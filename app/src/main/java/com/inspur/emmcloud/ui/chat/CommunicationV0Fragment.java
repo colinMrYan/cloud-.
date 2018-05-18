@@ -51,7 +51,6 @@ import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -167,12 +166,11 @@ public class CommunicationV0Fragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
-        LogUtils.jasonDebug("0000000000000000000000000000000");
         super.onCreate(savedInstanceState);
         initView();
+        sortChannelList();// 对Channel 进行排序
         registerMessageFragmentReceiver();
         getChannelList();
-        sortChannelList();// 对Channel 进行排序
         showMessageButtons();
         EventBus.getDefault().register(this);
     }
@@ -429,7 +427,7 @@ public class CommunicationV0Fragment extends Fragment {
         // TODO Auto-generated method stub
         List<Channel> channelList = ChannelCacheUtils
                 .getCacheChannelList(getActivity());
-        for (Channel channel:channelList){
+        for (Channel channel : channelList) {
             List<Msg> newMsgList = MsgCacheUtil.getHistoryMsgList(getActivity(), channel.getCid(), "",
                     15);
             channel.setNewMsgList(getActivity().getApplicationContext(), newMsgList);
@@ -466,42 +464,29 @@ public class CommunicationV0Fragment extends Fragment {
                         //将没有消息的单聊和没有消息的但不是自己创建的群聊隐藏掉
                         while (it.hasNext()) {
                             Channel channel = it.next();
+                            if (channel.getNewMsgList().size() == 0 && channel.getType().equals("DIRECT")) {
+                                it.remove();
+                            }
                             channel.setIsSetTop(false);
                             int unReadCount = MsgReadIDCacheUtils.getNotReadMsgCount(
                                     getActivity(), channel.getCid());
                             channel.setUnReadCount(unReadCount);
                             setChannelDisplayTitle(channel);
-                            if (channel.getNewMsgList().size() == 0) {
-                                if (channel.getType().equals("DIRECT")) {
-                                    it.remove();
-                                } else if (channel.getType().equals("GROUP")) {
-                                    ChannelGroup channelGroup = ChannelGroupCacheUtils.getChannelGroupById(getActivity(), channel.getCid());
-                                    String myUid = MyApplication.getInstance().getUid();
-                                    if (channelGroup != null && !channelGroup.getOwner().equals(myUid)) {
-                                        it.remove();
-                                    }
-                                }
-                            }
                         }
 
                         List<ChannelOperationInfo> hideChannelOpList = ChannelOperationCacheUtils
                                 .getHideChannelOpList(getActivity());
                         // 如果隐藏的频道中有未读消息则取消隐藏
-                        if (hideChannelOpList != null) {
-                            for (int i = 0; i < hideChannelOpList.size(); i++) {
-                                String cid = hideChannelOpList.get(i).getCid();
-                                int index = channelList.indexOf(new Channel(cid));
-                                if (index != -1) {
-                                    Channel channel = channelList.get(index);
-                                    if (channel.getNewestMid() != null
-                                            && !MsgReadIDCacheUtils.isMsgHaveRead(
-                                            getActivity(), cid,
-                                            channel.getNewestMid())) {
-                                        ChannelOperationCacheUtils.setChannelHide(
-                                                getActivity(), cid, false);
-                                    } else {
-                                        channelList.remove(index); // 如果没有未读消息则删除
-                                    }
+                        for (int i = 0; i < hideChannelOpList.size(); i++) {
+                            String cid = hideChannelOpList.get(i).getCid();
+                            int index = channelList.indexOf(new Channel(cid));
+                            if (index != -1) {
+                                Channel channel = channelList.get(index);
+                                if (channel.getUnReadCount() != 0) {
+                                    ChannelOperationCacheUtils.setChannelHide(
+                                            getActivity(), cid, false);
+                                } else {
+                                    channelList.remove(index); // 如果没有未读消息则删除
                                 }
                             }
                         }
@@ -966,7 +951,7 @@ public class CommunicationV0Fragment extends Fragment {
         public void onReceive(Context context, Intent intent) {
             // TODO Auto-generated method stub
             String command = intent.getExtras().getString("command");
-            switch (command){
+            switch (command) {
                 case "creat_group_icon":
                     isHaveCreatGroupIcon = false;
                     createGroupIcon(null);
@@ -978,7 +963,6 @@ public class CommunicationV0Fragment extends Fragment {
                     sortChannelList();
                     break;
                 case "sync_all_base_data_success":
-                    sortChannelList();
                     createGroupIcon(null);
                     break;
                 case "set_all_message_read":
@@ -993,8 +977,8 @@ public class CommunicationV0Fragment extends Fragment {
                     String mid = intent.getExtras().getString("mid");
                     setChannelMsgRead(cid, mid);
                     break;
-                   default:
-                       break;
+                default:
+                    break;
             }
         }
 

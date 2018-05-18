@@ -51,7 +51,6 @@ import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -72,6 +71,7 @@ import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 import com.inspur.emmcloud.util.privates.cache.MessageMatheSetCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageReadCreationDateCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
+import com.inspur.emmcloud.widget.WeakThread;
 import com.inspur.imp.plugin.barcode.scan.CaptureActivity;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 
@@ -100,6 +100,7 @@ public class CommunicationFragment extends Fragment {
 
     private static final int CREAT_CHANNEL_GROUP = 1;
     private static final int RERESH_GROUP_ICON = 2;
+    private static final int SORT_CHANNEL_COMPLETE = 3;
     private static final int SCAN_LOGIN_QRCODE_RESULT = 5;
     private View rootView;
     private ListView msgListView;
@@ -114,19 +115,18 @@ public class CommunicationFragment extends Fragment {
     private PopupWindow popupWindow;
     private CacheNewMsgTask cacheMsgAsyncTask;
     private CacheChannelTask cacheChannelTask;
-    private SortChannelTask sortChannelTask;
     private boolean isFirstConnectWebsockt = true;//判断是否第一次连上websockt
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
-        LogUtils.jasonDebug("==============================================================");
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
         initView();
+        sortChannelList();// 对Channel 进行排序
+        getMessage();
         registerMessageFragmentReceiver();
         getChannelList();
-        sortChannelList();// 对Channel 进行排序
         updateHeaderFunctionBtn(null);
     }
 
@@ -368,6 +368,7 @@ public class CommunicationFragment extends Fragment {
 
     /**
      * 为群组创建头像
+     *
      * @param channelList
      */
     private void createGroupIcon(List<Channel> channelList) {
@@ -384,9 +385,82 @@ public class CommunicationFragment extends Fragment {
      */
     private void sortChannelList() {
         // TODO Auto-generated method stub
-        new SortChannelTask().execute();
-    }
+        WeakThread weakThread = new WeakThread(getActivity()) {
+            @Override
+            public void run() {
+                super.run();
+                try {
+                    List<Channel> channelList = ChannelCacheUtils
+                            .getCacheChannelList(MyApplication.getInstance());
+                    if (channelList.size() > 0) {
+                        Iterator<Channel> it = channelList.iterator();
+                        //将没有消息的单聊和没有消息的但不是自己创建的群聊隐藏掉
+                        while (it.hasNext()) {
+                            Channel channel = it.next();
+                            List<Message> newMessageList = MessageCacheUtil.getHistoryMessageList(MyApplication.getInstance(), channel.getCid(), null, 15);
+                            if (newMessageList.size() == 0 && channel.getType().equals("DIRECT")) {
+                                it.remove();
+                                continue;
+                            }
+                            channel.setNewMessageList(MyApplication.getInstance(), newMessageList);
+                            channel.setIsSetTop(false);
+                            int unReadCount = MessageReadCreationDateCacheUtils.getNotReadMessageCount(
+                                    MyApplication.getInstance(), channel.getCid());
+                            channel.setUnReadCount(unReadCount);
+                            channel.setDisplayTitle(CommunicationUtils.getChannelDisplayTitle(channel));
+                        }
 
+                        List<ChannelOperationInfo> hideChannelOpList = ChannelOperationCacheUtils
+                                .getHideChannelOpList(MyApplication.getInstance());
+                        // 如果隐藏的频道中有未读消息则取消隐藏
+                        for (ChannelOperationInfo channelOperationInfo : hideChannelOpList) {
+                            int index = channelList.indexOf(new Channel(channelOperationInfo.getCid()));
+                            if (index != -1) {
+                                Channel channel = channelList.get(index);
+                                if (channel.getUnReadCount() != 0) {
+                                    ChannelOperationCacheUtils.setChannelHide(
+                                            getActivity(), channelOperationInfo.getCid(), false);
+                                } else {
+                                    channelList.remove(index); // 如果没有未读消息则删除
+                                }
+                            }
+                        }
+
+                        // 处理置顶的频道
+                        List<ChannelOperationInfo> setTopChannelOpList = ChannelOperationCacheUtils
+                                .getSetTopChannelOpList(getActivity());
+                        List<Channel> setTopChannelList = new ArrayList<>();
+                        for (ChannelOperationInfo channelOperationInfo : setTopChannelOpList) {
+                            int index = channelList.indexOf(new Channel(channelOperationInfo.getCid()));
+                            if (index != -1) {
+                                Channel setTopChannel = channelList.get(index);
+                                setTopChannel.setIsSetTop(true);
+                                setTopChannelList.add(setTopChannel);
+                                channelList.remove(index);
+                            }
+                        }
+
+                        // 所有显得的频道进行统一排序
+                        Collections.sort(channelList, new Channel().new SortComparator());
+                        channelList.addAll(0, setTopChannelList);
+                    }
+
+
+                    List<Channel> sortChannelList = new ArrayList<Channel>();
+                    sortChannelList.addAll(channelList);
+                    android.os.Message message = new android.os.Message();
+                    message.obj = sortChannelList;
+                    message.what = SORT_CHANNEL_COMPLETE;
+                    if (handler != null) {
+                        handler.sendMessage(message);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        weakThread.start();
+    }
 
 
     private void handMessage() {
@@ -403,6 +477,12 @@ public class CommunicationFragment extends Fragment {
                             displayData();
                         }
                         break;
+                    case SORT_CHANNEL_COMPLETE:
+                        List<Channel> channelList = (List<Channel>) msg.obj;
+                        displayChannelList.clear();
+                        displayChannelList.addAll(channelList);
+                        displayData();// 展示数据
+                        break;
                     default:
                         break;
                 }
@@ -414,13 +494,14 @@ public class CommunicationFragment extends Fragment {
 
     /**
      * 缓存推送的消息体，消息连续时间段，已读消息的id
+     *
      * @param receivedWSMessage
      */
     private void cacheReceiveMessage(Message receivedWSMessage) {
         // TODO Auto-generated method stub
         Message channelNewMessage = MessageCacheUtil.getNewMessge(MyApplication.getInstance(), receivedWSMessage.getChannel());
         MessageCacheUtil.saveMessage(MyApplication.getInstance(), receivedWSMessage);
-        Long ChannelMessageMatheSetStart = (channelNewMessage == null)?receivedWSMessage.getCreationDate():channelNewMessage.getCreationDate();
+        Long ChannelMessageMatheSetStart = (channelNewMessage == null) ? receivedWSMessage.getCreationDate() : channelNewMessage.getCreationDate();
         MessageMatheSetCacheUtils.add(MyApplication.getInstance(),
                 receivedWSMessage.getChannel(),
                 new MatheSet(ChannelMessageMatheSetStart, receivedWSMessage.getCreationDate()));
@@ -456,7 +537,7 @@ public class CommunicationFragment extends Fragment {
      */
     private void setChannelAllMsgRead(Channel channel) {
         // TODO Auto-generated method stub
-        MessageReadCreationDateCacheUtils.saveMessageReadCreationDate(MyApplication.getInstance(),channel.getCid(),channel.getMsgLastUpdate());
+        MessageReadCreationDateCacheUtils.saveMessageReadCreationDate(MyApplication.getInstance(), channel.getCid(), channel.getMsgLastUpdate());
         int position = displayChannelList.indexOf(channel);
         channel.setUnReadCount(0);
         View childAt = msgListView.getChildAt(position
@@ -504,7 +585,7 @@ public class CommunicationFragment extends Fragment {
                             ChannelOperationCacheUtils.setChannelHide(
                                     MyApplication.getInstance(), channel.getCid(), true);
                             // 当隐藏会话时，把该会话的所有消息置为已读
-                            MessageReadCreationDateCacheUtils.saveMessageReadCreationDate(MyApplication.getInstance(),channel.getCid(),channel.getMsgLastUpdate());
+                            MessageReadCreationDateCacheUtils.saveMessageReadCreationDate(MyApplication.getInstance(), channel.getCid(), channel.getMsgLastUpdate());
                             displayChannelList.remove(position);
                             displayData();
                         }
@@ -529,8 +610,8 @@ public class CommunicationFragment extends Fragment {
 
         @Override
         protected void onPostExecute(List<Channel> addchannelList) {
-            createGroupIcon(isHaveCreatGroupIcon?addchannelList:allchannelList);
-            getMessage();
+            sortChannelList();
+            createGroupIcon(isHaveCreatGroupIcon ? addchannelList : allchannelList);
             getChannelInfoResult(allchannelList);
         }
 
@@ -549,113 +630,19 @@ public class CommunicationFragment extends Fragment {
         }
     }
 
-    class CacheNewMsgTask extends AsyncTask<GetNewMessagesResult, Void, Void> {
+    class CacheNewMsgTask extends AsyncTask<GetNewMessagesResult, Void, Boolean> {
         @Override
-        protected void onPostExecute(Void aVoid) {
-            sortChannelList();
+        protected void onPostExecute(Boolean isHaveNewMessage) {
+            if (isHaveNewMessage) {
+                sortChannelList();
+            }
         }
 
         @Override
-        protected Void doInBackground(GetNewMessagesResult... params) {
-            try {
-                GetNewMessagesResult getNewMessagesResult = params[0];
-                List<Channel> channelList = ChannelCacheUtils
-                        .getCacheChannelList(getActivity());
-                List<Message> allChannelMessageList = new ArrayList<>();
-                for (Channel channel : channelList) {
-                    String cid = channel.getCid();
-                    List<Message> newMessageList = getNewMessagesResult.getNewMessageList(cid);
-                    if (newMessageList.size() > 0) {
-                        allChannelMessageList.addAll(newMessageList);
-                        // 当会话中最后一条消息为自己发出的时候，将此消息存入已读消息列表，解决最新消息为自己发出，仍识别为未读的问题
-                        if (newMessageList.get(newMessageList.size() - 1).getFromUser()
-                                .equals(MyApplication.getInstance().getUid())) {
-                            MessageReadCreationDateCacheUtils.saveMessageReadCreationDate(MyApplication.getInstance(), cid, newMessageList.get(newMessageList.size() - 1).getCreationDate());
-                        }
-                    }
-                }
-                MessageCacheUtil.saveMessageList(MyApplication.getInstance(), allChannelMessageList, null); // 获取的消息需要缓存
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return null;
+        protected Boolean doInBackground(GetNewMessagesResult... params) {
+            return cacheMessageList(params[0]);
         }
     }
-
-    class SortChannelTask extends AsyncTask<Void, Void, List<Channel>> {
-        @Override
-        protected void onPostExecute(List<Channel> channelList) {
-            displayChannelList.clear();
-            displayChannelList.addAll(channelList);
-            displayData();// 展示数据
-        }
-
-        @Override
-        protected List<Channel> doInBackground(Void... voids) {
-            List<Channel> channelList = ChannelCacheUtils
-                    .getCacheChannelList(getActivity());
-            Iterator<Channel> it = channelList.iterator();
-            //将没有消息的单聊和没有消息的但不是自己创建的群聊隐藏掉
-            while (it.hasNext()) {
-                Channel channel = it.next();
-                List<Message> newMessageList = MessageCacheUtil.getHistoryMessageList(MyApplication.getInstance(), channel.getCid(), null, 15);
-                if (newMessageList.size() == 0) {
-                    if (channel.getType().equals("DIRECT")) {
-                        it.remove();
-                        continue;
-                    } else if (channel.getType().equals("GROUP")) {
-                        ChannelGroup channelGroup = ChannelGroupCacheUtils.getChannelGroupById(getActivity(), channel.getCid());
-                        if (channelGroup != null && !channelGroup.getOwner().equals(MyApplication.getInstance().getUid())) {
-                            it.remove();
-                            continue;
-                        }
-                    }
-                }
-                channel.setNewMessageList(MyApplication.getInstance(), newMessageList);
-                channel.setIsSetTop(false);
-                int unReadCount = MessageReadCreationDateCacheUtils.getNotReadMessageCount(
-                        MyApplication.getInstance(), channel.getCid());
-                channel.setUnReadCount(unReadCount);
-                channel.setDisplayTitle(CommunicationUtils.getChannelDisplayTitle(channel));
-            }
-
-            List<ChannelOperationInfo> hideChannelOpList = ChannelOperationCacheUtils
-                    .getHideChannelOpList(MyApplication.getInstance());
-            // 如果隐藏的频道中有未读消息则取消隐藏
-            for (ChannelOperationInfo channelOperationInfo : hideChannelOpList) {
-                int index = channelList.indexOf(new Channel(channelOperationInfo.getCid()));
-                if (index != -1) {
-                    Channel channel = channelList.get(index);
-                    if (channel.getUnReadCount() != 0) {
-                        ChannelOperationCacheUtils.setChannelHide(
-                                getActivity(), channelOperationInfo.getCid(), false);
-                    } else {
-                        channelList.remove(channel); // 如果没有未读消息则删除
-                    }
-                }
-            }
-
-            // 处理置顶的频道
-            List<ChannelOperationInfo> setTopChannelOpList = ChannelOperationCacheUtils
-                    .getSetTopChannelOpList(getActivity());
-            List<Channel> setTopChannelList = new ArrayList<>();
-            for (ChannelOperationInfo channelOperationInfo : setTopChannelOpList) {
-                int index = channelList.indexOf(new Channel(channelOperationInfo.getCid()));
-                if (index != -1) {
-                    Channel setTopChannel = channelList.get(index);
-                    setTopChannel.setIsSetTop(true);
-                    setTopChannelList.add(setTopChannel);
-                    channelList.remove(index);
-                }
-            }
-
-            // 所有显得的频道进行统一排序
-            Collections.sort(channelList, new Channel().new SortComparator());
-            channelList.addAll(0, setTopChannelList);
-            return channelList;
-        }
-    }
-
 
     /**
      * 接受创建群组头像的icon
@@ -680,7 +667,6 @@ public class CommunicationFragment extends Fragment {
                     sortChannelList();
                     break;
                 case "sync_all_base_data_success":
-                    sortChannelList();
                     createGroupIcon(null);
                     break;
                 case "set_all_message_read":
@@ -709,7 +695,7 @@ public class CommunicationFragment extends Fragment {
             //当断开以后连接成功(非第一次连接上)后重新拉取一遍消息
             if (!isFirstConnectWebsockt) {
                 getChannelList();
-            }else {
+            } else {
                 getMessage();
             }
             isFirstConnectWebsockt = false;
@@ -729,8 +715,8 @@ public class CommunicationFragment extends Fragment {
      */
     private void setAllChannelMsgRead() {
         // TODO Auto-generated method stub
-        for(Channel channel:displayChannelList){
-            MessageReadCreationDateCacheUtils.saveMessageReadCreationDate(MyApplication.getInstance(),channel.getCid(),channel.getMsgLastUpdate());
+        for (Channel channel : displayChannelList) {
+            MessageReadCreationDateCacheUtils.saveMessageReadCreationDate(MyApplication.getInstance(), channel.getCid(), channel.getMsgLastUpdate());
             channel.setUnReadCount(0);
         }
         displayData();
@@ -743,8 +729,8 @@ public class CommunicationFragment extends Fragment {
      * @param mid
      */
     private void setChannelMsgRead(String cid, long messageCreationDate) {
-        MessageReadCreationDateCacheUtils.saveMessageReadCreationDate(MyApplication.getInstance(),cid,messageCreationDate);
-        for(Channel channel:displayChannelList){
+        MessageReadCreationDateCacheUtils.saveMessageReadCreationDate(MyApplication.getInstance(), cid, messageCreationDate);
+        for (Channel channel : displayChannelList) {
             if (channel.getCid().equals(cid)) {
                 channel.setUnReadCount(0);
                 break;
@@ -766,7 +752,7 @@ public class CommunicationFragment extends Fragment {
             @Override
             public void run() {
                 Map<String, String> channelMap = new HashMap<>();
-                for (ChannelGroup channelGroup:searchChannelGroupList){
+                for (ChannelGroup channelGroup : searchChannelGroupList) {
                     channelMap.put(channelGroup.getCid(), channelGroup.getInputs());
                     if (channelGroup.getType().equals("GROUP")) {
                         ChannelGroupCacheUtils.saveChannelGroup(getActivity(), channelGroup);
@@ -774,7 +760,7 @@ public class CommunicationFragment extends Fragment {
                 }
                 List<Channel> channelList = ChannelCacheUtils
                         .getCacheChannelList(getActivity());
-                for (Channel channel:channelList) {
+                for (Channel channel : channelList) {
                     if (channel.getType().equals("SERVICE")) {
                         int channelGroupIndex = searchChannelGroupList.indexOf(new ChannelGroup(channel));
                         channel.setInputs(searchChannelGroupList.get(channelGroupIndex).getInputs());
@@ -797,10 +783,6 @@ public class CommunicationFragment extends Fragment {
         if (cacheMsgAsyncTask != null && !cacheMsgAsyncTask.isCancelled() && cacheMsgAsyncTask.getStatus() == AsyncTask.Status.RUNNING) {
             cacheMsgAsyncTask.cancel(true);
             cacheMsgAsyncTask = null;
-        }
-        if (sortChannelTask != null && !sortChannelTask.isCancelled() && sortChannelTask.getStatus() == AsyncTask.Status.RUNNING) {
-            sortChannelTask.cancel(true);
-            sortChannelTask = null;
         }
         if (receiver != null) {
             LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(receiver);
@@ -881,12 +863,11 @@ public class CommunicationFragment extends Fragment {
     }
 
 
-
     //接收到websocket发过来的消息
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveWSMessage(EventMessage eventMessage) {
-        if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE)){
-            if(eventMessage.getStatus() == 200){
+        if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE)) {
+            if (eventMessage.getStatus() == 200) {
                 String content = eventMessage.getContent();
                 JSONObject contentObj = JSONUtils.getJSONObject(content);
                 Message receivedWSMessage = new Message(contentObj);
@@ -898,7 +879,7 @@ public class CommunicationFragment extends Fragment {
                     cacheReceiveMessage(receivedWSMessage);
                     sortChannelList();
                 }
-            }else {
+            } else {
                 WebServiceMiddleUtils.hand(getActivity(), eventMessage.getContent(), eventMessage.getStatus());
             }
 
@@ -906,9 +887,9 @@ public class CommunicationFragment extends Fragment {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReiceveWSOfflineMessage(EventMessage eventMessage){
-        if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_GET_OFFLINE_WS_MESSAGE)){
-            if(eventMessage.getStatus() == 200){
+    public void onReiceveWSOfflineMessage(EventMessage eventMessage) {
+        if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_GET_OFFLINE_WS_MESSAGE)) {
+            if (eventMessage.getStatus() == 200) {
                 String content = eventMessage.getContent();
                 GetNewMessagesResult getNewMessagesResult = new GetNewMessagesResult(content);
                 cacheMsgAsyncTask = new CacheNewMsgTask();
@@ -919,20 +900,45 @@ public class CommunicationFragment extends Fragment {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReceiveWSRecentMessage(EventMessage eventMessage){
-        if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_GET_CHANNEL_RECENT_MESSAGE)){
-            if(eventMessage.getStatus() == 200){
+    public void onReceiveWSRecentMessage(EventMessage eventMessage) {
+        if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_GET_CHANNEL_RECENT_MESSAGE)) {
+            if (eventMessage.getStatus() == 200) {
                 String content = eventMessage.getContent();
-                GetNewMessagesResult getNewMessagesResult = new GetNewMessagesResult(content);
-                cacheMsgAsyncTask = new CacheNewMsgTask();
-                cacheMsgAsyncTask.execute(getNewMessagesResult);
-            }else {
+                boolean isHaveNewMessage = cacheMessageList(new GetNewMessagesResult(content));
+                if (isHaveNewMessage) {
+                    sortChannelList();
+                }
+            } else {
                 WebServiceMiddleUtils.hand(getActivity(), eventMessage.getContent(), eventMessage.getStatus());
             }
         }
     }
 
-
+    /**
+     * 缓存获取的消息，返回是否有新消息
+     *
+     * @param getNewMessagesResult
+     * @return
+     */
+    private boolean cacheMessageList(GetNewMessagesResult getNewMessagesResult) {
+        List<Channel> channelList = ChannelCacheUtils
+                .getCacheChannelList(getActivity());
+        List<Message> allChannelMessageList = new ArrayList<>();
+        for (Channel channel : channelList) {
+            String cid = channel.getCid();
+            List<Message> newMessageList = getNewMessagesResult.getNewMessageList(cid);
+            if (newMessageList.size() > 0) {
+                allChannelMessageList.addAll(newMessageList);
+                Message lastMessage = newMessageList.get(newMessageList.size() - 1);
+                // 当会话中最后一条消息为自己发出的时候，将此消息存入已读消息列表，解决最新消息为自己发出，仍识别为未读的问题
+                if (lastMessage.getFromUser().equals(MyApplication.getInstance().getUid())) {
+                    MessageReadCreationDateCacheUtils.saveMessageReadCreationDate(MyApplication.getInstance(), cid, lastMessage.getCreationDate());
+                }
+            }
+        }
+        MessageCacheUtil.saveMessageList(MyApplication.getInstance(), allChannelMessageList, null); // 获取的消息需要缓存
+        return allChannelMessageList.size() > 0;
+    }
 
     /**
      * 获取消息会话列表
@@ -945,13 +951,13 @@ public class CommunicationFragment extends Fragment {
         }
     }
 
-    public void getMessage(){
-        if (NetUtils.isNetworkConnected(MyApplication.getInstance()) && WebSocketPush.getInstance().isSocketConnect()){
-            long enterAppTime = PreferencesUtils.getLong(MyApplication.getInstance(),Constant.PREF_ENTER_APP_TIME,System.currentTimeMillis());
-            if (MessageCacheUtil.isHistoryMessageCache(MyApplication.getInstance(),enterAppTime)){
+    public void getMessage() {
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance()) && WebSocketPush.getInstance().isSocketConnect()) {
+            long enterAppTime = PreferencesUtils.getLong(MyApplication.getInstance(), Constant.PREF_ENTER_APP_TIME, System.currentTimeMillis());
+            if (MessageCacheUtil.isHistoryMessageCache(MyApplication.getInstance(), enterAppTime)) {
                 //获取离线消息
                 WSAPIService.getInstance().getOfflineMessage();
-            }else{
+            } else {
                 //获取每个频道最近的20条消息
                 WSAPIService.getInstance().getChannelRecentMessage();
             }
@@ -1002,21 +1008,10 @@ public class CommunicationFragment extends Fragment {
             if (getActivity() != null) {
                 swipeRefreshLayout.setRefreshing(false);
                 WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
-                sortChannelList();// 对Channel 进行排序
+                getMessage();
             }
 
         }
-
-//        @Override
-//        public void returnNewMessagesSuccess(final GetNewMessagesResult getNewMsgsResult) {
-//            // TODO Auto-generated method stub
-//            if (getActivity() != null) {
-//                cacheMsgAsyncTask = new CacheNewMsgTask();
-//                cacheMsgAsyncTask.execute(getNewMsgsResult);
-//
-//            }
-//
-//        }
 
         @Override
         public void returnSearchChannelGroupSuccess(
@@ -1029,17 +1024,6 @@ public class CommunicationFragment extends Fragment {
         public void returnSearchChannelGroupFail(String error, int errorCode) {
         }
 
-
-//        @Override
-//        public void returnNewMessagesFail(String error, int errorCode) {
-//            // TODO Auto-generated method stub
-//            if (getActivity() != null) {
-//                swipeRefreshLayout.setRefreshing(false);
-//                sortChannelList();// 对Channel 进行排序
-//                WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
-//            }
-//
-//        }
 
     }
 
