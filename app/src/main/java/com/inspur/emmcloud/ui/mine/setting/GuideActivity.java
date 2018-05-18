@@ -55,11 +55,21 @@ public class GuideActivity extends BaseActivity {
     private void initView() {
         // TODO Auto-generated method stub
         List<Integer> splashResIdList = new ArrayList<>();
-        splashResIdList.add(R.drawable.guide_page_1);
-        splashResIdList.add(R.drawable.guide_page_2);
-        splashResIdList.add(R.drawable.guide_page_3);
-        splashResIdList.add(R.drawable.guide_page_4);
-        splashResIdList.add(R.drawable.guide_page_5);
+        //刚安装App初次进入
+        if (PreferencesUtils.getBoolean(getApplicationContext(),"isFirst", false)){
+            splashResIdList.add(R.drawable.guide_page_1);
+            splashResIdList.add(R.drawable.guide_page_2);
+            splashResIdList.add(R.drawable.guide_page_3);
+            splashResIdList.add(R.drawable.guide_page_4);
+            splashResIdList.add(R.drawable.guide_page_5);
+        }else {//版本升级进入
+            splashResIdList.add(R.drawable.guide_page_1);
+            splashResIdList.add(R.drawable.guide_page_2);
+            splashResIdList.add(R.drawable.guide_page_3);
+            splashResIdList.add(R.drawable.guide_page_4);
+            splashResIdList.add(R.drawable.guide_page_5);
+        }
+
         for (int i = 0; i < splashResIdList.size(); i++) {
             View guideView = LayoutInflater.from(this).inflate(R.layout.view_pager_guide, null);
             ImageView img = (ImageView) guideView.findViewById(R.id.img);
