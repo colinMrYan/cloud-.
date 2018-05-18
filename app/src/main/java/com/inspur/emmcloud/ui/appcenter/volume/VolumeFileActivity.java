@@ -581,7 +581,6 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
             bundle.putSerializable("volume", volume);
             bundle.putSerializable("currentDirAbsolutePath", parentDirAbsolutePath);
             bundle.putSerializable("title", parentForderName);
-            bundle.putBoolean("isOpenFromParentDirectory", true);
             IntentUtils.startActivity(VolumeFileActivity.this, VolumeFileActivity.class, bundle,true);
         }
 
