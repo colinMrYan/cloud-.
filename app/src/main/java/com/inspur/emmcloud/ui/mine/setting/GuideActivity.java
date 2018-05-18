@@ -123,6 +123,13 @@ public class GuideActivity extends BaseActivity {
     }
 
     /**
+     * 转到LoginActivity
+     */
+    private void startLoginActivity(){
+        IntentUtils.startActivity(GuideActivity.this,LoginActivity.class,true);
+    }
+
+    /**
      * 获取用户的个人信息
      */
     private void getUserProfile() {
@@ -131,6 +138,8 @@ public class GuideActivity extends BaseActivity {
             LoginAPIService apiServices = new LoginAPIService(GuideActivity.this);
             apiServices.setAPIInterface(new WebService());
             apiServices.getMyInfo();
+        }else{
+            startLoginActivity();
         }
     }
 
@@ -142,13 +151,12 @@ public class GuideActivity extends BaseActivity {
             saveNewProfileAndOldProfile(getMyInfoResult.getResponse());
             MyApplication.getInstance().initTanent();
             startIntentActivity();
-
         }
 
         @Override
         public void returnMyInfoFail(String error, int errorCode) {
             LoadingDialog.dimissDlg(loadingDialog);
-            startIntentActivity();
+            startLoginActivity();
         }
     }
 
