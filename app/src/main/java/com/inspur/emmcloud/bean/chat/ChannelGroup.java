@@ -38,6 +38,9 @@ public class ChannelGroup {
     public ChannelGroup() {
 
     }
+    public ChannelGroup(String cid,String extra){
+        this.cid = cid;
+    }
 
     public ChannelGroup(Channel channel) {
         this.cid = channel.getCid();
