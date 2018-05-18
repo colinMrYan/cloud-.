@@ -238,7 +238,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                 setMutiSelect(false);
                 break;
             case R.id.batch_operation_select_all_text:
-                boolean isSelectAllStatus = getBatchOprationSelectAllText.getText().toString().equals("全选");
+                boolean isSelectAllStatus = getBatchOprationSelectAllText.getText().toString().equals(getString(R.string.select_all));
                 setselectAll(isSelectAllStatus);
                 setBatchOprationLayoutByPrivilege();
                 break;
