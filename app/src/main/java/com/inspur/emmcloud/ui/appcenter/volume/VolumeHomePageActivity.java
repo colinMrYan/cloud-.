@@ -21,12 +21,16 @@ import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeListResult;
 import com.inspur.emmcloud.bean.appcenter.volume.Volume;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeHomePageDirectory;
+import com.inspur.emmcloud.bean.system.ClearShareDataBean;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.imp.plugin.file.FileUtil;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 
@@ -59,6 +63,7 @@ public class VolumeHomePageActivity extends BaseActivity implements SwipeRefresh
     private List<Volume> shareVolumeList;
     private BaseAdapter adapter;
     private List<VolumeHomePageDirectory> volumeHomePageDirectoryList = new ArrayList<>();
+    private boolean isShareState = true;
 
 
     @Override
@@ -66,6 +71,7 @@ public class VolumeHomePageActivity extends BaseActivity implements SwipeRefresh
         super.onCreate(savedInstanceState);
         init();
         getVolumeList(true);
+        EventBus.getDefault().register(this);
     }
 
     private void init() {
@@ -86,7 +92,10 @@ public class VolumeHomePageActivity extends BaseActivity implements SwipeRefresh
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("volume", myVolume);
                 bundle.putString("title",getString(R.string.volume_my_file) );
-                List<Uri> uriList = (List<Uri>) getIntent().getSerializableExtra("fileShareUriList");
+                List<Uri> uriList = null;
+                if(isShareState){
+                    uriList = (List<Uri>) getIntent().getSerializableExtra("fileShareUriList");
+                }
                 switch (position) {
                     case 0:
                         if(myVolume != null){
@@ -113,6 +122,15 @@ public class VolumeHomePageActivity extends BaseActivity implements SwipeRefresh
                 }
             }
         });
+    }
+
+    /**
+     * 接收来自上传页面的消息
+     * @param clearShareDataBean
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void clearShareData(ClearShareDataBean clearShareDataBean){
+        isShareState = false;
     }
 
     public void onClick(View v) {
@@ -156,6 +174,12 @@ public class VolumeHomePageActivity extends BaseActivity implements SwipeRefresh
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Override
     public void onRefresh() {
         getVolumeList(false);
     }
@@ -171,7 +195,6 @@ public class VolumeHomePageActivity extends BaseActivity implements SwipeRefresh
             swipeRefreshLayout.setRefreshing(false);
         }
     }
-
 
     private class WebService extends APIInterfaceInstance {
         @Override

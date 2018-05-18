@@ -24,6 +24,7 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeListResult;
 import com.inspur.emmcloud.bean.appcenter.volume.Volume;
+import com.inspur.emmcloud.bean.system.ClearShareDataBean;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.FomatUtils;
 import com.inspur.emmcloud.util.common.InputMethodUtils;
@@ -39,6 +40,9 @@ import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 
@@ -66,12 +70,14 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
     private MyAppAPIService apiService;
     private LoadingDialog loadingDlg;
     private MyDialog createShareVolumeDlg,updateShareVolumeNameDlg;
+    private boolean isShareState = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initView();
         getVolumeList(true);
+        EventBus.getDefault().register(this);
     }
 
     private void initView() {
@@ -85,7 +91,10 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
         shareVolumeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                List<Uri> shareUriList = (List<Uri>) getIntent().getSerializableExtra("fileShareUriList");
+                List<Uri> shareUriList = null ;
+                if(isShareState){
+                    shareUriList = (List<Uri>) getIntent().getSerializableExtra("fileShareUriList");
+                }
                 Volume volume = shareVolumeList.get(position);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("volume", volume);
@@ -198,6 +207,15 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
     }
 
     /**
+     * 接收来自上传页面的消息
+     * @param clearShareDataBean
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void clearShareData(ClearShareDataBean clearShareDataBean){
+        isShareState = false;
+    }
+
+    /**
      * 弹出文件删除提示框
      *
      * @param volume
@@ -304,6 +322,12 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
                 adapter.notifyDataSetChanged();
             }
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 
     @Override
