@@ -946,4 +946,5 @@
     <string name="share_to_channel">Send to the channel</string>
     <string name="share_upload_volume">Upload to the cloud volume</string>
     <string name="share_no_suffix">Do not support a file sharing the name without suffix</string>
+    <string name="share_has_not_exist_file">There are nonexistent files in the files you shared, please check.</string>
 </resources>

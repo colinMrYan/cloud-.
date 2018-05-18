@@ -153,13 +153,18 @@ public class ShareFilesActivity extends BaseActivity {
     }
 
     /**
+     * 分享功能中不再判断文件来源（例如来自文件系统还是图库）
      * @param uriList
      */
     private void startVolumeShareActivity(List<String> uriList) {
-        Intent intent = new Intent();
-        intent.setClass(ShareFilesActivity.this, VolumeHomePageActivity.class);
-        intent.putExtra("fileShareUriList", (Serializable) uriList);
-        startActivity(intent);
+        if(FileUtils.isFileInListExist(uriList)){
+            Intent intent = new Intent();
+            intent.setClass(ShareFilesActivity.this, VolumeHomePageActivity.class);
+            intent.putExtra("fileShareUriList", (Serializable) uriList);
+            startActivity(intent);
+        }else{
+            ToastUtils.show(ShareFilesActivity.this,getString(R.string.share_has_not_exist_file));
+        }
         finish();
     }
 
@@ -222,8 +227,6 @@ public class ShareFilesActivity extends BaseActivity {
                     ChannelV0Activity.class: ChannelActivity.class,bundle,true);
     }
 
-
-
     /**
      * 创建单聊
      *
@@ -273,7 +276,6 @@ public class ShareFilesActivity extends BaseActivity {
 
     class FileHolder extends RecyclerView.ViewHolder {
         private ImageView imageView;
-
         public FileHolder(View itemView) {
             super(itemView);
         }

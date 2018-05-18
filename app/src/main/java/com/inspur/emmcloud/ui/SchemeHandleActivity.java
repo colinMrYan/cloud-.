@@ -174,7 +174,6 @@ public class SchemeHandleActivity extends Activity {
                                 bundle.putString(scheme, uri.toString());
                                 IntentUtils.startActivity(SchemeHandleActivity.this, ReactNativeAppActivity.class, bundle, true);
                                 break;
-
                             case "gs-msg":
                                 if (!NetUtils.isNetworkConnected(SchemeHandleActivity.this)) {
                                     finish();
@@ -193,7 +192,6 @@ public class SchemeHandleActivity extends Activity {
                                     IntentUtils.startActivity(SchemeHandleActivity.this,
                                             ChannelActivity.class, bundle, true);
                                 }
-
                                 break;
                             case "ecc-app":
                                 AppId2AppAndOpenAppUtils appId2AppAndOpenAppUtils = new AppId2AppAndOpenAppUtils(SchemeHandleActivity.this);
@@ -336,7 +334,6 @@ public class SchemeHandleActivity extends Activity {
             case "news.ecc":
                 IntentUtils.startActivity(this, GroupNewsActivity.class, true);
                 break;
-
             case "document":
                 IntentUtils.startActivity(this, DocumentActivity.class, true);
                 break;
