@@ -1,7 +1,6 @@
 package com.inspur.emmcloud.util.privates;
 
 import android.annotation.SuppressLint;
-import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
 import android.database.Cursor;
@@ -12,12 +11,10 @@ import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 
-import com.inspur.emmcloud.util.common.LogUtils;
 
 public class GetPathFromUri4kitkat {
 
-    public static String getPathByUri(final Context context,  Uri uri) {
-        uri = getMiUiUri(context,uri);
+    public static String getPathByUri(final Context context, final Uri uri) {
         boolean isAboveKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
         String filePath = null;
         if (isAboveKitKat) {
@@ -31,43 +28,6 @@ public class GetPathFromUri4kitkat {
     }
 
     /**
-     * 解决小米手机上获取图片路径为null的情况
-     * @param uriInput
-     * @return
-     */
-    public static Uri getMiUiUri(Context context,Uri uriInput) {
-        Uri uri = uriInput;
-        if (uri.getScheme().contains("content") ) {
-            String path = uri.getEncodedPath();
-            if (path != null) {
-                path = Uri.decode(path);
-                ContentResolver cr = context.getContentResolver();
-                StringBuffer buff = new StringBuffer();
-                buff.append("(").append(MediaStore.Images.ImageColumns.DATA).append("=")
-                        .append("'" + path + "'").append(")");
-                Cursor cur = cr.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                        new String[] { MediaStore.Images.ImageColumns._ID },
-                        buff.toString(), null, null);
-                int index = 0;
-                for (cur.moveToFirst(); !cur.isAfterLast(); cur.moveToNext()) {
-                    index = cur.getColumnIndex(MediaStore.Images.ImageColumns._ID);
-                    // set _id value
-                    index = cur.getInt(index);
-                }
-                if (index == 0) {
-                    // do nothing
-                } else {
-                    Uri uri_temp = Uri.parse("content://media/external/images/media/" + index);
-                    if (uri_temp != null) {
-                        uri = uri_temp;
-                    }
-                }
-            }
-        }
-        return uri;
-    }
-
-    /**
      * 专为Android4.4设计的从Uri获取文件绝对路径，以前的方法已不好使
      */
     @SuppressLint("NewApi")
@@ -77,10 +37,8 @@ public class GetPathFromUri4kitkat {
 
         // DocumentProvider
         if (isKitKat && DocumentsContract.isDocumentUri(context, uri)) {
-            LogUtils.jasonDebug("============================0");
             // ExternalStorageProvider
             if (isExternalStorageDocument(uri)) {
-                LogUtils.jasonDebug("============================1");
                 final String docId = DocumentsContract.getDocumentId(uri);
                 final String[] split = docId.split(":");
                 final String type = split[0];
@@ -94,7 +52,7 @@ public class GetPathFromUri4kitkat {
             }
             // DownloadsProvider
             else if (isDownloadsDocument(uri)) {
-                LogUtils.jasonDebug("============================2");
+
                 final String id = DocumentsContract.getDocumentId(uri);
                 final Uri contentUri = ContentUris.withAppendedId(
                         Uri.parse("content://downloads/public_downloads"),
@@ -104,7 +62,6 @@ public class GetPathFromUri4kitkat {
             }
             // MediaProvider
             else if (isMediaDocument(uri)) {
-                LogUtils.jasonDebug("============================3");
                 final String docId = DocumentsContract.getDocumentId(uri);
                 final String[] split = docId.split(":");
                 final String type = split[0];
@@ -124,20 +81,17 @@ public class GetPathFromUri4kitkat {
                 return getDataColumn(context, contentUri, selection,
                         selectionArgs);
             } else if (isSamsungDocument(uri)) {
-                LogUtils.jasonDebug("============================4");
                 return getSamsungDataColumn(context, uri, null, null);
             }
         }
         // MediaStore (and general)
         else if ("content".equalsIgnoreCase(uri.getScheme())) {
-            LogUtils.jasonDebug("============================5");
             if (isGooglePhotosUri(uri))
                 return uri.getLastPathSegment();
             return getDataColumn(context, uri, null, null);
         }
         // File
         else if ("file".equalsIgnoreCase(uri.getScheme())) {
-            LogUtils.jasonDebug("============================6");
             return uri.getPath();
         }
 
@@ -168,8 +122,6 @@ public class GetPathFromUri4kitkat {
         Cursor cursor = null;
         final String column = MediaStore.Images.Media.DATA;
         final String[] projection = {column};
-        LogUtils.jasonDebug("uri.getAuthority()="+uri.getAuthority());
-        LogUtils.jasonDebug("pah=================="+uri.getPath());
         if (!TextUtils.isEmpty(uri.getAuthority())) {
             try {
                 cursor = context.getContentResolver().query(uri, projection,
@@ -185,7 +137,6 @@ public class GetPathFromUri4kitkat {
                     cursor.close();
             }
         }else {
-            LogUtils.jasonDebug("00000000000000000000000000000");
             return  uri.getPath();
         }
 
