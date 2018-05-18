@@ -178,7 +178,7 @@ public class AppUtils {
             }
             if (savedArray.length == 3 && currentArray.length == 3) {
                 int savedVersionNum = Integer.parseInt(savedArray[0])*1000000+Integer.parseInt(savedArray[1])*1000+Integer.parseInt(savedArray[2]);
-                int currentVersionNum = Integer.parseInt(savedArray[0])*1000000+Integer.parseInt(savedArray[1])*1000+Integer.parseInt(savedArray[2]);
+                int currentVersionNum = Integer.parseInt(currentArray[0])*1000000+Integer.parseInt(currentArray[1])*1000+Integer.parseInt(currentArray[2]);
                 return currentVersionNum>savedVersionNum;
             }
         }
