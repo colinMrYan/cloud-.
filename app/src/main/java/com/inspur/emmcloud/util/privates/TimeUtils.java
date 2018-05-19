@@ -1011,23 +1011,6 @@ public class TimeUtils {
         return date;
     }
 
-    /**
-     * 获取新闻的请求url中的时间
-     *
-     * @param postTime
-     * @return
-     */
-    public static String getNewsTime(String postTime) {
-        String timeYear = postTime.substring(0, 4);
-        String timeMon = postTime.substring(5, 7);
-        String timeDay = postTime.substring(8, 10);
-        int year = Integer.parseInt(timeYear);
-        int mon = Integer.parseInt(timeMon);
-        int day = Integer.parseInt(timeDay);
-        String timepath = APIUri.getGroupNewsArticleUrl() + year + "/" + mon
-                + "/" + day + "/";
-        return timepath;
-    }
 
     /**
      * 带有时区的时间路径,目前是零时区GMT
