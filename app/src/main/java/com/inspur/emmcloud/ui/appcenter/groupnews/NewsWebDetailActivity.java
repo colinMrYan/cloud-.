@@ -157,7 +157,7 @@ public class NewsWebDetailActivity extends BaseActivity {
         webSettings.setTextZoom(textSize);
         // 加载需要显示的网页
         if (!url.startsWith("http")) {
-            url = APIUri.getGroupNewsUrl(url);
+            url = APIUri.getGroupNewsHtmlUrl(url);
         }
         webView.loadUrl(url);
         // 设置Web视图

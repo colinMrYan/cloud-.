@@ -647,7 +647,16 @@ public class APIUri {
      * @return
      */
     public static String getGroupNewsUrl(String url) {
-        return getECMNews() +"/" + url;
+        return getECMNews()  + url;
+    }
+
+    /**
+     * 获取网页地址
+     * @param url
+     * @return
+     */
+    public static String getGroupNewsHtmlUrl(String url){
+        return getStorageLegacy() + url;
     }
 
     /**
@@ -656,7 +665,7 @@ public class APIUri {
      * @return
      */
     public static String getGroupNewsArticleUrl() {
-        return "/" + MyApplication.getInstance().getTanent() + "/res" + "/article" + "/";
+        return "/res" + "/article" + "/";
     }
 
     /**
@@ -1021,7 +1030,7 @@ public class APIUri {
      * @return
      */
     public static String getTripArriveCityUrl() {
-        return "https://ecm.inspur.com/trip/simple/city";
+        return "https://ecm.inspur.com/"+MyApplication.getInstance().getTanent()+"/trip/simple/city";
     }
 
     /**
@@ -1038,11 +1047,11 @@ public class APIUri {
      * @return
      */
     public static String getUpdateTripInfoUrl(){
-        return "https://ecm.inspur.com/trip/simple/upload";
+        return "https://ecm.inspur.com/"+MyApplication.getInstance().getTanent()+"/trip/simple/upload";
     }
 
     public static String getTripInfoUrl(){
-        return "https://ecm.inspur.com/trip/simple/detail?trip_ticket=";
+        return "https://ecm.inspur.com/"+MyApplication.getInstance().getTanent()+"/trip/simple/detail?trip_ticket=";
     }
 
     /**
