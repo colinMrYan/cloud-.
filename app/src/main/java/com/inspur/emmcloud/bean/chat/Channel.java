@@ -7,7 +7,6 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.PinyinUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.richtext.markdown.MarkDown;
 import com.inspur.emmcloud.util.privates.ChatMsgContentUtils;
@@ -78,7 +77,7 @@ public class Channel implements Serializable {
             }
             if (obj.has("title")) {
                 this.title = obj.getString("title");
-                this.pyFull = PinyinUtils.getPingYin(title);
+//                this.pyFull = PinyinUtils.getPingYin(title);
             }
             if (obj.has("icon")) {
                 this.icon = obj.getString("icon");

@@ -89,10 +89,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import io.socket.client.Socket;
 
@@ -884,13 +882,13 @@ public class CommunicationV0Fragment extends Fragment {
 
         @Override
         protected void onPostExecute(List<Channel> addchannelList) {
+            getChannelMsg();
             if (!isHaveCreatGroupIcon) {
                 createGroupIcon(allchannelList);
             } else {
                 createGroupIcon(addchannelList);
             }
             getChannelInfoResult(allchannelList);
-            getChannelMsg();
         }
 
         @Override
@@ -1053,24 +1051,23 @@ public class CommunicationV0Fragment extends Fragment {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                Map<String, String> channelMap = new HashMap<String, String>();
-                for (int i = 0; i < searchChannelGroupList.size(); i++) {
-                    ChannelGroup channelGroup = searchChannelGroupList.get(i);
-                    channelMap.put(channelGroup.getCid(), channelGroup.getInputs());
-                    if (channelGroup.getType().equals("GROUP")) {
-                        ChannelGroupCacheUtils.saveChannelGroup(getActivity(), channelGroup);
-                    }
-                }
                 List<Channel> channelList = ChannelCacheUtils
                         .getCacheChannelList(getActivity());
-                for (int i = 0; i < channelList.size(); i++) {
-                    Channel channel = channelList.get(i);
-                    if (channel.getType().equals("SERVICE")) {
-                        int channelGroupIndex = searchChannelGroupList.indexOf(new ChannelGroup(channel));
-                        channel.setInputs(searchChannelGroupList.get(channelGroupIndex).getInputs());
-                        ChannelCacheUtils.saveChannel(getActivity(), channel);
+                List<ChannelGroup> channelGroupList = new ArrayList<>();
+                for (int i = 0; i < searchChannelGroupList.size(); i++) {
+                    ChannelGroup channelGroup = searchChannelGroupList.get(i);
+                    if (channelGroup.getType().equals("GROUP")) {
+                        channelGroupList.add(channelGroup);
+                    }else if (channelGroup.getType().equals("SERVICE")){
+                        int index = channelList.indexOf(new Channel(channelGroup.getCid()));
+                        if (index != -1){
+                            channelList.get(index).setInputs(channelGroup.getInputs());
+                        }
+
                     }
                 }
+                ChannelGroupCacheUtils.saveChannelGroupList(MyApplication.getInstance(), channelGroupList);
+                ChannelCacheUtils.saveChannelList(MyApplication.getInstance(), channelList);
             }
         }).start();
 
@@ -1175,7 +1172,7 @@ public class CommunicationV0Fragment extends Fragment {
                         bundle.putString("title", channelGroup.getChannelName());
                         IntentUtils.startActivity(getActivity(),
                                 ChannelV0Activity.class, bundle);
-                        ChannelGroupCacheUtils.saveChannelGroup(getActivity(),
+                        ChannelGroupCacheUtils.saveChannelGroup(MyApplication.getInstance(),
                                 channelGroup);
                         getChannelList();
                     }
@@ -1242,7 +1239,6 @@ public class CommunicationV0Fragment extends Fragment {
             if (getActivity() != null) {
                 cacheChannelTask = new CacheChannelTask();
                 cacheChannelTask.execute(getChannelListResult);
-
             }
 
         }

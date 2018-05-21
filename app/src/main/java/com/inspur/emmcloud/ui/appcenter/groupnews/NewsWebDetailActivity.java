@@ -615,7 +615,8 @@ public class NewsWebDetailActivity extends BaseActivity {
                     String uid = JSONUtils.getString(peopleObj,"pid","");
                     createDirectChannel(uid);
                 }
-            }else if (jsonObject.has("channelGroup")){
+            }
+            if (jsonObject.has("channelGroup")){
                 JSONArray channelGroupArray = JSONUtils.getJSONArray(jsonObject,"channelGroup",new JSONArray());
                 if (channelGroupArray.length() > 0) {
                     JSONObject cidObj = JSONUtils.getJSONObject(channelGroupArray,0,new JSONObject());
