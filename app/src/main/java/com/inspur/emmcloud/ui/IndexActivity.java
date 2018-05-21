@@ -59,13 +59,13 @@ import java.util.List;
  */
 public class IndexActivity extends IndexBaseActivity {
     private static final int SYNC_ALL_BASE_DATA_SUCCESS = 0;
+    private static final int CACHE
     private static final int RELOAD_WEB = 3;
     @ViewInject(R.id.preload_webview)
     private WebView webView;
     private WeakHandler handler;
     private boolean isHasCacheContact = false;
     private LoadingDialog loadingDlg;
-    private ContactUserCacheTask contactUserCacheTask;
     private long a = System.currentTimeMillis();
 
     @Override
@@ -294,7 +294,23 @@ public class IndexActivity extends IndexBaseActivity {
         EventBus.getDefault().unregister(this);
     }
 
-    class ContactUserCacheTask extends AsyncTask<byte[], Void, Void> {
+    class ContactUserThread extends Thread {
+        private byte[] result;
+        public ContactUserThread(byte[] result){
+            this.result = result;
+        }
+
+        @Override
+        public void run() {
+            try {
+                List<ContactProtoBuf.user> userList = ContactProtoBuf.users.parseFrom(result).getUsersList();
+                List<ContactUser> contactUserList = ContactUser.protoBufUserList2ContactUserList(userList);
+                ContactUserCacheUtils.saveContactUserList(contactUserList);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+
         @Override
         protected void onPostExecute(Void aVoid) {
             getAllChannelGroup();
@@ -383,9 +399,11 @@ public class IndexActivity extends IndexBaseActivity {
         }
     }
 
+
     public class WebService extends APIInterfaceInstance {
         @Override
         public void returnContactUserListSuccess(byte[] bytes) {
+            new Thread()
             contactUserCacheTask = new ContactUserCacheTask();
             contactUserCacheTask.execute(bytes);
             long b = System.currentTimeMillis();
