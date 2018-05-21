@@ -372,7 +372,7 @@ public class CommunicationFragment extends Fragment {
     private void createGroupIcon(List<Channel> channelList) {
         if (MyApplication.getInstance().getIsContactReady() && NetUtils.isNetworkConnected(MyApplication.getInstance(), false)) {
             isHaveCreatGroupIcon = true;
-            ChannelGroupIconUtils.getInstance().create(getActivity(), channelList,
+            ChannelGroupIconUtils.getInstance().create(MyApplication.getInstance(), channelList,
                     handler);
         }
     }
