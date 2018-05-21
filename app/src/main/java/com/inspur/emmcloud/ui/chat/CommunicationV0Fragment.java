@@ -438,9 +438,9 @@ public class CommunicationV0Fragment extends Fragment {
      * 为单个群组创建头像
      */
     private void createGroupIcon(List<Channel> channelList) {
-        if (((MyApplication) getActivity().getApplicationContext()).getIsContactReady() && NetUtils.isNetworkConnected(MyApplication.getInstance(), false)) {
+        if (MyApplication.getInstance().getIsContactReady() && NetUtils.isNetworkConnected(MyApplication.getInstance(), false)) {
             isHaveCreatGroupIcon = true;
-            ChannelGroupIconUtils.getInstance().create(getActivity(), channelList,
+            ChannelGroupIconUtils.getInstance().create(MyApplication.getInstance(), channelList,
                     handler);
         }
     }

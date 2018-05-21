@@ -120,7 +120,7 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
 		};
 		IntentFilter myIntentFilter = new IntentFilter();
 		myIntentFilter.addAction(Constant.ACTION_MEETING);
-		registerReceiver(meetingReceiver, myIntentFilter);
+		LocalBroadcastManager.getInstance(this).registerReceiver(meetingReceiver, myIntentFilter);
 	}
 
 	/**
