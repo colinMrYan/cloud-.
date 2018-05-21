@@ -84,10 +84,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import io.socket.client.Socket;
 
@@ -752,22 +750,23 @@ public class CommunicationFragment extends Fragment {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                Map<String, String> channelMap = new HashMap<>();
-                for (ChannelGroup channelGroup : searchChannelGroupList) {
-                    channelMap.put(channelGroup.getCid(), channelGroup.getInputs());
-                    if (channelGroup.getType().equals("GROUP")) {
-                        ChannelGroupCacheUtils.saveChannelGroup(getActivity(), channelGroup);
-                    }
-                }
                 List<Channel> channelList = ChannelCacheUtils
                         .getCacheChannelList(getActivity());
-                for (Channel channel : channelList) {
-                    if (channel.getType().equals("SERVICE")) {
-                        int channelGroupIndex = searchChannelGroupList.indexOf(new ChannelGroup(channel));
-                        channel.setInputs(searchChannelGroupList.get(channelGroupIndex).getInputs());
-                        ChannelCacheUtils.saveChannel(getActivity(), channel);
+                List<ChannelGroup> channelGroupList = new ArrayList<>();
+                for (int i = 0; i < searchChannelGroupList.size(); i++) {
+                    ChannelGroup channelGroup = searchChannelGroupList.get(i);
+                    if (channelGroup.getType().equals("GROUP")) {
+                        channelGroupList.add(channelGroup);
+                    }else if (channelGroup.getType().equals("SERVICE")){
+                        int index = channelList.indexOf(new Channel(channelGroup.getCid()));
+                        if (index != -1){
+                            channelList.get(index).setInputs(channelGroup.getInputs());
+                        }
+
                     }
                 }
+                ChannelGroupCacheUtils.saveChannelGroupList(MyApplication.getInstance(), channelGroupList);
+                ChannelCacheUtils.saveChannelList(MyApplication.getInstance(), channelList);
             }
         }).start();
 
