@@ -157,7 +157,7 @@ public class NewsWebDetailActivity extends BaseActivity {
         webSettings.setTextZoom(textSize);
         // 加载需要显示的网页
         if (!url.startsWith("http")) {
-            url = APIUri.getGroupNewsUrl(url);
+            url = APIUri.getGroupNewsHtmlUrl(url);
         }
         webView.loadUrl(url);
         // 设置Web视图
@@ -615,7 +615,8 @@ public class NewsWebDetailActivity extends BaseActivity {
                     String uid = JSONUtils.getString(peopleObj,"pid","");
                     createDirectChannel(uid);
                 }
-            }else if (jsonObject.has("channelGroup")){
+            }
+            if (jsonObject.has("channelGroup")){
                 JSONArray channelGroupArray = JSONUtils.getJSONArray(jsonObject,"channelGroup",new JSONArray());
                 if (channelGroupArray.length() > 0) {
                     JSONObject cidObj = JSONUtils.getJSONObject(channelGroupArray,0,new JSONObject());
