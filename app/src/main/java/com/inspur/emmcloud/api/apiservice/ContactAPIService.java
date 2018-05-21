@@ -164,12 +164,16 @@ public class ContactAPIService {
 		});
 	}
 
-	public void getContactUserList(){
-		String url = "https://emm.inspuronline.com/api/sys/v4.0/contacts/users";
+	public void getContactUserList(long lastQuetyTime){
+		String url = APIUri.getContactUserUrl();
 		RequestParams params = MyApplication.getInstance().getHttpRequestParams(url);
+		if (lastQuetyTime != 0) {
+			params.addParameter("lastQueryTime", lastQuetyTime);
+		}
 		x.http().post(params, new Callback.CommonCallback<byte[]>() {
 			@Override
 			public void onSuccess(byte[] bytes) {
+				LogUtils.jasonDebug("getContactUserList:"+new String(bytes));
 				apiInterface.returnContactUserListSuccess(bytes);
 			}
 
@@ -191,19 +195,22 @@ public class ContactAPIService {
 		});
 	}
 
-	public void getContactOrgList(){
-		String url = "https://emm.inspuronline.com/api/sys/v4.0/contacts/orgs";
+	public void getContactOrgList(long lastQuetyTime){
+		String url = APIUri.getContactOrgUrl();
 		RequestParams params =  MyApplication.getInstance().getHttpRequestParams(url);
+		if (lastQuetyTime != 0) {
+			params.addParameter("lastQueryTime", lastQuetyTime);
+		}
 		x.http().post(params, new Callback.CommonCallback<byte[]>() {
 			@Override
 			public void onSuccess(byte[] bytes) {
+				LogUtils.jasonDebug("getContactOrgList:"+new String(bytes));
 				apiInterface.returnContactOrgListSuccess(bytes);
 			}
 
 			@Override
 			public void onError(Throwable throwable, boolean b) {
 				apiInterface.returnContactOrgListFail("",-1);
-				LogUtils.jasonDebug("onError-----------------------------");
 			}
 
 			@Override

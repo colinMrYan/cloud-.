@@ -24,7 +24,7 @@ import java.util.concurrent.TimeoutException;
  * com.inspur.emmcloud.api.APICallback
  * create at 2016年11月7日 下午4:12:58
  */
-public abstract class APICallback2 implements CommonCallback<Byte[]> {
+public abstract class APICallback2 implements CommonCallback<byte[]> {
 
     private Context context;
     private String url;
@@ -101,10 +101,10 @@ public abstract class APICallback2 implements CommonCallback<Byte[]> {
      * @see org.xutils.common.Callback.CommonCallback#onSuccess(java.lang.Object)
      */
     @Override
-    public void onSuccess(Byte[] arg0) {
+    public void onSuccess(byte[] arg0) {
         // TODO Auto-generated method stub
         LogUtils.debug("HttpUtil", "url=" + url);
-        LogUtils.debug("HttpUtil", "result=" + arg0);
+        LogUtils.debug("HttpUtil", "result=" + new String(arg0));
         //Callback回调到回调处，出异常，则可能既调onSuccess又调OnError，加try为了将异常在此处捕获防止异常被吞，无法查找
         try {
             callbackSuccess(arg0);
@@ -114,7 +114,7 @@ public abstract class APICallback2 implements CommonCallback<Byte[]> {
         }
     }
 
-    public abstract void callbackSuccess(Byte[] arg0);
+    public abstract void callbackSuccess(byte[] arg0);
 
     public abstract void callbackFail(String error, int responseCode);
 

@@ -24,6 +24,10 @@ public class ContactOrg {
     @Column(name = "sortOrder")
     private int sortOrder= 0;
 
+    public ContactOrg(){
+
+    }
+
     public ContactOrg(String id, String name, String nameGlobal, String pinyin, String parentId, int sortOrder) {
         this.id = id;
         this.name = name;

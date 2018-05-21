@@ -178,7 +178,8 @@ public class DbCacheUtils {
     public static void deleteDb(Context context) {
         try {
             db.dropDb();
-            ContactCacheUtils.saveLastUpdateTime(context, "");
+            ContactUserCacheUtils.setLastQueryTime(0);
+            ContactOrgCacheUtils.setLastQueryTime(0);
             closeDb(context);
         } catch (Exception e) {
             // TODO: handle exception

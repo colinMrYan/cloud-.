@@ -1660,7 +1660,12 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnContactUserSuccess(String result) {
+    public void returnContactOrgListSuccess(byte[] bytes) {
+
+    }
+
+    @Override
+    public void returnContactOrgListFail(String error, int errorCode) {
 
     }
 }

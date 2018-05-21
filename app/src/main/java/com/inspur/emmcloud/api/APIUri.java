@@ -565,6 +565,22 @@ public class APIUri {
         return MyApplication.getInstance().getClusterEmm() + "api/sys/v3.0/contacts/get_all";
     }
 
+    /**
+     * 获取通讯录中的人员
+     * @return
+     */
+    public static String getContactUserUrl(){
+        return MyApplication.getInstance().getClusterEmm() + "api/sys/v4.0/contacts/users";
+    }
+
+    /**
+     * 获取通讯录中的组织
+     * @return
+     */
+    public static String getContactOrgUrl(){
+        return MyApplication.getInstance().getClusterEmm() + "api/sys/v4.0/contacts/orgs";
+    }
+
 
     /**
      * 行政审批验证密码

@@ -1,7 +1,6 @@
 package com.inspur.emmcloud.ui;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
@@ -16,6 +15,7 @@ import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.api.apiservice.ContactAPIService;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
 import com.inspur.emmcloud.bean.chat.GetAllRobotsResult;
+import com.inspur.emmcloud.bean.contact.ContactOrg;
 import com.inspur.emmcloud.bean.contact.ContactProtoBuf;
 import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
@@ -29,7 +29,6 @@ import com.inspur.emmcloud.service.PVCollectService;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppConfigUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ClientIDUtils;
@@ -38,14 +37,12 @@ import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.ReactNativeUtils;
 import com.inspur.emmcloud.util.privates.SplashPageUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
-import com.inspur.emmcloud.util.privates.cache.AppExceptionCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelGroupCacheUtils;
-import com.inspur.emmcloud.util.privates.cache.ContactCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.ContactOrgCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.RobotCacheUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.WeakHandler;
-import com.inspur.emmcloud.widget.WeakThread;
 
 import org.greenrobot.eventbus.EventBus;
 import org.xutils.view.annotation.ViewInject;
@@ -59,7 +56,7 @@ import java.util.List;
  */
 public class IndexActivity extends IndexBaseActivity {
     private static final int SYNC_ALL_BASE_DATA_SUCCESS = 0;
-    private static final int CACHE
+    private static final int CACHE_CONTACT_USER_SUCCESS = 1;
     private static final int RELOAD_WEB = 3;
     @ViewInject(R.id.preload_webview)
     private WebView webView;
@@ -98,13 +95,12 @@ public class IndexActivity extends IndexBaseActivity {
      * 初始化
      */
     private void getInitData() {
-        String contactLastUpdateTime = ContactCacheUtils
-                .getLastUpdateTime(IndexActivity.this);
-        isHasCacheContact = !StringUtils.isBlank(contactLastUpdateTime);
+        isHasCacheContact = (ContactUserCacheUtils.getLastQueryTime() == 0);
+        LogUtils.jasonDebug("ContactUserCacheUtils.getLastQueryTime()="+ContactUserCacheUtils.getLastQueryTime());
         if (!isHasCacheContact) {
             loadingDlg.show();
         }
-        getContactInfo();
+        getContactUser();
         getAllRobotInfo();
         getAppTabInfo();  //从服务端获取显示tab
         new SplashPageUtils(IndexActivity.this).update();//更新闪屏页面
@@ -228,13 +224,16 @@ public class IndexActivity extends IndexBaseActivity {
             @Override
             protected void handleMessage(Object o, Message msg) {
                 switch (msg.what) {
+                    case CACHE_CONTACT_USER_SUCCESS:
+                        getAllChannelGroup();
+                        break;
                     case SYNC_ALL_BASE_DATA_SUCCESS:
                         LoadingDialog.dimissDlg(loadingDlg);
                         MyApplication.getInstance()
                                 .setIsContactReady(true);
                         notifySyncAllBaseDataSuccess();
                         MyApplication.getInstance().startWebSocket(true);// 启动webSocket推送
-                        deleteIllegalUser();
+                        getContactOrg();
                         break;
                     case RELOAD_WEB:
                         if (webView != null) {
@@ -260,101 +259,101 @@ public class IndexActivity extends IndexBaseActivity {
 
     }
 
-    /**
-     * 清除数据库中非法用户
-     */
-    private void deleteIllegalUser() {
-        try {
-            boolean isHasDeletleIllegalUser = PreferencesByUserAndTanentUtils.getBoolean(getApplicationContext(), Constant.PREF_DELETE_ILLEGAL_USER, false);
-            if (!isHasDeletleIllegalUser) {
-                int illegalUserCount = ContactCacheUtils.deleteIllegalUser(getApplicationContext());
-                if (illegalUserCount != -1) {
-                    PreferencesByUserAndTanentUtils.putBoolean(getApplicationContext(), Constant.PREF_DELETE_ILLEGAL_USER, true);
-                }
-                if (illegalUserCount != 0) {
-                    AppExceptionCacheUtils.saveAppException(getApplicationContext(), 5, "", "通讯录删除无效用户个数" + illegalUserCount, 0);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         MyApplication.getInstance().setIndexActvityRunning(false);
-        if (contactUserCacheTask != null && !contactUserCacheTask.isCancelled() && contactUserCacheTask.getStatus() == AsyncTask.Status.RUNNING) {
-            contactUserCacheTask.cancel(true);
-            contactUserCacheTask = null;
-        }
         if (handler != null) {
             handler = null;
         }
         EventBus.getDefault().unregister(this);
+        super.onDestroy();
     }
 
-    class ContactUserThread extends Thread {
+    class CacheContactUserThread extends Thread {
         private byte[] result;
-        public ContactUserThread(byte[] result){
+
+        public CacheContactUserThread(byte[] result) {
             this.result = result;
         }
 
         @Override
         public void run() {
             try {
-                List<ContactProtoBuf.user> userList = ContactProtoBuf.users.parseFrom(result).getUsersList();
+                ContactProtoBuf.users users = ContactProtoBuf.users.parseFrom(result);
+                List<ContactProtoBuf.user> userList = users.getUsersList();
                 List<ContactUser> contactUserList = ContactUser.protoBufUserList2ContactUserList(userList);
                 ContactUserCacheUtils.saveContactUserList(contactUserList);
-            }catch (Exception e){
+                LogUtils.jasonDebug("users.getLastQueryTime()="+users.getLastQueryTime());
+                ContactUserCacheUtils.setLastQueryTime(users.getLastQueryTime());
+                if (handler != null) {
+                    handler.sendEmptyMessage(CACHE_CONTACT_USER_SUCCESS);
+                }
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            getAllChannelGroup();
-        }
-
-        @Override
-        protected Void doInBackground(byte[]... params) {
-            long b = System.currentTimeMillis();
-            LogUtils.jasonDebug("get----time000000000="+(b-a)/1000.0);
-            try {
-                List<ContactProtoBuf.user> userList = ContactProtoBuf.users.parseFrom(params[0]).getUsersList();
-                long c = System.currentTimeMillis();
-                List<ContactUser> contactUserList = ContactUser.protoBufUserList2ContactUserList(userList);
-                LogUtils.jasonDebug("xuliehua----time000000000="+(c-b)/1000.0);
-                long d = System.currentTimeMillis();
-                LogUtils.jasonDebug("contactUserList="+contactUserList.size());
-                ContactUserCacheUtils.saveContactUserList(contactUserList);
-                LogUtils.jasonDebug("存储时间----time000000000="+(System.currentTimeMillis()-d)/1000.0);
-                LogUtils.jasonDebug("总时间----time000000000="+(System.currentTimeMillis()-a)/1000.0);
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-            return null;
         }
     }
 
-    class ContactOrgCacheTask extends AsyncTask<byte[], Void, Void> {
+    class CacheContactOrgThread extends Thread {
+        private byte[] result;
+
+        public CacheContactOrgThread(byte[] result) {
+            this.result = result;
+        }
+
         @Override
-        protected Void doInBackground(byte[]... params) {
+        public void run() {
             try {
-                List<ContactProtoBuf.org> orgList = ContactProtoBuf.orgs.parseFrom(params[0]).getOrgsList();
-
-
-
-                List<ContactUser> contactUserList = ContactUser.protoBufUserList2ContactUserList(userList);
-                LogUtils.jasonDebug("contactUserList="+contactUserList.size());
-                ContactUserCacheUtils.saveContactUserList(contactUserList);
-            }catch (Exception e){
+                ContactProtoBuf.orgs orgs = ContactProtoBuf.orgs.parseFrom(result);
+                List<ContactProtoBuf.org> orgList = orgs.getOrgsList();
+                List<ContactOrg> contactOrgList = ContactOrg.protoBufOrgList2ContactOrgList(orgList);
+                ContactOrgCacheUtils.saveContactOrgList(contactOrgList);
+                LogUtils.jasonDebug("orgs.getLastQueryTime()="+orgs.getLastQueryTime());
+                ContactOrgCacheUtils.setLastQueryTime(orgs.getLastQueryTime());
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-            return null;
         }
     }
 
+
+    class CacheChannelGroupThread extends Thread {
+        private GetSearchChannelGroupResult getSearchChannelGroupResult;
+
+        public CacheChannelGroupThread(GetSearchChannelGroupResult getSearchChannelGroupResult) {
+            this.getSearchChannelGroupResult = getSearchChannelGroupResult;
+        }
+
+        @Override
+        public void run() {
+            try {
+                List<ChannelGroup> channelGroupList = getSearchChannelGroupResult
+                        .getSearchChannelGroupList();
+                ChannelGroupCacheUtils.clearChannelGroupList(getApplicationContext());
+                ChannelGroupCacheUtils.saveChannelGroupList(
+                        getApplicationContext(), channelGroupList);
+                if (handler != null) {
+                    handler.sendEmptyMessage(SYNC_ALL_BASE_DATA_SUCCESS);
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+    }
+
+    class CacheRobotInfoThread extends Thread {
+        private GetAllRobotsResult getAllBotInfoResultl;
+
+        public CacheRobotInfoThread(GetAllRobotsResult getAllBotInfoResult) {
+            this.getAllBotInfoResultl = getAllBotInfoResult;
+        }
+
+        @Override
+        public void run() {
+            RobotCacheUtils.clearRobotList(MyApplication.getInstance());
+            RobotCacheUtils.saveOrUpdateRobotList(MyApplication.getInstance(), getAllBotInfoResultl.getRobotList());
+        }
+    }
 
     /**
      * 获取所有的群组信息
@@ -372,18 +371,32 @@ public class IndexActivity extends IndexBaseActivity {
     }
 
     /**
-     * 获取通讯录信息
+     * 获取通讯录人员信息
      */
-    private void getContactInfo() {
+    private void getContactUser() {
         // TODO Auto-generated method stub
         ContactAPIService apiService = new ContactAPIService(IndexActivity.this);
         apiService.setAPIInterface(new WebService());
         if (NetUtils.isNetworkConnected(getApplicationContext(), false)) {
             MyApplication.getInstance().setIsContactReady(false);
-            apiService.getContactOrgList();
-            apiService.getContactUserList();
+            long contactUserLastQuetyTime = ContactUserCacheUtils.getLastQueryTime();
+            apiService.getContactUserList(contactUserLastQuetyTime);
         } else if (isHasCacheContact && handler != null) {
             handler.sendEmptyMessage(SYNC_ALL_BASE_DATA_SUCCESS);
+        }
+    }
+
+    /**
+     * 获取通讯录人员信息
+     */
+    private void getContactOrg() {
+        // TODO Auto-generated method stub
+        ContactAPIService apiService = new ContactAPIService(IndexActivity.this);
+        apiService.setAPIInterface(new WebService());
+        if (NetUtils.isNetworkConnected(getApplicationContext(), false)) {
+            MyApplication.getInstance().setIsContactReady(false);
+            long contactUserLastQuetyTime = ContactOrgCacheUtils.getLastQueryTime();
+            apiService.getContactOrgList(contactUserLastQuetyTime);
         }
     }
 
@@ -403,24 +416,7 @@ public class IndexActivity extends IndexBaseActivity {
     public class WebService extends APIInterfaceInstance {
         @Override
         public void returnContactUserListSuccess(byte[] bytes) {
-            new Thread()
-            contactUserCacheTask = new ContactUserCacheTask();
-            contactUserCacheTask.execute(bytes);
-            long b = System.currentTimeMillis();
-            LogUtils.jasonDebug("get----time000000000="+(b-a)/1000.0);
-            try {
-                List<ContactProtoBuf.user> userList = ContactProtoBuf.users.parseFrom(bytes).getUsersList();
-                long c = System.currentTimeMillis();
-                List<ContactUser> contactUserList = ContactUser.protoBufUserList2ContactUserList(userList);
-                LogUtils.jasonDebug("xuliehua----time000000000="+(c-b)/1000.0);
-                long d = System.currentTimeMillis();
-                LogUtils.jasonDebug("contactUserList="+contactUserList.size());
-                ContactUserCacheUtils.saveContactUserList(contactUserList);
-                LogUtils.jasonDebug("存储时间----time000000000="+(System.currentTimeMillis()-d)/1000.0);
-                LogUtils.jasonDebug("总时间----time000000000="+(System.currentTimeMillis()-a)/1000.0);
-            }catch (Exception e){
-                e.printStackTrace();
-            }
+            new CacheContactUserThread(bytes).start();
         }
 
         @Override
@@ -430,29 +426,19 @@ public class IndexActivity extends IndexBaseActivity {
         }
 
         @Override
+        public void returnContactOrgListSuccess(byte[] bytes) {
+            new CacheContactOrgThread(bytes).start();
+        }
+
+        @Override
+        public void returnContactOrgListFail(String error, int errorCode) {
+
+        }
+
+        @Override
         public void returnSearchChannelGroupSuccess(
                 final GetSearchChannelGroupResult getSearchChannelGroupResult) {
-            // TODO Auto-generated method stub
-            WeakThread weakThread = new WeakThread(IndexActivity.this) {
-                @Override
-                public void run() {
-                    super.run();
-                    try {
-                        List<ChannelGroup> channelGroupList = getSearchChannelGroupResult
-                                .getSearchChannelGroupList();
-                        ChannelGroupCacheUtils.clearChannelGroupList(getApplicationContext());
-                        ChannelGroupCacheUtils.saveChannelGroupList(
-                                getApplicationContext(), channelGroupList);
-                        if (handler != null) {
-                            handler.sendEmptyMessage(SYNC_ALL_BASE_DATA_SUCCESS);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-                }
-            };
-            weakThread.start();
+            new CacheChannelGroupThread(getSearchChannelGroupResult).start();
         }
 
         @Override
@@ -468,8 +454,7 @@ public class IndexActivity extends IndexBaseActivity {
         @Override
         public void returnAllRobotsSuccess(
                 final GetAllRobotsResult getAllBotInfoResult) {
-            RobotCacheUtils.clearRobotList(IndexActivity.this);
-            RobotCacheUtils.saveOrUpdateRobotList(IndexActivity.this, getAllBotInfoResult.getRobotList());
+            new CacheRobotInfoThread(getAllBotInfoResult).start();
         }
 
         @Override
