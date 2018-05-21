@@ -14,6 +14,7 @@ import com.inspur.emmcloud.adapter.VolumeFileAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
+import com.inspur.emmcloud.bean.system.ClearShareDataBean;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
@@ -21,6 +22,7 @@ import com.inspur.emmcloud.util.privates.VolumeFilePrivilegeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 
+import org.greenrobot.eventbus.EventBus;
 import org.xutils.view.annotation.ViewInject;
 
 import java.io.Serializable;
@@ -61,8 +63,6 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //设置此界面只显示文件夹
-        this.fileFilterType = VolumeFile.FILE_TYPE_DIRECTORY;
         isFunctionCopy = getIntent().getBooleanExtra("isFunctionCopy", true);
         initViews();
 
@@ -71,7 +71,6 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
     private void initViews() {
         apiService = new MyAppAPIService(this);
         apiService.setAPIInterface(new WebService());
-        noFileText.setText(R.string.no_directory);
         locationSelectToText.setText(isFunctionCopy ? R.string.copy_to_current_directory : R.string.move_to_current_directory);
         headerOperationLayout.setVisibility(View.GONE);
         locationSelectCancelText.setVisibility(View.VISIBLE);
@@ -80,13 +79,15 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
         adapter.setItemClickListener(new VolumeFileAdapter.MyItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                Intent intent = new Intent(getApplicationContext(), VolumeFileLocationSelectActivity.class);
                 VolumeFile volumeFile = volumeFileList.get(position);
-                Bundle bundle = getIntent().getExtras();
-                bundle.putString("currentDirAbsolutePath", currentDirAbsolutePath + volumeFile.getName() + "/");
-                bundle.putString("title",volumeFile.getName() );
-                intent.putExtras(bundle);
-                startActivityForResult(intent, isFunctionCopy?REQUEST_COPY_FILE:REQUEST_MOVE_FILE);
+                if (volumeFile.getType().equals(VolumeFile.FILE_TYPE_DIRECTORY)){
+                    Intent intent = new Intent(getApplicationContext(), VolumeFileLocationSelectActivity.class);
+                    Bundle bundle = getIntent().getExtras();
+                    bundle.putString("currentDirAbsolutePath", currentDirAbsolutePath + volumeFile.getName() + "/");
+                    bundle.putString("title",volumeFile.getName() );
+                    intent.putExtras(bundle);
+                    startActivityForResult(intent, isFunctionCopy?REQUEST_COPY_FILE:REQUEST_MOVE_FILE);
+                }
             }
 
             @Override
@@ -156,10 +157,12 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
      */
     private void goUploadPage() {
         if(NetUtils.isNetworkConnected(this)){
+            //发送到ShareVolume页面和VolumeHomePage页面
+            EventBus.getDefault().post(new ClearShareDataBean());
             Bundle bundle = new Bundle();
             bundle.putSerializable("volume", volume);
             bundle.putSerializable("currentDirAbsolutePath", currentDirAbsolutePath);
-            bundle.putSerializable("title", getString(R.string.volume_upload_file));
+            bundle.putSerializable("title", title);
             bundle.putSerializable("fileShareUriList", (Serializable) shareUriList);
             IntentUtils.startActivity(VolumeFileLocationSelectActivity.this, VolumeFileActivity.class, bundle);
             closeAllThisActivityInstance();

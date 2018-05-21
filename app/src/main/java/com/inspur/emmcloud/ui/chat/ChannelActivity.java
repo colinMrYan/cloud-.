@@ -21,15 +21,11 @@ import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.ChannelMessageAdapter;
-import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.APIUri;
-import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.bean.chat.Channel;
-import com.inspur.emmcloud.bean.chat.GetFileUploadResult;
 import com.inspur.emmcloud.bean.chat.GetNewMessagesResult;
-import com.inspur.emmcloud.bean.chat.GetNewsImgResult;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.UIMessage;
 import com.inspur.emmcloud.bean.contact.Contact;
@@ -55,6 +51,7 @@ import com.inspur.emmcloud.util.privates.DirectChannelUtils;
 import com.inspur.emmcloud.util.privates.GetPathFromUri4kitkat;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.MessageRecourceUploadUtils;
+import com.inspur.emmcloud.util.privates.UriUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
@@ -77,6 +74,7 @@ import org.xutils.view.annotation.ViewInject;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -116,7 +114,6 @@ public class ChannelActivity extends BaseActivity {
     private List<UIMessage> uiMessageList = new ArrayList<>();
     private ChannelMessageAdapter adapter;
     private Handler handler;
-    private ChatAPIService apiService;
     private boolean isSpecialUser = false; //小智机器人进行特殊处理
     private BroadcastReceiver sendActionMsgReceiver;
     private BroadcastReceiver refreshNameReceiver;
@@ -144,8 +141,6 @@ public class ChannelActivity extends BaseActivity {
 
     private void init() {
         loadingDlg = new LoadingDialog(this);
-        apiService = new ChatAPIService(ChannelActivity.this);
-        apiService.setAPIInterface(new WebService());
         cid = getIntent().getExtras().getString("cid");
         new ChannelInfoUtils().getChannelInfo(this, cid, loadingDlg, new ChannelInfoUtils.GetChannelInfoCallBack() {
             @Override
@@ -156,6 +151,7 @@ public class ChannelActivity extends BaseActivity {
                     getNewMsgOfChannel();
                 } else {
                     initViews();
+                    sendMsgFromShare();
                 }
             }
 
@@ -284,7 +280,7 @@ public class ChannelActivity extends BaseActivity {
     private void initMsgListView() {
         final List<Message> cacheMessageList = MessageCacheUtil.getHistoryMessageList(MyApplication.getInstance(), cid, null, 20);
         uiMessageList = UIMessage.MessageList2UIMessageList(cacheMessageList);
-        adapter = new ChannelMessageAdapter(ChannelActivity.this, apiService, channel.getType(), chatInputMenu);
+        adapter = new ChannelMessageAdapter(ChannelActivity.this, channel.getType(), chatInputMenu);
         adapter.setItemClickListener(new ChannelMessageAdapter.MyItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
@@ -317,6 +313,10 @@ public class ChannelActivity extends BaseActivity {
                         IntentUtils.startActivity(ChannelActivity.this,
                                 ChannelMessageDetailActivity.class, bundle);
                         break;
+                    case "extended/links":
+                        String url = message.getMsgContentExtendedLinks().getUrl();
+                        UriUtils.openUrl(ChannelActivity.this, url);
+                        break;
                     default:
                         break;
                 }
@@ -337,6 +337,27 @@ public class ChannelActivity extends BaseActivity {
         });
     }
 
+    /**
+     * 从外部分享过来
+     */
+    private void sendMsgFromShare() {
+        if (getIntent().hasExtra("share_type")) {
+            String type = getIntent().getStringExtra("share_type");
+            switch (type) {
+                case "image":
+                case "file":
+                    List<String> pathList = getIntent().getStringArrayListExtra("share_paths");
+                    for (String url : pathList) {
+                        uploadResFileAndSendMessage(url, type.equals("file"));
+                    }
+                    break;
+                default:
+                    break;
+            }
+
+        }
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode,
@@ -346,7 +367,7 @@ public class ChannelActivity extends BaseActivity {
             // 文件管理器返回
             if (requestCode == CHOOSE_FILE
                     && NetUtils.isNetworkConnected(MyApplication.getInstance())) {
-                String filePath = GetPathFromUri4kitkat.getPath(MyApplication.getInstance(), data.getData());
+                String filePath = GetPathFromUri4kitkat.getPathByUri(MyApplication.getInstance(), data.getData());
                 File file = new File(filePath);
                 if (StringUtils.isBlank(FileUtils.getSuffix(file))) {
                     ToastUtils.show(MyApplication.getInstance(),
@@ -443,9 +464,7 @@ public class ChannelActivity extends BaseActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveWSMessage(EventMessage eventMessage) {
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE)) {
-            LogUtils.jasonDebug("00000000000000");
             if (eventMessage.getStatus() == 200) {
-                LogUtils.jasonDebug("11111111111111111111");
                 String content = eventMessage.getContent();
                 JSONObject contentobj = JSONUtils.getJSONObject(content);
                 Message receivedWSMessage = new Message(contentobj);
@@ -475,7 +494,7 @@ public class ChannelActivity extends BaseActivity {
                     }
                     msgListView.MoveToPosition(uiMessageList.size() - 1);
                 }
-            }else {
+            } else {
                 setMessageSendFailStatus(String.valueOf(eventMessage.getExtra()));
             }
         }
@@ -504,13 +523,16 @@ public class ChannelActivity extends BaseActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveHistoryMessage(EventMessage eventMessage) {
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_GET_HISTORY_MESSAGE)) {
+            LoadingDialog.dimissDlg(loadingDlg);
+            if (swipeRefreshLayout.isRefreshing()) {
+                swipeRefreshLayout.setRefreshing(false);
+            }
             if (eventMessage.getStatus() == 200) {
                 String content = eventMessage.getContent();
                 GetNewMessagesResult getNewMessagesResult = new GetNewMessagesResult(content);
                 final List<Message> historyMessageList = getNewMessagesResult
                         .getNewMessageList(cid);
                 if (adapter != null) {
-                    swipeRefreshLayout.setRefreshing(false);
                     if (historyMessageList.size() > 0) {
                         MessageCacheUtil.saveMessageList(MyApplication.getInstance(), historyMessageList, uiMessageList.get(0).getCreationDate());
                         List<UIMessage> historyUIMessageList = UIMessage.MessageList2UIMessageList(historyMessageList);
@@ -524,18 +546,15 @@ public class ChannelActivity extends BaseActivity {
                         MessageCacheUtil.saveMessageList(MyApplication.getInstance(), historyMessageList, null);
                         MessageReadCreationDateCacheUtils.saveMessageReadCreationDate(MyApplication.getInstance(), cid, historyMessageList.get(historyMessageList.size() - 1).getCreationDate());
                     }
-                    initViews();
                     setChannelMsgRead();
                 }
             } else {
-                LoadingDialog.dimissDlg(loadingDlg);
-                if (swipeRefreshLayout.isRefreshing()) {
-                    swipeRefreshLayout.setRefreshing(false);
-                }
-                if (adapter == null) {
-                    initViews();
-                }
                 WebServiceMiddleUtils.hand(ChannelActivity.this, eventMessage.getContent(), eventMessage.getStatus());
+            }
+
+            if (adapter == null) {
+                initViews();
+                sendMsgFromShare();
             }
 
         }
@@ -544,20 +563,28 @@ public class ChannelActivity extends BaseActivity {
 
     //接收到离线消息
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReiceveWSOfflineMessage(EventMessage eventMessage){
-        if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_GET_OFFLINE_WS_MESSAGE)){
-            if(eventMessage.getStatus() == 200){
+    public void onReiceveWSOfflineMessage(EventMessage eventMessage) {
+        if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_GET_OFFLINE_WS_MESSAGE)) {
+            if (eventMessage.getStatus() == 200) {
                 String content = eventMessage.getContent();
                 GetNewMessagesResult getNewMessagesResult = new GetNewMessagesResult(content);
-                List<Message>offlineMessageList = getNewMessagesResult.getNewMessageList(cid);
-                if (offlineMessageList.size()>0){
-                    int currentPostion = uiMessageList.size()-1;
+                List<Message> offlineMessageList = getNewMessagesResult.getNewMessageList(cid);
+                if (offlineMessageList.size() > 0) {
+                    Iterator<Message> it = offlineMessageList.iterator();
+                    //去重
+                    while (it.hasNext()) {
+                        Message offlineMessage = it.next();
+                        UIMessage uiMessage = new UIMessage(offlineMessage.getId());
+                        if (uiMessageList.contains(uiMessage)){
+                            it.remove();
+                        }
+                    }
+                    int currentPostion = uiMessageList.size() - 1;
                     List<UIMessage> offlineUIMessageList = UIMessage.MessageList2UIMessageList(offlineMessageList);
                     uiMessageList.addAll(uiMessageList.size(), offlineUIMessageList);
                     adapter.setMessageList(uiMessageList);
                     adapter.notifyItemRangeInserted(uiMessageList.size(), offlineUIMessageList.size());
                     msgListView.MoveToPosition(currentPostion);
-
                 }
 
             }
@@ -743,7 +770,6 @@ public class ChannelActivity extends BaseActivity {
 
     }
 
-
     /**
      * 获取此频道的最新消息
      */
@@ -753,86 +779,5 @@ public class ChannelActivity extends BaseActivity {
         }
     }
 
-
-    private class WebService extends APIInterfaceInstance {
-
-        @Override
-        public void returnUploadResImgSuccess(
-                GetNewsImgResult getNewsImgResult, String fakeMessageId) {
-            String newsImgBody = getNewsImgResult.getImgMsgBody();
-            //sendMsg(newsImgBody, "res_image", fakeMessageId);
-        }
-
-        @Override
-        public void returnUploadResImgFail(String error, int errorCode, String fakeMessageId) {
-            setMessageSendFailStatus(fakeMessageId);
-        }
-
-
-        @Override
-        public void returnUpLoadResFileSuccess(
-                GetFileUploadResult getFileUploadResult, String fakeMessageId) {
-            String fileMsgBody = getFileUploadResult.getFileMsgBody();
-            //sendMsg(fileMsgBody, "res_file", fakeMessageId);
-        }
-
-        @Override
-        public void returnUpLoadResFileFail(String error, int errorCode, String fakeMessageId) {
-            setMessageSendFailStatus(fakeMessageId);
-        }
-
-        @Override
-        public void returnNewMessagesSuccess(GetNewMessagesResult getNewMessagesResult) {
-            final List<Message> historyMessageList = getNewMessagesResult
-                    .getNewMessageList(cid);
-            if (swipeRefreshLayout.isRefreshing()) {
-                swipeRefreshLayout.setRefreshing(false);
-                if (historyMessageList.size() > 0) {
-                    MessageCacheUtil.saveMessageList(MyApplication.getInstance(), historyMessageList, uiMessageList.get(0).getCreationDate());
-                    List<UIMessage> historyUIMessageList = UIMessage.MessageList2UIMessageList(historyMessageList);
-                    uiMessageList.addAll(0, historyUIMessageList);
-                    adapter.setMessageList(uiMessageList);
-                    adapter.notifyItemRangeInserted(0, historyMessageList.size());
-                    msgListView.MoveToPosition(historyMessageList.size() - 1);
-                }
-            } else {
-                LoadingDialog.dimissDlg(loadingDlg);
-                if (historyMessageList.size() > 0) {
-                    MessageCacheUtil.saveMessageList(MyApplication.getInstance(), historyMessageList, null);
-                    MessageReadCreationDateCacheUtils.saveMessageReadCreationDate(MyApplication.getInstance(), cid, historyMessageList.get(historyMessageList.size() - 1).getCreationDate());
-                }
-                initViews();
-                setChannelMsgRead();
-            }
-
-        }
-
-        @Override
-        public void returnNewMessagesFail(String error, int errorCode) {
-            LoadingDialog.dimissDlg(loadingDlg);
-            if (swipeRefreshLayout.isRefreshing()) {
-                swipeRefreshLayout.setRefreshing(false);
-                WebServiceMiddleUtils.hand(ChannelActivity.this, error, errorCode);
-            } else {
-                initViews();
-            }
-        }
-
-//        @Override
-//        public void returnMsgSuccess(GetMsgResult getMsgResult) {
-//            Msg msg = getMsgResult.getMsg();
-//            if (msg != null && ChannelActivity.this != null) {
-//                MsgCacheUtil.saveMsg(ChannelActivity.this, msg);
-//                adapter.setMsgList(uiMessageList);
-//                adapter.notifyDataSetChanged();
-//            }
-//        }
-//
-//        @Override
-//        public void returnMsgFail(String error, int errorCode) {
-//            WebServiceMiddleUtils.hand(ChannelActivity.this, error, errorCode);
-//        }
-
-    }
 
 }

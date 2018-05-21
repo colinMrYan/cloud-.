@@ -21,7 +21,7 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.WSAPIService;
-import com.inspur.emmcloud.bean.chat.GetMsgCommentCountResult;
+import com.inspur.emmcloud.bean.chat.GetMessageCommentCountResult;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.system.EventMessage;
 import com.inspur.emmcloud.config.Constant;
@@ -397,14 +397,14 @@ public class ImagePagerActivity extends BaseFragmentActivity {
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_GET_MESSAGE_COMMENT_COUNT)) {
             if (eventMessage.getStatus() == 200){
                 String content = eventMessage.getContent();
-                GetMsgCommentCountResult getMsgCommentCountResult = new GetMsgCommentCountResult(content);
-                int count = getMsgCommentCountResult.getCount();
+                GetMessageCommentCountResult getMessageCommentCountResult = new GetMessageCommentCountResult(content);
+                int number = getMessageCommentCountResult.getNumber();
                 String mid = String.valueOf(eventMessage.getExtra());
                 if (mid != null) {
-                    commentCountMap.put(mid, count);
+                    commentCountMap.put(mid, number);
                     String currentMid = imgTypeMessageList.get(pagerPosition).getId();
                     if (mid.equals(currentMid)) {
-                        commentCountText.setText(count + "");
+                        commentCountText.setText(number + "");
                     }
                 }
             }
@@ -424,7 +424,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 
 //	private class WebService extends APIInterfaceInstance {
 //		@Override
-//		public void returnMsgCommentCountSuccess(GetMsgCommentCountResult getMsgCommentCountResult, String mid) {
+//		public void returnMsgCommentCountSuccess(GetMessageCommentCountResult getMsgCommentCountResult, String mid) {
 //			int count = getMsgCommentCountResult.getCount();
 //			commentCountMap.put(mid, count);
 //			String currentMid = imgTypeMessageList.get(pagerPosition).getMid();

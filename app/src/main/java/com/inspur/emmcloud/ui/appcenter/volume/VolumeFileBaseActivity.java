@@ -83,9 +83,6 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
     @ViewInject(R.id.data_blank_layout)
     protected LinearLayout dataBlankLayout;
 
-    @ViewInject(R.id.no_file_text)
-    protected TextView noFileText;
-
     protected LoadingDialog loadingDlg;
     protected VolumeFileAdapter adapter;
     protected List<VolumeFile> volumeFileList = new ArrayList<>();//云盘列表
@@ -98,6 +95,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
     protected String fileFilterType = "";  //显示的文件类型
     protected boolean isShowFileUploading = false;  //是否显示正在上传的文件
     protected GetVolumeFileListResult getVolumeFileListResult;
+    protected String title = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,7 +112,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
         volume = (Volume) getIntent().getSerializableExtra("volume");
         currentDirAbsolutePath = getIntent().getExtras().getString("currentDirAbsolutePath", "/");
         fileFilterType = getIntent().getExtras().getString("fileFilterType", "");
-        String title = getIntent().getExtras().getString("title", "");
+        title = getIntent().getExtras().getString("title", "");
         headerText.setVisibility(View.VISIBLE);
         headerText.setText(title);
         initRecycleView();

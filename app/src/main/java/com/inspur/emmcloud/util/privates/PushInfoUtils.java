@@ -61,7 +61,7 @@ public class PushInfoUtils {
     private void callbackClientIdFail() {
         if (callBack != null) {
             String chatClientId = PreferencesByUserAndTanentUtils.getString(context, Constant.PREF_CHAT_CLIENTID, "");
-            if (StringUtils.isBlank(chatClientId)) {
+            if (!StringUtils.isBlank(chatClientId)) {
                 callBack.getChatClientIdSuccess(chatClientId);
             } else {
                 callBack.getChatClientIdFail();

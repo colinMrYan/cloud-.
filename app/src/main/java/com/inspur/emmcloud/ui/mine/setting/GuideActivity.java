@@ -55,11 +55,21 @@ public class GuideActivity extends BaseActivity {
     private void initView() {
         // TODO Auto-generated method stub
         List<Integer> splashResIdList = new ArrayList<>();
-        splashResIdList.add(R.drawable.guide_page_1);
-        splashResIdList.add(R.drawable.guide_page_2);
-        splashResIdList.add(R.drawable.guide_page_3);
-        splashResIdList.add(R.drawable.guide_page_4);
-        splashResIdList.add(R.drawable.guide_page_5);
+        //刚安装App初次进入
+        if (PreferencesUtils.getBoolean(getApplicationContext(),"isFirst", false)){
+            splashResIdList.add(R.drawable.guide_page_1);
+            splashResIdList.add(R.drawable.guide_page_2);
+            splashResIdList.add(R.drawable.guide_page_3);
+            splashResIdList.add(R.drawable.guide_page_4);
+            splashResIdList.add(R.drawable.guide_page_5);
+        }else {//版本升级进入
+            splashResIdList.add(R.drawable.guide_page_1);
+            splashResIdList.add(R.drawable.guide_page_2);
+            splashResIdList.add(R.drawable.guide_page_3);
+            splashResIdList.add(R.drawable.guide_page_4);
+            splashResIdList.add(R.drawable.guide_page_5);
+        }
+
         for (int i = 0; i < splashResIdList.size(); i++) {
             View guideView = LayoutInflater.from(this).inflate(R.layout.view_pager_guide, null);
             ImageView img = (ImageView) guideView.findViewById(R.id.img);
@@ -113,6 +123,17 @@ public class GuideActivity extends BaseActivity {
     }
 
     /**
+     * 转到LoginActivity
+     */
+    private void startLoginActivity(){
+        // 存入当前版本号,方便判断新功能介绍显示的时机
+        String appVersion = AppUtils.getVersion(GuideActivity.this);
+        PreferencesUtils.putString(getApplicationContext(), "previousVersion",
+                appVersion);
+        IntentUtils.startActivity(GuideActivity.this,LoginActivity.class,true);
+    }
+
+    /**
      * 获取用户的个人信息
      */
     private void getUserProfile() {
@@ -121,6 +142,8 @@ public class GuideActivity extends BaseActivity {
             LoginAPIService apiServices = new LoginAPIService(GuideActivity.this);
             apiServices.setAPIInterface(new WebService());
             apiServices.getMyInfo();
+        }else{
+            startLoginActivity();
         }
     }
 
@@ -132,13 +155,12 @@ public class GuideActivity extends BaseActivity {
             saveNewProfileAndOldProfile(getMyInfoResult.getResponse());
             MyApplication.getInstance().initTanent();
             startIntentActivity();
-
         }
 
         @Override
         public void returnMyInfoFail(String error, int errorCode) {
             LoadingDialog.dimissDlg(loadingDialog);
-            startIntentActivity();
+            startLoginActivity();
         }
     }
 

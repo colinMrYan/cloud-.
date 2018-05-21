@@ -19,7 +19,8 @@ public class MsgContentComment {
     public MsgContentComment(String content){
         JSONObject object = JSONUtils.getJSONObject(content);
         text = JSONUtils.getString(object,"text","");
-        mentionsMap = JSONUtils.parseKeyAndValueToMap(object);
+        JSONObject mentionObj = JSONUtils.getJSONObject(object, "mentions", null);
+        mentionsMap = JSONUtils.parseKeyAndValueToMap(mentionObj);
         message= JSONUtils.getString(object,"message","");
     }
 

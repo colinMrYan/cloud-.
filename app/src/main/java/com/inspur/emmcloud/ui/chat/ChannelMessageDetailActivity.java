@@ -384,6 +384,7 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
 
     @Override
     public void onRefresh() {
+        swipeRefreshLayout.setRefreshing(false);
         getComment();
     }
 

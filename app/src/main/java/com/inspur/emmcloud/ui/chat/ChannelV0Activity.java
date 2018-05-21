@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.ChannelMsgAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
@@ -50,6 +51,7 @@ import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ChannelInfoUtils;
 import com.inspur.emmcloud.util.privates.ConbineMsg;
 import com.inspur.emmcloud.util.privates.DirectChannelUtils;
+import com.inspur.emmcloud.util.privates.GetPathFromUri4kitkat;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.MsgRecourceUploadUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
@@ -153,6 +155,7 @@ public class ChannelV0Activity extends BaseActivity {
                     getNewMsgOfChannel();
                 } else {
                     initViews();
+                    sendMsgFromShare();
                 }
             }
 
@@ -176,6 +179,29 @@ public class ChannelV0Activity extends BaseActivity {
         initMsgListView();
         handMessage();
         registeMsgReceiver();
+    }
+    /**
+     * 从外部分享过来
+     */
+    private void sendMsgFromShare() {
+        if (getIntent().hasExtra("share_type")) {
+            String type = getIntent().getStringExtra("share_type");
+            switch (type) {
+                case "image":
+                case "file":
+                    List<String> pathList = getIntent().getStringArrayListExtra("share_paths");
+                    for (String url : pathList) {
+                        Msg msg = type.equals("file")?MsgRecourceUploadUtils.uploadResFile(
+                                MyApplication.getInstance(), url, apiService):MsgRecourceUploadUtils.uploadResImg(
+                               MyApplication.getInstance(), url, apiService);
+                        addLocalMessage(msg);
+                    }
+                    break;
+                default:
+                    break;
+            }
+
+        }
     }
 
     /**
@@ -399,8 +425,9 @@ public class ChannelV0Activity extends BaseActivity {
             // 文件管理器返回
             if (requestCode == CHOOSE_FILE
                     && NetUtils.isNetworkConnected(getApplicationContext())) {
+                String filePath = GetPathFromUri4kitkat.getPathByUri(MyApplication.getInstance(),data.getData());
                 Msg localMsg = MsgRecourceUploadUtils.uploadResFile(
-                        ChannelV0Activity.this, data, apiService);
+                        ChannelV0Activity.this, filePath, apiService);
                 addLocalMessage(localMsg);
                 //拍照返回
             } else if (requestCode == CAMERA_RESULT
@@ -828,6 +855,7 @@ public class ChannelV0Activity extends BaseActivity {
                 }
                 initViews();
                 setChannelMsgRead();
+                sendMsgFromShare();
             }
 
         }
@@ -840,6 +868,7 @@ public class ChannelV0Activity extends BaseActivity {
                 WebServiceMiddleUtils.hand(ChannelV0Activity.this, error, errorCode);
             } else {
                 initViews();
+                sendMsgFromShare();
             }
         }
 

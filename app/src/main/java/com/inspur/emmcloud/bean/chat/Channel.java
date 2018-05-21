@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.bean.chat;
 
 import android.content.Context;
+import android.text.SpannableString;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -9,6 +10,7 @@ import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.PinyinUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.richtext.markdown.MarkDown;
+import com.inspur.emmcloud.util.privates.ChatMsgContentUtils;
 import com.inspur.emmcloud.util.privates.DirectChannelUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactCacheUtils;
@@ -259,10 +261,15 @@ public class Channel implements Serializable {
             }
             switch (messageType) {
                 case "text/plain":
-                    newMsgContent = fromUserName + message.getMsgContentTextPlain().getText();
+                    newMsgContent = fromUserName + ChatMsgContentUtils.mentionsAndUrl2Span(context, message.getMsgContentTextPlain().getText(), message.getMsgContentTextPlain().getMentionsMap()).toString();
                     break;
                 case "text/markdown":
-                    newMsgContent = fromUserName + message.getMsgContentTextMarkdown().getText();
+                    SpannableString spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(context, message.getMsgContentTextMarkdown().getText(), message.getMsgContentTextMarkdown().getMentionsMap());
+                    String markdownString =spannableString.toString();
+                    if (!StringUtils.isBlank(markdownString)){
+                        markdownString = MarkDown.fromMarkdown(markdownString);
+                    }
+                    newMsgContent = fromUserName + markdownString;
                     break;
                 case "comment/text-plain":
                     newMsgContent = fromUserName + context.getString(R.string.send_a_comment);
