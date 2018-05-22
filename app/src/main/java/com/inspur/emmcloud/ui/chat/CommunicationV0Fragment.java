@@ -39,6 +39,7 @@ import com.inspur.emmcloud.bean.chat.EventMessageUnReadCount;
 import com.inspur.emmcloud.bean.chat.GetChannelListResult;
 import com.inspur.emmcloud.bean.chat.GetNewMsgsResult;
 import com.inspur.emmcloud.bean.chat.MatheSet;
+import com.inspur.emmcloud.bean.chat.MessageReadCreationDate;
 import com.inspur.emmcloud.bean.chat.Msg;
 import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.system.AppTabAutoBean;
@@ -52,7 +53,6 @@ import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.AppTitleUtils;
@@ -69,9 +69,10 @@ import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelOperationCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.DbCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.MessageMatheSetCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MsgCacheUtil;
-import com.inspur.emmcloud.util.privates.cache.MsgMatheSetCacheUtils;
-import com.inspur.emmcloud.util.privates.cache.MsgReadIDCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.MsgReadCreationDateCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.widget.CircleImageView;
 import com.inspur.emmcloud.widget.WeakThread;
@@ -426,7 +427,7 @@ public class CommunicationV0Fragment extends Fragment {
         List<Channel> channelList = ChannelCacheUtils
                 .getCacheChannelList(getActivity());
         for (Channel channel : channelList) {
-            List<Msg> newMsgList = MsgCacheUtil.getHistoryMsgList(getActivity(), channel.getCid(), "",
+            List<Msg> newMsgList = MsgCacheUtil.getHistoryMsgList(getActivity(), channel.getCid(), null,
                     15);
             channel.setNewMsgList(getActivity().getApplicationContext(), newMsgList);
         }
@@ -466,7 +467,7 @@ public class CommunicationV0Fragment extends Fragment {
                                 it.remove();
                             }
                             channel.setIsSetTop(false);
-                            int unReadCount = MsgReadIDCacheUtils.getNotReadMsgCount(
+                            int unReadCount = MsgReadCreationDateCacheUtils.getNotReadMessageCount(
                                     getActivity(), channel.getCid());
                             channel.setUnReadCount(unReadCount);
                             setChannelDisplayTitle(channel);
@@ -602,24 +603,22 @@ public class CommunicationV0Fragment extends Fragment {
      */
     private void cacheReceiveMsg(Channel receiveMsgChannel, Msg receivedMsg) {
         // TODO Auto-generated method stub
-        Msg channelNewMsg = MsgCacheUtil.getNewMsg(getActivity(),
+        Msg channelNewMsg = MsgCacheUtil.getNewMsg(MyApplication.getInstance(),
                 receivedMsg.getCid());
         MsgCacheUtil.saveMsg(getActivity(), receivedMsg);
         if (channelNewMsg == null) {
-            MsgMatheSetCacheUtils.add(getActivity(),
+            MessageMatheSetCacheUtils.add(MyApplication.getInstance(),
                     receiveMsgChannel.getCid(),
-                    new MatheSet(receivedMsg.getMid(), receivedMsg.getMid()));
+                    new MatheSet(receivedMsg.getTime(), receivedMsg.getTime()));
         } else {
-            MsgMatheSetCacheUtils.add(getActivity(),
+            MessageMatheSetCacheUtils.add(MyApplication.getInstance(),
                     receiveMsgChannel.getCid(),
-                    new MatheSet(channelNewMsg.getMid(), receivedMsg.getMid()));
+                    new MatheSet(channelNewMsg.getTime(), receivedMsg.getTime()));
         }
-        String userID = PreferencesUtils.getString(getActivity(), "userID");
-        boolean isMyMsg = receivedMsg.getUid().equals(userID);
         /** 判断是否是当前查看的频道的信息或者自己发出的信息 **/
-        if (isMyMsg) {
-            MsgReadIDCacheUtils.saveReadedMsg(getActivity(),
-                    receivedMsg.getCid(), receivedMsg.getMid());
+        if (receivedMsg.getUid().equals(MyApplication.getInstance().getUid())) {
+            MsgReadCreationDateCacheUtils.saveMessageReadCreationDate(MyApplication.getInstance(),
+                    receivedMsg.getCid(), receivedMsg.getTime());
         }
 
     }
@@ -662,8 +661,8 @@ public class CommunicationV0Fragment extends Fragment {
      */
     private void setChannelAllMsgRead(Channel channel) {
         // TODO Auto-generated method stub
-        MsgReadIDCacheUtils.saveReadedMsg(getActivity(),
-                channel.getCid(), channel.getNewestMid());
+        MsgReadCreationDateCacheUtils.saveMessageReadCreationDate(MyApplication.getInstance(),
+                channel.getCid(), channel.getMsgLastUpdate());
         int position = displayChannelList.indexOf(channel);
         displayChannelList.get(position).setUnReadCount(0);
         View childAt = msgListView.getChildAt(position
@@ -711,11 +710,11 @@ public class CommunicationV0Fragment extends Fragment {
                                     getActivity(), displayChannelList.get(position)
                                             .getCid(), true);
                             // 当隐藏会话时，把该会话的所有消息置为已读
-                            MsgReadIDCacheUtils
-                                    .saveReadedMsg(getActivity(),
+                            MsgReadCreationDateCacheUtils
+                                    .saveMessageReadCreationDate(MyApplication.getInstance(),
                                             displayChannelList.get(position)
                                                     .getCid(), displayChannelList
-                                                    .get(position).getNewestMid());
+                                                    .get(position).getMsgLastUpdate());
                             displayChannelList.remove(position);
                             displayData();
                         }
@@ -902,6 +901,7 @@ public class CommunicationV0Fragment extends Fragment {
             addchannelList.removeAll(cacheChannelList);
             ChannelCacheUtils.clearChannel(getActivity());
             ChannelCacheUtils.saveChannelList(getActivity(), allchannelList);
+            firstEnterToSetAllChannelMsgRead(allchannelList);
             return addchannelList;
         }
     }
@@ -923,12 +923,12 @@ public class CommunicationV0Fragment extends Fragment {
                         String cid = channelList.get(i).getCid();
                         List<Msg> newMsgList = getNewMsgsResult.getNewMsgList(cid);
                         if (newMsgList.size() > 0) {
-                            MsgCacheUtil.saveMsgList(getActivity(), newMsgList, ""); // 获取的消息需要缓存
+                            MsgCacheUtil.saveMsgList(getActivity(), newMsgList, null); // 获取的消息需要缓存
                             // 当会话中最后一条消息为自己发出的时候，将此消息存入已读消息列表，解决最新消息为自己发出，仍识别为未读的问题
                             if (newMsgList.get(newMsgList.size() - 1).getUid()
                                     .equals(myUid)) {
-                                MsgReadIDCacheUtils.saveReadedMsg(getActivity(), cid,
-                                        newMsgList.get(newMsgList.size() - 1).getMid());
+                                MsgReadCreationDateCacheUtils.saveMessageReadCreationDate(MyApplication.getInstance(), cid,
+                                        newMsgList.get(newMsgList.size() - 1).getTime());
                             }
                         }
                     }
@@ -976,8 +976,8 @@ public class CommunicationV0Fragment extends Fragment {
                     break;
                 case "set_channel_message_read":
                     String cid = intent.getExtras().getString("cid");
-                    String mid = intent.getExtras().getString("mid");
-                    setChannelMsgRead(cid, mid);
+                    long messageCreationDate = intent.getExtras().getLong("messageCreationDate");
+                    setChannelMsgRead(cid, messageCreationDate);
                     break;
                 default:
                     break;
@@ -1011,13 +1011,27 @@ public class CommunicationV0Fragment extends Fragment {
      */
     private void setAllChannelMsgRead() {
         // TODO Auto-generated method stub
-        for (int i = 0; i < displayChannelList.size(); i++) {
-            Channel channel = displayChannelList.get(i);
-            MsgReadIDCacheUtils.saveReadedMsg(getActivity(), channel.getCid(),
-                    channel.getNewestMid());
+        List<MessageReadCreationDate> MessageReadCreationDateList = new ArrayList<>();
+        for (Channel channel : displayChannelList) {
+            MessageReadCreationDateList.add(new MessageReadCreationDate(channel.getCid(),channel.getMsgLastUpdate()));
             channel.setUnReadCount(0);
         }
+        MsgReadCreationDateCacheUtils.saveMessageReadCreationDateList(MyApplication.getInstance(), MessageReadCreationDateList);
         displayData();
+    }
+
+    /**
+     * 初始进入时将所有消息置为已读
+     * @param channelList
+     */
+    private void firstEnterToSetAllChannelMsgRead(List<Channel> channelList){
+        if (!DbCacheUtils.tableIsExist("MessageReadCreationDate")){
+            List<MessageReadCreationDate> MessageReadCreationDateList = new ArrayList<>();
+            for (Channel channel:channelList) {
+                MessageReadCreationDateList.add(new MessageReadCreationDate(channel.getCid(),System.currentTimeMillis()));
+            }
+            MsgReadCreationDateCacheUtils.saveMessageReadCreationDateList(MyApplication.getInstance(), MessageReadCreationDateList);
+        }
     }
 
     /**
@@ -1026,9 +1040,9 @@ public class CommunicationV0Fragment extends Fragment {
      * @param cid
      * @param mid
      */
-    private void setChannelMsgRead(String cid, String mid) {
-        MsgReadIDCacheUtils.saveReadedMsg(getActivity(), cid,
-                mid);
+    private void setChannelMsgRead(String cid, Long messageCreationDate) {
+        MsgReadCreationDateCacheUtils.saveMessageReadCreationDate(getActivity(), cid,
+                messageCreationDate);
         for (int i = 0; i < displayChannelList.size(); i++) {
             Channel channel = displayChannelList.get(i);
             if (channel.getCid().equals(cid)) {

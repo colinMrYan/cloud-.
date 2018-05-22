@@ -118,12 +118,14 @@ public class Channel implements Serializable {
         if (msgList != null) {
             newMsgList.addAll(msgList);
         }
-        String lastMsgTime = lastUpdate;
+        long lastMsgTime;
         if (newMsgList.size() > 0) {
-            Msg msg = newMsgList.get(newMsgList.size() - 1);
-            lastMsgTime = msg.getTime();
+            lastMsgTime = newMsgList.get(newMsgList.size() - 1).getTime();
+        } else {
+            lastMsgTime = TimeUtils.UTCString2Long(lastUpdate);
         }
-        setMsgLastUpdate(TimeUtils.UTCString2Long(lastMsgTime));
+
+        setMsgLastUpdate(lastMsgTime);
         setNewMsgContent(context);
     }
 
@@ -157,7 +159,7 @@ public class Channel implements Serializable {
 
     public void addReceivedNewMsg(Msg receivedMsg) {
         newMsgList.add(receivedMsg);
-        setMsgLastUpdate(TimeUtils.UTCString2Long(receivedMsg.getTime()));
+        setMsgLastUpdate(receivedMsg.getTime());
     }
 
     public boolean getIsShowNotify() {
@@ -211,7 +213,7 @@ public class Channel implements Serializable {
                     newMsgContent = title + context.getString(R.string.send_a_file);
                     break;
                 case "news":
-                    newMsgContent = msg.getNTitle();
+                    newMsgContent = msg.getnTitle();
                     break;
                 case "res_link":
                     newMsgContent = title + context.getString(R.string.send_a_link);
@@ -363,10 +365,6 @@ public class Channel implements Serializable {
     }
 
     public String getLastUpdate() {
-        if (newMsgList.size() > 0) {
-            Msg msg = newMsgList.get(newMsgList.size() - 1);
-            lastUpdate = msg.getTime();
-        }
         return lastUpdate;
 
     }

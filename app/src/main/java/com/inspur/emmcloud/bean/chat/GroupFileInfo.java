@@ -16,7 +16,7 @@ public class GroupFileInfo {
 	private String owner = "";
 	public GroupFileInfo(Msg msg){
 		owner = msg.getTitle();
-		time = TimeUtils.UTCString2Long(msg.getTime());
+		time = msg.getTime();
 		try {
 			JSONObject jsonObject = new JSONObject(msg.getBody());
 			if (jsonObject.has("size")) {

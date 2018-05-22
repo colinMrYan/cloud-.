@@ -38,6 +38,7 @@ import com.inspur.emmcloud.bean.chat.GetChannelListResult;
 import com.inspur.emmcloud.bean.chat.GetNewMessagesResult;
 import com.inspur.emmcloud.bean.chat.MatheSet;
 import com.inspur.emmcloud.bean.chat.Message;
+import com.inspur.emmcloud.bean.chat.MessageReadCreationDate;
 import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.system.AppTabAutoBean;
 import com.inspur.emmcloud.bean.system.AppTabDataBean;
@@ -67,9 +68,11 @@ import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelOperationCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.DbCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 import com.inspur.emmcloud.util.privates.cache.MessageMatheSetCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageReadCreationDateCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.MsgReadCreationDateCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.widget.WeakThread;
 import com.inspur.imp.plugin.barcode.scan.CaptureActivity;
@@ -624,6 +627,7 @@ public class CommunicationFragment extends Fragment {
             addchannelList.removeAll(cacheChannelList);
             ChannelCacheUtils.clearChannel(getActivity());
             ChannelCacheUtils.saveChannelList(getActivity(), allchannelList);
+            firstEnterToSetAllChannelMsgRead(allchannelList);
             return addchannelList;
         }
     }
@@ -719,6 +723,20 @@ public class CommunicationFragment extends Fragment {
             channel.setUnReadCount(0);
         }
         displayData();
+    }
+
+    /**
+     * 初始进入时将所有消息置为已读
+     * @param channelList
+     */
+    private void firstEnterToSetAllChannelMsgRead(List<Channel> channelList){
+        if (!DbCacheUtils.tableIsExist("MessageReadCreationDate")){
+            List<MessageReadCreationDate> MessageReadCreationDateList = new ArrayList<>();
+            for (Channel channel:channelList) {
+                MessageReadCreationDateList.add(new MessageReadCreationDate(channel.getCid(),System.currentTimeMillis()));
+            }
+            MsgReadCreationDateCacheUtils.saveMessageReadCreationDateList(MyApplication.getInstance(), MessageReadCreationDateList);
+        }
     }
 
     /**
