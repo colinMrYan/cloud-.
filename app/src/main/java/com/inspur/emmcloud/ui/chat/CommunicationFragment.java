@@ -169,6 +169,7 @@ public class CommunicationFragment extends Fragment {
             public void onRefresh() {
                 MyApplication.getInstance().startWebSocket(false);
                 getChannelList();
+                getMessage();
             }
         });
     }
@@ -698,9 +699,8 @@ public class CommunicationFragment extends Fragment {
             //当断开以后连接成功(非第一次连接上)后重新拉取一遍消息
             if (!isFirstConnectWebsockt) {
                 getChannelList();
-            } else {
-                getMessage();
             }
+            getMessage();
             isFirstConnectWebsockt = false;
             String appTabs = PreferencesByUserAndTanentUtils.getString(getActivity(), "app_tabbar_info_current", "");
             if (!StringUtils.isBlank(appTabs)) {
