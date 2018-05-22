@@ -5,6 +5,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
@@ -40,7 +41,7 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
                 .isIndexActivityRunning()) {
             //当用通知打开特定Activity或者第一个打开的是SchemeActivity时，此处不作处理，交由SchemeActivity处理
             if (!MyApplication.getInstance().getOPenNotification() && !(activity instanceof SchemeHandleActivity)) {
-                showSafeVerificationPage(activity);
+                showSafeVerificationPage();
             }
             MyApplication.getInstance().setIsActive(true);
             uploadMDMInfo(activity);
@@ -90,16 +91,21 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
      *
      * @param context
      */
-    private void showSafeVerificationPage(final Context context) {
-        if (FaceVerifyActivity.getFaceVerifyIsOpenByUser(context)) {
-            Intent intent = new Intent(context, FaceVerifyActivity.class);
-            intent.putExtra("isFaceVerifyExperience",false);
-            context.startActivity(intent);
-        } else if (getIsNeedGestureCode(context)) {
-            Intent intent = new Intent(context, GestureLoginActivity.class);
-            intent.putExtra("gesture_code_change", "login");
-            context.startActivity(intent);
-        }
+    private void showSafeVerificationPage() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (FaceVerifyActivity.getFaceVerifyIsOpenByUser(MyApplication.getInstance())) {
+                    Intent intent = new Intent(currentActivity, FaceVerifyActivity.class);
+                    intent.putExtra("isFaceVerifyExperience",false);
+                    currentActivity.startActivity(intent);
+                } else if (getIsNeedGestureCode(MyApplication.getInstance())) {
+                    Intent intent = new Intent(currentActivity, GestureLoginActivity.class);
+                    intent.putExtra("gesture_code_change", "login");
+                    currentActivity.startActivity(intent);
+                }
+            }
+        },600);
     }
 
     /**
