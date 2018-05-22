@@ -37,7 +37,7 @@ public class DbCacheUtils {
                 .setDbName("emm.db")
                 // 不设置dbDir时, 默认存储在app的私有目录.
                 .setDbDir(new File(dbCachePath))
-                .setDbVersion(8)
+                .setDbVersion(9)
                 .setAllowTransaction(true)
                 .setDbOpenListener(new DbManager.DbOpenListener() {
                     @Override
@@ -107,6 +107,12 @@ public class DbCacheUtils {
                             if (oldVersion < 8) {
                                 if (tableIsExist("Contact")) {
                                     db.execNonQuery("CREATE INDEX contactindex ON Contact(inspurID)");
+                                }
+
+                            }
+                            if (oldVersion < 9) {
+                                if (tableIsExist("Msg")) {
+                                    db.execNonQuery("ALTER TABLE Msg ALTER COLUMN mid INTERGER");
                                 }
 
                             }

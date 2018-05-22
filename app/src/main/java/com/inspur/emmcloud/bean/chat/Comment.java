@@ -7,7 +7,7 @@ import java.io.Serializable;
 public class Comment implements Serializable{
 
 	
-	private String mid = "";
+	private Long mid = 0L;
 //	private String from;
 	private String uid = "";;
 	private String title= "";;
@@ -56,7 +56,7 @@ public class Comment implements Serializable{
 		
 		try {
 			if (jsonObject.has("mid")) {
-				mid = jsonObject.getString("mid");
+				mid = jsonObject.getLong("mid");
 			} 
 			if (jsonObject.has("from")) {
 				
@@ -116,7 +116,7 @@ public class Comment implements Serializable{
 			e.printStackTrace();
 		}
 	}
-	public String getMid() {
+	public Long getMid() {
 		return mid;
 	}
 	public void setMid(String mid) {

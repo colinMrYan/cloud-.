@@ -13,7 +13,7 @@ import java.io.Serializable;
 public class Msg implements Serializable {
     private static final String TAG = "Msg";
     @Column(name = "mid",isId = true)
-    private String mid = "";
+    private Long mid = 0L;
     @Column(name = "time")
     private String time = "";
     @Column(name = "type")
@@ -66,7 +66,7 @@ public class Msg implements Serializable {
                 this.cid = obj.getString("to");
             }
             if (obj.has("mid")) {
-                this.mid = obj.getString("mid");
+                this.mid = obj.getLong("mid");
             }
             if (obj.has("timestamp")) {
                 this.time = obj.getString("timestamp");
@@ -148,7 +148,7 @@ public class Msg implements Serializable {
         }
     }
 
-    public String getMid() {
+    public Long getMid() {
         return mid;
     }
 
@@ -220,7 +220,7 @@ public class Msg implements Serializable {
         this.title = title;
     }
 
-    public void setMid(String mid) {
+    public void setMid(Long mid) {
         this.mid = mid;
     }
 
