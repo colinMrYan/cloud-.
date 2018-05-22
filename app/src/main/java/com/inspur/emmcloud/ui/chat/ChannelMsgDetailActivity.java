@@ -407,7 +407,7 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
             TransHtmlToTextUtils.stripUnderlines(contentText,
                     Color.parseColor("#0f7bca"));
             String time = TimeUtils.getDisplayTime(getApplicationContext(),
-                    comment.getTimestamp());
+                    comment.getTime());
             sendTimeText.setText(time);
 
             //机器人进群修改处

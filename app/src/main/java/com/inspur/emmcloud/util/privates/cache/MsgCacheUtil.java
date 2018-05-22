@@ -4,7 +4,6 @@ import android.content.Context;
 
 import com.inspur.emmcloud.bean.chat.MatheSet;
 import com.inspur.emmcloud.bean.chat.Msg;
-import com.inspur.emmcloud.util.common.StringUtils;
 
 import org.xutils.db.sqlite.WhereBuilder;
 
@@ -39,7 +38,7 @@ public class MsgCacheUtil {
      * @param targetMsgId
      */
     public static void saveMsgList(final Context context,
-                                   final List<Msg> msgList, final String targetMsgId) {
+                                   final List<Msg> msgList, final Long targetMsgCreationDate) {
 
 
         // TODO Auto-generated method stub
@@ -51,9 +50,9 @@ public class MsgCacheUtil {
             DbCacheUtils.getDb(context).saveOrUpdate(msgList);
             MatheSet matheSet = new MatheSet();
             matheSet.setStart(msgList.get(0).getMid());
-            matheSet.setEnd(StringUtils.isBlank(targetMsgId)?msgList.get(msgList.size() - 1)
-                    .getMid():targetMsgId);
-            MsgMatheSetCacheUtils.add(context, msgList.get(0).getCid(),
+            matheSet.setEnd((targetMsgCreationDate == null)?msgList.get(msgList.size() - 1)
+                    .getTime():targetMsgCreationDate);
+            MessageMatheSetCacheUtils.add(context, msgList.get(0).getCid(),
                     matheSet);
         } catch (Exception e) {
             // TODO Auto-generated catch block
@@ -72,18 +71,18 @@ public class MsgCacheUtil {
      * @return
      */
     public static List<Msg> getHistoryMsgList(Context context,
-                                              String channelID, String targetID, int num) {
+                                              String channelID, Long targetMessageCreationDate, int num) {
         List<Msg> msgList = null;
         try {
 
-            if (StringUtils.isBlank(targetID)) {
+            if (targetMessageCreationDate == null) {
                 msgList = DbCacheUtils.getDb(context).selector(Msg.class)
-                        .where("cid", "=", channelID).orderBy("mid", true)
+                        .where("cid", "=", channelID).orderBy("time", true)
                         .limit(num).findAll();
             } else {
                 msgList = DbCacheUtils.getDb(context).selector(Msg.class)
-                        .where("mid", "<", targetID).and("cid", "=", channelID)
-                        .orderBy("mid", true).limit(num).findAll();
+                        .where("time", "<", targetMessageCreationDate).and("cid", "=", channelID)
+                        .orderBy("time", true).limit(num).findAll();
             }
             if (msgList != null && msgList.size() > 1) {
                 Collections.reverse(msgList);
@@ -128,12 +127,12 @@ public class MsgCacheUtil {
      * @return 本地是否有足够多的缓存的数据
      */
     public static boolean isDataInLocal(Context context, String channelID,
-                                        String targetId, int num) {
+                                        long targetCreateDate, int num) {
         // TODO Auto-generated method stub
         try {
 
-            MatheSet matheSet = MsgMatheSetCacheUtils.getInMatheSet(context,
-                    channelID, targetId);
+            MatheSet matheSet = MessageMatheSetCacheUtils.getInMatheSet(context,
+                    channelID, targetCreateDate);
             if (matheSet == null) {
                 return false;
             }
@@ -141,9 +140,9 @@ public class MsgCacheUtil {
             // 此处获取count后减1，因为要获取targetID以前的数据不能包含自己
             long continuousCount = DbCacheUtils.getDb(context).selector
                     (Msg.class)
-                    .where("mid", "between",
-                            new String[]{mathSetStart + "", targetId})
-                    .and("mid", "!=", targetId).and("cid", "=", channelID).count();
+                    .where("time", "between",
+                            new String[]{mathSetStart + "", targetCreateDate+""})
+                    .and("time", "!=", targetCreateDate).and("cid", "=", channelID).count();
 
 
             if (continuousCount >= num) {
@@ -184,12 +183,12 @@ public class MsgCacheUtil {
      * @param mid
      * @return
      */
-    public static int getNewerMsgCount(Context context, String cid, String mid) {
+    public static int getNewerMsgCount(Context context, String cid, long targetMessageReadCreationDate) {
         int count = 0;
         try {
 
             count = (int) DbCacheUtils.getDb(context).selector(Msg.class)
-                    .where("mid", ">", mid).and("cid", "=", cid).count();
+                    .where("time", ">", targetMessageReadCreationDate).and("cid", "=", cid).count();
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

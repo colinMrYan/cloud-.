@@ -37,8 +37,7 @@ public class ConbineMsg {
 		msgSend.setType(type);
 		msgSend.setUid(userID);
 		msgSend.setAvatar("");
-		String UTCNow = TimeUtils.getCurrentUTCTimeString();
-		msgSend.setTime(UTCNow);
+		msgSend.setTime(System.currentTimeMillis());
 		msgSend.setBody(body);
 		return msgSend;
 	}
@@ -52,8 +51,7 @@ public class ConbineMsg {
 		msgSend.setType(type);
 		msgSend.setUid(robotUid);
 		msgSend.setAvatar("");
-		String UTCNow = TimeUtils.getCurrentUTCTimeString();
-		msgSend.setTime(UTCNow);
+		msgSend.setTime(System.currentTimeMillis());
 		msgSend.setBody(body);
 		return msgSend;
 	}

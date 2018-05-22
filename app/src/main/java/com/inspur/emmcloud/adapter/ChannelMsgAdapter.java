@@ -286,11 +286,11 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
      */
     private void showMsgSendTime(ViewHolder holder, Msg msg, int position) {
         // TODO Auto-generated method stub
-        long msgTimeLong = TimeUtils.UTCString2Long(msg.getTime());
+        long msgTimeLong = msg.getTime();
         long lastMsgTimelong = 0;
         if (position != 0) {
-            lastMsgTimelong = TimeUtils.UTCString2Long(msgList.get(
-                    position - 1).getTime());
+            lastMsgTimelong = msgList.get(
+                    position - 1).getTime();
         }
         long duration = msgTimeLong - lastMsgTimelong;
         if (duration >= 180000) {

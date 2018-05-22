@@ -105,7 +105,7 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
                     currentActivity.startActivity(intent);
                 }
             }
-        },600);
+        },200);
     }
 
     /**
