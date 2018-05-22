@@ -1,5 +1,7 @@
 package com.inspur.emmcloud.bean.chat;
 
+import com.inspur.emmcloud.util.privates.TimeUtils;
+
 import org.json.JSONObject;
 
 import java.io.Serializable;
@@ -7,27 +9,23 @@ import java.io.Serializable;
 public class Comment implements Serializable{
 
 	
-	private Long mid = 0L;
-//	private String from;
+	private String mid = "";
 	private String uid = "";;
 	private String title= "";;
 	private String avatar = "";
-	private String timestamp = "";
+	private Long time = 0L;
 	private String order = "";
 	private String type = "";
-//	private String body;
 	private String preview = "";
 	private String content = "";
-//	private JSONObject jsonObject;
-//	private JSONArray jsonArray;
 	private String source = "";
 	private String mentions = "";
 	private String urls = "";
-	public Comment (String title,String content,String uid,String timestamp){
+	public Comment (String title,String content,String uid,Long time){
 		this.title = title;
 		this.source = content;
 		this.uid = uid;
-		this.timestamp = timestamp;
+		this.time = time;
 	}
 	
 	public Comment(Msg msg){
@@ -35,7 +33,7 @@ public class Comment implements Serializable{
 		this.uid = msg.getUid();
 		this.avatar = msg.getAvatar();
 		this.title = msg.getTitle();
-		this.timestamp = msg.getTime();
+		this.time = msg.getTime();
 //		this.order = msg.getOrder();
 		this.type = msg.getType();
 //		this.preview = msg.getPreview();
@@ -56,7 +54,7 @@ public class Comment implements Serializable{
 		
 		try {
 			if (jsonObject.has("mid")) {
-				mid = jsonObject.getLong("mid");
+				mid = jsonObject.getString("mid");
 			} 
 			if (jsonObject.has("from")) {
 				
@@ -72,7 +70,8 @@ public class Comment implements Serializable{
 				}
 			} 
 			if (jsonObject.has("timestamp")) {
-				timestamp = jsonObject.getString("timestamp");
+				String timestamp = jsonObject.getString("timestamp");
+				time =TimeUtils.UTCString2Long(timestamp);
 			} 
 			if (jsonObject.has("order")) {
 				order = jsonObject.getString("order");
@@ -116,7 +115,7 @@ public class Comment implements Serializable{
 			e.printStackTrace();
 		}
 	}
-	public Long getMid() {
+	public String getMid() {
 		return mid;
 	}
 	public void setMid(String mid) {
@@ -140,11 +139,11 @@ public class Comment implements Serializable{
 	public void setAvatar(String avatar) {
 		this.avatar = avatar;
 	}
-	public String getTimestamp() {
-		return timestamp;
+	public Long getTime() {
+		return time;
 	}
-	public void setTimestamp(String timestamp) {
-		this.timestamp = timestamp;
+	public void setTime(Long time) {
+		this.time = time;
 	}
 	public String getOrder() {
 		return order;

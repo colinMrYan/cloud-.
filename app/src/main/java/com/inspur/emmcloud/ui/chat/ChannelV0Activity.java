@@ -57,7 +57,7 @@ import com.inspur.emmcloud.util.privates.MsgRecourceUploadUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MsgCacheUtil;
-import com.inspur.emmcloud.util.privates.cache.MsgReadIDCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.MsgReadCreationDateCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.RobotCacheUtils;
 import com.inspur.emmcloud.widget.ECMChatInputMenu;
@@ -213,9 +213,9 @@ public class ChannelV0Activity extends BaseActivity {
             @Override
             public void onRefresh() {
                 if (msgList.size() > 0 && MsgCacheUtil.isDataInLocal(ChannelV0Activity.this, cid, msgList
-                        .get(0).getMid(), 15)) {
+                        .get(0).getTime(), 15)) {
                     List<Msg> historyMsgList = MsgCacheUtil.getHistoryMsgList(
-                            ChannelV0Activity.this, cid, msgList.get(0).getMid(),
+                            ChannelV0Activity.this, cid, msgList.get(0).getTime(),
                             15);
                     msgList.addAll(0, historyMsgList);
                     swipeRefreshLayout.setRefreshing(false);
@@ -327,7 +327,7 @@ public class ChannelV0Activity extends BaseActivity {
      */
     private void initMsgListView() {
         msgList = MsgCacheUtil.getHistoryMsgList(getApplicationContext(),
-                cid, "", 15);
+                cid, null, 15);
         adapter = new ChannelMsgAdapter(ChannelV0Activity.this, apiService, channel.getType(), chatInputMenu);
         adapter.setItemClickListener(new ChannelMsgAdapter.MyItemClickListener() {
             @Override
@@ -496,8 +496,8 @@ public class ChannelV0Activity extends BaseActivity {
                         if (msg.arg1 == 0) {
                             Msg pushMsg = new Msg((JSONObject) msg.obj);
                             if (cid.equals(pushMsg.getCid())) {
-                                MsgReadIDCacheUtils.saveReadedMsg(ChannelV0Activity.this,
-                                        pushMsg.getCid(), pushMsg.getMid());
+                                MsgReadCreationDateCacheUtils.saveMessageReadCreationDate(ChannelV0Activity.this,
+                                        pushMsg.getCid(), pushMsg.getTime());
                                 if (!msgList.contains(pushMsg) && !pushMsg.getTmpId().equals(AppUtils.getMyUUID(getApplicationContext()))) {
                                     msgList.add(pushMsg);
                                     adapter.setMsgList(msgList);
@@ -697,12 +697,12 @@ public class ChannelV0Activity extends BaseActivity {
      */
     private void setChannelMsgRead() {
         if (msgList != null && msgList.size() > 0) {
-            MsgReadIDCacheUtils.saveReadedMsg(this, cid,
-                    msgList.get(msgList.size() - 1).getMid());
+            MsgReadCreationDateCacheUtils.saveMessageReadCreationDate(this, cid,
+                    msgList.get(msgList.size() - 1).getTime());
             Intent intent = new Intent("message_notify");
             intent.putExtra("command", "set_channel_message_read");
             intent.putExtra("cid", cid);
-            intent.putExtra("mid", msgList.get(msgList.size() - 1).getMid());
+            intent.putExtra("messageCreationDate", msgList.get(msgList.size() - 1).getTime());
             LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
         }
     }
@@ -838,7 +838,7 @@ public class ChannelV0Activity extends BaseActivity {
                         .getNewMsgList(cid);
                 if (historyMsgList.size() > 0) {
                     MsgCacheUtil.saveMsgList(ChannelV0Activity.this, historyMsgList,
-                            msgList.get(0).getMid());
+                            msgList.get(0).getTime());
                     msgList.addAll(0, historyMsgList);
                     adapter.setMsgList(msgList);
                     adapter.notifyItemRangeInserted(0, historyMsgList.size());
@@ -848,10 +848,10 @@ public class ChannelV0Activity extends BaseActivity {
                 LoadingDialog.dimissDlg(loadingDlg);
                 List<Msg> msgList = getNewMsgsResult.getNewMsgList(cid);
                 if (msgList.size() > 0) {
-                    MsgCacheUtil.saveMsgList(ChannelV0Activity.this, msgList, "");
-                    String lastMsgMid = msgList.get(msgList.size() - 1).getMid();
-                    MsgReadIDCacheUtils.saveReadedMsg(ChannelV0Activity.this, cid,
-                            lastMsgMid);
+                    MsgCacheUtil.saveMsgList(ChannelV0Activity.this, msgList, null);
+                    long lastMsgCreationDate = msgList.get(msgList.size() - 1).getTime();
+                    MsgReadCreationDateCacheUtils.saveMessageReadCreationDate(ChannelV0Activity.this, cid,
+                            lastMsgCreationDate);
                 }
                 initViews();
                 setChannelMsgRead();

@@ -14,6 +14,7 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.bean.appcenter.AppCommonlyUse;
 import com.inspur.emmcloud.bean.chat.Channel;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
+import com.inspur.emmcloud.bean.chat.Msg;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
 
 import org.xutils.DbManager;
@@ -37,7 +38,7 @@ public class DbCacheUtils {
                 .setDbName("emm.db")
                 // 不设置dbDir时, 默认存储在app的私有目录.
                 .setDbDir(new File(dbCachePath))
-                .setDbVersion(9)
+                .setDbVersion(8)
                 .setAllowTransaction(true)
                 .setDbOpenListener(new DbManager.DbOpenListener() {
                     @Override
@@ -75,17 +76,17 @@ public class DbCacheUtils {
                                 }
 
 
-                                if (tableIsExist("com_inspur_emmcloud_bean_Msg")) {
-                                    db.execNonQuery("alter table com_inspur_emmcloud_bean_Msg rename to Msg");
-                                }
+//                                if (tableIsExist("com_inspur_emmcloud_bean_Msg")) {
+//                                    db.execNonQuery("alter table com_inspur_emmcloud_bean_Msg rename to Msg");
+//                                }
 
-                                if (tableIsExist("com_inspur_emmcloud_bean_MsgMatheSet")) {
-                                    db.execNonQuery("alter table com_inspur_emmcloud_bean_MsgMatheSet rename to MsgMatheSet");
-                                }
+//                                if (tableIsExist("com_inspur_emmcloud_bean_MsgMatheSet")) {
+//                                    db.execNonQuery("alter table com_inspur_emmcloud_bean_MsgMatheSet rename to MsgMatheSet");
+//                                }
 
-                                if (tableIsExist("com_inspur_emmcloud_bean_MsgReadId")) {
-                                    db.execNonQuery("alter table com_inspur_emmcloud_bean_MsgReadId rename to MsgReadId");
-                                }
+//                                if (tableIsExist("com_inspur_emmcloud_bean_MsgReadId")) {
+//                                    db.execNonQuery("alter table com_inspur_emmcloud_bean_MsgReadId rename to MsgReadId");
+//                                }
 
                                 if (tableIsExist("com_inspur_emmcloud_bean_MyCalendarOperation")) {
                                     db.execNonQuery("alter table com_inspur_emmcloud_bean_MyCalendarOperation rename to MyCalendarOperation");
@@ -101,7 +102,7 @@ public class DbCacheUtils {
 
                             }
                             if (oldVersion < 7) {
-                                    db.dropTable(PVCollectModel.class);
+                                db.dropTable(PVCollectModel.class);
 
                             }
                             if (oldVersion < 8) {
@@ -111,10 +112,13 @@ public class DbCacheUtils {
 
                             }
                             if (oldVersion < 9) {
-                                if (tableIsExist("Msg")) {
-                                    db.execNonQuery("ALTER TABLE Msg ALTER COLUMN mid INTERGER");
+                                db.dropTable(Msg.class);
+                                if (tableIsExist("MsgReadId")) {
+                                    db.execNonQuery("DROP TABLE MsgReadId");
                                 }
-
+                                if (tableIsExist("MsgMatheSet")) {
+                                    db.execNonQuery("DROP TABLE MsgMatheSet");
+                                }
                             }
                         } catch (Exception e) {
                             e.printStackTrace();

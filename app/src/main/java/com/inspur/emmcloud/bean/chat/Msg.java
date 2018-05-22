@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.bean.chat;
 
 import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.emmcloud.util.privates.TimeUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,9 +14,9 @@ import java.io.Serializable;
 public class Msg implements Serializable {
     private static final String TAG = "Msg";
     @Column(name = "mid",isId = true)
-    private Long mid = 0L;
+    private String mid = "";
     @Column(name = "time")
-    private String time = "";
+    private Long time = 0L;
     @Column(name = "type")
     private String type = "";
     @Column(name = "body")
@@ -28,28 +29,10 @@ public class Msg implements Serializable {
     private String avatar = "";
     @Column(name = "commentContent")
     private String commentContent = "";
-    @Column(name = "originalMsgMid")
-    private String originalMsgMid = "";
-    @Column(name = "originalMsgPreview")
-    private String originalMsgPreview = "";
     @Column(name = "cid")
     private String cid = "";  //channel id
-    @Column(name = "nid")
-    private String nid = "";
     @Column(name = "nTitle")
     private String nTitle = "";
-    @Column(name = "nDigest")
-    private String nDigest = "";
-    @Column(name = "nAuthor")
-    private String nAuthor = "";
-    @Column(name = "nUrl")
-    private String nUrl = "";
-    @Column(name = "nPublisher")
-    private String nPublisher = "";
-    @Column(name = "nPostTime")
-    private String nPostTime = "";
-    @Column(name = "isHaveRead")
-    private boolean isHaveRead = false;
     @Column(name = "privates")
     private String privates = "";
 
@@ -66,10 +49,11 @@ public class Msg implements Serializable {
                 this.cid = obj.getString("to");
             }
             if (obj.has("mid")) {
-                this.mid = obj.getLong("mid");
+                this.mid = obj.getString("mid");
             }
             if (obj.has("timestamp")) {
-                this.time = obj.getString("timestamp");
+                String timestamp = obj.getString("timestamp");
+                this.time = TimeUtils.UTCString2Long(timestamp);
             }
             if (obj.has("type")) {
                 this.type = obj.getString("type");
@@ -79,26 +63,8 @@ public class Msg implements Serializable {
                 if (type.equals("news")) {
                     try {
                         JSONObject jsonObject = new JSONObject(body);
-                        if (jsonObject.has("nid")) {
-                            this.nid = jsonObject.getString("nid");
-                        }
                         if (jsonObject.has("title")) {
                             this.nTitle = jsonObject.getString("title");
-                        }
-                        if (jsonObject.has("digest")) {
-                            this.nDigest = jsonObject.getString("digest");
-                        }
-                        if (jsonObject.has("author")) {
-                            this.nAuthor = jsonObject.getString("author");
-                        }
-                        if (jsonObject.has("publisher")) {
-                            this.nPublisher = jsonObject.getString("publisher");
-                        }
-                        if (jsonObject.has("url")) {
-                            this.nUrl = jsonObject.getString("url");
-                        }
-                        if (jsonObject.has("posttime")) {
-                            this.nPostTime = jsonObject.getString("posttime");
                         }
                     } catch (Exception e) {
                         // TODO: handle exception
@@ -128,15 +94,6 @@ public class Msg implements Serializable {
                 if (bodyJsonObject.has("content")) {
                     this.commentContent = bodyJsonObject.getString("content");
                 }
-
-
-                if (bodyJsonObject.has("quote")) {
-                    JSONObject quoteJsonObject = new JSONObject(bodyJsonObject.getString("quote"));
-                    if (quoteJsonObject.has("preview")) {
-                        originalMsgPreview = quoteJsonObject.getString("preview");
-                        originalMsgMid = quoteJsonObject.getString("mid");
-                    }
-                }
             }
             if (obj.has("privates")) {
                 this.privates = obj.getString("privates");
@@ -148,11 +105,11 @@ public class Msg implements Serializable {
         }
     }
 
-    public Long getMid() {
+    public String getMid() {
         return mid;
     }
 
-    public String getTime() {
+    public Long getTime() {
         return time;
     }
 
@@ -192,20 +149,12 @@ public class Msg implements Serializable {
         this.sendStatus = sendStatus;
     }
 
-    public String getNPublisher() {
-        return nPublisher;
-    }
-
-    public String getNTitle() {
+    public String getnTitle() {
         return nTitle;
     }
 
-    public String getCommentOriMid() {
-        return originalMsgMid;
-    }
-
-    public String getCommentOriPre() {
-        return originalMsgPreview;
+    public void setnTitle(String nTitle) {
+        this.nTitle = nTitle;
     }
 
     public void setType(String type) {
@@ -220,11 +169,11 @@ public class Msg implements Serializable {
         this.title = title;
     }
 
-    public void setMid(Long mid) {
+    public void setMid(String mid) {
         this.mid = mid;
     }
 
-    public void setTime(String time) {
+    public void setTime(Long time) {
         this.time = time;
     }
 
@@ -244,13 +193,6 @@ public class Msg implements Serializable {
         this.commentContent = commentContent;
     }
 
-    public void setHaveRead(boolean isHaveRead) {
-        this.isHaveRead = isHaveRead;
-    }
-
-    public boolean getIsHaveRead() {
-        return isHaveRead;
-    }
 
     public String getTmpId(){
 		return  tmpId;
