@@ -18,10 +18,11 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.bean.mine.Enterprise;
 import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
 import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.common.FileUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ZipUtils;
+import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.reactnative.AuthorizationManagerPackage;
 import com.inspur.reactnative.ReactNativeInitInfoUtils;
 import com.oblador.vectoricons.VectorIconsPackage;
@@ -125,11 +126,11 @@ public class FindFragment extends Fragment implements DefaultHardwareBackBtnHand
         bundle.putString("systemVersion",ReactNativeInitInfoUtils.getSystemVersion(getActivity()));
         bundle.putString("locale",ReactNativeInitInfoUtils.getLocalLanguage(getActivity()));
         bundle.putString("reactNativeVersion",ReactNativeInitInfoUtils.getReactNativeVersion(reactCurrentFilePath));
-        bundle.putSerializable("userProfile",getMyInfoResult.getUserProfile2ReactNativeWritableNativeMap());
         bundle.putString("accessToken",((MyApplication)getActivity().getApplicationContext()).getToken());
         bundle.putString("pushId",ReactNativeInitInfoUtils.getPushId(getActivity()));
         bundle.putString("pushType",ReactNativeInitInfoUtils.getPushType(getActivity()));
-        bundle.putSerializable("currentEnterprise", ((MyApplication)getActivity().getApplicationContext()).getCurrentEnterprise().enterPrise2ReactNativeWritableNativeMap());
+        bundle.putSerializable("userProfile", myInfo);
+        bundle.putSerializable("currentEnterprise", ((MyApplication)getActivity().getApplicationContext()).getCurrentEnterprise().toJSONObject().toString());
         bundle.putString("appVersion", AppUtils.getVersion(getActivity()));
         return bundle;
     }
