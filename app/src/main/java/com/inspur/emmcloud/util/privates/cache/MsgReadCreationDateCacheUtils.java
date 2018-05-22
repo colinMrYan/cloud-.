@@ -3,6 +3,7 @@ package com.inspur.emmcloud.util.privates.cache;
 import android.content.Context;
 
 import com.inspur.emmcloud.bean.chat.MessageReadCreationDate;
+import com.inspur.emmcloud.util.common.LogUtils;
 
 import java.util.List;
 
@@ -69,6 +70,8 @@ public class MsgReadCreationDateCacheUtils {
             if (messageReadCreationDate != null) {
                 targetMessageReadCreationDate = messageReadCreationDate.getMessageReadCreationDate();
             }
+            LogUtils.jasonDebug("targetMessageReadCreationDate===="+targetMessageReadCreationDate);
+            LogUtils.jasonDebug("current===="+System.currentTimeMillis());
             return MsgCacheUtil.getNewerMsgCount(context, cid, targetMessageReadCreationDate);
         } catch (Exception e) {
             // TODO: handle exception
