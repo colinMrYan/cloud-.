@@ -64,13 +64,14 @@ public class ShareFilesActivity extends BaseActivity {
         this.uriList.addAll((List<String>) getIntent().getSerializableExtra("fileShareUriList"));
         initSharingMode();
         if(!isImageUriList(uriList)){
-            if(uriList.size() > 1){
+            if(uriList.size() <= 1){
+                File file = new File(uriList.get(0));
+                if(StringUtils.isBlank(FileUtils.getSuffix(file))){
+                    ToastUtils.show(ShareFilesActivity.this,getString(R.string.share_no_suffix));
+                    finish();
+                }
+            }else{
                 ToastUtils.show(ShareFilesActivity.this,getString(R.string.share_mutil_only_support_image));
-                finish();
-            }
-            File file = new File(uriList.get(0));
-            if(StringUtils.isBlank(FileUtils.getSuffix(file))){
-                ToastUtils.show(ShareFilesActivity.this,getString(R.string.share_no_suffix));
                 finish();
             }
         }else if(isImageUriList(uriList) && uriList.size() > 5){
