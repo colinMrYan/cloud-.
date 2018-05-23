@@ -38,8 +38,7 @@ import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelOperationCacheUtils;
-import com.inspur.emmcloud.util.privates.cache.ContactCacheUtils;
-import com.inspur.emmcloud.util.privates.cache.RobotCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.widget.CircleImageView;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.NoScrollGridView;
@@ -381,22 +380,8 @@ public class ChannelInfoActivity extends BaseActivity {
 
             } else {
                 String uid = memberList.get(position);
-                viewHolder.nameText.setText(ContactCacheUtils.getUserName(
-                        ChannelInfoActivity.this, uid));
-                if (uid.startsWith("BOT")) {
-                    userPhotoUrl = APIUri.getRobotIconUrl(RobotCacheUtils
-                            .getRobotById(ChannelInfoActivity.this, uid)
-                            .getAvatar());
-                    userName = RobotCacheUtils
-                            .getRobotById(ChannelInfoActivity.this, uid)
-                            .getName();
-                } else {
-                    userPhotoUrl = APIUri.getChannelImgUrl(ChannelInfoActivity.this, uid);
-                    userName = ContactCacheUtils.getUserName(
-                            ChannelInfoActivity.this, uid);
-                }
-                ImageDisplayUtils.getInstance().displayImage(viewHolder.memberHeadImg,
-                        APIUri.getChannelImgUrl(ChannelInfoActivity.this, uid), R.drawable.icon_photo_default);
+                userName = ContactUserCacheUtils.getUserName(uid);
+                userPhotoUrl = APIUri.getUserIconUrl(MyApplication.getInstance(),uid);
             }
             viewHolder.nameText.setText(userName);
             ImageDisplayUtils.getInstance().displayImage(viewHolder.memberHeadImg, userPhotoUrl, R.drawable.icon_photo_default);

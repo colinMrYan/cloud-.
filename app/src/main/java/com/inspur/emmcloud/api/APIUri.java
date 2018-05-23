@@ -245,22 +245,22 @@ public class APIUri {
     /**
      * 频道页面头像显示图片
      **/
-    public static String getChannelImgUrl(Context context, String inspurID) {
-        if (StringUtils.isBlank(inspurID) || inspurID.equals("null"))
+    public static String getChannelImgUrl(Context context, String uid) {
+        if (StringUtils.isBlank(uid) || uid.equals("null"))
             return null;
-        String headImgUrl = ((MyApplication) context.getApplicationContext()).getUserPhotoUrl(inspurID);
-        if (headImgUrl == null && !((MyApplication) context.getApplicationContext()).isKeysContainUid(inspurID)) {
-            Contact contact = ContactCacheUtils.getUserContact(context, inspurID);
+        String headImgUrl = ((MyApplication) context.getApplicationContext()).getUserPhotoUrl(uid);
+        if (headImgUrl == null && !((MyApplication) context.getApplicationContext()).isKeysContainUid(uid)) {
+            Contact contact = ContactCacheUtils.getUserContact(context, uid);
             if (contact != null) {
-                headImgUrl = MyApplication.getInstance().getClusterEmm() + "api/sys/v3.0/img/userhead/" + inspurID;
+                headImgUrl = MyApplication.getInstance().getClusterEmm() + "api/sys/v3.0/img/userhead/" + uid;
                 String lastUpdateTime = contact.getLastUpdateTime();
                 if (!StringUtils.isBlank(lastUpdateTime) && (!lastUpdateTime.equals("null"))) {
                     headImgUrl = headImgUrl + "?" + lastUpdateTime;
                 }
-                ((MyApplication) context.getApplicationContext()).setUsesrPhotoUrl(inspurID, headImgUrl);
+                ((MyApplication) context.getApplicationContext()).setUsesrPhotoUrl(uid, headImgUrl);
             } else if (((MyApplication) context.getApplicationContext())
                     .getIsContactReady()) {
-                ((MyApplication) context.getApplicationContext()).setUsesrPhotoUrl(inspurID, null);
+                ((MyApplication) context.getApplicationContext()).setUsesrPhotoUrl(uid, null);
             }
         }
         return headImgUrl;

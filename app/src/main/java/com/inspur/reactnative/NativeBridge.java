@@ -14,14 +14,17 @@ import com.facebook.react.bridge.WritableNativeMap;
 import com.facebook.react.uimanager.IllegalViewOperationException;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.contact.Contact;
+import com.inspur.emmcloud.bean.contact.ContactUser;
+import com.inspur.emmcloud.bean.contact.SearchModel;
 import com.inspur.emmcloud.bean.mine.Enterprise;
 import com.inspur.emmcloud.bean.mine.GetMyInfoResultWithoutSerializable;
-import com.inspur.emmcloud.bean.contact.SearchModel;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
-import com.inspur.emmcloud.util.privates.cache.ContactCacheUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.privates.cache.ContactCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -213,13 +216,32 @@ public class NativeBridge extends ReactContextBaseJavaModule implements Activity
             promise.resolve(null);
             return;
         }
-        Contact contact = ContactCacheUtils.getContactByEmail(getCurrentActivity(), email);
-        if (contact != null) {
-            WritableNativeMap map = contact.contact2Map(getCurrentActivity());
+        ContactUser contactUser = ContactUserCacheUtils.getContactUserByEmail(email);
+        if (contactUser != null) {
+            WritableNativeMap map = contactUser2Map(contactUser);
             promise.resolve(map);
         } else {
             promise.resolve(null);
         }
+    }
+
+    public WritableNativeMap contactUser2Map(ContactUser contactUser) {
+        WritableNativeMap map = new WritableNativeMap();
+        try {
+            map.putString("inspur_id", contactUser.getId());
+         //   map.putString("code", code);
+            map.putString("real_name", contactUser.getName());
+            map.putString("pinyin", contactUser.getPinyin());
+            map.putString("mobile", contactUser.getMobile());
+            map.putString("email", contactUser.getEmail());
+         //   map.putString("org_name", orgName);
+          //  map.putString("type", type);
+            map.putString("head", APIUri.getChannelImgUrl(MyApplication.getInstance(), contactUser.getId()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return map;
     }
 
     @Override

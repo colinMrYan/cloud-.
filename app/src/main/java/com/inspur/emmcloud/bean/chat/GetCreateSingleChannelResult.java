@@ -1,13 +1,13 @@
 package com.inspur.emmcloud.bean.chat;
 
+import android.content.Context;
+
+import com.inspur.emmcloud.util.common.PreferencesUtils;
+import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import com.inspur.emmcloud.util.privates.cache.ContactCacheUtils;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
-
-import android.content.Context;
 
 
 public class GetCreateSingleChannelResult {
@@ -48,7 +48,7 @@ public class GetCreateSingleChannelResult {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		String name = ContactCacheUtils.getUserName(context, otherUid);
+		String name = ContactUserCacheUtils.getUserName(otherUid);
 		return name;
 	}
 }

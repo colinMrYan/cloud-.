@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
-import com.inspur.emmcloud.util.privates.cache.ContactCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.widget.CircleImageView;
 
 import java.util.List;
@@ -68,8 +68,7 @@ public class VolumeInfoMemberAdapter extends BaseAdapter {
 
         } else {
             String uid = memberList.get(position);
-            userName = ContactCacheUtils.getUserName(
-                    context, uid);
+            userName = ContactUserCacheUtils.getUserName(uid);
             userPhotoUrl = APIUri.getChannelImgUrl(context, uid);
         }
         nameText.setText(userName);

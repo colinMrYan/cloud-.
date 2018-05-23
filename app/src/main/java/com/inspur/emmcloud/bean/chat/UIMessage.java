@@ -2,7 +2,7 @@ package com.inspur.emmcloud.bean.chat;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APIUri;
-import com.inspur.emmcloud.util.privates.cache.ContactCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -21,7 +21,7 @@ public class UIMessage implements Serializable {
         this.id = message.getId();
         this.creationDate = message.getCreationDate();
         if (!message.getFromUser().equals(MyApplication.getInstance().getUid())){
-            senderName = ContactCacheUtils.getUserName(MyApplication.getInstance(),message.getFromUser());
+            senderName = ContactUserCacheUtils.getUserName(message.getFromUser());
             senderPhotoUrl = APIUri.getUserIconUrl(MyApplication.getInstance(), message.getFromUser());
         }
     }

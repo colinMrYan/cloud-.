@@ -28,7 +28,7 @@ import com.inspur.emmcloud.bean.chat.Channel;
 import com.inspur.emmcloud.bean.chat.GetNewMessagesResult;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.UIMessage;
-import com.inspur.emmcloud.bean.contact.Contact;
+import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.bean.system.EventMessage;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.config.Constant;
@@ -53,7 +53,7 @@ import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.MessageRecourceUploadUtils;
 import com.inspur.emmcloud.util.privates.UriUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
-import com.inspur.emmcloud.util.privates.cache.ContactCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 import com.inspur.emmcloud.util.privates.cache.MessageReadCreationDateCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
@@ -649,10 +649,10 @@ public class ChannelActivity extends BaseActivity {
         Message localMessage = CommunicationUtils.combinLocalTextPlainMessage(content, cid, mentionsMap);
         //当在机器人频道时输入小于4个汉字时先进行通讯录查找，查找到返回通讯路卡片
         if (isSpecialUser && !isActionMsg && content.length() < 4 && StringUtils.isChinese(content)) {
-            Contact contact = ContactCacheUtils.getContactByUserName(getApplicationContext(), content);
-            if (contact != null) {
+            ContactUser contactUser = ContactUserCacheUtils.getContactUserByUserName(content);
+            if (contactUser != null) {
                 addLocalMessage(localMessage, 1);
-                Message replyLocalMessage = CommunicationUtils.combinLocalReplyAttachmentCardMessage(contact, cid, robotUid);
+                Message replyLocalMessage = CommunicationUtils.combinLocalReplyAttachmentCardMessage(contactUser, cid, robotUid);
                 addLocalMessage(replyLocalMessage, 1);
                 return;
             }

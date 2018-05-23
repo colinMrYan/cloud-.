@@ -32,4 +32,36 @@ public class ContactOrgCacheUtils {
         return  PreferencesByUserAndTanentUtils.getLong(MyApplication.getInstance(), Constant.PREF_CONTACT_ORG_LASTQUERYTIME,0L);
     }
 
+
+        /**
+     * 存储更新后客户端通讯录显示起始位置
+     *
+     * @param unitID
+     */
+    public static void saveLastUpdateunitID( String unitID) {
+        PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), "unitID", unitID);
+    }
+
+    /**
+     * 获取通讯录显示起始级别，如集团，单位，部门
+     *
+     * @return
+     */
+    public static String getLastUpdateunitID() {
+        return PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), "unitID", "");
+    }
+
+    /**
+     * 获取ContactOrg
+     * @param id
+     */
+    public static  ContactOrg getContactOrg(String id){
+        try {
+            ContactOrg contactOrg = DbCacheUtils.getDb().findById(ContactOrg.class,id);
+            return contactOrg;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
