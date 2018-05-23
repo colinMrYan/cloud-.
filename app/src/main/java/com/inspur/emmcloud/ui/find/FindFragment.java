@@ -82,7 +82,7 @@ public class FindFragment extends Fragment implements DefaultHardwareBackBtnHand
                 .setUseDeveloperSupport(BuildConfig.DEBUG)
                 .setInitialLifecycleState(LifecycleState.RESUMED)
                 .build();
-        mReactRootView.startReactApplication(mReactInstanceManager, "WeeklyPlan", createInitBundle());
+        mReactRootView.startReactApplication(mReactInstanceManager, "discover", createInitBundle());
         if (needToRefresh) {
             mReactRootView.invalidate();
         }
@@ -95,7 +95,7 @@ public class FindFragment extends Fragment implements DefaultHardwareBackBtnHand
 //        reactCurrentFilePath = MyAppConfig.getReactCurrentFilePath(getActivity(), userId);
         reactCurrentFilePath = MyAppConfig.getReactAppFilePath(getActivity(),userId,"discover");
         if (!FileUtils.isFileExist(reactCurrentFilePath + "/index.android.bundle")) {
-            ZipUtils.unZip(getActivity(), "bundle-inspur-100000-v0.2.2-alpha1.android.zip", reactCurrentFilePath, true);
+            ZipUtils.unZip(getActivity(), "bundle-inspur_esg-v0.3.0-alpha1-.android.zip", reactCurrentFilePath, true);
         }
     }
 
