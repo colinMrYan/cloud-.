@@ -251,6 +251,9 @@ public class SchemeHandleActivity extends Activity {
         }
         if (uriList.size() > 0) {
             startVolumeShareActivity(uriList);
+        }else{
+            ToastUtils.show(SchemeHandleActivity.this,getString(R.string.share_not_support));
+            finish();
         }
     }
 
