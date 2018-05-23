@@ -19,7 +19,6 @@ import com.inspur.emmcloud.bean.mine.Enterprise;
 import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.FileUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ZipUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
@@ -83,7 +82,7 @@ public class FindFragment extends Fragment implements DefaultHardwareBackBtnHand
                 .setUseDeveloperSupport(BuildConfig.DEBUG)
                 .setInitialLifecycleState(LifecycleState.RESUMED)
                 .build();
-        mReactRootView.startReactApplication(mReactInstanceManager, "discover", createInitBundle());
+        mReactRootView.startReactApplication(mReactInstanceManager, "WeeklyPlan", createInitBundle());
         if (needToRefresh) {
             mReactRootView.invalidate();
         }
@@ -96,7 +95,7 @@ public class FindFragment extends Fragment implements DefaultHardwareBackBtnHand
 //        reactCurrentFilePath = MyAppConfig.getReactCurrentFilePath(getActivity(), userId);
         reactCurrentFilePath = MyAppConfig.getReactAppFilePath(getActivity(),userId,"discover");
         if (!FileUtils.isFileExist(reactCurrentFilePath + "/index.android.bundle")) {
-            ZipUtils.unZip(getActivity(), "bundle-v0.1.0.android.zip", reactCurrentFilePath, true);
+            ZipUtils.unZip(getActivity(), "bundle-inspur-100000-v0.2.2-alpha1.android.zip", reactCurrentFilePath, true);
         }
     }
 

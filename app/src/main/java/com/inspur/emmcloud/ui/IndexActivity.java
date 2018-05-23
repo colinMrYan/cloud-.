@@ -34,7 +34,6 @@ import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ClientIDUtils;
 import com.inspur.emmcloud.util.privates.MyAppWidgetUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
-import com.inspur.emmcloud.util.privates.ReactNativeUtils;
 import com.inspur.emmcloud.util.privates.SplashPageUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.AppExceptionCacheUtils;
@@ -110,7 +109,7 @@ public class IndexActivity extends IndexBaseActivity {
         getAllRobotInfo();
         getAppTabInfo();  //从服务端获取显示tab
         new SplashPageUtils(IndexActivity.this).update();//更新闪屏页面
-        new ReactNativeUtils(IndexActivity.this).init(); //更新react
+//        new ReactNativeUtils(IndexActivity.this).init(); //更新react
         getMyAppRecommendWidgets();
     }
 
