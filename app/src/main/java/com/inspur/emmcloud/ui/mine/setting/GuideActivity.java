@@ -17,6 +17,7 @@ import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.login.LoginActivity;
+import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
@@ -42,14 +43,29 @@ public class GuideActivity extends BaseActivity {
     private ViewPager viewPager;
     private List<View> guideViewList = new ArrayList<>();
     private LoadingDialog loadingDialog;
-//    private boolean needGetMyProfile = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         StateBarUtils.changeStateBarColor(this, R.color.white);
+        deleteReactNativeResource();
         initView();
+    }
+
+    /**
+     * 删除老版本（低于2.0.0）的React文件目录
+     */
+    private void deleteReactNativeResource() {
+        try {
+            String reactNativeResourceFolderPath = getDir("ReactResource",MODE_PRIVATE).getPath();
+            if(FileUtils.isFolderExist((reactNativeResourceFolderPath))){
+                FileUtils.deleteFile(reactNativeResourceFolderPath);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 
     private void initView() {
