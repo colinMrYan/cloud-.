@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.inspur.emmcloud.BaseActivity;
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
@@ -62,15 +63,15 @@ public class ShareFilesActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.uriList.addAll((List<String>) getIntent().getSerializableExtra("fileShareUriList"));
-        initSharingMode();
         if(!isImageUriList(uriList)){
-            if(uriList.size() > 1){
+            if(uriList.size() <= 1){
+                File file = new File(uriList.get(0));
+                if(StringUtils.isBlank(FileUtils.getSuffix(file))){
+                    ToastUtils.show(ShareFilesActivity.this,getString(R.string.share_no_suffix));
+                    finish();
+                }
+            }else{
                 ToastUtils.show(ShareFilesActivity.this,getString(R.string.share_mutil_only_support_image));
-                finish();
-            }
-            File file = new File(uriList.get(0));
-            if(StringUtils.isBlank(FileUtils.getSuffix(file))){
-                ToastUtils.show(ShareFilesActivity.this,getString(R.string.share_no_suffix));
                 finish();
             }
         }else if(isImageUriList(uriList) && uriList.size() > 5){
@@ -85,18 +86,19 @@ public class ShareFilesActivity extends BaseActivity {
      * 分享方式
      */
     private void initSharingMode() {
-        boolean isCommunicateExist = TabAndAppExistUtils.isTabExist(ShareFilesActivity.this,"communicate");
-        boolean isVolumeAppExist = TabAndAppExistUtils.isAppExist(ShareFilesActivity.this,"emm://volume");
+        boolean isCommunicateExist = TabAndAppExistUtils.isTabExist(MyApplication.getInstance(),"communicate");
+        boolean isVolumeAppExist = TabAndAppExistUtils.isAppExist(MyApplication.getInstance(),"emm://volume");
         channelRelativeLayout.setVisibility(isCommunicateExist?View.VISIBLE:View.GONE);
         volumeRelativeLayout.setVisibility(isVolumeAppExist?View.VISIBLE:View.GONE);
         viewLineVolume.setVisibility((isCommunicateExist&&isVolumeAppExist)?View.VISIBLE:View.GONE);
         if(!(isCommunicateExist || isVolumeAppExist)){
-            ToastUtils.show(ShareFilesActivity.this,getString(R.string.share_no_share_way));
+            ToastUtils.show(MyApplication.getInstance(),getString(R.string.share_no_share_way));
         }
     }
 
     private void initViews() {
-        ImageDisplayUtils.getInstance().displayImage(imageView, TabAndAppExistUtils.getVolumeIconUrl(ShareFilesActivity.this,
+        initSharingMode();
+        ImageDisplayUtils.getInstance().displayImage(imageView, TabAndAppExistUtils.getVolumeIconUrl(MyApplication.getInstance(),
                 "emm://volume"), R.drawable.ic_app_default);
         int uriListSize = uriList.size();
         switch (uriListSize) {
@@ -113,8 +115,8 @@ public class ShareFilesActivity extends BaseActivity {
                 }
                 break;
             default:
-                recyclerView.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(ShareFilesActivity.this, 11)));
-                GridLayoutManager gridLayoutManager = new GridLayoutManager(ShareFilesActivity.this, 3);
+                recyclerView.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(MyApplication.getInstance(), 11)));
+                GridLayoutManager gridLayoutManager = new GridLayoutManager(MyApplication.getInstance(), 3);
                 recyclerView.setLayoutManager(gridLayoutManager);
                 recyclerView.setAdapter(new ShareFilesAdapter());
                 break;
@@ -163,7 +165,7 @@ public class ShareFilesActivity extends BaseActivity {
             intent.putExtra("fileShareUriList", (Serializable) uriList);
             startActivity(intent);
         }else{
-            ToastUtils.show(ShareFilesActivity.this,getString(R.string.share_has_not_exist_file));
+            ToastUtils.show(MyApplication.getInstance(),getString(R.string.share_has_not_exist_file));
         }
         finish();
     }
@@ -210,7 +212,7 @@ public class ShareFilesActivity extends BaseActivity {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                ToastUtils.show(ShareFilesActivity.this,getString(R.string.news_share_fail));
+                ToastUtils.show(MyApplication.getInstance(),getString(R.string.news_share_fail));
             }
         }
     }
