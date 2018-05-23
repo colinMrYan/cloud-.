@@ -29,7 +29,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.WorkAPIService;
-import com.inspur.emmcloud.bean.contact.Contact;
+import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.bean.contact.SearchModel;
 import com.inspur.emmcloud.bean.work.Meeting;
 import com.inspur.emmcloud.bean.work.Room;
@@ -45,7 +45,7 @@ import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
-import com.inspur.emmcloud.util.privates.cache.ContactCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.widget.CircleImageView;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.MyDatePickerDialog;
@@ -517,11 +517,9 @@ public class MeetingDetailActivity extends BaseActivity {
      */
     private void getUidsInfoList() {
         selectMemList.clear();
-        for (int i = 0; i < participantList.size(); i++) {
-            String uid = participantList.get(i);
-            Contact contact = ContactCacheUtils.getUserContact(
-                    MeetingDetailActivity.this, uid);
-            SearchModel searchModel = new SearchModel(contact);
+        for (String uid:participantList){
+            ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(uid);
+            SearchModel searchModel = new SearchModel(contactUser);
             selectMemList.add(searchModel);
         }
     }

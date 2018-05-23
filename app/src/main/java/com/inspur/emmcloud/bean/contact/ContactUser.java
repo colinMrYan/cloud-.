@@ -33,6 +33,8 @@ public class ContactUser {
     private int hasHead = 0;
     @Column(name = "sortOrder")
     private int sortOrder= 0;
+    @Column(name = "lastUpdateTime")
+    private String lastUpdateTime = "";
     public ContactUser(){
 
     }
@@ -152,10 +154,17 @@ public class ContactUser {
         this.sortOrder = sortOrder;
     }
 
+    public String getLastUpdateTime() {
+        return lastUpdateTime;
+    }
+
+    public void setLastUpdateTime(String lastUpdateTime) {
+        this.lastUpdateTime = lastUpdateTime;
+    }
 
     /*
-    * 重写equals方法修饰符必须是public,因为是重写的Object的方法. 2.参数类型必须是Object.
-    */
+        * 重写equals方法修饰符必须是public,因为是重写的Object的方法. 2.参数类型必须是Object.
+        */
     public boolean equals(Object other) { // 重写equals方法，后面最好重写hashCode方法
 
         if (this == other) // 先检查是否其自反性，后比较other是否为空。这样效率高

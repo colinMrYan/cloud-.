@@ -10,7 +10,7 @@ import com.inspur.emmcloud.bean.chat.Msg;
 import com.inspur.emmcloud.bean.chat.MsgContentAttachmentCard;
 import com.inspur.emmcloud.bean.chat.MsgContentTextPlain;
 import com.inspur.emmcloud.bean.chat.Phone;
-import com.inspur.emmcloud.bean.contact.Contact;
+import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.privates.cache.RobotCacheUtils;
 
@@ -80,7 +80,7 @@ public class ConbineMsg {
 		return  msgRobot;
 	}
 
-	public static Message conbineReplyAttachmentCardMsg(Contact contact, String cid, String from, String fakeMessageId){
+	public static Message conbineReplyAttachmentCardMsg(ContactUser contactUser, String cid, String from, String fakeMessageId){
 		Message msgRobot = new Message();
 		msgRobot.setChannel(cid);
 		msgRobot.setMessage("1.0");
@@ -98,17 +98,17 @@ public class ConbineMsg {
 		msgRobot.setTo("");
 		msgRobot.setState("");
 		MsgContentAttachmentCard msgContentAttachmentCard = new MsgContentAttachmentCard();
-		msgContentAttachmentCard.setAvatar(APIUri.getChannelImgUrl(MyApplication.getInstance(), contact.getInspurID()));
-		msgContentAttachmentCard.setFirstName(contact.getRealName());
+		msgContentAttachmentCard.setAvatar(APIUri.getChannelImgUrl(MyApplication.getInstance(), contactUser.getId()));
+		msgContentAttachmentCard.setFirstName(contactUser.getName());
 		msgContentAttachmentCard.setLastName("");
-		msgContentAttachmentCard.setOrganization(contact.getOrgName());
+		msgContentAttachmentCard.setOrganization("");
 		msgContentAttachmentCard.setTitle("");
-		msgContentAttachmentCard.setUid(contact.getInspurID());
-		Email email = new Email("工作",contact.getEmail());
+		msgContentAttachmentCard.setUid(contactUser.getId());
+		Email email = new Email("工作",contactUser.getEmail());
 		List<Email> emailList = new ArrayList<>();
 		emailList.add(email);
 		msgContentAttachmentCard.setEmailList(emailList);
-		Phone phone = new Phone("工作",contact.getMobile());
+		Phone phone = new Phone("工作",contactUser.getMobile());
 		List<Phone> phoneList = new ArrayList<>();
 		phoneList.add(phone);
 		msgContentAttachmentCard.setPhoneList(phoneList);

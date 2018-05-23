@@ -15,7 +15,6 @@ import com.facebook.react.uimanager.IllegalViewOperationException;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
-import com.inspur.emmcloud.bean.contact.Contact;
 import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.bean.contact.SearchModel;
 import com.inspur.emmcloud.bean.mine.Enterprise;
@@ -23,7 +22,6 @@ import com.inspur.emmcloud.bean.mine.GetMyInfoResultWithoutSerializable;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.privates.cache.ContactCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 
 import java.io.Serializable;
@@ -178,16 +176,17 @@ public class NativeBridge extends ReactContextBaseJavaModule implements Activity
                             uidList.add(contactId);
                         }
                     }
-                    List<Contact> contactList = ContactCacheUtils.getSoreUserList(activity, uidList);
+                    List<ContactUser> contactUserList = ContactUserCacheUtils.getSoreUserList(uidList);
                     if (multi) {
                         WritableNativeArray writableNativeArray = new WritableNativeArray();
-                        for (int i = 0; i < contactList.size(); i++) {
-                            WritableNativeMap map = contactList.get(i).contact2Map(getCurrentActivity());
+                        for (ContactUser contactUser:contactUserList) {
+                            WritableNativeMap map = contactUser2Map(contactUser);
                             writableNativeArray.pushMap(map);
                         }
                         promise.resolve(writableNativeArray);
                     } else {
-                        WritableNativeMap map = contactList.get(0).contact2Map(getCurrentActivity());
+                        ContactUser contactUser = contactUserList.get(0);
+                        WritableNativeMap map = contactUser2Map(contactUser);
                         promise.resolve(map);
                     }
 

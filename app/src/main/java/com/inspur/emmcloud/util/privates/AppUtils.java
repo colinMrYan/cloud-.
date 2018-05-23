@@ -548,6 +548,43 @@ public class AppUtils {
     }
 
     /**
+     * 发短信
+     * @param activity
+     * @param phoneNum
+     * @param requestCode
+     */
+    public static void sendSMS(Activity activity,String phoneNum,int requestCode){
+        Uri smsToUri = Uri.parse("smsto:" + phoneNum);
+        Intent intent = new Intent(Intent.ACTION_SENDTO, smsToUri);
+        activity.startActivityForResult(intent, requestCode);
+
+    }
+
+    /**
+     * 打电话
+     * @param activity
+     * @param phoneNum
+     * @param requestCode
+     */
+    public static void call(Activity activity,String phoneNum,int requestCode){
+        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:"
+                + phoneNum));
+        activity.startActivityForResult(intent, requestCode);
+    }
+
+    /**
+     * 发邮件
+     * @param activity
+     * @param email
+     * @param requestCode
+     */
+    public static void sendMail(Activity activity,String mail,int requestCode){
+        Uri uri = Uri.parse("mailto:" + mail);
+        Intent intent = new Intent(Intent.ACTION_SENDTO, uri);
+        activity.startActivityForResult(Intent.createChooser(intent,
+                activity.getString(R.string.please_select_app_of_mail)), 1);
+    }
+    /**
      * 初始化图片选择控件
      */
     private static void initImagePicker(int limit) {

@@ -616,6 +616,8 @@ public class ChannelV0Activity extends BaseActivity {
             IntentUtils.startActivity(ChannelV0Activity.this,
                     RobotInfoActivity.class, bundle);
         } else {
+            String uid = DirectChannelUtils.getDirctChannelOtherUid(MyApplication.getInstance(),channel.getTitle());
+            bundle.putString("uid", uid);
             IntentUtils.startActivity(ChannelV0Activity.this,
                     UserInfoActivity.class, bundle);
         }
@@ -628,8 +630,8 @@ public class ChannelV0Activity extends BaseActivity {
         String fakeMessageId = System.currentTimeMillis() + "";
         //当在机器人频道时输入小于4个汉字时先进行通讯录查找，查找到返回通讯路卡片
         if (isSpecialUser && !isActionMsg && content.length() < 4 && StringUtils.isChinese(content)) {
-            ContactUser contact = ContactUserCacheUtils.getContactUserByUserName(content);
-            if (contact != null) {
+            ContactUser contactUser = ContactUserCacheUtils.getContactUserByUserName(content);
+            if (contactUser != null) {
                 JSONObject sourceObj = new JSONObject();
                 try {
                     sourceObj.put("source", content);
@@ -640,7 +642,7 @@ public class ChannelV0Activity extends BaseActivity {
                 Msg localMsg = ConbineMsg.conbineMsg(ChannelV0Activity.this,
                         sourceObj.toString(), "", "txt_rich", fakeMessageId);
                 addLocalMessage(localMsg, 1);
-                Message conbineReplyMessage = ConbineMsg.conbineReplyAttachmentCardMsg(contact, cid, robotUid, fakeMessageId);
+                Message conbineReplyMessage = ConbineMsg.conbineReplyAttachmentCardMsg(contactUser, cid, robotUid, fakeMessageId);
                 Msg replyLocalMsg = ConbineMsg.conbineRobotMsg(ChannelV0Activity.this,
                         conbineReplyMessage.Message2MsgBody(),robotUid, "txt_rich", fakeMessageId);
                 addLocalMessage(replyLocalMsg, 1);

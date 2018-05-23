@@ -17,10 +17,8 @@ import com.inspur.emmcloud.api.CloudHttpMethod;
 import com.inspur.emmcloud.api.HttpUtils;
 import com.inspur.emmcloud.bean.chat.GetAllRobotsResult;
 import com.inspur.emmcloud.bean.chat.Robot;
-import com.inspur.emmcloud.bean.contact.GetAllContactResult;
 import com.inspur.emmcloud.interf.OauthCallBack;
 import com.inspur.emmcloud.util.common.LogUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.OauthUtils;
 
 import org.xutils.common.Callback;
@@ -42,52 +40,6 @@ public class ContactAPIService {
 		this.apiInterface = apiInterface;
 	}
 	
-	
-	/**
-	 * 获取全部通讯录
-	 * 
-	 * @param lastQueryTime
-	 */
-	public void getAllContact(final String lastQueryTime) {
-		final String completeUrl = APIUri.getAllContact();
-		RequestParams params = ((MyApplication)context.getApplicationContext()).getHttpRequestParams(completeUrl);
-		if (!StringUtils.isBlank(lastQueryTime)) {
-			params.addParameter("lastQueryTime", lastQueryTime);
-		}
-		HttpUtils.request(context, CloudHttpMethod.POST,params,new APICallback(context,completeUrl) {
-
-			@Override
-			public void callbackTokenExpire(long requestTime) {
-				OauthCallBack oauthCallBack = new OauthCallBack() {
-					@Override
-					public void reExecute() {
-						getAllContact(lastQueryTime);
-					}
-
-					@Override
-					public void executeFailCallback() {
-						callbackFail("", -1);
-					}
-				};
-				OauthUtils.getInstance().refreshToken(
-						oauthCallBack, requestTime);
-			}
-
-			@Override
-			public void callbackSuccess(String arg0) {
-				// TODO Auto-generated method stub
-				apiInterface.returnAllContactSuccess(new GetAllContactResult(
-						arg0));
-			}
-
-			@Override
-			public void callbackFail(String error, int responseCode) {
-				// TODO Auto-generated method stub
-				apiInterface.returnAllContactFail(error,responseCode);
-			}
-		});
-		
-	}
 	
 	/**
 	 * 获取所有机器人信息

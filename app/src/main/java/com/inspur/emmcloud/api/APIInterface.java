@@ -48,7 +48,6 @@ import com.inspur.emmcloud.bean.chat.GetSendMsgResult;
 import com.inspur.emmcloud.bean.chat.GetUploadPushInfoResult;
 import com.inspur.emmcloud.bean.chat.GetWebSocketUrlResult;
 import com.inspur.emmcloud.bean.chat.Robot;
-import com.inspur.emmcloud.bean.contact.GetAllContactResult;
 import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.find.GetKnowledgeInfo;
 import com.inspur.emmcloud.bean.find.GetTripArriveCity;
@@ -223,10 +222,6 @@ public interface APIInterface {
     void returnChannelInfoSuccess(GetChannelInfoResult getChannelInfoResult);
 
     void returnChannelInfoFail(String error, int errorCode);
-
-    void returnAllContactSuccess(GetAllContactResult getAllContactResult);
-
-    void returnAllContactFail(String error, int errorCode);
 
     void returnUpLoadResFileSuccess(GetFileUploadResult getFileUploadResult, String fakeMessageId);
 

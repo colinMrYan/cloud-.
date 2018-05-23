@@ -4,11 +4,11 @@ package com.inspur.emmcloud.api;
 import android.content.Context;
 
 import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.bean.contact.Contact;
+import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
-import com.inspur.emmcloud.util.privates.cache.ContactCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.RobotCacheUtils;
 
 
@@ -250,17 +250,16 @@ public class APIUri {
             return null;
         String headImgUrl = ((MyApplication) context.getApplicationContext()).getUserPhotoUrl(uid);
         if (headImgUrl == null && !((MyApplication) context.getApplicationContext()).isKeysContainUid(uid)) {
-            Contact contact = ContactCacheUtils.getUserContact(context, uid);
-            if (contact != null) {
+            ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(uid);
+            if (contactUser != null) {
                 headImgUrl = MyApplication.getInstance().getClusterEmm() + "api/sys/v3.0/img/userhead/" + uid;
-                String lastUpdateTime = contact.getLastUpdateTime();
+                String lastUpdateTime = contactUser.getLastUpdateTime();
                 if (!StringUtils.isBlank(lastUpdateTime) && (!lastUpdateTime.equals("null"))) {
                     headImgUrl = headImgUrl + "?" + lastUpdateTime;
                 }
-                ((MyApplication) context.getApplicationContext()).setUsesrPhotoUrl(uid, headImgUrl);
-            } else if (((MyApplication) context.getApplicationContext())
-                    .getIsContactReady()) {
-                ((MyApplication) context.getApplicationContext()).setUsesrPhotoUrl(uid, null);
+               MyApplication.getInstance().setUsesrPhotoUrl(uid, headImgUrl);
+            } else if (MyApplication.getInstance().getIsContactReady()) {
+                MyApplication.getInstance().setUsesrPhotoUrl(uid, null);
             }
         }
         return headImgUrl;

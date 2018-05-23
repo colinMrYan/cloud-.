@@ -42,7 +42,6 @@ import com.inspur.emmcloud.util.common.InputMethodUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.ListViewUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
@@ -51,6 +50,7 @@ import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.CommonContactCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.widget.CircleImageView;
 import com.inspur.emmcloud.widget.FlowLayout;
 import com.inspur.emmcloud.widget.MaxHightScrollView;
@@ -159,7 +159,7 @@ public class ContactSearchActivity extends BaseActivity {
         title = getIntent().getExtras().getString(EXTRA_TITLE);
         isMultiSelect = getIntent().getExtras().getBoolean(EXTRA_MULTI_SELECT);
         searchContent = getIntent().getExtras().getInt(EXTRA_TYPE);
-        isContainMe = getIntent().getExtras().containsKey(EXTRA_CONTAIN_ME) && getIntent().getBooleanExtra(EXTRA_CONTAIN_ME,false);
+        isContainMe = getIntent().getExtras().containsKey(EXTRA_CONTAIN_ME) && getIntent().getBooleanExtra(EXTRA_CONTAIN_ME, false);
         initSearchArea();
         if (searchContent == SEARCH_CHANNELGROUP) {
             (findViewById(R.id.struct_layout))
@@ -181,10 +181,10 @@ public class ContactSearchActivity extends BaseActivity {
             }
         }
 
-        if (getIntent().hasExtra(EXTRA_EXCLUDE_SELECT)){
+        if (getIntent().hasExtra(EXTRA_EXCLUDE_SELECT)) {
             List<String> excludeContactUidList = (List<String>) getIntent().getExtras()
                     .getSerializable(EXTRA_EXCLUDE_SELECT);
-            excludeContactList = ContactCacheUtils.getContactListById(getApplicationContext(),excludeContactUidList);
+            excludeContactList = Contact.contactUserList2ContactList(ContactUserCacheUtils.getContactUserListById(excludeContactUidList));
 
         }
     }
@@ -252,7 +252,7 @@ public class ContactSearchActivity extends BaseActivity {
         // TODO Auto-generated method stub
         secondTitleText.setText(getString(R.string.recently_used));
         commonContactList = CommonContactCacheUtils.getCommonContactList(
-                getApplicationContext(), 5, searchContent,excludeContactList);
+                getApplicationContext(), 5, searchContent, excludeContactList);
         secondGroupListAdapter = new SecondGroupListAdapter();
         secondGroupListView.setAdapter(secondGroupListAdapter);
         secondGroupListView.setOnItemClickListener(new OnItemClickListener() {
@@ -402,7 +402,7 @@ public class ContactSearchActivity extends BaseActivity {
                     LayoutParams.WRAP_CONTENT, DensityUtil.dip2px(
                     getApplicationContext(), LayoutParams.WRAP_CONTENT));
             params.topMargin = DensityUtil.dip2px(getApplicationContext(), 3);
-            params.bottomMargin =  params.topMargin;
+            params.bottomMargin = params.topMargin;
             int piddingTop = DensityUtil.dip2px(getApplicationContext(), 1);
             int piddingLeft = DensityUtil.dip2px(getApplicationContext(), 5);
             searchEdit.setPadding(piddingLeft, piddingTop, piddingLeft, piddingTop);
@@ -469,7 +469,7 @@ public class ContactSearchActivity extends BaseActivity {
             intent.setClass(getApplicationContext(), UserInfoActivity.class);
             startActivity(intent);
         } else {
-            intent.setClass(getApplicationContext(), MyApplication.getInstance().isChatVersionV0()? ChannelV0Activity.class:ChannelActivity.class);
+            intent.setClass(getApplicationContext(), MyApplication.getInstance().isChatVersionV0() ? ChannelV0Activity.class : ChannelActivity.class);
             intent.putExtra("title", searchModel.getName());
             intent.putExtra("cid", searchModel.getId());
             intent.putExtra("channelType", searchModel.getType());
@@ -491,7 +491,7 @@ public class ContactSearchActivity extends BaseActivity {
                     LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
             params.rightMargin = DensityUtil.dip2px(getApplicationContext(), 5);
             params.topMargin = DensityUtil.dip2px(getApplicationContext(), 3);
-            params.bottomMargin =  params.topMargin;
+            params.bottomMargin = params.topMargin;
             searchResultText.setLayoutParams(params);
             int piddingTop = DensityUtil.dip2px(getApplicationContext(), 1);
             int piddingLeft = DensityUtil.dip2px(getApplicationContext(), 5);
@@ -618,8 +618,8 @@ public class ContactSearchActivity extends BaseActivity {
                 showAllChannelGroup();
                 break;
             case R.id.layout:
-                if (searchEdit != null){
-                    InputMethodUtils.display(ContactSearchActivity.this,searchEdit);
+                if (searchEdit != null) {
+                    InputMethodUtils.display(ContactSearchActivity.this, searchEdit);
                 }
                 break;
 
@@ -633,8 +633,8 @@ public class ContactSearchActivity extends BaseActivity {
                 intent.putExtra("searchText", searchEdit.getText().toString());
                 intent.putExtra("searchContent", searchContent);
                 intent.putExtra("isMultiSelect", isMultiSelect);
-                if (excludeContactList != null){
-                    intent.putExtra("excludeContactList", (Serializable)excludeContactList);
+                if (excludeContactList != null) {
+                    intent.putExtra("excludeContactList", (Serializable) excludeContactList);
                 }
                 startActivityForResult(intent, SEARCH_MORE);
                 break;
@@ -649,8 +649,8 @@ public class ContactSearchActivity extends BaseActivity {
                 intent.putExtra("searchText", searchEdit.getText().toString());
                 intent.putExtra("searchContent", searchContent);
                 intent.putExtra("isMultiSelect", isMultiSelect);
-                if (excludeContactList != null){
-                    intent.putExtra("excludeContactList", (Serializable)excludeContactList);
+                if (excludeContactList != null) {
+                    intent.putExtra("excludeContactList", (Serializable) excludeContactList);
                 }
                 startActivityForResult(intent, SEARCH_MORE);
                 break;
@@ -670,10 +670,8 @@ public class ContactSearchActivity extends BaseActivity {
         JSONObject searchResultObj = new JSONObject();
         for (int i = 0; i < selectMemList.size(); i++) {
             SearchModel searchModel = selectMemList.get(i);
-            if (searchModel.getType().equals("USER")) {
-                String myUid = PreferencesUtils.getString(
-                        getApplicationContext(), "userID");
-                if (!(myUid.equals(searchModel.getId()) && isContainMe == false)) {
+            if (searchModel.getType().equals(SearchModel.TYPE_USER)) {
+                if (!(MyApplication.getInstance().getUid().equals(searchModel.getId()) && isContainMe == false)) {
                     JSONObject jsonObject = new JSONObject();
                     try {
                         jsonObject.put("pid", searchModel.getId());
@@ -698,10 +696,6 @@ public class ContactSearchActivity extends BaseActivity {
             }
         }
         try {
-            // if (searchContent == SEARCH_CONTACT &&
-            // channelGroupArray.length()>0 ) {
-            //
-            // }
             searchResultObj.put("people", peopleArray);
             searchResultObj.put("channelGroup", channelGroupArray);
         } catch (JSONException e) {
@@ -1005,13 +999,12 @@ public class ContactSearchActivity extends BaseActivity {
             {
                 Contact contact = openGroupContactList.get(position);
                 searchModel = new SearchModel(contact);
-                if (contact.getType().equals("user")) { // 如果通讯录是人的话就显示头像
+                if (contact.getType().equals(Contact.TYPE_USER)) { // 如果通讯录是人的话就显示头像
                     viewHolder.rightArrowImg.setVisibility(View.INVISIBLE);
                 } else {
                     viewHolder.rightArrowImg.setVisibility(View.VISIBLE);
                 }
-                viewHolder.nameText.setText(searchModel
-                        .getCompleteName(getApplicationContext()));
+                viewHolder.nameText.setText(searchModel.getCompleteName());
 
             } else {
                 viewHolder.rightArrowImg.setVisibility(View.INVISIBLE);
@@ -1080,8 +1073,7 @@ public class ContactSearchActivity extends BaseActivity {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
             SearchModel searchModel = commonContactList.get(position);
-            viewHolder.nameText.setText(searchModel
-                    .getCompleteName(getApplicationContext()));
+            viewHolder.nameText.setText(searchModel.getCompleteName());
             displayImg(searchModel, viewHolder.photoImg);
             if (selectMemList.contains(searchModel)) {
                 viewHolder.selectedImg.setVisibility(View.VISIBLE);
@@ -1167,8 +1159,7 @@ public class ContactSearchActivity extends BaseActivity {
 
             }
             displayImg(searchModel, viewHolder.photoImg);
-            viewHolder.nameText.setText(searchModel
-                    .getCompleteName(getApplicationContext()));
+            viewHolder.nameText.setText(searchModel.getCompleteName());
             if (selectMemList.contains(searchModel)) {
                 viewHolder.selectedImg.setVisibility(View.VISIBLE);
                 viewHolder.nameText.setTextColor(Color.parseColor("#0f7bca"));
@@ -1334,7 +1325,7 @@ public class ContactSearchActivity extends BaseActivity {
         Integer defaultIcon = null; // 默认显示图标
         String icon = null;
         String type = searchModel.getType();
-        if (type.equals("GROUP")) {
+        if (type.equals(SearchModel.TYPE_GROUP)) {
             defaultIcon = R.drawable.icon_channel_group_default;
             File file = new File(MyAppConfig.LOCAL_CACHE_PHOTO_PATH,
                     MyApplication.getInstance().getTanent() + searchModel.getId() + "_100.png1");
@@ -1343,7 +1334,7 @@ public class ContactSearchActivity extends BaseActivity {
                 ImageDisplayUtils.getInstance().displayImageNoCache(photoImg, icon, defaultIcon);
                 return;
             }
-        } else if (type.equals("STRUCT")) {
+        } else if (type.equals(SearchModel.TYPE_STRUCT)) {
             defaultIcon = R.drawable.icon_channel_group_default;
         } else {
             defaultIcon = R.drawable.icon_person_default;
@@ -1410,8 +1401,8 @@ public class ContactSearchActivity extends BaseActivity {
             bundle.putString("cid", searchModel.getId());
             bundle.putString("channelType", searchModel.getType());
             IntentUtils.startActivity(ContactSearchActivity.this,
-                    MyApplication.getInstance().isChatVersionV0()?
-                            ChannelV0Activity.class:ChannelActivity.class, bundle);
+                    MyApplication.getInstance().isChatVersionV0() ?
+                            ChannelV0Activity.class : ChannelActivity.class, bundle);
 
         }
     }
@@ -1441,8 +1432,8 @@ public class ContactSearchActivity extends BaseActivity {
                                     getCreateSingleChannelResult
                                             .getName(getApplicationContext()));
                             IntentUtils.startActivity(
-                                    ContactSearchActivity.this,MyApplication.getInstance().isChatVersionV0()?
-                                            ChannelV0Activity.class:ChannelActivity.class, bundle);
+                                    ContactSearchActivity.this, MyApplication.getInstance().isChatVersionV0() ?
+                                            ChannelV0Activity.class : ChannelActivity.class, bundle);
                         }
 
                         @Override

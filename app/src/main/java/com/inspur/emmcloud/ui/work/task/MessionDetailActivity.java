@@ -32,6 +32,7 @@ import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.api.apiservice.WorkAPIService;
 import com.inspur.emmcloud.bean.chat.GetFileUploadResult;
+import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.bean.contact.SearchModel;
 import com.inspur.emmcloud.bean.work.Attachment;
 import com.inspur.emmcloud.bean.work.GetTaskListResult;
@@ -53,7 +54,7 @@ import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.MessionTagColorUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
-import com.inspur.emmcloud.util.privates.cache.ContactCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.widget.HorizontalProgressBarWithNumber;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.MyDatePickerDialog;
@@ -163,11 +164,9 @@ public class MessionDetailActivity extends BaseActivity {
      */
     private void handleManager() {
         String ownerUid = task.getOwner();
-        String ownerName = ContactCacheUtils.getUserName(
-                getApplicationContext(), ownerUid);
+        String ownerName = ContactUserCacheUtils.getUserName(ownerUid);
         String masterId = task.getMaster();
-        String masterName = ContactCacheUtils.getUserName(
-                getApplicationContext(), masterId);
+        String masterName = ContactUserCacheUtils.getUserName(masterId);
         if (!StringUtils.isEmpty(masterId) && !masterId.contains("null")) {
             managerText.setText(masterName);
         } else if (!StringUtils.isEmpty(ownerUid)) {
@@ -801,13 +800,14 @@ public class MessionDetailActivity extends BaseActivity {
 
     /**
      * 发送文件
+     *
      * @param data
      */
     private void sendFileMsg(Intent data) {
         ChatAPIService apiService = new ChatAPIService(MessionDetailActivity.this);
         apiService.setAPIInterface(new WebService());
         Uri uri = data.getData();
-        String filePath = GetPathFromUri4kitkat.getPathByUri(this,uri);
+        String filePath = GetPathFromUri4kitkat.getPathByUri(this, uri);
         File tempFile = new File(filePath);
         if (TextUtils.isEmpty(FileUtils.getSuffix(tempFile))) {
             ToastUtils.show(this, getString(R.string.not_support_upload));
@@ -871,7 +871,7 @@ public class MessionDetailActivity extends BaseActivity {
         }
 
         @Override
-        public void returnUpLoadResFileFail(String error,int errorCode, String temp) {
+        public void returnUpLoadResFileFail(String error, int errorCode, String temp) {
             if (loadingDlg != null && loadingDlg.isShowing()) {
                 loadingDlg.dismiss();
             }
@@ -932,17 +932,7 @@ public class MessionDetailActivity extends BaseActivity {
                 memimg = 4;
             }
             for (int i = 0; i < memimg; i++) {
-                // 去掉显示头像逻辑改为显示名字
-                // String inspurID = ContactCacheUtils.getUserInspurID(
-                // getApplicationContext(), memids.get(i));
-                //
-                // membersImg[i].setVisibility(View.VISIBLE);
-                // imageDisplayUtils.displayImage(membersImg[i],
-                // APIUri.getChannelImgUrl(inspurID));
-                memebers = memebers
-                        + ContactCacheUtils.getUserName(
-                        getApplicationContext(), memebersIds.get(i))
-                        + " ";
+                memebers = memebers + ContactUserCacheUtils.getUserName(memebersIds.get(i)) + " ";
             }
             memberText.setText(memebers);
         }
@@ -1148,14 +1138,11 @@ public class MessionDetailActivity extends BaseActivity {
                     .contains("REMOVED")) {
                 membersIds.add(getTaskListResult.getTaskList().get(i)
                         .getMaster());
-                if (!StringUtils.isBlank(getTaskListResult.getTaskList()
-                        .get(i).getMaster())) {
-                    SearchModel searchModel = new SearchModel(
-                            ContactCacheUtils.getUserContact(
-                                    MessionDetailActivity.this,
-                                    getTaskListResult.getTaskList().get(i)
-                                            .getMaster()));
-                    if (searchModel != null) {
+                String masterUid = getTaskListResult.getTaskList().get(i).getMaster();
+                if (!StringUtils.isBlank(masterUid)) {
+                    ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(masterUid);
+                    if (contactUser != null) {
+                        SearchModel searchModel = new SearchModel(contactUser);
                         selectMemList.add(searchModel);
                         deleteMemList.add(searchModel);
                         oldMemList.add(searchModel);

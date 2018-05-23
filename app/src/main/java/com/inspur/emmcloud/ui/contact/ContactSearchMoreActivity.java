@@ -165,7 +165,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
         searchContent = getIntent().getIntExtra("searchContent", 1);
         // 单选时隐藏输入框或者不选时
         if (!isMultiSelect || searchContent == SEARCH_NOTHIING) {
-            ((TextView) findViewById(R.id.ok_text)).setVisibility(View.GONE);
+            (findViewById(R.id.ok_text)).setVisibility(View.GONE);
         }
         searchText = getIntent().getStringExtra("searchText");
         int groupPosition = getIntent().getIntExtra("groupPosition", 1);
@@ -284,7 +284,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
         }
         CommonContactCacheUtils.saveCommonContact(getApplicationContext(),
                 searchModel);
-        if (type.equals("USER")) {
+        if (type.equals(SearchModel.TYPE_USER)) {
             intent.putExtra("uid", id);
             intent.setClass(getApplicationContext(), UserInfoActivity.class);
             startActivity(intent);
@@ -461,7 +461,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
 
             }
             displayImg(searchModel, viewHolder.photoImg);
-            viewHolder.nameText.setText(searchModel.getCompleteName(getApplicationContext()));
+            viewHolder.nameText.setText(searchModel.getCompleteName());
             if (selectMemList.contains(searchModel)) {
                 viewHolder.selectedImg.setVisibility(View.VISIBLE);
                 viewHolder.nameText.setTextColor(Color.parseColor("#0f7bca"));
@@ -484,7 +484,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
         Integer defaultIcon = null; // 默认显示图标
         String icon = null;
         String type = searchModel.getType();
-        if (type.equals("GROUP")) {
+        if (type.equals(SearchModel.TYPE_GROUP)) {
             defaultIcon = R.drawable.icon_channel_group_default;
             File file = new File(MyAppConfig.LOCAL_CACHE_PHOTO_PATH,
                     MyApplication.getInstance().getTanent() + searchModel.getId() + "_100.png1");
@@ -493,7 +493,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
                 ImageDisplayUtils.getInstance().displayImageNoCache(photoImg, icon, defaultIcon);
                 return;
             }
-        } else if (type.equals("STRUCT")) {
+        } else if (type.equals(SearchModel.TYPE_STRUCT)) {
             defaultIcon = R.drawable.icon_channel_group_default;
         } else {
             defaultIcon = R.drawable.icon_person_default;
