@@ -62,7 +62,6 @@ public class ShareFilesActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.uriList.addAll((List<String>) getIntent().getSerializableExtra("fileShareUriList"));
-        initSharingMode();
         if(!isImageUriList(uriList)){
             if(uriList.size() <= 1){
                 File file = new File(uriList.get(0));
@@ -97,6 +96,7 @@ public class ShareFilesActivity extends BaseActivity {
     }
 
     private void initViews() {
+        initSharingMode();
         ImageDisplayUtils.getInstance().displayImage(imageView, TabAndAppExistUtils.getVolumeIconUrl(ShareFilesActivity.this,
                 "emm://volume"), R.drawable.ic_app_default);
         int uriListSize = uriList.size();
