@@ -48,7 +48,7 @@ public class Message implements Serializable {
         state = JSONUtils.getString(dataObj, "state", "");
         content = JSONUtils.getString(dataObj, "content", "");
         channel = msg.getCid();
-        creationDate = TimeUtils.UTCString2Long(msg.getTime());
+        creationDate = msg.getTime();
     }
 
     public static boolean isMessage(Msg msg) {

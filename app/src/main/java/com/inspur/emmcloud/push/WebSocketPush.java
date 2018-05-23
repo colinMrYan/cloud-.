@@ -302,6 +302,7 @@ public class WebSocketPush {
             sendContent(content);
             tracerMap.put(tracer, eventMessage);
         } else {
+            LogUtils.jasonDebug("isSocketConnect=false");
             eventMessage.setContent("time out");
             eventMessage.setStatus(-1);
             EventBus.getDefault().post(eventMessage);
