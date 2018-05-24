@@ -115,7 +115,9 @@ public class WebSocketPush {
                                 public void call(Object... args) {
                                     @SuppressWarnings("unchecked")
                                     Map<String, List<String>> headers = (Map<String, List<String>>) args[0];
-                                    headers.put("Authorization", Arrays.asList(MyApplication.getInstance().getToken()));
+                                    if (MyApplication.getInstance().getToken() != null){
+                                        headers.put("Authorization", Arrays.asList(MyApplication.getInstance().getToken()));
+                                    }
                                 }
                             }).on(Transport.EVENT_RESPONSE_HEADERS,
                             new Emitter.Listener() {

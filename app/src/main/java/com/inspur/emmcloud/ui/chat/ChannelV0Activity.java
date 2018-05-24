@@ -801,6 +801,7 @@ public class ChannelV0Activity extends BaseActivity {
         @Override
         public void returnSendMsgSuccess(GetSendMsgResult getSendMsgResult,
                                          String fakeMessageId) {
+            MsgCacheUtil.saveMsg(MyApplication.getInstance(),getSendMsgResult.getMsg());
             setMsgSendSuccess(fakeMessageId, getSendMsgResult.getMsg());
         }
 
