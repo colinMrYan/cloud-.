@@ -25,7 +25,7 @@ import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.DownLoaderUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
-import com.inspur.emmcloud.util.privates.cache.ContactCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 import com.inspur.emmcloud.util.privates.cache.MsgCacheUtil;
 import com.inspur.emmcloud.widget.HorizontalProgressBarWithNumber;
@@ -82,7 +82,7 @@ public class GroupFileActivity extends BaseActivity {
             for (Message message : fileTypeMessageList) {
                 MsgContentRegularFile msgContentRegularFile = message.getMsgContentAttachmentFile();
                 String url = APIUri.getChatFileResouceUrl(message.getChannel(),msgContentRegularFile.getMedia());
-                GroupFileInfo groupFileInfo = new GroupFileInfo(url, msgContentRegularFile.getName(), msgContentRegularFile.getSize() + "", message.getCreationDate(), ContactCacheUtils.getUserName(MyApplication.getInstance(), message.getFromUser()));
+                GroupFileInfo groupFileInfo = new GroupFileInfo(url, msgContentRegularFile.getName(), msgContentRegularFile.getSize() + "", message.getCreationDate(), ContactUserCacheUtils.getUserName(message.getFromUser()));
                 fileInfoList.add(groupFileInfo);
             }
         }

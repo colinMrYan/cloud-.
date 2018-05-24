@@ -248,18 +248,24 @@ public class APIUri {
     public static String getChannelImgUrl(Context context, String uid) {
         if (StringUtils.isBlank(uid) || uid.equals("null"))
             return null;
-        String headImgUrl = ((MyApplication) context.getApplicationContext()).getUserPhotoUrl(uid);
-        if (headImgUrl == null && !((MyApplication) context.getApplicationContext()).isKeysContainUid(uid)) {
+        String headImgUrl = null;
+        boolean isCacheUserPhotoUrl = MyApplication.getInstance().isKeysContainUid(uid);
+        if (isCacheUserPhotoUrl){
+            headImgUrl = MyApplication.getInstance().getUserPhotoUrl(uid);
+        }else {
             ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(uid);
             if (contactUser != null) {
-                headImgUrl = MyApplication.getInstance().getClusterEmm() + "api/sys/v3.0/img/userhead/" + uid;
-                String lastUpdateTime = contactUser.getLastUpdateTime();
-                if (!StringUtils.isBlank(lastUpdateTime) && (!lastUpdateTime.equals("null"))) {
-                    headImgUrl = headImgUrl + "?" + lastUpdateTime;
+                if (contactUser.getHasHead() == 1){
+                    headImgUrl = MyApplication.getInstance().getClusterEmm() + "api/sys/v3.0/img/userhead/" + uid;
+                    String lastQueryTime = contactUser.getLastQueryTime();
+                    if (!StringUtils.isBlank(lastQueryTime) && (!lastQueryTime.equals("null"))) {
+                        headImgUrl = headImgUrl + "?" + lastQueryTime;
+                    }
+                    MyApplication.getInstance().setUsesrPhotoUrl(uid, headImgUrl);
                 }
-               MyApplication.getInstance().setUsesrPhotoUrl(uid, headImgUrl);
-            } else if (MyApplication.getInstance().getIsContactReady()) {
-                MyApplication.getInstance().setUsesrPhotoUrl(uid, null);
+            }
+            if (MyApplication.getInstance().getIsContactReady() && headImgUrl == null) {
+                MyApplication.getInstance().setUsesrPhotoUrl(uid, headImgUrl);
             }
         }
         return headImgUrl;
@@ -555,14 +561,6 @@ public class APIUri {
         return MyApplication.getInstance().getClusterEmm() + "api/sys/v3.0/upgrade/checkVersion";
     }
 
-    /**
-     * 获取获取所有通讯录
-     *
-     * @return
-     */
-    public static String getAllContact() {
-        return MyApplication.getInstance().getClusterEmm() + "api/sys/v3.0/contacts/get_all";
-    }
 
     /**
      * 获取通讯录中的人员

@@ -30,6 +30,19 @@ public class ContactUserCacheUtils {
         }
     }
 
+    public static void saveContactUser(ContactUser contactUser){
+        if (contactUser == null ) {
+            return;
+        }
+        try {
+
+            DbCacheUtils.getDb().saveOrUpdate(contactUser);
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
     public static void setLastQueryTime(long lastQueryTime){
         PreferencesByUserAndTanentUtils.putLong(MyApplication.getInstance(), Constant.PREF_CONTACT_USER_LASTQUERYTIME,lastQueryTime);
     }

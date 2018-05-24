@@ -25,14 +25,14 @@ import com.inspur.emmcloud.api.apiservice.WorkAPIService;
 import com.inspur.emmcloud.bean.work.GetMeetingListResult;
 import com.inspur.emmcloud.bean.work.Meeting;
 import com.inspur.emmcloud.bean.work.MeetingSchedule;
-import com.inspur.emmcloud.util.privates.cache.ContactCacheUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
+import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
@@ -312,8 +312,7 @@ public class MeetingsRoomDetailActivity extends BaseActivity {
                         null);
                 ((TextView) convertView.findViewById(R.id.meeting_time_text))
                         .setText(timeSegment);
-                String organizer = ContactCacheUtils.getUserName(
-                        getApplicationContext(), meeting.getOrganizer());
+                String organizer = ContactUserCacheUtils.getUserName(meeting.getOrganizer());
                 ((TextView) convertView
                         .findViewById(R.id.meeting_order_name_text))
                         .setText(organizer);

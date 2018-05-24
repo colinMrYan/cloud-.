@@ -21,11 +21,11 @@ import com.inspur.emmcloud.adapter.ChannelMemberListAdapter;
 import com.inspur.emmcloud.bean.chat.PersonDto;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
-import com.inspur.emmcloud.util.privates.cache.ChannelGroupCacheUtils;
-import com.inspur.emmcloud.util.privates.cache.ContactCacheUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.privates.cache.ChannelGroupCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.slidebar.CharacterParser;
 import com.inspur.emmcloud.widget.slidebar.SideBar;
@@ -84,9 +84,9 @@ public class MembersActivity extends BaseActivity implements
 
                 if (!StringUtils.isBlank(channelID)) {
                     List<String> uidList = ChannelGroupCacheUtils.getMemberUidList(MembersActivity.this, channelID, 0);
-                    personDtoList = ContactCacheUtils.getShowMemberList(MembersActivity.this, uidList);
+                    personDtoList = ContactUserCacheUtils.getShowMemberList(uidList);
                 } else if (getIntent().getStringArrayListExtra("uidList") != null) {
-                    personDtoList = ContactCacheUtils.getShowMemberList(MembersActivity.this, getIntent().getStringArrayListExtra("uidList"));
+                    personDtoList = ContactUserCacheUtils.getShowMemberList(getIntent().getStringArrayListExtra("uidList"));
                 }
 
                 Iterator<PersonDto> personDtoIterator = personDtoList.iterator();

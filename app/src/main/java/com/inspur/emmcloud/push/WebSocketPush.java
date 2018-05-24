@@ -292,6 +292,8 @@ public class WebSocketPush {
                 sendWebSocketStatusBroadcaset(Socket.EVENT_DISCONNECT);
                 LogUtils.debug(TAG, "断开连接");
                 LogUtils.debug(TAG, arg0[0].toString());
+                LogUtils.debug(TAG, arg0[1].toString());
+                LogUtils.debug(TAG, arg0[2].toString());
             }
         });
 
