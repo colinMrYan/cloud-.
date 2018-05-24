@@ -281,9 +281,8 @@ public class IndexActivity extends IndexBaseActivity {
             try {
                 ContactProtoBuf.users users = ContactProtoBuf.users.parseFrom(result);
                 List<ContactProtoBuf.user> userList = users.getUsersList();
-                List<ContactUser> contactUserList = ContactUser.protoBufUserList2ContactUserList(userList);
+                List<ContactUser> contactUserList = ContactUser.protoBufUserList2ContactUserList(userList,users.getLastQueryTime());
                 ContactUserCacheUtils.saveContactUserList(contactUserList);
-                LogUtils.jasonDebug("users.getLastQueryTime()="+users.getLastQueryTime());
                 ContactUserCacheUtils.setLastQueryTime(users.getLastQueryTime());
                 if (handler != null) {
                     handler.sendEmptyMessage(CACHE_CONTACT_USER_SUCCESS);
