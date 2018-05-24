@@ -133,19 +133,10 @@ public class AppCenterAdapter extends BaseAdapter {
     }
 
     private void installApp(int type, String appID, Button statusBtn) {
-        switch (type) {
-            case 2:
-            case 3:
-            case 4:
-                if (NetUtils.isNetworkConnected(activity)) {
-                    statusBtn.setText(activity.getString(R.string.adding));
-                    loadingDialog.show();
-                    apiService.addApp(appID);
-                }
-                break;
-
-            default:
-                break;
+        if (NetUtils.isNetworkConnected(activity)) {
+            statusBtn.setText(activity.getString(R.string.adding));
+            loadingDialog.show();
+            apiService.addApp(appID);
         }
     }
 
