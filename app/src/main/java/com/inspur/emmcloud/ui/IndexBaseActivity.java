@@ -430,6 +430,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
 
     @Override
     public void onTabChanged(String tabId) {
+        //RN新版发现无法自己把状态栏改回原来状态，原生代码协助适配
         if(tabId.equals("find")){
             findViewById(R.id.index_root_layout).setPadding(0, getStatusBarHeight(this), 0, 0);
         }
