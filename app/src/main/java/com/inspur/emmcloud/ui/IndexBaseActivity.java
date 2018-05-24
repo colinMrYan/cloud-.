@@ -1,7 +1,6 @@
 package com.inspur.emmcloud.ui;
 
 import android.app.Fragment;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -85,16 +84,6 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
         initTabs();
     }
 
-
-    public int getStatusBarHeight(Context context) {
-        int result = 0;
-        int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen",
-                "android");
-        if (resourceId > 0) {
-            result = context.getResources().getDimensionPixelSize(resourceId);
-        }
-        return result;
-    }
 
     /**
      * 处理tab数组
@@ -430,10 +419,6 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
 
     @Override
     public void onTabChanged(String tabId) {
-        //RN新版发现无法自己把状态栏改回原来状态，原生代码协助适配
-        if(tabId.equals("find")){
-            findViewById(R.id.index_root_layout).setPadding(0, getStatusBarHeight(this), 0, 0);
-        }
         tipsView.setCanTouch(tabId.equals("communicate"));
         if (!isSystemChangeTag) {
             //记录打开的tab页
