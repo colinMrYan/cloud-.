@@ -256,12 +256,12 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
         bundle.putString("systemVersion", ReactNativeInitInfoUtils.getSystemVersion(ReactNativeAppActivity.this));
         bundle.putString("locale", ReactNativeInitInfoUtils.getLocalLanguage(ReactNativeAppActivity.this));
         bundle.putString("reactNativeVersion", ReactNativeInitInfoUtils.getReactNativeVersion(reactAppFilePath));
-        bundle.putSerializable("userProfile", getMyInfoResult.getUserProfile2ReactNativeWritableNativeMap());
         bundle.putString("accessToken", ((MyApplication)getApplicationContext()).getToken());
         bundle.putString("pushId", ReactNativeInitInfoUtils.getPushId(ReactNativeAppActivity.this));
         bundle.putString("pushType", ReactNativeInitInfoUtils.getPushType(ReactNativeAppActivity.this));
-        bundle.putSerializable("currentEnterprise", ((MyApplication) getApplicationContext()).getCurrentEnterprise().enterPrise2ReactNativeWritableNativeMap());
         bundle.putString("appVersion", AppUtils.getVersion(ReactNativeAppActivity.this));
+        bundle.putSerializable("userProfile", myInfo);
+        bundle.putSerializable("currentEnterprise", ((MyApplication)getApplicationContext()).getCurrentEnterprise().toJSONObject().toString());
 
         /**
          * 增加RN路径上的约定参数

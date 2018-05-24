@@ -62,7 +62,7 @@ android {
     configurations.all {
         // React Native依赖的findbugs版本更高
         resolutionStrategy.force 'com.google.code.findbugs:jsr305:3.0.0',
-                'com.squareup.okhttp3:okhttp:3.4.1'
+                'com.squareup.okhttp3:okhttp:3.6.0'
     }
     lintOptions {
         lintConfig file("lint.xml")
@@ -126,15 +126,7 @@ android {
                             'src/main/res'//根目录
 
                     ]
-//            proto {
-//                srcDir 'src/main/proto'
-//                include '**/*.proto'
-//            }
-//            java {
-//                srcDir 'src/main/java'
-//            }
         }
-
     }
     splits {
         abi {
@@ -158,7 +150,6 @@ android {
             }
         }
     }
-
 }
 
 
@@ -176,8 +167,8 @@ dependencies {
     compile 'com.baidu.mapapi:location:6.13'
     compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.alibaba:fastjson:1.2.24'
-    compile 'io.socket:engine.io-client:0.6.1'
-    compile 'io.socket:socket.io-client:0.6.1'
+    compile 'io.socket:engine.io-client:1.0.0'
+    compile 'io.socket:socket.io-client:1.0.0'
     compile 'com.belerweb:pinyin4j:2.5.1'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     compile 'com.google.zxing:core:3.3.0'
@@ -231,11 +222,11 @@ dependencies {
     compile files('libs/umeng_social_shareview.jar')
     compile files('libs/umeng_social_tool.jar')
     compile files('libs/SocialSDK_sms.jar')
-    compile files('libs/aliyun-oss-sdk-android-2.0.1.1.jar')
+   //compile files('libs/aliyun-oss-sdk-android-2.0.1.1.jar')
     compile files('libs/Msc.jar')
     compile files('libs/Sunflower.jar')
+    compile 'com.aliyun.dpa:oss-android-sdk:+'
     compile 'com.google.protobuf:protobuf-java:3.5.1'
-//    compile 'com.google.protobuf:protoc:3.5.1'
 }
 repositories { flatDir { dirs 'aars' } }
 

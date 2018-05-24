@@ -52,23 +52,13 @@ public class MyAppConfig {
 
 
     /**
-     * 获取React当前展示的文件路径
-     * @param context
-     * @param userId
-     * @return
-     */
-    public static String getReactCurrentFilePath(Context context, String userId) {
-        return context.getDir("ReactResource", MODE_PRIVATE).getPath() + "/" + MyApplication.getInstance().getTanent() + "/" + userId;
-    }
-
-    /**
      * 获取React App的存储路径，分租户用户
      * @param context
      * @param userId
      * @return
      */
     public static String getReactAppFilePath(Context context, String userId, String module) {
-        return context.getDir("ReactResource", MODE_PRIVATE).getPath() + "/" + MyApplication.getInstance().getTanent() + "/" + userId + "/" + module;
+        return context.getDir("ReactResource_046", MODE_PRIVATE).getPath() + "/" + MyApplication.getInstance().getTanent() + "/" + userId + "/" + module;
     }
 
     /**
@@ -78,7 +68,7 @@ public class MyAppConfig {
      * @return
      */
     public static String getReactTempFilePath(Context context, String userId) {
-        return context.getDir("ReactResource", MODE_PRIVATE).getPath() + "/" + MyApplication.getInstance().getTanent() + "/" + userId + "/Pre";
+        return context.getDir("ReactResource_046", MODE_PRIVATE).getPath() + "/" + MyApplication.getInstance().getTanent() + "/" + userId + "/Pre";
     }
 
     /**
@@ -91,25 +81,6 @@ public class MyAppConfig {
         return context.getDir("SplashPage", MODE_PRIVATE).getPath() + "/" + MyApplication.getInstance().getTanent() + "/" + userId + "/" + module;
     }
 
-    /**
-     * 获取闪屏页前一个版本图片路径
-     * @param context
-     * @param userId
-     * @return
-     */
-    public static String getSplashPageImageLastVersionPath(Context context, String userId) {
-        return context.getDir("SplashPage", MODE_PRIVATE).getPath() + "/" + MyApplication.getInstance().getTanent() + "/" + userId + "/Pre";
-    }
-
-    /**
-     * 获取特定租户下特定用户ReactNative安装目录，清除所有缓存时在此清理
-     * @param context
-     * @param userId
-     * @return
-     */
-    public static String getReactInstallPath(Context context, String userId) {
-        return context.getDir("ReactResource", MODE_PRIVATE).getPath() + "/" + MyApplication.getInstance().getTanent() + "/" + userId;
-    }
 
     public static Language getDefaultLanguage = new Language("中文简体", "zh-CN", "zh-Hans", "zh-CN", "zh-CN", "zh-Hans");
 }
