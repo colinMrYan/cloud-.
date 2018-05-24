@@ -4,7 +4,6 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.KeyEvent;
@@ -12,8 +11,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TabHost;
@@ -41,7 +38,6 @@ import com.inspur.emmcloud.ui.mine.MoreFragment;
 import com.inspur.emmcloud.ui.notsupport.NotSupportFragment;
 import com.inspur.emmcloud.ui.work.TabBean;
 import com.inspur.emmcloud.ui.work.WorkFragment;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -89,15 +85,6 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
         initTabs();
     }
 
-
-    protected void setImmerseLayout(View view) {// view为标题栏
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            Window window = getWindow();
-            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            int statusBarHeight = getStatusBarHeight(this.getBaseContext());
-            view.setPadding(0, statusBarHeight, 0, 0);
-        }
-    }
 
     public int getStatusBarHeight(Context context) {
         int result = 0;
@@ -443,8 +430,9 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
 
     @Override
     public void onTabChanged(String tabId) {
-        LogUtils.YfcDebug("tabId:"+tabId);
-//        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        if(tabId.equals("find")){
+            findViewById(R.id.index_root_layout).setPadding(0, getStatusBarHeight(this), 0, 0);
+        }
         tipsView.setCanTouch(tabId.equals("communicate"));
         if (!isSystemChangeTag) {
             //记录打开的tab页

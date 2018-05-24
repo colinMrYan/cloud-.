@@ -95,7 +95,7 @@ public class FindFragment extends Fragment implements DefaultHardwareBackBtnHand
 //        reactCurrentFilePath = MyAppConfig.getReactCurrentFilePath(getActivity(), userId);
         reactCurrentFilePath = MyAppConfig.getReactAppFilePath(getActivity(),userId,"discover");
         if (!FileUtils.isFileExist(reactCurrentFilePath + "/index.android.bundle")) {
-            ZipUtils.unZip(getActivity(), "bundle-inspur_esg-v0.3.0-alpha1-.android.zip", reactCurrentFilePath, true);
+            ZipUtils.unZip(getActivity(), "bundle-inspur_esg-v0.3.1-beta6-.android.zip", reactCurrentFilePath, true);
         }
     }
 
