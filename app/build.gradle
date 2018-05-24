@@ -167,8 +167,10 @@ dependencies {
     compile 'com.baidu.mapapi:location:6.13'
     compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.alibaba:fastjson:1.2.24'
-    compile 'io.socket:engine.io-client:1.0.0'
-    compile 'io.socket:socket.io-client:1.0.0'
+    compile ('io.socket:socket.io-client:0.9.0') {
+        // excluding org.json which is provided by Android
+        exclude group: 'org.json', module: 'json'
+    }
     compile 'com.belerweb:pinyin4j:2.5.1'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     compile 'com.google.zxing:core:3.3.0'
@@ -222,7 +224,6 @@ dependencies {
     compile files('libs/umeng_social_shareview.jar')
     compile files('libs/umeng_social_tool.jar')
     compile files('libs/SocialSDK_sms.jar')
-   //compile files('libs/aliyun-oss-sdk-android-2.0.1.1.jar')
     compile files('libs/Msc.jar')
     compile files('libs/Sunflower.jar')
     compile 'com.aliyun.dpa:oss-android-sdk:+'

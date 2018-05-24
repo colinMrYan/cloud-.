@@ -29,6 +29,7 @@ import io.socket.client.Manager;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 import io.socket.engineio.client.Transport;
+import io.socket.engineio.client.transports.WebSocket;
 import io.socket.parseqs.ParseQS;
 
 public class WebSocketPush {
@@ -100,6 +101,7 @@ public class WebSocketPush {
         opts.path = path;
         LogUtils.debug(TAG, "query.toString()=" + ParseQS.encode(query));
         opts.query = ParseQS.encode(query);
+        opts.transports = new String[] { WebSocket.NAME};
         try {
             webSocketSignout();
             Manager manager = new Manager(new URI(url), opts);
@@ -208,6 +210,15 @@ public class WebSocketPush {
             public void call(Object... arg0) {
                 // TODO Auto-generated method stub
                 LogUtils.debug(TAG, "连接失败");
+                if (arg0[0] != null){
+                    try {
+                        ((Exception) arg0[0]).printStackTrace();
+                        LogUtils.debug(TAG, "arg0[0]=="+arg0[0].toString());
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+
                 sendWebSocketStatusBroadcaset(Socket.EVENT_CONNECT_ERROR);
 
             }

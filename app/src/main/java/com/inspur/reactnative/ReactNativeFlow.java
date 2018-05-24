@@ -52,7 +52,7 @@ public class ReactNativeFlow {
         boolean isBundleExist = checkIsBundleExist(context, userId);
         String reactCurrentFilePath = MyAppConfig.getReactAppFilePath(context, userId, "discover");
         if (!isBundleExist) {
-            ZipUtils.unZip(context, "bundle-inspur_esg-v0.3.0-alpha1-.android.zip", reactCurrentFilePath, true);
+            ZipUtils.unZip(context, "bundle-inspur_esg-v0.3.1-beta7-.android.zip", reactCurrentFilePath, true);
 //                PreferencesUtils.putString(context, "react_native_lastupdatetime", System.currentTimeMillis() + "");//隔半小时检查逻辑
         }
     }

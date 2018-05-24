@@ -37,7 +37,6 @@ import com.inspur.emmcloud.ui.mine.MoreFragment;
 import com.inspur.emmcloud.ui.notsupport.NotSupportFragment;
 import com.inspur.emmcloud.ui.work.TabBean;
 import com.inspur.emmcloud.ui.work.WorkFragment;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -84,6 +83,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
         mTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
         initTabs();
     }
+
 
     /**
      * 处理tab数组
@@ -419,7 +419,6 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
 
     @Override
     public void onTabChanged(String tabId) {
-        LogUtils.jasonDebug("tabId="+tabId);
         tipsView.setCanTouch(tabId.equals("communicate"));
         if (!isSystemChangeTag) {
             //记录打开的tab页

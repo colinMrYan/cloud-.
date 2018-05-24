@@ -9,11 +9,12 @@ import android.widget.TextView;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
+import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.UpgradeUtils;
 import com.inspur.emmcloud.widget.dialogs.ActionSheetDialog;
 
@@ -50,7 +51,7 @@ public class AboutActivity extends BaseActivity {
 				String enterpriseName = PreferencesUtils
 						.getString(AboutActivity.this, "login_enterprise_name", "");
 				new ActionSheetDialog.ActionListSheetBuilder(AboutActivity.this)
-						.setTitle(getString(R.string.current_system)+"-->"+ (StringUtils.isBlank(enterpriseName)?getString(R.string.cluster_default):enterpriseName))
+//						.setTitle(getString(R.string.current_system)+"-->"+ (StringUtils.isBlank(enterpriseName)?getString(R.string.cluster_default):enterpriseName))
 						.addItem("idm-->"+ MyApplication.getInstance().getCloudId())
 //						.addItem("ecm-->"+ MyApplication.getInstance().getClusterEcm())
 						.addItem("emm-->"+ MyApplication.getInstance().getClusterEmm())
@@ -61,6 +62,9 @@ public class AboutActivity extends BaseActivity {
 						.addItem("ecm.cloud-drive-->"+MyApplication.getInstance().getClusterCloudDrive())
 						.addItem("ecm.storage.legacy-->"+MyApplication.getInstance().getClusterStorageLegacy())
 						.addItem("ecm.client-registry-->"+MyApplication.getInstance().getClusterClientRegistry())
+						.addItem("ClientId-->"+ PreferencesByUserAndTanentUtils.getString(AboutActivity.this, Constant.PREF_CHAT_CLIENTID, ""))
+//						.addItem("DeviceId-->"+ AppUtils.getMyUUID(MyApplication.getInstance()))
+						.addItem("DeviceToken-->"+ AppUtils.getPushId(MyApplication.getInstance()))
 						.build()
 						.show();
 				return false;
