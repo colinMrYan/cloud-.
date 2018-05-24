@@ -15,6 +15,7 @@ import com.alibaba.sdk.android.oss.common.auth.OSSCredentialProvider;
 import com.alibaba.sdk.android.oss.internal.OSSAsyncTask;
 import com.alibaba.sdk.android.oss.model.PutObjectRequest;
 import com.alibaba.sdk.android.oss.model.PutObjectResult;
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileUploadTokenResult;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.interf.ProgressCallback;
@@ -23,8 +24,6 @@ import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.privates.VolumeFileUploadManagerUtils;
 
 import java.util.HashMap;
-
-import static com.umeng.socialize.utils.DeviceConfig.context;
 
 /**
  * Created by oss on 2015/12/7 0007.
@@ -60,7 +59,7 @@ public class OssService implements VolumeFileUploadService {
         conf.setSocketTimeout(15 * 1000); // socket超时，默认15秒
         //conf.setMaxConcurrentRequest(5); // 最大并发请求书，默认5个
         conf.setMaxErrorRetry(2); // 失败后最大重试次数，默认2次
-        oss = new OSSClient(context, getVolumeFileUploadTokenResult.getEndpoint(), credentialProvider, conf);
+        oss = new OSSClient(MyApplication.getInstance(), getVolumeFileUploadTokenResult.getEndpoint(), credentialProvider, conf);
     }
 
     @Override
