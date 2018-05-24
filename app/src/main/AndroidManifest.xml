@@ -577,7 +577,6 @@
         <activity
             android:name=".ui.appcenter.ReactNativeAppActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
-            android:resizeableActivity="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"></activity>
         <activity
