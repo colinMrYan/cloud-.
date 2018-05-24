@@ -34,6 +34,7 @@ public class Constant {
     public static final String PREF_CONTACT_ORG_LASTQUERYTIME = "contact_org_lastquerytime";
     public static final String PREF_MY_INFO_OLD = "my_info_old";
     public static final String PREF_ENTER_APP_TIME = "enter_app_time";
+    public static final String PREF_CONTACT_ORG_ROOT_ID = "contact_org_root_id";
 
     public static final String ACTION_MEETING = "com.inspur.meeting";
     public static final String ACTION_TASK = "com.inspur.task";

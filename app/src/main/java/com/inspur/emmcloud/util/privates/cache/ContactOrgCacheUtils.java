@@ -3,6 +3,7 @@ package com.inspur.emmcloud.util.privates.cache;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.bean.contact.ContactOrg;
 import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 
 import java.util.List;
@@ -38,8 +39,8 @@ public class ContactOrgCacheUtils {
      *
      * @param unitID
      */
-    public static void saveLastUpdateunitID( String unitID) {
-        PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), "unitID", unitID);
+    public static void setContactOrgRootId( String rootId) {
+        PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), Constant.PREF_CONTACT_ORG_ROOT_ID, rootId);
     }
 
     /**
@@ -47,8 +48,8 @@ public class ContactOrgCacheUtils {
      *
      * @return
      */
-    public static String getLastUpdateunitID() {
-        return PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), "unitID", "");
+    public static String getContactOrgRootId() {
+        return PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_CONTACT_ORG_ROOT_ID, "");
     }
 
     /**
@@ -63,5 +64,26 @@ public class ContactOrgCacheUtils {
             e.printStackTrace();
         }
         return null;
+    }
+
+    /**
+     * 获取根组织架构
+     * @return
+     */
+    public static ContactOrg getRootContactOrg() {
+        ContactOrg contactOrg = null;
+        try {
+            String contactOrgRootId = getContactOrgRootId();
+            if (!StringUtils.isBlank(contactOrgRootId)) {
+                contactOrg = DbCacheUtils.getDb().findById(ContactOrg.class,contactOrgRootId);
+            } else {
+                contactOrg = DbCacheUtils.getDb().selector(ContactOrg.class).where(
+                        "parentId", "=", "root").findFirst();
+            }
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
+        return contactOrg;
     }
 }

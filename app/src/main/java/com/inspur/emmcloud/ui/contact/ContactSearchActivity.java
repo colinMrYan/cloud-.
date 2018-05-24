@@ -50,6 +50,7 @@ import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.CommonContactCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.ContactOrgCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.widget.CircleImageView;
 import com.inspur.emmcloud.widget.FlowLayout;
@@ -349,13 +350,12 @@ public class ContactSearchActivity extends BaseActivity {
     private void openContact(Contact currentStruct) {
         // TODO Auto-generated method stub
         if (currentStruct == null) {
-            currentStruct = rootContact;
-        }
-
-        if (currentStruct == null) {
-            ToastUtils.show(ContactSearchActivity.this,
-                    getString(R.string.contact_exception));
-            return;
+            currentStruct = new Contact(ContactOrgCacheUtils.getRootContactOrg());
+            if (currentStruct == null) {
+                ToastUtils.show(ContactSearchActivity.this,
+                        getString(R.string.contact_exception));
+                return;
+            }
         }
         openContact(currentStruct.getId(), currentStruct.getName());
     }
