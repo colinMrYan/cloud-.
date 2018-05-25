@@ -320,18 +320,24 @@ public class WSAPIService {
             String clientId = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_CHAT_CLIENTID, "");
             JSONObject object = new JSONObject();
             try {
+                String tracer = CommunicationUtils.getTracer();
                 JSONObject actionObj = new JSONObject();
                 actionObj.put("method", "put");
                 actionObj.put("path", "/client/"+clientId+"/state");
                 object.put("action", actionObj);
                 JSONObject headerObj = new JSONObject();
                 headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
-                headerObj.put("tracer",  CommunicationUtils.getTracer());
+                headerObj.put("tracer",  tracer);
                 object.put("headers", headerObj);
                 JSONObject bodyObject = new JSONObject();
                 bodyObject.put("state",state);
                 object.put("body", bodyObject);
-                WebSocketPush.getInstance().sendContent(object);
+                if (state.equals("REMOVED")){
+                    EventMessage eventMessage = new EventMessage(Constant.EVENTBUS_TAG_WEBSOCKET_STATUS_REMOVE,"","");
+                    WebSocketPush.getInstance().sendEventMessage(eventMessage, object,tracer);
+                }else {
+                    WebSocketPush.getInstance().sendContent(object);
+                }
             }catch (Exception e){
                 e.printStackTrace();
             }

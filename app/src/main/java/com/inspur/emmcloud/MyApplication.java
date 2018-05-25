@@ -165,12 +165,19 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
 
 
     /**************************************登出逻辑相关********************************************************/
+    public void signout(){
+        signout(true);
+    }
+
     /**
      * 注销
+     * @param isWebSocketSignout 是否在此处处理websocket的注销
      */
-    public void signout() {
+    public void signout(boolean isWebSocketSignout) {
         // TODO Auto-generated method stub
-        WebSocketPush.getInstance().webSocketSignout();
+        if (isWebSocketSignout){
+            WebSocketPush.getInstance().webSocketSignout();
+        }
         //清除日历提醒极光推送本地通知
         CalEventNotificationUtils.cancelAllCalEventNotification(this);
         stopPush();

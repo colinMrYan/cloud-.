@@ -534,7 +534,11 @@ public class ChannelActivity extends BaseActivity {
                         .getNewMessageList(cid);
                 if (adapter != null) {
                     if (historyMessageList.size() > 0) {
-                        MessageCacheUtil.saveMessageList(MyApplication.getInstance(), historyMessageList, uiMessageList.get(0).getCreationDate());
+                        Long targetMessageCreationDate = null;
+                        if (uiMessageList.size()>0){
+                            targetMessageCreationDate = uiMessageList.get(0).getCreationDate();
+                        }
+                        MessageCacheUtil.saveMessageList(MyApplication.getInstance(), historyMessageList, targetMessageCreationDate);
                         List<UIMessage> historyUIMessageList = UIMessage.MessageList2UIMessageList(historyMessageList);
                         uiMessageList.addAll(0, historyUIMessageList);
                         adapter.setMessageList(uiMessageList);
@@ -556,7 +560,6 @@ public class ChannelActivity extends BaseActivity {
                 initViews();
                 sendMsgFromShare();
             }
-
         }
     }
 

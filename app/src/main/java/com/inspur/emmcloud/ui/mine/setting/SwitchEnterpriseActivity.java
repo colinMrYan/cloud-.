@@ -101,7 +101,7 @@ public class SwitchEnterpriseActivity extends BaseActivity {
      * @param enterprise
      */
     private void switchToEnterprise(Enterprise enterprise) {
-        WebSocketPush.getInstance().webSocketSignout();
+        WebSocketPush.getInstance().closeWebsocket();
         PreferencesByUsersUtils.putString(getApplicationContext(), "current_enterprise_id", enterprise.getId());
         ((MyApplication) getApplicationContext()).initTanent();
         ((MyApplication) getApplicationContext()).stopPush();

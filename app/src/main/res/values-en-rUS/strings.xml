@@ -516,6 +516,7 @@
     <string name="current_enterprise">Current enterprise</string>
     <string name="web_app_auto_rotate">Web App support rotation</string>
     <string name="run_background">Background running</string>
+    <string name="signout_fail">Signout failure,please make sure the network connection is normal</string>
 
     <!-- 修改密码部分 -->
     <string name="modify_input_user_new_password">Enter a new password</string>
