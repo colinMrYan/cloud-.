@@ -15,8 +15,10 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
+import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.bean.mine.Language;
 import com.inspur.emmcloud.bean.system.AppConfig;
+import com.inspur.emmcloud.bean.system.EventMessage;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.service.BackgroundService;
@@ -28,6 +30,7 @@ import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.DataCleanManager;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
+import com.inspur.emmcloud.util.privates.TabAndAppExistUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.AppConfigCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MyAppCacheUtils;
@@ -36,6 +39,10 @@ import com.inspur.emmcloud.widget.SwitchView;
 import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 public class SettingActivity extends BaseActivity {
 
@@ -53,6 +60,7 @@ public class SettingActivity extends BaseActivity {
         initView();
         setLanguage();
         handMessage();
+        EventBus.getDefault().register(this);
     }
 
     private void initView() {
@@ -203,8 +211,15 @@ public class SettingActivity extends BaseActivity {
                     public void onClick(QMUIDialog dialog, int index) {
                         dialog.dismiss();
                         if (NetUtils.isNetworkConnected(getApplicationContext())){
-                            ((MyApplication) getApplication()).signout();
-                            stopAppService();
+                            // TODO Auto-generated method stub
+                            boolean isCommunicateExist = TabAndAppExistUtils.isTabExist(MyApplication.getInstance(),"communicate");
+                            if (MyApplication.getInstance().isChatVersionV0() || !isCommunicateExist){
+                                MyApplication.getInstance().signout();
+                            }else {
+                                loadingDlg.show();
+                                WSAPIService.getInstance().sendAppStatus("REMOVED");
+                            }
+
                         }
                     }
                 })
@@ -299,9 +314,27 @@ public class SettingActivity extends BaseActivity {
     protected void onDestroy() {
         // TODO Auto-generated method stub
         super.onDestroy();
+        EventBus.getDefault().unregister(this);
         if (handler != null) {
             handler = null;
         }
+    }
+
+
+    //接收到websocket发过来的消息
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReiceiveWebsocketRemoveCallback(EventMessage eventMessage) {
+        if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_WEBSOCKET_STATUS_REMOVE)) {
+            LoadingDialog.dimissDlg(loadingDlg);
+            if (eventMessage.getStatus() == 200) {
+                MyApplication.getInstance().signout(false);
+                stopAppService();
+            }else {
+                ToastUtils.show(MyApplication.getInstance(),R.string.signout_fail);
+            }
+
+        }
+
     }
 
 

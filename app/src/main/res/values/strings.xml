@@ -518,6 +518,7 @@
     <string name="web_app_auto_rotate">Web应用支持旋转</string>
     <string name="turn_off_success">关闭成功</string>
     <string name="run_background">后台运行</string>
+    <string name="signout_fail">注销失败，请确保网络连接正常</string>
 
     <!-- 修改密码部分 -->
     <string name="modify_input_user_new_password">请输入新密码</string>
