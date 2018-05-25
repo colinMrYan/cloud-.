@@ -1,7 +1,5 @@
 package com.inspur.emmcloud.util.privates.cache;
 
-import android.content.Context;
-
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.bean.chat.PersonDto;
 import com.inspur.emmcloud.bean.chat.Robot;
@@ -9,6 +7,7 @@ import com.inspur.emmcloud.bean.contact.Contact;
 import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.PinyinUtils;
+import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 
 import org.xutils.db.sqlite.WhereBuilder;
@@ -257,20 +256,151 @@ public class ContactUserCacheUtils {
         List<Contact> searchContactList = null;
         searchText = "%" + searchText + "%";
         try {
-            searchContactList = DbCacheUtils.getDb(context).selector
-                    (Contact.class)
-                    .where("type", "=", "user")
+            List<ContactUser> contactUserList = DbCacheUtils.getDb().selector
+                    (ContactUser.class)
                     .and(WhereBuilder.b("mobile", "like", searchText)
-                            .or("realName", "like", searchText)
+                            .or("name", "like", searchText)
                     )
                     .and(WhereBuilder.b().expr("id not in" + noInSql))
                     .limit(limit).findAll();
+            if (contactUserList != null){
+                searchContactList = Contact.contactUserList2ContactList(contactUserList);
+            }
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (searchContactList == null) {
+            searchContactList = new ArrayList<>();
+        }
+        return searchContactList;
+    }
+
+
+    /**
+     * 搜索子目录中符合条件的通讯录
+     * @param searchText
+     * @param excludeContactList  排除掉某些数据
+     * @param limit
+     * @return
+     */
+    public static List<Contact> getSearchContact(String searchText, List<Contact> excludeContactList, int limit) {
+        searchText = searchText.trim();
+        //解决ios通讯录复制后手机号带特殊字符的问题
+        String iosSpecialString1 = (char) (8236) + "";
+        String iosSpecialString2 = (char) (8237) + "";
+        searchText = searchText.replaceAll(iosSpecialString1, "").replaceAll(iosSpecialString2, "");
+        String searchStr = searchText;
+        String noInSql = "()";
+        noInSql = getNoInSql(noInSql, excludeContactList);
+        //数字大于4位搜索手机号
+        if (searchText.length() > 3 && StringUtils.isNumeric(searchText)) {
+            return getSearchContactByPhoneNum(searchText, noInSql, limit);
+        }
+        List<Contact> searchContactList = new ArrayList<>();
+        try {
+            List<ContactUser> searchContactUserList1 = DbCacheUtils.getDb().selector
+                    (ContactUser.class)
+                    .and(WhereBuilder.b("pinyin", "=", searchStr)
+                            .or("name", "=", searchStr)
+                            .or("nameGlobal", "=", searchStr)
+                            .or("code", "=", searchStr))
+                    .and(WhereBuilder.b().expr("id not in" + noInSql))
+                    .limit(limit).findAll();
+            if (searchContactUserList1 != null){
+                searchContactList.addAll(Contact.contactUserList2ContactList(searchContactUserList1));
+                noInSql = getNoInSql(noInSql, searchContactList);
+            }
+
+            if (limit == -1 || searchContactList.size() < limit) {
+                searchStr = searchText + "%";
+                List<ContactUser> searchContactUserList2 = DbCacheUtils.getDb().selector
+                        (ContactUser.class)
+                        .and(WhereBuilder.b("pinyin", "like", searchStr)
+                                .or("name", "like", searchStr)
+                                .or("nameGlobal", "like", searchStr)
+                                .or("code", "like", searchStr))
+                        .and(WhereBuilder.b().expr("id not in" + noInSql))
+                        .limit(limit - searchContactList.size()).findAll();
+                if (searchContactUserList2)
+                searchContactList.addAll(searchContactList.size(), searchContactList2);
+                noInSql = getNoInSql(noInSql, searchContactList);
+            }
+
+            if (limit == -1 || searchContactList.size() < limit) {
+                searchStr = "%" + searchText;
+                List<Contact> searchContactList3 = DbCacheUtils.getDb().selector
+                        (ContactUser.class)
+                        .and(WhereBuilder.b("pinyin", "like", searchStr)
+                                .or("name", "like", searchStr)
+                                .or("nameGlobal", "like", searchStr))
+                        .and(WhereBuilder.b().expr("id not in" + noInSql))
+                        .limit(limit - searchContactList.size()).findAll();
+                searchContactList.addAll(searchContactList.size(), searchContactList3);
+                noInSql = getNoInSql(noInSql, searchContactList);
+            }
+
+            if (limit == -1 || searchContactList.size() < limit) {
+                searchStr = "%" + searchText + "%";
+                List<Contact> searchContactList4 = DbCacheUtils.getDb().selector
+                        (ContactUser.class)
+                        .and(WhereBuilder.b("pinyin", "like", searchStr)
+                                .or("name", "like", searchStr)
+                                .or("nameGlobal", "like", searchStr))
+                        .and(WhereBuilder.b().expr("id not in" + noInSql))
+                        .limit(limit - searchContactList.size()).findAll();
+                searchContactList.addAll(searchContactList.size(), searchContactList4);
+                noInSql = getNoInSql(noInSql, searchContactList);
+            }
+
+            if (limit == -1 || searchContactList.size() < limit) {
+                searchStr = "";
+                for (int i = 0; i < searchText.length(); i++) {
+                    if (i < searchText.length() - 1) {
+                        searchStr += "%" + searchText.charAt(i);
+                    } else {
+                        searchStr += "%" + searchText.charAt(i) + "%";
+                    }
+                }
+                List<Contact> searchContactList5 = DbCacheUtils.getDb().selector
+                        (ContactUser.class)
+                        .and(WhereBuilder.b("pinyin", "like", searchStr)
+                                .or("name", "like", searchStr)
+                                .or("nameGlobal", "like", searchStr))
+                        .and(WhereBuilder.b().expr("id not in" + noInSql))
+                        .limit(limit - searchContactList.size()).findAll();
+                searchContactList.addAll(searchContactList.size(), searchContactList5);
+            }
+        } catch (Exception e) {
+            // TODO: handle exception
             e.printStackTrace();
         }
         if (searchContactList == null) {
             searchContactList = new ArrayList<Contact>();
         }
         return searchContactList;
+    }
+
+    /**
+     * 获取sql中的id数组
+     *
+     * @param noInSql
+     * @param addSearchContactList
+     * @return
+     */
+    private static String getNoInSql(String noInSql, List<Contact> addSearchContactList) {
+        if (addSearchContactList != null && addSearchContactList.size() > 0) {
+            noInSql = noInSql.substring(0, noInSql.length() - 1);
+            if (noInSql.length() > 1) {
+                noInSql = noInSql + ",";
+            }
+            for (int i = 0; i < addSearchContactList.size(); i++) {
+                noInSql = noInSql + addSearchContactList.get(i).getId() + ",";
+            }
+            if (noInSql.endsWith(",")) {
+                noInSql = noInSql.substring(0, noInSql.length() - 1);
+            }
+            noInSql = noInSql + ")";
+        }
+        return noInSql;
     }
 }
