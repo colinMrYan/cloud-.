@@ -97,6 +97,7 @@ public class WebSocketPush {
             query.put("device.push", pushId);
         } else {
             query.put("client", chatClientId);
+            query.put("enterprise",MyApplication.getInstance().getCurrentEnterprise().getId());
         }
         opts.path = path;
         LogUtils.debug(TAG, "query.toString()=" + ParseQS.encode(query));
@@ -183,14 +184,22 @@ public class WebSocketPush {
                     WSAPIService.getInstance().sendAppStatus("REMOVED");
                 }
             }
+        }
+        closeWebsocket();
+    }
+
+    /**
+     * 切换租户的时候直接断开Websocket
+     */
+    public void closeWebsocket() {
+        if (mSocket != null) {
             mSocket.disconnect();
             removeListeners();
             mSocket.close();
             mSocket = null;
-            if (tracerMap != null) {
-                tracerMap.clear();
-            }
-
+        }
+        if (tracerMap != null) {
+            tracerMap.clear();
         }
     }
 
