@@ -110,7 +110,6 @@ public class ContactSearchActivity extends BaseActivity {
     private GroupTitleAdapter groupTitleAdapter;
     private OpenGroupListAdapter openGroupAdapter;
     private SecondGroupListAdapter secondGroupListAdapter;
-    private Contact rootContact;
     private int orginCurrentArea = 0; // orgin页面目前的搜索模式
     private int searchArea = 0; // 搜索范围
     private String title;
@@ -144,8 +143,6 @@ public class ContactSearchActivity extends BaseActivity {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contact_search);
-        rootContact = ContactCacheUtils
-                .getRootContact(ContactSearchActivity.this);
         getIntentData();
         handMessage();
         initView();
@@ -372,8 +369,7 @@ public class ContactSearchActivity extends BaseActivity {
                     getString(R.string.all), ""));
         }
         openGroupTextList.add(new FirstGroupTextModel(name, id));
-        openGroupContactList = ContactCacheUtils.getChildContactList(
-                getApplicationContext(), id);
+        openGroupContactList = ContactOrgCacheUtils.getChildContactList(id);
         orginCurrentArea = SEARCH_CONTACT;
         isSearchSingle = true;
         displayOpenLayout();

@@ -1,12 +1,17 @@
 package com.inspur.emmcloud.util.privates.cache;
 
+import android.content.Context;
+
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.bean.chat.PersonDto;
 import com.inspur.emmcloud.bean.chat.Robot;
+import com.inspur.emmcloud.bean.contact.Contact;
 import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.PinyinUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
+
+import org.xutils.db.sqlite.WhereBuilder;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -239,4 +244,33 @@ public class ContactUserCacheUtils {
         return contactUser;
     }
 
+
+        /**
+     * 通过手机号搜索通讯录
+     *
+     * @param searchText
+     * @param haveSearchContactList
+     * @param limit
+     * @return
+     */
+    public static List<Contact> getSearchContactByPhoneNum(String searchText, String noInSql, int limit) {
+        List<Contact> searchContactList = null;
+        searchText = "%" + searchText + "%";
+        try {
+            searchContactList = DbCacheUtils.getDb(context).selector
+                    (Contact.class)
+                    .where("type", "=", "user")
+                    .and(WhereBuilder.b("mobile", "like", searchText)
+                            .or("realName", "like", searchText)
+                    )
+                    .and(WhereBuilder.b().expr("id not in" + noInSql))
+                    .limit(limit).findAll();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (searchContactList == null) {
+            searchContactList = new ArrayList<Contact>();
+        }
+        return searchContactList;
+    }
 }
