@@ -321,35 +321,39 @@ public class ContactUserCacheUtils {
                                 .or("code", "like", searchStr))
                         .and(WhereBuilder.b().expr("id not in" + noInSql))
                         .limit(limit - searchContactList.size()).findAll();
-                if (searchContactUserList2)
-                searchContactList.addAll(searchContactList.size(), searchContactList2);
-                noInSql = getNoInSql(noInSql, searchContactList);
+                if (searchContactUserList2 != null){
+                    searchContactList.addAll(Contact.contactUserList2ContactList(searchContactUserList2));
+                    noInSql = getNoInSql(noInSql, searchContactList);
+                }
             }
 
             if (limit == -1 || searchContactList.size() < limit) {
                 searchStr = "%" + searchText;
-                List<Contact> searchContactList3 = DbCacheUtils.getDb().selector
+                List<ContactUser> searchContactUserList3 = DbCacheUtils.getDb().selector
                         (ContactUser.class)
                         .and(WhereBuilder.b("pinyin", "like", searchStr)
                                 .or("name", "like", searchStr)
                                 .or("nameGlobal", "like", searchStr))
                         .and(WhereBuilder.b().expr("id not in" + noInSql))
                         .limit(limit - searchContactList.size()).findAll();
-                searchContactList.addAll(searchContactList.size(), searchContactList3);
-                noInSql = getNoInSql(noInSql, searchContactList);
+                if (searchContactUserList3 != null){
+                    searchContactList.addAll(Contact.contactUserList2ContactList(searchContactUserList3));
+                    noInSql = getNoInSql(noInSql, searchContactList);
+                }
             }
-
             if (limit == -1 || searchContactList.size() < limit) {
                 searchStr = "%" + searchText + "%";
-                List<Contact> searchContactList4 = DbCacheUtils.getDb().selector
+                List<ContactUser> searchContactUserList4 = DbCacheUtils.getDb().selector
                         (ContactUser.class)
                         .and(WhereBuilder.b("pinyin", "like", searchStr)
                                 .or("name", "like", searchStr)
                                 .or("nameGlobal", "like", searchStr))
                         .and(WhereBuilder.b().expr("id not in" + noInSql))
                         .limit(limit - searchContactList.size()).findAll();
-                searchContactList.addAll(searchContactList.size(), searchContactList4);
-                noInSql = getNoInSql(noInSql, searchContactList);
+                if (searchContactUserList4 != null){
+                    searchContactList.addAll(Contact.contactUserList2ContactList(searchContactUserList4));
+                    noInSql = getNoInSql(noInSql, searchContactList);
+                }
             }
 
             if (limit == -1 || searchContactList.size() < limit) {
@@ -361,21 +365,20 @@ public class ContactUserCacheUtils {
                         searchStr += "%" + searchText.charAt(i) + "%";
                     }
                 }
-                List<Contact> searchContactList5 = DbCacheUtils.getDb().selector
+                List<ContactUser> searchContactList5 = DbCacheUtils.getDb().selector
                         (ContactUser.class)
                         .and(WhereBuilder.b("pinyin", "like", searchStr)
                                 .or("name", "like", searchStr)
                                 .or("nameGlobal", "like", searchStr))
                         .and(WhereBuilder.b().expr("id not in" + noInSql))
                         .limit(limit - searchContactList.size()).findAll();
-                searchContactList.addAll(searchContactList.size(), searchContactList5);
+                if (searchContactList5 != null){
+                    searchContactList.addAll(Contact.contactUserList2ContactList(searchContactList5));
+                }
             }
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
-        }
-        if (searchContactList == null) {
-            searchContactList = new ArrayList<Contact>();
         }
         return searchContactList;
     }

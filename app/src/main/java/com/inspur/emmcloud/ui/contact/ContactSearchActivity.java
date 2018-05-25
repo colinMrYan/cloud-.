@@ -49,7 +49,6 @@ import com.inspur.emmcloud.util.privates.ChatCreateUtils.OnCreateDirectChannelLi
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.CommonContactCacheUtils;
-import com.inspur.emmcloud.util.privates.cache.ContactCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactOrgCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.widget.CircleImageView;
@@ -527,9 +526,7 @@ public class ContactSearchActivity extends BaseActivity {
                         searchChannelGroupList = ChannelGroupCacheUtils
                                 .getSearchChannelGroupList(getApplicationContext(),
                                         searchText);
-                        searchContactList = ContactCacheUtils.getSearchContact(
-                                getApplicationContext(), searchText, excludeContactList,
-                                4);
+                        searchContactList = ContactUserCacheUtils.getSearchContact(searchText, excludeContactList,4);
                         break;
                     case SEARCH_CHANNELGROUP:
                         searchChannelGroupList = ChannelGroupCacheUtils
@@ -537,9 +534,7 @@ public class ContactSearchActivity extends BaseActivity {
                                         searchText);
                         break;
                     case SEARCH_CONTACT:
-                        searchContactList = ContactCacheUtils.getSearchContact(
-                                getApplicationContext(), searchText, excludeContactList,
-                                4);
+                        searchContactList = ContactUserCacheUtils.getSearchContact(searchText, excludeContactList,4);
                         break;
 
                     default:

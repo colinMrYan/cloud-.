@@ -45,7 +45,7 @@ import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.CommonContactCacheUtils;
-import com.inspur.emmcloud.util.privates.cache.ContactCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.widget.CircleImageView;
 import com.inspur.emmcloud.widget.FlowLayout;
 import com.inspur.emmcloud.widget.MaxHightScrollView;
@@ -364,8 +364,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
-                                searchContactList = ContactCacheUtils.getSearchContact(
-                                        getApplicationContext(), searchText,
+                                searchContactList = ContactUserCacheUtils.getSearchContact(searchText,
                                         excludeContactList, 25);
                                 handler.sendEmptyMessage(REFRESH_CONTACT_DATA);
                             }
@@ -593,9 +592,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
         List<Contact> excludeSearchContactList = new ArrayList<>();
         excludeSearchContactList.addAll(searchContactList);
         excludeSearchContactList.addAll(excludeContactList);
-        List<Contact> moreContactList = ContactCacheUtils.getSearchContact(
-                getApplicationContext(), searchText,
-                excludeSearchContactList, 25);
+        List<Contact> moreContactList = ContactUserCacheUtils.getSearchContact(searchText, excludeSearchContactList, 25);
         swipeRefreshLayout.setLoading(false);
         swipeRefreshLayout.setCanLoadMore((moreContactList.size() == 25));
         if (moreContactList.size() != 0) {
