@@ -97,8 +97,8 @@ public class WebSocketPush {
             query.put("device.push", pushId);
         } else {
             query.put("client", chatClientId);
-            query.put("enterprise",MyApplication.getInstance().getCurrentEnterprise().getId());
         }
+        query.put("enterprise",MyApplication.getInstance().getCurrentEnterprise().getId());
         opts.path = path;
         LogUtils.debug(TAG, "query.toString()=" + ParseQS.encode(query));
         opts.query = ParseQS.encode(query);
