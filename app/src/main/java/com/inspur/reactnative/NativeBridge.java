@@ -235,7 +235,7 @@ public class NativeBridge extends ReactContextBaseJavaModule implements Activity
             map.putString("email", contactUser.getEmail());
          //   map.putString("org_name", orgName);
           //  map.putString("type", type);
-            map.putString("head", APIUri.getChannelImgUrl(MyApplication.getInstance(), contactUser.getId()));
+            map.putString("head", APIUri.getUserIconUrl(MyApplication.getInstance(), contactUser.getId()));
         } catch (Exception e) {
             e.printStackTrace();
         }

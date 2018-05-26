@@ -69,7 +69,7 @@ public class VolumeInfoMemberAdapter extends BaseAdapter {
         } else {
             String uid = memberList.get(position);
             userName = ContactUserCacheUtils.getUserName(uid);
-            userPhotoUrl = APIUri.getChannelImgUrl(context, uid);
+            userPhotoUrl = APIUri.getUserIconUrl(context, uid);
         }
         nameText.setText(userName);
         ImageDisplayUtils.getInstance().displayImage(memberHeadImg, userPhotoUrl, R.drawable.icon_photo_default);

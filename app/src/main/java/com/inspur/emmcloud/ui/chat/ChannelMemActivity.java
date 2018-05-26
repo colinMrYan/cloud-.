@@ -94,7 +94,7 @@ public class ChannelMemActivity extends BaseActivity {
 
             String uid = memberArray[position];
             ImageDisplayUtils.getInstance().displayImage(viewHolder.memberHeadImg,
-                    APIUri.getChannelImgUrl(ChannelMemActivity.this, uid), R.drawable.icon_photo_default);
+                    APIUri.getUserIconUrl(ChannelMemActivity.this, uid), R.drawable.icon_photo_default);
             viewHolder.nameText.setText("");
             return convertView;
         }

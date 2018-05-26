@@ -88,7 +88,7 @@ public class UserInfoActivity extends BaseActivity {
         String mail = contactUser.getEmail();
         String phoneNum = contactUser.getMobile();
         String name = contactUser.getName();
-        String headUrl = APIUri.getChannelImgUrl(UserInfoActivity.this, contactUser.getId());
+        String headUrl = APIUri.getUserIconUrl(UserInfoActivity.this, contactUser.getId());
         String organize= null;
         ContactOrg contactOrg = ContactOrgCacheUtils.getContactOrg(contactUser.getParentId());
         if (organize != null){

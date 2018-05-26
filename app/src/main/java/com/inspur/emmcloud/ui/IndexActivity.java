@@ -63,8 +63,6 @@ public class IndexActivity extends IndexBaseActivity {
     private WeakHandler handler;
     private boolean isHasCacheContact = false;
     private LoadingDialog loadingDlg;
-    private long a = System.currentTimeMillis();
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
