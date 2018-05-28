@@ -19,6 +19,7 @@ import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
 import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
 import com.inspur.imp.plugin.camera.imagepicker.ui.ImageGridActivity;
 import com.inspur.imp.plugin.camera.mycamera.MyCameraActivity;
+import com.inspur.imp.util.DialogUtil;
 import com.inspur.imp.util.compressor.Compressor;
 
 import org.json.JSONArray;
@@ -38,12 +39,14 @@ public class PhotoService extends ImpPlugin {
     @Override
     public void execute(String action, JSONObject paramsObject) {
         // TODO Auto-generated method stub
+        LogUtils.YfcDebug("调用到PhotoService："+action);
         this.paramsObject = paramsObject;
         if ("selectAndUpload".equals(action)) {
             selectAndUpload();
-        }
-        if ("takePhotoAndUpload".equals(action)) {
+        }else if ("takePhotoAndUpload".equals(action)) {
             takePhotoAndUpload();
+        }else{
+            DialogUtil.getInstance(getActivity()).show();
         }
     }
 
@@ -243,8 +246,8 @@ public class PhotoService extends ImpPlugin {
     /**
      * 处理异常网络请求
      *
+     * @param function
      * @param error
-     * @param responseCode
      */
     private void saveNetException( String function,String error) {
         AppExceptionCacheUtils.saveAppException(context,4,function,error,0);

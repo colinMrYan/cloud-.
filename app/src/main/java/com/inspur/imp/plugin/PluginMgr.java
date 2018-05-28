@@ -1,10 +1,12 @@
 package com.inspur.imp.plugin;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 
 import com.inspur.imp.api.iLog;
 import com.inspur.imp.engine.webview.ImpWebView;
+import com.inspur.imp.util.DialogUtil;
 import com.inspur.imp.util.StrUtil;
 
 import org.json.JSONException;
@@ -82,6 +84,8 @@ public class PluginMgr {
         // 执行接口的execute方法
         if (plugin != null) {
             plugin.execute(action, jo);
+        }else{
+            DialogUtil.getInstance((Activity)context).show();
         }
     }
 
@@ -121,6 +125,8 @@ public class PluginMgr {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }else{
+            DialogUtil.getInstance((Activity)context).show();
         }
         Log.d("jason", "2---");
         return res;
