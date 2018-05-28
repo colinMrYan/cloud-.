@@ -8,6 +8,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Environment;
 import android.os.Parcelable;
@@ -52,6 +53,7 @@ import com.inspur.reactnative.AuthorizationManagerPackage;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiskCache;
 import com.nostra13.universalimageloader.cache.disc.naming.HashCodeFileNameGenerator;
 import com.nostra13.universalimageloader.cache.memory.impl.UsingFreqLimitedMemoryCache;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
@@ -747,9 +749,14 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
      **/
     private void initImageLoader() {
         // TODO Auto-generated method stub
+        DisplayImageOptions options = new DisplayImageOptions.Builder()
+                // 设置图片的解码类型
+                .bitmapConfig(Bitmap.Config.RGB_565)
+                .build();
         ImageLoaderConfiguration.Builder builder = new ImageLoaderConfiguration.Builder(
                 getInstance())
-                .memoryCacheExtraOptions(1200, 1200)
+                .memoryCacheExtraOptions(1280, 1280)
+                .defaultDisplayImageOptions(options)
                 .imageDownloader(
                         new CustomImageDownloader(getApplicationContext()))
                 .threadPoolSize(6)

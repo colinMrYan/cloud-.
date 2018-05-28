@@ -1,13 +1,16 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 
-import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.MyViewPagerAdapter;
@@ -21,13 +24,15 @@ import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
+import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
+import com.inspur.emmcloud.util.privates.LanguageUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
+import org.xutils.x;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +42,7 @@ import java.util.List;
  *
  */
 @ContentView(R.layout.activity_guide)
-public class GuideActivity extends BaseActivity {
+public class GuideActivity extends Activity {
 
     @ViewInject(R.id.viewpager)
     private ViewPager viewPager;
@@ -48,7 +53,9 @@ public class GuideActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        StateBarUtils.changeStateBarColor(this, R.color.white);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);//没有标题
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
+        x.view().inject(this);
         deleteReactNativeResource();
         initView();
     }
@@ -78,6 +85,7 @@ public class GuideActivity extends BaseActivity {
             splashResIdList.add(R.drawable.guide_page_3);
             splashResIdList.add(R.drawable.guide_page_4);
             splashResIdList.add(R.drawable.guide_page_5);
+            splashResIdList.add(R.drawable.guide_page_6);
         }else {//版本升级进入
             splashResIdList.add(R.drawable.guide_page_1);
             splashResIdList.add(R.drawable.guide_page_2);
@@ -89,7 +97,8 @@ public class GuideActivity extends BaseActivity {
         for (int i = 0; i < splashResIdList.size(); i++) {
             View guideView = LayoutInflater.from(this).inflate(R.layout.view_pager_guide, null);
             ImageView img = (ImageView) guideView.findViewById(R.id.img);
-            img.setImageResource(splashResIdList.get(i));
+                    ImageDisplayUtils.getInstance().displayImage(img,"drawable://"+splashResIdList.get(i));
+           // img.setImageResource(splashResIdList.get(i));
             if (i == splashResIdList.size() - 1) {
                 Button enterButton = ((Button) guideView
                         .findViewById(R.id.enter_app_btn));
@@ -188,5 +197,10 @@ public class GuideActivity extends BaseActivity {
         //存储上一个版本，不再有本地默认版本
         PreferencesUtils.putString(GuideActivity.this, Constant.PREF_MY_INFO_OLD,PreferencesUtils.getString(GuideActivity.this,"",""));
         PreferencesUtils.putString(GuideActivity.this, "myInfo", response);
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LanguageUtils.attachBaseContext(newBase));
     }
 }
