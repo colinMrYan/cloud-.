@@ -87,18 +87,18 @@ public class GuideActivity extends Activity {
             splashResIdList.add(R.drawable.guide_page_5);
             splashResIdList.add(R.drawable.guide_page_6);
         }else {//版本升级进入
-            splashResIdList.add(R.drawable.guide_page_1);
-            splashResIdList.add(R.drawable.guide_page_2);
-            splashResIdList.add(R.drawable.guide_page_3);
-            splashResIdList.add(R.drawable.guide_page_4);
-            splashResIdList.add(R.drawable.guide_page_5);
+            splashResIdList.add(R.drawable.guide_page_new_1);
+            splashResIdList.add(R.drawable.guide_page_new_2);
+            splashResIdList.add(R.drawable.guide_page_new_3);
+            splashResIdList.add(R.drawable.guide_page_new_4);
+            splashResIdList.add(R.drawable.guide_page_new_5);
+            splashResIdList.add(R.drawable.guide_page_new_6);
         }
 
         for (int i = 0; i < splashResIdList.size(); i++) {
             View guideView = LayoutInflater.from(this).inflate(R.layout.view_pager_guide, null);
             ImageView img = (ImageView) guideView.findViewById(R.id.img);
                     ImageDisplayUtils.getInstance().displayImage(img,"drawable://"+splashResIdList.get(i));
-           // img.setImageResource(splashResIdList.get(i));
             if (i == splashResIdList.size() - 1) {
                 Button enterButton = ((Button) guideView
                         .findViewById(R.id.enter_app_btn));
