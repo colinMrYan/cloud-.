@@ -11,6 +11,7 @@ import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.imp.plugin.ImpPlugin;
+import com.inspur.imp.util.DialogUtil;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -32,8 +33,9 @@ public class BroadcastService extends ImpPlugin {
         } else if ("receive".equals(action)) {
             this.paramsObject = paramsObject;
             registerReceiver(paramsObject);
+        }else{
+            DialogUtil.getInstance(getActivity()).show();
         }
-
     }
 
     /**

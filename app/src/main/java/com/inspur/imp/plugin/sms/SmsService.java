@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.inspur.imp.api.ImpActivity;
 import com.inspur.imp.plugin.ImpPlugin;
+import com.inspur.imp.util.DialogUtil;
 import com.inspur.imp.util.StrUtil;
 
 import org.json.JSONArray;
@@ -55,6 +56,8 @@ public class SmsService extends ImpPlugin {
 		// 直接发送短
 		else if ("batchSend".equals(action)) {
 			batchSend(paramsObject);
+		}else{
+			DialogUtil.getInstance(getActivity()).show();
 		}
 
 	}

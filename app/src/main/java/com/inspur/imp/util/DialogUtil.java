@@ -1,6 +1,7 @@
 package com.inspur.imp.util;
 
 import android.app.Activity;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
 
@@ -13,34 +14,15 @@ import com.inspur.emmcloud.widget.dialogs.MyDialog;
 
 public class DialogUtil {
 
-//    private static MyQMUIDialog.MessageDialogBuilder myQMUIDialog;
-//    public static MyQMUIDialog.MessageDialogBuilder getInstance(Activity activity){
-//        if(myQMUIDialog == null){
-//            synchronized (DialogUtil.class){
-//                if(myQMUIDialog == null){
-//                    myQMUIDialog = new MyQMUIDialog.MessageDialogBuilder(activity)
-//                            .setMessage("方法名错误或此版本的客户端不支持，请检查")
-//                            .addAction(R.string.ok, new QMUIDialogAction.ActionListener() {
-//                                @Override
-//                                public void onClick(QMUIDialog dialog, int index) {
-//                                    dialog.dismiss();
-//                                }
-//                            });
-//                }
-//            }
-//        }
-//        return myQMUIDialog;
-//    }
-
-
-
     private static MyDialog myDialog;
     public static MyDialog getInstance(Activity activity){
         if(myDialog == null){
             synchronized (MyDialog.class){
                 if(myDialog == null){
                     myDialog = new MyDialog(activity, R.layout.dialog_one_button,R.style.CustomDialog);
-                    ((TextView)myDialog.findViewById(R.id.show_text)).setText("方法名错误或此版本的客户端不支持，请检查");
+                    TextView textView = ((TextView)myDialog.findViewById(R.id.show_text));
+                    textView.setGravity(Gravity.LEFT);
+                    textView.setText(R.string.imp_function_error);
                     myDialog.findViewById(R.id.ok_btn).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {

@@ -7,6 +7,7 @@ import android.os.Vibrator;
 import android.provider.Settings;
 
 import com.inspur.imp.plugin.ImpPlugin;
+import com.inspur.imp.util.DialogUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -56,6 +57,8 @@ public class DeviceService extends ImpPlugin {
 				e.printStackTrace();
 			}
 			res = jsonObject.toString();
+		}else{
+			DialogUtil.getInstance(getActivity()).show();
 		}
 		return res;
 	}
@@ -69,6 +72,8 @@ public class DeviceService extends ImpPlugin {
 		// 震动
 		else if (action.equals("vibrate")) {
 			vibrate(jsonObject);
+		}else{
+			DialogUtil.getInstance(getActivity()).show();
 		}
 
 	}

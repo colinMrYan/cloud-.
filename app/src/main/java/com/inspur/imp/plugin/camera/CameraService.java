@@ -30,6 +30,7 @@ import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
 import com.inspur.imp.plugin.camera.imagepicker.ui.ImageGridActivity;
 import com.inspur.imp.plugin.camera.imagepicker.view.CropImageView;
 import com.inspur.imp.plugin.photo.PhotoNameUtils;
+import com.inspur.imp.util.DialogUtil;
 import com.inspur.imp.util.compressor.Compressor;
 
 import org.json.JSONArray;
@@ -106,9 +107,10 @@ public class CameraService extends ImpPlugin {
         LogUtils.jasonDebug("paramsObject=" + paramsObject);
         if ("open".equals(action)) {
             open(paramsObject);
-        }
-        if ("getPicture".equals(action)) {
+        }else if ("getPicture".equals(action)) {
             getPicture(paramsObject);
+        }else{
+            DialogUtil.getInstance(getActivity()).show();
         }
     }
 

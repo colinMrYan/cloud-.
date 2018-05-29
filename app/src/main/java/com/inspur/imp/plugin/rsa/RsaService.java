@@ -1,8 +1,8 @@
 package com.inspur.imp.plugin.rsa;
 
 
-
 import com.inspur.imp.plugin.ImpPlugin;
+import com.inspur.imp.util.DialogUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -54,6 +54,8 @@ public class RsaService extends ImpPlugin {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+		}else{
+			DialogUtil.getInstance(getActivity()).show();
 		}
 		return content;
 	}

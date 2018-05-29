@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import com.inspur.imp.api.Res;
 import com.inspur.imp.plugin.ImpPlugin;
+import com.inspur.imp.util.DialogUtil;
 import com.inspur.imp.util.StrUtil;
 
 import org.json.JSONException;
@@ -58,6 +59,8 @@ public class DialogService extends ImpPlugin {
 		// 调用prompt组件
 		else if ("prompt".equals(action)) {
 			prompt(paramsObject);
+		}else{
+			DialogUtil.getInstance(getActivity()).show();
 		}
 	}
 

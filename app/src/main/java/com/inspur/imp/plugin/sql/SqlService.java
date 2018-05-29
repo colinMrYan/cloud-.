@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 
 import com.inspur.imp.plugin.ImpPlugin;
+import com.inspur.imp.util.DialogUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -35,6 +36,8 @@ public class SqlService extends ImpPlugin {
 			openDatabase(jsonObject);
 		} else if ("executeSql".equals(action)) {
 			executeSql(jsonObject);
+		}else{
+			DialogUtil.getInstance(getActivity()).show();
 		}
 	}
 

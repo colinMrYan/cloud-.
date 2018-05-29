@@ -39,7 +39,7 @@ public class PhotoService extends ImpPlugin {
     @Override
     public void execute(String action, JSONObject paramsObject) {
         // TODO Auto-generated method stub
-        LogUtils.YfcDebug("调用到PhotoService："+action);
+        action = "";
         this.paramsObject = paramsObject;
         if ("selectAndUpload".equals(action)) {
             selectAndUpload();
