@@ -28,6 +28,7 @@ import android.provider.MediaStore;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Base64;
 import android.util.DisplayMetrics;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -796,6 +797,30 @@ public class ImageUtils {
         Bitmap bitmap = textView.getDrawingCache();
         return bitmap;
     }
+
+    public static void drawAndSavePhotoTextImg(Context context, String content,String savePath){
+		TextView textView = new TextView(context);
+		textView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+		textView.setWidth(100);
+		textView.setHeight(100);
+		textView.setBackgroundColor(Color.parseColor("#3596f7"));
+		textView.setTextSize(20);
+		textView.setTextColor(Color.WHITE);
+		textView.setGravity(Gravity.CENTER);
+		//textView.setPadding(DensityUtil.dip2px(context,15),DensityUtil.dip2px(context,15),DensityUtil.dip2px(context,15),DensityUtil.dip2px(context,15));
+		LogUtils.jasonDebug("content="+content);
+		textView.setText(content);
+		textView.measure(View.MeasureSpec.makeMeasureSpec(100, View.MeasureSpec.AT_MOST),
+				View.MeasureSpec.makeMeasureSpec(100, View.MeasureSpec.AT_MOST));
+		textView.layout(0, 0, textView.getMeasuredWidth(), textView.getMeasuredHeight());
+		textView.buildDrawingCache();
+		Bitmap bitmap = textView.getDrawingCache();
+		try {
+			saveImageToSD(context,savePath,bitmap,100);
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+	}
 
     /**
      * 获取paddingLeft

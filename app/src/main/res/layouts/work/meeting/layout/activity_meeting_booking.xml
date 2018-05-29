@@ -379,7 +379,7 @@
 
                     <!-- 会议成员先不让点击 -->
 
-                    <com.inspur.emmcloud.widget.CircleImageView
+                    <com.inspur.emmcloud.widget.CircleTextImageView
                         android:id="@+id/meeting_booking_member_head_img1"
                         android:layout_width="33.5dp"
                         android:layout_height="33.5dp"
@@ -387,7 +387,7 @@
                         android:src="@drawable/ic_launcher"
                         android:visibility="gone" />
 
-                    <com.inspur.emmcloud.widget.CircleImageView
+                    <com.inspur.emmcloud.widget.CircleTextImageView
                         android:id="@+id/meeting_booking_member_head_img2"
                         android:layout_width="33.5dp"
                         android:layout_height="33.5dp"
@@ -396,7 +396,7 @@
                         android:src="@drawable/ic_launcher"
                         android:visibility="gone" />
 
-                    <com.inspur.emmcloud.widget.CircleImageView
+                    <com.inspur.emmcloud.widget.CircleTextImageView
                         android:id="@+id/meeting_booking_member_head_img3"
                         android:layout_width="33.5dp"
                         android:layout_height="33.5dp"
@@ -405,7 +405,7 @@
                         android:src="@drawable/ic_launcher"
                         android:visibility="gone" />
 
-                    <com.inspur.emmcloud.widget.CircleImageView
+                    <com.inspur.emmcloud.widget.CircleTextImageView
                         android:id="@+id/meeting_booking_member_head_img4"
                         android:layout_width="33.5dp"
                         android:layout_height="33.5dp"
@@ -414,7 +414,7 @@
                         android:src="@drawable/ic_launcher"
                         android:visibility="gone" />
 
-                    <com.inspur.emmcloud.widget.CircleImageView
+                    <com.inspur.emmcloud.widget.CircleTextImageView
                         android:id="@+id/meeting_booking_member_head_img5"
                         android:layout_width="33.5dp"
                         android:layout_height="33.5dp"
@@ -476,7 +476,7 @@
 
                     <!-- 会议成员先不让点击 -->
 
-                    <com.inspur.emmcloud.widget.CircleImageView
+                    <com.inspur.emmcloud.widget.CircleTextImageView
                         android:id="@+id/mession_memhead_img"
                         android:layout_width="33.5dp"
                         android:layout_height="33.5dp"

@@ -125,7 +125,7 @@ public class ContactAPIService {
 		x.http().post(params, new Callback.CommonCallback<byte[]>() {
 			@Override
 			public void onSuccess(byte[] bytes) {
-				LogUtils.jasonDebug("getContactUserList:"+new String(bytes));
+				//LogUtils.jasonDebug("getContactUserList:"+new String(bytes));
 				apiInterface.returnContactUserListSuccess(bytes);
 			}
 
@@ -156,7 +156,7 @@ public class ContactAPIService {
 		x.http().post(params, new Callback.CommonCallback<byte[]>() {
 			@Override
 			public void onSuccess(byte[] bytes) {
-				LogUtils.jasonDebug("getContactOrgList:"+new String(bytes));
+			//	LogUtils.jasonDebug("getContactOrgList:"+new String(bytes));
 				apiInterface.returnContactOrgListSuccess(bytes);
 			}
 

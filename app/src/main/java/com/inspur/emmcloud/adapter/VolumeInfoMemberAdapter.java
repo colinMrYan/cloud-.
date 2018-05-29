@@ -11,7 +11,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
-import com.inspur.emmcloud.widget.CircleImageView;
+import com.inspur.emmcloud.widget.CircleTextImageView;
 
 import java.util.List;
 
@@ -51,7 +51,7 @@ public class VolumeInfoMemberAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         convertView = LayoutInflater.from(context).inflate(R.layout.channel_member_item_view,null);
-        CircleImageView memberHeadImg = (CircleImageView) convertView
+        CircleTextImageView memberHeadImg = (CircleTextImageView) convertView
                 .findViewById(R.id.member_head_img);
         TextView nameText = (TextView) convertView
                 .findViewById(R.id.name_text);

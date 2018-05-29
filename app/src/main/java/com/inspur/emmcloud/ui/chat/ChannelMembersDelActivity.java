@@ -18,7 +18,7 @@ import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
-import com.inspur.emmcloud.widget.CircleImageView;
+import com.inspur.emmcloud.widget.CircleTextImageView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -89,7 +89,7 @@ public class ChannelMembersDelActivity extends BaseActivity {
 		    ContactUser contactUser =  memberContactUserList.get(position);
 			LayoutInflater vi = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
 			convertView = vi.inflate(R.layout.channel_member_list_item, null);
-			CircleImageView circleImageView = (CircleImageView) convertView
+			CircleTextImageView circleImageView = (CircleTextImageView) convertView
 					.findViewById(R.id.head);
 			ImageDisplayUtils.getInstance().displayImage(circleImageView, APIUri
 					.getChannelImgUrl(MyApplication.getInstance(), contactUser.getId()),R.drawable.icon_person_default);

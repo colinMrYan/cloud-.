@@ -28,6 +28,7 @@ import android.widget.TextView;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.chat.Channel;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
 import com.inspur.emmcloud.bean.contact.Contact;
@@ -46,7 +47,7 @@ import com.inspur.emmcloud.util.privates.cache.ChannelCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.CommonContactCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
-import com.inspur.emmcloud.widget.CircleImageView;
+import com.inspur.emmcloud.widget.CircleTextImageView;
 import com.inspur.emmcloud.widget.FlowLayout;
 import com.inspur.emmcloud.widget.MaxHightScrollView;
 import com.inspur.emmcloud.widget.MySwipeRefreshLayout;
@@ -437,7 +438,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
                         R.layout.member_search_item_view, null);
                 viewHolder.nameText = (TextView) convertView
                         .findViewById(R.id.name_text);
-                viewHolder.photoImg = (CircleImageView) convertView.findViewById(R.id.photo_img);
+                viewHolder.photoImg = (CircleTextImageView) convertView.findViewById(R.id.photo_img);
                 viewHolder.selectedImg = (ImageView) convertView
                         .findViewById(R.id.selected_img);
                 convertView.setTag(viewHolder);
@@ -479,7 +480,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
      * @param searchModel
      * @param photoImg
      */
-    private void displayImg(SearchModel searchModel, CircleImageView photoImg) {
+    private void displayImg(SearchModel searchModel, CircleTextImageView photoImg) {
         Integer defaultIcon = null; // 默认显示图标
         String icon = null;
         String type = searchModel.getType();
@@ -497,9 +498,8 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
         } else {
             defaultIcon = R.drawable.icon_person_default;
             if (!searchModel.getId().equals("null")) {
-                icon = searchModel.getIcon(ContactSearchMoreActivity.this);
+                icon = APIUri.getChannelImgUrl(MyApplication.getInstance(),searchModel.getId());
             }
-
         }
         ImageDisplayUtils.getInstance().displayImage(
                 photoImg, icon, defaultIcon);
@@ -510,7 +510,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
 
     public static class ViewHolder {
         TextView nameText;
-        CircleImageView photoImg;
+        CircleTextImageView photoImg;
         ImageView selectedImg;
     }
 
@@ -610,4 +610,5 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
             handler = null;
         }
     }
+
 }

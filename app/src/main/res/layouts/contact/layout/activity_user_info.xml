@@ -36,7 +36,7 @@
                 android:src="@drawable/selector_back_btn" />
         </RelativeLayout>
 
-        <com.inspur.emmcloud.widget.CircleImageView
+        <com.inspur.emmcloud.widget.CircleTextImageView
             android:id="@+id/photo_img"
             android:layout_width="70dp"
             android:layout_height="70dp"

@@ -29,9 +29,14 @@ import android.widget.TextView;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIInterfaceInstance;
+import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.api.apiservice.ContactAPIService;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
 import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.bean.contact.Contact;
+import com.inspur.emmcloud.bean.contact.ContactOrg;
+import com.inspur.emmcloud.bean.contact.ContactProtoBuf;
 import com.inspur.emmcloud.bean.contact.FirstGroupTextModel;
 import com.inspur.emmcloud.bean.contact.SearchModel;
 import com.inspur.emmcloud.config.MyAppConfig;
@@ -47,12 +52,14 @@ import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils.OnCreateDirectChannelListener;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
+import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.CommonContactCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactOrgCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
-import com.inspur.emmcloud.widget.CircleImageView;
+import com.inspur.emmcloud.widget.CircleTextImageView;
 import com.inspur.emmcloud.widget.FlowLayout;
+import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.MaxHightScrollView;
 import com.inspur.emmcloud.widget.NoHorScrollView;
 import com.inspur.emmcloud.widget.WeakHandler;
@@ -114,7 +121,6 @@ public class ContactSearchActivity extends BaseActivity {
     private String title;
     private List<ChannelGroup> searchChannelGroupList = new ArrayList<ChannelGroup>(); // 群组搜索结果
     private List<Contact> searchContactList = new ArrayList<Contact>(); // 通讯录搜索结果
-
     // popupWindow中的控件与数据
     private LinearLayout popSecondGrouplayou;
     private LinearLayout popThirdGrouplayou;
@@ -135,7 +141,8 @@ public class ContactSearchActivity extends BaseActivity {
     private Runnable searchRunnbale;
     private String searchText;
     private long lastSearchTime = 0L;
-    private List<Contact> excludeContactList;//不显示某些数据
+    private List<Contact> excludeContactList = new ArrayList<>();//不显示某些数据
+    private LoadingDialog loadingDlg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -146,6 +153,7 @@ public class ContactSearchActivity extends BaseActivity {
         handMessage();
         initView();
         initSearchRunnable();
+        getContactOrg();
     }
 
     /**
@@ -200,6 +208,7 @@ public class ContactSearchActivity extends BaseActivity {
 
     private void initView() {
         // TODO Auto-generated method stub
+        loadingDlg = new LoadingDialog(this);
         ((TextView) findViewById(R.id.header_text)).setText(title);
         originAllLayout = (RelativeLayout) findViewById(R.id.origin_all_layout);
         originLayout = (LinearLayout) findViewById(R.id.origin_layout);
@@ -526,7 +535,7 @@ public class ContactSearchActivity extends BaseActivity {
                         searchChannelGroupList = ChannelGroupCacheUtils
                                 .getSearchChannelGroupList(getApplicationContext(),
                                         searchText);
-                        searchContactList = ContactUserCacheUtils.getSearchContact(searchText, excludeContactList,4);
+                        searchContactList = ContactUserCacheUtils.getSearchContact(searchText, excludeContactList, 4);
                         break;
                     case SEARCH_CHANNELGROUP:
                         searchChannelGroupList = ChannelGroupCacheUtils
@@ -534,7 +543,7 @@ public class ContactSearchActivity extends BaseActivity {
                                         searchText);
                         break;
                     case SEARCH_CONTACT:
-                        searchContactList = ContactUserCacheUtils.getSearchContact(searchText, excludeContactList,4);
+                        searchContactList = ContactUserCacheUtils.getSearchContact(searchText, excludeContactList, 4);
                         break;
 
                     default:
@@ -624,7 +633,7 @@ public class ContactSearchActivity extends BaseActivity {
                 intent.putExtra("searchText", searchEdit.getText().toString());
                 intent.putExtra("searchContent", searchContent);
                 intent.putExtra("isMultiSelect", isMultiSelect);
-                if (excludeContactList != null) {
+                if (excludeContactList != null && excludeContactList.size() > 0) {
                     intent.putExtra("excludeContactList", (Serializable) excludeContactList);
                 }
                 startActivityForResult(intent, SEARCH_MORE);
@@ -640,7 +649,7 @@ public class ContactSearchActivity extends BaseActivity {
                 intent.putExtra("searchText", searchEdit.getText().toString());
                 intent.putExtra("searchContent", searchContent);
                 intent.putExtra("isMultiSelect", isMultiSelect);
-                if (excludeContactList != null) {
+                if (excludeContactList != null && excludeContactList.size() > 0) {
                     intent.putExtra("excludeContactList", (Serializable) excludeContactList);
                 }
                 startActivityForResult(intent, SEARCH_MORE);
@@ -979,7 +988,7 @@ public class ContactSearchActivity extends BaseActivity {
                         .findViewById(R.id.arrow_img);
                 viewHolder.selectedImg = (ImageView) convertView
                         .findViewById(R.id.selected_img);
-                viewHolder.photoImg = (CircleImageView) convertView.findViewById(R.id.photo_img);
+                viewHolder.photoImg = (CircleTextImageView) convertView.findViewById(R.id.photo_img);
                 convertView.setTag(viewHolder);
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
@@ -1006,15 +1015,15 @@ public class ContactSearchActivity extends BaseActivity {
             }
             if (searchModel != null) {
                 displayImg(searchModel, viewHolder.photoImg);
-            }
-            if (searchModel != null && selectMemList.contains(searchModel)) {
-                viewHolder.selectedImg.setVisibility(View.VISIBLE);
-                viewHolder.nameText.setTextColor(Color.parseColor("#0f7bca"));
-            } else {
-                viewHolder.selectedImg.setVisibility(View.INVISIBLE);
-                viewHolder.nameText.setTextColor(Color.parseColor("#030303"));
-            }
+                if (selectMemList.contains(searchModel)) {
+                    viewHolder.selectedImg.setVisibility(View.VISIBLE);
+                    viewHolder.nameText.setTextColor(Color.parseColor("#0f7bca"));
+                } else {
+                    viewHolder.selectedImg.setVisibility(View.INVISIBLE);
+                    viewHolder.nameText.setTextColor(Color.parseColor("#030303"));
+                }
 
+            }
             return convertView;
         }
 
@@ -1058,7 +1067,7 @@ public class ContactSearchActivity extends BaseActivity {
                         .findViewById(R.id.name_text);
                 viewHolder.selectedImg = (ImageView) convertView
                         .findViewById(R.id.selected_img);
-                viewHolder.photoImg = (CircleImageView) convertView.findViewById(R.id.photo_img);
+                viewHolder.photoImg = (CircleTextImageView) convertView.findViewById(R.id.photo_img);
                 convertView.setTag(viewHolder);
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
@@ -1080,7 +1089,7 @@ public class ContactSearchActivity extends BaseActivity {
 
     public static class ViewHolder {
         TextView nameText;
-        CircleImageView photoImg;
+        CircleTextImageView photoImg;
         ImageView rightArrowImg;
         ImageView selectedImg;
     }
@@ -1133,7 +1142,7 @@ public class ContactSearchActivity extends BaseActivity {
                         .findViewById(R.id.name_text);
                 viewHolder.selectedImg = (ImageView) convertView
                         .findViewById(R.id.selected_img);
-                viewHolder.photoImg = (CircleImageView) convertView.findViewById(R.id.photo_img);
+                viewHolder.photoImg = (CircleTextImageView) convertView.findViewById(R.id.photo_img);
                 convertView.setTag(viewHolder);
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
@@ -1312,7 +1321,7 @@ public class ContactSearchActivity extends BaseActivity {
      * @param searchModel
      * @param photoImg
      */
-    private void displayImg(SearchModel searchModel, CircleImageView photoImg) {
+    private void displayImg(SearchModel searchModel, CircleTextImageView photoImg) {
         Integer defaultIcon = null; // 默认显示图标
         String icon = null;
         String type = searchModel.getType();
@@ -1330,7 +1339,7 @@ public class ContactSearchActivity extends BaseActivity {
         } else {
             defaultIcon = R.drawable.icon_person_default;
             if (!searchModel.getId().equals("null")) {
-                icon = searchModel.getIcon(ContactSearchActivity.this);
+                icon = APIUri.getChannelImgUrl(MyApplication.getInstance(), searchModel.getId());
             }
 
         }
@@ -1378,14 +1387,13 @@ public class ContactSearchActivity extends BaseActivity {
      */
     private void creatOrInterChannel(SearchModel searchModel) {
         // TODO Auto-generated method stub
-        String uid = ((MyApplication) getApplication()).getUid();
-        if (uid.equals(searchModel.getId())) {
-            ToastUtils.show(ContactSearchActivity.this,
-                    getString(R.string.do_not_select_yourself));
-            return;
-        }
         if (searchModel.getType().equals("USER")) {
-            creatDirectChannel(searchModel.getId());
+            if (MyApplication.getInstance().equals(searchModel.getId())) {
+                ToastUtils.show(ContactSearchActivity.this,
+                        getString(R.string.do_not_select_yourself));
+            } else {
+                creatDirectChannel(searchModel.getId());
+            }
         } else {
             Bundle bundle = new Bundle();
             bundle.putString("title", searchModel.getName());
@@ -1445,5 +1453,41 @@ public class ContactSearchActivity extends BaseActivity {
     private void refreshListView(ListView listView, BaseAdapter adpter) {
         adpter.notifyDataSetChanged();
         ListViewUtils.setListViewHeightBasedOnChildren(listView);
+    }
+
+    /**
+     * 获取通讯录人员信息
+     */
+    private void getContactOrg() {
+        // TODO Auto-generated method stub
+        long contactOrgLastQuetyTime = ContactOrgCacheUtils.getLastQueryTime();
+        if (contactOrgLastQuetyTime == 0 && NetUtils.isNetworkConnected(getApplicationContext())) {
+            loadingDlg.show();
+            ContactAPIService apiService = new ContactAPIService(ContactSearchActivity.this);
+            apiService.setAPIInterface(new WebService());
+            apiService.getContactOrgList(contactOrgLastQuetyTime);
+        }
+    }
+
+    public class WebService extends APIInterfaceInstance {
+        @Override
+        public void returnContactOrgListSuccess(byte[] bytes) {
+            try {
+                ContactProtoBuf.orgs orgs = ContactProtoBuf.orgs.parseFrom(bytes);
+                List<ContactProtoBuf.org> orgList = orgs.getOrgsList();
+                List<ContactOrg> contactOrgList = ContactOrg.protoBufOrgList2ContactOrgList(orgList);
+                ContactOrgCacheUtils.saveContactOrgList(contactOrgList);
+                ContactOrgCacheUtils.setLastQueryTime(orgs.getLastQueryTime());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            LoadingDialog.dimissDlg(loadingDlg);
+        }
+
+        @Override
+        public void returnContactOrgListFail(String error, int errorCode) {
+            WebServiceMiddleUtils.hand(MyApplication.getInstance(), error, errorCode);
+            LoadingDialog.dimissDlg(loadingDlg);
+        }
     }
 }

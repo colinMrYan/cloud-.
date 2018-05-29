@@ -187,7 +187,7 @@
                         android:background="@color/white"
                         android:onClick="onClick">
 
-                        <com.inspur.emmcloud.widget.CircleImageView
+                        <com.inspur.emmcloud.widget.CircleTextImageView
                             android:id="@+id/struct_img"
                             android:layout_width="40dp"
                             android:layout_height="40dp"
@@ -226,7 +226,7 @@
                         android:background="@color/white"
                         android:onClick="onClick">
 
-                        <com.inspur.emmcloud.widget.CircleImageView
+                        <com.inspur.emmcloud.widget.CircleTextImageView
                             android:id="@+id/channel_group_img"
                             android:layout_width="40dp"
                             android:layout_height="40dp"

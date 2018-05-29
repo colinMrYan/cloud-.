@@ -305,7 +305,6 @@ public class IndexActivity extends IndexBaseActivity {
                 List<ContactProtoBuf.org> orgList = orgs.getOrgsList();
                 List<ContactOrg> contactOrgList = ContactOrg.protoBufOrgList2ContactOrgList(orgList);
                 ContactOrgCacheUtils.saveContactOrgList(contactOrgList);
-                LogUtils.jasonDebug("orgs.getLastQueryTime()="+orgs.getLastQueryTime());
                 ContactOrgCacheUtils.setLastQueryTime(orgs.getLastQueryTime());
             } catch (Exception e) {
                 e.printStackTrace();
@@ -388,12 +387,11 @@ public class IndexActivity extends IndexBaseActivity {
      */
     private void getContactOrg() {
         // TODO Auto-generated method stub
-        ContactAPIService apiService = new ContactAPIService(IndexActivity.this);
-        apiService.setAPIInterface(new WebService());
         if (NetUtils.isNetworkConnected(getApplicationContext(), false)) {
-            MyApplication.getInstance().setIsContactReady(false);
-            long contactUserLastQuetyTime = ContactOrgCacheUtils.getLastQueryTime();
-            apiService.getContactOrgList(contactUserLastQuetyTime);
+            ContactAPIService apiService = new ContactAPIService(IndexActivity.this);
+            apiService.setAPIInterface(new WebService());
+            long contactOrgLastQuetyTime = ContactOrgCacheUtils.getLastQueryTime();
+            apiService.getContactOrgList(contactOrgLastQuetyTime);
         }
     }
 

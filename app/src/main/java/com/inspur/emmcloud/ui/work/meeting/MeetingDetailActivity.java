@@ -46,7 +46,7 @@ import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
-import com.inspur.emmcloud.widget.CircleImageView;
+import com.inspur.emmcloud.widget.CircleTextImageView;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.MyDatePickerDialog;
 
@@ -65,7 +65,7 @@ public class MeetingDetailActivity extends BaseActivity {
     private static final int MEETING_BEGIN_TIME = 3;
     private static final int MEETING_END_TIME = 4;
     private String id = "";
-    private CircleImageView[] circleImg = new CircleImageView[5];
+    private CircleTextImageView[] circleImg = new CircleTextImageView[5];
     private ImageView meetingChangeImg;
     private WorkAPIService apiService;
     private LoadingDialog loadingDialog;
@@ -195,12 +195,12 @@ public class MeetingDetailActivity extends BaseActivity {
         topicEdit = ((EditText) findViewById(R.id.meeting_detail_content_text));
         attendantText = ((TextView) findViewById(R.id.meeting_detial_member_log_text));
         noticeEdit = ((EditText) findViewById(R.id.meeting_notice_name_text));
-        circleImg[0] = (CircleImageView) findViewById(R.id.meeting_detail_member_head_img5);
-        circleImg[1] = (CircleImageView) findViewById(R.id.meeting_detail_member_head_img4);
-        circleImg[2] = (CircleImageView) findViewById(R.id.meeting_detail_member_head_img3);
-        circleImg[3] = (CircleImageView) findViewById(R.id.meeting_detail_member_head_img2);
-        circleImg[4] = (CircleImageView) findViewById(R.id.meeting_detail_member_head_img1);
-        // conferenceImg = (CircleImageView)
+        circleImg[0] = (CircleTextImageView) findViewById(R.id.meeting_detail_member_head_img5);
+        circleImg[1] = (CircleTextImageView) findViewById(R.id.meeting_detail_member_head_img4);
+        circleImg[2] = (CircleTextImageView) findViewById(R.id.meeting_detail_member_head_img3);
+        circleImg[3] = (CircleTextImageView) findViewById(R.id.meeting_detail_member_head_img2);
+        circleImg[4] = (CircleTextImageView) findViewById(R.id.meeting_detail_member_head_img1);
+        // conferenceImg = (CircleTextImageView)
         // findViewById(R.id.mession_memhead_img);
         headText = (TextView) findViewById(R.id.header_text);
         meetingChangeCancelText = (TextView) findViewById(R.id.meeting_detail_cancel_text);

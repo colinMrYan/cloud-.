@@ -6,6 +6,7 @@ import android.content.Context;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
@@ -262,6 +263,18 @@ public class APIUri {
                         headImgUrl = headImgUrl + "?" + lastQueryTime;
                     }
                     MyApplication.getInstance().setUsesrPhotoUrl(uid, headImgUrl);
+                }else {
+                    LogUtils.jasonDebug("00000000000000000");
+//                    String name = contactUser.getName();
+//                    name = name.substring(name.length()-1,name.length());
+//                    LogUtils.jasonDebug("name="+name);
+//                    File file = new File(MyAppConfig.LOCAL_CACHE_PHOTO_PATH,
+//                            name + "_user.png1");
+//                    headImgUrl = "file://"+file.getAbsolutePath();
+//                    if (!file.exists()){
+//                        ImageUtils.drawAndSavePhotoTextImg(context,name,file.getAbsolutePath());
+//                    }
+                    LogUtils.jasonDebug("headImgUrl="+headImgUrl);
                 }
             }
             if (MyApplication.getInstance().getIsContactReady() && headImgUrl == null) {

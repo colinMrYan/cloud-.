@@ -6,7 +6,7 @@
                 android:background="@drawable/selector_list"
                 android:paddingLeft="11dp">
 
-    <com.inspur.emmcloud.widget.CircleImageView
+    <com.inspur.emmcloud.widget.CircleTextImageView
         android:id="@+id/msg_img"
         android:layout_width="48dp"
         android:layout_height="48dp"

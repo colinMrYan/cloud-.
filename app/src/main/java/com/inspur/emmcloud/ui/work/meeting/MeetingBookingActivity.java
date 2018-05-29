@@ -31,7 +31,7 @@ import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
-import com.inspur.emmcloud.widget.CircleImageView;
+import com.inspur.emmcloud.widget.CircleTextImageView;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.MyDatePickerDialog;
 
@@ -62,7 +62,7 @@ public class MeetingBookingActivity extends BaseActivity {
     private String meetingRoomName = "";
     private String meetingRoomFlour = "";
     private List<SearchModel> selectMemList = new ArrayList<SearchModel>();
-    private CircleImageView[] circleHeadImageView = new CircleImageView[5];
+    private CircleTextImageView[] circleHeadImageView = new CircleTextImageView[5];
     private String userId = "";
     private int maxAhead = 0;
     private int maxDuration = 0;
@@ -100,11 +100,11 @@ public class MeetingBookingActivity extends BaseActivity {
         meetingBeginTimeText = (TextView) findViewById(R.id.meeting_booking_begin_time_text);
         meetingEndDateText = (TextView) findViewById(R.id.meeting_booking_end_time_date_text);
         meetingEndTimeText = (TextView) findViewById(R.id.meeting_booking_end_time_text);
-        circleHeadImageView[0] = (CircleImageView) findViewById(R.id.meeting_booking_member_head_img5);
-        circleHeadImageView[1] = (CircleImageView) findViewById(R.id.meeting_booking_member_head_img4);
-        circleHeadImageView[2] = (CircleImageView) findViewById(R.id.meeting_booking_member_head_img3);
-        circleHeadImageView[3] = (CircleImageView) findViewById(R.id.meeting_booking_member_head_img2);
-        circleHeadImageView[4] = (CircleImageView) findViewById(R.id.meeting_booking_member_head_img1);
+        circleHeadImageView[0] = (CircleTextImageView) findViewById(R.id.meeting_booking_member_head_img5);
+        circleHeadImageView[1] = (CircleTextImageView) findViewById(R.id.meeting_booking_member_head_img4);
+        circleHeadImageView[2] = (CircleTextImageView) findViewById(R.id.meeting_booking_member_head_img3);
+        circleHeadImageView[3] = (CircleTextImageView) findViewById(R.id.meeting_booking_member_head_img2);
+        circleHeadImageView[4] = (CircleTextImageView) findViewById(R.id.meeting_booking_member_head_img1);
         userId = ((MyApplication) getApplication())
                 .getUid();
         meetingBeginCalendar = TimeUtils.getNextHalfHourTime(meetingBeginCalendar);

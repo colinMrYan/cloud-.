@@ -44,7 +44,7 @@
                 android:textColor="#3CBAFF"
                 android:textSize="14sp" />
 
-            <com.inspur.emmcloud.widget.CircleImageView
+            <com.inspur.emmcloud.widget.CircleTextImageView
                 android:id="@+id/work_approval_item_small_red_point"
                 android:layout_width="6dp"
                 android:layout_height="6dp"

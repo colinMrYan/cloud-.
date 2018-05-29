@@ -145,7 +145,7 @@ public class SearchModel implements Serializable {
                 globalName = contactOrg.getNameGlobal();
             }
         }
-        if (StringUtils.isBlank(globalName)) {
+        if (!StringUtils.isBlank(globalName)) {
             completeName = completeName + "（" + globalName + "）";
         }
         return completeName;
