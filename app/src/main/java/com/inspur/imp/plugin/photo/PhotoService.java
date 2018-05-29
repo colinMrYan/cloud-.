@@ -7,6 +7,8 @@ import android.os.Environment;
 import android.widget.Toast;
 
 import com.inspur.emmcloud.config.MyAppConfig;
+import com.inspur.emmcloud.ui.chat.ImagePagerActivity;
+import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.cache.AppExceptionCacheUtils;
@@ -38,17 +40,46 @@ public class PhotoService extends ImpPlugin {
 
     @Override
     public void execute(String action, JSONObject paramsObject) {
-        LogUtils.YfcDebug("action："+action);
-        LogUtils.YfcDebug("paramsObject："+paramsObject);
         // TODO Auto-generated method stub
         this.paramsObject = paramsObject;
         if ("selectAndUpload".equals(action)) {
             selectAndUpload();
         }else if ("takePhotoAndUpload".equals(action)) {
             takePhotoAndUpload();
+        }else if("viewImage".equals(action)){
+            viewImage();
         }else{
             DialogUtil.getInstance(getActivity()).show();
         }
+    }
+
+    /**
+     * 浏览图片原生方法
+     */
+    private void viewImage() {
+        ArrayList<String> imageOriginUrlList = new ArrayList<>();
+        ArrayList<String> imageThumbnailUrlList =  new ArrayList<>();
+        JSONArray jsonParamArray = JSONUtils.getJSONArray(paramsObject, "img",new JSONArray());
+        int imageIndex = JSONUtils.getInt(paramsObject,"index",0);
+        for (int i = 0; i < jsonParamArray.length(); i++) {
+            imageThumbnailUrlList.add(JSONUtils.getString(JSONUtils.getJSONObject(jsonParamArray,i,new JSONObject()),"imgUrl",""));
+            imageOriginUrlList.add(JSONUtils.getString(JSONUtils.getJSONObject(jsonParamArray,i,new JSONObject()),"originImgUrl",""));
+        }
+        if(imageOriginUrlList.size() > 0){
+            startImagePagerActivity(imageOriginUrlList,imageIndex);
+        }
+    }
+
+    /**
+     * 调起ImagePager
+     * @param imagePathList
+     */
+    private void startImagePagerActivity(ArrayList<String> imagePathList,int imageIndex) {
+        Intent intent = new Intent();
+        intent.setClass(getActivity(), ImagePagerActivity.class);
+        intent.putStringArrayListExtra(ImagePagerActivity.EXTRA_IMAGE_URLS, imagePathList);
+        intent.putExtra(ImagePagerActivity.EXTRA_IMAGE_INDEX,imageIndex);
+        getActivity().startActivity(intent);
     }
 
     private void selectAndUpload() {

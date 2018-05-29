@@ -59,8 +59,7 @@ public class PluginMgr {
                         final String params) {
         if (serviceName.endsWith("LoadingDialogService")) {
             serviceName = "com.inspur.imp.plugin.loadingdialog." + serviceName;
-        }
-        if (serviceName.endsWith("FileTransferService")) {
+        } else if (serviceName.endsWith("FileTransferService")) {
             serviceName = "com.inspur.imp.plugin.filetransfer." + serviceName;
         }
         Log.d("jason", "serviceName=" + serviceName);
