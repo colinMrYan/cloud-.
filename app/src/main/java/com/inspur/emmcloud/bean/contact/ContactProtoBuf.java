@@ -194,7 +194,7 @@ public final class ContactProtoBuf {
       if (ref instanceof String) {
         return (String) ref;
       } else {
-        com.google.protobuf.ByteString bs =
+        com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         String s = bs.toStringUtf8();
         id_ = s;
@@ -208,7 +208,7 @@ public final class ContactProtoBuf {
         getIdBytes() {
       Object ref = id_;
       if (ref instanceof String) {
-        com.google.protobuf.ByteString b =
+        com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (String) ref);
         id_ = b;
@@ -228,7 +228,7 @@ public final class ContactProtoBuf {
       if (ref instanceof String) {
         return (String) ref;
       } else {
-        com.google.protobuf.ByteString bs =
+        com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         String s = bs.toStringUtf8();
         name_ = s;
@@ -242,7 +242,7 @@ public final class ContactProtoBuf {
         getNameBytes() {
       Object ref = name_;
       if (ref instanceof String) {
-        com.google.protobuf.ByteString b =
+        com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (String) ref);
         name_ = b;
@@ -262,7 +262,7 @@ public final class ContactProtoBuf {
       if (ref instanceof String) {
         return (String) ref;
       } else {
-        com.google.protobuf.ByteString bs =
+        com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         String s = bs.toStringUtf8();
         nameGlobal_ = s;
@@ -276,7 +276,7 @@ public final class ContactProtoBuf {
         getNameGlobalBytes() {
       Object ref = nameGlobal_;
       if (ref instanceof String) {
-        com.google.protobuf.ByteString b =
+        com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (String) ref);
         nameGlobal_ = b;
@@ -296,7 +296,7 @@ public final class ContactProtoBuf {
       if (ref instanceof String) {
         return (String) ref;
       } else {
-        com.google.protobuf.ByteString bs =
+        com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         String s = bs.toStringUtf8();
         pinyin_ = s;
@@ -310,7 +310,7 @@ public final class ContactProtoBuf {
         getPinyinBytes() {
       Object ref = pinyin_;
       if (ref instanceof String) {
-        com.google.protobuf.ByteString b =
+        com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (String) ref);
         pinyin_ = b;
@@ -330,7 +330,7 @@ public final class ContactProtoBuf {
       if (ref instanceof String) {
         return (String) ref;
       } else {
-        com.google.protobuf.ByteString bs =
+        com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         String s = bs.toStringUtf8();
         parentId_ = s;
@@ -344,7 +344,7 @@ public final class ContactProtoBuf {
         getParentIdBytes() {
       Object ref = parentId_;
       if (ref instanceof String) {
-        com.google.protobuf.ByteString b =
+        com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (String) ref);
         parentId_ = b;
@@ -754,7 +754,7 @@ public final class ContactProtoBuf {
           getIdBytes() {
         Object ref = id_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b =
+          com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (String) ref);
           id_ = b;
@@ -771,7 +771,7 @@ public final class ContactProtoBuf {
         if (value == null) {
     throw new NullPointerException();
   }
-
+  
         id_ = value;
         onChanged();
         return this;
@@ -780,7 +780,7 @@ public final class ContactProtoBuf {
        * <code>string id = 1;</code>
        */
       public Builder clearId() {
-
+        
         id_ = getDefaultInstance().getId();
         onChanged();
         return this;
@@ -794,7 +794,7 @@ public final class ContactProtoBuf {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-
+        
         id_ = value;
         onChanged();
         return this;
@@ -823,7 +823,7 @@ public final class ContactProtoBuf {
           getNameBytes() {
         Object ref = name_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b =
+          com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (String) ref);
           name_ = b;
@@ -840,7 +840,7 @@ public final class ContactProtoBuf {
         if (value == null) {
     throw new NullPointerException();
   }
-
+  
         name_ = value;
         onChanged();
         return this;
@@ -849,7 +849,7 @@ public final class ContactProtoBuf {
        * <code>string name = 2;</code>
        */
       public Builder clearName() {
-
+        
         name_ = getDefaultInstance().getName();
         onChanged();
         return this;
@@ -863,7 +863,7 @@ public final class ContactProtoBuf {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-
+        
         name_ = value;
         onChanged();
         return this;
@@ -892,7 +892,7 @@ public final class ContactProtoBuf {
           getNameGlobalBytes() {
         Object ref = nameGlobal_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b =
+          com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (String) ref);
           nameGlobal_ = b;
@@ -909,7 +909,7 @@ public final class ContactProtoBuf {
         if (value == null) {
     throw new NullPointerException();
   }
-
+  
         nameGlobal_ = value;
         onChanged();
         return this;
@@ -918,7 +918,7 @@ public final class ContactProtoBuf {
        * <code>string name_global = 3;</code>
        */
       public Builder clearNameGlobal() {
-
+        
         nameGlobal_ = getDefaultInstance().getNameGlobal();
         onChanged();
         return this;
@@ -932,7 +932,7 @@ public final class ContactProtoBuf {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-
+        
         nameGlobal_ = value;
         onChanged();
         return this;
@@ -961,7 +961,7 @@ public final class ContactProtoBuf {
           getPinyinBytes() {
         Object ref = pinyin_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b =
+          com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (String) ref);
           pinyin_ = b;
@@ -978,7 +978,7 @@ public final class ContactProtoBuf {
         if (value == null) {
     throw new NullPointerException();
   }
-
+  
         pinyin_ = value;
         onChanged();
         return this;
@@ -987,7 +987,7 @@ public final class ContactProtoBuf {
        * <code>string pinyin = 4;</code>
        */
       public Builder clearPinyin() {
-
+        
         pinyin_ = getDefaultInstance().getPinyin();
         onChanged();
         return this;
@@ -1001,7 +1001,7 @@ public final class ContactProtoBuf {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-
+        
         pinyin_ = value;
         onChanged();
         return this;
@@ -1030,7 +1030,7 @@ public final class ContactProtoBuf {
           getParentIdBytes() {
         Object ref = parentId_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b =
+          com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (String) ref);
           parentId_ = b;
@@ -1047,7 +1047,7 @@ public final class ContactProtoBuf {
         if (value == null) {
     throw new NullPointerException();
   }
-
+  
         parentId_ = value;
         onChanged();
         return this;
@@ -1056,7 +1056,7 @@ public final class ContactProtoBuf {
        * <code>string parent_id = 5;</code>
        */
       public Builder clearParentId() {
-
+        
         parentId_ = getDefaultInstance().getParentId();
         onChanged();
         return this;
@@ -1070,7 +1070,7 @@ public final class ContactProtoBuf {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-
+        
         parentId_ = value;
         onChanged();
         return this;
@@ -1087,7 +1087,7 @@ public final class ContactProtoBuf {
        * <code>int32 sort_order = 6;</code>
        */
       public Builder setSortOrder(int value) {
-
+        
         sortOrder_ = value;
         onChanged();
         return this;
@@ -1096,7 +1096,7 @@ public final class ContactProtoBuf {
        * <code>int32 sort_order = 6;</code>
        */
       public Builder clearSortOrder() {
-
+        
         sortOrder_ = 0;
         onChanged();
         return this;
@@ -1375,7 +1375,7 @@ public final class ContactProtoBuf {
       if (ref instanceof String) {
         return (String) ref;
       } else {
-        com.google.protobuf.ByteString bs =
+        com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         String s = bs.toStringUtf8();
         id_ = s;
@@ -1389,7 +1389,7 @@ public final class ContactProtoBuf {
         getIdBytes() {
       Object ref = id_;
       if (ref instanceof String) {
-        com.google.protobuf.ByteString b =
+        com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (String) ref);
         id_ = b;
@@ -1409,7 +1409,7 @@ public final class ContactProtoBuf {
       if (ref instanceof String) {
         return (String) ref;
       } else {
-        com.google.protobuf.ByteString bs =
+        com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         String s = bs.toStringUtf8();
         realName_ = s;
@@ -1423,7 +1423,7 @@ public final class ContactProtoBuf {
         getRealNameBytes() {
       Object ref = realName_;
       if (ref instanceof String) {
-        com.google.protobuf.ByteString b =
+        com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (String) ref);
         realName_ = b;
@@ -1443,7 +1443,7 @@ public final class ContactProtoBuf {
       if (ref instanceof String) {
         return (String) ref;
       } else {
-        com.google.protobuf.ByteString bs =
+        com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         String s = bs.toStringUtf8();
         nameGlobal_ = s;
@@ -1457,7 +1457,7 @@ public final class ContactProtoBuf {
         getNameGlobalBytes() {
       Object ref = nameGlobal_;
       if (ref instanceof String) {
-        com.google.protobuf.ByteString b =
+        com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (String) ref);
         nameGlobal_ = b;
@@ -1477,7 +1477,7 @@ public final class ContactProtoBuf {
       if (ref instanceof String) {
         return (String) ref;
       } else {
-        com.google.protobuf.ByteString bs =
+        com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         String s = bs.toStringUtf8();
         pinyin_ = s;
@@ -1491,7 +1491,7 @@ public final class ContactProtoBuf {
         getPinyinBytes() {
       Object ref = pinyin_;
       if (ref instanceof String) {
-        com.google.protobuf.ByteString b =
+        com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (String) ref);
         pinyin_ = b;
@@ -1511,7 +1511,7 @@ public final class ContactProtoBuf {
       if (ref instanceof String) {
         return (String) ref;
       } else {
-        com.google.protobuf.ByteString bs =
+        com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         String s = bs.toStringUtf8();
         mobile_ = s;
@@ -1525,7 +1525,7 @@ public final class ContactProtoBuf {
         getMobileBytes() {
       Object ref = mobile_;
       if (ref instanceof String) {
-        com.google.protobuf.ByteString b =
+        com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (String) ref);
         mobile_ = b;
@@ -1545,7 +1545,7 @@ public final class ContactProtoBuf {
       if (ref instanceof String) {
         return (String) ref;
       } else {
-        com.google.protobuf.ByteString bs =
+        com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         String s = bs.toStringUtf8();
         email_ = s;
@@ -1559,7 +1559,7 @@ public final class ContactProtoBuf {
         getEmailBytes() {
       Object ref = email_;
       if (ref instanceof String) {
-        com.google.protobuf.ByteString b =
+        com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (String) ref);
         email_ = b;
@@ -1579,7 +1579,7 @@ public final class ContactProtoBuf {
       if (ref instanceof String) {
         return (String) ref;
       } else {
-        com.google.protobuf.ByteString bs =
+        com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         String s = bs.toStringUtf8();
         parentId_ = s;
@@ -1593,7 +1593,7 @@ public final class ContactProtoBuf {
         getParentIdBytes() {
       Object ref = parentId_;
       if (ref instanceof String) {
-        com.google.protobuf.ByteString b =
+        com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (String) ref);
         parentId_ = b;
@@ -2063,7 +2063,7 @@ public final class ContactProtoBuf {
           getIdBytes() {
         Object ref = id_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b =
+          com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (String) ref);
           id_ = b;
@@ -2080,7 +2080,7 @@ public final class ContactProtoBuf {
         if (value == null) {
     throw new NullPointerException();
   }
-
+  
         id_ = value;
         onChanged();
         return this;
@@ -2089,7 +2089,7 @@ public final class ContactProtoBuf {
        * <code>string id = 1;</code>
        */
       public Builder clearId() {
-
+        
         id_ = getDefaultInstance().getId();
         onChanged();
         return this;
@@ -2103,7 +2103,7 @@ public final class ContactProtoBuf {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-
+        
         id_ = value;
         onChanged();
         return this;
@@ -2132,7 +2132,7 @@ public final class ContactProtoBuf {
           getRealNameBytes() {
         Object ref = realName_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b =
+          com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (String) ref);
           realName_ = b;
@@ -2149,7 +2149,7 @@ public final class ContactProtoBuf {
         if (value == null) {
     throw new NullPointerException();
   }
-
+  
         realName_ = value;
         onChanged();
         return this;
@@ -2158,7 +2158,7 @@ public final class ContactProtoBuf {
        * <code>string real_name = 2;</code>
        */
       public Builder clearRealName() {
-
+        
         realName_ = getDefaultInstance().getRealName();
         onChanged();
         return this;
@@ -2172,7 +2172,7 @@ public final class ContactProtoBuf {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-
+        
         realName_ = value;
         onChanged();
         return this;
@@ -2201,7 +2201,7 @@ public final class ContactProtoBuf {
           getNameGlobalBytes() {
         Object ref = nameGlobal_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b =
+          com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (String) ref);
           nameGlobal_ = b;
@@ -2218,7 +2218,7 @@ public final class ContactProtoBuf {
         if (value == null) {
     throw new NullPointerException();
   }
-
+  
         nameGlobal_ = value;
         onChanged();
         return this;
@@ -2227,7 +2227,7 @@ public final class ContactProtoBuf {
        * <code>string name_global = 3;</code>
        */
       public Builder clearNameGlobal() {
-
+        
         nameGlobal_ = getDefaultInstance().getNameGlobal();
         onChanged();
         return this;
@@ -2241,7 +2241,7 @@ public final class ContactProtoBuf {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-
+        
         nameGlobal_ = value;
         onChanged();
         return this;
@@ -2270,7 +2270,7 @@ public final class ContactProtoBuf {
           getPinyinBytes() {
         Object ref = pinyin_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b =
+          com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (String) ref);
           pinyin_ = b;
@@ -2287,7 +2287,7 @@ public final class ContactProtoBuf {
         if (value == null) {
     throw new NullPointerException();
   }
-
+  
         pinyin_ = value;
         onChanged();
         return this;
@@ -2296,7 +2296,7 @@ public final class ContactProtoBuf {
        * <code>string pinyin = 4;</code>
        */
       public Builder clearPinyin() {
-
+        
         pinyin_ = getDefaultInstance().getPinyin();
         onChanged();
         return this;
@@ -2310,7 +2310,7 @@ public final class ContactProtoBuf {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-
+        
         pinyin_ = value;
         onChanged();
         return this;
@@ -2339,7 +2339,7 @@ public final class ContactProtoBuf {
           getMobileBytes() {
         Object ref = mobile_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b =
+          com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (String) ref);
           mobile_ = b;
@@ -2356,7 +2356,7 @@ public final class ContactProtoBuf {
         if (value == null) {
     throw new NullPointerException();
   }
-
+  
         mobile_ = value;
         onChanged();
         return this;
@@ -2365,7 +2365,7 @@ public final class ContactProtoBuf {
        * <code>string mobile = 5;</code>
        */
       public Builder clearMobile() {
-
+        
         mobile_ = getDefaultInstance().getMobile();
         onChanged();
         return this;
@@ -2379,7 +2379,7 @@ public final class ContactProtoBuf {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-
+        
         mobile_ = value;
         onChanged();
         return this;
@@ -2408,7 +2408,7 @@ public final class ContactProtoBuf {
           getEmailBytes() {
         Object ref = email_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b =
+          com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (String) ref);
           email_ = b;
@@ -2425,7 +2425,7 @@ public final class ContactProtoBuf {
         if (value == null) {
     throw new NullPointerException();
   }
-
+  
         email_ = value;
         onChanged();
         return this;
@@ -2434,7 +2434,7 @@ public final class ContactProtoBuf {
        * <code>string email = 6;</code>
        */
       public Builder clearEmail() {
-
+        
         email_ = getDefaultInstance().getEmail();
         onChanged();
         return this;
@@ -2448,7 +2448,7 @@ public final class ContactProtoBuf {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-
+        
         email_ = value;
         onChanged();
         return this;
@@ -2477,7 +2477,7 @@ public final class ContactProtoBuf {
           getParentIdBytes() {
         Object ref = parentId_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b =
+          com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (String) ref);
           parentId_ = b;
@@ -2494,7 +2494,7 @@ public final class ContactProtoBuf {
         if (value == null) {
     throw new NullPointerException();
   }
-
+  
         parentId_ = value;
         onChanged();
         return this;
@@ -2503,7 +2503,7 @@ public final class ContactProtoBuf {
        * <code>string parent_id = 7;</code>
        */
       public Builder clearParentId() {
-
+        
         parentId_ = getDefaultInstance().getParentId();
         onChanged();
         return this;
@@ -2517,7 +2517,7 @@ public final class ContactProtoBuf {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-
+        
         parentId_ = value;
         onChanged();
         return this;
@@ -2534,7 +2534,7 @@ public final class ContactProtoBuf {
        * <code>int32 has_head = 8;</code>
        */
       public Builder setHasHead(int value) {
-
+        
         hasHead_ = value;
         onChanged();
         return this;
@@ -2543,7 +2543,7 @@ public final class ContactProtoBuf {
        * <code>int32 has_head = 8;</code>
        */
       public Builder clearHasHead() {
-
+        
         hasHead_ = 0;
         onChanged();
         return this;
@@ -2560,7 +2560,7 @@ public final class ContactProtoBuf {
        * <code>int32 sort_order = 9;</code>
        */
       public Builder setSortOrder(int value) {
-
+        
         sortOrder_ = value;
         onChanged();
         return this;
@@ -2569,7 +2569,7 @@ public final class ContactProtoBuf {
        * <code>int32 sort_order = 9;</code>
        */
       public Builder clearSortOrder() {
-
+        
         sortOrder_ = 0;
         onChanged();
         return this;
@@ -2628,9 +2628,9 @@ public final class ContactProtoBuf {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>int32 lastQueryTime = 1;</code>
+     * <code>int64 lastQueryTime = 1;</code>
      */
-    int getLastQueryTime();
+    long getLastQueryTime();
 
     /**
      * <code>repeated .com.inspur.emmcloud.bean.contact.org orgs = 2;</code>
@@ -2679,7 +2679,7 @@ public final class ContactProtoBuf {
       super(builder);
     }
     private orgs() {
-      lastQueryTime_ = 0;
+      lastQueryTime_ = 0L;
       orgs_ = java.util.Collections.emptyList();
       rootID_ = "";
     }
@@ -2717,7 +2717,7 @@ public final class ContactProtoBuf {
             }
             case 8: {
 
-              lastQueryTime_ = input.readInt32();
+              lastQueryTime_ = input.readInt64();
               break;
             }
             case 18: {
@@ -2764,11 +2764,11 @@ public final class ContactProtoBuf {
 
     private int bitField0_;
     public static final int LASTQUERYTIME_FIELD_NUMBER = 1;
-    private int lastQueryTime_;
+    private long lastQueryTime_;
     /**
-     * <code>int32 lastQueryTime = 1;</code>
+     * <code>int64 lastQueryTime = 1;</code>
      */
-    public int getLastQueryTime() {
+    public long getLastQueryTime() {
       return lastQueryTime_;
     }
 
@@ -2817,7 +2817,7 @@ public final class ContactProtoBuf {
       if (ref instanceof String) {
         return (String) ref;
       } else {
-        com.google.protobuf.ByteString bs =
+        com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         String s = bs.toStringUtf8();
         rootID_ = s;
@@ -2831,7 +2831,7 @@ public final class ContactProtoBuf {
         getRootIDBytes() {
       Object ref = rootID_;
       if (ref instanceof String) {
-        com.google.protobuf.ByteString b =
+        com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (String) ref);
         rootID_ = b;
@@ -2853,8 +2853,8 @@ public final class ContactProtoBuf {
 
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (lastQueryTime_ != 0) {
-        output.writeInt32(1, lastQueryTime_);
+      if (lastQueryTime_ != 0L) {
+        output.writeInt64(1, lastQueryTime_);
       }
       for (int i = 0; i < orgs_.size(); i++) {
         output.writeMessage(2, orgs_.get(i));
@@ -2870,9 +2870,9 @@ public final class ContactProtoBuf {
       if (size != -1) return size;
 
       size = 0;
-      if (lastQueryTime_ != 0) {
+      if (lastQueryTime_ != 0L) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(1, lastQueryTime_);
+          .computeInt64Size(1, lastQueryTime_);
       }
       for (int i = 0; i < orgs_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
@@ -2915,7 +2915,8 @@ public final class ContactProtoBuf {
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
       hash = (37 * hash) + LASTQUERYTIME_FIELD_NUMBER;
-      hash = (53 * hash) + getLastQueryTime();
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getLastQueryTime());
       if (getOrgsCount() > 0) {
         hash = (37 * hash) + ORGS_FIELD_NUMBER;
         hash = (53 * hash) + getOrgsList().hashCode();
@@ -3052,7 +3053,7 @@ public final class ContactProtoBuf {
       }
       public Builder clear() {
         super.clear();
-        lastQueryTime_ = 0;
+        lastQueryTime_ = 0L;
 
         if (orgsBuilder_ == null) {
           orgs_ = java.util.Collections.emptyList();
@@ -3139,7 +3140,7 @@ public final class ContactProtoBuf {
 
       public Builder mergeFrom(orgs other) {
         if (other == orgs.getDefaultInstance()) return this;
-        if (other.getLastQueryTime() != 0) {
+        if (other.getLastQueryTime() != 0L) {
           setLastQueryTime(other.getLastQueryTime());
         }
         if (orgsBuilder_ == null) {
@@ -3160,7 +3161,7 @@ public final class ContactProtoBuf {
               orgsBuilder_ = null;
               orgs_ = other.orgs_;
               bitField0_ = (bitField0_ & ~0x00000002);
-              orgsBuilder_ =
+              orgsBuilder_ = 
                 com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
                    getOrgsFieldBuilder() : null;
             } else {
@@ -3200,28 +3201,28 @@ public final class ContactProtoBuf {
       }
       private int bitField0_;
 
-      private int lastQueryTime_ ;
+      private long lastQueryTime_ ;
       /**
-       * <code>int32 lastQueryTime = 1;</code>
+       * <code>int64 lastQueryTime = 1;</code>
        */
-      public int getLastQueryTime() {
+      public long getLastQueryTime() {
         return lastQueryTime_;
       }
       /**
-       * <code>int32 lastQueryTime = 1;</code>
+       * <code>int64 lastQueryTime = 1;</code>
        */
-      public Builder setLastQueryTime(int value) {
-
+      public Builder setLastQueryTime(long value) {
+        
         lastQueryTime_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>int32 lastQueryTime = 1;</code>
+       * <code>int64 lastQueryTime = 1;</code>
        */
       public Builder clearLastQueryTime() {
-
-        lastQueryTime_ = 0;
+        
+        lastQueryTime_ = 0L;
         onChanged();
         return this;
       }
@@ -3489,7 +3490,7 @@ public final class ContactProtoBuf {
           getRootIDBytes() {
         Object ref = rootID_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b =
+          com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (String) ref);
           rootID_ = b;
@@ -3506,7 +3507,7 @@ public final class ContactProtoBuf {
         if (value == null) {
     throw new NullPointerException();
   }
-
+  
         rootID_ = value;
         onChanged();
         return this;
@@ -3515,7 +3516,7 @@ public final class ContactProtoBuf {
        * <code>string rootID = 3;</code>
        */
       public Builder clearRootID() {
-
+        
         rootID_ = getDefaultInstance().getRootID();
         onChanged();
         return this;
@@ -3529,7 +3530,7 @@ public final class ContactProtoBuf {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-
+        
         rootID_ = value;
         onChanged();
         return this;
@@ -3588,9 +3589,9 @@ public final class ContactProtoBuf {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>int32 lastQueryTime = 1;</code>
+     * <code>int64 lastQueryTime = 1;</code>
      */
-    int getLastQueryTime();
+    long getLastQueryTime();
 
     /**
      * <code>repeated .com.inspur.emmcloud.bean.contact.user users = 2;</code>
@@ -3629,7 +3630,7 @@ public final class ContactProtoBuf {
       super(builder);
     }
     private users() {
-      lastQueryTime_ = 0;
+      lastQueryTime_ = 0L;
       users_ = java.util.Collections.emptyList();
     }
 
@@ -3666,7 +3667,7 @@ public final class ContactProtoBuf {
             }
             case 8: {
 
-              lastQueryTime_ = input.readInt32();
+              lastQueryTime_ = input.readInt64();
               break;
             }
             case 18: {
@@ -3707,11 +3708,11 @@ public final class ContactProtoBuf {
 
     private int bitField0_;
     public static final int LASTQUERYTIME_FIELD_NUMBER = 1;
-    private int lastQueryTime_;
+    private long lastQueryTime_;
     /**
-     * <code>int32 lastQueryTime = 1;</code>
+     * <code>int64 lastQueryTime = 1;</code>
      */
-    public int getLastQueryTime() {
+    public long getLastQueryTime() {
       return lastQueryTime_;
     }
 
@@ -3762,8 +3763,8 @@ public final class ContactProtoBuf {
 
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (lastQueryTime_ != 0) {
-        output.writeInt32(1, lastQueryTime_);
+      if (lastQueryTime_ != 0L) {
+        output.writeInt64(1, lastQueryTime_);
       }
       for (int i = 0; i < users_.size(); i++) {
         output.writeMessage(2, users_.get(i));
@@ -3776,9 +3777,9 @@ public final class ContactProtoBuf {
       if (size != -1) return size;
 
       size = 0;
-      if (lastQueryTime_ != 0) {
+      if (lastQueryTime_ != 0L) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(1, lastQueryTime_);
+          .computeInt64Size(1, lastQueryTime_);
       }
       for (int i = 0; i < users_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
@@ -3816,7 +3817,8 @@ public final class ContactProtoBuf {
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
       hash = (37 * hash) + LASTQUERYTIME_FIELD_NUMBER;
-      hash = (53 * hash) + getLastQueryTime();
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getLastQueryTime());
       if (getUsersCount() > 0) {
         hash = (37 * hash) + USERS_FIELD_NUMBER;
         hash = (53 * hash) + getUsersList().hashCode();
@@ -3951,7 +3953,7 @@ public final class ContactProtoBuf {
       }
       public Builder clear() {
         super.clear();
-        lastQueryTime_ = 0;
+        lastQueryTime_ = 0L;
 
         if (usersBuilder_ == null) {
           users_ = java.util.Collections.emptyList();
@@ -4035,7 +4037,7 @@ public final class ContactProtoBuf {
 
       public Builder mergeFrom(users other) {
         if (other == users.getDefaultInstance()) return this;
-        if (other.getLastQueryTime() != 0) {
+        if (other.getLastQueryTime() != 0L) {
           setLastQueryTime(other.getLastQueryTime());
         }
         if (usersBuilder_ == null) {
@@ -4056,7 +4058,7 @@ public final class ContactProtoBuf {
               usersBuilder_ = null;
               users_ = other.users_;
               bitField0_ = (bitField0_ & ~0x00000002);
-              usersBuilder_ =
+              usersBuilder_ = 
                 com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
                    getUsersFieldBuilder() : null;
             } else {
@@ -4092,28 +4094,28 @@ public final class ContactProtoBuf {
       }
       private int bitField0_;
 
-      private int lastQueryTime_ ;
+      private long lastQueryTime_ ;
       /**
-       * <code>int32 lastQueryTime = 1;</code>
+       * <code>int64 lastQueryTime = 1;</code>
        */
-      public int getLastQueryTime() {
+      public long getLastQueryTime() {
         return lastQueryTime_;
       }
       /**
-       * <code>int32 lastQueryTime = 1;</code>
+       * <code>int64 lastQueryTime = 1;</code>
        */
-      public Builder setLastQueryTime(int value) {
-
+      public Builder setLastQueryTime(long value) {
+        
         lastQueryTime_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>int32 lastQueryTime = 1;</code>
+       * <code>int64 lastQueryTime = 1;</code>
        */
       public Builder clearLastQueryTime() {
-
-        lastQueryTime_ = 0;
+        
+        lastQueryTime_ = 0L;
         onChanged();
         return this;
       }
@@ -4408,22 +4410,22 @@ public final class ContactProtoBuf {
 
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_com_inspur_emmcloud_bean_contact_org_descriptor;
-  private static final
+  private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_com_inspur_emmcloud_bean_contact_org_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_com_inspur_emmcloud_bean_contact_user_descriptor;
-  private static final
+  private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_com_inspur_emmcloud_bean_contact_user_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_com_inspur_emmcloud_bean_contact_orgs_descriptor;
-  private static final
+  private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_com_inspur_emmcloud_bean_contact_orgs_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_com_inspur_emmcloud_bean_contact_users_descriptor;
-  private static final
+  private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_com_inspur_emmcloud_bean_contact_users_fieldAccessorTable;
 
@@ -4443,10 +4445,10 @@ public final class ContactProtoBuf {
       "\023\n\013name_global\030\003 \001(\t\022\016\n\006pinyin\030\004 \001(\t\022\016\n\006" +
       "mobile\030\005 \001(\t\022\r\n\005email\030\006 \001(\t\022\021\n\tparent_id" +
       "\030\007 \001(\t\022\020\n\010has_head\030\010 \001(\005\022\022\n\nsort_order\030\t" +
-      " \001(\005\"b\n\004orgs\022\025\n\rlastQueryTime\030\001 \001(\005\0223\n\004o" +
+      " \001(\005\"b\n\004orgs\022\025\n\rlastQueryTime\030\001 \001(\003\0223\n\004o" +
       "rgs\030\002 \003(\0132%.com.inspur.emmcloud.bean.con" +
       "tact.org\022\016\n\006rootID\030\003 \001(\t\"U\n\005users\022\025\n\rlas" +
-      "tQueryTime\030\001 \001(\005\0225\n\005users\030\002 \003(\0132&.com.in" +
+      "tQueryTime\030\001 \001(\003\0225\n\005users\030\002 \003(\0132&.com.in" +
       "spur.emmcloud.bean.contact.userB3\n com.i" +
       "nspur.emmcloud.bean.contactB\017ContactProt" +
       "oBufb\006proto3"

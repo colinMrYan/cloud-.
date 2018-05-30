@@ -65,7 +65,7 @@ public class ContactUser {
         this.lastQueryTime =lastQueryTime;
     }
 
-    public static List<ContactUser> protoBufUserList2ContactUserList(List<ContactProtoBuf.user> userList,int lastQueryTime){
+    public static List<ContactUser> protoBufUserList2ContactUserList(List<ContactProtoBuf.user> userList,long lastQueryTime){
         List<ContactUser> contactUserList = new ArrayList<>();
         if (userList != null && userList.size()>0){
             int size = userList.size();

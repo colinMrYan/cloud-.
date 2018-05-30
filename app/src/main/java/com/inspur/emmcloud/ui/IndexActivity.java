@@ -56,16 +56,17 @@ import java.util.List;
  */
 public class IndexActivity extends IndexBaseActivity {
     private static final int SYNC_ALL_BASE_DATA_SUCCESS = 0;
-    private static final int CACHE_CONTACT_USER_SUCCESS = 1;
     private static final int RELOAD_WEB = 3;
     @ViewInject(R.id.preload_webview)
     private WebView webView;
     private WeakHandler handler;
     private boolean isHasCacheContact = false;
     private LoadingDialog loadingDlg;
+    long a = 0;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        a = System.currentTimeMillis();
         initAppEnvironment();
         initView();
         getInitData();
@@ -93,13 +94,11 @@ public class IndexActivity extends IndexBaseActivity {
      * 初始化
      */
     private void getInitData() {
-        isHasCacheContact = (ContactUserCacheUtils.getLastQueryTime() == 0);
-        LogUtils.jasonDebug("ContactUserCacheUtils.getLastQueryTime()="+ContactUserCacheUtils.getLastQueryTime());
+        isHasCacheContact = (ContactUserCacheUtils.getLastQueryTime() != 0);
         if (!isHasCacheContact) {
             loadingDlg.show();
         }
         getContactUser();
-        getAllRobotInfo();
         getAppTabInfo();  //从服务端获取显示tab
         new SplashPageUtils(IndexActivity.this).update();//更新闪屏页面
         new ReactNativeUtils(IndexActivity.this).init(); //更新react
@@ -222,16 +221,15 @@ public class IndexActivity extends IndexBaseActivity {
             @Override
             protected void handleMessage(Object o, Message msg) {
                 switch (msg.what) {
-                    case CACHE_CONTACT_USER_SUCCESS:
-                        getAllChannelGroup();
-                        break;
                     case SYNC_ALL_BASE_DATA_SUCCESS:
                         LoadingDialog.dimissDlg(loadingDlg);
                         MyApplication.getInstance()
                                 .setIsContactReady(true);
                         notifySyncAllBaseDataSuccess();
                         MyApplication.getInstance().startWebSocket(true);// 启动webSocket推送
+                        getAllChannelGroup();
                         getContactOrg();
+                        getAllRobotInfo();
                         break;
                     case RELOAD_WEB:
                         if (webView != null) {
@@ -283,7 +281,7 @@ public class IndexActivity extends IndexBaseActivity {
                 ContactUserCacheUtils.saveContactUserList(contactUserList);
                 ContactUserCacheUtils.setLastQueryTime(users.getLastQueryTime());
                 if (handler != null) {
-                    handler.sendEmptyMessage(CACHE_CONTACT_USER_SUCCESS);
+                    handler.sendEmptyMessage(SYNC_ALL_BASE_DATA_SUCCESS);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -306,6 +304,7 @@ public class IndexActivity extends IndexBaseActivity {
                 List<ContactOrg> contactOrgList = ContactOrg.protoBufOrgList2ContactOrgList(orgList);
                 ContactOrgCacheUtils.saveContactOrgList(contactOrgList);
                 ContactOrgCacheUtils.setLastQueryTime(orgs.getLastQueryTime());
+                ContactOrgCacheUtils.setContactOrgRootId(orgs.getRootID());
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -328,9 +327,6 @@ public class IndexActivity extends IndexBaseActivity {
                 ChannelGroupCacheUtils.clearChannelGroupList(getApplicationContext());
                 ChannelGroupCacheUtils.saveChannelGroupList(
                         getApplicationContext(), channelGroupList);
-                if (handler != null) {
-                    handler.sendEmptyMessage(SYNC_ALL_BASE_DATA_SUCCESS);
-                }
             }catch (Exception e){
                 e.printStackTrace();
             }
@@ -357,12 +353,9 @@ public class IndexActivity extends IndexBaseActivity {
     private void getAllChannelGroup() {
         // TODO Auto-generated method stub
         if (NetUtils.isNetworkConnected(getApplicationContext(), false)) {
-            MyApplication.getInstance().setIsContactReady(false);
             ChatAPIService apiService = new ChatAPIService(IndexActivity.this);
             apiService.setAPIInterface(new WebService());
             apiService.getAllGroupChannelList();
-        } else if (isHasCacheContact) {
-            handler.sendEmptyMessage(SYNC_ALL_BASE_DATA_SUCCESS);
         }
     }
 
@@ -377,7 +370,7 @@ public class IndexActivity extends IndexBaseActivity {
             MyApplication.getInstance().setIsContactReady(false);
             long contactUserLastQuetyTime = ContactUserCacheUtils.getLastQueryTime();
             apiService.getContactUserList(contactUserLastQuetyTime);
-        } else if (isHasCacheContact && handler != null) {
+        } else if (handler != null) {
             handler.sendEmptyMessage(SYNC_ALL_BASE_DATA_SUCCESS);
         }
     }
@@ -416,7 +409,9 @@ public class IndexActivity extends IndexBaseActivity {
 
         @Override
         public void returnContactUserListFail(String error, int errorCode) {
-            getAllChannelGroup();
+            if (handler != null) {
+                handler.sendEmptyMessage(SYNC_ALL_BASE_DATA_SUCCESS);
+            }
             WebServiceMiddleUtils.hand(IndexActivity.this, error, errorCode);
         }
 
@@ -438,11 +433,6 @@ public class IndexActivity extends IndexBaseActivity {
 
         @Override
         public void returnSearchChannelGroupFail(String error, int errorCode) {
-            super.returnSearchChannelGroupFail(error, errorCode);
-            // 无论成功或者失败都返回成功都能进入应用
-            if (handler != null) {
-                handler.sendEmptyMessage(SYNC_ALL_BASE_DATA_SUCCESS);
-            }
         }
 
 

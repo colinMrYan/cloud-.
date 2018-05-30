@@ -22,8 +22,13 @@ import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.privates.OauthUtils;
 
 import org.xutils.common.Callback;
+import org.xutils.ex.HttpException;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
+
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
+import java.util.concurrent.TimeoutException;
 
 /**
  * com.inspur.emmcloud.api.apiservice.ContactAPIService
@@ -130,9 +135,21 @@ public class ContactAPIService {
 			}
 
 			@Override
-			public void onError(Throwable throwable, boolean b) {
+			public void onError(Throwable arg0, boolean b) {
+
 				apiInterface.returnContactUserListFail("",-1);
-				LogUtils.jasonDebug("onError-----------------------------");
+String error = "";
+				if (arg0 instanceof TimeoutException || arg0 instanceof SocketTimeoutException) {
+					error = "time out";
+				} else if (arg0 instanceof UnknownHostException) {
+					error = "time out";
+				} else if (arg0 instanceof HttpException) {
+					HttpException httpEx = (HttpException) arg0;
+					error = httpEx.getResult();
+				} else {
+					error = arg0.toString();
+				}
+				LogUtils.jasonDebug("onError-----------------------------error="+error);
 			}
 
 			@Override

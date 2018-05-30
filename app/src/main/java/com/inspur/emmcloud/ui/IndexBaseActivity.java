@@ -418,12 +418,17 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
 
 
     @Override
-    public void onTabChanged(String tabId) {
+    public void onTabChanged(final String tabId) {
         tipsView.setCanTouch(tabId.equals("communicate"));
         if (!isSystemChangeTag) {
-            //记录打开的tab页
-            PVCollectModel pvCollectModel = new PVCollectModel(tabId, tabId);
-            PVCollectModelCacheUtils.saveCollectModel(IndexBaseActivity.this, pvCollectModel);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    //记录打开的tab页
+                    PVCollectModel pvCollectModel = new PVCollectModel(tabId, tabId);
+                    PVCollectModelCacheUtils.saveCollectModel(IndexBaseActivity.this, pvCollectModel);
+                }
+            }).start();
             isSystemChangeTag = true;
         }
     }
