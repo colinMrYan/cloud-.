@@ -251,8 +251,9 @@ public class ImpWebView extends WebView {
 		// 设置WebView的属性，此时可以去执行JavaScript脚本
 		settings.setJavaScriptEnabled(true);
 		settings.setUseWideViewPort(true);
-		settings.setSupportZoom(false);
-		settings.setBuiltInZoomControls(false);
+		settings.setSupportZoom(true);
+		settings.setBuiltInZoomControls(true);
+		settings.setDisplayZoomControls(false);
 		//解决在安卓5.0以上跨域链接无法访问的问题
 		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ){
 			settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
