@@ -26,7 +26,6 @@ import com.inspur.emmcloud.service.BackgroundService;
 import com.inspur.emmcloud.service.CoreService;
 import com.inspur.emmcloud.service.LocationService;
 import com.inspur.emmcloud.service.PVCollectService;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.privates.AppConfigUtils;
@@ -62,11 +61,9 @@ public class IndexActivity extends IndexBaseActivity {
     private WeakHandler handler;
     private boolean isHasCacheContact = false;
     private LoadingDialog loadingDlg;
-    long a = 0;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        a = System.currentTimeMillis();
         initAppEnvironment();
         initView();
         getInitData();

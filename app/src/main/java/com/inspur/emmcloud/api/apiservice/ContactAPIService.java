@@ -18,17 +18,11 @@ import com.inspur.emmcloud.api.HttpUtils;
 import com.inspur.emmcloud.bean.chat.GetAllRobotsResult;
 import com.inspur.emmcloud.bean.chat.Robot;
 import com.inspur.emmcloud.interf.OauthCallBack;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.privates.OauthUtils;
 
 import org.xutils.common.Callback;
-import org.xutils.ex.HttpException;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
-
-import java.net.SocketTimeoutException;
-import java.net.UnknownHostException;
-import java.util.concurrent.TimeoutException;
 
 /**
  * com.inspur.emmcloud.api.apiservice.ContactAPIService
@@ -72,8 +66,8 @@ public class ContactAPIService {
 			}
 			
 			@Override
-			public void callbackSuccess(String arg0) {
-				apiInterface.returnAllRobotsSuccess(new GetAllRobotsResult(arg0));
+			public void callbackSuccess(byte[] arg0) {
+				apiInterface.returnAllRobotsSuccess(new GetAllRobotsResult(new String(arg0)));
 			}
 			
 			@Override
@@ -110,8 +104,8 @@ public class ContactAPIService {
 			}
 
 			@Override
-			public void callbackSuccess(String arg0) {
-				apiInterface.returnRobotByIdSuccess(new Robot(arg0));
+			public void callbackSuccess(byte[] arg0) {
+				apiInterface.returnRobotByIdSuccess(new Robot(new String(arg0)));
 			}
 			
 			@Override
@@ -121,47 +115,40 @@ public class ContactAPIService {
 		});
 	}
 
-	public void getContactUserList(long lastQuetyTime){
+	public void getContactUserList(final long lastQuetyTime){
 		String url = APIUri.getContactUserUrl();
 		RequestParams params = MyApplication.getInstance().getHttpRequestParams(url);
 		if (lastQuetyTime != 0) {
 			params.addParameter("lastQueryTime", lastQuetyTime);
 		}
-		x.http().post(params, new Callback.CommonCallback<byte[]>() {
+		x.http().post(params, new APICallback(context,url){
 			@Override
-			public void onSuccess(byte[] bytes) {
-				//LogUtils.jasonDebug("getContactUserList:"+new String(bytes));
-				apiInterface.returnContactUserListSuccess(bytes);
+			public void callbackSuccess(byte[] arg0) {
+				apiInterface.returnContactUserListSuccess(arg0);
 			}
 
 			@Override
-			public void onError(Throwable arg0, boolean b) {
-
+			public void callbackFail(String error, int responseCode) {
 				apiInterface.returnContactUserListFail("",-1);
-String error = "";
-				if (arg0 instanceof TimeoutException || arg0 instanceof SocketTimeoutException) {
-					error = "time out";
-				} else if (arg0 instanceof UnknownHostException) {
-					error = "time out";
-				} else if (arg0 instanceof HttpException) {
-					HttpException httpEx = (HttpException) arg0;
-					error = httpEx.getResult();
-				} else {
-					error = arg0.toString();
-				}
-				LogUtils.jasonDebug("onError-----------------------------error="+error);
 			}
 
 			@Override
-			public void onCancelled(CancelledException e) {
+			public void callbackTokenExpire(long requestTime) {
+				OauthCallBack oauthCallBack = new OauthCallBack() {
+					@Override
+					public void reExecute() {
+						getContactUserList(lastQuetyTime);
+					}
 
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				};
+				OauthUtils.getInstance().refreshToken(
+						oauthCallBack, requestTime);
 			}
-
-			@Override
-			public void onFinished() {
-
-			}
-		});
+		} );
 	}
 
 	public void getContactOrgList(long lastQuetyTime){
@@ -173,7 +160,6 @@ String error = "";
 		x.http().post(params, new Callback.CommonCallback<byte[]>() {
 			@Override
 			public void onSuccess(byte[] bytes) {
-			//	LogUtils.jasonDebug("getContactOrgList:"+new String(bytes));
 				apiInterface.returnContactOrgListSuccess(bytes);
 			}
 

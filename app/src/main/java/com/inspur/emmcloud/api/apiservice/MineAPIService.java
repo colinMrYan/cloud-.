@@ -61,7 +61,7 @@ public class MineAPIService {
         File file = new File(filePath);
         params.setMultipart(true);// 有上传文件时使用multipart表单, 否则上传原始文件流.
         params.addBodyParameter("head", file);
-        HttpUtils.request(context, CloudHttpMethod.POST,params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -81,11 +81,10 @@ public class MineAPIService {
             }
 
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
                 apiInterface
-                        .returnUploadMyHeadSuccess(new GetUploadMyHeadResult(
-                                arg0));
+                        .returnUploadMyHeadSuccess(new GetUploadMyHeadResult(new String(arg0)));
             }
 
             @Override
@@ -109,7 +108,7 @@ public class MineAPIService {
                 .getHttpRequestParams(completeUrl);
         params.addParameter("key", key);
         params.addParameter("value", value);
-        HttpUtils.request(context,CloudHttpMethod.POST,params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -129,10 +128,9 @@ public class MineAPIService {
             }
 
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
-                apiInterface.returnModifyUserInfoSucces(new GetBoolenResult(
-                        arg0));
+                apiInterface.returnModifyUserInfoSucces(new GetBoolenResult(new String(arg0)));
             }
 
             @Override
@@ -173,7 +171,7 @@ public class MineAPIService {
         params.addParameter("Email", "");
         params.addParameter("Telephone", "");
         params.addParameter("UUID", UUID);
-        HttpUtils.request(context,CloudHttpMethod.POST,params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -182,7 +180,7 @@ public class MineAPIService {
             }
 
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
 
             }
@@ -203,7 +201,7 @@ public class MineAPIService {
         final String completeUrl = APIUri.getLangUrl();
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
-        HttpUtils.request(context,CloudHttpMethod.GET,params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -223,9 +221,9 @@ public class MineAPIService {
             }
 
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
-                apiInterface.returnLanguageSuccess(new GetLanguageResult(arg0));
+                apiInterface.returnLanguageSuccess(new GetLanguageResult(new String(arg0)));
             }
 
             @Override
@@ -243,10 +241,10 @@ public class MineAPIService {
         final String completeUrl = APIUri.getUserProfileUrl();
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
-        HttpUtils.request(context,CloudHttpMethod.GET,params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
             @Override
-            public void callbackSuccess(String arg0) {
-                apiInterface.returnUserProfileSuccess(new UserProfileInfoBean(arg0));
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnUserProfileSuccess(new UserProfileInfoBean(new String(arg0)));
             }
 
             @Override
@@ -282,7 +280,7 @@ public class MineAPIService {
         final String completeUrl = APIUri.getBindingDevicesUrl();
         RequestParams params =
                 ((MyApplication) context.getApplicationContext()).getHttpRequestParams(completeUrl);
-        HttpUtils.request(context,CloudHttpMethod.GET,params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -302,11 +300,10 @@ public class MineAPIService {
             }
 
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
                 apiInterface
-                        .returnBindingDeviceListSuccess(new GetBindingDeviceResult(
-                                arg0));
+                        .returnBindingDeviceListSuccess(new GetBindingDeviceResult(new String(arg0)));
             }
 
             @Override
@@ -326,7 +323,7 @@ public class MineAPIService {
         RequestParams params =
                 ((MyApplication) context.getApplicationContext()).getHttpRequestParams(completeUrl);
         params.addParameter("udid", udid);
-        HttpUtils.request(context,CloudHttpMethod.POST,params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -346,11 +343,10 @@ public class MineAPIService {
             }
 
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
                 apiInterface
-                        .returnDeviceLogListSuccess(new GetDeviceLogResult(
-                                arg0));
+                        .returnDeviceLogListSuccess(new GetDeviceLogResult(new String(arg0)));
             }
 
             @Override
@@ -371,9 +367,9 @@ public class MineAPIService {
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         params.addParameter("udid", udid);
-        HttpUtils.request(context,CloudHttpMethod.POST,params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnUnBindDeviceSuccess();
             }
 
@@ -409,10 +405,10 @@ public class MineAPIService {
         final String completeUrl = APIUri.getMDMStateUrl();
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
-        HttpUtils.request(context,CloudHttpMethod.GET,params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
             @Override
-            public void callbackSuccess(String arg0) {
-                apiInterface.returnMDMStateSuccess(new GetMDMStateResult(arg0));
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnMDMStateSuccess(new GetMDMStateResult(new String(arg0)));
             }
 
             @Override
@@ -442,18 +438,19 @@ public class MineAPIService {
 
     /**
      * 设置脸部图像
+     *
      * @param bitmapBase64
      */
-    public void faceSetting(final String bitmapBase64){
+    public void faceSetting(final String bitmapBase64) {
         final String completeUrl = APIUri.getFaceSettingUrl();
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
-        params.addParameter("face",bitmapBase64);
+        params.addParameter("face", bitmapBase64);
         params.setAsJsonContent(true);
-        HttpUtils.request(context,CloudHttpMethod.POST,params, new APICallback(context,completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
             @Override
-            public void callbackSuccess(String arg0) {
-             apiInterface.returnFaceSettingSuccess(new GetFaceSettingResult(arg0));
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnFaceSettingSuccess(new GetFaceSettingResult(new String(arg0)));
             }
 
             @Override
@@ -482,18 +479,19 @@ public class MineAPIService {
 
     /**
      * 刷脸比对图像
+     *
      * @param bitmapBase64
      */
-    public void faceVerify(final String bitmapBase64){
+    public void faceVerify(final String bitmapBase64) {
         final String completeUrl = APIUri.getFaceVerifyUrl();
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
-        params.addParameter("face",bitmapBase64);
+        params.addParameter("face", bitmapBase64);
         params.setAsJsonContent(true);
-        HttpUtils.request(context,CloudHttpMethod.POST,params, new APICallback(context,completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
             @Override
-            public void callbackSuccess(String arg0) {
-                apiInterface.returnFaceVerifySuccess(new GetFaceSettingResult(arg0));
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnFaceVerifySuccess(new GetFaceSettingResult(new String(arg0)));
             }
 
             @Override
