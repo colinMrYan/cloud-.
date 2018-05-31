@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.imp.api.iLog;
 import com.inspur.imp.engine.webview.ImpWebView;
 import com.inspur.imp.util.DialogUtil;
@@ -64,11 +65,14 @@ public class PluginMgr {
         }
         Log.d("jason", "serviceName=" + serviceName);
         Log.d("jason", "action=" + action);
+        Log.d("jason","检测是否有plugin之前");
         IPlugin plugin = null;
         if (!entries.containsKey(serviceName)) {
+            Log.d("jason","有选择人员");
             plugin = createPlugin(serviceName);
             entries.put(serviceName, plugin);
         } else {
+            Log.d("jason","没有选择人员");
             plugin = getPlugin(serviceName);
         }
         // 将传递过来的参数转换为JSON
@@ -144,7 +148,8 @@ public class PluginMgr {
         if ("com.inspur.imp.plugin.window.WindowService".equals(service)
                 || "com.inspur.imp.plugin.scroll.ScrollService".equals(service)
                 || "com.inspur.imp.plugin.app.AppService".equals(service)
-                || "com.inspur.imp.plugin.transfer.FileTransferService".equals(service)) {
+                || "com.inspur.imp.plugin.transfer.FileTransferService".equals(service)
+                ) {
             plugin = createPlugin(service);
         } else {
             plugin.init(context, webView);
