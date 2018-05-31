@@ -91,21 +91,21 @@ public class UserInfoActivity extends BaseActivity {
         String headUrl = APIUri.getUserIconUrl(UserInfoActivity.this, contactUser.getId());
         String organize= null;
         ContactOrg contactOrg = ContactOrgCacheUtils.getContactOrg(contactUser.getParentId());
-        if (organize != null){
+        if (contactOrg != null){
             organize = contactOrg.getName();
         }
         if (!StringUtils.isEmpty(organize)) {
-            departmentLayout.setVisibility(View.GONE);
+            departmentLayout.setVisibility(View.VISIBLE);
             departmentText.setText(organize);
         }
 
         if (!StringUtils.isEmpty(mail)) {
-            mailLayout.setVisibility(View.GONE);
+            mailLayout.setVisibility(View.VISIBLE);
             mailText.setText(mail);
         }
 
         if (!StringUtils.isEmpty(phoneNum)) {
-            contactLayout.setVisibility(View.GONE);
+            contactLayout.setVisibility(View.VISIBLE);
             phoneNumText.setText(phoneNum);
         }
         nameText.setText(StringUtils.isEmpty(name)?getString(R.string.not_set):name);

@@ -6,11 +6,14 @@ import android.content.Context;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.emmcloud.config.MyAppConfig;
+import com.inspur.emmcloud.util.common.ImageUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.RobotCacheUtils;
+
+import java.io.File;
 
 
 /**
@@ -264,17 +267,22 @@ public class APIUri {
                     }
                     MyApplication.getInstance().setUsesrPhotoUrl(uid, headImgUrl);
                 }else {
-                    LogUtils.jasonDebug("00000000000000000");
-//                    String name = contactUser.getName();
-//                    name = name.substring(name.length()-1,name.length());
-//                    LogUtils.jasonDebug("name="+name);
-//                    File file = new File(MyAppConfig.LOCAL_CACHE_PHOTO_PATH,
-//                            name + "_user.png1");
-//                    headImgUrl = "file://"+file.getAbsolutePath();
-//                    if (!file.exists()){
-//                        ImageUtils.drawAndSavePhotoTextImg(context,name,file.getAbsolutePath());
-//                    }
-                    LogUtils.jasonDebug("headImgUrl="+headImgUrl);
+                    String name = contactUser.getName();
+                    if (!StringUtils.isBlank(name)){
+                        String photoName = name.replaceAll("(\\(|（)[^（\\(\\)）]*?(\\)|）)|\\d*$","");
+                        if (photoName.length()>0){
+                            name = photoName.substring(photoName.length()-1,photoName.length());
+                        }else {
+                            name = name.substring(name.length()-1,name.length());
+                        }
+                        String localPhotoFileName = "u"+(int)(name.charAt(0));
+                        File file = new File(MyAppConfig.LOCAL_CACHE_PHOTO_PATH,
+                                localPhotoFileName);
+                        headImgUrl = "file://"+file.getAbsolutePath();
+                        if (!file.exists()){
+                            ImageUtils.drawAndSavePhotoTextImg(context,name,file.getAbsolutePath());
+                        }
+                    }
                 }
             }
             if (MyApplication.getInstance().getIsContactReady() && headImgUrl == null) {
