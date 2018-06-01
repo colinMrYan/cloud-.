@@ -52,7 +52,6 @@ import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
@@ -78,8 +77,6 @@ import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.widget.CircleImageView;
 import com.inspur.emmcloud.widget.WeakThread;
 import com.inspur.imp.plugin.barcode.scan.CaptureActivity;
-import com.photograph.PhotoSDkApi;
-import com.photograph.ui.OCROptCallBack;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 
 import org.greenrobot.eventbus.EventBus;
@@ -316,34 +313,14 @@ public class CommunicationV0Fragment extends Fragment {
                     showPopupWindow(rootView.findViewById(R.id.more_function_list_img));
                     break;
                 case R.id.contact_img:
-//                    Bundle bundle = new Bundle();
-//                    bundle.putInt("select_content", 4);
-//                    bundle.putBoolean("isMulti_select", false);
-//                    bundle.putString("title",
-//                            getActivity().getString(R.string.adress_list));
-//                    IntentUtils.startActivity(getActivity(),
-//                            ContactSearchActivity.class, bundle);
-//                    recordUserClickContact();
-                    JSONObject Json = new JSONObject();
-                    try {
-                        Json.put("ocrType",1);
-                        Json.put("isBack",true);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-                    PhotoSDkApi.init(MyApplication.getInstance()).StartPhotoOCR(Json, new OCROptCallBack() {
-                        @Override
-                        public void OCRBack(String result) {
-                            LogUtils.jasonDebug("OCRBack===result="+result);
-                        }
-
-                        @Override
-                        public void callBackMsg(boolean result) {
-                            LogUtils.jasonDebug("callBackMsg===result="+result);
-                        }
-                    });
-
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("select_content", 4);
+                    bundle.putBoolean("isMulti_select", false);
+                    bundle.putString("title",
+                            getActivity().getString(R.string.adress_list));
+                    IntentUtils.startActivity(getActivity(),
+                            ContactSearchActivity.class, bundle);
+                    recordUserClickContact();
                     break;
                 default:
                     break;

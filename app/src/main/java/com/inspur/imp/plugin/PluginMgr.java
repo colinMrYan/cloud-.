@@ -55,33 +55,30 @@ public class PluginMgr {
      */
     public void execute(String serviceName, final String action,
                         final String params) {
-        if (serviceName.endsWith("LoadingDialogService")) {
-            serviceName = "com.inspur.imp.plugin.loadingdialog." + serviceName;
-        }
-        if (serviceName.endsWith("FileTransferService")) {
-            serviceName = "com.inspur.imp.plugin.filetransfer." + serviceName;
-        }
-        Log.d("jason", "serviceName=" + serviceName);
-        Log.d("jason", "action=" + action);
-        IPlugin plugin = null;
-        if (!entries.containsKey(serviceName)) {
-            plugin = createPlugin(serviceName);
-            entries.put(serviceName, plugin);
-        } else {
-            plugin = getPlugin(serviceName);
-        }
-        // 将传递过来的参数转换为JSON
-        JSONObject jo = null;
-        if (StrUtil.strIsNotNull(params)) {
-            try {
-                jo = new JSONObject(params);
-            } catch (JSONException e) {
-                iLog.e(TAG, "组装Json对象出现异常!");
+        serviceName = getReallyServiceName(serviceName);
+        if (serviceName != null){
+            Log.d("jason", "serviceName=" + serviceName);
+            Log.d("jason", "action=" + action);
+            IPlugin plugin = null;
+            if (!entries.containsKey(serviceName)) {
+                plugin = createPlugin(serviceName);
+                entries.put(serviceName, plugin);
+            } else {
+                plugin = getPlugin(serviceName);
             }
-        }
-        // 执行接口的execute方法
-        if (plugin != null) {
-            plugin.execute(action, jo);
+            // 将传递过来的参数转换为JSON
+            JSONObject jo = null;
+            if (StrUtil.strIsNotNull(params)) {
+                try {
+                    jo = new JSONObject(params);
+                } catch (JSONException e) {
+                    iLog.e(TAG, "组装Json对象出现异常!");
+                }
+            }
+            // 执行接口的execute方法
+            if (plugin != null) {
+                plugin.execute(action, jo);
+            }
         }
     }
 
@@ -94,36 +91,51 @@ public class PluginMgr {
      */
     public String executeAndReturn(final String serviceName,
                                    final String action, final String params) {
-        IPlugin plugin = null;
+        String reallyServiceName = getReallyServiceName(serviceName);
         String res = "";
-        Log.d("jason", "serviceName=" + serviceName);
-        Log.d("jason", "action=" + action);
-        if (!entries.containsKey(serviceName)) {
-            plugin = createPlugin(serviceName);
-            entries.put(serviceName, plugin);
-        } else {
-            plugin = getPlugin(serviceName);
-        }
-        // 将传递过来的参数转换为JSON
-        JSONObject jo = null;
-        if (StrUtil.strIsNotNull(params)) {
-            try {
-                jo = new JSONObject(params);
-            } catch (JSONException e) {
-                iLog.e(TAG, "组装Json对象出现异常!");
+        if (reallyServiceName != null){
+            IPlugin plugin = null;
+            Log.d("jason", "serviceName=" + reallyServiceName);
+            Log.d("jason", "action=" + action);
+            if (!entries.containsKey(reallyServiceName)) {
+                plugin = createPlugin(reallyServiceName);
+                entries.put(reallyServiceName, plugin);
+            } else {
+                plugin = getPlugin(reallyServiceName);
+            }
+            // 将传递过来的参数转换为JSON
+            JSONObject jo = null;
+            if (StrUtil.strIsNotNull(params)) {
+                try {
+                    jo = new JSONObject(params);
+                } catch (JSONException e) {
+                    iLog.e(TAG, "组装Json对象出现异常!");
+                }
+            }
+            // 执行接口的execute方法
+            if (plugin != null) {
+                try {
+                    res = plugin.executeAndReturn(action, jo);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
-        // 执行接口的execute方法
-        if (plugin != null) {
-            try {
-                Log.d("jason", "1---");
-                res = plugin.executeAndReturn(action, jo);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        Log.d("jason", "2---");
         return res;
+
+    }
+
+    private String getReallyServiceName(String serviceName){
+        if (serviceName != null){
+            if (serviceName.endsWith("LoadingDialogService")) {
+                serviceName = "com.inspur.imp.plugin.loadingdialog.LoadingDialogService";
+            }else if (serviceName.endsWith("FileTransferService")) {
+                serviceName = "com.inspur.imp.plugin.filetransfer.FileTransferService";
+            }else if (serviceName.endsWith("OCRService")){
+                serviceName = "com.inspur.imp.plugin.ocr.OCRService";
+            }
+        }
+        return serviceName;
     }
 
     /**
