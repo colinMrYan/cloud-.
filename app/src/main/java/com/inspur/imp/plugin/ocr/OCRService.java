@@ -38,6 +38,7 @@ public class OCRService extends ImpPlugin {
         JSONObject Json = new JSONObject();
         try {
             Json.put("ocrType", OCRType);
+            Json.put("isBack", true);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -79,7 +80,8 @@ public class OCRService extends ImpPlugin {
         }
         JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("OCRResult", result);
+            JSONObject object = new JSONObject(result);
+            jsonObject.put("OCRResult", object);
             jsonObject.put("photoData", js_out);
         } catch (Exception e) {
             e.printStackTrace();
