@@ -170,7 +170,8 @@ public class WebSocketPush {
                 WSAPIService.getInstance().sendAppStatus(isActive ? "ACTIVED" : "SUSPEND");
                 LogUtils.debug(TAG, "发送App状态：" + (isActive ? "ACTIVED" : "SUSPEND"));
             }
-
+        }else{
+            init(false);
         }
     }
 
