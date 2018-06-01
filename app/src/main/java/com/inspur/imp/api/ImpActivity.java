@@ -442,7 +442,6 @@ public class ImpActivity extends ImpBaseActivity {
             PublicWay.uploadPhotoService.onActivityResult(requestCode, resultCode, data);
             return;
         }
-
         if (PublicWay.selectStaffService != null) {
             PublicWay.selectStaffService.onActivityResult(requestCode, resultCode, data);
             return;

@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.facebook.react.bridge.WritableNativeMap;
 import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.util.common.StringUtils;
 
 import org.json.JSONObject;
 import org.xutils.db.annotation.Column;
@@ -236,16 +237,15 @@ public class Contact implements Serializable {
 
     public JSONObject contact2JSONObject(Context context) {
         JSONObject obj = new JSONObject();
+        String headUrl = APIUri.getChannelImgUrl(context, inspurID);
         try {
-            obj.put("inspur_id", inspurID);
-            obj.put("code", code);
-            obj.put("real_name", realName);
+            obj.put("id", id);
+            obj.put("name", name);
+            obj.put("nameGlobal", globalName);
             obj.put("pinyin", pinyin);
             obj.put("mobile", mobile);
             obj.put("email", email);
-            obj.put("org_name", orgName);
-            obj.put("type", type);
-            obj.put("head", APIUri.getChannelImgUrl(context, inspurID));
+            obj.put("head", StringUtils.isBlank(headUrl)?"":headUrl);
         } catch (Exception e) {
             e.printStackTrace();
         }

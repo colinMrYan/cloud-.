@@ -2,7 +2,6 @@ package com.inspur.imp.plugin.staff;
 
 import android.content.Intent;
 
-import com.alibaba.fastjson.JSON;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.contact.Contact;
 import com.inspur.emmcloud.bean.contact.SearchModel;
@@ -14,6 +13,7 @@ import com.inspur.imp.plugin.ImpPlugin;
 import com.inspur.imp.plugin.camera.PublicWay;
 import com.inspur.imp.util.DialogUtil;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -89,11 +89,20 @@ public class SelectStaffService extends ImpPlugin {
                 }
             }
             List<Contact> contactList = ContactCacheUtils.getSoreUserList(getActivity(), uidList);
-            if(contactList.size() > 0){
-                this.jsCallback(successCb, contactList.size() == 1 ? JSON.toJSONString(contactList.get(0)):JSON.toJSONString(contactList));
+            if(contactList.size() == 1){
+                this.jsCallback(successCb, contactList.get(0).contact2JSONObject(getActivity()).toString());
+            }else{
+                JSONArray jsonArray = new JSONArray();
+                for (int i = 0; i < contactList.size(); i++) {
+                    jsonArray.put(contactList.get(i).contact2JSONObject(getActivity()));
+                }
+                if(jsonArray.length() > 0){
+                    this.jsCallback(successCb, jsonArray.toString());
+                }
             }
+
         }else{
-            this.jsCallback(failCb);
+            this.jsCallback(failCb,"error");
         }
     }
 }
