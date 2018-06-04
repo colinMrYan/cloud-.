@@ -367,7 +367,9 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
                             public void run() {
                                 searchContactList = ContactUserCacheUtils.getSearchContact(searchText,
                                         excludeContactList, 25);
-                                handler.sendEmptyMessage(REFRESH_CONTACT_DATA);
+                                if (handler !=null){
+                                    handler.sendEmptyMessage(REFRESH_CONTACT_DATA);
+                                }
                             }
                         }).start();
                         break;
@@ -605,10 +607,10 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         if (handler != null) {
             handler = null;
         }
+        super.onDestroy();
     }
 
 }

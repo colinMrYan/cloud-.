@@ -529,27 +529,33 @@ public class ContactSearchActivity extends BaseActivity {
         searchRunnbale = new Runnable() {
             @Override
             public void run() {
-                lastSearchTime = System.currentTimeMillis();
-                switch (searchArea) {
-                    case SEARCH_ALL:
-                        searchChannelGroupList = ChannelGroupCacheUtils
-                                .getSearchChannelGroupList(getApplicationContext(),
-                                        searchText);
-                        searchContactList = ContactUserCacheUtils.getSearchContact(searchText, excludeContactList, 4);
-                        break;
-                    case SEARCH_CHANNELGROUP:
-                        searchChannelGroupList = ChannelGroupCacheUtils
-                                .getSearchChannelGroupList(getApplicationContext(),
-                                        searchText);
-                        break;
-                    case SEARCH_CONTACT:
-                        searchContactList = ContactUserCacheUtils.getSearchContact(searchText, excludeContactList, 4);
-                        break;
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        switch (searchArea) {
+                            case SEARCH_ALL:
+                                searchChannelGroupList = ChannelGroupCacheUtils
+                                        .getSearchChannelGroupList(getApplicationContext(),
+                                                searchText);
+                                searchContactList = ContactUserCacheUtils.getSearchContact(searchText, excludeContactList, 4);
+                                break;
+                            case SEARCH_CHANNELGROUP:
+                                searchChannelGroupList = ChannelGroupCacheUtils
+                                        .getSearchChannelGroupList(getApplicationContext(),
+                                                searchText);
+                                break;
+                            case SEARCH_CONTACT:
+                                searchContactList = ContactUserCacheUtils.getSearchContact(searchText, excludeContactList, 4);
+                                break;
 
-                    default:
-                        break;
-                }
-                handler.sendEmptyMessage(REFRESH_DATA);
+                            default:
+                                break;
+                        }
+                        if (handler != null){
+                            handler.sendEmptyMessage(REFRESH_DATA);
+                        }
+                    }
+                }).start();
             }
         };
     }
@@ -584,6 +590,7 @@ public class ContactSearchActivity extends BaseActivity {
                     handler.removeCallbacks(searchRunnbale);
                     handler.postDelayed(searchRunnbale, 500);
                 }
+                lastSearchTime = System.currentTimeMillis();
             } else {
                 lastSearchTime = 0;
                 handler.removeCallbacks(searchRunnbale);
@@ -1379,6 +1386,13 @@ public class ContactSearchActivity extends BaseActivity {
 
     }
 
+    @Override
+    protected void onDestroy() {
+        if (handler != null){
+            handler = null;
+        }
+        super.onDestroy();
+    }
 
     /**
      * 创建或进入频道

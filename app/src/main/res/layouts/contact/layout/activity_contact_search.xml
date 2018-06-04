@@ -137,8 +137,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1.0"
-                    android:dividerHeight="0dp"
-                    android:divider="#00000000"></ListView>
+                    android:dividerHeight="0.5dp"
+                    android:divider="#ffffff"></ListView>
             </LinearLayout>
 
             <LinearLayout
@@ -282,8 +282,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="1.0"
-                        android:dividerHeight="0dp"
-                        android:divider="#00000000"></ListView>
+                        android:dividerHeight="0.5dp"
+                        android:divider="#ffffff"></ListView>
                 </LinearLayout>
             </LinearLayout>
         </RelativeLayout>
@@ -332,7 +332,7 @@
                             android:paddingRight="10dp"
                             android:text="@string/more"
                             android:textColor="#0F7BCA"
-                            android:textSize="@dimen/content_title_textsize"
+                            android:textSize="16sp"
                             android:visibility="gone" />
                     </RelativeLayout>
 
@@ -370,8 +370,8 @@
                             android:id="@+id/pop_third_group_list"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:dividerHeight="0dp"
-                            android:divider="#00000000"></ListView>
+                            android:dividerHeight="0.5dp"
+                            android:divider="#ffffff"></ListView>
                     </RelativeLayout>
                 </LinearLayout>
 
@@ -379,6 +379,7 @@
                     android:id="@+id/pop_second_group_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="-0.5dp"
                     android:orientation="vertical">
 
                     <View
@@ -409,7 +410,7 @@
                             android:paddingRight="10dp"
                             android:text="@string/more"
                             android:textColor="#0F7BCA"
-                            android:textSize="@dimen/content_title_textsize"
+                            android:textSize="16sp"
                             android:visibility="gone" />
                     </RelativeLayout>
 
@@ -447,8 +448,8 @@
                             android:id="@+id/pop_second_group_list"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:dividerHeight="0dp"
-                            android:divider="#00000000"></ListView>
+                            android:dividerHeight="0.5dp"
+                            android:divider="#ffffff"></ListView>
                     </RelativeLayout>
                 </LinearLayout>
             </LinearLayout>
