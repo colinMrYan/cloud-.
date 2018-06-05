@@ -891,10 +891,10 @@ public class CommunicationFragment extends Fragment {
                 Message receivedWSMessage = new Message(contentObj);
                 Channel receiveMessageChannel = ChannelCacheUtils.getChannel(
                         getActivity(), receivedWSMessage.getChannel());
+                cacheReceiveMessage(receivedWSMessage);
                 if (receiveMessageChannel == null) {
                     getChannelList();
                 } else {
-                    cacheReceiveMessage(receivedWSMessage);
                     sortChannelList();
                 }
             } else {
