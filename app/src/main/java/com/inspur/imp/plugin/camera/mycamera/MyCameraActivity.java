@@ -34,6 +34,7 @@ import android.widget.Toast;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.config.MyAppConfig;
+import com.inspur.emmcloud.ui.chat.ChannelActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
@@ -77,6 +78,7 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
     private ImageView previewImg;
     private Bitmap cropBitmap;
     private String cropImgLocalPath;
+    private boolean mIsCropEnabled = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -106,27 +108,30 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
         detectScreenOrientation.enable();
         photoSaveDirectoryPath = getIntent().getStringExtra(PHOTO_DIRECTORY_PATH);
         photoName = getIntent().getStringExtra(PHOTO_NAME);
-        extraParam = getIntent().getStringExtra(PHOTO_PARAM);
-        JSONObject optionsObj = JSONUtils.getJSONObject(extraParam, "options", new JSONObject());
-        defaultRectScale = JSONUtils.getString(optionsObj, "rectScale", null);
-        String rectScaleListJson = JSONUtils.getString(optionsObj, "rectScaleList", "");
-        rectScaleList = new GetReatScaleResult(rectScaleListJson).getRectScaleList();
-        if (!StringUtils.isBlank(defaultRectScale) && rectScaleList.size() > 0) {
-            boolean isSelectionRadio = false;
-            for (int i = 0; i < rectScaleList.size(); i++) {
-                String rectScale = rectScaleList.get(i).getRectScale();
-                if (rectScale.equals(defaultRectScale)) {
-                    radioSelectPosition = i;
-                    isSelectionRadio = true;
-                    break;
-                }
-            }
-            if (!isSelectionRadio) {
+        if (getIntent().hasExtra("mIsCropEnabled") && getIntent().getBooleanExtra("mIsCropEnabled",false)){
+            mIsCropEnabled = true;
+            extraParam = getIntent().getStringExtra(PHOTO_PARAM);
+            JSONObject optionsObj = JSONUtils.getJSONObject(extraParam, "options", new JSONObject());
+            defaultRectScale = JSONUtils.getString(optionsObj, "rectScale", null);
+            String rectScaleListJson = JSONUtils.getString(optionsObj, "rectScaleList", "");
+            rectScaleList = new GetReatScaleResult(rectScaleListJson).getRectScaleList();
+            if (!StringUtils.isBlank(defaultRectScale) && rectScaleList.size() > 0) {
+                boolean isSelectionRadio = false;
                 for (int i = 0; i < rectScaleList.size(); i++) {
                     String rectScale = rectScaleList.get(i).getRectScale();
-                    if (rectScale.equals("custom")) {
+                    if (rectScale.equals(defaultRectScale)) {
                         radioSelectPosition = i;
+                        isSelectionRadio = true;
                         break;
+                    }
+                }
+                if (!isSelectionRadio) {
+                    for (int i = 0; i < rectScaleList.size(); i++) {
+                        String rectScale = rectScaleList.get(i).getRectScale();
+                        if (rectScale.equals("custom")) {
+                            radioSelectPosition = i;
+                            break;
+                        }
                     }
                 }
             }
@@ -162,10 +167,14 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
 
     @Override
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
-        if (rectScaleList.size() > 0) {
-            previewSFV.setCustomRectScale(rectScaleList.get(radioSelectPosition).getRectScale());
-        } else {
-            previewSFV.setCustomRectScale(defaultRectScale);
+        if (mIsCropEnabled){
+            if (rectScaleList.size() > 0) {
+                previewSFV.setCustomRectScale(rectScaleList.get(radioSelectPosition).getRectScale());
+            } else {
+                previewSFV.setCustomRectScale(defaultRectScale);
+            }
+        }else {
+            previewSFV.setCropEnabled(false);
         }
         currentCameraFacing = hasBackFacingCamera() ? Camera.CameraInfo.CAMERA_FACING_BACK : Camera.CameraInfo.CAMERA_FACING_FRONT;
         initCamera();
@@ -309,18 +318,6 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
             case R.id.take_bt:
                 takePicture(currentOrientation);
                 break;
-            case R.id.three_four_bt:
-                previewSFV.setCropMode(FocusSurfaceView.CropMode.RATIO_3_4);
-                break;
-            case R.id.four_three_bt:
-                previewSFV.setCropMode(FocusSurfaceView.CropMode.RATIO_3_4);
-                break;
-            case R.id.nine_sixteen_bt:
-                previewSFV.setCropMode(FocusSurfaceView.CropMode.RATIO_9_16);
-                break;
-            case R.id.sixteen_nine_bt:
-                previewSFV.setCropMode(FocusSurfaceView.CropMode.FREE);
-                break;
             case R.id.switch_camera_btn:
                 currentCameraFacing = 1 - currentCameraFacing;
                 releaseCamera();
@@ -350,7 +347,12 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
                 break;
             case R.id.btn_edit:
                 BitmapUtils.saveBitmap(cropBitmap, cropImgLocalPath, 100, 0);
-                EditImageActivity.start(MyCameraActivity.this, cropImgLocalPath, MyAppConfig.LOCAL_IMG_CREATE_PATH, true, extraParam);
+                if (mIsCropEnabled){
+                    EditImageActivity.start(MyCameraActivity.this, cropImgLocalPath, MyAppConfig.LOCAL_IMG_CREATE_PATH, true???, extraParam);
+                }else {
+                    EditImageActivity.start(MyCameraActivity.this, cropImgLocalPath, MyAppConfig.LOCAL_IMG_CREATE_PATH);
+                }
+
                 break;
             case R.id.btn_complete:
                 BitmapUtils.saveBitmap(cropBitmap, cropImgLocalPath, 100, 0);
@@ -419,9 +421,7 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
                     photoName = System.currentTimeMillis() + ".jpg";
                 }
                 cropImgLocalPath = photoDir.getAbsolutePath() + "/" + photoName;
-                LogUtils.jasonDebug("width="+cropBitmap.getWidth());
-                LogUtils.jasonDebug("height="+cropBitmap.getHeight());
-                recycleBitmap(originBitmap);
+                //recycleBitmap(originBitmap);
                 previewImg.setImageBitmap(cropBitmap);
                 previewLayout.setVisibility(View.VISIBLE);
 
