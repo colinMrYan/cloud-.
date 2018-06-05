@@ -10,14 +10,11 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.hardware.Camera;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
@@ -30,6 +27,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +36,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.imp.api.ImpBaseActivity;
@@ -46,11 +46,9 @@ import com.inspur.imp.plugin.camera.editimage.utils.BitmapUtils;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.List;
 
 import static android.Manifest.permission.CAMERA;
-import static android.R.attr.path;
 import static com.inspur.imp.plugin.camera.editimage.EditImageActivity.ACTION_REQUEST_EDITIMAGE;
 
 public class MyCameraActivity extends ImpBaseActivity implements View.OnClickListener, SurfaceHolder.Callback {
@@ -59,7 +57,7 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
     public static final String PHOTO_NAME = "photo_name";
     public static final String PHOTO_PARAM = "upload_parm";
     private FocusSurfaceView previewSFV;
-    private Button mTakeBT, mThreeFourBT, mFourThreeBT, mNineSixteenBT, mSixteenNineBT;
+    private Button takeBtn;
     private ImageButton switchCameraBtn, cameraLightSwitchBtn;
 
     private Camera mCamera;
@@ -75,6 +73,10 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
     private RecyclerView setRadioRecycleView;
     private List<RectScale> rectScaleList;
     private int radioSelectPosition = 0;
+    private RelativeLayout previewLayout;
+    private ImageView previewImg;
+    private Bitmap cropBitmap;
+    private String cropImgLocalPath;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -95,7 +97,6 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
     protected void onResume() {
         super.onResume();
         initView();
-        setListener();
     }
 
     private void initData() {
@@ -136,20 +137,10 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
     private void initView() {
         previewSFV = (FocusSurfaceView) findViewById(R.id.preview_sv);
         //为了使取景框居中（下部的内容较多），上调取景框
-        if (rectScaleList.size() > 0) {
-            previewSFV.setTopMove(DensityUtil.dip2px(getApplicationContext(), 29));
-        } else {
-            previewSFV.setTopMove(DensityUtil.dip2px(getApplicationContext(), 12));
-        }
+        previewSFV.setTopMove(DensityUtil.dip2px(getApplicationContext(),(rectScaleList.size()) > 0? 29:12));
         mHolder = previewSFV.getHolder();
         mHolder.addCallback(MyCameraActivity.this);
-        mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-
-        mTakeBT = (Button) findViewById(R.id.take_bt);
-        mThreeFourBT = (Button) findViewById(R.id.three_four_bt);
-        mFourThreeBT = (Button) findViewById(R.id.four_three_bt);
-        mNineSixteenBT = (Button) findViewById(R.id.nine_sixteen_bt);
-        mSixteenNineBT = (Button) findViewById(R.id.sixteen_nine_bt);
+        takeBtn = (Button) findViewById(R.id.take_bt);
         switchCameraBtn = (ImageButton) findViewById(R.id.switch_camera_btn);
         cameraLightSwitchBtn = (ImageButton) findViewById(R.id.camera_light_switch_btn);
         if (Camera.getNumberOfCameras() < 2) {
@@ -162,18 +153,12 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
             linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
             setRadioRecycleView.setLayoutManager(linearLayoutManager);
             setRadioRecycleView.setAdapter(new Adapter());
-
         }
+        previewLayout = (RelativeLayout)findViewById(R.id.rl_preview);
+        previewImg = (ImageView)findViewById(R.id.iv_preview);
     }
 
 
-    private void setListener() {
-        mTakeBT.setOnClickListener(this);
-        mThreeFourBT.setOnClickListener(this);
-        mFourThreeBT.setOnClickListener(this);
-        mNineSixteenBT.setOnClickListener(this);
-        mSixteenNineBT.setOnClickListener(this);
-    }
 
     @Override
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
@@ -182,7 +167,6 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
         } else {
             previewSFV.setCustomRectScale(defaultRectScale);
         }
-
         currentCameraFacing = hasBackFacingCamera() ? Camera.CameraInfo.CAMERA_FACING_BACK : Camera.CameraInfo.CAMERA_FACING_FRONT;
         initCamera();
         setCameraParams();
@@ -192,7 +176,6 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
         if (checkPermission()) {
             try {
                 mCamera = Camera.open(currentCameraFacing);//1:采集指纹的摄像头. 0:拍照的摄像头.
-
                 Camera.Parameters mParameters = mCamera.getParameters();
                 mCamera.setParameters(mParameters);
                 mCamera.setPreviewDisplay(mHolder);
@@ -254,6 +237,8 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
 
             List<Camera.Size> PictureSizeList = parameters.getSupportedPictureSizes();
             Camera.Size pictureSize = CameraUtils.getInstance(this).getPictureSize(PictureSizeList, 1000);
+            LogUtils.jasonDebug("width="+pictureSize.width);
+            LogUtils.jasonDebug("height="+pictureSize.height);
             parameters.setPictureSize(pictureSize.width, pictureSize.height);
             List<Camera.Size> previewSizeList = parameters.getSupportedPreviewSizes();
             Camera.Size previewSize = CameraUtils.getInstance(this).getPreviewSize(previewSizeList, 1300);
@@ -358,6 +343,18 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
                 }
                 mCamera.setParameters(parameters);
                 break;
+            case R.id.btn_retry:
+                previewLayout.setVisibility(View.GONE);
+                mCamera.startPreview();
+                mCamera.cancelAutoFocus();
+                break;
+            case R.id.btn_edit:
+                BitmapUtils.saveBitmap(cropBitmap, cropImgLocalPath, 100, 0);
+                EditImageActivity.start(MyCameraActivity.this, cropImgLocalPath, MyAppConfig.LOCAL_IMG_CREATE_PATH, true, extraParam);
+                break;
+            case R.id.btn_complete:
+                BitmapUtils.saveBitmap(cropBitmap, cropImgLocalPath, 100, 0);
+                break;
             default:
                 break;
         }
@@ -367,7 +364,7 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
      * 拍照
      */
     private void takePicture(final int currentOrientation) {
-        mCamera.cancelAutoFocus();
+       // mCamera.cancelAutoFocus();
         mCamera.takePicture(new Camera.ShutterCallback() {
             @Override
             public void onShutter() {
@@ -377,6 +374,8 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
 
             @Override
             public void onPictureTaken(byte[] data, Camera camera) {
+                mCamera.stopPreview();
+                mCamera.cancelAutoFocus();
                 int orientation = currentOrientation;
                 Bitmap originBitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
                 //如果是三星手机需要先旋转90度
@@ -401,7 +400,7 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
                     originBitmap = rotaingImageView(180, originBitmap);
                 }
                 //通过各种旋转和镜面操作，使originBitmap显示出preview界面
-                Bitmap cropBitmap = previewSFV.getPicture(originBitmap);
+                cropBitmap = previewSFV.getPicture(originBitmap);
                 //界面进行旋转
                 if (orientation != 0) {
                     cropBitmap = rotaingImageView(orientation, cropBitmap);
@@ -419,11 +418,13 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
                 if (photoName == null) {
                     photoName = System.currentTimeMillis() + ".jpg";
                 }
-                String imgPath = photoDir.getAbsolutePath() + "/" + photoName;
-                BitmapUtils.saveBitmap(cropBitmap, imgPath, 100, 0);
+                cropImgLocalPath = photoDir.getAbsolutePath() + "/" + photoName;
+                LogUtils.jasonDebug("width="+cropBitmap.getWidth());
+                LogUtils.jasonDebug("height="+cropBitmap.getHeight());
                 recycleBitmap(originBitmap);
-                recycleBitmap(cropBitmap);
-                EditImageActivity.start(MyCameraActivity.this, imgPath, MyAppConfig.LOCAL_IMG_CREATE_PATH, true, extraParam);
+                previewImg.setImageBitmap(cropBitmap);
+                previewLayout.setVisibility(View.VISIBLE);
+
             }
         });
     }
@@ -510,28 +511,10 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
     }
 
 
-    /**
-     * 保存并显示把图片展示出来
-     *
-     * @param cameraPath
-     */
-    private void refreshGallery(String cameraPath) {
-        File file = new File(cameraPath);
-        // 其次把文件插入到系统图库
-        try {
-            MediaStore.Images.Media.insertImage(getContentResolver(),
-                    file.getAbsolutePath(), file.getName(), null);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        // 最后通知图库更新
-        LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + path)));
-    }
-
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        recycleBitmap(cropBitmap);
         releaseCamera();
     }
 

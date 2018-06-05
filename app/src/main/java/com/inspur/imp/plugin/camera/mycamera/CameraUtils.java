@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.hardware.Camera.Size;
 
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.ResolutionUtils;
 
 import java.util.Collections;
@@ -82,8 +83,9 @@ public class CameraUtils {
         Size size = null;
         for(Size s:list){
             if((s.width > th) && (s.height > th) && equalRateLevel0(s, rate)){
+                LogUtils.jasonDebug("width="+s.width);
+                LogUtils.jasonDebug("height="+s.height);
                 size = s;
-                break;
             }
         }
         if (size == null){
