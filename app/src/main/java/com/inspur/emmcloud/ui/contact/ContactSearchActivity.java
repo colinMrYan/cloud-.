@@ -469,7 +469,7 @@ public class ContactSearchActivity extends BaseActivity {
             intent.setClass(getApplicationContext(), UserInfoActivity.class);
             startActivity(intent);
         } else {
-            intent.setClass(getApplicationContext(), MyApplication.getInstance().isChatVersionV0()? ChannelV0Activity.class:ChannelActivity.class);
+            intent.setClass(getApplicationContext(), MyApplication.getInstance().isV0VersionChat()? ChannelV0Activity.class:ChannelActivity.class);
             intent.putExtra("title", searchModel.getName());
             intent.putExtra("cid", searchModel.getId());
             intent.putExtra("channelType", searchModel.getType());
@@ -1410,7 +1410,7 @@ public class ContactSearchActivity extends BaseActivity {
             bundle.putString("cid", searchModel.getId());
             bundle.putString("channelType", searchModel.getType());
             IntentUtils.startActivity(ContactSearchActivity.this,
-                    MyApplication.getInstance().isChatVersionV0()?
+                    MyApplication.getInstance().isV0VersionChat()?
                             ChannelV0Activity.class:ChannelActivity.class, bundle);
 
         }
@@ -1441,7 +1441,7 @@ public class ContactSearchActivity extends BaseActivity {
                                     getCreateSingleChannelResult
                                             .getName(getApplicationContext()));
                             IntentUtils.startActivity(
-                                    ContactSearchActivity.this,MyApplication.getInstance().isChatVersionV0()?
+                                    ContactSearchActivity.this,MyApplication.getInstance().isV0VersionChat()?
                                             ChannelV0Activity.class:ChannelActivity.class, bundle);
                         }
 

@@ -70,7 +70,7 @@ public class GroupAlbumActivity extends BaseActivity {
                 bundle.putInt(ImagePagerV0Activity.PHOTO_SELECT_H_TAG, height);
                 bundle.putInt("image_index", position);
                 bundle.putStringArrayList("image_urls", imgUrlList);
-                if (MyApplication.getInstance().isChatVersionV0()){
+                if (MyApplication.getInstance().isV0VersionChat()){
                     bundle.putSerializable(ImagePagerV0Activity.EXTRA_IMAGE_MSG_LIST, (Serializable) imgTypeMsgList);
                     bundle.putSerializable(ImagePagerV0Activity.EXTRA_CURRENT_IMAGE_MSG, imgTypeMsgList.get(position));
                     IntentUtils.startActivity(GroupAlbumActivity.this,ImagePagerV0Activity.class,bundle);
@@ -90,7 +90,7 @@ public class GroupAlbumActivity extends BaseActivity {
      */
     private void getImgMsgList() {
         // TODO Auto-generated method stub
-        if (MyApplication.getInstance().isChatVersionV0()){
+        if (MyApplication.getInstance().isV0VersionChat()){
             imgTypeMsgList = MsgCacheUtil.getImgTypeMsgList(MyApplication.getInstance(), cid);
             for (Msg msg :imgTypeMsgList){
                 String url = APIUri.getPreviewUrl(msg.getImgTypeMsgImg());
