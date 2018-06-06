@@ -329,6 +329,7 @@ public class WebSocketPush {
             eventMessage.setContent("time out");
             eventMessage.setStatus(-1);
             EventBus.getDefault().post(eventMessage);
+            init(false);
         }
     }
 
