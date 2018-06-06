@@ -24,6 +24,7 @@ import com.inspur.emmcloud.bean.chat.EventMessageUnReadCount;
 import com.inspur.emmcloud.bean.chat.TransparentBean;
 import com.inspur.emmcloud.bean.system.AppTabAutoBean;
 import com.inspur.emmcloud.bean.system.AppTabDataBean;
+import com.inspur.emmcloud.bean.system.AppTabPayloadBean;
 import com.inspur.emmcloud.bean.system.ChangeTabBean;
 import com.inspur.emmcloud.bean.system.GetAppTabAutoResult;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
@@ -99,14 +100,18 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
             AppTabAutoBean appTabAutoBean = new AppTabAutoBean(appTabs);
             //发送到MessageFragment
             EventBus.getDefault().post(appTabAutoBean);
-            ArrayList<AppTabDataBean> appTabList = (ArrayList<AppTabDataBean>) appTabAutoBean.getPayload().getTabs();
+            ArrayList<AppTabDataBean> appTabList = new ArrayList<>();
+            AppTabPayloadBean appTabPayloadBean = appTabAutoBean.getPayload();
+            if(appTabPayloadBean != null){
+                appTabList.addAll((ArrayList<AppTabDataBean>) appTabPayloadBean.getTabs());
+            }
             if (appTabList.size() > 0) {
                 tabBeans = new TabBean[appTabList.size()];
                 for (int i = 0; i < appTabList.size(); i++) {
                     TabBean tabBean = null;
                     switch (appTabList.get(i).getTabId()) {
                         case "communicate":
-                            if (MyApplication.getInstance().isChatVersionV0()){
+                            if (MyApplication.getInstance().isV0VersionChat()){
                                 tabBean = new TabBean(getString(R.string.communicate), R.drawable.selector_tab_message_btn + "", CommunicationV0Fragment.class);
                             }else {
                                 tabBean = new TabBean(getString(R.string.communicate), R.drawable.selector_tab_message_btn + "", CommunicationFragment.class);
@@ -364,7 +369,11 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
         int tabIndex = 0;
         String appTabs = PreferencesByUserAndTanentUtils.getString(IndexBaseActivity.this, "app_tabbar_info_current", "");
         if (!StringUtils.isBlank(appTabs)) {
-            ArrayList<AppTabDataBean> appTabList = (ArrayList<AppTabDataBean>) new AppTabAutoBean(appTabs).getPayload().getTabs();
+            AppTabPayloadBean appTabPayloadBean = new AppTabAutoBean(appTabs).getPayload();
+            ArrayList<AppTabDataBean> appTabList = new ArrayList<>();
+            if(appTabPayloadBean != null){
+                appTabList.addAll(appTabPayloadBean.getTabs());
+            }
             if (appTabList.size() > 0) {
                 for (int i = 0; i < appTabList.size(); i++) {
                     if (appTabList.get(i).isSelected()) {

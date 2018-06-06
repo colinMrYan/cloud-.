@@ -68,7 +68,7 @@ public class GroupFileActivity extends BaseActivity {
      */
     private void getFileMsgList() {
         // TODO Auto-generated method stub
-        if (MyApplication.getInstance().isChatVersionV0()) {
+        if (MyApplication.getInstance().isV0VersionChat()) {
             List<Msg> fileTypeMsgList = MsgCacheUtil.getFileTypeMsgList(
                     GroupFileActivity.this, cid);
             for (Msg msg : fileTypeMsgList) {
@@ -208,7 +208,7 @@ public class GroupFileActivity extends BaseActivity {
                     FileUtils.openFile(getApplicationContext(), fileDownloadPath);
                 } else {
                     RequestParams params = MyApplication.getInstance().getHttpRequestParams(fileUrl);
-                    if (MyApplication.getInstance().isChatVersionV0()){
+                    if (MyApplication.getInstance().isV0VersionChat()){
                         params.setAutoResume(true);// 断点下载
                         params.setSaveFilePath(fileDownloadPath);
                         params.setCancelFast(true);
