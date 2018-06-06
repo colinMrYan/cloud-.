@@ -1,7 +1,6 @@
 package com.inspur.imp.plugin.camera.mycamera;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.hardware.Camera.Size;
 
 import com.inspur.emmcloud.util.common.ResolutionUtils;
@@ -157,20 +156,6 @@ public class CameraUtils {
             }
         }
 
-    }
-
-    /**
-     * 打开相机拍照
-     * @param context
-     * @param photoSaveDirectoryPath
-     * @param photoName
-     * @param requestCode
-     */
-    public static void takePhoto(Activity context, String photoSaveDirectoryPath, String photoName, int requestCode){
-        Intent intent = new Intent(context,MyCameraActivity.class);
-        intent.putExtra(MyCameraActivity.PHOTO_DIRECTORY_PATH,photoSaveDirectoryPath);
-        intent.putExtra(MyCameraActivity.PHOTO_NAME,photoName);
-        context.startActivityForResult(intent,requestCode);
     }
 
 }

@@ -57,6 +57,7 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
     public static final String PHOTO_DIRECTORY_PATH = "save_derectory_path";
     public static final String PHOTO_NAME = "photo_name";
     public static final String PHOTO_PARAM = "upload_parm";
+    public static final String CROP_ENABLE="mIsCropEnabled";
     private FocusSurfaceView previewSFV;
     private Button takeBtn;
     private ImageButton switchCameraBtn, cameraLightSwitchBtn;
@@ -108,7 +109,7 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
         detectScreenOrientation.enable();
         photoSaveDirectoryPath = getIntent().getStringExtra(PHOTO_DIRECTORY_PATH);
         photoName = getIntent().getStringExtra(PHOTO_NAME);
-        if (getIntent().hasExtra("mIsCropEnabled") && getIntent().getBooleanExtra("mIsCropEnabled",false)){
+        if (getIntent().hasExtra(CROP_ENABLE) && getIntent().getBooleanExtra(CROP_ENABLE,false)){
             mIsCropEnabled = true;
             extraParam = getIntent().getStringExtra(PHOTO_PARAM);
             JSONObject optionsObj = JSONUtils.getJSONObject(extraParam, "options", new JSONObject());

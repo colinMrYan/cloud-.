@@ -132,6 +132,7 @@ public class PhotoService extends ImpPlugin {
             String fileName = PhotoNameUtils.getFileName(getActivity(), encodingType);
             takePhotoImgPath = MyAppConfig.LOCAL_IMG_CREATE_PATH + fileName;
             Intent intent = new Intent(getActivity(), MyCameraActivity.class);
+            intent.putExtra(MyCameraActivity.CROP_ENABLE, true);
             intent.putExtra(MyCameraActivity.PHOTO_DIRECTORY_PATH, MyAppConfig.LOCAL_IMG_CREATE_PATH);
             intent.putExtra(MyCameraActivity.PHOTO_NAME, fileName);
             intent.putExtra(MyCameraActivity.PHOTO_PARAM, paramsObject.toString());
