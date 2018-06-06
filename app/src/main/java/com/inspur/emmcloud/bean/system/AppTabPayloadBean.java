@@ -102,8 +102,8 @@ public  class AppTabPayloadBean {
         return tabDataBeanList;
     }
 
-    public void setTabs(List<AppTabDataBean> tabs) {
-        this.tabDataBeanList = tabs;
+    public void setTabs(List<AppTabDataBean> tabDataBeanList) {
+        this.tabDataBeanList = tabDataBeanList;
     }
 
 
