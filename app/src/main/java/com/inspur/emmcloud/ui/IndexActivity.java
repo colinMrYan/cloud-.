@@ -109,8 +109,6 @@ public class IndexActivity extends IndexBaseActivity {
         getContactInfo();
         getAllRobotInfo();
         getAppTabInfo();  //从服务端获取显示tab
-        new SplashPageUtils(IndexActivity.this).update();//更新闪屏页面
-        new ReactNativeUtils(IndexActivity.this).init(); //更新react
         getMyAppRecommendWidgets();
     }
 
@@ -217,7 +215,8 @@ public class IndexActivity extends IndexBaseActivity {
                     String version = PreferencesByUserAndTanentUtils.getString(IndexActivity.this, "app_tabbar_version", "");
                     String clientId = PreferencesByUserAndTanentUtils.getString(IndexActivity.this, Constant.PREF_REACT_NATIVE_CLIENTID, "");
                     apiService.getAppNewTabs(version, clientId);
-
+                    new SplashPageUtils(IndexActivity.this).update();//更新闪屏页面
+                    new ReactNativeUtils(IndexActivity.this).init(); //更新react
                 }
             }
         }).getClientID();

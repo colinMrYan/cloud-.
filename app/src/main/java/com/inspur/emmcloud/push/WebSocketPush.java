@@ -59,6 +59,9 @@ public class WebSocketPush {
      */
     public void init(boolean isForceNew) {
         // TODO Auto-generated method stub
+        if (!APIUri.isV0VersionChat() && !APIUri.isV1xVersionChat()){
+            return;
+        }
         if (isForceNew || !isSocketConnect()) {
             if (NetUtils.isNetworkConnected(MyApplication.getInstance(), false)) {
                 new PushInfoUtils(MyApplication.getInstance(), new PushInfoUtils.OnGetChatClientIdListener() {
@@ -88,6 +91,7 @@ public class WebSocketPush {
         opts.reconnectionAttempts = 5; // 设置websocket重连次数
         opts.forceNew = true;
         Map<String, String> query = new HashMap<String, String>();
+        try {
         if (MyApplication.getInstance().isChatVersionV0()) {
             String uuid = AppUtils.getMyUUID(MyApplication.getInstance());
             String deviceName = AppUtils.getDeviceName(MyApplication.getInstance());
@@ -103,7 +107,6 @@ public class WebSocketPush {
         LogUtils.debug(TAG, "query.toString()=" + ParseQS.encode(query));
         opts.query = ParseQS.encode(query);
         opts.transports = new String[] { WebSocket.NAME};
-        try {
             webSocketSignout();
             Manager manager = new Manager(new URI(url), opts);
             mSocket = manager.socket(MyApplication.getInstance().getChatSocketNameSpace());
