@@ -59,7 +59,7 @@ public class WebSocketPush {
      */
     public void init(boolean isForceNew) {
         // TODO Auto-generated method stub
-        if (!APIUri.isV0VersionChat() && !APIUri.isV1xVersionChat()){
+        if (!MyApplication.getInstance().isV0VersionChat() && !MyApplication.getInstance().isV1xVersionChat()){
             return;
         }
         if (isForceNew || !isSocketConnect()) {
@@ -84,15 +84,16 @@ public class WebSocketPush {
 
     private void WebSocketConnect(String chatClientId) {
         String url = APIUri.getWebsocketConnectUrl();
-        String path = MyApplication.getInstance().isChatVersionV0() ? "/" + MyApplication.getInstance().getCurrentEnterprise().getCode() + "/socket/handshake" :
+        String path = MyApplication.getInstance().isV0VersionChat() ? "/" + MyApplication.getInstance().getCurrentEnterprise().getCode() + "/socket/handshake" :
                 "/chat/socket/handshake";
         sendWebSocketStatusBroadcaset("socket_connecting");
         IO.Options opts = new IO.Options();
         opts.reconnectionAttempts = 5; // 设置websocket重连次数
         opts.forceNew = true;
         Map<String, String> query = new HashMap<String, String>();
+        if (MyApplication.getInstance().isV0VersionChat()) {
         try {
-        if (MyApplication.getInstance().isChatVersionV0()) {
+        if (MyApplication.getInstance().isV0VersionChat()) {
             String uuid = AppUtils.getMyUUID(MyApplication.getInstance());
             String deviceName = AppUtils.getDeviceName(MyApplication.getInstance());
             String pushId = AppUtils.getPushId(MyApplication.getInstance());
@@ -165,7 +166,7 @@ public class WebSocketPush {
 
     public void sendAppStatus(boolean isActive) {
         if (isSocketConnect()) {
-            if (MyApplication.getInstance().isChatVersionV0()) {
+            if (MyApplication.getInstance().isV0VersionChat()) {
                 String appStatus = isActive ? "ACTIVED" : "FROZEN";
                 LogUtils.debug(TAG, "发送App状态：" + appStatus);
                 mSocket.emit("state", appStatus);
@@ -182,7 +183,7 @@ public class WebSocketPush {
         if (mSocket != null) {
             if (isSocketConnect()) {
                 LogUtils.debug(TAG, "注销");
-                if (MyApplication.getInstance().isChatVersionV0()) {
+                if (MyApplication.getInstance().isV0VersionChat()) {
                     mSocket.emit("state", "SIGNOUT");
                 } else {
                     WSAPIService.getInstance().sendAppStatus("REMOVED");
@@ -241,7 +242,7 @@ public class WebSocketPush {
             @Override
             public void call(Object... arg0) {
                 // TODO Auto-generated method stub
-                if (MyApplication.getInstance().isChatVersionV0()) {
+                if (MyApplication.getInstance().isV0VersionChat()) {
                     LogUtils.debug(TAG, "连接成功");
                     sendWebSocketStatusBroadcaset(Socket.EVENT_CONNECT);
                     // 当第一次连接成功后发送App目前的状态消息

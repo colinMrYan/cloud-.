@@ -14,7 +14,6 @@ import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
-import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.bean.mine.Language;
@@ -214,12 +213,13 @@ public class SettingActivity extends BaseActivity {
                         if (NetUtils.isNetworkConnected(getApplicationContext())){
                             // TODO Auto-generated method stub
                             boolean isCommunicateExist = TabAndAppExistUtils.isTabExist(MyApplication.getInstance(),"communicate");
-                            if (APIUri.isV1xVersionChat() && isCommunicateExist){
+                            if (MyApplication.getInstance().isV1xVersionChat() && isCommunicateExist){
                                 loadingDlg.show();
                                 WSAPIService.getInstance().sendAppStatus("REMOVED");
                             }else {
                                 MyApplication.getInstance().signout();
                             }
+
                         }
                     }
                 })

@@ -654,7 +654,7 @@ public class NewsWebDetailActivity extends BaseActivity {
      */
     private void sendMsg(String cid) {
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
-            if (MyApplication.getInstance().isChatVersionV0()) {
+            if (MyApplication.getInstance().isV0VersionChat()) {
                 ChatAPIService apiService = new ChatAPIService(
                         NewsWebDetailActivity.this);
                 apiService.setAPIInterface(new WebService());
