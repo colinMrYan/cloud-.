@@ -816,7 +816,11 @@ public class APIUri {
      * @return
      */
     public static String getMeetingsUrl() {
-        return getMeetingBaseUrl() + "room/bookings";
+        String meetingUrl = "";
+        if(MyApplication.getInstance().getClusterScheduleVersion().toLowerCase().startsWith("v0") || MyApplication.getInstance().getClusterScheduleVersion().toLowerCase().startsWith("v1")){
+            meetingUrl = getMeetingBaseUrl() + "room/bookings";
+        }
+        return meetingUrl;
     }
 
     /**
