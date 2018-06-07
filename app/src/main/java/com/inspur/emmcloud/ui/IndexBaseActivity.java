@@ -85,8 +85,8 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
         initTabs();
     }
 
-    public void onClick(){
-
+    public void onClick(View view){
+        EventBus.getDefault().post("");
     }
 
 
