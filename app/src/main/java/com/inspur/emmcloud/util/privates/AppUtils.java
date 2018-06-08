@@ -16,7 +16,6 @@ import android.graphics.Paint.FontMetrics;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -34,6 +33,7 @@ import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.imp.api.ImpActivity;
 import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
 import com.inspur.imp.plugin.camera.imagepicker.ui.ImageGridActivity;
+import com.inspur.imp.plugin.camera.mycamera.MyCameraActivity;
 
 import java.io.File;
 import java.util.List;
@@ -531,17 +531,16 @@ public class AppUtils {
         // 判断存储卡是否可以用，可用进行存储
         if (Environment.getExternalStorageState().equals(
                 Environment.MEDIA_MOUNTED)) {
-            Intent intentFromCapture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             File appDir = new File(Environment.getExternalStorageDirectory(),
                     "DCIM");
             if (!appDir.exists()) {
                 appDir.mkdir();
             }
-            // 指定文件名字
-            intentFromCapture.putExtra(MediaStore.EXTRA_OUTPUT,
-                    Uri.fromFile(new File(appDir, fileName)));
-            activity.startActivityForResult(intentFromCapture,
-                    requestCode);
+            Intent intent = new Intent();
+            intent.putExtra(MyCameraActivity.PHOTO_DIRECTORY_PATH, appDir.getAbsolutePath());
+            intent.putExtra(MyCameraActivity.PHOTO_NAME,fileName);
+            intent.setClass(activity,MyCameraActivity.class);
+            activity.startActivityForResult(intent, requestCode);
         } else {
             ToastUtils.show(activity, R.string.filetransfer_sd_not_exist);
         }

@@ -8,7 +8,6 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
@@ -501,7 +500,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                 uploadFile(filePath);
             } else if (requestCode == REQUEST_OPEN_CEMERA //拍照返回
                     && NetUtils.isNetworkConnected(getApplicationContext())) {
-                String filePath = Environment.getExternalStorageDirectory() + "/DCIM/" + cameraPicFileName;
+                String filePath = data.getExtras().getString("save_file_path");
                 uploadFile(filePath);
             } else if (requestCode == REQUEST_SHOW_FILE_FILTER) {  //移动文件
                 getVolumeFileList(false);

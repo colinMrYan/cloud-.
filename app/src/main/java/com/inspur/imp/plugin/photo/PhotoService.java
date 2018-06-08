@@ -135,7 +135,8 @@ public class PhotoService extends ImpPlugin {
             intent.putExtra(MyCameraActivity.CROP_ENABLE, true);
             intent.putExtra(MyCameraActivity.PHOTO_DIRECTORY_PATH, MyAppConfig.LOCAL_IMG_CREATE_PATH);
             intent.putExtra(MyCameraActivity.PHOTO_NAME, fileName);
-            intent.putExtra(MyCameraActivity.PHOTO_PARAM, paramsObject.toString());
+            intent.putExtra(MyCameraActivity.EXTRA_PARAM, paramsObject.toString());
+            intent.putExtra(MyCameraActivity.EXTRA_NEED_UPLOAD,true);
             getActivity().startActivityForResult(intent, RESULT_CAMERA);
         } else {
             Toast.makeText(context,

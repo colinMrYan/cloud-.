@@ -350,8 +350,8 @@ public class FocusSurfaceView extends SurfaceView {
         float cx = l + w / 2;
         float cy = t + h / 2;
         if(isSetMaxInitialFrameScale){
-            float maxInitialFrameWidth = imageRect.width()- DensityUtil.dip2px(getContext(),30);
-            float maxInitialFrameHeight = imageRect.height()-2*topMove-2* DensityUtil.dip2px(getContext(),50)-DensityUtil.dip2px(getContext(),30);
+            float maxInitialFrameWidth = imageRect.width()- DensityUtil.dip2px(getContext(),10);
+            float maxInitialFrameHeight = imageRect.height()-2*topMove-2* DensityUtil.dip2px(getContext(),58);
             float maxInitialFrameWidthScale = maxInitialFrameWidth/w;
             float maxInitialFrameHeightScale = maxInitialFrameHeight/h;
             mInitialFrameScale = (maxInitialFrameWidthScale < maxInitialFrameHeightScale)?maxInitialFrameWidthScale:maxInitialFrameHeightScale;
