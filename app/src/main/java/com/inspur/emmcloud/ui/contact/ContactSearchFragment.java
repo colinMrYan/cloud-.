@@ -29,6 +29,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
 import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.bean.contact.Contact;
+import com.inspur.emmcloud.bean.contact.ContactClickMessage;
 import com.inspur.emmcloud.bean.contact.FirstGroupTextModel;
 import com.inspur.emmcloud.bean.contact.SearchModel;
 import com.inspur.emmcloud.config.MyAppConfig;
@@ -53,6 +54,9 @@ import com.inspur.emmcloud.widget.MaxHightScrollView;
 import com.inspur.emmcloud.widget.NoHorScrollView;
 import com.inspur.emmcloud.widget.WeakHandler;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -147,6 +151,7 @@ public class ContactSearchFragment extends Fragment{
                 .getRootContact(getActivity());
         getIntentData();
         handMessage();
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -163,6 +168,21 @@ public class ContactSearchFragment extends Fragment{
         initView();
         initSearchRunnable();
         return rootView;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
+    /**
+     * 接收来自ContactSearchFragment
+     * @param contactClickMessage
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void updateUI(ContactClickMessage contactClickMessage){
+        clickView(contactClickMessage.getViewId());
     }
 
     /**
@@ -619,9 +639,13 @@ public class ContactSearchFragment extends Fragment{
      */
     public void onClick(View v) {
         List<FirstGroupTextModel> list = new ArrayList<FirstGroupTextModel>();
+        clickView(v.getId());
+    }
+
+    private void clickView(int id) {
         Intent intent = new Intent(getActivity().getApplicationContext(),
                 ContactSearchMoreActivity.class);
-        switch (v.getId()) {
+        switch (id) {
             case R.id.back_layout:
                 InputMethodUtils.hide(getActivity());
                 getActivity().finish();

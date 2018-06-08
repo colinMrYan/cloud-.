@@ -22,6 +22,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.appcenter.GetAppBadgeResult;
 import com.inspur.emmcloud.bean.chat.EventMessageUnReadCount;
 import com.inspur.emmcloud.bean.chat.TransparentBean;
+import com.inspur.emmcloud.bean.contact.ContactClickMessage;
 import com.inspur.emmcloud.bean.system.AppTabAutoBean;
 import com.inspur.emmcloud.bean.system.AppTabDataBean;
 import com.inspur.emmcloud.bean.system.AppTabPayloadBean;
@@ -85,8 +86,14 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
         initTabs();
     }
 
+    /**
+     * 发送到ContactSearchFragment
+     * @param view
+     */
     public void onClick(View view){
-        EventBus.getDefault().post("");
+        ContactClickMessage contactClickMessage = new ContactClickMessage();
+        contactClickMessage.setViewId(view.getId());
+        EventBus.getDefault().post(contactClickMessage);
     }
 
 
