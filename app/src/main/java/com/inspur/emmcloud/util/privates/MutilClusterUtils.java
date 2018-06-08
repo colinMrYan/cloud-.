@@ -88,6 +88,7 @@ public class MutilClusterUtils {
      * 重新初始化路由
      */
     private static void initClusters() {
+        //切企业时重置路由
         MyApplication.getInstance().setClusterEmm("");
         MyApplication.getInstance().setClusterChat("");
         MyApplication.getInstance().setClusterSchedule("");
@@ -98,6 +99,10 @@ public class MutilClusterUtils {
         MyApplication.getInstance().setClusterClientRegistry("");
         MyApplication.getInstance().setClusterBot("");
         MyApplication.getInstance().setClusterEcm("");
+
+        //切企业时重置Chat和Schedule版本
+        MyApplication.getInstance().setClusterChatVersion("");
+        MyApplication.getInstance().setClusterScheduleVersion("");
     }
 
 

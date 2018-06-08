@@ -817,7 +817,7 @@ public class APIUri {
      */
     public static String getMeetingsUrl() {
         String meetingUrl = "";
-        if(MyApplication.getInstance().isV0VersionChat() || MyApplication.getInstance().isV1xVersionChat()){
+        if(MyApplication.getInstance().getClusterScheduleVersion().toLowerCase().startsWith("v0") || MyApplication.getInstance().getClusterScheduleVersion().toLowerCase().startsWith("v1")){
             meetingUrl = getMeetingBaseUrl() + "room/bookings";
         }
         return meetingUrl;
