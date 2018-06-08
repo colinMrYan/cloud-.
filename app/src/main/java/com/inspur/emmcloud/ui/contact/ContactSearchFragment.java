@@ -39,6 +39,7 @@ import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.InputMethodUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.ListViewUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -146,6 +147,7 @@ public class ContactSearchFragment extends Fragment{
     public void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
+        LogUtils.YfcDebug("Activity:"+getActivity().getClass().getSimpleName());
 //        setContentView(R.layout.activity_contact_search);
         rootContact = ContactCacheUtils
                 .getRootContact(getActivity());
@@ -452,7 +454,9 @@ public class ContactSearchFragment extends Fragment{
             searchEdit.setBackground(null);
             searchEdit.addTextChangedListener(myTextWatcher);
         }
-        flowLayout.addView(searchEdit);
+        if(searchEdit.getParent() == null){
+            flowLayout.addView(searchEdit);
+        }
     }
 
     /**
@@ -648,7 +652,13 @@ public class ContactSearchFragment extends Fragment{
         switch (id) {
             case R.id.back_layout:
                 InputMethodUtils.hide(getActivity());
-                getActivity().finish();
+                if(isPopLayoutVisible()){
+                    clearSearchEdit();
+                }else if(isOpenGroupLayoutVisiable()){
+                    back2LastGroup();
+                }else{
+                    getActivity().finish();
+                }
                 break;
             case R.id.ok_text:
                 InputMethodUtils.hide(getActivity());
