@@ -18,6 +18,8 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
@@ -141,7 +143,10 @@ public class EditImageActivity extends ImageBaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);//没有标题
         setContentView(R.layout.activity_image_edit);
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
+        this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);//拍照过程屏幕一直处于高亮
         initView();
         getData();
     }
