@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
 
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
@@ -53,7 +52,7 @@ public class BroadcastService extends ImpPlugin {
                 intent.putExtra(extraName, extraValue);
             }
         }
-        LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
+        getActivity().sendBroadcast(intent);
 
     }
 
