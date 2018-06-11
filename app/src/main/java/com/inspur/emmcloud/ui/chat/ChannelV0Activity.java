@@ -41,6 +41,7 @@ import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.ui.appcenter.groupnews.NewsWebDetailActivity;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
+import com.inspur.emmcloud.ui.mine.setting.FaceVerifyActivity;
 import com.inspur.emmcloud.util.common.InputMethodUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
@@ -109,7 +110,7 @@ public class ChannelV0Activity extends BaseActivity {
     private ImageView robotPhotoImg;
 
     private LoadingDialog loadingDlg;
-    private String robotUid ="BOT6006";
+    private String robotUid = "BOT6006";
     private String cid;
     private Channel channel;
     private List<Msg> msgList;
@@ -180,6 +181,7 @@ public class ChannelV0Activity extends BaseActivity {
         handMessage();
         registeMsgReceiver();
     }
+
     /**
      * 从外部分享过来
      */
@@ -191,9 +193,9 @@ public class ChannelV0Activity extends BaseActivity {
                 case "file":
                     List<String> pathList = getIntent().getStringArrayListExtra("share_paths");
                     for (String url : pathList) {
-                        Msg msg = type.equals("file")?MsgRecourceUploadUtils.uploadResFile(
-                                MyApplication.getInstance(), url, apiService):MsgRecourceUploadUtils.uploadResImg(
-                               MyApplication.getInstance(), url, apiService);
+                        Msg msg = type.equals("file") ? MsgRecourceUploadUtils.uploadResFile(
+                                MyApplication.getInstance(), url, apiService) : MsgRecourceUploadUtils.uploadResImg(
+                                MyApplication.getInstance(), url, apiService);
                         addLocalMessage(msg);
                     }
                     break;
@@ -279,9 +281,9 @@ public class ChannelV0Activity extends BaseActivity {
         chatInputMenu.setChatInputMenuListener(new ChatInputMenuListener() {
 
             @Override
-            public void onSendMsg(String content, List<String> mentionsUidList, List<String> urlList, Map<String,String> map) {
+            public void onSendMsg(String content, List<String> mentionsUidList, List<String> urlList, Map<String, String> map) {
                 // TODO Auto-generated method stub
-                sendTextMessage(content, mentionsUidList, urlList,false);
+                sendTextMessage(content, mentionsUidList, urlList, false);
             }
         });
         chatInputMenu.setInputLayout(isSpecialUser ? "1" : channel.getInputs());
@@ -311,7 +313,7 @@ public class ChannelV0Activity extends BaseActivity {
                 public void onReceive(Context context, Intent intent) {
                     String content = intent.getStringExtra("content");
                     if (!StringUtils.isBlank(content)) {
-                        sendTextMessage(content, null, null,true);
+                        sendTextMessage(content, null, null, true);
                     }
                 }
             };
@@ -380,7 +382,7 @@ public class ChannelV0Activity extends BaseActivity {
                         groupNews.setUrl(linkUrl);
                         groupNews.setPoster(linkPoster);
                         bundle.putSerializable("groupNews", groupNews);
-                        IntentUtils.startActivity(ChannelV0Activity.this, 
+                        IntentUtils.startActivity(ChannelV0Activity.this,
                                 NewsWebDetailActivity.class, bundle);
                         break;
                     default:
@@ -425,7 +427,7 @@ public class ChannelV0Activity extends BaseActivity {
             // 文件管理器返回
             if (requestCode == CHOOSE_FILE
                     && NetUtils.isNetworkConnected(getApplicationContext())) {
-                String filePath = GetPathFromUri4kitkat.getPathByUri(MyApplication.getInstance(),data.getData());
+                String filePath = GetPathFromUri4kitkat.getPathByUri(MyApplication.getInstance(), data.getData());
                 Msg localMsg = MsgRecourceUploadUtils.uploadResFile(
                         ChannelV0Activity.this, filePath, apiService);
                 addLocalMessage(localMsg);
@@ -495,7 +497,16 @@ public class ChannelV0Activity extends BaseActivity {
                     case HAND_CALLBACK_MESSAGE: // 接收推送的消息·
                         if (msg.arg1 == 0) {
                             Msg pushMsg = new Msg((JSONObject) msg.obj);
-                            if (cid.equals(pushMsg.getCid())) {
+                            if (cid.equals(pushMsg.getCid())){
+                                if (Message.isMessage(pushMsg)) {
+                                    Message message = new Message(pushMsg);
+                                    if (message.getType().equals("command/faceLogin")) {
+                                        MsgReadCreationDateCacheUtils.saveMessageReadCreationDate(ChannelV0Activity.this,
+                                                cid, message.getCreationDate());
+                                        intentFaceLogin(message.getContent());
+                                        return;
+                                    }
+                                }
                                 MsgReadCreationDateCacheUtils.saveMessageReadCreationDate(ChannelV0Activity.this,
                                         pushMsg.getCid(), pushMsg.getTime());
                                 if (!msgList.contains(pushMsg) && !pushMsg.getTmpId().equals(AppUtils.getMyUUID(getApplicationContext()))) {
@@ -505,6 +516,8 @@ public class ChannelV0Activity extends BaseActivity {
                                     msgListView.MoveToPosition(msgList.size() - 1);
                                 }
                             }
+
+
                         }
                         break;
 
@@ -515,6 +528,14 @@ public class ChannelV0Activity extends BaseActivity {
             }
 
         };
+    }
+
+    private void intentFaceLogin(String token) {
+        Bundle bundle = new Bundle();
+        bundle.putBoolean("isFaceVerifyExperience", false);
+        bundle.putBoolean("isFaceLogin", true);
+        bundle.putString("token", token);
+        IntentUtils.startActivity(ChannelV0Activity.this, FaceVerifyActivity.class, bundle);
     }
 
     /**
@@ -622,7 +643,7 @@ public class ChannelV0Activity extends BaseActivity {
     /**
      * 点击发送按钮后发送消息的逻辑
      */
-    private void sendTextMessage(String content, List<String> mentionsUidList, List<String> urlList,boolean isActionMsg) {
+    private void sendTextMessage(String content, List<String> mentionsUidList, List<String> urlList, boolean isActionMsg) {
         String fakeMessageId = System.currentTimeMillis() + "";
         //当在机器人频道时输入小于4个汉字时先进行通讯录查找，查找到返回通讯路卡片
         if (isSpecialUser && !isActionMsg && content.length() < 4 && StringUtils.isChinese(content)) {
@@ -631,7 +652,7 @@ public class ChannelV0Activity extends BaseActivity {
                 JSONObject sourceObj = new JSONObject();
                 try {
                     sourceObj.put("source", content);
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
@@ -640,7 +661,7 @@ public class ChannelV0Activity extends BaseActivity {
                 addLocalMessage(localMsg, 1);
                 Message conbineReplyMessage = ConbineMsg.conbineReplyAttachmentCardMsg(contact, cid, robotUid, fakeMessageId);
                 Msg replyLocalMsg = ConbineMsg.conbineRobotMsg(ChannelV0Activity.this,
-                        conbineReplyMessage.Message2MsgBody(),robotUid, "txt_rich", fakeMessageId);
+                        conbineReplyMessage.Message2MsgBody(), robotUid, "txt_rich", fakeMessageId);
                 addLocalMessage(replyLocalMsg, 1);
                 return;
             }
@@ -797,7 +818,7 @@ public class ChannelV0Activity extends BaseActivity {
         @Override
         public void returnSendMsgSuccess(GetSendMsgResult getSendMsgResult,
                                          String fakeMessageId) {
-            MsgCacheUtil.saveMsg(MyApplication.getInstance(),getSendMsgResult.getMsg());
+            MsgCacheUtil.saveMsg(MyApplication.getInstance(), getSendMsgResult.getMsg());
             setMsgSendSuccess(fakeMessageId, getSendMsgResult.getMsg());
         }
 
