@@ -39,7 +39,6 @@ import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.InputMethodUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.ListViewUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -148,8 +147,6 @@ public class ContactSearchFragment extends Fragment{
     public void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        LogUtils.YfcDebug("Activity:"+getActivity().getClass().getSimpleName());
-//        setContentView(R.layout.activity_contact_search);
         rootContact = ContactCacheUtils
                 .getRootContact(getActivity());
         getIntentData();
@@ -279,7 +276,7 @@ public class ContactSearchFragment extends Fragment{
      * 设置标题
      */
     private void setTabTitle() {
-        ((TextView) rootView.findViewById(R.id.header_text)).setText(AppTitleUtils.getTabTitle(getActivity(),"contact"));
+        ((TextView) rootView.findViewById(R.id.header_text)).setText(AppTitleUtils.getTabTitle(getActivity(),ContactSearchFragment.class.getSimpleName()));
     }
 
     private void handMessage() {
