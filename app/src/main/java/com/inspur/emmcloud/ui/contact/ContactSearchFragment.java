@@ -44,6 +44,7 @@ import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.privates.AppTitleUtils;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelGroupCacheUtils;
@@ -269,6 +270,16 @@ public class ContactSearchFragment extends Fragment{
         if (selectMemList.size() > 0) {
             notifyFlowLayoutDataChange();
         }
+        if(StringUtils.isBlank(title)){
+            setTabTitle();
+        }
+    }
+
+    /**
+     * 设置标题
+     */
+    private void setTabTitle() {
+        ((TextView) rootView.findViewById(R.id.header_text)).setText(AppTitleUtils.getTabTitle(getActivity(),"contact"));
     }
 
     private void handMessage() {

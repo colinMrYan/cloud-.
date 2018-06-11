@@ -14,14 +14,17 @@ import java.util.ArrayList;
  */
 
 public class AppTitleUtils {
-    public static String getTabTitle(Context context,String tabkey){
+    public static String getTabTitle(Context context,String tabKey){
+        if(tabKey.equals("contact")){
+            return "通讯录";
+        }
         String appTabs = PreferencesByUserAndTanentUtils.getString(context,"app_tabbar_info_current","");
         ArrayList<AppTabDataBean> tabList = new ArrayList<>();
         AppTabPayloadBean appTabPayloadBean = new AppTabAutoBean(appTabs).getPayload();
         if(appTabPayloadBean != null){
             tabList.addAll(appTabPayloadBean.getTabs());
         }
-        String tabCompont = getCompont(tabkey);
+        String tabCompont = getCompont(tabKey);
         AppTabDataBean tab = getTabByTabKey(tabList,tabCompont);
         if(tab == null){
             return "";
