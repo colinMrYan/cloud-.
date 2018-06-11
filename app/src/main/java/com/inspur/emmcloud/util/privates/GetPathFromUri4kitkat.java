@@ -11,6 +11,9 @@ import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 
+import com.inspur.emmcloud.util.common.FileUtils;
+import com.inspur.emmcloud.util.common.StringUtils;
+
 
 public class GetPathFromUri4kitkat {
 
@@ -47,17 +50,17 @@ public class GetPathFromUri4kitkat {
                     return Environment.getExternalStorageDirectory() + "/"
                             + split[1];
                 }
-
                 // TODO handle non-primary volumes
             }
             // DownloadsProvider
             else if (isDownloadsDocument(uri)) {
-
                 final String id = DocumentsContract.getDocumentId(uri);
+                if(!StringUtils.isNumeric(id)){
+                    return getFilePath(id);
+                }
                 final Uri contentUri = ContentUris.withAppendedId(
                         Uri.parse("content://downloads/public_downloads"),
                         Long.valueOf(id));
-
                 return getDataColumn(context, contentUri, null, null);
             }
             // MediaProvider
@@ -94,8 +97,21 @@ public class GetPathFromUri4kitkat {
         else if ("file".equalsIgnoreCase(uri.getScheme())) {
             return uri.getPath();
         }
-
         return null;
+    }
+
+    /**
+     * 检查文件是否存在，文件存在则返回路径不存在返回空
+     */
+    private static String getFilePath(String filePath) {
+        String filePathExceptRaw = "";
+        if(filePath.startsWith("raw:")){
+            filePathExceptRaw = filePath.split(":")[1];
+        }
+        if(FileUtils.isFileExist(filePathExceptRaw)){
+            return filePathExceptRaw;
+        }
+        return "";
     }
 
     /**
