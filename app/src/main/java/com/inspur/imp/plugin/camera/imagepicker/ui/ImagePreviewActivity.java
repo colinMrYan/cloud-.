@@ -41,7 +41,6 @@ public class ImagePreviewActivity extends ImagePreviewBaseActivity implements
 
 		mBtnOk = (Button) topBar.findViewById(R.id.btn_ok);
 		mBtnOk.setVisibility(View.VISIBLE);
-		mBtnOk.setOnClickListener(this);
 
 		bottomBar = findViewById(R.id.bottom_bar);
 		bottomBar.setVisibility(View.VISIBLE);
@@ -133,19 +132,8 @@ public class ImagePreviewActivity extends ImagePreviewBaseActivity implements
 	 */
 	@Override
 	public void onImageSelected(int position, ImageItem item, boolean isAdd) {
-		if (imagePicker.getSelectLimit() == 1) { // 当单选模式下进入预览时候
-			mBtnOk.setText(getString(R.string.send));
-		} else {
-			if (imagePicker.getSelectImageCount() > 0) {
-				mBtnOk.setText(getString(R.string.select_complete,
-						imagePicker.getSelectImageCount(),
-						imagePicker.getSelectLimit()));
-				mBtnOk.setEnabled(true);
-			} else {
-				mBtnOk.setText(getString(R.string.send));
-				mBtnOk.setEnabled(false);
-			}
-		}
+		mBtnOk.setText(getString(R.string.send));
+		mBtnOk.setEnabled(isAdd);
 	}
 
 	@Override

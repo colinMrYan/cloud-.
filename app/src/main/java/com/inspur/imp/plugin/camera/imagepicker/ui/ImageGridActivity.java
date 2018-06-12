@@ -42,7 +42,7 @@ import java.util.List;
 public class ImageGridActivity extends ImageBaseActivity implements
 		ImageDataSource.OnImagesLoadedListener,
 		ImageGridAdapter.OnImageItemClickListener,
-		ImagePicker.OnImageSelectedListener, View.OnClickListener {
+		ImagePicker.OnImageSelectedListener {
 
 	public static final int REQUEST_PERMISSION_STORAGE = 0x01;
 	public static final int REQUEST_PERMISSION_CAMERA = 0x02;
@@ -61,8 +61,8 @@ public class ImageGridActivity extends ImageBaseActivity implements
 	private View mFooterBar; // 底部栏
 	private Button mBtnOk; // 确定按钮
 	private Button mBtnDir; // 文件夹切换按钮
-	// private Button mBtnPre; // 预览按钮
-	private Button mBtnEdit;
+	private Button mBtnPre; // 预览按钮
+	//private Button mBtnEdit;
 	private ImageFolderAdapter mImageFolderAdapter; // 图片文件夹的适配器
 	private FolderPopUpWindow mFolderPopupWindow; // ImageSet的PopupWindow
 	private List<ImageFolder> mImageFolders; // 所有的图片文件夹
@@ -80,25 +80,14 @@ public class ImageGridActivity extends ImageBaseActivity implements
 		imagePicker = ImagePicker.getInstance();
 		imagePicker.clear();
 		imagePicker.addOnImageSelectedListener(this);
-
-		findViewById(R.id.btn_back).setOnClickListener(this);
 		mBtnOk = (Button) findViewById(R.id.btn_ok);
-		mBtnOk.setOnClickListener(this);
 		mBtnDir = (Button) findViewById(R.id.btn_dir);
-		mBtnDir.setOnClickListener(this);
-		mBtnEdit = (Button) findViewById(R.id.btn_edit);
-		mBtnEdit.setOnClickListener(this);
+		mBtnPre = (Button) findViewById(R.id.btn_preview);
 		mGridView = (GridView) findViewById(R.id.gridview);
 		mFooterBar = findViewById(R.id.footer_bar);
 		loadingDlg = new LoadingDialog(this);
-		if (imagePicker.isMultiMode()) {
-			mBtnOk.setVisibility(View.VISIBLE);
-			mBtnEdit.setVisibility(View.VISIBLE);
-		} else {
-			mBtnOk.setVisibility(View.GONE);
-			mBtnEdit.setVisibility(View.GONE);
-		}
-
+		mBtnOk.setVisibility(imagePicker.isMultiMode()?View.VISIBLE:View.GONE);
+		mBtnPre.setVisibility(imagePicker.isMultiMode()?View.VISIBLE:View.GONE);
 		mImageGridAdapter = new ImageGridAdapter(this, null);
 		mImageFolderAdapter = new ImageFolderAdapter(this, null);
 		handMessage();
@@ -160,7 +149,6 @@ public class ImageGridActivity extends ImageBaseActivity implements
 		super.onDestroy();
 	}
 
-	@Override
 	public void onClick(View v) {
 		int id = v.getId();
 		if (id == R.id.btn_ok) {
@@ -189,14 +177,17 @@ public class ImageGridActivity extends ImageBaseActivity implements
 				index = index == 0 ? index : index - 1;
 				mFolderPopupWindow.setSelection(index);
 			}
-		} else if (id == R.id.btn_edit) {
-			if (paramObjJson == null) {
-				EditImageActivity.start(this, imagePicker.getSelectedImages()
-						.get(0).path, MyAppConfig.LOCAL_IMG_CREATE_PATH);
-			}else {
-				EditImageActivity.start(this, imagePicker.getSelectedImages()
-						.get(0).path, MyAppConfig.LOCAL_IMG_CREATE_PATH, true, paramObjJson.toString());
-			}
+		} else if (id == R.id.btn_preview) {
+			Intent intent = new Intent(ImageGridActivity.this,ImagePreviewActivity.class);
+			intent.putExtra(ImagePicker.EXTRA_IMAGE_ITEMS,imagePicker.getSelectedImages());
+			startActivity(intent);
+//			if (paramObjJson == null) {
+//				EditImageActivity.start(this, imagePicker.getSelectedImages()
+//						.get(0).path, MyAppConfig.LOCAL_IMG_CREATE_PATH);
+//			}else {
+//				EditImageActivity.start(this, imagePicker.getSelectedImages()
+//						.get(0).path, MyAppConfig.LOCAL_IMG_CREATE_PATH, true, paramObjJson.toString());
+//			}
 		} else if (id == R.id.btn_back) {
 			// 点击返回按钮
 			finish();
@@ -338,7 +329,7 @@ public class ImageGridActivity extends ImageBaseActivity implements
 			int selectLimit = imagePicker.getSelectLimit();
 			boolean isCheck = imagePicker.getSelectedImages().contains(imageItem);
 			if (!isCheck && imagePicker.getSelectedImages().size()>= selectLimit){
-				Toast.makeText(getApplicationContext(), getString(R.string.select_limit, selectLimit+""), Toast.LENGTH_SHORT).show();
+				Toast.makeText(getApplicationContext(), getString(R.string.select_limit, selectLimit), Toast.LENGTH_SHORT).show();
 			}else {
 				imagePicker.addSelectedImageItem(position, imageItem, !isCheck);
 			}
@@ -368,8 +359,8 @@ public class ImageGridActivity extends ImageBaseActivity implements
 	public void onImageSelected(int position, ImageItem item, boolean isAdd) {
 		if (imagePicker.getSelectImageCount() > 0) {
 			mBtnOk.setText(getString(R.string.select_complete,
-					imagePicker.getSelectImageCount()+"",
-					imagePicker.getSelectLimit()+""));
+					imagePicker.getSelectImageCount(),
+					imagePicker.getSelectLimit()));
 			mBtnOk.setEnabled(true);
 		} else {
 			mBtnOk.setText(getString(R.string.complete));
@@ -377,9 +368,9 @@ public class ImageGridActivity extends ImageBaseActivity implements
 		}
 
 		if (imagePicker.getSelectImageCount() == 1 && imagePicker.isMultiMode()) {
-			mBtnEdit.setVisibility(View.VISIBLE);
+			mBtnPre.setVisibility(View.VISIBLE);
 		} else {
-			mBtnEdit.setVisibility(View.GONE);
+			mBtnPre.setVisibility(View.GONE);
 		}
 		mImageGridAdapter.notifyDataSetChanged();
 	}
