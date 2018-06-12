@@ -79,6 +79,7 @@
     <com.inspur.imp.plugin.camera.editimage.view.CustomViewPager
         android:id="@+id/bottom_gallery"
         android:layout_width="fill_parent"
+        android:background="#5e000000"
         android:layout_height="65dp"
         android:layout_alignParentBottom="true"
         />
