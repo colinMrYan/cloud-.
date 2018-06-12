@@ -33,12 +33,14 @@ import com.inspur.emmcloud.bean.contact.ContactClickMessage;
 import com.inspur.emmcloud.bean.contact.FirstGroupTextModel;
 import com.inspur.emmcloud.bean.contact.SearchModel;
 import com.inspur.emmcloud.config.MyAppConfig;
+import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.chat.ChannelActivity;
 import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.InputMethodUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.ListViewUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -142,6 +144,7 @@ public class ContactSearchFragment extends Fragment{
     private String searchText;
     private long lastSearchTime = 0L;
     private List<Contact> excludeContactList;//不显示某些数据
+    private long lastBackTime;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -149,8 +152,7 @@ public class ContactSearchFragment extends Fragment{
         super.onCreate(savedInstanceState);
         rootContact = ContactCacheUtils
                 .getRootContact(getActivity());
-        getIntentData();
-        handMessage();
+
         EventBus.getDefault().register(this);
     }
 
@@ -165,6 +167,8 @@ public class ContactSearchFragment extends Fragment{
         if (parent != null) {
             parent.removeView(rootView);
         }
+        getIntentData();
+        handMessage();
         initView();
         initSearchRunnable();
         return rootView;
@@ -182,7 +186,29 @@ public class ContactSearchFragment extends Fragment{
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void updateUI(ContactClickMessage contactClickMessage){
-        clickView(contactClickMessage.getViewId());
+        if(getActivity().getClass().getSimpleName().equals(IndexActivity.class.getSimpleName())
+                && contactClickMessage.getTabId().equals("find") && contactClickMessage.getViewId() == -1){
+            handleAppClose();
+        }else{
+            clickView(contactClickMessage.getViewId());
+        }
+    }
+
+    /**
+     * 处理点击两次关闭App
+     */
+    private void handleAppClose() {
+        if(isPopLayoutVisible()){
+            clearSearchEdit();
+        }else if(isOpenGroupLayoutVisiable()){
+            back2LastGroup();
+        } else if ((System.currentTimeMillis() - lastBackTime) > 2000) {
+            ToastUtils.show(getActivity(),
+                    getString(R.string.reclick_to_desktop));
+            lastBackTime = System.currentTimeMillis();
+        } else {
+            MyApplication.getInstance().exit();
+        }
     }
 
     /**
@@ -198,12 +224,16 @@ public class ContactSearchFragment extends Fragment{
                 isContainMe = getActivity().getIntent().getExtras().containsKey(EXTRA_CONTAIN_ME) && getActivity().getIntent().getBooleanExtra(EXTRA_CONTAIN_ME,false);
             }
         }
+        if(getActivity().getClass().getSimpleName().equals(IndexActivity.class.getSimpleName())){
+            searchContent = SEARCH_NOTHIING;
+        }
         initSearchArea();
         if (searchContent == SEARCH_CHANNELGROUP) {
             (rootView.findViewById(R.id.struct_layout))
                     .setVisibility(View.GONE);
         }
         if (searchContent == SEARCH_CONTACT) {
+            LogUtils.YfcDebug("rootView为空："+(rootView == null));
             (rootView.findViewById(R.id.channel_group_layout))
                     .setVisibility(View.GONE);
         }
@@ -310,6 +340,9 @@ public class ContactSearchFragment extends Fragment{
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
                 // TODO Auto-generated method stub
+                if(getActivity().getClass().getSimpleName().equals(IndexActivity.class.getSimpleName())){
+                    searchContent = SEARCH_NOTHIING;
+                }
                 SearchModel searchModel = commonContactList.get(position);
                 changeMembers(searchModel);
             }
@@ -660,12 +693,16 @@ public class ContactSearchFragment extends Fragment{
         switch (id) {
             case R.id.back_layout:
                 InputMethodUtils.hide(getActivity());
-                if(isPopLayoutVisible()){
-                    clearSearchEdit();
-                }else if(isOpenGroupLayoutVisiable()){
-                    back2LastGroup();
+                if(getActivity().getClass().getSimpleName().equals(IndexActivity.class.getSimpleName())){
+                    handleAppClose();
                 }else{
-                    getActivity().finish();
+                    if(isPopLayoutVisible()){
+                        clearSearchEdit();
+                    }else if(isOpenGroupLayoutVisiable()){
+                        back2LastGroup();
+                    }else{
+                        getActivity().finish();
+                    }
                 }
                 break;
             case R.id.ok_text:

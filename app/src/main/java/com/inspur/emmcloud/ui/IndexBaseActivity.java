@@ -75,6 +75,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
     private TipsView tipsView;
     private boolean isCommunicationRunning = false;
     private boolean isSystemChangeTag = true;//控制如果是系统切换的tab则不计入用户行为
+    private String tabId = "";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -405,7 +406,12 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if ((System.currentTimeMillis() - lastBackTime) > 2000) {
+            if(tabId.equals("find")){
+                ContactClickMessage contactClickMessage = new ContactClickMessage();
+                contactClickMessage.setTabId("find");
+                contactClickMessage.setViewId(-1);
+                EventBus.getDefault().post(contactClickMessage);
+            }else if ((System.currentTimeMillis() - lastBackTime) > 2000) {
                 ToastUtils.show(IndexBaseActivity.this,
                         getString(R.string.reclick_to_desktop));
                 lastBackTime = System.currentTimeMillis();
@@ -440,6 +446,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
 
     @Override
     public void onTabChanged(String tabId) {
+        this.tabId = tabId;
         tipsView.setCanTouch(tabId.equals("communicate"));
         if (!isSystemChangeTag) {
             //记录打开的tab页
@@ -453,6 +460,8 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
         return getFragmentManager().findFragmentByTag(
                 mTabHost.getCurrentTabTag());
     }
+
+
 
     /**
      * 根据命令升级Tabbar

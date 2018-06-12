@@ -5,7 +5,8 @@ package com.inspur.emmcloud.bean.contact;
  */
 
 public class ContactClickMessage {
-    private int viewId = 0;
+    private int viewId = -1;
+    private String tabId = "";
 
     public int getViewId() {
         return viewId;
@@ -13,5 +14,13 @@ public class ContactClickMessage {
 
     public void setViewId(int viewId) {
         this.viewId = viewId;
+    }
+
+    public String getTabId() {
+        return tabId;
+    }
+
+    public void setTabId(String tabId) {
+        this.tabId = tabId;
     }
 }
