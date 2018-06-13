@@ -37,11 +37,8 @@ import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.imp.api.ImpBaseActivity;
-import com.inspur.imp.plugin.camera.editimage.EditImageActivity;
 import com.inspur.imp.plugin.camera.editimage.utils.BitmapUtils;
-import com.inspur.imp.plugin.photo.UploadPhoto;
 import com.inspur.imp.util.compressor.Compressor;
 
 import org.json.JSONObject;
@@ -55,11 +52,22 @@ import static com.inspur.imp.plugin.camera.editimage.EditImageActivity.ACTION_RE
 
 public class MyCameraActivity extends ImpBaseActivity implements View.OnClickListener, SurfaceHolder.Callback {
 
-    public static final String PHOTO_DIRECTORY_PATH = "save_derectory_path";
-    public static final String PHOTO_NAME = "photo_name";
-    public static final String EXTRA_PARAM = "upload_parm";
-    public static final String CROP_ENABLE = "mIsCropEnabled";
-    public static final String EXTRA_NEED_UPLOAD = "is_need_upload";
+    public static final String PARAM_PHOTO_DIRECTORY_PATH = "param_save_derectory_path";
+    public static final String PARAM_PHOTO_NAME = "param_photo_name";
+    public static final String PARAM_CROP_ENABLE = "param_crop_enale";
+    public static final String PARAM_MAX_HEIGHT = "param_max_height";
+    public static final String PARAM_MAX_WIDTH = "param_max_width";
+    //public static final String PARAM_QUALTITY = "param_qualtity";
+    public static final String PARAM_ENCODINGTYPE = "param_encoding_type";
+    public static final String PARAM_RECT_SCALE_JSON = "param_rect_scale_json";
+
+    private int maxHeight = 2000;
+    private int maxWidth = 2000;
+    private int qualtity = 90;
+    private int encodingType = 0;
+    private String photoFilePath;
+    private String photoName;
+    private boolean isCropEnabled = false;
     private FocusSurfaceView previewSFV;
     private ImageButton switchCameraBtn, cameraLightSwitchBtn;
     private Camera mCamera;
@@ -69,9 +77,7 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
     private String cameraFlashModel = Camera.Parameters.FLASH_MODE_AUTO;
     private DetectScreenOrientation detectScreenOrientation;
     private String photoSaveDirectoryPath;
-    private String photoFilePath;
-    private String photoName;
-    private String extraParam;
+
     private String defaultRectScale;
     private RecyclerView setRadioRecycleView;
     private List<RectScale> rectScaleList = new ArrayList<>();
@@ -80,14 +86,6 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
     private ImageView previewImg;
     private Bitmap originBitmap;
     private Bitmap cropBitmap;
-    private boolean mIsCropEnabled = false;
-    private boolean isNeedUpload = false;
-    private int parm_resolution =2000;
-    private int parm_qualtity = 90;
-    private int parm_encodingType = 0;
-    private String parm_context;
-    private String parm_uploadUrl;
-    private JSONObject watermarkObj;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -115,40 +113,35 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
             detectScreenOrientation = new DetectScreenOrientation(this);
         }
         detectScreenOrientation.enable();
-        photoSaveDirectoryPath = getIntent().getExtras().getString(PHOTO_DIRECTORY_PATH, Environment.getExternalStorageDirectory() + "/DCIM");
-        photoName = getIntent().getStringExtra(PHOTO_NAME);
-        isNeedUpload = getIntent().getBooleanExtra(EXTRA_NEED_UPLOAD, false);
-        mIsCropEnabled = getIntent().getBooleanExtra(CROP_ENABLE, false);
-        if (getIntent().hasExtra(EXTRA_PARAM)) {
-            extraParam = getIntent().getStringExtra(EXTRA_PARAM);
-            this.parm_uploadUrl = JSONUtils.getString(extraParam, "uploadUrl", null);
-            JSONObject optionsObj = JSONUtils.getJSONObject(extraParam, "options", new JSONObject());
-            this.parm_resolution = JSONUtils.getInt(optionsObj, "resolution", MyAppConfig.UPLOAD_ORIGIN_IMG_MAX_SIZE);
-            this.parm_qualtity = JSONUtils.getInt(optionsObj, "quality", 90);
-            this.parm_context = JSONUtils.getString(optionsObj, "context", "");
-            this.parm_encodingType = JSONUtils.getInt(optionsObj, "encodingType", 0);
-            this.watermarkObj = JSONUtils.getJSONObject(optionsObj, "watermark", null);
-            if (mIsCropEnabled) {
-                defaultRectScale = JSONUtils.getString(optionsObj, "rectScale", null);
-                String rectScaleListJson = JSONUtils.getString(optionsObj, "rectScaleList", "");
-                rectScaleList = new GetReatScaleResult(rectScaleListJson).getRectScaleList();
-                if (!StringUtils.isBlank(defaultRectScale) && rectScaleList.size() > 0) {
-                    boolean isSelectionRadio = false;
+        photoSaveDirectoryPath = getIntent().getExtras().getString(PARAM_PHOTO_DIRECTORY_PATH, Environment.getExternalStorageDirectory() + "/DCIM/");
+        photoName = getIntent().getStringExtra(PARAM_PHOTO_NAME);
+        isCropEnabled = getIntent().getBooleanExtra(PARAM_CROP_ENABLE, false);
+        maxHeight = getIntent().getIntExtra(PARAM_MAX_HEIGHT,MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE);
+        maxWidth = getIntent().getIntExtra(PARAM_MAX_WIDTH,MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE);
+//        qualtity =  getIntent().getIntExtra(PARAM_QUALTITY,90);
+        encodingType = getIntent().getIntExtra(PARAM_ENCODINGTYPE,0);
+        if (isCropEnabled) {
+            String json = getIntent().getStringExtra(PARAM_RECT_SCALE_JSON);
+            JSONObject optionsObj = JSONUtils.getJSONObject(json, "options", new JSONObject());
+            defaultRectScale = JSONUtils.getString(optionsObj, "rectScale", null);
+            String rectScaleListJson = JSONUtils.getString(optionsObj, "rectScaleList", "");
+            rectScaleList = new GetReatScaleResult(rectScaleListJson).getRectScaleList();
+            if (!StringUtils.isBlank(defaultRectScale) && rectScaleList.size() > 0) {
+                boolean isSelectionRadio = false;
+                for (int i = 0; i < rectScaleList.size(); i++) {
+                    String rectScale = rectScaleList.get(i).getRectScale();
+                    if (rectScale.equals(defaultRectScale)) {
+                        radioSelectPosition = i;
+                        isSelectionRadio = true;
+                        break;
+                    }
+                }
+                if (!isSelectionRadio) {
                     for (int i = 0; i < rectScaleList.size(); i++) {
                         String rectScale = rectScaleList.get(i).getRectScale();
-                        if (rectScale.equals(defaultRectScale)) {
+                        if (rectScale.equals("custom")) {
                             radioSelectPosition = i;
-                            isSelectionRadio = true;
                             break;
-                        }
-                    }
-                    if (!isSelectionRadio) {
-                        for (int i = 0; i < rectScaleList.size(); i++) {
-                            String rectScale = rectScaleList.get(i).getRectScale();
-                            if (rectScale.equals("custom")) {
-                                radioSelectPosition = i;
-                                break;
-                            }
                         }
                     }
                 }
@@ -184,7 +177,7 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
 
     @Override
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
-        if (mIsCropEnabled) {
+        if (isCropEnabled) {
             if (rectScaleList.size() > 0) {
                 previewSFV.setCustomRectScale(rectScaleList.get(radioSelectPosition).getRectScale());
             } else {
@@ -261,7 +254,7 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
             mCamera.setDisplayOrientation(rotateAngle);
             parameters.setRotation(rotateAngle);
             List<Camera.Size> PictureSizeList = parameters.getSupportedPictureSizes();
-            Camera.Size pictureSize = CameraUtils.getInstance(this).getPictureSize(PictureSizeList, 1400);
+            Camera.Size pictureSize = CameraUtils.getInstance(this).getPictureSize(PictureSizeList, 2600);
             LogUtils.jasonDebug("width=" + pictureSize.width);
             LogUtils.jasonDebug("height=" + pictureSize.height);
             parameters.setPictureSize(pictureSize.width, pictureSize.height);
@@ -355,8 +348,7 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
                 break;
             case R.id.btn_edit:
                 BitmapUtils.saveBitmap(cropBitmap, photoFilePath, 100, 0);
-                EditImageActivity.start(MyCameraActivity.this, photoFilePath, MyAppConfig.LOCAL_IMG_CREATE_PATH, isNeedUpload, extraParam);
-
+                //EditImageActivity.start(MyCameraActivity.this, photoFilePath, MyAppConfig.LOCAL_IMG_CREATE_PATH, isNeedUpload, extraParam);
                 break;
             case R.id.btn_complete:
                 new MyAsyncTask().execute();
@@ -371,11 +363,11 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
         protected Void doInBackground(Void... params) {
             BitmapUtils.saveBitmap(cropBitmap, photoFilePath, 100, 0);
             try {
-                Bitmap bitmap = new Compressor(MyCameraActivity.this).setMaxHeight(parm_resolution).setMaxWidth(parm_resolution).setQuality(parm_qualtity).setDestinationDirectoryPath(photoSaveDirectoryPath)
-                        .setCompressFormat((parm_encodingType == 0) ? Bitmap.CompressFormat.JPEG : Bitmap.CompressFormat.PNG).compressToBitmap(new File(photoFilePath));
-                ImageUtils.saveImageToSD(MyCameraActivity.this,photoFilePath,bitmap,100);
+                Bitmap bitmap = new Compressor(MyCameraActivity.this).setMaxHeight(maxHeight).setMaxWidth(maxWidth).setQuality(100).setDestinationDirectoryPath(photoSaveDirectoryPath)
+                        .setCompressFormat((encodingType == 0) ? Bitmap.CompressFormat.JPEG : Bitmap.CompressFormat.PNG).compressToBitmap(new File(photoFilePath));
+                ImageUtils.saveImageToSD(MyCameraActivity.this, photoFilePath, bitmap, 100);
                 recycleBitmap(bitmap);
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             return null;
@@ -383,38 +375,11 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
 
         @Override
         protected void onPostExecute(Void result) {
-            if (isNeedUpload) {
-                uploadImg();
-            } else {
-                returnData(null);
-            }
+            returnData(null);
         }
 
     }
 
-    /**
-     * 图片进行上传
-     */
-    private void uploadImg() {
-        final  LoadingDialog loadingDlg = new LoadingDialog(this);
-        loadingDlg.show();
-        new UploadPhoto(MyCameraActivity.this, new UploadPhoto.OnUploadPhotoListener() {
-
-            @Override
-            public void uploadPhotoSuccess(String result) {
-                // TODO Auto-generated method stub
-                LoadingDialog.dimissDlg(loadingDlg);
-                returnData(result);
-            }
-
-            @Override
-            public void uploadPhotoFail() {
-                // TODO Auto-generated method stub
-                LoadingDialog.dimissDlg(loadingDlg);
-                Toast.makeText(getApplicationContext(), R.string.img_upload_fail, Toast.LENGTH_SHORT).show();
-            }
-        }).upload(parm_uploadUrl, photoFilePath, parm_encodingType, parm_context, watermarkObj);
-    }
 
     private void returnData(String uploadResult) {
         Intent intent = new Intent();
@@ -444,7 +409,7 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
                 mCamera.cancelAutoFocus();
                 int orientation = currentOrientation;
                 BitmapFactory.Options options = new BitmapFactory.Options();
-                 options.inPreferredConfig = Bitmap.Config.RGB_565;
+                options.inPreferredConfig = Bitmap.Config.RGB_565;
                 originBitmap = BitmapFactory.decodeByteArray(data, 0, data.length, options);
                 //如果是三星手机需要先旋转90度
                 boolean isSamSungType = originBitmap.getWidth() > originBitmap.getHeight();
@@ -468,7 +433,7 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
                 if (photoName == null) {
                     photoName = System.currentTimeMillis() + ".jpg";
                 }
-                photoFilePath = photoDir.getAbsolutePath() + "/" + photoName;
+                photoFilePath = photoDir.getAbsolutePath() + photoName;
                 previewImg.setImageBitmap(cropBitmap);
                 previewLayout.setVisibility(View.VISIBLE);
             }

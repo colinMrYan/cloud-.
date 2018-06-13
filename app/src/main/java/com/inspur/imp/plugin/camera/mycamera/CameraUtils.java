@@ -39,7 +39,6 @@ public class CameraUtils {
      */
     public  Size getPreviewSize(List<Size> list, int th){
         Collections.sort(list, sizeComparator);
-        Collections.reverse(list);
         Size size = null;
         for(Size s:list){
             if((s.width < th) && (s.height < th) && equalRateLevel0(s, rate)){
@@ -73,21 +72,21 @@ public class CameraUtils {
     /**
      * 获取图片的大小
      * @param list
-     * @param th  最小尺寸
+     * @param th  最大尺寸
      * @return
      */
     public Size getPictureSize(List<Size> list, int th){
         Collections.sort(list, sizeComparator);
         Size size = null;
         for(Size s:list){
-            if((s.width > th) && (s.height > th) && equalRateLevel0(s, rate)){
+            if((s.width < th) && (s.height < th) && equalRateLevel0(s, rate)){
                 size = s;
                 break;
             }
         }
         if (size == null){
             for(Size s:list) {
-                if ((s.width > th) && (s.height > th) && equalRateLevel1(s, rate)) {
+                if ((s.width < th) && (s.height < th) && equalRateLevel1(s, rate)) {
                     size = s;
                     break;
                 }
@@ -96,7 +95,7 @@ public class CameraUtils {
 
         if (size == null){
             for(Size s:list) {
-                if ((s.width > th) && (s.height > th) && equalRateLevel2(s, rate)) {
+                if ((s.width < th) && (s.height < th) && equalRateLevel2(s, rate)) {
                     size = s;
                     break;
                 }
@@ -149,10 +148,10 @@ public class CameraUtils {
                 return 0;
             }
             else if(lhs.width > rhs.width || (lhs.width == rhs.width && lhs.height > rhs.height)){
-                return 1;
+                return -1;
             }
             else{
-                return -1;
+                return 1;
             }
         }
 
