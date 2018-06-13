@@ -5,6 +5,7 @@ import android.content.res.Configuration;
 
 import com.inspur.emmcloud.bean.system.AppTabAutoBean;
 import com.inspur.emmcloud.bean.system.AppTabDataBean;
+import com.inspur.emmcloud.bean.system.AppTabPayloadBean;
 
 import java.util.ArrayList;
 
@@ -15,8 +16,11 @@ import java.util.ArrayList;
 public class AppTitleUtils {
     public static String getTabTitle(Context context,String tabkey){
         String appTabs = PreferencesByUserAndTanentUtils.getString(context,"app_tabbar_info_current","");
-        ArrayList<AppTabDataBean> tabList =
-                (ArrayList<AppTabDataBean>) new AppTabAutoBean(appTabs).getPayload().getTabs();
+        ArrayList<AppTabDataBean> tabList = new ArrayList<>();
+        AppTabPayloadBean appTabPayloadBean = new AppTabAutoBean(appTabs).getPayload();
+        if(appTabPayloadBean != null){
+            tabList.addAll(appTabPayloadBean.getTabs());
+        }
         String tabCompont = getCompont(tabkey);
         AppTabDataBean tab = getTabByTabKey(tabList,tabCompont);
         if(tab == null){

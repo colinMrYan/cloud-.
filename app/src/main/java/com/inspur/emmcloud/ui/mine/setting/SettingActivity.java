@@ -213,11 +213,11 @@ public class SettingActivity extends BaseActivity {
                         if (NetUtils.isNetworkConnected(getApplicationContext())){
                             // TODO Auto-generated method stub
                             boolean isCommunicateExist = TabAndAppExistUtils.isTabExist(MyApplication.getInstance(),"communicate");
-                            if (MyApplication.getInstance().isChatVersionV0() || !isCommunicateExist){
-                                MyApplication.getInstance().signout();
-                            }else {
+                            if (MyApplication.getInstance().isV1xVersionChat() && isCommunicateExist){
                                 loadingDlg.show();
                                 WSAPIService.getInstance().sendAppStatus("REMOVED");
+                            }else {
+                                MyApplication.getInstance().signout();
                             }
 
                         }

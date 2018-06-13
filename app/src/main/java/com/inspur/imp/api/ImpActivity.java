@@ -221,10 +221,6 @@ public class ImpActivity extends ImpBaseActivity {
         settings.setUserAgentString(userAgent);
         settings.enableSmoothTransition();
         settings.setJavaScriptEnabled(true);
-        //禁用缩放
-        settings.setBuiltInZoomControls(false);
-        settings.setSupportZoom(false);
-        settings.setDisplayZoomControls(false);
         settings.setGeolocationEnabled(true);
         settings.setDatabaseEnabled(true);
         String dir = this.getApplicationContext().getDir("database", Context.MODE_PRIVATE).getPath();

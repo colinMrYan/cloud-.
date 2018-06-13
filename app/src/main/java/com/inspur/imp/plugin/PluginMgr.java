@@ -58,21 +58,14 @@ public class PluginMgr {
      */
     public void execute(String serviceName, final String action,
                         final String params) {
-        if (serviceName.endsWith("LoadingDialogService")) {
-            serviceName = "com.inspur.imp.plugin.loadingdialog." + serviceName;
-        } else if (serviceName.endsWith("FileTransferService")) {
-            serviceName = "com.inspur.imp.plugin.filetransfer." + serviceName;
-        }
+        serviceName = getReallyServiceName(serviceName);
         Log.d("jason", "serviceName=" + serviceName);
         Log.d("jason", "action=" + action);
-        Log.d("jason","检测是否有plugin之前");
         IPlugin plugin = null;
         if (!entries.containsKey(serviceName)) {
-            Log.d("jason","有选择人员");
             plugin = createPlugin(serviceName);
             entries.put(serviceName, plugin);
         } else {
-            Log.d("jason","没有选择人员");
             plugin = getPlugin(serviceName);
         }
         // 将传递过来的参数转换为JSON
@@ -101,38 +94,51 @@ public class PluginMgr {
      */
     public String executeAndReturn(final String serviceName,
                                    final String action, final String params) {
-        IPlugin plugin = null;
+        String reallyServiceName = getReallyServiceName(serviceName);
         String res = "";
-        Log.d("jason", "serviceName=" + serviceName);
-        Log.d("jason", "action=" + action);
-        if (!entries.containsKey(serviceName)) {
-            plugin = createPlugin(serviceName);
-            entries.put(serviceName, plugin);
-        } else {
-            plugin = getPlugin(serviceName);
-        }
-        // 将传递过来的参数转换为JSON
-        JSONObject jo = null;
-        if (StrUtil.strIsNotNull(params)) {
-            try {
-                jo = new JSONObject(params);
-            } catch (JSONException e) {
-                iLog.e(TAG, "组装Json对象出现异常!");
+        if (reallyServiceName != null){
+            IPlugin plugin = null;
+            Log.d("jason", "serviceName=" + reallyServiceName);
+            Log.d("jason", "action=" + action);
+            if (!entries.containsKey(reallyServiceName)) {
+                plugin = createPlugin(reallyServiceName);
+                entries.put(reallyServiceName, plugin);
+            } else {
+                plugin = getPlugin(reallyServiceName);
             }
-        }
-        // 执行接口的execute方法
-        if (plugin != null) {
-            try {
-                Log.d("jason", "1---");
-                res = plugin.executeAndReturn(action, jo);
-            } catch (Exception e) {
-                e.printStackTrace();
+            // 将传递过来的参数转换为JSON
+            JSONObject jo = null;
+            if (StrUtil.strIsNotNull(params)) {
+                try {
+                    jo = new JSONObject(params);
+                } catch (JSONException e) {
+                    iLog.e(TAG, "组装Json对象出现异常!");
+                }
+            }
+            // 执行接口的execute方法
+            if (plugin != null) {
+                try {
+                    res = plugin.executeAndReturn(action, jo);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }else{
             DialogUtil.getInstance((Activity)context).show();
         }
-        Log.d("jason", "2---");
         return res;
+
+    }
+
+    private String getReallyServiceName(String serviceName){
+        if (serviceName != null){
+            if (serviceName.endsWith("LoadingDialogService")) {
+                serviceName = "com.inspur.imp.plugin.loadingdialog.LoadingDialogService";
+            }else if (serviceName.endsWith("FileTransferService")) {
+                serviceName = "com.inspur.imp.plugin.filetransfer.FileTransferService";
+            }
+        }
+        return serviceName;
     }
 
     /**
