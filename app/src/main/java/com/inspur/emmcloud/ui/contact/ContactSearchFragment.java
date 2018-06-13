@@ -40,7 +40,6 @@ import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.InputMethodUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.ListViewUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -233,7 +232,6 @@ public class ContactSearchFragment extends Fragment{
                     .setVisibility(View.GONE);
         }
         if (searchContent == SEARCH_CONTACT) {
-            LogUtils.YfcDebug("rootView为空："+(rootView == null));
             (rootView.findViewById(R.id.channel_group_layout))
                     .setVisibility(View.GONE);
         }
@@ -272,6 +270,9 @@ public class ContactSearchFragment extends Fragment{
 
     private void initView() {
         // TODO Auto-generated method stub
+        if(getActivity().getClass().getSimpleName().equals(IndexActivity.class.getSimpleName())){
+            rootView.findViewById(R.id.back_layout).setVisibility(View.GONE);
+        }
         ((TextView) rootView.findViewById(R.id.header_text)).setText(title);
         originAllLayout = (RelativeLayout) rootView.findViewById(R.id.origin_all_layout);
         originLayout = (LinearLayout) rootView.findViewById(R.id.origin_layout);
@@ -683,7 +684,6 @@ public class ContactSearchFragment extends Fragment{
      * @param v
      */
     public void onClick(View v) {
-        List<FirstGroupTextModel> list = new ArrayList<FirstGroupTextModel>();
         clickView(v.getId());
     }
 
@@ -693,16 +693,12 @@ public class ContactSearchFragment extends Fragment{
         switch (id) {
             case R.id.back_layout:
                 InputMethodUtils.hide(getActivity());
-                if(getActivity().getClass().getSimpleName().equals(IndexActivity.class.getSimpleName())){
-                    handleAppClose();
+                if(isPopLayoutVisible()){
+                    clearSearchEdit();
+                }else if(isOpenGroupLayoutVisiable()){
+                    back2LastGroup();
                 }else{
-                    if(isPopLayoutVisible()){
-                        clearSearchEdit();
-                    }else if(isOpenGroupLayoutVisiable()){
-                        back2LastGroup();
-                    }else{
-                        getActivity().finish();
-                    }
+                    getActivity().finish();
                 }
                 break;
             case R.id.ok_text:
