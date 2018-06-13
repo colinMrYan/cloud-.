@@ -7,6 +7,7 @@ import com.inspur.emmcloud.bean.contact.Contact;
 import com.inspur.emmcloud.bean.contact.SearchModel;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactCacheUtils;
 import com.inspur.imp.plugin.ImpPlugin;
@@ -30,18 +31,25 @@ public class SelectStaffService extends ImpPlugin {
     private static final int CONTACT_PICKER = 2;
     private String successCb, failCb;
     private int multiSelection = 0;
+    private JSONObject paramsObject;
     @Override
     public void execute(String action, JSONObject paramsObject) {
+        LogUtils.YfcDebug("action:"+action);
+        this.paramsObject = paramsObject;
         multiSelection = JSONUtils.getInt(paramsObject,"multiSelection",0);
         successCb = JSONUtils.getString(paramsObject,"success","");
         failCb = JSONUtils.getString(paramsObject,"fail","");
         if("select".equals(action)){
             selectFromContact();
         }else if("viewContact".equals(action)){
-
+            viewContact();
         }else{
             DialogUtil.getInstance(getActivity()).show();
         }
+    }
+
+    private void viewContact() {
+
     }
 
     /**
