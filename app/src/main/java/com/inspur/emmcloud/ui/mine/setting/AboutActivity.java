@@ -35,7 +35,7 @@ public class AboutActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_about);
 		((TextView) findViewById(R.id.app_version_text))
-				.setText(getString(R.string.app_name)+"  "
+				.setText(AppUtils.getAppName(this)+"  "
 						+ AppUtils.getVersion(this));
 		showSysInfo();
 		handMessage();

@@ -61,7 +61,7 @@
             android:layout_height="80dp"
             android:layout_marginBottom="10dp"
             android:layout_marginTop="5dp"
-            android:src="@drawable/icon_circle_logo" />
+            android:src="@drawable/ic_launcher_zhihuichengjian" />
 
         <TextView
             android:id="@+id/app_version_text"
@@ -114,12 +114,14 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
+            android:visibility="gone"
             android:background="@color/color_list_divider" />
 
         <RelativeLayout
             android:id="@+id/protocol_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:background="@drawable/text_layout_selector"
             android:onClick="onClick"
             android:paddingLeft="12dp">
@@ -179,6 +181,7 @@
         </RelativeLayout>
 
         <View
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
             android:background="@color/color_list_divider" />
@@ -189,6 +192,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/text_layout_selector"
             android:onClick="onClick"
+            android:visibility="gone"
             android:paddingLeft="12dp">
 
             <TextView

@@ -1,7 +1,9 @@
 package com.inspur.emmcloud;
 
+import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -73,10 +75,21 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
 
 
     /**
-     * ea
      * 初始化
      */
     private void init() {
+        if (!AppUtils.isAppVersionStandard(this)){
+            String appVersionFlag = AppUtils.getAppVersionFlag(this);
+            PackageManager pm = getApplicationContext().getPackageManager();
+            System.out.println(getComponentName());
+            pm.setComponentEnabledSetting(getComponentName(),
+                    PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+                    PackageManager.DONT_KILL_APP);
+            pm.setComponentEnabledSetting(new ComponentName(
+                            getBaseContext(),getPackageName()+"."+appVersionFlag),
+                    PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+                    PackageManager.DONT_KILL_APP);
+        }
         activitySplashShowTime = System.currentTimeMillis();
         //进行app异常上传
         startUploadExceptionService();

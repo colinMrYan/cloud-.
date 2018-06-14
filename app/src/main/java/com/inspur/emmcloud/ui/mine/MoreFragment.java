@@ -27,6 +27,7 @@ import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppTitleUtils;
+import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.cache.AppConfigCacheUtils;
@@ -92,7 +93,7 @@ public class MoreFragment extends Fragment {
             feedbackLayout.setOnClickListener(onClickListener);
         }
         RelativeLayout customerLayout = (RelativeLayout) rootView.findViewById(R.id.customer_layout);
-        if (isShowCustomerService.equals("true")) {
+        if (isShowCustomerService.equals("true") && AppUtils.isAppVersionStandard(getActivity())) {
             customerLayout.setVisibility(View.VISIBLE);
             customerLayout.setOnClickListener(onClickListener);
         }
