@@ -1,13 +1,16 @@
 package com.inspur.imp.plugin.staff;
 
 import android.content.Intent;
+import android.os.Bundle;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.contact.Contact;
 import com.inspur.emmcloud.bean.contact.SearchModel;
+import com.inspur.emmcloud.ui.chat.MembersActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
+import com.inspur.emmcloud.ui.contact.UserInfoActivity;
+import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactCacheUtils;
 import com.inspur.imp.plugin.ImpPlugin;
@@ -17,7 +20,6 @@ import com.inspur.imp.util.DialogUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,17 +47,29 @@ public class SelectStaffService extends ImpPlugin {
             selectFromContact();
         } else if ("viewContact".equals(action)) {
             viewContact();
+        } else if("openContact".equals(action)){
+            openContact();
         } else {
             DialogUtil.getInstance(getActivity()).show();
         }
     }
 
     /**
+     * 打开联系人详情页面
+     */
+    private void openContact() {
+        String id = JSONUtils.getString(paramsObject,"uid","");
+        Intent intent = new Intent();
+        intent.putExtra("uid", id);
+        intent.setClass(getActivity(), UserInfoActivity.class);
+        getActivity().startActivity(intent);
+    }
+
+    /**
      * 查看人员方法
      */
     private void viewContact() {
-        List<String> contactIdList = new ArrayList<>();
-        List<SearchModel> searchModelList = new ArrayList<>();
+        ArrayList<String> contactIdList = new ArrayList<String>();
         JSONArray array = JSONUtils.getJSONArray(paramsObject, "array", new JSONArray());
         try {
             for (int i = 0; i < array.length(); i++) {
@@ -64,21 +78,13 @@ public class SelectStaffService extends ImpPlugin {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        List<Contact> contactList = ContactCacheUtils.getContactListById(context,contactIdList);
-        for (int i = 0; i < contactIdList.size(); i++) {
-            SearchModel searchModel = new SearchModel(contactList.get(i));
-            searchModelList.add(searchModel);
-        }
-        Intent intent = new Intent();
-        intent.setClass(getActivity(),
-                ContactSearchActivity.class);
-        intent.putExtra("select_content", 4);
-        intent.putExtra("isMulti_select", multiSelection==0?false:true);
-        intent.putExtra("title", getActivity().getString(R.string.adress_list));
-        if (searchModelList != null && (multiSelection == 0?false:true)) {
-            intent.putExtra("hasSearchResult", (Serializable) searchModelList);
-        }
-        getActivity().startActivity(intent);
+        Bundle bundle = new Bundle();
+        bundle.putString("cid", "");
+        bundle.putString("title", getActivity().getString(R.string.meeting_memebers));
+        bundle.putString("search", "1");
+        bundle.putStringArrayList("uidList", contactIdList);
+        IntentUtils.startActivity(getActivity(),
+                MembersActivity.class, bundle);
     }
 
     /**
@@ -97,15 +103,15 @@ public class SelectStaffService extends ImpPlugin {
 
     @Override
     public String executeAndReturn(String action, JSONObject paramsObject) {
-        LogUtils.YfcDebug("action:" + action);
-        LogUtils.YfcDebug("paramsObject:" + paramsObject.toString());
         multiSelection = JSONUtils.getInt(JSONUtils.getJSONObject(paramsObject, "options", new JSONObject()), "multiSelection", 0);
         successCb = JSONUtils.getString(paramsObject, "success", "");
         failCb = JSONUtils.getString(paramsObject, "fail", "");
         if ("select".equals(action)) {
             selectFromContact();
-        } else if ("view".equals(action)) {
+        } else if ("viewContact".equals(action)) {
             viewContact();
+        } else if("openContact".equals(action)){
+            openContact();
         } else {
             DialogUtil.getInstance(getActivity()).show();
         }
