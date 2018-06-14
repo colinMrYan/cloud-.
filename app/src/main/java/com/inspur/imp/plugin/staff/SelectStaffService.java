@@ -17,6 +17,7 @@ import com.inspur.imp.util.DialogUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,24 +33,52 @@ public class SelectStaffService extends ImpPlugin {
     private String successCb, failCb;
     private int multiSelection = 0;
     private JSONObject paramsObject;
+
     @Override
     public void execute(String action, JSONObject paramsObject) {
-        LogUtils.YfcDebug("action:"+action);
+
         this.paramsObject = paramsObject;
-        multiSelection = JSONUtils.getInt(paramsObject,"multiSelection",0);
-        successCb = JSONUtils.getString(paramsObject,"success","");
-        failCb = JSONUtils.getString(paramsObject,"fail","");
-        if("select".equals(action)){
+        multiSelection = JSONUtils.getInt(paramsObject, "multiSelection", 0);
+        successCb = JSONUtils.getString(paramsObject, "success", "");
+        failCb = JSONUtils.getString(paramsObject, "fail", "");
+        if ("select".equals(action)) {
             selectFromContact();
-        }else if("viewContact".equals(action)){
+        } else if ("viewContact".equals(action)) {
             viewContact();
-        }else{
+        } else {
             DialogUtil.getInstance(getActivity()).show();
         }
     }
 
+    /**
+     * 查看人员方法
+     */
     private void viewContact() {
-
+        List<String> contactIdList = new ArrayList<>();
+        List<SearchModel> searchModelList = new ArrayList<>();
+        JSONArray array = JSONUtils.getJSONArray(paramsObject, "array", new JSONArray());
+        try {
+            for (int i = 0; i < array.length(); i++) {
+                contactIdList.add((String) array.get(i));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        List<Contact> contactList = ContactCacheUtils.getContactListById(context,contactIdList);
+        for (int i = 0; i < contactIdList.size(); i++) {
+            SearchModel searchModel = new SearchModel(contactList.get(i));
+            searchModelList.add(searchModel);
+        }
+        Intent intent = new Intent();
+        intent.setClass(getActivity(),
+                ContactSearchActivity.class);
+        intent.putExtra("select_content", 4);
+        intent.putExtra("isMulti_select", multiSelection==0?false:true);
+        intent.putExtra("title", getActivity().getString(R.string.adress_list));
+        if (searchModelList != null && (multiSelection == 0?false:true)) {
+            intent.putExtra("hasSearchResult", (Serializable) searchModelList);
+        }
+        getActivity().startActivity(intent);
     }
 
     /**
@@ -61,21 +90,23 @@ public class SelectStaffService extends ImpPlugin {
         intent.setClass(getActivity(),
                 ContactSearchActivity.class);
         intent.putExtra(ContactSearchActivity.EXTRA_TYPE, 2);
-        intent.putExtra(ContactSearchActivity.EXTRA_MULTI_SELECT, multiSelection == 0 ? false:true);
+        intent.putExtra(ContactSearchActivity.EXTRA_MULTI_SELECT, multiSelection == 0 ? false : true);
         intent.putExtra(ContactSearchActivity.EXTRA_TITLE, getActivity().getString(R.string.adress_list));
         getActivity().startActivityForResult(intent, CONTACT_PICKER);
     }
 
     @Override
     public String executeAndReturn(String action, JSONObject paramsObject) {
-        multiSelection = JSONUtils.getInt(JSONUtils.getJSONObject(paramsObject,"options",new JSONObject()),"multiSelection",0);
-        successCb = JSONUtils.getString(paramsObject,"success","");
-        failCb = JSONUtils.getString(paramsObject,"fail","");
-        if("select".equals(action)){
+        LogUtils.YfcDebug("action:" + action);
+        LogUtils.YfcDebug("paramsObject:" + paramsObject.toString());
+        multiSelection = JSONUtils.getInt(JSONUtils.getJSONObject(paramsObject, "options", new JSONObject()), "multiSelection", 0);
+        successCb = JSONUtils.getString(paramsObject, "success", "");
+        failCb = JSONUtils.getString(paramsObject, "fail", "");
+        if ("select".equals(action)) {
             selectFromContact();
-        }else if("view".equals(action)){
-
-        }else{
+        } else if ("view".equals(action)) {
+            viewContact();
+        } else {
             DialogUtil.getInstance(getActivity()).show();
         }
         return super.executeAndReturn(action, paramsObject);
@@ -87,7 +118,7 @@ public class SelectStaffService extends ImpPlugin {
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        if(resultCode == RESULT_OK && requestCode == CONTACT_PICKER){
+        if (resultCode == RESULT_OK && requestCode == CONTACT_PICKER) {
             List<SearchModel> searchModelList = (List<SearchModel>) intent.getSerializableExtra("selectMemList");
             List<String> uidList = new ArrayList<>();
             for (int i = 0; i < searchModelList.size(); i++) {
@@ -97,20 +128,20 @@ public class SelectStaffService extends ImpPlugin {
                 }
             }
             List<Contact> contactList = ContactCacheUtils.getSoreUserList(getActivity(), uidList);
-            if(contactList.size() == 1){
+            if (contactList.size() == 1) {
                 this.jsCallback(successCb, contactList.get(0).contact2JSONObject(getActivity()).toString());
-            }else{
+            } else {
                 JSONArray jsonArray = new JSONArray();
                 for (int i = 0; i < contactList.size(); i++) {
                     jsonArray.put(contactList.get(i).contact2JSONObject(getActivity()));
                 }
-                if(jsonArray.length() > 0){
+                if (jsonArray.length() > 0) {
                     this.jsCallback(successCb, jsonArray.toString());
                 }
             }
 
-        }else{
-            this.jsCallback(failCb,"error");
+        } else {
+            this.jsCallback(failCb, "error");
         }
     }
 }
