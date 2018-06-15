@@ -160,8 +160,8 @@ public class CameraService extends ImpPlugin {
             PublicWay.file = createCaptureFile(encodingType);
             PublicWay.photoService = this;
             Intent intent = new Intent();
-            intent.putExtra(MyCameraActivity.PHOTO_DIRECTORY_PATH,PublicWay.file.getParent());
-            intent.putExtra(MyCameraActivity.PHOTO_NAME,PublicWay.file.getName());
+            intent.putExtra(MyCameraActivity.PARAM_PHOTO_DIRECTORY_PATH,PublicWay.file.getParent());
+            intent.putExtra(MyCameraActivity.PARAM_PHOTO_NAME,PublicWay.file.getName());
             intent.setClass(getActivity(),MyCameraActivity.class);
             getActivity().startActivityForResult(intent, CAMERA);
 

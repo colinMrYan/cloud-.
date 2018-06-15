@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.hardware.Camera;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.Nullable;
@@ -30,7 +29,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.ImageUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
@@ -39,7 +37,7 @@ import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.imp.api.ImpBaseActivity;
 import com.inspur.imp.plugin.camera.editimage.utils.BitmapUtils;
-import com.inspur.imp.util.compressor.Compressor;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.json.JSONObject;
 
@@ -55,15 +53,15 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
     public static final String PARAM_PHOTO_DIRECTORY_PATH = "param_save_derectory_path";
     public static final String PARAM_PHOTO_NAME = "param_photo_name";
     public static final String PARAM_CROP_ENABLE = "param_crop_enale";
-    public static final String PARAM_MAX_HEIGHT = "param_max_height";
-    public static final String PARAM_MAX_WIDTH = "param_max_width";
-    //public static final String PARAM_QUALTITY = "param_qualtity";
+//    public static final String PARAM_MAX_HEIGHT = "param_max_height";
+//    public static final String PARAM_MAX_WIDTH = "param_max_width";
+ //public static final String PARAM_QUALTITY = "param_qualtity";
     public static final String PARAM_ENCODINGTYPE = "param_encoding_type";
     public static final String PARAM_RECT_SCALE_JSON = "param_rect_scale_json";
 
-    private int maxHeight = 2000;
-    private int maxWidth = 2000;
-    private int qualtity = 90;
+//    private int maxHeight = 2000;
+//    private int maxWidth = 2000;
+//    private int qualtity = 90;
     private int encodingType = 0;
     private String photoFilePath;
     private String photoName;
@@ -114,10 +112,10 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
         }
         detectScreenOrientation.enable();
         photoSaveDirectoryPath = getIntent().getExtras().getString(PARAM_PHOTO_DIRECTORY_PATH, Environment.getExternalStorageDirectory() + "/DCIM/");
-        photoName = getIntent().getStringExtra(PARAM_PHOTO_NAME);
+        photoName =getIntent().getExtras().getString(PARAM_PHOTO_NAME,System.currentTimeMillis() + ".jpg");
         isCropEnabled = getIntent().getBooleanExtra(PARAM_CROP_ENABLE, false);
-        maxHeight = getIntent().getIntExtra(PARAM_MAX_HEIGHT,MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE);
-        maxWidth = getIntent().getIntExtra(PARAM_MAX_WIDTH,MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE);
+//        maxHeight = getIntent().getIntExtra(PARAM_MAX_HEIGHT,MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE);
+//        maxWidth = getIntent().getIntExtra(PARAM_MAX_WIDTH,MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE);
 //        qualtity =  getIntent().getIntExtra(PARAM_QUALTITY,90);
         encodingType = getIntent().getIntExtra(PARAM_ENCODINGTYPE,0);
         if (isCropEnabled) {
@@ -347,45 +345,19 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
                 mCamera.cancelAutoFocus();
                 break;
             case R.id.btn_edit:
-                BitmapUtils.saveBitmap(cropBitmap, photoFilePath, 100, 0);
                 //EditImageActivity.start(MyCameraActivity.this, photoFilePath, MyAppConfig.LOCAL_IMG_CREATE_PATH, isNeedUpload, extraParam);
                 break;
             case R.id.btn_complete:
-                new MyAsyncTask().execute();
+                returnData();
                 break;
             default:
                 break;
         }
     }
 
-    private class MyAsyncTask extends AsyncTask<Void, Void, Void> {
-        @Override
-        protected Void doInBackground(Void... params) {
-            BitmapUtils.saveBitmap(cropBitmap, photoFilePath, 100, 0);
-            try {
-                Bitmap bitmap = new Compressor(MyCameraActivity.this).setMaxHeight(maxHeight).setMaxWidth(maxWidth).setQuality(100).setDestinationDirectoryPath(photoSaveDirectoryPath)
-                        .setCompressFormat((encodingType == 0) ? Bitmap.CompressFormat.JPEG : Bitmap.CompressFormat.PNG).compressToBitmap(new File(photoFilePath));
-                ImageUtils.saveImageToSD(MyCameraActivity.this, photoFilePath, bitmap, 100);
-                recycleBitmap(bitmap);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
 
-        @Override
-        protected void onPostExecute(Void result) {
-            returnData(null);
-        }
-
-    }
-
-
-    private void returnData(String uploadResult) {
+    private void returnData() {
         Intent intent = new Intent();
-        if (uploadResult != null) {
-            intent.putExtra("uploadResult", uploadResult);
-        }
         intent.putExtra("save_file_path", photoFilePath);
         setResult(RESULT_OK, intent);
         finish();
@@ -426,18 +398,28 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
                 if (orientation != 0) {
                     cropBitmap = ImageUtils.rotaingImageView(orientation, cropBitmap);
                 }
-                File photoDir = new File(photoSaveDirectoryPath);
-                if (!photoDir.exists()) {
-                    photoDir.mkdir();
-                }
-                if (photoName == null) {
-                    photoName = System.currentTimeMillis() + ".jpg";
-                }
-                photoFilePath = photoDir.getAbsolutePath() + photoName;
-                previewImg.setImageBitmap(cropBitmap);
-                previewLayout.setVisibility(View.VISIBLE);
+                savePhoto();
+                showPreview(photoFilePath);
             }
         });
+    }
+
+    private void savePhoto(){
+        File photoDir = new File(photoSaveDirectoryPath);
+        if (!photoDir.exists()) {
+            photoDir.mkdir();
+        }
+        photoFilePath = photoDir.getAbsolutePath() + photoName;
+        File photoFile = new File(photoFilePath);
+        if (photoFile.exists()){
+            photoFile.delete();
+        }
+        BitmapUtils.saveBitmap(cropBitmap, photoFilePath, 100, encodingType);
+    }
+
+    private void showPreview(String photoFilePath){
+        ImageLoader.getInstance().displayImage(photoFilePath,previewImg);
+        previewLayout.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -516,8 +498,6 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        recycleBitmap(originBitmap);
-        recycleBitmap(cropBitmap);
         releaseCamera();
     }
 
