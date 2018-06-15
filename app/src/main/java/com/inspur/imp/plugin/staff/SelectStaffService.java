@@ -145,7 +145,6 @@ public class SelectStaffService extends ImpPlugin {
                     this.jsCallback(successCb, jsonArray.toString());
                 }
             }
-
         } else {
             this.jsCallback(failCb, "error");
         }
