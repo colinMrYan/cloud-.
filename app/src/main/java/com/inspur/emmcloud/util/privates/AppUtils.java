@@ -537,8 +537,8 @@ public class AppUtils {
                 appDir.mkdir();
             }
             Intent intent = new Intent();
-            intent.putExtra(MyCameraActivity.PARAM_PHOTO_DIRECTORY_PATH, appDir.getAbsolutePath());
-            intent.putExtra(MyCameraActivity.PARAM_PHOTO_NAME,fileName);
+            intent.putExtra(MyCameraActivity.EXTRA_PHOTO_DIRECTORY_PATH, appDir.getAbsolutePath());
+            intent.putExtra(MyCameraActivity.EXTRA_PHOTO_NAME,fileName);
             intent.setClass(activity,MyCameraActivity.class);
             activity.startActivityForResult(intent, requestCode);
         } else {
