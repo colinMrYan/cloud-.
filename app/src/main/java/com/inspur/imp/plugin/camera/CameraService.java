@@ -162,9 +162,8 @@ public class CameraService extends ImpPlugin {
             Intent intent = new Intent();
             intent.putExtra(MyCameraActivity.EXTRA_PHOTO_DIRECTORY_PATH,PublicWay.file.getParent());
             intent.putExtra(MyCameraActivity.EXTRA_PHOTO_NAME,PublicWay.file.getName());
-            LogUtils.jasonDebug("PublicWay.file.getParent()="+PublicWay.file.getParent());
-            LogUtils.jasonDebug("PublicWay.file.getName()="+PublicWay.file.getName());
             intent.putExtra(MyCameraActivity.EXTRA_ENCODING_TYPE,encodingType);
+            intent.putExtra(MyCameraActivity.EXTRA_RECT_SCALE_JSON,jsonObject.toString());
             intent.setClass(getActivity(),MyCameraActivity.class);
             getActivity().startActivityForResult(intent, CAMERA);
 

@@ -38,7 +38,7 @@ public class MyAppConfig {
     public static final String[] clientLanguages = {"zh-CN", "en-US", "zh-TW"};
     public static final boolean isUseMarkdown = true;
     public static final int UPLOAD_ORIGIN_IMG_MAX_SIZE = 2100;
-    public static final int UPLOAD_ORIGIN_IMG_DEFAULT_SIZE = 1200;
+    public static final int UPLOAD_ORIGIN_IMG_DEFAULT_SIZE = 1280;
     public static final int UPLOAD_THUMBNAIL_IMG_MAX_SIZE = 600;
     public static final int VOLUME_MAX_FILE_NAME_LENGTH = 40;
 

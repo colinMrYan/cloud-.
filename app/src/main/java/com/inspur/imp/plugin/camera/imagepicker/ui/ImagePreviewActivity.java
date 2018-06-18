@@ -181,9 +181,9 @@ public class ImagePreviewActivity extends ImagePreviewBaseActivity implements
 		// TODO Auto-generated method stub
         super.onActivityResult(arg0, arg1, arg2);
 		if (arg1 == RESULT_OK && arg0 == REQ_IMAGE_EDIT) {
-			String imgFilePath = arg2.getStringExtra(IMGEditActivity.EXTRA_SAVE_FILE_PATH);
-			LogUtils.jasonDebug("imgFilePath="+imgFilePath);
+			String imgFilePath = arg2.getStringExtra(IMGEditActivity.OUT_FILE_PATH);
 			mImageItems.get(mCurrentPosition).path = imgFilePath;
+			imagePicker.getSelectedImages().get(mCurrentPosition).path=imgFilePath;
 			mAdapter.notifyDataSetChanged();
 		}
 	}

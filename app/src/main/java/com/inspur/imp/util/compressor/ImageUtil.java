@@ -31,9 +31,14 @@ class ImageUtil {
             file.mkdirs();
         }
         try {
-            fileOutputStream = new FileOutputStream(destinationPath);
             // write the compressed bitmap at the destination specified by destinationPath.
-            decodeSampledBitmapFromFile(imageFile, reqWidth, reqHeight).compress(compressFormat, quality, fileOutputStream);
+            Bitmap bitmap = decodeSampledBitmapFromFile(imageFile, reqWidth, reqHeight);
+            File outFile = new File(destinationPath);
+            if (outFile.exists()){
+                outFile.delete();
+            }
+            fileOutputStream = new FileOutputStream(destinationPath);
+            bitmap.compress(compressFormat, quality, fileOutputStream);
         } finally {
             if (fileOutputStream != null) {
                 fileOutputStream.flush();

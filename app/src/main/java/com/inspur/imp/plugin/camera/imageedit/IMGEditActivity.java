@@ -27,7 +27,7 @@ public class IMGEditActivity extends IMGEditBaseActivity {
 
     public static final String EXTRA_IMAGE_SAVE_DIR_PATH = "IMAGE_SAVE_DIR_PATH";
     public static final String EXTRA_ENCODING_TYPE = "IMAGE_ENCODING_TYPE";
-    public static final String EXTRA_SAVE_FILE_PATH = "SAVE_FILE_PATH";
+    public static final String OUT_FILE_PATH = "OUT_FILE_PATH";
     private int encodingType = 0;
 
 
@@ -51,7 +51,7 @@ public class IMGEditActivity extends IMGEditBaseActivity {
         }
         try {
             encodingType = getIntent().getIntExtra(EXTRA_ENCODING_TYPE,0);
-                    Bitmap bitmap = new Compressor(IMGEditActivity.this).setMaxHeight(MyAppConfig.UPLOAD_ORIGIN_IMG_MAX_SIZE).setMaxWidth(MyAppConfig.UPLOAD_ORIGIN_IMG_MAX_SIZE).setCompressFormat((encodingType == 0)? Bitmap.CompressFormat.JPEG:Bitmap.CompressFormat.PNG).setQuality(100).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
+             Bitmap bitmap = new Compressor(IMGEditActivity.this).setMaxHeight(MyAppConfig.UPLOAD_ORIGIN_IMG_MAX_SIZE).setMaxWidth(MyAppConfig.UPLOAD_ORIGIN_IMG_MAX_SIZE).setCompressFormat((encodingType == 0)? Bitmap.CompressFormat.JPEG:Bitmap.CompressFormat.PNG).setQuality(100).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
                     .compressToBitmap(file);
             return bitmap;
         }catch (Exception e){
@@ -125,7 +125,7 @@ public class IMGEditActivity extends IMGEditBaseActivity {
                     }
                 }
                 Intent intent = new Intent();
-                intent.putExtra(EXTRA_SAVE_FILE_PATH,saveFile.getAbsolutePath());
+                intent.putExtra(OUT_FILE_PATH,saveFile.getAbsolutePath());
                 setResult(RESULT_OK,intent);
                 finish();
                 return;

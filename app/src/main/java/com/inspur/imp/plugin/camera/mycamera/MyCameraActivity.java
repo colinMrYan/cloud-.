@@ -54,12 +54,13 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
     private static final int REQ_IMAGE_EDIT = 1;
     public static final String EXTRA_PHOTO_DIRECTORY_PATH = "IMAGE_SAVE_PATH";
     public static final String EXTRA_PHOTO_NAME = "IMAGE_NAME";
-    public static final String EXTRA_CROP_ENABLE = "IMAGE_CROP_ENABLE";
+    //    public static final String EXTRA_CROP_ENABLE = "IMAGE_CROP_ENABLE";
     //    public static final String PARAM_MAX_HEIGHT = "param_max_height";
 //    public static final String PARAM_MAX_WIDTH = "param_max_width";
     //public static final String PARAM_QUALTITY = "param_qualtity";
     public static final String EXTRA_ENCODING_TYPE = "IMAGE_ENCODING_TYPE";
     public static final String EXTRA_RECT_SCALE_JSON = "CAMERA_SCALE_JSON";
+    public static final String OUT_FILE_PATH = "OUT_FILE_PATH";
 
     //    private int maxHeight = 2000;
 //    private int maxWidth = 2000;
@@ -67,7 +68,6 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
     private int encodingType = 0;
     private String photoFilePath;
     private String photoName;
-    private boolean isCropEnabled = false;
     private FocusSurfaceView previewSFV;
     private ImageButton switchCameraBtn, cameraLightSwitchBtn;
     private Camera mCamera;
@@ -115,12 +115,11 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
         detectScreenOrientation.enable();
         photoSaveDirectoryPath = getIntent().getExtras().getString(EXTRA_PHOTO_DIRECTORY_PATH, Environment.getExternalStorageDirectory() + "/DCIM/");
         photoName = getIntent().getExtras().getString(EXTRA_PHOTO_NAME, System.currentTimeMillis() + ".jpg");
-        isCropEnabled = getIntent().getBooleanExtra(EXTRA_CROP_ENABLE, false);
 //        maxHeight = getIntent().getIntExtra(PARAM_MAX_HEIGHT,MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE);
 //        maxWidth = getIntent().getIntExtra(PARAM_MAX_WIDTH,MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE);
 //        qualtity =  getIntent().getIntExtra(PARAM_QUALTITY,90);
         encodingType = getIntent().getIntExtra(EXTRA_ENCODING_TYPE, 0);
-        if (isCropEnabled) {
+        if (getIntent().hasExtra(EXTRA_RECT_SCALE_JSON)) {
             String json = getIntent().getStringExtra(EXTRA_RECT_SCALE_JSON);
             JSONObject optionsObj = JSONUtils.getJSONObject(json, "options", new JSONObject());
             defaultRectScale = JSONUtils.getString(optionsObj, "rectScale", null);
@@ -177,12 +176,10 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
 
     @Override
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
-        if (isCropEnabled) {
-            if (rectScaleList.size() > 0) {
-                previewSFV.setCustomRectScale(rectScaleList.get(radioSelectPosition).getRectScale());
-            } else {
-                previewSFV.setCustomRectScale(defaultRectScale);
-            }
+        if (rectScaleList.size() > 0) {
+            previewSFV.setCustomRectScale(rectScaleList.get(radioSelectPosition).getRectScale());
+        } else if (defaultRectScale != null) {
+            previewSFV.setCustomRectScale(defaultRectScale);
         } else {
             previewSFV.setCropEnabled(false);
         }
@@ -350,7 +347,7 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
                 startActivityForResult(
                         new Intent(MyCameraActivity.this, IMGEditActivity.class)
                                 .putExtra(IMGEditActivity.EXTRA_IMAGE_PATH, photoFilePath)
-                        .putExtra(IMGEditActivity.EXTRA_ENCODING_TYPE,encodingType),
+                                .putExtra(IMGEditActivity.EXTRA_ENCODING_TYPE, encodingType),
                         REQ_IMAGE_EDIT
                 );
                 break;
@@ -365,7 +362,7 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
 
     private void returnData() {
         Intent intent = new Intent();
-        intent.putExtra("save_file_path", photoFilePath);
+        intent.putExtra(OUT_FILE_PATH, photoFilePath);
         setResult(RESULT_OK, intent);
         finish();
     }
@@ -417,7 +414,7 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
         if (!photoDir.exists()) {
             photoDir.mkdirs();
         }
-        File photoFile = new File(photoDir,photoName);
+        File photoFile = new File(photoDir, photoName);
         photoFilePath = photoFile.getAbsolutePath();
         if (photoFile.exists()) {
             photoFile.delete();
@@ -449,7 +446,7 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQ_IMAGE_EDIT) {
             if (resultCode == RESULT_OK) {
-                photoFilePath = data.getStringExtra(IMGEditActivity.EXTRA_SAVE_FILE_PATH);
+                photoFilePath = data.getStringExtra(IMGEditActivity.OUT_FILE_PATH);
                 showPreview();
             }
         }

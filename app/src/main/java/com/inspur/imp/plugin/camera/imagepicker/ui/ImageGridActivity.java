@@ -231,7 +231,7 @@ public class ImageGridActivity extends ImageBaseActivity implements
             if (requestCode == ImagePicker.REQUEST_CODE_EDIT) {// 说明是从裁剪页面过来的数据，直接返回就可以
                 if (resultCode == RESULT_OK) {
                     String newPath = data.getStringExtra(
-                            IMGEditActivity.EXTRA_SAVE_FILE_PATH);
+                            IMGEditActivity.OUT_FILE_PATH);
                     imagePicker.getSelectedImages().get(0).path = newPath;
                     Intent intent = new Intent();
                     intent.putExtra(ImagePicker.EXTRA_RESULT_ITEMS,
