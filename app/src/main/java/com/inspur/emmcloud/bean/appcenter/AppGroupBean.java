@@ -24,55 +24,34 @@ public class AppGroupBean {
 	public AppGroupBean() {
 	}
 	public AppGroupBean(String response) {
-		try {
-			JSONObject jsonObject = new JSONObject(response);
-			if (jsonObject.has("categoryID")) {
-				this.categoryID = jsonObject.getString("categoryID");
-			}
-
-			if (jsonObject.has("categoryName")) {
-				this.categoryName = jsonObject.getString("categoryName");
-			}
-
-			if (jsonObject.has("appList")) {
-				JSONArray jsonArray = jsonObject.getJSONArray("appList");
+			JSONObject jsonObject = JSONUtils.getJSONObject(response);
+			categoryID = JSONUtils.getString(jsonObject,"categoryID","");
+			categoryName = JSONUtils.getString(jsonObject,"categoryName","");
+			if (JSONUtils.isJsonObjHasKey(jsonObject,"appList")) {
+				JSONArray jsonArray = JSONUtils.getJSONArray(jsonObject,"appList",new JSONArray());
 				for (int i = 0; i < jsonArray.length(); i++) {
-					App app = new App(jsonArray.getJSONObject(i));
+					App app = new App(JSONUtils.getJSONObjectFromJSONArray(jsonArray,i));
 					app.setCategoryID(categoryID);
 					app.setOrderId(1000);
 					appItemList.add(app);
 				}
 			}
 			categoryIco = JSONUtils.getString(response,"category_ico","");
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 	
 	public AppGroupBean(JSONObject jsonObject) {
-		try {
-			if (jsonObject.has("categoryID")) {
-				this.categoryID = jsonObject.getString("categoryID");
-			}
-
-			if (jsonObject.has("categoryName")) {
-				this.categoryName = jsonObject.getString("categoryName");
-			}
-
+			categoryID = JSONUtils.getString(jsonObject,"categoryID","");
+			categoryName = JSONUtils.getString(jsonObject,"categoryName","");
 			if (jsonObject.has("appList")) {
-				JSONArray jsonArray = jsonObject.getJSONArray("appList");
+				JSONArray jsonArray = JSONUtils.getJSONArray(jsonObject,"appList",new JSONArray());
 				for (int i = 0; i < jsonArray.length(); i++) {
-					App app = new App(jsonArray.getJSONObject(i));
+					App app = new App(JSONUtils.getJSONObjectFromJSONArray(jsonArray,i));
 					app.setCategoryID(categoryID);
 					app.setOrderId(1000);
 					appItemList.add(app);
 				}
 			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+			categoryIco = JSONUtils.getString(jsonObject,"category_ico","");
 	}
 
 	public String getCategoryID() {

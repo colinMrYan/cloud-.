@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.util.common;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -965,5 +966,33 @@ public class JSONUtils {
             return false;
         }
         return jsonObject.has(key);
+    }
+
+    /**
+     * 判断一个jsonObject里是否含有某个key
+     * @param jsonObject
+     * @param key
+     * @return
+     */
+    public static boolean isJsonObjHasKey(JSONObject jsonObject,String key){
+        if(jsonObject == null){
+            return false;
+        }
+        return jsonObject.has(key);
+    }
+
+    /**
+     * 获取JsonArray
+     * @param jsonArray
+     * @param i
+     * @return
+     */
+    public static JSONObject getJSONObjectFromJSONArray(JSONArray jsonArray,int i){
+        try {
+            return jsonArray.getJSONObject(i);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
