@@ -25,7 +25,7 @@ public  class AppTabPayloadBean {
     private String state = "";
     private long creationDate = 0;
     private String selected = "";
-    private List<AppTabDataBean> tabs = new ArrayList<>();
+    private List<AppTabDataBean> tabDataBeanList = new ArrayList<>();
 
     public AppTabPayloadBean(String response) {
         try {
@@ -49,7 +49,7 @@ public  class AppTabPayloadBean {
                 JSONArray jsonArray = jsonObject.getJSONArray("tabs");
                 int arraySize = jsonArray.length();
                 for (int i = 0; i < arraySize; i++) {
-                    this.tabs.add(new AppTabDataBean(jsonArray.getJSONObject(i)));
+                    this.tabDataBeanList.add(new AppTabDataBean(jsonArray.getJSONObject(i)));
                 }
             }
 
@@ -99,11 +99,11 @@ public  class AppTabPayloadBean {
     }
 
     public List<AppTabDataBean> getTabs() {
-        return tabs;
+        return tabDataBeanList;
     }
 
-    public void setTabs(List<AppTabDataBean> tabs) {
-        this.tabs = tabs;
+    public void setTabs(List<AppTabDataBean> tabDataBeanList) {
+        this.tabDataBeanList = tabDataBeanList;
     }
 
 

@@ -40,8 +40,8 @@ android {
         applicationId "com.inspur.emmcloud"
         minSdkVersion 16
         targetSdkVersion 22
-        versionCode 55
-        versionName "2.0.0"
+        versionCode 56
+        versionName "2.0.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             abiFilters "armeabi-v7a", "x86"
@@ -209,6 +209,7 @@ dependencies {
     }
     compile(name: 'xutils-3.5.0', ext: 'aar')
     compile(name: 'qmui-1.0.4', ext: 'aar')
+    compile(name: 'photosdk2-release', ext: 'aar')
     compile 'commons-codec:commons-codec:20041127.091804'
     compile files('libs/jpush-android-3.1.1.jar')
     compile files('libs/jcore-android-1.1.9.jar')

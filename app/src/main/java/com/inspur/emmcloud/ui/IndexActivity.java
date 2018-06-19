@@ -26,6 +26,7 @@ import com.inspur.emmcloud.service.BackgroundService;
 import com.inspur.emmcloud.service.CoreService;
 import com.inspur.emmcloud.service.LocationService;
 import com.inspur.emmcloud.service.PVCollectService;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -109,8 +110,6 @@ public class IndexActivity extends IndexBaseActivity {
         getContactInfo();
         getAllRobotInfo();
         getAppTabInfo();  //从服务端获取显示tab
-        new SplashPageUtils(IndexActivity.this).update();//更新闪屏页面
-        new ReactNativeUtils(IndexActivity.this).init(); //更新react
         getMyAppRecommendWidgets();
     }
 
@@ -217,7 +216,8 @@ public class IndexActivity extends IndexBaseActivity {
                     String version = PreferencesByUserAndTanentUtils.getString(IndexActivity.this, "app_tabbar_version", "");
                     String clientId = PreferencesByUserAndTanentUtils.getString(IndexActivity.this, Constant.PREF_REACT_NATIVE_CLIENTID, "");
                     apiService.getAppNewTabs(version, clientId);
-
+                    new SplashPageUtils(IndexActivity.this).update();//更新闪屏页面
+                    new ReactNativeUtils(IndexActivity.this).init(); //更新react
                 }
             }
         }).getClientID();
@@ -328,12 +328,13 @@ public class IndexActivity extends IndexBaseActivity {
      */
     private void getAllChannelGroup() {
         // TODO Auto-generated method stub
-        if (NetUtils.isNetworkConnected(getApplicationContext(), false)) {
+        LogUtils.jasonDebug("MyApplication.getInstance().getClusterChatVersion()="+MyApplication.getInstance().getClusterChatVersion());
+        if (!StringUtils.isBlank(MyApplication.getInstance().getClusterChatVersion())&&NetUtils.isNetworkConnected(getApplicationContext(), false)) {
             MyApplication.getInstance().setIsContactReady(false);
             ChatAPIService apiService = new ChatAPIService(IndexActivity.this);
             apiService.setAPIInterface(new WebService());
             apiService.getAllGroupChannelList();
-        } else if (isHasCacheContact) {
+        } else if (handler != null) {
             handler.sendEmptyMessage(SYNC_ALL_BASE_DATA_SUCCESS);
         }
     }
@@ -360,7 +361,7 @@ public class IndexActivity extends IndexBaseActivity {
      * 获取所有的Robot
      */
     private void getAllRobotInfo() {
-        if (NetUtils.isNetworkConnected(getApplicationContext(), false)) {
+        if (!StringUtils.isBlank(MyApplication.getInstance().getClusterChatVersion())&&NetUtils.isNetworkConnected(getApplicationContext(), false)) {
             ContactAPIService apiService = new ContactAPIService(IndexActivity.this);
             apiService.setAPIInterface(new WebService());
             apiService.getAllRobotInfo();
@@ -372,6 +373,7 @@ public class IndexActivity extends IndexBaseActivity {
         @Override
         public void returnAllContactSuccess(
                 final GetAllContactResult getAllContactResult) {
+            LogUtils.jasonDebug("00000000");
             contactCacheTask = new ContactCacheTask();
             contactCacheTask.execute(getAllContactResult);
         }
@@ -379,6 +381,7 @@ public class IndexActivity extends IndexBaseActivity {
         @Override
         public void returnAllContactFail(String error, int errorCode) {
             // TODO Auto-generated method stub
+            LogUtils.jasonDebug("11111111111111");
             getAllChannelGroup();
             WebServiceMiddleUtils.hand(IndexActivity.this, error, errorCode);
         }
