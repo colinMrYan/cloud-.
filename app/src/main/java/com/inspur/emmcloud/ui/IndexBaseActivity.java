@@ -88,17 +88,6 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
     }
 
     /**
-     * 发送到ContactSearchFragment
-     * @param view
-     */
-    public void onClick(View view){
-        ContactClickMessage contactClickMessage = new ContactClickMessage();
-        contactClickMessage.setViewId(view.getId());
-        EventBus.getDefault().post(contactClickMessage);
-    }
-
-
-    /**
      * 处理tab数组
      *
      * @return
@@ -128,7 +117,6 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
                             }else {
                                 tabBean = new TabBean(getString(R.string.communicate), R.drawable.selector_tab_message_btn + "", CommunicationFragment.class);
                             }
-
                             break;
                         case "work":
                             tabBean = new TabBean(getString(R.string.work), R.drawable.selector_tab_work_btn + "", WorkFragment.class);

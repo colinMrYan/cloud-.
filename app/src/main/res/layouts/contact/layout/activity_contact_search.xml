@@ -15,7 +15,6 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
-            android:onClick="onClick"
             android:paddingLeft="12dp"
             android:paddingRight="12dp"
             >
@@ -48,7 +47,6 @@
             android:layout_centerVertical="true"
             android:clickable="true"
             android:gravity="center"
-            android:onClick="onClick"
             android:paddingLeft="12dp"
             android:paddingRight="12dp"
             android:text="@string/ok"
@@ -78,7 +76,6 @@
 
             <RelativeLayout
                 android:id="@+id/layout"
-                android:onClick="onClick"
                 android:paddingLeft="10dp"
                 android:paddingTop="7dp"
                 android:paddingBottom="7dp"
@@ -184,8 +181,7 @@
                         android:id="@+id/struct_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@color/white"
-                        android:onClick="onClick">
+                        android:background="@color/white">
 
                         <com.inspur.emmcloud.widget.CircleImageView
                             android:id="@+id/struct_img"
@@ -223,8 +219,7 @@
                         android:id="@+id/channel_group_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@color/white"
-                        android:onClick="onClick">
+                        android:background="@color/white">
 
                         <com.inspur.emmcloud.widget.CircleImageView
                             android:id="@+id/channel_group_img"
