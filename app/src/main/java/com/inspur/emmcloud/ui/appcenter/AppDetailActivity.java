@@ -112,7 +112,7 @@ public class AppDetailActivity extends BaseActivity {
 
         @Override
         public void onBindViewHolder(final AppDetailImageViewHolder holder, final int position) {
-            ImageDisplayUtils.getInstance().displayImage(holder.appDetailImg, legendList.get(position), R.drawable.ic_app_default);
+            ImageDisplayUtils.getInstance().displayImage(holder.appDetailImg, legendList.get(position), R.drawable.default_image);
             if (onAppDetailImageItemClickListener != null) {
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
