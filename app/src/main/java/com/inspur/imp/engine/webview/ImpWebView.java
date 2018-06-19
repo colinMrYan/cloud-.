@@ -28,7 +28,6 @@ import com.inspur.imp.api.ImpActivity;
 import com.inspur.imp.api.JsInterface;
 import com.inspur.imp.api.iLog;
 import com.inspur.imp.plugin.PluginMgr;
-import com.inspur.imp.util.DeviceInfo;
 
 import org.json.JSONObject;
 import org.jsoup.nodes.Element;
@@ -406,8 +405,9 @@ public class ImpWebView extends WebView {
 
 	// 设置字体大小
 	private void setFontSize() {
-		settings.setDefaultFontSize(DeviceInfo.getInstance().defaultFontSize);
-		settings.setDefaultFixedFontSize(DeviceInfo.getInstance().defaultFontSize);
+		//IMP修改处  此处默认字体大小为0
+//		settings.setDefaultFontSize(DeviceInfo.getInstance().defaultFontSize);
+//		settings.setDefaultFixedFontSize(DeviceInfo.getInstance().defaultFontSize);
 		settings.setDefaultTextEncodingName("utf-8");
 	}
 

@@ -573,20 +573,31 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         this.clusterBot = clusterBot;
     }
 
-    public boolean isChatVersionV0(){
-        return clusterChatVersion.equals("v0");
+    public boolean isV0VersionChat(){
+        return getClusterChatVersion().toLowerCase().startsWith(Constant.SERVICE_VERSION_CHAT_V0);
     }
 
     /**
      * namespace
      * v1版及v1.x版返回/api/v1
+     * v0版返回/
      * @return
      */
     public String getChatSocketNameSpace(){
-        if(getClusterChatVersion().toLowerCase().startsWith("v1")){
+        if(getClusterChatVersion().toLowerCase().startsWith("v0")){
+            return "/";
+        }else if(getClusterChatVersion().toLowerCase().startsWith("v1")){
             return "/api/v1";
         }
-        return "/";
+        return "";
+    }
+
+    /**
+     * 判断是v1.x版本
+     * @return
+     */
+    public  boolean isV1xVersionChat(){
+        return getClusterChatVersion().toLowerCase().startsWith(Constant.SERVICE_VERSION_CHAT_V1);
     }
 
     /*****************************通讯录头像缓存********************************************/

@@ -5,19 +5,13 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Matrix;
-import android.graphics.Paint;
 import android.hardware.Camera;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
@@ -28,40 +22,54 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.DensityUtil;
+import com.inspur.emmcloud.util.common.ImageUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.imp.api.ImpBaseActivity;
-import com.inspur.imp.plugin.camera.editimage.EditImageActivity;
 import com.inspur.imp.plugin.camera.editimage.utils.BitmapUtils;
+import com.inspur.imp.plugin.camera.imageedit.IMGEditActivity;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 
 import static android.Manifest.permission.CAMERA;
-import static android.R.attr.path;
-import static com.inspur.imp.plugin.camera.editimage.EditImageActivity.ACTION_REQUEST_EDITIMAGE;
 
 public class MyCameraActivity extends ImpBaseActivity implements View.OnClickListener, SurfaceHolder.Callback {
 
-    public static final String PHOTO_DIRECTORY_PATH = "save_derectory_path";
-    public static final String PHOTO_NAME = "photo_name";
-    public static final String PHOTO_PARAM = "upload_parm";
-    private FocusSurfaceView previewSFV;
-    private Button mTakeBT, mThreeFourBT, mFourThreeBT, mNineSixteenBT, mSixteenNineBT;
-    private ImageButton switchCameraBtn, cameraLightSwitchBtn;
+    private static final int REQ_IMAGE_EDIT = 1;
+    public static final String EXTRA_PHOTO_DIRECTORY_PATH = "IMAGE_SAVE_PATH";
+    public static final String EXTRA_PHOTO_NAME = "IMAGE_NAME";
+    //    public static final String EXTRA_CROP_ENABLE = "IMAGE_CROP_ENABLE";
+    //    public static final String PARAM_MAX_HEIGHT = "param_max_height";
+//    public static final String PARAM_MAX_WIDTH = "param_max_width";
+    //public static final String PARAM_QUALTITY = "param_qualtity";
+    public static final String EXTRA_ENCODING_TYPE = "IMAGE_ENCODING_TYPE";
+    public static final String EXTRA_RECT_SCALE_JSON = "CAMERA_SCALE_JSON";
+    public static final String OUT_FILE_PATH = "OUT_FILE_PATH";
 
+    //    private int maxHeight = 2000;
+//    private int maxWidth = 2000;
+//    private int qualtity = 90;
+    private int encodingType = 0;
+    private String photoFilePath;
+    private String photoName;
+    private FocusSurfaceView previewSFV;
+    private ImageButton switchCameraBtn, cameraLightSwitchBtn;
     private Camera mCamera;
     private SurfaceHolder mHolder;
     private int currentCameraFacing;
@@ -69,12 +77,15 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
     private String cameraFlashModel = Camera.Parameters.FLASH_MODE_AUTO;
     private DetectScreenOrientation detectScreenOrientation;
     private String photoSaveDirectoryPath;
-    private String photoName;
-    private String extraParam;
+
     private String defaultRectScale;
     private RecyclerView setRadioRecycleView;
-    private List<RectScale> rectScaleList;
+    private List<RectScale> rectScaleList = new ArrayList<>();
     private int radioSelectPosition = 0;
+    private RelativeLayout previewLayout;
+    private ImageView previewImg;
+    private Bitmap originBitmap;
+    private Bitmap cropBitmap;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -95,7 +106,6 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
     protected void onResume() {
         super.onResume();
         initView();
-        setListener();
     }
 
     private void initData() {
@@ -103,53 +113,49 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
             detectScreenOrientation = new DetectScreenOrientation(this);
         }
         detectScreenOrientation.enable();
-        photoSaveDirectoryPath = getIntent().getStringExtra(PHOTO_DIRECTORY_PATH);
-        photoName = getIntent().getStringExtra(PHOTO_NAME);
-        extraParam = getIntent().getStringExtra(PHOTO_PARAM);
-        JSONObject optionsObj = JSONUtils.getJSONObject(extraParam, "options", new JSONObject());
-        defaultRectScale = JSONUtils.getString(optionsObj, "rectScale", null);
-        String rectScaleListJson = JSONUtils.getString(optionsObj, "rectScaleList", "");
-        rectScaleList = new GetReatScaleResult(rectScaleListJson).getRectScaleList();
-        if (!StringUtils.isBlank(defaultRectScale) && rectScaleList.size() > 0) {
-            boolean isSelectionRadio = false;
-            for (int i = 0; i < rectScaleList.size(); i++) {
-                String rectScale = rectScaleList.get(i).getRectScale();
-                if (rectScale.equals(defaultRectScale)) {
-                    radioSelectPosition = i;
-                    isSelectionRadio = true;
-                    break;
-                }
-            }
-            if (!isSelectionRadio) {
+        photoSaveDirectoryPath = getIntent().getExtras().getString(EXTRA_PHOTO_DIRECTORY_PATH, Environment.getExternalStorageDirectory() + "/DCIM/");
+        photoName = getIntent().getExtras().getString(EXTRA_PHOTO_NAME, System.currentTimeMillis() + ".jpg");
+//        maxHeight = getIntent().getIntExtra(PARAM_MAX_HEIGHT,MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE);
+//        maxWidth = getIntent().getIntExtra(PARAM_MAX_WIDTH,MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE);
+//        qualtity =  getIntent().getIntExtra(PARAM_QUALTITY,90);
+        encodingType = getIntent().getIntExtra(EXTRA_ENCODING_TYPE, 0);
+        if (getIntent().hasExtra(EXTRA_RECT_SCALE_JSON)) {
+            String json = getIntent().getStringExtra(EXTRA_RECT_SCALE_JSON);
+            JSONObject optionsObj = JSONUtils.getJSONObject(json, "options", new JSONObject());
+            defaultRectScale = JSONUtils.getString(optionsObj, "rectScale", null);
+            String rectScaleListJson = JSONUtils.getString(optionsObj, "rectScaleList", "");
+            rectScaleList = new GetReatScaleResult(rectScaleListJson).getRectScaleList();
+            if (!StringUtils.isBlank(defaultRectScale) && rectScaleList.size() > 0) {
+                boolean isSelectionRadio = false;
                 for (int i = 0; i < rectScaleList.size(); i++) {
                     String rectScale = rectScaleList.get(i).getRectScale();
-                    if (rectScale.equals("custom")) {
+                    if (rectScale.equals(defaultRectScale)) {
                         radioSelectPosition = i;
+                        isSelectionRadio = true;
                         break;
+                    }
+                }
+                if (!isSelectionRadio) {
+                    for (int i = 0; i < rectScaleList.size(); i++) {
+                        String rectScale = rectScaleList.get(i).getRectScale();
+                        if (rectScale.equals("custom")) {
+                            radioSelectPosition = i;
+                            break;
+                        }
                     }
                 }
             }
         }
+
 
     }
 
     private void initView() {
         previewSFV = (FocusSurfaceView) findViewById(R.id.preview_sv);
         //为了使取景框居中（下部的内容较多），上调取景框
-        if (rectScaleList.size() > 0) {
-            previewSFV.setTopMove(DensityUtil.dip2px(getApplicationContext(), 29));
-        } else {
-            previewSFV.setTopMove(DensityUtil.dip2px(getApplicationContext(), 12));
-        }
+        previewSFV.setTopMove(DensityUtil.dip2px(getApplicationContext(), (rectScaleList.size()) > 0 ? 28 : 16));
         mHolder = previewSFV.getHolder();
         mHolder.addCallback(MyCameraActivity.this);
-        mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-
-        mTakeBT = (Button) findViewById(R.id.take_bt);
-        mThreeFourBT = (Button) findViewById(R.id.three_four_bt);
-        mFourThreeBT = (Button) findViewById(R.id.four_three_bt);
-        mNineSixteenBT = (Button) findViewById(R.id.nine_sixteen_bt);
-        mSixteenNineBT = (Button) findViewById(R.id.sixteen_nine_bt);
         switchCameraBtn = (ImageButton) findViewById(R.id.switch_camera_btn);
         cameraLightSwitchBtn = (ImageButton) findViewById(R.id.camera_light_switch_btn);
         if (Camera.getNumberOfCameras() < 2) {
@@ -162,27 +168,21 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
             linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
             setRadioRecycleView.setLayoutManager(linearLayoutManager);
             setRadioRecycleView.setAdapter(new Adapter());
-
         }
+        previewLayout = (RelativeLayout) findViewById(R.id.rl_preview);
+        previewImg = (ImageView) findViewById(R.id.iv_preview);
     }
 
-
-    private void setListener() {
-        mTakeBT.setOnClickListener(this);
-        mThreeFourBT.setOnClickListener(this);
-        mFourThreeBT.setOnClickListener(this);
-        mNineSixteenBT.setOnClickListener(this);
-        mSixteenNineBT.setOnClickListener(this);
-    }
 
     @Override
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
         if (rectScaleList.size() > 0) {
             previewSFV.setCustomRectScale(rectScaleList.get(radioSelectPosition).getRectScale());
-        } else {
+        } else if (defaultRectScale != null) {
             previewSFV.setCustomRectScale(defaultRectScale);
+        } else {
+            previewSFV.setCropEnabled(false);
         }
-
         currentCameraFacing = hasBackFacingCamera() ? Camera.CameraInfo.CAMERA_FACING_BACK : Camera.CameraInfo.CAMERA_FACING_FRONT;
         initCamera();
         setCameraParams();
@@ -192,7 +192,6 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
         if (checkPermission()) {
             try {
                 mCamera = Camera.open(currentCameraFacing);//1:采集指纹的摄像头. 0:拍照的摄像头.
-
                 Camera.Parameters mParameters = mCamera.getParameters();
                 mCamera.setParameters(mParameters);
                 mCamera.setPreviewDisplay(mHolder);
@@ -251,9 +250,10 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
             }
             mCamera.setDisplayOrientation(rotateAngle);
             parameters.setRotation(rotateAngle);
-
             List<Camera.Size> PictureSizeList = parameters.getSupportedPictureSizes();
-            Camera.Size pictureSize = CameraUtils.getInstance(this).getPictureSize(PictureSizeList, 1000);
+            Camera.Size pictureSize = CameraUtils.getInstance(this).getPictureSize(PictureSizeList, MyAppConfig.UPLOAD_ORIGIN_IMG_MAX_SIZE);
+            LogUtils.jasonDebug("width=" + pictureSize.width);
+            LogUtils.jasonDebug("height=" + pictureSize.height);
             parameters.setPictureSize(pictureSize.width, pictureSize.height);
             List<Camera.Size> previewSizeList = parameters.getSupportedPreviewSizes();
             Camera.Size previewSize = CameraUtils.getInstance(this).getPreviewSize(previewSizeList, 1300);
@@ -268,8 +268,6 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
             mCamera.setParameters(parameters);
             mCamera.startPreview();
             mCamera.cancelAutoFocus();// 如果要实现连续的自动对焦，这一句必须加上，这句必须要在startPreview后面加上去
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -295,7 +293,6 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
 
     @Override
     public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i1, int i2) {
-
     }
 
     @Override
@@ -324,18 +321,6 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
             case R.id.take_bt:
                 takePicture(currentOrientation);
                 break;
-            case R.id.three_four_bt:
-                previewSFV.setCropMode(FocusSurfaceView.CropMode.RATIO_3_4);
-                break;
-            case R.id.four_three_bt:
-                previewSFV.setCropMode(FocusSurfaceView.CropMode.RATIO_3_4);
-                break;
-            case R.id.nine_sixteen_bt:
-                previewSFV.setCropMode(FocusSurfaceView.CropMode.RATIO_9_16);
-                break;
-            case R.id.sixteen_nine_bt:
-                previewSFV.setCropMode(FocusSurfaceView.CropMode.FREE);
-                break;
             case R.id.switch_camera_btn:
                 currentCameraFacing = 1 - currentCameraFacing;
                 releaseCamera();
@@ -347,27 +332,46 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
                 break;
             case R.id.camera_light_switch_btn:
                 Camera.Parameters parameters = mCamera.getParameters();
-                if (cameraFlashModel.equals(Camera.Parameters.FLASH_MODE_AUTO)) {
-                    parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
-                    cameraLightSwitchBtn.setImageResource(R.drawable.plugin_cemera_btn_camera_light_close);
-                    cameraFlashModel = Camera.Parameters.FLASH_MODE_OFF;
-                } else {
-                    parameters.setFlashMode(Camera.Parameters.FLASH_MODE_AUTO);
-                    cameraLightSwitchBtn.setImageResource(R.drawable.plugin_cemera_btn_camera_light_on);
-                    cameraFlashModel = Camera.Parameters.FLASH_MODE_AUTO;
-                }
+                boolean isCameraFlashAutoModel = cameraFlashModel.equals(Camera.Parameters.FLASH_MODE_AUTO);
+                parameters.setFlashMode(isCameraFlashAutoModel ? Camera.Parameters.FLASH_MODE_OFF : Camera.Parameters.FLASH_MODE_AUTO);
+                cameraLightSwitchBtn.setImageResource(isCameraFlashAutoModel ? R.drawable.plugin_cemera_btn_camera_light_close : R.drawable.plugin_cemera_btn_camera_light_on);
+                cameraFlashModel = isCameraFlashAutoModel ? Camera.Parameters.FLASH_MODE_OFF : Camera.Parameters.FLASH_MODE_AUTO;
                 mCamera.setParameters(parameters);
+                break;
+            case R.id.btn_retry:
+                previewLayout.setVisibility(View.GONE);
+                mCamera.startPreview();
+                mCamera.cancelAutoFocus();
+                break;
+            case R.id.btn_edit:
+                startActivityForResult(
+                        new Intent(MyCameraActivity.this, IMGEditActivity.class)
+                                .putExtra(IMGEditActivity.EXTRA_IMAGE_PATH, photoFilePath)
+                                .putExtra(IMGEditActivity.EXTRA_ENCODING_TYPE, encodingType),
+                        REQ_IMAGE_EDIT
+                );
+                break;
+            case R.id.btn_complete:
+                returnData();
                 break;
             default:
                 break;
         }
     }
 
+
+    private void returnData() {
+        Intent intent = new Intent();
+        intent.putExtra(OUT_FILE_PATH, photoFilePath);
+        setResult(RESULT_OK, intent);
+        finish();
+    }
+
     /**
      * 拍照
      */
     private void takePicture(final int currentOrientation) {
-        mCamera.cancelAutoFocus();
+        // mCamera.cancelAutoFocus();
         mCamera.takePicture(new Camera.ShutterCallback() {
             @Override
             public void onShutter() {
@@ -377,55 +381,50 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
 
             @Override
             public void onPictureTaken(byte[] data, Camera camera) {
+                mCamera.stopPreview();
+                mCamera.cancelAutoFocus();
                 int orientation = currentOrientation;
-                Bitmap originBitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inPreferredConfig = Bitmap.Config.RGB_565;
+                originBitmap = BitmapFactory.decodeByteArray(data, 0, data.length, options);
                 //如果是三星手机需要先旋转90度
                 boolean isSamSungType = originBitmap.getWidth() > originBitmap.getHeight();
                 if (isSamSungType) {
-                    originBitmap = rotaingImageView(90, originBitmap);
+                    originBitmap = ImageUtils.rotaingImageView(90, originBitmap);
                 }
                 //前置摄像头拍摄的照片和预览界面成镜面效果，需要翻转。
                 if (currentCameraFacing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
-                    Bitmap mirrorOriginBitmap = Bitmap.createBitmap(originBitmap.getWidth(), originBitmap.getHeight(), originBitmap.getConfig());
-                    Canvas canvas = new Canvas(mirrorOriginBitmap);
-                    Paint paint = new Paint();
-                    paint.setColor(Color.BLACK);
-                    paint.setAntiAlias(true);
-                    Matrix matrix = new Matrix();
-                    //镜子效果
-                    matrix.setScale(-1, 1);
-                    matrix.postTranslate(originBitmap.getWidth(), 0);
-                    canvas.drawBitmap(originBitmap, matrix, paint);
-                    originBitmap = mirrorOriginBitmap;
-                    //前置摄像头旋转180度才能显示preview显示的界面
-                    originBitmap = rotaingImageView(180, originBitmap);
+                    originBitmap = ImageUtils.rotaingImageViewByMirror(originBitmap);
                 }
                 //通过各种旋转和镜面操作，使originBitmap显示出preview界面
-                Bitmap cropBitmap = previewSFV.getPicture(originBitmap);
+                cropBitmap = previewSFV.getPicture(originBitmap);
                 //界面进行旋转
                 if (orientation != 0) {
-                    cropBitmap = rotaingImageView(orientation, cropBitmap);
+                    cropBitmap = ImageUtils.rotaingImageView(orientation, cropBitmap);
                 }
-                File photoDir = null;
-                if (photoSaveDirectoryPath != null) {
-                    photoDir = new File(photoSaveDirectoryPath);
-                } else {
-                    photoDir = new File(Environment.getExternalStorageDirectory(),
-                            "DCIM");
-                }
-                if (!photoDir.exists()) {
-                    photoDir.mkdir();
-                }
-                if (photoName == null) {
-                    photoName = System.currentTimeMillis() + ".jpg";
-                }
-                String imgPath = photoDir.getAbsolutePath() + "/" + photoName;
-                BitmapUtils.saveBitmap(cropBitmap, imgPath, 100, 0);
-                recycleBitmap(originBitmap);
-                recycleBitmap(cropBitmap);
-                EditImageActivity.start(MyCameraActivity.this, imgPath, MyAppConfig.LOCAL_IMG_CREATE_PATH, true, extraParam);
+                savePhoto();
+                previewImg.setImageBitmap(cropBitmap);
+                previewLayout.setVisibility(View.VISIBLE);
             }
         });
+    }
+
+    private void savePhoto() {
+        File photoDir = new File(photoSaveDirectoryPath);
+        if (!photoDir.exists()) {
+            photoDir.mkdirs();
+        }
+        File photoFile = new File(photoDir, photoName);
+        photoFilePath = photoFile.getAbsolutePath();
+        if (photoFile.exists()) {
+            photoFile.delete();
+        }
+        BitmapUtils.saveBitmap(cropBitmap, photoFilePath, 100, encodingType);
+    }
+
+    private void showPreview() {
+        ImageLoader.getInstance().displayImage("file://" + photoFilePath, previewImg);
+        previewLayout.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -445,24 +444,15 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == ACTION_REQUEST_EDITIMAGE) {
+        if (requestCode == REQ_IMAGE_EDIT) {
             if (resultCode == RESULT_OK) {
-                setResult(RESULT_OK, data);
+                photoFilePath = data.getStringExtra(IMGEditActivity.OUT_FILE_PATH);
+                showPreview();
             }
-            finish();
         }
 
     }
 
-    public Bitmap rotaingImageView(int angle, Bitmap bitmap) {
-        // 旋转图片 动作
-        Matrix matrix = new Matrix();
-        matrix.postRotate(angle);
-        // 创建新的图片
-        Bitmap resizedBitmap = Bitmap.createBitmap(bitmap, 0, 0,
-                bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-        return resizedBitmap;
-    }
 
     /**
      * 用来监测左横屏和右横屏切换时旋转摄像头的角度
@@ -510,29 +500,12 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
     }
 
 
-    /**
-     * 保存并显示把图片展示出来
-     *
-     * @param cameraPath
-     */
-    private void refreshGallery(String cameraPath) {
-        File file = new File(cameraPath);
-        // 其次把文件插入到系统图库
-        try {
-            MediaStore.Images.Media.insertImage(getContentResolver(),
-                    file.getAbsolutePath(), file.getName(), null);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        // 最后通知图库更新
-        LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + path)));
-    }
-
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
         releaseCamera();
+        recycleBitmap(originBitmap);
+        recycleBitmap(cropBitmap);
     }
 
 
@@ -559,7 +532,7 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup viewGroup, final int i) {
             TextView textView = new TextView(MyCameraActivity.this);
-            textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 17);
+            textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
             textView.setPadding(DensityUtil.dip2px(MyCameraActivity.this, 20), DensityUtil.dip2px(MyCameraActivity.this, 4), DensityUtil.dip2px(MyCameraActivity.this, 20), DensityUtil.dip2px(MyCameraActivity.this, 4));
             textView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             ViewHolder viewHolder = new ViewHolder(textView);
@@ -574,7 +547,6 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
         public void onBindViewHolder(final ViewHolder viewHolder, final int i) {
             viewHolder.textView.setText(rectScaleList.get(i).getName());
             viewHolder.textView.setTextColor((radioSelectPosition == i) ? Color.parseColor("#CB602D") : Color.parseColor("#FFFFFB"));
-            viewHolder.textView.setBackgroundColor((radioSelectPosition == i) ? Color.parseColor("#323232") : Color.parseColor("#00000000"));
             viewHolder.textView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

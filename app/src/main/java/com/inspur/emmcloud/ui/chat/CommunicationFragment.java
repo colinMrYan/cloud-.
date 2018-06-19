@@ -50,6 +50,7 @@ import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
+import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
@@ -309,9 +310,9 @@ public class CommunicationFragment extends Fragment {
                     break;
                 case R.id.message_create_group_layout:
                     Intent contactIntent = new Intent();
-                    contactIntent.putExtra(ContactSearchActivity.EXTRA_TYPE, 2);
-                    contactIntent.putExtra(ContactSearchActivity.EXTRA_MULTI_SELECT, true);
-                    contactIntent.putExtra(ContactSearchActivity.EXTRA_TITLE,
+                    contactIntent.putExtra(ContactSearchFragment.EXTRA_TYPE, 2);
+                    contactIntent.putExtra(ContactSearchFragment.EXTRA_MULTI_SELECT, true);
+                    contactIntent.putExtra(ContactSearchFragment.EXTRA_TITLE,
                             getActivity().getString(R.string.creat_group));
                     contactIntent.setClass(getActivity(), ContactSearchActivity.class);
                     startActivityForResult(contactIntent, CREAT_CHANNEL_GROUP);
@@ -891,10 +892,10 @@ public class CommunicationFragment extends Fragment {
                 Message receivedWSMessage = new Message(contentObj);
                 Channel receiveMessageChannel = ChannelCacheUtils.getChannel(
                         getActivity(), receivedWSMessage.getChannel());
+                cacheReceiveMessage(receivedWSMessage);
                 if (receiveMessageChannel == null) {
                     getChannelList();
                 } else {
-                    cacheReceiveMessage(receivedWSMessage);
                     sortChannelList();
                 }
             } else {

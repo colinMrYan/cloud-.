@@ -26,6 +26,7 @@ import com.inspur.emmcloud.service.BackgroundService;
 import com.inspur.emmcloud.service.CoreService;
 import com.inspur.emmcloud.service.LocationService;
 import com.inspur.emmcloud.service.PVCollectService;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.privates.AppConfigUtils;
@@ -97,8 +98,6 @@ public class IndexActivity extends IndexBaseActivity {
         }
         getContactUser();
         getAppTabInfo();  //从服务端获取显示tab
-        new SplashPageUtils(IndexActivity.this).update();//更新闪屏页面
-        new ReactNativeUtils(IndexActivity.this).init(); //更新react
         getMyAppRecommendWidgets();
     }
 
@@ -205,7 +204,8 @@ public class IndexActivity extends IndexBaseActivity {
                     String version = PreferencesByUserAndTanentUtils.getString(IndexActivity.this, "app_tabbar_version", "");
                     String clientId = PreferencesByUserAndTanentUtils.getString(IndexActivity.this, Constant.PREF_REACT_NATIVE_CLIENTID, "");
                     apiService.getAppNewTabs(version, clientId);
-
+                    new SplashPageUtils(IndexActivity.this).update();//更新闪屏页面
+                    new ReactNativeUtils(IndexActivity.this).init(); //更新react
                 }
             }
         }).getClientID();
@@ -390,13 +390,12 @@ public class IndexActivity extends IndexBaseActivity {
      * 获取所有的Robot
      */
     private void getAllRobotInfo() {
-        if (NetUtils.isNetworkConnected(getApplicationContext(), false)) {
+        if (!StringUtils.isBlank(MyApplication.getInstance().getClusterChatVersion())&&NetUtils.isNetworkConnected(getApplicationContext(), false)) {
             ContactAPIService apiService = new ContactAPIService(IndexActivity.this);
             apiService.setAPIInterface(new WebService());
             apiService.getAllRobotInfo();
         }
     }
-
 
     public class WebService extends APIInterfaceInstance {
         @Override

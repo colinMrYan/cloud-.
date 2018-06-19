@@ -2,10 +2,10 @@ package com.inspur.emmcloud.util.privates;
 
 import android.text.SpannableString;
 import android.text.Spanned;
-import android.text.style.URLSpan;
 
 import com.inspur.emmcloud.bean.work.MentionsAndUrl;
 import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.widget.spans.URLClickableSpan;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 
@@ -113,10 +113,9 @@ public class MentionsAndUrlShowUtils {
 		SpannableString spannableString = new SpannableString(mentions);
 		for (int i = 0; i < mentionsAndUrls.size(); i++) {
 			MentionsAndUrl mentionsAndUrl = mentionsAndUrls.get(i);
-			URLSpan urlSpan = new URLSpan(mentionsAndUrl.getProtocol());
-			int start = mentionsAndUrl.getStart();
-			int end = mentionsAndUrl.getEnd();
-			spannableString.setSpan(urlSpan, start, end, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+			String url = mentionsAndUrl.getProtocol();
+			URLClickableSpan urlClickableSpan = new URLClickableSpan(url);
+			spannableString.setSpan(urlClickableSpan, mentionsAndUrl.getStart(), mentionsAndUrl.getEnd(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
 		}
 		return spannableString;
 	}

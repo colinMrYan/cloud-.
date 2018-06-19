@@ -194,8 +194,8 @@ public class UserInfoActivity extends BaseActivity {
                                 .getName(getApplicationContext()));
                         LogUtils.jasonDebug("title=" + getCreateSingleChannelResult
                                 .getName(getApplicationContext()));
-                        IntentUtils.startActivity(UserInfoActivity.this, MyApplication.getInstance().isChatVersionV0() ?
-                                ChannelV0Activity.class : ChannelActivity.class, bundle);
+                        IntentUtils.startActivity(UserInfoActivity.this,MyApplication.getInstance().isV0VersionChat()?
+                                ChannelV0Activity.class:ChannelActivity.class, bundle);
                     }
 
                     @Override

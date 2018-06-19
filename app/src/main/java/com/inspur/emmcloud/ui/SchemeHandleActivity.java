@@ -185,7 +185,7 @@ public class SchemeHandleActivity extends Activity {
                             case "ecc-channel":
                                 bundle.putString("cid", host);
                                 bundle.putBoolean("get_new_msg", true);
-                                if (MyApplication.getInstance().isChatVersionV0()) {
+                                if (MyApplication.getInstance().isV0VersionChat()) {
                                     IntentUtils.startActivity(SchemeHandleActivity.this,
                                             ChannelV0Activity.class, bundle, true);
                                 } else {

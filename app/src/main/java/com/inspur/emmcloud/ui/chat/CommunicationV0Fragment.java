@@ -827,7 +827,7 @@ public class CommunicationV0Fragment extends Fragment {
                 if (file.exists()) {
                     iconUrl = "file://" + file.getAbsolutePath();
                     ImageDisplayUtils.getInstance().displayImageNoCache(channelPhotoImg, iconUrl, defaultIcon);
-                }else {
+                } else {
                     channelPhotoImg.setImageResource(R.drawable.icon_channel_group_default);
                 }
             } else {
@@ -1013,7 +1013,7 @@ public class CommunicationV0Fragment extends Fragment {
         // TODO Auto-generated method stub
         List<MessageReadCreationDate> MessageReadCreationDateList = new ArrayList<>();
         for (Channel channel : displayChannelList) {
-            MessageReadCreationDateList.add(new MessageReadCreationDate(channel.getCid(),channel.getMsgLastUpdate()));
+            MessageReadCreationDateList.add(new MessageReadCreationDate(channel.getCid(), channel.getMsgLastUpdate()));
             channel.setUnReadCount(0);
         }
         MsgReadCreationDateCacheUtils.saveMessageReadCreationDateList(MyApplication.getInstance(), MessageReadCreationDateList);
@@ -1022,13 +1022,14 @@ public class CommunicationV0Fragment extends Fragment {
 
     /**
      * 初始进入时将所有消息置为已读
+     *
      * @param channelList
      */
-    private void firstEnterToSetAllChannelMsgRead(List<Channel> channelList){
-        if (!DbCacheUtils.tableIsExist("MessageReadCreationDate")){
+    private void firstEnterToSetAllChannelMsgRead(List<Channel> channelList) {
+        if (!DbCacheUtils.tableIsExist("MessageReadCreationDate")) {
             List<MessageReadCreationDate> MessageReadCreationDateList = new ArrayList<>();
-            for (Channel channel:channelList) {
-                MessageReadCreationDateList.add(new MessageReadCreationDate(channel.getCid(),System.currentTimeMillis()));
+            for (Channel channel : channelList) {
+                MessageReadCreationDateList.add(new MessageReadCreationDate(channel.getCid(), System.currentTimeMillis()));
             }
             MsgReadCreationDateCacheUtils.saveMessageReadCreationDateList(MyApplication.getInstance(), MessageReadCreationDateList);
         }
@@ -1072,9 +1073,9 @@ public class CommunicationV0Fragment extends Fragment {
                     ChannelGroup channelGroup = searchChannelGroupList.get(i);
                     if (channelGroup.getType().equals("GROUP")) {
                         channelGroupList.add(channelGroup);
-                    }else if (channelGroup.getType().equals("SERVICE")){
+                    } else if (channelGroup.getType().equals("SERVICE")) {
                         int index = channelList.indexOf(new Channel(channelGroup.getCid()));
-                        if (index != -1){
+                        if (index != -1) {
                             channelList.get(index).setInputs(channelGroup.getInputs());
                         }
 

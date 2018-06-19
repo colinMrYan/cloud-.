@@ -29,41 +29,49 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="top"
-        android:background="#5e000000"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         >
 
         <ImageButton
             android:id="@+id/close_camera_btn"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:background="@null"
             android:onClick="onClick"
-            android:padding="5dp"
+            android:paddingLeft="6dp"
+            android:paddingRight="6dp"
+            android:paddingBottom="4dp"
+            android:paddingTop="6dp"
             android:scaleType="fitXY"
             android:src="@drawable/plugin_cemera_btn_close_camera" />
 
         <ImageButton
             android:id="@+id/camera_light_switch_btn"
             android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_height="48dp"
             android:layout_alignParentRight="true"
             android:layout_marginRight="60dp"
             android:background="@null"
             android:onClick="onClick"
-            android:padding="5dp"
+            android:paddingLeft="7dp"
+            android:paddingRight="7dp"
+            android:paddingBottom="5dp"
+            android:paddingTop="7dp"
             android:scaleType="fitXY"
             android:src="@drawable/plugin_cemera_btn_camera_light_on" />
 
         <ImageButton
             android:id="@+id/switch_camera_btn"
             android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_height="48dp"
             android:layout_alignParentRight="true"
             android:background="@null"
             android:onClick="onClick"
-            android:padding="5dp"
+            android:paddingLeft="7dp"
+            android:paddingRight="7dp"
+            android:paddingBottom="5dp"
+            android:paddingTop="7dp"
             android:scaleType="fitXY"
             android:src="@drawable/plugin_cemera_btn_camera_facing_switch" />
     </RelativeLayout>
@@ -73,34 +81,69 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center"
-        android:paddingTop="4dp"
-        android:paddingBottom="4dp"
         android:paddingLeft="10dp"
-        android:layout_marginBottom="75dp"
+        android:layout_marginBottom="80dp"
         android:background="#99000000"
         android:visibility="gone"
         android:scrollbars="none"></android.support.v7.widget.RecyclerView>
-
-    <ScrollView
-        android:id="@+id/set_radio_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center"
-        android:layout_marginBottom="90dp"
-        android:background="#99000000"
-        android:visibility="gone"
-        android:scrollbars="none">
-
-        <include layout="@layout/plugin_camera_crop_mode_layout" />
-
-    </ScrollView>
-
     <Button
         android:id="@+id/take_bt"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_gravity="bottom|center"
+        android:onClick="onClick"
         android:layout_marginBottom="10dp"
-        android:background="@drawable/plugin_camera_take_picture_button_bg" />
+        android:background="@drawable/plugin_camera_take_picture_btn" />
+
+    <RelativeLayout
+        android:id="@+id/rl_preview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black"
+        android:visibility="gone"
+        android:fitsSystemWindows="true">
+
+        <ImageView
+            android:id="@+id/iv_preview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitCenter" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_retry"
+                android:background="@drawable/plugin_camera_take_picture_preview_back"
+                android:onClick="onClick"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp" />
+
+            <Button
+                android:id="@+id/btn_edit"
+                android:onClick="onClick"
+                android:background="@drawable/plugin_camera_take_picture_preview_edit"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp" />
+
+            <Button
+                android:id="@+id/btn_complete"
+                android:onClick="onClick"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:background="@drawable/plugin_camera_take_picture_preview_complete"
+                android:layout_width="60dp"
+                android:layout_height="60dp" />
+        </LinearLayout>
+    </RelativeLayout>
 
 </FrameLayout>

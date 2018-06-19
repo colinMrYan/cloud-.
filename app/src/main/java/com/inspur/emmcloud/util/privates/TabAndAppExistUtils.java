@@ -6,6 +6,7 @@ import com.inspur.emmcloud.bean.appcenter.App;
 import com.inspur.emmcloud.bean.appcenter.AppGroupBean;
 import com.inspur.emmcloud.bean.system.AppTabAutoBean;
 import com.inspur.emmcloud.bean.system.AppTabDataBean;
+import com.inspur.emmcloud.bean.system.AppTabPayloadBean;
 import com.inspur.emmcloud.util.privates.cache.MyAppCacheUtils;
 
 import java.util.ArrayList;
@@ -27,12 +28,16 @@ public class TabAndAppExistUtils {
         String appTabs = PreferencesByUserAndTanentUtils.getString(context, "app_tabbar_info_current", "");
         AppTabAutoBean appTabAutoBean = new AppTabAutoBean(appTabs);
         //发送到MessageFragment
-        ArrayList<AppTabDataBean> appTabList = (ArrayList<AppTabDataBean>) appTabAutoBean.getPayload().getTabs();
-        for (int i = 0; i < appTabList.size(); i++) {
-            if(appTabList.get(i).getTabId().equals(tabId)){
-                return true;
+        AppTabPayloadBean appTabPayloadBean = appTabAutoBean.getPayload();
+        if(appTabPayloadBean != null){
+            ArrayList<AppTabDataBean> appTabList = (ArrayList<AppTabDataBean>) appTabPayloadBean.getTabs();
+            for (int i = 0; i < appTabList.size(); i++) {
+                if(appTabList.get(i).getTabId().equals(tabId)){
+                    return true;
+                }
             }
         }
+
         return false;
     }
 
