@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.inspur.emmcloud.ui.mine.setting.NoPermissionDialogActivity;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 
 import org.xutils.http.HttpMethod;
@@ -63,6 +64,7 @@ public class HttpUtils {
         if(isValidUrl(params)){
             x.http().request(httpMethod,params,callback);
         }else{
+            LogUtils.jasonDebug("params.getUri()="+params.getUri());
             callback.callbackFail("", -1);
             if (AppUtils.isAppOnForeground(context)){
                 Intent intent = new Intent();

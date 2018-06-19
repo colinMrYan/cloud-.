@@ -92,7 +92,6 @@ public class GuideActivity extends Activity {
             splashResIdList.add(R.drawable.guide_page_new_3);
             splashResIdList.add(R.drawable.guide_page_new_4);
             splashResIdList.add(R.drawable.guide_page_new_5);
-            splashResIdList.add(R.drawable.guide_page_new_6);
         }
 
         for (int i = 0; i < splashResIdList.size(); i++) {

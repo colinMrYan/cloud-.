@@ -13,7 +13,6 @@ import android.widget.RelativeLayout;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.ui.appcenter.volume.VolumeHomePageActivity;
 import com.inspur.emmcloud.ui.chat.ChannelActivity;
@@ -225,7 +224,7 @@ public class ShareFilesActivity extends BaseActivity {
             bundle.putString("cid",cid);
             bundle.putString("share_type",isImageUriList(uriList)?"image":"file");
             bundle.putSerializable("share_paths", (Serializable) uriList);
-            IntentUtils.startActivity(ShareFilesActivity.this, APIUri.isV0VersionChat()?
+            IntentUtils.startActivity(ShareFilesActivity.this, MyApplication.getInstance().isV0VersionChat()?
                     ChannelV0Activity.class: ChannelActivity.class,bundle,true);
     }
 
