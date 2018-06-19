@@ -17,7 +17,7 @@ import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelOperationCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.RobotCacheUtils;
-import com.inspur.emmcloud.widget.CircleImageView;
+import com.inspur.emmcloud.widget.CircleTextImageView;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.SwitchView;
 import com.inspur.emmcloud.widget.SwitchView.OnStateChangedListener;
@@ -31,7 +31,7 @@ public class RobotInfoActivity extends BaseActivity implements OnStateChangedLis
 	private String id = "";
 	private ContactAPIService apiService;
 	private LoadingDialog loadingDialog;
-	private CircleImageView robotHeadImg;
+	private CircleTextImageView robotHeadImg;
 	private TextView robotNameText,functionIntroductionText,supportText;
 	private SwitchView setTopSwitch;
 	private String cid;
@@ -50,7 +50,7 @@ public class RobotInfoActivity extends BaseActivity implements OnStateChangedLis
 		apiService = new ContactAPIService(RobotInfoActivity.this);
 		apiService.setAPIInterface(new WebService());
 		loadingDialog = new LoadingDialog(RobotInfoActivity.this);
-		robotHeadImg = (CircleImageView) findViewById(R.id.photo_img);
+		robotHeadImg = (CircleTextImageView) findViewById(R.id.photo_img);
 		robotNameText = (TextView) findViewById(R.id.name_text);
 		supportText = (TextView) findViewById(R.id.support_text);
 		functionIntroductionText = (TextView) findViewById(R.id.function_introduction_text);

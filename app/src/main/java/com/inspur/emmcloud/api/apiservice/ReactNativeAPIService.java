@@ -48,8 +48,8 @@ public class ReactNativeAPIService {
         params.addParameter("deviceName",deviceName);
         HttpUtils.request(context, CloudHttpMethod.POST,params, new APICallback(context,completeUrl) {
             @Override
-            public void callbackSuccess(String arg0) {
-                apiInterface.returnGetClientIdResultSuccess(new GetClientIdRsult(arg0));
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnGetClientIdResultSuccess(new GetClientIdRsult(new String(arg0)));
             }
 
             @Override
@@ -88,8 +88,8 @@ public class ReactNativeAPIService {
         params.addParameter("uri",uri);
         HttpUtils.request(context,CloudHttpMethod.POST,params, new APICallback(context,completeUrl) {
             @Override
-            public void callbackSuccess(String arg0) {
-                apiInterface.returnGetReactNativeInstallUrlSuccess(new ReactNativeInstallUriBean(arg0));
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnGetReactNativeInstallUrlSuccess(new ReactNativeInstallUriBean(new String(arg0)));
             }
 
             @Override
@@ -132,7 +132,7 @@ public class ReactNativeAPIService {
                 .getHttpRequestParams(completeUrl);
         HttpUtils.request(context,CloudHttpMethod.POST,params, new APICallback(context,completeUrl) {
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 LogUtils.YfcDebug("写回成功，不需要后续处理");
             }
 
@@ -176,8 +176,8 @@ public class ReactNativeAPIService {
                 .getHttpRequestParams(completeUrl);
         HttpUtils.request(context,CloudHttpMethod.GET,params, new APICallback(context,completeUrl) {
             @Override
-            public void callbackSuccess(String arg0) {
-                apiInterface.returnGetDownloadReactNativeUrlSuccess(new ReactNativeDownloadUrlBean(arg0));
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnGetDownloadReactNativeUrlSuccess(new ReactNativeDownloadUrlBean(new String(arg0)));
             }
 
             @Override
@@ -230,7 +230,7 @@ public class ReactNativeAPIService {
                 .getHttpRequestParams(completeUrl);
         HttpUtils.request(context,CloudHttpMethod.POST,params, new APICallback(context,completeUrl) {
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 LogUtils.YfcDebug("闪屏写回成功，不需要后续处理");
             }
 

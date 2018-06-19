@@ -1,7 +1,6 @@
 package com.inspur.imp.plugin.camera.mycamera;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.hardware.Camera.Size;
 
 import com.inspur.emmcloud.util.common.ResolutionUtils;
@@ -40,7 +39,6 @@ public class CameraUtils {
      */
     public  Size getPreviewSize(List<Size> list, int th){
         Collections.sort(list, sizeComparator);
-        Collections.reverse(list);
         Size size = null;
         for(Size s:list){
             if((s.width < th) && (s.height < th) && equalRateLevel0(s, rate)){
@@ -74,21 +72,21 @@ public class CameraUtils {
     /**
      * 获取图片的大小
      * @param list
-     * @param th  最小尺寸
+     * @param th  最大尺寸
      * @return
      */
     public Size getPictureSize(List<Size> list, int th){
         Collections.sort(list, sizeComparator);
         Size size = null;
         for(Size s:list){
-            if((s.width > th) && (s.height > th) && equalRateLevel0(s, rate)){
+            if((s.width < th) && (s.height < th) && equalRateLevel0(s, rate)){
                 size = s;
                 break;
             }
         }
         if (size == null){
             for(Size s:list) {
-                if ((s.width > th) && (s.height > th) && equalRateLevel1(s, rate)) {
+                if ((s.width < th) && (s.height < th) && equalRateLevel1(s, rate)) {
                     size = s;
                     break;
                 }
@@ -97,7 +95,7 @@ public class CameraUtils {
 
         if (size == null){
             for(Size s:list) {
-                if ((s.width > th) && (s.height > th) && equalRateLevel2(s, rate)) {
+                if ((s.width < th) && (s.height < th) && equalRateLevel2(s, rate)) {
                     size = s;
                     break;
                 }
@@ -150,27 +148,13 @@ public class CameraUtils {
                 return 0;
             }
             else if(lhs.width > rhs.width || (lhs.width == rhs.width && lhs.height > rhs.height)){
-                return 1;
+                return -1;
             }
             else{
-                return -1;
+                return 1;
             }
         }
 
-    }
-
-    /**
-     * 打开相机拍照
-     * @param context
-     * @param photoSaveDirectoryPath
-     * @param photoName
-     * @param requestCode
-     */
-    public static void takePhoto(Activity context, String photoSaveDirectoryPath, String photoName, int requestCode){
-        Intent intent = new Intent(context,MyCameraActivity.class);
-        intent.putExtra(MyCameraActivity.PHOTO_DIRECTORY_PATH,photoSaveDirectoryPath);
-        intent.putExtra(MyCameraActivity.PHOTO_NAME,photoName);
-        context.startActivityForResult(intent,requestCode);
     }
 
 }

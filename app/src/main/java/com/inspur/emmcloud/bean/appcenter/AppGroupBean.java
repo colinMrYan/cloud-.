@@ -17,62 +17,28 @@ public class AppGroupBean {
 
 	private String categoryID = "";
 	private String categoryName = "";
-//	private List<App> appList = new ArrayList<App>();
 	private List<App> appItemList = new ArrayList<App>();
 	private String categoryIco = "";
 
 	public AppGroupBean() {
 	}
 	public AppGroupBean(String response) {
-		try {
-			JSONObject jsonObject = new JSONObject(response);
-			if (jsonObject.has("categoryID")) {
-				this.categoryID = jsonObject.getString("categoryID");
-			}
-
-			if (jsonObject.has("categoryName")) {
-				this.categoryName = jsonObject.getString("categoryName");
-			}
-
-			if (jsonObject.has("appList")) {
-				JSONArray jsonArray = jsonObject.getJSONArray("appList");
-				for (int i = 0; i < jsonArray.length(); i++) {
-					App app = new App(jsonArray.getJSONObject(i));
-					app.setCategoryID(categoryID);
-					app.setOrderId(1000);
-					appItemList.add(app);
-				}
-			}
-			categoryIco = JSONUtils.getString(response,"category_ico","");
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		this(JSONUtils.getJSONObject(response));
 	}
 	
 	public AppGroupBean(JSONObject jsonObject) {
-		try {
-			if (jsonObject.has("categoryID")) {
-				this.categoryID = jsonObject.getString("categoryID");
-			}
-
-			if (jsonObject.has("categoryName")) {
-				this.categoryName = jsonObject.getString("categoryName");
-			}
-
+			categoryID = JSONUtils.getString(jsonObject,"categoryID","");
+			categoryName = JSONUtils.getString(jsonObject,"categoryName","");
 			if (jsonObject.has("appList")) {
-				JSONArray jsonArray = jsonObject.getJSONArray("appList");
+				JSONArray jsonArray = JSONUtils.getJSONArray(jsonObject,"appList",new JSONArray());
 				for (int i = 0; i < jsonArray.length(); i++) {
-					App app = new App(jsonArray.getJSONObject(i));
+					App app = new App(JSONUtils.getJSONObject(jsonArray,i,new JSONObject()));
 					app.setCategoryID(categoryID);
 					app.setOrderId(1000);
 					appItemList.add(app);
 				}
 			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+			categoryIco = JSONUtils.getString(jsonObject,"category_ico","");
 	}
 
 	public String getCategoryID() {

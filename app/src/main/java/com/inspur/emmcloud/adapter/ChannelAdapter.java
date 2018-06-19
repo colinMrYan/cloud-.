@@ -18,7 +18,7 @@ import com.inspur.emmcloud.util.privates.DirectChannelUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.TransHtmlToTextUtils;
-import com.inspur.emmcloud.widget.CircleImageView;
+import com.inspur.emmcloud.widget.CircleTextImageView;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -69,7 +69,7 @@ public class ChannelAdapter extends BaseAdapter {
             convertView = LayoutInflater.from(context).inflate(R.layout.msg_item_view, null);
             holder.mainLayout = (RelativeLayout) convertView
                     .findViewById(R.id.main_layout);
-            holder.channelPhotoImg = (CircleImageView) convertView
+            holder.channelPhotoImg = (CircleTextImageView) convertView
                     .findViewById(R.id.msg_img);
             holder.channelTitleText = (TextView) convertView
                     .findViewById(R.id.name_text);
@@ -102,7 +102,7 @@ public class ChannelAdapter extends BaseAdapter {
      *
      * @param channel
      */
-    private void setChannelIcon(Channel channel, CircleImageView channelPhotoImg) {
+    private void setChannelIcon(Channel channel, CircleTextImageView channelPhotoImg) {
         // TODO Auto-generated method stub
         Integer defaultIcon = R.drawable.icon_channel_group_default; // 默认显示图标
         String iconUrl = channel.getIcon();// Channel头像的uri
@@ -161,7 +161,7 @@ public class ChannelAdapter extends BaseAdapter {
 
     static class ViewHolder {
         RelativeLayout mainLayout;
-        CircleImageView channelPhotoImg;
+        CircleTextImageView channelPhotoImg;
         TextView channelContentText;
         TextView channelTitleText;
         TextView channelTimeText;

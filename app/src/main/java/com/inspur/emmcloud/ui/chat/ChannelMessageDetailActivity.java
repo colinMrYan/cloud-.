@@ -40,9 +40,9 @@ import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.TransHtmlToTextUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelCacheUtils;
-import com.inspur.emmcloud.util.privates.cache.ContactCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
-import com.inspur.emmcloud.widget.CircleImageView;
+import com.inspur.emmcloud.widget.CircleTextImageView;
 import com.inspur.emmcloud.widget.ECMChatInputMenu;
 import com.inspur.emmcloud.widget.LinkMovementClickMethod;
 import com.inspur.emmcloud.widget.ScrollViewWithListView;
@@ -72,7 +72,7 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
     private BaseAdapter commentAdapter;
     private ScrollView commentScrollView;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private CircleImageView senderHeadImg;
+    private CircleTextImageView senderHeadImg;
     private TextView msgSendTimeText;
     private TextView senderNameText;
     private ImageView msgContentImg;
@@ -102,7 +102,7 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
         inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         View msgDetailLayout = inflater.inflate(R.layout.msg_parent_detail,
                 null);
-        senderHeadImg = (CircleImageView) msgDetailLayout
+        senderHeadImg = (CircleTextImageView) msgDetailLayout
                 .findViewById(R.id.sender_photo_img);
         msgSendTimeText = (TextView) msgDetailLayout
                 .findViewById(R.id.msg_send_time_text);
@@ -236,7 +236,7 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
         String msgSendTime = TimeUtils.getDisplayTime(MyApplication.getInstance(),
                 message.getCreationDate());
         msgSendTimeText.setText(msgSendTime);
-        senderNameText.setText(ContactCacheUtils.getUserName(MyApplication.getInstance(), message.getFromUser()));
+        senderNameText.setText(ContactUserCacheUtils.getUserName(message.getFromUser()));
     }
 
     /**
@@ -336,7 +336,7 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
             ImageView photoImg = (ImageView) convertView
                     .findViewById(R.id.msg_img);
             final Message message = commentList.get(position);
-            userNameText.setText(ContactCacheUtils.getUserName(MyApplication.getInstance(), message.getFromUser()));
+            userNameText.setText(ContactUserCacheUtils.getUserName(message.getFromUser()));
             String content = message.getMsgContentComment().getText();
             contentText.setMovementMethod(LinkMovementClickMethod.getInstance());
             SpannableString spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(MyApplication.getInstance(), content, message.getMsgContentTextPlain().getMentionsMap());

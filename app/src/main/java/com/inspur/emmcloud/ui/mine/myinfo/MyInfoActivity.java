@@ -16,7 +16,7 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.LoginAPIService;
 import com.inspur.emmcloud.api.apiservice.MineAPIService;
-import com.inspur.emmcloud.bean.contact.Contact;
+import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.bean.mine.Enterprise;
 import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
 import com.inspur.emmcloud.bean.mine.GetUploadMyHeadResult;
@@ -32,7 +32,7 @@ import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
-import com.inspur.emmcloud.util.privates.cache.ContactCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
 import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
@@ -194,10 +194,11 @@ public class MyInfoActivity extends BaseActivity {
      * 保存更新头像时间
      */
     private void saveUpdateHeadTime() {
-        Contact contact = ContactCacheUtils.getUserContact(MyInfoActivity.this, ((MyApplication) getApplication()).getUid());
-        contact.setLastUpdateTime(System.currentTimeMillis() + "");
-        ContactCacheUtils.saveContact(MyInfoActivity.this, contact);
-        ((MyApplication) getApplicationContext()).clearUserPhotoUrl(((MyApplication) getApplication()).getUid());
+        ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(MyApplication.getInstance().getUid());
+        contactUser.setLastQueryTime(System.currentTimeMillis()+"");
+        contactUser.setHasHead(1);
+        ContactUserCacheUtils.saveContactUser(contactUser);
+        MyApplication.getInstance().clearUserPhotoUrl(MyApplication.getInstance().getUid());
     }
 
     /**

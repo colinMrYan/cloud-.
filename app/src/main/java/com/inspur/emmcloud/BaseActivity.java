@@ -19,7 +19,8 @@ public class BaseActivity extends Activity {
         x.view().inject(this);
         String className = this.getClass().getCanonicalName();
         if ( !className.endsWith(".CaptureActivity") &&!className.endsWith(".MyCameraActivity") && !className.endsWith(".LoginActivity")
-                && !className.endsWith(".MainActivity") && !className.endsWith(".FaceVerifyActivity") && !className.endsWith(".ReactNativeAppActivity")  && !className.endsWith(".ScanQrCodeLoginGSActivity")){
+                && !className.endsWith(".MainActivity") && !className.endsWith(".FaceVerifyActivity") && !className.endsWith(".ReactNativeAppActivity")  && !className.endsWith(".ScanQrCodeLoginGSActivity")
+                && !className.endsWith(".IMGEditActivity")){
             StateBarUtils.changeStateBarColor(this);
         }
     }

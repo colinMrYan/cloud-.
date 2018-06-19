@@ -48,7 +48,6 @@ import com.inspur.emmcloud.bean.chat.GetSendMsgResult;
 import com.inspur.emmcloud.bean.chat.GetUploadPushInfoResult;
 import com.inspur.emmcloud.bean.chat.GetWebSocketUrlResult;
 import com.inspur.emmcloud.bean.chat.Robot;
-import com.inspur.emmcloud.bean.contact.GetAllContactResult;
 import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.find.GetKnowledgeInfo;
 import com.inspur.emmcloud.bean.find.GetTripArriveCity;
@@ -455,19 +454,6 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnChannelInfoFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
-
-    }
-
-
-    @Override
-    public void returnAllContactSuccess(GetAllContactResult getAllContactResult) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void returnAllContactFail(String error, int errorCode) {
         // TODO Auto-generated method stub
 
     }
@@ -1646,6 +1632,26 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnChatFileUploadTokenFail(String error, int errorCode) {
+
+    }
+
+    @Override
+    public void returnContactUserListSuccess(byte[] bytes) {
+
+    }
+
+    @Override
+    public void returnContactUserListFail(String error, int errorCode) {
+
+    }
+
+    @Override
+    public void returnContactOrgListSuccess(byte[] bytes) {
+
+    }
+
+    @Override
+    public void returnContactOrgListFail(String error, int errorCode) {
 
     }
 }

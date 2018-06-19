@@ -15,10 +15,11 @@ import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
@@ -82,7 +83,7 @@ public class EditImageActivity extends ImageBaseActivity {
     public String filePath;// 需要编辑图片路径
     public String saveFilePath;// 生成的新图片路径
     public String currentFilePath;
-    private int imageWidth, imageHeight;// 展示图片控件 宽 高
+    private JSONObject watermarkObj;
     private LoadImageTask mLoadImageTask;
 
     public int mode = MODE_NONE;// 当前操作模式
@@ -108,7 +109,6 @@ public class EditImageActivity extends ImageBaseActivity {
     public RotateFragment mRotateFragment;// 图片旋转Fragment
     // public TextFragment mTextFragment;// 文字Fragment
     private Handler handle;
-    private JSONObject watermarkObj;
 
     /**
      * @param srcPath    原图片路径
@@ -133,7 +133,9 @@ public class EditImageActivity extends ImageBaseActivity {
         intent.putExtra(EditImageActivity.FILE_PATH, srcPath);
         intent.putExtra(EditImageActivity.EXTRA_OUTPUT, targetPath);
         intent.putExtra(EditImageActivity.EXTRA_NEED_UPLOAD, isNeedUpload);
-        intent.putExtra(EditImageActivity.EXTRA_PARAM, paramsObject);
+        if (paramsObject != null){
+            intent.putExtra(EditImageActivity.EXTRA_PARAM, paramsObject);
+        }
         activity.startActivityForResult(intent, ACTION_REQUEST_EDITIMAGE);
     }
 
@@ -141,7 +143,10 @@ public class EditImageActivity extends ImageBaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);//没有标题
         setContentView(R.layout.activity_image_edit);
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
+        this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);//拍照过程屏幕一直处于高亮
         initView();
         getData();
     }
@@ -151,8 +156,8 @@ public class EditImageActivity extends ImageBaseActivity {
         currentFilePath = filePath;
 
         saveFilePath = getIntent().getStringExtra(EXTRA_OUTPUT);// 保存图片路径
-        if (getIntent().hasExtra(EXTRA_NEED_UPLOAD)) {
-            isNeedUpload = getIntent().getBooleanExtra(EXTRA_NEED_UPLOAD, false);
+        isNeedUpload = getIntent().getBooleanExtra(EXTRA_NEED_UPLOAD, false);
+        if (getIntent().hasExtra(EXTRA_PARAM)){
             String json = getIntent().getStringExtra(EXTRA_PARAM);
             this.parm_uploadUrl = JSONUtils.getString(json, "uploadUrl", null);
             JSONObject optionsObj = JSONUtils.getJSONObject(json, "options", new JSONObject());
@@ -173,10 +178,6 @@ public class EditImageActivity extends ImageBaseActivity {
 
     private void initView() {
         loadingDlg = new LoadingDialog(this);
-        DisplayMetrics metrics = getResources().getDisplayMetrics();
-        imageWidth = (int) ((float) metrics.widthPixels / 1.5);
-        imageHeight = (int) ((float) metrics.heightPixels / 1.5);
-
         bannerFlipper = (ViewFlipper) findViewById(R.id.banner_flipper);
         bannerFlipper.setInAnimation(this, R.anim.in_bottom_to_top);
         bannerFlipper.setOutAnimation(this, R.anim.out_bottom_to_top);
@@ -359,9 +360,9 @@ public class EditImageActivity extends ImageBaseActivity {
                     break;
                 default:
                     break;
-            }// end switch
+            }
         }
-    }// end inner class
+    }
 
     /**
      * 保存按钮 点击退出
@@ -375,7 +376,7 @@ public class EditImageActivity extends ImageBaseActivity {
             cutImg();
         }
 
-    }// end inner class
+    }
 
     private void handMessage() {
         // TODO Auto-generated method stub
@@ -387,7 +388,7 @@ public class EditImageActivity extends ImageBaseActivity {
                 switch (msg.what) {
                     case CUT_IMG_SUCCESS:
                         if (!isNeedUpload) {
-                            returnDataAndClose(null);
+                            returnData(null);
                         } else {
                             uploadImg();
                         }
@@ -429,24 +430,20 @@ public class EditImageActivity extends ImageBaseActivity {
             @Override
             public void uploadPhotoSuccess(String result) {
                 // TODO Auto-generated method stub
-                if (loadingDlg != null && loadingDlg.isShowing()) {
-                    loadingDlg.dismiss();
-                }
-                returnDataAndClose(result);
+                LoadingDialog.dimissDlg(loadingDlg);
+                returnData(result);
             }
 
             @Override
             public void uploadPhotoFail() {
                 // TODO Auto-generated method stub
-                if (loadingDlg != null && loadingDlg.isShowing()) {
-                    loadingDlg.dismiss();
-                }
+                LoadingDialog.dimissDlg(loadingDlg);
                 Toast.makeText(getApplicationContext(), R.string.img_upload_fail, Toast.LENGTH_SHORT).show();
             }
         }).upload(parm_uploadUrl, saveFilePath, parm_encodingType, parm_context,watermarkObj);
     }
 
-    private void returnDataAndClose(String uploadResult) {
+    private void returnData(String uploadResult) {
         Intent returnIntent = new Intent();
         if (uploadResult != null) {
             returnIntent.putExtra("uploadResult", uploadResult);

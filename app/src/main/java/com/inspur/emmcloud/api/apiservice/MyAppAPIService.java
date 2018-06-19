@@ -36,14 +36,11 @@ import com.inspur.emmcloud.bean.appcenter.volume.Volume;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeDetail;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.interf.OauthCallBack;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.privates.OauthUtils;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.xutils.http.HttpMethod;
 import org.xutils.http.RequestParams;
-import org.xutils.x;
 
 import java.util.List;
 
@@ -96,9 +93,8 @@ public class MyAppAPIService {
 
 
             @Override
-            public void callbackSuccess(String arg0) {
-                apiInterface.returnAddAppSuccess(new GetAddAppResult(arg0,
-                        appID));
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnAddAppSuccess(new GetAddAppResult(new String(new String(arg0)),appID));
             }
 
             @Override
@@ -138,9 +134,9 @@ public class MyAppAPIService {
             }
 
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 apiInterface
-                        .returnRemoveAppSuccess(new GetRemoveAppResult(arg0));
+                        .returnRemoveAppSuccess(new GetRemoveAppResult(new String(arg0)));
             }
 
             @Override
@@ -180,9 +176,8 @@ public class MyAppAPIService {
             }
 
             @Override
-            public void callbackSuccess(String arg0) {
-                apiInterface.returnSearchAppSuccess(new GetSearchAppResult(
-                        arg0));
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnSearchAppSuccess(new GetSearchAppResult(new String(arg0)));
             }
 
             @Override
@@ -223,11 +218,10 @@ public class MyAppAPIService {
             }
 
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
                 apiInterface
-                        .returnGroupNewsTitleSuccess(new GetNewsTitleResult(
-                                arg0));
+                        .returnGroupNewsTitleSuccess(new GetNewsTitleResult(new String(arg0)));
             }
 
             @Override
@@ -271,11 +265,10 @@ public class MyAppAPIService {
             }
 
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
                 apiInterface
-                        .returnGroupNewsDetailSuccess(new GetGroupNewsDetailResult(
-                                arg0), page);
+                        .returnGroupNewsDetailSuccess(new GetGroupNewsDetailResult(new String(arg0)), page);
             }
 
             @Override
@@ -314,8 +307,8 @@ public class MyAppAPIService {
             }
 
             @Override
-            public void callbackSuccess(String arg0) {
-                apiInterface.returnUserAppsSuccess(new GetAppGroupResult(arg0));
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnUserAppsSuccess(new GetAppGroupResult(new String(arg0)));
             }
 
             @Override
@@ -336,9 +329,9 @@ public class MyAppAPIService {
         HttpUtils.request(context,CloudHttpMethod.POST,params, new APICallback(context, completeUrl) {
 
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
-                apiInterface.returnAllAppsSuccess(new GetAllAppResult(arg0));
+                apiInterface.returnAllAppsSuccess(new GetAllAppResult(new String(arg0)));
             }
 
             @Override
@@ -379,8 +372,8 @@ public class MyAppAPIService {
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(completeUrl);
         HttpUtils.request(context,CloudHttpMethod.GET,params, new APICallback(context, completeUrl) {
             @Override
-            public void callbackSuccess(String arg0) {
-                apiInterface.returnGetAppAuthCodeResultSuccess(new AppRedirectResult(arg0));
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnGetAppAuthCodeResultSuccess(new AppRedirectResult(new String(arg0)));
             }
 
             @Override
@@ -418,8 +411,8 @@ public class MyAppAPIService {
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(completeUrl);
         HttpUtils.request(context,CloudHttpMethod.GET,params, new APICallback(context, completeUrl) {
             @Override
-            public void callbackSuccess(String arg0) {
-                apiInterface.returnAppInfoSuccess(new App(arg0));
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnAppInfoSuccess(new App(new String(arg0)));
             }
 
             @Override
@@ -455,8 +448,8 @@ public class MyAppAPIService {
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(completeUrl);
         HttpUtils.request(context,CloudHttpMethod.GET,params, new APICallback(context, completeUrl) {
             @Override
-            public void callbackSuccess(String arg0) {
-                apiInterface.returnGetAppBadgeResultSuccess(new GetAppBadgeResult(arg0));
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnGetAppBadgeResultSuccess(new GetAppBadgeResult(new String(arg0)));
             }
 
             @Override
@@ -493,8 +486,8 @@ public class MyAppAPIService {
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
         HttpUtils.request(context,CloudHttpMethod.GET,params, new APICallback(context, url) {
             @Override
-            public void callbackSuccess(String arg0) {
-                apiInterface.returnWebAppRealUrlSuccess(new GetWebAppRealUrlResult(arg0));
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnWebAppRealUrlSuccess(new GetWebAppRealUrlResult(new String(arg0)));
             }
 
             @Override
@@ -533,7 +526,7 @@ public class MyAppAPIService {
         params.setBodyContent(commonAppListJson);
         HttpUtils.request(context,CloudHttpMethod.POST,params, new APICallback(context, url) {
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnSaveConfigSuccess();
             }
 
@@ -589,8 +582,8 @@ public class MyAppAPIService {
             }
 
             @Override
-            public void callbackSuccess(String arg0) {
-                apiInterface.returnRecommendAppWidgetListSuccess(new GetRecommendAppWidgetListResult(arg0));
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnRecommendAppWidgetListSuccess(new GetRecommendAppWidgetListResult(new String(arg0)));
             }
 
             @Override
@@ -610,8 +603,8 @@ public class MyAppAPIService {
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
         HttpUtils.request(context,CloudHttpMethod.GET,params, new APICallback(context, url) {
             @Override
-            public void callbackSuccess(String arg0) {
-                apiInterface.returnVolumeListSuccess(new GetVolumeListResult(arg0));
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnVolumeListSuccess(new GetVolumeListResult(new String(arg0)));
             }
 
             @Override
@@ -651,8 +644,8 @@ public class MyAppAPIService {
         params.addParameter("path", currentDirAbsolutePath);
         HttpUtils.request(context,CloudHttpMethod.GET,params, new APICallback(context, url) {
             @Override
-            public void callbackSuccess(String arg0) {
-                apiInterface.returnVolumeFileListSuccess(new GetVolumeFileListResult(arg0));
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnVolumeFileListSuccess(new GetVolumeFileListResult(new String(arg0)));
             }
 
             @Override
@@ -694,8 +687,8 @@ public class MyAppAPIService {
         params.addParameter("path", volumeFilePath + fileName);
         HttpUtils.request(context,CloudHttpMethod.POST,params, new APICallback(context, url) {
             @Override
-            public void callbackSuccess(String arg0) {
-                apiInterface.returnVolumeFileUploadTokenSuccess(new GetVolumeFileUploadTokenResult(arg0), localFilePath, mockVolumeFile);
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnVolumeFileUploadTokenSuccess(new GetVolumeFileUploadTokenResult(new String(arg0)), localFilePath, mockVolumeFile);
             }
 
             @Override
@@ -747,7 +740,7 @@ public class MyAppAPIService {
         params.setAsJsonContent(true);
         HttpUtils.request(context,CloudHttpMethod.PUT, params, new APICallback(context, url) {
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnMoveFileSuccess(moveVolumeFileList);
             }
 
@@ -800,7 +793,7 @@ public class MyAppAPIService {
         params.setAsJsonContent(true);
         HttpUtils.request(context,CloudHttpMethod.POST,params, new APICallback(context, url) {
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnCopyFileSuccess();
             }
 
@@ -842,8 +835,8 @@ public class MyAppAPIService {
         params.addQueryStringParameter("path", currentDirAbsolutePath + forderName);
         HttpUtils.request(context,CloudHttpMethod.POST,params, new APICallback(context, url) {
             @Override
-            public void callbackSuccess(String arg0) {
-                apiInterface.returnCreateForderSuccess(new VolumeFile(arg0));
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnCreateForderSuccess(new VolumeFile(new String(new String(arg0))));
             }
 
             @Override
@@ -896,7 +889,7 @@ public class MyAppAPIService {
         params.setAsJsonContent(true);
         HttpUtils.request(context,CloudHttpMethod.DELETE, params, new APICallback(context, url) {
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnVolumeFileDeleteSuccess(deleteVolumeFileList);
             }
 
@@ -939,7 +932,7 @@ public class MyAppAPIService {
         params.addQueryStringParameter("name", fileNewName);
         HttpUtils.request(context,CloudHttpMethod.PUT, params, new APICallback(context, url) {
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnVolumeFileRenameSuccess(volumeFile, fileNewName);
             }
 
@@ -990,8 +983,8 @@ public class MyAppAPIService {
         params.setAsJsonContent(true);
         HttpUtils.request(context,CloudHttpMethod.POST,params, new APICallback(context, url) {
             @Override
-            public void callbackSuccess(String arg0) {
-                apiInterface.returnCreateShareVolumeSuccess(new Volume(arg0));
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnCreateShareVolumeSuccess(new Volume(new String(arg0)));
             }
 
             @Override
@@ -1032,7 +1025,7 @@ public class MyAppAPIService {
         params.addQueryStringParameter("name", name);
         HttpUtils.request(context,CloudHttpMethod.PUT, params, new APICallback(context, url) {
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnUpdateShareVolumeNameSuccess(volume, name);
             }
 
@@ -1075,7 +1068,7 @@ public class MyAppAPIService {
         params.addParameter("id", volume.getId());
         HttpUtils.request(context,CloudHttpMethod.DELETE, params, new APICallback(context, url) {
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 apiInterface.retrunRemoveShareVolumeSuccess(volume);
             }
 
@@ -1116,8 +1109,8 @@ public class MyAppAPIService {
         params.addParameter("id", volumeId);
         HttpUtils.request(context,CloudHttpMethod.GET,params, new APICallback(context, url) {
             @Override
-            public void callbackSuccess(String arg0) {
-                apiInterface.returnVolumeDetailSuccess(new VolumeDetail(arg0));
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnVolumeDetailSuccess(new VolumeDetail(new String(arg0)));
             }
 
             @Override
@@ -1157,7 +1150,7 @@ public class MyAppAPIService {
         params.setAsJsonContent(true);
         HttpUtils.request(context,CloudHttpMethod.POST,params, new APICallback(context, url) {
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnVolumeMemAddSuccess(uidList);
             }
 
@@ -1199,7 +1192,7 @@ public class MyAppAPIService {
         params.setAsJsonContent(true);
         HttpUtils.request(context,CloudHttpMethod.DELETE,params, new APICallback(context, url) {
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnVolumeMemDelSuccess(uidList);
             }
 
@@ -1239,7 +1232,7 @@ public class MyAppAPIService {
         params.addQueryStringParameter("name",groupName);
         HttpUtils.request(context,CloudHttpMethod.PUT, params, new APICallback(context,url) {
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnUpdateGroupNameSuccess(groupName);
             }
 
@@ -1281,7 +1274,7 @@ public class MyAppAPIService {
         params.setAsJsonContent(true);
         HttpUtils.request(context,CloudHttpMethod.POST,params, new APICallback(context, url) {
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnGroupMemAddSuccess(uidList);
             }
 
@@ -1322,7 +1315,7 @@ public class MyAppAPIService {
         params.setAsJsonContent(true);
         HttpUtils.request(context,CloudHttpMethod.DELETE,params, new APICallback(context, url) {
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnGroupMemDelSuccess(uidList);
             }
 
@@ -1361,8 +1354,8 @@ public class MyAppAPIService {
         params.addParameter("isMember",true);
         HttpUtils.request(context,CloudHttpMethod.GET,params, new APICallback(context, url) {
             @Override
-            public void callbackSuccess(String arg0) {
-            apiInterface.returnVolumeGroupContainMeSuccess(new GetVolumeGroupResult(arg0));
+            public void callbackSuccess(byte[] arg0) {
+            apiInterface.returnVolumeGroupContainMeSuccess(new GetVolumeGroupResult(new String(arg0)));
             }
 
             @Override
@@ -1400,8 +1393,8 @@ public class MyAppAPIService {
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
         HttpUtils.request(context,CloudHttpMethod.GET,params, new APICallback(context, url) {
             @Override
-            public void callbackSuccess(String arg0) {
-                apiInterface.returnVolumeGroupSuccess(new GetVolumeResultWithPermissionResult(arg0));
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnVolumeGroupSuccess(new GetVolumeResultWithPermissionResult(new String(arg0)));
             }
 
             @Override
@@ -1443,7 +1436,7 @@ public class MyAppAPIService {
         RequestParams params = ((MyApplication)context.getApplicationContext()).getHttpRequestParams(url);
         HttpUtils.request(context,CloudHttpMethod.PUT, params, new APICallback(context,url) {
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 GetVolumeGroupPermissionResult getVolumeGroupPermissionResult = new GetVolumeGroupPermissionResult("");
                 getVolumeGroupPermissionResult.setPrivilege(privilege);
                 apiInterface.returnUpdateVolumeGroupPermissionSuccess(getVolumeGroupPermissionResult);

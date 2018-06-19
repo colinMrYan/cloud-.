@@ -64,9 +64,9 @@ public class FindAPIService {
 			}
 			
 			@Override
-			public void callbackSuccess(String arg0) {
+			public void callbackSuccess(byte[] arg0) {
 				// TODO Auto-generated method stub
-				apiInterface.returnTripSuccess(new Trip(arg0));
+				apiInterface.returnTripSuccess(new Trip(new String(arg0)));
 			}
 			
 			@Override
@@ -109,7 +109,7 @@ public class FindAPIService {
 			}
 			
 			@Override
-			public void callbackSuccess(String arg0) {
+			public void callbackSuccess(byte[] arg0) {
 				// TODO Auto-generated method stub
 				apiInterface.returnDelTripSuccess();
 			}
@@ -154,7 +154,7 @@ public class FindAPIService {
 			}
 
 			@Override
-			public void callbackSuccess(String arg0) {
+			public void callbackSuccess(byte[] arg0) {
 				// TODO Auto-generated method stub
 				apiInterface.returnUploadTrainTicketSuccess();
 			}
@@ -198,7 +198,7 @@ public class FindAPIService {
 			}
 			
 			@Override
-			public void callbackSuccess(String arg0) {
+			public void callbackSuccess(byte[] arg0) {
 				// TODO Auto-generated method stub
 				apiInterface.returnUploadTrainTicketSuccess();
 			}
@@ -241,10 +241,9 @@ public class FindAPIService {
 			}
 			
 			@Override
-			public void callbackSuccess(String arg0) {
+			public void callbackSuccess(byte[] arg0) {
 				// TODO Auto-generated method stub
-				apiInterface.returnTripArriveSuccess(new GetTripArriveCity(
-						arg0));
+				apiInterface.returnTripArriveSuccess(new GetTripArriveCity(new String(arg0)));
 			}
 			
 			@Override
@@ -281,10 +280,9 @@ public class FindAPIService {
 			}
 
 			@Override
-			public void callbackSuccess(String arg0) {
+			public void callbackSuccess(byte[] arg0) {
 				// TODO Auto-generated method stub
-				apiInterface.returnKnowledgeListSuccess(new GetKnowledgeInfo(
-						arg0));
+				apiInterface.returnKnowledgeListSuccess(new GetKnowledgeInfo(new String(arg0)));
 			}
 			
 			@Override

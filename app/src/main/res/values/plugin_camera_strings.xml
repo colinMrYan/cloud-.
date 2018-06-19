@@ -28,11 +28,11 @@
 
     <string name="all_images">全部图片</string>
     <string name="folder_image_count">共%1$d张</string>
-    <string name="preview_image_count">%1$s/%2$s</string>
-    <string name="select_limit">最多选择%1$s张图片</string>
+    <string name="preview_image_count">%1$d/%2$d</string>
+    <string name="select_limit">最多选择%1$d张图片</string>
     <string name="complete">完成</string>
-    <string name="select_complete">完成(%1$s/%2$s)</string>
-    <string name="preview_count">预览(%1$s)</string>
+    <string name="select_complete">完成(%1$d/%2$d)</string>
+    <string name="preview_count">预览(%1$d)</string>
     <string name="photo_crop">图片裁剪</string>
     <string name="origin">原图</string>
     <string name="origin_size">原图(%1$s)</string>
@@ -44,4 +44,19 @@
     <string name="img_upload_fail">图片上传失败,请重试</string>
     <string name="img_decode_fail">图片解析失败</string>
     <string name="open_camera_fail_by_perminssion">摄像头启动失败，请尝试在手机应用权限管理中打开权限</string>
+
+    <string name="image_doodle">涂鸦</string>
+    <string name="image_text">文字</string>
+    <string name="image_mosaic">马赛克</string>
+    <string name="image_clip">裁剪</string>
+    <string name="image_reset">还原</string>
+    <string name="image_done">完成</string>
+    <string name="image_cancel">取消</string>
+    <string name="image_rotate">旋转</string>
+
+    <string name="image_mosaic_tip">请直接在图片上涂抹虚化</string>
+    <string name="image_undo">撤销</string>
+    <string name="image_all_photo">所有照片</string>
+    <string name="image_original">原图</string>
+    <string name="image_preview">预览</string>
 </resources>

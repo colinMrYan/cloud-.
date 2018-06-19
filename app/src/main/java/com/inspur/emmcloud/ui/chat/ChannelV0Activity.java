@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v4.content.LocalBroadcastManager;
@@ -35,6 +34,7 @@ import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.Msg;
 import com.inspur.emmcloud.bean.chat.Robot;
 import com.inspur.emmcloud.bean.contact.Contact;
+import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.broadcastreceiver.MsgReceiver;
 import com.inspur.emmcloud.config.MyAppConfig;
@@ -46,7 +46,6 @@ import com.inspur.emmcloud.util.common.InputMethodUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ChannelInfoUtils;
@@ -57,6 +56,7 @@ import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.MsgRecourceUploadUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MsgCacheUtil;
 import com.inspur.emmcloud.util.privates.cache.MsgReadCreationDateCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
@@ -65,9 +65,10 @@ import com.inspur.emmcloud.widget.ECMChatInputMenu;
 import com.inspur.emmcloud.widget.ECMChatInputMenu.ChatInputMenuListener;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.RecycleViewForSizeChange;
-import com.inspur.imp.plugin.camera.editimage.EditImageActivity;
 import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
 import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
+import com.inspur.imp.plugin.camera.mycamera.MyCameraActivity;
+import com.inspur.imp.util.compressor.Compressor;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -432,18 +433,19 @@ public class ChannelV0Activity extends BaseActivity {
                         ChannelV0Activity.this, filePath, apiService);
                 addLocalMessage(localMsg);
                 //拍照返回
-            } else if (requestCode == CAMERA_RESULT
-                    && NetUtils.isNetworkConnected(getApplicationContext())) {
-                String cameraImgPath = Environment.getExternalStorageDirectory() + "/DCIM/" + PreferencesUtils.getString(ChannelV0Activity.this, "capturekey");
-                refreshGallery(ChannelV0Activity.this, cameraImgPath);
-                EditImageActivity.start(ChannelV0Activity.this, cameraImgPath, MyAppConfig.LOCAL_IMG_CREATE_PATH);
-                //拍照后图片编辑返回
-            } else if (requestCode == EditImageActivity.ACTION_REQUEST_EDITIMAGE) {
-                String imgPath = data.getExtras().getString("save_file_path");
+            } else if (requestCode == CAMERA_RESULT) {
+                String imgPath = data.getExtras().getString(MyCameraActivity.OUT_FILE_PATH);
+               try {
+                   File file = new Compressor(ChannelV0Activity.this).setMaxHeight(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setMaxWidth(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setQuality(90).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
+                           .compressToFile(new File(imgPath));
+                   imgPath = file.getAbsolutePath();
+               }catch (Exception e){
+                   e.printStackTrace();
+               }
                 Msg localMsg = MsgRecourceUploadUtils.uploadResImg(
                         ChannelV0Activity.this, imgPath, apiService);
                 addLocalMessage(localMsg);
-            } else if (requestCode == MENTIONS_RESULT) {
+            }  else if (requestCode == MENTIONS_RESULT) {
                 // @返回
                 String result = data.getStringExtra("searchResult");
                 String uid = JSONUtils.getString(result, "uid", null);
@@ -458,8 +460,16 @@ public class ChannelV0Activity extends BaseActivity {
                     ArrayList<ImageItem> imageItemList = (ArrayList<ImageItem>) data
                             .getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
                     for (int i = 0; i < imageItemList.size(); i++) {
+                        String imgPath =imageItemList.get(i).path;
+                        try {
+                            File file = new Compressor(ChannelV0Activity.this).setMaxHeight(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setMaxWidth(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setQuality(90).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
+                                    .compressToFile(new File(imgPath));
+                            imgPath = file.getAbsolutePath();
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
                         Msg localMsg = MsgRecourceUploadUtils.uploadResImg(
-                                ChannelV0Activity.this, imageItemList.get(i).path, apiService);
+                                ChannelV0Activity.this,imgPath, apiService);
                         addLocalMessage(localMsg);
                     }
                 }
@@ -635,6 +645,8 @@ public class ChannelV0Activity extends BaseActivity {
             IntentUtils.startActivity(ChannelV0Activity.this,
                     RobotInfoActivity.class, bundle);
         } else {
+            String uid = DirectChannelUtils.getDirctChannelOtherUid(MyApplication.getInstance(),channel.getTitle());
+            bundle.putString("uid", uid);
             IntentUtils.startActivity(ChannelV0Activity.this,
                     UserInfoActivity.class, bundle);
         }
@@ -647,8 +659,8 @@ public class ChannelV0Activity extends BaseActivity {
         String fakeMessageId = System.currentTimeMillis() + "";
         //当在机器人频道时输入小于4个汉字时先进行通讯录查找，查找到返回通讯路卡片
         if (isSpecialUser && !isActionMsg && content.length() < 4 && StringUtils.isChinese(content)) {
-            Contact contact = ContactCacheUtils.getContactByUserName(getApplicationContext(), content);
-            if (contact != null) {
+            ContactUser contactUser = ContactUserCacheUtils.getContactUserByUserName(content);
+            if (contactUser != null) {
                 JSONObject sourceObj = new JSONObject();
                 try {
                     sourceObj.put("source", content);
@@ -659,7 +671,7 @@ public class ChannelV0Activity extends BaseActivity {
                 Msg localMsg = ConbineMsg.conbineMsg(ChannelV0Activity.this,
                         sourceObj.toString(), "", "txt_rich", fakeMessageId);
                 addLocalMessage(localMsg, 1);
-                Message conbineReplyMessage = ConbineMsg.conbineReplyAttachmentCardMsg(contact, cid, robotUid, fakeMessageId);
+                Message conbineReplyMessage = ConbineMsg.conbineReplyAttachmentCardMsg(contactUser, cid, robotUid, fakeMessageId);
                 Msg replyLocalMsg = ConbineMsg.conbineRobotMsg(ChannelV0Activity.this,
                         conbineReplyMessage.Message2MsgBody(), robotUid, "txt_rich", fakeMessageId);
                 addLocalMessage(replyLocalMsg, 1);

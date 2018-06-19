@@ -18,7 +18,7 @@ import com.inspur.emmcloud.bean.chat.MsgContentComment;
 import com.inspur.emmcloud.util.privates.ChatMsgContentUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.TransHtmlToTextUtils;
-import com.inspur.emmcloud.util.privates.cache.ContactCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 import com.inspur.emmcloud.widget.LinkMovementClickMethod;
 import com.inspur.emmcloud.widget.TextViewWithSpan;
@@ -72,7 +72,7 @@ public class DisplayCommentTextPlainMsg {
 
 
     private static SpannableStringBuilder getCommentTitle(Context context,Message commentedMessage,boolean isMyMsg){
-        String commentMsgSenderName = ContactCacheUtils.getUserName(context,commentedMessage.getFromUser());
+        String commentMsgSenderName = ContactUserCacheUtils.getUserName(commentedMessage.getFromUser());
         String commentedMessageTime = TimeUtils.getDisplayTime(context,commentedMessage.getCreationDate());
         String commentTitle = context
                 .getString(R.string.comment_hallcomment_text)

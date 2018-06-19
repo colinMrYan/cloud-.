@@ -19,7 +19,7 @@ public class PerfectInfoActivity extends BaseActivity {
 //	MyDialog myDialog;
 //	TextView camaralText, galleryText;
 //	private Boolean isHasSdcard;
-//	private CircleImageView circleImageView;
+//	private CircleTextImageView circleImageView;
 //	private APIService apiService;
 //
 //	private static final String IMAGE_FILE_NAME = "photoImage.jpg";
@@ -57,7 +57,7 @@ public class PerfectInfoActivity extends BaseActivity {
 //					}
 //				});
 //
-//		circleImageView = (CircleImageView) findViewById(R.id.photo_img);
+//		circleImageView = (CircleTextImageView) findViewById(R.id.photo_img);
 //		isHasSdcard = Environment.getExternalStorageState().equals(
 //				android.os.Environment.MEDIA_MOUNTED);
 //		myDialog = new MyDialog(PerfectInfoActivity.this,

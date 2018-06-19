@@ -1,8 +1,5 @@
 package com.inspur.emmcloud.bean.appcenter;
 
-import com.inspur.emmcloud.bean.appcenter.App;
-import com.inspur.emmcloud.bean.appcenter.AppAdsBean;
-import com.inspur.emmcloud.bean.appcenter.AppGroupBean;
 import com.inspur.emmcloud.util.common.JSONUtils;
 
 import org.json.JSONArray;

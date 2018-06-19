@@ -10,10 +10,9 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 
-import com.inspur.imp.plugin.camera.editimage.EditImageActivity;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.imp.plugin.camera.imageedit.IMGEditActivity;
 import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
 import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
 import com.inspur.imp.plugin.camera.imagepicker.view.SuperCheckBox;
@@ -22,8 +21,10 @@ public class ImagePreviewActivity extends ImagePreviewBaseActivity implements
 		ImagePicker.OnImageSelectedListener, View.OnClickListener {
 
 	public static final String ISORIGIN = "isOrigin";
+	public static final String EXTRA_ENCODING_TYPE = "IMAGE_ENCODING_TYPE";
+	private int encodingType = 0;
 
-	protected static final int EDIT_IMG = 1;
+	protected static final int REQ_IMAGE_EDIT = 1;
 
 	private boolean isOrigin; // 是否选中原图
 	private SuperCheckBox mCbCheck; // 是否选中当前图片的CheckBox
@@ -41,29 +42,29 @@ public class ImagePreviewActivity extends ImagePreviewBaseActivity implements
 
 		mBtnOk = (Button) topBar.findViewById(R.id.btn_ok);
 		mBtnOk.setVisibility(View.VISIBLE);
-		mBtnOk.setOnClickListener(this);
 
 		bottomBar = findViewById(R.id.bottom_bar);
 		bottomBar.setVisibility(View.VISIBLE);
 
 		mCbCheck = (SuperCheckBox) findViewById(R.id.cb_check);
 		editBtn = (Button) findViewById(R.id.edit_btn);
+		encodingType = getIntent().getIntExtra(EXTRA_ENCODING_TYPE,0);
 		editBtn.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				Intent intent = new Intent(getApplicationContext(),
-						EditImageActivity.class);
-				intent.putExtra(EditImageActivity.FILE_PATH, mImageItems.get(mCurrentPosition).path);
-				intent.putExtra(EditImageActivity.EXTRA_OUTPUT, MyAppConfig.LOCAL_CACHE_PATH);
-
-				startActivityForResult(intent, EDIT_IMG);
+				startActivityForResult(
+						new Intent(ImagePreviewActivity.this, IMGEditActivity.class)
+								.putExtra(IMGEditActivity.EXTRA_IMAGE_PATH, mImageItems.get(mCurrentPosition).path)
+								.putExtra(IMGEditActivity.EXTRA_ENCODING_TYPE,encodingType),
+						REQ_IMAGE_EDIT
+				);
 			}
 		});
 
 		// 初始化当前页面的状态
-		onImageSelected(0, null, false);
+		onImageSelected(0, null, true);
 		ImageItem item = mImageItems.get(mCurrentPosition);
 		boolean isSelected = imagePicker.isSelect(item);
 		mTitleCount.setText(getString(R.string.preview_image_count,
@@ -133,19 +134,8 @@ public class ImagePreviewActivity extends ImagePreviewBaseActivity implements
 	 */
 	@Override
 	public void onImageSelected(int position, ImageItem item, boolean isAdd) {
-		if (imagePicker.getSelectLimit() == 1) { // 当单选模式下进入预览时候
-			mBtnOk.setText(getString(R.string.send));
-		} else {
-			if (imagePicker.getSelectImageCount() > 0) {
-				mBtnOk.setText(getString(R.string.select_complete,
-						imagePicker.getSelectImageCount(),
-						imagePicker.getSelectLimit()));
-				mBtnOk.setEnabled(true);
-			} else {
-				mBtnOk.setText(getString(R.string.send));
-				mBtnOk.setEnabled(false);
-			}
-		}
+		mBtnOk.setText(getString(R.string.send));
+		mBtnOk.setEnabled(isAdd);
 	}
 
 	@Override
@@ -190,10 +180,10 @@ public class ImagePreviewActivity extends ImagePreviewBaseActivity implements
 	protected void onActivityResult(int arg0, int arg1, Intent arg2) {
 		// TODO Auto-generated method stub
         super.onActivityResult(arg0, arg1, arg2);
-		if (arg1 == RESULT_OK && arg0 == EDIT_IMG) {
-			ImageItem imageItem = (ImageItem) arg2
-					.getSerializableExtra("ImageItem");
-			imagePicker.replaceSelectedImageItem(mCurrentPosition, imageItem);
+		if (arg1 == RESULT_OK && arg0 == REQ_IMAGE_EDIT) {
+			String imgFilePath = arg2.getStringExtra(IMGEditActivity.OUT_FILE_PATH);
+			mImageItems.get(mCurrentPosition).path = imgFilePath;
+			imagePicker.getSelectedImages().get(mCurrentPosition).path=imgFilePath;
 			mAdapter.notifyDataSetChanged();
 		}
 	}

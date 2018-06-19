@@ -11,11 +11,11 @@ import android.widget.LinearLayout;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.chat.PersonDto;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
-import com.inspur.emmcloud.util.privates.cache.RobotCacheUtils;
 
 import java.util.List;
 
@@ -95,14 +95,7 @@ public class ChannelMemberListAdapter extends BaseAdapter implements SectionInde
                 holder.line.setVisibility(View.GONE);
             }
             holder.username.setText(dto.getName());
-            String photoUrl = "";
-            if (dto.getUtype().equals("robot")) {
-                photoUrl = APIUri.getRobotIconUrl(RobotCacheUtils
-                        .getRobotById(mActivity, dto.getUid())
-                        .getAvatar());
-            } else {
-                photoUrl = APIUri.getChannelImgUrl(mActivity, dto.getUid());
-            }
+            String photoUrl = APIUri.getUserIconUrl(MyApplication.getInstance(),dto.getUid());
             ImageDisplayUtils.getInstance().displayImage(holder.headimg, photoUrl, R.drawable.icon_person_default);
 
 

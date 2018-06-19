@@ -14,25 +14,18 @@ import java.util.ArrayList;
  */
 
 public class AppTitleUtils {
-    public static String getTabTitle(Context context,String tabkey){
+    public static String getTabTitle(Context context,String tabKey){
         String appTabs = PreferencesByUserAndTanentUtils.getString(context,"app_tabbar_info_current","");
         ArrayList<AppTabDataBean> tabList = new ArrayList<>();
         AppTabPayloadBean appTabPayloadBean = new AppTabAutoBean(appTabs).getPayload();
         if(appTabPayloadBean != null){
             tabList.addAll(appTabPayloadBean.getTabs());
         }
-        String tabCompont = getCompont(tabkey);
+        String tabCompont = getCompont(tabKey);
         AppTabDataBean tab = getTabByTabKey(tabList,tabCompont);
         if(tab == null){
             return "";
         }
-//        String environmentLanguage = "";
-//        String languageJson = PreferencesUtils.getString(
-//                context, MyApplication.getInstance().getTanent() + "appLanguageObj");
-//        if (languageJson != null) {
-//            Language language = new Language(languageJson);
-//            environmentLanguage = language.getIana();
-//        }
         Configuration config = context.getResources().getConfiguration();
         String environmentLanguage = config.locale.getLanguage();
         if(environmentLanguage.toLowerCase().equals("zh")||environmentLanguage.toLowerCase().equals("zh-Hans".toLowerCase())){
@@ -63,6 +56,8 @@ public class AppTitleUtils {
             return "application";
         }else if(tabkey.equals("MoreFragment")){
             return "mine";
+        }else if(tabkey.equals("ContactSearchFragment")){
+            return "contact";
         }else if(tabkey.equals("NotSupportFragment")){
             return "";
         }
