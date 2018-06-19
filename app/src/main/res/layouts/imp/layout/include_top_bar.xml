@@ -13,6 +13,7 @@
         android:layout_centerVertical="true"
         android:background="@drawable/selector_back_press"
         android:padding="14dp"
+        android:onClick="onClick"
         android:src="@mipmap/ic_back"/>
 
     <View
@@ -46,6 +47,7 @@
         android:minHeight="30dp"
         android:minWidth="50dp"
         android:padding="8dp"
+        android:onClick="onClick"
         android:text="完成(3/9)"
         android:textColor="#ffffff"
         android:textSize="14dp"/>

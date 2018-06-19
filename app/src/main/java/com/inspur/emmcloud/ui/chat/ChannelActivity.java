@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v4.content.LocalBroadcastManager;
@@ -42,7 +41,6 @@ import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.ChannelInfoUtils;
@@ -61,9 +59,10 @@ import com.inspur.emmcloud.widget.ECMChatInputMenu;
 import com.inspur.emmcloud.widget.ECMChatInputMenu.ChatInputMenuListener;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.RecycleViewForSizeChange;
-import com.inspur.imp.plugin.camera.editimage.EditImageActivity;
 import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
 import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
+import com.inspur.imp.plugin.camera.mycamera.MyCameraActivity;
+import com.inspur.imp.util.compressor.Compressor;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -377,15 +376,18 @@ public class ChannelActivity extends BaseActivity {
                 }
                 //拍照返回
             } else if (requestCode == CAMERA_RESULT
-                    && NetUtils.isNetworkConnected(getApplicationContext())) {
-                String cameraImgPath = Environment.getExternalStorageDirectory() + "/DCIM/" + PreferencesUtils.getString(ChannelActivity.this, "capturekey");
-                refreshGallery(ChannelActivity.this, cameraImgPath);
-                EditImageActivity.start(ChannelActivity.this, cameraImgPath, MyAppConfig.LOCAL_IMG_CREATE_PATH);
+                   ) {
+                String imgPath = data.getExtras().getString(MyCameraActivity.OUT_FILE_PATH);
+                try {
+                    File file = new Compressor(ChannelActivity.this).setMaxHeight(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setMaxWidth(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setQuality(90).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
+                            .compressToFile(new File(imgPath));
+                    imgPath = file.getAbsolutePath();
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+                uploadResFileAndSendMessage(imgPath, false);
                 //拍照后图片编辑返回
-            } else if (requestCode == EditImageActivity.ACTION_REQUEST_EDITIMAGE) {
-                String filePath = data.getExtras().getString("save_file_path");
-                uploadResFileAndSendMessage(filePath, false);
-            } else if (requestCode == MENTIONS_RESULT) {
+            }else if (requestCode == MENTIONS_RESULT) {
                 // @返回
                 String result = data.getStringExtra("searchResult");
                 String uid = JSONUtils.getString(result, "uid", null);
@@ -400,8 +402,15 @@ public class ChannelActivity extends BaseActivity {
                     ArrayList<ImageItem> imageItemList = (ArrayList<ImageItem>) data
                             .getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
                     for (int i = 0; i < imageItemList.size(); i++) {
-                        String filePath = imageItemList.get(i).path;
-                        uploadResFileAndSendMessage(filePath, false);
+                        String imgPath =imageItemList.get(i).path;
+                        try {
+                            File file = new Compressor(ChannelActivity.this).setMaxHeight(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setMaxWidth(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setQuality(90).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
+                                    .compressToFile(new File(imgPath));
+                            imgPath = file.getAbsolutePath();
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+                        uploadResFileAndSendMessage(imgPath, false);
                     }
                 }
         }

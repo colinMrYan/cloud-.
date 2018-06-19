@@ -29,6 +29,7 @@ import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
 import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
 import com.inspur.imp.plugin.camera.imagepicker.ui.ImageGridActivity;
 import com.inspur.imp.plugin.camera.imagepicker.view.CropImageView;
+import com.inspur.imp.plugin.camera.mycamera.MyCameraActivity;
 import com.inspur.imp.plugin.photo.PhotoNameUtils;
 import com.inspur.imp.util.compressor.Compressor;
 
@@ -42,7 +43,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ArrayList;
 
 
@@ -132,6 +132,7 @@ public class CameraService extends ImpPlugin {
                 if (!optionsObj.isNull("watermark")){
                     JSONObject watermarkObj = optionsObj.getJSONObject("watermark");
                     watermarkContent = JSONUtils.getString(watermarkObj,"content","");
+                    LogUtils.jasonDebug("watermarkContent="+watermarkContent);
                     fontSize = JSONUtils.getInt(watermarkObj,"fontSize",14);
                     color = JSONUtils.getString(watermarkObj,"color","#ffffff");
                     background = JSONUtils.getString(watermarkObj,"background","#00000000");
@@ -158,11 +159,13 @@ public class CameraService extends ImpPlugin {
         if (state.equals(Environment.MEDIA_MOUNTED)) {
             PublicWay.file = createCaptureFile(encodingType);
             PublicWay.photoService = this;
-            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            this.imageUri = Uri.fromFile(PublicWay.file);
-            intent.putExtra(MediaStore.EXTRA_OUTPUT,
-                    Uri.fromFile(PublicWay.file));
-            ((Activity) context).startActivityForResult(intent, CAMERA);
+            Intent intent = new Intent();
+            intent.putExtra(MyCameraActivity.EXTRA_PHOTO_DIRECTORY_PATH,PublicWay.file.getParent());
+            intent.putExtra(MyCameraActivity.EXTRA_PHOTO_NAME,PublicWay.file.getName());
+            intent.putExtra(MyCameraActivity.EXTRA_ENCODING_TYPE,encodingType);
+            intent.putExtra(MyCameraActivity.EXTRA_RECT_SCALE_JSON,jsonObject.toString());
+            intent.setClass(getActivity(),MyCameraActivity.class);
+            getActivity().startActivityForResult(intent, CAMERA);
 
         } else {
             Toast.makeText(this.context, Res.getString("invalidSD"),
@@ -525,33 +528,6 @@ public class CameraService extends ImpPlugin {
 
         checkForDuplicateImage(imageType);
         System.gc();
-    }
-
-    /**
-     * In the special case where the default width, height and quality are
-     * unchanged we just write the file out to disk saving the expensive
-     * Bitmap.compress function.
-     *
-     * @param uri
-     * @throws FileNotFoundException
-     * @throws IOException
-     */
-    private void writeUncompressedImage(Uri uri) throws FileNotFoundException,
-            IOException {
-        FileInputStream fis = new FileInputStream(
-                FileHelper.stripFileProtocol(this.imageUri.toString()));
-
-
-        OutputStream os = this.context.getContentResolver().openOutputStream(
-                uri);
-        byte[] buffer = new byte[4096];
-        int len;
-        while ((len = fis.read(buffer)) != -1) {
-            os.write(buffer, 0, len);
-        }
-        os.flush();
-        os.close();
-        fis.close();
     }
 
 
