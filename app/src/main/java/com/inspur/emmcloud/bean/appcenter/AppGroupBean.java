@@ -17,26 +17,13 @@ public class AppGroupBean {
 
 	private String categoryID = "";
 	private String categoryName = "";
-//	private List<App> appList = new ArrayList<App>();
 	private List<App> appItemList = new ArrayList<App>();
 	private String categoryIco = "";
 
 	public AppGroupBean() {
 	}
 	public AppGroupBean(String response) {
-			JSONObject jsonObject = JSONUtils.getJSONObject(response);
-			categoryID = JSONUtils.getString(jsonObject,"categoryID","");
-			categoryName = JSONUtils.getString(jsonObject,"categoryName","");
-			if (jsonObject.has("appList")) {
-				JSONArray jsonArray = JSONUtils.getJSONArray(jsonObject,"appList",new JSONArray());
-				for (int i = 0; i < jsonArray.length(); i++) {
-					App app = new App(JSONUtils.getJSONObject(jsonArray,i,new JSONObject()));
-					app.setCategoryID(categoryID);
-					app.setOrderId(1000);
-					appItemList.add(app);
-				}
-			}
-			categoryIco = JSONUtils.getString(response,"category_ico","");
+		this(JSONUtils.getJSONObject(response));
 	}
 	
 	public AppGroupBean(JSONObject jsonObject) {
