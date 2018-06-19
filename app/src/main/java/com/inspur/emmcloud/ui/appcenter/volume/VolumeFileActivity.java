@@ -24,6 +24,8 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.VolumeFileAdapter;
 import com.inspur.emmcloud.adapter.VolumeFileFilterPopGridAdapter;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
+import com.inspur.emmcloud.config.MyAppConfig;
+import com.inspur.emmcloud.ui.chat.ChannelActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
@@ -35,6 +37,8 @@ import com.inspur.emmcloud.util.privates.VolumeFileUploadManagerUtils;
 import com.inspur.emmcloud.widget.dialogs.ActionSheetDialog;
 import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
 import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
+import com.inspur.imp.plugin.camera.mycamera.MyCameraActivity;
+import com.inspur.imp.util.compressor.Compressor;
 
 import org.xutils.view.annotation.ViewInject;
 
@@ -500,8 +504,15 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                 uploadFile(filePath);
             } else if (requestCode == REQUEST_OPEN_CEMERA //拍照返回
                     && NetUtils.isNetworkConnected(getApplicationContext())) {
-                String filePath = data.getExtras().getString("save_file_path");
-                uploadFile(filePath);
+                String imgPath = data.getExtras().getString(MyCameraActivity.OUT_FILE_PATH);
+                try {
+                    File file = new Compressor(VolumeFileActivity.this).setMaxHeight(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setMaxWidth(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setQuality(90).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
+                            .compressToFile(new File(imgPath));
+                    imgPath = file.getAbsolutePath();
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+                uploadFile(imgPath);
             } else if (requestCode == REQUEST_SHOW_FILE_FILTER) {  //移动文件
                 getVolumeFileList(false);
             }
@@ -509,8 +520,15 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
             if (data != null && requestCode == REQUEST_OPEN_GALLERY) {
                 ArrayList<ImageItem> imageItemList = (ArrayList<ImageItem>) data
                         .getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
-                String filePath = imageItemList.get(0).path;
-                uploadFile(filePath);
+                String imgPath =imageItemList.get(0).path;
+                try {
+                    File file = new Compressor(VolumeFileActivity.this).setMaxHeight(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setMaxWidth(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setQuality(90).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
+                            .compressToFile(new File(imgPath));
+                    imgPath = file.getAbsolutePath();
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+                uploadFile(imgPath);
             }
         }
 

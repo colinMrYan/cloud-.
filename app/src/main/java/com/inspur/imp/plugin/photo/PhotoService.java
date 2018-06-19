@@ -169,10 +169,11 @@ public class PhotoService extends ImpPlugin {
         if (requestCode == RESULT_CAMERA) {
             if (resultCode == getActivity().RESULT_OK) {
                 loadingDlg.show();
-                final String originImagePath = intent.getStringExtra(MyCameraActivity.OUT_FILE_PATH);
+                String originImagePath = intent.getStringExtra(MyCameraActivity.OUT_FILE_PATH);
                 try {
-                    new Compressor(context).setMaxHeight(parm_resolution).setMaxWidth(parm_resolution).setQuality(parm_qualtity).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
+                    File originImgFile =  new Compressor(context).setMaxHeight(parm_resolution).setMaxWidth(parm_resolution).setQuality(parm_qualtity).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
                             .compressToFile(new File(originImagePath));
+                    final String originImagefinalPath = originImgFile.getAbsolutePath();
                     new UploadPhoto(getActivity(), new UploadPhoto.OnUploadPhotoListener() {
 
                         @Override
@@ -184,7 +185,7 @@ public class PhotoService extends ImpPlugin {
                                 JSONObject contextObj = new JSONObject(result);
                                 jsonObject.put("context", contextObj);
                                thumbnailBitmap = new Compressor(context).setMaxHeight(MyAppConfig.UPLOAD_THUMBNAIL_IMG_MAX_SIZE).setMaxWidth(MyAppConfig.UPLOAD_THUMBNAIL_IMG_MAX_SIZE).setQuality(90).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
-                                        .compressToBitmap(new File(originImagePath));
+                                        .compressToBitmap(new File(originImagefinalPath));
                                 String bitmapBase64 = Bimp.bitmapToBase64(thumbnailBitmap);
                                 jsonObject.put("thumbnailData", bitmapBase64);
                                 String returnData = jsonObject.toString();
@@ -229,9 +230,9 @@ public class PhotoService extends ImpPlugin {
                     final List<String> originImagePathList = new ArrayList<>();
                     for (ImageItem imageItem : selectedList) {
                         String originImagePath = imageItem.path;
-                        originImagePathList.add(originImagePath);
-                        new Compressor(context).setMaxHeight(parm_resolution).setMaxWidth(parm_resolution).setQuality(parm_qualtity).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
+                        File originImgFile = new Compressor(context).setMaxHeight(parm_resolution).setMaxWidth(parm_resolution).setQuality(parm_qualtity).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
                                 .compressToFile(new File(originImagePath));
+                        originImagePathList.add(originImgFile.getAbsolutePath());
                     }
                     new UploadPhoto(getActivity(), new UploadPhoto.OnUploadPhotoListener() {
 

@@ -36,6 +36,7 @@ import com.inspur.emmcloud.bean.chat.Robot;
 import com.inspur.emmcloud.bean.contact.Contact;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.broadcastreceiver.MsgReceiver;
+import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.ui.appcenter.groupnews.NewsWebDetailActivity;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
@@ -63,6 +64,8 @@ import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.RecycleViewForSizeChange;
 import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
 import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
+import com.inspur.imp.plugin.camera.mycamera.MyCameraActivity;
+import com.inspur.imp.util.compressor.Compressor;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -427,11 +430,17 @@ public class ChannelV0Activity extends BaseActivity {
                 addLocalMessage(localMsg);
                 //拍照返回
             } else if (requestCode == CAMERA_RESULT) {
-                String imgPath = data.getExtras().getString("save_file_path");
+                String imgPath = data.getExtras().getString(MyCameraActivity.OUT_FILE_PATH);
+               try {
+                   File file = new Compressor(ChannelV0Activity.this).setMaxHeight(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setMaxWidth(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setQuality(90).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
+                           .compressToFile(new File(imgPath));
+                   imgPath = file.getAbsolutePath();
+               }catch (Exception e){
+                   e.printStackTrace();
+               }
                 Msg localMsg = MsgRecourceUploadUtils.uploadResImg(
                         ChannelV0Activity.this, imgPath, apiService);
                 addLocalMessage(localMsg);
-                //拍照后图片编辑返回
             }  else if (requestCode == MENTIONS_RESULT) {
                 // @返回
                 String result = data.getStringExtra("searchResult");
@@ -447,8 +456,16 @@ public class ChannelV0Activity extends BaseActivity {
                     ArrayList<ImageItem> imageItemList = (ArrayList<ImageItem>) data
                             .getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
                     for (int i = 0; i < imageItemList.size(); i++) {
+                        String imgPath =imageItemList.get(i).path;
+                        try {
+                            File file = new Compressor(ChannelV0Activity.this).setMaxHeight(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setMaxWidth(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setQuality(90).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
+                                    .compressToFile(new File(imgPath));
+                            imgPath = file.getAbsolutePath();
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
                         Msg localMsg = MsgRecourceUploadUtils.uploadResImg(
-                                ChannelV0Activity.this, imageItemList.get(i).path, apiService);
+                                ChannelV0Activity.this,imgPath, apiService);
                         addLocalMessage(localMsg);
                     }
                 }
