@@ -27,10 +27,10 @@ public class AppGroupBean {
 			JSONObject jsonObject = JSONUtils.getJSONObject(response);
 			categoryID = JSONUtils.getString(jsonObject,"categoryID","");
 			categoryName = JSONUtils.getString(jsonObject,"categoryName","");
-			if (JSONUtils.isJsonObjHasKey(jsonObject,"appList")) {
+			if (jsonObject.has("appList")) {
 				JSONArray jsonArray = JSONUtils.getJSONArray(jsonObject,"appList",new JSONArray());
 				for (int i = 0; i < jsonArray.length(); i++) {
-					App app = new App(JSONUtils.getJSONObjectFromJSONArray(jsonArray,i));
+					App app = new App(JSONUtils.getJSONObject(jsonArray,i,new JSONObject()));
 					app.setCategoryID(categoryID);
 					app.setOrderId(1000);
 					appItemList.add(app);
@@ -45,7 +45,7 @@ public class AppGroupBean {
 			if (jsonObject.has("appList")) {
 				JSONArray jsonArray = JSONUtils.getJSONArray(jsonObject,"appList",new JSONArray());
 				for (int i = 0; i < jsonArray.length(); i++) {
-					App app = new App(JSONUtils.getJSONObjectFromJSONArray(jsonArray,i));
+					App app = new App(JSONUtils.getJSONObject(jsonArray,i,new JSONObject()));
 					app.setCategoryID(categoryID);
 					app.setOrderId(1000);
 					appItemList.add(app);
