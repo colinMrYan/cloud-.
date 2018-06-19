@@ -5,6 +5,7 @@ import android.view.View;
 
 import com.inspur.emmcloud.BaseFragmentActivity;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.util.common.StateBarUtils;
 
 /**
  * 通讯录选择界面
@@ -17,6 +18,7 @@ public class ContactSearchActivity extends BaseFragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        StateBarUtils.changeStateBarColor(this);
         setContentView(R.layout.activity_contact_search_hold);
         //必需继承FragmentActivity,嵌套fragment只需要这行代码
         fragment = new ContactSearchFragment();
@@ -25,11 +27,7 @@ public class ContactSearchActivity extends BaseFragmentActivity {
 
     @Override
     public void onBackPressed() {
-        if(fragment.isPopLayoutVisible()){
-            fragment.clearSearchEdit();
-        }else if(fragment.isOpenGroupLayoutVisiable()){
-            fragment.back2LastGroup();
-        }else{
+        if (!fragment.onBackPressedConsumeByUI()){
             super.onBackPressed();
         }
     }

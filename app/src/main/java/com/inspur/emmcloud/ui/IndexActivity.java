@@ -26,9 +26,9 @@ import com.inspur.emmcloud.service.BackgroundService;
 import com.inspur.emmcloud.service.CoreService;
 import com.inspur.emmcloud.service.LocationService;
 import com.inspur.emmcloud.service.PVCollectService;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
+import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppConfigUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ClientIDUtils;
@@ -224,8 +224,8 @@ public class IndexActivity extends IndexBaseActivity {
                                 .setIsContactReady(true);
                         notifySyncAllBaseDataSuccess();
                         MyApplication.getInstance().startWebSocket(true);// 启动webSocket推送
-                        getAllChannelGroup();
                         getContactOrg();
+                        getAllChannelGroup();
                         getAllRobotInfo();
                         break;
                     case RELOAD_WEB:
