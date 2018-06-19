@@ -1,15 +1,5 @@
 package com.inspur.emmcloud.bean.contact;
 
-import android.content.Context;
-
-import com.facebook.react.bridge.WritableNativeMap;
-import com.inspur.emmcloud.api.APIUri;
-import com.inspur.emmcloud.util.common.StringUtils;
-
-import org.json.JSONObject;
-import org.xutils.db.annotation.Column;
-import org.xutils.db.annotation.Table;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;

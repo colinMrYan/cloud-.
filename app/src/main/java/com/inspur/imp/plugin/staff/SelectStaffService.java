@@ -4,15 +4,16 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.bean.contact.Contact;
+import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.bean.contact.SearchModel;
 import com.inspur.emmcloud.ui.chat.MembersActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
+import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.privates.cache.ContactCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.imp.plugin.ImpPlugin;
 import com.inspur.imp.plugin.camera.PublicWay;
 import com.inspur.imp.util.DialogUtil;
@@ -95,9 +96,9 @@ public class SelectStaffService extends ImpPlugin {
         Intent intent = new Intent();
         intent.setClass(getActivity(),
                 ContactSearchActivity.class);
-        intent.putExtra(ContactSearchActivity.EXTRA_TYPE, 2);
-        intent.putExtra(ContactSearchActivity.EXTRA_MULTI_SELECT, multiSelection == 0 ? false : true);
-        intent.putExtra(ContactSearchActivity.EXTRA_TITLE, getActivity().getString(R.string.adress_list));
+        intent.putExtra(ContactSearchFragment.EXTRA_TYPE, 2);
+        intent.putExtra(ContactSearchFragment.EXTRA_MULTI_SELECT, multiSelection == 0 ? false : true);
+        intent.putExtra(ContactSearchFragment.EXTRA_TITLE, getActivity().getString(R.string.adress_list));
         getActivity().startActivityForResult(intent, CONTACT_PICKER);
     }
 
@@ -133,7 +134,7 @@ public class SelectStaffService extends ImpPlugin {
                     uidList.add(contactId);
                 }
             }
-            List<Contact> contactList = ContactCacheUtils.getSoreUserList(getActivity(), uidList);
+            List<ContactUser> contactList = ContactUserCacheUtils.getSoreUserList(uidList);
             if (contactList.size() == 1) {
                 this.jsCallback(successCb, contactList.get(0).contact2JSONObject(getActivity()).toString());
             } else {
