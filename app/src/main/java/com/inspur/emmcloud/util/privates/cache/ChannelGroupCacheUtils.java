@@ -3,16 +3,13 @@ package com.inspur.emmcloud.util.privates.cache;
 import android.content.Context;
 
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
-import com.inspur.emmcloud.bean.contact.Contact;
 import com.inspur.emmcloud.util.common.StringUtils;
 
-import org.json.JSONArray;
 import org.xutils.common.util.KeyValue;
 import org.xutils.db.sqlite.WhereBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 频道列表缓存处理类
@@ -166,107 +163,6 @@ public class ChannelGroupCacheUtils {
         return  userList;
     }
 
-    /**
-     * 获取群组成员
-     * @param context
-     * @param channelGroup
-     * @param limit
-     * @return
-     */
-    public static List<String> getMemberUidList(Context context,  ChannelGroup channelGroup,
-                                                int limit) {
-        List<String> userList = new ArrayList<String>();
-        try {
-            if (channelGroup != null) {
-                List<String>  allMemberList = channelGroup.getMemberList();
-                if (limit == 0 ){
-                    userList.addAll(allMemberList);
-                }else {
-                    int size = allMemberList.size();
-                    if (size < limit) {
-                        limit = size;
-                    }
-                    for (int i = 0; i < limit; i++) {
-                        String uid = allMemberList.get(i);
-                        userList.add(i,uid);
-                    }
-                }
-            }
-
-        }catch (Exception e) {
-            // TODO: handle exception
-            e.printStackTrace();
-        }
-        return  userList;
-    }
-
-    /**
-     * 获取群组中成员列表
-     *
-     * @param context
-     * @param cid
-     * @param limit
-     * @return
-     */
-    public static List<Contact> getMembersList(Context context, String cid,
-                                               int limit) {
-        List<Contact> userList = new ArrayList<Contact>();
-        try {
-            ChannelGroup channelGroup = DbCacheUtils.getDb(context).findById(ChannelGroup.class, cid);
-            if (channelGroup != null) {
-                JSONArray memberArray = new JSONArray();
-                JSONArray allMemberArray = channelGroup.getMembersArray();
-                if (limit == 0) {
-                    memberArray = allMemberArray;
-                } else {
-                    int size = allMemberArray.length();
-                    if (size < limit) {
-                        limit = size;
-                    }
-                    for (int i = 0; i < limit; i++) {
-                        String uid = allMemberArray.getString(i);
-                        memberArray.put(i, uid);
-                    }
-                }
-
-                userList = ContactCacheUtils.getSoreUserList(context, memberArray);
-            }
-        } catch (Exception e) {
-            // TODO: handle exception
-            e.printStackTrace();
-        }
-        if (userList == null) {
-            userList = new ArrayList<Contact>();
-        }
-        return userList;
-
-    }
-
-    public static List<Contact> getMembersList(Context context, String cid) {
-        return getMembersList(context, cid, 0);
-    }
-
-    public static List<Map<String, String>> getMembersMapList(Context context,
-                                                              String cid) {
-        List<Map<String, String>> userMapList = new ArrayList<Map<String, String>>();
-        try {
-            ChannelGroup channelGroup = DbCacheUtils.getDb(context).findById(ChannelGroup.class, cid);
-            if (channelGroup != null) {
-                String members = channelGroup.getMembers();
-                JSONArray memberArray = new JSONArray(members);
-                userMapList = ContactCacheUtils
-                        .getUserMap(context, memberArray);
-            }
-        } catch (Exception e) {
-            // TODO: handle exception
-            e.printStackTrace();
-        }
-        if (userMapList == null) {
-            userMapList = new ArrayList<Map<String, String>>();
-        }
-        return userMapList;
-
-    }
 
     /**
      * 更改群组名称

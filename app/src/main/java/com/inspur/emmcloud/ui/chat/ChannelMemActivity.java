@@ -16,7 +16,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
-import com.inspur.emmcloud.widget.CircleImageView;
+import com.inspur.emmcloud.widget.CircleTextImageView;
 
 public class ChannelMemActivity extends BaseActivity {
 
@@ -83,7 +83,7 @@ public class ChannelMemActivity extends BaseActivity {
                 LayoutInflater vi = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
                 convertView = vi.inflate(R.layout.channel_member_item_view,
                         null);
-                viewHolder.memberHeadImg = (CircleImageView) convertView
+                viewHolder.memberHeadImg = (CircleTextImageView) convertView
                         .findViewById(R.id.member_head_img);
                 viewHolder.nameText = (TextView) convertView
                         .findViewById(R.id.name_text);
@@ -94,14 +94,14 @@ public class ChannelMemActivity extends BaseActivity {
 
             String uid = memberArray[position];
             ImageDisplayUtils.getInstance().displayImage(viewHolder.memberHeadImg,
-                    APIUri.getChannelImgUrl(ChannelMemActivity.this, uid), R.drawable.icon_photo_default);
+                    APIUri.getUserIconUrl(ChannelMemActivity.this, uid), R.drawable.icon_photo_default);
             viewHolder.nameText.setText("");
             return convertView;
         }
     }
 
     public static class ViewHolder {
-        CircleImageView memberHeadImg;
+        CircleTextImageView memberHeadImg;
         TextView nameText;
     }
 

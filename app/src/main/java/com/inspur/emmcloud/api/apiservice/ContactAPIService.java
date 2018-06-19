@@ -17,12 +17,12 @@ import com.inspur.emmcloud.api.CloudHttpMethod;
 import com.inspur.emmcloud.api.HttpUtils;
 import com.inspur.emmcloud.bean.chat.GetAllRobotsResult;
 import com.inspur.emmcloud.bean.chat.Robot;
-import com.inspur.emmcloud.bean.contact.GetAllContactResult;
 import com.inspur.emmcloud.interf.OauthCallBack;
-import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.OauthUtils;
 
+import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
+import org.xutils.x;
 
 /**
  * com.inspur.emmcloud.api.apiservice.ContactAPIService
@@ -39,52 +39,6 @@ public class ContactAPIService {
 		this.apiInterface = apiInterface;
 	}
 	
-	
-	/**
-	 * 获取全部通讯录
-	 * 
-	 * @param lastQueryTime
-	 */
-	public void getAllContact(final String lastQueryTime) {
-		final String completeUrl = APIUri.getAllContact();
-		RequestParams params = ((MyApplication)context.getApplicationContext()).getHttpRequestParams(completeUrl);
-		if (!StringUtils.isBlank(lastQueryTime)) {
-			params.addParameter("lastQueryTime", lastQueryTime);
-		}
-		HttpUtils.request(context, CloudHttpMethod.POST,params,new APICallback(context,completeUrl) {
-
-			@Override
-			public void callbackTokenExpire(long requestTime) {
-				OauthCallBack oauthCallBack = new OauthCallBack() {
-					@Override
-					public void reExecute() {
-						getAllContact(lastQueryTime);
-					}
-
-					@Override
-					public void executeFailCallback() {
-						callbackFail("", -1);
-					}
-				};
-				OauthUtils.getInstance().refreshToken(
-						oauthCallBack, requestTime);
-			}
-
-			@Override
-			public void callbackSuccess(String arg0) {
-				// TODO Auto-generated method stub
-				apiInterface.returnAllContactSuccess(new GetAllContactResult(
-						arg0));
-			}
-
-			@Override
-			public void callbackFail(String error, int responseCode) {
-				// TODO Auto-generated method stub
-				apiInterface.returnAllContactFail(error,responseCode);
-			}
-		});
-		
-	}
 	
 	/**
 	 * 获取所有机器人信息
@@ -112,8 +66,8 @@ public class ContactAPIService {
 			}
 			
 			@Override
-			public void callbackSuccess(String arg0) {
-				apiInterface.returnAllRobotsSuccess(new GetAllRobotsResult(arg0));
+			public void callbackSuccess(byte[] arg0) {
+				apiInterface.returnAllRobotsSuccess(new GetAllRobotsResult(new String(arg0)));
 			}
 			
 			@Override
@@ -150,8 +104,8 @@ public class ContactAPIService {
 			}
 
 			@Override
-			public void callbackSuccess(String arg0) {
-				apiInterface.returnRobotByIdSuccess(new Robot(arg0));
+			public void callbackSuccess(byte[] arg0) {
+				apiInterface.returnRobotByIdSuccess(new Robot(new String(arg0)));
 			}
 			
 			@Override
@@ -160,4 +114,72 @@ public class ContactAPIService {
 			}
 		});
 	}
+
+	public void getContactUserList(final long lastQuetyTime){
+		String url = APIUri.getContactUserUrl();
+		RequestParams params = MyApplication.getInstance().getHttpRequestParams(url);
+		if (lastQuetyTime != 0) {
+			params.addParameter("lastQueryTime", lastQuetyTime);
+		}
+		x.http().post(params, new APICallback(context,url){
+			@Override
+			public void callbackSuccess(byte[] arg0) {
+				apiInterface.returnContactUserListSuccess(arg0);
+			}
+
+			@Override
+			public void callbackFail(String error, int responseCode) {
+				apiInterface.returnContactUserListFail("",-1);
+			}
+
+			@Override
+			public void callbackTokenExpire(long requestTime) {
+				OauthCallBack oauthCallBack = new OauthCallBack() {
+					@Override
+					public void reExecute() {
+						getContactUserList(lastQuetyTime);
+					}
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				};
+				OauthUtils.getInstance().refreshToken(
+						oauthCallBack, requestTime);
+			}
+		} );
+	}
+
+	public void getContactOrgList(long lastQuetyTime){
+		String url = APIUri.getContactOrgUrl();
+		RequestParams params =  MyApplication.getInstance().getHttpRequestParams(url);
+		if (lastQuetyTime != 0) {
+			params.addParameter("lastQueryTime", lastQuetyTime);
+		}
+		x.http().post(params, new Callback.CommonCallback<byte[]>() {
+			@Override
+			public void onSuccess(byte[] bytes) {
+				apiInterface.returnContactOrgListSuccess(bytes);
+			}
+
+			@Override
+			public void onError(Throwable throwable, boolean b) {
+				apiInterface.returnContactOrgListFail("",-1);
+			}
+
+			@Override
+			public void onCancelled(CancelledException e) {
+
+			}
+
+			@Override
+			public void onFinished() {
+
+			}
+		});
+	}
+
+
+
 }

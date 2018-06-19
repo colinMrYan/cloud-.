@@ -45,8 +45,7 @@ import com.inspur.emmcloud.util.privates.TransHtmlToTextUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MsgCacheUtil;
-import com.inspur.emmcloud.util.privates.cache.RobotCacheUtils;
-import com.inspur.emmcloud.widget.CircleImageView;
+import com.inspur.emmcloud.widget.CircleTextImageView;
 import com.inspur.emmcloud.widget.ECMChatInputMenu;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.ScrollViewWithListView;
@@ -58,8 +57,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-
-import static com.inspur.emmcloud.api.APIUri.getChannelImgUrl;
 
 
 /**
@@ -79,7 +76,7 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
     private LoadingDialog loadingDialog;
     private ScrollView commentScrollView;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private CircleImageView senderHeadImg;
+    private CircleTextImageView senderHeadImg;
     private TextView msgSendTimeText;
     private TextView senderNameText;
     private ImageView msgContentImg;
@@ -110,7 +107,7 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
         inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         View msgDetailLayout = inflater.inflate(R.layout.msg_parent_detail,
                 null);
-        senderHeadImg = (CircleImageView) msgDetailLayout
+        senderHeadImg = (CircleTextImageView) msgDetailLayout
                 .findViewById(R.id.sender_photo_img);
         msgSendTimeText = (TextView) msgDetailLayout
                 .findViewById(R.id.msg_send_time_text);
@@ -252,14 +249,7 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
      */
     private void disPlayCommonInfo() {
         //机器人进群修改处
-        String iconUrl = "";
-        if (msg.getUid().startsWith("BOT")) {
-            iconUrl = APIUri.getRobotIconUrl(RobotCacheUtils
-                    .getRobotById(ChannelMsgDetailActivity.this, msg.getUid())
-                    .getAvatar());
-        } else {
-            iconUrl = getChannelImgUrl(ChannelMsgDetailActivity.this, msg.getUid());
-        }
+        String iconUrl = APIUri.getUserIconUrl(MyApplication.getInstance(), msg.getUid());
         ImageDisplayUtils.getInstance().displayImage(senderHeadImg, iconUrl, R.drawable.icon_photo_default);
         senderHeadImg.setOnClickListener(new OnClickListener() {
             @Override
@@ -411,15 +401,7 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
             sendTimeText.setText(time);
 
             //机器人进群修改处
-            String iconUrl = "";
-            if (comment.getUid().startsWith("BOT")) {
-                iconUrl = APIUri.getRobotIconUrl(RobotCacheUtils
-                        .getRobotById(ChannelMsgDetailActivity.this, comment.getUid())
-                        .getAvatar());
-            } else {
-                iconUrl =
-                        getChannelImgUrl(ChannelMsgDetailActivity.this, comment.getUid());
-            }
+            String iconUrl = APIUri.getUserIconUrl(MyApplication.getInstance(),comment.getUid());
             ImageDisplayUtils.getInstance().displayImage(photoImg, iconUrl, R.drawable.icon_person_default);
             photoImg.setOnClickListener(new OnClickListener() {
                 @Override

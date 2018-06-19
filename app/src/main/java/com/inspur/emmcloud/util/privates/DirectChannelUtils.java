@@ -4,10 +4,10 @@ import android.content.Context;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APIUri;
-import com.inspur.emmcloud.bean.contact.Contact;
 import com.inspur.emmcloud.bean.chat.Robot;
+import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.privates.cache.ContactCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.RobotCacheUtils;
 
 public class DirectChannelUtils {
@@ -22,9 +22,9 @@ public class DirectChannelUtils {
     public static String getDirectChannelTitle(Context context, String title) {
         String channelTitle = "";
         if (title.contains("-") && title.contains(MyApplication.getInstance().getUid())){
-            Contact otherContact = getDirctChannelOtherContact(context, title);
-            if (otherContact != null) {
-                channelTitle = otherContact.getRealName();
+            ContactUser otherContactUser = getDirctChannelOtherContactUser(context, title);
+            if (otherContactUser != null) {
+                channelTitle = otherContactUser.getName();
             }
         }
         return channelTitle;
@@ -68,24 +68,23 @@ public class DirectChannelUtils {
      * @param title
      * @return
      */
-    public static Contact getDirctChannelOtherContact(Context context,
+    public static ContactUser getDirctChannelOtherContactUser(Context context,
                                                       String title) {
-        Contact contact = null;
+        ContactUser contactUser = null;
         try {
             String[] uidArray = title.split("-");
-            String myUid = PreferencesUtils.getString(context, "userID");
             String otherUid = "";
-            if (uidArray[0].equals(myUid)) {
+            if (uidArray[0].equals(MyApplication.getInstance().getUid())) {
                 otherUid = uidArray[1];
             } else {
                 otherUid = uidArray[0];
             }
-            contact = ContactCacheUtils.getUserContact(context, otherUid);
+            contactUser = ContactUserCacheUtils.getContactUserByUid(otherUid);
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
         }
-        return contact;
+        return contactUser;
     }
 
     /**

@@ -12,7 +12,7 @@ import com.inspur.emmcloud.util.common.richtext.markdown.MarkDown;
 import com.inspur.emmcloud.util.privates.ChatMsgContentUtils;
 import com.inspur.emmcloud.util.privates.DirectChannelUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
-import com.inspur.emmcloud.util.privates.cache.ContactCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 
 import org.json.JSONObject;
 import org.xutils.db.annotation.Column;
@@ -258,7 +258,7 @@ public class Channel implements Serializable {
             String fromUserName = "";
             String messageType = message.getType();
             if (!type.equals("DIRECT") && !message.getFromUser().equals(MyApplication.getInstance().getUid())) {
-                fromUserName = ContactCacheUtils.getUserName(MyApplication.getInstance(), message.getFromUser()) + "：";
+                fromUserName = ContactUserCacheUtils.getUserName(message.getFromUser()) + "：";
             }
             switch (messageType) {
                 case "text/plain":

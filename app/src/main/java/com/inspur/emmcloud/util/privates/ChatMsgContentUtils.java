@@ -7,7 +7,7 @@ import android.text.Spanned;
 import com.inspur.emmcloud.bean.work.MentionsAndUrl;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.privates.cache.ContactCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.widget.spans.URLClickableSpan;
 
 import java.util.ArrayList;
@@ -35,7 +35,7 @@ public class ChatMsgContentUtils {
             if (mentionsMap.containsKey(key)) {
                 String uid = mentionsMap.get(key);
                 String protocol = "ecm-contact://" + uid;
-                String newString = "@" + ContactCacheUtils.getUserName(context, uid)+" ";
+                String newString = "@" + ContactUserCacheUtils.getUserName(uid)+" ";
                 int startPosition = contentStringBuilder.indexOf(patternString);
                 contentStringBuilder.replace(startPosition, startPosition+patternString.length(), newString);
                 MentionProtocolList.add(new MentionsAndUrl(startPosition, startPosition + newString.length(), protocol));

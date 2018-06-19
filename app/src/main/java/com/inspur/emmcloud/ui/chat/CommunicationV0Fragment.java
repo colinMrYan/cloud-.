@@ -74,7 +74,7 @@ import com.inspur.emmcloud.util.privates.cache.MessageMatheSetCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MsgCacheUtil;
 import com.inspur.emmcloud.util.privates.cache.MsgReadCreationDateCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
-import com.inspur.emmcloud.widget.CircleImageView;
+import com.inspur.emmcloud.widget.CircleTextImageView;
 import com.inspur.emmcloud.widget.WeakThread;
 import com.inspur.imp.plugin.barcode.scan.CaptureActivity;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
@@ -738,7 +738,7 @@ public class CommunicationV0Fragment extends Fragment {
 
     static class ViewHolder {
         RelativeLayout mainLayout;
-        CircleImageView channelPhotoImg;
+        CircleTextImageView channelPhotoImg;
         TextView channelContentText;
         TextView channelTitleText;
         TextView channelTimeText;
@@ -784,7 +784,7 @@ public class CommunicationV0Fragment extends Fragment {
                 convertView = LayoutInflater.from(getActivity()).inflate(R.layout.msg_item_view, null);
                 holder.mainLayout = (RelativeLayout) convertView
                         .findViewById(R.id.main_layout);
-                holder.channelPhotoImg = (CircleImageView) convertView
+                holder.channelPhotoImg = (CircleTextImageView) convertView
                         .findViewById(R.id.msg_img);
                 holder.channelTitleText = (TextView) convertView
                         .findViewById(R.id.name_text);
@@ -817,7 +817,7 @@ public class CommunicationV0Fragment extends Fragment {
          *
          * @param channel
          */
-        private void setChannelIcon(Channel channel, CircleImageView channelPhotoImg) {
+        private void setChannelIcon(Channel channel, CircleTextImageView channelPhotoImg) {
             // TODO Auto-generated method stub
             Integer defaultIcon = R.drawable.icon_channel_group_default; // 默认显示图标
             String iconUrl = channel.getIcon();// Channel头像的uri

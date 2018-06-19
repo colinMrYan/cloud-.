@@ -34,6 +34,7 @@ import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.Msg;
 import com.inspur.emmcloud.bean.chat.Robot;
 import com.inspur.emmcloud.bean.contact.Contact;
+import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.broadcastreceiver.MsgReceiver;
 import com.inspur.emmcloud.config.MyAppConfig;
@@ -55,6 +56,7 @@ import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.MsgRecourceUploadUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MsgCacheUtil;
 import com.inspur.emmcloud.util.privates.cache.MsgReadCreationDateCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
@@ -643,6 +645,8 @@ public class ChannelV0Activity extends BaseActivity {
             IntentUtils.startActivity(ChannelV0Activity.this,
                     RobotInfoActivity.class, bundle);
         } else {
+            String uid = DirectChannelUtils.getDirctChannelOtherUid(MyApplication.getInstance(),channel.getTitle());
+            bundle.putString("uid", uid);
             IntentUtils.startActivity(ChannelV0Activity.this,
                     UserInfoActivity.class, bundle);
         }
@@ -655,8 +659,8 @@ public class ChannelV0Activity extends BaseActivity {
         String fakeMessageId = System.currentTimeMillis() + "";
         //当在机器人频道时输入小于4个汉字时先进行通讯录查找，查找到返回通讯路卡片
         if (isSpecialUser && !isActionMsg && content.length() < 4 && StringUtils.isChinese(content)) {
-            Contact contact = ContactCacheUtils.getContactByUserName(getApplicationContext(), content);
-            if (contact != null) {
+            ContactUser contactUser = ContactUserCacheUtils.getContactUserByUserName(content);
+            if (contactUser != null) {
                 JSONObject sourceObj = new JSONObject();
                 try {
                     sourceObj.put("source", content);
@@ -667,7 +671,7 @@ public class ChannelV0Activity extends BaseActivity {
                 Msg localMsg = ConbineMsg.conbineMsg(ChannelV0Activity.this,
                         sourceObj.toString(), "", "txt_rich", fakeMessageId);
                 addLocalMessage(localMsg, 1);
-                Message conbineReplyMessage = ConbineMsg.conbineReplyAttachmentCardMsg(contact, cid, robotUid, fakeMessageId);
+                Message conbineReplyMessage = ConbineMsg.conbineReplyAttachmentCardMsg(contactUser, cid, robotUid, fakeMessageId);
                 Msg replyLocalMsg = ConbineMsg.conbineRobotMsg(ChannelV0Activity.this,
                         conbineReplyMessage.Message2MsgBody(), robotUid, "txt_rich", fakeMessageId);
                 addLocalMessage(replyLocalMsg, 1);

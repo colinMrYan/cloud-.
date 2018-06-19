@@ -40,7 +40,7 @@
             android:scaleType="fitXY"
             android:src="@drawable/bg_head" />
  -->
-     <com.inspur.emmcloud.widget.CircleImageView
+     <com.inspur.emmcloud.widget.CircleTextImageView
         android:id="@+id/head"
         android:layout_width="38dp"
         android:layout_height="38dp"

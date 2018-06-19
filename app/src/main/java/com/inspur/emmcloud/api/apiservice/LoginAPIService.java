@@ -61,9 +61,9 @@ public class LoginAPIService {
 		HttpUtils.request(context, CloudHttpMethod.POST,params, new APICallback(context,completeUrl) {
 
 			@Override
-			public void callbackSuccess(String arg0) {
+			public void callbackSuccess(byte[] arg0) {
 				// TODO Auto-generated method stub
-				apiInterface.returnOauthSigninSuccess(new GetLoginResult(arg0));
+				apiInterface.returnOauthSigninSuccess(new GetLoginResult(new String(arg0)));
 			}
 
 			@Override
@@ -96,9 +96,9 @@ public class LoginAPIService {
 		HttpUtils.request(context,CloudHttpMethod.POST,params, new APICallback(context,completeUrl) {
 
 			@Override
-			public void callbackSuccess(String arg0) {
+			public void callbackSuccess(byte[] arg0) {
 				// TODO Auto-generated method stub
-				apiInterface.returnOauthSigninSuccess(new GetLoginResult(arg0));
+				apiInterface.returnOauthSigninSuccess(new GetLoginResult(new String(arg0)));
 			}
 
 			@Override
@@ -137,10 +137,10 @@ public class LoginAPIService {
 			}
 
 			@Override
-			public void callbackSuccess(String arg0) {
+			public void callbackSuccess(byte[] arg0) {
 				// TODO Auto-generated method stub
 				apiInterface
-						.returnReqLoginSMSSuccess(new GetBoolenResult(arg0));
+						.returnReqLoginSMSSuccess(new GetBoolenResult(new String(arg0)));
 			}
 
 			@Override
@@ -174,11 +174,10 @@ public class LoginAPIService {
 			}
 
 			@Override
-			public void callbackSuccess(String arg0) {
+			public void callbackSuccess(byte[] arg0) {
 				// TODO Auto-generated method stub
 				apiInterface
-						.returnReisterSMSCheckSuccess(new GetRegisterCheckResult(
-								arg0));
+						.returnReisterSMSCheckSuccess(new GetRegisterCheckResult(new String(arg0)));
 			}
 
 			@Override
@@ -218,10 +217,9 @@ public class LoginAPIService {
 			}
 
 			@Override
-			public void callbackSuccess(String arg0) {
+			public void callbackSuccess(byte[] arg0) {
 				// TODO Auto-generated method stub
-				apiInterface.returnMyInfoSuccess(new GetMyInfoResult(
-						arg0));
+				apiInterface.returnMyInfoSuccess(new GetMyInfoResult(new String(arg0)));
 			}
 
 			@Override
@@ -265,7 +263,7 @@ public class LoginAPIService {
 			}
 
 			@Override
-			public void callbackSuccess(String arg0) {
+			public void callbackSuccess(byte[] arg0) {
 				// TODO Auto-generated method stub
 				apiInterface.returnModifyPsdSuccess();
 			}
@@ -311,8 +309,8 @@ public class LoginAPIService {
 			}
 
 			@Override
-			public void callbackSuccess(String arg0) {
-				apiInterface.returnUpdatePwdBySMSCodeSuccess(new GetUpdatePwdBySMSCodeBean(arg0));
+			public void callbackSuccess(byte[] arg0) {
+				apiInterface.returnUpdatePwdBySMSCodeSuccess(new GetUpdatePwdBySMSCodeBean(new String(arg0)));
 			}
 
 			@Override
@@ -336,7 +334,7 @@ public class LoginAPIService {
 		params.setAsJsonContent(true);
 		HttpUtils.request(context,CloudHttpMethod.POST,params, new APICallback(context,completeUrl) {
 			@Override
-			public void callbackSuccess(String arg0) {
+			public void callbackSuccess(byte[] arg0) {
 				apiInterface.returnFaceLoginGSSuccess();
 			}
 

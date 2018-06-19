@@ -7,7 +7,7 @@
     >
 
 
-    <com.inspur.emmcloud.widget.CircleImageView
+    <com.inspur.emmcloud.widget.CircleTextImageView
         android:id="@+id/msg_img"
         android:layout_width="42dp"
         android:layout_height="42dp"
