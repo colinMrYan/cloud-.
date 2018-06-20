@@ -71,7 +71,7 @@ public class SelectStaffService extends ImpPlugin {
      */
     private void viewContact() {
         ArrayList<String> contactIdList = new ArrayList<String>();
-        JSONArray array = JSONUtils.getJSONArray(paramsObject, "array", new JSONArray());
+        JSONArray array = JSONUtils.getJSONArray(paramsObject, "uidArray", new JSONArray());
         try {
             for (int i = 0; i < array.length(); i++) {
                 contactIdList.add((String) array.get(i));
@@ -135,6 +135,7 @@ public class SelectStaffService extends ImpPlugin {
                 }
             }
             List<ContactUser> contactList = ContactUserCacheUtils.getSoreUserList(uidList);
+
             if (contactList.size() == 1) {
                 this.jsCallback(successCb, contactList.get(0).contact2JSONObject(getActivity()).toString());
             } else {
