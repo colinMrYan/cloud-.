@@ -696,7 +696,7 @@ public class AppUtils {
     public static boolean isAppVersionStandard(Activity activity) {
         boolean isAppVersionStandard = true;
         String appVersionType = getManifestMetadata(activity,"FLAG_APP_VERSION_TYPE");
-        if (appVersionType != null && !appVersionType.equals("custom")) {
+        if (appVersionType != null && !appVersionType.equals("standard")) {
             isAppVersionStandard = false;
         }
 
