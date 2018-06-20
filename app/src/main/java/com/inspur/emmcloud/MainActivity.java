@@ -78,15 +78,17 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
      * 初始化
      */
     private void init() {
-        if (!AppUtils.isAppVersionStandard(this)){
+        Boolean isFirst = PreferencesUtils.getBoolean(MainActivity.this,
+                "isFirst", true);
+        if (isFirst && !AppUtils.isAppVersionStandard(this)){
             String appVersionFlag = AppUtils.getAppVersionFlag(this);
             PackageManager pm = getApplicationContext().getPackageManager();
-            System.out.println(getComponentName());
-            pm.setComponentEnabledSetting(getComponentName(),
+            pm.setComponentEnabledSetting(new ComponentName(
+                            MainActivity.this,getPackageName()+".Standard"),
                     PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
                     PackageManager.DONT_KILL_APP);
             pm.setComponentEnabledSetting(new ComponentName(
-                            getBaseContext(),getPackageName()+"."+appVersionFlag),
+                            MainActivity.this,getPackageName()+"."+appVersionFlag),
                     PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
                     PackageManager.DONT_KILL_APP);
         }
