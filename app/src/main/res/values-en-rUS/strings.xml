@@ -9,6 +9,7 @@
     <string name="cancel">Cancel</string>
     <string name="resolution_valiad">Your device resolution is less than 800*480, unable to run this program</string>
     <string name="retry">Retry</string>
+    <string name="re_login">ReLogin</string>
     <string name="software_service_term">Services Agreemen</string>
     <string name="update_fail">Update failed</string>
     <string name="downloading_package">Please wait a minute while downloading</string>
@@ -949,4 +950,6 @@
     <string name="share_no_suffix">Do not support a file sharing the name without suffix</string>
     <string name="share_has_not_exist_file">There are nonexistent files in the files you shared, please check.</string>
     <string name="share_not_support">Unsupported sharing types</string>
+
+    <string name="net_work_fail">网络请求失败</string>
 </resources>

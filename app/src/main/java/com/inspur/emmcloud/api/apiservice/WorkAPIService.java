@@ -496,59 +496,6 @@ public class WorkAPIService {
         });
     }
 
-    /**
-     * 创建群组
-     *
-     * @param name
-     * @param members
-     */
-    public void creatGroupChannel(final String name, final JSONArray members) {
-        final String completeUrl = APIUri.getHttpApiUrl("channel");
-        RequestParams params = ((MyApplication) context.getApplicationContext())
-                .getHttpRequestParams(completeUrl);
-        try {
-            JSONObject paramObj = new JSONObject();
-            paramObj.put("name", name);
-            paramObj.put("type", "GROUP");
-            paramObj.put("members", members);
-            params.setBodyContent(paramObj.toString());
-            params.setAsJsonContent(true);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        HttpUtils.request(context,CloudHttpMethod.POST,params, new APICallback(context, completeUrl) {
-
-            @Override
-            public void callbackTokenExpire(long requestTime) {
-                OauthCallBack oauthCallBack = new OauthCallBack() {
-                    @Override
-                    public void reExecute() {
-                        creatGroupChannel(name, members);
-                    }
-
-                    @Override
-                    public void executeFailCallback() {
-                        callbackFail("", -1);
-                    }
-                };
-                OauthUtils.getInstance().refreshToken(
-                        oauthCallBack, requestTime);
-            }
-
-            @Override
-            public void callbackSuccess(byte[] arg0) {
-                // TODO Auto-generated method stub
-                apiInterface.returnCreatChannelGroupSuccess(new ChannelGroup(new String(arg0)));
-            }
-
-            @Override
-            public void callbackFail(String error, int responseCode) {
-                // TODO Auto-generated method stub
-                apiInterface.returnCreateChannelGroupFail(error, responseCode);
-            }
-        });
-    }
-
 
     /**
      * 获取对应room的会议情况

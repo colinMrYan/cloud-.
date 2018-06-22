@@ -29,6 +29,9 @@ import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.LanguageUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
+import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
+import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
+import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
@@ -117,10 +120,10 @@ public class GuideActivity extends Activity {
                                     "isFirst", false);
                             String accessToken = PreferencesUtils.getString(
                                     GuideActivity.this, "accessToken", "");
-                            if(!StringUtils.isBlank(accessToken) && AppUtils.isAppHasUpgraded(GuideActivity.this)){
+                            if(!StringUtils.isBlank(accessToken)){
                                 getUserProfile();
                             }else{
-                                startIntentActivity();
+                                startLoginActivity();
                             }
                         }
                     }
@@ -135,15 +138,13 @@ public class GuideActivity extends Activity {
     /**
      * 打开应该打开的Activity
      */
-    private void startIntentActivity() {
+    private void startIndexActivity() {
         // 存入当前版本号,方便判断新功能介绍显示的时机
         String appVersion = AppUtils.getVersion(GuideActivity.this);
         PreferencesUtils.putString(getApplicationContext(), "previousVersion",
                 appVersion);
-        String accessToken = PreferencesUtils.getString(
-                GuideActivity.this, "accessToken", "");
-        IntentUtils.startActivity(GuideActivity.this, (!StringUtils.isBlank(accessToken)) ?
-                IndexActivity.class : LoginActivity.class, true);
+        IntentUtils.startActivity(GuideActivity.this,
+                IndexActivity.class, true);
     }
 
     /**
@@ -151,6 +152,7 @@ public class GuideActivity extends Activity {
      */
     private void startLoginActivity(){
         // 存入当前版本号,方便判断新功能介绍显示的时机
+        MyApplication.getInstance().signout();
         String appVersion = AppUtils.getVersion(GuideActivity.this);
         PreferencesUtils.putString(getApplicationContext(), "previousVersion",
                 appVersion);
@@ -176,26 +178,34 @@ public class GuideActivity extends Activity {
         @Override
         public void returnMyInfoSuccess(GetMyInfoResult getMyInfoResult) {
             LoadingDialog.dimissDlg(loadingDialog);
-            saveNewProfileAndOldProfile(getMyInfoResult.getResponse());
+            //存储上一个版本，不再有本地默认版本
+            PreferencesUtils.putString(GuideActivity.this, Constant.PREF_MY_INFO_OLD,PreferencesUtils.getString(GuideActivity.this,"myInfo",""));
+            PreferencesUtils.putString(GuideActivity.this, "myInfo", getMyInfoResult.getResponse());
             MyApplication.getInstance().initTanent();
-            startIntentActivity();
+            startIndexActivity();
         }
 
         @Override
         public void returnMyInfoFail(String error, int errorCode) {
             LoadingDialog.dimissDlg(loadingDialog);
-            startLoginActivity();
+            new MyQMUIDialog.MessageDialogBuilder(GuideActivity.this)
+                    .setMessage(getString(R.string.net_work_fail))
+                    .addAction(getString(R.string.retry), new QMUIDialogAction.ActionListener() {
+                        @Override
+                        public void onClick(QMUIDialog dialog, int index) {
+                            dialog.dismiss();
+                            getUserProfile();
+                        }
+                    })
+                    .addAction(getString(R.string.re_login), new QMUIDialogAction.ActionListener() {
+                        @Override
+                        public void onClick(QMUIDialog dialog, int index) {
+                            dialog.dismiss();
+                            startLoginActivity();
+                        }
+                    })
+                    .show();
         }
-    }
-
-    /**
-     * 存储新旧profile
-     * @param response
-     */
-    private void saveNewProfileAndOldProfile(String response) {
-        //存储上一个版本，不再有本地默认版本
-        PreferencesUtils.putString(GuideActivity.this, Constant.PREF_MY_INFO_OLD,PreferencesUtils.getString(GuideActivity.this,"",""));
-        PreferencesUtils.putString(GuideActivity.this, "myInfo", response);
     }
 
     @Override
