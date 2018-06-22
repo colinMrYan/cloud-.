@@ -133,6 +133,8 @@ public class PluginMgr {
                 serviceName = "com.inspur.imp.plugin.filetransfer.FileTransferService";
             }else if (serviceName.endsWith("OCRService")){
                 serviceName = "com.inspur.imp.plugin.ocr.OCRService";
+            }else if(serviceName.endsWith("StartAppService")){
+                serviceName = "com.inspur.imp.plugin.startapp.StartAppService";
             }
         }
         return serviceName;
