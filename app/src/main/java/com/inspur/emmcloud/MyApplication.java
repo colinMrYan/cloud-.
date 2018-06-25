@@ -424,8 +424,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
                 currentEnterprise = getMyInfoResult.getDefaultEnterprise();
             }
             MutilClusterUtils.setClusterBaseUrl(currentEnterprise);
-            String enterpriseCode = currentEnterprise.getCode();
-            tanent = enterpriseCode;
+            tanent = currentEnterprise.getCode();
         }
     }
 

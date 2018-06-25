@@ -31,6 +31,7 @@ import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.ui.mine.setting.CreateGestureActivity;
 import com.inspur.emmcloud.ui.mine.setting.FaceVerifyActivity;
 import com.inspur.emmcloud.ui.mine.setting.GestureLoginActivity;
+import com.inspur.emmcloud.ui.mine.setting.GuideActivity;
 import com.inspur.emmcloud.ui.work.calendar.CalEventAddActivity;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
@@ -40,6 +41,7 @@ import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.AppId2AppAndOpenAppUtils;
+import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.GetPathFromUri4kitkat;
 import com.inspur.emmcloud.util.privates.WebAppUtils;
 import com.inspur.imp.api.ImpActivity;
@@ -133,6 +135,13 @@ public class SchemeHandleActivity extends Activity {
      */
     private void openScheme() {
         if (((MyApplication) getApplicationContext()).isHaveLogin()) {
+
+            if(AppUtils.isAppHasUpgraded(getApplication().getApplicationContext())){
+
+                IntentUtils.startActivity(SchemeHandleActivity.this, GuideActivity.class,true);
+                return;
+            }
+
             openIndexActivity(this);
             //此处加延时操作，为了让打开通知时IndexActivity走onCreate()方法
             new Handler().postDelayed(new Runnable() {
