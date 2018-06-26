@@ -951,5 +951,5 @@
     <string name="share_has_not_exist_file">There are nonexistent files in the files you shared, please check.</string>
     <string name="share_not_support">Unsupported sharing types</string>
 
-    <string name="net_work_fail">网络请求失败</string>
+    <string name="net_work_fail">Failed to get configuration information</string>
 </resources>
