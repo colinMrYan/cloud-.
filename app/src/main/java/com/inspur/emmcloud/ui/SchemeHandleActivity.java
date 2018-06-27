@@ -135,13 +135,10 @@ public class SchemeHandleActivity extends Activity {
      */
     private void openScheme() {
         if (((MyApplication) getApplicationContext()).isHaveLogin()) {
-
             if(AppUtils.isAppHasUpgraded(getApplication().getApplicationContext())){
-
                 IntentUtils.startActivity(SchemeHandleActivity.this, GuideActivity.class,true);
                 return;
             }
-
             openIndexActivity(this);
             //此处加延时操作，为了让打开通知时IndexActivity走onCreate()方法
             new Handler().postDelayed(new Runnable() {
