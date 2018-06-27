@@ -17,6 +17,7 @@ import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.system.ChangeTabBean;
 import com.inspur.emmcloud.bean.work.CalendarEvent;
 import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.interf.CommonCallBack;
 import com.inspur.emmcloud.ui.appcenter.ReactNativeAppActivity;
 import com.inspur.emmcloud.ui.appcenter.groupnews.GroupNewsActivity;
 import com.inspur.emmcloud.ui.chat.ChannelActivity;
@@ -31,7 +32,6 @@ import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.ui.mine.setting.CreateGestureActivity;
 import com.inspur.emmcloud.ui.mine.setting.FaceVerifyActivity;
 import com.inspur.emmcloud.ui.mine.setting.GestureLoginActivity;
-import com.inspur.emmcloud.ui.mine.setting.GuideActivity;
 import com.inspur.emmcloud.ui.work.calendar.CalEventAddActivity;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
@@ -41,8 +41,8 @@ import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.AppId2AppAndOpenAppUtils;
-import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.GetPathFromUri4kitkat;
+import com.inspur.emmcloud.util.privates.ProfileUtils;
 import com.inspur.emmcloud.util.privates.WebAppUtils;
 import com.inspur.imp.api.ImpActivity;
 
@@ -64,21 +64,26 @@ public class SchemeHandleActivity extends Activity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         StateBarUtils.changeStateBarColor(this);
-        if (MyApplication.getInstance().getOPenNotification()) {
-            MyApplication.getInstance().setOpenNotification(false);
-            if (FaceVerifyActivity.getFaceVerifyIsOpenByUser(SchemeHandleActivity.this)) {
-                registerReiceiver();
-                MyApplication.getInstance().setIsActive(true);
-                faceVerify();
-                return;
-            } else if (getIsNeedGestureCode()) {
-                registerReiceiver();
-                MyApplication.getInstance().setIsActive(true);
-                gestureVerify();
-                return;
+        new ProfileUtils(SchemeHandleActivity.this, new CommonCallBack() {
+            @Override
+            public void execute() {
+                if (MyApplication.getInstance().getOPenNotification()) {
+                    MyApplication.getInstance().setOpenNotification(false);
+                    if (FaceVerifyActivity.getFaceVerifyIsOpenByUser(SchemeHandleActivity.this)) {
+                        registerReiceiver();
+                        MyApplication.getInstance().setIsActive(true);
+                        faceVerify();
+                        return;
+                    } else if (getIsNeedGestureCode()) {
+                        registerReiceiver();
+                        MyApplication.getInstance().setIsActive(true);
+                        gestureVerify();
+                        return;
+                    }
+                }
+                openScheme();
             }
-        }
-        openScheme();
+        }).initProfile();
     }
 
     @Override
@@ -86,19 +91,24 @@ public class SchemeHandleActivity extends Activity {
         // TODO Auto-generated method stub
         super.onNewIntent(intent);
         setIntent(intent);
-        if (MyApplication.getInstance().getOPenNotification()) {
-            MyApplication.getInstance().setOpenNotification(false);
-            if (FaceVerifyActivity.getFaceVerifyIsOpenByUser(SchemeHandleActivity.this)) {
-                MyApplication.getInstance().setIsActive(true);
-                faceVerify();
-                return;
-            } else if (getIsNeedGestureCode()) {
-                MyApplication.getInstance().setIsActive(true);
-                gestureVerify();
-                return;
+        new ProfileUtils(SchemeHandleActivity.this, new CommonCallBack() {
+            @Override
+            public void execute() {
+                if (MyApplication.getInstance().getOPenNotification()) {
+                    MyApplication.getInstance().setOpenNotification(false);
+                    if (FaceVerifyActivity.getFaceVerifyIsOpenByUser(SchemeHandleActivity.this)) {
+                        MyApplication.getInstance().setIsActive(true);
+                        faceVerify();
+                        return;
+                    } else if (getIsNeedGestureCode()) {
+                        MyApplication.getInstance().setIsActive(true);
+                        gestureVerify();
+                        return;
+                    }
+                }
+                openScheme();
             }
-        }
-        openScheme();
+        }).initProfile();
     }
 
     private void faceVerify() {
@@ -135,10 +145,6 @@ public class SchemeHandleActivity extends Activity {
      */
     private void openScheme() {
         if (((MyApplication) getApplicationContext()).isHaveLogin()) {
-            if(AppUtils.isAppHasUpgraded(getApplication().getApplicationContext())){
-                IntentUtils.startActivity(SchemeHandleActivity.this, GuideActivity.class,true);
-                return;
-            }
             openIndexActivity(this);
             //此处加延时操作，为了让打开通知时IndexActivity走onCreate()方法
             new Handler().postDelayed(new Runnable() {
