@@ -32,7 +32,6 @@ public class ProfileUtils {
         this.activity = activity;
         this.commonCallBack = commonCallBack;
         loadingDialog = new LoadingDialog(activity);
-
     }
 
     /**
