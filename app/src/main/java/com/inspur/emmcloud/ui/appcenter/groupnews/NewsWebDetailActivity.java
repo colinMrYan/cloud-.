@@ -115,6 +115,7 @@ public class NewsWebDetailActivity extends BaseActivity {
         initWebViewSettings();
         setWebViewModel(StringUtils.isBlank(model) ? lightMode : model);
         webView.setDownloadListener(new FileDownloadListener());
+        webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
     }
 
     private class FileDownloadListener implements DownloadListener {
