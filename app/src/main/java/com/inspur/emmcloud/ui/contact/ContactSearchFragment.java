@@ -99,7 +99,7 @@ public class ContactSearchFragment extends Fragment {
     private boolean isSearchSingle = false; // 判断是否搜索单一项
     private boolean isContainMe = false; // 搜索结果是否可以包含自己
     private boolean isMultiSelect = false;
-    private int searchContent;
+    private int searchContent = -1;
     private FlowLayout flowLayout;
     private EditText searchEdit;
     private LinearLayout originLayout; // 进入后看到的页面
@@ -426,7 +426,7 @@ public class ContactSearchFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
                 // TODO Auto-generated method stub
-                if (getActivity().getClass().getSimpleName().equals(IndexActivity.class.getSimpleName())) {
+                if (getActivity().getClass().getSimpleName().equals(IndexActivity.class.getSimpleName()) && searchContent == -1) {
                     searchContent = SEARCH_NOTHIING;
                 }
                 SearchModel searchModel = commonContactList.get(position);
@@ -464,7 +464,7 @@ public class ContactSearchFragment extends Fragment {
                     // TODO Auto-generated method stub
                     if (orginCurrentArea == SEARCH_CONTACT) {
                         Contact contact = openGroupContactList.get(position);
-                        if (contact.getType().equals("user")) {
+                        if (contact.getType().toLowerCase().equals("user")) {
                             changeMembers(new SearchModel(contact));
                         } else {
                             openContact(contact);
@@ -858,6 +858,7 @@ public class ContactSearchFragment extends Fragment {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view,
                                             int position, long id) {
+
                         // TODO Auto-generated method stub
                         ChannelGroup channelGroup = searchChannelGroupList
                                 .get(position);
