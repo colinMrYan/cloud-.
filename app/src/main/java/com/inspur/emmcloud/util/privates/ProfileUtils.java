@@ -79,6 +79,9 @@ public class ProfileUtils {
             PreferencesUtils.putString(activity, "myInfo", getMyInfoResult.getResponse());
             MyApplication.getInstance().initTanent();
             commonCallBack.execute();
+            String appVersion = AppUtils.getVersion(activity);
+            PreferencesUtils.putString(activity, "previousVersion",
+                    appVersion);
         }
 
         @Override

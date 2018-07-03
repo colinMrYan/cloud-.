@@ -19,7 +19,6 @@ import com.inspur.emmcloud.api.apiservice.LoginAPIService;
 import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.IndexActivity;
-import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
@@ -156,7 +155,6 @@ public class GuideActivity extends Activity {
         String appVersion = AppUtils.getVersion(GuideActivity.this);
         PreferencesUtils.putString(getApplicationContext(), "previousVersion",
                 appVersion);
-        IntentUtils.startActivity(GuideActivity.this,LoginActivity.class,true);
     }
 
     /**
@@ -169,8 +167,31 @@ public class GuideActivity extends Activity {
             apiServices.setAPIInterface(new WebService());
             apiServices.getMyInfo();
         }else{
-            startLoginActivity();
+            showPromptDialog();
         }
+    }
+
+    /**
+     * 弹出提示
+     */
+    private void showPromptDialog() {
+        new MyQMUIDialog.MessageDialogBuilder(GuideActivity.this)
+                .setMessage(getString(R.string.net_work_fail))
+                .addAction(getString(R.string.retry), new QMUIDialogAction.ActionListener() {
+                    @Override
+                    public void onClick(QMUIDialog dialog, int index) {
+                        dialog.dismiss();
+                        getUserProfile();
+                    }
+                })
+                .addAction(getString(R.string.re_login), new QMUIDialogAction.ActionListener() {
+                    @Override
+                    public void onClick(QMUIDialog dialog, int index) {
+                        dialog.dismiss();
+                        startLoginActivity();
+                    }
+                })
+                .show();
     }
 
 
@@ -188,23 +209,7 @@ public class GuideActivity extends Activity {
         @Override
         public void returnMyInfoFail(String error, int errorCode) {
             LoadingDialog.dimissDlg(loadingDialog);
-            new MyQMUIDialog.MessageDialogBuilder(GuideActivity.this)
-                    .setMessage(getString(R.string.net_work_fail))
-                    .addAction(getString(R.string.retry), new QMUIDialogAction.ActionListener() {
-                        @Override
-                        public void onClick(QMUIDialog dialog, int index) {
-                            dialog.dismiss();
-                            getUserProfile();
-                        }
-                    })
-                    .addAction(getString(R.string.re_login), new QMUIDialogAction.ActionListener() {
-                        @Override
-                        public void onClick(QMUIDialog dialog, int index) {
-                            dialog.dismiss();
-                            startLoginActivity();
-                        }
-                    })
-                    .show();
+            showPromptDialog();
         }
     }
 
