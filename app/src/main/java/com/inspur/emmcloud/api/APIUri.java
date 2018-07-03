@@ -4,8 +4,8 @@ package com.inspur.emmcloud.api;
 import android.content.Context;
 
 import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.bean.chat.Robot;
 import com.inspur.emmcloud.bean.contact.ContactUser;
-import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.ImageUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -347,11 +347,12 @@ public class APIUri {
      * @return
      */
     public static String getUserIconUrl(Context context, String uid){
-        String iconUrl;
+        String iconUrl = null;
         if (uid.startsWith("BOT")) {
-            iconUrl = APIUri.getRobotIconUrl(RobotCacheUtils
-                    .getRobotById(context, uid)
-                    .getAvatar());
+            Robot robot = RobotCacheUtils.getRobotById(context, uid);
+            if (robot != null){
+                iconUrl = APIUri.getRobotIconUrl(robot.getAvatar());
+            }
         } else {
             iconUrl = APIUri.getChannelImgUrl(context, uid);
         }
