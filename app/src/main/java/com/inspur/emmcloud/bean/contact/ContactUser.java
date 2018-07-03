@@ -167,7 +167,7 @@ public class ContactUser {
 
     public JSONObject contact2JSONObject(Context context) {
         JSONObject obj = new JSONObject();
-        String headUrl = APIUri.getChannelImgUrl(context, id);
+        String headUrl = APIUri.getChannelImgUrl4Imp( id);
         try {
             obj.put("id", id);
             obj.put("name", name);

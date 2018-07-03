@@ -117,7 +117,7 @@ public class SelectStaffService extends ImpPlugin {
         } else {
             DialogUtil.getInstance(getActivity()).show();
         }
-        return super.executeAndReturn(action, paramsObject);
+        return "";
     }
 
     @Override

@@ -52,6 +52,12 @@ public class DatePickerService extends ImpPlugin {
 		}
 	}
 
+	@Override
+	public String executeAndReturn(String action, JSONObject paramsObject) {
+		DialogUtil.getInstance(getActivity()).show();
+		return "";
+	}
+
 	/**
 	 * 设置时间
 	 * 

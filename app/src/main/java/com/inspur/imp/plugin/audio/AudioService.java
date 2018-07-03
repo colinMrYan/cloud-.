@@ -52,7 +52,13 @@ public class AudioService extends ImpPlugin {
 		}
     }
 
-    public void onDestroy() {
+	@Override
+	public String executeAndReturn(String action, JSONObject paramsObject) {
+		DialogUtil.getInstance(getActivity()).show();
+		return "";
+	}
+
+	public void onDestroy() {
         for (AudioPlayer audio : this.players.values()) {
             audio.destroy();
         }

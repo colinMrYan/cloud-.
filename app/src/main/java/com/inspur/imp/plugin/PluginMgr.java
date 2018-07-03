@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.imp.api.iLog;
 import com.inspur.imp.engine.webview.ImpWebView;
 import com.inspur.imp.util.DialogUtil;
@@ -59,29 +58,31 @@ public class PluginMgr {
     public void execute(String serviceName, final String action,
                         final String params) {
         serviceName = getReallyServiceName(serviceName);
-        Log.d("jason", "serviceName=" + serviceName);
-        Log.d("jason", "action=" + action);
-        IPlugin plugin = null;
-        if (!entries.containsKey(serviceName)) {
-            plugin = createPlugin(serviceName);
-            entries.put(serviceName, plugin);
-        } else {
-            plugin = getPlugin(serviceName);
-        }
-        // 将传递过来的参数转换为JSON
-        JSONObject jo = null;
-        if (StrUtil.strIsNotNull(params)) {
-            try {
-                jo = new JSONObject(params);
-            } catch (JSONException e) {
-                iLog.e(TAG, "组装Json对象出现异常!");
+        if (serviceName != null) {
+            Log.d("jason", "serviceName=" + serviceName);
+            Log.d("jason", "action=" + action);
+            IPlugin plugin = null;
+            if (!entries.containsKey(serviceName)) {
+                plugin = createPlugin(serviceName);
+                entries.put(serviceName, plugin);
+            } else {
+                plugin = getPlugin(serviceName);
             }
-        }
-        // 执行接口的execute方法
-        if (plugin != null) {
-            plugin.execute(action, jo);
-        }else{
-            DialogUtil.getInstance((Activity)context).show();
+            // 将传递过来的参数转换为JSON
+            JSONObject jo = null;
+            if (StrUtil.strIsNotNull(params)) {
+                try {
+                    jo = new JSONObject(params);
+                } catch (JSONException e) {
+                    iLog.e(TAG, "组装Json对象出现异常!");
+                }
+            }
+            // 执行接口的execute方法
+            if (plugin != null) {
+                plugin.execute(action, jo);
+            } else {
+                DialogUtil.getInstance((Activity) context).show();
+            }
         }
     }
 
@@ -96,7 +97,7 @@ public class PluginMgr {
                                    final String action, final String params) {
         String reallyServiceName = getReallyServiceName(serviceName);
         String res = "";
-        if (reallyServiceName != null){
+        if (reallyServiceName != null) {
             IPlugin plugin = null;
             Log.d("jason", "serviceName=" + reallyServiceName);
             Log.d("jason", "action=" + action);
@@ -123,22 +124,22 @@ public class PluginMgr {
                     e.printStackTrace();
                 }
             }
-        }else{
-            DialogUtil.getInstance((Activity)context).show();
+        } else {
+            DialogUtil.getInstance((Activity) context).show();
         }
         return res;
 
     }
 
-    private String getReallyServiceName(String serviceName){
-        if (serviceName != null){
+    private String getReallyServiceName(String serviceName) {
+        if (serviceName != null) {
             if (serviceName.endsWith("LoadingDialogService")) {
                 serviceName = "com.inspur.imp.plugin.loadingdialog.LoadingDialogService";
-            }else if (serviceName.endsWith("FileTransferService")) {
+            } else if (serviceName.endsWith("FileTransferService")) {
                 serviceName = "com.inspur.imp.plugin.filetransfer.FileTransferService";
-            }else if (serviceName.endsWith("OCRService")){
+            } else if (serviceName.endsWith("OCRService")) {
                 serviceName = "com.inspur.imp.plugin.ocr.OCRService";
-            }else if(serviceName.endsWith("StartAppService")){
+            } else if (serviceName.endsWith("StartAppService")) {
                 serviceName = "com.inspur.imp.plugin.startapp.StartAppService";
             }
         }

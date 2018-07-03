@@ -30,7 +30,7 @@ public class LoadingDialogService extends ImpPlugin {
     @Override
     public String executeAndReturn(String action, JSONObject paramsObject) {
         DialogUtil.getInstance(getActivity()).show();
-        return super.executeAndReturn(action, paramsObject);
+        return "";
     }
 
     private void showDlg(JSONObject paramsObject) {

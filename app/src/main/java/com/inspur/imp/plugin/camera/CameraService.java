@@ -114,6 +114,12 @@ public class CameraService extends ImpPlugin {
         }
     }
 
+    @Override
+    public String executeAndReturn(String action, JSONObject paramsObject) {
+        DialogUtil.getInstance(getActivity()).show();
+        return "";
+    }
+
     /**
      * 选择相机拍照进行上传
      */
