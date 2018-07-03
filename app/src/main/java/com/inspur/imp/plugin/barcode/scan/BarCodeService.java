@@ -21,6 +21,7 @@ import com.google.zxing.qrcode.QRCodeWriter;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.imp.api.Res;
 import com.inspur.imp.plugin.ImpPlugin;
+import com.inspur.imp.util.DialogUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -49,10 +50,9 @@ public class BarCodeService extends ImpPlugin {
 			scan(paramsObject);
 		}else if ("closeQrCode".equals(action)) {
 			closeQrCodeDlg();
+		}else{
+			DialogUtil.getInstance(getActivity()).show();
 		}
-		
-		
-
 	}
 
 	/**
@@ -81,6 +81,8 @@ public class BarCodeService extends ImpPlugin {
 				// TODO: handle exception
 				e.printStackTrace();
 			}
+		}else {
+			DialogUtil.getInstance(getActivity()).show();
 		}
 		return "";
 	}

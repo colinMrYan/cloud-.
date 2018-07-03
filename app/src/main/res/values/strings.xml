@@ -870,6 +870,7 @@
 
     <string name="function_not_implemented">内测期间，暂不开放</string>
     <string name="msg_default_time">时间</string>
+    <string name="imp_function_error">功能调用错误，请检查应用是否已升级到最新版本</string>
 
 
     <!-- 打点 -->

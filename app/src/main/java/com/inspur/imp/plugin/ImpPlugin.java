@@ -42,9 +42,7 @@ public abstract class ImpPlugin implements IPlugin {
      * @param paramsObject 参数
      * @throws JSONException
      */
-    public String executeAndReturn(String action, JSONObject paramsObject) {
-        return "";
-    }
+    public abstract  String executeAndReturn(String action, JSONObject paramsObject);
 
     /**
      * 初始化context和webview控件

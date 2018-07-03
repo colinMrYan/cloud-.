@@ -1,6 +1,5 @@
 package com.inspur.emmcloud.bean.contact;
 
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;

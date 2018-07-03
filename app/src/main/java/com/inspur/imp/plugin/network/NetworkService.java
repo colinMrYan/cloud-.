@@ -9,6 +9,7 @@ import android.net.NetworkInfo;
 import android.net.TrafficStats;
 
 import com.inspur.imp.plugin.ImpPlugin;
+import com.inspur.imp.util.DialogUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -91,6 +92,8 @@ public class NetworkService extends ImpPlugin {
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
+		}else{
+			DialogUtil.getInstance(getActivity()).show();
 		}
 		return Long.toString(data)+"MB";
 	}
@@ -222,6 +225,6 @@ public class NetworkService extends ImpPlugin {
 
 	@Override
 	public void execute(String action, JSONObject paramsObject){
-		
+		DialogUtil.getInstance(getActivity()).show();
 	}
 }

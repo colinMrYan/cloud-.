@@ -12,6 +12,7 @@ import android.util.Log;
 
 import com.inspur.imp.api.ImpActivity;
 import com.inspur.imp.plugin.ImpPlugin;
+import com.inspur.imp.util.DialogUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -80,6 +81,8 @@ public class FileService extends ImpPlugin {
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
+		}else{
+			DialogUtil.getInstance(getActivity()).show();
 		}
 		return fileInfo;
 	}
@@ -212,6 +215,8 @@ public class FileService extends ImpPlugin {
 		else if ("browser".equals(action)) {
 			fileService = this;
 			browser(paramsObject);
+		}else{
+			DialogUtil.getInstance(getActivity()).show();
 		}
 	}
 
