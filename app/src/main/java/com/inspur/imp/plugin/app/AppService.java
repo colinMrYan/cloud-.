@@ -3,6 +3,7 @@ package com.inspur.imp.plugin.app;
 import android.app.Activity;
 
 import com.inspur.imp.plugin.ImpPlugin;
+import com.inspur.imp.util.DialogUtil;
 
 import org.json.JSONObject;
 
@@ -19,6 +20,8 @@ public class AppService extends ImpPlugin {
 	public void execute(String action, JSONObject paramsObject) {
 		if ("close".equals(action)) {
 			close();
+		}else{
+			DialogUtil.getInstance(getActivity()).show();
 		}
 	}
 
@@ -28,8 +31,10 @@ public class AppService extends ImpPlugin {
 		// 退出系统
 		if ("close".equals(action)) {
 			close();
+		}else{
+			DialogUtil.getInstance(getActivity()).show();
 		}
-		return super.executeAndReturn(action, paramsObject);
+		return "";
 	}
 	
 

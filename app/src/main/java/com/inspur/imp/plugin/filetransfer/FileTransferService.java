@@ -21,6 +21,7 @@ import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.imp.api.Res;
 import com.inspur.imp.plugin.ImpPlugin;
+import com.inspur.imp.util.DialogUtil;
 import com.inspur.imp.util.StrUtil;
 
 import org.json.JSONException;
@@ -105,6 +106,8 @@ public class FileTransferService extends ImpPlugin {
         // 下载文件
         else if ("download".equals(action)) {
             download(paramsObject);
+        }else{
+            DialogUtil.getInstance(getActivity()).show();
         }
     }
 
@@ -115,9 +118,7 @@ public class FileTransferService extends ImpPlugin {
         // 下载文件
         if ("download".equals(action)) {
             download(paramsObject);
-        }
-
-        if ("downloadFile".equals(action)) { // 为了兼容自定义的imp插件
+        }else if ("downloadFile".equals(action)) { // 为了兼容自定义的imp插件
             if (!paramsObject.isNull("key"))
                 try {
                     String key = paramsObject.getString("key");
@@ -130,6 +131,8 @@ public class FileTransferService extends ImpPlugin {
                     e.printStackTrace();
                     handler.sendEmptyMessage(1);
                 }
+        }else{
+            DialogUtil.getInstance(getActivity()).show();
         }
 
         return result;

@@ -438,6 +438,10 @@ public class ImpActivity extends ImpBaseActivity {
             PublicWay.uploadPhotoService.onActivityResult(requestCode, resultCode, data);
             return;
         }
+        if (PublicWay.selectStaffService != null) {
+            PublicWay.selectStaffService.onActivityResult(requestCode, resultCode, data);
+            return;
+        }
         // 获取选择的文件
         else if (resultCode == FILEEXPLOER_RESULTCODE) {
             FileService.fileService.getAudioFilePath(data

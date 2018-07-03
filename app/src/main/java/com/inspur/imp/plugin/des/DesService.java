@@ -3,6 +3,7 @@ package com.inspur.imp.plugin.des;
 import android.util.Base64;
 
 import com.inspur.imp.plugin.ImpPlugin;
+import com.inspur.imp.util.DialogUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -54,6 +55,8 @@ public class DesService extends ImpPlugin {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+		}else{
+			DialogUtil.getInstance(getActivity()).show();
 		}
 		return resultStr;
 	}

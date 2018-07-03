@@ -1,10 +1,12 @@
 package com.inspur.imp.plugin;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 
 import com.inspur.imp.api.iLog;
 import com.inspur.imp.engine.webview.ImpWebView;
+import com.inspur.imp.util.DialogUtil;
 import com.inspur.imp.util.StrUtil;
 
 import org.json.JSONException;
@@ -56,7 +58,7 @@ public class PluginMgr {
     public void execute(String serviceName, final String action,
                         final String params) {
         serviceName = getReallyServiceName(serviceName);
-        if (serviceName != null){
+        if (serviceName != null) {
             Log.d("jason", "serviceName=" + serviceName);
             Log.d("jason", "action=" + action);
             IPlugin plugin = null;
@@ -78,6 +80,8 @@ public class PluginMgr {
             // 执行接口的execute方法
             if (plugin != null) {
                 plugin.execute(action, jo);
+            } else {
+                DialogUtil.getInstance((Activity) context).show();
             }
         }
     }
@@ -93,7 +97,7 @@ public class PluginMgr {
                                    final String action, final String params) {
         String reallyServiceName = getReallyServiceName(serviceName);
         String res = "";
-        if (reallyServiceName != null){
+        if (reallyServiceName != null) {
             IPlugin plugin = null;
             Log.d("jason", "serviceName=" + reallyServiceName);
             Log.d("jason", "action=" + action);
@@ -120,20 +124,22 @@ public class PluginMgr {
                     e.printStackTrace();
                 }
             }
+        } else {
+            DialogUtil.getInstance((Activity) context).show();
         }
         return res;
 
     }
 
-    private String getReallyServiceName(String serviceName){
-        if (serviceName != null){
+    private String getReallyServiceName(String serviceName) {
+        if (serviceName != null) {
             if (serviceName.endsWith("LoadingDialogService")) {
                 serviceName = "com.inspur.imp.plugin.loadingdialog.LoadingDialogService";
-            }else if (serviceName.endsWith("FileTransferService")) {
+            } else if (serviceName.endsWith("FileTransferService")) {
                 serviceName = "com.inspur.imp.plugin.filetransfer.FileTransferService";
-            }else if (serviceName.endsWith("OCRService")){
+            } else if (serviceName.endsWith("OCRService")) {
                 serviceName = "com.inspur.imp.plugin.ocr.OCRService";
-            }else if(serviceName.endsWith("StartAppService")){
+            } else if (serviceName.endsWith("StartAppService")) {
                 serviceName = "com.inspur.imp.plugin.startapp.StartAppService";
             }
         }
@@ -153,7 +159,8 @@ public class PluginMgr {
         if ("com.inspur.imp.plugin.window.WindowService".equals(service)
                 || "com.inspur.imp.plugin.scroll.ScrollService".equals(service)
                 || "com.inspur.imp.plugin.app.AppService".equals(service)
-                || "com.inspur.imp.plugin.transfer.FileTransferService".equals(service)) {
+                || "com.inspur.imp.plugin.transfer.FileTransferService".equals(service)
+                ) {
             plugin = createPlugin(service);
         } else {
             plugin.init(context, webView);

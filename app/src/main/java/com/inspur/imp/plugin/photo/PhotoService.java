@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.config.MyAppConfig;
+import com.inspur.emmcloud.ui.chat.ImagePagerActivity;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
@@ -21,6 +22,7 @@ import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
 import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
 import com.inspur.imp.plugin.camera.imagepicker.ui.ImageGridActivity;
 import com.inspur.imp.plugin.camera.mycamera.MyCameraActivity;
+import com.inspur.imp.util.DialogUtil;
 import com.inspur.imp.util.compressor.Compressor;
 
 import org.json.JSONArray;
@@ -49,11 +51,49 @@ public class PhotoService extends ImpPlugin {
         this.paramsObject = paramsObject;
         if ("selectAndUpload".equals(action)) {
             selectAndUpload();
-        }
-        if ("takePhotoAndUpload".equals(action)) {
+        }else if ("takePhotoAndUpload".equals(action)) {
             takePhotoAndUpload();
+        }else if("viewImage".equals(action)){
+            viewImage();
+        }else{
+            DialogUtil.getInstance(getActivity()).show();
         }
         loadingDlg = new LoadingDialog(getActivity());
+    }
+
+    @Override
+    public String executeAndReturn(String action, JSONObject paramsObject) {
+        DialogUtil.getInstance(getActivity()).show();
+        return "";
+    }
+
+    /**
+     * 浏览图片原生方法
+     */
+    private void viewImage() {
+        ArrayList<String> imageOriginUrlList = new ArrayList<>();
+        ArrayList<String> imageThumbnailUrlList =  new ArrayList<>();
+        JSONArray jsonParamArray = JSONUtils.getJSONArray(paramsObject, "img",new JSONArray());
+        int imageIndex = JSONUtils.getInt(paramsObject,"index",0);
+        for (int i = 0; i < jsonParamArray.length(); i++) {
+            imageThumbnailUrlList.add(JSONUtils.getString(JSONUtils.getJSONObject(jsonParamArray,i,new JSONObject()),"imgUrl",""));
+            imageOriginUrlList.add(JSONUtils.getString(JSONUtils.getJSONObject(jsonParamArray,i,new JSONObject()),"originImgUrl",""));
+        }
+        if(imageOriginUrlList.size() > 0){
+            startImagePagerActivity(imageOriginUrlList,imageIndex);
+        }
+    }
+
+    /**
+     * 调起ImagePager
+     * @param imagePathList
+     */
+    private void startImagePagerActivity(ArrayList<String> imagePathList,int imageIndex) {
+        Intent intent = new Intent();
+        intent.setClass(getActivity(), ImagePagerActivity.class);
+        intent.putStringArrayListExtra(ImagePagerActivity.EXTRA_IMAGE_URLS, imagePathList);
+        intent.putExtra(ImagePagerActivity.EXTRA_IMAGE_INDEX,imageIndex);
+        getActivity().startActivity(intent);
     }
 
     private void selectAndUpload() {
@@ -324,8 +364,8 @@ public class PhotoService extends ImpPlugin {
     /**
      * 处理异常网络请求
      *
+     * @param function
      * @param error
-     * @param responseCode
      */
     private void saveNetException(String function, String error) {
         AppExceptionCacheUtils.saveAppException(context, 4, function, error, 0);

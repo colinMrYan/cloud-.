@@ -5,7 +5,6 @@ import android.content.Context;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.bean.contact.ContactUser;
-import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.ImageUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -287,6 +286,24 @@ public class APIUri {
             }
             if (MyApplication.getInstance().getIsContactReady() && headImgUrl == null) {
                 MyApplication.getInstance().setUsesrPhotoUrl(uid, headImgUrl);
+            }
+        }
+        return headImgUrl;
+    }
+
+    /**
+     * Imp获取头像路径
+     * @param uid
+     * @return
+     */
+    public static String getChannelImgUrl4Imp(String uid){
+        String headImgUrl = "";
+        ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(uid);
+        if(contactUser != null){
+            headImgUrl = MyApplication.getInstance().getClusterEmm() + "api/sys/v3.0/img/userhead/" + uid;
+            String lastQueryTime = contactUser.getLastQueryTime();
+            if (!StringUtils.isBlank(lastQueryTime) && (!lastQueryTime.equals("null"))) {
+                headImgUrl = headImgUrl + "?" + lastQueryTime;
             }
         }
         return headImgUrl;

@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.widget.Toast;
 
 import com.inspur.imp.plugin.ImpPlugin;
+import com.inspur.imp.util.DialogUtil;
 import com.inspur.imp.util.StrUtil;
 
 import org.json.JSONException;
@@ -29,7 +30,15 @@ public class TelephoneService extends ImpPlugin {
 		// 直接拨打电话
 		else if ("call".equals(action)) {
 			call(paramsObject);
+		}else{
+			DialogUtil.getInstance(getActivity()).show();
 		}
+	}
+
+	@Override
+	public String executeAndReturn(String action, JSONObject paramsObject) {
+		DialogUtil.getInstance(getActivity()).show();
+		return "";
 	}
 
 	/**
