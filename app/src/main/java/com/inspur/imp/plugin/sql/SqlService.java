@@ -41,6 +41,12 @@ public class SqlService extends ImpPlugin {
 		}
 	}
 
+	@Override
+	public String executeAndReturn(String action, JSONObject paramsObject) {
+		DialogUtil.getInstance(getActivity()).show();
+		return super.executeAndReturn(action, paramsObject);
+	}
+
 	/**
 	 * 打开或者创建数据库
 	 * 

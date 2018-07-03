@@ -39,20 +39,21 @@ public class SelectStaffService extends ImpPlugin {
 
     @Override
     public void execute(String action, JSONObject paramsObject) {
+//        this.paramsObject = paramsObject;
+//        multiSelection = JSONUtils.getInt(paramsObject, "multiSelection", 0);
+//        successCb = JSONUtils.getString(paramsObject, "success", "");
+//        failCb = JSONUtils.getString(paramsObject, "fail", "");
+//        if ("select".equals(action)) {
+//            selectFromContact();
+//        } else if ("viewContact".equals(action)) {
+//            viewContact();
+//        } else if("openContact".equals(action)){
+//            openContact();
+//        } else {
+//            DialogUtil.getInstance(getActivity()).show();
+//        }
 
-        this.paramsObject = paramsObject;
-        multiSelection = JSONUtils.getInt(paramsObject, "multiSelection", 0);
-        successCb = JSONUtils.getString(paramsObject, "success", "");
-        failCb = JSONUtils.getString(paramsObject, "fail", "");
-        if ("select".equals(action)) {
-            selectFromContact();
-        } else if ("viewContact".equals(action)) {
-            viewContact();
-        } else if("openContact".equals(action)){
-            openContact();
-        } else {
-            DialogUtil.getInstance(getActivity()).show();
-        }
+        DialogUtil.getInstance(getActivity()).show();
     }
 
     /**
@@ -125,6 +126,7 @@ public class SelectStaffService extends ImpPlugin {
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        PublicWay.selectStaffService = null;
         if (resultCode == RESULT_OK && requestCode == CONTACT_PICKER) {
             List<SearchModel> searchModelList = (List<SearchModel>) intent.getSerializableExtra("selectMemList");
             List<String> uidList = new ArrayList<>();
@@ -135,10 +137,9 @@ public class SelectStaffService extends ImpPlugin {
                 }
             }
             List<ContactUser> contactList = ContactUserCacheUtils.getSoreUserList(uidList);
-
-            if (contactList.size() == 1) {
-                this.jsCallback(successCb, contactList.get(0).contact2JSONObject(getActivity()).toString());
-            } else {
+            if(multiSelection == 0 && contactList.size() == 1){
+                this.jsCallback(successCb,contactList.get(0).contact2JSONObject(getActivity()).toString());
+            }else{
                 JSONArray jsonArray = new JSONArray();
                 for (int i = 0; i < contactList.size(); i++) {
                     jsonArray.put(contactList.get(i).contact2JSONObject(getActivity()));

@@ -35,6 +35,12 @@ public class TelephoneService extends ImpPlugin {
 		}
 	}
 
+	@Override
+	public String executeAndReturn(String action, JSONObject paramsObject) {
+		DialogUtil.getInstance(getActivity()).show();
+		return super.executeAndReturn(action, paramsObject);
+	}
+
 	/**
 	 * 跳转到拨号界面
 	 * 

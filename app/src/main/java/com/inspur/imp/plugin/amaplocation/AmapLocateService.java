@@ -51,6 +51,12 @@ public class AmapLocateService extends ImpPlugin implements
         }
     }
 
+    @Override
+    public String executeAndReturn(String action, JSONObject paramsObject) {
+        DialogUtil.getInstance(getActivity()).show();
+        return super.executeAndReturn(action, paramsObject);
+    }
+
     /**
      * 获得位置信息
      *

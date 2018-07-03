@@ -225,6 +225,6 @@ public class NetworkService extends ImpPlugin {
 
 	@Override
 	public void execute(String action, JSONObject paramsObject){
-		
+		DialogUtil.getInstance(getActivity()).show();
 	}
 }

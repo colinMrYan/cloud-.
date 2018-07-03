@@ -61,6 +61,12 @@ public class PhotoService extends ImpPlugin {
         loadingDlg = new LoadingDialog(getActivity());
     }
 
+    @Override
+    public String executeAndReturn(String action, JSONObject paramsObject) {
+        DialogUtil.getInstance(getActivity()).show();
+        return super.executeAndReturn(action, paramsObject);
+    }
+
     /**
      * 浏览图片原生方法
      */

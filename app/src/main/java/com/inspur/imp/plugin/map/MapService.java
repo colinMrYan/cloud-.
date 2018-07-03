@@ -110,6 +110,8 @@ public class MapService extends ImpPlugin {
 		if (action.equals("getAllMapApps")) {
 			String result = getAllMapApps();
 			return result;
+		}else{
+			DialogUtil.getInstance(getActivity()).show();
 		}
 		return "";
 	}

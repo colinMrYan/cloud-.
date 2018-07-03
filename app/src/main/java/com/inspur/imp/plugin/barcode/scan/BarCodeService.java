@@ -81,6 +81,8 @@ public class BarCodeService extends ImpPlugin {
 				// TODO: handle exception
 				e.printStackTrace();
 			}
+		}else {
+			DialogUtil.getInstance(getActivity()).show();
 		}
 		return "";
 	}

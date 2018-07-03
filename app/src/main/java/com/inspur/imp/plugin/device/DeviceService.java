@@ -6,10 +6,8 @@ import android.net.Uri;
 import android.os.Vibrator;
 import android.provider.Settings;
 
-import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.imp.plugin.ImpPlugin;
 import com.inspur.imp.util.DialogUtil;
-import com.umeng.socialize.PlatformConfig;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -54,27 +52,6 @@ public class DeviceService extends ImpPlugin {
 				// 获取设备国际唯一标识码
 				jsonObject.put("uuid", String.valueOf(this.getUuid()));
 				jsonObject.put("model", getModel());
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			res = jsonObject.toString();
-		}else if("getAppVersionInfo".equals(action)){
-			try {
-				jsonObject.put("version", AppUtils.getVersion(getActivity()));
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			res = jsonObject.toString();
-		}else if("getDeviceType".equals(action)){
-			try {
-				jsonObject.put("deviceType", AppUtils.getDeviceName(getActivity()));
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			res = jsonObject.toString();
-		}else if("getOSVersionInfo".equals(action)){
-			try {
-				jsonObject.put("OSVersion",AppUtils.getReleaseVersion());
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

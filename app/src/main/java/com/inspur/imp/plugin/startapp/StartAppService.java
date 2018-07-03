@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.imp.plugin.ImpPlugin;
+import com.inspur.imp.util.DialogUtil;
 
 import org.json.JSONObject;
 
@@ -34,7 +35,15 @@ public class StartAppService extends ImpPlugin {
         // TODO Auto-generated method stub
         if ("open".equals(action)) {
             startApp(paramsObject);
+        }else{
+            DialogUtil.getInstance(getActivity()).show();
         }
+    }
+
+    @Override
+    public String executeAndReturn(String action, JSONObject paramsObject) {
+        DialogUtil.getInstance(getActivity()).show();
+        return super.executeAndReturn(action, paramsObject);
     }
 
     /**

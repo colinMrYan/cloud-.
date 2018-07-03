@@ -31,7 +31,7 @@ public class RsaService extends ImpPlugin {
 
 	@Override
 	public void execute(String action, JSONObject paramsObject) {
-		
+		DialogUtil.getInstance(getActivity()).show();
 	}
 	
 	public String executeAndReturn(String action, JSONObject paramsObject){
