@@ -1,7 +1,6 @@
 package com.inspur.emmcloud.util.privates;
 
 import android.app.Activity;
-import android.content.Intent;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -10,7 +9,6 @@ import com.inspur.emmcloud.api.apiservice.LoginAPIService;
 import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.interf.CommonCallBack;
-import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -55,8 +53,31 @@ public class ProfileUtils {
             apiServices.setAPIInterface(new WebService());
             apiServices.getMyInfo();
         }else{
-            startLoginActivity();
+            showPromptDialog();
         }
+    }
+
+    /**
+     * 弹出提示
+     */
+    private void showPromptDialog() {
+        new MyQMUIDialog.MessageDialogBuilder(activity)
+                .setMessage(activity.getString(R.string.net_work_fail))
+                .addAction(activity.getString(R.string.retry), new QMUIDialogAction.ActionListener() {
+                    @Override
+                    public void onClick(QMUIDialog dialog, int index) {
+                        dialog.dismiss();
+                        getUserProfile();
+                    }
+                })
+                .addAction(activity.getString(R.string.re_login), new QMUIDialogAction.ActionListener() {
+                    @Override
+                    public void onClick(QMUIDialog dialog, int index) {
+                        dialog.dismiss();
+                        startLoginActivity();
+                    }
+                })
+                .show();
     }
 
     /**
@@ -115,9 +136,6 @@ public class ProfileUtils {
         String appVersion = AppUtils.getVersion(activity);
         PreferencesUtils.putString(activity.getApplicationContext(), "previousVersion",
                 appVersion);
-        Intent intent = new Intent();
-        intent.setClass(activity, LoginActivity.class);
-        activity.startActivity(intent);
         activity.finish();
     }
 }

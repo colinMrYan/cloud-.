@@ -14,23 +14,17 @@ import android.widget.ImageView;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.MyViewPagerAdapter;
-import com.inspur.emmcloud.api.APIInterfaceInstance;
-import com.inspur.emmcloud.api.apiservice.LoginAPIService;
-import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
-import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.interf.CommonCallBack;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.LanguageUtils;
+import com.inspur.emmcloud.util.privates.ProfileUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
-import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
@@ -120,7 +114,13 @@ public class GuideActivity extends Activity {
                             String accessToken = PreferencesUtils.getString(
                                     GuideActivity.this, "accessToken", "");
                             if(!StringUtils.isBlank(accessToken)){
-                                getUserProfile();
+                                new ProfileUtils(GuideActivity.this, new CommonCallBack() {
+                                    @Override
+                                    public void execute() {
+                                        IntentUtils.startActivity(GuideActivity.this,
+                                                IndexActivity.class, true);
+                                    }
+                                }).initProfile();
                             }else{
                                 startLoginActivity();
                             }
@@ -134,17 +134,6 @@ public class GuideActivity extends Activity {
         loadingDialog = new LoadingDialog(this);
     }
 
-    /**
-     * 打开应该打开的Activity
-     */
-    private void startIndexActivity() {
-        // 存入当前版本号,方便判断新功能介绍显示的时机
-        String appVersion = AppUtils.getVersion(GuideActivity.this);
-        PreferencesUtils.putString(getApplicationContext(), "previousVersion",
-                appVersion);
-        IntentUtils.startActivity(GuideActivity.this,
-                IndexActivity.class, true);
-    }
 
     /**
      * 转到LoginActivity
@@ -155,62 +144,6 @@ public class GuideActivity extends Activity {
         String appVersion = AppUtils.getVersion(GuideActivity.this);
         PreferencesUtils.putString(getApplicationContext(), "previousVersion",
                 appVersion);
-    }
-
-    /**
-     * 获取用户的个人信息
-     */
-    private void getUserProfile() {
-        if (NetUtils.isNetworkConnected(GuideActivity.this, true)) {
-            loadingDialog.show();
-            LoginAPIService apiServices = new LoginAPIService(GuideActivity.this);
-            apiServices.setAPIInterface(new WebService());
-            apiServices.getMyInfo();
-        }else{
-            showPromptDialog();
-        }
-    }
-
-    /**
-     * 弹出提示
-     */
-    private void showPromptDialog() {
-        new MyQMUIDialog.MessageDialogBuilder(GuideActivity.this)
-                .setMessage(getString(R.string.net_work_fail))
-                .addAction(getString(R.string.retry), new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        dialog.dismiss();
-                        getUserProfile();
-                    }
-                })
-                .addAction(getString(R.string.re_login), new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        dialog.dismiss();
-                        startLoginActivity();
-                    }
-                })
-                .show();
-    }
-
-
-    class WebService extends APIInterfaceInstance{
-        @Override
-        public void returnMyInfoSuccess(GetMyInfoResult getMyInfoResult) {
-            LoadingDialog.dimissDlg(loadingDialog);
-            //存储上一个版本，不再有本地默认版本
-            PreferencesUtils.putString(GuideActivity.this, Constant.PREF_MY_INFO_OLD,PreferencesUtils.getString(GuideActivity.this,"myInfo",""));
-            PreferencesUtils.putString(GuideActivity.this, "myInfo", getMyInfoResult.getResponse());
-            MyApplication.getInstance().initTanent();
-            startIndexActivity();
-        }
-
-        @Override
-        public void returnMyInfoFail(String error, int errorCode) {
-            LoadingDialog.dimissDlg(loadingDialog);
-            showPromptDialog();
-        }
     }
 
     @Override
