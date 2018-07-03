@@ -96,6 +96,7 @@ public class IndexActivity extends IndexBaseActivity {
         if (!isHasCacheContact) {
             loadingDlg.show();
         }
+        getAllRobotInfo();
         getContactUser();
         getAppTabInfo();  //从服务端获取显示tab
         getMyAppRecommendWidgets();
@@ -226,7 +227,6 @@ public class IndexActivity extends IndexBaseActivity {
                         MyApplication.getInstance().startWebSocket(true);// 启动webSocket推送
                         getContactOrg();
                         getAllChannelGroup();
-                        getAllRobotInfo();
                         break;
                     case RELOAD_WEB:
                         if (webView != null) {
