@@ -193,9 +193,6 @@ public class AppUtils {
     public static boolean isLower202Version(Context context){
         String savedVersion = PreferencesUtils.getString(context,
                 "previousVersion", "");
-        if(StringUtils.isBlank(savedVersion)){
-            return false;
-        }
         String[] savedArray = savedVersion.split("\\.");
         int savedVersionNum = Integer.parseInt(savedArray[0])*1000000+Integer.parseInt(savedArray[1])*1000+Integer.parseInt(savedArray[2]);
         if(savedVersionNum < 2000002){
