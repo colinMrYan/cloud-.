@@ -13,6 +13,7 @@ import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.imp.api.Res;
 import com.inspur.imp.plugin.ImpPlugin;
+import com.inspur.imp.util.DialogUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -52,7 +53,15 @@ public class AmapLocateService extends ImpPlugin implements
         // 获取经纬度地址
         if ("getInfo".equals(action)) {
             getInfo(paramsObject);
+        }else{
+            DialogUtil.getInstance(getActivity()).show();
         }
+    }
+
+    @Override
+    public String executeAndReturn(String action, JSONObject paramsObject) {
+        DialogUtil.getInstance(getActivity()).show();
+        return "";
     }
 
     /**

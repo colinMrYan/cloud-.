@@ -1,5 +1,11 @@
 package com.inspur.emmcloud.bean.contact;
 
+import android.content.Context;
+
+import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.util.common.StringUtils;
+
+import org.json.JSONObject;
 import org.xutils.db.annotation.Column;
 import org.xutils.db.annotation.Table;
 
@@ -157,6 +163,24 @@ public class ContactUser {
 
     public void setLastQueryTime(String lastQueryTime) {
         this.lastQueryTime = lastQueryTime;
+    }
+
+    public JSONObject contact2JSONObject(Context context) {
+        JSONObject obj = new JSONObject();
+        String headUrl = APIUri.getChannelImgUrl4Imp( id);
+        try {
+            obj.put("id", id);
+            obj.put("name", name);
+            obj.put("nameGlobal", nameGlobal);
+            obj.put("pinyin", pinyin);
+            obj.put("mobile", mobile);
+            obj.put("email", email);
+            obj.put("head", StringUtils.isBlank(headUrl)?"":headUrl);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return obj;
     }
 
     /*

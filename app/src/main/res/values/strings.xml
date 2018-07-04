@@ -869,6 +869,7 @@
 
     <string name="function_not_implemented">内测期间，暂不开放</string>
     <string name="msg_default_time">时间</string>
+    <string name="imp_function_error">功能调用错误，请检查应用是否已升级到最新版本</string>
 
 
     <!-- 打点 -->
@@ -995,4 +996,5 @@
     <string name="share_no_suffix">不支持分享无后缀名的文件</string>
     <string name="share_has_not_exist_file">您分享的文件中有不存在的文件，请检查</string>
     <string name="share_not_support">暂不支持的分享类型</string>
+
 </resources>

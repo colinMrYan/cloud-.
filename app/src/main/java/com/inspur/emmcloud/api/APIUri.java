@@ -293,6 +293,24 @@ public class APIUri {
     }
 
     /**
+     * Imp获取头像路径
+     * @param uid
+     * @return
+     */
+    public static String getChannelImgUrl4Imp(String uid){
+        String headImgUrl = "";
+        ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(uid);
+        if(contactUser != null){
+            headImgUrl = MyApplication.getInstance().getClusterEmm() + "api/sys/v3.0/img/userhead/" + uid;
+            String lastQueryTime = contactUser.getLastQueryTime();
+            if (!StringUtils.isBlank(lastQueryTime) && (!lastQueryTime.equals("null"))) {
+                headImgUrl = headImgUrl + "?" + lastQueryTime;
+            }
+        }
+        return headImgUrl;
+    }
+
+    /**
      * 统一接口
      *
      * @param uri

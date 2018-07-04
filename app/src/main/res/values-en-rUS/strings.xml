@@ -862,6 +862,7 @@
     <string name="can_not_stop">The current state can not be stopped</string>
     <string name="turn_on_light">Turn on the light</string>
     <string name="turn_off_light">Turn on the light</string>
+    <string name="imp_function_error">Function call error. Please check if Cloud + has been upgraded to the latest version.</string>
 
     <!-- 打点 -->
     <string name="msg_default_format">Format</string>
