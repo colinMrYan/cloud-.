@@ -45,7 +45,6 @@ import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.WeakHandler;
 
 import org.greenrobot.eventbus.EventBus;
-import org.xutils.view.annotation.ViewInject;
 
 import java.util.List;
 
@@ -57,8 +56,6 @@ import java.util.List;
 public class IndexActivity extends IndexBaseActivity {
     private static final int SYNC_ALL_BASE_DATA_SUCCESS = 0;
     private static final int RELOAD_WEB = 3;
-    @ViewInject(R.id.preload_webview)
-    private WebView webView;
     private WeakHandler handler;
     private boolean isHasCacheContact = false;
     private LoadingDialog loadingDlg;
@@ -96,6 +93,7 @@ public class IndexActivity extends IndexBaseActivity {
         if (!isHasCacheContact) {
             loadingDlg.show();
         }
+        getAllRobotInfo();
         getContactUser();
         getAppTabInfo();  //从服务端获取显示tab
         getMyAppRecommendWidgets();
@@ -226,7 +224,6 @@ public class IndexActivity extends IndexBaseActivity {
                         MyApplication.getInstance().startWebSocket(true);// 启动webSocket推送
                         getContactOrg();
                         getAllChannelGroup();
-                        getAllRobotInfo();
                         break;
                     case RELOAD_WEB:
                         if (webView != null) {

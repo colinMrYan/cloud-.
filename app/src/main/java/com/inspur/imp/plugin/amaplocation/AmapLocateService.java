@@ -1,11 +1,17 @@
 package com.inspur.imp.plugin.amaplocation;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.provider.Settings;
+
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.imp.api.Res;
 import com.inspur.imp.plugin.ImpPlugin;
 import com.inspur.imp.util.DialogUtil;
 
@@ -38,6 +44,7 @@ public class AmapLocateService extends ImpPlugin implements
     private String coordinateType = "";
     private List<AMapLocation> aMapLocationList = new ArrayList<>();
     private int locationCount = 0;
+    private  AlertDialog dialog;
 
     @Override
     public void execute(String action, JSONObject paramsObject) {
@@ -73,7 +80,50 @@ public class AmapLocateService extends ImpPlugin implements
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        startLocation();
+
+
+        boolean isOpen = Settings.Secure.getInt(context.getContentResolver(),Settings.Secure.ALLOW_MOCK_LOCATION, 0) != 0;
+        if (isOpen) {
+            if (dialog == null){
+                final AlertDialog.Builder builder = new AlertDialog.Builder(
+                        getActivity());
+
+                builder.setTitle(Res.getStringID("msg_title")).setMessage("请在开发者选项中关闭【允许模拟位置】选项");
+
+                builder.setPositiveButton(Res.getStringID("file_ok"),
+                        new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                try {
+                                    context.startActivity(new Intent(Settings.ACTION_APPLICATION_DEVELOPMENT_SETTINGS));
+                                }catch (Exception e){
+                                    e.printStackTrace();
+                                }
+                            }
+
+                        });
+                // 禁止取消按钮
+                builder.setCancelable(false);
+                dialog = builder.create();
+            }
+            if (context != null &&  !dialog.isShowing()) {
+                dialog.show();
+            }
+            // 绑定监听状态
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("longitude","0");
+                jsonObject.put("latitude","0");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            jsCallback(functName, jsonObject.toString());
+        }else{
+            startLocation();
+        }
+
+
 
 
     }

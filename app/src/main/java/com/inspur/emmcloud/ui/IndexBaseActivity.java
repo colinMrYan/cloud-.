@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
+import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TabHost;
@@ -66,7 +67,8 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
 
     @ViewInject(android.R.id.tabhost)
     public MyFragmentTabHost mTabHost;
-
+    @ViewInject(R.id.preload_webview)
+    protected WebView webView;
     private  TextView newMessageTipsText;
 
     private  RelativeLayout newMessageTipsLayout;

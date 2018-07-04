@@ -221,6 +221,7 @@ public class ImageDetailFragment extends Fragment {
 		super.onStart();
 		DisplayImageOptions options = new DisplayImageOptions.Builder()
 				.showImageForEmptyUri(R.drawable.plugin_camera_no_pictures)
+
 				.showImageOnFail(R.drawable.plugin_camera_no_pictures)
 				.showImageOnLoading(R.drawable.plugin_camera_no_pictures)
 				// 设置图片的解码类型
