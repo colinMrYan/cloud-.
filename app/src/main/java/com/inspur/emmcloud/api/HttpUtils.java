@@ -4,8 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.inspur.emmcloud.ui.mine.setting.NoPermissionDialogActivity;
-import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
+import com.inspur.emmcloud.util.privates.cache.AppExceptionCacheUtils;
 
 import org.xutils.http.HttpMethod;
 import org.xutils.http.RequestParams;
@@ -64,7 +65,9 @@ public class HttpUtils {
         if(isValidUrl(params)){
             x.http().request(httpMethod,params,callback);
         }else{
-            LogUtils.jasonDebug("params.getUri()="+params.getUri());
+            AppExceptionCacheUtils.saveAppException(context,8,"",params.getUri(),0);
+            AppExceptionCacheUtils.saveAppClusterException(context,8,PreferencesUtils.getString(context,
+                    "myInfo", ""),"clusters", 0);
             callback.callbackFail("", -1);
             if (AppUtils.isAppOnForeground(context)){
                 Intent intent = new Intent();

@@ -9,6 +9,7 @@
     <string name="cancel">取消</string>
     <string name="resolution_warning">您的設備解析度小於800*480，無法運行此程式</string>
     <string name="retry">重試</string>
+    <string name="re_login">重新登入</string>
     <string name="software_service_term">服務協定</string>
     <string name="update_fail">更新失敗</string>
     <string name="downloading_package">下載中，請稍候....</string>
@@ -951,4 +952,6 @@
     <string name="share_no_suffix">不支持分享無后綴名的檔案</string>
     <string name="share_has_not_exist_file">您分享的檔案中有不存在的檔案，請檢查</string>
     <string name="share_not_support">暫不支持的分享類型</string>
+
+    <string name="net_work_fail">獲取配置資訊失敗</string>
 </resources>

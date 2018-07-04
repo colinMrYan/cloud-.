@@ -110,7 +110,7 @@ public class ChatAPIService {
      * @param count
      */
     public void getNewMsgs(final String cid, final String msgId, final int count) {
-        final String completeUrl = APIUri.getHttpApiUrl("session/message");
+        final String completeUrl = APIUri.getECMChatChannelUrl()+("/session/message");
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         params.addParameter("limit", count);
@@ -169,7 +169,7 @@ public class ChatAPIService {
      */
     public void getComment(final String mid) {
 
-        final String completeUrl = APIUri.getHttpApiUrl("message/" + mid
+        final String completeUrl = APIUri.getECMChatChannelUrl()+("/message/" + mid
                 + "/comment");
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
@@ -274,7 +274,7 @@ public class ChatAPIService {
      */
     public void sendMsg(final String channelId, final String msgContent,
                         final String type, final String mid, final String fakeMessageId) {
-        final String completeUrl = APIUri.getHttpApiUrl("message");
+        final String completeUrl = APIUri.getECMChatChannelUrl()+("/message");
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         try {
@@ -341,7 +341,7 @@ public class ChatAPIService {
      * @param mid
      */
     public void getMsg(final String mid) {
-        final String completeUrl = APIUri.getHttpApiUrl("message/" + mid);
+        final String completeUrl = APIUri.getECMChatChannelUrl()+("/message/" + mid);
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
@@ -844,7 +844,7 @@ public class ChatAPIService {
     }
 
     public void getMsgCommentCount(final String mid) {
-        final String completeUrl = APIUri.getHttpApiUrl("message/" + mid
+        final String completeUrl = APIUri.getECMChatChannelUrl()+("/message/" + mid
                 + "/comment/count");
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);

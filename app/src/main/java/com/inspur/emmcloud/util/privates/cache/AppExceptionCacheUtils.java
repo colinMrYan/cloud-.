@@ -6,6 +6,7 @@ import com.inspur.emmcloud.bean.system.AppException;
 import com.inspur.emmcloud.util.privates.AppUtils;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -20,7 +21,7 @@ public class AppExceptionCacheUtils {
      * 存储异常信息
      *
      * @param context
-     * @param appException
+     * @param errorLevel
      */
     public static void saveAppException(final Context context, int errorLevel, String url, String error, int errorCode) {
         // TODO Auto-generated method stub
@@ -32,6 +33,35 @@ public class AppExceptionCacheUtils {
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * 存储路由表
+     * @param context
+     * @param errorLevel
+     * @param url
+     * @param error
+     * @param errorCode
+     */
+    public static void saveAppClusterException(final Context context,int errorLevel,String url,String error,int errorCode){
+        List<AppException> appExceptionList = getAppExceptionList(context);
+        Iterator<AppException> appExceptionIterator = appExceptionList.iterator();
+        while (appExceptionIterator.hasNext()){
+            AppException appException = appExceptionIterator.next();
+            if(appException.getErrorInfo().equals("clusters")){
+                appException.setHappenTime(System.currentTimeMillis());
+                appException.setAppVersion(AppUtils.getVersion(context));
+                appException.setErrorCode(errorCode);
+                appException.setErrorInfo(error);
+                appException.setErrorLevel(errorLevel);
+                appException.setErrorUrl(url);
+                try {
+                    DbCacheUtils.getDb(context).saveOrUpdate(appException);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
