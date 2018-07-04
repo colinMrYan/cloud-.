@@ -19,9 +19,9 @@ import android.widget.Toast;
 
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.imp.api.ImpActivity;
 import com.inspur.imp.api.Res;
 import com.inspur.imp.plugin.ImpPlugin;
-import com.inspur.imp.util.DialogUtil;
 import com.inspur.imp.util.StrUtil;
 
 import org.json.JSONException;
@@ -107,7 +107,7 @@ public class FileTransferService extends ImpPlugin {
         else if ("download".equals(action)) {
             download(paramsObject);
         }else{
-            DialogUtil.getInstance(getActivity()).show();
+            ((ImpActivity)getActivity()).showImpDialog();
         }
     }
 
@@ -132,7 +132,7 @@ public class FileTransferService extends ImpPlugin {
                     handler.sendEmptyMessage(1);
                 }
         }else{
-            DialogUtil.getInstance(getActivity()).show();
+            ((ImpActivity)getActivity()).showImpDialog();
         }
 
         return result;

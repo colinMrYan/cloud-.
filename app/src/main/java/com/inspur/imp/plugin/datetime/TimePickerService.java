@@ -5,8 +5,8 @@ import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.widget.TimePicker;
 
+import com.inspur.imp.api.ImpActivity;
 import com.inspur.imp.plugin.ImpPlugin;
-import com.inspur.imp.util.DialogUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -41,13 +41,13 @@ public class TimePickerService extends ImpPlugin {
 		if ("open".equals(action)) {
 			openTimePicker(paramsObject);
 		}else{
-			DialogUtil.getInstance(getActivity()).show();
+			((ImpActivity)getActivity()).showImpDialog();
 		}
 	}
 
 	@Override
 	public String executeAndReturn(String action, JSONObject paramsObject) {
-		DialogUtil.getInstance(getActivity()).show();
+		((ImpActivity)getActivity()).showImpDialog();
 		return "";
 	}
 

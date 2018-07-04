@@ -3,7 +3,6 @@ package com.inspur.imp.plugin.loadingdialog;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.imp.api.ImpActivity;
 import com.inspur.imp.plugin.ImpPlugin;
-import com.inspur.imp.util.DialogUtil;
 
 import org.json.JSONObject;
 
@@ -23,13 +22,13 @@ public class LoadingDialogService extends ImpPlugin {
         } else if ("hide".equals(action)) {
             hideDlg();
         }else{
-            DialogUtil.getInstance(getActivity()).show();
+            ((ImpActivity)getActivity()).showImpDialog();
         }
     }
 
     @Override
     public String executeAndReturn(String action, JSONObject paramsObject) {
-        DialogUtil.getInstance(getActivity()).show();
+        ((ImpActivity)getActivity()).showImpDialog();
         return "";
     }
 

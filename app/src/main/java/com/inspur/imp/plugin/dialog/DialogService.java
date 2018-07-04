@@ -7,9 +7,9 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.inspur.imp.api.ImpActivity;
 import com.inspur.imp.api.Res;
 import com.inspur.imp.plugin.ImpPlugin;
-import com.inspur.imp.util.DialogUtil;
 import com.inspur.imp.util.StrUtil;
 
 import org.json.JSONException;
@@ -60,13 +60,13 @@ public class DialogService extends ImpPlugin {
 		else if ("prompt".equals(action)) {
 			prompt(paramsObject);
 		}else{
-			DialogUtil.getInstance(getActivity()).show();
+			((ImpActivity)getActivity()).showImpDialog();
 		}
 	}
 
 	@Override
 	public String executeAndReturn(String action, JSONObject paramsObject) {
-		DialogUtil.getInstance(getActivity()).show();
+		((ImpActivity)getActivity()).showImpDialog();
 		return "";
 	}
 

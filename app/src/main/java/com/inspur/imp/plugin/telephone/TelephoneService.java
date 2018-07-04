@@ -4,8 +4,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.widget.Toast;
 
+import com.inspur.imp.api.ImpActivity;
 import com.inspur.imp.plugin.ImpPlugin;
-import com.inspur.imp.util.DialogUtil;
 import com.inspur.imp.util.StrUtil;
 
 import org.json.JSONException;
@@ -31,13 +31,13 @@ public class TelephoneService extends ImpPlugin {
 		else if ("call".equals(action)) {
 			call(paramsObject);
 		}else{
-			DialogUtil.getInstance(getActivity()).show();
+			((ImpActivity)getActivity()).showImpDialog();
 		}
 	}
 
 	@Override
 	public String executeAndReturn(String action, JSONObject paramsObject) {
-		DialogUtil.getInstance(getActivity()).show();
+		((ImpActivity)getActivity()).showImpDialog();
 		return "";
 	}
 

@@ -8,6 +8,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.TrafficStats;
 
+import com.inspur.imp.api.ImpActivity;
 import com.inspur.imp.plugin.ImpPlugin;
 import com.inspur.imp.util.DialogUtil;
 
@@ -93,7 +94,7 @@ public class NetworkService extends ImpPlugin {
 				e.printStackTrace();
 			}
 		}else{
-			DialogUtil.getInstance(getActivity()).show();
+			((ImpActivity)getActivity()).showImpDialog();
 		}
 		return Long.toString(data)+"MB";
 	}
@@ -225,6 +226,6 @@ public class NetworkService extends ImpPlugin {
 
 	@Override
 	public void execute(String action, JSONObject paramsObject){
-		DialogUtil.getInstance(getActivity()).show();
+		((ImpActivity)getActivity()).showImpDialog();
 	}
 }

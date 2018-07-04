@@ -5,9 +5,9 @@ import android.util.Base64;
 
 import com.inspur.emmcloud.util.common.ImageUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.imp.api.ImpActivity;
 import com.inspur.imp.api.Res;
 import com.inspur.imp.plugin.ImpPlugin;
-import com.inspur.imp.util.DialogUtil;
 import com.photograph.PhotoSDkApi;
 import com.photograph.ui.OCROptCallBack;
 
@@ -29,13 +29,13 @@ public class OCRService extends ImpPlugin {
         if ("startPhotoOCR".equals(action)) {
             startPhotoOCR(paramsObject);
         }else{
-            DialogUtil.getInstance(getActivity()).show();
+            ((ImpActivity)getActivity()).showImpDialog();
         }
     }
 
     @Override
     public String executeAndReturn(String action, JSONObject paramsObject) {
-        DialogUtil.getInstance(getActivity()).show();
+        ((ImpActivity)getActivity()).showImpDialog();
         return "";
     }
 

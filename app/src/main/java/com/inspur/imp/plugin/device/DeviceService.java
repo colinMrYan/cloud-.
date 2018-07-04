@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Vibrator;
 import android.provider.Settings;
 
+import com.inspur.imp.api.ImpActivity;
 import com.inspur.imp.plugin.ImpPlugin;
 import com.inspur.imp.util.DialogUtil;
 
@@ -57,7 +58,7 @@ public class DeviceService extends ImpPlugin {
 			}
 			res = jsonObject.toString();
 		}else {
-			DialogUtil.getInstance(getActivity()).show();
+			((ImpActivity)getActivity()).showImpDialog();
 		}
 		return res;
 	}
@@ -72,7 +73,7 @@ public class DeviceService extends ImpPlugin {
 		else if (action.equals("vibrate")) {
 			vibrate(jsonObject);
 		}else{
-			DialogUtil.getInstance(getActivity()).show();
+			((ImpActivity)getActivity()).showImpDialog();
 		}
 
 	}

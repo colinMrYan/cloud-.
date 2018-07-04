@@ -1,8 +1,8 @@
 package com.inspur.imp.plugin.rsa;
 
 
+import com.inspur.imp.api.ImpActivity;
 import com.inspur.imp.plugin.ImpPlugin;
-import com.inspur.imp.util.DialogUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,7 +31,7 @@ public class RsaService extends ImpPlugin {
 
 	@Override
 	public void execute(String action, JSONObject paramsObject) {
-		DialogUtil.getInstance(getActivity()).show();
+		((ImpActivity)getActivity()).showImpDialog();
 	}
 	
 	public String executeAndReturn(String action, JSONObject paramsObject){
@@ -55,7 +55,7 @@ public class RsaService extends ImpPlugin {
 				e.printStackTrace();
 			}
 		}else{
-			DialogUtil.getInstance(getActivity()).show();
+			((ImpActivity)getActivity()).showImpDialog();
 		}
 		return content;
 	}

@@ -22,6 +22,7 @@ import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.cache.AppExceptionCacheUtils;
+import com.inspur.imp.api.ImpActivity;
 import com.inspur.imp.api.Res;
 import com.inspur.imp.api.iLog;
 import com.inspur.imp.plugin.ImpPlugin;
@@ -110,13 +111,13 @@ public class CameraService extends ImpPlugin {
         }else if ("getPicture".equals(action)) {
             getPicture(paramsObject);
         }else{
-            DialogUtil.getInstance(getActivity()).show();
+            ((ImpActivity)getActivity()).showImpDialog();
         }
     }
 
     @Override
     public String executeAndReturn(String action, JSONObject paramsObject) {
-        DialogUtil.getInstance(getActivity()).show();
+        ((ImpActivity)getActivity()).showImpDialog();
         return "";
     }
 

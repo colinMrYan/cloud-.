@@ -7,8 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
 
+import com.inspur.imp.api.ImpActivity;
 import com.inspur.imp.plugin.ImpPlugin;
-import com.inspur.imp.util.DialogUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -48,13 +48,13 @@ public class DatePickerService extends ImpPlugin {
 		if ("open".equals(action)) {
 			open(paramsObject);
 		}else{
-			DialogUtil.getInstance(getActivity()).show();
+			((ImpActivity)getActivity()).showImpDialog();
 		}
 	}
 
 	@Override
 	public String executeAndReturn(String action, JSONObject paramsObject) {
-		DialogUtil.getInstance(getActivity()).show();
+		((ImpActivity)getActivity()).showImpDialog();
 		return "";
 	}
 

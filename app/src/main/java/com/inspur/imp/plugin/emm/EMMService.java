@@ -10,8 +10,8 @@ import com.inspur.emmcloud.util.common.ResolutionUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.MDM.MDM;
+import com.inspur.imp.api.ImpActivity;
 import com.inspur.imp.plugin.ImpPlugin;
-import com.inspur.imp.util.DialogUtil;
 
 import org.json.JSONObject;
 
@@ -31,7 +31,7 @@ public class EMMService extends ImpPlugin {
 		} else if ("webviewReload".equals(action)){
 			webviewReload();
 		}else{
-			DialogUtil.getInstance(getActivity()).show();
+			((ImpActivity)getActivity()).showImpDialog();
 		}
 	}
 
@@ -41,7 +41,7 @@ public class EMMService extends ImpPlugin {
 		if ("getDeviceInfo".equals(action)) {
 			return getDeviceInfo();
 		}else{
-			DialogUtil.getInstance(getActivity()).show();
+			((ImpActivity)getActivity()).showImpDialog();
 		}
 		return "";
 	}
