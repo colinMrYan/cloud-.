@@ -539,8 +539,8 @@
     <string name="modify_user_password_success">Password changed successfully, please login</string>
     <string name="modify_user_password_fail">Retry</string>
     <string name="modify_jump">Skip</string>
-    <string name="modify_welcom_user_cloud">Welcome to the wave of cloud +</string>
-    <string name="modify_first_use">This is the first time you use the cloud + wave, the wave passes is set password to login next time</string>
+    <string name="modify_welcom_user_cloud">Welcome to the inspur of cloud +</string>
+    <string name="modify_first_use">This is the first time you use the cloud + , the inspur passes is set password to login next time</string>
 
     <!-- 用户信息页面部分 -->
     <string name="user_info_text">Profile</string>

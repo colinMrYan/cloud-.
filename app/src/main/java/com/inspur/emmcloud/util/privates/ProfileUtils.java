@@ -1,6 +1,11 @@
 package com.inspur.emmcloud.util.privates;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.view.KeyEvent;
+import android.view.View;
+import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -13,9 +18,7 @@ import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
-import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
+import com.inspur.emmcloud.widget.dialogs.MyDialog;
 
 /**
  * Created by yufuchang on 2018/6/27.
@@ -39,6 +42,9 @@ public class ProfileUtils {
         if(checkNeedGetProfile()){
             getUserProfile();
         }else{
+            String appVersion = AppUtils.getVersion(activity);
+            PreferencesUtils.putString(activity, "previousVersion",
+                    appVersion);
             commonCallBack.execute();
         }
     }
@@ -61,23 +67,34 @@ public class ProfileUtils {
      * 弹出提示
      */
     private void showPromptDialog() {
-        new MyQMUIDialog.MessageDialogBuilder(activity)
-                .setMessage(activity.getString(R.string.net_work_fail))
-                .addAction(activity.getString(R.string.retry), new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        dialog.dismiss();
-                        getUserProfile();
-                    }
-                })
-                .addAction(activity.getString(R.string.re_login), new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        dialog.dismiss();
-                        startLoginActivity();
-                    }
-                })
-                .show();
+        final Dialog dialog = new MyDialog(activity, R.layout.dialog_profile_two_button);
+        dialog.setCanceledOnTouchOutside(false);
+        ((TextView) dialog.findViewById(R.id.show_text)).setText(R.string.net_work_fail);
+        dialog.findViewById(R.id.btn_re_login).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                startLoginActivity();
+            }
+        });
+        dialog.findViewById(R.id.btn_retry).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                getUserProfile();
+            }
+        });
+        dialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
+            @Override
+            public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+                if(keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount()==0) {
+                    dialog.dismiss();
+                    activity.finish();
+                }
+                return false;
+            }
+        });
+        dialog.show();
     }
 
     /**
@@ -88,7 +105,7 @@ public class ProfileUtils {
     private boolean checkNeedGetProfile() {
         String accessToken = PreferencesUtils.getString(
                 activity, "accessToken", "");
-        return !StringUtils.isBlank(accessToken) && AppUtils.isAppHasUpgraded(activity);
+        return !StringUtils.isBlank(accessToken) && AppUtils.isAppHasUpgraded(activity) && AppUtils.isLower202Version(activity);
     }
 
     class WebService extends APIInterfaceInstance {
@@ -99,32 +116,16 @@ public class ProfileUtils {
             PreferencesUtils.putString(activity, Constant.PREF_MY_INFO_OLD,PreferencesUtils.getString(activity,"myInfo",""));
             PreferencesUtils.putString(activity, "myInfo", getMyInfoResult.getResponse());
             MyApplication.getInstance().initTanent();
-            commonCallBack.execute();
             String appVersion = AppUtils.getVersion(activity);
             PreferencesUtils.putString(activity, "previousVersion",
                     appVersion);
+            commonCallBack.execute();
         }
 
         @Override
         public void returnMyInfoFail(String error, int errorCode) {
             LoadingDialog.dimissDlg(loadingDialog);
-            new MyQMUIDialog.MessageDialogBuilder(activity)
-                    .setMessage(activity.getString(R.string.net_work_fail))
-                    .addAction(activity.getString(R.string.retry), new QMUIDialogAction.ActionListener() {
-                        @Override
-                        public void onClick(QMUIDialog dialog, int index) {
-                            dialog.dismiss();
-                            getUserProfile();
-                        }
-                    })
-                    .addAction(activity.getString(R.string.re_login), new QMUIDialogAction.ActionListener() {
-                        @Override
-                        public void onClick(QMUIDialog dialog, int index) {
-                            dialog.dismiss();
-                            startLoginActivity();
-                        }
-                    })
-                    .show();
+            showPromptDialog();
         }
     }
 
@@ -136,6 +137,5 @@ public class ProfileUtils {
         String appVersion = AppUtils.getVersion(activity);
         PreferencesUtils.putString(activity.getApplicationContext(), "previousVersion",
                 appVersion);
-        activity.finish();
     }
 }
