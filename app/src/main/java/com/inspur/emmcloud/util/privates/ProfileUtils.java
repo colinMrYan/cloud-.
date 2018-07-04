@@ -2,8 +2,6 @@ package com.inspur.emmcloud.util.privates;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.DialogInterface;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.TextView;
 
@@ -68,7 +66,7 @@ public class ProfileUtils {
      */
     private void showPromptDialog() {
         final Dialog dialog = new MyDialog(activity, R.layout.dialog_profile_two_button);
-        dialog.setCanceledOnTouchOutside(false);
+        dialog.setCancelable(false);
         ((TextView) dialog.findViewById(R.id.show_text)).setText(R.string.net_work_fail);
         dialog.findViewById(R.id.btn_re_login).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,16 +80,6 @@ public class ProfileUtils {
             public void onClick(View v) {
                 dialog.dismiss();
                 getUserProfile();
-            }
-        });
-        dialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
-            @Override
-            public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-                if(keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount()==0) {
-                    dialog.dismiss();
-                    activity.finish();
-                }
-                return false;
             }
         });
         dialog.show();
