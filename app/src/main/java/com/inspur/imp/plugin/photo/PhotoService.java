@@ -14,6 +14,7 @@ import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.cache.AppExceptionCacheUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
+import com.inspur.imp.api.ImpActivity;
 import com.inspur.imp.api.Res;
 import com.inspur.imp.plugin.ImpPlugin;
 import com.inspur.imp.plugin.camera.Bimp;
@@ -22,7 +23,6 @@ import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
 import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
 import com.inspur.imp.plugin.camera.imagepicker.ui.ImageGridActivity;
 import com.inspur.imp.plugin.camera.mycamera.MyCameraActivity;
-import com.inspur.imp.util.DialogUtil;
 import com.inspur.imp.util.compressor.Compressor;
 
 import org.json.JSONArray;
@@ -56,14 +56,14 @@ public class PhotoService extends ImpPlugin {
         }else if("viewImage".equals(action)){
             viewImage();
         }else{
-            DialogUtil.getInstance(getActivity()).show();
+            ((ImpActivity)getActivity()).showImpDialog();
         }
         loadingDlg = new LoadingDialog(getActivity());
     }
 
     @Override
     public String executeAndReturn(String action, JSONObject paramsObject) {
-        DialogUtil.getInstance(getActivity()).show();
+        ((ImpActivity)getActivity()).showImpDialog();
         return "";
     }
 

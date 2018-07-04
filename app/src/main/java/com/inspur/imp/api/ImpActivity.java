@@ -3,6 +3,7 @@ package com.inspur.imp.api;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
@@ -39,6 +40,7 @@ import com.inspur.emmcloud.util.privates.DataCleanManager;
 import com.inspur.emmcloud.util.privates.MDM.MDM;
 import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
 import com.inspur.emmcloud.util.privates.cache.AppConfigCacheUtils;
+import com.inspur.emmcloud.widget.dialogs.EasyDialog;
 import com.inspur.imp.engine.webview.ImpWebView;
 import com.inspur.imp.plugin.camera.PublicWay;
 import com.inspur.imp.plugin.file.FileService;
@@ -399,6 +401,20 @@ public class ImpActivity extends ImpBaseActivity {
         return super.onKeyDown(keyCode, event);
     }
 
+    /**
+     * 弹出提示框
+     */
+    public void showImpDialog(){
+        DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        };
+        EasyDialog.showDialog(ImpActivity.this, getString(R.string.prompt),
+                getString(R.string.imp_function_error),
+                getString(R.string.ok),listener, false);
+    }
 
     @Override
     protected void onDestroy() {

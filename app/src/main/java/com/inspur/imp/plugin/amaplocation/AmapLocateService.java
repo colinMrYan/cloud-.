@@ -11,9 +11,9 @@ import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.imp.api.ImpActivity;
 import com.inspur.imp.api.Res;
 import com.inspur.imp.plugin.ImpPlugin;
-import com.inspur.imp.util.DialogUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -54,13 +54,13 @@ public class AmapLocateService extends ImpPlugin implements
         if ("getInfo".equals(action)) {
             getInfo(paramsObject);
         }else{
-            DialogUtil.getInstance(getActivity()).show();
+            ((ImpActivity)getActivity()).showImpDialog();
         }
     }
 
     @Override
     public String executeAndReturn(String action, JSONObject paramsObject) {
-        DialogUtil.getInstance(getActivity()).show();
+        ((ImpActivity)getActivity()).showImpDialog();
         return "";
     }
 

@@ -11,7 +11,6 @@ import com.baidu.location.LocationClientOption;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.imp.api.ImpActivity;
 import com.inspur.imp.plugin.ImpPlugin;
-import com.inspur.imp.util.DialogUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -98,7 +97,7 @@ public class MapService extends ImpPlugin {
 			}
 			doNaviByMapId(mapId,address);
 		} else{
-			DialogUtil.getInstance(getActivity()).show();
+			((ImpActivity)getActivity()).showImpDialog();
 		}
 
 	}
@@ -111,7 +110,7 @@ public class MapService extends ImpPlugin {
 			String result = getAllMapApps();
 			return result;
 		}else{
-			DialogUtil.getInstance(getActivity()).show();
+			((ImpActivity)getActivity()).showImpDialog();
 		}
 		return "";
 	}

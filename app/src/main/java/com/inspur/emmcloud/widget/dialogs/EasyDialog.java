@@ -1,6 +1,5 @@
 package com.inspur.emmcloud.widget.dialogs;
 
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -28,16 +27,16 @@ public class EasyDialog {
 	 * @param listener  需要传入的点击按钮后的处理DialogInterface.OnClickListener
 	 */
 	public static void showDialog(Context context,String title,String content,String item1,DialogInterface.OnClickListener listener,boolean cancle){
-		AlertDialog.Builder builder = new AlertDialog.Builder(context,android.R.style.Theme_Holo_Light_Dialog);
-		
-        builder.setTitle(title);
-        builder.setMessage(content);
-        builder.setPositiveButton(item1, listener);
-        
-        AlertDialog dialog = builder.create();
-    	dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-    	dialog.setCancelable(cancle);
-    	dialog.show();
+		if(context != null){
+			AlertDialog.Builder builder = new AlertDialog.Builder(context,android.R.style.Theme_Holo_Light_Dialog);
+			builder.setTitle(title);
+			builder.setMessage(content);
+			builder.setPositiveButton(item1, listener);
+			AlertDialog dialog = builder.create();
+			dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+			dialog.setCancelable(cancle);
+			dialog.show();
+		}
 	}
 	
 	
@@ -51,20 +50,17 @@ public class EasyDialog {
 	 * @param listener  需要传入的点击按钮后的处理DialogInterface.OnClickListener
 	 */
 	public static void showDialog(Context context,String title,String content,String item1,String item2,DialogInterface.OnClickListener listener,boolean cancle){
-		
-		AlertDialog.Builder builder = new AlertDialog.Builder(context,android.R.style.Theme_Holo_Light_Dialog);
-		
-        builder.setTitle(title);
-        builder.setMessage(content);
-        builder.setPositiveButton(item1, listener);
-        builder.setNegativeButton(item2, listener);
-        
-        
-        
-        AlertDialog dialog = builder.create();
-    	dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-    	dialog.setCancelable(cancle);
-    	dialog.show();
+		if(context != null){
+			AlertDialog.Builder builder = new AlertDialog.Builder(context,android.R.style.Theme_Holo_Light_Dialog);
+			builder.setTitle(title);
+			builder.setMessage(content);
+			builder.setPositiveButton(item1, listener);
+			builder.setNegativeButton(item2, listener);
+			AlertDialog dialog = builder.create();
+			dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+			dialog.setCancelable(cancle);
+			dialog.show();
+		}
 	}
 	
 	/**
@@ -78,19 +74,18 @@ public class EasyDialog {
 	 * @param listener  点击按钮后的监听DialogInterface.OnClickListener
 	 */
 	public static void showDialog(Context context,String title,String content,String item1,String item2,String item3,DialogInterface.OnClickListener listener,boolean cancle){
-		
-		AlertDialog.Builder builder = new AlertDialog.Builder(context,android.R.style.Theme_Holo_Light_Dialog);
-		
-		builder.setTitle(title);
-        builder.setMessage(content);
-        builder.setPositiveButton(item1, listener);
-        builder.setNeutralButton(item2, listener);
-        builder.setNegativeButton(item3, listener);
-        
-        AlertDialog dialog = builder.create();
-    	dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-    	dialog.setCancelable(cancle);
-    	dialog.show();
+		if(context != null){
+			AlertDialog.Builder builder = new AlertDialog.Builder(context,android.R.style.Theme_Holo_Light_Dialog);
+			builder.setTitle(title);
+			builder.setMessage(content);
+			builder.setPositiveButton(item1, listener);
+			builder.setNeutralButton(item2, listener);
+			builder.setNegativeButton(item3, listener);
+			AlertDialog dialog = builder.create();
+			dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+			dialog.setCancelable(cancle);
+			dialog.show();
+		}
 	}
 	
 	/**
@@ -101,15 +96,14 @@ public class EasyDialog {
 	 * @param listener  点击按钮后处理的DialogInterface.OnClickListener
 	 */
 	public static void showDialog(Context context,String title,String[] items,DialogInterface.OnClickListener listener,boolean cancle){
-		
-		AlertDialog.Builder builder = new AlertDialog.Builder(context,android.R.style.Theme_Holo_Light_Dialog);
-		
-		builder.setTitle(title);
-        builder.setItems(items, listener);
-        
-        AlertDialog dialog = builder.create();
-    	dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-    	dialog.setCancelable(cancle);
-    	dialog.show();
+		if(context != null){
+			AlertDialog.Builder builder = new AlertDialog.Builder(context,android.R.style.Theme_Holo_Light_Dialog);
+			builder.setTitle(title);
+			builder.setItems(items, listener);
+			AlertDialog dialog = builder.create();
+			dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+			dialog.setCancelable(cancle);
+			dialog.show();
+		}
 	}
 }

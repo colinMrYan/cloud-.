@@ -14,9 +14,9 @@ import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
+import com.inspur.imp.api.ImpActivity;
 import com.inspur.imp.plugin.ImpPlugin;
 import com.inspur.imp.plugin.camera.PublicWay;
-import com.inspur.imp.util.DialogUtil;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -53,7 +53,7 @@ public class SelectStaffService extends ImpPlugin {
 //            DialogUtil.getInstance(getActivity()).show();
 //        }
 
-        DialogUtil.getInstance(getActivity()).show();
+        ((ImpActivity)getActivity()).showImpDialog();
     }
 
     /**
@@ -115,7 +115,7 @@ public class SelectStaffService extends ImpPlugin {
         } else if("openContact".equals(action)){
             openContact();
         } else {
-            DialogUtil.getInstance(getActivity()).show();
+            ((ImpActivity)getActivity()).showImpDialog();
         }
         return "";
     }

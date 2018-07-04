@@ -1,12 +1,11 @@
 package com.inspur.imp.plugin;
 
-import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 
+import com.inspur.imp.api.ImpActivity;
 import com.inspur.imp.api.iLog;
 import com.inspur.imp.engine.webview.ImpWebView;
-import com.inspur.imp.util.DialogUtil;
 import com.inspur.imp.util.StrUtil;
 
 import org.json.JSONException;
@@ -81,7 +80,7 @@ public class PluginMgr {
             if (plugin != null) {
                 plugin.execute(action, jo);
             } else {
-                DialogUtil.getInstance((Activity) context).show();
+                ((ImpActivity)context).showImpDialog();
             }
         }
     }
@@ -125,7 +124,7 @@ public class PluginMgr {
                 }
             }
         } else {
-            DialogUtil.getInstance((Activity) context).show();
+            ((ImpActivity)context).showImpDialog();
         }
         return res;
 

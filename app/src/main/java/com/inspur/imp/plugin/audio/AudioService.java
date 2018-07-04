@@ -6,7 +6,6 @@ import android.net.Uri;
 import com.inspur.imp.api.ImpActivity;
 import com.inspur.imp.api.Res;
 import com.inspur.imp.plugin.ImpPlugin;
-import com.inspur.imp.util.DialogUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -48,13 +47,13 @@ public class AudioService extends ImpPlugin {
         else if (action.equals("stopPlaying")) {
             this.stopPlaying(paramsObject);
         }else{
-			DialogUtil.getInstance(getActivity()).show();
+			((ImpActivity)getActivity()).showImpDialog();
 		}
     }
 
 	@Override
 	public String executeAndReturn(String action, JSONObject paramsObject) {
-		DialogUtil.getInstance(getActivity()).show();
+		((ImpActivity)getActivity()).showImpDialog();
 		return "";
 	}
 
