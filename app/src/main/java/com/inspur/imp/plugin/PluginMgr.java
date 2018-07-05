@@ -3,6 +3,7 @@ package com.inspur.imp.plugin;
 import android.content.Context;
 import android.util.Log;
 
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.imp.api.ImpActivity;
 import com.inspur.imp.api.iLog;
 import com.inspur.imp.engine.webview.ImpWebView;
@@ -63,7 +64,9 @@ public class PluginMgr {
             IPlugin plugin = null;
             if (!entries.containsKey(serviceName)) {
                 plugin = createPlugin(serviceName);
-                entries.put(serviceName, plugin);
+                if (plugin != null){
+                    entries.put(serviceName, plugin);
+                }
             } else {
                 plugin = getPlugin(serviceName);
             }
@@ -102,7 +105,9 @@ public class PluginMgr {
             Log.d("jason", "action=" + action);
             if (!entries.containsKey(reallyServiceName)) {
                 plugin = createPlugin(reallyServiceName);
-                entries.put(reallyServiceName, plugin);
+                if (plugin != null){
+                    entries.put(reallyServiceName, plugin);
+                }
             } else {
                 plugin = getPlugin(reallyServiceName);
             }
@@ -137,7 +142,7 @@ public class PluginMgr {
             } else if (serviceName.endsWith("FileTransferService")) {
                 serviceName = "com.inspur.imp.plugin.filetransfer.FileTransferService";
             } else if (serviceName.endsWith("OCRService")) {
-                serviceName = "com.inspur.imp.plugin.ocr.OCRService";
+               // serviceName = "com.inspur.imp.plugin.ocr.OCRService";
             } else if (serviceName.endsWith("StartAppService")) {
                 serviceName = "com.inspur.imp.plugin.startapp.StartAppService";
             }
@@ -152,6 +157,7 @@ public class PluginMgr {
      * @return IPlugin
      */
     public IPlugin getPlugin(String service) {
+        LogUtils.jasonDebug("service="+service);
         IPlugin plugin = entries.get(service);
 
         // 页面切换时切换webView

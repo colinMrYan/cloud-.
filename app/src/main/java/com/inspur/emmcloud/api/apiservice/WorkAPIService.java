@@ -585,7 +585,6 @@ public class WorkAPIService {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
-                LogUtils.YfcDebug("callBackSuccess:"+new String(arg0));
             }
 
             @Override

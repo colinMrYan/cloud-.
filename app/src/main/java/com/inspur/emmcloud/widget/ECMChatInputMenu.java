@@ -88,7 +88,7 @@ public class ECMChatInputMenu extends LinearLayout {
     private Voice2StringMessageUtils voice2StringMessageUtils;
     private MediaPlayerUtils mediaPlayerUtils;
     private String cid = "";
-    private String inputs;
+    private String inputs = "";
     private boolean isSpecialUser = false; //小智机器人进行特殊处理
     private boolean isMessageV0 = true;
 
