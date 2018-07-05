@@ -121,7 +121,7 @@ public class App implements Serializable {
 			if(helpUrl.equals("null")){
 				helpUrl = "";
 			}
-			userHeader = JSONUtils.getInt(obj,"use_header",0);
+			userHeader = JSONUtils.getInt(obj,"use_header",1);
 		} catch (Exception e) {
 			// TODO: handle exception
             e.printStackTrace();
@@ -214,7 +214,7 @@ public class App implements Serializable {
             if(helpUrl.equals("null")){
                 helpUrl = "";
             }
-            userHeader = JSONUtils.getInt(obj,"use_header",0);
+            userHeader = JSONUtils.getInt(obj,"use_header",1);
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
