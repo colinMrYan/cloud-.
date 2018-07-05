@@ -52,6 +52,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
     private static final int CHECK_IMG_COMMENT = 1;
     public static final String EXTRA_IMAGE_INDEX = "image_index";
     public static final String EXTRA_IMAGE_URLS = "image_urls";
+    public static final String EXTRA_IMAGE_THUMB_URLS = "image_thumn_urls";
     public static final String EXTRA_CURRENT_IMAGE_MSG = "channel_current_image_msg";
     public static final String EXTRA_IMAGE_MSG_LIST = "channel_image_msg_list";
     public static final String PHOTO_SELECT_X_TAG = "PHOTO_SELECT_X_TAG";
@@ -64,7 +65,8 @@ public class ImagePagerActivity extends BaseFragmentActivity {
     private int pagerPosition;
     private int pageStartPosition = 0;
     private List<Message> imgTypeMessageList = new ArrayList<>();
-    private ArrayList<String> urlList = new ArrayList<>();
+    private ArrayList<String> orginUrlList = new ArrayList<>();
+    private ArrayList<String> thumbUrlList = new ArrayList<>();
     private String cid;
     private int locationX, locationY, locationW, locationH;
     private ImagePagerAdapter mAdapter;
@@ -107,7 +109,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
         }
 
         mPager = (HackyViewPager) findViewById(R.id.pager);
-        mAdapter = new ImagePagerAdapter(getSupportFragmentManager(), urlList);
+        mAdapter = new ImagePagerAdapter(getSupportFragmentManager(), orginUrlList);
         mPager.setAdapter(mAdapter);
         initIndicatorView();
         pagerPosition = pageStartPosition;
@@ -278,16 +280,16 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 
         if (getIntent().hasExtra(EXTRA_CURRENT_IMAGE_MSG)) {
             Message currentMsg = (Message) getIntent().getSerializableExtra(EXTRA_CURRENT_IMAGE_MSG);
-            urlList = new ArrayList<>();
+            orginUrlList = new ArrayList<>();
             cid = currentMsg.getChannel();
             imgTypeMessageList = (List<Message>) getIntent().getSerializableExtra(EXTRA_IMAGE_MSG_LIST);
             for(Message message:imgTypeMessageList){
                 String url = APIUri.getChatFileResouceUrl(message.getChannel(),message.getMsgContentMediaImage().getRawMedia());
-                urlList.add(url);
+                orginUrlList.add(url);
             }
             pageStartPosition = imgTypeMessageList.indexOf(currentMsg);
         } else {
-            urlList = getIntent().getStringArrayListExtra(EXTRA_IMAGE_URLS);
+            orginUrlList = getIntent().getStringArrayListExtra(EXTRA_IMAGE_URLS);
             pageStartPosition = getIntent().getIntExtra(EXTRA_IMAGE_INDEX, 0);
         }
         locationX = getIntent().getIntExtra(PHOTO_SELECT_X_TAG, 0);
