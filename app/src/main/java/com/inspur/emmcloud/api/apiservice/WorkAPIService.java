@@ -15,7 +15,6 @@ import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.CloudHttpMethod;
 import com.inspur.emmcloud.api.HttpUtils;
 import com.inspur.emmcloud.bean.appcenter.GetIDResult;
-import com.inspur.emmcloud.bean.chat.ChannelGroup;
 import com.inspur.emmcloud.bean.contact.SearchModel;
 import com.inspur.emmcloud.bean.work.Attachment;
 import com.inspur.emmcloud.bean.work.GetCalendarEventsResult;
@@ -32,6 +31,7 @@ import com.inspur.emmcloud.bean.work.GetTaskAddResult;
 import com.inspur.emmcloud.bean.work.GetTaskListResult;
 import com.inspur.emmcloud.bean.work.TaskResult;
 import com.inspur.emmcloud.interf.OauthCallBack;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.privates.OauthUtils;
 
@@ -518,9 +518,13 @@ public class WorkAPIService {
             @Override
             public void onSuccess(UriRequest arg0, Object arg1) {
                 // TODO Auto-generated method stub
+                String result = "";
+                if(arg1 != null){
+                    result = new String((byte[])arg1);
+                }
                 apiInterface
                         .returnMeetingListSuccess(new GetMeetingListResult(
-                                arg1.toString()), arg0.getResponseHeader("Date"));
+                                result), arg0.getResponseHeader("Date"));
             }
 
             @Override
@@ -581,6 +585,7 @@ public class WorkAPIService {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
+                LogUtils.YfcDebug("callBackSuccess:"+new String(arg0));
             }
 
             @Override
