@@ -42,6 +42,7 @@ public class App implements Serializable {
 
 	//应用功能扩展字段
 	private int isZoomable = 0;
+	private int userHeader = 0;
 
 	public App(){}
 	public App(JSONObject obj) {
@@ -120,6 +121,7 @@ public class App implements Serializable {
 			if(helpUrl.equals("null")){
 				helpUrl = "";
 			}
+			userHeader = JSONUtils.getInt(obj,"use_header",0);
 		} catch (Exception e) {
 			// TODO: handle exception
             e.printStackTrace();
@@ -212,6 +214,7 @@ public class App implements Serializable {
             if(helpUrl.equals("null")){
                 helpUrl = "";
             }
+            userHeader = JSONUtils.getInt(obj,"use_header",0);
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
@@ -414,6 +417,14 @@ public class App implements Serializable {
 
 	public void setIsSSO(int isSSO) {
 		this.isSSO = isSSO;
+	}
+
+	public int getUserHeader() {
+		return userHeader;
+	}
+
+	public void setUserHeader(int userHeader) {
+		this.userHeader = userHeader;
 	}
 
 	@Override
