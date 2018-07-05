@@ -552,7 +552,7 @@ public class MeetingDetailActivity extends BaseActivity {
         for (int i = 0; i < memberCount; i++) {
             circleImg[i].setVisibility(View.VISIBLE);
             ImageDisplayUtils.getInstance().displayImage(circleImg[i],
-                    selectMemList.get(selectMemList.size() - i - 1).getIcon(MeetingDetailActivity.this), R.drawable.icon_person_default);
+                    APIUri.getChannelImgUrl(MeetingDetailActivity.this,selectMemList.get(selectMemList.size() - i - 1).getId()), R.drawable.icon_person_default);
         }
     }
 
