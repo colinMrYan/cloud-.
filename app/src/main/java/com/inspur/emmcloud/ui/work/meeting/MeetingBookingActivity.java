@@ -18,6 +18,7 @@ import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
+import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.WorkAPIService;
 import com.inspur.emmcloud.bean.contact.SearchModel;
 import com.inspur.emmcloud.bean.work.GetIsAdmin;
@@ -384,7 +385,7 @@ public class MeetingBookingActivity extends BaseActivity {
         for (int i = 0; i < count; i++) {
             circleHeadImageView[i].setVisibility(View.VISIBLE);
             SearchModel searchModel = selectMemList.get(i);
-            String icon = searchModel.getIcon(MeetingBookingActivity.this);
+            String icon = APIUri.getChannelImgUrl(MeetingBookingActivity.this,searchModel.getId());
             int defaultIcon = -1;
             if (searchModel.getType().equals("GROUP")) {
                 File file = new File(MyAppConfig.LOCAL_CACHE_PATH, MyApplication.getInstance().getTanent()
