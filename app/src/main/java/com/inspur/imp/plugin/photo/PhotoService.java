@@ -49,6 +49,7 @@ public class PhotoService extends ImpPlugin {
     public void execute(String action, JSONObject paramsObject) {
         // TODO Auto-generated method stub
         this.paramsObject = paramsObject;
+        LogUtils.jasonDebug("paramsObject="+paramsObject.toString());
         if ("selectAndUpload".equals(action)) {
             selectAndUpload();
         }else if ("takePhotoAndUpload".equals(action)) {
