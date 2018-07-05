@@ -233,43 +233,49 @@ public class ImageDetailFragment extends Fragment {
 				new SimpleImageLoadingListener() {
 					@Override
 					public void onLoadingStarted(String imageUri, View view) {
-						progressBar.setVisibility(View.VISIBLE);
+						if (getActivity() !=null){
+							progressBar.setVisibility(View.VISIBLE);
+						}
 					}
 
 					@Override
 					public void onLoadingFailed(String imageUri, View view,
 												FailReason failReason) {
-						String message = null;
-						switch (failReason.getType()) {
-							case IO_ERROR:
-								message = getString(R.string.download_fail);
-								break;
-							case DECODING_ERROR:
-								message = getString(R.string.picture_cannot_show);
-								break;
-							case NETWORK_DENIED:
-								message = getString(R.string.cannot_download_for_network_exception);
-								break;
-							case OUT_OF_MEMORY:
-								message = getString(R.string.cannot_show_for_too_big);
-								break;
-							case UNKNOWN:
-								message = getString(R.string.unknown_error);
-								break;
-							default:
-								message = getString(R.string.download_fail);
-								break;
+						if (getActivity() !=null){
+							String message = null;
+							switch (failReason.getType()) {
+								case IO_ERROR:
+									message = getString(R.string.download_fail);
+									break;
+								case DECODING_ERROR:
+									message = getString(R.string.picture_cannot_show);
+									break;
+								case NETWORK_DENIED:
+									message = getString(R.string.cannot_download_for_network_exception);
+									break;
+								case OUT_OF_MEMORY:
+									message = getString(R.string.cannot_show_for_too_big);
+									break;
+								case UNKNOWN:
+									message = getString(R.string.unknown_error);
+									break;
+								default:
+									message = getString(R.string.download_fail);
+									break;
+							}
+							Toast.makeText(getActivity(), message,
+									Toast.LENGTH_SHORT).show();
+							progressBar.setVisibility(View.GONE);
 						}
-						Toast.makeText(getActivity(), message,
-								Toast.LENGTH_SHORT).show();
-						progressBar.setVisibility(View.GONE);
 					}
 
 					@Override
 					public void onLoadingComplete(String imageUri, View view,
 												  Bitmap loadedImage) {
-						progressBar.setVisibility(View.GONE);
-						mAttacher.update();
+						if (getActivity() !=null){
+							progressBar.setVisibility(View.GONE);
+							mAttacher.update();
+						}
 					}
 				});
 	}
