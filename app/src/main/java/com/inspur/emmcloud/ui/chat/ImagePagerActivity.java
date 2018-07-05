@@ -291,6 +291,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
         } else {
             orginUrlList = getIntent().getStringArrayListExtra(EXTRA_IMAGE_URLS);
             pageStartPosition = getIntent().getIntExtra(EXTRA_IMAGE_INDEX, 0);
+            thumbUrlList = getIntent().getStringArrayListExtra(EXTRA_IMAGE_THUMB_URLS);
         }
         locationX = getIntent().getIntExtra(PHOTO_SELECT_X_TAG, 0);
         locationY = getIntent().getIntExtra(PHOTO_SELECT_Y_TAG, 0);
@@ -422,23 +423,4 @@ public class ImagePagerActivity extends BaseFragmentActivity {
         }
 
     }
-
-
-//	private class WebService extends APIInterfaceInstance {
-//		@Override
-//		public void returnMsgCommentCountSuccess(GetMessageCommentCountResult getMsgCommentCountResult, String mid) {
-//			int count = getMsgCommentCountResult.getCount();
-//			commentCountMap.put(mid, count);
-//			String currentMid = imgTypeMessageList.get(pagerPosition).getMid();
-//			if (mid.equals(currentMid)) {
-//				commentCountText.setText(count + "");
-//			}
-//		}
-//
-//		@Override
-//		public void returnMsgCommentCountFail(String error,int errorCode) {
-//			super.returnMsgCommentCountFail(error,errorCode);
-//		}
-//	}
-
 }
