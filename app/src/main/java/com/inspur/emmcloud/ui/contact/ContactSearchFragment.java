@@ -45,7 +45,6 @@ import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.InputMethodUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.ListViewUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
@@ -518,12 +517,13 @@ public class ContactSearchFragment extends Fragment {
     private void openContact(Contact currentStruct) {
         // TODO Auto-generated method stub
         if (currentStruct == null) {
-            currentStruct = new Contact(ContactOrgCacheUtils.getRootContactOrg());
-            if (currentStruct == null) {
+            ContactOrg org = ContactOrgCacheUtils.getRootContactOrg();
+            if (org == null) {
                 ToastUtils.show(MyApplication.getInstance(),
                         getString(R.string.contact_exception));
                 return;
             }
+            currentStruct = new Contact(ContactOrgCacheUtils.getRootContactOrg());
         }
         openContact(currentStruct.getId(), currentStruct.getName());
     }
@@ -1558,7 +1558,7 @@ public class ContactSearchFragment extends Fragment {
             loadingDlg.show();
             ContactAPIService apiService = new ContactAPIService(getActivity());
             apiService.setAPIInterface(new WebService());
-            apiService.getContactOrgList(contactOrgLastQuetyTime);
+            apiService.getContactOrgList();
         }
     }
 

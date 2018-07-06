@@ -48,6 +48,8 @@ import com.inspur.emmcloud.bean.chat.GetSendMsgResult;
 import com.inspur.emmcloud.bean.chat.GetUploadPushInfoResult;
 import com.inspur.emmcloud.bean.chat.GetWebSocketUrlResult;
 import com.inspur.emmcloud.bean.chat.Robot;
+import com.inspur.emmcloud.bean.contact.GetContactOrgListUpateResult;
+import com.inspur.emmcloud.bean.contact.GetContactUserListUpateResult;
 import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.find.GetKnowledgeInfo;
 import com.inspur.emmcloud.bean.find.GetTripArriveCity;
@@ -660,4 +662,10 @@ public interface APIInterface {
 
     void returnContactOrgListSuccess(byte[] bytes);
     void returnContactOrgListFail(String error, int errorCode);
+
+    void returnContactUserListUpdateSuccess(GetContactUserListUpateResult getContactUserListUpateResult);
+    void returnContactUserListUpdateFail(String error, int errorCode);
+
+    void returnContactOrgListUpdateSuccess(GetContactOrgListUpateResult getContactOrgListUpateResult);
+    void returnContactOrgListUpdateFail(String error, int errorCode);
 }

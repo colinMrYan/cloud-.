@@ -18,6 +18,8 @@ import com.inspur.emmcloud.bean.chat.GetAllRobotsResult;
 import com.inspur.emmcloud.bean.contact.ContactOrg;
 import com.inspur.emmcloud.bean.contact.ContactProtoBuf;
 import com.inspur.emmcloud.bean.contact.ContactUser;
+import com.inspur.emmcloud.bean.contact.GetContactOrgListUpateResult;
+import com.inspur.emmcloud.bean.contact.GetContactUserListUpateResult;
 import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.system.GetAppTabAutoResult;
 import com.inspur.emmcloud.config.Constant;
@@ -283,6 +285,30 @@ public class IndexActivity extends IndexBaseActivity {
         }
     }
 
+    class CacheContactUserUpdateThread extends Thread {
+        private GetContactUserListUpateResult getContactUserListUpateResult;
+
+        public CacheContactUserUpdateThread(GetContactUserListUpateResult getContactUserListUpateResult) {
+            this.getContactUserListUpateResult = getContactUserListUpateResult;
+        }
+
+        @Override
+        public void run() {
+            try {
+                List<ContactUser> contactUserChangedList = getContactUserListUpateResult.getContactUserChangedList();
+                List<String> contactUserIdDeleteList = getContactUserListUpateResult.getContactUserIdDeleteList();
+                ContactUserCacheUtils.saveContactUserList(contactUserChangedList);
+                ContactUserCacheUtils.deleteContactUserList(contactUserIdDeleteList);
+                ContactUserCacheUtils.setLastQueryTime(getContactUserListUpateResult.getLastQueryTime());
+                if (handler != null) {
+                    handler.sendEmptyMessage(SYNC_ALL_BASE_DATA_SUCCESS);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     class CacheContactOrgThread extends Thread {
         private byte[] result;
 
@@ -297,8 +323,34 @@ public class IndexActivity extends IndexBaseActivity {
                 List<ContactProtoBuf.org> orgList = orgs.getOrgsList();
                 List<ContactOrg> contactOrgList = ContactOrg.protoBufOrgList2ContactOrgList(orgList);
                 ContactOrgCacheUtils.saveContactOrgList(contactOrgList);
-                ContactOrgCacheUtils.setLastQueryTime(orgs.getLastQueryTime());
                 ContactOrgCacheUtils.setContactOrgRootId(orgs.getRootID());
+                ContactOrgCacheUtils.setLastQueryTime(orgs.getLastQueryTime());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+    class CacheContactOrgUpdateThread extends Thread {
+        private GetContactOrgListUpateResult getContactOrgListUpateResult;
+
+        public CacheContactOrgUpdateThread(GetContactOrgListUpateResult getContactOrgListUpateResult) {
+            this.getContactOrgListUpateResult = getContactOrgListUpateResult;
+        }
+
+        @Override
+        public void run() {
+            try {
+                List<ContactOrg> contactOrgChangedList = getContactOrgListUpateResult.getContactOrgChangedList();
+
+                List<String> contactOrgIdDeleteList = getContactOrgListUpateResult.getContactOrgIdDeleteList();
+                ContactOrgCacheUtils.saveContactOrgList(contactOrgChangedList);
+                ContactOrgCacheUtils.deleteContactOrgList(contactOrgIdDeleteList);
+                if (getContactOrgListUpateResult.getRootID() != null){
+                    ContactOrgCacheUtils.setContactOrgRootId(getContactOrgListUpateResult.getRootID());
+                }
+                ContactOrgCacheUtils.setLastQueryTime(getContactOrgListUpateResult.getLastQueryTime());
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -363,7 +415,11 @@ public class IndexActivity extends IndexBaseActivity {
         if (NetUtils.isNetworkConnected(getApplicationContext(), false)) {
             MyApplication.getInstance().setIsContactReady(false);
             long contactUserLastQuetyTime = ContactUserCacheUtils.getLastQueryTime();
-            apiService.getContactUserList(contactUserLastQuetyTime);
+            if(contactUserLastQuetyTime == 0){
+                apiService.getContactUserList();
+            }else {
+                apiService.getContactUserListUpdate(contactUserLastQuetyTime);
+            }
         } else if (handler != null) {
             handler.sendEmptyMessage(SYNC_ALL_BASE_DATA_SUCCESS);
         }
@@ -378,7 +434,12 @@ public class IndexActivity extends IndexBaseActivity {
             ContactAPIService apiService = new ContactAPIService(IndexActivity.this);
             apiService.setAPIInterface(new WebService());
             long contactOrgLastQuetyTime = ContactOrgCacheUtils.getLastQueryTime();
-            apiService.getContactOrgList(contactOrgLastQuetyTime);
+            if (contactOrgLastQuetyTime == 0){
+                apiService.getContactOrgList();
+            }else {
+                apiService.getContactOrgListUpdate(contactOrgLastQuetyTime);
+            }
+
         }
     }
 
@@ -409,6 +470,20 @@ public class IndexActivity extends IndexBaseActivity {
         }
 
         @Override
+        public void returnContactUserListUpdateSuccess(GetContactUserListUpateResult getContactUserListUpateResult) {
+            new CacheContactUserUpdateThread(getContactUserListUpateResult).start();
+        }
+
+        @Override
+        public void returnContactUserListUpdateFail(String error, int errorCode) {
+            if (handler != null) {
+                handler.sendEmptyMessage(SYNC_ALL_BASE_DATA_SUCCESS);
+            }
+            WebServiceMiddleUtils.hand(IndexActivity.this, error, errorCode);
+        }
+
+
+        @Override
         public void returnContactOrgListSuccess(byte[] bytes) {
             new CacheContactOrgThread(bytes).start();
         }
@@ -416,6 +491,15 @@ public class IndexActivity extends IndexBaseActivity {
         @Override
         public void returnContactOrgListFail(String error, int errorCode) {
 
+        }
+
+        @Override
+        public void returnContactOrgListUpdateSuccess(GetContactOrgListUpateResult getContactOrgListUpateResult) {
+            new CacheContactOrgUpdateThread(getContactOrgListUpateResult).start();
+        }
+
+        @Override
+        public void returnContactOrgListUpdateFail(String error, int errorCode) {
         }
 
         @Override

@@ -17,10 +17,11 @@ import com.inspur.emmcloud.api.CloudHttpMethod;
 import com.inspur.emmcloud.api.HttpUtils;
 import com.inspur.emmcloud.bean.chat.GetAllRobotsResult;
 import com.inspur.emmcloud.bean.chat.Robot;
+import com.inspur.emmcloud.bean.contact.GetContactOrgListUpateResult;
+import com.inspur.emmcloud.bean.contact.GetContactUserListUpateResult;
 import com.inspur.emmcloud.interf.OauthCallBack;
 import com.inspur.emmcloud.util.privates.OauthUtils;
 
-import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
 
@@ -115,12 +116,9 @@ public class ContactAPIService {
 		});
 	}
 
-	public void getContactUserList(final long lastQuetyTime){
+	public void getContactUserList(){
 		String url = APIUri.getContactUserUrl();
 		RequestParams params = MyApplication.getInstance().getHttpRequestParams(url);
-		if (lastQuetyTime != 0) {
-			params.addParameter("lastQueryTime", lastQuetyTime);
-		}
 		x.http().post(params, new APICallback(context,url){
 			@Override
 			public void callbackSuccess(byte[] arg0) {
@@ -137,7 +135,7 @@ public class ContactAPIService {
 				OauthCallBack oauthCallBack = new OauthCallBack() {
 					@Override
 					public void reExecute() {
-						getContactUserList(lastQuetyTime);
+						getContactUserList();
 					}
 
 					@Override
@@ -151,33 +149,108 @@ public class ContactAPIService {
 		} );
 	}
 
-	public void getContactOrgList(long lastQuetyTime){
-		String url = APIUri.getContactOrgUrl();
-		RequestParams params =  MyApplication.getInstance().getHttpRequestParams(url);
-		if (lastQuetyTime != 0) {
-			params.addParameter("lastQueryTime", lastQuetyTime);
-		}
-		x.http().post(params, new Callback.CommonCallback<byte[]>() {
+	public void getContactUserListUpdate(final long lastQuetyTime){
+		String url = APIUri.getContactUserUrlUpdate();
+		RequestParams params = MyApplication.getInstance().getHttpRequestParams(url);
+		params.addParameter("lastQueryTime", lastQuetyTime);
+		x.http().post(params, new APICallback(context,url){
 			@Override
-			public void onSuccess(byte[] bytes) {
-				apiInterface.returnContactOrgListSuccess(bytes);
+			public void callbackSuccess(byte[] arg0) {
+				apiInterface.returnContactUserListUpdateSuccess(new GetContactUserListUpateResult(new String(arg0)));
 			}
 
 			@Override
-			public void onError(Throwable throwable, boolean b) {
+			public void callbackFail(String error, int responseCode) {
+				apiInterface.returnContactUserListUpdateFail("",-1);
+			}
+
+			@Override
+			public void callbackTokenExpire(long requestTime) {
+				OauthCallBack oauthCallBack = new OauthCallBack() {
+					@Override
+					public void reExecute() {
+						getContactUserListUpdate(lastQuetyTime);
+					}
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				};
+				OauthUtils.getInstance().refreshToken(
+						oauthCallBack, requestTime);
+			}
+		} );
+	}
+
+
+
+	public void getContactOrgList(){
+		String url = APIUri.getContactOrgUrl();
+		RequestParams params =  MyApplication.getInstance().getHttpRequestParams(url);
+		x.http().post(params, new APICallback(context,url){
+			@Override
+			public void callbackSuccess(byte[] arg0) {
+				apiInterface.returnContactOrgListSuccess(arg0);
+			}
+
+			@Override
+			public void callbackFail(String error, int responseCode) {
 				apiInterface.returnContactOrgListFail("",-1);
 			}
 
 			@Override
-			public void onCancelled(CancelledException e) {
+			public void callbackTokenExpire(long requestTime) {
+				OauthCallBack oauthCallBack = new OauthCallBack() {
+					@Override
+					public void reExecute() {
+						getContactOrgList();
+					}
 
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				};
+				OauthUtils.getInstance().refreshToken(
+						oauthCallBack, requestTime);
+			}
+		} );
+	}
+
+
+	public void getContactOrgListUpdate(final long lastQuetyTime){
+		String url = APIUri.getContactOrgUrlUpdate();
+		RequestParams params = MyApplication.getInstance().getHttpRequestParams(url);
+		params.addParameter("lastQueryTime", lastQuetyTime);
+		x.http().post(params, new APICallback(context,url){
+			@Override
+			public void callbackSuccess(byte[] arg0) {
+				apiInterface.returnContactOrgListUpdateSuccess(new GetContactOrgListUpateResult(new String(arg0)));
 			}
 
 			@Override
-			public void onFinished() {
-
+			public void callbackFail(String error, int responseCode) {
+				apiInterface.returnContactOrgListUpdateFail("",-1);
 			}
-		});
+
+			@Override
+			public void callbackTokenExpire(long requestTime) {
+				OauthCallBack oauthCallBack = new OauthCallBack() {
+					@Override
+					public void reExecute() {
+						getContactOrgListUpdate(lastQuetyTime);
+					}
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				};
+				OauthUtils.getInstance().refreshToken(
+						oauthCallBack, requestTime);
+			}
+		} );
 	}
 
 
