@@ -755,7 +755,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
 
 
     /**
-     * init ImageLoader
+     * init ImageLoaderCommon
      **/
     private void initImageLoader() {
         // TODO Auto-generated method stub
