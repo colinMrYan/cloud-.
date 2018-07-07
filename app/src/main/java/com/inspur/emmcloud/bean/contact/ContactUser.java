@@ -3,6 +3,7 @@ package com.inspur.emmcloud.bean.contact;
 import android.content.Context;
 
 import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 
 import org.json.JSONObject;
@@ -46,17 +47,18 @@ public class ContactUser {
         this.id = id;
     }
 
-//    public ContactUser(JSONObject object){
-//        this.id = JSONUtils.getString(object,"id","");
-//        this.name = JSONUtils.getString(object,"name","");
-//        this.nameGlobal = JSONUtils.getString(object,"nameGlobal","");
-//        this.pinyin =JSONUtils.getString(object,"pinyin","");
-//        this.parentId = JSONUtils.getString(object,"parentId","");
-//        this.mobile = JSONUtils.getString(object,"mobile","");
-//        this.email = JSONUtils.getString(object,"email","");
-//        this.hasHead =JSONUtils.getInt(object,"hasHead",0);
-//        this.sortOrder = JSONUtils.getInt(object,"sortOrder",0);
-//    }
+    public ContactUser(JSONObject object,String lastQueryTime){
+        this.id = JSONUtils.getString(object,"id","");
+        this.name = JSONUtils.getString(object,"real_name","");
+        this.nameGlobal = JSONUtils.getString(object,"name_global","");
+        this.pinyin =JSONUtils.getString(object,"pinyin","");
+        this.parentId = JSONUtils.getString(object,"parent_id","");
+        this.mobile = JSONUtils.getString(object,"mobile","");
+        this.email = JSONUtils.getString(object,"email","");
+        this.hasHead =JSONUtils.getInt(object,"has_head",0);
+        this.sortOrder = JSONUtils.getInt(object,"sort_order",0);
+        this.lastQueryTime = lastQueryTime;
+    }
 
     public ContactUser(String id, String name, String nameGlobal, String pinyin, String parentId, String mobile, String email, int hasHead, int sortOrder,String lastQueryTime) {
         this.id = id;

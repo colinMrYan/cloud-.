@@ -47,6 +47,19 @@ public class ContactUserCacheUtils {
         }
     }
 
+    public static void deleteContactUserList(List<String> uidList){
+        if (uidList == null || uidList.size() == 0) {
+            return;
+        }
+        try {
+
+            DbCacheUtils.getDb().delete(ContactUser.class,WhereBuilder.b("id","in", uidList));
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
     public static void setLastQueryTime(long lastQueryTime){
         PreferencesByUserAndTanentUtils.putLong(MyApplication.getInstance(), Constant.PREF_CONTACT_USER_LASTQUERYTIME,lastQueryTime);
     }

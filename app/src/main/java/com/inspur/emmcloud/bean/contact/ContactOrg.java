@@ -1,5 +1,8 @@
 package com.inspur.emmcloud.bean.contact;
 
+import com.inspur.emmcloud.util.common.JSONUtils;
+
+import org.json.JSONObject;
 import org.xutils.db.annotation.Column;
 import org.xutils.db.annotation.Table;
 
@@ -23,9 +26,17 @@ public class ContactOrg {
     private String parentId= "";
     @Column(name = "sortOrder")
     private int sortOrder= 0;
-
     public ContactOrg(){
 
+    }
+
+    public ContactOrg(JSONObject object){
+        this.id = JSONUtils.getString(object,"id","");
+        this.name = JSONUtils.getString(object,"name","");
+        this.nameGlobal = JSONUtils.getString(object,"name_global","");
+        this.pinyin =JSONUtils.getString(object,"pinyin","");
+        this.parentId = JSONUtils.getString(object,"parent_id","");
+        this.sortOrder = JSONUtils.getInt(object,"sort_order",0);
     }
 
     public ContactOrg(String id, String name, String nameGlobal, String pinyin, String parentId, int sortOrder) {

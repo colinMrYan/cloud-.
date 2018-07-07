@@ -601,6 +601,14 @@ public class APIUri {
     public static String getContactUserUrl(){
         return MyApplication.getInstance().getClusterEmm() + "api/sys/v4.0/contacts/users";
     }
+    /**
+     * 获取通讯录中的人员更新
+     * @return
+     */
+    public static String getContactUserUrlUpdate(){
+        return MyApplication.getInstance().getClusterEmm() + "api/sys/v3.0/contacts/users";
+    }
+
 
     /**
      * 获取通讯录中的组织
@@ -608,6 +616,14 @@ public class APIUri {
      */
     public static String getContactOrgUrl(){
         return MyApplication.getInstance().getClusterEmm() + "api/sys/v4.0/contacts/orgs";
+    }
+
+    /**
+     * 获取通讯录中的组织更新
+     * @return
+     */
+    public static String getContactOrgUrlUpdate(){
+        return MyApplication.getInstance().getClusterEmm() + "api/sys/v3.0/contacts/orgs";
     }
 
 
