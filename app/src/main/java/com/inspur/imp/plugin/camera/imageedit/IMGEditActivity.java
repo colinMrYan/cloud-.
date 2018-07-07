@@ -100,7 +100,7 @@ public class IMGEditActivity extends IMGEditBaseActivity {
         String path = getIntent().getExtras().getString(EXTRA_IMAGE_SAVE_DIR_PATH,MyAppConfig.LOCAL_IMG_CREATE_PATH);
         if (!TextUtils.isEmpty(path)) {
             File dir = new File(path);
-            if (dir.exists()){
+            if (!dir.exists()){
                 dir.mkdirs();
             }
             File saveFile = new File(path,System.currentTimeMillis()+".png");
