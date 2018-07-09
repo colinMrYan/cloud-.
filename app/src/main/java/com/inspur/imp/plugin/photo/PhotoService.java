@@ -285,8 +285,13 @@ public class PhotoService extends ImpPlugin {
                             Bitmap thumbnailBitmaps[] = new Bitmap[originImagePathList.size()];
                             try {
                                 JSONObject jsonObject = new JSONObject();
-                                JSONObject contextObj = new JSONObject(result);
-                                jsonObject.put("context", contextObj);
+                                try {
+                                    JSONObject contextObj = new JSONObject(result);
+                                    jsonObject.put("context", contextObj);
+                                }catch (Exception e){
+                                    e.printStackTrace();
+                                    jsonObject.put("context", result);
+                                }
                                 JSONArray dataArray = new JSONArray();
                                 for (int i = 0; i < originImagePathList.size(); i++) {
                                     String imagePath = originImagePathList.get(i);
