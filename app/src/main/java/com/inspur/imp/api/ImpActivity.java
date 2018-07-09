@@ -2,6 +2,8 @@ package com.inspur.imp.api;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -66,6 +68,7 @@ public class ImpActivity extends ImpBaseActivity {
     private TextView loadingText;
     private String helpUrl = "";
     private HashMap<String, String> urlTilteMap = new HashMap<>();
+    private ImpFragment fragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,11 +77,22 @@ public class ImpActivity extends ImpBaseActivity {
         boolean isWebAutoRotate = Boolean.parseBoolean(AppConfigCacheUtils.getAppConfigValue(this, Constant.CONCIG_WEB_AUTO_ROTATE, "false"));
         //设置是否开启webview自动旋转
         setRequestedOrientation(isWebAutoRotate ? ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED : ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        setContentView(Res.getLayoutID("activity_imp"));
+        setContentView(Res.getLayoutID("activity_imp_hold"));
         getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
                         | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-        initViews();
+//        initViews();
+        fragment = new ImpFragment();
+        //获取到FragmentManager，在V4包中通过getSupportFragmentManager，
+        //在系统中原生的Fragment是通过getFragmentManager获得的。
+        FragmentManager fragmentManager = getFragmentManager();
+        //2.开启一个事务，通过调用beginTransaction方法开启。
+        FragmentTransaction MfragmentTransaction = fragmentManager.beginTransaction();
+        //向容器内加入Fragment，一般使用add或者replace方法实现，需要传入容器的id和Fragment的实例。
+        MfragmentTransaction.add(R.id.fl_container,fragment);
+        //提交事务，调用commit方法提交。
+        MfragmentTransaction.commit();
+//        getSupportFragmentManager().beginTransaction().replace(R.id.fl_container, fragment).commitAllowingStateLoss();
     }
 
 
@@ -440,7 +454,7 @@ public class ImpActivity extends ImpBaseActivity {
     }
 
     public void dimissLoadingDlg() {
-        loadingLayout.setVisibility(View.GONE);
+//        loadingLayout.setVisibility(View.GONE);
     }
 
     @Override
