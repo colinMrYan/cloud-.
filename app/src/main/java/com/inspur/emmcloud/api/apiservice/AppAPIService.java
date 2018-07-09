@@ -325,7 +325,7 @@ public class AppAPIService {
         HttpUtils.request(context,CloudHttpMethod.GET,params,new APICallback(context, completeUrl) {
             @Override
             public void callbackSuccess(byte[] arg0) {
-                if (arg0.equals("登录成功")) {
+                if (arg0 != null && new String(arg0).equals("登录成功")) {
                     apiInterface.returnVeriryApprovalPasswordSuccess(password);
                 } else {
                     apiInterface.returnVeriryApprovalPasswordFail("", -1);
