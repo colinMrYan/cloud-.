@@ -781,16 +781,11 @@ public class PhotoView extends ImageView {
 
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-            Log.d("jason","onFling---scale=="+mScale);
-            Log.d("jason","onFling---hasMultiTouch=="+hasMultiTouch);
-            Log.d("jason","onFling---!imgLargeWidth=="+!imgLargeWidth);
-            Log.d("jason","onFling---!imgLargeHeight=="+!imgLargeHeight);
-            Log.d("jason","onFling---mTranslate.isRuning=="+mTranslate.isRuning);
             if (hasMultiTouch) return false;
             if (pointerCount == 1 && Math.abs(velocityY) > Math.abs(velocityX) && e2.getY() - e1.getY() > 60) {
-                Log.d("jason","0000000000000000000");
+           //     Log.d("jason","0000000000000000000");
             }else {
-                Log.d("jason","11111111111111111111");
+           //     Log.d("jason","11111111111 111111111");
             }
             if (!imgLargeWidth && !imgLargeHeight) return false;
             if (mTranslate.isRuning) return false;

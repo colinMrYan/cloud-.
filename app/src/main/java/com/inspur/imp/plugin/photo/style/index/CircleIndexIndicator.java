@@ -26,7 +26,7 @@ public class CircleIndexIndicator implements IIndexIndicator {
     public void attach(FrameLayout parent) {
         FrameLayout.LayoutParams indexLp = new FrameLayout.LayoutParams(WRAP_CONTENT, 48);
         indexLp.gravity = Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL;
-        indexLp.bottomMargin = 10;
+        indexLp.bottomMargin = 25;
 
         circleIndicator = new CircleIndicator(parent.getContext());
         circleIndicator.setGravity(Gravity.CENTER_VERTICAL);

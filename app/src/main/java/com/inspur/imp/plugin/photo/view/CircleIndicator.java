@@ -26,8 +26,8 @@ import static android.support.v4.view.ViewPager.OnPageChangeListener;
  */
 public class CircleIndicator extends LinearLayout {
 
-    private final static int DEFAULT_INDICATOR_WIDTH = 5;
-
+    private final static int DEFAULT_INDICATOR_WIDTH = 7;
+    private final static int DEFAULT_INDICATOR_MARGIN = 5;
     private ViewPager mViewpager;
     private GradientDrawable mIndicatorBackground;
 
@@ -168,7 +168,7 @@ public class CircleIndicator extends LinearLayout {
         mIndicatorHeight =
                 (mIndicatorHeight < 0) ? dip2px(DEFAULT_INDICATOR_WIDTH) : mIndicatorHeight;
         mIndicatorMargin =
-                (mIndicatorMargin < 0) ? dip2px(DEFAULT_INDICATOR_WIDTH) : mIndicatorMargin;
+                (mIndicatorMargin < 0) ? dip2px(DEFAULT_INDICATOR_MARGIN) : mIndicatorMargin;
 
         mAnimatorOut = createAnimatorOut();
         mImmediateAnimatorOut = createAnimatorOut();
@@ -181,8 +181,8 @@ public class CircleIndicator extends LinearLayout {
 
     private Animator createAnimatorOut() {
         ObjectAnimator alphaAnima = ObjectAnimator.ofFloat(null, "alpha", .5f, 1.f);
-        ObjectAnimator scaleX = ObjectAnimator.ofFloat(null, "scaleX", 1.0f, 1.8f);
-        ObjectAnimator scaleY = ObjectAnimator.ofFloat(null, "scaleY", 1.0f, 1.8f);
+        ObjectAnimator scaleX = ObjectAnimator.ofFloat(null, "scaleX", 1.0f, 1.5f);
+        ObjectAnimator scaleY = ObjectAnimator.ofFloat(null, "scaleY", 1.0f, 1.5f);
 
         AnimatorSet animatorOut = new AnimatorSet();
         animatorOut.play(alphaAnima).with(scaleX).with(scaleY);

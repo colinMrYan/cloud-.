@@ -17,7 +17,6 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="70dp"
-            android:background="@drawable/ic_chat_img_display_gradient_header"
             android:paddingBottom="30dp">
 
             <ImageView
@@ -53,7 +52,6 @@
             android:layout_width="match_parent"
             android:layout_height="67dp"
             android:layout_alignParentBottom="true"
-            android:background="@drawable/ic_chat_img_display_gradient_footer"
             android:gravity="right"
             android:orientation="horizontal"
             android:paddingBottom="7dp"

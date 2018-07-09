@@ -9,7 +9,6 @@ import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
 import com.inspur.imp.plugin.photo.loader.UniversalImageLoader;
 import com.inspur.imp.plugin.photo.style.index.CircleIndexIndicator;
-import com.inspur.imp.plugin.photo.style.index.NumberIndexIndicator;
 import com.inspur.imp.plugin.photo.style.progress.ProgressBarIndicator;
 import com.inspur.imp.plugin.photo.style.progress.ProgressPieIndicator;
 import com.inspur.imp.plugin.photo.transfer.TransferConfig;
@@ -69,7 +68,7 @@ public class ImageGalleryActivity extends BaseActivity {
                 .setMissPlaceHolder(R.drawable.plugin_camera_no_pictures)
                 .setErrorPlaceHolder(R.drawable.plugin_camera_no_pictures)
                 .setProgressIndicator(new ProgressPieIndicator())
-                .setIndexIndicator(new NumberIndexIndicator())
+                .setIndexIndicator(new CircleIndexIndicator())
                 .setJustLoadHitImage(false)
                 .setNowThumbnailIndex(0)
                 .setDuration(0)
