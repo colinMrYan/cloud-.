@@ -147,6 +147,7 @@ public class NativeBridge extends ReactContextBaseJavaModule implements Activity
         intent.putExtra("select_content", 2);
         intent.putExtra("isMulti_select", multi);
         intent.putExtra("title", getReactApplicationContext().getString(R.string.adress_list));
+        intent.putExtra("isContainMe", true);
         if (searchModelList != null && multi) {
             intent.putExtra("hasSearchResult", (Serializable) searchModelList);
         }
