@@ -37,7 +37,7 @@ public class JSONUtils {
      * </ul>
      */
     public static Long getLong(JSONObject jsonObject, String key, Long defaultValue) {
-        if (jsonObject == null || StringUtils.isEmpty(key) || !jsonObject.has(key)) {
+        if (jsonObject == null || StringUtils.isEmpty(key) || !jsonObject.has(key) || jsonObject.isNull(key)) {
             return defaultValue;
         }
 
@@ -115,7 +115,7 @@ public class JSONUtils {
      * </ul>
      */
     public static Integer getInt(JSONObject jsonObject, String key, Integer defaultValue) {
-        if (jsonObject == null || StringUtils.isEmpty(key) || !jsonObject.has(key)) {
+        if (jsonObject == null || StringUtils.isEmpty(key) || !jsonObject.has(key) || jsonObject.isNull(key)) {
             return defaultValue;
         }
 
@@ -193,7 +193,7 @@ public class JSONUtils {
      * </ul>
      */
     public static Double getDouble(JSONObject jsonObject, String key, Double defaultValue) {
-        if (jsonObject == null || StringUtils.isEmpty(key) || !jsonObject.has(key)) {
+        if (jsonObject == null || StringUtils.isEmpty(key) || !jsonObject.has(key) || jsonObject.isNull(key)) {
             return defaultValue;
         }
 
@@ -271,7 +271,7 @@ public class JSONUtils {
      * </ul>
      */
     public static String getString(JSONObject jsonObject, String key, String defaultValue) {
-        if (jsonObject == null || StringUtils.isEmpty(key) || !jsonObject.has(key)) {
+        if (jsonObject == null || StringUtils.isEmpty(key) || !jsonObject.has(key) || jsonObject.isNull(key)) {
             return defaultValue;
         }
 
@@ -386,7 +386,7 @@ public class JSONUtils {
      * </ul>
      */
     public static String[] getStringArray(JSONObject jsonObject, String key, String[] defaultValue) {
-        if (jsonObject == null || StringUtils.isEmpty(key) || !jsonObject.has(key)) {
+        if (jsonObject == null || StringUtils.isEmpty(key) || !jsonObject.has(key) || jsonObject.isNull(key)) {
             return defaultValue;
         }
 
@@ -449,7 +449,7 @@ public class JSONUtils {
      * </ul>
      */
     public static List<String> getStringList(JSONObject jsonObject, String key, List<String> defaultValue) {
-        if (jsonObject == null || StringUtils.isEmpty(key) || !jsonObject.has(key)) {
+        if (jsonObject == null || StringUtils.isEmpty(key) || !jsonObject.has(key) || jsonObject.isNull(key)) {
             return defaultValue;
         }
 
@@ -513,7 +513,7 @@ public class JSONUtils {
      * </ul>
      */
     public static JSONObject getJSONObject(JSONObject jsonObject, String key, JSONObject defaultValue) {
-        if (jsonObject == null || StringUtils.isEmpty(key) || !jsonObject.has(key)) {
+        if (jsonObject == null || StringUtils.isEmpty(key) || !jsonObject.has(key) || jsonObject.isNull(key)) {
             return defaultValue;
         }
 
@@ -644,7 +644,7 @@ public class JSONUtils {
      * </ul>
      */
     public static JSONArray getJSONArray(JSONObject jsonObject, String key, JSONArray defaultValue) {
-        if (jsonObject == null || StringUtils.isEmpty(key) || !jsonObject.has(key)) {
+        if (jsonObject == null || StringUtils.isEmpty(key) || !jsonObject.has(key) || jsonObject.isNull(key)) {
             return defaultValue;
         }
 
@@ -721,7 +721,7 @@ public class JSONUtils {
      * </ul>
      */
     public static boolean getBoolean(JSONObject jsonObject, String key, Boolean defaultValue) {
-        if (jsonObject == null || StringUtils.isEmpty(key) || !jsonObject.has(key)) {
+        if (jsonObject == null || StringUtils.isEmpty(key) || !jsonObject.has(key) || jsonObject.isNull(key)) {
             return defaultValue;
         }
 
