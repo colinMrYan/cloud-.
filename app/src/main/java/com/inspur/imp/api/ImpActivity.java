@@ -264,37 +264,38 @@ public class ImpActivity extends ImpBaseActivity {
 
 
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.imp_change_font_size_btn:
-                showChangeFontSizeDialog();
-                break;
-            case R.id.app_imp_crm_font_normal_btn:
-                setNewsFontSize(MyAppWebConfig.NORMAL);
-                break;
-            case R.id.app_imp_crm_font_middle_btn:
-                setNewsFontSize(MyAppWebConfig.CRM_BIG);
-                break;
-            case R.id.app_imp_crm_font_big_btn:
-                setNewsFontSize(MyAppWebConfig.CRM_BIGGER);
-                break;
-            case R.id.app_imp_crm_font_biggest_btn:
-                setNewsFontSize(MyAppWebConfig.CRM_BIGGEST);
-                break;
-            case R.id.back_layout:
-                goBack();
-                break;
-            case R.id.imp_close_btn:
-                finishActivity();
-                break;
-            case R.id.refresh_text:
-                showLoadingDlg(getString(Res.getStringID("@string/loading_text")));
-                webView.reload();
-                webView.setVisibility(View.INVISIBLE);
-                loadFailLayout.setVisibility(View.GONE);
-                break;
-            default:
-                break;
-        }
+//        switch (v.getId()) {
+//            case R.id.imp_change_font_size_btn:
+//                showChangeFontSizeDialog();
+//                break;
+//            case R.id.app_imp_crm_font_normal_btn:
+//                setNewsFontSize(MyAppWebConfig.NORMAL);
+//                break;
+//            case R.id.app_imp_crm_font_middle_btn:
+//                setNewsFontSize(MyAppWebConfig.CRM_BIG);
+//                break;
+//            case R.id.app_imp_crm_font_big_btn:
+//                setNewsFontSize(MyAppWebConfig.CRM_BIGGER);
+//                break;
+//            case R.id.app_imp_crm_font_biggest_btn:
+//                setNewsFontSize(MyAppWebConfig.CRM_BIGGEST);
+//                break;
+//            case R.id.back_layout:
+//                goBack();
+//                break;
+//            case R.id.imp_close_btn:
+//                finishActivity();
+//                break;
+//            case R.id.refresh_text:
+//                showLoadingDlg(getString(Res.getStringID("@string/loading_text")));
+//                webView.reload();
+//                webView.setVisibility(View.INVISIBLE);
+//                loadFailLayout.setVisibility(View.GONE);
+//                break;
+//            default:
+//                break;
+//        }
+        fragment.onClick(v);
 
     }
 
@@ -405,12 +406,13 @@ public class ImpActivity extends ImpBaseActivity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         // TODO Auto-generated method stub
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if (webView.canGoBack()) {
-                webView.goBack();// 返回上一页面
-                return true;
-            } else {
-                finishActivity();// 退出程序
-            }
+//            if (webView.canGoBack()) {
+//                webView.goBack();// 返回上一页面
+//                return true;
+//            } else {
+//                finishActivity();// 退出程序
+//            }
+            return fragment.onKeyDown();
         }
         return super.onKeyDown(keyCode, event);
     }
@@ -455,6 +457,7 @@ public class ImpActivity extends ImpBaseActivity {
 
     public void dimissLoadingDlg() {
 //        loadingLayout.setVisibility(View.GONE);
+        fragment.dimissLoadingDlg();
     }
 
     @Override

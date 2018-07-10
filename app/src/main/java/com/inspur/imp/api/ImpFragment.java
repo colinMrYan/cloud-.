@@ -134,6 +134,20 @@ public class ImpFragment extends Fragment {
     }
 
     /**
+     * 返回逻辑
+     * @return
+     */
+    public boolean onKeyDown(){
+        if (webView.canGoBack()) {
+            webView.goBack();// 返回上一页面
+            return true;
+        } else {
+            finishActivity();// 退出程序
+        }
+        return false;
+    }
+
+    /**
      * 在WebClient获取header
      *
      * @return
