@@ -1,12 +1,16 @@
 package com.inspur.imp.plugin.photo;
 
 import android.os.Bundle;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.config.MyAppConfig;
+import com.inspur.emmcloud.util.privates.DownLoaderUtils;
 import com.inspur.imp.plugin.photo.loader.UniversalImageLoader;
 import com.inspur.imp.plugin.photo.style.index.CircleIndexIndicator;
 import com.inspur.imp.plugin.photo.style.progress.ProgressBarIndicator;
@@ -14,10 +18,11 @@ import com.inspur.imp.plugin.photo.style.progress.ProgressPieIndicator;
 import com.inspur.imp.plugin.photo.transfer.TransferConfig;
 import com.inspur.imp.plugin.photo.transfer.TransferLayout;
 
+import org.xutils.common.Callback;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 
-import java.util.ArrayList;
+import java.io.File;
 import java.util.List;
 
 /**
@@ -27,42 +32,29 @@ import java.util.List;
 @ContentView(R.layout.plugin_activity_image_gallery)
 public class ImageGalleryActivity extends BaseActivity {
 
+    public static final String EXTRA_IMAGE_SOURCE_URLS = "image_source_urls";
+    public static final String EXTRA_IMAGE_THUMB_URLS = "image_thumb_urls";
+    public static final String EXTRA_IMAGE_INDEX = "image_index";
+
     @ViewInject(R.id.rl_content)
     private RelativeLayout contentLayout;
 
 
     private TransferLayout transLayout;
     private TransferConfig transConfig;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);//没有标题
         super.onCreate(savedInstanceState);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
 
-        List<String> thumbnailImageList = new ArrayList<>();
-        thumbnailImageList.add("http://static.fdc.com.cn/avatar/sns/1486263782969.png@233w_160h_20q");
-        thumbnailImageList.add("http://static.fdc.com.cn/avatar/sns/1485055822651.png@233w_160h_20q");
-        thumbnailImageList.add("http://static.fdc.com.cn/avatar/sns/1486194909983.png@233w_160h_20q");
-        thumbnailImageList.add("http://static.fdc.com.cn/avatar/sns/1486194996586.png@233w_160h_20q");
-        thumbnailImageList.add("http://static.fdc.com.cn/avatar/sns/1486195059137.png@233w_160h_20q");
-        thumbnailImageList.add("http://static.fdc.com.cn/avatar/sns/1486173497249.png@233w_160h_20q");
-        thumbnailImageList.add("http://static.fdc.com.cn/avatar/sns/1486173526402.png@233w_160h_20q");
-        thumbnailImageList.add("http://static.fdc.com.cn/avatar/sns/1486173639603.png@233w_160h_20q");
-        thumbnailImageList.add("http://static.fdc.com.cn/avatar/sns/1486172566083.png@233w_160h_20q");
-
-        List<String> sourceImageList = new ArrayList<>();
-        sourceImageList.add("http://static.fdc.com.cn/avatar/sns/1486263782969.png");
-        sourceImageList.add("http://static.fdc.com.cn/avatar/sns/1485055822651.png");
-        sourceImageList.add("http://static.fdc.com.cn/avatar/sns/1486194909983.png");
-        sourceImageList.add("http://static.fdc.com.cn/avatar/sns/1486194996586.png");
-        sourceImageList.add("http://static.fdc.com.cn/avatar/sns/1486195059137.png");
-        sourceImageList.add("http://static.fdc.com.cn/avatar/sns/1486173497249.png");
-        sourceImageList.add("http://static.fdc.com.cn/avatar/sns/1486173526402.png");
-        sourceImageList.add("http://static.fdc.com.cn/avatar/sns/1486173639603.png");
-        sourceImageList.add("http://static.fdc.com.cn/avatar/sns/1486172566083.png");
+        List<String> sourceImageList = getIntent().getStringArrayListExtra(EXTRA_IMAGE_SOURCE_URLS);
+        List<String> thumbnailImageList = getIntent().getStringArrayListExtra(EXTRA_IMAGE_THUMB_URLS);
+        int index = getIntent().getIntExtra(EXTRA_IMAGE_INDEX,0);
         transLayout = new TransferLayout(this);
         contentLayout.addView(transLayout);
-        transConfig= TransferConfig.build()
+        transConfig = TransferConfig.build()
                 .setThumbnailImageList(thumbnailImageList)
                 .setSourceImageList(sourceImageList)
                 .setMissPlaceHolder(R.drawable.plugin_camera_no_pictures)
@@ -70,13 +62,14 @@ public class ImageGalleryActivity extends BaseActivity {
                 .setProgressIndicator(new ProgressPieIndicator())
                 .setIndexIndicator(new CircleIndexIndicator())
                 .setJustLoadHitImage(false)
-                .setNowThumbnailIndex(0)
+                .setNowThumbnailIndex(index)
                 .setDuration(0)
                 .create();
         checkConfig();
         transLayout.apply(transConfig);
         transLayout.show();
     }
+
     /**
      * 检查参数，如果必须参数缺少，就使用缺省参数或者抛出异常
      */
@@ -102,6 +95,60 @@ public class ImageGalleryActivity extends BaseActivity {
         transConfig.setImageLoader(transConfig.getImageLoader() == null
                 ? UniversalImageLoader.with(getApplicationContext())
                 : transConfig.getImageLoader());
+    }
+
+    public void onClick(View v){
+        switch (v.getId()){
+            case R.id.iv_close:
+                finish();
+                break;
+
+            case R.id.iv_download:
+                int position = transConfig.getNowThumbnailIndex();
+                String url = transConfig.getSourceImageList().get(position);
+                saveImg(url);
+                break;
+
+        }
+    }
+
+    private void saveImg(String url){
+        String savePath = MyAppConfig.LOCAL_DOWNLOAD_PATH+"download"+System.currentTimeMillis()+".jpg";
+    new DownLoaderUtils().startDownLoad(url, savePath, new Callback.ProgressCallback<File>() {
+        @Override
+        public void onWaiting() {
+
+        }
+
+        @Override
+        public void onStarted() {
+
+        }
+
+        @Override
+        public void onLoading(long l, long l1, boolean b) {
+
+        }
+
+        @Override
+        public void onSuccess(File file) {
+
+        }
+
+        @Override
+        public void onError(Throwable throwable, boolean b) {
+            Toast.makeText(getApplicationContext(),R.string.download_fail,Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onCancelled(CancelledException e) {
+        }
+
+        @Override
+        public void onFinished() {
+            Toast.makeText(getApplicationContext(),"图片已保存至IMP-Cloud/download/文件夹",Toast.LENGTH_SHORT).show();
+        }
+    });
     }
 
 

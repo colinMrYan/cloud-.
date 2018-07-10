@@ -8,7 +8,6 @@ import android.widget.Toast;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.emmcloud.ui.chat.ImagePagerActivity;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
@@ -81,7 +80,7 @@ public class PhotoService extends ImpPlugin {
             imageOriginUrlList.add(JSONUtils.getString(JSONUtils.getJSONObject(jsonParamArray,i,new JSONObject()),"originImgUrl",""));
         }
         if(imageOriginUrlList.size() > 0){
-            startImagePagerActivity(imageOriginUrlList,imageIndex);
+            startImagePagerActivity(imageOriginUrlList,imageThumbnailUrlList,imageIndex);
         }
     }
 
@@ -89,11 +88,12 @@ public class PhotoService extends ImpPlugin {
      * 调起ImagePager
      * @param imagePathList
      */
-    private void startImagePagerActivity(ArrayList<String> imagePathList,int imageIndex) {
+    private void startImagePagerActivity(ArrayList<String> imagePathList,ArrayList<String> imageThumbnailUrlList,int imageIndex) {
         Intent intent = new Intent();
-        intent.setClass(getActivity(), ImagePagerActivity.class);
-        intent.putStringArrayListExtra(ImagePagerActivity.EXTRA_IMAGE_URLS, imagePathList);
-        intent.putExtra(ImagePagerActivity.EXTRA_IMAGE_INDEX,imageIndex);
+        intent.setClass(getActivity(), ImageGalleryActivity.class);
+        intent.putStringArrayListExtra(ImageGalleryActivity.EXTRA_IMAGE_SOURCE_URLS, imagePathList);
+        intent.putStringArrayListExtra(ImageGalleryActivity.EXTRA_IMAGE_THUMB_URLS, imageThumbnailUrlList);
+        intent.putExtra(ImageGalleryActivity.EXTRA_IMAGE_INDEX,imageIndex);
         getActivity().startActivity(intent);
     }
 
