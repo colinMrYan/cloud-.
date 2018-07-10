@@ -125,6 +125,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
                             break;
                         case "find":
                             tabBean = new TabBean(getString(R.string.find), R.drawable.selector_tab_find_btn + "", FindFragment.class);
+//                            tabBean = new TabBean("",R.drawable.selector_tab_find_btn + "", ImpFragment.class);
                             break;
                         case "application":
                             tabBean = new TabBean(getString(R.string.application), R.drawable.selector_tab_app_btn + "", MyAppFragment.class);
