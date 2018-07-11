@@ -18,7 +18,6 @@ import com.inspur.imp.api.ImpActivity;
 import com.inspur.imp.api.Res;
 import com.inspur.imp.plugin.ImpPlugin;
 import com.inspur.imp.plugin.camera.Bimp;
-import com.inspur.imp.plugin.camera.PublicWay;
 import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
 import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
 import com.inspur.imp.plugin.camera.imagepicker.ui.ImageGridActivity;
@@ -131,7 +130,6 @@ public class PhotoService extends ImpPlugin {
 
     private void openGallery(int picTotal) {
         // TODO Auto-generated method stub
-        PublicWay.uploadPhotoService = this;
         initImagePicker(picTotal);
         Intent intent = new Intent(context, ImageGridActivity.class);
         intent.putExtra("paramsObject", paramsObject.toString());
@@ -185,7 +183,6 @@ public class PhotoService extends ImpPlugin {
         // 判断存储卡是否可以用，可用进行存储
         if (Environment.getExternalStorageState().equals(
                 android.os.Environment.MEDIA_MOUNTED)) {
-            PublicWay.uploadPhotoService = this;
             File appDir = new File(MyAppConfig.LOCAL_IMG_CREATE_PATH);
             if (!appDir.exists()) {
                 appDir.mkdir();
@@ -205,7 +202,6 @@ public class PhotoService extends ImpPlugin {
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        PublicWay.uploadPhotoService = null;
         if (requestCode == RESULT_CAMERA) {
             if (resultCode == getActivity().RESULT_OK) {
                 loadingDlg.show();

@@ -16,7 +16,6 @@ import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.imp.api.ImpActivity;
 import com.inspur.imp.plugin.ImpPlugin;
-import com.inspur.imp.plugin.camera.PublicWay;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -39,20 +38,6 @@ public class SelectStaffService extends ImpPlugin {
 
     @Override
     public void execute(String action, JSONObject paramsObject) {
-//        this.paramsObject = paramsObject;
-//        multiSelection = JSONUtils.getInt(paramsObject, "multiSelection", 0);
-//        successCb = JSONUtils.getString(paramsObject, "success", "");
-//        failCb = JSONUtils.getString(paramsObject, "fail", "");
-//        if ("select".equals(action)) {
-//            selectFromContact();
-//        } else if ("viewContact".equals(action)) {
-//            viewContact();
-//        } else if("openContact".equals(action)){
-//            openContact();
-//        } else {
-//            DialogUtil.getInstance(getActivity()).show();
-//        }
-
         ((ImpActivity)getActivity()).showImpDialog();
     }
 
@@ -93,7 +78,6 @@ public class SelectStaffService extends ImpPlugin {
      * 从通讯录选人
      */
     private void selectFromContact() {
-        PublicWay.selectStaffService = this;
         Intent intent = new Intent();
         intent.setClass(getActivity(),
                 ContactSearchActivity.class);
@@ -126,7 +110,6 @@ public class SelectStaffService extends ImpPlugin {
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        PublicWay.selectStaffService = null;
         if (resultCode == RESULT_OK && requestCode == CONTACT_PICKER) {
             List<SearchModel> searchModelList = (List<SearchModel>) intent.getSerializableExtra("selectMemList");
             List<String> uidList = new ArrayList<>();

@@ -32,7 +32,6 @@ import com.inspur.imp.plugin.camera.imagepicker.ui.ImageGridActivity;
 import com.inspur.imp.plugin.camera.imagepicker.view.CropImageView;
 import com.inspur.imp.plugin.camera.mycamera.MyCameraActivity;
 import com.inspur.imp.plugin.photo.PhotoNameUtils;
-import com.inspur.imp.util.DialogUtil;
 import com.inspur.imp.util.compressor.Compressor;
 
 import org.json.JSONArray;
@@ -102,6 +101,7 @@ public class CameraService extends ImpPlugin {
     private int uploadThumbnailMaxSize = MyAppConfig.UPLOAD_THUMBNAIL_IMG_MAX_SIZE;
     private String watermarkContent,color,background, align,valign;
     private int fontSize;
+    private File cameraFile;
 
     @Override
     public void execute(String action, JSONObject paramsObject) {
@@ -166,11 +166,10 @@ public class CameraService extends ImpPlugin {
         destoryImage();
         String state = Environment.getExternalStorageState();
         if (state.equals(Environment.MEDIA_MOUNTED)) {
-            PublicWay.file = createCaptureFile(encodingType);
-            PublicWay.photoService = this;
+            cameraFile = createCaptureFile(encodingType);
             Intent intent = new Intent();
-            intent.putExtra(MyCameraActivity.EXTRA_PHOTO_DIRECTORY_PATH,PublicWay.file.getParent());
-            intent.putExtra(MyCameraActivity.EXTRA_PHOTO_NAME,PublicWay.file.getName());
+            intent.putExtra(MyCameraActivity.EXTRA_PHOTO_DIRECTORY_PATH,cameraFile.getParent());
+            intent.putExtra(MyCameraActivity.EXTRA_PHOTO_NAME,cameraFile.getName());
             intent.putExtra(MyCameraActivity.EXTRA_ENCODING_TYPE,encodingType);
             intent.putExtra(MyCameraActivity.EXTRA_RECT_SCALE_JSON,jsonObject.toString());
             intent.setClass(getActivity(),MyCameraActivity.class);
@@ -233,7 +232,6 @@ public class CameraService extends ImpPlugin {
         if (this.targetHeight < 1) {
             this.targetHeight = MyAppConfig.UPLOAD_ORIGIN_IMG_MAX_SIZE;
         }
-        PublicWay.photoService = this;
         initImagePicker();
         Intent intent = new Intent(this.context,
                 ImageGridActivity.class);
@@ -304,21 +302,20 @@ public class CameraService extends ImpPlugin {
      * IMP代码修改处
      */
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        PublicWay.photoService = null;
         int mOriginHeightSize = targetHeight < uploadOriginMaxSize ? targetHeight : uploadOriginMaxSize;
         int mOriginWidthtSize = targetWidth < uploadOriginMaxSize ? targetWidth : uploadOriginMaxSize;
         Bitmap.CompressFormat format = (encodingType == JPEG )? Bitmap.CompressFormat.JPEG:Bitmap.CompressFormat.PNG;
         // 照相取得图片
         if (requestCode == CAMERA) {
-            if (resultCode == -2) {
-                if (PublicWay.file != null && PublicWay.file.exists()) {
+            if (resultCode == Activity.RESULT_OK) {
+                if (cameraFile != null && cameraFile.exists()) {
                     Bitmap originBitmap = null;
                     Bitmap thumbnailBitmap = null;
                     try {
                         String originImgFileName = PhotoNameUtils.getFileName(context, encodingType);
                         String thumbnailImgFileName = PhotoNameUtils.getThumbnailFileName(context, 0, encodingType);
                         File originImgFile = new Compressor(this.context).setMaxHeight(mOriginHeightSize).setMaxWidth(mOriginWidthtSize).setQuality(mQuality).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
-                                .setCompressFormat(format).compressToFile(PublicWay.file, originImgFileName);
+                                .setCompressFormat(format).compressToFile(cameraFile, originImgFileName);
                         String originImgPath = originImgFile.getAbsolutePath();
                         if (StringUtils.isBlank(watermarkContent)){
                             originBitmap = ImageUtils.getBitmapByFile(originImgFile);
@@ -348,7 +345,7 @@ public class CameraService extends ImpPlugin {
                 this.failPicture(Res.getString("camera_error"));
             }
         } else if (requestCode == REQUEST_GELLEY_IMG_SELECT) {  // 从相册取图片
-            if (resultCode == -2) {
+            if (resultCode == Activity.RESULT_OK) {
                 if (intent == null) {
                     //解决HCM放弃选择图片时弹出error的问题
 //					LogUtils.jasonDebug("00000000");
@@ -412,7 +409,6 @@ public class CameraService extends ImpPlugin {
                 saveNetException("CameraService.gallery","system_gallry_error");
             }
         }
-        PublicWay.activityList.clear();
     }
 
     /**

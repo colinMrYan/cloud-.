@@ -393,6 +393,10 @@ public class ImpWebView extends WebView {
 		super.destroy();
 	}
 
+	public PluginMgr getPluginMgr(){
+		return pluginMgr;
+	}
+
 	@Override
 	public void onPause() {
 		super.onPause();

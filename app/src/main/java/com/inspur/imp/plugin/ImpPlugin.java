@@ -2,6 +2,8 @@ package com.inspur.imp.plugin;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.ContextWrapper;
+import android.content.Intent;
 import android.os.Build;
 import android.webkit.ValueCallback;
 
@@ -42,7 +44,7 @@ public abstract class ImpPlugin implements IPlugin {
      * @param paramsObject 参数
      * @throws JSONException
      */
-    public abstract  String executeAndReturn(String action, JSONObject paramsObject);
+    public abstract String executeAndReturn(String action, JSONObject paramsObject);
 
     /**
      * 初始化context和webview控件
@@ -64,13 +66,13 @@ public abstract class ImpPlugin implements IPlugin {
     @Override
     public void jsCallback(String functionName) {
         String script = "javascript: " + functionName + "()";
-        if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.KITKAT){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             this.webview.evaluateJavascript(script, new ValueCallback<String>() {
                 @Override
                 public void onReceiveValue(String value) {
                 }
             });
-        }else {
+        } else {
             this.webview.loadUrl(script);
         }
 
@@ -85,13 +87,13 @@ public abstract class ImpPlugin implements IPlugin {
     @Override
     public void jsCallback(String functionName, String params) {
         String script = "javascript: " + functionName + "('" + params + "')";
-        if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.KITKAT){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             this.webview.evaluateJavascript(script, new ValueCallback<String>() {
                 @Override
                 public void onReceiveValue(String value) {
                 }
             });
-        }else {
+        } else {
             this.webview.loadUrl(script);
         }
 
@@ -110,15 +112,15 @@ public abstract class ImpPlugin implements IPlugin {
             jsonArray.put(params[i]);
         }
 
-        String script ="javascript: " + functionName + "("
+        String script = "javascript: " + functionName + "("
                 + jsonArray.toString() + ")";
-        if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.KITKAT){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             this.webview.evaluateJavascript(script, new ValueCallback<String>() {
                 @Override
                 public void onReceiveValue(String value) {
                 }
             });
-        }else {
+        } else {
             this.webview.loadUrl(script);
         }
     }
@@ -133,10 +135,27 @@ public abstract class ImpPlugin implements IPlugin {
 
     }
 
-    public Activity getActivity() {
-        return (Activity) this.context;
+
+    private Activity getActivity() {
+        while (!(context instanceof Activity) && context instanceof ContextWrapper) {
+            context = ((ContextWrapper) context).getBaseContext();
+        }
+
+        if (context instanceof Activity) {
+            return (Activity) context;
+        }
+        return null;
+    }
+
+    public Context getFragmentContext() {
+        return this.context;
     }
 
     // 关闭功能类的方法
     public abstract void onDestroy();
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    }
+
+    ;
 }

@@ -1,6 +1,7 @@
 package com.inspur.imp.plugin.file;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -1278,6 +1279,15 @@ public class FileService extends ImpPlugin {
 		else {
 			// 如果游标为空说明获取的已经是绝对路径了
 			return uri.getPath();
+		}
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (resultCode == Activity.RESULT_OK){
+			String filePath = data.getStringExtra("filePath");
+			jsCallback(callback, filePath + "");
 		}
 	}
 

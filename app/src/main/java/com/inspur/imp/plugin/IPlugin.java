@@ -1,6 +1,7 @@
 package com.inspur.imp.plugin;
 
 import android.content.Context;
+import android.content.Intent;
 
 import com.inspur.imp.engine.webview.ImpWebView;
 
@@ -72,4 +73,5 @@ public interface IPlugin {
     public void onActivityResume();
 
     public void onActivityPause();
+    public void onActivityResult(int requestCode, int resultCode, Intent data);
 }
