@@ -24,7 +24,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.util.common.ParseHtmlUtils;
-import com.inspur.imp.api.ImpActivity;
+import com.inspur.imp.api.ImpCallBackInterface;
 import com.inspur.imp.api.JsInterface;
 import com.inspur.imp.api.iLog;
 import com.inspur.imp.plugin.PluginMgr;
@@ -73,6 +73,8 @@ public class ImpWebView extends WebView {
 	private Handler handler;
 	private FrameLayout frameLayout;
 	private PluginMgr pluginMgr;
+	private ImpWebViewClient impWebViewClient;
+	private ImpCallBackInterface impCallBackInterface;
 
 	public ImpWebView(Context context, AttributeSet attrs) {
 		super(context,attrs);
@@ -99,7 +101,8 @@ public class ImpWebView extends WebView {
 						titleText.setText(title);
 						break;
 					case DIMISS_LOADING:
-						((ImpActivity)getContext()).dimissLoadingDlg();
+//						((ImpActivity)getContext()).dimissLoadingDlg();
+						impCallBackInterface.onDialogDissmiss();
 						break;
 					default:
 						break;
@@ -109,9 +112,17 @@ public class ImpWebView extends WebView {
 
 	}
 
+	public ImpWebViewClient getImpWebViewClient(){
+		return impWebViewClient;
+	}
+
 	//imp修改处
 	public ImpWebChromeClient getWebChromeClient(){
 		return impWebChromeClient;
+	}
+
+	public void setImpCallBackInterface(ImpCallBackInterface impCallBackInterface){
+		this.impCallBackInterface = impCallBackInterface;
 	}
 
 	public void init() {
@@ -163,6 +174,7 @@ public class ImpWebView extends WebView {
 	// 重置当前接口的webview
 	public void initPlugin() {
 		pluginMgr = new PluginMgr(context,this);
+		pluginMgr.setImpCallBackInterface(impCallBackInterface);
 	}
 	private int mLastMotionX;
 	private int mLastMotionY;
@@ -178,7 +190,8 @@ public class ImpWebView extends WebView {
 		setAnimation(null);
 		setNetworkAvailable(true);
 		this.setBackgroundColor(Color.WHITE);
-		this.setWebViewClient(new ImpWebViewClient(loadFailLayout));
+		impWebViewClient = new ImpWebViewClient(loadFailLayout);
+		this.setWebViewClient(impWebViewClient);
 		// 使WebView支持弹出框
 		impWebChromeClient = new ImpWebChromeClient(context,this,frameLayout);
 		this.setWebChromeClient(impWebChromeClient);
