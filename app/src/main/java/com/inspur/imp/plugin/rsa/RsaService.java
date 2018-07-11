@@ -31,7 +31,7 @@ public class RsaService extends ImpPlugin {
 
 	@Override
 	public void execute(String action, JSONObject paramsObject) {
-		((ImpActivity)getActivity()).showImpDialog();
+		showCallIMPMethodErrorDlg();
 	}
 	
 	public String executeAndReturn(String action, JSONObject paramsObject){
@@ -55,7 +55,7 @@ public class RsaService extends ImpPlugin {
 				e.printStackTrace();
 			}
 		}else{
-			((ImpActivity)getActivity()).showImpDialog();
+			showCallIMPMethodErrorDlg();
 		}
 		return content;
 	}

@@ -1,6 +1,7 @@
 package com.inspur.imp.plugin.file;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -10,7 +11,7 @@ import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
 
-import com.inspur.imp.api.ImpActivity;
+import com.inspur.imp.api.ImpFragment;
 import com.inspur.imp.plugin.ImpPlugin;
 
 import org.json.JSONArray;
@@ -81,7 +82,7 @@ public class FileService extends ImpPlugin {
 				e.printStackTrace();
 			}
 		}else{
-			((ImpActivity)getActivity()).showImpDialog();
+			showCallIMPMethodErrorDlg();
 		}
 		return fileInfo;
 	}
@@ -215,7 +216,7 @@ public class FileService extends ImpPlugin {
 			fileService = this;
 			browser(paramsObject);
 		}else{
-			((ImpActivity)getActivity()).showImpDialog();
+			showCallIMPMethodErrorDlg();
 		}
 	}
 
@@ -282,8 +283,8 @@ public class FileService extends ImpPlugin {
 		if (!paramsObject.isNull("callback")) {
 			funct = paramsObject.getString("callback");
 		}
-		String newFileName = FileHelper.getRealPath(fileName, context);
-		newParent = FileHelper.getRealPath(newParent, context);
+		String newFileName = FileHelper.getRealPath(fileName, getFragmentContext());
+		newParent = FileHelper.getRealPath(newParent, getFragmentContext());
 		// 查看新文件名是否可用
 		if (newName != null && newName.contains(":")) {
 			JSONObject obj = new JSONObject();
@@ -339,9 +340,9 @@ public class FileService extends ImpPlugin {
 	 *            待检查的路径
 	 */
 	private void notifyDelete(String filePath) {
-		String newFilePath = FileHelper.getRealPath(filePath, context);
+		String newFilePath = FileHelper.getRealPath(filePath, getFragmentContext());
 		try {
-			context.getContentResolver().delete(
+			getFragmentContext().getContentResolver().delete(
 					MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
 					MediaStore.Images.Media.DATA + " = ?",
 					new String[] { newFilePath });
@@ -741,7 +742,7 @@ public class FileService extends ImpPlugin {
 		if (fileName.startsWith("/")) {
 			fp = new File(fileName);
 		} else {
-			dirPath = FileHelper.getRealPath(dirPath, context);
+			dirPath = FileHelper.getRealPath(dirPath, getFragmentContext());
 			fp = new File(dirPath + File.separator + fileName);
 		}
 		return fp;
@@ -761,7 +762,7 @@ public class FileService extends ImpPlugin {
 		if (!paramsObject.isNull("callback")) {
 			funct = paramsObject.getString("callback");
 		}
-		filePath = FileHelper.getRealPath(filePath, context);
+		filePath = FileHelper.getRealPath(filePath, getFragmentContext());
 
 		if (atRootDirectory(filePath)) {
 			jsCallback(funct, getEntry(filePath).toString());
@@ -775,16 +776,16 @@ public class FileService extends ImpPlugin {
 	 * @return
 	 */
 	private boolean atRootDirectory(String filePath) {
-		filePath = FileHelper.getRealPath(filePath, context);
+		filePath = FileHelper.getRealPath(filePath, getFragmentContext());
 
 		if (filePath.equals(Environment.getExternalStorageDirectory()
 				.getAbsolutePath()
 				+ "/Android/data/"
-				+ this.getActivity().getPackageName() + "/cache")
+				+ getActivity().getPackageName() + "/cache")
 				|| filePath.equals(Environment.getExternalStorageDirectory()
 						.getAbsolutePath())
 				|| filePath.equals("/data/data/"
-						+ this.getActivity().getPackageName())) {
+						+ getActivity().getPackageName())) {
 			return true;
 		}
 		return false;
@@ -822,7 +823,7 @@ public class FileService extends ImpPlugin {
 		DecimalFormat fnum  = new DecimalFormat("##0.00");  
 		metadata.put("size", fnum.format(file.length() / 1024.0));
 		}
-		metadata.put("type", FileHelper.getMimeType(filePath, context));
+		metadata.put("type", FileHelper.getMimeType(filePath, getFragmentContext()));
 		metadata.put("name", file.getName());
 		metadata.put("fullPath", "file://" + file.getAbsolutePath());
 		java.util.Date date = new java.util.Date(file.lastModified());
@@ -851,7 +852,7 @@ public class FileService extends ImpPlugin {
 		File file = createFileObject(filePath);
 		JSONObject metadata = new JSONObject();
 		metadata.put("size", file.length());
-		metadata.put("type", FileHelper.getMimeType(filePath, context));
+		metadata.put("type", FileHelper.getMimeType(filePath, getFragmentContext()));
 		metadata.put("name", file.getName());
 		metadata.put("fullPath", filePath);
 		metadata.put("lastModifiedDate", file.lastModified());
@@ -890,7 +891,7 @@ public class FileService extends ImpPlugin {
 	 * @return
 	 */
 	private File createFileObject(String filePath) {
-		filePath = FileHelper.getRealPath(filePath, context);
+		filePath = FileHelper.getRealPath(filePath, getFragmentContext());
 		File file = new File(filePath);
 		return file;
 	}
@@ -1019,7 +1020,7 @@ public class FileService extends ImpPlugin {
 			obj.put("code", 8);
 			jsCallback(funct, obj.toString().trim());
 		}
-		fileName = FileHelper.getRealPath(fileName, context);
+		fileName = FileHelper.getRealPath(fileName, getFragmentContext());
 		boolean append = false;
 		if (start > 0) {
 			this.truncateFile(fileName, start);
@@ -1066,7 +1067,7 @@ public class FileService extends ImpPlugin {
 					"Couldn't truncate file given its content URI");
 		}
 
-		fileName = FileHelper.getRealPath(fileName, context);
+		fileName = FileHelper.getRealPath(fileName, getFragmentContext());
 
 		RandomAccessFile raf = new RandomAccessFile(fileName, "rw");
 		try {
@@ -1117,7 +1118,7 @@ public class FileService extends ImpPlugin {
 			jsCallback(callback, temp);
 			break;
 		default:// base64
-			String contentType = FileHelper.getMimeType(fileName, context);
+			String contentType = FileHelper.getMimeType(fileName, getFragmentContext());
 			byte[] base64 = Base64.encode(bytes, Base64.NO_WRAP);
 			temp = "data:" + contentType + ";base64,"
 					+ new String(base64, "US-ASCII");
@@ -1143,7 +1144,7 @@ public class FileService extends ImpPlugin {
 		int numBytesToRead = end - start;
 		byte[] bytes = new byte[numBytesToRead];
 		InputStream inputStream = FileHelper.getInputStreamFromUriString(
-				fileName, context);
+				fileName, getFragmentContext());
 		int numBytesRead = 0;
 
 		if (start > 0) {
@@ -1167,8 +1168,10 @@ public class FileService extends ImpPlugin {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		Intent intent = new Intent(context, FileBrowerAppActivity.class);
-		((ImpActivity) context).startActivityForResult(intent, 4);
+		Intent intent = new Intent(getFragmentContext(), FileBrowerAppActivity.class);
+		if (getImpCallBackInterface() != null){
+			getImpCallBackInterface().onStartActivityForResult(intent, ImpFragment.FILE_SERVICE_REQUEST);
+		}
 	}
 
 	/**
@@ -1254,13 +1257,13 @@ public class FileService extends ImpPlugin {
 		String[] audioProj = { MediaStore.Audio.Media.DATA };
 		String[] vedioProj = { MediaStore.Video.Media.DATA };
 		@SuppressWarnings("deprecation")
-		Cursor cursor = ((ImpActivity) context).managedQuery(uri, proj, null,
+		Cursor cursor = getActivity().managedQuery(uri, proj, null,
 				null, null);
 		@SuppressWarnings("deprecation")
-		Cursor audioCursor = ((ImpActivity) context).managedQuery(uri,
+		Cursor audioCursor = getActivity().managedQuery(uri,
 				audioProj, null, null, null);
 		@SuppressWarnings("deprecation")
-		Cursor vedioCursor = ((ImpActivity) context).managedQuery(uri,
+		Cursor vedioCursor = getActivity().managedQuery(uri,
 				vedioProj, null, null, null);
 
 		if (cursor != null) {
@@ -1281,6 +1284,15 @@ public class FileService extends ImpPlugin {
 		}
 	}
 
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (resultCode == Activity.RESULT_OK && requestCode == ImpFragment.FILE_SERVICE_REQUEST){
+			String filePath = data.getStringExtra("filePath");
+			jsCallback(callback, filePath + "");
+		}
+	}
+
 	/**
 	 * 查询文件路径
 	 * 
@@ -1294,11 +1306,6 @@ public class FileService extends ImpPlugin {
 		int column_index = cursor.getColumnIndexOrThrow(columnname);
 		cursor.moveToFirst();
 		return cursor.getString(column_index);
-	}
-
-	// 将文件路径返回给前台
-	public void getAudioFilePath(String filePath) {
-		jsCallback(callback, filePath + "");
 	}
 
 	@Override

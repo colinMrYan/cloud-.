@@ -15,8 +15,8 @@ import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.imp.api.ImpActivity;
+import com.inspur.imp.api.ImpFragment;
 import com.inspur.imp.plugin.ImpPlugin;
-import com.inspur.imp.plugin.camera.PublicWay;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -39,21 +39,7 @@ public class SelectStaffService extends ImpPlugin {
 
     @Override
     public void execute(String action, JSONObject paramsObject) {
-//        this.paramsObject = paramsObject;
-//        multiSelection = JSONUtils.getInt(paramsObject, "multiSelection", 0);
-//        successCb = JSONUtils.getString(paramsObject, "success", "");
-//        failCb = JSONUtils.getString(paramsObject, "fail", "");
-//        if ("select".equals(action)) {
-//            selectFromContact();
-//        } else if ("viewContact".equals(action)) {
-//            viewContact();
-//        } else if("openContact".equals(action)){
-//            openContact();
-//        } else {
-//            DialogUtil.getInstance(getActivity()).show();
-//        }
-
-        ((ImpActivity)getActivity()).showImpDialog();
+        showCallIMPMethodErrorDlg();
     }
 
     /**
@@ -93,14 +79,15 @@ public class SelectStaffService extends ImpPlugin {
      * 从通讯录选人
      */
     private void selectFromContact() {
-        PublicWay.selectStaffService = this;
         Intent intent = new Intent();
         intent.setClass(getActivity(),
                 ContactSearchActivity.class);
         intent.putExtra(ContactSearchFragment.EXTRA_TYPE, 2);
         intent.putExtra(ContactSearchFragment.EXTRA_MULTI_SELECT, multiSelection == 0 ? false : true);
         intent.putExtra(ContactSearchFragment.EXTRA_TITLE, getActivity().getString(R.string.adress_list));
-        getActivity().startActivityForResult(intent, CONTACT_PICKER);
+        if (getImpCallBackInterface() != null){
+            getImpCallBackInterface().onStartActivityForResult(intent, ImpFragment.SELECT_STAFF_SERVICE_REQUEST);
+        }
     }
 
     @Override
@@ -115,7 +102,7 @@ public class SelectStaffService extends ImpPlugin {
         } else if("openContact".equals(action)){
             openContact();
         } else {
-            ((ImpActivity)getActivity()).showImpDialog();
+            showCallIMPMethodErrorDlg();
         }
         return "";
     }
@@ -126,8 +113,7 @@ public class SelectStaffService extends ImpPlugin {
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        PublicWay.selectStaffService = null;
-        if (resultCode == RESULT_OK && requestCode == CONTACT_PICKER) {
+        if (resultCode == RESULT_OK && requestCode == ImpFragment.SELECT_STAFF_SERVICE_REQUEST) {
             List<SearchModel> searchModelList = (List<SearchModel>) intent.getSerializableExtra("selectMemList");
             List<String> uidList = new ArrayList<>();
             for (int i = 0; i < searchModelList.size(); i++) {

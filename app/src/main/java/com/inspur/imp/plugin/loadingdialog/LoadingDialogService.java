@@ -1,7 +1,6 @@
 package com.inspur.imp.plugin.loadingdialog;
 
 import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.imp.api.ImpActivity;
 import com.inspur.imp.plugin.ImpPlugin;
 
 import org.json.JSONObject;
@@ -22,24 +21,28 @@ public class LoadingDialogService extends ImpPlugin {
         } else if ("hide".equals(action)) {
             hideDlg();
         }else{
-            ((ImpActivity)getActivity()).showImpDialog();
+            showCallIMPMethodErrorDlg();
         }
     }
 
     @Override
     public String executeAndReturn(String action, JSONObject paramsObject) {
-        ((ImpActivity)getActivity()).showImpDialog();
+        showCallIMPMethodErrorDlg();
         return "";
     }
 
     private void showDlg(JSONObject paramsObject) {
         String content = null;
         content = JSONUtils.getString(paramsObject, "content", "");
-        ((ImpActivity) getActivity()).showLoadingDlg(content);
+        if (getImpCallBackInterface() != null){
+            getImpCallBackInterface().onLoadingDlgShow(content);
+        }
     }
 
     private void hideDlg() {
-        ((ImpActivity) getActivity()).dimissLoadingDlg();
+        if (getImpCallBackInterface() != null){
+            getImpCallBackInterface().onLoadingDlgDimiss();
+        }
     }
 
     @Override

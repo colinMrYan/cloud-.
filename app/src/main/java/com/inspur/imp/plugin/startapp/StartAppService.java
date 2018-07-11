@@ -36,13 +36,13 @@ public class StartAppService extends ImpPlugin {
         if ("open".equals(action)) {
             startApp(paramsObject);
         }else{
-            ((ImpActivity)getActivity()).showImpDialog();
+            showCallIMPMethodErrorDlg();
         }
     }
 
     @Override
     public String executeAndReturn(String action, JSONObject paramsObject) {
-        ((ImpActivity)getActivity()).showImpDialog();
+        showCallIMPMethodErrorDlg();
         return "";
     }
 
@@ -53,7 +53,7 @@ public class StartAppService extends ImpPlugin {
      * @return
      */
     private boolean isAppInstall(String packageName) {
-        PackageManager packageManager = context.getPackageManager();
+        PackageManager packageManager = getFragmentContext().getPackageManager();
         // 获取所有已安装程序的包信息
         List<PackageInfo> pinfo = packageManager.getInstalledPackages(0);
         for (int i = 0; i < pinfo.size(); i++) {
@@ -89,7 +89,7 @@ public class StartAppService extends ImpPlugin {
             }
             if (!StringUtils.isBlank(packageName)) {
                 if (!isAppInstall(packageName)) {
-                    Toast.makeText(getActivity(), "应用未安装", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getFragmentContext(), "应用未安装", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if (!StringUtils.isBlank(targetActivity)) {
@@ -114,11 +114,11 @@ public class StartAppService extends ImpPlugin {
             }
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.putExtras(bundle);
-            this.context.startActivity(intent);
+            getActivity().startActivity(intent);
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
-            Toast.makeText(getActivity(), "应用打开失败", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getFragmentContext(), "应用打开失败", Toast.LENGTH_SHORT).show();
         }
 
     }

@@ -55,7 +55,7 @@ public class MapService extends ImpPlugin {
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
-			mLocationClient = new LocationClient(this.context);
+			mLocationClient = new LocationClient(getFragmentContext());
 			mMyLocationListener = new MyLocationListener();
 			mLocationClient.registerLocationListener(mMyLocationListener);
 			option.setIsNeedAddress(true);
@@ -97,7 +97,7 @@ public class MapService extends ImpPlugin {
 			}
 			doNaviByMapId(mapId,address);
 		} else{
-			((ImpActivity)getActivity()).showImpDialog();
+			showCallIMPMethodErrorDlg();
 		}
 
 	}
@@ -110,7 +110,7 @@ public class MapService extends ImpPlugin {
 			String result = getAllMapApps();
 			return result;
 		}else{
-			((ImpActivity)getActivity()).showImpDialog();
+			showCallIMPMethodErrorDlg();
 		}
 		return "";
 	}
@@ -148,7 +148,7 @@ public class MapService extends ImpPlugin {
 		LogUtils.debug("jason", "mapId="+mapId+"000");
 		try {
 			if (mapId.equals("map_baidu")) {
-				String packageName = context.getPackageName();
+				String packageName = getFragmentContext().getPackageName();
 				Intent intent = Intent
 						.parseUri(
 								"intent://map/direction?destination="
@@ -158,11 +158,11 @@ public class MapService extends ImpPlugin {
 										+ "#Intent;scheme=bdapp;package=com.baidu.BaiduMap;end",
 								0);
 				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-				context.startActivity(intent);
+				getActivity().startActivity(intent);
 				this.jsCallback(successCb, "地图打开成功");
 			} else if (mapId.equals("map_autonavi")) {
-				String packageName = context.getPackageName();
-				Intent intent = context.getPackageManager()
+				String packageName = getFragmentContext().getPackageName();
+				Intent intent = getFragmentContext().getPackageManager()
 						.getLaunchIntentForPackage("com.autonavi.minimap");
 				intent.addCategory(Intent.CATEGORY_DEFAULT);
 				intent.setAction(Intent.ACTION_VIEW);
@@ -171,7 +171,7 @@ public class MapService extends ImpPlugin {
 				String uri = "androidamap://keywordNavi?sourceApplication="+packageName+"&keyword="+destination+"&style=2";
 				intent.setData(Uri.parse(uri));
 				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-				getActivity().startActivityForResult(intent, ImpActivity.DO_NOTHING_RESULTCODE);
+				getActivity().startActivity(intent);
 				this.jsCallback(successCb, "地图打开成功");
 			}else {
 				this.jsCallback(failCb, "未安装此地图");
@@ -288,7 +288,7 @@ public class MapService extends ImpPlugin {
 		if (isInstallByread("com.baidu.BaiduMap")) {
 			Uri uri = Uri.parse("geo:" + jindu + "," + weidu + "");
 			Intent it = new Intent(Intent.ACTION_VIEW, uri);
-            getActivity().startActivityForResult(it, ImpActivity.DO_NOTHING_RESULTCODE);
+            getActivity().startActivity(it);
 		} else {
 			this.jsCallback(failCb, "没有安装地图客户端");
 		}

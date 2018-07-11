@@ -1,12 +1,9 @@
 package com.inspur.imp.api;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -16,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.webkit.ValueCallback;
 import android.webkit.WebSettings;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -38,8 +34,12 @@ import com.inspur.emmcloud.util.privates.MDM.MDM;
 import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
 import com.inspur.emmcloud.widget.dialogs.EasyDialog;
 import com.inspur.imp.engine.webview.ImpWebView;
-import com.inspur.imp.plugin.camera.PublicWay;
+import com.inspur.imp.plugin.IPlugin;
+import com.inspur.imp.plugin.PluginMgr;
+import com.inspur.imp.plugin.camera.CameraService;
 import com.inspur.imp.plugin.file.FileService;
+import com.inspur.imp.plugin.photo.PhotoService;
+import com.inspur.imp.plugin.staff.SelectStaffService;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -49,11 +49,15 @@ import java.util.Map;
  */
 
 public class ImpFragment extends Fragment {
-    public static final int FILE_CHOOSER_RESULT_CODE = 5173;
     private ImpWebView webView;
     // 浏览文件resultCode
-    private int FILEEXPLOER_RESULTCODE = 4;
-    public static final int DO_NOTHING_RESULTCODE = 5;
+    public static final int CAMERA_SERVICE_CAMERA_REQUEST = 1;
+    public static final int CAMERA_SERVICE_GALLERY_REQUEST = 2;
+    public static final int PHOTO_SERVICE_CAMERA_REQUEST = 3;
+    public static final int PHOTO_SERVICE_GALLERY_REQUEST = 4;
+    public static final int SELECT_STAFF_SERVICE_REQUEST = 5;
+    public static final int FILE_SERVICE_REQUEST = 6;
+    public static final int DO_NOTHING_REQUEST = 7;
     private Map<String, String> webViewHeaders;
     private TextView headerText;
     private LinearLayout loadFailLayout;
@@ -134,20 +138,7 @@ public class ImpFragment extends Fragment {
             LogUtils.jasonDebug("url=" + url);
             setWebViewFunctionVisiable();
         }
-
-//        webView.setImpCallBackInterface(new ImpCallBackInterface() {
-//            @Override
-//            public void onDialogDissmiss() {
-//                dimissLoadingDlg();
-//            }
-//
-//            @Override
-//            public void onShowImpDialog() {
-//                showImpDialog();
-//            }
-//        });
     }
-
 
 
     /**
@@ -214,45 +205,46 @@ public class ImpFragment extends Fragment {
     private ImpCallBackInterface getImpCallBackInterface(){
         return new ImpCallBackInterface() {
             @Override
-            public void onDialogDissmiss() {
-
+            public void onLoadingDlgDimiss() {
+                dimissLoadingDlg();
             }
 
             @Override
             public void onShowImpDialog() {
-
+                showImpDialog();
             }
 
             @Override
             public Map<String, String> onGetWebViewHeaders() {
-                return null;
+                return getWebViewHeaders();
             }
 
             @Override
             public void onInitWebViewGoBackOrClose() {
-
+                initWebViewGoBackOrClose();
             }
 
             @Override
-            public void onSetTitle() {
-
+            public void onSetTitle(String title) {
+                setTitle("");
             }
 
             @Override
             public void onFinishActivity() {
-
+                finishActivity();
             }
 
             @Override
-            public void onShowLoadingDlg() {
-
+            public void onLoadingDlgShow(String content) {
+                showLoadingDlg(content);
             }
 
             @Override
             public void onStartActivityForResult(Intent intent, int requestCode) {
-
+                startActivityForResult(intent,requestCode);
             }
         };
+
     }
     /**
      * 初始化原生WebView的返回和关闭
@@ -489,7 +481,6 @@ public class ImpFragment extends Fragment {
 //    }
 
 
-
     /**
      * 弹出提示框
      */
@@ -535,46 +526,35 @@ public class ImpFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (PublicWay.photoService != null) {
-            PublicWay.photoService.onActivityResult(requestCode, -2, data);
-            return;
-        }
-        if (PublicWay.uploadPhotoService != null) {
-            PublicWay.uploadPhotoService.onActivityResult(requestCode, resultCode, data);
-            return;
-        }
-        if (PublicWay.selectStaffService != null) {
-            PublicWay.selectStaffService.onActivityResult(requestCode, resultCode, data);
-            return;
-        }
-        // 获取选择的文件
-        else if (resultCode == FILEEXPLOER_RESULTCODE) {
-            FileService.fileService.getAudioFilePath(data
-                    .getStringExtra("filePath"));
-        } else if (requestCode == FILE_CHOOSER_RESULT_CODE) {
-            Uri uri = data == null || resultCode != Activity.RESULT_OK ? null
-                    : data.getData();
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-
-                ValueCallback<Uri[]> mUploadCallbackAboveL = webView
-                        .getWebChromeClient().getValueCallbackAboveL();
-                if (null == mUploadCallbackAboveL)
-                    return;
-                if (uri == null) {
-                    mUploadCallbackAboveL.onReceiveValue(null);
-                } else {
-                    Uri[] uris = new Uri[]{uri};
-                    mUploadCallbackAboveL.onReceiveValue(uris);
-                }
-                mUploadCallbackAboveL = null;
-            } else {
-                ValueCallback<Uri> mUploadMessage = webView
-                        .getWebChromeClient().getValueCallback();
-                if (null == mUploadMessage)
-                    return;
-                mUploadMessage.onReceiveValue(uri);
-                mUploadMessage = null;
+        PluginMgr pluginMgr = webView.getPluginMgr();
+        if (pluginMgr != null) {
+            String serviceName = "";
+            switch (requestCode) {
+                case CAMERA_SERVICE_CAMERA_REQUEST:
+                case CAMERA_SERVICE_GALLERY_REQUEST:
+                    serviceName = CameraService.class.getCanonicalName();
+                    break;
+                case PHOTO_SERVICE_CAMERA_REQUEST:
+                    PHOTO_SERVICE_GALLERY_REQUEST:
+                    serviceName = PhotoService.class.getCanonicalName();
+                    break;
+                case SELECT_STAFF_SERVICE_REQUEST:
+                    serviceName = SelectStaffService.class.getCanonicalName();
+                    break;
+                case FILE_SERVICE_REQUEST:
+                    serviceName = FileService.class.getCanonicalName();
+                    break;
+                default:
+                    break;
             }
+            if (StringUtils.isBlank(serviceName)){
+                IPlugin plugin = pluginMgr.getPlugin(serviceName);
+                if (plugin != null){
+                    plugin.onActivityResult(requestCode,resultCode,data);
+                }
+
+            }
+
         }
     }
 }
