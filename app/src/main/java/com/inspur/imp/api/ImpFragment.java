@@ -247,6 +247,11 @@ public class ImpFragment extends Fragment {
             public void onShowLoadingDlg() {
 
             }
+
+            @Override
+            public void onStartActivityForResult(Intent intent, int requestCode) {
+
+            }
         };
     }
     /**

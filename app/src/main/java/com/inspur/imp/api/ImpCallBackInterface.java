@@ -1,5 +1,7 @@
 package com.inspur.imp.api;
 
+import android.content.Intent;
+
 import java.util.Map;
 
 /**
@@ -14,4 +16,5 @@ public interface ImpCallBackInterface {
     void onSetTitle();
     void onFinishActivity();
     void onShowLoadingDlg();
+    void onStartActivityForResult(Intent intent,int requestCode);
 }
