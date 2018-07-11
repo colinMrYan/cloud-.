@@ -57,6 +57,7 @@ public abstract class ImpPlugin implements IPlugin {
     public void init(Context context, ImpWebView webview,ImpCallBackInterface impCallBackInterface) {
         this.context = context;
         this.webview = webview;
+        this.impCallBackInterface = impCallBackInterface;
     }
 
     /**

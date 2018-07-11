@@ -103,8 +103,7 @@ public class ImpWebView extends WebView {
 						titleText.setText(title);
 						break;
 					case DIMISS_LOADING:
-//						((ImpActivity)getContext()).dimissLoadingDlg();
-						impCallBackInterface.onDialogDissmiss();
+						impCallBackInterface.onLoadingDlgDimiss();
 						break;
 					default:
 						break;
@@ -114,14 +113,12 @@ public class ImpWebView extends WebView {
 
 	}
 
-	public ImpWebViewClient getImpWebViewClient(){
-		return impWebViewClient;
-	}
 
 	//imp修改处
 	public ImpWebChromeClient getWebChromeClient(){
 		return impWebChromeClient;
 	}
+
 
 	public void init() {
 		initPlugin();
@@ -170,7 +167,7 @@ public class ImpWebView extends WebView {
 	}
 
 	// 重置当前接口的webview
-	public void initPlugin() {
+	private void initPlugin() {
 		pluginMgr = new PluginMgr(context,this);
 		pluginMgr.setImpCallBackInterface(impCallBackInterface);
 	}
@@ -188,7 +185,7 @@ public class ImpWebView extends WebView {
 		setAnimation(null);
 		setNetworkAvailable(true);
 		this.setBackgroundColor(Color.WHITE);
-		impWebViewClient = new ImpWebViewClient(loadFailLayout);
+		impWebViewClient = new ImpWebViewClient(loadFailLayout,impCallBackInterface);
 		this.setWebViewClient(impWebViewClient);
 		// 使WebView支持弹出框
 		impWebChromeClient = new ImpWebChromeClient(context,this,frameLayout);

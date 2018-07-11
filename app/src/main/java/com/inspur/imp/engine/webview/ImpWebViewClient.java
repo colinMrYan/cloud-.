@@ -22,7 +22,6 @@ import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.appcenter.AppRedirectResult;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.imp.api.ImpActivity;
 import com.inspur.imp.api.ImpCallBackInterface;
 
 import java.net.URL;
@@ -46,8 +45,9 @@ public class ImpWebViewClient extends WebViewClient {
     private Runnable runnable = null;
     private ImpCallBackInterface impCallBackInterface;
 
-    public ImpWebViewClient(LinearLayout loadFailLayout) {
+    public ImpWebViewClient(LinearLayout loadFailLayout,ImpCallBackInterface impCallBackInterface) {
         this.loadFailLayout = loadFailLayout;
+        this.impCallBackInterface = impCallBackInterface;
         handMessage();
         initRunnable();
     }
@@ -118,8 +118,9 @@ public class ImpWebViewClient extends WebViewClient {
             mHandler.removeCallbacks(runnable);
             runnable = null;
         }
-
-        ((ImpActivity) (view.getContext())).initWebViewGoBackOrClose();
+        if(impCallBackInterface != null){
+            impCallBackInterface.onInitWebViewGoBackOrClose();
+        }
         ImpWebView webview = (ImpWebView) view;
         if (webview.destroyed) {
             return;
@@ -146,7 +147,6 @@ public class ImpWebViewClient extends WebViewClient {
         String c = CookieManager.getInstance().getCookie(url);
         PreferencesUtils.putString(view.getContext(), "web_cookie", c);
         CookieSyncManager.getInstance().sync();
-        webview.initPlugin();
     }
 
     /*
@@ -164,7 +164,7 @@ public class ImpWebViewClient extends WebViewClient {
             runnable = null;
         }
         if(impCallBackInterface != null){
-            impCallBackInterface.onDialogDissmiss();
+            impCallBackInterface.onLoadingDlgDimiss();
         }
 //        ((ImpActivity) view.getContext()).dimissLoadingDlg();
         loadFailLayout.setVisibility(View.VISIBLE);
@@ -180,7 +180,7 @@ public class ImpWebViewClient extends WebViewClient {
                 runnable = null;
             }
             if(impCallBackInterface != null){
-                impCallBackInterface.onDialogDissmiss();
+                impCallBackInterface.onLoadingDlgDimiss();
             }
 //            ((ImpActivity) view.getContext()).dimissLoadingDlg();
             loadFailLayout.setVisibility(View.VISIBLE);
@@ -224,7 +224,7 @@ public class ImpWebViewClient extends WebViewClient {
      * @return
      */
     private Map<String, String> getWebViewHeaders() {
-        return myWebView == null ? new HashMap<String, String>() : ((ImpActivity) myWebView.getContext()).getWebViewHeaders();
+        return myWebView == null ? new HashMap<String, String>() : ((impCallBackInterface != null)? impCallBackInterface.onGetWebViewHeaders():new HashMap<String, String>());
     }
 
     /**

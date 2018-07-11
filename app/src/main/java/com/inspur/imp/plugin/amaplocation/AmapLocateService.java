@@ -80,8 +80,7 @@ public class AmapLocateService extends ImpPlugin implements
             e.printStackTrace();
         }
 
-
-        boolean isOpen = Settings.Secure.getInt(context.getContentResolver(),Settings.Secure.ALLOW_MOCK_LOCATION, 0) != 0;
+        boolean isOpen = Settings.Secure.getInt(getFragmentContext().getContentResolver(),Settings.Secure.ALLOW_MOCK_LOCATION, 0) != 0;
         if (isOpen) {
             if (dialog == null){
                 final AlertDialog.Builder builder = new AlertDialog.Builder(
@@ -95,7 +94,7 @@ public class AmapLocateService extends ImpPlugin implements
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 try {
-                                    context.startActivity(new Intent(Settings.ACTION_APPLICATION_DEVELOPMENT_SETTINGS));
+                                    getFragmentContext().startActivity(new Intent(Settings.ACTION_APPLICATION_DEVELOPMENT_SETTINGS));
                                 }catch (Exception e){
                                     e.printStackTrace();
                                 }

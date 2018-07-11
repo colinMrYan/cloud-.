@@ -5,43 +5,19 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.privates.cache.AppConfigCacheUtils;
-import com.inspur.imp.engine.webview.ImpWebView;
-
-import java.util.HashMap;
-import java.util.Map;
 
 
 public class ImpActivity extends ImpBaseActivity {
 
-    public static final int FILE_CHOOSER_RESULT_CODE = 5173;
-    private ImpWebView webView;
-    // 浏览文件resultCode
-    private int FILEEXPLOER_RESULTCODE = 4;
     public static final int DO_NOTHING_RESULTCODE = 5;
-    private Map<String, String> webViewHeaders;
-    private TextView headerText;
-    private LinearLayout loadFailLayout;
-    private Button normalBtn, middleBtn, bigBtn, biggestBtn;
-    private String appId = "";
-    private FrameLayout frameLayout;
-    private RelativeLayout loadingLayout;
-    private TextView loadingText;
-    private String helpUrl = "";
-    private HashMap<String, String> urlTilteMap = new HashMap<>();
     private ImpFragment fragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         boolean isWebAutoRotate = Boolean.parseBoolean(AppConfigCacheUtils.getAppConfigValue(this, Constant.CONCIG_WEB_AUTO_ROTATE, "false"));
         //设置是否开启webview自动旋转
@@ -54,32 +30,12 @@ public class ImpActivity extends ImpBaseActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.fl_container, fragment).commitAllowingStateLoss();
     }
 
-    /**
-     * 在WebClient获取header
-     *
-     * @return
-     */
-    public Map<String, String> getWebViewHeaders() {
-        return webViewHeaders;
-    }
-
-    /**
-     * 初始化原生WebView的返回和关闭
-     * （不是GS应用，GS应用有重定向，不容易实现返回）
-     */
-    public void initWebViewGoBackOrClose() {
-        if (headerText != null) {
-            (findViewById(Res.getWidgetID("imp_close_btn"))).setVisibility(webView.canGoBack() ? View.VISIBLE : View.GONE);
-        }
-    }
-
     public void onClick(View v) {
         fragment.onClick(v);
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        // TODO Auto-generated method stub
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             return fragment.onKeyDown();
         }
