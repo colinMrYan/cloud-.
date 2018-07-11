@@ -1,15 +1,10 @@
 package com.inspur.imp.api;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.webkit.ValueCallback;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -20,8 +15,6 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.privates.cache.AppConfigCacheUtils;
 import com.inspur.imp.engine.webview.ImpWebView;
-import com.inspur.imp.plugin.camera.PublicWay;
-import com.inspur.imp.plugin.file.FileService;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -91,53 +84,6 @@ public class ImpActivity extends ImpBaseActivity {
             return fragment.onKeyDown();
         }
         return super.onKeyDown(keyCode, event);
-    }
-
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (PublicWay.photoService != null) {
-            PublicWay.photoService.onActivityResult(requestCode, -2, data);
-            return;
-        }
-        if (PublicWay.uploadPhotoService != null) {
-            PublicWay.uploadPhotoService.onActivityResult(requestCode, resultCode, data);
-            return;
-        }
-        if (PublicWay.selectStaffService != null) {
-            PublicWay.selectStaffService.onActivityResult(requestCode, resultCode, data);
-            return;
-        }
-        // 获取选择的文件
-        else if (resultCode == FILEEXPLOER_RESULTCODE) {
-            FileService.fileService.getAudioFilePath(data
-                    .getStringExtra("filePath"));
-        } else if (requestCode == FILE_CHOOSER_RESULT_CODE) {
-            Uri uri = data == null || resultCode != Activity.RESULT_OK ? null
-                    : data.getData();
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-
-                ValueCallback<Uri[]> mUploadCallbackAboveL = webView
-                        .getWebChromeClient().getValueCallbackAboveL();
-                if (null == mUploadCallbackAboveL)
-                    return;
-                if (uri == null) {
-                    mUploadCallbackAboveL.onReceiveValue(null);
-                } else {
-                    Uri[] uris = new Uri[]{uri};
-                    mUploadCallbackAboveL.onReceiveValue(uris);
-                }
-                mUploadCallbackAboveL = null;
-            } else {
-                ValueCallback<Uri> mUploadMessage = webView
-                        .getWebChromeClient().getValueCallback();
-                if (null == mUploadMessage)
-                    return;
-                mUploadMessage.onReceiveValue(uri);
-                mUploadMessage = null;
-            }
-        }
     }
 
 }
