@@ -29,7 +29,6 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.mine.Language;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.config.MyAppWebConfig;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
@@ -38,8 +37,10 @@ import com.inspur.emmcloud.util.privates.MDM.MDM;
 import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
 import com.inspur.emmcloud.widget.dialogs.EasyDialog;
 import com.inspur.imp.engine.webview.ImpWebView;
+import com.inspur.imp.plugin.IPlugin;
 import com.inspur.imp.plugin.camera.PublicWay;
 import com.inspur.imp.plugin.file.FileService;
+import com.inspur.imp.plugin.photo.PhotoService;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -52,8 +53,7 @@ public class ImpFragment extends Fragment {
     public static final int FILE_CHOOSER_RESULT_CODE = 5173;
     private ImpWebView webView;
     // 浏览文件resultCode
-    private int FILEEXPLOER_RESULTCODE = 4;
-    public static final int DO_NOTHING_RESULTCODE = 5;
+    private static final int FILEEXPLOER_RESULTCODE = 4;
     private Map<String, String> webViewHeaders;
     private TextView headerText;
     private LinearLayout loadFailLayout;
@@ -65,7 +65,6 @@ public class ImpFragment extends Fragment {
     private String helpUrl = "";
     private HashMap<String, String> urlTilteMap = new HashMap<>();
     private View rootView;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -90,7 +89,6 @@ public class ImpFragment extends Fragment {
         }
         return rootView;
     }
-
 
     /**
      * 初始化Views
@@ -131,24 +129,9 @@ public class ImpFragment extends Fragment {
                 }
             });
             webView.loadUrl(url, webViewHeaders);
-            LogUtils.jasonDebug("url=" + url);
             setWebViewFunctionVisiable();
         }
-
-//        webView.setImpCallBackInterface(new ImpCallBackInterface() {
-//            @Override
-//            public void onDialogDissmiss() {
-//                dimissLoadingDlg();
-//            }
-//
-//            @Override
-//            public void onShowImpDialog() {
-//                showImpDialog();
-//            }
-//        });
     }
-
-
 
     /**
      * 返回逻辑
@@ -214,43 +197,43 @@ public class ImpFragment extends Fragment {
     private ImpCallBackInterface getImpCallBackInterface(){
         return new ImpCallBackInterface() {
             @Override
-            public void onDialogDissmiss() {
-
+            public void onLoadingDlgDimiss() {
+                dimissLoadingDlg();
             }
 
             @Override
             public void onShowImpDialog() {
-
+                showImpDialog();
             }
 
             @Override
             public Map<String, String> onGetWebViewHeaders() {
-                return null;
+                return getWebViewHeaders();
             }
 
             @Override
             public void onInitWebViewGoBackOrClose() {
-
+                initWebViewGoBackOrClose();
             }
 
             @Override
-            public void onSetTitle() {
-
+            public void onSetTitle(String title) {
+                setTitle("");
             }
 
             @Override
             public void onFinishActivity() {
-
+                finishActivity();
             }
 
             @Override
-            public void onShowLoadingDlg() {
-
+            public void onLoadingDlgShow(String content) {
+                showLoadingDlg(content);
             }
 
             @Override
             public void onStartActivityForResult(Intent intent, int requestCode) {
-
+                startActivityForResult(intent,requestCode);
             }
         };
     }
@@ -302,9 +285,7 @@ public class ImpFragment extends Fragment {
         getActivity().finish();// 退出程序
     }
 
-
     private void setWebViewUserAgent() {
-        // TODO Auto-generated method stub
         WebSettings settings = webView.getSettings();
         String userAgent = settings.getUserAgentString();
         userAgent = userAgent + "/emmcloud/" + AppUtils.getVersion(getActivity());
@@ -316,8 +297,6 @@ public class ImpFragment extends Fragment {
         String dir = getActivity().getDir("database", Context.MODE_PRIVATE).getPath();
         settings.setGeolocationDatabasePath(dir);
         settings.setDomStorageEnabled(true);
-
-
     }
 
     private void setWebViewHeader() {
@@ -334,7 +313,6 @@ public class ImpFragment extends Fragment {
             webViewHeaders.put("Accept-Language", language.getIana());
         }
     }
-
 
     public void onClick(View v) {
         switch (v.getId()) {
@@ -445,7 +423,6 @@ public class ImpFragment extends Fragment {
 
     }
 
-
     /**
      * 改变WebView字体大小
      *
@@ -474,22 +451,6 @@ public class ImpFragment extends Fragment {
         biggestBtn.setTextColor((textSize == MyAppWebConfig.CRM_BIGGEST) ? lightModeFontColor : blackFontColor);
     }
 
-//    @Override
-//    public boolean onKeyDown(int keyCode, KeyEvent event) {
-//        // TODO Auto-generated method stub
-//        if (keyCode == KeyEvent.KEYCODE_BACK) {
-//            if (webView.canGoBack()) {
-//                webView.goBack();// 返回上一页面
-//                return true;
-//            } else {
-//                finishActivity();// 退出程序
-//            }
-//        }
-//        return super.onKeyDown(keyCode, event);
-//    }
-
-
-
     /**
      * 弹出提示框
      */
@@ -504,7 +465,6 @@ public class ImpFragment extends Fragment {
                 getString(R.string.imp_function_error),
                 getString(R.string.ok), listener, false);
     }
-
 
     @Override
     public void onDestroy() {
@@ -535,6 +495,7 @@ public class ImpFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        handleServices(requestCode,resultCode,data);
         if (PublicWay.photoService != null) {
             PublicWay.photoService.onActivityResult(requestCode, -2, data);
             return;
@@ -552,29 +513,9 @@ public class ImpFragment extends Fragment {
             FileService.fileService.getAudioFilePath(data
                     .getStringExtra("filePath"));
         } else if (requestCode == FILE_CHOOSER_RESULT_CODE) {
-            Uri uri = data == null || resultCode != Activity.RESULT_OK ? null
-                    : data.getData();
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
-                ValueCallback<Uri[]> mUploadCallbackAboveL = webView
-                        .getWebChromeClient().getValueCallbackAboveL();
-                if (null == mUploadCallbackAboveL)
-                    return;
-                if (uri == null) {
-                    mUploadCallbackAboveL.onReceiveValue(null);
-                } else {
-                    Uri[] uris = new Uri[]{uri};
-                    mUploadCallbackAboveL.onReceiveValue(uris);
-                }
-                mUploadCallbackAboveL = null;
-            } else {
-                ValueCallback<Uri> mUploadMessage = webView
-                        .getWebChromeClient().getValueCallback();
-                if (null == mUploadMessage)
-                    return;
-                mUploadMessage.onReceiveValue(uri);
-                mUploadMessage = null;
-            }
         }
     }
+
+
 }
