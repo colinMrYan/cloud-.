@@ -23,6 +23,7 @@ import com.inspur.emmcloud.bean.appcenter.AppRedirectResult;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.imp.api.ImpActivity;
+import com.inspur.imp.api.ImpCallBackInterface;
 
 import java.net.URL;
 import java.util.HashMap;
@@ -43,6 +44,7 @@ public class ImpWebViewClient extends WebViewClient {
     private LinearLayout loadFailLayout;
     private Handler mHandler = null;
     private Runnable runnable = null;
+    private ImpCallBackInterface impCallBackInterface;
 
     public ImpWebViewClient(LinearLayout loadFailLayout) {
         this.loadFailLayout = loadFailLayout;
@@ -161,7 +163,10 @@ public class ImpWebViewClient extends WebViewClient {
             mHandler.removeCallbacks(runnable);
             runnable = null;
         }
-        ((ImpActivity) view.getContext()).dimissLoadingDlg();
+        if(impCallBackInterface != null){
+            impCallBackInterface.onDialogDissmiss();
+        }
+//        ((ImpActivity) view.getContext()).dimissLoadingDlg();
         loadFailLayout.setVisibility(View.VISIBLE);
     }
 
@@ -174,7 +179,10 @@ public class ImpWebViewClient extends WebViewClient {
                 mHandler.removeCallbacks(runnable);
                 runnable = null;
             }
-            ((ImpActivity) view.getContext()).dimissLoadingDlg();
+            if(impCallBackInterface != null){
+                impCallBackInterface.onDialogDissmiss();
+            }
+//            ((ImpActivity) view.getContext()).dimissLoadingDlg();
             loadFailLayout.setVisibility(View.VISIBLE);
         }
     }
@@ -238,6 +246,14 @@ public class ImpWebViewClient extends WebViewClient {
             appAPIService.getAuthCode(requestUrl, urlWithParams.getQuery());
         }
 
+    }
+
+    /**
+     * 设置回调
+     * @param impCallBackInterface
+     */
+    public void setImpCallBackInterface(ImpCallBackInterface impCallBackInterface){
+        this.impCallBackInterface = impCallBackInterface;
     }
 
     class WebService extends APIInterfaceInstance {

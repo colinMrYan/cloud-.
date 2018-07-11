@@ -124,9 +124,6 @@ public class AmapLocateService extends ImpPlugin implements
             startLocation();
         }
 
-
-
-
     }
 
     /**
