@@ -48,13 +48,13 @@ public class DatePickerService extends ImpPlugin {
 		if ("open".equals(action)) {
 			open(paramsObject);
 		}else{
-			((ImpActivity)getActivity()).showImpDialog();
+			showCallIMPMethodErrorDlg();
 		}
 	}
 
 	@Override
 	public String executeAndReturn(String action, JSONObject paramsObject) {
-		((ImpActivity)getActivity()).showImpDialog();
+		showCallIMPMethodErrorDlg();
 		return "";
 	}
 
@@ -103,7 +103,7 @@ public class DatePickerService extends ImpPlugin {
 		}
 
 		// 显示设置日期对话框
-		DatePickerDialog dateDlg = new DatePickerDialog(this.context, theme,
+		DatePickerDialog dateDlg = new DatePickerDialog(getActivity(), theme,
 				new DatePickerDialog.OnDateSetListener() {
 
 					@Override

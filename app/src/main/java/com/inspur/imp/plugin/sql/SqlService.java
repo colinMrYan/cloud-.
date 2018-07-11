@@ -5,7 +5,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 
-import com.inspur.imp.api.ImpActivity;
 import com.inspur.imp.plugin.ImpPlugin;
 
 import org.json.JSONArray;
@@ -37,13 +36,13 @@ public class SqlService extends ImpPlugin {
 		} else if ("executeSql".equals(action)) {
 			executeSql(jsonObject);
 		}else{
-			((ImpActivity)getActivity()).showImpDialog();
+			showCallIMPMethodErrorDlg();
 		}
 	}
 
 	@Override
 	public String executeAndReturn(String action, JSONObject paramsObject) {
-		((ImpActivity)getActivity()).showImpDialog();
+		showCallIMPMethodErrorDlg();
 		return "";
 	}
 
@@ -83,7 +82,7 @@ public class SqlService extends ImpPlugin {
 		}
 		// 将数据库放在应用文件夹下
 		if (this.path == null) {
-			this.path = this.context.getApplicationContext()
+			this.path = getFragmentContext().getApplicationContext()
 					.getDir("database", Context.MODE_PRIVATE).getPath();
 		}
 

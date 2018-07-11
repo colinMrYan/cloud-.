@@ -85,11 +85,12 @@ public class ImpWebView extends WebView {
 		this.titleText =titleText;
 		this.loadFailLayout = loadFailLayout;
 		this.frameLayout = layout;
+		this.impCallBackInterface = impCallBackInterface;
 		this.setWebView();
 		this.setWebSetting();
 		handMessage();
-		this.impCallBackInterface = impCallBackInterface;
 		init();
+		this.impCallBackInterface = impCallBackInterface;
 	}
 
 	private void handMessage(){
@@ -112,9 +113,6 @@ public class ImpWebView extends WebView {
 
 	}
 
-	public PluginMgr getPluginMgr(){
-		return pluginMgr;
-	}
 
 	//imp修改处
 	public ImpWebChromeClient getWebChromeClient(){
@@ -401,6 +399,10 @@ public class ImpWebView extends WebView {
 			pluginMgr = null;
 		}
 		super.destroy();
+	}
+
+	public PluginMgr getPluginMgr(){
+		return pluginMgr;
 	}
 
 	@Override

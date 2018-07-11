@@ -17,4 +17,5 @@ public interface ImpCallBackInterface {
     void onFinishActivity();
     void onLoadingDlgShow(String content);
     void onStartActivityForResult(Intent intent,int requestCode);
+
 }

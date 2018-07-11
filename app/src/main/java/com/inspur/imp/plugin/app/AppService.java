@@ -1,8 +1,5 @@
 package com.inspur.imp.plugin.app;
 
-import android.app.Activity;
-
-import com.inspur.imp.api.ImpActivity;
 import com.inspur.imp.plugin.ImpPlugin;
 
 import org.json.JSONObject;
@@ -21,7 +18,7 @@ public class AppService extends ImpPlugin {
 		if ("close".equals(action)) {
 			close();
 		}else{
-			((ImpActivity)getActivity()).showImpDialog();
+			showCallIMPMethodErrorDlg();
 		}
 	}
 
@@ -32,7 +29,7 @@ public class AppService extends ImpPlugin {
 		if ("close".equals(action)) {
 			close();
 		}else{
-			((ImpActivity)getActivity()).showImpDialog();
+			showCallIMPMethodErrorDlg();
 		}
 		return "";
 	}
@@ -41,7 +38,7 @@ public class AppService extends ImpPlugin {
 	// 退出系统
 	private void close() {
 
-		((Activity) this.context).finish();
+		getActivity().finish();
 	}
 
 	@Override
