@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.inspur.emmcloud.util.common.LogUtils;
-import com.inspur.imp.api.ImpActivity;
+import com.inspur.imp.api.ImpCallBackInterface;
 import com.inspur.imp.api.iLog;
 import com.inspur.imp.engine.webview.ImpWebView;
 import com.inspur.imp.util.StrUtil;
@@ -31,6 +31,8 @@ public class PluginMgr {
 
     // 缓存功能类实例
     private HashMap<String, IPlugin> entries = new HashMap<String, IPlugin>();
+
+    private ImpCallBackInterface impCallBackInterface;
 
     public PluginMgr(Context ctx, ImpWebView ImpWebView) {
         context = ctx;
@@ -83,7 +85,7 @@ public class PluginMgr {
             if (plugin != null) {
                 plugin.execute(action, jo);
             } else {
-                ((ImpActivity)context).showImpDialog();
+                impCallBackInterface.onShowImpDialog();
             }
         }
     }
@@ -129,7 +131,7 @@ public class PluginMgr {
                 }
             }
         } else {
-            ((ImpActivity)context).showImpDialog();
+            impCallBackInterface.onShowImpDialog();
         }
         return res;
 
@@ -148,6 +150,14 @@ public class PluginMgr {
             }
         }
         return serviceName;
+    }
+
+    public void setImpCallBackInterface(ImpCallBackInterface impCallBackInterface){
+        this.impCallBackInterface = impCallBackInterface;
+    }
+
+    public ImpCallBackInterface getImpCallBackInterface(){
+        return impCallBackInterface;
     }
 
     /**

@@ -66,6 +66,7 @@ public class ImpFragment extends Fragment {
     private HashMap<String, String> urlTilteMap = new HashMap<>();
     private View rootView;
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
@@ -110,28 +111,44 @@ public class ImpFragment extends Fragment {
         if (getActivity().getIntent().hasExtra("appId")) {
             appId = getActivity().getIntent().getExtras().getString("appId");
         }
-        String url = getActivity().getIntent().getExtras().getString("uri");
-        initWebViewHeaderLayout();
-        setWebViewHeader();
-        setWebViewUserAgent();
-        webView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                    case MotionEvent.ACTION_UP:
-                        if (!v.hasFocus()) {
-                            v.requestFocus();
-                        }
-                        break;
+        if(getActivity().getIntent().getExtras() != null){
+            String url = getActivity().getIntent().getExtras().getString("uri");
+            initWebViewHeaderLayout();
+            setWebViewHeader();
+            setWebViewUserAgent();
+            webView.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    switch (event.getAction()) {
+                        case MotionEvent.ACTION_DOWN:
+                        case MotionEvent.ACTION_UP:
+                            if (!v.hasFocus()) {
+                                v.requestFocus();
+                            }
+                            break;
+                    }
+                    return false;
                 }
-                return false;
+            });
+            webView.loadUrl(url, webViewHeaders);
+            LogUtils.jasonDebug("url=" + url);
+            setWebViewFunctionVisiable();
+        }
+
+        webView.setImpCallBackInterface(new ImpCallBackInterface() {
+            @Override
+            public void onDialogDissmiss() {
+                dimissLoadingDlg();
+            }
+
+            @Override
+            public void onShowImpDialog() {
+                showImpDialog();
             }
         });
-        webView.loadUrl(url, webViewHeaders);
-        LogUtils.jasonDebug("url=" + url);
-        setWebViewFunctionVisiable();
     }
+
+
 
     /**
      * 返回逻辑
