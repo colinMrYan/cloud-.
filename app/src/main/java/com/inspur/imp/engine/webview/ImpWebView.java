@@ -90,6 +90,7 @@ public class ImpWebView extends WebView {
 		this.setWebSetting();
 		handMessage();
 		init();
+		this.impCallBackInterface = impCallBackInterface;
 	}
 
 	private void handMessage(){

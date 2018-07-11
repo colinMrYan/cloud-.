@@ -140,10 +140,9 @@ public class ImpFragment extends Fragment {
 
     /**
      * 返回逻辑
-     *
      * @return
      */
-    public boolean onKeyDown() {
+    public boolean onKeyDown(){
         if (webView.canGoBack()) {
             webView.goBack();// 返回上一页面
             return true;
@@ -182,39 +181,67 @@ public class ImpFragment extends Fragment {
      * 初始化webview haader layout
      */
     private void initWebViewHeaderLayout() {
+        ImpCallBackInterface impCallBackInterface = getImpCallBackInterface();
         if (getActivity().getIntent().hasExtra("appName")) {
             String title = getActivity().getIntent().getExtras().getString("appName");
             headerText = (TextView) rootView.findViewById(Res.getWidgetID("header_text"));
-            webView.setProperty(headerText, loadFailLayout, frameLayout,new ImpCallBackInterface() {
-                @Override
-                public void onDialogDissmiss() {
-                    dimissLoadingDlg();
-                }
-
-                @Override
-                public void onShowImpDialog() {
-                    showImpDialog();
-                }
-            });
+            webView.setProperty(headerText, loadFailLayout, frameLayout,impCallBackInterface);
             initWebViewGoBackOrClose();
             (rootView.findViewById(Res.getWidgetID("header_layout")))
                     .setVisibility(View.VISIBLE);
             headerText.setText(title);
         } else {
-            webView.setProperty(null, loadFailLayout, frameLayout,new ImpCallBackInterface() {
-                @Override
-                public void onDialogDissmiss() {
-                    dimissLoadingDlg();
-                }
-
-                @Override
-                public void onShowImpDialog() {
-                    showImpDialog();
-                }
-            });
+            webView.setProperty(null, loadFailLayout, frameLayout,impCallBackInterface);
         }
     }
 
+    /**
+     * 与主Fragment通信的接口
+     * @return
+     */
+    private ImpCallBackInterface getImpCallBackInterface(){
+        return new ImpCallBackInterface() {
+            @Override
+            public void onDialogDissmiss() {
+
+            }
+
+            @Override
+            public void onShowImpDialog() {
+
+            }
+
+            @Override
+            public Map<String, String> onGetWebViewHeaders() {
+                return null;
+            }
+
+            @Override
+            public void onInitWebViewGoBackOrClose() {
+
+            }
+
+            @Override
+            public void onSetTitle() {
+
+            }
+
+            @Override
+            public void onFinishActivity() {
+
+            }
+
+            @Override
+            public void onShowLoadingDlg() {
+
+            }
+
+            @Override
+            public void onStartActivityForResult(Intent intent, int requestCode) {
+
+            }
+        };
+    }
     /**
      * 初始化原生WebView的返回和关闭
      * （不是GS应用，GS应用有重定向，不容易实现返回）
