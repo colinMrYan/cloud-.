@@ -15,6 +15,7 @@ import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.imp.api.ImpActivity;
+import com.inspur.imp.api.ImpFragment;
 import com.inspur.imp.plugin.ImpPlugin;
 
 import org.json.JSONArray;
@@ -84,7 +85,9 @@ public class SelectStaffService extends ImpPlugin {
         intent.putExtra(ContactSearchFragment.EXTRA_TYPE, 2);
         intent.putExtra(ContactSearchFragment.EXTRA_MULTI_SELECT, multiSelection == 0 ? false : true);
         intent.putExtra(ContactSearchFragment.EXTRA_TITLE, getActivity().getString(R.string.adress_list));
-        getActivity().startActivityForResult(intent, CONTACT_PICKER);
+        if (getImpCallBackInterface() != null){
+            getImpCallBackInterface().onStartActivityForResult(intent, ImpFragment.SELECT_STAFF_SERVICE_REQUEST);
+        }
     }
 
     @Override
@@ -110,7 +113,7 @@ public class SelectStaffService extends ImpPlugin {
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        if (resultCode == RESULT_OK && requestCode == CONTACT_PICKER) {
+        if (resultCode == RESULT_OK && requestCode == ImpFragment.SELECT_STAFF_SERVICE_REQUEST) {
             List<SearchModel> searchModelList = (List<SearchModel>) intent.getSerializableExtra("selectMemList");
             List<String> uidList = new ArrayList<>();
             for (int i = 0; i < searchModelList.size(); i++) {

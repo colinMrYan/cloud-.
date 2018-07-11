@@ -9,12 +9,13 @@ import java.util.Map;
  */
 
 public interface ImpCallBackInterface {
-    void onDialogDissmiss();
+    void onLoadingDlgDimiss();
     void onShowImpDialog();
     Map<String, String> onGetWebViewHeaders();
     void onInitWebViewGoBackOrClose();
-    void onSetTitle();
+    void onSetTitle(String title);
     void onFinishActivity();
-    void onShowLoadingDlg();
+    void onLoadingDlgShow(String content);
     void onStartActivityForResult(Intent intent,int requestCode);
+
 }

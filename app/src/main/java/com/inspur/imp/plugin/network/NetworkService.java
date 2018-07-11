@@ -1,18 +1,12 @@
 package com.inspur.imp.plugin.network;
 
 import android.content.Context;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.TrafficStats;
 
-import com.inspur.imp.api.ImpActivity;
 import com.inspur.imp.plugin.ImpPlugin;
-import com.inspur.imp.util.DialogUtil;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -77,23 +71,26 @@ public class NetworkService extends ImpPlugin {
 			data = getTotalRxBytes();
 		} else if ("getMobileRxBytes".equals(action)) {
 			data = getMobileRxBytes();
-		} else if ("getAppRecive".equals(action)){
-			try {
-				data = getAppRecive(paramsObject);
-			} catch (NameNotFoundException e) {
-				e.printStackTrace();
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}		
-		} else if("getAppSend".equals(action)){
-			try {
-				data = getAppSend(paramsObject);
-			} catch (NameNotFoundException e) {
-				e.printStackTrace();
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-		}else{
+		}
+//		else if ("getAppRecive".equals(action)){
+//			try {
+//				data = getAppRecive(paramsObject);
+//			} catch (NameNotFoundException e) {
+//				e.printStackTrace();
+//			} catch (JSONException e) {
+//				e.printStackTrace();
+//			}
+//		}
+//		else if("getAppSend".equals(action)){
+//			try {
+//				data = (paramsObject);
+//			} catch (NameNotFoundException e) {
+//				e.printStackTrace();
+//			} catch (JSONException e) {
+//				e.printStackTrace();
+//			}
+//		}
+		else{
 			showCallIMPMethodErrorDlg();
 		}
 		return Long.toString(data)+"MB";
@@ -181,42 +178,42 @@ public class NetworkService extends ImpPlugin {
 				: (TrafficStats.getMobileRxBytes() / 1024 / 1024);
 	}
 
-	/**
-	 * 通过包名查看对应应用的流量上行数据
-	 * @param paramsObject
-	 * @return 单位是MB
-	 * @throws NameNotFoundException
-	 * @throws JSONException
-	 */
-	public long getAppSend(JSONObject paramsObject) throws NameNotFoundException, JSONException{
-		if(!paramsObject.isNull("packageName")){
-			packageName = paramsObject.getString("packageName");
-		}
-		int uid = 0;
-		PackageManager pm = this.context.getPackageManager();
-		ApplicationInfo ai = pm.getApplicationInfo(packageName,PackageManager.GET_ACTIVITIES);
-		uid = ai.uid;
-		return TrafficStats.getUidTxBytes(uid) / 1024 / 1024;
-	}
+//	/**
+//	 * 通过包名查看对应应用的流量上行数据
+//	 * @param paramsObject
+//	 * @return 单位是MB
+//	 * @throws NameNotFoundException
+//	 * @throws JSONException
+//	 */
+//	public long getAppSend(JSONObject paramsObject) throws NameNotFoundException, JSONException{
+//		if(!paramsObject.isNull("packageName")){
+//			packageName = paramsObject.getString("packageName");
+//		}
+//		int uid = 0;
+//		PackageManager pm = getFragmentContext().getPackageManager();
+//		ApplicationInfo ai = pm.getApplicationInfo(packageName,PackageManager.GET_ACTIVITIES);
+//		uid = ai.uid;
+//		return TrafficStats.getUidTxBytes(uid) / 1024 / 1024;
+//	}
 	
-	/**
-	 * 通过包名查看对应应用的流量下行数据
-	 * @param paramsObject
-	 * @return 单位是MB
-	 * @throws NameNotFoundException
-	 * @throws JSONException
-	 */
-
-	public long getAppRecive(JSONObject paramsObject) throws NameNotFoundException, JSONException{
-		if(!paramsObject.isNull("packageName")){
-			packageName = paramsObject.getString("packageName");
-		}
-		int uid = 0;
-		PackageManager pm = this.context.getPackageManager();
-		ApplicationInfo ai = pm.getApplicationInfo(packageName,PackageManager.GET_ACTIVITIES);
-		uid = ai.uid;
-		return TrafficStats.getUidRxBytes(uid) / 1024 / 1024;
-	}
+//	/**
+//	 * 通过包名查看对应应用的流量下行数据
+//	 * @param paramsObject
+//	 * @return 单位是MB
+//	 * @throws NameNotFoundException
+//	 * @throws JSONException
+//	 */
+//
+//	public long getAppRecive(JSONObject paramsObject) throws NameNotFoundException, JSONException{
+//		if(!paramsObject.isNull("packageName")){
+//			packageName = paramsObject.getString("packageName");
+//		}
+//		int uid = 0;
+//		PackageManager pm = getFragmentContext().getPackageManager();
+//		ApplicationInfo ai = pm.getApplicationInfo(packageName,PackageManager.GET_ACTIVITIES);
+//		uid = ai.uid;
+//		return TrafficStats.getUidRxBytes(uid) / 1024 / 1024;
+//	}
 	
 
 	@Override

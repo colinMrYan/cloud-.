@@ -91,7 +91,7 @@ public class TimePickerService extends ImpPlugin {
 		}
 
 		// 显示设置时间对话框
-		TimePickerDialog timeDlg = new TimePickerDialog(context, theme,
+		TimePickerDialog timeDlg = new TimePickerDialog(getActivity(), theme,
 				new TimePickerDialog.OnTimeSetListener() {
 
 					@Override

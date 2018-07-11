@@ -5,7 +5,6 @@ import android.util.Base64;
 
 import com.inspur.emmcloud.util.common.ImageUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.imp.api.ImpActivity;
 import com.inspur.imp.api.Res;
 import com.inspur.imp.plugin.ImpPlugin;
 import com.photograph.PhotoSDkApi;
@@ -51,7 +50,7 @@ public class OCRService extends ImpPlugin {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        PhotoSDkApi.init(getActivity()).StartPhotoOCR(Json, new OCROptCallBack() {
+        PhotoSDkApi.init(getFragmentContext()).StartPhotoOCR(Json, new OCROptCallBack() {
             @Override
             public void OCRBack(String result) {
                 callbackResult(result);

@@ -165,11 +165,11 @@ public class DeviceService extends ImpPlugin {
 				.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
 		// 调用系统功能中的蜂鸣
-		Ringtone notification = RingtoneManager.getRingtone(this.getActivity()
+		Ringtone notification = RingtoneManager.getRingtone(getActivity()
 				.getBaseContext(), ringtone);
 		// 如果不能调到系统蜂鸣则使用默认蜂鸣
 		if (notification == null)
-			notification = RingtoneManager.getRingtone(this.context,
+			notification = RingtoneManager.getRingtone(getFragmentContext(),
 					RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM));
 		if (notification != null)
 			for (long i = 0L; i < count; i++) {

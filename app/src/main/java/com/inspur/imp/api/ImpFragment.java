@@ -51,10 +51,13 @@ import java.util.Map;
 public class ImpFragment extends Fragment {
     private ImpWebView webView;
     // 浏览文件resultCode
-    public static final int CAMERA_SERVICE_REQUEST = 1;
-    public static final int PHOTO_SERVICE_REQUEST = 2;
-    public static final int SELECT_STAFF_SERVICE_REQUEST = 3;
-    public static final int FILE_SERVICE_REQUEST = 4;
+    public static final int CAMERA_SERVICE_CAMERA_REQUEST = 1;
+    public static final int CAMERA_SERVICE_GALLERY_REQUEST = 2;
+    public static final int PHOTO_SERVICE_CAMERA_REQUEST = 3;
+    public static final int PHOTO_SERVICE_GALLERY_REQUEST = 4;
+    public static final int SELECT_STAFF_SERVICE_REQUEST = 5;
+    public static final int FILE_SERVICE_REQUEST = 6;
+    public static final int DO_NOTHING_REQUEST = 7;
     private Map<String, String> webViewHeaders;
     private TextView headerText;
     private LinearLayout loadFailLayout;
@@ -202,45 +205,46 @@ public class ImpFragment extends Fragment {
     private ImpCallBackInterface getImpCallBackInterface(){
         return new ImpCallBackInterface() {
             @Override
-            public void onDialogDissmiss() {
-
+            public void onLoadingDlgDimiss() {
+                dimissLoadingDlg();
             }
 
             @Override
             public void onShowImpDialog() {
-
+                showImpDialog();
             }
 
             @Override
             public Map<String, String> onGetWebViewHeaders() {
-                return null;
+                return getWebViewHeaders();
             }
 
             @Override
             public void onInitWebViewGoBackOrClose() {
-
+                initWebViewGoBackOrClose();
             }
 
             @Override
-            public void onSetTitle() {
-
+            public void onSetTitle(String title) {
+                setTitle("");
             }
 
             @Override
             public void onFinishActivity() {
-
+                finishActivity();
             }
 
             @Override
-            public void onShowLoadingDlg() {
-
+            public void onLoadingDlgShow(String content) {
+                showLoadingDlg(content);
             }
 
             @Override
             public void onStartActivityForResult(Intent intent, int requestCode) {
-
+                startActivityForResult(intent,requestCode);
             }
         };
+
     }
     /**
      * 初始化原生WebView的返回和关闭
@@ -526,10 +530,12 @@ public class ImpFragment extends Fragment {
         if (pluginMgr != null) {
             String serviceName = "";
             switch (requestCode) {
-                case CAMERA_SERVICE_REQUEST:
+                case CAMERA_SERVICE_CAMERA_REQUEST:
+                case CAMERA_SERVICE_GALLERY_REQUEST:
                     serviceName = CameraService.class.getCanonicalName();
                     break;
-                case PHOTO_SERVICE_REQUEST:
+                case PHOTO_SERVICE_CAMERA_REQUEST:
+                    PHOTO_SERVICE_GALLERY_REQUEST:
                     serviceName = PhotoService.class.getCanonicalName();
                     break;
                 case SELECT_STAFF_SERVICE_REQUEST:

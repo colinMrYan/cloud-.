@@ -14,7 +14,6 @@ import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.imp.api.ImpActivity;
 import com.inspur.imp.api.Res;
 import com.inspur.imp.plugin.ImpPlugin;
 import com.inspur.imp.plugin.amaplocation.ECMLoactionTransformUtils;
@@ -78,18 +77,18 @@ public class GpsService extends ImpPlugin implements
      */
     private void open() {
         // 通过系统服务，取得LocationManager对象
-        locationManager = (LocationManager) (this.context
+        locationManager = (LocationManager) (getFragmentContext()
                 .getSystemService(Context.LOCATION_SERVICE));
         // 判断GPS模块是否开启，如果没有则开启
         if (!locationManager
                 .isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             // 转到手机设置界面，用户设置GPS
             Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-            this.context.startActivity(intent);
+            getActivity().startActivity(intent);
             // 设置完成后返回到原来的界面
         } else {
             // 弹出Toast
-            Toast.makeText(this.context, "GPS已经开启", Toast.LENGTH_LONG).show();
+            Toast.makeText(getFragmentContext(), "GPS已经开启", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -112,7 +111,7 @@ public class GpsService extends ImpPlugin implements
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        boolean isOpen = Settings.Secure.getInt(context.getContentResolver(),Settings.Secure.ALLOW_MOCK_LOCATION, 0) != 0;
+        boolean isOpen = Settings.Secure.getInt(getFragmentContext().getContentResolver(),Settings.Secure.ALLOW_MOCK_LOCATION, 0) != 0;
         if (isOpen) {
             if (dialog == null){
                 final AlertDialog.Builder builder = new AlertDialog.Builder(
@@ -126,7 +125,7 @@ public class GpsService extends ImpPlugin implements
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 try {
-                                    context.startActivity(new Intent(Settings.ACTION_APPLICATION_DEVELOPMENT_SETTINGS));
+                                    getActivity().startActivity(new Intent(Settings.ACTION_APPLICATION_DEVELOPMENT_SETTINGS));
                                 }catch (Exception e){
                                     e.printStackTrace();
                                 }
@@ -137,7 +136,7 @@ public class GpsService extends ImpPlugin implements
                 builder.setCancelable(false);
                 dialog = builder.create();
             }
-            if (context != null &&  !dialog.isShowing()) {
+            if (getActivity() != null &&  !dialog.isShowing()) {
                 dialog.show();
             }
             // 绑定监听状态
@@ -166,7 +165,7 @@ public class GpsService extends ImpPlugin implements
         locationCount = 0;
         if (mlocationClient == null) {
             // 初始化定位，
-            mlocationClient = new AMapLocationClient(getActivity().getApplicationContext());
+            mlocationClient = new AMapLocationClient(getFragmentContext());
         }
         // 初始化定位参数 默认连续定位
         AMapLocationClientOption mLocationOption = new AMapLocationClientOption();
@@ -261,18 +260,18 @@ public class GpsService extends ImpPlugin implements
      */
     private void close() {
         // 通过系统服务，取得LocationManager对象
-        locationManager = (LocationManager) (this.context
+        locationManager = (LocationManager) (getFragmentContext()
                 .getSystemService(Context.LOCATION_SERVICE));
         // 判断GPS模块是否开启，如果已经开启了
         if (locationManager
                 .isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             // 转到手机设置界面，用户设置GPS
             Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-            this.context.startActivity(intent);
+            getActivity().startActivity(intent);
             // 设置完成后返回到原来的界面
         } else {
             // 弹出Toast
-            Toast.makeText(this.context, "GPS已经关闭", Toast.LENGTH_LONG).show();
+            Toast.makeText(this.getFragmentContext(), "GPS已经关闭", Toast.LENGTH_LONG).show();
         }
     }
     private class ComparatorValues implements Comparator<AMapLocation> {

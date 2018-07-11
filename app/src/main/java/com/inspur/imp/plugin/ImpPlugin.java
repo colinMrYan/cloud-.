@@ -148,7 +148,7 @@ public abstract class ImpPlugin implements IPlugin {
     }
 
 
-    private Activity getActivity() {
+    public Activity getActivity() {
         if (!(context instanceof Activity) && context instanceof ContextWrapper) {
             context = ((ContextWrapper) context).getBaseContext();
         }
