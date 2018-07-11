@@ -147,7 +147,6 @@ public class ImpWebViewClient extends WebViewClient {
         String c = CookieManager.getInstance().getCookie(url);
         PreferencesUtils.putString(view.getContext(), "web_cookie", c);
         CookieSyncManager.getInstance().sync();
-        webview.initPlugin();
     }
 
     /*

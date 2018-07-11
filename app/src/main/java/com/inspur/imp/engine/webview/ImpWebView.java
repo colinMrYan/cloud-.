@@ -167,7 +167,7 @@ public class ImpWebView extends WebView {
 	}
 
 	// 重置当前接口的webview
-	public void initPlugin() {
+	private void initPlugin() {
 		pluginMgr = new PluginMgr(context,this);
 		pluginMgr.setImpCallBackInterface(impCallBackInterface);
 	}

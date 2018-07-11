@@ -63,15 +63,7 @@ public class PluginMgr {
         if (serviceName != null) {
             Log.d("jason", "serviceName=" + serviceName);
             Log.d("jason", "action=" + action);
-            IPlugin plugin = null;
-            if (!entries.containsKey(serviceName)) {
-                plugin = createPlugin(serviceName);
-                if (plugin != null){
-                    entries.put(serviceName, plugin);
-                }
-            } else {
-                plugin = getPlugin(serviceName);
-            }
+            IPlugin plugin = getPlugin(serviceName);
             // 将传递过来的参数转换为JSON
             JSONObject jo = null;
             if (StrUtil.strIsNotNull(params)) {
@@ -85,6 +77,12 @@ public class PluginMgr {
             if (plugin != null) {
                 plugin.execute(action, jo);
             } else {
+                if(impCallBackInterface != null){
+                    impCallBackInterface.onShowImpDialog();
+                }
+            }
+        }else {
+            if(impCallBackInterface != null){
                 impCallBackInterface.onShowImpDialog();
             }
         }
@@ -102,17 +100,10 @@ public class PluginMgr {
         String reallyServiceName = getReallyServiceName(serviceName);
         String res = "";
         if (reallyServiceName != null) {
-            IPlugin plugin = null;
+
             Log.d("jason", "serviceName=" + reallyServiceName);
             Log.d("jason", "action=" + action);
-            if (!entries.containsKey(reallyServiceName)) {
-                plugin = createPlugin(reallyServiceName);
-                if (plugin != null){
-                    entries.put(reallyServiceName, plugin);
-                }
-            } else {
-                plugin = getPlugin(reallyServiceName);
-            }
+            IPlugin plugin = getPlugin(reallyServiceName);
             // 将传递过来的参数转换为JSON
             JSONObject jo = null;
             if (StrUtil.strIsNotNull(params)) {
@@ -129,9 +120,15 @@ public class PluginMgr {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+            }else{
+                if(impCallBackInterface != null){
+                    impCallBackInterface.onShowImpDialog();
+                }
             }
         } else {
-            impCallBackInterface.onShowImpDialog();
+            if(impCallBackInterface != null){
+                impCallBackInterface.onShowImpDialog();
+            }
         }
         return res;
 
@@ -167,18 +164,16 @@ public class PluginMgr {
      * @return IPlugin
      */
     public IPlugin getPlugin(String service) {
-        LogUtils.jasonDebug("service="+service);
-        IPlugin plugin = entries.get(service);
-
-        // 页面切换时切换webView
-        if ("com.inspur.imp.plugin.window.WindowService".equals(service)
-                || "com.inspur.imp.plugin.scroll.ScrollService".equals(service)
-                || "com.inspur.imp.plugin.app.AppService".equals(service)
-                || "com.inspur.imp.plugin.transfer.FileTransferService".equals(service)
-                ) {
+        service = service.trim();
+        IPlugin plugin = null;
+        Log.d("jason", "serviceName=" + service);
+        if (!entries.containsKey(service) || service.equals("com.inspur.imp.plugin.transfer.FileTransferService")) {
             plugin = createPlugin(service);
+            if (plugin != null){
+                entries.put(service, plugin);
+            }
         } else {
-            plugin.init(context, webView,impCallBackInterface);
+            plugin = entries.get(service);
         }
         return plugin;
     }

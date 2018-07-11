@@ -25,6 +25,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.mine.Language;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.config.MyAppWebConfig;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
@@ -73,6 +74,7 @@ public class ImpFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
+        LogUtils.YfcDebug("onCreate  daofijeoa");
         LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(
                 getActivity().LAYOUT_INFLATER_SERVICE);
         rootView = inflater.inflate(R.layout.activity_imp, null);
@@ -112,7 +114,7 @@ public class ImpFragment extends Fragment {
         if (getActivity().getIntent().hasExtra("appId")) {
             appId = getActivity().getIntent().getExtras().getString("appId");
         }
-        if(getActivity().getIntent().getExtras() != null){
+        if (getActivity().getIntent().getExtras() != null) {
             String url = getActivity().getIntent().getExtras().getString("uri");
             initWebViewHeaderLayout();
             setWebViewHeader();
@@ -139,9 +141,10 @@ public class ImpFragment extends Fragment {
 
     /**
      * 返回逻辑
+     *
      * @return
      */
-    public boolean onKeyDown(){
+    public boolean onKeyDown() {
         if (webView.canGoBack()) {
             webView.goBack();// 返回上一页面
             return true;
@@ -184,21 +187,22 @@ public class ImpFragment extends Fragment {
         if (getActivity().getIntent().hasExtra("appName")) {
             String title = getActivity().getIntent().getExtras().getString("appName");
             headerText = (TextView) rootView.findViewById(Res.getWidgetID("header_text"));
-            webView.setProperty(headerText, loadFailLayout, frameLayout,impCallBackInterface);
+            webView.setProperty(headerText, loadFailLayout, frameLayout, impCallBackInterface);
             initWebViewGoBackOrClose();
             (rootView.findViewById(Res.getWidgetID("header_layout")))
                     .setVisibility(View.VISIBLE);
             headerText.setText(title);
         } else {
-            webView.setProperty(null, loadFailLayout, frameLayout,impCallBackInterface);
+            webView.setProperty(null, loadFailLayout, frameLayout, impCallBackInterface);
         }
     }
 
     /**
      * 与主Fragment通信的接口
+     *
      * @return
      */
-    private ImpCallBackInterface getImpCallBackInterface(){
+    private ImpCallBackInterface getImpCallBackInterface() {
         return new ImpCallBackInterface() {
             @Override
             public void onLoadingDlgDimiss() {
@@ -237,11 +241,12 @@ public class ImpFragment extends Fragment {
 
             @Override
             public void onStartActivityForResult(Intent intent, int requestCode) {
-                startActivityForResult(intent,requestCode);
+                startActivityForResult(intent, requestCode);
             }
         };
 
     }
+
     /**
      * 初始化原生WebView的返回和关闭
      * （不是GS应用，GS应用有重定向，不容易实现返回）
@@ -506,33 +511,30 @@ public class ImpFragment extends Fragment {
             switch (requestCode) {
                 case CAMERA_SERVICE_CAMERA_REQUEST:
                 case CAMERA_SERVICE_GALLERY_REQUEST:
-                    serviceName = CameraService.class.getCanonicalName();
+                    serviceName = CameraService.class.getCanonicalName().trim();
                     break;
                 case PHOTO_SERVICE_CAMERA_REQUEST:
                     PHOTO_SERVICE_GALLERY_REQUEST:
-                    serviceName = PhotoService.class.getCanonicalName();
+                    serviceName = PhotoService.class.getCanonicalName().trim();
                     break;
                 case SELECT_STAFF_SERVICE_REQUEST:
-                    serviceName = SelectStaffService.class.getCanonicalName();
+                    serviceName = SelectStaffService.class.getCanonicalName().trim();
                     break;
                 case FILE_SERVICE_REQUEST:
-                    serviceName = FileService.class.getCanonicalName();
+                    serviceName = FileService.class.getCanonicalName().trim();
                     break;
                 default:
                     break;
             }
-            if (!StringUtils.isBlank(serviceName)){
+            if (!StringUtils.isBlank(serviceName)) {
                 IPlugin plugin = pluginMgr.getPlugin(serviceName);
-                if (plugin != null){
-                    plugin.onActivityResult(requestCode,resultCode,data);
+                if (plugin != null) {
+                    plugin.onActivityResult(requestCode, resultCode, data);
                 }
 
             }
 
-            }
-
         }
+
     }
-
-
 }
