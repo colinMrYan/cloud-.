@@ -47,13 +47,13 @@ public class AudioService extends ImpPlugin {
         else if (action.equals("stopPlaying")) {
             this.stopPlaying(paramsObject);
         }else{
-			((ImpActivity)getActivity()).showImpDialog();
+			showCallIMPMethodErrorDlg();
 		}
     }
 
 	@Override
 	public String executeAndReturn(String action, JSONObject paramsObject) {
-		((ImpActivity)getActivity()).showImpDialog();
+		showCallIMPMethodErrorDlg();
 		return "";
 	}
 

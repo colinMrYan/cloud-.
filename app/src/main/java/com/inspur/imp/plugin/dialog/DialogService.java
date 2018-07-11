@@ -60,13 +60,13 @@ public class DialogService extends ImpPlugin {
 		else if ("prompt".equals(action)) {
 			prompt(paramsObject);
 		}else{
-			((ImpActivity)getActivity()).showImpDialog();
+			showCallIMPMethodErrorDlg();
 		}
 	}
 
 	@Override
 	public String executeAndReturn(String action, JSONObject paramsObject) {
-		((ImpActivity)getActivity()).showImpDialog();
+		showCallIMPMethodErrorDlg();
 		return "";
 	}
 

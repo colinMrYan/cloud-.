@@ -55,14 +55,14 @@ public class PhotoService extends ImpPlugin {
         }else if("viewImage".equals(action)){
             viewImage();
         }else{
-            ((ImpActivity)getActivity()).showImpDialog();
+            showCallIMPMethodErrorDlg();
         }
         loadingDlg = new LoadingDialog(getActivity());
     }
 
     @Override
     public String executeAndReturn(String action, JSONObject paramsObject) {
-        ((ImpActivity)getActivity()).showImpDialog();
+        showCallIMPMethodErrorDlg();
         return "";
     }
 

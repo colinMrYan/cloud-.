@@ -56,14 +56,14 @@ public class SmsService extends ImpPlugin {
 		else if ("batchSend".equals(action)) {
 			batchSend(paramsObject);
 		}else{
-			((ImpActivity)getActivity()).showImpDialog();
+			showCallIMPMethodErrorDlg();
 		}
 
 	}
 
 	@Override
 	public String executeAndReturn(String action, JSONObject paramsObject) {
-		((ImpActivity)getActivity()).showImpDialog();
+		showCallIMPMethodErrorDlg();
 		return "";
 	}
 

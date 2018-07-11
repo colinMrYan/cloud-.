@@ -97,7 +97,7 @@ public class MapService extends ImpPlugin {
 			}
 			doNaviByMapId(mapId,address);
 		} else{
-			((ImpActivity)getActivity()).showImpDialog();
+			showCallIMPMethodErrorDlg();
 		}
 
 	}
@@ -110,7 +110,7 @@ public class MapService extends ImpPlugin {
 			String result = getAllMapApps();
 			return result;
 		}else{
-			((ImpActivity)getActivity()).showImpDialog();
+			showCallIMPMethodErrorDlg();
 		}
 		return "";
 	}

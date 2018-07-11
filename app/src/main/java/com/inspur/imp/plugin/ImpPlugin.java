@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.webkit.ValueCallback;
 
+import com.inspur.imp.api.ImpCallBackInterface;
 import com.inspur.imp.engine.webview.ImpWebView;
 
 import org.json.JSONArray;
@@ -26,7 +27,8 @@ public abstract class ImpPlugin implements IPlugin {
     protected ImpWebView webview;
 
     // WebViewActivity的上下文
-    protected Context context;
+    private Context context;
+    private ImpCallBackInterface impCallBackInterface;
 
     /**
      * 执行方法，无返回值
@@ -52,7 +54,7 @@ public abstract class ImpPlugin implements IPlugin {
      * @param context
      * @param webview
      */
-    public void init(Context context, ImpWebView webview) {
+    public void init(Context context, ImpWebView webview,ImpCallBackInterface impCallBackInterface) {
         this.context = context;
         this.webview = webview;
     }
@@ -133,6 +135,16 @@ public abstract class ImpPlugin implements IPlugin {
     @Override
     public void onActivityPause() {
 
+    }
+
+    public ImpCallBackInterface getImpCallBackInterface(){
+        return impCallBackInterface;
+    }
+
+    public void showCallIMPMethodErrorDlg(){
+        if (impCallBackInterface != null){
+            impCallBackInterface.onShowImpDialog();
+        }
     }
 
 

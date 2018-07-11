@@ -22,13 +22,13 @@ public class LoadingDialogService extends ImpPlugin {
         } else if ("hide".equals(action)) {
             hideDlg();
         }else{
-            ((ImpActivity)getActivity()).showImpDialog();
+            showCallIMPMethodErrorDlg();
         }
     }
 
     @Override
     public String executeAndReturn(String action, JSONObject paramsObject) {
-        ((ImpActivity)getActivity()).showImpDialog();
+        showCallIMPMethodErrorDlg();
         return "";
     }
 

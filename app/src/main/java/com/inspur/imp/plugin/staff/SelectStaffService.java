@@ -38,7 +38,7 @@ public class SelectStaffService extends ImpPlugin {
 
     @Override
     public void execute(String action, JSONObject paramsObject) {
-        ((ImpActivity)getActivity()).showImpDialog();
+        showCallIMPMethodErrorDlg();
     }
 
     /**
@@ -99,7 +99,7 @@ public class SelectStaffService extends ImpPlugin {
         } else if("openContact".equals(action)){
             openContact();
         } else {
-            ((ImpActivity)getActivity()).showImpDialog();
+            showCallIMPMethodErrorDlg();
         }
         return "";
     }

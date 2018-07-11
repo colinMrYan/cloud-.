@@ -82,7 +82,7 @@ public class FileService extends ImpPlugin {
 				e.printStackTrace();
 			}
 		}else{
-			((ImpActivity)getActivity()).showImpDialog();
+			showCallIMPMethodErrorDlg();
 		}
 		return fileInfo;
 	}
@@ -216,7 +216,7 @@ public class FileService extends ImpPlugin {
 			fileService = this;
 			browser(paramsObject);
 		}else{
-			((ImpActivity)getActivity()).showImpDialog();
+			showCallIMPMethodErrorDlg();
 		}
 	}
 

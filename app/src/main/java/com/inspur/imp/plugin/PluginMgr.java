@@ -178,7 +178,7 @@ public class PluginMgr {
                 ) {
             plugin = createPlugin(service);
         } else {
-            plugin.init(context, webView);
+            plugin.init(context, webView,impCallBackInterface);
         }
         return plugin;
     }
@@ -193,7 +193,7 @@ public class PluginMgr {
             @SuppressWarnings("rawtypes")
             Class c = getClassByName(clssName);
             plugin = (IPlugin) c.newInstance();
-            plugin.init(context, webView);
+            plugin.init(context, webView,impCallBackInterface);
         } catch (Exception e) {
             e.printStackTrace();
         }

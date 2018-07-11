@@ -23,6 +23,7 @@ import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.cache.AppExceptionCacheUtils;
 import com.inspur.imp.api.ImpActivity;
+import com.inspur.imp.api.ImpFragment;
 import com.inspur.imp.api.Res;
 import com.inspur.imp.api.iLog;
 import com.inspur.imp.plugin.ImpPlugin;
@@ -60,7 +61,7 @@ public class CameraService extends ImpPlugin {
     private static final int PHOTOLIBRARY = 0; // Choose image from picture
     // library (same as
     // SAVEDPHOTOALBUM for Android)
-    private static final int CAMERA = 1; // Take picture from camera
+//    private static final int CAMERA = 1; // Take picture from camera
     private static final int SAVEDPHOTOALBUM = 2; // Choose image from picture
     // library (same as
     // PHOTOLIBRARY for Android)
@@ -111,13 +112,13 @@ public class CameraService extends ImpPlugin {
         }else if ("getPicture".equals(action)) {
             getPicture(paramsObject);
         }else{
-            ((ImpActivity)getActivity()).showImpDialog();
+            showCallIMPMethodErrorDlg();
         }
     }
 
     @Override
     public String executeAndReturn(String action, JSONObject paramsObject) {
-        ((ImpActivity)getActivity()).showImpDialog();
+        showCallIMPMethodErrorDlg();
         return "";
     }
 
@@ -172,11 +173,11 @@ public class CameraService extends ImpPlugin {
             intent.putExtra(MyCameraActivity.EXTRA_PHOTO_NAME,cameraFile.getName());
             intent.putExtra(MyCameraActivity.EXTRA_ENCODING_TYPE,encodingType);
             intent.putExtra(MyCameraActivity.EXTRA_RECT_SCALE_JSON,jsonObject.toString());
-            intent.setClass(getActivity(),MyCameraActivity.class);
-            getActivity().startActivityForResult(intent, CAMERA);
+            intent.setClass(getFragmentContext(),MyCameraActivity.class);
+            getFragmentContext().startActivityForResult(intent, ImpFragment.CAMERA_SERVICE_REQUEST);
 
         } else {
-            Toast.makeText(this.context, Res.getString("invalidSD"),
+            Toast.makeText(getFragmentContext(), Res.getString("invalidSD"),
                     Toast.LENGTH_SHORT).show();
         }
         File savePath = new File(saveDir);

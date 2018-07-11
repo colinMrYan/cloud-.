@@ -31,7 +31,7 @@ public class EMMService extends ImpPlugin {
 		} else if ("webviewReload".equals(action)){
 			webviewReload();
 		}else{
-			((ImpActivity)getActivity()).showImpDialog();
+			showCallIMPMethodErrorDlg();
 		}
 	}
 
@@ -41,7 +41,7 @@ public class EMMService extends ImpPlugin {
 		if ("getDeviceInfo".equals(action)) {
 			return getDeviceInfo();
 		}else{
-			((ImpActivity)getActivity()).showImpDialog();
+			showCallIMPMethodErrorDlg();
 		}
 		return "";
 	}

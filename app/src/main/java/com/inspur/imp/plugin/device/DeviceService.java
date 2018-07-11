@@ -58,7 +58,7 @@ public class DeviceService extends ImpPlugin {
 			}
 			res = jsonObject.toString();
 		}else {
-			((ImpActivity)getActivity()).showImpDialog();
+			showCallIMPMethodErrorDlg();
 		}
 		return res;
 	}
@@ -73,7 +73,7 @@ public class DeviceService extends ImpPlugin {
 		else if (action.equals("vibrate")) {
 			vibrate(jsonObject);
 		}else{
-			((ImpActivity)getActivity()).showImpDialog();
+			showCallIMPMethodErrorDlg();
 		}
 
 	}

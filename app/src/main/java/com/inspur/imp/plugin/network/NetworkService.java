@@ -94,7 +94,7 @@ public class NetworkService extends ImpPlugin {
 				e.printStackTrace();
 			}
 		}else{
-			((ImpActivity)getActivity()).showImpDialog();
+			showCallIMPMethodErrorDlg();
 		}
 		return Long.toString(data)+"MB";
 	}
@@ -226,6 +226,6 @@ public class NetworkService extends ImpPlugin {
 
 	@Override
 	public void execute(String action, JSONObject paramsObject){
-		((ImpActivity)getActivity()).showImpDialog();
+		showCallIMPMethodErrorDlg();
 	}
 }

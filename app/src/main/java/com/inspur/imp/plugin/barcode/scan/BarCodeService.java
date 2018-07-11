@@ -19,7 +19,6 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.inspur.emmcloud.util.common.LogUtils;
-import com.inspur.imp.api.ImpActivity;
 import com.inspur.imp.api.Res;
 import com.inspur.imp.plugin.ImpPlugin;
 
@@ -51,7 +50,7 @@ public class BarCodeService extends ImpPlugin {
 		}else if ("closeQrCode".equals(action)) {
 			closeQrCodeDlg();
 		}else{
-			((ImpActivity)getActivity()).showImpDialog();
+			showCallIMPMethodErrorDlg();
 		}
 	}
 
@@ -82,7 +81,7 @@ public class BarCodeService extends ImpPlugin {
 				e.printStackTrace();
 			}
 		}else {
-			((ImpActivity)getActivity()).showImpDialog();
+			showCallIMPMethodErrorDlg();
 		}
 		return "";
 	}
@@ -101,8 +100,8 @@ public class BarCodeService extends ImpPlugin {
 			e.printStackTrace();
 		}
 		// ImpActivity.isBack = true;
-		Intent scanIntent = new Intent(context, CaptureActivity.class);
-		this.context.startActivity(scanIntent);
+		Intent scanIntent = new Intent(getFragmentContext(), CaptureActivity.class);
+		getFragmentContext().startActivity(scanIntent);
 	}
 	
 	/**
@@ -116,7 +115,7 @@ public class BarCodeService extends ImpPlugin {
 		try {
 			if (!paramsObject.isNull("value")) {
 				String content = paramsObject.getString("value");
-				int qrSize = dip2px(context, 300);
+				int qrSize = dip2px(getFragmentContext(), 300);
 				Bitmap bitmap = creatQrCode(content, qrSize);
 				if (bitmap != null) {
 					LogUtils.jasonDebug("11111111111111");

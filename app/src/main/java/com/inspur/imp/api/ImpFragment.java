@@ -135,20 +135,7 @@ public class ImpFragment extends Fragment {
             LogUtils.jasonDebug("url=" + url);
             setWebViewFunctionVisiable();
         }
-
-        webView.setImpCallBackInterface(new ImpCallBackInterface() {
-            @Override
-            public void onDialogDissmiss() {
-                dimissLoadingDlg();
-            }
-
-            @Override
-            public void onShowImpDialog() {
-                showImpDialog();
-            }
-        });
     }
-
 
 
     /**
@@ -198,13 +185,33 @@ public class ImpFragment extends Fragment {
         if (getActivity().getIntent().hasExtra("appName")) {
             String title = getActivity().getIntent().getExtras().getString("appName");
             headerText = (TextView) rootView.findViewById(Res.getWidgetID("header_text"));
-            webView.setProperty(headerText, loadFailLayout, frameLayout);
+            webView.setProperty(headerText, loadFailLayout, frameLayout,new ImpCallBackInterface() {
+                @Override
+                public void onDialogDissmiss() {
+                    dimissLoadingDlg();
+                }
+
+                @Override
+                public void onShowImpDialog() {
+                    showImpDialog();
+                }
+            });
             initWebViewGoBackOrClose();
             (rootView.findViewById(Res.getWidgetID("header_layout")))
                     .setVisibility(View.VISIBLE);
             headerText.setText(title);
         } else {
-            webView.setProperty(null, loadFailLayout, frameLayout);
+            webView.setProperty(null, loadFailLayout, frameLayout,new ImpCallBackInterface() {
+                @Override
+                public void onDialogDissmiss() {
+                    dimissLoadingDlg();
+                }
+
+                @Override
+                public void onShowImpDialog() {
+                    showImpDialog();
+                }
+            });
         }
     }
 

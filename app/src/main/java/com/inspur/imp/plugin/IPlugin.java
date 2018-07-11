@@ -3,6 +3,7 @@ package com.inspur.imp.plugin;
 import android.content.Context;
 import android.content.Intent;
 
+import com.inspur.imp.api.ImpCallBackInterface;
 import com.inspur.imp.engine.webview.ImpWebView;
 
 import org.json.JSONException;
@@ -22,7 +23,7 @@ public interface IPlugin {
      * @param context
      * @param webview
      */
-    public void init(Context context, ImpWebView webview);
+    public void init(Context context, ImpWebView webview,ImpCallBackInterface impCallBackInterface);
 
     /**
      * 执行方法，无返回值

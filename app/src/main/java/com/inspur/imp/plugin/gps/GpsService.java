@@ -61,13 +61,13 @@ public class GpsService extends ImpPlugin implements
         else if ("getInfo".equals(action)) {
             getInfo(paramsObject);
         }else{
-            ((ImpActivity)getActivity()).showImpDialog();
+            showCallIMPMethodErrorDlg();
         }
     }
 
     @Override
     public String executeAndReturn(String action, JSONObject paramsObject) {
-        ((ImpActivity)getActivity()).showImpDialog();
+        showCallIMPMethodErrorDlg();
         return "";
     }
 

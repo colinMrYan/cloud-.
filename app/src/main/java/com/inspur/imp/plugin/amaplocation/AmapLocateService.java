@@ -11,8 +11,6 @@ import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.imp.api.ImpActivity;
-import com.inspur.imp.api.ImpFragment;
 import com.inspur.imp.api.Res;
 import com.inspur.imp.plugin.ImpPlugin;
 
@@ -55,13 +53,13 @@ public class AmapLocateService extends ImpPlugin implements
         if ("getInfo".equals(action)) {
             getInfo(paramsObject);
         }else{
-            ((ImpFragment)getFragmentContext()).showImpDialog();
+            showCallIMPMethodErrorDlg();
         }
     }
 
     @Override
     public String executeAndReturn(String action, JSONObject paramsObject) {
-        ((ImpActivity)getActivity()).showImpDialog();
+        showCallIMPMethodErrorDlg();
         return "";
     }
 
@@ -108,7 +106,7 @@ public class AmapLocateService extends ImpPlugin implements
                 builder.setCancelable(false);
                 dialog = builder.create();
             }
-            if (context != null &&  !dialog.isShowing()) {
+            if (getActivity() != null &&  !dialog.isShowing()) {
                 dialog.show();
             }
             // 绑定监听状态
@@ -137,7 +135,7 @@ public class AmapLocateService extends ImpPlugin implements
         locationCount = 0;
         if (mlocationClient == null) {
             // 初始化定位，
-            mlocationClient = new AMapLocationClient(getActivity().getApplicationContext());
+            mlocationClient = new AMapLocationClient(getFragmentContext());
         }
         // 初始化定位参数 默认连续定位
         AMapLocationClientOption mLocationOption = new AMapLocationClientOption();

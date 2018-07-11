@@ -107,7 +107,7 @@ public class FileTransferService extends ImpPlugin {
         else if ("download".equals(action)) {
             download(paramsObject);
         }else{
-            ((ImpActivity)getActivity()).showImpDialog();
+            showCallIMPMethodErrorDlg();
         }
     }
 
@@ -132,7 +132,7 @@ public class FileTransferService extends ImpPlugin {
                     handler.sendEmptyMessage(1);
                 }
         }else{
-            ((ImpActivity)getActivity()).showImpDialog();
+            showCallIMPMethodErrorDlg();
         }
 
         return result;
