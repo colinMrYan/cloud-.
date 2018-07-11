@@ -137,7 +137,7 @@ public abstract class ImpPlugin implements IPlugin {
 
 
     private Activity getActivity() {
-        while (!(context instanceof Activity) && context instanceof ContextWrapper) {
+        if (!(context instanceof Activity) && context instanceof ContextWrapper) {
             context = ((ContextWrapper) context).getBaseContext();
         }
 
@@ -150,6 +150,7 @@ public abstract class ImpPlugin implements IPlugin {
     public Context getFragmentContext() {
         return this.context;
     }
+
 
     // 关闭功能类的方法
     public abstract void onDestroy();

@@ -12,6 +12,7 @@ import com.amap.api.location.AMapLocationListener;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.imp.api.ImpActivity;
+import com.inspur.imp.api.ImpFragment;
 import com.inspur.imp.api.Res;
 import com.inspur.imp.plugin.ImpPlugin;
 
@@ -54,7 +55,7 @@ public class AmapLocateService extends ImpPlugin implements
         if ("getInfo".equals(action)) {
             getInfo(paramsObject);
         }else{
-            ((ImpActivity)getActivity()).showImpDialog();
+            ((ImpFragment)getFragmentContext()).showImpDialog();
         }
     }
 
