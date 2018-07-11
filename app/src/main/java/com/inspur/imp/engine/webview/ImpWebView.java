@@ -81,7 +81,7 @@ public class ImpWebView extends WebView {
 		this.context = context;
 	}
 
-	public void setProperty( TextView titleText, LinearLayout loadFailLayout,FrameLayout layout){
+	public void setProperty( TextView titleText, LinearLayout loadFailLayout,FrameLayout layout,ImpCallBackInterface impCallBackInterface){
 		this.titleText =titleText;
 		this.loadFailLayout = loadFailLayout;
 		this.frameLayout = layout;
@@ -89,6 +89,7 @@ public class ImpWebView extends WebView {
 		this.setWebSetting();
 		handMessage();
 		init();
+		this.impCallBackInterface = impCallBackInterface;
 	}
 
 	private void handMessage(){
