@@ -113,18 +113,10 @@ public class AppCacheUtils {
 
 	public static List<AppCommonlyUse> getUploadCommonlyUseAppList(Context context){
 		try {
-			List<AppCommonlyUse> orderCommonlyUseAppList = DbCacheUtils.getDb(context).selector(AppCommonlyUse.class).orderBy("weight",true).limit(8).findAll();
-			long time = System.currentTimeMillis()-604800000;
-			//获取一周之内使用过的常用应用
-			List<AppCommonlyUse> recentCommonlyUseAppList = DbCacheUtils.getDb(context).selector(AppCommonlyUse.class).where("lastUpdateTime",">",time).findAll();
+			List<AppCommonlyUse> orderCommonlyUseAppList = DbCacheUtils.getDb(context).selector(AppCommonlyUse.class).orderBy("weight",true).limit(10).findAll();
 			if (orderCommonlyUseAppList == null ){
 				orderCommonlyUseAppList = new ArrayList<>();
 			}
-			if (recentCommonlyUseAppList == null ){
-				recentCommonlyUseAppList = new ArrayList<>();
-			}
-			orderCommonlyUseAppList.removeAll(recentCommonlyUseAppList);
-			orderCommonlyUseAppList.addAll(recentCommonlyUseAppList);
 			return orderCommonlyUseAppList;
 		}catch (Exception e){
 			e.printStackTrace();
