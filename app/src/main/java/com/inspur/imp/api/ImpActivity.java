@@ -27,6 +27,7 @@ public class ImpActivity extends ImpBaseActivity {
                 WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
                         | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         fragment = new ImpFragment();
+        fragment.setArguments(getIntent().getExtras());
         getSupportFragmentManager().beginTransaction().replace(R.id.fl_container, fragment).commitAllowingStateLoss();
     }
 

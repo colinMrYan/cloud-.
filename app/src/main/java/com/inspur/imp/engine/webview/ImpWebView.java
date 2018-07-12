@@ -73,7 +73,7 @@ public class ImpWebView extends WebView {
 	private Handler handler;
 	private FrameLayout frameLayout;
 	private PluginMgr pluginMgr;
-	private ImpWebViewClient impWebViewClient;
+
 	private ImpCallBackInterface impCallBackInterface;
 
 	public ImpWebView(Context context, AttributeSet attrs) {
@@ -185,8 +185,7 @@ public class ImpWebView extends WebView {
 		setAnimation(null);
 		setNetworkAvailable(true);
 		this.setBackgroundColor(Color.WHITE);
-		impWebViewClient = new ImpWebViewClient(loadFailLayout,impCallBackInterface);
-		this.setWebViewClient(impWebViewClient);
+		this.setWebViewClient(new ImpWebViewClient(loadFailLayout,impCallBackInterface));
 		// 使WebView支持弹出框
 		impWebChromeClient = new ImpWebChromeClient(context,this,frameLayout);
 		this.setWebChromeClient(impWebChromeClient);

@@ -125,7 +125,8 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
                             break;
                         case "find":
 //                            tabBean = new TabBean(getString(R.string.find), R.drawable.selector_tab_find_btn + "", FindFragment.class);
-                            tabBean = new TabBean("",R.drawable.selector_tab_find_btn + "", ImpFragment.class);
+                            tabBean = new TabBean(getString(R.string.find), R.drawable.selector_tab_find_btn + "", ImpFragment.class);
+//                            tabBean = new TabBean(getString(R.string.find),R.drawable.selector_tab_find_btn + "", ContactSearchFragment.class);
                             break;
                         case "application":
                             tabBean = new TabBean(getString(R.string.application), R.drawable.selector_tab_app_btn + "", MyAppFragment.class);
@@ -181,7 +182,9 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
                     return new View(IndexBaseActivity.this);
                 }
             });
-            mTabHost.addTab(tab, tabBean.getClz(), null);
+            Bundle bundle = new Bundle();
+            bundle.putString("uri","http://www.baidu.com");
+            mTabHost.addTab(tab, tabBean.getClz(), bundle);
             mTabHost.getTabWidget().getChildAt(i).setOnTouchListener(this);
             mTabHost.getTabWidget().getChildAt(i).setTag(tabBean.getTabId());
         }

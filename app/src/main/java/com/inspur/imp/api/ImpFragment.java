@@ -25,7 +25,6 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.mine.Language;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.config.MyAppWebConfig;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
@@ -74,7 +73,6 @@ public class ImpFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        LogUtils.YfcDebug("onCreate  daofijeoa");
         LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(
                 getActivity().LAYOUT_INFLATER_SERVICE);
         rootView = inflater.inflate(R.layout.activity_imp, null);
@@ -114,8 +112,8 @@ public class ImpFragment extends Fragment {
         if (getActivity().getIntent().hasExtra("appId")) {
             appId = getActivity().getIntent().getExtras().getString("appId");
         }
-        if (getActivity().getIntent().getExtras() != null) {
-            String url = getActivity().getIntent().getExtras().getString("uri");
+        if (getArguments() != null) {
+            String url = getArguments().getString("uri");
             initWebViewHeaderLayout();
             setWebViewHeader();
             setWebViewUserAgent();

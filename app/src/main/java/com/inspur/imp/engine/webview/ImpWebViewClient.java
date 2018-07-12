@@ -166,7 +166,6 @@ public class ImpWebViewClient extends WebViewClient {
         if(impCallBackInterface != null){
             impCallBackInterface.onLoadingDlgDimiss();
         }
-//        ((ImpActivity) view.getContext()).dimissLoadingDlg();
         loadFailLayout.setVisibility(View.VISIBLE);
     }
 
@@ -182,7 +181,6 @@ public class ImpWebViewClient extends WebViewClient {
             if(impCallBackInterface != null){
                 impCallBackInterface.onLoadingDlgDimiss();
             }
-//            ((ImpActivity) view.getContext()).dimissLoadingDlg();
             loadFailLayout.setVisibility(View.VISIBLE);
         }
     }
