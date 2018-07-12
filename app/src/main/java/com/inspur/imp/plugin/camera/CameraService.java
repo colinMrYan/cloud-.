@@ -341,7 +341,7 @@ public class CameraService extends ImpPlugin {
                 this.failPicture(Res.getString("camera_error"));
             }
         } else if (requestCode == ImpFragment.CAMERA_SERVICE_GALLERY_REQUEST) {  // 从相册取图片
-            if (resultCode == Activity.RESULT_OK) {
+            if (resultCode == ImagePicker.RESULT_CODE_ITEMS) {
                 if (intent == null) {
                     //解决HCM放弃选择图片时弹出error的问题
 //					LogUtils.jasonDebug("00000000");

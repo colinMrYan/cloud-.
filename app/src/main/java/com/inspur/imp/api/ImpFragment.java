@@ -514,7 +514,7 @@ public class ImpFragment extends Fragment {
                     serviceName = CameraService.class.getCanonicalName().trim();
                     break;
                 case PHOTO_SERVICE_CAMERA_REQUEST:
-                    PHOTO_SERVICE_GALLERY_REQUEST:
+                case PHOTO_SERVICE_GALLERY_REQUEST:
                     serviceName = PhotoService.class.getCanonicalName().trim();
                     break;
                 case SELECT_STAFF_SERVICE_REQUEST:
