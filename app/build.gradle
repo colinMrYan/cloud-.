@@ -188,6 +188,7 @@ dependencies {
     compile 'org.jsoup:jsoup:1.9.2'
     compile 'com.zzhoujay.markdown:markdown:1.0.5'
     compile 'com.jakewharton:disklrucache:2.0.2'
+    compile 'com.github.filippudak.progresspieview:library:1.0.4'
     //Markdown引入 缓存
     compile 'com.android.support:multidex:1.0.2'
     compile 'com.wei.android.lib:fingerprintidentify:1.2.1'
