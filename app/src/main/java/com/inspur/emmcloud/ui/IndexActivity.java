@@ -398,7 +398,7 @@ public class IndexActivity extends IndexBaseActivity {
      */
     private void getAllChannelGroup() {
         // TODO Auto-generated method stub
-        if (NetUtils.isNetworkConnected(getApplicationContext(), false)) {
+        if (!StringUtils.isBlank(MyApplication.getInstance().getClusterChatVersion())&&NetUtils.isNetworkConnected(getApplicationContext(), false)) {
             ChatAPIService apiService = new ChatAPIService(IndexActivity.this);
             apiService.setAPIInterface(new WebService());
             apiService.getAllGroupChannelList();
