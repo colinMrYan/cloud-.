@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
@@ -22,231 +23,315 @@ import android.widget.TextView;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
+import com.inspur.emmcloud.api.APICallback;
+import com.inspur.emmcloud.api.CloudHttpMethod;
+import com.inspur.emmcloud.api.HttpUtils;
+import com.inspur.emmcloud.bean.chat.GetFileUploadResult;
+import com.inspur.emmcloud.bean.chat.GetNewsImgResult;
+import com.inspur.emmcloud.interf.OauthCallBack;
+import com.inspur.emmcloud.util.privates.AppUtils;
+import com.inspur.emmcloud.util.privates.OauthUtils;
 import com.inspur.imp.api.Res;
 import com.inspur.imp.plugin.barcode.camera.CameraManager;
 import com.inspur.imp.plugin.barcode.decoding.CaptureActivityHandler;
 import com.inspur.imp.plugin.barcode.decoding.InactivityTimer;
+import com.inspur.imp.plugin.barcode.view.OnDoubleClickListener;
 import com.inspur.imp.plugin.barcode.view.ViewfinderView;
 
+import org.xutils.http.RequestParams;
+
+import java.io.File;
 import java.io.IOException;
 import java.util.Vector;
 
 
 public class CaptureActivity extends Activity implements Callback {
 
-	private CaptureActivityHandler handler;
-	private ViewfinderView viewfinderView;
-	private boolean hasSurface;
-	private Vector<BarcodeFormat> decodeFormats;
-	private String characterSet;
-	private InactivityTimer inactivityTimer;
-	private MediaPlayer mediaPlayer;
-	private boolean playBeep;
-	private static final float BEEP_VOLUME = 0.10f;
-	private boolean vibrate;
-	private SurfaceView surfaceView;
-	private Button btn_torch;
-	private boolean isTorchOn = false;
-	private TextView lampText;
+    private CaptureActivityHandler handler;
+    private ViewfinderView viewfinderView;
+    private boolean hasSurface;
+    private Vector<BarcodeFormat> decodeFormats;
+    private String characterSet;
+    private InactivityTimer inactivityTimer;
+    private MediaPlayer mediaPlayer;
+    private boolean playBeep;
+    private static final float BEEP_VOLUME = 0.10f;
+    private boolean vibrate;
+    private SurfaceView surfaceView;
+    private Button btn_torch;
+    private boolean isTorchOn = false;
+    private TextView lampText;
 
-	/** Called when the activity is first created. */
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);//没有标题
-		this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
-		setContentView(Res.getLayoutID("plugin_barcode_capture"));
-		CameraManager.init(this);
-		btn_torch = (Button)findViewById(Res.getWidgetID("btn_torch"));
-		viewfinderView = (ViewfinderView) findViewById(Res.getWidgetID("viewfinder_view"));
-		surfaceView = (SurfaceView) findViewById(Res.getWidgetID("preview_view"));
-		lampText = (TextView) findViewById(Res.getWidgetID("lamp_text"));
-		hasSurface = false;
-		inactivityTimer = new InactivityTimer(this);
-		(findViewById(Res.getWidgetID("close_camera_btn"))).setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				finish();
-			}
-		});
-		btn_torch.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				if (isTorchOn) {
-					isTorchOn = false;
-					lampText.setText(Res.getStringID("turn_on_light"));
-					btn_torch.setBackgroundResource(Res.getDrawableID("imp_lamp_off"));
-					CameraManager.get().setTorch(false);
-				} else {
-					isTorchOn = true;
-					lampText.setText(Res.getStringID("turn_off_light"));
-					btn_torch.setBackgroundResource(Res.getDrawableID("imp_lamp_on"));
-					CameraManager.get().setTorch(true);
-				}
-			}
-		});
-	}
+    /**
+     * Called when the activity is first created.
+     */
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);//没有标题
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
+        setContentView(Res.getLayoutID("plugin_barcode_capture"));
+        CameraManager.init(this);
+        btn_torch = (Button) findViewById(Res.getWidgetID("btn_torch"));
+        viewfinderView = (ViewfinderView) findViewById(Res.getWidgetID("viewfinder_view"));
+        surfaceView = (SurfaceView) findViewById(Res.getWidgetID("preview_view"));
+        lampText = (TextView) findViewById(Res.getWidgetID("lamp_text"));
+        hasSurface = false;
+        inactivityTimer = new InactivityTimer(this);
+        (findViewById(Res.getWidgetID("close_camera_btn"))).setOnClickListener(new OnClickListener() {
 
-	@Override
-	protected void onResume() {
-		super.onResume();
-		SurfaceHolder surfaceHolder = surfaceView.getHolder();
-		if (hasSurface) {
-			initCamera(surfaceHolder);
-		} else {
-			surfaceHolder.addCallback(this);
-			surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-		}
-		decodeFormats = null;
-		characterSet = null;
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                finish();
+            }
+        });
+        (findViewById(Res.getWidgetID("ll_root"))).setOnTouchListener(new OnDoubleClickListener(new OnDoubleClickListener.DoubleClickCallback() {
+            @Override
+            public void onDoubleClick() {
+                CameraManager.get().changeZoom();
+            }
+        }
+		));
+        btn_torch.setOnClickListener(new
 
-		playBeep = true;
-		AudioManager audioService = (AudioManager) getSystemService(AUDIO_SERVICE);
-		if (audioService.getRingerMode() != AudioManager.RINGER_MODE_NORMAL) {
-			playBeep = false;
-		}
-		initBeepSound();
-		vibrate = true;
-	}
+            OnClickListener() {
 
-	
-	@Override
-	protected void onPause() {
-		super.onPause();
-		if (handler != null) {
-			handler.quitSynchronously();
-			handler = null;
-		}
-		CameraManager.get().closeDriver();
-	}
+                @Override
+                public void onClick (View v){
+                    // TODO Auto-generated method stub
+                    if (isTorchOn) {
+                        isTorchOn = false;
+                        lampText.setText(Res.getStringID("turn_on_light"));
+                        btn_torch.setBackgroundResource(Res.getDrawableID("imp_lamp_off"));
+                        CameraManager.get().setTorch(false);
+                    } else {
+                        isTorchOn = true;
+                        lampText.setText(Res.getStringID("turn_off_light"));
+                        btn_torch.setBackgroundResource(Res.getDrawableID("imp_lamp_on"));
+                        CameraManager.get().setTorch(true);
+                    }
+                }
+            });
+        }
 
-	@Override
-	protected void onDestroy() {
-		inactivityTimer.shutdown();
-		super.onDestroy();
-	}
+        @Override
+        protected void onResume () {
+            super.onResume();
+            SurfaceHolder surfaceHolder = surfaceView.getHolder();
+            if (hasSurface) {
+                initCamera(surfaceHolder);
+            } else {
+                surfaceHolder.addCallback(this);
+                surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+            }
+            decodeFormats = null;
+            characterSet = null;
 
-	public void handDecodeResult(String result){
-		boolean isFromWeb = true;
-		if (getIntent().hasExtra("from")) {
-			isFromWeb = false;
-		}
-		if (!isFromWeb) {
-			Intent intent = new Intent();
-			if (result == null || "".equals(result)) {
-				result = getString(Res.getStringID("can_not_recognize"));
-				intent.putExtra("isDecodeSuccess", false);
-			}else {
-				intent.putExtra("isDecodeSuccess", true);
-			}
-			 intent.putExtra("msg", result);
-			 setResult(RESULT_OK, intent);
-		}else {
-			String functName = BarCodeService.functName;
-			if(BarCodeService.barcodeService != null){
-				BarCodeService.barcodeService.jsCallback(functName, result.toString());
-			}
-		}
-		finish();
-	}
-	
-	private void initCamera(SurfaceHolder surfaceHolder) {
-		try {
-			CameraManager.get().openDriver(surfaceHolder);
-		} catch (IOException ioe) {
-			return;
-		} catch (RuntimeException e) {
-			return;
-		}
-		if (handler == null) {
-			handler = new CaptureActivityHandler(this, decodeFormats,
-					characterSet);
-		}
-	}
+            playBeep = true;
+            AudioManager audioService = (AudioManager) getSystemService(AUDIO_SERVICE);
+            if (audioService.getRingerMode() != AudioManager.RINGER_MODE_NORMAL) {
+                playBeep = false;
+            }
+            initBeepSound();
+            vibrate = true;
+        }
 
-	public void surfaceChanged(SurfaceHolder holder, int format, int width,
-			int height) {
 
-	}
+        @Override
+        protected void onPause () {
+            super.onPause();
+            if (handler != null) {
+                handler.quitSynchronously();
+                handler = null;
+            }
+            CameraManager.get().closeDriver();
+        }
 
-	public void surfaceCreated(SurfaceHolder holder) {
-		if (!hasSurface) {
-			hasSurface = true;
-			initCamera(holder);
-		}
+        @Override
+        protected void onDestroy () {
+            inactivityTimer.shutdown();
+            super.onDestroy();
+        }
 
-	}
+    public void handDecodeResult(String result) {
+        boolean isFromWeb = true;
+        if (getIntent().hasExtra("from")) {
+            isFromWeb = false;
+        }
+        if (!isFromWeb) {
+            Intent intent = new Intent();
+            if (result == null || "".equals(result)) {
+                result = getString(Res.getStringID("can_not_recognize"));
+                intent.putExtra("isDecodeSuccess", false);
+            } else {
+                intent.putExtra("isDecodeSuccess", true);
+            }
+            intent.putExtra("msg", result);
+            setResult(RESULT_OK, intent);
+        } else {
+            String functName = BarCodeService.functName;
+            if (BarCodeService.barcodeService != null) {
+                BarCodeService.barcodeService.jsCallback(functName, result.toString());
+            }
+        }
+        finish();
+    }
 
-	public void surfaceDestroyed(SurfaceHolder holder) {
-		hasSurface = false;
+    private void initCamera(SurfaceHolder surfaceHolder) {
+        try {
+            CameraManager.get().openDriver(surfaceHolder);
+        } catch (IOException ioe) {
+            return;
+        } catch (RuntimeException e) {
+            return;
+        }
+        if (handler == null) {
+            handler = new CaptureActivityHandler(this, decodeFormats,
+                    characterSet);
+        }
+    }
 
-	}
+    public void surfaceChanged(SurfaceHolder holder, int format, int width,
+                               int height) {
 
-	public ViewfinderView getViewfinderView() {
-		return viewfinderView;
-	}
+    }
 
-	public Handler getHandler() {
-		return handler;
-	}
+    public void surfaceCreated(SurfaceHolder holder) {
+        if (!hasSurface) {
+            hasSurface = true;
+            initCamera(holder);
+        }
 
-	public void drawViewfinder() {
-		viewfinderView.drawViewfinder();
+    }
 
-	}
+    public void surfaceDestroyed(SurfaceHolder holder) {
+        hasSurface = false;
 
-	public void handleDecode(Result obj, Bitmap barcode) {
-		inactivityTimer.onActivity();
-	}
-	
+    }
 
-	private void initBeepSound() {
-		if (playBeep && mediaPlayer == null) {
-			// The volume on STREAM_SYSTEM is not adjustable, and users found it
-			// too loud,
-			// so we now play on the music stream.
-			setVolumeControlStream(AudioManager.STREAM_MUSIC);
-			mediaPlayer = new MediaPlayer();
-			mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-			mediaPlayer.setOnCompletionListener(beepListener);
+    public ViewfinderView getViewfinderView() {
+        return viewfinderView;
+    }
 
-			AssetFileDescriptor file = getResources().openRawResourceFd(
-					Res.getRawID("plugin_barcode_beep"));
-			try {
-				mediaPlayer.setDataSource(file.getFileDescriptor(),
-						file.getStartOffset(), file.getLength());
-				file.close();
-				mediaPlayer.setVolume(BEEP_VOLUME, BEEP_VOLUME);
-				mediaPlayer.prepare();
-			} catch (IOException e) {
-				mediaPlayer = null;
-			}
-		}
-	}
+    public Handler getHandler() {
+        return handler;
+    }
 
-	private static final long VIBRATE_DURATION = 200L;
+    public void drawViewfinder() {
+        viewfinderView.drawViewfinder();
 
-	private void playBeepSoundAndVibrate() {
-		if (playBeep && mediaPlayer != null) {
-			mediaPlayer.start();
-		}
-		if (vibrate) {
-			Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
-			vibrator.vibrate(VIBRATE_DURATION);
-		}
-	}
+    }
 
-	/**
-	 * When the beep has finished playing, rewind to queue up another one.
-	 */
-	private final OnCompletionListener beepListener = new OnCompletionListener() {
-		public void onCompletion(MediaPlayer mediaPlayer) {
-			mediaPlayer.seekTo(0);
-		}
-	};
+    public void handleDecode(Result obj, Bitmap barcode) {
+        inactivityTimer.onActivity();
+    }
+
+
+    private void initBeepSound() {
+        if (playBeep && mediaPlayer == null) {
+            // The volume on STREAM_SYSTEM is not adjustable, and users found it
+            // too loud,
+            // so we now play on the music stream.
+            setVolumeControlStream(AudioManager.STREAM_MUSIC);
+            mediaPlayer = new MediaPlayer();
+            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            mediaPlayer.setOnCompletionListener(beepListener);
+
+            AssetFileDescriptor file = getResources().openRawResourceFd(
+                    Res.getRawID("plugin_barcode_beep"));
+            try {
+                mediaPlayer.setDataSource(file.getFileDescriptor(),
+                        file.getStartOffset(), file.getLength());
+                file.close();
+                mediaPlayer.setVolume(BEEP_VOLUME, BEEP_VOLUME);
+                mediaPlayer.prepare();
+            } catch (IOException e) {
+                mediaPlayer = null;
+            }
+        }
+    }
+
+    private static final long VIBRATE_DURATION = 200L;
+
+    private void playBeepSoundAndVibrate() {
+        if (playBeep && mediaPlayer != null) {
+            mediaPlayer.start();
+        }
+        if (vibrate) {
+            Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+            vibrator.vibrate(VIBRATE_DURATION);
+        }
+    }
+
+    /**
+     * When the beep has finished playing, rewind to queue up another one.
+     */
+    private final OnCompletionListener beepListener = new OnCompletionListener() {
+        public void onCompletion(MediaPlayer mediaPlayer) {
+            mediaPlayer.seekTo(0);
+        }
+    };
+
+    public void uploadImgToDecodeByServer(String imgFilePath){
+        final String completeUrl = "http://emm.inspuronline.com:88/api/barcode/decode";
+        RequestParams params = new RequestParams(completeUrl);
+        File file = new File(imgFilePath);
+        params.setMultipart(true);// 有上传文件时使用multipart表单, 否则上传原始文件流.
+        params.addBodyParameter("file1", file);
+        final Bitmap bitmap = BitmapFactory.decodeFile(filePath);
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        uploadMsgResource(filePath, fakeMessageId, isImg);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+                if (isImg) {
+                    try {
+                        JSONObject jsonObject = new JSONObject(new String(arg0));
+                        jsonObject.put("height", bitmap.getHeight());
+                        jsonObject.put("width", bitmap.getWidth());
+                        jsonObject.put("tmpId", AppUtils.getMyUUID(context));
+                        apiInterface.returnUploadResImgSuccess(
+                                new GetNewsImgResult(jsonObject.toString()), fakeMessageId);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    bitmap.recycle();
+                } else {
+                    apiInterface.returnUpLoadResFileSuccess(
+                            new GetFileUploadResult(new String(arg0)), fakeMessageId);
+                }
+
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                if (isImg) {
+                    apiInterface.returnUploadResImgFail(error, responseCode, fakeMessageId);
+                } else {
+                    apiInterface.returnUpLoadResFileFail(error, responseCode, fakeMessageId);
+                }
+            }
+        });
+    }
 
 }

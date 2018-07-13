@@ -16,6 +16,7 @@
 
 package com.inspur.imp.plugin.barcode.decoding;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -28,11 +29,15 @@ import com.google.zxing.MultiFormatReader;
 import com.google.zxing.ReaderException;
 import com.google.zxing.Result;
 import com.google.zxing.common.HybridBinarizer;
+import com.inspur.emmcloud.config.MyAppConfig;
+import com.inspur.emmcloud.util.common.ImageUtils;
+import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.imp.api.Res;
 import com.inspur.imp.plugin.barcode.camera.CameraManager;
 import com.inspur.imp.plugin.barcode.camera.PlanarYUVLuminanceSource;
 import com.inspur.imp.plugin.barcode.scan.CaptureActivity;
 
+import java.io.File;
 import java.util.Hashtable;
 
 
@@ -42,11 +47,13 @@ final class DecodeHandler extends Handler {
 
   private final CaptureActivity activity;
   private final MultiFormatReader multiFormatReader;
+  private int decodeCount = 0;
 
   DecodeHandler(CaptureActivity activity, Hashtable<DecodeHintType, Object> hints) {
     multiFormatReader = new MultiFormatReader();
     multiFormatReader.setHints(hints);
     this.activity = activity;
+    decodeCount = 0;
   }
 
   @Override
@@ -67,6 +74,7 @@ final class DecodeHandler extends Handler {
    * @param height The height of the preview frame.
    */
   private void decode(byte[] data, int width, int height) {
+    decodeCount++;
     long start = System.currentTimeMillis();
     Result rawResult = null;
 //    PlanarYUVLuminanceSource source = CameraManager.get().buildLuminanceSource(data, width, height);
@@ -102,6 +110,26 @@ final class DecodeHandler extends Handler {
 
       message.sendToTarget();
     } else {
+      if (decodeCount == 40 && AppUtils.isHasSDCard(this.activity)){
+        File dir =new File(MyAppConfig.LOCAL_IMG_CREATE_PATH);
+        if (!dir.exists()){
+          dir.mkdirs();
+        }
+        String imgSavePath = MyAppConfig.LOCAL_IMG_CREATE_PATH+"qr.jpg";
+        File file = new File(imgSavePath);
+        if (file.exists()){
+          file.delete();
+        }
+        Bitmap imgBitmap = source.renderCroppedGreyscaleBitmap();
+        try {
+          ImageUtils.saveImageToSD(this.activity,imgSavePath,imgBitmap,100);
+          Message message = Message.obtain(activity.getHandler(), Res.getWidgetID("decode_server"));
+          message.obj = imgSavePath;
+          message.sendToTarget();
+        }catch (Exception e){
+          e.printStackTrace();
+        }
+      }
       Message message = Message.obtain(activity.getHandler(), Res.getWidgetID("decode_failed"));
       message.sendToTarget();
     }

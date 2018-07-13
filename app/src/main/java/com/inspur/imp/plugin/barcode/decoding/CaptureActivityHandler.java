@@ -98,7 +98,10 @@ public final class CaptureActivityHandler extends Handler {
 			 Log.d(TAG, "Got return scan result message");
 	        activity.setResult(Activity.RESULT_OK, (Intent) message.obj);
 	        activity.finish();
-		} 
+		} else if (Res.getWidgetID("decode_server") == message.what){
+	      String imgFilePath = (String) message.obj;
+	    //  activity.uploadImgToDecodeByServer(imgFilePath);
+      }
   }
 
   public void quitSynchronously() {

@@ -262,6 +262,32 @@ public final class CameraManager {
 	}
 
 	/**
+	 * 放大或缩小图像
+	 */
+	public void changeZoom(){
+		try {
+			if (camera != null) {
+				Camera.Parameters parameters = camera.getParameters();
+				if(parameters.isZoomSupported()){
+					int maxZoom = parameters.getMaxZoom();
+					int zoom = parameters.getZoom();
+					if (zoom == 0){
+						parameters.setZoom(maxZoom);
+					}else {
+						parameters.setZoom(0);
+					}
+				}
+
+				camera.setParameters(parameters);
+			}
+
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+	}
+
+
+	/**
 	 * Calculates the framing rect which the UI should draw to show the user
 	 * where to place the barcode. This target helps with alignment as well as
 	 * forces the user to hold the device far enough away to ensure the image
