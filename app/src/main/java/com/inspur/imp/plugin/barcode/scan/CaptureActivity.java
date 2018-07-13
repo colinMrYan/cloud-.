@@ -26,11 +26,7 @@ import com.google.zxing.Result;
 import com.inspur.emmcloud.api.APICallback;
 import com.inspur.emmcloud.api.CloudHttpMethod;
 import com.inspur.emmcloud.api.HttpUtils;
-import com.inspur.emmcloud.bean.chat.GetFileUploadResult;
-import com.inspur.emmcloud.bean.chat.GetNewsImgResult;
-import com.inspur.emmcloud.interf.OauthCallBack;
-import com.inspur.emmcloud.util.privates.AppUtils;
-import com.inspur.emmcloud.util.privates.OauthUtils;
+import org.xutils.common.Callback.CommonCallback;
 import com.inspur.imp.api.Res;
 import com.inspur.imp.plugin.barcode.camera.CameraManager;
 import com.inspur.imp.plugin.barcode.decoding.CaptureActivityHandler;
@@ -38,7 +34,9 @@ import com.inspur.imp.plugin.barcode.decoding.InactivityTimer;
 import com.inspur.imp.plugin.barcode.view.OnDoubleClickListener;
 import com.inspur.imp.plugin.barcode.view.ViewfinderView;
 
+import org.xutils.http.HttpMethod;
 import org.xutils.http.RequestParams;
+import org.xutils.x;
 
 import java.io.File;
 import java.io.IOException;
@@ -278,58 +276,32 @@ public class CaptureActivity extends Activity implements Callback {
         RequestParams params = new RequestParams(completeUrl);
         File file = new File(imgFilePath);
         params.setMultipart(true);// 有上传文件时使用multipart表单, 否则上传原始文件流.
-        params.addBodyParameter("file1", file);
-        final Bitmap bitmap = BitmapFactory.decodeFile(filePath);
-        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
-
+        params.addBodyParameter("file", file);
+        params.addBodyParameter("filename", file.getName());
+        x.http().request(this, HttpMethod.POST, params, new CommonCallback<String>(){
             @Override
-            public void callbackTokenExpire(long requestTime) {
-                OauthCallBack oauthCallBack = new OauthCallBack() {
-                    @Override
-                    public void reExecute() {
-                        uploadMsgResource(filePath, fakeMessageId, isImg);
-                    }
-
-                    @Override
-                    public void executeFailCallback() {
-                        callbackFail("", -1);
-                    }
-                };
-                OauthUtils.getInstance().refreshToken(
-                        oauthCallBack, requestTime);
+            public int hashCode() {
+                return super.hashCode();
             }
 
-
             @Override
-            public void callbackSuccess(byte[] arg0) {
-                // TODO Auto-generated method stub
-                if (isImg) {
-                    try {
-                        JSONObject jsonObject = new JSONObject(new String(arg0));
-                        jsonObject.put("height", bitmap.getHeight());
-                        jsonObject.put("width", bitmap.getWidth());
-                        jsonObject.put("tmpId", AppUtils.getMyUUID(context));
-                        apiInterface.returnUploadResImgSuccess(
-                                new GetNewsImgResult(jsonObject.toString()), fakeMessageId);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    bitmap.recycle();
-                } else {
-                    apiInterface.returnUpLoadResFileSuccess(
-                            new GetFileUploadResult(new String(arg0)), fakeMessageId);
-                }
+            public void onSuccess(String s) {
 
             }
 
             @Override
-            public void callbackFail(String error, int responseCode) {
-                // TODO Auto-generated method stub
-                if (isImg) {
-                    apiInterface.returnUploadResImgFail(error, responseCode, fakeMessageId);
-                } else {
-                    apiInterface.returnUpLoadResFileFail(error, responseCode, fakeMessageId);
-                }
+            public void onError(Throwable throwable, boolean b) {
+
+            }
+
+            @Override
+            public void onCancelled(CancelledException e) {
+
+            }
+
+            @Override
+            public void onFinished() {
+
             }
         });
     }
