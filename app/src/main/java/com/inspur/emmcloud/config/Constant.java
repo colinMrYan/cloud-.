@@ -35,6 +35,14 @@ public class Constant {
     public static final String PREF_MY_INFO_OLD = "my_info_old";
     public static final String PREF_ENTER_APP_TIME = "enter_app_time";
     public static final String PREF_CONTACT_ORG_ROOT_ID = "contact_org_root_id";
+    public static final String PREF_APP_TAB_BAR_VERSION = "app_tabbar_version";
+    public static final String PREF_APP_TAB_BAR_INFO_CURRENT = "app_tabbar_info_current";
+    public static final String PREF_APP_TAB_BAR_COMMUNACATE = "native://communicate";
+    public static final String PREF_APP_TAB_BAR_WORK = "native://work";
+    public static final String PREF_APP_TAB_BAR_RN_FIND = "ecc-app-react-native:find";
+    public static final String PREF_APP_TAB_BAR_APPLICATION = "native://application";
+    public static final String PREF_APP_TAB_BAR_PROFILE = "native://profile";
+    public static final String PREF_APP_TAB_BAR_CONTACT = "native://contact";
 
     public static final String ACTION_MEETING = "com.inspur.meeting";
     public static final String ACTION_TASK = "com.inspur.task";
