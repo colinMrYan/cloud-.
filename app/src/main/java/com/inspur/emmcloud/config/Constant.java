@@ -43,6 +43,7 @@ public class Constant {
     public static final String PREF_APP_TAB_BAR_APPLICATION = "native://application";
     public static final String PREF_APP_TAB_BAR_PROFILE = "native://profile";
     public static final String PREF_APP_TAB_BAR_CONTACT = "native://contact";
+    public static final String PREF_APP_TAB_BAR_WEB = "native://contact";
 
     public static final String ACTION_MEETING = "com.inspur.meeting";
     public static final String ACTION_TASK = "com.inspur.task";

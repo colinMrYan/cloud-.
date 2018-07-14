@@ -246,14 +246,6 @@ public class ImpWebViewClient extends WebViewClient {
 
     }
 
-    /**
-     * 设置回调
-     * @param impCallBackInterface
-     */
-    public void setImpCallBackInterface(ImpCallBackInterface impCallBackInterface){
-        this.impCallBackInterface = impCallBackInterface;
-    }
-
     class WebService extends APIInterfaceInstance {
         private WebView webView;
 

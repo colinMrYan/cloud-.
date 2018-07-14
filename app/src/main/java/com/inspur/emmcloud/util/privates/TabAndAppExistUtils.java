@@ -29,7 +29,7 @@ public class TabAndAppExistUtils {
         GetAppMainTabResult getAppMainTabResult = new GetAppMainTabResult(appTabs);
         ArrayList<MainTabResult> mainTabResultList = getAppMainTabResult.getMainTabResultList();
         for (int i = 0; i < mainTabResultList.size(); i++) {
-            if(mainTabResultList.get(i).getName().equals(tabId)){
+            if(mainTabResultList.get(i).getUri().equals(tabId)){
                 return true;
             }
         }

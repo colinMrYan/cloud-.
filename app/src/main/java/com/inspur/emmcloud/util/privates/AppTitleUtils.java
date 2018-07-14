@@ -43,17 +43,17 @@ public class AppTitleUtils {
      */
     private static String getCompont(String tabkey) {
         if(tabkey.startsWith("CommunicationFragment")||tabkey.startsWith("CommunicationV0Fragment") ){
-            return "communicate";
+            return Constant.PREF_APP_TAB_BAR_COMMUNACATE;
         }else if(tabkey.equals("FindFragment")){
-            return "find";
+            return Constant.PREF_APP_TAB_BAR_RN_FIND;
         }else if(tabkey.equals("WorkFragment")){
-            return "work";
+            return Constant.PREF_APP_TAB_BAR_WORK;
         }else if(tabkey.equals("MyAppFragment")){
-            return "application";
+            return Constant.PREF_APP_TAB_BAR_APPLICATION;
         }else if(tabkey.equals("MoreFragment")){
-            return "mine";
+            return Constant.PREF_APP_TAB_BAR_PROFILE;
         }else if(tabkey.equals("ContactSearchFragment")){
-            return "contact";
+            return Constant.PREF_APP_TAB_BAR_CONTACT;
         }else if(tabkey.equals("NotSupportFragment")){
             return "";
         }
@@ -65,9 +65,9 @@ public class AppTitleUtils {
      * @param tabList
      * @return
      */
-    private static MainTabResult getTabByTabKey(ArrayList<MainTabResult> tabList, String tabKey) {
+    private static MainTabResult getTabByTabKey(ArrayList<MainTabResult> tabList, String tabCompont) {
         for(int i = 0; i < tabList.size(); i++){
-            if(tabList.get(i).getName().equals(tabKey)){
+            if(tabList.get(i).getUri().equals(tabCompont)){
                 return tabList.get(i);
             }
         }

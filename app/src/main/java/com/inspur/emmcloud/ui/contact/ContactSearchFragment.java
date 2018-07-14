@@ -37,6 +37,7 @@ import com.inspur.emmcloud.bean.contact.ContactOrg;
 import com.inspur.emmcloud.bean.contact.ContactProtoBuf;
 import com.inspur.emmcloud.bean.contact.FirstGroupTextModel;
 import com.inspur.emmcloud.bean.contact.SearchModel;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.chat.ChannelActivity;
@@ -251,7 +252,7 @@ public class ContactSearchFragment extends Fragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void updateUI(ContactClickMessage contactClickMessage) {
         if (getActivity().getClass().getSimpleName().equals(IndexActivity.class.getSimpleName())
-                && contactClickMessage.getTabId().equals("find") && contactClickMessage.getViewId() == -1) {
+                && contactClickMessage.getTabId().equals(Constant.PREF_APP_TAB_BAR_RN_FIND) && contactClickMessage.getViewId() == -1) {
             if (!onBackPressedConsumeByUI()) {
                 if ((System.currentTimeMillis() - lastBackTime) > 2000) {
                     ToastUtils.show(getActivity(),

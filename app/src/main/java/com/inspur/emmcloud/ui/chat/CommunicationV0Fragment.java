@@ -180,13 +180,6 @@ public class CommunicationV0Fragment extends Fragment {
     private void showMessageButtons() {
         String tabBarInfo = PreferencesByUserAndTanentUtils.getString(getActivity(), Constant.PREF_APP_TAB_BAR_INFO_CURRENT, "");
         //第一次登录时有tabBarInfo会为“”，会导致JSON waring
-//        if (!StringUtils.isBlank(tabBarInfo)) {
-//            AppTabAutoBean appTabAutoBean = new AppTabAutoBean(tabBarInfo);
-//            AppTabPayloadBean payloadBean = appTabAutoBean.getPayload();
-//            if (payloadBean != null) {
-//                showCreateGroupOrFindContact(payloadBean);
-//            }
-//        }
         if(!StringUtils.isBlank(tabBarInfo)){
             GetAppMainTabResult getAppMainTabResult = new GetAppMainTabResult(tabBarInfo);
             showCreateGroupOrFindContact(getAppMainTabResult);
@@ -201,7 +194,7 @@ public class CommunicationV0Fragment extends Fragment {
     private void showCreateGroupOrFindContact(GetAppMainTabResult getAppMainTabResult) {
         ArrayList<MainTabResult> mainTabResultList = getAppMainTabResult.getMainTabResultList();
         for (int i = 0; i < mainTabResultList.size(); i++) {
-            if(mainTabResultList.get(i).getName().equals("communicate")){
+            if(mainTabResultList.get(i).getUri().equals(Constant.PREF_APP_TAB_BAR_COMMUNACATE)){
                 MainTabProperty mainTabProperty = mainTabResultList.get(i).getMainTabProperty();
                 if (mainTabProperty != null) {
                     if (!mainTabProperty.isCanCreate()) {
@@ -298,12 +291,6 @@ public class CommunicationV0Fragment extends Fragment {
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void updateMessageUI(GetAppMainTabResult getAppMainTabResult) {
-//        if (appTabAutoBean != null) {
-//            AppTabPayloadBean payloadBean = appTabAutoBean.getPayload();
-//            if (payloadBean != null) {
-//                showCreateGroupOrFindContact(payloadBean);
-//            }
-//        }
         showCreateGroupOrFindContact(getAppMainTabResult);
     }
 

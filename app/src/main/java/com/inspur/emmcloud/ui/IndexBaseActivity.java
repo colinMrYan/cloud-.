@@ -169,7 +169,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
                     .inflate(R.layout.tab_item_view, null);
             ImageView tabImg = (ImageView) tabView.findViewById(R.id.imageview);
             TextView tabText = (TextView) tabView.findViewById(R.id.textview);
-            if (tabId.equals("communicate")) {
+            if (tabId.equals(Constant.PREF_APP_TAB_BAR_COMMUNACATE)) {
                 handleTipsView(tabView);
                 communicateIndex = i;
             }
@@ -406,9 +406,9 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if(tabId.equals("find")){
+            if(tabId.equals(Constant.PREF_APP_TAB_BAR_RN_FIND)){
                 ContactClickMessage contactClickMessage = new ContactClickMessage();
-                contactClickMessage.setTabId("find");
+                contactClickMessage.setTabId(Constant.PREF_APP_TAB_BAR_RN_FIND);
                 contactClickMessage.setViewId(-1);
                 EventBus.getDefault().post(contactClickMessage);
             }else if ((System.currentTimeMillis() - lastBackTime) > 2000) {
@@ -446,7 +446,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
 
     @Override
     public void onTabChanged(final String tabId) {
-        tipsView.setCanTouch(tabId.equals("communicate"));
+        tipsView.setCanTouch(tabId.equals(Constant.PREF_APP_TAB_BAR_COMMUNACATE));
         if (!isSystemChangeTag) {
             new Thread(new Runnable() {
                 @Override
