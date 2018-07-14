@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -25,7 +26,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.mine.Language;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.config.MyAppWebConfig;
-import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
@@ -74,7 +75,6 @@ public class ImpFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        LogUtils.YfcDebug("onCreate  daofijeoa");
         LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(
                 getActivity().LAYOUT_INFLATER_SERVICE);
         rootView = inflater.inflate(R.layout.activity_imp, null);
@@ -104,18 +104,22 @@ public class ImpFragment extends Fragment {
         frameLayout = (FrameLayout) rootView.findViewById(Res.getWidgetID("videoContainer"));
         loadFailLayout = (LinearLayout) rootView.findViewById(Res.getWidgetID("load_error_layout"));
         webView = (ImpWebView) rootView.findViewById(Res.getWidgetID("webview"));
+        if(getActivity().getClass().getName().equals(IndexActivity.class.getName())){
+            rootView.findViewById(R.id.back_layout).setVisibility(View.GONE);
+            ((TextView)rootView.findViewById(R.id.header_text)).setGravity(Gravity.CENTER_HORIZONTAL);
+        }
         showLoadingDlg(getString(Res.getStringID("@string/loading_text")));
-        if (getActivity().getIntent().hasExtra("help_url")) {
-            String helpUrl = getActivity().getIntent().getStringExtra("help_url");
+        if (!StringUtils.isBlank(getArguments().getString("help_url"))) {
+            String helpUrl = getArguments().getString("help_url");
             if (!StringUtils.isBlank(helpUrl)) {
                 this.helpUrl = helpUrl;
             }
         }
-        if (getActivity().getIntent().hasExtra("appId")) {
-            appId = getActivity().getIntent().getExtras().getString("appId");
+        if (!StringUtils.isBlank(getArguments().getString("appId"))) {
+            appId = getArguments().getString("appId");
         }
-        if (getActivity().getIntent().getExtras() != null) {
-            String url = getActivity().getIntent().getExtras().getString("uri");
+        if (getArguments() != null) {
+            String url = getArguments().getString("uri");
             initWebViewHeaderLayout();
             setWebViewHeader();
             setWebViewUserAgent();
@@ -167,8 +171,8 @@ public class ImpFragment extends Fragment {
      * 设置Webview自定义功能是否显示
      */
     private void setWebViewFunctionVisiable() {
-        if (getActivity().getIntent().hasExtra("is_zoomable")) {
-            int isZoomable = getActivity().getIntent().getIntExtra("is_zoomable", 0);
+        if (!StringUtils.isBlank(getArguments().getString("is_zoomable"))) {
+            int isZoomable = getArguments().getInt("is_zoomable", 0);
             if (isZoomable == 1 || !StringUtils.isBlank(helpUrl)) {
                 rootView.findViewById(R.id.imp_change_font_size_btn).setVisibility(View.VISIBLE);
             }
@@ -184,8 +188,8 @@ public class ImpFragment extends Fragment {
      */
     private void initWebViewHeaderLayout() {
         ImpCallBackInterface impCallBackInterface = getImpCallBackInterface();
-        if (getActivity().getIntent().hasExtra("appName")) {
-            String title = getActivity().getIntent().getExtras().getString("appName");
+        if (!StringUtils.isEmpty(getArguments().getString("appName"))) {
+            String title = getArguments().getString("appName");
             headerText = (TextView) rootView.findViewById(Res.getWidgetID("header_text"));
             webView.setProperty(headerText, loadFailLayout, frameLayout, impCallBackInterface);
             initWebViewGoBackOrClose();
@@ -289,7 +293,7 @@ public class ImpFragment extends Fragment {
     }
 
     public void finishActivity() {
-        if (getActivity().getIntent().hasExtra("function") && getActivity().getIntent().getStringExtra("function").equals("mdm")) {
+        if (!StringUtils.isBlank(getArguments().getString("function")) && getArguments().getString("function").equals("mdm")) {
             new MDM().getMDMListener().MDMStatusNoPass();
         }
         getActivity().finish();// 退出程序
@@ -388,7 +392,8 @@ public class ImpFragment extends Fragment {
         dialog.onWindowAttributesChanged(wl);
         // 设置点击外围解散
         dialog.setCanceledOnTouchOutside(true);
-        if (getActivity().getIntent().hasExtra("is_zoomable") && (getActivity().getIntent().getIntExtra("is_zoomable", 0) == 1)) {
+
+        if (!StringUtils.isBlank(getArguments().getString("is_zoomable")) && (getArguments().getInt("is_zoomable", 0) == 1)) {
             setWebViewButtonTextColor(0);
         }
         dialog.show();
@@ -418,7 +423,8 @@ public class ImpFragment extends Fragment {
      * @param view
      */
     private void initFontSizeDialogViews(View view) {
-        if (getActivity().getIntent().hasExtra("is_zoomable") && (getActivity().getIntent().getIntExtra("is_zoomable", 0) == 1)) {
+
+        if (!StringUtils.isBlank(getArguments().getString("is_zoomable")) && (getArguments().getInt("is_zoomable", 0) == 1)) {
             view.findViewById(R.id.app_imp_crm_font_text).setVisibility(View.VISIBLE);
             view.findViewById(R.id.app_imp_crm_font_layout).setVisibility(View.VISIBLE);
             normalBtn = (Button) view.findViewById(R.id.app_imp_crm_font_normal_btn);

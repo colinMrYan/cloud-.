@@ -40,11 +40,8 @@ import com.inspur.emmcloud.bean.chat.MatheSet;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.MessageReadCreationDate;
 import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
-import com.inspur.emmcloud.bean.system.AppTabAutoBean;
-import com.inspur.emmcloud.bean.system.AppTabDataBean;
-import com.inspur.emmcloud.bean.system.AppTabPayloadBean;
-import com.inspur.emmcloud.bean.system.AppTabProperty;
 import com.inspur.emmcloud.bean.system.EventMessage;
+import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.push.WebSocketPush;
@@ -221,35 +218,30 @@ public class CommunicationFragment extends Fragment {
     /**
      * 根据服务端的配置信息显示和隐藏沟通header上的通讯录和“+”按钮
      *
-     * @param appTabAutoBeans
+     * @param getAppMainTabResult
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void updateHeaderFunctionBtn(AppTabAutoBean appTabAutoBeans) {
-        String tabBarInfo = PreferencesByUserAndTanentUtils.getString(getActivity(), "app_tabbar_info_current", "");
+    public void updateHeaderFunctionBtn(GetAppMainTabResult getAppMainTabResult) {
+        String tabBarInfo = PreferencesByUserAndTanentUtils.getString(getActivity(), Constant.PREF_APP_TAB_BAR_INFO_CURRENT, "");
         if (StringUtils.isBlank(tabBarInfo)) {
             return;
         }
-        AppTabAutoBean appTabAutoBean = new AppTabAutoBean(tabBarInfo);
-        AppTabPayloadBean payloadBean = appTabAutoBean.getPayload();
-        if (payloadBean == null) {
-            return;
-        }
-        ArrayList<AppTabDataBean> appTabList =
-                (ArrayList<AppTabDataBean>) payloadBean.getTabs();
-        for (AppTabDataBean appTabDataBean : appTabList) {
-            if (appTabDataBean.getTabId().equals("communicate")) {
-                AppTabProperty property = appTabDataBean.getProperty();
-                if (property != null) {
-                    if (!property.isCanCreate()) {
-                        rootView.findViewById(R.id.more_function_list_img).setVisibility(View.GONE);
-                    }
-                    if (!property.isCanContact()) {
-                        rootView.findViewById(R.id.contact_img).setVisibility(View.GONE);
-                    }
-                }
-                break;
-            }
-        }
+
+//        ArrayList<MainTabResult> appTabList = getAppMainTabResult.getMainTabResultList();
+//        for (MainTabResult mainTabResult : appTabList) {
+//            if (mainTabResult.getName().equals("communicate")) {
+//                MainTabProperty property = mainTabResult.getProperty();
+//                if (property != null) {
+//                    if (!property.isCanCreate()) {
+//                        rootView.findViewById(R.id.more_function_list_img).setVisibility(View.GONE);
+//                    }
+//                    if (!property.isCanContact()) {
+//                        rootView.findViewById(R.id.contact_img).setVisibility(View.GONE);
+//                    }
+//                }
+//                break;
+//            }
+//        }
     }
 
     /**
@@ -744,7 +736,6 @@ public class CommunicationFragment extends Fragment {
      * 将单个频道消息置为已读
      *
      * @param cid
-     * @param mid
      */
     private void setChannelMsgRead(String cid, long messageCreationDate) {
         MessageReadCreationDateCacheUtils.saveMessageReadCreationDate(MyApplication.getInstance(), cid, messageCreationDate);

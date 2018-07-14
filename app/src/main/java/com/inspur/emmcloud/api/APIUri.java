@@ -116,7 +116,8 @@ public class APIUri {
      * @return
      */
     public static String getAppNewTabs() {
-        return getECMDistribution() + "/preference/main-tab/latest";
+//        return getECMDistribution() + "/preference/main-tab/latest";
+        return getEMMBaseUrl() + "api/sys/v6.0/maintab";
     }
 
 

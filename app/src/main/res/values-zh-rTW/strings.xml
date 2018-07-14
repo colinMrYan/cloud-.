@@ -520,6 +520,9 @@
     <string name="run_background">後臺運行</string>
     <string name="signout_fail">註銷登錄失敗，請確保網絡連接正常</string>
 
+    <string name="contact">通訊錄</string>
+    <string name="web">web</string>
+
 
     <!-- 修改密碼部分 -->
     <string name="modify_input_user_new_password">請輸入新密碼</string>

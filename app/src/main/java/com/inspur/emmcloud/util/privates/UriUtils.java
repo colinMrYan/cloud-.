@@ -123,7 +123,7 @@ public class UriUtils {
     public static void openUrl(Activity context, String uri) {
         Bundle bundle = new Bundle();
         bundle.putString("uri", uri);
-        bundle.putString("appName", "");
+        bundle.putString("appName", "  ");
         IntentUtils.startActivity(context, ImpActivity.class, bundle);
     }
 

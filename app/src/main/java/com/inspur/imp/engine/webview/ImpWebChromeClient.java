@@ -26,7 +26,6 @@ import android.webkit.WebView;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 
-import com.inspur.imp.api.ImpActivity;
 import com.inspur.imp.api.Res;
 import com.inspur.imp.api.iLog;
 
@@ -99,9 +98,9 @@ public class ImpWebChromeClient extends WebChromeClient {
 
 	private void fullScreen() {
 		if (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-			((ImpActivity)context).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+			((Activity)context).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 		} else {
-			((ImpActivity)context).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+			((Activity)context).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		}
 	}
 
@@ -303,7 +302,7 @@ public class ImpWebChromeClient extends WebChromeClient {
 	@Override
 	public void onReceivedTitle(WebView view, String title) {
 		if(null != title && !getRemoveHttpUrl(title).equals(getRemoveHttpUrl(view.getUrl()))  && !getRemoveHttpUrl(title).equals(getRemoveHttpUrl(view.getOriginalUrl()))){
-			((ImpActivity)context).setTitle(title);
+			((Activity)context).setTitle(title);
 		}
 	}
 
