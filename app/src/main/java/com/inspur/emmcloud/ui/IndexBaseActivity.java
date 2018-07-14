@@ -113,26 +113,26 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
                     if(!mainTabResult.getType().equals("web")){
                         //包含native和发现两种
                         switch (mainTabResult.getUri()) {
-                            case Constant.PREF_APP_TAB_BAR_COMMUNACATE:
+                            case Constant.APP_TAB_BAR_COMMUNACATE:
                                 if (MyApplication.getInstance().isV0VersionChat()){
                                     tabBean = new TabBean(getString(R.string.communicate), R.drawable.selector_tab_message_btn + "", CommunicationV0Fragment.class,mainTabResult);
                                 }else {
                                     tabBean = new TabBean(getString(R.string.communicate), R.drawable.selector_tab_message_btn + "", CommunicationFragment.class,mainTabResult);
                                 }
                                 break;
-                            case Constant.PREF_APP_TAB_BAR_WORK:
+                            case Constant.APP_TAB_BAR_WORK:
                                 tabBean = new TabBean(getString(R.string.work), R.drawable.selector_tab_work_btn + "", WorkFragment.class,mainTabResult);
                                 break;
-                            case Constant.PREF_APP_TAB_BAR_RN_FIND:
+                            case Constant.APP_TAB_BAR_RN_FIND:
                                 tabBean = new TabBean(getString(R.string.find), R.drawable.selector_tab_find_btn + "", FindFragment.class,mainTabResult);
                                 break;
-                            case Constant.PREF_APP_TAB_BAR_APPLICATION:
+                            case Constant.APP_TAB_BAR_APPLICATION:
                                 tabBean = new TabBean(getString(R.string.application), R.drawable.selector_tab_app_btn + "", MyAppFragment.class,mainTabResult);
                                 break;
-                            case Constant.PREF_APP_TAB_BAR_PROFILE:
+                            case Constant.APP_TAB_BAR_PROFILE:
                                 tabBean = new TabBean(getString(R.string.mine), R.drawable.selector_tab_more_btn + "", MoreFragment.class,mainTabResult);
                                 break;
-                            case Constant.PREF_APP_TAB_BAR_CONTACT:
+                            case Constant.APP_TAB_BAR_CONTACT:
                                 tabBean = new TabBean(getString(R.string.contact),R.drawable.selector_tab_contact_btn + "", ContactSearchFragment.class,mainTabResult);
                                 break;
                             default:
@@ -169,7 +169,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
                     .inflate(R.layout.tab_item_view, null);
             ImageView tabImg = (ImageView) tabView.findViewById(R.id.imageview);
             TextView tabText = (TextView) tabView.findViewById(R.id.textview);
-            if (tabId.equals(Constant.PREF_APP_TAB_BAR_COMMUNACATE)) {
+            if (tabId.equals(Constant.APP_TAB_BAR_COMMUNACATE)) {
                 handleTipsView(tabView);
                 communicateIndex = i;
             }
@@ -243,7 +243,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
     private void findAndSetUnhandleBadgesDisplay(int badgeNumber) {
         for (int i = 0; i < mTabHost.getTabWidget().getChildCount(); i++) {
             View tabView = mTabHost.getTabWidget().getChildAt(i);
-            if (mTabHost.getTabWidget().getChildAt(i).getTag().toString().contains(Constant.PREF_APP_TAB_BAR_APPLICATION)) {
+            if (mTabHost.getTabWidget().getChildAt(i).getTag().toString().contains(Constant.APP_TAB_BAR_APPLICATION)) {
                 setUnHandledBadgesDisplay(tabView, badgeNumber);
                 break;
             }
@@ -310,10 +310,10 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
         TabBean[] tabBeans = new TabBean[2];
         TabBean tabBeanApp = new TabBean(getString(R.string.application), R.drawable.selector_tab_app_btn + "",
                 MyAppFragment.class,new MainTabResult(new JSONObject()));
-        tabBeanApp.setTabId(Constant.PREF_APP_TAB_BAR_APPLICATION);
+        tabBeanApp.setTabId(Constant.APP_TAB_BAR_APPLICATION);
         TabBean tabBeanMine = new TabBean(getString(R.string.mine), R.drawable.selector_tab_more_btn + "",
                 MoreFragment.class,new MainTabResult(new JSONObject()));
-        tabBeanMine.setTabId(Constant.PREF_APP_TAB_BAR_PROFILE);
+        tabBeanMine.setTabId(Constant.APP_TAB_BAR_PROFILE);
         //无数据改为显示两个tab
         tabBeans[0] = tabBeanApp;
         tabBeans[1] = tabBeanMine;
@@ -406,9 +406,9 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if(tabId.equals(Constant.PREF_APP_TAB_BAR_RN_FIND)){
+            if(tabId.equals(Constant.APP_TAB_BAR_RN_FIND)){
                 ContactClickMessage contactClickMessage = new ContactClickMessage();
-                contactClickMessage.setTabId(Constant.PREF_APP_TAB_BAR_RN_FIND);
+                contactClickMessage.setTabId(Constant.APP_TAB_BAR_RN_FIND);
                 contactClickMessage.setViewId(-1);
                 EventBus.getDefault().post(contactClickMessage);
             }else if ((System.currentTimeMillis() - lastBackTime) > 2000) {
@@ -446,7 +446,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
 
     @Override
     public void onTabChanged(final String tabId) {
-        tipsView.setCanTouch(tabId.equals(Constant.PREF_APP_TAB_BAR_COMMUNACATE));
+        tipsView.setCanTouch(tabId.equals(Constant.APP_TAB_BAR_COMMUNACATE));
         if (!isSystemChangeTag) {
             new Thread(new Runnable() {
                 @Override

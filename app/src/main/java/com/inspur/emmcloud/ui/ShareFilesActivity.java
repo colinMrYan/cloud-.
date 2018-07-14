@@ -86,7 +86,7 @@ public class ShareFilesActivity extends BaseActivity {
      * 分享方式
      */
     private void initSharingMode() {
-        boolean isCommunicateExist = TabAndAppExistUtils.isTabExist(MyApplication.getInstance(), Constant.PREF_APP_TAB_BAR_COMMUNACATE);
+        boolean isCommunicateExist = TabAndAppExistUtils.isTabExist(MyApplication.getInstance(), Constant.APP_TAB_BAR_COMMUNACATE);
         boolean isVolumeAppExist = TabAndAppExistUtils.isAppExist(MyApplication.getInstance(),"emm://volume");
         channelRelativeLayout.setVisibility(isCommunicateExist?View.VISIBLE:View.GONE);
         volumeRelativeLayout.setVisibility(isVolumeAppExist?View.VISIBLE:View.GONE);

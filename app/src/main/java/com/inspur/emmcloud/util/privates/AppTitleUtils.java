@@ -43,17 +43,17 @@ public class AppTitleUtils {
      */
     private static String getCompont(String tabkey) {
         if(tabkey.startsWith("CommunicationFragment")||tabkey.startsWith("CommunicationV0Fragment") ){
-            return Constant.PREF_APP_TAB_BAR_COMMUNACATE;
+            return Constant.APP_TAB_BAR_COMMUNACATE;
         }else if(tabkey.equals("FindFragment")){
-            return Constant.PREF_APP_TAB_BAR_RN_FIND;
+            return Constant.APP_TAB_BAR_RN_FIND;
         }else if(tabkey.equals("WorkFragment")){
-            return Constant.PREF_APP_TAB_BAR_WORK;
+            return Constant.APP_TAB_BAR_WORK;
         }else if(tabkey.equals("MyAppFragment")){
-            return Constant.PREF_APP_TAB_BAR_APPLICATION;
+            return Constant.APP_TAB_BAR_APPLICATION;
         }else if(tabkey.equals("MoreFragment")){
-            return Constant.PREF_APP_TAB_BAR_PROFILE;
+            return Constant.APP_TAB_BAR_PROFILE;
         }else if(tabkey.equals("ContactSearchFragment")){
-            return Constant.PREF_APP_TAB_BAR_CONTACT;
+            return Constant.APP_TAB_BAR_CONTACT;
         }else if(tabkey.equals("NotSupportFragment")){
             return "";
         }

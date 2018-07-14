@@ -252,7 +252,7 @@ public class ContactSearchFragment extends Fragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void updateUI(ContactClickMessage contactClickMessage) {
         if (getActivity().getClass().getSimpleName().equals(IndexActivity.class.getSimpleName())
-                && contactClickMessage.getTabId().equals(Constant.PREF_APP_TAB_BAR_RN_FIND) && contactClickMessage.getViewId() == -1) {
+                && contactClickMessage.getTabId().equals(Constant.APP_TAB_BAR_RN_FIND) && contactClickMessage.getViewId() == -1) {
             if (!onBackPressedConsumeByUI()) {
                 if ((System.currentTimeMillis() - lastBackTime) > 2000) {
                     ToastUtils.show(getActivity(),

@@ -212,7 +212,7 @@ public class SettingActivity extends BaseActivity {
                         dialog.dismiss();
                         if (NetUtils.isNetworkConnected(getApplicationContext())){
                             // TODO Auto-generated method stub
-                            boolean isCommunicateExist = TabAndAppExistUtils.isTabExist(MyApplication.getInstance(),Constant.PREF_APP_TAB_BAR_COMMUNACATE);
+                            boolean isCommunicateExist = TabAndAppExistUtils.isTabExist(MyApplication.getInstance(),Constant.APP_TAB_BAR_COMMUNACATE);
                             if (MyApplication.getInstance().isV1xVersionChat() && isCommunicateExist){
                                 loadingDlg.show();
                                 WSAPIService.getInstance().sendAppStatus("REMOVED");
