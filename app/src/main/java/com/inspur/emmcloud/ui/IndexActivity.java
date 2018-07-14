@@ -397,7 +397,7 @@ public class IndexActivity extends IndexBaseActivity {
      */
     private void getAllChannelGroup() {
         // TODO Auto-generated method stub
-        if (NetUtils.isNetworkConnected(getApplicationContext(), false)) {
+        if (!StringUtils.isBlank(MyApplication.getInstance().getClusterChatVersion())&&NetUtils.isNetworkConnected(getApplicationContext(), false)) {
             ChatAPIService apiService = new ChatAPIService(IndexActivity.this);
             apiService.setAPIInterface(new WebService());
             apiService.getAllGroupChannelList();
@@ -447,7 +447,7 @@ public class IndexActivity extends IndexBaseActivity {
      * 获取所有的Robot
      */
     private void getAllRobotInfo() {
-        if (!StringUtils.isBlank(MyApplication.getInstance().getClusterChatVersion())&&NetUtils.isNetworkConnected(getApplicationContext(), false)) {
+        if (!StringUtils.isBlank(MyApplication.getInstance().getClusterBot())&&NetUtils.isNetworkConnected(getApplicationContext(), false)) {
             ContactAPIService apiService = new ContactAPIService(IndexActivity.this);
             apiService.setAPIInterface(new WebService());
             apiService.getAllRobotInfo();
