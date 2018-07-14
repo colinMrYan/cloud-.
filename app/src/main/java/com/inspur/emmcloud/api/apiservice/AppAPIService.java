@@ -249,7 +249,7 @@ public class AppAPIService {
     /**
      * 获取显示tab页的接口
      */
-    public void getAppNewTabs(final Context context, final String tabVersion) {
+    public void getAppNewTabs(final String tabVersion) {
         final String completeUrl = APIUri.getAppNewTabs();
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
@@ -273,7 +273,7 @@ public class AppAPIService {
                 OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        getAppNewTabs(context,tabVersion);
+                        getAppNewTabs(tabVersion);
                     }
 
                     @Override

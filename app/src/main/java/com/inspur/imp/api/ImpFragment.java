@@ -1,7 +1,6 @@
 package com.inspur.imp.api;
 
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -24,13 +23,10 @@ import android.widget.TextView;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.mine.Language;
-import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.config.MyAppWebConfig;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.privates.AppUtils;
-import com.inspur.emmcloud.util.privates.DataCleanManager;
 import com.inspur.emmcloud.util.privates.MDM.MDM;
 import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
 import com.inspur.emmcloud.widget.dialogs.EasyDialog;
@@ -122,7 +118,6 @@ public class ImpFragment extends Fragment {
             String url = getArguments().getString("uri");
             initWebViewHeaderLayout();
             setWebViewHeader();
-            setWebViewUserAgent();
             webView.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
@@ -230,7 +225,7 @@ public class ImpFragment extends Fragment {
 
             @Override
             public void onSetTitle(String title) {
-                setTitle("");
+                setTitle(title);
             }
 
             @Override
@@ -299,19 +294,6 @@ public class ImpFragment extends Fragment {
         getActivity().finish();// 退出程序
     }
 
-    private void setWebViewUserAgent() {
-        WebSettings settings = webView.getSettings();
-        String userAgent = settings.getUserAgentString();
-        userAgent = userAgent + "/emmcloud/" + AppUtils.getVersion(getActivity());
-        settings.setUserAgentString(userAgent);
-        settings.enableSmoothTransition();
-        settings.setJavaScriptEnabled(true);
-        settings.setGeolocationEnabled(true);
-        settings.setDatabaseEnabled(true);
-        String dir = getActivity().getDir("database", Context.MODE_PRIVATE).getPath();
-        settings.setGeolocationDatabasePath(dir);
-        settings.setDomStorageEnabled(true);
-    }
 
     private void setWebViewHeader() {
         webViewHeaders = new HashMap<>();
@@ -489,7 +471,7 @@ public class ImpFragment extends Fragment {
             webView.destroy();
         }
         //清除掉图片缓存
-        DataCleanManager.cleanCustomCache(MyAppConfig.LOCAL_IMG_CREATE_PATH);
+//        DataCleanManager.cleanCustomCache(MyAppConfig.LOCAL_IMG_CREATE_PATH);
         super.onDestroy();
     }
 

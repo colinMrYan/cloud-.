@@ -39,6 +39,7 @@ import com.inspur.emmcloud.ui.mine.MoreFragment;
 import com.inspur.emmcloud.ui.notsupport.NotSupportFragment;
 import com.inspur.emmcloud.ui.work.TabBean;
 import com.inspur.emmcloud.ui.work.WorkFragment;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -70,9 +71,9 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
     public MyFragmentTabHost mTabHost;
     @ViewInject(R.id.preload_webview)
     protected WebView webView;
-    private  TextView newMessageTipsText;
+    private TextView newMessageTipsText;
 
-    private  RelativeLayout newMessageTipsLayout;
+    private RelativeLayout newMessageTipsLayout;
 
     @ViewInject(R.id.tip)
     private TipsView tipsView;
@@ -84,7 +85,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         StateBarUtils.changeStateBarColor(this);
-        PreferencesUtils.putLong(this, Constant.PREF_ENTER_APP_TIME,System.currentTimeMillis());
+        PreferencesUtils.putLong(this, Constant.PREF_ENTER_APP_TIME, System.currentTimeMillis());
         x.view().inject(this);
         mTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
         initTabs();
@@ -98,6 +99,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
     private void initTabs() {
         TabBean[] tabBeans = null;
         String appTabs = PreferencesByUserAndTanentUtils.getString(IndexBaseActivity.this, Constant.PREF_APP_TAB_BAR_INFO_CURRENT, "");
+        LogUtils.YfcDebug("appTabs:" + appTabs);
         if (!StringUtils.isBlank(appTabs)) {
             Configuration config = getResources().getConfiguration();
             String environmentLanguage = config.locale.getLanguage();
@@ -110,37 +112,43 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
                 for (int i = 0; i < mainTabResultList.size(); i++) {
                     TabBean tabBean = null;
                     MainTabResult mainTabResult = mainTabResultList.get(i);
-                    if(!mainTabResult.getType().equals("web")){
-                        //包含native和发现两种
-                        switch (mainTabResult.getUri()) {
-                            case Constant.APP_TAB_BAR_COMMUNACATE:
-                                if (MyApplication.getInstance().isV0VersionChat()){
-                                    tabBean = new TabBean(getString(R.string.communicate), R.drawable.selector_tab_message_btn + "", CommunicationV0Fragment.class,mainTabResult);
-                                }else {
-                                    tabBean = new TabBean(getString(R.string.communicate), R.drawable.selector_tab_message_btn + "", CommunicationFragment.class,mainTabResult);
-                                }
-                                break;
-                            case Constant.APP_TAB_BAR_WORK:
-                                tabBean = new TabBean(getString(R.string.work), R.drawable.selector_tab_work_btn + "", WorkFragment.class,mainTabResult);
-                                break;
-                            case Constant.APP_TAB_BAR_RN_FIND:
-                                tabBean = new TabBean(getString(R.string.find), R.drawable.selector_tab_find_btn + "", FindFragment.class,mainTabResult);
-                                break;
-                            case Constant.APP_TAB_BAR_APPLICATION:
-                                tabBean = new TabBean(getString(R.string.application), R.drawable.selector_tab_app_btn + "", MyAppFragment.class,mainTabResult);
-                                break;
-                            case Constant.APP_TAB_BAR_PROFILE:
-                                tabBean = new TabBean(getString(R.string.mine), R.drawable.selector_tab_more_btn + "", MoreFragment.class,mainTabResult);
-                                break;
-                            case Constant.APP_TAB_BAR_CONTACT:
-                                tabBean = new TabBean(getString(R.string.contact),R.drawable.selector_tab_contact_btn + "", ContactSearchFragment.class,mainTabResult);
-                                break;
-                            default:
-                                tabBean = new TabBean(getString(R.string.new_function), R.drawable.selector_tab_unknown_btn + "", NotSupportFragment.class,mainTabResult);
-                                break;
-                        }
-                    }else{
-                        tabBean = new TabBean(getString(R.string.web), R.drawable.selector_tab_cloud_tweet_btn + "", ImpFragment.class,mainTabResult);
+                    switch (mainTabResult.getType()) {
+                        case "native":
+                            switch (mainTabResult.getUri()) {
+                                case Constant.APP_TAB_BAR_COMMUNACATE:
+                                    if (MyApplication.getInstance().isV0VersionChat()) {
+                                        tabBean = new TabBean(getString(R.string.communicate), R.drawable.selector_tab_message_btn + "", CommunicationV0Fragment.class, mainTabResult);
+                                    } else {
+                                        tabBean = new TabBean(getString(R.string.communicate), R.drawable.selector_tab_message_btn + "", CommunicationFragment.class, mainTabResult);
+                                    }
+                                    break;
+                                case Constant.APP_TAB_BAR_WORK:
+                                    tabBean = new TabBean(getString(R.string.work), R.drawable.selector_tab_work_btn + "", WorkFragment.class, mainTabResult);
+                                    break;
+                                case Constant.APP_TAB_BAR_APPLICATION:
+                                    tabBean = new TabBean(getString(R.string.application), R.drawable.selector_tab_app_btn + "", MyAppFragment.class, mainTabResult);
+                                    break;
+                                case Constant.APP_TAB_BAR_PROFILE:
+                                    tabBean = new TabBean(getString(R.string.mine), R.drawable.selector_tab_more_btn + "", MoreFragment.class, mainTabResult);
+                                    break;
+                                case Constant.APP_TAB_BAR_CONTACT:
+                                    tabBean = new TabBean(getString(R.string.contact), R.drawable.selector_tab_contact_btn + "", ContactSearchFragment.class, mainTabResult);
+                                    break;
+                            }
+                            break;
+                        case "react-native":
+                            switch (mainTabResult.getUri()) {
+                                case Constant.APP_TAB_BAR_RN_FIND:
+                                    tabBean = new TabBean(getString(R.string.find), R.drawable.selector_tab_find_btn + "", FindFragment.class, mainTabResult);
+                                    break;
+                            }
+                            break;
+                        case "web":
+                            tabBean = new TabBean(getString(R.string.web), R.drawable.selector_tab_cloud_tweet_btn + "", ImpFragment.class, mainTabResult);
+                            break;
+                    }
+                    if (tabBean == null) {
+                        tabBean = new TabBean(getString(R.string.new_function), R.drawable.selector_tab_unknown_btn + "", NotSupportFragment.class, mainTabResult);
                     }
                     tabBean.setTabId(mainTabResultList.get(i).getUri());
                     tabBeans[i] = internationalMainLanguage(mainTabResultList.get(i), environmentLanguage, tabBean);
@@ -186,15 +194,15 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
                     return new View(IndexBaseActivity.this);
                 }
             });
-            if(tabBean.getMainTabResult().getType().equals("web")){
+            if (tabBean.getMainTabResult().getType().equals("web")) {
                 Bundle bundle = new Bundle();
-                bundle.putString("uri",tabBean.getMainTabResult().getUri());
-                if(tabBean.getMainTabResult().getMainTabProperty().isHaveNavbar()){
-                    bundle.putString("appName",tabBean.getMainTabResult().getName());
+                bundle.putString("uri", tabBean.getMainTabResult().getUri());
+                if (tabBean.getMainTabResult().getMainTabProperty().isHaveNavbar()) {
+                    bundle.putString("appName", tabBean.getMainTabResult().getName());
                 }
                 mTabHost.addTab(tab, tabBean.getClz(), bundle);
-            }else{
-                mTabHost.addTab(tab, tabBean.getClz(),null);
+            } else {
+                mTabHost.addTab(tab, tabBean.getClz(), null);
             }
             mTabHost.getTabWidget().getChildAt(i).setOnTouchListener(this);
             mTabHost.getTabWidget().getChildAt(i).setTag(tabBean.getTabId());
@@ -216,7 +224,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
             if (eventMessageUnReadCount.getMessageUnReadCount() == 0) {
                 newMessageTipsLayout.setVisibility(View.GONE);
             } else {
-                String shoWNum = (eventMessageUnReadCount.getMessageUnReadCount() > 99)?"99+":eventMessageUnReadCount.getMessageUnReadCount() + "";
+                String shoWNum = (eventMessageUnReadCount.getMessageUnReadCount() > 99) ? "99+" : eventMessageUnReadCount.getMessageUnReadCount() + "";
                 newMessageTipsLayout.setVisibility(View.VISIBLE);
                 newMessageTipsText.setText(shoWNum);
             }
@@ -260,8 +268,8 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
         findAndSetUnhandleBadgesDisplay(transparentBean.getBadgeNumber());
     }
 
-    @Subscribe(threadMode =  ThreadMode.MAIN)
-    public void updateTabIndex(ChangeTabBean changeTabBean){
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void updateTabIndex(ChangeTabBean changeTabBean) {
         for (int i = 0; i < mTabHost.getTabWidget().getChildCount(); i++) {
             if (mTabHost.getTabWidget().getChildAt(i).getTag().toString().contains(changeTabBean.getTabId())) {
                 mTabHost.setCurrentTab(i);
@@ -309,10 +317,10 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
         //无数据改为显示两个tab，数组变为2
         TabBean[] tabBeans = new TabBean[2];
         TabBean tabBeanApp = new TabBean(getString(R.string.application), R.drawable.selector_tab_app_btn + "",
-                MyAppFragment.class,new MainTabResult(new JSONObject()));
+                MyAppFragment.class, new MainTabResult(new JSONObject()));
         tabBeanApp.setTabId(Constant.APP_TAB_BAR_APPLICATION);
         TabBean tabBeanMine = new TabBean(getString(R.string.mine), R.drawable.selector_tab_more_btn + "",
-                MoreFragment.class,new MainTabResult(new JSONObject()));
+                MoreFragment.class, new MainTabResult(new JSONObject()));
         tabBeanMine.setTabId(Constant.APP_TAB_BAR_PROFILE);
         //无数据改为显示两个tab
         tabBeans[0] = tabBeanApp;
@@ -406,12 +414,12 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if(tabId.equals(Constant.APP_TAB_BAR_RN_FIND)){
+            if (tabId.equals(Constant.APP_TAB_BAR_RN_FIND)) {
                 ContactClickMessage contactClickMessage = new ContactClickMessage();
                 contactClickMessage.setTabId(Constant.APP_TAB_BAR_RN_FIND);
                 contactClickMessage.setViewId(-1);
                 EventBus.getDefault().post(contactClickMessage);
-            }else if ((System.currentTimeMillis() - lastBackTime) > 2000) {
+            } else if ((System.currentTimeMillis() - lastBackTime) > 2000) {
                 ToastUtils.show(IndexBaseActivity.this,
                         getString(R.string.reclick_to_desktop));
                 lastBackTime = System.currentTimeMillis();

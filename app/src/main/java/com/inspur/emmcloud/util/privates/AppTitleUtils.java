@@ -32,7 +32,7 @@ public class AppTitleUtils {
                 environmentLanguage.toLowerCase().equals("en".toLowerCase())){
             return tab.getMainTabTitleResult().getEnUS();
         }else{
-            return "";
+            return tab.getMainTabTitleResult().getZhHans();
         }
     }
 

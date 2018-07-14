@@ -12,7 +12,7 @@ import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.privates.cache.AppConfigCacheUtils;
 
 
-public class ImpActivity extends ImpBaseActivity {
+public class ImpActivity extends ImpFragmentBaseActivity {
 
     public static final int DO_NOTHING_RESULTCODE = 5;
     private ImpFragment fragment;

@@ -202,7 +202,7 @@ public class IndexActivity extends IndexBaseActivity {
                     AppAPIService apiService = new AppAPIService(IndexActivity.this);
                     apiService.setAPIInterface(new WebService());
                     String version = PreferencesByUserAndTanentUtils.getString(IndexActivity.this, Constant.PREF_APP_TAB_BAR_VERSION, "");
-                    apiService.getAppNewTabs(IndexActivity.this,version);
+                    apiService.getAppNewTabs(version);
                     new SplashPageUtils(IndexActivity.this).update();//更新闪屏页面
                     new ReactNativeUtils(IndexActivity.this).init(); //更新react
                 }

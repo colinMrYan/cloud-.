@@ -24,6 +24,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.util.common.ParseHtmlUtils;
+import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.imp.api.ImpCallBackInterface;
 import com.inspur.imp.api.JsInterface;
 import com.inspur.imp.api.iLog;
@@ -102,7 +103,9 @@ public class ImpWebView extends WebView {
 						titleText.setText(title);
 						break;
 					case DIMISS_LOADING:
-						impCallBackInterface.onLoadingDlgDimiss();
+						if(impCallBackInterface != null){
+							impCallBackInterface.onLoadingDlgDimiss();
+						}
 						break;
 					default:
 						break;
@@ -183,6 +186,7 @@ public class ImpWebView extends WebView {
 		setLayoutAnimation(null);
 		setAnimation(null);
 		setNetworkAvailable(true);
+
 		this.setBackgroundColor(Color.WHITE);
 		this.setWebViewClient(new ImpWebViewClient(loadFailLayout,impCallBackInterface));
 		// 使WebView支持弹出框
@@ -231,6 +235,8 @@ public class ImpWebView extends WebView {
 
 	// 设置websettings属性
 	public void setWebSetting() {
+		//基础设置，地理位置，缓存，userAgent等
+		setBaseConfig();
 		// 支持js相关方法
 		setJSConfig();
 		// 页面效果设置
@@ -245,10 +251,19 @@ public class ImpWebView extends WebView {
 		// 支持html5数据库和使用缓存的功能
 		Html5Apis htmlApi = new Html5Apis();
 		htmlApi.invoke(settings);
+	}
+
+	/**
+	 * 基础设置
+	 */
+	private void setBaseConfig() {
 		// 代理字符串，如果字符串为空或者null系统默认字符串将被利用
-		settings.setUserAgentString(USERAGENT);
-
-
+		String userAgent = USERAGENT + "/emmcloud/" + AppUtils.getVersion(context);
+		settings.setUserAgentString(userAgent);
+		settings.enableSmoothTransition();
+		settings.setGeolocationEnabled(true);
+		String dir = context.getDir("database", Context.MODE_PRIVATE).getPath();
+		settings.setGeolocationDatabasePath(dir);
 	}
 
 	/* 支持js相关方法 */

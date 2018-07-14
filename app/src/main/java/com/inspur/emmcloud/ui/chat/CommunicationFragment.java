@@ -237,6 +237,7 @@ public class CommunicationFragment extends Fragment {
                             rootView.findViewById(R.id.contact_img).setVisibility(View.GONE);
                         }
                     }
+                    break;
                 }
             }
         }
