@@ -73,7 +73,7 @@ public class ImpFragment extends Fragment {
         super.onCreate(savedInstanceState);
         LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(
                 getActivity().LAYOUT_INFLATER_SERVICE);
-        rootView = inflater.inflate(R.layout.activity_imp, null);
+        rootView = inflater.inflate(Res.getLayoutID("activity_imp"), null);
         initViews();
     }
 
@@ -81,7 +81,7 @@ public class ImpFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         if (rootView == null) {
-            rootView = inflater.inflate(R.layout.activity_imp, container,
+            rootView = inflater.inflate(Res.getLayoutID("activity_imp"), container,
                     false);
         }
         ViewGroup parent = (ViewGroup) rootView.getParent();
@@ -95,14 +95,18 @@ public class ImpFragment extends Fragment {
      * 初始化Views
      */
     private void initViews() {
+        //防止以后扩展其他Activity时，忘记设置相关参数造成崩溃
+        if (getArguments() == null) {
+            setArguments(new Bundle());
+        }
         loadingLayout = (RelativeLayout) rootView.findViewById(Res.getWidgetID("loading_layout"));
         loadingText = (TextView) rootView.findViewById(Res.getWidgetID("loading_text"));
         frameLayout = (FrameLayout) rootView.findViewById(Res.getWidgetID("videoContainer"));
         loadFailLayout = (LinearLayout) rootView.findViewById(Res.getWidgetID("load_error_layout"));
         webView = (ImpWebView) rootView.findViewById(Res.getWidgetID("webview"));
-        if(getActivity().getClass().getName().equals(IndexActivity.class.getName())){
+        if (getActivity().getClass().getName().equals(IndexActivity.class.getName())) {
             rootView.findViewById(R.id.back_layout).setVisibility(View.GONE);
-            ((TextView)rootView.findViewById(R.id.header_text)).setGravity(Gravity.CENTER_HORIZONTAL);
+            ((TextView) rootView.findViewById(R.id.header_text)).setGravity(Gravity.CENTER_HORIZONTAL);
         }
         showLoadingDlg(getString(Res.getStringID("@string/loading_text")));
         if (!StringUtils.isBlank(getArguments().getString("help_url"))) {
@@ -114,27 +118,25 @@ public class ImpFragment extends Fragment {
         if (!StringUtils.isBlank(getArguments().getString("appId"))) {
             appId = getArguments().getString("appId");
         }
-        if (getArguments() != null) {
-            String url = getArguments().getString("uri");
-            initWebViewHeaderLayout();
-            setWebViewHeader();
-            webView.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    switch (event.getAction()) {
-                        case MotionEvent.ACTION_DOWN:
-                        case MotionEvent.ACTION_UP:
-                            if (!v.hasFocus()) {
-                                v.requestFocus();
-                            }
-                            break;
-                    }
-                    return false;
+        String url = getArguments().getString("uri");
+        initWebViewHeaderLayout();
+        setWebViewHeader();
+        webView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                    case MotionEvent.ACTION_UP:
+                        if (!v.hasFocus()) {
+                            v.requestFocus();
+                        }
+                        break;
                 }
-            });
-            webView.loadUrl(url, webViewHeaders);
-            setWebViewFunctionVisiable();
-        }
+                return false;
+            }
+        });
+        webView.loadUrl(url, webViewHeaders);
+        setWebViewFunctionVisiable();
     }
 
 

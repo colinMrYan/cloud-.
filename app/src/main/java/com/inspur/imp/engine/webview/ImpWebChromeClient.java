@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
@@ -98,10 +99,25 @@ public class ImpWebChromeClient extends WebChromeClient {
 
 	private void fullScreen() {
 		if (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-			((Activity)context).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+			getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 		} else {
-			((Activity)context).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+			getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		}
+	}
+
+	/**
+	 * 转化为Activity
+	 * @return
+	 */
+	private Activity getActivity() {
+		if (!(context instanceof Activity) && context instanceof ContextWrapper) {
+			context = ((ContextWrapper) context).getBaseContext();
+		}
+
+		if (context instanceof Activity) {
+			return (Activity) context;
+		}
+		return null;
 	}
 
 	/**
@@ -248,7 +264,7 @@ public class ImpWebChromeClient extends WebChromeClient {
 			acceptType = "*/*";
 		}
 		i.setType(acceptType);
-		((Activity) context).startActivityForResult(
+		getActivity().startActivityForResult(
 				Intent.createChooser(i, "File Browser"),
 				FILE_CHOOSER_RESULT_CODE);
 	}
@@ -271,7 +287,7 @@ public class ImpWebChromeClient extends WebChromeClient {
 		}
 		i.setType(type);
 
-		((Activity) context).startActivityForResult(
+		getActivity().startActivityForResult(
 				Intent.createChooser(i, "File Browser"),
 				FILE_CHOOSER_RESULT_CODE);
 		return true;
@@ -302,7 +318,7 @@ public class ImpWebChromeClient extends WebChromeClient {
 	@Override
 	public void onReceivedTitle(WebView view, String title) {
 		if(null != title && !getRemoveHttpUrl(title).equals(getRemoveHttpUrl(view.getUrl()))  && !getRemoveHttpUrl(title).equals(getRemoveHttpUrl(view.getOriginalUrl()))){
-			((Activity)context).setTitle(title);
+			getActivity().setTitle(title);
 		}
 	}
 
