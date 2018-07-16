@@ -69,8 +69,7 @@ import com.inspur.emmcloud.bean.mine.GetUploadMyHeadResult;
 import com.inspur.emmcloud.bean.mine.GetUserHeadUploadResult;
 import com.inspur.emmcloud.bean.mine.UserProfileInfoBean;
 import com.inspur.emmcloud.bean.system.GetAppConfigResult;
-import com.inspur.emmcloud.bean.system.GetAppTabAutoResult;
-import com.inspur.emmcloud.bean.system.GetAppTabsResult;
+import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
 import com.inspur.emmcloud.bean.system.GetBoolenResult;
 import com.inspur.emmcloud.bean.system.GetUpgradeResult;
 import com.inspur.emmcloud.bean.system.SplashPageBean;
@@ -442,7 +441,7 @@ public interface APIInterface {
 
     void returnUpdatePwdBySMSCodeFail(String error, int errorCode);
 
-    void returnGetAppTabsSuccess(GetAppTabsResult getAppTabsResult);
+    void returnGetAppTabsSuccess(GetAppMainTabResult getAppTabsResult);
 
     void returnGetAppTabsFail(String error, int errorCode);
 
@@ -482,7 +481,7 @@ public interface APIInterface {
 
     void returnNewsInstructionFail(String error, int errorCode);
 
-    void returnAppTabAutoSuccess(GetAppTabAutoResult getAppTabAutoResult);
+    void returnAppTabAutoSuccess(GetAppMainTabResult getAppMainTabResult);
 
     void returnAppTabAutoFail(String error, int errorCode);
 

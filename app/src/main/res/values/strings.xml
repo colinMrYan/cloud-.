@@ -521,6 +521,9 @@
     <string name="run_background">后台运行</string>
     <string name="signout_fail">注销失败，请确保网络连接正常</string>
 
+    <string name="contact">通讯录</string>
+    <string name="web">web</string>
+
     <!-- 修改密码部分 -->
     <string name="modify_input_user_new_password">请输入新密码</string>
     <string name="modify_input_confirm_passord">请输入确认密码</string>

@@ -9,7 +9,6 @@ import android.os.Bundle;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.imp.api.ImpActivity;
 import com.inspur.imp.plugin.ImpPlugin;
 
 import org.json.JSONArray;
@@ -33,7 +32,7 @@ public class BroadcastService extends ImpPlugin {
             this.paramsObject = paramsObject;
             registerReceiver(paramsObject);
         }else{
-            ((ImpActivity)getActivity()).showImpDialog();
+            showCallIMPMethodErrorDlg();
         }
     }
 
@@ -54,7 +53,7 @@ public class BroadcastService extends ImpPlugin {
                 intent.putExtra(extraName, extraValue);
             }
         }
-        getActivity().sendBroadcast(intent);
+        getFragmentContext().sendBroadcast(intent);
 
     }
 
@@ -71,7 +70,7 @@ public class BroadcastService extends ImpPlugin {
             return;
         }
         if (receiver != null){
-            getActivity().unregisterReceiver(receiver);
+            getFragmentContext().unregisterReceiver(receiver);
             receiver= null;
         }
         receiver = new BroadcastReceiver() {
@@ -89,19 +88,19 @@ public class BroadcastService extends ImpPlugin {
                 String result =object.toString();
                 LogUtils.YfcDebug("result="+result);
                 BroadcastService.this.jsCallback(callback,result);
-                getActivity().unregisterReceiver(receiver);
+                getFragmentContext().unregisterReceiver(receiver);
                 receiver = null;
 
             }
         };
         IntentFilter filter = new IntentFilter(action);
-        getActivity().registerReceiver(receiver, filter);
+        getFragmentContext().registerReceiver(receiver, filter);
 
     }
 
     @Override
     public String executeAndReturn(String action, JSONObject paramsObject) {
-        ((ImpActivity)getActivity()).showImpDialog();
+        showCallIMPMethodErrorDlg();
         return "";
     }
 
@@ -115,7 +114,7 @@ public class BroadcastService extends ImpPlugin {
     @Override
     public void onActivityPause() {
         if (receiver != null && !isRunInBackgroud){
-            getActivity().unregisterReceiver(receiver);
+            getFragmentContext().unregisterReceiver(receiver);
         }
 
     }
@@ -123,7 +122,7 @@ public class BroadcastService extends ImpPlugin {
     @Override
     public void onDestroy() {
         if (receiver != null){
-            getActivity().unregisterReceiver(receiver);
+            getFragmentContext().unregisterReceiver(receiver);
             receiver = null;
         }
     }

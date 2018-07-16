@@ -21,7 +21,7 @@ import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.bean.contact.GetContactOrgListUpateResult;
 import com.inspur.emmcloud.bean.contact.GetContactUserListUpateResult;
 import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
-import com.inspur.emmcloud.bean.system.GetAppTabAutoResult;
+import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.interf.CommonCallBack;
 import com.inspur.emmcloud.service.BackgroundService;
@@ -201,9 +201,8 @@ public class IndexActivity extends IndexBaseActivity {
                 if (NetUtils.isNetworkConnected(getApplicationContext(), false)) {
                     AppAPIService apiService = new AppAPIService(IndexActivity.this);
                     apiService.setAPIInterface(new WebService());
-                    String version = PreferencesByUserAndTanentUtils.getString(IndexActivity.this, "app_tabbar_version", "");
-                    String clientId = PreferencesByUserAndTanentUtils.getString(IndexActivity.this, Constant.PREF_REACT_NATIVE_CLIENTID, "");
-                    apiService.getAppNewTabs(version, clientId);
+                    String version = PreferencesByUserAndTanentUtils.getString(IndexActivity.this, Constant.PREF_APP_TAB_BAR_VERSION, "");
+                    apiService.getAppNewTabs(version);
                     new SplashPageUtils(IndexActivity.this).update();//更新闪屏页面
                     new ReactNativeUtils(IndexActivity.this).init(); //更新react
                 }
@@ -525,8 +524,8 @@ public class IndexActivity extends IndexBaseActivity {
 
 
         @Override
-        public void returnAppTabAutoSuccess(GetAppTabAutoResult getAppTabAutoResult) {
-            updateTabbarWithOrder(getAppTabAutoResult);
+        public void returnAppTabAutoSuccess(GetAppMainTabResult getAppMainTabResult) {
+            updateTabbarWithOrder(getAppMainTabResult);
         }
 
         @Override

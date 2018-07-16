@@ -6,7 +6,7 @@ import com.inspur.emmcloud.util.common.JSONUtils;
  * Created by yufuchang on 2018/4/2.
  */
 
-public class AppTabProperty {
+public class MainTabProperty {
     /**
      * "properties": {
      * "canContact": "false",
@@ -15,10 +15,12 @@ public class AppTabProperty {
      */
     private boolean canContact = true;
     private boolean canCreate = true;
+    private boolean isHaveNavbar = false;
 
-    public AppTabProperty(String response) {
+    public MainTabProperty(String response) {
         canContact = JSONUtils.getBoolean(response, "canOpenContact", true);
         canCreate = JSONUtils.getBoolean(response, "canCreateChannel", true);
+        isHaveNavbar = JSONUtils.getBoolean(response,"isHaveNavbar",false);
     }
 
     public boolean isCanContact() {
@@ -35,5 +37,13 @@ public class AppTabProperty {
 
     public void setCanCreate(boolean canCreate) {
         this.canCreate = canCreate;
+    }
+
+    public boolean isHaveNavbar() {
+        return isHaveNavbar;
+    }
+
+    public void setHaveNavbar(boolean haveNavbar) {
+        isHaveNavbar = haveNavbar;
     }
 }

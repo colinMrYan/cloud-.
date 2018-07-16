@@ -14,6 +14,7 @@ import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.appcenter.volume.VolumeHomePageActivity;
 import com.inspur.emmcloud.ui.chat.ChannelActivity;
 import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
@@ -85,7 +86,7 @@ public class ShareFilesActivity extends BaseActivity {
      * 分享方式
      */
     private void initSharingMode() {
-        boolean isCommunicateExist = TabAndAppExistUtils.isTabExist(MyApplication.getInstance(),"communicate");
+        boolean isCommunicateExist = TabAndAppExistUtils.isTabExist(MyApplication.getInstance(), Constant.APP_TAB_BAR_COMMUNACATE);
         boolean isVolumeAppExist = TabAndAppExistUtils.isAppExist(MyApplication.getInstance(),"emm://volume");
         channelRelativeLayout.setVisibility(isCommunicateExist?View.VISIBLE:View.GONE);
         volumeRelativeLayout.setVisibility(isVolumeAppExist?View.VISIBLE:View.GONE);

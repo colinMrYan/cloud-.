@@ -142,6 +142,15 @@ public class AppUtils {
     }
 
     /**
+     * 获取应用包名
+     * @param context
+     * @return
+     */
+    public static String getPackageName(Context context){
+        return context.getPackageName();
+    }
+
+    /**
      * 如果包含Beta则截取bata前的版本号信息
      *
      * @param versionCode

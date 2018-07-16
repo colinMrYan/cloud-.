@@ -4,9 +4,9 @@ import android.content.Context;
 
 import com.inspur.emmcloud.bean.appcenter.App;
 import com.inspur.emmcloud.bean.appcenter.AppGroupBean;
-import com.inspur.emmcloud.bean.system.AppTabAutoBean;
-import com.inspur.emmcloud.bean.system.AppTabDataBean;
-import com.inspur.emmcloud.bean.system.AppTabPayloadBean;
+import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
+import com.inspur.emmcloud.bean.system.MainTabResult;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.privates.cache.MyAppCacheUtils;
 
 import java.util.ArrayList;
@@ -25,19 +25,14 @@ public class TabAndAppExistUtils {
      * @return
      */
     public static boolean isTabExist(Context context, String tabId){
-        String appTabs = PreferencesByUserAndTanentUtils.getString(context, "app_tabbar_info_current", "");
-        AppTabAutoBean appTabAutoBean = new AppTabAutoBean(appTabs);
-        //发送到MessageFragment
-        AppTabPayloadBean appTabPayloadBean = appTabAutoBean.getPayload();
-        if(appTabPayloadBean != null){
-            ArrayList<AppTabDataBean> appTabList = (ArrayList<AppTabDataBean>) appTabPayloadBean.getTabs();
-            for (int i = 0; i < appTabList.size(); i++) {
-                if(appTabList.get(i).getTabId().equals(tabId)){
-                    return true;
-                }
+        String appTabs = PreferencesByUserAndTanentUtils.getString(context, Constant.PREF_APP_TAB_BAR_INFO_CURRENT, "");
+        GetAppMainTabResult getAppMainTabResult = new GetAppMainTabResult(appTabs);
+        ArrayList<MainTabResult> mainTabResultList = getAppMainTabResult.getMainTabResultList();
+        for (int i = 0; i < mainTabResultList.size(); i++) {
+            if(mainTabResultList.get(i).getUri().equals(tabId)){
+                return true;
             }
         }
-
         return false;
     }
 

@@ -41,13 +41,13 @@ public class TimePickerService extends ImpPlugin {
 		if ("open".equals(action)) {
 			openTimePicker(paramsObject);
 		}else{
-			((ImpActivity)getActivity()).showImpDialog();
+			showCallIMPMethodErrorDlg();
 		}
 	}
 
 	@Override
 	public String executeAndReturn(String action, JSONObject paramsObject) {
-		((ImpActivity)getActivity()).showImpDialog();
+		showCallIMPMethodErrorDlg();
 		return "";
 	}
 
@@ -91,7 +91,7 @@ public class TimePickerService extends ImpPlugin {
 		}
 
 		// 显示设置时间对话框
-		TimePickerDialog timeDlg = new TimePickerDialog(context, theme,
+		TimePickerDialog timeDlg = new TimePickerDialog(getActivity(), theme,
 				new TimePickerDialog.OnTimeSetListener() {
 
 					@Override

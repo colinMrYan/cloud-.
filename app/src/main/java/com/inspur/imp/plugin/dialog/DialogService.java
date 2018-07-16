@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.inspur.imp.api.ImpActivity;
 import com.inspur.imp.api.Res;
 import com.inspur.imp.plugin.ImpPlugin;
 import com.inspur.imp.util.StrUtil;
@@ -60,13 +59,13 @@ public class DialogService extends ImpPlugin {
 		else if ("prompt".equals(action)) {
 			prompt(paramsObject);
 		}else{
-			((ImpActivity)getActivity()).showImpDialog();
+			showCallIMPMethodErrorDlg();
 		}
 	}
 
 	@Override
 	public String executeAndReturn(String action, JSONObject paramsObject) {
-		((ImpActivity)getActivity()).showImpDialog();
+		showCallIMPMethodErrorDlg();
 		return "";
 	}
 
@@ -88,7 +87,7 @@ public class DialogService extends ImpPlugin {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		LayoutInflater layoutInflater = LayoutInflater.from(this.context);
+		LayoutInflater layoutInflater = LayoutInflater.from(getFragmentContext());
 		View viewText = layoutInflater.inflate(
 				Res.getLayoutID("imp_activity_edittext"), null);
 		// 获得Edit框
@@ -96,7 +95,7 @@ public class DialogService extends ImpPlugin {
 		if (StrUtil.strIsNotNull(msg)) {
 			editText.setText(msg);
 		}
-		new AlertDialog.Builder(this.context)
+		new AlertDialog.Builder(getActivity())
 				.setTitle(title)
 				.setView(viewText)
 				.setPositiveButton("确定", new DialogInterface.OnClickListener() {
@@ -131,7 +130,7 @@ public class DialogService extends ImpPlugin {
 		}
 		if (StrUtil.strIsNotNull(msg))
 			// 利用Toast方式显示消息内容
-			Toast.makeText(this.context, msg, Toast.LENGTH_SHORT).show();
+			Toast.makeText(getFragmentContext(), msg, Toast.LENGTH_SHORT).show();
 	}
 
 	/**
@@ -152,7 +151,7 @@ public class DialogService extends ImpPlugin {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		new AlertDialog.Builder(this.context).setTitle(title).setMessage(msg)
+		new AlertDialog.Builder(getActivity()).setTitle(title).setMessage(msg)
 				.setPositiveButton("确定", new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
@@ -192,7 +191,7 @@ public class DialogService extends ImpPlugin {
 			e.printStackTrace();
 		}
 		fbutton = buttonLabel.split(",");
-		AlertDialog.Builder dlg = new AlertDialog.Builder(this.context)
+		AlertDialog.Builder dlg = new AlertDialog.Builder(getActivity())
 				.setTitle(title).setMessage(msg);
 
 		if (fbutton.length > 0)
@@ -253,7 +252,7 @@ public class DialogService extends ImpPlugin {
 			e.printStackTrace();
 		}
 		fbutton = buttonLabel.split(",");
-		LayoutInflater layoutInflater = LayoutInflater.from(this.context);
+		LayoutInflater layoutInflater = LayoutInflater.from(getFragmentContext());
 		View viewText = layoutInflater.inflate(
 				Res.getLayoutID("imp_activity_edittext"), null);
 		// 获得EditText框,在EditText中设置默认文本。
@@ -261,7 +260,7 @@ public class DialogService extends ImpPlugin {
 		if (StrUtil.strIsNotNull(defaultText)) {
 			editText.setText(defaultText);
 		}
-		AlertDialog.Builder dlg = new AlertDialog.Builder(this.context)
+		AlertDialog.Builder dlg = new AlertDialog.Builder(getActivity())
 				.setTitle(title).setMessage(msg).setView(viewText);
 		if (fbutton.length > 0)
 			dlg.setPositiveButton(fbutton[0],

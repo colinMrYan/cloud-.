@@ -49,7 +49,7 @@ public class ScanQrCodeUtils {
             Intent intent = new Intent();
             intent.setClass(context, ImpActivity.class);
             intent.putExtra("uri", msg);
-            intent.putExtra("appName","");
+            intent.putExtra("appName","    ");
             context.startActivity(intent);
         } else {
             showUnKnownMsg(msg);
