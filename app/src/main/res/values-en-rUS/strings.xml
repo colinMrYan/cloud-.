@@ -377,12 +377,12 @@
     <string name="move_to">Move</string>
     <string name="copy">Copy</string>
     <string name="file_dpwnload">Download</string>
-    <string name="create_forder">Create Forder</string>
+    <string name="create_forder">Create Folder</string>
     <string name="file_filter">Filter</string>
     <string name="sort_by_time_asc">Sort by Time Asc</string>
-    <string name="sort_by_time_dasc">Sort by Name Dasc</string>
+    <string name="sort_by_time_dasc">Sort by Name Desc</string>
     <string name="sort_by_name_asc">Sort by Name Asc</string>
-    <string name="sort_by_name_dasc">Sort by Name Dasc</string>
+    <string name="sort_by_name_dasc">Sort by Name Desc</string>
     <string name="video">Video</string>
     <string name="audio">Audio</string>
     <string name="other">Other</string>

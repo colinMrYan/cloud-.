@@ -91,11 +91,10 @@ public class AppCenterMoreActivity extends BaseActivity {
         public View getView(int position, View convertView, ViewGroup parent) {
             App app = appList.get(position);
             convertView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.app_center_more_app_item_view, null);
-            ImageView appIconImg = (ImageView) convertView.findViewById(R.id.app_icon_img);
-            TextView appNameText = (TextView) convertView.findViewById(R.id.app_name_text);
-            ImageDisplayUtils.getInstance().displayImage(appIconImg, app.getAppIcon(), R.drawable.ic_app_default);
-            appNameText.setText(app.getAppName());
-            ((TextView) convertView.findViewById(R.id.app_group_name_text)).setText(app.getAppName());
+            ((TextView) convertView.findViewById(R.id.app_name_text)).setText(app.getAppName());
+            ((TextView) convertView.findViewById(R.id.txt_app_note)).setText(app.getNote());
+            ImageDisplayUtils.getInstance().displayImage((ImageView) convertView.
+                    findViewById(R.id.app_icon_img), app.getAppIcon(), R.drawable.ic_app_default);
             return convertView;
         }
 
