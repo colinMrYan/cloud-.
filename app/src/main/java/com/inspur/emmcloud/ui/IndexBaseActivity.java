@@ -39,7 +39,6 @@ import com.inspur.emmcloud.ui.mine.MoreFragment;
 import com.inspur.emmcloud.ui.notsupport.NotSupportFragment;
 import com.inspur.emmcloud.ui.work.TabBean;
 import com.inspur.emmcloud.ui.work.WorkFragment;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -99,7 +98,6 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
     private void initTabs() {
         TabBean[] tabBeans = null;
         String appTabs = PreferencesByUserAndTanentUtils.getString(IndexBaseActivity.this, Constant.PREF_APP_TAB_BAR_INFO_CURRENT, "");
-        LogUtils.YfcDebug("appTabs:" + appTabs);
         if (!StringUtils.isBlank(appTabs)) {
             Configuration config = getResources().getConfiguration();
             String environmentLanguage = config.locale.getLanguage();
@@ -113,7 +111,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
                     TabBean tabBean = null;
                     MainTabResult mainTabResult = mainTabResultList.get(i);
                     switch (mainTabResult.getType()) {
-                        case "native":
+                        case Constant.APP_TAB_TYPE_NATIVE:
                             switch (mainTabResult.getUri()) {
                                 case Constant.APP_TAB_BAR_COMMUNACATE:
                                     if (MyApplication.getInstance().isV0VersionChat()) {
@@ -136,14 +134,14 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
                                     break;
                             }
                             break;
-                        case "react-native":
+                        case Constant.APP_TAB_TYPE_RN:
                             switch (mainTabResult.getUri()) {
                                 case Constant.APP_TAB_BAR_RN_FIND:
                                     tabBean = new TabBean(getString(R.string.find), R.drawable.selector_tab_find_btn + "", FindFragment.class, mainTabResult);
                                     break;
                             }
                             break;
-                        case "web":
+                        case Constant.APP_TAB_TYPE_WEB:
                             tabBean = new TabBean(getString(R.string.web), R.drawable.selector_tab_cloud_tweet_btn + "", ImpFragment.class, mainTabResult);
                             break;
                     }
@@ -194,7 +192,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
                     return new View(IndexBaseActivity.this);
                 }
             });
-            if (tabBean.getMainTabResult().getType().equals("web")) {
+            if (tabBean.getMainTabResult().getType().equals(Constant.APP_TAB_TYPE_WEB)) {
                 Bundle bundle = new Bundle();
                 bundle.putString("uri", tabBean.getMainTabResult().getUri());
                 if (tabBean.getMainTabResult().getMainTabProperty().isHaveNavbar()) {
