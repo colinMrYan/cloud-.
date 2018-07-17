@@ -335,17 +335,19 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
      * @return
      */
     private TabBean internationalMainLanguage(MainTabResult mainTabResult, String environmentLanguage, TabBean tabBean) {
-        switch (environmentLanguage.toLowerCase()) {
-            case "zh-hant":
-                tabBean.setTabName(mainTabResult.getMainTabTitleResult().getZhHant());
-                break;
-            case "en":
-            case "en-us":
-                tabBean.setTabName(mainTabResult.getMainTabTitleResult().getEnUS());
-                break;
-            default:
-                tabBean.setTabName(mainTabResult.getMainTabTitleResult().getZhHans());
-                break;
+        if(!tabBean.getClz().getName().equals(NotSupportFragment.class.getName())){
+            switch (environmentLanguage.toLowerCase()) {
+                case "zh-hant":
+                    tabBean.setTabName(mainTabResult.getMainTabTitleResult().getZhHant());
+                    break;
+                case "en":
+                case "en-us":
+                    tabBean.setTabName(mainTabResult.getMainTabTitleResult().getEnUS());
+                    break;
+                default:
+                    tabBean.setTabName(mainTabResult.getMainTabTitleResult().getZhHans());
+                    break;
+            }
         }
         return tabBean;
     }
