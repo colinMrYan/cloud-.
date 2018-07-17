@@ -130,4 +130,25 @@ public final class PlanarYUVLuminanceSource extends LuminanceSource {
     bitmap.setPixels(pixels, 0, width, 0, 0, width, height);
     return bitmap;
   }
+
+  public Bitmap getBitmap() {
+    int width = getWidth();
+    int height = getHeight();
+    int[] pixels = new int[width * height];
+    byte[] yuv = yuvData;
+    int inputOffset = top * dataWidth + left;
+
+    for (int y = 0; y < height; y++) {
+      int outputOffset = y * width;
+      for (int x = 0; x < width; x++) {
+        int grey = yuv[inputOffset + x] & 0xff;
+        pixels[outputOffset + x] = 0xFF000000 | (grey * 0x00010101);
+      }
+      inputOffset += dataWidth;
+    }
+
+    Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
+    bitmap.setPixels(pixels, 0, width, 0, 0, width, height);
+    return bitmap;
+  }
 }

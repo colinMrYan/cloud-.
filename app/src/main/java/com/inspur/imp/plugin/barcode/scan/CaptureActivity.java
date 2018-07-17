@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
@@ -23,18 +22,19 @@ import android.widget.TextView;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
-import com.inspur.emmcloud.api.APICallback;
-import com.inspur.emmcloud.api.CloudHttpMethod;
-import com.inspur.emmcloud.api.HttpUtils;
-import org.xutils.common.Callback.CommonCallback;
+import com.inspur.emmcloud.config.MyAppConfig;
+import com.inspur.emmcloud.util.common.ImageUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.imp.api.Res;
 import com.inspur.imp.plugin.barcode.camera.CameraManager;
+import com.inspur.imp.plugin.barcode.camera.PlanarYUVLuminanceSource;
 import com.inspur.imp.plugin.barcode.decoding.CaptureActivityHandler;
+import com.inspur.imp.plugin.barcode.decoding.GetDecodeResultFromServer;
 import com.inspur.imp.plugin.barcode.decoding.InactivityTimer;
 import com.inspur.imp.plugin.barcode.view.OnDoubleClickListener;
 import com.inspur.imp.plugin.barcode.view.ViewfinderView;
 
-import org.xutils.http.HttpMethod;
+import org.xutils.common.Callback.CommonCallback;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
 
@@ -59,6 +59,8 @@ public class CaptureActivity extends Activity implements Callback {
     private Button btn_torch;
     private boolean isTorchOn = false;
     private TextView lampText;
+    private boolean isDecodeingFromServer = false;
+    private boolean isDecodeFinish = false;
 
     /**
      * Called when the activity is first created.
@@ -153,6 +155,8 @@ public class CaptureActivity extends Activity implements Callback {
         }
 
     public void handDecodeResult(String result) {
+        LogUtils.jasonDebug("result="+result);
+        isDecodeFinish = true;
         boolean isFromWeb = true;
         if (getIntent().hasExtra("from")) {
             isFromWeb = false;
@@ -171,6 +175,7 @@ public class CaptureActivity extends Activity implements Callback {
             String functName = BarCodeService.functName;
             if (BarCodeService.barcodeService != null) {
                 BarCodeService.barcodeService.jsCallback(functName, result.toString());
+                BarCodeService.barcodeService = null;
             }
         }
         finish();
@@ -271,39 +276,65 @@ public class CaptureActivity extends Activity implements Callback {
         }
     };
 
-    public void uploadImgToDecodeByServer(String imgFilePath){
-        final String completeUrl = "http://emm.inspuronline.com:88/api/barcode/decode";
-        RequestParams params = new RequestParams(completeUrl);
-        File file = new File(imgFilePath);
-        params.setMultipart(true);// 有上传文件时使用multipart表单, 否则上传原始文件流.
-        params.addBodyParameter("file", file);
-        params.addBodyParameter("filename", file.getName());
-        x.http().request(this, HttpMethod.POST, params, new CommonCallback<String>(){
-            @Override
-            public int hashCode() {
-                return super.hashCode();
-            }
+    public void uploadImgToDecodeByServer(PlanarYUVLuminanceSource source){
+        if (isDecodeingFromServer)return;
+        isDecodeingFromServer = true;
+        File dir =new File(MyAppConfig.LOCAL_IMG_CREATE_PATH);
+        if (!dir.exists()){
+            dir.mkdirs();
+        }
+        String imgSavePath = MyAppConfig.LOCAL_IMG_CREATE_PATH+"file.jpg";
+        final File file = new File(imgSavePath);
+        if (file.exists()){
+            file.delete();
+        }
+        Bitmap imgBitmap = source.getBitmap();
+        try {
+            ImageUtils.saveImageToSD(CaptureActivity.this, imgSavePath, imgBitmap, 90);
+            final String completeUrl = "http://emm.inspuronline.com:88/api/barcode/decode";
+            RequestParams params = new RequestParams(completeUrl);
+            params.setMultipart(true);// 使用multipart表单上传文件
+            params.addBodyParameter("file", file,"image/jpg");
+            x.http().post(params, new CommonCallback<String>(){
+                @Override
+                public void onSuccess(String s) {
+                    LogUtils.jasonDebug("isDecodeingFromServerSuccess-----------");
+                    if (!isDecodeFinish){
+                        GetDecodeResultFromServer getDecodeResultFromServer = new GetDecodeResultFromServer(s);
+                        String data = getDecodeResultFromServer.getData();
+                        if (data != null){
+                            data = data.replaceAll("[\\t\\n\\r]", "");
+                            if ((CaptureActivity.this != null) && (isDecodeFinish == false) && !data.equals("")){
+                                handDecodeResult(data);
+                            }
+                        }
+                        isDecodeingFromServer = false;
+                    }
+                }
 
-            @Override
-            public void onSuccess(String s) {
+                @Override
+                public void onError(Throwable arg0, boolean b) {
+                    LogUtils.jasonDebug("isDecodeingFromServerFail-----------");
+                    isDecodeingFromServer = false;
+                }
 
-            }
+                @Override
+                public void onCancelled(CancelledException e) {
+                    isDecodeingFromServer = false;
+                }
 
-            @Override
-            public void onError(Throwable throwable, boolean b) {
+                @Override
+                public void onFinished() {
+                    if (file.exists()){
+                        file.delete();
+                    }
+                }
+            });
+        }catch (Exception e){
+            e.printStackTrace();
+            isDecodeingFromServer = false;
+        }
 
-            }
-
-            @Override
-            public void onCancelled(CancelledException e) {
-
-            }
-
-            @Override
-            public void onFinished() {
-
-            }
-        });
     }
 
 }

@@ -16,7 +16,6 @@
 
 package com.inspur.imp.plugin.barcode.decoding;
 
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -29,110 +28,85 @@ import com.google.zxing.MultiFormatReader;
 import com.google.zxing.ReaderException;
 import com.google.zxing.Result;
 import com.google.zxing.common.HybridBinarizer;
-import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.emmcloud.util.common.ImageUtils;
-import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.imp.api.Res;
 import com.inspur.imp.plugin.barcode.camera.CameraManager;
 import com.inspur.imp.plugin.barcode.camera.PlanarYUVLuminanceSource;
 import com.inspur.imp.plugin.barcode.scan.CaptureActivity;
 
-import java.io.File;
 import java.util.Hashtable;
 
 
 final class DecodeHandler extends Handler {
 
-  private static final String TAG = DecodeHandler.class.getSimpleName();
+    private static final String TAG = DecodeHandler.class.getSimpleName();
 
-  private final CaptureActivity activity;
-  private final MultiFormatReader multiFormatReader;
-  private int decodeCount = 0;
+    private final CaptureActivity activity;
+    private final MultiFormatReader multiFormatReader;
+    private int scanCount=0;
 
-  DecodeHandler(CaptureActivity activity, Hashtable<DecodeHintType, Object> hints) {
-    multiFormatReader = new MultiFormatReader();
-    multiFormatReader.setHints(hints);
-    this.activity = activity;
-    decodeCount = 0;
-  }
-
-  @Override
-  public void handleMessage(Message message) {
-	  if(Res.getWidgetID("decode")==message.what){
-		  decode((byte[]) message.obj, message.arg1, message.arg2); 
-	  }else if(Res.getWidgetID("quit")==message.what){
-		  Looper.myLooper().quit();
-	  }
-  }
-
-  /**
-   * Decode the data within the viewfinder rectangle, and time how long it took. For efficiency,
-   * reuse the same reader objects from one decode to the next.
-   *
-   * @param data   The YUV preview frame.
-   * @param width  The width of the preview frame.
-   * @param height The height of the preview frame.
-   */
-  private void decode(byte[] data, int width, int height) {
-    decodeCount++;
-    long start = System.currentTimeMillis();
-    Result rawResult = null;
-//    PlanarYUVLuminanceSource source = CameraManager.get().buildLuminanceSource(data, width, height);
-
-    byte[] rotatedData = new byte[data.length];
-    for (int y = 0; y < height; y++) {
-        for (int x = 0; x < width; x++)
-            rotatedData[x * height + height - y - 1] = data[x + y * width];
-    }
-    int tmp = width; // Here we are swapping, that's the difference to #11
-    width = height;
-    height = tmp;
-    
-    PlanarYUVLuminanceSource source = CameraManager.get().buildLuminanceSource(rotatedData, width, height);
-
-    BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
-    try {
-      rawResult = multiFormatReader.decodeWithState(bitmap);
-    } catch (ReaderException re) {
-      // continue
-    } finally {
-      multiFormatReader.reset();
+    DecodeHandler(CaptureActivity activity, Hashtable<DecodeHintType, Object> hints) {
+        multiFormatReader = new MultiFormatReader();
+        multiFormatReader.setHints(hints);
+        this.activity = activity;
+        scanCount =0;
     }
 
-    if (rawResult != null) {
-      long end = System.currentTimeMillis();
-      Log.d(TAG, "Found barcode (" + (end - start) + " ms):\n" + rawResult.toString());
-
-      Message message = Message.obtain(activity.getHandler(), Res.getWidgetID("decode_succeeded"), rawResult);
-      Bundle bundle = new Bundle();
-      bundle.putParcelable(DecodeThread.BARCODE_BITMAP, source.renderCroppedGreyscaleBitmap());
-      message.setData(bundle);
-
-      message.sendToTarget();
-    } else {
-      if (decodeCount == 40 && AppUtils.isHasSDCard(this.activity)){
-        File dir =new File(MyAppConfig.LOCAL_IMG_CREATE_PATH);
-        if (!dir.exists()){
-          dir.mkdirs();
+    @Override
+    public void handleMessage(Message message) {
+        if (Res.getWidgetID("decode") == message.what) {
+            decode((byte[]) message.obj, message.arg1, message.arg2);
+        } else if (Res.getWidgetID("quit") == message.what) {
+            Looper.myLooper().quit();
         }
-        String imgSavePath = MyAppConfig.LOCAL_IMG_CREATE_PATH+"qr.jpg";
-        File file = new File(imgSavePath);
-        if (file.exists()){
-          file.delete();
+    }
+
+    /**
+     * Decode the data within the viewfinder rectangle, and time how long it took. For efficiency,
+     * reuse the same reader objects from one decode to the next.
+     *
+     * @param data   The YUV preview frame.
+     * @param width  The width of the preview frame.
+     * @param height The height of the preview frame.
+     */
+    private void decode(byte[] data, int width, int height) {
+        scanCount++;
+        long start = System.currentTimeMillis();
+        Result rawResult = null;
+        byte[] rotatedData = new byte[data.length];
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++)
+                rotatedData[x * height + height - y - 1] = data[x + y * width];
         }
-        Bitmap imgBitmap = source.renderCroppedGreyscaleBitmap();
+        int tmp = width; // Here we are swapping, that's the difference to #11
+        width = height;
+        height = tmp;
+
+        PlanarYUVLuminanceSource source = CameraManager.get().buildLuminanceSource(rotatedData, width, height);
+
+        BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
         try {
-          ImageUtils.saveImageToSD(this.activity,imgSavePath,imgBitmap,100);
-          Message message = Message.obtain(activity.getHandler(), Res.getWidgetID("decode_server"));
-          message.obj = imgSavePath;
-          message.sendToTarget();
-        }catch (Exception e){
-          e.printStackTrace();
+            rawResult = multiFormatReader.decodeWithState(bitmap);
+        } catch (ReaderException re) {
+            // continue
+        } finally {
+            multiFormatReader.reset();
         }
-      }
-      Message message = Message.obtain(activity.getHandler(), Res.getWidgetID("decode_failed"));
-      message.sendToTarget();
+        if (rawResult != null) {
+            long end = System.currentTimeMillis();
+            Log.d(TAG, "Found barcode (" + (end - start) + " ms):\n" + rawResult.toString());
+            Message message = Message.obtain(activity.getHandler(), Res.getWidgetID("decode_succeeded"), rawResult);
+            Bundle bundle = new Bundle();
+            bundle.putParcelable(DecodeThread.BARCODE_BITMAP, source.renderCroppedGreyscaleBitmap());
+            message.setData(bundle);
+
+            message.sendToTarget();
+        } else {
+            Message message = Message.obtain(activity.getHandler(), Res.getWidgetID("decode_failed"));
+            if (scanCount >30){
+                message.obj = source;
+            }
+            message.sendToTarget();
+        }
     }
-  }
 
 }

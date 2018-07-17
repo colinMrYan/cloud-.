@@ -410,8 +410,8 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         if (!StringUtils.isBlank(myInfo)) {
             GetMyInfoResult getMyInfoResult = new GetMyInfoResult(myInfo);
             String currentEnterpriseId = PreferencesByUsersUtils.getString(getInstance(), "current_enterprise_id");
+            List<Enterprise> enterpriseList = getMyInfoResult.getEnterpriseList();
             if (!StringUtils.isBlank(currentEnterpriseId)) {
-                List<Enterprise> enterpriseList = getMyInfoResult.getEnterpriseList();
                 for (int i = 0; i < enterpriseList.size(); i++) {
                     Enterprise enterprise = enterpriseList.get(i);
                     if (enterprise.getId().equals(currentEnterpriseId)) {
@@ -422,6 +422,9 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
             }
             if (currentEnterprise == null) {
                 currentEnterprise = getMyInfoResult.getDefaultEnterprise();
+            }
+            if (currentEnterprise == null && enterpriseList.size()>0 ) {
+                currentEnterprise = enterpriseList.get(0);
             }
             MutilClusterUtils.setClusterBaseUrl(currentEnterprise);
             tanent = currentEnterprise.getCode();

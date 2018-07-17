@@ -24,8 +24,6 @@ import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
 
-import com.inspur.emmcloud.util.common.LogUtils;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -88,7 +86,6 @@ final class CameraConfigurationManager {
 			screenResolutionForCamera.x = screenResolution.y;
 			screenResolutionForCamera.y = screenResolution.x;
 		}
-		Log.d("jason", "000000");
 		cameraResolution = findBestPreviewSizeValue(parameters,
 				screenResolutionForCamera);
 		Log.i(TAG, "Camera resolution: " + cameraResolution);
@@ -156,14 +153,12 @@ final class CameraConfigurationManager {
 
   private Point findBestPreviewSizeValue(Camera.Parameters parameters,
 			Point screenResolution) {
-LogUtils.jasonDebug("findBestPreviewSizeValue--------------");
 		List<Camera.Size> rawSupportedSizes = parameters
 				.getSupportedPreviewSizes();
 		if (rawSupportedSizes == null) {
 			Log.w(TAG,
 					"Device returned no supported preview sizes; using default");
 			Camera.Size defaultSize = parameters.getPreviewSize();
-			LogUtils.jasonDebug("1111100000000");
 			return new Point(defaultSize.width, defaultSize.height);
 		}
 
@@ -184,7 +179,6 @@ LogUtils.jasonDebug("findBestPreviewSizeValue--------------");
 				return 0;
 			}
 		});
-		LogUtils.jasonDebug("1111100000000");
 //		if (Log.isLoggable(TAG, Log.INFO)) {
 			StringBuilder previewSizesString = new StringBuilder();
 			for (Camera.Size supportedPreviewSize : supportedPreviewSizes) {
@@ -194,7 +188,6 @@ LogUtils.jasonDebug("findBestPreviewSizeValue--------------");
 			}
 			Log.i(TAG, "Supported preview sizes: " + previewSizesString);
 //		}
-		LogUtils.jasonDebug("1111100000000");
 		Point bestSize = null;
 		float screenAspectRatio = (float) screenResolution.x
 				/ (float) screenResolution.y;
@@ -203,7 +196,6 @@ LogUtils.jasonDebug("findBestPreviewSizeValue--------------");
 		for (Camera.Size supportedPreviewSize : supportedPreviewSizes) {
 			int realWidth = supportedPreviewSize.width;
 			int realHeight = supportedPreviewSize.height;
-			LogUtils.jasonDebug("realWidth="+realWidth+"------realHeight="+realHeight);
 			int pixels = realWidth * realHeight;
 			if (pixels < MIN_PREVIEW_PIXELS || pixels > MAX_PREVIEW_PIXELS) {
 				continue;
@@ -228,60 +220,14 @@ LogUtils.jasonDebug("findBestPreviewSizeValue--------------");
 				diff = newDiff;
 			}
 		}
-		LogUtils.jasonDebug("1111100000000");
 		if (bestSize == null) {
 			Camera.Size defaultSize = parameters.getPreviewSize();
 			bestSize = new Point(defaultSize.width, defaultSize.height);
 			Log.i(TAG, "No suitable preview sizes, using default: " + bestSize);
 		}
-		LogUtils.jasonDebug("1111100000000="+bestSize);
 		Log.i(TAG, "Found best approximate preview size: " + bestSize);
 		return bestSize;
 	}
-
-  
-  
-//  private static Point findBestPreviewSizeValue(CharSequence previewSizeValueString, Point screenResolution) {
-//    int bestX = 0;
-//    int bestY = 0;
-//    int diff = Integer.MAX_VALUE;
-//    for (String previewSize : COMMA_PATTERN.split(previewSizeValueString)) {
-//
-//      previewSize = previewSize.trim();
-//      int dimPosition = previewSize.indexOf('x');
-//      if (dimPosition < 0) {
-//        Log.w(TAG, "Bad preview-size: " + previewSize);
-//        continue;
-//      }
-//
-//      int newX;
-//      int newY;
-//      try {
-//        newX = Integer.parseInt(previewSize.substring(0, dimPosition));
-//        newY = Integer.parseInt(previewSize.substring(dimPosition + 1));
-//      } catch (NumberFormatException nfe) {
-//        Log.w(TAG, "Bad preview-size: " + previewSize);
-//        continue;
-//      }
-//
-//      int newDiff = Math.abs(newX - screenResolution.x) + Math.abs(newY - screenResolution.y);
-//      if (newDiff == 0) {
-//        bestX = newX;
-//        bestY = newY;
-//        break;
-//      } else if (newDiff < diff) {
-//        bestX = newX;
-//        bestY = newY;
-//        diff = newDiff;
-//      }
-//
-//    }
-//
-//    if (bestX > 0 && bestY > 0) {
-//      return new Point(bestX, bestY);
-//    }
-//    return null;
-//  }
 
   private static int findBestMotZoomValue(CharSequence stringValues, int tenDesiredZoom) {
     int tenBestValue = 0;
