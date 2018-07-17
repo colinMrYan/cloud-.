@@ -36,6 +36,7 @@ import com.inspur.emmcloud.ui.work.calendar.CalEventAddActivity;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -264,9 +265,23 @@ public class SchemeHandleActivity extends Activity {
         if (uriList.size() > 0) {
             startVolumeShareActivity(uriList);
         }else{
+            handleShareUrl();
             ToastUtils.show(SchemeHandleActivity.this,getString(R.string.share_not_support));
             finish();
         }
+    }
+
+    /**
+     * 处理分享url
+     */
+    private void handleShareUrl() {
+        Bundle bundle = getIntent().getExtras();
+//        for (String key: bundle.keySet()) {
+//            LogUtils.YfcDebug( "Key=" + key + ", content=" +bundle.getString(key));
+//        }
+        LogUtils.YfcDebug("获取url"+bundle.getString("url"));
+        LogUtils.YfcDebug("获取file"+bundle.getString("file"));
+        LogUtils.YfcDebug("获取text"+bundle.getString(Intent.EXTRA_TEXT));
     }
 
     /**
