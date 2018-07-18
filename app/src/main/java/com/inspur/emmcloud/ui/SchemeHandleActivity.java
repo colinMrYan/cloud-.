@@ -276,9 +276,9 @@ public class SchemeHandleActivity extends Activity {
      */
     private void handleShareUrl() {
         Bundle bundle = getIntent().getExtras();
-//        for (String key: bundle.keySet()) {
-//            LogUtils.YfcDebug( "Key=" + key + ", content=" +bundle.getString(key));
-//        }
+        for (String key: bundle.keySet()) {
+            LogUtils.YfcDebug( "Key=" + key + ", content=" +bundle.getString(key));
+        }
         LogUtils.YfcDebug("获取url"+bundle.getString("url"));
         LogUtils.YfcDebug("获取file"+bundle.getString("file"));
         LogUtils.YfcDebug("获取text"+bundle.getString(Intent.EXTRA_TEXT));
