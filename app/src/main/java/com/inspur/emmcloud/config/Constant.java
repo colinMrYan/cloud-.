@@ -62,6 +62,10 @@ public class Constant {
     public static final String SERVICE_VERSION_CHAT_V0 = "v0";
     public static final String SERVICE_VERSION_CHAT_V1 = "v1";
 
+    public static final String APP_TAB_TYPE_NATIVE = "native";
+    public static final String APP_TAB_TYPE_RN = "react-native";
+    public static final String APP_TAB_TYPE_WEB = "web";
+
     public static final String APP_TAB_BAR_COMMUNACATE = "native://communicate";
     public static final String APP_TAB_BAR_WORK = "native://work";
     public static final String APP_TAB_BAR_RN_FIND = "ecc-app-react-native://find";
