@@ -25,6 +25,7 @@ import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeListResult;
 import com.inspur.emmcloud.bean.appcenter.volume.Volume;
 import com.inspur.emmcloud.bean.system.ClearShareDataBean;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.FomatUtils;
 import com.inspur.emmcloud.util.common.InputMethodUtils;
@@ -93,7 +94,7 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 List<Uri> shareUriList = null ;
                 if(isShareState){
-                    shareUriList = (List<Uri>) getIntent().getSerializableExtra("fileShareUriList");
+                    shareUriList = (List<Uri>) getIntent().getSerializableExtra(Constant.SHARE_FILE_URI_LIST);
                 }
                 Volume volume = shareVolumeList.get(position);
                 Bundle bundle = new Bundle();

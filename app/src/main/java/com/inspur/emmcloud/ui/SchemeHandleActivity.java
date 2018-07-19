@@ -250,6 +250,7 @@ public class SchemeHandleActivity extends Activity {
      */
     private void handleShareIntent() {
         String action = getIntent().getAction();
+        LogUtils.YfcDebug("action:"+action);
         List<String> uriList = new ArrayList<>();
         if (Intent.ACTION_SEND.equals(action)) {
             Uri uri = FileUtils.getShareFileUri(getIntent());
@@ -265,10 +266,26 @@ public class SchemeHandleActivity extends Activity {
         if (uriList.size() > 0) {
             startVolumeShareActivity(uriList);
         }else{
-            handleShareUrl();
-            ToastUtils.show(SchemeHandleActivity.this,getString(R.string.share_not_support));
-            finish();
+            if(isLinkShare()){
+                handleShareUrl();
+            }else{
+                ToastUtils.show(SchemeHandleActivity.this,getString(R.string.share_not_support));
+                finish();
+            }
+
         }
+    }
+
+    /**
+     * 是一个链接分享
+     * @return
+     */
+    private boolean isLinkShare() {
+        Intent intent = getIntent();
+        if(intent != null && intent.getExtras() != null && !StringUtils.isBlank(intent.getExtras().getString("url"))){
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -276,12 +293,23 @@ public class SchemeHandleActivity extends Activity {
      */
     private void handleShareUrl() {
         Bundle bundle = getIntent().getExtras();
-        for (String key: bundle.keySet()) {
-            LogUtils.YfcDebug( "Key=" + key + ", content=" +bundle.getString(key));
+//        for (String key: bundle.keySet()) {
+//            LogUtils.YfcDebug( "Key=" + key + ", content=" +bundle.getString(key));
+//        }
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("url", bundle.getString("url"));
+            jsonObject.put("poster", bundle.getString("file"));
+            jsonObject.put("digest", bundle.getString(Intent.EXTRA_TEXT));
+            jsonObject.put("title", bundle.getString("title"));
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        LogUtils.YfcDebug("获取url"+bundle.getString("url"));
-        LogUtils.YfcDebug("获取file"+bundle.getString("file"));
-        LogUtils.YfcDebug("获取text"+bundle.getString(Intent.EXTRA_TEXT));
+        Intent intent = new Intent();
+        intent.setClass(SchemeHandleActivity.this, ShareLinkActivity.class);
+        intent.putExtra(Constant.SHARE_LINK, jsonObject.toString());
+        startActivity(intent);
+        finish();
     }
 
     /**
@@ -290,7 +318,7 @@ public class SchemeHandleActivity extends Activity {
     private void startVolumeShareActivity(List<String> uriList) {
         Intent intent = new Intent();
         intent.setClass(SchemeHandleActivity.this, ShareFilesActivity.class);
-        intent.putExtra("fileShareUriList", (Serializable) uriList);
+        intent.putExtra(Constant.SHARE_FILE_URI_LIST, (Serializable) uriList);
         startActivity(intent);
         finish();
     }

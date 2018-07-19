@@ -22,6 +22,7 @@ import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeListResult;
 import com.inspur.emmcloud.bean.appcenter.volume.Volume;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeHomePageDirectory;
 import com.inspur.emmcloud.bean.system.ClearShareDataBean;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
@@ -94,7 +95,7 @@ public class VolumeHomePageActivity extends BaseActivity implements SwipeRefresh
                 bundle.putString("title",getString(R.string.volume_my_file) );
                 List<Uri> uriList = null;
                 if(isShareState){
-                    uriList = (List<Uri>) getIntent().getSerializableExtra("fileShareUriList");
+                    uriList = (List<Uri>) getIntent().getSerializableExtra(Constant.SHARE_FILE_URI_LIST);
                 }
                 switch (position) {
                     case 0:
@@ -112,7 +113,7 @@ public class VolumeHomePageActivity extends BaseActivity implements SwipeRefresh
                     case 1:
                         bundle.putSerializable("shareVolumeList", (Serializable) shareVolumeList);
                         if (uriList != null && uriList.size() > 0) {
-                            bundle.putSerializable("fileShareUriList", (Serializable) uriList);
+                            bundle.putSerializable(Constant.SHARE_FILE_URI_LIST, (Serializable) uriList);
                         }
                         IntentUtils.startActivity(VolumeHomePageActivity.this, ShareVolumeActivity.class,
                                 bundle);

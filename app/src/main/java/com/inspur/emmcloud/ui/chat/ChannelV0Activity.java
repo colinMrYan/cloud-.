@@ -36,6 +36,7 @@ import com.inspur.emmcloud.bean.chat.Robot;
 import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.broadcastreceiver.MsgReceiver;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.ui.appcenter.groupnews.NewsWebDetailActivity;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
@@ -195,6 +196,12 @@ public class ChannelV0Activity extends BaseActivity {
                                 MyApplication.getInstance(), url, apiService) : MsgRecourceUploadUtils.uploadResImg(
                                 MyApplication.getInstance(), url, apiService);
                         addLocalMessage(msg);
+                    }
+                    break;
+                case "link":
+                    String content = getIntent().getExtras().getString(Constant.SHARE_LINK);
+                    if(!StringUtils.isBlank(content)){
+                       sendMsg(content,"res_link",System.currentTimeMillis() + "");
                     }
                     break;
                 default:
