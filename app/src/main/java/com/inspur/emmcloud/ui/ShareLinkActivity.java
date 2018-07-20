@@ -46,10 +46,11 @@ public class ShareLinkActivity extends BaseActivity {
         apiService.setAPIInterface(new WebService());
         shareLink = getIntent().getExtras().getString(Constant.SHARE_LINK);
         loadingDialog = new LoadingDialog(ShareLinkActivity.this);
-        if(!StringUtils.isBlank(shareLink)){
+        if(!StringUtils.isBlank(shareLink) && NetUtils.isNetworkConnected(ShareLinkActivity.this)){
             loadingDialog.show();
             MsgRecourceUploadUtils.uploadResImg(ShareLinkActivity.this,JSONUtils.getString(shareLink,"poster",""),apiService);
         }else{
+            ToastUtils.show(ShareLinkActivity.this,getString(R.string.news_share_fail));
             finish();
         }
     }

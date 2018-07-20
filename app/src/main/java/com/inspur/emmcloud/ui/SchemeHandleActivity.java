@@ -264,7 +264,7 @@ public class SchemeHandleActivity extends Activity {
         if (uriList.size() > 0) {
             startVolumeShareActivity(uriList);
         }else if(isLinkShare()){
-            handleShareUrl();
+            handleLinkShare();
         }else{
             ToastUtils.show(SchemeHandleActivity.this,getString(R.string.share_not_support));
             finish();
@@ -286,7 +286,7 @@ public class SchemeHandleActivity extends Activity {
     /**
      * 处理分享url
      */
-    private void handleShareUrl() {
+    private void handleLinkShare() {
         Bundle bundle = getIntent().getExtras();
         JSONObject jsonObject = new JSONObject();
         try {
