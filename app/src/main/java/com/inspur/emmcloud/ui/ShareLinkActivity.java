@@ -16,7 +16,6 @@ import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -75,7 +74,6 @@ public class ShareLinkActivity extends BaseActivity {
         if (resultCode == RESULT_OK && requestCode == SHARE_LINK
                 && NetUtils.isNetworkConnected(getApplicationContext())) {
             String result = data.getStringExtra("searchResult");
-            LogUtils.YfcDebug("Result:"+result);
             try {
                 JSONObject jsonObject = new JSONObject(result);
                 if (jsonObject.has("people")) {
@@ -101,7 +99,6 @@ public class ShareLinkActivity extends BaseActivity {
                 ToastUtils.show(MyApplication.getInstance(),getString(R.string.news_share_fail));
             }
         }else{
-            LogUtils.YfcDebug("走到else");
             finish();
         }
     }

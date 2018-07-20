@@ -106,7 +106,7 @@ public class NewsWebDetailActivity extends BaseActivity {
     }
     /**
      * 初始化原生WebView的返回和关闭
-     * （不是GS应用，GS应用有重定向，不容易实现返回）
+     * 两处使用本方法的，专门封一个方法
      */
     public void initWebViewGoBackOrClose() {
         (findViewById(R.id.news_close_btn)).setVisibility(webView.canGoBack() ? View.VISIBLE : View.GONE);

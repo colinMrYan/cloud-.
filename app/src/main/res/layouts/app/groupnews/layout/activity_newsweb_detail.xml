@@ -30,7 +30,7 @@
                 android:src="@drawable/selector_back_btn" />
 
             <TextView
-                android:id="@+id/imp_back_btn"
+                android:id="@+id/news_back_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_toRightOf="@id/back_btn"

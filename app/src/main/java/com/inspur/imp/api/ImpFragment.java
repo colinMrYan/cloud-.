@@ -25,7 +25,6 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.mine.Language;
 import com.inspur.emmcloud.config.MyAppWebConfig;
 import com.inspur.emmcloud.ui.IndexActivity;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.MDM.MDM;
@@ -255,7 +254,6 @@ public class ImpFragment extends Fragment {
      */
     public void initWebViewGoBackOrClose() {
         if (headerText != null) {
-            LogUtils.YfcDebug("可以返回的判断："+webView.canGoBack());
             (rootView.findViewById(Res.getWidgetID("imp_close_btn"))).setVisibility(webView.canGoBack() ? View.VISIBLE : View.GONE);
         }
     }

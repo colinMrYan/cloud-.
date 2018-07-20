@@ -36,7 +36,6 @@ import com.inspur.emmcloud.ui.work.calendar.CalEventAddActivity;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -250,7 +249,6 @@ public class SchemeHandleActivity extends Activity {
      */
     private void handleShareIntent() {
         String action = getIntent().getAction();
-        LogUtils.YfcDebug("action:"+action);
         List<String> uriList = new ArrayList<>();
         if (Intent.ACTION_SEND.equals(action)) {
             Uri uri = FileUtils.getShareFileUri(getIntent());
@@ -265,14 +263,11 @@ public class SchemeHandleActivity extends Activity {
         }
         if (uriList.size() > 0) {
             startVolumeShareActivity(uriList);
+        }else if(isLinkShare()){
+            handleShareUrl();
         }else{
-            if(isLinkShare()){
-                handleShareUrl();
-            }else{
-                ToastUtils.show(SchemeHandleActivity.this,getString(R.string.share_not_support));
-                finish();
-            }
-
+            ToastUtils.show(SchemeHandleActivity.this,getString(R.string.share_not_support));
+            finish();
         }
     }
 
@@ -293,9 +288,6 @@ public class SchemeHandleActivity extends Activity {
      */
     private void handleShareUrl() {
         Bundle bundle = getIntent().getExtras();
-//        for (String key: bundle.keySet()) {
-//            LogUtils.YfcDebug( "Key=" + key + ", content=" +bundle.getString(key));
-//        }
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("url", bundle.getString("url"));
