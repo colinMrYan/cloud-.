@@ -6,10 +6,7 @@ import android.os.Bundle;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.api.APIInterfaceInstance;
-import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
-import com.inspur.emmcloud.bean.chat.GetNewsImgResult;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.chat.ChannelActivity;
 import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
@@ -21,8 +18,6 @@ import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
-import com.inspur.emmcloud.util.privates.MsgRecourceUploadUtils;
-import com.inspur.emmcloud.widget.LoadingDialog;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -34,21 +29,14 @@ import org.json.JSONObject;
 public class ShareLinkActivity extends BaseActivity {
 
     private static final int SHARE_LINK = 1;
-    private ChatAPIService apiService;
     private String shareLink = "";
-    private String key = "";
-    private LoadingDialog loadingDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         StateBarUtils.changeStateBarColor(this);
-        apiService = new ChatAPIService(ShareLinkActivity.this);
-        apiService.setAPIInterface(new WebService());
         shareLink = getIntent().getExtras().getString(Constant.SHARE_LINK);
-        loadingDialog = new LoadingDialog(ShareLinkActivity.this);
-        if(!StringUtils.isBlank(shareLink) && NetUtils.isNetworkConnected(ShareLinkActivity.this)){
-            loadingDialog.show();
-            MsgRecourceUploadUtils.uploadResImg(ShareLinkActivity.this,JSONUtils.getString(shareLink,"poster",""),apiService);
+        if(!StringUtils.isBlank(shareLink) ){
+            shareLinkToFriends();
         }else{
             ToastUtils.show(ShareLinkActivity.this,getString(R.string.news_share_fail));
             finish();
@@ -58,7 +46,7 @@ public class ShareLinkActivity extends BaseActivity {
     /**
      * 给朋友分享图片或文件
      */
-    private void shareFilesToFriends() {
+    private void shareLinkToFriends() {
         Intent intent = new Intent();
         intent.putExtra("select_content", 0);
         intent.putExtra("isMulti_select", false);
@@ -144,7 +132,7 @@ public class ShareLinkActivity extends BaseActivity {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("url", JSONUtils.getString(shareLink,"url",""));
-            jsonObject.put("poster", key);
+            jsonObject.put("poster", "");
             jsonObject.put("digest", JSONUtils.getString(shareLink,"digest",""));
             jsonObject.put("title", JSONUtils.getString(shareLink,"title",""));
         } catch (Exception e) {
@@ -153,22 +141,4 @@ public class ShareLinkActivity extends BaseActivity {
         return jsonObject.toString();
     }
 
-    class WebService extends APIInterfaceInstance{
-
-        @Override
-        public void returnUploadResImgSuccess(
-                GetNewsImgResult getNewsImgResult, String fakeMessageId) {
-            LoadingDialog.dimissDlg(loadingDialog);
-            String newsImgBody = getNewsImgResult.getImgMsgBody();
-            key = JSONUtils.getString(newsImgBody,"key","");
-            shareFilesToFriends();
-        }
-
-        @Override
-        public void returnUploadResImgFail(String error, int errorCode, String fakeMessageId) {
-            LoadingDialog.dimissDlg(loadingDialog);
-            ToastUtils.show(ShareLinkActivity.this,getString(R.string.news_share_fail));
-            finish();
-        }
-    }
 }
