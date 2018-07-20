@@ -10,6 +10,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -98,8 +99,17 @@ public class NewsWebDetailActivity extends BaseActivity {
      */
     private void initViews() {
         loadingDlg = new LoadingDialog(NewsWebDetailActivity.this);
-        ((TextView) findViewById(R.id.header_text)).setText(getString(R.string.group_news));
+//        ((TextView) findViewById(R.id.header_text)).setText(getString(R.string.group_news));
+        ((TextView) findViewById(R.id.header_text)).setText(((GroupNews)getIntent().getSerializableExtra("groupNews")).getTitle());
         initWebView();
+        initWebViewGoBackOrClose();
+    }
+    /**
+     * 初始化原生WebView的返回和关闭
+     * （不是GS应用，GS应用有重定向，不容易实现返回）
+     */
+    public void initWebViewGoBackOrClose() {
+        (findViewById(R.id.news_close_btn)).setVisibility(webView.canGoBack() ? View.VISIBLE : View.GONE);
     }
 
     /**
@@ -116,7 +126,37 @@ public class NewsWebDetailActivity extends BaseActivity {
         setWebViewModel(StringUtils.isBlank(model) ? lightMode : model);
         webView.setDownloadListener(new FileDownloadListener());
         webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+        webView.setWebViewClient(new WebViewClient(){
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+                initWebViewGoBackOrClose();
+            }
+
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                //Android8.0以下的需要返回true 并且需要loadUrl；8.0之后效果相反
+                if(Build.VERSION.SDK_INT<26) {
+                    view.loadUrl(url);
+                    return true;
+                }
+                return false;
+            }
+
+        });
     }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (webView.canGoBack()) {
+            webView.goBack();// 返回上一页面
+            return true;
+        } else {
+            finish();// 退出
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
 
     private class FileDownloadListener implements DownloadListener {
         @Override
@@ -354,6 +394,13 @@ public class NewsWebDetailActivity extends BaseActivity {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.back_layout:
+                if (webView.canGoBack()) {
+                    webView.goBack();// 返回上一页面
+                } else {
+                    finish();// 退出
+                }
+                break;
+            case R.id.news_close_btn:
                 finish();
                 break;
             case R.id.news_share_img:
