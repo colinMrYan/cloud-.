@@ -127,4 +127,17 @@ public class UriUtils {
         IntentUtils.startActivity(context, ImpActivity.class, bundle);
     }
 
+    /**
+     * 打开url
+     *
+     * @param context
+     * @param uri
+     */
+    public static void openUrl(Activity context, String uri,String appName) {
+        Bundle bundle = new Bundle();
+        bundle.putString("uri", uri);
+        bundle.putString("appName", appName);
+        IntentUtils.startActivity(context, ImpActivity.class, bundle);
+    }
+
 }
