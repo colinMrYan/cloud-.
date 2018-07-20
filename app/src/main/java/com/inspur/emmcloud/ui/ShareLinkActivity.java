@@ -50,6 +50,7 @@ public class ShareLinkActivity extends BaseActivity {
             loadingDialog.show();
             MsgRecourceUploadUtils.uploadResImg(ShareLinkActivity.this,JSONUtils.getString(shareLink,"poster",""),apiService);
         }else{
+            ToastUtils.show(ShareLinkActivity.this,getString(R.string.news_share_fail));
             finish();
         }
     }
