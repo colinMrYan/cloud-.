@@ -11,6 +11,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.chat.Msg;
 import com.inspur.emmcloud.util.common.DensityUtil;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -46,7 +47,9 @@ public class DisplayResLinkMsg {
                 .findViewById(R.id.news_card_digest_text);
         linkTitleText.setText(linkTitle);
         linkDigestText.setText(linkDigest);
-
+        if(StringUtils.isBlank(linkTitle) || linkTitle.length() <= 1){
+            linkTitleText.setVisibility(View.GONE);
+        }
         ImageView linkImageview = (ImageView) cardContentView
                 .findViewById(R.id.news_card_content_img);
         if (!StringUtils.isBlank(linkPoster)) {
@@ -73,7 +76,6 @@ public class DisplayResLinkMsg {
      * 展示链接类卡片，如新闻
      *
      * @param context
-     * @param convertView
      * @param msg
      */
     public static View displayResLinkMsg(Activity context,

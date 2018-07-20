@@ -200,8 +200,10 @@ public class ChannelV0Activity extends BaseActivity {
                     break;
                 case "link":
                     String content = getIntent().getExtras().getString(Constant.SHARE_LINK);
+                    String fakeId = System.currentTimeMillis() + "";
                     if(!StringUtils.isBlank(content)){
-                       sendMsg(content,"res_link",System.currentTimeMillis() + "");
+                       sendMsg(content,"res_link",fakeId);
+                       addLocalMessage(ConbineMsg.conbineMsg(ChannelV0Activity.this,content,"","res_link",fakeId));
                     }
                     break;
                 default:
@@ -210,6 +212,8 @@ public class ChannelV0Activity extends BaseActivity {
 
         }
     }
+
+
 
     /**
      * 初始化下拉刷新UI
