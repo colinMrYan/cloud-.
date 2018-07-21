@@ -37,7 +37,7 @@ final class CameraConfigurationManager {
   private static final int TEN_DESIRED_ZOOM = 27;
   private static final int DESIRED_SHARPNESS = 30;
 	private static final int MIN_PREVIEW_PIXELS = 720 * 720; // normal screen
-	private static final int MAX_PREVIEW_PIXELS = 1440 * 1200;
+	private static final int MAX_PREVIEW_PIXELS = 2000 * 1100;
 
   private static final Pattern COMMA_PATTERN = Pattern.compile(",");
 
@@ -103,6 +103,7 @@ final class CameraConfigurationManager {
     parameters.setPreviewSize(cameraResolution.x, cameraResolution.y);
     setFlash(parameters);
     setZoom(parameters);
+    setFocusArea(parameters);
     camera.setDisplayOrientation(90);
     
     //setSharpness(parameters);
@@ -325,6 +326,17 @@ final class CameraConfigurationManager {
       parameters.set("taking-picture-zoom", tenDesiredZoom);
     }
   }
+
+    public static void setFocusArea(Camera.Parameters parameters) {
+//        if (parameters.getMaxNumFocusAreas() > 0) {
+//            List<Camera.Area> focusAreas = new ArrayList<Camera.Area>();
+//            focusAreas.add(new Camera.Area(CameraManager.get().getFramingRectInPreview(), 1000));
+//            parameters.setFocusAreas(focusAreas);
+//        } else {
+//            Log.i(TAG, "Device does not support focus areas");
+//        }
+    }
+
 
   /*
   private void setSharpness(Camera.Parameters parameters) {

@@ -27,7 +27,6 @@ import com.inspur.emmcloud.util.common.ImageUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.imp.api.Res;
 import com.inspur.imp.plugin.barcode.camera.CameraManager;
-import com.inspur.imp.plugin.barcode.camera.PlanarYUVLuminanceSource;
 import com.inspur.imp.plugin.barcode.decoding.CaptureActivityHandler;
 import com.inspur.imp.plugin.barcode.decoding.GetDecodeResultFromServer;
 import com.inspur.imp.plugin.barcode.decoding.InactivityTimer;
@@ -276,7 +275,7 @@ public class CaptureActivity extends Activity implements Callback {
         }
     };
 
-    public void uploadImgToDecodeByServer(PlanarYUVLuminanceSource source){
+    public void uploadImgToDecodeByServer(Bitmap cropBitmap){
         if (isDecodeingFromServer)return;
         isDecodeingFromServer = true;
         File dir =new File(MyAppConfig.LOCAL_IMG_CREATE_PATH);
@@ -288,9 +287,8 @@ public class CaptureActivity extends Activity implements Callback {
         if (file.exists()){
             file.delete();
         }
-        Bitmap imgBitmap = source.getBitmap();
         try {
-            ImageUtils.saveImageToSD(CaptureActivity.this, imgSavePath, imgBitmap, 90);
+            ImageUtils.saveImageToSD(CaptureActivity.this, imgSavePath, cropBitmap, 90);
             final String completeUrl = "http://emm.inspuronline.com:88/api/barcode/decode";
             RequestParams params = new RequestParams(completeUrl);
             params.setMultipart(true);// 使用multipart表单上传文件

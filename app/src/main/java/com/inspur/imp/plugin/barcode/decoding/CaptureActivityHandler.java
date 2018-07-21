@@ -18,6 +18,7 @@ package com.inspur.imp.plugin.barcode.decoding;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -27,7 +28,6 @@ import com.google.zxing.Result;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.imp.api.Res;
 import com.inspur.imp.plugin.barcode.camera.CameraManager;
-import com.inspur.imp.plugin.barcode.camera.PlanarYUVLuminanceSource;
 import com.inspur.imp.plugin.barcode.scan.CaptureActivity;
 import com.inspur.imp.plugin.barcode.view.ViewfinderResultPointCallback;
 
@@ -92,8 +92,8 @@ public final class CaptureActivityHandler extends Handler {
 		} else if (Res.getWidgetID("decode_failed") == message.what) {
 			// We're decoding as fast as possible, so when one decode fails, init another.
           if (message.obj != null && NetUtils.isNetworkConnected(activity,false)){
-              PlanarYUVLuminanceSource source = (PlanarYUVLuminanceSource) message.obj;
-              activity.uploadImgToDecodeByServer(source);
+              Bitmap cropBitmap = (Bitmap) message.obj;
+              activity.uploadImgToDecodeByServer(cropBitmap);
           }
 	        state = State.PREVIEW;
 	        CameraManager.get().requestPreviewFrame(decodeThread.getHandler(), Res.getWidgetID("decode"));
