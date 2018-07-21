@@ -1,7 +1,7 @@
 package com.inspur.imp.api;
 
-import com.inspur.emmcloud.BaseActivity;
+import com.inspur.emmcloud.BaseFragmentActivity;
 
-public class ImpBaseActivity extends BaseActivity {
+public class ImpBaseActivity extends BaseFragmentActivity {
 
 }

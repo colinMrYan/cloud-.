@@ -69,8 +69,7 @@ import com.inspur.emmcloud.bean.mine.GetUploadMyHeadResult;
 import com.inspur.emmcloud.bean.mine.GetUserHeadUploadResult;
 import com.inspur.emmcloud.bean.mine.UserProfileInfoBean;
 import com.inspur.emmcloud.bean.system.GetAppConfigResult;
-import com.inspur.emmcloud.bean.system.GetAppTabAutoResult;
-import com.inspur.emmcloud.bean.system.GetAppTabsResult;
+import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
 import com.inspur.emmcloud.bean.system.GetBoolenResult;
 import com.inspur.emmcloud.bean.system.GetUpgradeResult;
 import com.inspur.emmcloud.bean.system.SplashPageBean;
@@ -1156,7 +1155,7 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnGetAppTabsSuccess(GetAppTabsResult getAppTabsResult) {
+    public void returnGetAppTabsSuccess(GetAppMainTabResult getAppTabsResult) {
         // TODO Auto-generated method stub
 
     }
@@ -1298,7 +1297,7 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnAppTabAutoSuccess(GetAppTabAutoResult getAppTabAutoResult) {
+    public void returnAppTabAutoSuccess(GetAppMainTabResult getAppMainTabResult) {
 
     }
 

@@ -19,7 +19,7 @@ import com.inspur.emmcloud.bean.appcenter.ReactNativeUpdateBean;
 import com.inspur.emmcloud.bean.login.GetDeviceCheckResult;
 import com.inspur.emmcloud.bean.login.LoginDesktopCloudPlusBean;
 import com.inspur.emmcloud.bean.system.GetAppConfigResult;
-import com.inspur.emmcloud.bean.system.GetAppTabAutoResult;
+import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
 import com.inspur.emmcloud.bean.system.GetUpgradeResult;
 import com.inspur.emmcloud.bean.system.SplashPageBean;
 import com.inspur.emmcloud.interf.OauthCallBack;
@@ -249,17 +249,31 @@ public class AppAPIService {
     /**
      * 获取显示tab页的接口
      */
-    public void getAppNewTabs(final String version, final String clientId) {
-        final String completeUrl = APIUri.getAppNewTabs() + "?version=" + version + "&clientId=" + clientId;
+    public void getAppNewTabs(final String tabVersion) {
+        final String completeUrl = APIUri.getAppNewTabs();
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
-        HttpUtils.request(context,CloudHttpMethod.GET,params,new APICallback(context, completeUrl) {
+        JSONObject jsonObject = new JSONObject();
+        try{
+            jsonObject.put("os","Android");
+            jsonObject.put("osVersion",AppUtils.getReleaseVersion());
+            jsonObject.put("appId",AppUtils.getPackageName(context));
+            jsonObject.put("appVersion",AppUtils.getVersion(context));
+            jsonObject.put("appCoreVersion",AppUtils.getVersion(context));
+            jsonObject.put("version",tabVersion);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        params.setBodyContent(jsonObject.toString());
+        params.setAsJsonContent(true);
+
+        HttpUtils.request(context,CloudHttpMethod.POST,params,new APICallback(context, completeUrl) {
             @Override
             public void callbackTokenExpire(long requestTime) {
                 OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        getAppNewTabs(version, clientId);
+                        getAppNewTabs(tabVersion);
                     }
 
                     @Override
@@ -273,7 +287,7 @@ public class AppAPIService {
 
             @Override
             public void callbackSuccess(byte[] arg0) {
-                apiInterface.returnAppTabAutoSuccess(new GetAppTabAutoResult(new String(arg0)));
+                apiInterface.returnAppTabAutoSuccess(new GetAppMainTabResult(new String(arg0)));
             }
 
             @Override

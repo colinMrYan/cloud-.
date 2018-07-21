@@ -24,7 +24,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.util.common.ParseHtmlUtils;
-import com.inspur.imp.api.ImpActivity;
+import com.inspur.emmcloud.util.privates.AppUtils;
+import com.inspur.imp.api.ImpCallBackInterface;
 import com.inspur.imp.api.JsInterface;
 import com.inspur.imp.api.iLog;
 import com.inspur.imp.plugin.PluginMgr;
@@ -74,15 +75,18 @@ public class ImpWebView extends WebView {
 	private FrameLayout frameLayout;
 	private PluginMgr pluginMgr;
 
+	private ImpCallBackInterface impCallBackInterface;
+
 	public ImpWebView(Context context, AttributeSet attrs) {
 		super(context,attrs);
 		this.context = context;
 	}
 
-	public void setProperty( TextView titleText, LinearLayout loadFailLayout,FrameLayout layout){
+	public void setProperty( TextView titleText, LinearLayout loadFailLayout,FrameLayout layout,ImpCallBackInterface impCallBackInterface){
 		this.titleText =titleText;
 		this.loadFailLayout = loadFailLayout;
 		this.frameLayout = layout;
+		this.impCallBackInterface = impCallBackInterface;
 		this.setWebView();
 		this.setWebSetting();
 		handMessage();
@@ -99,7 +103,9 @@ public class ImpWebView extends WebView {
 						titleText.setText(title);
 						break;
 					case DIMISS_LOADING:
-						((ImpActivity)getContext()).dimissLoadingDlg();
+						if(impCallBackInterface != null){
+							impCallBackInterface.onLoadingDlgDimiss();
+						}
 						break;
 					default:
 						break;
@@ -109,10 +115,12 @@ public class ImpWebView extends WebView {
 
 	}
 
+
 	//imp修改处
 	public ImpWebChromeClient getWebChromeClient(){
 		return impWebChromeClient;
 	}
+
 
 	public void init() {
 		initPlugin();
@@ -161,8 +169,9 @@ public class ImpWebView extends WebView {
 	}
 
 	// 重置当前接口的webview
-	public void initPlugin() {
+	private void initPlugin() {
 		pluginMgr = new PluginMgr(context,this);
+		pluginMgr.setImpCallBackInterface(impCallBackInterface);
 	}
 	private int mLastMotionX;
 	private int mLastMotionY;
@@ -177,8 +186,9 @@ public class ImpWebView extends WebView {
 		setLayoutAnimation(null);
 		setAnimation(null);
 		setNetworkAvailable(true);
+
 		this.setBackgroundColor(Color.WHITE);
-		this.setWebViewClient(new ImpWebViewClient(loadFailLayout));
+		this.setWebViewClient(new ImpWebViewClient(loadFailLayout,impCallBackInterface));
 		// 使WebView支持弹出框
 		impWebChromeClient = new ImpWebChromeClient(context,this,frameLayout);
 		this.setWebChromeClient(impWebChromeClient);
@@ -225,6 +235,8 @@ public class ImpWebView extends WebView {
 
 	// 设置websettings属性
 	public void setWebSetting() {
+		//基础设置，地理位置，缓存，userAgent等
+		setBaseConfig();
 		// 支持js相关方法
 		setJSConfig();
 		// 页面效果设置
@@ -239,10 +251,19 @@ public class ImpWebView extends WebView {
 		// 支持html5数据库和使用缓存的功能
 		Html5Apis htmlApi = new Html5Apis();
 		htmlApi.invoke(settings);
+	}
+
+	/**
+	 * 基础设置
+	 */
+	private void setBaseConfig() {
 		// 代理字符串，如果字符串为空或者null系统默认字符串将被利用
-		settings.setUserAgentString(USERAGENT);
-
-
+		String userAgent = USERAGENT + "/emmcloud/" + AppUtils.getVersion(context);
+		settings.setUserAgentString(userAgent);
+		settings.enableSmoothTransition();
+		settings.setGeolocationEnabled(true);
+		String dir = context.getDir("database", Context.MODE_PRIVATE).getPath();
+		settings.setGeolocationDatabasePath(dir);
 	}
 
 	/* 支持js相关方法 */
@@ -391,6 +412,10 @@ public class ImpWebView extends WebView {
 			pluginMgr = null;
 		}
 		super.destroy();
+	}
+
+	public PluginMgr getPluginMgr(){
+		return pluginMgr;
 	}
 
 	@Override
