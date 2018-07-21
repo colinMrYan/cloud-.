@@ -24,7 +24,6 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.ImageUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.imp.api.Res;
 import com.inspur.imp.plugin.barcode.camera.CameraManager;
 import com.inspur.imp.plugin.barcode.decoding.CaptureActivityHandler;
@@ -154,7 +153,6 @@ public class CaptureActivity extends Activity implements Callback {
         }
 
     public void handDecodeResult(String result) {
-        LogUtils.jasonDebug("result="+result);
         isDecodeFinish = true;
         boolean isFromWeb = true;
         if (getIntent().hasExtra("from")) {
@@ -296,7 +294,6 @@ public class CaptureActivity extends Activity implements Callback {
             x.http().post(params, new CommonCallback<String>(){
                 @Override
                 public void onSuccess(String s) {
-                    LogUtils.jasonDebug("isDecodeingFromServerSuccess-----------");
                     if (!isDecodeFinish){
                         GetDecodeResultFromServer getDecodeResultFromServer = new GetDecodeResultFromServer(s);
                         String data = getDecodeResultFromServer.getData();
@@ -312,7 +309,6 @@ public class CaptureActivity extends Activity implements Callback {
 
                 @Override
                 public void onError(Throwable arg0, boolean b) {
-                    LogUtils.jasonDebug("isDecodeingFromServerFail-----------");
                     isDecodeingFromServer = false;
                 }
 
