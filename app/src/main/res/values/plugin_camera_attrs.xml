@@ -11,4 +11,11 @@
             <enum name="circle" value="1"/>
         </attr>
     </declare-styleable>
+
+    <declare-styleable name="IMGColorRadio">
+
+        <attr name="image_color" format="color" />
+        <attr name="image_stroke_color" format="color" />
+
+    </declare-styleable>
 </resources>

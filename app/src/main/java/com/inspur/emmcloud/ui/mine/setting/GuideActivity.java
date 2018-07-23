@@ -14,20 +14,16 @@ import android.widget.ImageView;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.MyViewPagerAdapter;
-import com.inspur.emmcloud.api.APIInterfaceInstance;
-import com.inspur.emmcloud.api.apiservice.LoginAPIService;
-import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
-import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.interf.CommonCallBack;
 import com.inspur.emmcloud.ui.IndexActivity;
-import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.LanguageUtils;
+import com.inspur.emmcloud.util.privates.ProfileUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 
 import org.xutils.view.annotation.ContentView;
@@ -117,10 +113,16 @@ public class GuideActivity extends Activity {
                                     "isFirst", false);
                             String accessToken = PreferencesUtils.getString(
                                     GuideActivity.this, "accessToken", "");
-                            if(!StringUtils.isBlank(accessToken) && AppUtils.isAppHasUpgraded(GuideActivity.this)){
-                                getUserProfile();
+                            if(!StringUtils.isBlank(accessToken)){
+                                new ProfileUtils(GuideActivity.this, new CommonCallBack() {
+                                    @Override
+                                    public void execute() {
+                                        IntentUtils.startActivity(GuideActivity.this,
+                                                IndexActivity.class, true);
+                                    }
+                                }).initProfile();
                             }else{
-                                startIntentActivity();
+                                startLoginActivity();
                             }
                         }
                     }
@@ -132,70 +134,16 @@ public class GuideActivity extends Activity {
         loadingDialog = new LoadingDialog(this);
     }
 
-    /**
-     * 打开应该打开的Activity
-     */
-    private void startIntentActivity() {
-        // 存入当前版本号,方便判断新功能介绍显示的时机
-        String appVersion = AppUtils.getVersion(GuideActivity.this);
-        PreferencesUtils.putString(getApplicationContext(), "previousVersion",
-                appVersion);
-        String accessToken = PreferencesUtils.getString(
-                GuideActivity.this, "accessToken", "");
-        IntentUtils.startActivity(GuideActivity.this, (!StringUtils.isBlank(accessToken)) ?
-                IndexActivity.class : LoginActivity.class, true);
-    }
 
     /**
      * 转到LoginActivity
      */
     private void startLoginActivity(){
         // 存入当前版本号,方便判断新功能介绍显示的时机
+        MyApplication.getInstance().signout();
         String appVersion = AppUtils.getVersion(GuideActivity.this);
         PreferencesUtils.putString(getApplicationContext(), "previousVersion",
                 appVersion);
-        IntentUtils.startActivity(GuideActivity.this,LoginActivity.class,true);
-    }
-
-    /**
-     * 获取用户的个人信息
-     */
-    private void getUserProfile() {
-        if (NetUtils.isNetworkConnected(GuideActivity.this, true)) {
-            loadingDialog.show();
-            LoginAPIService apiServices = new LoginAPIService(GuideActivity.this);
-            apiServices.setAPIInterface(new WebService());
-            apiServices.getMyInfo();
-        }else{
-            startLoginActivity();
-        }
-    }
-
-
-    class WebService extends APIInterfaceInstance{
-        @Override
-        public void returnMyInfoSuccess(GetMyInfoResult getMyInfoResult) {
-            LoadingDialog.dimissDlg(loadingDialog);
-            saveNewProfileAndOldProfile(getMyInfoResult.getResponse());
-            MyApplication.getInstance().initTanent();
-            startIntentActivity();
-        }
-
-        @Override
-        public void returnMyInfoFail(String error, int errorCode) {
-            LoadingDialog.dimissDlg(loadingDialog);
-            startLoginActivity();
-        }
-    }
-
-    /**
-     * 存储新旧profile
-     * @param response
-     */
-    private void saveNewProfileAndOldProfile(String response) {
-        //存储上一个版本，不再有本地默认版本
-        PreferencesUtils.putString(GuideActivity.this, Constant.PREF_MY_INFO_OLD,PreferencesUtils.getString(GuideActivity.this,"",""));
-        PreferencesUtils.putString(GuideActivity.this, "myInfo", response);
     }
 
     @Override

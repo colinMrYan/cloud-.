@@ -48,7 +48,8 @@ import com.inspur.emmcloud.bean.chat.GetSendMsgResult;
 import com.inspur.emmcloud.bean.chat.GetUploadPushInfoResult;
 import com.inspur.emmcloud.bean.chat.GetWebSocketUrlResult;
 import com.inspur.emmcloud.bean.chat.Robot;
-import com.inspur.emmcloud.bean.contact.GetAllContactResult;
+import com.inspur.emmcloud.bean.contact.GetContactOrgListUpateResult;
+import com.inspur.emmcloud.bean.contact.GetContactUserListUpateResult;
 import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.find.GetKnowledgeInfo;
 import com.inspur.emmcloud.bean.find.GetTripArriveCity;
@@ -68,8 +69,7 @@ import com.inspur.emmcloud.bean.mine.GetUploadMyHeadResult;
 import com.inspur.emmcloud.bean.mine.GetUserHeadUploadResult;
 import com.inspur.emmcloud.bean.mine.UserProfileInfoBean;
 import com.inspur.emmcloud.bean.system.GetAppConfigResult;
-import com.inspur.emmcloud.bean.system.GetAppTabAutoResult;
-import com.inspur.emmcloud.bean.system.GetAppTabsResult;
+import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
 import com.inspur.emmcloud.bean.system.GetBoolenResult;
 import com.inspur.emmcloud.bean.system.GetUpgradeResult;
 import com.inspur.emmcloud.bean.system.SplashPageBean;
@@ -455,19 +455,6 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnChannelInfoFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
-
-    }
-
-
-    @Override
-    public void returnAllContactSuccess(GetAllContactResult getAllContactResult) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void returnAllContactFail(String error, int errorCode) {
         // TODO Auto-generated method stub
 
     }
@@ -1168,7 +1155,7 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnGetAppTabsSuccess(GetAppTabsResult getAppTabsResult) {
+    public void returnGetAppTabsSuccess(GetAppMainTabResult getAppTabsResult) {
         // TODO Auto-generated method stub
 
     }
@@ -1310,7 +1297,7 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnAppTabAutoSuccess(GetAppTabAutoResult getAppTabAutoResult) {
+    public void returnAppTabAutoSuccess(GetAppMainTabResult getAppMainTabResult) {
 
     }
 
@@ -1646,6 +1633,46 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnChatFileUploadTokenFail(String error, int errorCode) {
+
+    }
+
+    @Override
+    public void returnContactUserListSuccess(byte[] bytes) {
+
+    }
+
+    @Override
+    public void returnContactUserListFail(String error, int errorCode) {
+
+    }
+
+    @Override
+    public void returnContactOrgListSuccess(byte[] bytes) {
+
+    }
+
+    @Override
+    public void returnContactOrgListFail(String error, int errorCode) {
+
+    }
+
+    @Override
+    public void returnContactUserListUpdateSuccess(GetContactUserListUpateResult getContactUserListUpateResult) {
+
+    }
+
+    @Override
+    public void returnContactUserListUpdateFail(String error, int errorCode) {
+
+    }
+
+    @Override
+    public void returnContactOrgListUpdateSuccess(GetContactOrgListUpateResult getContactOrgListUpateResult) {
+
+    }
+
+    @Override
+    public void returnContactOrgListUpdateFail(String error, int errorCode) {
 
     }
 }

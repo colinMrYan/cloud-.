@@ -28,9 +28,13 @@ import android.provider.MediaStore;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Base64;
 import android.util.DisplayMetrics;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.inspur.emmcloud.MyApplication;
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
@@ -96,10 +100,14 @@ public class ImageUtils {
 	public static void saveImageToSD(Context ctx, String filePath,
 			Bitmap bitmap, int quality) throws IOException {
 		if (bitmap != null) {
-			File file = new File(filePath.substring(0,
+			File dir = new File(filePath.substring(0,
 					filePath.lastIndexOf(File.separator)));
-			if (!file.exists()) {
-				file.mkdirs();
+			if (!dir.exists()) {
+				dir.mkdirs();
+			}
+			File file = new File(filePath);
+			if (file.exists()){
+				file.delete();
 			}
 			BufferedOutputStream bos = new BufferedOutputStream(
 					new FileOutputStream(filePath));
@@ -255,13 +263,34 @@ public class ImageUtils {
     public static Bitmap rotaingImageView(int angle, Bitmap bitmap) {
         // 旋转图片 动作
         Matrix matrix = new Matrix();
-        ;
         matrix.postRotate(angle);
         // 创建新的图片
         Bitmap resizedBitmap = Bitmap.createBitmap(bitmap, 0, 0,
                 bitmap.getWidth(), bitmap.getHeight(), matrix, true);
         return resizedBitmap;
     }
+
+	/**
+	 * 镜面旋转（前置摄像头拍照后照片镜面翻转）
+	 * @param originBitmap
+	 * @return
+	 */
+	public static Bitmap rotaingImageViewByMirror(Bitmap originBitmap){
+		Bitmap mirrorOriginBitmap = Bitmap.createBitmap(originBitmap.getWidth(), originBitmap.getHeight(), originBitmap.getConfig());
+		Canvas canvas = new Canvas(mirrorOriginBitmap);
+		Paint paint = new Paint();
+		paint.setColor(Color.BLACK);
+		paint.setAntiAlias(true);
+		Matrix matrix = new Matrix();
+		//镜子效果
+		matrix.setScale(-1, 1);
+		matrix.postTranslate(originBitmap.getWidth(), 0);
+		canvas.drawBitmap(originBitmap, matrix, paint);
+		originBitmap = mirrorOriginBitmap;
+		//前置摄像头旋转180度才能显示preview显示的界面
+		originBitmap = ImageUtils.rotaingImageView(180, originBitmap);
+		return originBitmap;
+	}
 
     /**
      * 使用当前时间戳拼接一个唯一的文件名
@@ -796,6 +825,30 @@ public class ImageUtils {
         Bitmap bitmap = textView.getDrawingCache();
         return bitmap;
     }
+
+    public static void drawAndSavePhotoTextImg(Context context, String content,String savePath){
+		TextView textView = new TextView(context);
+		textView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+		int height = DensityUtil.dip2px(MyApplication.getInstance(),50);
+		textView.setWidth(height);
+		textView.setHeight(height);
+		textView.setBackgroundColor(Color.parseColor("#3596f7"));
+		textView.setTextSize(TypedValue.COMPLEX_UNIT_PX,DensityUtil.dip2px(MyApplication.getInstance(),30));
+		textView.setIncludeFontPadding(false);
+		textView.setTextColor(Color.WHITE);
+		textView.setGravity(Gravity.CENTER);
+		textView.setText(content);
+		textView.measure(View.MeasureSpec.makeMeasureSpec(height, View.MeasureSpec.AT_MOST),
+				View.MeasureSpec.makeMeasureSpec(height, View.MeasureSpec.AT_MOST));
+		textView.layout(0, 0, textView.getMeasuredWidth(), textView.getMeasuredHeight());
+		textView.buildDrawingCache();
+		Bitmap bitmap = textView.getDrawingCache();
+		try {
+			saveImageToSD(context,savePath,bitmap,100);
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+	}
 
     /**
      * 获取paddingLeft

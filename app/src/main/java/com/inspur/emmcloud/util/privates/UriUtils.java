@@ -12,7 +12,6 @@ import com.inspur.emmcloud.ui.appcenter.ReactNativeAppActivity;
 import com.inspur.emmcloud.ui.appcenter.groupnews.GroupNewsActivity;
 import com.inspur.emmcloud.ui.appcenter.volume.VolumeHomePageActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
@@ -45,6 +44,7 @@ public class UriUtils {
                 break;
             case 3:
             case 4:
+            case 6:
                 if(app.getAppID().equals("456166a362436750d74bfeaef997693d")){
                     new AppCenterApprovalUtils().openApprovalApp(activity,app);
                 } else if(app.getIsSSO() == 1){
@@ -104,7 +104,7 @@ public class UriUtils {
         Intent intent = new Intent();
         intent.setClass(activity, ImpActivity.class);
         intent.putExtra("uri", uri);
-        if (app.getAppType() == 3) {
+        if (app.getAppType() == 3 || (app.getAppType() == 6 && app.getUserHeader() == 1)) {
             intent.putExtra("appName", app.getAppName());
         }
         intent.putExtra("is_zoomable", app.getIsZoomable());
@@ -123,7 +123,7 @@ public class UriUtils {
     public static void openUrl(Activity context, String uri) {
         Bundle bundle = new Bundle();
         bundle.putString("uri", uri);
-        bundle.putString("appName", "");
+        bundle.putString("appName", "  ");
         IntentUtils.startActivity(context, ImpActivity.class, bundle);
     }
 

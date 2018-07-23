@@ -17,8 +17,15 @@
 package com.inspur.imp.plugin.barcode.camera;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.ImageFormat;
+import android.graphics.Rect;
+import android.graphics.YuvImage;
 
 import com.google.zxing.LuminanceSource;
+import com.inspur.emmcloud.util.common.LogUtils;
+
+import java.io.ByteArrayOutputStream;
 
 /**
  * This object extends LuminanceSource around an array of YUV data returned from the camera driver,
@@ -51,6 +58,8 @@ public final class PlanarYUVLuminanceSource extends LuminanceSource {
     this.left = left;
     this.top = top;
   }
+
+
 
   @Override
   public byte[] getRow(int y, byte[] row) {
@@ -97,6 +106,73 @@ public final class PlanarYUVLuminanceSource extends LuminanceSource {
     return matrix;
   }
 
+  public byte[] getCropMatrix(){
+    int mWidth = dataWidth;
+    int mHeight = dataHeight;
+    LogUtils.jasonDebug("mWidth="+mWidth);
+    LogUtils.jasonDebug("mHeight="+mHeight);
+    int mYLenght = mWidth * mHeight;
+    int  mCropHeight =getHeight();
+    int mCropWidth = getWidth();
+
+    LogUtils.jasonDebug("mCropHeight="+mCropHeight);
+    LogUtils.jasonDebug("mCropWidth="+mCropWidth);
+
+    int mCropLeft = left;
+    int mCropTop = top;
+    byte[] mData = new byte[mCropHeight * mCropWidth * 3 / 2];
+
+
+    int index = 0;
+    int start = mCropLeft + mCropTop * mWidth;
+    int end = mWidth * (mCropTop + mCropHeight);
+    int oriStep = mWidth;
+    int newstep = mCropWidth;
+    //copy y;
+    for(int i = start; i < end; i += oriStep){
+      System.arraycopy(yuvData, i, mData, index, newstep);
+      index += newstep;
+    }
+    //copy u
+    start = mYLenght + (mWidth * mCropTop / 4 + mCropLeft / 2) ;
+    end = mYLenght + mWidth * (mCropTop + mCropHeight) / 4;
+    oriStep = mWidth / 2;
+    newstep = mCropWidth / 2;
+    for(int i = start; i < end; i += oriStep){
+      System.arraycopy(yuvData, i, mData, index, newstep);
+      index += newstep;
+    }
+    //copy v
+    start = mYLenght / 4 * 5 + mWidth * mCropTop / 4 + mCropLeft / 2;
+    end = mYLenght / 4 * 5 + mWidth * (mCropTop + mCropHeight) / 4;
+    for(int i = start; i < end; i += oriStep){
+      System.arraycopy(yuvData, i, mData, index, newstep);
+      index += newstep;
+    }
+    return mData;
+  }
+
+
+  /**
+   * 对于高通或者MTK平台，只支持宽高为16的整数备的数据
+   * @param size
+   * @param limit
+   * @return
+   */
+  private int roundTo16(int size, int limit){
+    if(size >= limit){
+      return limit;
+    }
+    float f = size / 16f;
+    int m;
+    if(f - (int)f > 0.5f){
+      m = ((int)(f + 0.5)) * 16;
+    }else{
+      m = (int)f * 16;
+    }
+    return m < 16 ? 16 : m;
+  }
+
   @Override
   public boolean isCropSupported() {
     return true;
@@ -130,4 +206,33 @@ public final class PlanarYUVLuminanceSource extends LuminanceSource {
     bitmap.setPixels(pixels, 0, width, 0, 0, width, height);
     return bitmap;
   }
+
+  public Bitmap getCropBitmap(){
+    Bitmap barcode= null;
+    Bitmap originBitmap =byte2Bitmap(yuvData,dataWidth,dataHeight);
+    barcode = Bitmap.createBitmap(originBitmap,left,top,getWidth(),getHeight());
+
+    return  barcode;
+  }
+
+
+
+  public Bitmap byte2Bitmap(byte[] data,int width,int height){
+    try {
+      YuvImage image = new YuvImage(data, ImageFormat.NV21, width, height, null);
+      if (image != null) {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        image.compressToJpeg(new Rect(0, 0, width, height), 90, stream);
+
+        Bitmap originBitmap = BitmapFactory.decodeByteArray(stream.toByteArray(), 0, stream.size());
+        stream.close();
+        return originBitmap;
+      }
+    }catch (Exception e){
+      e.printStackTrace();
+    }
+    return null;
+
+  }
+
 }

@@ -16,7 +16,6 @@ import android.graphics.Paint.FontMetrics;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -34,6 +33,7 @@ import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.imp.api.ImpActivity;
 import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
 import com.inspur.imp.plugin.camera.imagepicker.ui.ImageGridActivity;
+import com.inspur.imp.plugin.camera.mycamera.MyCameraActivity;
 
 import java.io.File;
 import java.util.List;
@@ -142,6 +142,15 @@ public class AppUtils {
     }
 
     /**
+     * 获取应用包名
+     * @param context
+     * @return
+     */
+    public static String getPackageName(Context context){
+        return context.getPackageName();
+    }
+
+    /**
      * 如果包含Beta则截取bata前的版本号信息
      *
      * @param versionCode
@@ -181,6 +190,22 @@ public class AppUtils {
                 int currentVersionNum = Integer.parseInt(currentArray[0]) * 1000000 + Integer.parseInt(currentArray[1]) * 1000 + Integer.parseInt(currentArray[2]);
                 return currentVersionNum > savedVersionNum;
             }
+        }
+        return false;
+    }
+
+    /**
+     * 判断是否低于2.0.2
+     * @param context
+     * @return
+     */
+    public static boolean isLower202Version(Context context){
+        String savedVersion = PreferencesUtils.getString(context,
+                "previousVersion", "");
+        String[] savedArray = savedVersion.split("\\.");
+        int savedVersionNum = Integer.parseInt(savedArray[0])*1000000+Integer.parseInt(savedArray[1])*1000+Integer.parseInt(savedArray[2]);
+        if(savedVersionNum < 2000002){
+            return true;
         }
         return false;
     }
@@ -537,22 +562,58 @@ public class AppUtils {
         // 判断存储卡是否可以用，可用进行存储
         if (Environment.getExternalStorageState().equals(
                 Environment.MEDIA_MOUNTED)) {
-            Intent intentFromCapture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             File appDir = new File(Environment.getExternalStorageDirectory(),
                     "DCIM");
             if (!appDir.exists()) {
                 appDir.mkdir();
             }
-            // 指定文件名字
-            intentFromCapture.putExtra(MediaStore.EXTRA_OUTPUT,
-                    Uri.fromFile(new File(appDir, fileName)));
-            activity.startActivityForResult(intentFromCapture,
-                    requestCode);
+            Intent intent = new Intent();
+            intent.putExtra(MyCameraActivity.EXTRA_PHOTO_DIRECTORY_PATH, appDir.getAbsolutePath());
+            intent.putExtra(MyCameraActivity.EXTRA_PHOTO_NAME,fileName);
+            intent.setClass(activity,MyCameraActivity.class);
+            activity.startActivityForResult(intent, requestCode);
         } else {
             ToastUtils.show(activity, R.string.filetransfer_sd_not_exist);
         }
     }
 
+    /**
+     * 发短信
+     * @param activity
+     * @param phoneNum
+     * @param requestCode
+     */
+    public static void sendSMS(Activity activity,String phoneNum,int requestCode){
+        Uri smsToUri = Uri.parse("smsto:" + phoneNum);
+        Intent intent = new Intent(Intent.ACTION_SENDTO, smsToUri);
+        activity.startActivityForResult(intent, requestCode);
+
+    }
+
+    /**
+     * 打电话
+     * @param activity
+     * @param phoneNum
+     * @param requestCode
+     */
+    public static void call(Activity activity,String phoneNum,int requestCode){
+        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:"
+                + phoneNum));
+        activity.startActivityForResult(intent, requestCode);
+    }
+
+    /**
+     * 发邮件
+     * @param activity
+     * @param mail
+     * @param requestCode
+     */
+    public static void sendMail(Activity activity,String mail,int requestCode){
+        Uri uri = Uri.parse("mailto:" + mail);
+        Intent intent = new Intent(Intent.ACTION_SENDTO, uri);
+        activity.startActivityForResult(Intent.createChooser(intent,
+                activity.getString(R.string.please_select_app_of_mail)), 1);
+    }
     /**
      * 初始化图片选择控件
      */
@@ -600,7 +661,7 @@ public class AppUtils {
     private static String getDeviceUUID(Context context) {
         final TelephonyManager tm = (TelephonyManager) context
                 .getSystemService(Context.TELEPHONY_SERVICE);
-        final String tmDevice, tmSerial, tmPhone, androidId;
+        final String tmDevice, tmSerial, androidId;
         tmDevice = "" + tm.getDeviceId();
         tmSerial = "" + tm.getSimSerialNumber();
         androidId = ""

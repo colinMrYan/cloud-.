@@ -1,119 +1,66 @@
 package com.inspur.emmcloud.bean.contact;
 
-import android.content.Context;
-
-import com.facebook.react.bridge.WritableNativeMap;
-import com.inspur.emmcloud.api.APIUri;
-
-import org.json.JSONObject;
-import org.xutils.db.annotation.Column;
-import org.xutils.db.annotation.Table;
-
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
-/**
- * {"id":"lcgj_u_chenmch","inspur_id":"1ae36f30-b25a-435a-868e-2b7096d70cc0",
- * "code":"chenmch","real_name":"陈明超","pinyin":"chenmingchao",
- * "new_id":"66666","mobile":"18560131028",
- * "email":"chenmch@inspur.com","org_name":"运行平台产品研发部",
- * "full_path":"inspur_dev00010004|inspur_dev000100040007|inspur_dev000100040007239",
- * "parent_id":"inspur_dev000100040007239","head":"/img/headimg/d6858120-f6e7-11e5-9cad-850d114ad5ec",
- * "sort_order":1,"type":"user"}
- */
-@Table(name = "Contact", onCreated = "CREATE INDEX contactindex ON Contact(inspurID)")
 public class Contact implements Serializable {
-    @Column(name = "id", isId = true)
-    private String id;
-    @Column(name = "parentId")
-    private String parentId = "";
-    @Column(name = "name")
+    public static final String TYPE_USER = "USER";
+    public static final String TYPE_STRUCT = "STRUCT";
+    private String id="";
     private String name = "";
-    @Column(name = "code")
-    private String code = "";
-    @Column(name = "email")
-    private String email = "";
-    @Column(name = "head")
-    private String head = "";
-    @Column(name = "mobile")
-    private String mobile = "";
-    @Column(name = "orgName")
-    private String orgName = "";
-    @Column(name = "realName")
-    private String realName = "";
-    @Column(name = "type")
-    private String type = "";
-    @Column(name = "sortOrder")
-    private int sortOrder = -1;
-    @Column(name = "pinyin")
+    private String nameGlobal = "";
     private String pinyin = "";
-    @Column(name = "inspurID")
-    private String inspurID = "";
-    @Column(name = "globalName")
-    private String globalName = "";
-    @Column(name = "lastUpdateTime")
-    private String lastUpdateTime = "";
+    private String parentId= "";
+    private int sortOrder= 0;
+    private String mobile="";
+    private String email="";
+    private int hasHead = 0;
+    private String type="USER";
 
     public Contact() {
 
     }
 
-    public Contact(JSONObject obj, String lastUpdateTime) {
-        this(obj);
-        this.lastUpdateTime = lastUpdateTime;
+    public Contact(ContactUser contactUser){
+        this.id = contactUser.getId();
+        this.name = contactUser.getName();
+        this.nameGlobal = contactUser.getNameGlobal();
+        this.pinyin = contactUser.getPinyin();
+        this.parentId = contactUser.getParentId();
+        this.sortOrder = contactUser.getSortOrder();
+        this.mobile = contactUser.getMobile();
+        this.email = contactUser.getEmail();
+        this.hasHead = contactUser.getHasHead();
+        this.type = TYPE_USER;
     }
 
+    public Contact(ContactOrg contactOrg){
+        this.id = contactOrg.getId();
+        this.name = contactOrg.getName();
+        this.nameGlobal = contactOrg.getNameGlobal();
+        this.pinyin = contactOrg.getPinyin();
+        this.parentId = contactOrg.getParentId();
+        this.sortOrder = contactOrg.getSortOrder();
+        this.type = TYPE_STRUCT;
+    }
 
-    public Contact(JSONObject obj) {
-        try {
-            if (obj.has("id")) {
-                this.id = obj.getString("id");
-            }
-            if (obj.has("parent_id")) {
-                this.parentId = obj.getString("parent_id");
-            }
-            if (obj.has("name")) {
-                this.name = obj.getString("name");
-            }
-            if (obj.has("code")) {
-                this.code = obj.getString("code");
-            }
-            if (obj.has("email")) {
-                this.email = obj.getString("email");
-            }
-            if (obj.has("head")) {
-                this.head = obj.getString("head");
-            }
-            if (obj.has("inspur_id")) {
-                this.inspurID = obj.getString("inspur_id");
-            }
-            if (obj.has("mobile")) {
-                this.mobile = obj.getString("mobile");
-            }
-
-            if (obj.has("org_name")) {
-                this.orgName = obj.getString("org_name");
-            }
-            if (obj.has("real_name")) {
-                this.realName = obj.getString("real_name");
-            }
-            if (obj.has("type")) {
-                this.type = obj.getString("type");
-            }
-            if (obj.has("sort_order")) {
-                this.sortOrder = obj.getInt("sort_order");
-            }
-            if (obj.has("pinyin")) {
-                this.pinyin = obj.getString("pinyin");
-            }
-            if (obj.has("name_global")) {
-                this.globalName = obj.getString("name_global");
-            }
-
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+    public static List<Contact> contactUserList2ContactList(List<ContactUser> contactUserList){
+        List<Contact> contactList = new ArrayList<>();
+        for (ContactUser contactUser:contactUserList){
+            contactList.add(new Contact(contactUser));
         }
+        return contactList;
     }
+
+    public static List<Contact> contactOrgList2ContactList(List<ContactOrg> contactOrgList){
+        List<Contact> contactList = new ArrayList<>();
+        for (ContactOrg contactOrg:contactOrgList){
+            contactList.add(new Contact(contactOrg));
+        }
+        return contactList;
+    }
+
 
     public String getId() {
         return id;
@@ -123,11 +70,29 @@ public class Contact implements Serializable {
         this.id = id;
     }
 
-    public String getInspurID() {
-        return inspurID;
+    public String getName() {
+        return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
 
+    public String getNameGlobal() {
+        return nameGlobal;
+    }
+
+    public void setNameGlobal(String nameGlobal) {
+        this.nameGlobal = nameGlobal;
+    }
+
+    public String getPinyin() {
+        return pinyin;
+    }
+
+    public void setPinyin(String pinyin) {
+        this.pinyin = pinyin;
+    }
 
     public String getParentId() {
         return parentId;
@@ -135,79 +100,6 @@ public class Contact implements Serializable {
 
     public void setParentId(String parentId) {
         this.parentId = parentId;
-    }
-
-    public String getName() {
-        if (type.equals("user")) {
-            return realName;
-        }
-        return name;
-    }
-
-
-    public String getPinyin() {
-        return pinyin;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getHead() {
-        return head;
-    }
-
-    public void setHead(String head) {
-        this.head = head;
-    }
-
-
-    public String getMobile() {
-        return mobile;
-    }
-
-    public void setMobile(String mobile) {
-        this.mobile = mobile;
-    }
-
-    public String getOrgName() {
-        return orgName;
-    }
-
-    public void setOrgName(String orgName) {
-        this.orgName = orgName;
-    }
-
-    public String getRealName() {
-        return realName;
-    }
-
-    public void setRealName(String realName) {
-        this.realName = realName;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
     public int getSortOrder() {
@@ -218,81 +110,35 @@ public class Contact implements Serializable {
         this.sortOrder = sortOrder;
     }
 
-    public String getGlobalName() {
-        return globalName;
+    public String getMobile() {
+        return mobile;
     }
 
-    public void setGlobalName(String globalName) {
-        this.globalName = globalName;
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
     }
 
-    public String getLastUpdateTime() {
-        return lastUpdateTime;
+    public String getEmail() {
+        return email;
     }
 
-    public void setLastUpdateTime(String lastUpdateTime) {
-        this.lastUpdateTime = lastUpdateTime;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public JSONObject contact2JSONObject(Context context) {
-        JSONObject obj = new JSONObject();
-        try {
-            obj.put("inspur_id", inspurID);
-            obj.put("code", code);
-            obj.put("real_name", realName);
-            obj.put("pinyin", pinyin);
-            obj.put("mobile", mobile);
-            obj.put("email", email);
-            obj.put("org_name", orgName);
-            obj.put("type", type);
-            obj.put("head", APIUri.getChannelImgUrl(context, inspurID));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return obj;
+    public int getHasHead() {
+        return hasHead;
     }
 
-    ;
-
-    public WritableNativeMap contact2Map(Context context) {
-        WritableNativeMap map = new WritableNativeMap();
-        try {
-            map.putString("inspur_id", inspurID);
-            map.putString("code", code);
-            map.putString("real_name", realName);
-            map.putString("pinyin", pinyin);
-            map.putString("mobile", mobile);
-            map.putString("email", email);
-            map.putString("org_name", orgName);
-            map.putString("type", type);
-            map.putString("head", APIUri.getChannelImgUrl(context, inspurID));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return map;
+    public void setHasHead(int hasHead) {
+        this.hasHead = hasHead;
     }
 
-    ;
+    public String getType() {
+        return type;
+    }
 
-    @Override
-    public String toString() {
-        return "Contact{" +
-                "id='" + id + '\'' +
-                ", parentId='" + parentId + '\'' +
-                ", name='" + name + '\'' +
-                ", code='" + code + '\'' +
-                ", email='" + email + '\'' +
-                ", head='" + head + '\'' +
-                ", mobile='" + mobile + '\'' +
-                ", orgName='" + orgName + '\'' +
-                ", realName='" + realName + '\'' +
-                ", type='" + type + '\'' +
-                ", sortOrder=" + sortOrder +
-                ", pinyin='" + pinyin + '\'' +
-                ", inspurID='" + inspurID + '\'' +
-                ", globalName='" + globalName + '\'' +
-                '}';
+    public void setType(String type) {
+        this.type = type;
     }
 }

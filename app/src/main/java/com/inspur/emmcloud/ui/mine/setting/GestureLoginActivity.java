@@ -22,7 +22,7 @@ import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.ninelock.LockPatternUtil;
 import com.inspur.emmcloud.util.privates.ninelock.LockPatternView;
-import com.inspur.emmcloud.widget.CircleImageView;
+import com.inspur.emmcloud.widget.CircleTextImageView;
 import com.wei.android.lib.fingerprintidentify.FingerprintIdentify;
 import com.wei.android.lib.fingerprintidentify.base.BaseFingerprint;
 
@@ -75,7 +75,7 @@ public class GestureLoginActivity extends BaseActivity {
         }
         String userHeadImgUri = APIUri
                 .getChannelImgUrl(GestureLoginActivity.this, ((MyApplication) getApplication()).getUid());
-        CircleImageView circleImageView = (CircleImageView) findViewById(R.id.gesture_login_user_head_img);
+        CircleTextImageView circleImageView = (CircleTextImageView) findViewById(R.id.gesture_login_user_head_img);
         ImageDisplayUtils.getInstance().displayImage(circleImageView,
                 userHeadImgUri, R.drawable.icon_person_default);
         //由于机型，系统等问题，目前不开启指纹识别功能

@@ -1,7 +1,5 @@
 package com.inspur.imp.plugin.app;
 
-import android.app.Activity;
-
 import com.inspur.imp.plugin.ImpPlugin;
 
 import org.json.JSONObject;
@@ -19,6 +17,8 @@ public class AppService extends ImpPlugin {
 	public void execute(String action, JSONObject paramsObject) {
 		if ("close".equals(action)) {
 			close();
+		}else{
+			showCallIMPMethodErrorDlg();
 		}
 	}
 
@@ -28,15 +28,17 @@ public class AppService extends ImpPlugin {
 		// 退出系统
 		if ("close".equals(action)) {
 			close();
+		}else{
+			showCallIMPMethodErrorDlg();
 		}
-		return super.executeAndReturn(action, paramsObject);
+		return "";
 	}
 	
 
 	// 退出系统
 	private void close() {
 
-		((Activity) this.context).finish();
+		getActivity().finish();
 	}
 
 	@Override

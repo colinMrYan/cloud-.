@@ -1,7 +1,6 @@
 package com.inspur.imp.plugin.filetransfer;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -105,6 +104,8 @@ public class FileTransferService extends ImpPlugin {
         // 下载文件
         else if ("download".equals(action)) {
             download(paramsObject);
+        }else{
+            showCallIMPMethodErrorDlg();
         }
     }
 
@@ -115,9 +116,7 @@ public class FileTransferService extends ImpPlugin {
         // 下载文件
         if ("download".equals(action)) {
             download(paramsObject);
-        }
-
-        if ("downloadFile".equals(action)) { // 为了兼容自定义的imp插件
+        }else if ("downloadFile".equals(action)) { // 为了兼容自定义的imp插件
             if (!paramsObject.isNull("key"))
                 try {
                     String key = paramsObject.getString("key");
@@ -130,6 +129,8 @@ public class FileTransferService extends ImpPlugin {
                     e.printStackTrace();
                     handler.sendEmptyMessage(1);
                 }
+        }else{
+            showCallIMPMethodErrorDlg();
         }
 
         return result;
@@ -157,13 +158,13 @@ public class FileTransferService extends ImpPlugin {
         // 判断是否含有sd卡
         if (!Environment.getExternalStorageState().equals(
                 Environment.MEDIA_MOUNTED)) {
-            Toast.makeText(context, Res.getString("filetransfer_sd_not_exist"),
+            Toast.makeText(getFragmentContext(), Res.getString("filetransfer_sd_not_exist"),
                     Toast.LENGTH_SHORT).show();
             return;
         }
         // 判断网络是否连接
-        if (!NetUtils.isNetworkConnected(context)) {
-            Toast.makeText(context,
+        if (!NetUtils.isNetworkConnected(getFragmentContext())) {
+            Toast.makeText(getFragmentContext(),
                     Res.getString("filetransfer_network_disconnected"), Toast.LENGTH_SHORT)
                     .show();
             return;
@@ -191,7 +192,7 @@ public class FileTransferService extends ImpPlugin {
      */
     private void showDialog() {
         // 创建退出对话框
-        msgDlg = new AlertDialog.Builder(this.context).create();
+        msgDlg = new AlertDialog.Builder(getActivity()).create();
         // 设置对话框标题
         msgDlg.setTitle("温馨提示");
         // 设置对话框消息
@@ -211,7 +212,7 @@ public class FileTransferService extends ImpPlugin {
     private void showDownloadStatus() {
         // TODO Auto-generated method stub
         stopConn = false;
-        LayoutInflater layoutInflater = LayoutInflater.from(this.context);
+        LayoutInflater layoutInflater = LayoutInflater.from(getFragmentContext());
         View view = layoutInflater
                 .inflate(Res.getLayoutID("plugin_filetransfer_dialog_file_download_progress")
                         ,
@@ -219,7 +220,7 @@ public class FileTransferService extends ImpPlugin {
         ratioText = (TextView) view.findViewById(Res.getWidgetID("ratio_text"));
         progressBar = (ProgressBar) view.findViewById(Res.getWidgetID("update_progress"));
 
-        fileDownloadDlg = new AlertDialog.Builder(context,
+        fileDownloadDlg = new AlertDialog.Builder(getActivity(),
                 android.R.style.Theme_Holo_Light_Dialog)
                 .setTitle(Res.getStringID("file_downloading"))
                 .setView(view)
@@ -257,7 +258,7 @@ public class FileTransferService extends ImpPlugin {
                 case 0:
                     progressBar.setProgress(progress);
                     if (totalSize <= 0) {
-                        ratioText.setText(context.getString(Res.getStringID("has_downloaded"))
+                        ratioText.setText(getFragmentContext().getString(Res.getStringID("has_downloaded"))
                                 + setFormat(downloadSize));
                     } else {
                         String text = progress + "%" + "," + "  "
@@ -271,7 +272,7 @@ public class FileTransferService extends ImpPlugin {
                     if (fileDownloadDlg != null && fileDownloadDlg.isShowing()) {
                         fileDownloadDlg.dismiss();
                     }
-                    Toast.makeText(context, Res.getStringID("filetransfer_download_failed"), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getFragmentContext(), Res.getStringID("filetransfer_download_failed"), Toast.LENGTH_LONG).show();
                     getActivity().runOnUiThread(new Runnable() {
 
                         @Override
@@ -290,7 +291,7 @@ public class FileTransferService extends ImpPlugin {
                     if (fileDownloadDlg != null && fileDownloadDlg.isShowing()) {
                         fileDownloadDlg.dismiss();
                     }
-                    new FileOpen((Activity) FileTransferService.this.context, reallyPath, fileType).showOpenDialog();
+                    new FileOpen(getActivity(), reallyPath, fileType).showOpenDialog();
                     fileInfo = (String) msg.obj;
                     getActivity().runOnUiThread(new Runnable() {
                         @Override

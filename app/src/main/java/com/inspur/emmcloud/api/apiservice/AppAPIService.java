@@ -19,7 +19,7 @@ import com.inspur.emmcloud.bean.appcenter.ReactNativeUpdateBean;
 import com.inspur.emmcloud.bean.login.GetDeviceCheckResult;
 import com.inspur.emmcloud.bean.login.LoginDesktopCloudPlusBean;
 import com.inspur.emmcloud.bean.system.GetAppConfigResult;
-import com.inspur.emmcloud.bean.system.GetAppTabAutoResult;
+import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
 import com.inspur.emmcloud.bean.system.GetUpgradeResult;
 import com.inspur.emmcloud.bean.system.SplashPageBean;
 import com.inspur.emmcloud.interf.OauthCallBack;
@@ -73,9 +73,9 @@ public class AppAPIService {
             }
 
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
-                apiInterface.returnUpgradeSuccess(new GetUpgradeResult(arg0), isManualCheck);
+                apiInterface.returnUpgradeSuccess(new GetUpgradeResult(new String(arg0)), isManualCheck);
             }
 
             @Override
@@ -100,8 +100,8 @@ public class AppAPIService {
         params.addParameter("deviceName", deviceName);
         HttpUtils.request(context,CloudHttpMethod.POST,params,new APICallback(context, completeUrl) {
             @Override
-            public void callbackSuccess(String arg0) {
-                apiInterface.returnGetClientIdResultSuccess(new GetClientIdRsult(arg0));
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnGetClientIdResultSuccess(new GetClientIdRsult(new String(arg0)));
             }
 
             @Override
@@ -141,8 +141,8 @@ public class AppAPIService {
                 .getHttpRequestParams(completeUrl);
         HttpUtils.request(context,CloudHttpMethod.GET,params,new APICallback(context, completeUrl) {
             @Override
-            public void callbackSuccess(String arg0) {
-                apiInterface.returnReactNativeUpdateSuccess(new ReactNativeUpdateBean(arg0));
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnReactNativeUpdateSuccess(new ReactNativeUpdateBean(new String(arg0)));
             }
 
             @Override
@@ -184,7 +184,7 @@ public class AppAPIService {
                 .getHttpRequestParams(completeUrl);
         HttpUtils.request(context,CloudHttpMethod.PUT,params,new APICallback(context, completeUrl) {
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
             }
 
             @Override
@@ -231,7 +231,7 @@ public class AppAPIService {
             }
 
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
                 apiInterface
                         .returnUploadExceptionSuccess();
@@ -249,17 +249,31 @@ public class AppAPIService {
     /**
      * 获取显示tab页的接口
      */
-    public void getAppNewTabs(final String version, final String clientId) {
-        final String completeUrl = APIUri.getAppNewTabs() + "?version=" + version + "&clientId=" + clientId;
+    public void getAppNewTabs(final String tabVersion) {
+        final String completeUrl = APIUri.getAppNewTabs();
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
-        HttpUtils.request(context,CloudHttpMethod.GET,params,new APICallback(context, completeUrl) {
+        JSONObject jsonObject = new JSONObject();
+        try{
+            jsonObject.put("os","Android");
+            jsonObject.put("osVersion",AppUtils.getReleaseVersion());
+            jsonObject.put("appId",AppUtils.getPackageName(context));
+            jsonObject.put("appVersion",AppUtils.getVersion(context));
+            jsonObject.put("appCoreVersion",AppUtils.getVersion(context));
+            jsonObject.put("version",tabVersion);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        params.setBodyContent(jsonObject.toString());
+        params.setAsJsonContent(true);
+
+        HttpUtils.request(context,CloudHttpMethod.POST,params,new APICallback(context, completeUrl) {
             @Override
             public void callbackTokenExpire(long requestTime) {
                 OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        getAppNewTabs(version, clientId);
+                        getAppNewTabs(tabVersion);
                     }
 
                     @Override
@@ -272,8 +286,8 @@ public class AppAPIService {
             }
 
             @Override
-            public void callbackSuccess(String arg0) {
-                apiInterface.returnAppTabAutoSuccess(new GetAppTabAutoResult(arg0));
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnAppTabAutoSuccess(new GetAppMainTabResult(new String(arg0)));
             }
 
             @Override
@@ -296,7 +310,7 @@ public class AppAPIService {
         params.setAsJsonContent(true);
         HttpUtils.request(context,CloudHttpMethod.POST,params,new APICallback(context, completeUrl) {
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnUploadCollectSuccess();
             }
 
@@ -324,8 +338,8 @@ public class AppAPIService {
         params.addQueryStringParameter("userPass", password);
         HttpUtils.request(context,CloudHttpMethod.GET,params,new APICallback(context, completeUrl) {
             @Override
-            public void callbackSuccess(String arg0) {
-                if (arg0.equals("登录成功")) {
+            public void callbackSuccess(byte[] arg0) {
+                if (arg0 != null && new String(arg0).equals("登录成功")) {
                     apiInterface.returnVeriryApprovalPasswordSuccess(password);
                 } else {
                     apiInterface.returnVeriryApprovalPasswordFail("", -1);
@@ -357,7 +371,7 @@ public class AppAPIService {
         params.addParameter("refresh_token", refreshToken);
         HttpUtils.request(context,CloudHttpMethod.POST,params,new APICallback(context, completeUrl) {
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
             }
 
             @Override
@@ -396,8 +410,8 @@ public class AppAPIService {
                 .getHttpRequestParams(completeUrl);
         HttpUtils.request(context,CloudHttpMethod.GET,params, new APICallback(context, completeUrl) {
             @Override
-            public void callbackSuccess(String arg0) {
-                apiInterface.returnSplashPageInfoSuccess(new SplashPageBean(arg0));
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnSplashPageInfoSuccess(new SplashPageBean(new String(arg0)));
             }
 
             @Override
@@ -437,7 +451,7 @@ public class AppAPIService {
                 .getHttpRequestParams(completeUrl);
         HttpUtils.request(context,CloudHttpMethod.POST,params,new APICallback(context, completeUrl) {
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnLoginDesktopCloudPlusSuccess(new LoginDesktopCloudPlusBean());
             }
 
@@ -485,9 +499,8 @@ public class AppAPIService {
         params.addBodyParameter("user_code", userCode);
         HttpUtils.request(context,CloudHttpMethod.POST,params,new APICallback(context, completeUrl) {
             @Override
-            public void callbackSuccess(String arg0) {
-                apiInterface.returnDeviceCheckSuccess(new GetDeviceCheckResult(
-                        arg0));
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnDeviceCheckSuccess(new GetDeviceCheckResult(new String(arg0)));
             }
 
             @Override
@@ -510,8 +523,8 @@ public class AppAPIService {
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
         HttpUtils.request(context,CloudHttpMethod.GET,params,new APICallback(context, url) {
             @Override
-            public void callbackSuccess(String arg0) {
-                apiInterface.returnAppConfigSuccess(new GetAppConfigResult(arg0));
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnAppConfigSuccess(new GetAppConfigResult(new String(arg0)));
             }
 
             @Override
@@ -549,7 +562,7 @@ public class AppAPIService {
         params.setBodyContent(isWebAutoRotate + "");
         HttpUtils.request(context,CloudHttpMethod.POST,params,new APICallback(context, url) {
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnSaveWebAutoRotateConfigSuccess(isWebAutoRotate);
             }
 
@@ -589,7 +602,7 @@ public class AppAPIService {
         params.setAsJsonContent(true);
         HttpUtils.request(context,CloudHttpMethod.POST,params,new APICallback(context, url) {
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnUploadPositionSuccess();
             }
 

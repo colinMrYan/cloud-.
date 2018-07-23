@@ -9,6 +9,7 @@
     <string name="cancel">Cancel</string>
     <string name="resolution_valiad">Your device resolution is less than 800*480, unable to run this program</string>
     <string name="retry">Retry</string>
+    <string name="re_login">ReLogin</string>
     <string name="software_service_term">Services Agreemen</string>
     <string name="update_fail">Update failed</string>
     <string name="downloading_package">Please wait a minute while downloading</string>
@@ -376,12 +377,12 @@
     <string name="move_to">Move</string>
     <string name="copy">Copy</string>
     <string name="file_dpwnload">Download</string>
-    <string name="create_forder">Create Forder</string>
+    <string name="create_forder">Create Folder</string>
     <string name="file_filter">Filter</string>
     <string name="sort_by_time_asc">Sort by Time Asc</string>
-    <string name="sort_by_time_dasc">Sort by Name Dasc</string>
+    <string name="sort_by_time_dasc">Sort by Name Desc</string>
     <string name="sort_by_name_asc">Sort by Name Asc</string>
-    <string name="sort_by_name_dasc">Sort by Name Dasc</string>
+    <string name="sort_by_name_dasc">Sort by Name Desc</string>
     <string name="video">Video</string>
     <string name="audio">Audio</string>
     <string name="other">Other</string>
@@ -518,6 +519,9 @@
     <string name="run_background">Background running</string>
     <string name="signout_fail">Signout failure,please make sure the network connection is normal</string>
 
+    <string name="contact">Contact</string>
+    <string name="web">web</string>
+
     <!-- 修改密码部分 -->
     <string name="modify_input_user_new_password">Enter a new password</string>
     <string name="modify_input_confirm_passord">Enter confirm password</string>
@@ -538,8 +542,8 @@
     <string name="modify_user_password_success">Password changed successfully, please login</string>
     <string name="modify_user_password_fail">Retry</string>
     <string name="modify_jump">Skip</string>
-    <string name="modify_welcom_user_cloud">Welcome to the wave of cloud +</string>
-    <string name="modify_first_use">This is the first time you use the cloud + wave, the wave passes is set password to login next time</string>
+    <string name="modify_welcom_user_cloud">Welcome to the inspur of cloud +</string>
+    <string name="modify_first_use">This is the first time you use the cloud + , the inspur passes is set password to login next time</string>
 
     <!-- 用户信息页面部分 -->
     <string name="user_info_text">Profile</string>
@@ -862,6 +866,7 @@
     <string name="can_not_stop">The current state can not be stopped</string>
     <string name="turn_on_light">Turn on the light</string>
     <string name="turn_off_light">Turn on the light</string>
+    <string name="imp_function_error">Function call error. Please check if Cloud + has been upgraded to the latest version.</string>
 
     <!-- 打点 -->
     <string name="msg_default_format">Format</string>
@@ -949,4 +954,6 @@
     <string name="share_no_suffix">Do not support a file sharing the name without suffix</string>
     <string name="share_has_not_exist_file">There are nonexistent files in the files you shared, please check.</string>
     <string name="share_not_support">Unsupported sharing types</string>
+
+    <string name="net_work_fail">Failed to get configuration information</string>
 </resources>

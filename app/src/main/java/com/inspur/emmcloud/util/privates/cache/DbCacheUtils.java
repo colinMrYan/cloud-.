@@ -38,7 +38,7 @@ public class DbCacheUtils {
                 .setDbName("emm.db")
                 // 不设置dbDir时, 默认存储在app的私有目录.
                 .setDbDir(new File(dbCachePath))
-                .setDbVersion(9)
+                .setDbVersion(10)
                 .setAllowTransaction(true)
                 .setDbOpenListener(new DbManager.DbOpenListener() {
                     @Override
@@ -74,20 +74,6 @@ public class DbCacheUtils {
                                 if (tableIsExist("com_inspur_emmcloud_bean_SearchModel")) {
                                     db.execNonQuery("alter table com_inspur_emmcloud_bean_SearchModel rename to SearchModel");
                                 }
-
-
-//                                if (tableIsExist("com_inspur_emmcloud_bean_Msg")) {
-//                                    db.execNonQuery("alter table com_inspur_emmcloud_bean_Msg rename to Msg");
-//                                }
-
-//                                if (tableIsExist("com_inspur_emmcloud_bean_MsgMatheSet")) {
-//                                    db.execNonQuery("alter table com_inspur_emmcloud_bean_MsgMatheSet rename to MsgMatheSet");
-//                                }
-
-//                                if (tableIsExist("com_inspur_emmcloud_bean_MsgReadId")) {
-//                                    db.execNonQuery("alter table com_inspur_emmcloud_bean_MsgReadId rename to MsgReadId");
-//                                }
-
                                 if (tableIsExist("com_inspur_emmcloud_bean_MyCalendarOperation")) {
                                     db.execNonQuery("alter table com_inspur_emmcloud_bean_MyCalendarOperation rename to MyCalendarOperation");
                                 }
@@ -118,6 +104,11 @@ public class DbCacheUtils {
                                 }
                                 if (tableIsExist("MsgMatheSet")) {
                                     db.execNonQuery("DROP TABLE MsgMatheSet");
+                                }
+                            }
+                            if (oldVersion < 10) {
+                                if (tableIsExist("Contact")) {
+                                    db.execNonQuery("DROP TABLE Contact");
                                 }
                             }
                         } catch (Exception e) {
@@ -174,6 +165,13 @@ public class DbCacheUtils {
         return db;
     }
 
+    public static DbManager getDb() {
+        if (db == null) {
+            initDb(MyApplication.getInstance());
+        }
+        return db;
+    }
+
     /**
      * 删除数据库
      * @param context
@@ -181,7 +179,8 @@ public class DbCacheUtils {
     public static void deleteDb(Context context) {
         try {
             db.dropDb();
-            ContactCacheUtils.saveLastUpdateTime(context, "");
+            ContactUserCacheUtils.setLastQueryTime(0);
+            ContactOrgCacheUtils.setLastQueryTime(0);
             closeDb(context);
         } catch (Exception e) {
             // TODO: handle exception

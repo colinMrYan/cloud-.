@@ -42,12 +42,12 @@ import com.inspur.emmcloud.bean.chat.MatheSet;
 import com.inspur.emmcloud.bean.chat.MessageReadCreationDate;
 import com.inspur.emmcloud.bean.chat.Msg;
 import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
-import com.inspur.emmcloud.bean.system.AppTabAutoBean;
-import com.inspur.emmcloud.bean.system.AppTabDataBean;
-import com.inspur.emmcloud.bean.system.AppTabPayloadBean;
-import com.inspur.emmcloud.bean.system.AppTabProperty;
+import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
+import com.inspur.emmcloud.bean.system.MainTabProperty;
+import com.inspur.emmcloud.bean.system.MainTabResult;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.broadcastreceiver.MsgReceiver;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
@@ -74,7 +74,7 @@ import com.inspur.emmcloud.util.privates.cache.MessageMatheSetCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MsgCacheUtil;
 import com.inspur.emmcloud.util.privates.cache.MsgReadCreationDateCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
-import com.inspur.emmcloud.widget.CircleImageView;
+import com.inspur.emmcloud.widget.CircleTextImageView;
 import com.inspur.emmcloud.widget.WeakThread;
 import com.inspur.imp.plugin.barcode.scan.CaptureActivity;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
@@ -178,39 +178,35 @@ public class CommunicationV0Fragment extends Fragment {
      * 展示创建
      */
     private void showMessageButtons() {
-        String tabBarInfo = PreferencesByUserAndTanentUtils.getString(getActivity(), "app_tabbar_info_current", "");
+        String tabBarInfo = PreferencesByUserAndTanentUtils.getString(getActivity(), Constant.PREF_APP_TAB_BAR_INFO_CURRENT, "");
         //第一次登录时有tabBarInfo会为“”，会导致JSON waring
-        if (!StringUtils.isBlank(tabBarInfo)) {
-            AppTabAutoBean appTabAutoBean = new AppTabAutoBean(tabBarInfo);
-            AppTabPayloadBean payloadBean = appTabAutoBean.getPayload();
-            if (payloadBean != null) {
-                showCreateGroupOrFindContact(payloadBean);
-            }
+        if(!StringUtils.isBlank(tabBarInfo)){
+            GetAppMainTabResult getAppMainTabResult = new GetAppMainTabResult(tabBarInfo);
+            showCreateGroupOrFindContact(getAppMainTabResult);
         }
     }
 
     /**
      * 如果数据没有问题则决定展示或者不展示加号，以及通讯录
      *
-     * @param payloadBean
+     * @param getAppMainTabResult
      */
-    private void showCreateGroupOrFindContact(AppTabPayloadBean payloadBean) {
-        ArrayList<AppTabDataBean> appTabList =
-                (ArrayList<AppTabDataBean>) payloadBean.getTabs();
-        for (int i = 0; i < appTabList.size(); i++) {
-            if (appTabList.get(i).getTabId().equals("communicate")) {
-                AppTabProperty property = appTabList.get(i).getProperty();
-                if (property != null) {
-                    if (!property.isCanCreate()) {
+    private void showCreateGroupOrFindContact(GetAppMainTabResult getAppMainTabResult) {
+        ArrayList<MainTabResult> mainTabResultList = getAppMainTabResult.getMainTabResultList();
+        for (int i = 0; i < mainTabResultList.size(); i++) {
+            if(mainTabResultList.get(i).getUri().equals(Constant.APP_TAB_BAR_COMMUNACATE)){
+                MainTabProperty mainTabProperty = mainTabResultList.get(i).getMainTabProperty();
+                if (mainTabProperty != null) {
+                    if (!mainTabProperty.isCanCreate()) {
                         rootView.findViewById(R.id.more_function_list_img).setVisibility(View.GONE);
                     }
-                    if (!property.isCanContact()) {
+                    if (!mainTabProperty.isCanContact()) {
                         rootView.findViewById(R.id.contact_img).setVisibility(View.GONE);
                     }
                 }
+                break;
             }
         }
-
     }
 
     private void initView() {
@@ -290,17 +286,11 @@ public class CommunicationV0Fragment extends Fragment {
      * 根据tabbar信息更新加号UI，这里显示信息附在Tabbar信息里
      * 所以没有数据请求回来，MessageFragment不存在的情况
      *
-     * @param appTabAutoBean
+     * @param getAppMainTabResult
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void updateMessageUI(AppTabAutoBean appTabAutoBean) {
-        if (appTabAutoBean != null) {
-            AppTabPayloadBean payloadBean = appTabAutoBean.getPayload();
-            if (payloadBean != null) {
-                showCreateGroupOrFindContact(payloadBean);
-            }
-        }
-
+    public void updateMessageUI(GetAppMainTabResult getAppMainTabResult) {
+        showCreateGroupOrFindContact(getAppMainTabResult);
     }
 
     private OnClickListener onViewClickListener = new OnClickListener() {
@@ -738,7 +728,7 @@ public class CommunicationV0Fragment extends Fragment {
 
     static class ViewHolder {
         RelativeLayout mainLayout;
-        CircleImageView channelPhotoImg;
+        CircleTextImageView channelPhotoImg;
         TextView channelContentText;
         TextView channelTitleText;
         TextView channelTimeText;
@@ -784,7 +774,7 @@ public class CommunicationV0Fragment extends Fragment {
                 convertView = LayoutInflater.from(getActivity()).inflate(R.layout.msg_item_view, null);
                 holder.mainLayout = (RelativeLayout) convertView
                         .findViewById(R.id.main_layout);
-                holder.channelPhotoImg = (CircleImageView) convertView
+                holder.channelPhotoImg = (CircleTextImageView) convertView
                         .findViewById(R.id.msg_img);
                 holder.channelTitleText = (TextView) convertView
                         .findViewById(R.id.name_text);
@@ -817,7 +807,7 @@ public class CommunicationV0Fragment extends Fragment {
          *
          * @param channel
          */
-        private void setChannelIcon(Channel channel, CircleImageView channelPhotoImg) {
+        private void setChannelIcon(Channel channel, CircleTextImageView channelPhotoImg) {
             // TODO Auto-generated method stub
             Integer defaultIcon = R.drawable.icon_channel_group_default; // 默认显示图标
             String iconUrl = channel.getIcon();// Channel头像的uri
@@ -827,7 +817,7 @@ public class CommunicationV0Fragment extends Fragment {
                 if (file.exists()) {
                     iconUrl = "file://" + file.getAbsolutePath();
                     ImageDisplayUtils.getInstance().displayImageNoCache(channelPhotoImg, iconUrl, defaultIcon);
-                }else {
+                } else {
                     channelPhotoImg.setImageResource(R.drawable.icon_channel_group_default);
                 }
             } else {
@@ -1013,7 +1003,7 @@ public class CommunicationV0Fragment extends Fragment {
         // TODO Auto-generated method stub
         List<MessageReadCreationDate> MessageReadCreationDateList = new ArrayList<>();
         for (Channel channel : displayChannelList) {
-            MessageReadCreationDateList.add(new MessageReadCreationDate(channel.getCid(),channel.getMsgLastUpdate()));
+            MessageReadCreationDateList.add(new MessageReadCreationDate(channel.getCid(), channel.getMsgLastUpdate()));
             channel.setUnReadCount(0);
         }
         MsgReadCreationDateCacheUtils.saveMessageReadCreationDateList(MyApplication.getInstance(), MessageReadCreationDateList);
@@ -1022,13 +1012,14 @@ public class CommunicationV0Fragment extends Fragment {
 
     /**
      * 初始进入时将所有消息置为已读
+     *
      * @param channelList
      */
-    private void firstEnterToSetAllChannelMsgRead(List<Channel> channelList){
-        if (!DbCacheUtils.tableIsExist("MessageReadCreationDate")){
+    private void firstEnterToSetAllChannelMsgRead(List<Channel> channelList) {
+        if (!DbCacheUtils.tableIsExist("MessageReadCreationDate")) {
             List<MessageReadCreationDate> MessageReadCreationDateList = new ArrayList<>();
-            for (Channel channel:channelList) {
-                MessageReadCreationDateList.add(new MessageReadCreationDate(channel.getCid(),System.currentTimeMillis()));
+            for (Channel channel : channelList) {
+                MessageReadCreationDateList.add(new MessageReadCreationDate(channel.getCid(), System.currentTimeMillis()));
             }
             MsgReadCreationDateCacheUtils.saveMessageReadCreationDateList(MyApplication.getInstance(), MessageReadCreationDateList);
         }
@@ -1038,7 +1029,6 @@ public class CommunicationV0Fragment extends Fragment {
      * 将单个频道消息置为已读
      *
      * @param cid
-     * @param mid
      */
     private void setChannelMsgRead(String cid, Long messageCreationDate) {
         MsgReadCreationDateCacheUtils.saveMessageReadCreationDate(getActivity(), cid,
@@ -1072,9 +1062,9 @@ public class CommunicationV0Fragment extends Fragment {
                     ChannelGroup channelGroup = searchChannelGroupList.get(i);
                     if (channelGroup.getType().equals("GROUP")) {
                         channelGroupList.add(channelGroup);
-                    }else if (channelGroup.getType().equals("SERVICE")){
+                    } else if (channelGroup.getType().equals("SERVICE")) {
                         int index = channelList.indexOf(new Channel(channelGroup.getCid()));
-                        if (index != -1){
+                        if (index != -1) {
                             channelList.get(index).setInputs(channelGroup.getInputs());
                         }
 

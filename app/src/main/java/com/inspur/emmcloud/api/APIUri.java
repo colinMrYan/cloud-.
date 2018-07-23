@@ -4,11 +4,16 @@ package com.inspur.emmcloud.api;
 import android.content.Context;
 
 import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.bean.contact.Contact;
+import com.inspur.emmcloud.bean.chat.Robot;
+import com.inspur.emmcloud.bean.contact.ContactUser;
+import com.inspur.emmcloud.config.MyAppConfig;
+import com.inspur.emmcloud.util.common.ImageUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
-import com.inspur.emmcloud.util.privates.cache.ContactCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.RobotCacheUtils;
+
+import java.io.File;
 
 
 /**
@@ -111,7 +116,7 @@ public class APIUri {
      * @return
      */
     public static String getAppNewTabs() {
-        return getECMDistribution() + "/preference/main-tab/latest";
+        return getEMMBaseUrl() + "api/sys/v6.0/maintab";
     }
 
 
@@ -244,22 +249,62 @@ public class APIUri {
     /**
      * 频道页面头像显示图片
      **/
-    public static String getChannelImgUrl(Context context, String inspurID) {
-        if (StringUtils.isBlank(inspurID) || inspurID.equals("null"))
+    public static String getChannelImgUrl(Context context, String uid) {
+        if (StringUtils.isBlank(uid) || uid.equals("null"))
             return null;
-        String headImgUrl = ((MyApplication) context.getApplicationContext()).getUserPhotoUrl(inspurID);
-        if (headImgUrl == null && !((MyApplication) context.getApplicationContext()).isKeysContainUid(inspurID)) {
-            Contact contact = ContactCacheUtils.getUserContact(context, inspurID);
-            if (contact != null) {
-                headImgUrl = MyApplication.getInstance().getClusterEmm() + "api/sys/v3.0/img/userhead/" + inspurID;
-                String lastUpdateTime = contact.getLastUpdateTime();
-                if (!StringUtils.isBlank(lastUpdateTime) && (!lastUpdateTime.equals("null"))) {
-                    headImgUrl = headImgUrl + "?" + lastUpdateTime;
+        String headImgUrl = null;
+        boolean isCacheUserPhotoUrl = MyApplication.getInstance().isKeysContainUid(uid);
+        if (isCacheUserPhotoUrl){
+            headImgUrl = MyApplication.getInstance().getUserPhotoUrl(uid);
+        }else {
+            ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(uid);
+            if (contactUser != null) {
+                if (contactUser.getHasHead() == 1){
+                    headImgUrl = MyApplication.getInstance().getClusterEmm() + "api/sys/v3.0/img/userhead/" + uid;
+                    String lastQueryTime = contactUser.getLastQueryTime();
+                    if (!StringUtils.isBlank(lastQueryTime) && (!lastQueryTime.equals("null"))) {
+                        headImgUrl = headImgUrl + "?" + lastQueryTime;
+                    }
+                    MyApplication.getInstance().setUsesrPhotoUrl(uid, headImgUrl);
+                }else {
+                    String name = contactUser.getName();
+                    if (!StringUtils.isBlank(name)){
+                        String photoName = name.replaceAll("(\\(|（)[^（\\(\\)）]*?(\\)|）)|\\d*$","");
+                        if (photoName.length()>0){
+                            name = photoName.substring(photoName.length()-1,photoName.length());
+                        }else {
+                            name = name.substring(name.length()-1,name.length());
+                        }
+                        String localPhotoFileName = "u"+(int)(name.charAt(0));
+                        File file = new File(MyAppConfig.LOCAL_CACHE_PHOTO_PATH,
+                                localPhotoFileName);
+                        headImgUrl = "file://"+file.getAbsolutePath();
+                        if (!file.exists()){
+                            ImageUtils.drawAndSavePhotoTextImg(context,name,file.getAbsolutePath());
+                        }
+                    }
                 }
-                ((MyApplication) context.getApplicationContext()).setUsesrPhotoUrl(inspurID, headImgUrl);
-            } else if (((MyApplication) context.getApplicationContext())
-                    .getIsContactReady()) {
-                ((MyApplication) context.getApplicationContext()).setUsesrPhotoUrl(inspurID, null);
+            }
+            if (MyApplication.getInstance().getIsContactReady() && headImgUrl == null) {
+                MyApplication.getInstance().setUsesrPhotoUrl(uid, headImgUrl);
+            }
+        }
+        return headImgUrl;
+    }
+
+    /**
+     * Imp获取头像路径
+     * @param uid
+     * @return
+     */
+    public static String getChannelImgUrl4Imp(String uid){
+        String headImgUrl = "";
+        ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(uid);
+        if(contactUser != null){
+            headImgUrl = MyApplication.getInstance().getClusterEmm() + "api/sys/v3.0/img/userhead/" + uid;
+            String lastQueryTime = contactUser.getLastQueryTime();
+            if (!StringUtils.isBlank(lastQueryTime) && (!lastQueryTime.equals("null"))) {
+                headImgUrl = headImgUrl + "?" + lastQueryTime;
             }
         }
         return headImgUrl;
@@ -320,11 +365,12 @@ public class APIUri {
      * @return
      */
     public static String getUserIconUrl(Context context, String uid){
-        String iconUrl;
+        String iconUrl = null;
         if (uid.startsWith("BOT")) {
-            iconUrl = APIUri.getRobotIconUrl(RobotCacheUtils
-                    .getRobotById(context, uid)
-                    .getAvatar());
+            Robot robot = RobotCacheUtils.getRobotById(context, uid);
+            if (robot != null){
+                iconUrl = APIUri.getRobotIconUrl(robot.getAvatar());
+            }
         } else {
             iconUrl = APIUri.getChannelImgUrl(context, uid);
         }
@@ -547,13 +593,37 @@ public class APIUri {
         return MyApplication.getInstance().getClusterEmm() + "api/sys/v3.0/upgrade/checkVersion";
     }
 
+
     /**
-     * 获取获取所有通讯录
-     *
+     * 获取通讯录中的人员
      * @return
      */
-    public static String getAllContact() {
-        return MyApplication.getInstance().getClusterEmm() + "api/sys/v3.0/contacts/get_all";
+    public static String getContactUserUrl(){
+        return MyApplication.getInstance().getClusterEmm() + "api/sys/v4.0/contacts/users";
+    }
+    /**
+     * 获取通讯录中的人员更新
+     * @return
+     */
+    public static String getContactUserUrlUpdate(){
+        return MyApplication.getInstance().getClusterEmm() + "api/sys/v3.0/contacts/users";
+    }
+
+
+    /**
+     * 获取通讯录中的组织
+     * @return
+     */
+    public static String getContactOrgUrl(){
+        return MyApplication.getInstance().getClusterEmm() + "api/sys/v4.0/contacts/orgs";
+    }
+
+    /**
+     * 获取通讯录中的组织更新
+     * @return
+     */
+    public static String getContactOrgUrlUpdate(){
+        return MyApplication.getInstance().getClusterEmm() + "api/sys/v3.0/contacts/orgs";
     }
 
 

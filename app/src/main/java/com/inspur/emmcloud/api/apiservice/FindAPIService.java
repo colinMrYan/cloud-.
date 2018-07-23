@@ -21,7 +21,6 @@ import com.inspur.emmcloud.bean.find.Trip;
 import com.inspur.emmcloud.interf.OauthCallBack;
 import com.inspur.emmcloud.util.privates.OauthUtils;
 
-import org.json.JSONArray;
 import org.xutils.http.RequestParams;
 
 /**
@@ -64,9 +63,9 @@ public class FindAPIService {
 			}
 			
 			@Override
-			public void callbackSuccess(String arg0) {
+			public void callbackSuccess(byte[] arg0) {
 				// TODO Auto-generated method stub
-				apiInterface.returnTripSuccess(new Trip(arg0));
+				apiInterface.returnTripSuccess(new Trip(new String(arg0)));
 			}
 			
 			@Override
@@ -77,52 +76,7 @@ public class FindAPIService {
 		});
 	}
 
-	/**
-	 * 删除行程，180504已废弃？
-	 * 
-	 * @param tripId
-	 */
-	public void deleteTripByIds(final String tripId) {
-		final String completeUrl = APIUri
-				.getHttpApiUrl("trip/simple/states?state=DELETED");
-		RequestParams params = ((MyApplication)context.getApplicationContext()).getHttpRequestParams(completeUrl);
-		JSONArray array = new JSONArray();
-		array.put(tripId);
-		params.setBodyContent(array.toString());
-		params.setAsJsonContent(true);
-		HttpUtils.request(context,CloudHttpMethod.PUT, params, new APICallback(context,completeUrl) {
-			@Override
-			public void callbackTokenExpire(long requestTime) {
-				OauthCallBack oauthCallBack = new OauthCallBack() {
-					@Override
-					public void reExecute() {
-						deleteTripByIds(tripId);
-					}
 
-					@Override
-					public void executeFailCallback() {
-						callbackFail("", -1);
-					}
-				};
-				OauthUtils.getInstance().refreshToken(
-						oauthCallBack, requestTime);
-			}
-			
-			@Override
-			public void callbackSuccess(String arg0) {
-				// TODO Auto-generated method stub
-				apiInterface.returnDelTripSuccess();
-			}
-			
-			@Override
-			public void callbackFail(String error, int responseCode) {
-				// TODO Auto-generated method stub
-				apiInterface.returnDelTripFail(error,responseCode);
-			}
-		});
-
-	}
-	
 
 	/**
 	 * 上传最近一年的行程数据
@@ -154,7 +108,7 @@ public class FindAPIService {
 			}
 
 			@Override
-			public void callbackSuccess(String arg0) {
+			public void callbackSuccess(byte[] arg0) {
 				// TODO Auto-generated method stub
 				apiInterface.returnUploadTrainTicketSuccess();
 			}
@@ -198,7 +152,7 @@ public class FindAPIService {
 			}
 			
 			@Override
-			public void callbackSuccess(String arg0) {
+			public void callbackSuccess(byte[] arg0) {
 				// TODO Auto-generated method stub
 				apiInterface.returnUploadTrainTicketSuccess();
 			}
@@ -241,10 +195,9 @@ public class FindAPIService {
 			}
 			
 			@Override
-			public void callbackSuccess(String arg0) {
+			public void callbackSuccess(byte[] arg0) {
 				// TODO Auto-generated method stub
-				apiInterface.returnTripArriveSuccess(new GetTripArriveCity(
-						arg0));
+				apiInterface.returnTripArriveSuccess(new GetTripArriveCity(new String(arg0)));
 			}
 			
 			@Override
@@ -281,10 +234,9 @@ public class FindAPIService {
 			}
 
 			@Override
-			public void callbackSuccess(String arg0) {
+			public void callbackSuccess(byte[] arg0) {
 				// TODO Auto-generated method stub
-				apiInterface.returnKnowledgeListSuccess(new GetKnowledgeInfo(
-						arg0));
+				apiInterface.returnKnowledgeListSuccess(new GetKnowledgeInfo(new String(arg0)));
 			}
 			
 			@Override

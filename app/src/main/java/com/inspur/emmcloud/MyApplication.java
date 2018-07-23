@@ -130,7 +130,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         CrashHandler crashHandler = CrashHandler.getInstance();
         crashHandler.init(getInstance());
         x.Ext.init(MyApplication.this);
-        x.Ext.setDebug(LogUtils.isDebug);
+        x.Ext.setDebug(false);
         SoLoader.init(this, false);//ReactNative相关初始化
         Res.init(this); // 注册imp的资源文件类
         initImageLoader();
@@ -410,8 +410,8 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         if (!StringUtils.isBlank(myInfo)) {
             GetMyInfoResult getMyInfoResult = new GetMyInfoResult(myInfo);
             String currentEnterpriseId = PreferencesByUsersUtils.getString(getInstance(), "current_enterprise_id");
+            List<Enterprise> enterpriseList = getMyInfoResult.getEnterpriseList();
             if (!StringUtils.isBlank(currentEnterpriseId)) {
-                List<Enterprise> enterpriseList = getMyInfoResult.getEnterpriseList();
                 for (int i = 0; i < enterpriseList.size(); i++) {
                     Enterprise enterprise = enterpriseList.get(i);
                     if (enterprise.getId().equals(currentEnterpriseId)) {
@@ -423,9 +423,11 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
             if (currentEnterprise == null) {
                 currentEnterprise = getMyInfoResult.getDefaultEnterprise();
             }
+            if (currentEnterprise == null && enterpriseList.size()>0 ) {
+                currentEnterprise = enterpriseList.get(0);
+            }
             MutilClusterUtils.setClusterBaseUrl(currentEnterprise);
-            String enterpriseCode = currentEnterprise.getCode();
-            tanent = enterpriseCode;
+            tanent = currentEnterprise.getCode();
         }
     }
 
@@ -756,7 +758,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
 
 
     /**
-     * init ImageLoader
+     * init ImageLoaderCommon
      **/
     private void initImageLoader() {
         // TODO Auto-generated method stub

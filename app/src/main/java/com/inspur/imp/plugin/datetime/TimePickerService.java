@@ -5,6 +5,7 @@ import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.widget.TimePicker;
 
+import com.inspur.imp.api.ImpActivity;
 import com.inspur.imp.plugin.ImpPlugin;
 
 import org.json.JSONException;
@@ -39,7 +40,15 @@ public class TimePickerService extends ImpPlugin {
 	public void execute(String action, JSONObject paramsObject) {
 		if ("open".equals(action)) {
 			openTimePicker(paramsObject);
+		}else{
+			showCallIMPMethodErrorDlg();
 		}
+	}
+
+	@Override
+	public String executeAndReturn(String action, JSONObject paramsObject) {
+		showCallIMPMethodErrorDlg();
+		return "";
 	}
 
 	/**
@@ -82,7 +91,7 @@ public class TimePickerService extends ImpPlugin {
 		}
 
 		// 显示设置时间对话框
-		TimePickerDialog timeDlg = new TimePickerDialog(context, theme,
+		TimePickerDialog timeDlg = new TimePickerDialog(getActivity(), theme,
 				new TimePickerDialog.OnTimeSetListener() {
 
 					@Override

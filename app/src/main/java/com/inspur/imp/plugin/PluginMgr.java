@@ -3,6 +3,8 @@ package com.inspur.imp.plugin;
 import android.content.Context;
 import android.util.Log;
 
+import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.imp.api.ImpCallBackInterface;
 import com.inspur.imp.api.iLog;
 import com.inspur.imp.engine.webview.ImpWebView;
 import com.inspur.imp.util.StrUtil;
@@ -30,6 +32,8 @@ public class PluginMgr {
     // 缓存功能类实例
     private HashMap<String, IPlugin> entries = new HashMap<String, IPlugin>();
 
+    private ImpCallBackInterface impCallBackInterface;
+
     public PluginMgr(Context ctx, ImpWebView ImpWebView) {
         context = ctx;
         webView = ImpWebView;
@@ -56,16 +60,10 @@ public class PluginMgr {
     public void execute(String serviceName, final String action,
                         final String params) {
         serviceName = getReallyServiceName(serviceName);
-        if (serviceName != null){
+        if (serviceName != null) {
             Log.d("jason", "serviceName=" + serviceName);
             Log.d("jason", "action=" + action);
-            IPlugin plugin = null;
-            if (!entries.containsKey(serviceName)) {
-                plugin = createPlugin(serviceName);
-                entries.put(serviceName, plugin);
-            } else {
-                plugin = getPlugin(serviceName);
-            }
+            IPlugin plugin = getPlugin(serviceName);
             // 将传递过来的参数转换为JSON
             JSONObject jo = null;
             if (StrUtil.strIsNotNull(params)) {
@@ -78,6 +76,14 @@ public class PluginMgr {
             // 执行接口的execute方法
             if (plugin != null) {
                 plugin.execute(action, jo);
+            } else {
+                if(impCallBackInterface != null){
+                    impCallBackInterface.onShowImpDialog();
+                }
+            }
+        }else {
+            if(impCallBackInterface != null){
+                impCallBackInterface.onShowImpDialog();
             }
         }
     }
@@ -93,16 +99,11 @@ public class PluginMgr {
                                    final String action, final String params) {
         String reallyServiceName = getReallyServiceName(serviceName);
         String res = "";
-        if (reallyServiceName != null){
-            IPlugin plugin = null;
+        if (reallyServiceName != null) {
+
             Log.d("jason", "serviceName=" + reallyServiceName);
             Log.d("jason", "action=" + action);
-            if (!entries.containsKey(reallyServiceName)) {
-                plugin = createPlugin(reallyServiceName);
-                entries.put(reallyServiceName, plugin);
-            } else {
-                plugin = getPlugin(reallyServiceName);
-            }
+            IPlugin plugin = getPlugin(reallyServiceName);
             // 将传递过来的参数转换为JSON
             JSONObject jo = null;
             if (StrUtil.strIsNotNull(params)) {
@@ -119,21 +120,41 @@ public class PluginMgr {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+            }else{
+                if(impCallBackInterface != null){
+                    impCallBackInterface.onShowImpDialog();
+                }
+            }
+        } else {
+            if(impCallBackInterface != null){
+                impCallBackInterface.onShowImpDialog();
             }
         }
         return res;
 
     }
 
-    private String getReallyServiceName(String serviceName){
-        if (serviceName != null){
+    private String getReallyServiceName(String serviceName) {
+        if (serviceName != null) {
             if (serviceName.endsWith("LoadingDialogService")) {
                 serviceName = "com.inspur.imp.plugin.loadingdialog.LoadingDialogService";
-            }else if (serviceName.endsWith("FileTransferService")) {
+            } else if (serviceName.endsWith("FileTransferService")) {
                 serviceName = "com.inspur.imp.plugin.filetransfer.FileTransferService";
+            } else if (serviceName.endsWith("OCRService")) {
+               // serviceName = "com.inspur.imp.plugin.ocr.OCRService";
+            } else if (serviceName.endsWith("StartAppService")) {
+                serviceName = "com.inspur.imp.plugin.startapp.StartAppService";
             }
         }
         return serviceName;
+    }
+
+    public void setImpCallBackInterface(ImpCallBackInterface impCallBackInterface){
+        this.impCallBackInterface = impCallBackInterface;
+    }
+
+    public ImpCallBackInterface getImpCallBackInterface(){
+        return impCallBackInterface;
     }
 
     /**
@@ -143,16 +164,16 @@ public class PluginMgr {
      * @return IPlugin
      */
     public IPlugin getPlugin(String service) {
-        IPlugin plugin = entries.get(service);
-
-        // 页面切换时切换webView
-        if ("com.inspur.imp.plugin.window.WindowService".equals(service)
-                || "com.inspur.imp.plugin.scroll.ScrollService".equals(service)
-                || "com.inspur.imp.plugin.app.AppService".equals(service)
-                || "com.inspur.imp.plugin.transfer.FileTransferService".equals(service)) {
+        service = service.trim();
+        IPlugin plugin = null;
+        Log.d("jason", "serviceName=" + service);
+        if (!entries.containsKey(service) || service.equals("com.inspur.imp.plugin.transfer.FileTransferService")) {
             plugin = createPlugin(service);
+            if (plugin != null){
+                entries.put(service, plugin);
+            }
         } else {
-            plugin.init(context, webView);
+            plugin = entries.get(service);
         }
         return plugin;
     }
@@ -167,7 +188,7 @@ public class PluginMgr {
             @SuppressWarnings("rawtypes")
             Class c = getClassByName(clssName);
             plugin = (IPlugin) c.newInstance();
-            plugin.init(context, webView);
+            plugin.init(context, webView,impCallBackInterface);
         } catch (Exception e) {
             e.printStackTrace();
         }

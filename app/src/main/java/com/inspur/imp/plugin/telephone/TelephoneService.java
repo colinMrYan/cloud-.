@@ -29,7 +29,15 @@ public class TelephoneService extends ImpPlugin {
 		// 直接拨打电话
 		else if ("call".equals(action)) {
 			call(paramsObject);
+		}else{
+			showCallIMPMethodErrorDlg();
 		}
+	}
+
+	@Override
+	public String executeAndReturn(String action, JSONObject paramsObject) {
+		showCallIMPMethodErrorDlg();
+		return "";
 	}
 
 	/**
@@ -46,12 +54,12 @@ public class TelephoneService extends ImpPlugin {
 			e.printStackTrace();
 		}
 		if (!StrUtil.strIsNotNull(tel)) {
-			Toast.makeText(this.context, "电话号码不能为空！", Toast.LENGTH_SHORT).show();
+			Toast.makeText(getFragmentContext(), "电话号码不能为空！", Toast.LENGTH_SHORT).show();
 			return;
 		}
 		Intent intent = new Intent("android.intent.action.DIAL",
 				Uri.parse("tel:" + tel));
-		this.context.startActivity(intent);
+		getActivity().startActivity(intent);
 	}
 
 	/**
@@ -68,7 +76,7 @@ public class TelephoneService extends ImpPlugin {
 			e.printStackTrace();
 		}
 		if (!StrUtil.strIsNotNull(tel)) {
-			Toast.makeText(this.context, "电话号码不能为空！", Toast.LENGTH_SHORT).show();
+			Toast.makeText(getFragmentContext(), "电话号码不能为空！", Toast.LENGTH_SHORT).show();
 			return;
 		}
 		Intent intent = new Intent();
@@ -76,7 +84,7 @@ public class TelephoneService extends ImpPlugin {
 		// intent.addCategory("android.intent.category.DEFAULT");
 		intent.setData(Uri.parse("tel:" + tel));
 		// 方法内部会自动为Intent添加类别：android.intent.category.DEFAULT
-		this.context.startActivity(intent);
+		getActivity().startActivity(intent);
 	}
 
 	@Override

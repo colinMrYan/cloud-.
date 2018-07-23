@@ -31,8 +31,9 @@ public class BroadcastService extends ImpPlugin {
         } else if ("receive".equals(action)) {
             this.paramsObject = paramsObject;
             registerReceiver(paramsObject);
+        }else{
+            showCallIMPMethodErrorDlg();
         }
-
     }
 
     /**
@@ -52,7 +53,7 @@ public class BroadcastService extends ImpPlugin {
                 intent.putExtra(extraName, extraValue);
             }
         }
-        getActivity().sendBroadcast(intent);
+        getFragmentContext().sendBroadcast(intent);
 
     }
 
@@ -69,7 +70,7 @@ public class BroadcastService extends ImpPlugin {
             return;
         }
         if (receiver != null){
-            getActivity().unregisterReceiver(receiver);
+            getFragmentContext().unregisterReceiver(receiver);
             receiver= null;
         }
         receiver = new BroadcastReceiver() {
@@ -87,19 +88,20 @@ public class BroadcastService extends ImpPlugin {
                 String result =object.toString();
                 LogUtils.YfcDebug("result="+result);
                 BroadcastService.this.jsCallback(callback,result);
-                getActivity().unregisterReceiver(receiver);
+                getFragmentContext().unregisterReceiver(receiver);
                 receiver = null;
 
             }
         };
         IntentFilter filter = new IntentFilter(action);
-        getActivity().registerReceiver(receiver, filter);
+        getFragmentContext().registerReceiver(receiver, filter);
 
     }
 
     @Override
     public String executeAndReturn(String action, JSONObject paramsObject) {
-        return super.executeAndReturn(action, paramsObject);
+        showCallIMPMethodErrorDlg();
+        return "";
     }
 
     @Override
@@ -112,7 +114,7 @@ public class BroadcastService extends ImpPlugin {
     @Override
     public void onActivityPause() {
         if (receiver != null && !isRunInBackgroud){
-            getActivity().unregisterReceiver(receiver);
+            getFragmentContext().unregisterReceiver(receiver);
         }
 
     }
@@ -120,7 +122,7 @@ public class BroadcastService extends ImpPlugin {
     @Override
     public void onDestroy() {
         if (receiver != null){
-            getActivity().unregisterReceiver(receiver);
+            getFragmentContext().unregisterReceiver(receiver);
             receiver = null;
         }
     }

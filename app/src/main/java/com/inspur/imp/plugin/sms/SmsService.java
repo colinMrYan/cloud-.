@@ -12,7 +12,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.telephony.SmsManager;
 import android.widget.Toast;
 
-import com.inspur.imp.api.ImpActivity;
+import com.inspur.imp.api.ImpFragment;
 import com.inspur.imp.plugin.ImpPlugin;
 import com.inspur.imp.util.StrUtil;
 
@@ -55,9 +55,18 @@ public class SmsService extends ImpPlugin {
 		// 直接发送短
 		else if ("batchSend".equals(action)) {
 			batchSend(paramsObject);
+		}else{
+			showCallIMPMethodErrorDlg();
 		}
 
 	}
+
+	@Override
+	public String executeAndReturn(String action, JSONObject paramsObject) {
+		showCallIMPMethodErrorDlg();
+		return "";
+	}
+
 	/**
 	 * 打开系统发送短信的界面
 	 * 
@@ -74,13 +83,15 @@ public class SmsService extends ImpPlugin {
 			e.printStackTrace();
 		}
 		if (!StrUtil.strIsNotNull(tel) || !StrUtil.strIsNotNull(msg)) {
-			Toast.makeText(this.context, "电话号码或信息不能为空！", Toast.LENGTH_SHORT).show();
+			Toast.makeText(getFragmentContext(), "电话号码或信息不能为空！", Toast.LENGTH_SHORT).show();
 			return;
 		}
 		Intent sendIntent = new Intent(Intent.ACTION_SENDTO);
 		sendIntent.setData(Uri.parse("smsto:" + tel));
 		sendIntent.putExtra("sms_body", msg);
-		((Activity)this.context).startActivityForResult(sendIntent, ImpActivity.DO_NOTHING_RESULTCODE);
+		if (getImpCallBackInterface() != null){
+			getImpCallBackInterface().onStartActivityForResult(sendIntent, ImpFragment.DO_NOTHING_REQUEST);
+		}
 	}
 
 	/**
@@ -107,7 +118,7 @@ public class SmsService extends ImpPlugin {
 			try {
 				String tel = tels.getString(i);
 				if (!StrUtil.strIsNotNull(tel) || !StrUtil.strIsNotNull(msg)) {
-					Toast.makeText(this.context, "电话号码或信息不能为空！",Toast.LENGTH_SHORT).show();
+					Toast.makeText(getFragmentContext(), "电话号码或信息不能为空！",Toast.LENGTH_SHORT).show();
 					return;
 				}
 				// 短信管理器
@@ -129,11 +140,11 @@ public class SmsService extends ImpPlugin {
 						}
 					}
 				};
-				context.registerReceiver(sendmessage, new IntentFilter(SENT_SMS_ACTION));
+				getFragmentContext().registerReceiver(sendmessage, new IntentFilter(SENT_SMS_ACTION));
 				
 				// 发送状态确认
 				Intent sentIntent = new Intent(SENT_SMS_ACTION);
-				PendingIntent sentPI = PendingIntent.getBroadcast(context, 0,
+				PendingIntent sentPI = PendingIntent.getBroadcast(getFragmentContext(), 0,
 						sentIntent, 0);
 
 				// 拆分短信内容
@@ -155,7 +166,7 @@ public class SmsService extends ImpPlugin {
 					// 短信数据库的位置
 					Uri uri = Uri.parse("content://sms/sent");
 					// 通过该资源位置，插入该条短信
-					context.getContentResolver().insert(uri, values);
+					getFragmentContext().getContentResolver().insert(uri, values);
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
@@ -182,7 +193,7 @@ public class SmsService extends ImpPlugin {
 			e.printStackTrace();
 		}
 		if (!StrUtil.strIsNotNull(tel) || !StrUtil.strIsNotNull(msg)) {
-			Toast.makeText(this.context, "电话号码或信息不能为空！", Toast.LENGTH_SHORT).show();
+			Toast.makeText(getFragmentContext(), "电话号码或信息不能为空！", Toast.LENGTH_SHORT).show();
 			return;
 		}
 		// 短信管理器
@@ -205,12 +216,12 @@ public class SmsService extends ImpPlugin {
 				}
 			}
 		};
-		LocalBroadcastManager.getInstance(context).registerReceiver(sendmessage, new IntentFilter(SENT_SMS_ACTION));
+		LocalBroadcastManager.getInstance(getFragmentContext()).registerReceiver(sendmessage, new IntentFilter(SENT_SMS_ACTION));
 		
 		
 		// 发送状态确认
 		Intent sentIntent = new Intent(SENT_SMS_ACTION);
-		PendingIntent sentPI = PendingIntent.getBroadcast(context, 0,
+		PendingIntent sentPI = PendingIntent.getBroadcast(getFragmentContext(), 0,
 				sentIntent, 0);
 
 		// 拆分短信内容
@@ -232,7 +243,7 @@ public class SmsService extends ImpPlugin {
 			// 短信数据库的位置
 			Uri uri = Uri.parse("content://sms/sent");
 			// 通过该资源位置，插入该条短信
-			context.getContentResolver().insert(uri, values);
+			getFragmentContext().getContentResolver().insert(uri, values);
 			
 			
 		}

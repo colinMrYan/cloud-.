@@ -28,6 +28,7 @@ import android.widget.TextView;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.chat.Channel;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
 import com.inspur.emmcloud.bean.contact.Contact;
@@ -45,8 +46,8 @@ import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.CommonContactCacheUtils;
-import com.inspur.emmcloud.util.privates.cache.ContactCacheUtils;
-import com.inspur.emmcloud.widget.CircleImageView;
+import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
+import com.inspur.emmcloud.widget.CircleTextImageView;
 import com.inspur.emmcloud.widget.FlowLayout;
 import com.inspur.emmcloud.widget.MaxHightScrollView;
 import com.inspur.emmcloud.widget.MySwipeRefreshLayout;
@@ -165,7 +166,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
         searchContent = getIntent().getIntExtra("searchContent", 1);
         // 单选时隐藏输入框或者不选时
         if (!isMultiSelect || searchContent == SEARCH_NOTHIING) {
-            ((TextView) findViewById(R.id.ok_text)).setVisibility(View.GONE);
+            (findViewById(R.id.ok_text)).setVisibility(View.GONE);
         }
         searchText = getIntent().getStringExtra("searchText");
         int groupPosition = getIntent().getIntExtra("groupPosition", 1);
@@ -284,7 +285,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
         }
         CommonContactCacheUtils.saveCommonContact(getApplicationContext(),
                 searchModel);
-        if (type.equals("USER")) {
+        if (type.equals(SearchModel.TYPE_USER)) {
             intent.putExtra("uid", id);
             intent.setClass(getApplicationContext(), UserInfoActivity.class);
             startActivity(intent);
@@ -364,10 +365,11 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
-                                searchContactList = ContactCacheUtils.getSearchContact(
-                                        getApplicationContext(), searchText,
+                                searchContactList = ContactUserCacheUtils.getSearchContact(searchText,
                                         excludeContactList, 25);
-                                handler.sendEmptyMessage(REFRESH_CONTACT_DATA);
+                                if (handler !=null){
+                                    handler.sendEmptyMessage(REFRESH_CONTACT_DATA);
+                                }
                             }
                         }).start();
                         break;
@@ -438,7 +440,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
                         R.layout.member_search_item_view, null);
                 viewHolder.nameText = (TextView) convertView
                         .findViewById(R.id.name_text);
-                viewHolder.photoImg = (CircleImageView) convertView.findViewById(R.id.photo_img);
+                viewHolder.photoImg = (CircleTextImageView) convertView.findViewById(R.id.photo_img);
                 viewHolder.selectedImg = (ImageView) convertView
                         .findViewById(R.id.selected_img);
                 convertView.setTag(viewHolder);
@@ -461,7 +463,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
 
             }
             displayImg(searchModel, viewHolder.photoImg);
-            viewHolder.nameText.setText(searchModel.getCompleteName(getApplicationContext()));
+            viewHolder.nameText.setText(searchModel.getCompleteName());
             if (selectMemList.contains(searchModel)) {
                 viewHolder.selectedImg.setVisibility(View.VISIBLE);
                 viewHolder.nameText.setTextColor(Color.parseColor("#0f7bca"));
@@ -480,11 +482,11 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
      * @param searchModel
      * @param photoImg
      */
-    private void displayImg(SearchModel searchModel, CircleImageView photoImg) {
+    private void displayImg(SearchModel searchModel, CircleTextImageView photoImg) {
         Integer defaultIcon = null; // 默认显示图标
         String icon = null;
         String type = searchModel.getType();
-        if (type.equals("GROUP")) {
+        if (type.equals(SearchModel.TYPE_GROUP)) {
             defaultIcon = R.drawable.icon_channel_group_default;
             File file = new File(MyAppConfig.LOCAL_CACHE_PHOTO_PATH,
                     MyApplication.getInstance().getTanent() + searchModel.getId() + "_100.png1");
@@ -493,14 +495,13 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
                 ImageDisplayUtils.getInstance().displayImageNoCache(photoImg, icon, defaultIcon);
                 return;
             }
-        } else if (type.equals("STRUCT")) {
+        } else if (type.equals(SearchModel.TYPE_STRUCT)) {
             defaultIcon = R.drawable.icon_channel_group_default;
         } else {
             defaultIcon = R.drawable.icon_person_default;
             if (!searchModel.getId().equals("null")) {
-                icon = searchModel.getIcon(ContactSearchMoreActivity.this);
+                icon = APIUri.getChannelImgUrl(MyApplication.getInstance(),searchModel.getId());
             }
-
         }
         ImageDisplayUtils.getInstance().displayImage(
                 photoImg, icon, defaultIcon);
@@ -511,7 +512,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
 
     public static class ViewHolder {
         TextView nameText;
-        CircleImageView photoImg;
+        CircleTextImageView photoImg;
         ImageView selectedImg;
     }
 
@@ -593,9 +594,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
         List<Contact> excludeSearchContactList = new ArrayList<>();
         excludeSearchContactList.addAll(searchContactList);
         excludeSearchContactList.addAll(excludeContactList);
-        List<Contact> moreContactList = ContactCacheUtils.getSearchContact(
-                getApplicationContext(), searchText,
-                excludeSearchContactList, 25);
+        List<Contact> moreContactList = ContactUserCacheUtils.getSearchContact(searchText, excludeSearchContactList, 25);
         swipeRefreshLayout.setLoading(false);
         swipeRefreshLayout.setCanLoadMore((moreContactList.size() == 25));
         if (moreContactList.size() != 0) {
@@ -608,9 +607,10 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         if (handler != null) {
             handler = null;
         }
+        super.onDestroy();
     }
+
 }

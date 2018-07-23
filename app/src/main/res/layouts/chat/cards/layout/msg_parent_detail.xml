@@ -21,7 +21,7 @@
             android:paddingRight="20dp"
             android:paddingTop="10dp" >
 
-            <com.inspur.emmcloud.widget.CircleImageView
+            <com.inspur.emmcloud.widget.CircleTextImageView
                 android:id="@+id/sender_photo_img"
                 android:layout_width="45dp"
                 android:layout_height="45dp"

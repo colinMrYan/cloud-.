@@ -6,7 +6,6 @@ import com.inspur.emmcloud.util.common.ImageUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
 
 import org.json.JSONObject;
 import org.xutils.common.Callback.CommonCallback;
@@ -20,7 +19,6 @@ import java.util.List;
 
 public class UploadPhoto {
 	private Context mContext;
-	private List<String> filePathList = new ArrayList<String>();
 	private OnUploadPhotoListener onUploadPhotoListener;
 	public UploadPhoto(Context mContext,OnUploadPhotoListener onUploadPhotoListener){
 		this.mContext =mContext;
@@ -33,11 +31,7 @@ public class UploadPhoto {
 			httpUpload(filePathList,url,encodeType,context);
 	}
 	
-	public void upload(String url,List<ImageItem> imageItemList,int encodeType,String context, JSONObject watermarkObj){
-		List<String> filePathList = new ArrayList<String>();
-		for (int i = 0; i < imageItemList.size(); i++) {
-			filePathList.add(imageItemList.get(i).path);
-		}
+	public void upload(String url,List<String> filePathList,int encodeType,String context, JSONObject watermarkObj){
 		createWatermark(watermarkObj,filePathList);
 		httpUpload(filePathList,url,encodeType,context);
 	}

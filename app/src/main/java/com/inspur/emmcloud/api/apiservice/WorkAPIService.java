@@ -15,7 +15,6 @@ import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.CloudHttpMethod;
 import com.inspur.emmcloud.api.HttpUtils;
 import com.inspur.emmcloud.bean.appcenter.GetIDResult;
-import com.inspur.emmcloud.bean.chat.ChannelGroup;
 import com.inspur.emmcloud.bean.contact.SearchModel;
 import com.inspur.emmcloud.bean.work.Attachment;
 import com.inspur.emmcloud.bean.work.GetCalendarEventsResult;
@@ -32,6 +31,7 @@ import com.inspur.emmcloud.bean.work.GetTaskAddResult;
 import com.inspur.emmcloud.bean.work.GetTaskListResult;
 import com.inspur.emmcloud.bean.work.TaskResult;
 import com.inspur.emmcloud.interf.OauthCallBack;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.privates.OauthUtils;
 
@@ -91,10 +91,10 @@ public class WorkAPIService {
             }
 
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
                 apiInterface
-                        .returnMeetingsSuccess(new GetMeetingsResult(arg0));
+                        .returnMeetingsSuccess(new GetMeetingsResult(new String(arg0)));
             }
 
             @Override
@@ -133,11 +133,10 @@ public class WorkAPIService {
             }
 
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
                 apiInterface
-                        .returnMeetingRoomsSuccess(new GetMeetingRoomsResult(
-                                arg0));
+                        .returnMeetingRoomsSuccess(new GetMeetingRoomsResult(new String(arg0)));
             }
 
             @Override
@@ -195,10 +194,10 @@ public class WorkAPIService {
             }
 
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
                 apiInterface.returnMeetingRoomsSuccess(
-                        new GetMeetingRoomsResult(arg0), isFilte);
+                        new GetMeetingRoomsResult(new String(arg0)), isFilte);
             }
 
             @Override
@@ -246,10 +245,10 @@ public class WorkAPIService {
             }
 
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
                 apiInterface.returnMeetingsSuccess(
-                        new GetMeetingsResult(arg0), page);
+                        new GetMeetingsResult(new String(arg0)), page);
             }
 
             @Override
@@ -290,9 +289,9 @@ public class WorkAPIService {
             }
 
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
-                apiInterface.returnIsAdminSuccess(new GetIsAdmin(arg0));
+                apiInterface.returnIsAdminSuccess(new GetIsAdmin(new String(arg0)));
             }
 
             @Override
@@ -389,7 +388,7 @@ public class WorkAPIService {
             }
 
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
                 apiInterface.returnBookingRoomSuccess();
             }
@@ -484,7 +483,7 @@ public class WorkAPIService {
             }
 
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
                 apiInterface.returnBookingRoomSuccess();
             }
@@ -493,60 +492,6 @@ public class WorkAPIService {
             public void callbackFail(String error, int responseCode) {
                 // TODO Auto-generated method stub
                 apiInterface.returnBookingRoomFail(error, responseCode);
-            }
-        });
-    }
-
-    /**
-     * 创建群组
-     *
-     * @param name
-     * @param members
-     */
-    public void creatGroupChannel(final String name, final JSONArray members) {
-        final String completeUrl = APIUri.getHttpApiUrl("channel");
-        RequestParams params = ((MyApplication) context.getApplicationContext())
-                .getHttpRequestParams(completeUrl);
-        try {
-            JSONObject paramObj = new JSONObject();
-            paramObj.put("name", name);
-            paramObj.put("type", "GROUP");
-            paramObj.put("members", members);
-            params.setBodyContent(paramObj.toString());
-            params.setAsJsonContent(true);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        HttpUtils.request(context,CloudHttpMethod.POST,params, new APICallback(context, completeUrl) {
-
-            @Override
-            public void callbackTokenExpire(long requestTime) {
-                OauthCallBack oauthCallBack = new OauthCallBack() {
-                    @Override
-                    public void reExecute() {
-                        creatGroupChannel(name, members);
-                    }
-
-                    @Override
-                    public void executeFailCallback() {
-                        callbackFail("", -1);
-                    }
-                };
-                OauthUtils.getInstance().refreshToken(
-                        oauthCallBack, requestTime);
-            }
-
-            @Override
-            public void callbackSuccess(String arg0) {
-                // TODO Auto-generated method stub
-                apiInterface.returnCreatChannelGroupSuccess(new ChannelGroup(
-                        arg0));
-            }
-
-            @Override
-            public void callbackFail(String error, int responseCode) {
-                // TODO Auto-generated method stub
-                apiInterface.returnCreateChannelGroupFail(error, responseCode);
             }
         });
     }
@@ -573,9 +518,13 @@ public class WorkAPIService {
             @Override
             public void onSuccess(UriRequest arg0, Object arg1) {
                 // TODO Auto-generated method stub
+                String result = "";
+                if(arg1 != null){
+                    result = new String((byte[])arg1);
+                }
                 apiInterface
                         .returnMeetingListSuccess(new GetMeetingListResult(
-                                arg1.toString()), arg0.getResponseHeader("Date"));
+                                result), arg0.getResponseHeader("Date"));
             }
 
             @Override
@@ -634,7 +583,7 @@ public class WorkAPIService {
             }
 
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
             }
 
@@ -673,10 +622,9 @@ public class WorkAPIService {
             }
 
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
-                apiInterface.returnLoctionResultSuccess(new GetLoctionResult(
-                        arg0));
+                apiInterface.returnLoctionResultSuccess(new GetLoctionResult(new String(arg0)));
             }
 
             @Override
@@ -698,10 +646,10 @@ public class WorkAPIService {
         HttpUtils.request(context,CloudHttpMethod.GET,params, new APICallback(context, completeUrl) {
 
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
                 apiInterface
-                        .returnOfficeResultSuccess(new GetOfficeResult(arg0));
+                        .returnOfficeResultSuccess(new GetOfficeResult(new String(arg0)));
             }
 
             @Override
@@ -771,11 +719,10 @@ public class WorkAPIService {
             }
 
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
                 apiInterface
-                        .returnCreatOfficeSuccess(new GetCreateOfficeResult(
-                                arg0));
+                        .returnCreatOfficeSuccess(new GetCreateOfficeResult(new String(arg0)));
             }
 
             @Override
@@ -816,7 +763,7 @@ public class WorkAPIService {
             }
 
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
                 apiInterface.returnDelMeetingSuccess();
             }
@@ -858,7 +805,7 @@ public class WorkAPIService {
             }
 
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
                 apiInterface.returnDeleteOfficeSuccess(position);
             }
@@ -907,10 +854,9 @@ public class WorkAPIService {
             }
 
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
-                apiInterface.returnRecentTasksSuccess(new GetTaskListResult(
-                        arg0));
+                apiInterface.returnRecentTasksSuccess(new GetTaskListResult(new String(arg0)));
             }
 
             @Override
@@ -952,10 +898,9 @@ public class WorkAPIService {
             }
 
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
-                apiInterface.returnGetTasksSuccess(new GetTaskListResult(
-                        arg0));
+                apiInterface.returnGetTasksSuccess(new GetTaskListResult(new String(arg0)));
             }
 
             @Override
@@ -1001,10 +946,9 @@ public class WorkAPIService {
             }
 
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
-                apiInterface.returnRecentTasksSuccess(new GetTaskListResult(
-                        arg0));
+                apiInterface.returnRecentTasksSuccess(new GetTaskListResult(new String(arg0)));
             }
 
             @Override
@@ -1044,10 +988,9 @@ public class WorkAPIService {
             }
 
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
-                apiInterface.returnRecentTasksSuccess(new GetTaskListResult(
-                        arg0));
+                apiInterface.returnRecentTasksSuccess(new GetTaskListResult(new String(arg0)));
             }
 
             @Override
@@ -1087,10 +1030,9 @@ public class WorkAPIService {
             }
 
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
-                apiInterface.returnRecentTasksSuccess(new GetTaskListResult(
-                        arg0));
+                apiInterface.returnRecentTasksSuccess(new GetTaskListResult(new String(arg0)));
             }
 
             @Override
@@ -1129,10 +1071,10 @@ public class WorkAPIService {
             }
 
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
                 apiInterface
-                        .returnCreateTaskSuccess(new GetTaskAddResult(arg0));
+                        .returnCreateTaskSuccess(new GetTaskAddResult(new String(arg0)));
             }
 
             @Override
@@ -1173,7 +1115,7 @@ public class WorkAPIService {
             }
 
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
                 apiInterface.returnDeleteTaskSuccess();
             }
@@ -1213,10 +1155,9 @@ public class WorkAPIService {
             }
 
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
-                apiInterface.returnRecentTasksSuccess(new GetTaskListResult(
-                        arg0));
+                apiInterface.returnRecentTasksSuccess(new GetTaskListResult(new String(arg0)));
             }
 
             @Override
@@ -1257,9 +1198,9 @@ public class WorkAPIService {
             }
 
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
-                apiInterface.returnAttachmentSuccess(new TaskResult(arg0));
+                apiInterface.returnAttachmentSuccess(new TaskResult(new String(arg0)));
             }
 
             @Override
@@ -1301,7 +1242,7 @@ public class WorkAPIService {
             }
 
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
                 apiInterface.returnUpdateTaskSuccess(position);
             }
@@ -1347,10 +1288,10 @@ public class WorkAPIService {
             }
 
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
 
-                apiInterface.returnInviteMateForTaskSuccess(arg0);
+                apiInterface.returnInviteMateForTaskSuccess(new String(arg0));
             }
 
             @Override
@@ -1394,7 +1335,7 @@ public class WorkAPIService {
             }
 
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
                 apiInterface.returnDelTaskMemSuccess();
             }
@@ -1435,9 +1376,9 @@ public class WorkAPIService {
             }
 
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
-                apiInterface.returnGetTagResultSuccess(new GetTagResult(arg0));
+                apiInterface.returnGetTagResultSuccess(new GetTagResult(new String(arg0)));
             }
 
             @Override
@@ -1493,7 +1434,7 @@ public class WorkAPIService {
             }
 
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
                 apiInterface.returnCreateTagSuccess();
             }
@@ -1537,7 +1478,7 @@ public class WorkAPIService {
             }
 
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
                 apiInterface.returnDeleteTagSuccess();
             }
@@ -1583,7 +1524,7 @@ public class WorkAPIService {
             }
 
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
                 apiInterface.returnCreateTagSuccess();
             }
@@ -1630,7 +1571,7 @@ public class WorkAPIService {
             }
 
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
                 apiInterface.returnChangeMessionOwnerSuccess(managerName);
             }
@@ -1685,9 +1626,9 @@ public class WorkAPIService {
             }
 
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
-                apiInterface.returnAddAttachMentSuccess(new Attachment(arg0));
+                apiInterface.returnAddAttachMentSuccess(new Attachment(new String(arg0)));
             }
 
             @Override
@@ -1736,7 +1677,7 @@ public class WorkAPIService {
             }
 
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
                 apiInterface.returnDelAttachmentSuccess(position);
             }
@@ -1784,10 +1725,9 @@ public class WorkAPIService {
             }
 
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
-                apiInterface.returnMyCalendarSuccess(new GetMyCalendarResult(
-                        arg0));
+                apiInterface.returnMyCalendarSuccess(new GetMyCalendarResult(new String(arg0)));
             }
 
             @Override
@@ -1831,7 +1771,7 @@ public class WorkAPIService {
             }
 
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
                 apiInterface.returnDelelteCalendarByIdSuccess();
             }
@@ -1876,7 +1816,7 @@ public class WorkAPIService {
             }
 
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
                 apiInterface.returnUpdateCalendarSuccess();
             }
@@ -1924,10 +1864,9 @@ public class WorkAPIService {
             }
 
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
-                apiInterface.returnAddCalEventSuccess(new GetIDResult(
-                        arg0));
+                apiInterface.returnAddCalEventSuccess(new GetIDResult(new String(arg0)));
             }
 
             @Override
@@ -1972,7 +1911,7 @@ public class WorkAPIService {
             }
 
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
                 apiInterface.returnUpdateCalEventSuccess();
             }
@@ -2040,10 +1979,10 @@ public class WorkAPIService {
             }
 
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
                 apiInterface.returnCalEventsSuccess(
-                        new GetCalendarEventsResult(arg0),
+                        new GetCalendarEventsResult(new String(arg0)),
                         isRefresh);
             }
 
@@ -2086,7 +2025,7 @@ public class WorkAPIService {
             }
 
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
                 apiInterface.returnDeleteCalEventSuccess();
             }
@@ -2111,7 +2050,7 @@ public class WorkAPIService {
         params.setBodyContent(configJSon);
         HttpUtils.request(context,CloudHttpMethod.POST,params, new APICallback(context, url) {
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnSaveConfigSuccess();
             }
 

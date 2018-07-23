@@ -16,8 +16,10 @@ import com.inspur.emmcloud.bean.chat.MsgContentMediaImage;
 import com.inspur.emmcloud.bean.chat.MsgContentRegularFile;
 import com.inspur.emmcloud.bean.chat.MsgContentTextPlain;
 import com.inspur.emmcloud.bean.chat.Phone;
-import com.inspur.emmcloud.bean.contact.Contact;
+import com.inspur.emmcloud.bean.contact.ContactOrg;
+import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.util.common.FileUtils;
+import com.inspur.emmcloud.util.privates.cache.ContactOrgCacheUtils;
 
 import org.json.JSONObject;
 
@@ -141,7 +143,7 @@ public class CommunicationUtils {
         return message;
     }
 
-    public static Message combinLocalReplyAttachmentCardMessage(Contact contact, String cid, String fromUser) {
+    public static Message combinLocalReplyAttachmentCardMessage(ContactUser contactUser, String cid, String fromUser) {
         Message msgRobot = new Message();
         msgRobot.setChannel(cid);
         msgRobot.setMessage("1.0");
@@ -159,17 +161,22 @@ public class CommunicationUtils {
         msgRobot.setTo("");
         msgRobot.setState("");
         MsgContentAttachmentCard msgContentAttachmentCard = new MsgContentAttachmentCard();
-        msgContentAttachmentCard.setAvatar(APIUri.getChannelImgUrl(MyApplication.getInstance(), contact.getInspurID()));
-        msgContentAttachmentCard.setFirstName(contact.getRealName());
+        msgContentAttachmentCard.setAvatar(APIUri.getChannelImgUrl(MyApplication.getInstance(), contactUser.getId()));
+        msgContentAttachmentCard.setFirstName(contactUser.getName());
         msgContentAttachmentCard.setLastName("");
-        msgContentAttachmentCard.setOrganization(contact.getOrgName());
+        String contactOrgName = "";
+        ContactOrg contactOrg = ContactOrgCacheUtils.getContactOrg(contactUser.getParentId());
+        if (contactOrg != null){
+            contactOrgName = contactOrg.getName();
+        }
+        msgContentAttachmentCard.setOrganization(contactOrgName);
         msgContentAttachmentCard.setTitle("");
-        msgContentAttachmentCard.setUid(contact.getInspurID());
-        Email email = new Email(MyApplication.getInstance().getResources().getString(R.string.work), contact.getEmail());
+        msgContentAttachmentCard.setUid(contactUser.getId());
+        Email email = new Email(MyApplication.getInstance().getResources().getString(R.string.work), contactUser.getEmail());
         List<Email> emailList = new ArrayList<>();
         emailList.add(email);
         msgContentAttachmentCard.setEmailList(emailList);
-        Phone phone = new Phone(MyApplication.getInstance().getResources().getString(R.string.work), contact.getMobile());
+        Phone phone = new Phone(MyApplication.getInstance().getResources().getString(R.string.work), contactUser.getMobile());
         List<Phone> phoneList = new ArrayList<>();
         phoneList.add(phone);
         msgContentAttachmentCard.setPhoneList(phoneList);

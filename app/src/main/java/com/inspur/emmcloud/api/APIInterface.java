@@ -48,7 +48,8 @@ import com.inspur.emmcloud.bean.chat.GetSendMsgResult;
 import com.inspur.emmcloud.bean.chat.GetUploadPushInfoResult;
 import com.inspur.emmcloud.bean.chat.GetWebSocketUrlResult;
 import com.inspur.emmcloud.bean.chat.Robot;
-import com.inspur.emmcloud.bean.contact.GetAllContactResult;
+import com.inspur.emmcloud.bean.contact.GetContactOrgListUpateResult;
+import com.inspur.emmcloud.bean.contact.GetContactUserListUpateResult;
 import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.find.GetKnowledgeInfo;
 import com.inspur.emmcloud.bean.find.GetTripArriveCity;
@@ -68,8 +69,7 @@ import com.inspur.emmcloud.bean.mine.GetUploadMyHeadResult;
 import com.inspur.emmcloud.bean.mine.GetUserHeadUploadResult;
 import com.inspur.emmcloud.bean.mine.UserProfileInfoBean;
 import com.inspur.emmcloud.bean.system.GetAppConfigResult;
-import com.inspur.emmcloud.bean.system.GetAppTabAutoResult;
-import com.inspur.emmcloud.bean.system.GetAppTabsResult;
+import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
 import com.inspur.emmcloud.bean.system.GetBoolenResult;
 import com.inspur.emmcloud.bean.system.GetUpgradeResult;
 import com.inspur.emmcloud.bean.system.SplashPageBean;
@@ -223,10 +223,6 @@ public interface APIInterface {
     void returnChannelInfoSuccess(GetChannelInfoResult getChannelInfoResult);
 
     void returnChannelInfoFail(String error, int errorCode);
-
-    void returnAllContactSuccess(GetAllContactResult getAllContactResult);
-
-    void returnAllContactFail(String error, int errorCode);
 
     void returnUpLoadResFileSuccess(GetFileUploadResult getFileUploadResult, String fakeMessageId);
 
@@ -445,7 +441,7 @@ public interface APIInterface {
 
     void returnUpdatePwdBySMSCodeFail(String error, int errorCode);
 
-    void returnGetAppTabsSuccess(GetAppTabsResult getAppTabsResult);
+    void returnGetAppTabsSuccess(GetAppMainTabResult getAppTabsResult);
 
     void returnGetAppTabsFail(String error, int errorCode);
 
@@ -485,7 +481,7 @@ public interface APIInterface {
 
     void returnNewsInstructionFail(String error, int errorCode);
 
-    void returnAppTabAutoSuccess(GetAppTabAutoResult getAppTabAutoResult);
+    void returnAppTabAutoSuccess(GetAppMainTabResult getAppMainTabResult);
 
     void returnAppTabAutoFail(String error, int errorCode);
 
@@ -659,4 +655,16 @@ public interface APIInterface {
     void returnFaceLoginGSSuccess();
 
     void returnFaceLoginGSFail(String error, int errorCode);
+
+    void returnContactUserListSuccess(byte[] bytes);
+    void returnContactUserListFail(String error, int errorCode);
+
+    void returnContactOrgListSuccess(byte[] bytes);
+    void returnContactOrgListFail(String error, int errorCode);
+
+    void returnContactUserListUpdateSuccess(GetContactUserListUpateResult getContactUserListUpateResult);
+    void returnContactUserListUpdateFail(String error, int errorCode);
+
+    void returnContactOrgListUpdateSuccess(GetContactOrgListUpateResult getContactOrgListUpateResult);
+    void returnContactOrgListUpdateFail(String error, int errorCode);
 }

@@ -89,10 +89,9 @@ public class ChatAPIService {
 
 
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
-                apiInterface.returnChannelListSuccess(new GetChannelListResult(
-                        arg0));
+                apiInterface.returnChannelListSuccess(new GetChannelListResult(new String(arg0)));
             }
 
             @Override
@@ -111,7 +110,7 @@ public class ChatAPIService {
      * @param count
      */
     public void getNewMsgs(final String cid, final String msgId, final int count) {
-        final String completeUrl = APIUri.getHttpApiUrl("session/message");
+        final String completeUrl = APIUri.getECMChatChannelUrl()+("/session/message");
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         params.addParameter("limit", count);
@@ -143,9 +142,9 @@ public class ChatAPIService {
 
 
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
-                apiInterface.returnNewMsgsSuccess(new GetNewMsgsResult(arg0));
+                apiInterface.returnNewMsgsSuccess(new GetNewMsgsResult(new String(arg0)));
             }
 
             @Override
@@ -170,7 +169,7 @@ public class ChatAPIService {
      */
     public void getComment(final String mid) {
 
-        final String completeUrl = APIUri.getHttpApiUrl("message/" + mid
+        final String completeUrl = APIUri.getECMChatChannelUrl()+("/message/" + mid
                 + "/comment");
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
@@ -195,10 +194,9 @@ public class ChatAPIService {
 
 
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
-                apiInterface.returnMsgCommentSuccess(new GetMsgCommentResult(
-                        arg0), mid);
+                apiInterface.returnMsgCommentSuccess(new GetMsgCommentResult(new String(arg0)), mid);
             }
 
             @Override
@@ -239,10 +237,9 @@ public class ChatAPIService {
 
 
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
-                apiInterface.returnChannelInfoSuccess(new GetChannelInfoResult(
-                        arg0));
+                apiInterface.returnChannelInfoSuccess(new GetChannelInfoResult(new String(arg0)));
             }
 
             @Override
@@ -277,7 +274,7 @@ public class ChatAPIService {
      */
     public void sendMsg(final String channelId, final String msgContent,
                         final String type, final String mid, final String fakeMessageId) {
-        final String completeUrl = APIUri.getHttpApiUrl("message");
+        final String completeUrl = APIUri.getECMChatChannelUrl()+("/message");
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         try {
@@ -324,9 +321,9 @@ public class ChatAPIService {
 
 
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
-                apiInterface.returnSendMsgSuccess(new GetSendMsgResult(arg0),
+                apiInterface.returnSendMsgSuccess(new GetSendMsgResult(new String(arg0)),
                         fakeMessageId);
             }
 
@@ -344,7 +341,7 @@ public class ChatAPIService {
      * @param mid
      */
     public void getMsg(final String mid) {
-        final String completeUrl = APIUri.getHttpApiUrl("message/" + mid);
+        final String completeUrl = APIUri.getECMChatChannelUrl()+("/message/" + mid);
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
@@ -368,9 +365,9 @@ public class ChatAPIService {
 
 
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
-                apiInterface.returnMsgSuccess(new GetMsgResult(arg0));
+                apiInterface.returnMsgSuccess(new GetMsgResult(new String(arg0)));
             }
 
             @Override
@@ -418,11 +415,11 @@ public class ChatAPIService {
 
 
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
                 if (isImg) {
                     try {
-                        JSONObject jsonObject = new JSONObject(arg0);
+                        JSONObject jsonObject = new JSONObject(new String(arg0));
                         jsonObject.put("height", bitmap.getHeight());
                         jsonObject.put("width", bitmap.getWidth());
                         jsonObject.put("tmpId", AppUtils.getMyUUID(context));
@@ -434,7 +431,7 @@ public class ChatAPIService {
                     bitmap.recycle();
                 } else {
                     apiInterface.returnUpLoadResFileSuccess(
-                            new GetFileUploadResult(arg0), fakeMessageId);
+                            new GetFileUploadResult(new String(arg0)), fakeMessageId);
                 }
 
             }
@@ -479,11 +476,10 @@ public class ChatAPIService {
 
 
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
                 apiInterface
-                        .returnSearchChannelGroupSuccess(new GetSearchChannelGroupResult(
-                                arg0));
+                        .returnSearchChannelGroupSuccess(new GetSearchChannelGroupResult(new String(arg0)));
             }
 
             @Override
@@ -533,11 +529,10 @@ public class ChatAPIService {
 
 
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
                 apiInterface
-                        .returnSearchChannelGroupSuccess(new GetSearchChannelGroupResult(
-                                arg0));
+                        .returnSearchChannelGroupSuccess(new GetSearchChannelGroupResult(new String(arg0)));
             }
 
             @Override
@@ -579,11 +574,10 @@ public class ChatAPIService {
             }
 
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
                 apiInterface
-                        .returnCreateSingleChannelSuccess(new GetCreateSingleChannelResult(
-                                arg0));
+                        .returnCreateSingleChannelSuccess(new GetCreateSingleChannelResult(new String(arg0)));
             }
 
             @Override
@@ -634,11 +628,10 @@ public class ChatAPIService {
 
 
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
                 apiInterface
-                        .returnUpdateChannelGroupNameSuccess(new GetBoolenResult(
-                                arg0));
+                        .returnUpdateChannelGroupNameSuccess(new GetBoolenResult(new String(arg0)));
             }
 
             @Override
@@ -686,11 +679,10 @@ public class ChatAPIService {
 
 
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
                 apiInterface
-                        .returnAddMembersSuccess(new GetAddMembersSuccessResult(
-                                arg0));
+                        .returnAddMembersSuccess(new GetAddMembersSuccessResult(new String(arg0)));
             }
 
             @Override
@@ -737,10 +729,9 @@ public class ChatAPIService {
             }
 
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
-                apiInterface.returnDelMembersSuccess(new GetChannelInfoResult(
-                        arg0));
+                apiInterface.returnDelMembersSuccess(new GetChannelInfoResult(new String(arg0)));
             }
 
             @Override
@@ -784,7 +775,7 @@ public class ChatAPIService {
 
 
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
                 apiInterface.returnDndSuccess();
             }
@@ -838,10 +829,9 @@ public class ChatAPIService {
             }
 
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
-                apiInterface.returnCreatChannelGroupSuccess(new ChannelGroup(
-                        arg0));
+                apiInterface.returnCreatChannelGroupSuccess(new ChannelGroup(new String(arg0)));
             }
 
             @Override
@@ -854,7 +844,7 @@ public class ChatAPIService {
     }
 
     public void getMsgCommentCount(final String mid) {
-        final String completeUrl = APIUri.getHttpApiUrl("message/" + mid
+        final String completeUrl = APIUri.getECMChatChannelUrl()+("/message/" + mid
                 + "/comment/count");
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
@@ -879,9 +869,9 @@ public class ChatAPIService {
 
 
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
-                apiInterface.returnMsgCommentCountSuccess(new GetMsgCommentCountResult(arg0), mid);
+                apiInterface.returnMsgCommentCountSuccess(new GetMsgCommentCountResult(new String(arg0)), mid);
             }
 
             @Override
@@ -905,8 +895,8 @@ public class ChatAPIService {
         params.addQueryStringParameter("comment", instruction);
         HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
             @Override
-            public void callbackSuccess(String arg0) {
-                apiInterface.returnNewsInstructionSuccess(new GetNewsInstructionResult(arg0));
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnNewsInstructionSuccess(new GetNewsInstructionResult(new String(arg0)));
             }
 
             @Override
@@ -952,8 +942,8 @@ public class ChatAPIService {
         params.addParameter("notificationTracer", pushTracer);
         HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, url) {
             @Override
-            public void callbackSuccess(String arg0) {
-                apiInterface.returnUploadPushInfoResultSuccess(new GetUploadPushInfoResult(arg0));
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnUploadPushInfoResultSuccess(new GetUploadPushInfoResult(new String(arg0)));
             }
 
             @Override
@@ -990,7 +980,7 @@ public class ChatAPIService {
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
         HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, url) {
             @Override
-            public void callbackSuccess(String arg0) {
+            public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnOpenActionBackgroudUrlSuccess();
             }
 
@@ -1031,8 +1021,8 @@ public class ChatAPIService {
         params.addParameter("name", fileName);
         HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, url) {
             @Override
-            public void callbackSuccess(String arg0) {
-                apiInterface.returnChatFileUploadTokenSuccess(new GetVolumeFileUploadTokenResult(arg0));
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnChatFileUploadTokenSuccess(new GetVolumeFileUploadTokenResult(new String(arg0)));
             }
 
             @Override

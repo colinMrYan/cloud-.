@@ -155,6 +155,7 @@
     <color name="grey_dde1e7">#DDE1E7</color>
     <color name="red_f4333c">#F4333C</color>
     <color name="color_list_divider">#dddddd</color>
+    <color name="color_list_divider_tran">#99dddddd</color>
 <!--
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>

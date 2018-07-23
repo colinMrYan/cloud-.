@@ -1,5 +1,6 @@
 package com.inspur.imp.plugin.barcode.scan;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -18,7 +19,7 @@ import com.google.zxing.EncodeHintType;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
-import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.imp.api.ImpFragment;
 import com.inspur.imp.api.Res;
 import com.inspur.imp.plugin.ImpPlugin;
 
@@ -38,21 +39,18 @@ import java.util.Hashtable;
 public class BarCodeService extends ImpPlugin {
 
 	public static String functName;
-	public static BarCodeService barcodeService;
 	private Dialog qrCodeDlg;
 
 	@Override
 	public void execute(String action, JSONObject paramsObject) {
-		barcodeService = this;
 		// 启动扫描二维码
 		if ("scan".equals(action)) {
 			scan(paramsObject);
 		}else if ("closeQrCode".equals(action)) {
 			closeQrCodeDlg();
+		}else{
+			showCallIMPMethodErrorDlg();
 		}
-		
-		
-
 	}
 
 	/**
@@ -71,7 +69,6 @@ public class BarCodeService extends ImpPlugin {
 		if ("generate".equals(action)) {
 			try {
 				if (!paramsObject.isNull("format")) {
-					LogUtils.jasonDebug("executeAndReturn---------22222221");
 					String format = paramsObject.getString("format");
 					if (format.equals("QR")) {
 						return generateQrcode(paramsObject);
@@ -81,6 +78,8 @@ public class BarCodeService extends ImpPlugin {
 				// TODO: handle exception
 				e.printStackTrace();
 			}
+		}else {
+			showCallIMPMethodErrorDlg();
 		}
 		return "";
 	}
@@ -98,9 +97,11 @@ public class BarCodeService extends ImpPlugin {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		// ImpActivity.isBack = true;
-		Intent scanIntent = new Intent(context, CaptureActivity.class);
-		this.context.startActivity(scanIntent);
+
+		if (getImpCallBackInterface() != null) {
+			Intent scanIntent = new Intent(getFragmentContext(), CaptureActivity.class);
+			getImpCallBackInterface().onStartActivityForResult(scanIntent, ImpFragment.BARCODE_SERVER__SCAN_REQUEST);
+		}
 	}
 	
 	/**
@@ -114,10 +115,9 @@ public class BarCodeService extends ImpPlugin {
 		try {
 			if (!paramsObject.isNull("value")) {
 				String content = paramsObject.getString("value");
-				int qrSize = dip2px(context, 300);
+				int qrSize = dip2px(getFragmentContext(), 300);
 				Bitmap bitmap = creatQrCode(content, qrSize);
 				if (bitmap != null) {
-					LogUtils.jasonDebug("11111111111111");
 					showResultDlg(bitmap);
 					result = "true";
 				}
@@ -157,11 +157,9 @@ public class BarCodeService extends ImpPlugin {
 		Rect rect = new Rect();
 		View view = getActivity().getWindow().getDecorView();// decorView是window中的最顶层view，可以从window中获取到decorView
 		view.getWindowVisibleDisplayFrame(rect);
-		LogUtils.jasonDebug("rect.top="+rect.top);
 		lay.height = dm.heightPixels - rect.top;
 		lay.width = dm.widthPixels;
 		qrCodeDlg.show();
-		LogUtils.jasonDebug("2222222222");
 	}
 
 
@@ -216,6 +214,16 @@ public class BarCodeService extends ImpPlugin {
 	public  int dip2px(Context context, float dpValue) {
 		final float scale = context.getResources().getDisplayMetrics().density;
 		return (int) (dpValue * scale + 0.5f);
+	}
+
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (requestCode == ImpFragment.BARCODE_SERVER__SCAN_REQUEST && resultCode == Activity.RESULT_OK){
+			String result = data.getStringExtra("msg");
+			jsCallback(functName,result);
+		}
 	}
 
 	@Override

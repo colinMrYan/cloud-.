@@ -38,9 +38,8 @@ import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelOperationCacheUtils;
-import com.inspur.emmcloud.util.privates.cache.ContactCacheUtils;
-import com.inspur.emmcloud.util.privates.cache.RobotCacheUtils;
-import com.inspur.emmcloud.widget.CircleImageView;
+import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
+import com.inspur.emmcloud.widget.CircleTextImageView;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.NoScrollGridView;
 import com.inspur.emmcloud.widget.SwitchView;
@@ -358,7 +357,7 @@ public class ChannelInfoActivity extends BaseActivity {
                 LayoutInflater vi = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
                 convertView = vi.inflate(R.layout.channel_member_item_view,
                         null);
-                viewHolder.memberHeadImg = (CircleImageView) convertView
+                viewHolder.memberHeadImg = (CircleTextImageView) convertView
                         .findViewById(R.id.member_head_img);
                 viewHolder.nameText = (TextView) convertView
                         .findViewById(R.id.name_text);
@@ -381,22 +380,8 @@ public class ChannelInfoActivity extends BaseActivity {
 
             } else {
                 String uid = memberList.get(position);
-                viewHolder.nameText.setText(ContactCacheUtils.getUserName(
-                        ChannelInfoActivity.this, uid));
-                if (uid.startsWith("BOT")) {
-                    userPhotoUrl = APIUri.getRobotIconUrl(RobotCacheUtils
-                            .getRobotById(ChannelInfoActivity.this, uid)
-                            .getAvatar());
-                    userName = RobotCacheUtils
-                            .getRobotById(ChannelInfoActivity.this, uid)
-                            .getName();
-                } else {
-                    userPhotoUrl = APIUri.getChannelImgUrl(ChannelInfoActivity.this, uid);
-                    userName = ContactCacheUtils.getUserName(
-                            ChannelInfoActivity.this, uid);
-                }
-                ImageDisplayUtils.getInstance().displayImage(viewHolder.memberHeadImg,
-                        APIUri.getChannelImgUrl(ChannelInfoActivity.this, uid), R.drawable.icon_photo_default);
+                userName = ContactUserCacheUtils.getUserName(uid);
+                userPhotoUrl = APIUri.getUserIconUrl(MyApplication.getInstance(),uid);
             }
             viewHolder.nameText.setText(userName);
             ImageDisplayUtils.getInstance().displayImage(viewHolder.memberHeadImg, userPhotoUrl, R.drawable.icon_photo_default);
@@ -405,7 +390,7 @@ public class ChannelInfoActivity extends BaseActivity {
     }
 
     public static class ViewHolder {
-        CircleImageView memberHeadImg;
+        CircleTextImageView memberHeadImg;
         TextView nameText;
     }
 

@@ -158,6 +158,11 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustNothing"></activity>
         <activity
+            android:name=".ui.TestActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustNothing"></activity>
+        <activity
             android:name=".ui.mine.setting.GuideActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
@@ -897,6 +902,13 @@
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
+        <activity
+            android:resizeableActivity="true"
+            android:name="com.inspur.imp.plugin.camera.imageedit.IMGEditActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
+
         <!-- ImagePicker -->
 
 
@@ -921,6 +933,13 @@
             android:stateNotNeeded="true"
             android:supportsRtl="true"
             android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"></activity>
+        <activity
+            android:name="com.inspur.imp.plugin.photo.ImageGalleryActivity"
+            android:label="@string/app_name"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar">
+        </activity>
 
         <activity
             android:name="com.inspur.imp.plugin.file.FileBrowerAppActivity"

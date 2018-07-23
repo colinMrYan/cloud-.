@@ -6,7 +6,9 @@ import android.net.Uri;
 import android.os.Vibrator;
 import android.provider.Settings;
 
+import com.inspur.imp.api.ImpActivity;
 import com.inspur.imp.plugin.ImpPlugin;
+import com.inspur.imp.util.DialogUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,11 +39,10 @@ public class DeviceService extends ImpPlugin {
 	@Override
 	public String executeAndReturn(String action, JSONObject paramsObject) {
 		String res = "";
+		JSONObject jsonObject = new JSONObject();
 		if ("getInfo".equals(action)) {
 			// 检查网络连接
-			JSONObject jsonObject = new JSONObject();
 			try {
-
 				// 设备操作系统版本
 				jsonObject
 						.put("version", String.valueOf(this.getOSVersion()));
@@ -52,10 +53,12 @@ public class DeviceService extends ImpPlugin {
 				// 获取设备国际唯一标识码
 				jsonObject.put("uuid", String.valueOf(this.getUuid()));
 				jsonObject.put("model", getModel());
-			} catch (JSONException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			res = jsonObject.toString();
+		}else {
+			showCallIMPMethodErrorDlg();
 		}
 		return res;
 	}
@@ -69,6 +72,8 @@ public class DeviceService extends ImpPlugin {
 		// 震动
 		else if (action.equals("vibrate")) {
 			vibrate(jsonObject);
+		}else{
+			showCallIMPMethodErrorDlg();
 		}
 
 	}
@@ -160,11 +165,11 @@ public class DeviceService extends ImpPlugin {
 				.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
 		// 调用系统功能中的蜂鸣
-		Ringtone notification = RingtoneManager.getRingtone(this.getActivity()
+		Ringtone notification = RingtoneManager.getRingtone(getActivity()
 				.getBaseContext(), ringtone);
 		// 如果不能调到系统蜂鸣则使用默认蜂鸣
 		if (notification == null)
-			notification = RingtoneManager.getRingtone(this.context,
+			notification = RingtoneManager.getRingtone(getFragmentContext(),
 					RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM));
 		if (notification != null)
 			for (long i = 0L; i < count; i++) {

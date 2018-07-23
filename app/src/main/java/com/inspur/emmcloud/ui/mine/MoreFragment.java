@@ -111,7 +111,7 @@ public class MoreFragment extends Fragment {
     private void setMyInfo() {
         // TODO Auto-generated method stub
         String uid = ((MyApplication)getActivity().getApplicationContext()).getUid();
-        String photoUri = APIUri.getChannelImgUrl(getActivity(), uid);
+        String photoUri = APIUri.getUserIconUrl(getActivity(), uid);
         ImageDisplayUtils.getInstance().displayImage(moreHeadImg, photoUri, R.drawable.icon_photo_default);
         String userName = PreferencesUtils.getString(getActivity(), "userRealName", getString(R.string.not_set));
         ((TextView) rootView.findViewById(R.id.more_head_name_text)).setText(userName);
@@ -124,7 +124,7 @@ public class MoreFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_UPDATE_USER_PHOTO) {
             String uid = ((MyApplication)getActivity().getApplicationContext()).getUid();
-            String photoUri = APIUri.getChannelImgUrl(getActivity(),uid);
+            String photoUri = APIUri.getUserIconUrl(getActivity(),uid);
             ImageDisplayUtils.getInstance().displayImage(moreHeadImg, photoUri, R.drawable.icon_photo_default);
         }
     }
@@ -186,7 +186,7 @@ public class MoreFragment extends Fragment {
      * 设置标题
      */
     private void setTabTitle() {
-        String appTabs = PreferencesByUserAndTanentUtils.getString(getActivity(), "app_tabbar_info_current", "");
+        String appTabs = PreferencesByUserAndTanentUtils.getString(getActivity(), Constant.PREF_APP_TAB_BAR_INFO_CURRENT, "");
         if (!StringUtils.isBlank(appTabs)) {
             ((TextView) rootView.findViewById(R.id.header_text)).setText(AppTitleUtils.getTabTitle(getActivity(), getClass().getSimpleName()));
         }

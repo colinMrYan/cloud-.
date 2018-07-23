@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
 
+import com.inspur.imp.api.ImpActivity;
 import com.inspur.imp.plugin.ImpPlugin;
 
 import org.json.JSONException;
@@ -46,7 +47,15 @@ public class DatePickerService extends ImpPlugin {
 		// 打开日期组件
 		if ("open".equals(action)) {
 			open(paramsObject);
+		}else{
+			showCallIMPMethodErrorDlg();
 		}
+	}
+
+	@Override
+	public String executeAndReturn(String action, JSONObject paramsObject) {
+		showCallIMPMethodErrorDlg();
+		return "";
 	}
 
 	/**
@@ -94,7 +103,7 @@ public class DatePickerService extends ImpPlugin {
 		}
 
 		// 显示设置日期对话框
-		DatePickerDialog dateDlg = new DatePickerDialog(this.context, theme,
+		DatePickerDialog dateDlg = new DatePickerDialog(getActivity(), theme,
 				new DatePickerDialog.OnDateSetListener() {
 
 					@Override

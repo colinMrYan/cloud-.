@@ -4,12 +4,13 @@ import android.os.Build;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.bean.login.GetDeviceCheckResult;
-import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
-import com.inspur.emmcloud.util.privates.MDM.MDM;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ResolutionUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.privates.AppUtils;
+import com.inspur.emmcloud.util.privates.MDM.MDM;
+import com.inspur.imp.api.ImpActivity;
 import com.inspur.imp.plugin.ImpPlugin;
 
 import org.json.JSONObject;
@@ -27,10 +28,10 @@ public class EMMService extends ImpPlugin {
 		LogUtils.jasonDebug("action="+action);
 		if ("returnEMMstate".equals(action)) {
 			returnEMMstate(paramsObject);
-		}
-
-		if ("webviewReload".equals(action)){
+		} else if ("webviewReload".equals(action)){
 			webviewReload();
+		}else{
+			showCallIMPMethodErrorDlg();
 		}
 	}
 
@@ -39,8 +40,10 @@ public class EMMService extends ImpPlugin {
 		LogUtils.jasonDebug("action="+action);
 		if ("getDeviceInfo".equals(action)) {
 			return getDeviceInfo();
+		}else{
+			showCallIMPMethodErrorDlg();
 		}
-		return super.executeAndReturn(action, paramsObject);
+		return "";
 	}
 
 	@Override
@@ -57,7 +60,7 @@ public class EMMService extends ImpPlugin {
 	private String getDeviceInfo() {
 		JSONObject obj = new JSONObject();
 		try {
-			int deviceType = AppUtils.isTablet(context) ? 2 : 1;
+			int deviceType = AppUtils.isTablet(getFragmentContext()) ? 2 : 1;
 			obj.put("device_type", deviceType);
 			obj.put("device_model", Build.MODEL);
 			obj.put("os", "Android");
@@ -84,15 +87,15 @@ public class EMMService extends ImpPlugin {
 			if (paramsObject.has("EMMState")) {
 				String state = paramsObject.getString("EMMState");
 				GetDeviceCheckResult getDeviceCheckResult = new GetDeviceCheckResult(state);
-				String userName = PreferencesUtils.getString(getActivity(), "userRealName", "");
-				String userCode = PreferencesUtils.getString(getActivity(), "userID", "");
+				String userName = PreferencesUtils.getString(getFragmentContext(), "userRealName", "");
+				String userCode = PreferencesUtils.getString(getFragmentContext(), "userID", "");
 				MDM mdm = new MDM(getActivity(), MyApplication.getInstance().getTanent(), userCode,
 						userName, getDeviceCheckResult);
 				mdm.handCheckResult(getDeviceCheckResult.getState());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			ToastUtils.show(getActivity(), "设备检查信息异常");
+			ToastUtils.show(getFragmentContext(), "设备检查信息异常");
 		}
 
 	}
