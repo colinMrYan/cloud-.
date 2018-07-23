@@ -47,7 +47,7 @@ public class DisplayResLinkMsg {
                 .findViewById(R.id.news_card_digest_text);
         linkTitleText.setText(linkTitle);
         linkDigestText.setText(linkDigest);
-        if(StringUtils.isBlank(linkTitle) || linkTitle.length() <= 1){
+        if(StringUtils.isBlank(linkTitle)){
             linkTitleText.setVisibility(View.GONE);
         }
         ImageView linkImageview = (ImageView) cardContentView

@@ -254,6 +254,9 @@ public class SchemeHandleActivity extends Activity {
             Uri uri = FileUtils.getShareFileUri(getIntent());
             if (uri != null) {
                 uriList.add(GetPathFromUri4kitkat.getPathByUri(MyApplication.getInstance(), uri));
+            }else if(isLinkShare()){
+                handleLinkShare();
+                return;
             }
         } else if (Intent.ACTION_SEND_MULTIPLE.equals(action)) {
             List<Uri> fileUriList = FileUtils.getShareFileUriList(getIntent());
@@ -263,8 +266,6 @@ public class SchemeHandleActivity extends Activity {
         }
         if (uriList.size() > 0) {
             startVolumeShareActivity(uriList);
-        }else if(isLinkShare()){
-            handleLinkShare();
         }else{
             ToastUtils.show(SchemeHandleActivity.this,getString(R.string.share_not_support));
             finish();
@@ -277,7 +278,7 @@ public class SchemeHandleActivity extends Activity {
      */
     private boolean isLinkShare() {
         Intent intent = getIntent();
-        if(intent != null && intent.getExtras() != null && !StringUtils.isBlank(intent.getExtras().getString("url"))){
+        if(intent.getExtras() != null && !StringUtils.isBlank(intent.getExtras().getString("url"))){
             return true;
         }
         return false;
