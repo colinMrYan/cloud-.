@@ -29,7 +29,6 @@ import com.inspur.imp.plugin.barcode.camera.CameraManager;
 import com.inspur.imp.plugin.barcode.decoding.CaptureActivityHandler;
 import com.inspur.imp.plugin.barcode.decoding.GetDecodeResultFromServer;
 import com.inspur.imp.plugin.barcode.decoding.InactivityTimer;
-import com.inspur.imp.plugin.barcode.view.OnDoubleClickListener;
 import com.inspur.imp.plugin.barcode.view.ViewfinderView;
 
 import org.xutils.common.Callback.CommonCallback;
@@ -84,97 +83,79 @@ public class CaptureActivity extends Activity implements Callback {
                 finish();
             }
         });
-        (findViewById(Res.getWidgetID("ll_root"))).setOnTouchListener(new OnDoubleClickListener(new OnDoubleClickListener.DoubleClickCallback() {
+        btn_torch.setOnClickListener(new OnClickListener() {
+
             @Override
-            public void onDoubleClick() {
-                CameraManager.get().changeZoom();
-            }
-        }
-		));
-        btn_torch.setOnClickListener(new
-
-            OnClickListener() {
-
-                @Override
-                public void onClick (View v){
-                    // TODO Auto-generated method stub
-                    if (isTorchOn) {
-                        isTorchOn = false;
-                        lampText.setText(Res.getStringID("turn_on_light"));
-                        btn_torch.setBackgroundResource(Res.getDrawableID("imp_lamp_off"));
-                        CameraManager.get().setTorch(false);
-                    } else {
-                        isTorchOn = true;
-                        lampText.setText(Res.getStringID("turn_off_light"));
-                        btn_torch.setBackgroundResource(Res.getDrawableID("imp_lamp_on"));
-                        CameraManager.get().setTorch(true);
-                    }
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                if (isTorchOn) {
+                    isTorchOn = false;
+                    lampText.setText(Res.getStringID("turn_on_light"));
+                    btn_torch.setBackgroundResource(Res.getDrawableID("imp_lamp_off"));
+                    CameraManager.get().setTorch(false);
+                } else {
+                    isTorchOn = true;
+                    lampText.setText(Res.getStringID("turn_off_light"));
+                    btn_torch.setBackgroundResource(Res.getDrawableID("imp_lamp_on"));
+                    CameraManager.get().setTorch(true);
                 }
-            });
-        }
-
-        @Override
-        protected void onResume () {
-            super.onResume();
-            SurfaceHolder surfaceHolder = surfaceView.getHolder();
-            if (hasSurface) {
-                initCamera(surfaceHolder);
-            } else {
-                surfaceHolder.addCallback(this);
-                surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
             }
-            decodeFormats = null;
-            characterSet = null;
+        });
+    }
 
-            playBeep = true;
-            AudioManager audioService = (AudioManager) getSystemService(AUDIO_SERVICE);
-            if (audioService.getRingerMode() != AudioManager.RINGER_MODE_NORMAL) {
-                playBeep = false;
-            }
-            initBeepSound();
-            vibrate = true;
+    @Override
+    protected void onResume() {
+        super.onResume();
+        SurfaceHolder surfaceHolder = surfaceView.getHolder();
+        if (hasSurface) {
+            initCamera(surfaceHolder);
+        } else {
+            surfaceHolder.addCallback(this);
+            surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
         }
+        decodeFormats = null;
+        characterSet = null;
 
-
-        @Override
-        protected void onPause () {
-            super.onPause();
-            if (handler != null) {
-                handler.quitSynchronously();
-                handler = null;
-            }
-            CameraManager.get().closeDriver();
+        playBeep = true;
+        AudioManager audioService = (AudioManager) getSystemService(AUDIO_SERVICE);
+        if (audioService.getRingerMode() != AudioManager.RINGER_MODE_NORMAL) {
+            playBeep = false;
         }
+        initBeepSound();
+        vibrate = true;
+    }
 
-        @Override
-        protected void onDestroy () {
-            inactivityTimer.shutdown();
-            super.onDestroy();
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (handler != null) {
+            handler.quitSynchronously();
+            handler = null;
         }
+        CameraManager.get().closeDriver();
+    }
+
+    @Override
+    protected void onDestroy() {
+        inactivityTimer.shutdown();
+        super.onDestroy();
+    }
 
     public void handDecodeResult(String result) {
+        if (isDecodeFinish) {
+            return;
+        }
         isDecodeFinish = true;
-        boolean isFromWeb = true;
-        if (getIntent().hasExtra("from")) {
-            isFromWeb = false;
-        }
-        if (!isFromWeb) {
-            Intent intent = new Intent();
-            if (result == null || "".equals(result)) {
-                result = getString(Res.getStringID("can_not_recognize"));
-                intent.putExtra("isDecodeSuccess", false);
-            } else {
-                intent.putExtra("isDecodeSuccess", true);
-            }
-            intent.putExtra("msg", result);
-            setResult(RESULT_OK, intent);
+        Intent intent = new Intent();
+        if (result == null || "".equals(result)) {
+            result = getString(Res.getStringID("can_not_recognize"));
+            intent.putExtra("isDecodeSuccess", false);
         } else {
-            String functName = BarCodeService.functName;
-            if (BarCodeService.barcodeService != null) {
-                BarCodeService.barcodeService.jsCallback(functName, result.toString());
-                BarCodeService.barcodeService = null;
-            }
+            intent.putExtra("isDecodeSuccess", true);
         }
+        intent.putExtra("msg", result);
+        setResult(RESULT_OK, intent);
         finish();
     }
 
@@ -273,16 +254,16 @@ public class CaptureActivity extends Activity implements Callback {
         }
     };
 
-    public void uploadImgToDecodeByServer(Bitmap cropBitmap){
-        if (isDecodeingFromServer)return;
+    public void uploadImgToDecodeByServer(Bitmap cropBitmap) {
+        if (isDecodeingFromServer) return;
         isDecodeingFromServer = true;
-        File dir =new File(MyAppConfig.LOCAL_IMG_CREATE_PATH);
-        if (!dir.exists()){
+        File dir = new File(MyAppConfig.LOCAL_IMG_CREATE_PATH);
+        if (!dir.exists()) {
             dir.mkdirs();
         }
-        String imgSavePath = MyAppConfig.LOCAL_IMG_CREATE_PATH+"file.jpg";
+        String imgSavePath = MyAppConfig.LOCAL_IMG_CREATE_PATH + "file.jpg";
         final File file = new File(imgSavePath);
-        if (file.exists()){
+        if (file.exists()) {
             file.delete();
         }
         try {
@@ -290,16 +271,16 @@ public class CaptureActivity extends Activity implements Callback {
             final String completeUrl = "http://emm.inspuronline.com:88/api/barcode/decode";
             RequestParams params = new RequestParams(completeUrl);
             params.setMultipart(true);// 使用multipart表单上传文件
-            params.addBodyParameter("file", file,"image/jpg");
-            x.http().post(params, new CommonCallback<String>(){
+            params.addBodyParameter("file", file, "image/jpg");
+            x.http().post(params, new CommonCallback<String>() {
                 @Override
                 public void onSuccess(String s) {
-                    if (!isDecodeFinish){
+                    if (!isDecodeFinish) {
                         GetDecodeResultFromServer getDecodeResultFromServer = new GetDecodeResultFromServer(s);
                         String data = getDecodeResultFromServer.getData();
-                        if (data != null){
+                        if (data != null) {
                             data = data.replaceAll("[\\t\\n\\r]", "");
-                            if ((CaptureActivity.this != null) && (isDecodeFinish == false) && !data.equals("")){
+                            if ((CaptureActivity.this != null) && (isDecodeFinish == false) && !data.equals("")) {
                                 handDecodeResult(data);
                             }
                         }
@@ -319,12 +300,12 @@ public class CaptureActivity extends Activity implements Callback {
 
                 @Override
                 public void onFinished() {
-                    if (file.exists()){
+                    if (file.exists()) {
                         file.delete();
                     }
                 }
             });
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             isDecodeingFromServer = false;
         }

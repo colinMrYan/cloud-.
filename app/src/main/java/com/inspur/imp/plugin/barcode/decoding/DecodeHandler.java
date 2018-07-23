@@ -123,18 +123,22 @@ final class DecodeHandler extends Handler {
                 } finally {
                     reader.reset();
                 }
-                if (rawResult != null){
-                    Message message = Message.obtain(activity.getHandler(), Res.getWidgetID("decode_succeeded"), rawResult);
-                    message.sendToTarget();
-                }else {
-                    Message message = Message.obtain(activity.getHandler(), Res.getWidgetID("decode_failed"));
-                    message.obj = cropBitmap;
-                    message.sendToTarget();
+                if (activity.getHandler() != null){
+                    if (rawResult != null){
+                        Message message = Message.obtain(activity.getHandler(), Res.getWidgetID("decode_succeeded"), rawResult);
+                        message.sendToTarget();
+                    }else {
+                        Message message = Message.obtain(activity.getHandler(), Res.getWidgetID("decode_failed"));
+                        message.obj = cropBitmap;
+                        message.sendToTarget();
+                    }
                 }
 
             }else {
-                Message message = Message.obtain(activity.getHandler(), Res.getWidgetID("decode_failed"));
-                message.sendToTarget();
+                if (activity.getHandler() != null){
+                    Message message = Message.obtain(activity.getHandler(), Res.getWidgetID("decode_failed"));
+                    message.sendToTarget();
+                }
             }
         }
     }
