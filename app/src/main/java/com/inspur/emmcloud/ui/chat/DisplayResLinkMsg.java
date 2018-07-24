@@ -50,6 +50,9 @@ public class DisplayResLinkMsg {
         if(StringUtils.isBlank(linkTitle)){
             linkTitleText.setVisibility(View.GONE);
         }
+        if(StringUtils.isBlank(linkDigest)){
+            linkDigestText.setVisibility(View.GONE);
+        }
         ImageView linkImageview = (ImageView) cardContentView
                 .findViewById(R.id.news_card_content_img);
         if (!StringUtils.isBlank(linkPoster)) {
