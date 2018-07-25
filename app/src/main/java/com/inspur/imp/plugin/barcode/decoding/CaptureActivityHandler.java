@@ -19,16 +19,15 @@ package com.inspur.imp.plugin.barcode.decoding;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
+import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.imp.api.Res;
 import com.inspur.imp.plugin.barcode.camera.CameraManager;
-import com.inspur.imp.plugin.barcode.scan.BarCodeService;
 import com.inspur.imp.plugin.barcode.scan.CaptureActivity;
 import com.inspur.imp.plugin.barcode.view.ViewfinderResultPointCallback;
 
@@ -47,6 +46,7 @@ public final class CaptureActivityHandler extends Handler {
   private final CaptureActivity activity;
   private final DecodeThread decodeThread;
   private State state;
+  boolean isDecodingFromServer = false;
 
   private enum State {
     PREVIEW,
@@ -78,27 +78,30 @@ public final class CaptureActivityHandler extends Handler {
 	        restartPreviewAndDecode();
 		} else if (Res.getWidgetID("decode_succeeded") == message.what) {
 			 Log.d(TAG, "Got decode succeeded message");
-	        state = State.SUCCESS;
-	        Bundle bundle = message.getData();
-	        Bitmap barcode = bundle == null ? null :
-	            (Bitmap) bundle.getParcelable(DecodeThread.BARCODE_BITMAP);
 	        String str_result=((Result) message.obj).getText();
-	        String functName = BarCodeService.functName;
 			// 返回结果的回调函数
 			//将内容区域的回车换行去除
 	        str_result = str_result.replaceAll("[\\t\\n\\r]", "");
-	        activity.handDecodeResult(str_result);
-//			BarCodeService.barcodeService.jsCallback(functName, str_result.toString());
-//			activity.finish();
+	        if (str_result == null || str_result.equals("")){
+                state = State.PREVIEW;
+                CameraManager.get().requestPreviewFrame(decodeThread.getHandler(), Res.getWidgetID("decode"));
+            }else {
+                state = State.SUCCESS;
+                activity.handDecodeResult(str_result);
+            }
 		} else if (Res.getWidgetID("decode_failed") == message.what) {
 			// We're decoding as fast as possible, so when one decode fails, init another.
+          if (message.obj != null && NetUtils.isNetworkConnected(activity,false)){
+              Bitmap cropBitmap = (Bitmap) message.obj;
+              activity.uploadImgToDecodeByServer(cropBitmap);
+          }
 	        state = State.PREVIEW;
 	        CameraManager.get().requestPreviewFrame(decodeThread.getHandler(), Res.getWidgetID("decode"));
 		} else if (Res.getWidgetID("return_scan_result") == message.what) {
 			 Log.d(TAG, "Got return scan result message");
 	        activity.setResult(Activity.RESULT_OK, (Intent) message.obj);
 	        activity.finish();
-		} 
+		}
   }
 
   public void quitSynchronously() {

@@ -1,6 +1,5 @@
 package com.inspur.emmcloud.ui;
 
-import android.app.Fragment;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -29,7 +28,6 @@ import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
 import com.inspur.emmcloud.bean.system.MainTabResult;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.interf.OnTabReselectListener;
 import com.inspur.emmcloud.ui.appcenter.MyAppFragment;
 import com.inspur.emmcloud.ui.chat.CommunicationFragment;
 import com.inspur.emmcloud.ui.chat.CommunicationV0Fragment;
@@ -335,7 +333,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
      * @return
      */
     private TabBean internationalMainLanguage(MainTabResult mainTabResult, String environmentLanguage, TabBean tabBean) {
-        if(!tabBean.getClz().getName().equals(NotSupportFragment.class.getName())){
+        if (!tabBean.getClz().getName().equals(NotSupportFragment.class.getName())) {
             switch (environmentLanguage.toLowerCase()) {
                 case "zh-hant":
                     tabBean.setTabName(mainTabResult.getMainTabTitleResult().getZhHant());
@@ -434,21 +432,11 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        super.onTouchEvent(event);
-        boolean consumed = false;
         if (event.getAction() == MotionEvent.ACTION_DOWN
-                && v.equals(mTabHost.getCurrentTabView())) {
-            Fragment currentFragment = getCurrentFragment();
-            if (currentFragment != null
-                    && currentFragment instanceof OnTabReselectListener) {
-                OnTabReselectListener listener = (OnTabReselectListener) currentFragment;
-                listener.onTabReselect();
-                consumed = true;
-            }
-        } else {
+                && !v.equals(mTabHost.getCurrentTabView())) {
             isSystemChangeTag = false;
         }
-        return consumed;
+        return super.onTouchEvent(event);
     }
 
 
@@ -466,11 +454,6 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
             }).start();
             isSystemChangeTag = true;
         }
-    }
-
-    private Fragment getCurrentFragment() {
-        return getFragmentManager().findFragmentByTag(
-                mTabHost.getCurrentTabTag());
     }
 
     /**

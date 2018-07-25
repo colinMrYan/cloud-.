@@ -33,6 +33,7 @@ import com.inspur.emmcloud.widget.dialogs.EasyDialog;
 import com.inspur.imp.engine.webview.ImpWebView;
 import com.inspur.imp.plugin.IPlugin;
 import com.inspur.imp.plugin.PluginMgr;
+import com.inspur.imp.plugin.barcode.scan.BarCodeService;
 import com.inspur.imp.plugin.camera.CameraService;
 import com.inspur.imp.plugin.file.FileService;
 import com.inspur.imp.plugin.photo.PhotoService;
@@ -55,6 +56,7 @@ public class ImpFragment extends Fragment {
     public static final int SELECT_STAFF_SERVICE_REQUEST = 5;
     public static final int FILE_SERVICE_REQUEST = 6;
     public static final int DO_NOTHING_REQUEST = 7;
+    public static final int BARCODE_SERVER__SCAN_REQUEST = 8;
     private Map<String, String> webViewHeaders;
     private TextView headerText;
     private LinearLayout loadFailLayout;
@@ -514,6 +516,8 @@ public class ImpFragment extends Fragment {
                 case FILE_SERVICE_REQUEST:
                     serviceName = FileService.class.getCanonicalName().trim();
                     break;
+                case BARCODE_SERVER__SCAN_REQUEST:
+                    serviceName = BarCodeService.class.getCanonicalName().trim();
                 default:
                     break;
             }
