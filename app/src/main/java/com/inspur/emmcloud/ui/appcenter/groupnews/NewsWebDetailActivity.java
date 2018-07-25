@@ -1,9 +1,11 @@
 package com.inspur.emmcloud.ui.appcenter.groupnews;
 
+import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
@@ -50,6 +52,7 @@ import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils.OnCreateDirectChannelListener;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
@@ -59,6 +62,7 @@ import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.ProgressWebView;
 import com.inspur.emmcloud.widget.SwitchView;
+import com.inspur.imp.api.iLog;
 import com.inspur.imp.plugin.PluginMgr;
 
 import org.greenrobot.eventbus.EventBus;
@@ -66,6 +70,8 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.lang.reflect.Method;
 
 
 public class NewsWebDetailActivity extends BaseActivity {
@@ -84,6 +90,7 @@ public class NewsWebDetailActivity extends BaseActivity {
     private GroupNews groupNews;
     private Dialog intrcutionDialog;
     private String fakeMessageId;
+    private WebSettings settings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,9 +106,9 @@ public class NewsWebDetailActivity extends BaseActivity {
      */
     private void initViews() {
         loadingDlg = new LoadingDialog(NewsWebDetailActivity.this);
-//        ((TextView) findViewById(R.id.header_text)).setText(getString(R.string.group_news));
         ((TextView) findViewById(R.id.header_text)).setText(((GroupNews)getIntent().getSerializableExtra("groupNews")).getTitle());
-        initWebView();
+        setWebView();
+        setWebViewSettings();
         initWebViewGoBackOrClose();
     }
     /**
@@ -112,39 +119,6 @@ public class NewsWebDetailActivity extends BaseActivity {
         (findViewById(R.id.news_close_btn)).setVisibility(webView.canGoBack() ? View.VISIBLE : View.GONE);
     }
 
-    /**
-     * 初始化WebView，设置WebView属性
-     */
-    private void initWebView() {
-        String model = PreferencesByUserAndTanentUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", "");
-        webView = (ProgressWebView) findViewById(R.id.news_webdetail_webview);
-        webView.setBackgroundColor(ContextCompat.getColor(NewsWebDetailActivity.this, (model.equals(darkMode)) ? R.color.app_news_night_color : R.color.white));
-        //没有确定这里的影响，暂时不去掉
-        webView.setLayerType(WebView.LAYER_TYPE_SOFTWARE, null);
-        webView.clearCache(true);
-        initWebViewSettings();
-        setWebViewModel(StringUtils.isBlank(model) ? lightMode : model);
-        webView.setDownloadListener(new FileDownloadListener());
-        webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
-        webView.setWebViewClient(new WebViewClient(){
-            @Override
-            public void onPageFinished(WebView view, String url) {
-                super.onPageFinished(view, url);
-                initWebViewGoBackOrClose();
-            }
-
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                //Android8.0以下的需要返回true 并且需要loadUrl；8.0之后效果相反
-                if(Build.VERSION.SDK_INT<26) {
-                    view.loadUrl(url);
-                    return true;
-                }
-                return false;
-            }
-
-        });
-    }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -178,17 +152,10 @@ public class NewsWebDetailActivity extends BaseActivity {
     /**
      * 初始化WebView的Settings
      */
-    private void initWebViewSettings() {
+    private void setWebViewSettings() {
+        settings = webView.getSettings();
+        setWebSetting();
         WebSettings webSettings = webView.getSettings();
-        // 设置WebView属性，能够执行Javascript脚本
-        webSettings.setJavaScriptEnabled(true);
-        // 设置可以访问文件
-        webSettings.setAllowFileAccess(true);
-        // 设置支持缩放
-        webSettings.setBuiltInZoomControls(false);
-        // 设置字体大小
-        webSettings.setSupportZoom(false);
-        webSettings.setSavePassword(false);
         //解决在安卓5.0以上跨域链接无法访问的问题
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             webSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
@@ -201,10 +168,185 @@ public class NewsWebDetailActivity extends BaseActivity {
             url = APIUri.getGroupNewsHtmlUrl(url);
         }
         webView.loadUrl(url);
-        // 设置Web视图
-        webView.setWebViewClient(new GroupNewsWebViewClient());
     }
 
+    private void setWebView() {
+        // 为0就是不给滚动条留空间，滚动条覆盖在网页上
+        webView = (ProgressWebView) findViewById(R.id.news_webdetail_webview);
+        webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
+        //this.setInitialScale(100);
+        webView.setInitialScale(0);
+        webView.setLayoutAnimation(null);
+        webView.setAnimation(null);
+        webView.setNetworkAvailable(true);
+        webView.setBackgroundColor(Color.WHITE);
+        String model = PreferencesByUserAndTanentUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", "");
+        webView.setBackgroundColor(ContextCompat.getColor(NewsWebDetailActivity.this, (model.equals(darkMode)) ? R.color.app_news_night_color : R.color.white));
+        //没有确定这里的影响，暂时不去掉
+        webView.setLayerType(WebView.LAYER_TYPE_SOFTWARE, null);
+        webView.clearCache(true);
+        setWebViewModel(StringUtils.isBlank(model) ? lightMode : model);
+        webView.setDownloadListener(new FileDownloadListener());
+        webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+        webView.setWebViewClient(new WebViewClient(){
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+                initWebViewGoBackOrClose();
+            }
+
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                //Android8.0以下的需要返回true 并且需要loadUrl；8.0之后效果相反
+                if(Build.VERSION.SDK_INT<26) {
+                    view.loadUrl(url);
+                    return true;
+                }
+                return false;
+            }
+
+        });
+    }
+
+    // 设置websettings属性
+    public void setWebSetting() {
+        //基础设置，地理位置，缓存，userAgent等
+        setBaseConfig();
+        // 支持js相关方法
+        setJSConfig();
+        // 页面效果设置
+        setPageStyle();
+        settings.setDefaultTextEncodingName("utf-8");
+        // 本地安全设置
+        setSecury();
+        // API为16的方法访问
+        Level16Apis.invoke(settings);
+        // 允许ajax执行web请求
+        Level4Apis.invoke(settings);
+        // 支持html5数据库和使用缓存的功能
+        Html5Apis htmlApi = new Html5Apis();
+        htmlApi.invoke(settings);
+    }
+
+    /**
+     * 基础设置
+     */
+    private void setBaseConfig() {
+        // 代理字符串，如果字符串为空或者null系统默认字符串将被利用
+        String userAgent =  "Mozilla/5.0 (Linux; U; Android "
+                + Build.VERSION.RELEASE + "; en-us; " + Build.MODEL
+                + " Build/FRF91) AppleWebKit/533.1 "
+                + "(KHTML, like Gecko) Version/4.0 Chrome/51.0.2704.81 Mobile Safari/533.1" + "/emmcloud/" + AppUtils.getVersion(NewsWebDetailActivity.this);
+        settings.setUserAgentString(userAgent);
+        settings.enableSmoothTransition();
+        settings.setGeolocationEnabled(true);
+        String dir = NewsWebDetailActivity.this.getDir("database", Context.MODE_PRIVATE).getPath();
+        settings.setGeolocationDatabasePath(dir);
+        settings.setBlockNetworkLoads(false);
+    }
+
+    /* 支持js相关方法 */
+    private void setJSConfig() {
+        // 设置WebView的属性，此时可以去执行JavaScript脚本
+        settings.setJavaScriptEnabled(true);
+        settings.setUseWideViewPort(true);
+        settings.setSupportZoom(true);
+        settings.setBuiltInZoomControls(true);
+        settings.setDisplayZoomControls(false);
+        //解决在安卓5.0以上跨域链接无法访问的问题
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ){
+            settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+        }
+    }
+
+    /* 页面效果设置 */
+    private void setPageStyle() {
+        //设置自适应屏幕
+        settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
+        // 支持自动加载图片
+        settings.setLoadsImagesAutomatically(true);
+        settings.setAllowFileAccess(true);
+        // 支持多窗口
+        settings.supportMultipleWindows();
+        settings.setJavaScriptCanOpenWindowsAutomatically(true);
+        // 设置webview推荐使用的窗口
+        settings.setUseWideViewPort(false);
+        // 页面适应手机屏幕的分辨率
+        settings.setLoadWithOverviewMode(true);
+        settings.setDefaultTextEncodingName("utf-8");//设置自适应屏幕
+    }
+
+    // 本地安全设置
+    private void setSecury() {
+        // 是否保存表单数据
+        settings.setSaveFormData(false);
+        // 是否保存密码
+        settings.setSavePassword(false);
+    }
+
+    /**
+     * 支持html5数据库和使用缓存的功能
+     */
+    private class Html5Apis {
+        void invoke(WebSettings settings) {
+            try {
+                // 数据库路径
+                String databasePath = NewsWebDetailActivity.this.getDir("database", 0).getPath();
+                // 使用localStorage则必须打开
+                settings.setDomStorageEnabled(true);
+                // 是否允许数据库存储的api
+                settings.setDatabaseEnabled(true);
+                // 设置数据库路径
+                settings.setDatabasePath(databasePath);
+
+                // webview加载 服务端的网页，为了减少访问压力，用html5缓存技术
+                settings.setAppCacheEnabled(true);
+                // 设置加载cache的方式，
+                settings.setCacheMode(WebSettings.LOAD_DEFAULT);
+                // 设置缓存路径
+                settings.setAppCachePath(databasePath);
+                // 设置缓冲大小,此处设置为缓存最大为8m
+                settings.setAppCacheMaxSize(1024 * 1024 * 8);
+
+            } catch (Exception e) {
+                iLog.w("yfcLog", e.getMessage() + "");
+            }
+        }
+    }
+
+    /**
+     * API为16的方法访问
+     */
+    @TargetApi(16)
+    private static class Level16Apis {
+        static void invoke(WebSettings settings) {
+            try {
+                Method method = WebSettings.class.getMethod(
+                        "setAllowFileAccessFromFileURLs",
+                        new Class[] { boolean.class });
+                method.invoke(settings, true);
+            } catch (Exception e) {
+                iLog.w("yfcLog", "设备api不支持：" + e.getMessage());
+            }
+        }
+    }
+
+    /**
+     * API为16或以上，允许ajax执行web请求
+     */
+    @TargetApi(16)
+    private static class Level4Apis {
+        static void invoke(WebSettings settings) {
+            try {
+                Method method = WebSettings.class.getMethod(
+                        "setAllowUniversalAccessFromFileURLs",
+                        new Class[] { boolean.class });
+                method.invoke(settings, true);
+            } catch (Exception e) {
+                iLog.w("yfcLog", e.getMessage() + "");
+            }
+        }
+    }
     /**
      * 初始化数据
      */

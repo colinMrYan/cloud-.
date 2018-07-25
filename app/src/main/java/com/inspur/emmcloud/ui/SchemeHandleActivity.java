@@ -312,7 +312,8 @@ public class SchemeHandleActivity extends Activity {
      * @param text
      */
     private  String getShareUrl(String text) {
-        Pattern p = Pattern.compile("((http|ftp|https)://)(([a-zA-Z0-9\\._-]+\\.[a-zA-Z]{2,6})|([0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}))(:[0-9]{1,4})*(/[a-zA-Z0-9\\&%_\\./-~-]*)?", Pattern.CASE_INSENSITIVE);
+//        Pattern p = Pattern.compile("((http|ftp|https)://)(([a-zA-Z0-9\\._-]+\\.[a-zA-Z]{2,6})|([0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}))(:[0-9]{1,4})*(/[a-zA-Z0-9\\&%_\\./-~-]*)?", Pattern.CASE_INSENSITIVE);
+        Pattern p = Pattern.compile(Constant.PATTERN_URL, Pattern.CASE_INSENSITIVE);
         Matcher matcher = p.matcher(text);
         matcher.find();
         return matcher.group();
@@ -324,7 +325,6 @@ public class SchemeHandleActivity extends Activity {
      */
     private boolean isLinkShare() {
         Intent intent = getIntent();
-//        LogUtils.YfcDebug("isLinkShare"+(intent.getExtras() != null && !StringUtils.isBlank(intent.getExtras().getString("url"))));
         if(intent.getExtras() != null && !StringUtils.isBlank(intent.getExtras().getString(Intent.EXTRA_TEXT))){
             return true;
         }

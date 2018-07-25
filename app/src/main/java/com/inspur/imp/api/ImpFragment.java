@@ -169,15 +169,13 @@ public class ImpFragment extends Fragment {
      * 设置Webview自定义功能是否显示
      */
     private void setWebViewFunctionVisiable() {
-        if (!StringUtils.isBlank(getArguments().getString("is_zoomable"))) {
-            int isZoomable = getArguments().getInt("is_zoomable", 0);
-            if (isZoomable == 1 || !StringUtils.isBlank(helpUrl)) {
-                rootView.findViewById(R.id.imp_change_font_size_btn).setVisibility(View.VISIBLE);
-            }
-            if (isZoomable == 1) {
-                int textSize = PreferencesByUsersUtils.getInt(getActivity(), "app_crm_font_size_" + appId, MyAppWebConfig.NORMAL);
-                webView.getSettings().setTextZoom(textSize);
-            }
+        int isZoomable = getArguments().getInt("is_zoomable", 0);
+        if (isZoomable == 1 || !StringUtils.isBlank(helpUrl)) {
+            rootView.findViewById(R.id.imp_change_font_size_btn).setVisibility(View.VISIBLE);
+        }
+        if (isZoomable == 1) {
+            int textSize = PreferencesByUsersUtils.getInt(getActivity(), "app_crm_font_size_" + appId, MyAppWebConfig.NORMAL);
+            webView.getSettings().setTextZoom(textSize);
         }
     }
 
