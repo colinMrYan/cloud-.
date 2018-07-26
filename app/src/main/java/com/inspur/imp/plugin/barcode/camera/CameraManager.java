@@ -28,8 +28,6 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.SurfaceHolder;
 
-import com.inspur.emmcloud.util.common.LogUtils;
-
 import java.io.IOException;
 
 
@@ -262,6 +260,32 @@ public final class CameraManager {
 	}
 
 	/**
+	 * 放大或缩小图像
+	 */
+	public void changeZoom(){
+		try {
+			if (camera != null) {
+				Camera.Parameters parameters = camera.getParameters();
+				if(parameters.isZoomSupported()){
+					int maxZoom = parameters.getMaxZoom();
+					int zoom = parameters.getZoom();
+					if (zoom == 0){
+						parameters.setZoom(maxZoom);
+					}else {
+						parameters.setZoom(0);
+					}
+				}
+
+				camera.setParameters(parameters);
+			}
+
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+	}
+
+
+	/**
 	 * Calculates the framing rect which the UI should draw to show the user
 	 * where to place the barcode. This target helps with alignment as well as
 	 * forces the user to hold the device far enough away to ensure the image
@@ -288,7 +312,7 @@ public final class CameraManager {
 			/* ɨ����޸� */
 			DisplayMetrics metrics = context.getResources().getDisplayMetrics();
 			int width = (int) (metrics.widthPixels * 0.6);
-			int height = (int) (width * 0.9);
+			int height = width;
 
 			int leftOffset = (screenResolution.x - width) / 2;
 			int topOffset = (int)((screenResolution.y - height) / 2.5);
@@ -314,22 +338,10 @@ public final class CameraManager {
 			// rect.top = rect.top * cameraResolution.y / screenResolution.y;
 			// rect.bottom = rect.bottom * cameraResolution.y /
 			// screenResolution.y;
-			LogUtils.jasonDebug("rect.left="+rect.left);
-			LogUtils.jasonDebug("rect.right="+rect.right);
-			LogUtils.jasonDebug("rect.top="+rect.top);
-			LogUtils.jasonDebug("rect.bottom="+rect.bottom);
-			LogUtils.jasonDebug("rect.width="+rect.width());
-			LogUtils.jasonDebug("rect.height="+rect.height());
-			rect.left = rect.left * cameraResolution.y / screenResolution.x-100;
-			rect.right = rect.right * cameraResolution.y / screenResolution.x+100;
-			rect.top = rect.top * cameraResolution.x / screenResolution.y-100;
-			rect.bottom = rect.bottom * cameraResolution.x / screenResolution.y+100;
-			LogUtils.jasonDebug("rect.left="+rect.left);
-			LogUtils.jasonDebug("rect.right="+rect.right);
-			LogUtils.jasonDebug("rect.top="+rect.top);
-			LogUtils.jasonDebug("rect.bottom="+rect.bottom);
-			LogUtils.jasonDebug("rect.width="+rect.width());
-			LogUtils.jasonDebug("rect.height="+rect.height());
+			rect.left = rect.left * cameraResolution.y / screenResolution.x-50;
+			rect.right = rect.right * cameraResolution.y / screenResolution.x+50;
+			rect.top = rect.top * cameraResolution.x / screenResolution.y-50;
+			rect.bottom = rect.bottom * cameraResolution.x / screenResolution.y+50;
 			framingRectInPreview = rect;
 		}
 		return framingRectInPreview;
