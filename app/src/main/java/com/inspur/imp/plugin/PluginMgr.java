@@ -3,7 +3,6 @@ package com.inspur.imp.plugin;
 import android.content.Context;
 import android.util.Log;
 
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.imp.api.ImpCallBackInterface;
 import com.inspur.imp.api.iLog;
 import com.inspur.imp.engine.webview.ImpWebView;
@@ -144,6 +143,8 @@ public class PluginMgr {
                // serviceName = "com.inspur.imp.plugin.ocr.OCRService";
             } else if (serviceName.endsWith("StartAppService")) {
                 serviceName = "com.inspur.imp.plugin.startapp.StartAppService";
+            }else if(serviceName.endsWith("WindowService")){
+                serviceName = "com.inspur.imp.plugin.window.WindowService";
             }
         }
         return serviceName;
