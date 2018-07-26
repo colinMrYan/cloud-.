@@ -1,4 +1,4 @@
-package com.inspur.imp.plugin.startapp;
+package com.inspur.imp.plugin.window;
 
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.privates.UriUtils;
