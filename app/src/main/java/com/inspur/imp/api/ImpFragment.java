@@ -256,7 +256,9 @@ public class ImpFragment extends Fragment {
      */
     public void initWebViewGoBackOrClose() {
         if (headerText != null) {
-            (rootView.findViewById(Res.getWidgetID("imp_close_btn"))).setVisibility(webView.canGoBack() ? View.VISIBLE : View.GONE);
+            (rootView.findViewById(Res.getWidgetID("imp_close_btn"))).
+                    setVisibility((webView.canGoBack()&&getActivity().getClass().getName().
+                            equals(ImpActivity.class.getName())) ? View.VISIBLE : View.GONE);
         }
     }
 

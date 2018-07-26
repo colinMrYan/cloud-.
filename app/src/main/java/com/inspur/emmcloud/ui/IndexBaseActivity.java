@@ -194,7 +194,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
                 Bundle bundle = new Bundle();
                 bundle.putString("uri", tabBean.getMainTabResult().getUri());
                 if (tabBean.getMainTabResult().getMainTabProperty().isHaveNavbar()) {
-                    bundle.putString("appName", tabBean.getMainTabResult().getName());
+                    bundle.putString("appName", tabBean.getTabName());
                 }
                 mTabHost.addTab(tab, tabBean.getClz(), bundle);
             } else {
