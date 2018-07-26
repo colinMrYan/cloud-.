@@ -57,6 +57,7 @@ import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 @ContentView(R.layout.activity_index)
@@ -195,6 +196,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
                 bundle.putString("uri", tabBean.getMainTabResult().getUri());
                 if (tabBean.getMainTabResult().getMainTabProperty().isHaveNavbar()) {
                     bundle.putString("appName", tabBean.getTabName());
+                    bundle.putSerializable("menuList", (Serializable) tabBean.getMainTabResult().getMainTabProperty().getMainTabMenuList());
                 }
                 mTabHost.addTab(tab, tabBean.getClz(), bundle);
             } else {

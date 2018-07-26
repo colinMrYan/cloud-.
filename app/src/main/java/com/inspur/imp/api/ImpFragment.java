@@ -16,6 +16,7 @@ import android.view.WindowManager;
 import android.webkit.WebSettings;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -23,10 +24,13 @@ import android.widget.TextView;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.mine.Language;
+import com.inspur.emmcloud.bean.system.MainTabMenu;
 import com.inspur.emmcloud.config.MyAppWebConfig;
 import com.inspur.emmcloud.ui.IndexActivity;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.MDM.MDM;
 import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
 import com.inspur.emmcloud.widget.dialogs.EasyDialog;
@@ -39,6 +43,7 @@ import com.inspur.imp.plugin.file.FileService;
 import com.inspur.imp.plugin.photo.PhotoService;
 import com.inspur.imp.plugin.staff.SelectStaffService;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -97,6 +102,7 @@ public class ImpFragment extends Fragment {
      * 初始化Views
      */
     private void initViews() {
+
         //防止以后扩展其他Activity时，忘记设置相关参数造成崩溃
         if (getArguments() == null) {
             setArguments(new Bundle());
@@ -105,6 +111,8 @@ public class ImpFragment extends Fragment {
         loadingText = (TextView) rootView.findViewById(Res.getWidgetID("loading_text"));
         frameLayout = (FrameLayout) rootView.findViewById(Res.getWidgetID("videoContainer"));
         loadFailLayout = (LinearLayout) rootView.findViewById(Res.getWidgetID("load_error_layout"));
+        initMomentFunction();
+
         webView = (ImpWebView) rootView.findViewById(Res.getWidgetID("webview"));
         if (getActivity().getClass().getName().equals(IndexActivity.class.getName())) {
             rootView.findViewById(R.id.back_layout).setVisibility(View.GONE);
@@ -139,6 +147,40 @@ public class ImpFragment extends Fragment {
         });
         webView.loadUrl(url, webViewHeaders);
         setWebViewFunctionVisiable();
+
+    }
+
+    /**
+     * 配置圈子导航栏上的功能
+     */
+    private void initMomentFunction() {
+        final ArrayList<MainTabMenu> mainTabMenuArrayList = (ArrayList<MainTabMenu>)getArguments().getSerializable("menuList");
+        if(mainTabMenuArrayList != null){
+            if(mainTabMenuArrayList.size() == 1){
+                ImageView imageViewFun1 = (ImageView) rootView.findViewById(R.id.imp_cloud_function1_img);
+                imageViewFun1.setVisibility(View.VISIBLE);
+                ImageDisplayUtils.getInstance().displayImage(imageViewFun1,mainTabMenuArrayList.get(0).getIco());
+            }else if(mainTabMenuArrayList.size() == 2){
+                ImageView imageViewFun1 = (ImageView) rootView.findViewById(R.id.imp_cloud_function1_img);
+                ImageView imageViewFun2 = (ImageView) rootView.findViewById(R.id.imp_cloud_function2_img);
+                imageViewFun1.setVisibility(View.VISIBLE);
+                imageViewFun2.setVisibility(View.VISIBLE);
+                ImageDisplayUtils.getInstance().displayImage(imageViewFun1,mainTabMenuArrayList.get(0).getIco());
+                ImageDisplayUtils.getInstance().displayImage(imageViewFun2,mainTabMenuArrayList.get(1).getIco());
+            }
+        }
+        rootView.findViewById(R.id.imp_cloud_function2_img).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                webView.loadUrl("javascript:"+mainTabMenuArrayList.get(1).getAction());
+            }
+        });
+        rootView.findViewById(R.id.imp_cloud_function1_img).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                webView.loadUrl("javascript:"+mainTabMenuArrayList.get(0).getAction());
+            }
+        });
     }
 
 
@@ -344,6 +386,12 @@ public class ImpFragment extends Fragment {
                 webView.reload();
                 webView.setVisibility(View.INVISIBLE);
                 loadFailLayout.setVisibility(View.GONE);
+                break;
+            case R.id.imp_cloud_function2_img:
+                LogUtils.YfcDebug("点击了function2");
+                break;
+            case R.id.imp_cloud_function1_img:
+                LogUtils.YfcDebug("点击了function1");
                 break;
             default:
                 break;
