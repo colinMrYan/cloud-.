@@ -63,7 +63,7 @@ public class DeviceService extends ImpPlugin {
 		try {
 			// 设备操作系统版本
 			jsonObject
-					.put("osVersion", String.valueOf(this.getOSVersion()));
+					.put("version", String.valueOf(this.getOSVersion()));
 			// 获取操作系统
 			jsonObject.put("platform", String.valueOf(this.getPlatform()));
 			// 获取设备国际唯一标识码
