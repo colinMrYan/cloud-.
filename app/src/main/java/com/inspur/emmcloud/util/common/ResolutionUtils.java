@@ -1,29 +1,12 @@
 package com.inspur.emmcloud.util.common;
 
 import android.app.Activity;
-import android.content.Context;
 import android.util.DisplayMetrics;
 import android.view.Display;
 
 import java.lang.reflect.Method;
 
 public class ResolutionUtils {
-
-
-		/**
-	 * 获取设备分辨率
-	 *
-	 * @param context
-	 * @return
-	 */
-	public static String getDeviceResolution(Context context) {
-		DisplayMetrics displayMetrics = new DisplayMetrics();
-		((Activity) context).getWindowManager().getDefaultDisplay()
-				.getMetrics(displayMetrics);
-		int width = displayMetrics.widthPixels;
-		int height = getHeight(((Activity) context));
-		return height + "*" + width;
-	}
 
 	public static int getWidth(Activity context){
 		DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -43,9 +26,6 @@ public class ResolutionUtils {
 		context.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
 		int width = displayMetrics.widthPixels;
 		int height = getHeight(context);
-		if (height == 0) {
-			height = displayMetrics.heightPixels;
-		}
 		// 判断设备的分辨率，要求不小于800*480
 		if (width * height >= 384000) {
 			return true;
@@ -64,9 +44,6 @@ public class ResolutionUtils {
 		context.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
 		int width = displayMetrics.widthPixels;
 		int height = getHeight(context);
-		if (height == 0) {
-			height = displayMetrics.heightPixels;
-		}
 		return width * height;
 	}
 
@@ -80,9 +57,6 @@ public class ResolutionUtils {
 		context.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
 		int width = displayMetrics.widthPixels;
 		int height = getHeight(context);
-		if (height == 0) {
-			height = displayMetrics.heightPixels;
-		}
 		return height*1.0f/width;
 	}
 	
@@ -104,7 +78,12 @@ public class ResolutionUtils {
             dpi=dm.heightPixels;
         }catch(Exception e){
             e.printStackTrace();
-        }  
+        }
+		if (dpi == 0) {
+			DisplayMetrics displayMetrics = new DisplayMetrics();
+			context.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+			dpi = displayMetrics.heightPixels;
+		}
         return dpi;
     }
 
