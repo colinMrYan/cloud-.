@@ -102,7 +102,6 @@ public class ImpFragment extends Fragment {
      * 初始化Views
      */
     private void initViews() {
-
         //防止以后扩展其他Activity时，忘记设置相关参数造成崩溃
         if (getArguments() == null) {
             setArguments(new Bundle());
@@ -112,7 +111,6 @@ public class ImpFragment extends Fragment {
         frameLayout = (FrameLayout) rootView.findViewById(Res.getWidgetID("videoContainer"));
         loadFailLayout = (LinearLayout) rootView.findViewById(Res.getWidgetID("load_error_layout"));
         initMomentFunction();
-
         webView = (ImpWebView) rootView.findViewById(Res.getWidgetID("webview"));
         if (getActivity().getClass().getName().equals(IndexActivity.class.getName())) {
             rootView.findViewById(R.id.back_layout).setVisibility(View.GONE);
@@ -147,11 +145,11 @@ public class ImpFragment extends Fragment {
         });
         webView.loadUrl(url, webViewHeaders);
         setWebViewFunctionVisiable();
-
     }
 
     /**
-     * 配置圈子导航栏上的功能
+     * 配置圈子标题栏上的功能
+     * 最多两个功能，超过两个取前两个
      */
     private void initMomentFunction() {
         final ArrayList<MainTabMenu> mainTabMenuArrayList = (ArrayList<MainTabMenu>)getArguments().getSerializable("menuList");
@@ -169,6 +167,7 @@ public class ImpFragment extends Fragment {
                 ImageDisplayUtils.getInstance().displayImage(imageViewFun2,mainTabMenuArrayList.get(1).getIco());
             }
         }
+
         rootView.findViewById(R.id.imp_cloud_function2_img).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
