@@ -139,6 +139,9 @@ public class CaptureActivity extends Activity implements Callback {
     @Override
     protected void onDestroy() {
         inactivityTimer.shutdown();
+        if (handler != null){
+            handler = null;
+        }
         super.onDestroy();
     }
 
