@@ -62,6 +62,7 @@ public class ImpFragment extends Fragment {
     public static final int FILE_SERVICE_REQUEST = 6;
     public static final int DO_NOTHING_REQUEST = 7;
     public static final int BARCODE_SERVER__SCAN_REQUEST = 8;
+    private static final String JAVASCRIPT_PREFIX = "javascript:";
     private Map<String, String> webViewHeaders;
     private TextView headerText;
     private LinearLayout loadFailLayout;
@@ -171,15 +172,23 @@ public class ImpFragment extends Fragment {
         rootView.findViewById(R.id.imp_cloud_function2_img).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                webView.loadUrl("javascript:"+mainTabMenuArrayList.get(1).getAction());
+                runJavaScript(JAVASCRIPT_PREFIX+mainTabMenuArrayList.get(1).getAction());
             }
         });
         rootView.findViewById(R.id.imp_cloud_function1_img).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                webView.loadUrl("javascript:"+mainTabMenuArrayList.get(0).getAction());
+                runJavaScript(JAVASCRIPT_PREFIX+mainTabMenuArrayList.get(0).getAction());
             }
         });
+    }
+
+    /**
+     * 执行JS脚本
+     * @param script
+     */
+    private void runJavaScript(String script) {
+        webView.loadUrl(script);
     }
 
 
