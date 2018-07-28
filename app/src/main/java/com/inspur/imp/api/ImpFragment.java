@@ -27,7 +27,6 @@ import com.inspur.emmcloud.bean.mine.Language;
 import com.inspur.emmcloud.bean.system.MainTabMenu;
 import com.inspur.emmcloud.config.MyAppWebConfig;
 import com.inspur.emmcloud.ui.IndexActivity;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
@@ -394,12 +393,6 @@ public class ImpFragment extends Fragment {
                 webView.reload();
                 webView.setVisibility(View.INVISIBLE);
                 loadFailLayout.setVisibility(View.GONE);
-                break;
-            case R.id.imp_cloud_function2_img:
-                LogUtils.YfcDebug("点击了function2");
-                break;
-            case R.id.imp_cloud_function1_img:
-                LogUtils.YfcDebug("点击了function1");
                 break;
             default:
                 break;
