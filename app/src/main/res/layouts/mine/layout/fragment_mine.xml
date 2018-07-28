@@ -246,6 +246,57 @@
                 android:background="@color/color_list_divider" />
         </RelativeLayout>
 
+        <RelativeLayout
+            android:id="@+id/rl_card_package"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-0.5dp"
+            android:background="@drawable/text_layout_selector"
+            android:clickable="true">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/color_list_divider" />
+
+            <ImageView
+                android:id="@+id/img_card_package"
+                android:layout_width="33dp"
+                android:layout_height="33dp"
+                android:layout_centerVertical="true"
+                android:layout_marginBottom="6dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="6dp"
+                android:padding="0.5dp"
+                android:src="@drawable/icon_card_package" />
+
+            <TextView
+                android:id="@+id/txt_card_package"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/img_card_package"
+                android:text="@string/card_package_listtext"
+                android:textSize="@dimen/content_normal_textsize" />
+
+            <ImageView
+                android:id="@+id/img_card_package_arrow"
+                style="@style/arrow_right"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/icon_arrow_right" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_below="@id/img_card_package"
+                android:background="@color/color_list_divider" />
+        </RelativeLayout>
+
+
+
         <View
             android:id="@+id/blank_layout"
             android:background="#00000000"
@@ -259,7 +310,8 @@
             android:layout_height="wrap_content"
             android:background="@drawable/text_layout_selector"
             android:clickable="true"
-            android:visibility="gone">
+            android:visibility="gone"
+            >
 
             <ImageView
                 android:id="@+id/scan_login_desktop_img"
@@ -291,14 +343,10 @@
                 android:src="@drawable/icon_arrow_right" />
         </RelativeLayout>
 
-
-        <!-- 细线 -->
-
         <View
+            android:background="#00000000"
             android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@color/color_list_divider" />
-
+            android:layout_height="10dp"/>
 
         <RelativeLayout
             android:id="@+id/about_layout"

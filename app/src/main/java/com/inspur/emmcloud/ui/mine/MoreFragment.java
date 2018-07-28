@@ -19,6 +19,7 @@ import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.chat.ChannelActivity;
 import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
+import com.inspur.emmcloud.ui.mine.card.CardPackageActivity;
 import com.inspur.emmcloud.ui.mine.feedback.FeedBackActivity;
 import com.inspur.emmcloud.ui.mine.myinfo.MyInfoActivity;
 import com.inspur.emmcloud.ui.mine.setting.AboutActivity;
@@ -103,6 +104,7 @@ public class MoreFragment extends Fragment {
         rootView.findViewById(R.id.more_userhead_layout).setOnClickListener(onClickListener);
         (rootView.findViewById(R.id.about_layout)).setOnClickListener(onClickListener);
         (rootView.findViewById(R.id.scan_login_desktop_layout)).setOnClickListener(onClickListener);
+        rootView.findViewById(R.id.rl_card_package).setOnClickListener(onClickListener);
         moreHeadImg = (ImageView) rootView.findViewById(R.id.more_head_img);
     }
 
@@ -162,6 +164,9 @@ public class MoreFragment extends Fragment {
                     IntentUtils.startActivity(getActivity(), MyApplication.getInstance().isV0VersionChat()?
                             ChannelV0Activity.class:ChannelActivity.class, bundle);
                     recordUserClick("customservice");
+                    break;
+                case R.id.rl_card_package:
+                    IntentUtils.startActivity(getActivity(), CardPackageActivity.class);
                     break;
                 default:
                     break;
