@@ -62,7 +62,7 @@ public class ShareFilesActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.uriList.addAll((List<String>) getIntent().getSerializableExtra("fileShareUriList"));
+        this.uriList.addAll((List<String>) getIntent().getSerializableExtra(Constant.SHARE_FILE_URI_LIST));
         if(!isImageUriList(uriList)){
             if(uriList.size() <= 1){
                 File file = new File(uriList.get(0));
@@ -162,7 +162,7 @@ public class ShareFilesActivity extends BaseActivity {
         if(FileUtils.isFileInListExist(uriList)){
             Intent intent = new Intent();
             intent.setClass(ShareFilesActivity.this, VolumeHomePageActivity.class);
-            intent.putExtra("fileShareUriList", (Serializable) uriList);
+            intent.putExtra(Constant.SHARE_FILE_URI_LIST, (Serializable) uriList);
             startActivity(intent);
         }else{
             ToastUtils.show(MyApplication.getInstance(),getString(R.string.share_has_not_exist_file));

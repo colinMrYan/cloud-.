@@ -108,6 +108,7 @@ public class ImpFragment extends Fragment {
         webView = (ImpWebView) rootView.findViewById(Res.getWidgetID("webview"));
         if (getActivity().getClass().getName().equals(IndexActivity.class.getName())) {
             rootView.findViewById(R.id.back_layout).setVisibility(View.GONE);
+            rootView.findViewById(R.id.imp_close_btn).setVisibility(View.GONE);
             ((TextView) rootView.findViewById(R.id.header_text)).setGravity(Gravity.CENTER_HORIZONTAL);
         }
         showLoadingDlg(getString(Res.getStringID("@string/loading_text")));
@@ -170,15 +171,13 @@ public class ImpFragment extends Fragment {
      * 设置Webview自定义功能是否显示
      */
     private void setWebViewFunctionVisiable() {
-        if (!StringUtils.isBlank(getArguments().getString("is_zoomable"))) {
-            int isZoomable = getArguments().getInt("is_zoomable", 0);
-            if (isZoomable == 1 || !StringUtils.isBlank(helpUrl)) {
-                rootView.findViewById(R.id.imp_change_font_size_btn).setVisibility(View.VISIBLE);
-            }
-            if (isZoomable == 1) {
-                int textSize = PreferencesByUsersUtils.getInt(getActivity(), "app_crm_font_size_" + appId, MyAppWebConfig.NORMAL);
-                webView.getSettings().setTextZoom(textSize);
-            }
+        int isZoomable = getArguments().getInt("is_zoomable", 0);
+        if (isZoomable == 1 || !StringUtils.isBlank(helpUrl)) {
+            rootView.findViewById(R.id.imp_change_font_size_btn).setVisibility(View.VISIBLE);
+        }
+        if (isZoomable == 1) {
+            int textSize = PreferencesByUsersUtils.getInt(getActivity(), "app_crm_font_size_" + appId, MyAppWebConfig.NORMAL);
+            webView.getSettings().setTextZoom(textSize);
         }
     }
 
@@ -256,7 +255,9 @@ public class ImpFragment extends Fragment {
      */
     public void initWebViewGoBackOrClose() {
         if (headerText != null) {
-            (rootView.findViewById(Res.getWidgetID("imp_close_btn"))).setVisibility(webView.canGoBack() ? View.VISIBLE : View.GONE);
+            if(getActivity().getClass().getName().equals(ImpActivity.class.getName())){
+                (rootView.findViewById(Res.getWidgetID("imp_close_btn"))).setVisibility(webView.canGoBack() ? View.VISIBLE : View.GONE);
+            }
         }
     }
 

@@ -80,5 +80,7 @@ public class Constant {
     public static final String APP_TAB_BAR_PROFILE = "native://mine";
     public static final String APP_TAB_BAR_CONTACT = "native://contact";
 
+    public static final String SHARE_LINK = "shareLink";
+    public static final String SHARE_FILE_URI_LIST = "fileShareUriList";
 
 }
