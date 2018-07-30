@@ -29,17 +29,12 @@ import com.google.zxing.ReaderException;
 import com.google.zxing.Result;
 import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.qrcode.QRCodeReader;
-import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.emmcloud.util.common.ImageUtils;
 import com.inspur.imp.api.Res;
 import com.inspur.imp.plugin.barcode.camera.CameraManager;
 import com.inspur.imp.plugin.barcode.camera.PlanarYUVLuminanceSource;
 import com.inspur.imp.plugin.barcode.scan.CaptureActivity;
 
-import java.util.HashMap;
 import java.util.Hashtable;
-import java.util.Map;
 
 
 final class DecodeHandler extends Handler {
@@ -79,8 +74,6 @@ final class DecodeHandler extends Handler {
      * @param height The height of the preview frame.
      */
     private void decode(byte[] data, int width, int height) {
-        Map<DecodeHintType, Object> hints = new HashMap<>();
-        hints.put(DecodeHintType.TRY_HARDER, Boolean.TRUE);
         scanCount++;
         Result rawResult = null;
         byte[] rotatedData = rotateYUV420Degree90(data, width, height);
@@ -127,12 +120,6 @@ final class DecodeHandler extends Handler {
         int cropBitmapHeight = cropBitmap.getHeight();
         int cropBitmapWidth = cropBitmap.getWidth();
         Bitmap handlerBitmap = getBinaryBitmap(cropBitmap, tmp);
-                String filePathStrart = MyAppConfig.LOCAL_IMG_CREATE_PATH+System.currentTimeMillis();
-                try {
-                    ImageUtils.saveImageToSD(MyApplication.getInstance(),filePathStrart+tmp+".png",handlerBitmap,100);
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
         int[] bitmapPixels = new int[cropBitmapHeight * cropBitmapWidth];
         handlerBitmap.getPixels(bitmapPixels, 0, cropBitmapWidth, 0, 0, cropBitmapWidth, cropBitmapHeight);
         RGBLuminanceSource source = new RGBLuminanceSource(cropBitmapWidth, cropBitmapHeight, bitmapPixels);
@@ -210,8 +197,8 @@ final class DecodeHandler extends Handler {
                 int green = ((col & 0x0000FF00) >> 8);
                 int blue = (col & 0x000000FF);
                 // 用公式X = 0.3×R+0.59×G+0.11×B计算出X代替原来的RGB
-                int gray = (int) ((float) red * 0.3 + (float) green * 0.59 +
-                        (float) blue * 0.11);
+                int gray = (int) ((float) red * 0.2125 + (float) green * 0.7154 +
+                        (float) blue * 0.0721);
                 //对图像进行二值化处理
                 if (gray <= tmp) {
                     gray = 0;
