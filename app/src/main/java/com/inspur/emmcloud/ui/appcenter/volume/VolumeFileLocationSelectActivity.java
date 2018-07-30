@@ -15,6 +15,7 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.bean.system.ClearShareDataBean;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
@@ -97,7 +98,7 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
         });
         pathText.setVisibility(View.VISIBLE);
         pathText.setText(getString(R.string.current_directory_hint,currentDirAbsolutePath));
-        List<Uri> fileShareUriList = (List<Uri>)getIntent().getSerializableExtra("fileShareUriList");
+        List<Uri> fileShareUriList = (List<Uri>)getIntent().getSerializableExtra(Constant.SHARE_FILE_URI_LIST);
         if(fileShareUriList != null){
             shareUriList.addAll(fileShareUriList);
         }
@@ -163,7 +164,7 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
             bundle.putSerializable("volume", volume);
             bundle.putSerializable("currentDirAbsolutePath", currentDirAbsolutePath);
             bundle.putSerializable("title", title);
-            bundle.putSerializable("fileShareUriList", (Serializable) shareUriList);
+            bundle.putSerializable(Constant.SHARE_FILE_URI_LIST, (Serializable) shareUriList);
             IntentUtils.startActivity(VolumeFileLocationSelectActivity.this, VolumeFileActivity.class, bundle);
             closeAllThisActivityInstance();
         }
