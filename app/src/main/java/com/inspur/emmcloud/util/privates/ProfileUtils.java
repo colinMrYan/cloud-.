@@ -9,14 +9,18 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.LoginAPIService;
+import com.inspur.emmcloud.bean.mine.Enterprise;
 import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.interf.CommonCallBack;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.dialogs.MyDialog;
+
+import java.util.List;
 
 /**
  * Created by yufuchang on 2018/6/27.
@@ -100,14 +104,21 @@ public class ProfileUtils {
         @Override
         public void returnMyInfoSuccess(GetMyInfoResult getMyInfoResult) {
             LoadingDialog.dimissDlg(loadingDialog);
-            //存储上一个版本，不再有本地默认版本
-            PreferencesUtils.putString(activity, Constant.PREF_MY_INFO_OLD,PreferencesUtils.getString(activity,"myInfo",""));
-            PreferencesUtils.putString(activity, "myInfo", getMyInfoResult.getResponse());
-            MyApplication.getInstance().initTanent();
-            String appVersion = AppUtils.getVersion(activity);
-            PreferencesUtils.putString(activity, "previousVersion",
-                    appVersion);
-            commonCallBack.execute();
+            List<Enterprise> enterpriseList = getMyInfoResult.getEnterpriseList();
+            Enterprise defaultEnterprise = getMyInfoResult.getDefaultEnterprise();
+            if (enterpriseList.size() == 0 && defaultEnterprise == null){
+                ToastUtils.show(MyApplication.getInstance(),  R.string.user_not_bound_enterprise);
+                MyApplication.getInstance().signout();
+            }else {
+                //存储上一个版本，不再有本地默认版本
+                PreferencesUtils.putString(activity, Constant.PREF_MY_INFO_OLD, PreferencesUtils.getString(activity, "myInfo", ""));
+                PreferencesUtils.putString(activity, "myInfo", getMyInfoResult.getResponse());
+                MyApplication.getInstance().initTanent();
+                String appVersion = AppUtils.getVersion(activity);
+                PreferencesUtils.putString(activity, "previousVersion",
+                        appVersion);
+                commonCallBack.execute();
+            }
         }
 
         @Override

@@ -485,9 +485,9 @@ public interface APIInterface {
 
     void returnAppTabAutoFail(String error, int errorCode);
 
-    void returnUserProfileSuccess(UserProfileInfoBean userProfileInfoBean);
+    void returnUserProfileConfigSuccess(UserProfileInfoBean userProfileInfoBean);
 
-    void returnUserProfileFail(String error, int errorCode);
+    void returnUserProfileConfigFail(String error, int errorCode);
 
     void returnBindingDeviceListSuccess(GetBindingDeviceResult getBindingDeviceResult);
 

@@ -237,19 +237,19 @@ public class MineAPIService {
     /**
      * 获取我的信息
      */
-    public void getUserProfileInfo() {
+    public void getUserProfileConfigInfo() {
         final String completeUrl = APIUri.getUserProfileUrl();
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
             @Override
             public void callbackSuccess(byte[] arg0) {
-                apiInterface.returnUserProfileSuccess(new UserProfileInfoBean(new String(arg0)));
+                apiInterface.returnUserProfileConfigSuccess(new UserProfileInfoBean(new String(arg0)));
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                apiInterface.returnUserProfileFail(error, responseCode);
+                apiInterface.returnUserProfileConfigFail(error, responseCode);
             }
 
             @Override
@@ -257,7 +257,7 @@ public class MineAPIService {
                 OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        getUserProfileInfo();
+                        getUserProfileConfigInfo();
                     }
 
                     @Override

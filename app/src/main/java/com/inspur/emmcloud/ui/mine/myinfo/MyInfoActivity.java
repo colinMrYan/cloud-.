@@ -291,7 +291,7 @@ public class MyInfoActivity extends BaseActivity {
     private void getUserInfoConfig() {
         if (NetUtils.isNetworkConnected(MyInfoActivity.this, false)) {
             loadingDlg.show();
-            apiService.getUserProfileInfo();
+            apiService.getUserProfileConfigInfo();
         } else {
             setUserInfoConfig(null);
         }
@@ -322,16 +322,14 @@ public class MyInfoActivity extends BaseActivity {
         }
 
         @Override
-        public void returnUserProfileSuccess(UserProfileInfoBean userProfileInfoBean) {
+        public void returnUserProfileConfigSuccess(UserProfileInfoBean userProfileInfoBean) {
             setUserInfoConfig(userProfileInfoBean);
             PreferencesByUserAndTanentUtils.putString(getApplicationContext(), "user_profiles", userProfileInfoBean.getResponse());
-            getUserProfile();
         }
 
         @Override
-        public void returnUserProfileFail(String error, int errorCode) {
+        public void returnUserProfileConfigFail(String error, int errorCode) {
             setUserInfoConfig(null);
-            getUserProfile();
         }
 
         @Override
@@ -339,9 +337,16 @@ public class MyInfoActivity extends BaseActivity {
             // TODO Auto-generated method stub
             dimissDlg();
             MyInfoActivity.this.getMyInfoResult = getMyInfoResult;
-            PreferencesUtils.putString(MyInfoActivity.this, "myInfo", getMyInfoResult.getResponse());
-            showMyInfo();
-            setSwitchEnterpriseState();
+            List<Enterprise> enterpriseList = getMyInfoResult.getEnterpriseList();
+            Enterprise defaultEnterprise = getMyInfoResult.getDefaultEnterprise();
+            if (enterpriseList.size() == 0 && defaultEnterprise == null){
+                ToastUtils.show(MyApplication.getInstance(),  R.string.user_not_bound_enterprise);
+                MyApplication.getInstance().signout();
+            }else {
+                PreferencesUtils.putString(MyInfoActivity.this, "myInfo", getMyInfoResult.getResponse());
+                showMyInfo();
+                setSwitchEnterpriseState();
+            }
         }
 
         @Override

@@ -1307,12 +1307,12 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnUserProfileSuccess(UserProfileInfoBean userProfileInfoBean) {
+    public void returnUserProfileConfigSuccess(UserProfileInfoBean userProfileInfoBean) {
 
     }
 
     @Override
-    public void returnUserProfileFail(String error, int errorCode) {
+    public void returnUserProfileConfigFail(String error, int errorCode) {
 
     }
 
