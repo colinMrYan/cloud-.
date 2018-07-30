@@ -36,7 +36,6 @@ import com.inspur.emmcloud.ui.find.FindFragment;
 import com.inspur.emmcloud.ui.mine.MoreFragment;
 import com.inspur.emmcloud.ui.notsupport.NotSupportFragment;
 import com.inspur.emmcloud.ui.work.TabBean;
-import com.inspur.emmcloud.ui.work.WorkFragment;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -119,7 +118,8 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
                                     }
                                     break;
                                 case Constant.APP_TAB_BAR_WORK:
-                                    tabBean = new TabBean(getString(R.string.work), R.drawable.selector_tab_work_btn + "", WorkFragment.class, mainTabResult);
+                                    tabBean = new TabBean(getString(R.string.find), R.drawable.selector_tab_find_btn + "", FindFragment.class, mainTabResult);
+//                                    tabBean = new TabBean(getString(R.string.work), R.drawable.selector_tab_work_btn + "", WorkFragment.class, mainTabResult);
                                     break;
                                 case Constant.APP_TAB_BAR_APPLICATION:
                                     tabBean = new TabBean(getString(R.string.application), R.drawable.selector_tab_app_btn + "", MyAppFragment.class, mainTabResult);
