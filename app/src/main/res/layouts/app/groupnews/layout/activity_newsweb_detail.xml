@@ -28,14 +28,44 @@
                 android:paddingRight="5dp"
                 android:scaleType="centerInside"
                 android:src="@drawable/selector_back_btn" />
+
+            <TextView
+                android:id="@+id/news_back_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_toRightOf="@id/back_btn"
+                android:background="@null"
+                android:gravity="center"
+                android:paddingRight="3dp"
+                android:text="@string/back"
+                android:textColor="#ffffff"
+                android:textSize="16sp" />
         </RelativeLayout>
+        <TextView
+            android:id="@+id/news_close_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_toRightOf="@id/back_layout"
+            android:background="@null"
+            android:clickable="true"
+            android:gravity="center"
+            android:onClick="onClick"
+            android:paddingRight="13dp"
+            android:text="@string/close"
+            android:textColor="#ffffff"
+            android:textSize="16sp"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/header_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/news_close_btn"
+            android:layout_toLeftOf="@id/news_share_img"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:text="@string/group_news_detail"
             android:textColor="@color/header_text"
             android:textSize="@dimen/header_textsize" />
