@@ -20,6 +20,7 @@ import com.inspur.emmcloud.bean.login.GetDeviceCheckResult;
 import com.inspur.emmcloud.bean.login.LoginDesktopCloudPlusBean;
 import com.inspur.emmcloud.bean.system.GetAppConfigResult;
 import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
+import com.inspur.emmcloud.bean.system.GetAllConfigVersionResult;
 import com.inspur.emmcloud.bean.system.GetUpgradeResult;
 import com.inspur.emmcloud.bean.system.SplashPageBean;
 import com.inspur.emmcloud.interf.OauthCallBack;
@@ -249,7 +250,7 @@ public class AppAPIService {
     /**
      * 获取显示tab页的接口
      */
-    public void getAppNewTabs(final String tabVersion) {
+    public void getAppNewTabs(final String tabVersion,final String mainTabSaveConfigVersion) {
         final String completeUrl = APIUri.getAppNewTabs();
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
@@ -273,7 +274,7 @@ public class AppAPIService {
                 OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        getAppNewTabs(tabVersion);
+                        getAppNewTabs(tabVersion,mainTabSaveConfigVersion);
                     }
 
                     @Override
@@ -287,7 +288,7 @@ public class AppAPIService {
 
             @Override
             public void callbackSuccess(byte[] arg0) {
-                apiInterface.returnAppTabAutoSuccess(new GetAppMainTabResult(new String(arg0)));
+                apiInterface.returnAppTabAutoSuccess(new GetAppMainTabResult(new String(arg0)),mainTabSaveConfigVersion);
             }
 
             @Override
@@ -617,6 +618,58 @@ public class AppAPIService {
                     @Override
                     public void reExecute() {
                         uploadPosition(positionJson);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+        });
+    }
+
+
+    /**
+     * app通用检查更新
+     *
+     * @param positionJson
+     */
+    public void getAllConfigVersion(final JSONObject clientConfigVersionObj) {
+        final String url = APIUri.getAllConfigVersionUrl();
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(url);
+        JSONObject object = new JSONObject();
+        try {
+            object.put("os","Android");
+            object.put("osVersion",AppUtils.getReleaseVersion());
+            object.put("appId",context.getPackageName());
+            object.put("appVersion",AppUtils.getVersion(context));
+            object.put("appCoreVersion",AppUtils.getVersion(context));
+            object.put("ClientConfigVersions",clientConfigVersionObj);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        params.setBodyContent(object.toString());
+        params.setAsJsonContent(true);
+        HttpUtils.request(context,CloudHttpMethod.POST,params,new APICallback(context, url) {
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnAllConfigVersionSuccess(new GetAllConfigVersionResult(new String(arg0),clientConfigVersionObj));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnAllConfigVersionFail(error, responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        getAllConfigVersion(clientConfigVersionObj);
                     }
 
                     @Override

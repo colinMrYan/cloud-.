@@ -168,6 +168,16 @@ public class APIUri {
         return MyApplication.getInstance().getClusterClientRegistry() + "/client";
     }
 
+    /**
+     * 获取通用检查url
+     *
+     * @return
+     */
+    public static String getAllConfigVersionUrl() {
+        return MyApplication.getInstance().getClusterEmm() + "api/sys/v6.0/config/Check";
+    }
+
+
     /************************************************************************登录*****************************************************************/
 
     /**
