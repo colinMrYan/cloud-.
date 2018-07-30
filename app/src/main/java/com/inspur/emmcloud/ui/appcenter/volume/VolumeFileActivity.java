@@ -24,8 +24,8 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.VolumeFileAdapter;
 import com.inspur.emmcloud.adapter.VolumeFileFilterPopGridAdapter;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.emmcloud.ui.chat.ChannelActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
@@ -104,7 +104,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
      * 处理文件分享
      */
     private void handleFileShareToVolume() {
-        List<String> fileShareUriList = (List<String>) getIntent().getSerializableExtra("fileShareUriList");
+        List<String> fileShareUriList = (List<String>) getIntent().getSerializableExtra(Constant.SHARE_FILE_URI_LIST);
         if (fileShareUriList != null && NetUtils.isNetworkConnected(this)) {
             for (int i = 0; i < fileShareUriList.size(); i++) {
                 uploadFile(fileShareUriList.get(i));

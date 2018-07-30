@@ -238,7 +238,6 @@ public class MyFragmentTabHost extends TabHost
 
 	public void addTab(@NonNull TabHost.TabSpec tabSpec, @NonNull Class<?> clss,
 					   @Nullable Bundle args) {
-		LogUtils.jasonDebug("addTab======================================================");
 		tabSpec.setContent(new DummyTabFactory(mContext));
 
 		final String tag = tabSpec.getTag();
@@ -257,7 +256,6 @@ public class MyFragmentTabHost extends TabHost
 		}
 		mTabs.add(info);
 		addTab(tabSpec);
-		LogUtils.jasonDebug("mTabs==="+mTabs.size());
 	}
 
 	@Override
