@@ -219,6 +219,7 @@
     <string name="group_file">Group Files</string>
     <string name="authorization_expired">Authorization Expired</string>
     <string name="cant_login_with_sms">Your account is not allowed to log on with SMS</string>
+    <string name="user_not_bound_enterprise">The current user is not bound to the enterprise, please contact the administrator!</string>
 
     <!-- 消息部分 -->
     <string name="msgcontent_cannot_null">Please type message content</string>
