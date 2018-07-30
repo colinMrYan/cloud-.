@@ -51,7 +51,10 @@ import org.json.JSONObject;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * scheme统一处理类
@@ -229,7 +232,7 @@ public class SchemeHandleActivity extends Activity {
                                 finish();
                                 break;
                             case "ecc-app-change-tab":
-                                EventBus.getDefault().post(new ChangeTabBean("application"));
+                                EventBus.getDefault().post(new ChangeTabBean(Constant.APP_TAB_BAR_APPLICATION));
                                 break;
                             default:
                                 finish();
@@ -252,7 +255,10 @@ public class SchemeHandleActivity extends Activity {
         List<String> uriList = new ArrayList<>();
         if (Intent.ACTION_SEND.equals(action)) {
             Uri uri = FileUtils.getShareFileUri(getIntent());
-            if (uri != null) {
+            if(isLinkShare()){
+                handleLinkShare(getShareLinkContent());
+                return;
+            }else if(uri != null){
                 uriList.add(GetPathFromUri4kitkat.getPathByUri(MyApplication.getInstance(), uri));
             }
         } else if (Intent.ACTION_SEND_MULTIPLE.equals(action)) {
@@ -270,12 +276,88 @@ public class SchemeHandleActivity extends Activity {
     }
 
     /**
+     * 获取title和url
+     *
+     * @return
+     */
+    private HashMap<String, String> getShareLinkContent() {
+        Intent intent = getIntent();
+        String urlStr = "";
+        String titleStr = "";
+        String digest = "";
+        HashMap<String, String> shareLinkMap = new HashMap<>();
+        if(intent != null){
+            String text = intent.getExtras().getString(Intent.EXTRA_TEXT);
+            String subject = intent.getExtras().getString(Intent.EXTRA_SUBJECT);
+            if (text != null && subject != null) {
+                urlStr = getShareUrl(text);
+                titleStr = subject;
+                digest = text.replace(getShareUrl(text),"");
+            } else if (text != null && subject == null) {
+                urlStr = getShareUrl(text);
+                titleStr = text.replace(urlStr, "");
+            } else if (text == null && subject == null) {
+                return shareLinkMap;
+            }
+            shareLinkMap.put("title", titleStr);
+            shareLinkMap.put("url", urlStr);
+            shareLinkMap.put("digest",digest);
+        }
+        return shareLinkMap;
+    }
+
+    /**
+     * 获取url
+     *
+     * @param text
+     */
+    private  String getShareUrl(String text) {
+//        Pattern p = Pattern.compile("((http|ftp|https)://)(([a-zA-Z0-9\\._-]+\\.[a-zA-Z]{2,6})|([0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}))(:[0-9]{1,4})*(/[a-zA-Z0-9\\&%_\\./-~-]*)?", Pattern.CASE_INSENSITIVE);
+        Pattern p = Pattern.compile(Constant.PATTERN_URL, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = p.matcher(text);
+        matcher.find();
+        return matcher.group();
+    }
+
+    /**
+     * 是一个链接分享
+     * @return
+     */
+    private boolean isLinkShare() {
+        Intent intent = getIntent();
+        if(intent.getExtras() != null && !StringUtils.isBlank(intent.getExtras().getString(Intent.EXTRA_TEXT))){
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 处理分享url
+     */
+    private void handleLinkShare(HashMap<String,String> shareLinkContentMap) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("url", shareLinkContentMap.get("url"));
+            jsonObject.put("poster", "");
+            jsonObject.put("digest", shareLinkContentMap.get("digest"));
+            jsonObject.put("title", shareLinkContentMap.get("title"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Intent intent = new Intent();
+        intent.setClass(SchemeHandleActivity.this, ShareLinkActivity.class);
+        intent.putExtra(Constant.SHARE_LINK, jsonObject.toString());
+        startActivity(intent);
+        finish();
+    }
+
+    /**
      * @param uriList
      */
     private void startVolumeShareActivity(List<String> uriList) {
         Intent intent = new Intent();
         intent.setClass(SchemeHandleActivity.this, ShareFilesActivity.class);
-        intent.putExtra("fileShareUriList", (Serializable) uriList);
+        intent.putExtra(Constant.SHARE_FILE_URI_LIST, (Serializable) uriList);
         startActivity(intent);
         finish();
     }

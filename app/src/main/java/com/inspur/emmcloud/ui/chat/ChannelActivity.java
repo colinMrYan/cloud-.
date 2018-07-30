@@ -350,6 +350,15 @@ public class ChannelActivity extends BaseActivity {
                         uploadResFileAndSendMessage(url, type.equals("file"));
                     }
                     break;
+                case "link":
+                    String content = getIntent().getExtras().getString(Constant.SHARE_LINK);
+                    if(!StringUtils.isBlank(content)){
+                        Message message = CommunicationUtils.combinLocalExtendedLinksMessage(cid, JSONUtils.getString(content,"poster",""),JSONUtils.getString(content,"title","")
+                                , JSONUtils.getString(content,"digest",""), JSONUtils.getString(content,"url",""));
+                        WSAPIService.getInstance().sendChatExtendedLinksMsg(cid, message);
+                        addLocalMessage(message,0);
+                    }
+                    break;
                 default:
                     break;
             }
@@ -677,7 +686,7 @@ public class ChannelActivity extends BaseActivity {
     /**
      * 消息发送完成后在本地添加一条消息
      *
-     * @param msg
+     * @param message
      * @param status
      */
     private void addLocalMessage(Message message, int status) {

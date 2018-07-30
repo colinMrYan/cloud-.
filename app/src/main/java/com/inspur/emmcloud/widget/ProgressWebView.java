@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
 import com.inspur.emmcloud.R;
@@ -35,12 +34,6 @@ public class ProgressWebView extends WebView {
 					progressbar.setProgress(newProgress);
 				}
 				super.onProgressChanged(view, newProgress);
-			}
-		});
-		setWebViewClient(new WebViewClient() {
-			public boolean shouldOverrideUrlLoading(WebView view, String url) {
-				view.loadUrl(url);
-				return true;
 			}
 		});
 		// 是否可以缩放

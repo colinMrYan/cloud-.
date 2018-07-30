@@ -278,6 +278,14 @@
 
         </activity>
 
+        <activity android:name=".ui.ShareLinkActivity"
+            android:launchMode="singleTask"
+            android:resizeableActivity="true"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:screenOrientation="portrait">
+
+        </activity>
+
         <activity
             android:name=".ui.SchemeHandleActivity"
             android:launchMode="singleTask"
