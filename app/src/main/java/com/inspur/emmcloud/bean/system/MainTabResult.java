@@ -19,7 +19,7 @@ public class MainTabResult {
     public MainTabResult(JSONObject jsonObject){
         this.name = JSONUtils.getString(jsonObject,"name","");
         this.type = JSONUtils.getString(jsonObject,"type","");
-        this.icon = JSONUtils.getString(jsonObject,"icon","");
+        this.icon = JSONUtils.getString(jsonObject,"ico","");
         this.uri = JSONUtils.getString(jsonObject,"uri","");
         this.selected = JSONUtils.getBoolean(jsonObject,"selected",false);
         this.mainTabTitleResult = new MainTabTitleResult(JSONUtils.getString(jsonObject,"title",""));

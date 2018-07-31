@@ -23,6 +23,7 @@ public class MainTabProperty {
     private boolean canCreate = true;
     private boolean isHaveNavbar = false;
     private List<MainTabMenu> mainTabMenuList = new ArrayList<>();
+    private ArrayList<String> mineItemList = new ArrayList<>();
 
     public MainTabProperty(String response) {
         canContact = JSONUtils.getBoolean(response, "canOpenContact", true);
@@ -31,6 +32,10 @@ public class MainTabProperty {
         JSONArray jsonArray = JSONUtils.getJSONArray(response,"menus",new JSONArray());
         for (int i = 0; i < (jsonArray.length()>2?2:jsonArray.length()); i++) {
             mainTabMenuList.add(new MainTabMenu(JSONUtils.getJSONObject(jsonArray,i,new JSONObject())));
+        }
+        JSONArray mineItemArray = JSONUtils.getJSONArray(response,"tablist",new JSONArray());
+        for (int i = 0; i < mineItemArray.length(); i++) {
+            mineItemList.add(JSONUtils.getString(JSONUtils.getJSONArray(mineItemArray,i,new JSONArray()),0,""));
         }
     }
 
@@ -64,5 +69,13 @@ public class MainTabProperty {
 
     public void setMainTabMenuList(List<MainTabMenu> mainTabMenuList) {
         this.mainTabMenuList = mainTabMenuList;
+    }
+
+    public ArrayList<String> getMineItemList() {
+        return mineItemList;
+    }
+
+    public void setMineItemList(ArrayList<String> mineItemList) {
+        this.mineItemList = mineItemList;
     }
 }

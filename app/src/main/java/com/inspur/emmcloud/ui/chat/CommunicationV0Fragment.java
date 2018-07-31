@@ -192,7 +192,7 @@ public class CommunicationV0Fragment extends Fragment {
      * @param getAppMainTabResult
      */
     private void showCreateGroupOrFindContact(GetAppMainTabResult getAppMainTabResult) {
-        ArrayList<MainTabResult> mainTabResultList = getAppMainTabResult.getMainTabResultList();
+        ArrayList<MainTabResult> mainTabResultList = getAppMainTabResult.getMainTabPayLoad().getMainTabResultList();
         for (int i = 0; i < mainTabResultList.size(); i++) {
             if(mainTabResultList.get(i).getUri().equals(Constant.APP_TAB_BAR_COMMUNACATE)){
                 MainTabProperty mainTabProperty = mainTabResultList.get(i).getMainTabProperty();

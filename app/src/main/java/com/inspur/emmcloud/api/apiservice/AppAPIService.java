@@ -252,34 +252,22 @@ public class AppAPIService {
     }
 
 
+
+
     /**
      * 获取显示tab页的接口
      */
-    public void getAppNewTabs(final String tabVersion) {
-        final String completeUrl = APIUri.getAppNewTabs();
+    public void getAppNewTabs(final String version, final String clientId) {
+        final String completeUrl = APIUri.getAppNewTabs() + "?version=" + version + "&clientId=" + clientId;
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
-        JSONObject jsonObject = new JSONObject();
-        try{
-            jsonObject.put("os","Android");
-            jsonObject.put("osVersion",AppUtils.getReleaseVersion());
-            jsonObject.put("appId",AppUtils.getPackageName(context));
-            jsonObject.put("appVersion",AppUtils.getVersion(context));
-            jsonObject.put("appCoreVersion",AppUtils.getVersion(context));
-            jsonObject.put("version",tabVersion);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        params.setBodyContent(jsonObject.toString());
-        params.setAsJsonContent(true);
-
-        HttpUtils.request(context,CloudHttpMethod.POST,params,new APICallback(context, completeUrl) {
+        HttpUtils.request(context,CloudHttpMethod.GET,params,new APICallback(context, completeUrl) {
             @Override
             public void callbackTokenExpire(long requestTime) {
                 OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        getAppNewTabs(tabVersion);
+                        getAppNewTabs(version, clientId);
                     }
 
                     @Override

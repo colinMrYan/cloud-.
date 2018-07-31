@@ -16,7 +16,7 @@ import java.util.ArrayList;
 public class AppTitleUtils {
     public static String getTabTitle(Context context,String tabKey){
         String appTabs = PreferencesByUserAndTanentUtils.getString(context, Constant.PREF_APP_TAB_BAR_INFO_CURRENT,"");
-        ArrayList<MainTabResult> tabList = new GetAppMainTabResult(appTabs).getMainTabResultList();
+        ArrayList<MainTabResult> tabList = new GetAppMainTabResult(appTabs).getMainTabPayLoad().getMainTabResultList();
         String tabCompont = getCompont(tabKey);
         MainTabResult tab = getTabByTabKey(tabList,tabCompont);
         if(tab == null){

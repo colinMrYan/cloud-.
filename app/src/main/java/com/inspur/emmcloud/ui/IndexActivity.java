@@ -201,8 +201,9 @@ public class IndexActivity extends IndexBaseActivity {
                 if (NetUtils.isNetworkConnected(getApplicationContext(), false)) {
                     AppAPIService apiService = new AppAPIService(IndexActivity.this);
                     apiService.setAPIInterface(new WebService());
+                    String clientId = PreferencesByUserAndTanentUtils.getString(IndexActivity.this, Constant.PREF_REACT_NATIVE_CLIENTID, "");
                     String version = PreferencesByUserAndTanentUtils.getString(IndexActivity.this, Constant.PREF_APP_TAB_BAR_VERSION, "");
-                    apiService.getAppNewTabs(version);
+                    apiService.getAppNewTabs(version,clientId);
                     new SplashPageUtils(IndexActivity.this).update();//更新闪屏页面
                     new ReactNativeUtils(IndexActivity.this).init(); //更新react
                 }
