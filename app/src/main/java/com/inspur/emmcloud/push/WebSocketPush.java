@@ -14,7 +14,8 @@ import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
-import com.inspur.emmcloud.util.privates.PushInfoUtils;
+import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
+import com.inspur.emmcloud.util.privates.ClientIDUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -57,24 +58,26 @@ public class WebSocketPush {
     /**
      * 开始WebSocket推送
      */
-    public void init(boolean isForceNew) {
+    public void init(final boolean isForceNew) {
         // TODO Auto-generated method stub
-        if (!MyApplication.getInstance().isV0VersionChat() && !MyApplication.getInstance().isV1xVersionChat()) {
-            return;
-        }
-        if (isForceNew || !isSocketConnect()) {
+        if (MyApplication.getInstance().isV0VersionChat()){
+            String pushId = AppUtils.getPushId(MyApplication.getInstance());
+            if (!pushId.equals("UNKNOWN")){
+                WebSocketConnect(isForceNew);
+            }
+        }else if(MyApplication.getInstance().isV1xVersionChat()){
             if (NetUtils.isNetworkConnected(MyApplication.getInstance(), false)) {
-                new PushInfoUtils(MyApplication.getInstance(), new PushInfoUtils.OnGetChatClientIdListener() {
+                new ClientIDUtils(MyApplication.getInstance(), new ClientIDUtils.OnGetClientIdListener() {
                     @Override
-                    public void getChatClientIdSuccess(String chatClientId) {
-                        WebSocketConnect(chatClientId);
+                    public void getClientIdSuccess(String clientId) {
+                        WebSocketConnect(isForceNew);
                     }
 
                     @Override
-                    public void getChatClientIdFail() {
+                    public void getClientIdFail() {
                         sendWebSocketStatusBroadcast(Socket.EVENT_DISCONNECT);
                     }
-                }).getChatClientId(isForceNew);
+                }).getClientId();
             } else {
                 sendWebSocketStatusBroadcast(Socket.EVENT_DISCONNECT);
             }
@@ -82,7 +85,10 @@ public class WebSocketPush {
     }
 
 
-    private void WebSocketConnect(String chatClientId) {
+    private void WebSocketConnect(boolean isForceNew) {
+        if (!isForceNew && isSocketConnect()){
+            return;
+        }
         String url = APIUri.getWebsocketConnectUrl();
         String path = MyApplication.getInstance().isV0VersionChat() ? "/" + MyApplication.getInstance().getCurrentEnterprise().getCode() + "/socket/handshake" :
                 "/chat/socket/handshake";
@@ -100,7 +106,8 @@ public class WebSocketPush {
                 query.put("device.name", deviceName);
                 query.put("device.push", pushId);
             } else {
-                query.put("client", chatClientId);
+                String clientId =  PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_CLIENTID, "");
+                query.put("client", clientId);
             }
             query.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
             opts.path = path;

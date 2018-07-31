@@ -7,13 +7,12 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.bean.appcenter.AndroidBundleBean;
 import com.inspur.emmcloud.bean.appcenter.ReactNativeUpdateBean;
-import com.inspur.emmcloud.interf.CommonCallBack;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.ui.find.FindFragment;
-import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.reactnative.ReactNativeFlow;
 
 import java.io.File;
@@ -36,12 +35,17 @@ public class ReactNativeUtils {
         if (!FileUtils.isFileExist(reactNativeCurrentPath + "/index.android.bundle")) {
             ReactNativeFlow.initReactNative(context, uid);
         } else {
-            new ClientIDUtils(context, new CommonCallBack() {
+
+            new ClientIDUtils(MyApplication.getInstance(), new ClientIDUtils.OnGetClientIdListener() {
                 @Override
-                public void execute() {
+                public void getClientIdSuccess(String clientId) {
                     updateReactNative();
                 }
-            }).getClientID();
+
+                @Override
+                public void getClientIdFail() {
+                }
+            }).getClientId();
         }
     }
 

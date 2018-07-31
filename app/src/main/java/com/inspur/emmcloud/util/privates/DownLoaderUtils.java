@@ -37,13 +37,22 @@ public class DownLoaderUtils {
     public void startDownLoad(String source, String target,
                               ProgressCallback<File> progressCallback) {
 
-//        RequestParams params = new RequestParams(source);
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(source);
         params.setAutoResume(true);// 断点下载
         params.setSaveFilePath(target);
         params.setCancelFast(true);
         cancelable = x.http().get(params, progressCallback);
     }
+
+    public void startDownLoad(RequestParams params, String target,
+                              ProgressCallback<File> progressCallback) {
+
+        params.setAutoResume(true);// 断点下载
+        params.setSaveFilePath(target);
+        params.setCancelFast(true);
+        cancelable = x.http().get(params, progressCallback);
+    }
+
 
     public void pauseDownLoad() {
         cancelable.cancel();

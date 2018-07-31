@@ -721,6 +721,9 @@ public class AppUtils {
         } else {
             pushId = PreferencesUtils.getString(context, "JpushRegId", "");
         }
+        if (StringUtils.isBlank(pushId)){
+            pushId = "UNKNOWN";
+        }
         return pushId;
     }
 
