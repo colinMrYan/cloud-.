@@ -76,9 +76,9 @@ public class Constant {
 
     public static final String APP_TAB_BAR_COMMUNACATE = "native://communicate";
     public static final String APP_TAB_BAR_WORK = "native://work";
-    public static final String APP_TAB_BAR_RN_FIND = "ecc-app-react-native://find";
+    public static final String APP_TAB_BAR_RN_FIND = "ecc-app-react-native://discover";
     public static final String APP_TAB_BAR_APPLICATION = "native://application";
-    public static final String APP_TAB_BAR_PROFILE = "native://mine";
+    public static final String APP_TAB_BAR_PROFILE = "native://me";
     public static final String APP_TAB_BAR_CONTACT = "native://contact";
 
     public static final String SHARE_LINK = "shareLink";

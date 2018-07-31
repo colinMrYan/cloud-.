@@ -232,9 +232,9 @@ public class IndexActivity extends IndexBaseActivity {
                 public void getClientIdSuccess(String clientId) {
                     AppAPIService apiService = new AppAPIService(IndexActivity.this);
                     apiService.setAPIInterface(new WebService());
-                    String version = PreferencesByUserAndTanentUtils.getString(IndexActivity.this, Constant.PREF_APP_TAB_BAR_VERSION, "");
                     String mainTabSaveConfigVersion = ClientConfigUpdateUtils.getItemNewVersion(ClientConfigItem.CLIENT_CONFIG_MAINTAB);
-                    apiService.getAppNewTabs(version, mainTabSaveConfigVersion);
+                    String version = PreferencesByUserAndTanentUtils.getString(IndexActivity.this, Constant.PREF_APP_TAB_BAR_VERSION, "");
+                    apiService.getAppNewTabs(version,clientId,mainTabSaveConfigVersion);
                 }
 
                 @Override

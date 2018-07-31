@@ -103,7 +103,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
             GetAppMainTabResult getAppMainTabResult = new GetAppMainTabResult(appTabs);
             //发送到MessageFragment
             EventBus.getDefault().post(getAppMainTabResult);
-            ArrayList<MainTabResult> mainTabResultList = getAppMainTabResult.getMainTabResultList();
+            ArrayList<MainTabResult> mainTabResultList = getAppMainTabResult.getMainTabPayLoad().getMainTabResultList();
             if (mainTabResultList.size() > 0) {
                 tabBeans = new TabBean[mainTabResultList.size()];
                 for (int i = 0; i < mainTabResultList.size(); i++) {
@@ -395,7 +395,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
         int tabIndex = 0;
         String appTabs = PreferencesByUserAndTanentUtils.getString(IndexBaseActivity.this, Constant.PREF_APP_TAB_BAR_INFO_CURRENT, "");
         if (!StringUtils.isBlank(appTabs)) {
-            ArrayList<MainTabResult> mainTabResultList = new GetAppMainTabResult(appTabs).getMainTabResultList();
+            ArrayList<MainTabResult> mainTabResultList = new GetAppMainTabResult(appTabs).getMainTabPayLoad().getMainTabResultList();
             if (mainTabResultList.size() > 0) {
                 for (int i = 0; i < mainTabResultList.size(); i++) {
                     if (mainTabResultList.get(i).isSelected()) {
@@ -467,7 +467,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
     public void updateTabbarWithOrder(GetAppMainTabResult getAppMainTabResult) {
         String command = getAppMainTabResult.getCommand();
         if (command.equals("FORWARD")) {
-            PreferencesByUserAndTanentUtils.putString(IndexBaseActivity.this, Constant.PREF_APP_TAB_BAR_VERSION, getAppMainTabResult.getVersion());
+            PreferencesByUserAndTanentUtils.putString(IndexBaseActivity.this, Constant.PREF_APP_TAB_BAR_VERSION, getAppMainTabResult.getMainTabPayLoad().getVersion());
             PreferencesByUserAndTanentUtils.putString(IndexBaseActivity.this, Constant.PREF_APP_TAB_BAR_INFO_CURRENT, getAppMainTabResult.getAppTabInfo());
             mTabHost.clearAllTabs(); //更新tabbar
             initTabs();

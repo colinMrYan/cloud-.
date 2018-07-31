@@ -659,6 +659,34 @@ public class JSONUtils {
     }
 
     /**
+     * get JSONArray from jsonObject
+     *
+     * @param jsonArray
+     * @param key
+     * @param defaultValue
+     * @return <ul>
+     * <li>if jsonObject is null, return defaultValue</li>
+     * <li>if key is null or empty, return defaultValue</li>
+     * <li>if {@link JSONObject#getJSONArray(String)} exception, return defaultValue</li>
+     * <li>return {@link JSONObject#getJSONArray(String)}</li>
+     * </ul>
+     */
+    public static JSONArray getJSONArray(JSONArray jsonArray, int index, JSONArray defaultValue) {
+        if (jsonArray == null ) {
+            return defaultValue;
+        }
+
+        try {
+            return jsonArray.getJSONArray(index);
+        } catch (Exception e) {
+            if (isPrintException) {
+                e.printStackTrace();
+            }
+            return defaultValue;
+        }
+    }
+
+    /**
      * get JSONArray from jsonData
      *
      * @param jsonData

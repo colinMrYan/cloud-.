@@ -225,7 +225,7 @@ public class CommunicationFragment extends Fragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void updateHeaderFunctionBtn(GetAppMainTabResult getAppMainTabResult) {
         if(getAppMainTabResult != null){
-            ArrayList<MainTabResult> mainTabResultList = getAppMainTabResult.getMainTabResultList();
+            ArrayList<MainTabResult> mainTabResultList = getAppMainTabResult.getMainTabPayLoad().getMainTabResultList();
             for (int i = 0; i < mainTabResultList.size(); i++) {
                 if(mainTabResultList.get(i).getUri().equals(Constant.APP_TAB_BAR_COMMUNACATE)){
                     MainTabProperty mainTabProperty = mainTabResultList.get(i).getMainTabProperty();

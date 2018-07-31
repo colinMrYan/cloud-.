@@ -27,7 +27,7 @@ public class TabAndAppExistUtils {
     public static boolean isTabExist(Context context, String tabId){
         String appTabs = PreferencesByUserAndTanentUtils.getString(context, Constant.PREF_APP_TAB_BAR_INFO_CURRENT, "");
         GetAppMainTabResult getAppMainTabResult = new GetAppMainTabResult(appTabs);
-        ArrayList<MainTabResult> mainTabResultList = getAppMainTabResult.getMainTabResultList();
+        ArrayList<MainTabResult> mainTabResultList = getAppMainTabResult.getMainTabPayLoad().getMainTabResultList();
         for (int i = 0; i < mainTabResultList.size(); i++) {
             if(mainTabResultList.get(i).getUri().equals(tabId)){
                 return true;
