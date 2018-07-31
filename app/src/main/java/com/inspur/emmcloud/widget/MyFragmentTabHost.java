@@ -34,8 +34,6 @@ import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.TabWidget;
 
-import com.inspur.emmcloud.util.common.LogUtils;
-
 import java.util.ArrayList;
 
 /**
@@ -338,7 +336,6 @@ public class MyFragmentTabHost extends TabHost
 	@Nullable
 	private FragmentTransaction doTabChanged(@Nullable String tag,
 											 @Nullable FragmentTransaction ft) {
-		LogUtils.jasonDebug("tag==="+tag);
 		final TabInfo newTab = getTabInfoForTag(tag);
 		if (mLastTab != newTab) {
 			if (ft == null) {
