@@ -17,6 +17,7 @@ import com.inspur.emmcloud.ui.mine.setting.FaceVerifyActivity;
 import com.inspur.emmcloud.ui.mine.setting.GestureLoginActivity;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
+import com.inspur.emmcloud.util.privates.ClientIDUtils;
 import com.inspur.emmcloud.util.privates.cache.DbCacheUtils;
 
 /**
@@ -65,6 +66,7 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
             MyApplication.getInstance().setIsActive(false);
             startUploadPVCollectService(MyApplication.getInstance());
             startSyncCommonAppService(MyApplication.getInstance());
+            new ClientIDUtils(MyApplication.getInstance()).upload();
         }
     }
 

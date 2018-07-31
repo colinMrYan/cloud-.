@@ -28,10 +28,10 @@ public class WebServiceMiddleUtils {
 		String errorMessage = "";
 		if (response.equals("time out")){
 			errorMessage = context.getString(R.string.network_timeout);
-		}else if(errorCode == 400){
+		}else if(errorCode == 400 ){
 			ECMErrorBean ecmErrorBean = new ECMErrorBean(response);
 			errorMessage = ErrorCodeUtils.getAlertByCode(context,ecmErrorBean.getErrorCode());
-		}else if(errorCode == 500){
+		}else if(errorCode == 500 || errorCode == 403){
 			/*Emm服务器上对错误处理不统一，目前只需处理500，其余返回默认提示，已与emm确认  20170512  yfc*/
 			EMMErrorBean emmErrorBean = new EMMErrorBean(response);
 			errorMessage = emmErrorBean.getMsg();

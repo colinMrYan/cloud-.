@@ -317,7 +317,7 @@ public class WSAPIService {
     public void sendAppStatus(String state) {
         try {
 
-            String clientId = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_CHAT_CLIENTID, "");
+            String clientId = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_CLIENTID, "");
             JSONObject object = new JSONObject();
             try {
                 String tracer = CommunicationUtils.getTracer();
