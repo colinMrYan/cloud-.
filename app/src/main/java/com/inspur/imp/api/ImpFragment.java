@@ -25,6 +25,7 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.mine.Language;
 import com.inspur.emmcloud.bean.system.MainTabMenu;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppWebConfig;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
@@ -85,7 +86,7 @@ public class ImpFragment extends Fragment {
                 getActivity().LAYOUT_INFLATER_SERVICE);
         rootView = inflater.inflate(Res.getLayoutID("activity_imp"), null);
         initViews();
-        version = getArguments().getString("version","");
+        version = getArguments().getString(Constant.WEB_FRAGMENT_VERSION,"");
     }
 
     @Override
@@ -99,7 +100,7 @@ public class ImpFragment extends Fragment {
         if (parent != null) {
             parent.removeView(rootView);
         }
-        if(!version.equals(getArguments().getString("version",""))){
+        if(!version.equals(getArguments().getString(Constant.WEB_FRAGMENT_VERSION,""))){
             initFragmentViews();
         }
         return rootView;
@@ -225,7 +226,7 @@ public class ImpFragment extends Fragment {
      * 最多两个功能，超过两个取前两个
      */
     private void initHeaderFunction() {
-        mainTabMenuArrayList = (ArrayList<MainTabMenu>)getArguments().getSerializable("menuList");
+        mainTabMenuArrayList = (ArrayList<MainTabMenu>)getArguments().getSerializable(Constant.WEB_FRAGMENT_MENU);
         if(mainTabMenuArrayList != null){
             if(mainTabMenuArrayList.size() == 1){
                 ImageView imageViewFun1 = (ImageView) rootView.findViewById(R.id.imp_cloud_function1_img);
@@ -295,8 +296,8 @@ public class ImpFragment extends Fragment {
      */
     private void initWebViewHeaderLayout() {
         ImpCallBackInterface impCallBackInterface = getImpCallBackInterface();
-        if (getArguments().getString("appName") != null) {
-            String title = getArguments().getString("appName");
+        if (getArguments().getString(Constant.WEB_FRAGMENT_APP_NAME) != null) {
+            String title = getArguments().getString(Constant.WEB_FRAGMENT_APP_NAME);
             headerText = (TextView) rootView.findViewById(Res.getWidgetID("header_text"));
             webView.setProperty(headerText, loadFailLayout, frameLayout, impCallBackInterface);
             initWebViewGoBackOrClose();
@@ -478,7 +479,7 @@ public class ImpFragment extends Fragment {
                 Intent intent = new Intent();
                 intent.setClass(getActivity(), ImpActivity.class);
                 intent.putExtra("uri", helpUrl);
-                intent.putExtra("appName", "");
+                intent.putExtra(Constant.WEB_FRAGMENT_APP_NAME, "");
                 startActivity(intent);
                 dialog.dismiss();
             }
