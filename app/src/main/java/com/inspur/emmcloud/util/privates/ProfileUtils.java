@@ -11,11 +11,11 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.LoginAPIService;
 import com.inspur.emmcloud.bean.mine.Enterprise;
 import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
+import com.inspur.emmcloud.bean.system.ClientConfigItem;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.interf.CommonCallBack;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.dialogs.MyDialog;
@@ -31,6 +31,7 @@ public class ProfileUtils {
     private Activity activity;
     private CommonCallBack commonCallBack;
     private LoadingDialog loadingDialog;
+    private String saveConfigVersion = "";
     public ProfileUtils(Activity activity,CommonCallBack commonCallBack){
         this.activity = activity;
         this.commonCallBack = commonCallBack;
@@ -41,22 +42,28 @@ public class ProfileUtils {
      * 初始化Profile，如果已经有了直接用，如果没有则从网络获取
      */
     public void initProfile(){
-        if(checkNeedGetProfile()){
-            getUserProfile();
+       initProfile(true);
+    }
+    public void initProfile(boolean isShowLoadingDlg){
+        if(ClientConfigUpdateUtils.isItemNeedUpdate(ClientConfigItem.CLIENT_CONFIG_ROUTER)){
+            getUserProfile(isShowLoadingDlg);
         }else{
             String appVersion = AppUtils.getVersion(activity);
             PreferencesUtils.putString(activity, "previousVersion",
                     appVersion);
-            commonCallBack.execute();
+            if (commonCallBack != null){
+                commonCallBack.execute();
+            }
         }
     }
 
     /**
      * 获取用户的个人信息
      */
-    private void getUserProfile() {
-        if (NetUtils.isNetworkConnected(activity, true)) {
-            loadingDialog.show();
+    private void getUserProfile(boolean isShowLoadingDlg) {
+        if (NetUtils.isNetworkConnected(activity, false)) {
+            loadingDialog.show(isShowLoadingDlg);
+            saveConfigVersion = ClientConfigUpdateUtils.getItemNewVersion(ClientConfigItem.CLIENT_CONFIG_ROUTER);
             LoginAPIService apiServices = new LoginAPIService(activity);
             apiServices.setAPIInterface(new WebService());
             apiServices.getMyInfo();
@@ -83,21 +90,10 @@ public class ProfileUtils {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
-                getUserProfile();
+                getUserProfile(true);
             }
         });
         dialog.show();
-    }
-
-    /**
-     * 判断是否需要获取新的Profile
-     * 如果是登录状态，并且进行了升级则需要获取profile
-     * @return
-     */
-    private boolean checkNeedGetProfile() {
-        String accessToken = PreferencesUtils.getString(
-                activity, "accessToken", "");
-        return !StringUtils.isBlank(accessToken) && AppUtils.isAppHasUpgraded(activity) && AppUtils.isLower202Version(activity);
     }
 
     class WebService extends APIInterfaceInstance {
@@ -117,7 +113,10 @@ public class ProfileUtils {
                 String appVersion = AppUtils.getVersion(activity);
                 PreferencesUtils.putString(activity, "previousVersion",
                         appVersion);
-                commonCallBack.execute();
+                ClientConfigUpdateUtils.saveItemLocalVersion(ClientConfigItem.CLIENT_CONFIG_ROUTER,saveConfigVersion);
+                if (commonCallBack != null){
+                    commonCallBack.execute();
+                }
             }
         }
 

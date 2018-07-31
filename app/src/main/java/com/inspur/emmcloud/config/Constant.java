@@ -39,6 +39,13 @@ public class Constant {
     public static final String PREF_APP_TAB_BAR_INFO_CURRENT = "app_tabbar_info_current";
     public static final String PREF_APP_LOAD_ALIAS = "app_load_alias";
 
+//    public static final String PREF_V_CONFIG_LANG = "v_config_lang";
+//    public static final String PREF_V_CONFIG_MAINTAB = "v_config_maintab";
+//    public static final String PREF_V_CONFIG_CONTACT = "v_config_contact";
+//    public static final String PREF_V_CONFIG_SPLASH = "v_config_splash";
+//    public static final String PREF_V_CONFIG_ROUTER = "v_config_router";
+    public static final String PREF_V_CONFIG_ALL = "v_config_all";
+
 
     public static final String ACTION_MEETING = "com.inspur.meeting";
     public static final String ACTION_TASK = "com.inspur.task";

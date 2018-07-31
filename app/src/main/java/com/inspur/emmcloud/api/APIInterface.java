@@ -71,6 +71,7 @@ import com.inspur.emmcloud.bean.mine.UserProfileInfoBean;
 import com.inspur.emmcloud.bean.system.GetAppConfigResult;
 import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
 import com.inspur.emmcloud.bean.system.GetBoolenResult;
+import com.inspur.emmcloud.bean.system.GetAllConfigVersionResult;
 import com.inspur.emmcloud.bean.system.GetUpgradeResult;
 import com.inspur.emmcloud.bean.system.SplashPageBean;
 import com.inspur.emmcloud.bean.work.Attachment;
@@ -481,7 +482,7 @@ public interface APIInterface {
 
     void returnNewsInstructionFail(String error, int errorCode);
 
-    void returnAppTabAutoSuccess(GetAppMainTabResult getAppMainTabResult);
+    void returnAppTabAutoSuccess(GetAppMainTabResult getAppMainTabResult,String mainTabSaveConfigVersion);
 
     void returnAppTabAutoFail(String error, int errorCode);
 
@@ -667,4 +668,7 @@ public interface APIInterface {
 
     void returnContactOrgListUpdateSuccess(GetContactOrgListUpateResult getContactOrgListUpateResult);
     void returnContactOrgListUpdateFail(String error, int errorCode);
+
+    void returnAllConfigVersionSuccess(GetAllConfigVersionResult getAllConfigVersionResult);
+    void returnAllConfigVersionFail(String error, int errorCode);
 }

@@ -22,6 +22,7 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MineAPIService;
 import com.inspur.emmcloud.bean.mine.GetLanguageResult;
 import com.inspur.emmcloud.bean.mine.Language;
+import com.inspur.emmcloud.bean.system.ClientConfigItem;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
@@ -40,6 +41,7 @@ public class LanguageUtils {
 	private Context context;
 	private Handler handler;
 	private List<Language> commonLanguageList = new ArrayList<Language>();
+	private String saveConfigVersion = "";
 
 	public LanguageUtils(Activity context, Handler handler) {
 		this.context = context;
@@ -47,9 +49,17 @@ public class LanguageUtils {
 	}
 
 	public void getServerSupportLanguage() {
+		boolean isLanguageUpdate = ClientConfigUpdateUtils.isItemNeedUpdate(ClientConfigItem.CLIENT_CONFIG_LANGUAGE);
 		String languageResult = PreferencesUtils.getString(context,
 				MyApplication.getInstance().getTanent() + "languageResult");
+		if (!isLanguageUpdate && languageResult != null){
+			if (handler != null){
+				handler.sendEmptyMessage(GET_LANGUAGE_SUCCESS);
+			}
+			return;
+		}
 		if (NetUtils.isNetworkConnected(context,false)) {
+			saveConfigVersion = ClientConfigUpdateUtils.getItemNewVersion(ClientConfigItem.CLIENT_CONFIG_LANGUAGE);
 			MineAPIService apiService = new MineAPIService(context);
 			apiService.setAPIInterface(new WebService());
 			apiService.getLanguage();
@@ -135,8 +145,11 @@ public class LanguageUtils {
 		PreferencesUtils.putString(context, MyApplication.getInstance().getTanent()+"commonLanguageList", commonLanguageListJson);
 		((MyApplication) context.getApplicationContext())
 				.setAppLanguageAndFontScale();
-		handler.sendEmptyMessage(GET_LANGUAGE_SUCCESS);
-		
+		ClientConfigUpdateUtils.saveItemLocalVersion(ClientConfigItem.CLIENT_CONFIG_LANGUAGE,saveConfigVersion);
+		if (handler != null){
+			handler.sendEmptyMessage(GET_LANGUAGE_SUCCESS);
+		}
+
 	}
 
 	public Language getContainedLanguage(List<Language> commonLanguageList,

@@ -8,6 +8,7 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.api.apiservice.ReactNativeAPIService;
+import com.inspur.emmcloud.bean.system.ClientConfigItem;
 import com.inspur.emmcloud.bean.system.SplashDefaultBean;
 import com.inspur.emmcloud.bean.system.SplashPageBean;
 import com.inspur.emmcloud.config.Constant;
@@ -28,26 +29,27 @@ import java.util.List;
 
 public class SplashPageUtils {
     private Activity context;
+    private String saveConfigVersion="";
 
     public SplashPageUtils(Activity context) {
         this.context = context;
     }
 
     public void update() {
-        new ClientIDUtils(context, new CommonCallBack() {
-            @Override
-            public void execute() {
-                if (NetUtils.isNetworkConnected(context, false)) {
-                    AppAPIService apiService = new AppAPIService(context);
-                    apiService.setAPIInterface(new WebService());
-                    String splashInfo = PreferencesByUserAndTanentUtils.getString(context, "splash_page_info", "");
-                    SplashPageBean splashPageBean = new SplashPageBean(splashInfo);
-                    String clientId = PreferencesByUserAndTanentUtils.getString(context, Constant.PREF_REACT_NATIVE_CLIENTID, "");
-                    apiService.getSplashPageInfo(clientId, splashPageBean.getId().getVersion());
+        saveConfigVersion = ClientConfigUpdateUtils.getItemNewVersion(ClientConfigItem.CLIENT_CONFIG_SPLASH);
+            new ClientIDUtils(context, new CommonCallBack() {
+                @Override
+                public void execute() {
+                    if (NetUtils.isNetworkConnected(context, false)) {
+                        AppAPIService apiService = new AppAPIService(context);
+                        apiService.setAPIInterface(new WebService());
+                        String splashInfo = PreferencesByUserAndTanentUtils.getString(context, "splash_page_info", "");
+                        SplashPageBean splashPageBean = new SplashPageBean(splashInfo);
+                        String clientId = PreferencesByUserAndTanentUtils.getString(context, Constant.PREF_REACT_NATIVE_CLIENTID, "");
+                        apiService.getSplashPageInfo(clientId, splashPageBean.getId().getVersion());
+                    }
                 }
-            }
-        }).getClientID();
-
+            }).getClientID();
     }
 
 
@@ -130,6 +132,7 @@ public class SplashPageUtils {
                         protectedFileNameList.add(getCurrentSplashFileName(splashPageBean.getPayload().getResource().getDefaultX()));
                         FileUtils.delFilesExceptNameList(MyAppConfig.getSplashPageImageShowPath(context,
                                 ((MyApplication) context.getApplicationContext()).getUid(), "splash/"),protectedFileNameList);
+                        ClientConfigUpdateUtils.saveItemLocalVersion(ClientConfigItem.CLIENT_CONFIG_SPLASH,saveConfigVersion);
                     } else {
                         AppExceptionCacheUtils.saveAppException(context,2,url,"splash sha256 Error",0);
                     }
