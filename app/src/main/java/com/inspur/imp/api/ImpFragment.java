@@ -25,14 +25,12 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.mine.Language;
 import com.inspur.emmcloud.bean.system.MainTabMenu;
-import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppWebConfig;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.MDM.MDM;
-import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
 import com.inspur.emmcloud.widget.dialogs.EasyDialog;
 import com.inspur.imp.engine.webview.ImpWebView;
@@ -87,7 +85,7 @@ public class ImpFragment extends Fragment {
                 getActivity().LAYOUT_INFLATER_SERVICE);
         rootView = inflater.inflate(Res.getLayoutID("activity_imp"), null);
         initViews();
-        version = getArguments().getString("version");
+        version = getArguments().getString("version","");
     }
 
     @Override
@@ -101,7 +99,7 @@ public class ImpFragment extends Fragment {
         if (parent != null) {
             parent.removeView(rootView);
         }
-        if(!StringUtils.isBlank(version) && !version.equals(PreferencesByUserAndTanentUtils.getString(getActivity(), Constant.PREF_APP_TAB_BAR_VERSION, ""))){
+        if(!version.equals(getArguments().getString("version",""))){
             initFragmentViews();
         }
         return rootView;
@@ -143,7 +141,7 @@ public class ImpFragment extends Fragment {
      */
     private void initFragmentViews() {
         String url = getArguments().getString("uri");
-        initMomentFunction();
+        initHeaderFunction();
         initListeners();
         initWebViewHeaderLayout();
         setWebViewHeader();
@@ -226,7 +224,7 @@ public class ImpFragment extends Fragment {
      * 配置圈子标题栏上的功能
      * 最多两个功能，超过两个取前两个
      */
-    private void initMomentFunction() {
+    private void initHeaderFunction() {
         mainTabMenuArrayList = (ArrayList<MainTabMenu>)getArguments().getSerializable("menuList");
         if(mainTabMenuArrayList != null){
             if(mainTabMenuArrayList.size() == 1){
