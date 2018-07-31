@@ -1,7 +1,9 @@
 package com.inspur.emmcloud;
 
+import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,6 +14,7 @@ import android.view.WindowManager;
 
 import com.inspur.emmcloud.bean.system.SplashDefaultBean;
 import com.inspur.emmcloud.bean.system.SplashPageBean;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.service.AppExceptionService;
 import com.inspur.emmcloud.ui.IndexActivity;
@@ -73,10 +76,25 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
 
 
     /**
-     * ea
      * 初始化
      */
     private void init() {
+        String appFirstLoadAlis = PreferencesUtils.getString(MyApplication.getInstance(), Constant.PREF_APP_LOAD_ALIAS);
+        if (appFirstLoadAlis == null) {
+            String appVersionFlag = AppUtils.getAppVersionFlag(this);
+            if (!appVersionFlag.equals("Standard")) {
+                PackageManager pm = getApplicationContext().getPackageManager();
+                pm.setComponentEnabledSetting(new ComponentName(
+                                MainActivity.this, getPackageName() + ".Standard"),
+                        PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+                        PackageManager.DONT_KILL_APP);
+                pm.setComponentEnabledSetting(new ComponentName(
+                                MainActivity.this, getPackageName() + "." + appVersionFlag),
+                        PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+                        PackageManager.DONT_KILL_APP);
+                PreferencesUtils.putString(MyApplication.getInstance(), Constant.PREF_APP_LOAD_ALIAS, appVersionFlag);
+            }
+        }
         activitySplashShowTime = System.currentTimeMillis();
         //进行app异常上传
         startUploadExceptionService();

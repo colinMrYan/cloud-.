@@ -21,6 +21,7 @@ import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
 
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.EncryptUtils;
@@ -31,6 +32,7 @@ import com.inspur.emmcloud.util.common.ResolutionUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.imp.api.ImpActivity;
+import com.inspur.imp.api.Res;
 import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
 import com.inspur.imp.plugin.camera.imagepicker.ui.ImageGridActivity;
 import com.inspur.imp.plugin.camera.mycamera.MyCameraActivity;
@@ -186,9 +188,9 @@ public class AppUtils {
                 e.printStackTrace();
             }
             if (savedArray.length == 3 && currentArray.length == 3) {
-                int savedVersionNum = Integer.parseInt(savedArray[0])*1000000+Integer.parseInt(savedArray[1])*1000+Integer.parseInt(savedArray[2]);
-                int currentVersionNum = Integer.parseInt(currentArray[0])*1000000+Integer.parseInt(currentArray[1])*1000+Integer.parseInt(currentArray[2]);
-                return currentVersionNum>savedVersionNum;
+                int savedVersionNum = Integer.parseInt(savedArray[0]) * 1000000 + Integer.parseInt(savedArray[1]) * 1000 + Integer.parseInt(savedArray[2]);
+                int currentVersionNum = Integer.parseInt(currentArray[0]) * 1000000 + Integer.parseInt(currentArray[1]) * 1000 + Integer.parseInt(currentArray[2]);
+                return currentVersionNum > savedVersionNum;
             }
         }
         return false;
@@ -236,11 +238,11 @@ public class AppUtils {
      * @return
      */
     public static String getIMEICode(Context context) {
-    /**
-     * 唯一的设备ID：
-     * GSM手机的 IMEI 和 CDMA手机的 MEID.
-     * Return null if device ID is not available.
-     */
+        /**
+         * 唯一的设备ID：
+         * GSM手机的 IMEI 和 CDMA手机的 MEID.
+         * Return null if device ID is not available.
+         */
         TelephonyManager tm = (TelephonyManager) context
                 .getSystemService(Context.TELEPHONY_SERVICE);
         String imei = tm.getDeviceId();//String
@@ -265,22 +267,23 @@ public class AppUtils {
 
     /**
      * 获取UUID，类内部使用，不暴露给外部
+     *
      * @param context
      * @return
      */
     private static String getUUID(Context context) {
         //先读SharePreference，如果SharePreference里有UUID则返回SharePreference里的UUID，并判断SD卡里是否存在UUID文件，没有则存一份
         String uniqueId = PreferencesUtils.getString(context, "device_uuid", "");
-        if(!StringUtils.isBlank(uniqueId)){
+        if (!StringUtils.isBlank(uniqueId)) {
             return uniqueId;
         }
         //如果SharePreference里没有，则检查SD卡里有没有UUID文件，如果有则返回sd卡里的UUID，并向SharePreference里存一份
         uniqueId = getUUIDFromSDCardFile(context);
-        if(!StringUtils.isBlank(uniqueId)){
+        if (!StringUtils.isBlank(uniqueId)) {
             return uniqueId;
         }
         //如果前两个都没有，则生成一个UUID，并存到SharePreference和SD卡文件里
-        if(StringUtils.isBlank(uniqueId)){
+        if (StringUtils.isBlank(uniqueId)) {
             uniqueId = getDeviceUUID(context);
         }
         return uniqueId;
@@ -288,11 +291,12 @@ public class AppUtils {
 
     /**
      * 存UUID
+     *
      * @param context
      */
-    private static void saveUUID(Context context,String uuid){
-        PreferencesUtils.putString(context,"device_uuid",uuid);
-        if(isHasSDCard(context) && !FileUtils.isFileExist(Constant.CONCIG_CLOUD_PLUS_UUID_FILE)){
+    private static void saveUUID(Context context, String uuid) {
+        PreferencesUtils.putString(context, "device_uuid", uuid);
+        if (isHasSDCard(context) && !FileUtils.isFileExist(Constant.CONCIG_CLOUD_PLUS_UUID_FILE)) {
             saveDeviceUUID2SDCardFile(context, uuid);
         }
     }
@@ -348,7 +352,7 @@ public class AppUtils {
      * @return
      */
     public static boolean getIsHuaWei() {
-        return  AppUtils.GetChangShang().toLowerCase().startsWith("huawei");
+        return AppUtils.GetChangShang().toLowerCase().startsWith("huawei");
     }
 
     /**
@@ -475,7 +479,7 @@ public class AppUtils {
     /**
      * 获取当前手机系统版本号如6.0,7.0
      *
-     * @return  系统版本号
+     * @return 系统版本号
      */
     public static String getSystemVersion() {
         return android.os.Build.VERSION.RELEASE;
@@ -483,25 +487,27 @@ public class AppUtils {
 
     /**
      * 获取sdk版本如19,24等
+     *
      * @return
      */
-    public static int getSDKVersion(){
+    public static int getSDKVersion() {
         return Build.VERSION.SDK_INT;
     }
 
     /**
      * 判断应用是否已经启动
-     * @param context 一个context
+     *
+     * @param context     一个context
      * @param packageName 要判断应用的包名
      * @return boolean
      */
-    public static boolean isAppAlive(Context context, String packageName){
+    public static boolean isAppAlive(Context context, String packageName) {
         ActivityManager activityManager =
-                (ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE);
+                (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         List<ActivityManager.RunningAppProcessInfo> processInfos
                 = activityManager.getRunningAppProcesses();
-        for(int i = 0; i < processInfos.size(); i++){
-            if(processInfos.get(i).processName.equals(packageName)){
+        for (int i = 0; i < processInfos.size(); i++) {
+            if (processInfos.get(i).processName.equals(packageName)) {
                 return true;
             }
         }
@@ -510,12 +516,13 @@ public class AppUtils {
 
     /**
      * 判断是否有SD卡
+     *
      * @param context
      * @return
      */
-    public static boolean isHasSDCard(Context context){
-        if ( Environment.getExternalStorageState().equals(
-                Environment.MEDIA_MOUNTED)){
+    public static boolean isHasSDCard(Context context) {
+        if (Environment.getExternalStorageState().equals(
+                Environment.MEDIA_MOUNTED)) {
             return true;
         }
         return false;
@@ -526,7 +533,7 @@ public class AppUtils {
     /**
      * 调用文件系统
      */
-    public static void openFileSystem(Activity activity,int requestCode) {
+    public static void openFileSystem(Activity activity, int requestCode) {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("*/*");
         intent.addCategory(Intent.CATEGORY_OPENABLE);
@@ -539,7 +546,7 @@ public class AppUtils {
     /**
      * 调用图库
      */
-    public static void openGallery(Activity activity,int limit,int requestCode) {
+    public static void openGallery(Activity activity, int limit, int requestCode) {
         initImagePicker(limit);
         Intent intent = new Intent(activity,
                 ImageGridActivity.class);
@@ -548,11 +555,12 @@ public class AppUtils {
 
     /**
      * 调用系统相机
+     *
      * @param activity
      * @param fileName
      * @param requestCode
      */
-    public static void openCamera(Activity activity,String fileName,int requestCode){
+    public static void openCamera(Activity activity, String fileName, int requestCode) {
         // 判断存储卡是否可以用，可用进行存储
         if (Environment.getExternalStorageState().equals(
                 Environment.MEDIA_MOUNTED)) {
@@ -627,15 +635,14 @@ public class AppUtils {
     }
 
 
-
-
     /**
      * 获取SD卡文件里的UUID
+     *
      * @param context
      * @return
      */
     private static String getUUIDFromSDCardFile(Context context) {
-        if(!isHasSDCard(context) || !FileUtils.isFileExist(Constant.CONCIG_CLOUD_PLUS_UUID_FILE)){
+        if (!isHasSDCard(context) || !FileUtils.isFileExist(Constant.CONCIG_CLOUD_PLUS_UUID_FILE)) {
             return "";
         }
         try {
@@ -670,14 +677,14 @@ public class AppUtils {
     }
 
 
-
     /**
      * 存储uuid到SD卡文件系统，不分租户用户
+     *
      * @param context
      * @param uuid
      * @return
      */
-    private static void saveDeviceUUID2SDCardFile(Context context,String uuid) {
+    private static void saveDeviceUUID2SDCardFile(Context context, String uuid) {
         try {
             uuid = EncryptUtils.encode(uuid);
             FileUtils.writeFile(Constant.CONCIG_CLOUD_PLUS_UUID_FILE, uuid);
@@ -688,28 +695,30 @@ public class AppUtils {
 
     /**
      * 获取设备名称
+     *
      * @param context
      * @return
      */
-    public static String getDeviceName(Context context){
+    public static String getDeviceName(Context context) {
         boolean isTelbet = AppUtils.isTablet(context);
         String username = PreferencesUtils.getString(context, "userRealName");
-        return username + (isTelbet?"的平板电脑":"的手机");
+        return username + (isTelbet ? "的平板电脑" : "的手机");
     }
 
     /**
      * 通过厂商确定pushId
+     *
      * @return
      */
     public static String getPushId(Context context) {
         String pushId = "";
-        if(AppUtils.getIsHuaWei()&&canConnectHuawei(context)){
+        if (AppUtils.getIsHuaWei() && canConnectHuawei(context)) {
             //需要对华为单独推送的时候解开这里
-            String hwtoken = PreferencesUtils.getString(context,"huawei_push_token","");
-            if(!StringUtils.isBlank(hwtoken)){
+            String hwtoken = PreferencesUtils.getString(context, "huawei_push_token", "");
+            if (!StringUtils.isBlank(hwtoken)) {
                 pushId = hwtoken + "@push.huawei.com";
             }
-        }else{
+        } else {
             pushId = PreferencesUtils.getString(context, "JpushRegId", "");
         }
         return pushId;
@@ -717,11 +726,12 @@ public class AppUtils {
 
     /**
      * 判断是否可以连接华为推了送
+     *
      * @return
      */
     private static boolean canConnectHuawei(Context context) {
-        String pushFlag = PreferencesUtils.getString(context,"pushFlag","");
-        if(StringUtils.isBlank(pushFlag) || pushFlag.equals("huawei")){
+        String pushFlag = PreferencesUtils.getString(context, "pushFlag", "");
+        if (StringUtils.isBlank(pushFlag) || pushFlag.equals("huawei")) {
             return true;
         }
         return false;
@@ -730,12 +740,95 @@ public class AppUtils {
 
     /**
      * 设置添加屏幕的背景透明度
+     *
      * @param activity
      * @param bgAlpha
      */
-    public static void setWindowBackgroundAlpha(Activity activity,float bgAlpha) {
-        WindowManager.LayoutParams lp =activity.getWindow().getAttributes();
+    public static void setWindowBackgroundAlpha(Activity activity, float bgAlpha) {
+        WindowManager.LayoutParams lp = activity.getWindow().getAttributes();
         lp.alpha = bgAlpha; //0.0-1.0
         activity.getWindow().setAttributes(lp);
     }
+
+    /**
+     * app是否是标准版
+     *
+     * @param context
+     * @return
+     */
+    public static boolean isAppVersionStandard() {
+        boolean isAppVersionStandard = true;
+        String appFirstLoadAlis = PreferencesUtils.getString(MyApplication.getInstance(), Constant.PREF_APP_LOAD_ALIAS);
+        if (appFirstLoadAlis != null && !appFirstLoadAlis.equals("Standard")){
+            isAppVersionStandard = false;
+        }
+        return isAppVersionStandard;
+
+    }
+
+    /**
+     * 获取版本名
+     * @param activity
+     * @return
+     */
+    public static String getAppVersionFlag(Context context){
+        return getManifestMetadata(context,"FLAG_APP_VERSION_TYPE");
+    }
+
+    /**
+     * 获取manifest中的metadata值
+     * @param activity
+     * @param key
+     * @return
+     */
+    public static String getManifestMetadata(Context context,String key){
+        try {
+            ApplicationInfo appInfo = context.getPackageManager().getApplicationInfo(
+                    context.getPackageName(), PackageManager.GET_META_DATA);
+            return appInfo.metaData.getString(key);
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * 获取应用程序名称
+     */
+    public static String getAppName(Context context)
+    {
+        try
+        {
+            int appNameRes = -1;
+            if (isAppVersionStandard()){
+                appNameRes = R.string.app_name;
+            }else {
+                String appFirstLoadAlis = PreferencesUtils.getString(MyApplication.getInstance(), Constant.PREF_APP_LOAD_ALIAS);
+                appNameRes = Res.getStringID("app_name_"+appFirstLoadAlis);
+            }
+            return context.getResources().getString(appNameRes);
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return context.getResources().getString(R.string.app_name);
+    }
+
+    /**
+     * 获取app图标
+     * @param context
+     * @return
+     */
+    public static int getAppIconRes(Context context){
+        int appIconRes = -1;
+        if (isAppVersionStandard()){
+            appIconRes = R.drawable.ic_launcher;
+        }else {
+            String appFirstLoadAlis = PreferencesUtils.getString(MyApplication.getInstance(), Constant.PREF_APP_LOAD_ALIAS);
+            appIconRes = Res.getDrawableID("ic_launcher_"+appFirstLoadAlis);
+        }
+        return appIconRes;
+    }
+
 }

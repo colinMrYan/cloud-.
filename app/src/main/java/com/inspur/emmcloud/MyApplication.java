@@ -737,8 +737,6 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
                 // TODO: handle exception
                 e.printStackTrace();
             }
-            LogUtils.jasonDebug("country=" + country);
-            LogUtils.jasonDebug("variant=" + variant);
             Locale locale = new Locale(country, variant);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                 config.setLocale(locale);
