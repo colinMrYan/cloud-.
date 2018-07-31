@@ -196,6 +196,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
                 bundle.putString("uri", tabBean.getMainTabResult().getUri());
                 if (tabBean.getMainTabResult().getMainTabProperty().isHaveNavbar()) {
                     bundle.putString("appName", tabBean.getTabName());
+                    bundle.putString("version",PreferencesByUserAndTanentUtils.getString(IndexBaseActivity.this, Constant.PREF_APP_TAB_BAR_VERSION, ""));
                     bundle.putSerializable("menuList", (Serializable) tabBean.getMainTabResult().getMainTabProperty().getMainTabMenuList());
                 }
                 mTabHost.addTab(tab, tabBean.getClz(), bundle);

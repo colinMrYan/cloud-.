@@ -14,7 +14,7 @@ public class WindowService extends ImpPlugin {
     @Override
     public void execute(String action, JSONObject paramsObject) {
         if ("open".equals(action)) {
-            UriUtils.openUrl(getActivity(), JSONUtils.getString(paramsObject,"url",""),JSONUtils.getString(paramsObject,"title","   "));
+            UriUtils.openUrl(getActivity(), JSONUtils.getString(paramsObject,"url",""),JSONUtils.getString(paramsObject,"title",""));
         }else{
             showCallIMPMethodErrorDlg();
         }
