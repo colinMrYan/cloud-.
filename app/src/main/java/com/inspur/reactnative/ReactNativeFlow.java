@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APIDownloadCallBack;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.appcenter.ReactNativeUpdateBean;
@@ -15,6 +16,11 @@ import com.inspur.emmcloud.util.common.ZipUtils;
 import com.inspur.emmcloud.util.privates.DownLoaderUtils;
 import com.inspur.emmcloud.util.privates.FileSafeCode;
 import com.inspur.emmcloud.util.privates.cache.AppExceptionCacheUtils;
+
+import org.xutils.http.HttpMethod;
+import org.xutils.http.RequestParams;
+import org.xutils.http.app.RedirectHandler;
+import org.xutils.http.request.UriRequest;
 
 import java.io.File;
 
@@ -109,7 +115,7 @@ public class ReactNativeFlow {
      */
     public static void downLoadZipFile(final Context context, final ReactNativeUpdateBean reactNativeUpdateBean, final String userId) {
         final DownLoaderUtils downLoaderUtils = new DownLoaderUtils();
-        String reactZipFilePath = MyAppConfig.LOCAL_DOWNLOAD_PATH + "/" + userId + "/" + reactNativeUpdateBean.getBundle().getAndroidUri();
+        final String reactZipFilePath = MyAppConfig.LOCAL_DOWNLOAD_PATH + "/" + userId + "/" + reactNativeUpdateBean.getBundle().getAndroidUri();
         APIDownloadCallBack progressCallback = new APIDownloadCallBack(context, APIUri.getZipUrl()) {
             @Override
             public void callbackStart() {
@@ -136,7 +142,21 @@ public class ReactNativeFlow {
 
             }
         };
-        downLoaderUtils.startDownLoad(APIUri.getZipUrl() + reactNativeUpdateBean.getBundle().getAndroidUri(),
+        String source = APIUri.getZipUrl() + reactNativeUpdateBean.getBundle().getAndroidUri();
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(source);
+        params.setRedirectHandler(new RedirectHandler() {
+            @Override
+            public RequestParams getRedirectParams(UriRequest uriRequest) throws Throwable {
+                String locationUrl = uriRequest.getResponseHeader("Location");
+                RequestParams params = new RequestParams(locationUrl);
+                params.setAutoResume(true);// 断点下载
+                params.setSaveFilePath(reactZipFilePath);
+                params.setCancelFast(true);
+                params.setMethod(HttpMethod.GET);
+                return params;
+            }
+        });
+        downLoaderUtils.startDownLoad(params,
                 reactZipFilePath,
                 progressCallback);
     }

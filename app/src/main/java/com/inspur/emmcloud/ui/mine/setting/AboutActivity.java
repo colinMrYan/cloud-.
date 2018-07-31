@@ -65,7 +65,7 @@ public class AboutActivity extends BaseActivity {
 						.addItem("ecm.cloud-drive-->"+MyApplication.getInstance().getClusterCloudDrive())
 						.addItem("ecm.storage.legacy-->"+MyApplication.getInstance().getClusterStorageLegacy())
 						.addItem("ecm.client-registry-->"+MyApplication.getInstance().getClusterClientRegistry())
-						.addItem("ClientId-->"+ PreferencesByUserAndTanentUtils.getString(AboutActivity.this, Constant.PREF_CHAT_CLIENTID, ""))
+						.addItem("ClientId-->"+ PreferencesByUserAndTanentUtils.getString(AboutActivity.this, Constant.PREF_CLIENTID, ""))
 //						.addItem("DeviceId-->"+ AppUtils.getMyUUID(MyApplication.getInstance()))
 						.addItem("DeviceToken-->"+ AppUtils.getPushId(MyApplication.getInstance()))
 						.build()

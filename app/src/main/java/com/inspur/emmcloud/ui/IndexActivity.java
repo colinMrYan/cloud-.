@@ -36,10 +36,10 @@ import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppConfigUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ClientConfigUpdateUtils;
-import com.inspur.emmcloud.util.privates.ClientIDUtils;
 import com.inspur.emmcloud.util.privates.MyAppWidgetUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.ProfileUtils;
+import com.inspur.emmcloud.util.privates.ClientIDUtils;
 import com.inspur.emmcloud.util.privates.ReactNativeUtils;
 import com.inspur.emmcloud.util.privates.SplashPageUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
@@ -208,28 +208,39 @@ public class IndexActivity extends IndexBaseActivity {
      * 获取RN应用显示tab
      */
     private void updateReactNative() {
-        new ClientIDUtils(IndexActivity.this, new CommonCallBack() {
-            @Override
-            public void execute() {
-                if (NetUtils.isNetworkConnected(getApplicationContext(), false)) {
-                    new ReactNativeUtils(IndexActivity.this).init(); //更新react
+        if (NetUtils.isNetworkConnected(getApplicationContext(), false)) {
+            new ClientIDUtils(MyApplication.getInstance(), new ClientIDUtils.OnGetClientIdListener() {
+                @Override
+                public void getClientIdSuccess(String clientId) {
+                    if (NetUtils.isNetworkConnected(getApplicationContext(), false)) {
+                        new ReactNativeUtils(IndexActivity.this).init(); //更新react
+                    }
                 }
-            }
-        }).getClientID();
+
+                @Override
+                public void getClientIdFail() {
+                }
+            }).getClientId();
+        }
     }
 
     private void getTabInfo() {
         if (NetUtils.isNetworkConnected(getApplicationContext(), false)) {
-            new ClientIDUtils(IndexActivity.this, new CommonCallBack() {
+
+            new ClientIDUtils(MyApplication.getInstance(), new ClientIDUtils.OnGetClientIdListener() {
                 @Override
-                public void execute() {
+                public void getClientIdSuccess(String clientId) {
                     AppAPIService apiService = new AppAPIService(IndexActivity.this);
                     apiService.setAPIInterface(new WebService());
                     String version = PreferencesByUserAndTanentUtils.getString(IndexActivity.this, Constant.PREF_APP_TAB_BAR_VERSION, "");
                     String mainTabSaveConfigVersion = ClientConfigUpdateUtils.getItemNewVersion(ClientConfigItem.CLIENT_CONFIG_MAINTAB);
-                    apiService.getAppNewTabs(version,mainTabSaveConfigVersion);
+                    apiService.getAppNewTabs(version, mainTabSaveConfigVersion);
                 }
-            }).getClientID();
+
+                @Override
+                public void getClientIdFail() {
+                }
+            }).getClientId();
         }
     }
 
@@ -290,19 +301,30 @@ public class IndexActivity extends IndexBaseActivity {
      * @param getAllConfigVersionResult
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onClientConfigVersionUpdate(GetAllConfigVersionResult getAllConfigVersionResult) {
+    public void onClientConfigVersionUpdate(final GetAllConfigVersionResult getAllConfigVersionResult) {
         boolean isRouterUpdate = ClientConfigUpdateUtils.isItemNeedUpdate(ClientConfigItem.CLIENT_CONFIG_ROUTER, getAllConfigVersionResult);
         if (isRouterUpdate) {
             new ProfileUtils(IndexActivity.this, null).initProfile(false);
         }
-        boolean isMainTabUpdate = ClientConfigUpdateUtils.isItemNeedUpdate(ClientConfigItem.CLIENT_CONFIG_MAINTAB, getAllConfigVersionResult);
-        if (isMainTabUpdate) {
-            getTabInfo();
-        }
-        boolean isSplashUpdate = ClientConfigUpdateUtils.isItemNeedUpdate(ClientConfigItem.CLIENT_CONFIG_SPLASH, getAllConfigVersionResult);
-        if (isSplashUpdate) {
-            new SplashPageUtils(IndexActivity.this).update();//更新闪屏页面
-        }
+
+        new ClientIDUtils(MyApplication.getInstance(), new ClientIDUtils.OnGetClientIdListener() {
+            @Override
+            public void getClientIdSuccess(String clientId) {
+                boolean isMainTabUpdate = ClientConfigUpdateUtils.isItemNeedUpdate(ClientConfigItem.CLIENT_CONFIG_MAINTAB, getAllConfigVersionResult);
+                if (isMainTabUpdate) {
+                    getTabInfo();
+                }
+                boolean isSplashUpdate = ClientConfigUpdateUtils.isItemNeedUpdate(ClientConfigItem.CLIENT_CONFIG_SPLASH, getAllConfigVersionResult);
+                if (isSplashUpdate) {
+                    new SplashPageUtils(IndexActivity.this).update();//更新闪屏页面
+                }
+            }
+
+            @Override
+            public void getClientIdFail() {
+            }
+        }).getClientId();
+
     }
 
 
@@ -570,8 +592,8 @@ public class IndexActivity extends IndexBaseActivity {
 
 
         @Override
-        public void returnAppTabAutoSuccess(GetAppMainTabResult getAppMainTabResult,String mainTabSaveConfigVersion) {
-            ClientConfigUpdateUtils.saveItemLocalVersion(ClientConfigItem.CLIENT_CONFIG_MAINTAB,mainTabSaveConfigVersion);
+        public void returnAppTabAutoSuccess(GetAppMainTabResult getAppMainTabResult, String mainTabSaveConfigVersion) {
+            ClientConfigUpdateUtils.saveItemLocalVersion(ClientConfigItem.CLIENT_CONFIG_MAINTAB, mainTabSaveConfigVersion);
             updateTabbarWithOrder(getAppMainTabResult);
         }
 

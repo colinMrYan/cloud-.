@@ -13,7 +13,6 @@ import com.inspur.emmcloud.bean.system.SplashDefaultBean;
 import com.inspur.emmcloud.bean.system.SplashPageBean;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.emmcloud.interf.CommonCallBack;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -37,19 +36,24 @@ public class SplashPageUtils {
 
     public void update() {
         saveConfigVersion = ClientConfigUpdateUtils.getItemNewVersion(ClientConfigItem.CLIENT_CONFIG_SPLASH);
-            new ClientIDUtils(context, new CommonCallBack() {
-                @Override
-                public void execute() {
-                    if (NetUtils.isNetworkConnected(context, false)) {
-                        AppAPIService apiService = new AppAPIService(context);
-                        apiService.setAPIInterface(new WebService());
-                        String splashInfo = PreferencesByUserAndTanentUtils.getString(context, "splash_page_info", "");
-                        SplashPageBean splashPageBean = new SplashPageBean(splashInfo);
-                        String clientId = PreferencesByUserAndTanentUtils.getString(context, Constant.PREF_REACT_NATIVE_CLIENTID, "");
-                        apiService.getSplashPageInfo(clientId, splashPageBean.getId().getVersion());
-                    }
+
+        new ClientIDUtils(MyApplication.getInstance(), new ClientIDUtils.OnGetClientIdListener() {
+            @Override
+            public void getClientIdSuccess(String chatClientId) {
+                if (NetUtils.isNetworkConnected(context, false)) {
+                    AppAPIService apiService = new AppAPIService(context);
+                    apiService.setAPIInterface(new WebService());
+                    String splashInfo = PreferencesByUserAndTanentUtils.getString(context, "splash_page_info", "");
+                    SplashPageBean splashPageBean = new SplashPageBean(splashInfo);
+                    String clientId = PreferencesByUserAndTanentUtils.getString(context, Constant.PREF_REACT_NATIVE_CLIENTID, "");
+                    apiService.getSplashPageInfo(clientId, splashPageBean.getId().getVersion());
                 }
-            }).getClientID();
+            }
+
+            @Override
+            public void getClientIdFail() {
+            }
+        }).getClientId();
     }
 
 

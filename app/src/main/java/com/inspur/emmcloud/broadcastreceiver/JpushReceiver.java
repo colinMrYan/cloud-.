@@ -14,6 +14,7 @@ import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.ECMTransparentUtils;
+import com.inspur.emmcloud.util.privates.ClientIDUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -40,7 +41,8 @@ public class JpushReceiver extends BroadcastReceiver {
                     .getString(JPushInterface.EXTRA_REGISTRATION_ID);
             LogUtils.debug(TAG, "[MyReceiver] 接收Registration Id : " + regId);
             PreferencesUtils.putString(context, "JpushRegId", regId);
-            MyApplication.getInstance().startWebSocket(true);
+            new ClientIDUtils(context).upload();
+            MyApplication.getInstance().startWebSocket(false);
         } else if (JPushInterface.ACTION_MESSAGE_RECEIVED.equals(intent
                 .getAction())) {
             ECMTransparentUtils.handleTransparentMsg(context,bundle.getString(JPushInterface.EXTRA_MESSAGE));

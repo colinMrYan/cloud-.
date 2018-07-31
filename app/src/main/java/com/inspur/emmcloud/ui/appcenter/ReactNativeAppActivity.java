@@ -25,7 +25,6 @@ import com.inspur.emmcloud.bean.mine.Enterprise;
 import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.emmcloud.interf.CommonCallBack;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
@@ -170,15 +169,19 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
             if (!loadingDialog.isShowing()) {
                 loadingDialog.show();
             }
-            new ClientIDUtils(ReactNativeAppActivity.this, new CommonCallBack() {
+
+            new ClientIDUtils(MyApplication.getInstance(), new ClientIDUtils.OnGetClientIdListener() {
                 @Override
-                public void execute() {
+                public void getClientIdSuccess(String clientId) {
                     StringBuilder describeVersionAndTime = ReactNativeFlow.getBundleDotJsonFromFile(reactAppFilePath);
                     AndroidBundleBean androidBundleBean = new AndroidBundleBean(describeVersionAndTime.toString());
-                    String clientId = PreferencesByUserAndTanentUtils.getString(ReactNativeAppActivity.this, Constant.PREF_REACT_NATIVE_CLIENTID, "");
                     reactNativeAPIService.getDownLoadUrl(ReactNativeAppActivity.this,androidBundleBean.getUpdate(),clientId,androidBundleBean.getVersion());
                 }
-            }).getClientID();
+
+                @Override
+                public void getClientIdFail() {
+                }
+            }).getClientId();
         }
     }
 
@@ -324,15 +327,20 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
      */
     private void getDownlaodUrl(final ReactNativeInstallUriBean reactNativeInstallUriBean) {
         if (NetUtils.isNetworkConnected(ReactNativeAppActivity.this)) {
-            new ClientIDUtils(ReactNativeAppActivity.this, new CommonCallBack() {
+
+            new ClientIDUtils(MyApplication.getInstance(), new ClientIDUtils.OnGetClientIdListener() {
                 @Override
-                public void execute() {
-                    String clientId = PreferencesByUserAndTanentUtils.getString(ReactNativeAppActivity.this, Constant.PREF_REACT_NATIVE_CLIENTID, "");
+                public void getClientIdSuccess(String clientId) {
                     StringBuilder describeVersionAndTime = ReactNativeFlow.getBundleDotJsonFromFile(reactAppFilePath);
                     AndroidBundleBean androidBundleBean = new AndroidBundleBean(describeVersionAndTime.toString());
                     reactNativeAPIService.getDownLoadUrl(ReactNativeAppActivity.this, reactNativeInstallUriBean.getInstallUri(), clientId, androidBundleBean.getVersion());
                 }
-            }).getClientID();
+
+                @Override
+                public void getClientIdFail() {
+                }
+            }).getClientId();
+
         }
     }
 
