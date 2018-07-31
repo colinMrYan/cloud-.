@@ -235,8 +235,6 @@ public class IndexActivity extends IndexBaseActivity {
                     String mainTabSaveConfigVersion = ClientConfigUpdateUtils.getItemNewVersion(ClientConfigItem.CLIENT_CONFIG_MAINTAB);
                     String version = PreferencesByUserAndTanentUtils.getString(IndexActivity.this, Constant.PREF_APP_TAB_BAR_VERSION, "");
                     apiService.getAppNewTabs(version,clientId,mainTabSaveConfigVersion);
-                    new SplashPageUtils(IndexActivity.this).update();//更新闪屏页面
-                    new ReactNativeUtils(IndexActivity.this).init(); //更新react
                 }
 
                 @Override
