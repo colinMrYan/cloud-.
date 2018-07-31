@@ -2,6 +2,7 @@
 <resources>
 
     <string name="app_name">云+</string>
+    <string name="app_name_zhihuichengjian">智慧城建</string>
     <string name="reclick_to_desktop">再按一次退出程序</string>
     <string name="Network_Mobile">已经连接到移动网络</string>
     <string name="Network_WIFI">已经连接到WIFI</string>
@@ -221,6 +222,8 @@
     <string name="group_file">群文件</string>
     <string name="authorization_expired">授权过期，请重新登录</string>
     <string name="cant_login_with_sms">您的账号不允许使用短信登录</string>
+    <string name="user_not_bound_enterprise">当前用户未绑定企业，请联系管理员！</string>
+
 
     <!-- 消息部分 -->
     <string name="msgcontent_cannot_null">请输入消息内容</string>

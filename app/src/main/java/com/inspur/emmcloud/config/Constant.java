@@ -37,6 +37,7 @@ public class Constant {
     public static final String PREF_CONTACT_ORG_ROOT_ID = "contact_org_root_id";
     public static final String PREF_APP_TAB_BAR_VERSION = "app_tabbar_version";
     public static final String PREF_APP_TAB_BAR_INFO_CURRENT = "app_tabbar_info_current";
+    public static final String PREF_APP_LOAD_ALIAS = "app_load_alias";
 
 //    public static final String PREF_V_CONFIG_LANG = "v_config_lang";
 //    public static final String PREF_V_CONFIG_MAINTAB = "v_config_maintab";
@@ -82,5 +83,9 @@ public class Constant {
 
     public static final String SHARE_LINK = "shareLink";
     public static final String SHARE_FILE_URI_LIST = "fileShareUriList";
+
+    public static final String WEB_FRAGMENT_VERSION = "version";
+    public static final String WEB_FRAGMENT_APP_NAME = "appName";
+    public static final String WEB_FRAGMENT_MENU = "menuList";
 
 }

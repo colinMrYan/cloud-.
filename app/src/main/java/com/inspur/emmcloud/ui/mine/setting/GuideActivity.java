@@ -75,7 +75,7 @@ public class GuideActivity extends Activity {
         // TODO Auto-generated method stub
         List<Integer> splashResIdList = new ArrayList<>();
         //刚安装App初次进入
-        if (PreferencesUtils.getBoolean(getApplicationContext(),"isFirst", true)){
+        if (PreferencesUtils.getBoolean(getApplicationContext(),"isFirst", true) && AppUtils.isAppVersionStandard()){
             splashResIdList.add(R.drawable.guide_page_1);
             splashResIdList.add(R.drawable.guide_page_2);
             splashResIdList.add(R.drawable.guide_page_3);

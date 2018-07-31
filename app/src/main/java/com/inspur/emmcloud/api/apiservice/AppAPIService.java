@@ -63,7 +63,13 @@ public class AppAPIService {
         if (((MyApplication) context.getApplicationContext()).isVersionDev()) {
             params.addParameter("clientType", "dev_android");
         } else {
-            params.addParameter("clientType", "android");
+            if (AppUtils.isAppVersionStandard()){
+                params.addParameter("clientType", "android");
+            }else {
+                String appVersionFlag = AppUtils.getAppVersionFlag(context);
+                params.addParameter("clientType", "android_"+appVersionFlag);
+            }
+
         }
 
         HttpUtils.request(context,CloudHttpMethod.POST,params,new APICallback(context, completeUrl) {

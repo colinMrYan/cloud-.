@@ -16,7 +16,6 @@ import com.inspur.emmcloud.bean.mine.Enterprise;
 import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.DensityUtil;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -235,7 +234,6 @@ public class LoginUtils extends APIInterfaceInstance {
      * @param defaultEnterprise
      */
     private void showSelectEnterpriseDlg(final List<Enterprise> enterpriseList, Enterprise defaultEnterprise) {
-        LogUtils.jasonDebug("showSelectEnterpriseDlg====");
         final MyDialog myDialog = new MyDialog(activity, R.layout.dialog_login_select_tanent);
         final SwitchView switchView = (SwitchView) myDialog.findViewById(R.id.auto_select_switch);
         switchView.setOpened(true);
@@ -299,19 +297,26 @@ public class LoginUtils extends APIInterfaceInstance {
                 .setUid(getMyInfoResult.getID());
         List<Enterprise> enterpriseList = getMyInfoResult.getEnterpriseList();
         Enterprise defaultEnterprise = getMyInfoResult.getDefaultEnterprise();
-        if (isLogin && enterpriseList.size() > 1) {
-            String selectLoginEnterpriseId = PreferencesByUsersUtils.getString(activity, Constant.PREF_SELECT_LOGIN_ENTERPRISE_ID, "");
-            //当用户没有指定登录的企业时或已指定登录企业但是此企业不存在时则弹出选择登录企业的页面
-            if (StringUtils.isBlank(selectLoginEnterpriseId) || !isEnterpriseIdValid(enterpriseList, selectLoginEnterpriseId)) {
-                if (loadingDialog != null && loadingDialog.isShowing()) {
-                    loadingDialog.dismiss();
+        if (enterpriseList.size() == 0 && defaultEnterprise == null){
+            ToastUtils.show(activity,  R.string.user_not_bound_enterprise);
+            MyApplication.getInstance().setAccessToken("");
+            PreferencesUtils.putString(MyApplication.getInstance(), "accessToken", "");
+            loginUtilsHandler.sendEmptyMessage(LOGIN_FAIL);
+        }else {
+            if (isLogin && enterpriseList.size() > 1) {
+                String selectLoginEnterpriseId = PreferencesByUsersUtils.getString(activity, Constant.PREF_SELECT_LOGIN_ENTERPRISE_ID, "");
+                //当用户没有指定登录的企业时或已指定登录企业但是此企业不存在时则弹出选择登录企业的页面
+                if (StringUtils.isBlank(selectLoginEnterpriseId) || !isEnterpriseIdValid(enterpriseList, selectLoginEnterpriseId)) {
+                    if (loadingDialog != null && loadingDialog.isShowing()) {
+                        loadingDialog.dismiss();
+                    }
+                    showSelectEnterpriseDlg(enterpriseList, defaultEnterprise);
+                    return;
                 }
-                showSelectEnterpriseDlg(enterpriseList, defaultEnterprise);
-                return;
             }
+            ((MyApplication) activity.getApplicationContext()).initTanent();
+            getServerSupportLanguage();
         }
-        ((MyApplication) activity.getApplicationContext()).initTanent();
-        getServerSupportLanguage();
     }
 
 
