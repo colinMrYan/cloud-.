@@ -16,7 +16,6 @@ import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.interf.CommonCallBack;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.dialogs.MyDialog;
@@ -97,17 +96,6 @@ public class ProfileUtils {
         dialog.show();
     }
 
-    /**
-     * 判断是否需要获取新的Profile
-     * 如果是登录状态，并且进行了升级则需要获取profile
-     * @return
-     */
-    private boolean checkNeedGetProfile() {
-        String accessToken = PreferencesUtils.getString(
-                activity, "accessToken", "");
-        return !StringUtils.isBlank(accessToken) && AppUtils.isAppHasUpgraded(activity) && AppUtils.isLower202Version(activity);
-    }
-
     class WebService extends APIInterfaceInstance {
         @Override
         public void returnMyInfoSuccess(GetMyInfoResult getMyInfoResult) {
@@ -125,7 +113,10 @@ public class ProfileUtils {
                 String appVersion = AppUtils.getVersion(activity);
                 PreferencesUtils.putString(activity, "previousVersion",
                         appVersion);
-                commonCallBack.execute();
+                ClientConfigUpdateUtils.saveItemLocalVersion(ClientConfigItem.CLIENT_CONFIG_ROUTER,saveConfigVersion);
+                if (commonCallBack != null){
+                    commonCallBack.execute();
+                }
             }
         }
 
