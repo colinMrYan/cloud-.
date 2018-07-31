@@ -93,7 +93,7 @@ public class MoreFragment extends Fragment {
             feedbackLayout.setOnClickListener(onClickListener);
         }
         RelativeLayout customerLayout = (RelativeLayout) rootView.findViewById(R.id.customer_layout);
-        if (isShowCustomerService.equals("true") && AppUtils.isAppVersionStandard(getActivity())) {
+        if (isShowCustomerService.equals("true") && AppUtils.isAppVersionStandard()) {
             customerLayout.setVisibility(View.VISIBLE);
             customerLayout.setOnClickListener(onClickListener);
         }

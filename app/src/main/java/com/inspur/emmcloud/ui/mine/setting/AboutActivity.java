@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
@@ -11,9 +12,9 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
+import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.UpgradeUtils;
 import com.inspur.emmcloud.widget.dialogs.ActionSheetDialog;
@@ -37,6 +38,10 @@ public class AboutActivity extends BaseActivity {
 		((TextView) findViewById(R.id.app_version_text))
 				.setText(AppUtils.getAppName(this)+"  "
 						+ AppUtils.getVersion(this));
+		ImageView appIconImg = (ImageView)findViewById(R.id.about_app_icon_img);
+		ImageDisplayUtils.getInstance().displayImage(appIconImg,"drawable://"+AppUtils.getAppIconRes(MyApplication.getInstance()),R.drawable.ic_launcher);
+		((ImageView)findViewById(R.id.about_app_icon_img)).setImageResource(AppUtils.getAppIconRes(MyApplication.getInstance()));
+		findViewById(R.id.protocol_layout).setVisibility(AppUtils.isApkDebugable(MyApplication.getInstance())?View.VISIBLE:View.GONE);
 		showSysInfo();
 		handMessage();
 	}
@@ -48,8 +53,6 @@ public class AboutActivity extends BaseActivity {
 		findViewById(R.id.about_app_icon_img).setOnLongClickListener(new View.OnLongClickListener() {
 			@Override
 			public boolean onLongClick(View v) {
-				String enterpriseName = PreferencesUtils
-						.getString(AboutActivity.this, "login_enterprise_name", "");
 				new ActionSheetDialog.ActionListSheetBuilder(AboutActivity.this)
 //						.setTitle(getString(R.string.current_system)+"-->"+ (StringUtils.isBlank(enterpriseName)?getString(R.string.cluster_default):enterpriseName))
 						.addItem("idm-->"+ MyApplication.getInstance().getCloudId())

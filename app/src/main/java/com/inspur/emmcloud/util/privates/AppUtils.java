@@ -21,6 +21,7 @@ import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
 
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.EncryptUtils;
@@ -31,6 +32,7 @@ import com.inspur.emmcloud.util.common.ResolutionUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.imp.api.ImpActivity;
+import com.inspur.imp.api.Res;
 import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
 import com.inspur.imp.plugin.camera.imagepicker.ui.ImageGridActivity;
 import com.inspur.imp.plugin.camera.mycamera.MyCameraActivity;
@@ -754,13 +756,12 @@ public class AppUtils {
      * @param context
      * @return
      */
-    public static boolean isAppVersionStandard(Activity activity) {
+    public static boolean isAppVersionStandard() {
         boolean isAppVersionStandard = true;
-        String appVersionType = getManifestMetadata(activity,"FLAG_APP_VERSION_TYPE");
-        if (appVersionType != null && !appVersionType.equals("standard")) {
+        String appFirstLoadAlis = PreferencesUtils.getString(MyApplication.getInstance(), Constant.PREF_APP_LOAD_ALIAS);
+        if (appFirstLoadAlis != null && !appFirstLoadAlis.equals("Standard")){
             isAppVersionStandard = false;
         }
-
         return isAppVersionStandard;
 
     }
@@ -770,8 +771,8 @@ public class AppUtils {
      * @param activity
      * @return
      */
-    public static String getAppVersionFlag(Activity activity){
-        return getManifestMetadata(activity,"FLAG_APP_VERSION_TYPE");
+    public static String getAppVersionFlag(Context context){
+        return getManifestMetadata(context,"FLAG_APP_VERSION_TYPE");
     }
 
     /**
@@ -780,10 +781,10 @@ public class AppUtils {
      * @param key
      * @return
      */
-    public static String getManifestMetadata(Activity activity,String key){
+    public static String getManifestMetadata(Context context,String key){
         try {
-            ApplicationInfo appInfo = activity.getPackageManager().getApplicationInfo(
-                    activity.getPackageName(), PackageManager.GET_META_DATA);
+            ApplicationInfo appInfo = context.getPackageManager().getApplicationInfo(
+                    context.getPackageName(), PackageManager.GET_META_DATA);
             return appInfo.metaData.getString(key);
         } catch (Exception e) {
             // TODO Auto-generated catch block
@@ -799,15 +800,35 @@ public class AppUtils {
     {
         try
         {
-            PackageManager packageManager = context.getPackageManager();
-            PackageInfo packageInfo = packageManager.getPackageInfo(
-                    context.getPackageName(), 0);
-            int labelRes = packageInfo.applicationInfo.labelRes;
-            return context.getResources().getString(labelRes);
-        } catch (PackageManager.NameNotFoundException e)
+            int appNameRes = -1;
+            if (isAppVersionStandard()){
+                appNameRes = R.string.app_name;
+            }else {
+                String appFirstLoadAlis = PreferencesUtils.getString(MyApplication.getInstance(), Constant.PREF_APP_LOAD_ALIAS);
+                appNameRes = Res.getStringID("app_name_"+appFirstLoadAlis);
+            }
+            return context.getResources().getString(appNameRes);
+        } catch (Exception e)
         {
             e.printStackTrace();
         }
-        return "";
+        return context.getResources().getString(R.string.app_name);
     }
+
+    /**
+     * 获取app图标
+     * @param context
+     * @return
+     */
+    public static int getAppIconRes(Context context){
+        int appIconRes = -1;
+        if (isAppVersionStandard()){
+            appIconRes = R.drawable.ic_launcher;
+        }else {
+            String appFirstLoadAlis = PreferencesUtils.getString(MyApplication.getInstance(), Constant.PREF_APP_LOAD_ALIAS);
+            appIconRes = Res.getDrawableID("ic_launcher_"+appFirstLoadAlis);
+        }
+        return appIconRes;
+    }
+
 }

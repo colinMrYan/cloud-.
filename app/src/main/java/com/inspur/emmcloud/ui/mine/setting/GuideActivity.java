@@ -74,21 +74,21 @@ public class GuideActivity extends Activity {
     private void initView() {
         // TODO Auto-generated method stub
         List<Integer> splashResIdList = new ArrayList<>();
-//        //刚安装App初次进入
-//        if (PreferencesUtils.getBoolean(getApplicationContext(),"isFirst", true)){
-//            splashResIdList.add(R.drawable.guide_page_1);
-//            splashResIdList.add(R.drawable.guide_page_2);
-//            splashResIdList.add(R.drawable.guide_page_3);
-//            splashResIdList.add(R.drawable.guide_page_4);
-//            splashResIdList.add(R.drawable.guide_page_5);
-//            splashResIdList.add(R.drawable.guide_page_6);
-//        }else {//版本升级进入
+        //刚安装App初次进入
+        if (PreferencesUtils.getBoolean(getApplicationContext(),"isFirst", true) && AppUtils.isAppVersionStandard()){
+            splashResIdList.add(R.drawable.guide_page_1);
+            splashResIdList.add(R.drawable.guide_page_2);
+            splashResIdList.add(R.drawable.guide_page_3);
+            splashResIdList.add(R.drawable.guide_page_4);
+            splashResIdList.add(R.drawable.guide_page_5);
+            splashResIdList.add(R.drawable.guide_page_6);
+        }else {//版本升级进入
             splashResIdList.add(R.drawable.guide_page_new_1);
             splashResIdList.add(R.drawable.guide_page_new_2);
             splashResIdList.add(R.drawable.guide_page_new_3);
             splashResIdList.add(R.drawable.guide_page_new_4);
             splashResIdList.add(R.drawable.guide_page_new_5);
-//        }
+        }
 
         for (int i = 0; i < splashResIdList.size(); i++) {
             View guideView = LayoutInflater.from(this).inflate(R.layout.view_pager_guide, null);
