@@ -671,13 +671,13 @@ public class JSONUtils {
      * <li>return {@link JSONObject#getJSONArray(String)}</li>
      * </ul>
      */
-    public static JSONArray getJSONArray(JSONArray jsonArray, int key, JSONArray defaultValue) {
+    public static JSONArray getJSONArray(JSONArray jsonArray, int index, JSONArray defaultValue) {
         if (jsonArray == null ) {
             return defaultValue;
         }
 
         try {
-            return jsonArray.getJSONArray(key);
+            return jsonArray.getJSONArray(index);
         } catch (Exception e) {
             if (isPrintException) {
                 e.printStackTrace();
