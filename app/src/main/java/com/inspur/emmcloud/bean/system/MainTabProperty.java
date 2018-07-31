@@ -2,6 +2,12 @@ package com.inspur.emmcloud.bean.system;
 
 import com.inspur.emmcloud.util.common.JSONUtils;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by yufuchang on 2018/4/2.
  */
@@ -16,11 +22,16 @@ public class MainTabProperty {
     private boolean canContact = true;
     private boolean canCreate = true;
     private boolean isHaveNavbar = false;
+    private List<MainTabMenu> mainTabMenuList = new ArrayList<>();
 
     public MainTabProperty(String response) {
         canContact = JSONUtils.getBoolean(response, "canOpenContact", true);
         canCreate = JSONUtils.getBoolean(response, "canCreateChannel", true);
         isHaveNavbar = JSONUtils.getBoolean(response,"isHaveNavbar",false);
+        JSONArray jsonArray = JSONUtils.getJSONArray(response,"menus",new JSONArray());
+        for (int i = 0; i < (jsonArray.length()>2?2:jsonArray.length()); i++) {
+            mainTabMenuList.add(new MainTabMenu(JSONUtils.getJSONObject(jsonArray,i,new JSONObject())));
+        }
     }
 
     public boolean isCanContact() {
@@ -45,5 +56,13 @@ public class MainTabProperty {
 
     public void setHaveNavbar(boolean haveNavbar) {
         isHaveNavbar = haveNavbar;
+    }
+
+    public List<MainTabMenu> getMainTabMenuList() {
+        return mainTabMenuList;
+    }
+
+    public void setMainTabMenuList(List<MainTabMenu> mainTabMenuList) {
+        this.mainTabMenuList = mainTabMenuList;
     }
 }

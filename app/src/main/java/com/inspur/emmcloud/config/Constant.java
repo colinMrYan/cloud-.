@@ -77,4 +77,8 @@ public class Constant {
     public static final String SHARE_LINK = "shareLink";
     public static final String SHARE_FILE_URI_LIST = "fileShareUriList";
 
+    public static final String WEB_FRAGMENT_VERSION = "version";
+    public static final String WEB_FRAGMENT_APP_NAME = "appName";
+    public static final String WEB_FRAGMENT_MENU = "menuList";
+
 }

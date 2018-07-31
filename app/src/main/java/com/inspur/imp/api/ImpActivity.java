@@ -3,7 +3,6 @@ package com.inspur.imp.api;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.KeyEvent;
-import android.view.View;
 import android.view.WindowManager;
 
 import com.inspur.emmcloud.R;
@@ -33,9 +32,6 @@ public class ImpActivity extends ImpFragmentBaseActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.fl_container, fragment).commitAllowingStateLoss();
     }
 
-    public void onClick(View v) {
-        fragment.onClick(v);
-    }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
