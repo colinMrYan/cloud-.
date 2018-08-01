@@ -3,8 +3,6 @@ package com.inspur.emmcloud.ui.contact;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Message;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -26,15 +24,12 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.APIUri;
-import com.inspur.emmcloud.api.apiservice.ContactAPIService;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
 import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.bean.contact.Contact;
 import com.inspur.emmcloud.bean.contact.ContactClickMessage;
 import com.inspur.emmcloud.bean.contact.ContactOrg;
-import com.inspur.emmcloud.bean.contact.ContactProtoBuf;
 import com.inspur.emmcloud.bean.contact.FirstGroupTextModel;
 import com.inspur.emmcloud.bean.contact.SearchModel;
 import com.inspur.emmcloud.config.Constant;
@@ -49,17 +44,15 @@ import com.inspur.emmcloud.util.common.ListViewUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.privates.AppTitleUtils;
+import com.inspur.emmcloud.util.privates.AppTabUtils;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
-import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.CommonContactCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactOrgCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.widget.CircleTextImageView;
 import com.inspur.emmcloud.widget.FlowLayout;
-import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.MaxHightScrollView;
 import com.inspur.emmcloud.widget.NoHorScrollView;
 import com.inspur.emmcloud.widget.WeakHandler;
@@ -83,14 +76,13 @@ import static android.content.Context.LAYOUT_INFLATER_SERVICE;
  * Created by yufuchang on 2018/6/7.
  */
 
-public class ContactSearchFragment extends Fragment {
+public class ContactSearchFragment extends ContactSearchBaseFragment {
     private View rootView;
     private static final int SEARCH_ALL = 0;
     private static final int SEARCH_CHANNELGROUP = 1;
     private static final int SEARCH_CONTACT = 2;
     private static final int SEARCH_NOTHIING = 4;
     private static final int SEARCH_MORE = 5;
-    private static final int REFRESH_DATA = 6;
     public static final String EXTRA_TITLE = "title";
     public static final String EXTRA_MULTI_SELECT = "isMulti_select";
     public static final String EXTRA_TYPE = "select_content";
@@ -148,7 +140,6 @@ public class ContactSearchFragment extends Fragment {
     private String searchText;
     private long lastSearchTime = 0L;
     private List<Contact> excludeContactList = new ArrayList<>();//不显示某些数据
-    private LoadingDialog loadingDlg;
     private long lastBackTime;
 
     @Override
@@ -159,10 +150,8 @@ public class ContactSearchFragment extends Fragment {
                 getActivity().LAYOUT_INFLATER_SERVICE);
         rootView = inflater.inflate(R.layout.activity_contact_search, null);
         getIntentData();
-        handMessage();
         initView();
         initSearchRunnable();
-        getContactOrg();
         EventBus.getDefault().register(this);
     }
 
@@ -324,7 +313,6 @@ public class ContactSearchFragment extends Fragment {
         if (getActivity().getClass().getSimpleName().equals(IndexActivity.class.getSimpleName())) {
             rootView.findViewById(R.id.back_layout).setVisibility(View.GONE);
         }
-        loadingDlg = new LoadingDialog(getActivity());
         ((TextView) rootView.findViewById(R.id.header_text)).setText(title);
         originAllLayout = (RelativeLayout) rootView.findViewById(R.id.origin_all_layout);
         originLayout = (LinearLayout) rootView.findViewById(R.id.origin_layout);
@@ -351,7 +339,7 @@ public class ContactSearchFragment extends Fragment {
             notifyFlowLayoutDataChange();
         }
         if (StringUtils.isBlank(title)) {
-            ((TextView) rootView.findViewById(R.id.header_text)).setText(AppTitleUtils.getTabTitle(getActivity(), ContactSearchFragment.class.getSimpleName()));
+            ((TextView) rootView.findViewById(R.id.header_text)).setText(AppTabUtils.getTabTitle(getActivity(), ContactSearchFragment.class.getSimpleName()));
         }
         setOnClickListeners();
     }
@@ -394,21 +382,6 @@ public class ContactSearchFragment extends Fragment {
                     break;
             }
         }
-    }
-
-    private void handMessage() {
-        handler = new WeakHandler(getActivity()) {
-
-            @Override
-            protected void handleMessage(Object o, Message message) {
-                switch (message.what) {
-                    case REFRESH_DATA:
-                        showSearchPop();
-                        break;
-                }
-            }
-
-        };
     }
 
     /**
@@ -882,7 +855,7 @@ public class ContactSearchFragment extends Fragment {
 
     }
 
-    private void showSearchPop() {
+    protected void showSearchPop() {
         // TODO Auto-generated method stub
         if (StringUtils.isBlank(searchText)) {
             return;
@@ -1549,39 +1522,5 @@ public class ContactSearchFragment extends Fragment {
     }
 
 
-    /**
-     * 获取通讯录人员信息
-     */
-    private void getContactOrg() {
-        // TODO Auto-generated method stub
-        long contactOrgLastQuetyTime = ContactOrgCacheUtils.getLastQueryTime();
-        if (contactOrgLastQuetyTime == 0 && NetUtils.isNetworkConnected(MyApplication.getInstance())) {
-            loadingDlg.show();
-            ContactAPIService apiService = new ContactAPIService(getActivity());
-            apiService.setAPIInterface(new WebService());
-            apiService.getContactOrgList();
-        }
-    }
 
-    public class WebService extends APIInterfaceInstance {
-        @Override
-        public void returnContactOrgListSuccess(byte[] bytes) {
-            try {
-                ContactProtoBuf.orgs orgs = ContactProtoBuf.orgs.parseFrom(bytes);
-                List<ContactProtoBuf.org> orgList = orgs.getOrgsList();
-                List<ContactOrg> contactOrgList = ContactOrg.protoBufOrgList2ContactOrgList(orgList);
-                ContactOrgCacheUtils.saveContactOrgList(contactOrgList);
-                ContactOrgCacheUtils.setLastQueryTime(orgs.getLastQueryTime());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            LoadingDialog.dimissDlg(loadingDlg);
-        }
-
-        @Override
-        public void returnContactOrgListFail(String error, int errorCode) {
-            WebServiceMiddleUtils.hand(MyApplication.getInstance(), error, errorCode);
-            LoadingDialog.dimissDlg(loadingDlg);
-        }
-    }
 }

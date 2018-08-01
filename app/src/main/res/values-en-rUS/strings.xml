@@ -219,6 +219,7 @@
     <string name="group_file">Group Files</string>
     <string name="authorization_expired">Authorization Expired</string>
     <string name="cant_login_with_sms">Your account is not allowed to log on with SMS</string>
+    <string name="user_not_bound_enterprise">The current user is not bound to the enterprise, please contact the administrator!</string>
 
     <!-- 消息部分 -->
     <string name="msgcontent_cannot_null">Please type message content</string>
@@ -489,7 +490,7 @@
     <string name="language_traditionalTW">繁體中文</string>
     <string name="language_traditionalHK">繁體中文（香港）</string>
     <string name="language_english">English</string>
-    <string name="card_package_listtext">Card Pack</string>
+    <string name="wallet">Card Pack</string>
     <string name="my_setting_tips_quit">Sure to clear all cache? App will close after clear</string>
     <string name="get_language_error">Not available to the language package, please contact the administrator</string>
     <string name="app_customer">Cloud+ Customer</string>

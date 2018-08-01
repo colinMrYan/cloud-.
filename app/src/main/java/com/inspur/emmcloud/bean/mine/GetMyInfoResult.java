@@ -1,7 +1,6 @@
 
 package com.inspur.emmcloud.bean.mine;
 
-import com.inspur.emmcloud.bean.mine.Enterprise;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.reactnative.ReactNativeWritableArray;
 import com.inspur.reactnative.ReactNativeWritableNativeMap;
@@ -36,8 +35,10 @@ public class GetMyInfoResult implements Serializable {
 
 	public GetMyInfoResult(String response) {
 		this.response = response;
-		JSONObject jObject = JSONUtils.getJSONObject(response, "enterprise", new JSONObject());
-		defaultEnterprise = new Enterprise(jObject);
+		JSONObject jObject = JSONUtils.getJSONObject(response, "enterprise",null);
+		if (jObject != null){
+			defaultEnterprise = new Enterprise(jObject);
+		}
 		this.avatar = JSONUtils.getString(response, "avatar", "");
 		this.code = JSONUtils.getString(response, "code", "");
 		this.creationDate = JSONUtils.getString(response, "creation_date", "0");

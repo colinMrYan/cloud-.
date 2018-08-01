@@ -220,6 +220,7 @@
     <string name="group_file">群文件</string>
     <string name="authorization_expired">授權過期，請重新登錄</string>
     <string name="cant_login_with_sms">您的賬號不允許使用短信登錄</string>
+    <string name="user_not_bound_enterprise">當前用戶未綁定企業，請聯繫管理員！</string>
 
     <!-- 消息部分 -->
     <string name="msgcontent_cannot_null">請輸入消息內容</string>
@@ -490,7 +491,7 @@
     <string name="language_traditionalTW">繁體中文</string>
     <string name="language_traditionalHK">繁體中文（香港）</string>
     <string name="language_english">English</string>
-    <string name="card_package_listtext">卡包</string>
+    <string name="wallet">卡包</string>
     <string name="my_setting_tips_quit">確定清除應用內所有緩存數據？清除后將退出應用</string>
     <string name="get_language_error">未獲取到可用的語言包，請聯繫管理員</string>
     <string name="app_customer">雲+客服</string>

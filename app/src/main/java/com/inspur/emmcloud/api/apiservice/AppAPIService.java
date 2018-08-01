@@ -20,6 +20,7 @@ import com.inspur.emmcloud.bean.login.GetDeviceCheckResult;
 import com.inspur.emmcloud.bean.login.LoginDesktopCloudPlusBean;
 import com.inspur.emmcloud.bean.system.GetAppConfigResult;
 import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
+import com.inspur.emmcloud.bean.system.GetAllConfigVersionResult;
 import com.inspur.emmcloud.bean.system.GetUpgradeResult;
 import com.inspur.emmcloud.bean.system.SplashPageBean;
 import com.inspur.emmcloud.interf.OauthCallBack;
@@ -62,7 +63,13 @@ public class AppAPIService {
         if (((MyApplication) context.getApplicationContext()).isVersionDev()) {
             params.addParameter("clientType", "dev_android");
         } else {
-            params.addParameter("clientType", "android");
+            if (AppUtils.isAppVersionStandard()){
+                params.addParameter("clientType", "android");
+            }else {
+                String appVersionFlag = AppUtils.getAppVersionFlag(context);
+                params.addParameter("clientType", "android_"+appVersionFlag);
+            }
+
         }
 
         HttpUtils.request(context,CloudHttpMethod.POST,params,new APICallback(context, completeUrl) {
@@ -246,34 +253,22 @@ public class AppAPIService {
     }
 
 
+
+
     /**
      * 获取显示tab页的接口
      */
-    public void getAppNewTabs(final String tabVersion) {
-        final String completeUrl = APIUri.getAppNewTabs();
+    public void getAppNewTabs(final String version, final String clientId,final String mainTabSaveConfigVersion) {
+        final String completeUrl = APIUri.getAppNewTabs() + "?version=" + version + "&clientId=" + clientId;
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
-        JSONObject jsonObject = new JSONObject();
-        try{
-            jsonObject.put("os","Android");
-            jsonObject.put("osVersion",AppUtils.getReleaseVersion());
-            jsonObject.put("appId",AppUtils.getPackageName(context));
-            jsonObject.put("appVersion",AppUtils.getVersion(context));
-            jsonObject.put("appCoreVersion",AppUtils.getVersion(context));
-            jsonObject.put("version",tabVersion);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        params.setBodyContent(jsonObject.toString());
-        params.setAsJsonContent(true);
-
-        HttpUtils.request(context,CloudHttpMethod.POST,params,new APICallback(context, completeUrl) {
+        HttpUtils.request(context,CloudHttpMethod.GET,params,new APICallback(context, completeUrl) {
             @Override
             public void callbackTokenExpire(long requestTime) {
                 OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        getAppNewTabs(tabVersion);
+                        getAppNewTabs(version, clientId,mainTabSaveConfigVersion);
                     }
 
                     @Override
@@ -287,7 +282,7 @@ public class AppAPIService {
 
             @Override
             public void callbackSuccess(byte[] arg0) {
-                apiInterface.returnAppTabAutoSuccess(new GetAppMainTabResult(new String(arg0)));
+                apiInterface.returnAppTabAutoSuccess(new GetAppMainTabResult(new String(arg0)),mainTabSaveConfigVersion);
             }
 
             @Override
@@ -518,8 +513,8 @@ public class AppAPIService {
     /**
      * 获取应用的配置信息
      */
-    public void getAppConfig() {
-        final String url = APIUri.getAppConfigUrl();
+    public void getAppConfig(final boolean isGetCommonAppConfig,final boolean isGetWorkPortletAppConfig,final boolean isGetWebAutoRotate) {
+        final String url = APIUri.getAppConfigUrl(isGetCommonAppConfig,isGetWorkPortletAppConfig,isGetWebAutoRotate);
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
         HttpUtils.request(context,CloudHttpMethod.GET,params,new APICallback(context, url) {
             @Override
@@ -537,7 +532,7 @@ public class AppAPIService {
                 OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        getAppConfig();
+                        getAppConfig(isGetCommonAppConfig,isGetWorkPortletAppConfig,isGetWebAutoRotate);
                     }
 
                     @Override
@@ -563,12 +558,12 @@ public class AppAPIService {
         HttpUtils.request(context,CloudHttpMethod.POST,params,new APICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
-                apiInterface.returnSaveWebAutoRotateConfigSuccess(isWebAutoRotate);
+               // apiInterface.returnSaveWebAutoRotateConfigSuccess(isWebAutoRotate);
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                apiInterface.returnSaveWebAutoRotateConfigFail(error, responseCode);
+              //  apiInterface.returnSaveWebAutoRotateConfigFail(error, responseCode);
             }
 
             @Override
@@ -617,6 +612,58 @@ public class AppAPIService {
                     @Override
                     public void reExecute() {
                         uploadPosition(positionJson);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+        });
+    }
+
+
+    /**
+     * app通用检查更新
+     *
+     * @param positionJson
+     */
+    public void getAllConfigVersion(final JSONObject clientConfigVersionObj) {
+        final String url = APIUri.getAllConfigVersionUrl();
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(url);
+        JSONObject object = new JSONObject();
+        try {
+            object.put("os","Android");
+            object.put("osVersion",AppUtils.getReleaseVersion());
+            object.put("appId",context.getPackageName());
+            object.put("appVersion",AppUtils.getVersion(context));
+            object.put("appCoreVersion",AppUtils.getVersion(context));
+            object.put("ClientConfigVersions",clientConfigVersionObj);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        params.setBodyContent(object.toString());
+        params.setAsJsonContent(true);
+        HttpUtils.request(context,CloudHttpMethod.POST,params,new APICallback(context, url) {
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnAllConfigVersionSuccess(new GetAllConfigVersionResult(new String(arg0),clientConfigVersionObj));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnAllConfigVersionFail(error, responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        getAllConfigVersion(clientConfigVersionObj);
                     }
 
                     @Override

@@ -18,8 +18,7 @@ public class Constant {
     public static final String PATTERN_URL = "(((https?)://[a-zA-Z0-9\\_\\-]+(\\.[a-zA-Z0-9\\_\\-]+)*(\\:\\d{2,4})?(/?[a-zA-Z0-9\\-\\_\\.\\?\\=\\&\\%\\#]+)*/?)" +
             "|([a-zA-Z0-9\\-\\_]+\\.)+([a-zA-Z\\-\\_]+)(\\:\\d{2,4})?(/?[a-zA-Z0-9\\-\\_\\.\\?\\=\\&\\%\\#]+)*/?|\\d+(\\.\\d+){3}(\\:\\d{2,4})?)";
     public static final String PREF_APP_RUN_BACKGROUND = "app_set_run_background";
-    public static final String PREF_REACT_NATIVE_CLIENTID = "react_native_clientid";
-    public static final String PREF_CHAT_CLIENTID = "chat_clientid";
+    public static final String PREF_CLIENTID = "chat_clientid";
     public static final String PREF_WORK_INFO_BAR_OPEN = "work_open_info";
     public static final String PREF_WORK_PORTLET_CONFIG_UPLOAD = "is_work_portlet_config_upload";
     public static final String PREF_HAS_MY_APP_RECOMMEND = "has_my_app_recommend";
@@ -37,6 +36,9 @@ public class Constant {
     public static final String PREF_CONTACT_ORG_ROOT_ID = "contact_org_root_id";
     public static final String PREF_APP_TAB_BAR_VERSION = "app_tabbar_version";
     public static final String PREF_APP_TAB_BAR_INFO_CURRENT = "app_tabbar_info_current";
+    public static final String PREF_APP_LOAD_ALIAS = "app_load_alias";
+
+    public static final String PREF_V_CONFIG_ALL = "v_config_all";
 
 
     public static final String ACTION_MEETING = "com.inspur.meeting";
@@ -68,9 +70,16 @@ public class Constant {
 
     public static final String APP_TAB_BAR_COMMUNACATE = "native://communicate";
     public static final String APP_TAB_BAR_WORK = "native://work";
-    public static final String APP_TAB_BAR_RN_FIND = "ecc-app-react-native://find";
+    public static final String APP_TAB_BAR_RN_FIND = "ecc-app-react-native://discover";
     public static final String APP_TAB_BAR_APPLICATION = "native://application";
-    public static final String APP_TAB_BAR_PROFILE = "native://mine";
+    public static final String APP_TAB_BAR_PROFILE = "native://me";
     public static final String APP_TAB_BAR_CONTACT = "native://contact";
+
+    public static final String SHARE_LINK = "shareLink";
+    public static final String SHARE_FILE_URI_LIST = "fileShareUriList";
+
+    public static final String WEB_FRAGMENT_VERSION = "version";
+    public static final String WEB_FRAGMENT_APP_NAME = "appName";
+    public static final String WEB_FRAGMENT_MENU = "menuList";
 
 }

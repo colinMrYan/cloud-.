@@ -116,12 +116,13 @@ public class APIUri {
      * @return
      */
     public static String getAppNewTabs() {
-        return getEMMBaseUrl() + "api/sys/v6.0/maintab";
+        return getECMDistribution() + "/preference/main-tab/latest";
+//        return getEMMBaseUrl() + "api/sys/v6.0/maintab";
     }
 
 
-    public static String getAppConfigUrl() {
-        return MyApplication.getInstance().getClusterEmm() + "v3.0/api/app/config/array?key=WebAutoRotate&key=CommonFunctions&key=IsShowFeedback&key=IsShowCustomerService&key=PosReportTimeInterval&key=WorkPortlet";
+    public static String getAppConfigUrl( boolean isGetCommonAppConfig, boolean isGetWorkPortletAppConfig, boolean isGetWebAutoRotate) {
+        return MyApplication.getInstance().getClusterEmm() + "v3.0/api/app/config/array?key=PosReportTimeInterval"+(isGetCommonAppConfig?"&key=CommonFunctions":"")+(isGetWorkPortletAppConfig?"&key=WorkPortlet":"")+(isGetWebAutoRotate?"&key=WebAutoRotate":"");
     }
 
     /**
@@ -167,6 +168,16 @@ public class APIUri {
     public static String getUploadPushInfoUrl() {
         return MyApplication.getInstance().getClusterClientRegistry() + "/client";
     }
+
+    /**
+     * 获取通用检查url
+     *
+     * @return
+     */
+    public static String getAllConfigVersionUrl() {
+        return MyApplication.getInstance().getClusterEmm() + "api/sys/v6.0/config/Check";
+    }
+
 
     /************************************************************************登录*****************************************************************/
 

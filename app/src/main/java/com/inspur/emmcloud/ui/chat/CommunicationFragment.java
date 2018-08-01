@@ -56,7 +56,7 @@ import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.privates.AppTitleUtils;
+import com.inspur.emmcloud.util.privates.AppTabUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ChannelGroupIconUtils;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
@@ -225,7 +225,7 @@ public class CommunicationFragment extends Fragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void updateHeaderFunctionBtn(GetAppMainTabResult getAppMainTabResult) {
         if(getAppMainTabResult != null){
-            ArrayList<MainTabResult> mainTabResultList = getAppMainTabResult.getMainTabResultList();
+            ArrayList<MainTabResult> mainTabResultList = getAppMainTabResult.getMainTabPayLoad().getMainTabResultList();
             for (int i = 0; i < mainTabResultList.size(); i++) {
                 if(mainTabResultList.get(i).getUri().equals(Constant.APP_TAB_BAR_COMMUNACATE)){
                     MainTabProperty mainTabProperty = mainTabResultList.get(i).getMainTabProperty();
@@ -696,7 +696,7 @@ public class CommunicationFragment extends Fragment {
             isFirstConnectWebsockt = false;
             String appTabs = PreferencesByUserAndTanentUtils.getString(getActivity(), "app_tabbar_info_current", "");
             if (!StringUtils.isBlank(appTabs)) {
-                titleText.setText(AppTitleUtils.getTabTitle(getActivity(), getClass().getSimpleName()));
+                titleText.setText(AppTabUtils.getTabTitle(getActivity(), getClass().getSimpleName()));
             } else {
                 titleText.setText(R.string.communicate);
             }

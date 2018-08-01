@@ -16,6 +16,7 @@ import android.view.WindowManager;
 import android.webkit.WebSettings;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -23,10 +24,13 @@ import android.widget.TextView;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.mine.Language;
+import com.inspur.emmcloud.bean.system.MainTabMenu;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppWebConfig;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.MDM.MDM;
 import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
 import com.inspur.emmcloud.widget.dialogs.EasyDialog;
@@ -39,6 +43,7 @@ import com.inspur.imp.plugin.file.FileService;
 import com.inspur.imp.plugin.photo.PhotoService;
 import com.inspur.imp.plugin.staff.SelectStaffService;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -57,6 +62,7 @@ public class ImpFragment extends Fragment {
     public static final int FILE_SERVICE_REQUEST = 6;
     public static final int DO_NOTHING_REQUEST = 7;
     public static final int BARCODE_SERVER__SCAN_REQUEST = 8;
+    private static final String JAVASCRIPT_PREFIX = "javascript:";
     private Map<String, String> webViewHeaders;
     private TextView headerText;
     private LinearLayout loadFailLayout;
@@ -68,6 +74,9 @@ public class ImpFragment extends Fragment {
     private String helpUrl = "";
     private HashMap<String, String> urlTilteMap = new HashMap<>();
     private View rootView;
+    private ArrayList<MainTabMenu> mainTabMenuArrayList;
+    private String version;
+    private ImpFragmentClickListener listener;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -77,6 +86,7 @@ public class ImpFragment extends Fragment {
                 getActivity().LAYOUT_INFLATER_SERVICE);
         rootView = inflater.inflate(Res.getLayoutID("activity_imp"), null);
         initViews();
+        version = getArguments().getString(Constant.WEB_FRAGMENT_VERSION,"");
     }
 
     @Override
@@ -89,6 +99,9 @@ public class ImpFragment extends Fragment {
         ViewGroup parent = (ViewGroup) rootView.getParent();
         if (parent != null) {
             parent.removeView(rootView);
+        }
+        if(!version.equals(getArguments().getString(Constant.WEB_FRAGMENT_VERSION,""))){
+            initFragmentViews();
         }
         return rootView;
     }
@@ -108,6 +121,7 @@ public class ImpFragment extends Fragment {
         webView = (ImpWebView) rootView.findViewById(Res.getWidgetID("webview"));
         if (getActivity().getClass().getName().equals(IndexActivity.class.getName())) {
             rootView.findViewById(R.id.back_layout).setVisibility(View.GONE);
+            rootView.findViewById(R.id.imp_close_btn).setVisibility(View.GONE);
             ((TextView) rootView.findViewById(R.id.header_text)).setGravity(Gravity.CENTER_HORIZONTAL);
         }
         showLoadingDlg(getString(Res.getStringID("@string/loading_text")));
@@ -120,7 +134,16 @@ public class ImpFragment extends Fragment {
         if (!StringUtils.isBlank(getArguments().getString("appId"))) {
             appId = getArguments().getString("appId");
         }
+        initFragmentViews();
+    }
+
+    /**
+     * 初始化Fragment的WebView
+     */
+    private void initFragmentViews() {
         String url = getArguments().getString("uri");
+        initHeaderFunction();
+        initListeners();
         initWebViewHeaderLayout();
         setWebViewHeader();
         webView.setOnTouchListener(new View.OnTouchListener() {
@@ -139,6 +162,94 @@ public class ImpFragment extends Fragment {
         });
         webView.loadUrl(url, webViewHeaders);
         setWebViewFunctionVisiable();
+    }
+
+    /**
+     * 初始化监听器
+     */
+    private void initListeners() {
+        listener = new ImpFragmentClickListener();
+        rootView.findViewById(R.id.imp_change_font_size_btn).setOnClickListener(listener);
+        rootView.findViewById(R.id.back_layout).setOnClickListener(listener);
+        rootView.findViewById(R.id.imp_close_btn).setOnClickListener(listener);
+        rootView.findViewById(R.id.refresh_text).setOnClickListener(listener);
+        rootView.findViewById(R.id.imp_cloud_function1_img).setOnClickListener(listener);
+        rootView.findViewById(R.id.imp_cloud_function2_img).setOnClickListener(listener);
+    }
+
+    class ImpFragmentClickListener implements View.OnClickListener{
+
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.imp_change_font_size_btn:
+                    showChangeFontSizeDialog();
+                    break;
+                case R.id.app_imp_crm_font_normal_btn:
+                    setNewsFontSize(MyAppWebConfig.NORMAL);
+                    break;
+                case R.id.app_imp_crm_font_middle_btn:
+                    setNewsFontSize(MyAppWebConfig.CRM_BIG);
+                    break;
+                case R.id.app_imp_crm_font_big_btn:
+                    setNewsFontSize(MyAppWebConfig.CRM_BIGGER);
+                    break;
+                case R.id.app_imp_crm_font_biggest_btn:
+                    setNewsFontSize(MyAppWebConfig.CRM_BIGGEST);
+                    break;
+                case R.id.back_layout:
+                    goBack();
+                    break;
+                case R.id.imp_close_btn:
+                    finishActivity();
+                    break;
+                case R.id.refresh_text:
+                    showLoadingDlg(getString(Res.getStringID("@string/loading_text")));
+                    webView.reload();
+                    webView.setVisibility(View.INVISIBLE);
+                    loadFailLayout.setVisibility(View.GONE);
+                    break;
+                case R.id.imp_cloud_function1_img:
+                    runJavaScript(JAVASCRIPT_PREFIX+mainTabMenuArrayList.get(0).getAction());
+                    break;
+                case R.id.imp_cloud_function2_img:
+                    runJavaScript(JAVASCRIPT_PREFIX+mainTabMenuArrayList.get(1).getAction());
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    /**
+     * 配置圈子标题栏上的功能
+     * 最多两个功能，超过两个取前两个
+     */
+    private void initHeaderFunction() {
+        mainTabMenuArrayList = (ArrayList<MainTabMenu>)getArguments().getSerializable(Constant.WEB_FRAGMENT_MENU);
+        if(mainTabMenuArrayList != null){
+            if(mainTabMenuArrayList.size() == 1){
+                ImageView imageViewFun1 = (ImageView) rootView.findViewById(R.id.imp_cloud_function1_img);
+                imageViewFun1.setVisibility(View.VISIBLE);
+                ImageDisplayUtils.getInstance().displayImage(imageViewFun1,mainTabMenuArrayList.get(0).getIco());
+            }else if(mainTabMenuArrayList.size() == 2){
+                ImageView imageViewFun1 = (ImageView) rootView.findViewById(R.id.imp_cloud_function1_img);
+                ImageView imageViewFun2 = (ImageView) rootView.findViewById(R.id.imp_cloud_function2_img);
+                imageViewFun1.setVisibility(View.VISIBLE);
+                imageViewFun2.setVisibility(View.VISIBLE);
+                ImageDisplayUtils.getInstance().displayImage(imageViewFun1,mainTabMenuArrayList.get(0).getIco());
+                ImageDisplayUtils.getInstance().displayImage(imageViewFun2,mainTabMenuArrayList.get(1).getIco());
+            }
+        }
+
+    }
+
+    /**
+     * 执行JS脚本
+     * @param script
+     */
+    private void runJavaScript(String script) {
+        webView.loadUrl(script);
     }
 
 
@@ -170,15 +281,13 @@ public class ImpFragment extends Fragment {
      * 设置Webview自定义功能是否显示
      */
     private void setWebViewFunctionVisiable() {
-        if (!StringUtils.isBlank(getArguments().getString("is_zoomable"))) {
-            int isZoomable = getArguments().getInt("is_zoomable", 0);
-            if (isZoomable == 1 || !StringUtils.isBlank(helpUrl)) {
-                rootView.findViewById(R.id.imp_change_font_size_btn).setVisibility(View.VISIBLE);
-            }
-            if (isZoomable == 1) {
-                int textSize = PreferencesByUsersUtils.getInt(getActivity(), "app_crm_font_size_" + appId, MyAppWebConfig.NORMAL);
-                webView.getSettings().setTextZoom(textSize);
-            }
+        int isZoomable = getArguments().getInt("is_zoomable", 0);
+        if (isZoomable == 1 || !StringUtils.isBlank(helpUrl)) {
+            rootView.findViewById(R.id.imp_change_font_size_btn).setVisibility(View.VISIBLE);
+        }
+        if (isZoomable == 1) {
+            int textSize = PreferencesByUsersUtils.getInt(getActivity(), "app_crm_font_size_" + appId, MyAppWebConfig.NORMAL);
+            webView.getSettings().setTextZoom(textSize);
         }
     }
 
@@ -187,8 +296,8 @@ public class ImpFragment extends Fragment {
      */
     private void initWebViewHeaderLayout() {
         ImpCallBackInterface impCallBackInterface = getImpCallBackInterface();
-        if (!StringUtils.isEmpty(getArguments().getString("appName"))) {
-            String title = getArguments().getString("appName");
+        if (getArguments().getString(Constant.WEB_FRAGMENT_APP_NAME) != null) {
+            String title = getArguments().getString(Constant.WEB_FRAGMENT_APP_NAME);
             headerText = (TextView) rootView.findViewById(Res.getWidgetID("header_text"));
             webView.setProperty(headerText, loadFailLayout, frameLayout, impCallBackInterface);
             initWebViewGoBackOrClose();
@@ -256,7 +365,9 @@ public class ImpFragment extends Fragment {
      */
     public void initWebViewGoBackOrClose() {
         if (headerText != null) {
-            (rootView.findViewById(Res.getWidgetID("imp_close_btn"))).setVisibility(webView.canGoBack() ? View.VISIBLE : View.GONE);
+            if(getActivity().getClass().getName().equals(ImpActivity.class.getName())){
+                (rootView.findViewById(Res.getWidgetID("imp_close_btn"))).setVisibility(webView.canGoBack() ? View.VISIBLE : View.GONE);
+            }
         }
     }
 
@@ -314,40 +425,7 @@ public class ImpFragment extends Fragment {
         }
     }
 
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.imp_change_font_size_btn:
-                showChangeFontSizeDialog();
-                break;
-            case R.id.app_imp_crm_font_normal_btn:
-                setNewsFontSize(MyAppWebConfig.NORMAL);
-                break;
-            case R.id.app_imp_crm_font_middle_btn:
-                setNewsFontSize(MyAppWebConfig.CRM_BIG);
-                break;
-            case R.id.app_imp_crm_font_big_btn:
-                setNewsFontSize(MyAppWebConfig.CRM_BIGGER);
-                break;
-            case R.id.app_imp_crm_font_biggest_btn:
-                setNewsFontSize(MyAppWebConfig.CRM_BIGGEST);
-                break;
-            case R.id.back_layout:
-                goBack();
-                break;
-            case R.id.imp_close_btn:
-                finishActivity();
-                break;
-            case R.id.refresh_text:
-                showLoadingDlg(getString(Res.getStringID("@string/loading_text")));
-                webView.reload();
-                webView.setVisibility(View.INVISIBLE);
-                loadFailLayout.setVisibility(View.GONE);
-                break;
-            default:
-                break;
-        }
 
-    }
 
     /**
      * 打开修改字体的dialog
@@ -379,6 +457,11 @@ public class ImpFragment extends Fragment {
         // 设置点击外围解散
         dialog.setCanceledOnTouchOutside(true);
 
+        view.findViewById(R.id.app_imp_crm_font_normal_btn).setOnClickListener(listener);
+        view.findViewById(R.id.app_imp_crm_font_middle_btn).setOnClickListener(listener);
+        view.findViewById(R.id.app_imp_crm_font_big_btn).setOnClickListener(listener);
+        view.findViewById(R.id.app_imp_crm_font_biggest_btn).setOnClickListener(listener);
+
         if (!StringUtils.isBlank(getArguments().getString("is_zoomable")) && (getArguments().getInt("is_zoomable", 0) == 1)) {
             setWebViewButtonTextColor(0);
         }
@@ -396,7 +479,7 @@ public class ImpFragment extends Fragment {
                 Intent intent = new Intent();
                 intent.setClass(getActivity(), ImpActivity.class);
                 intent.putExtra("uri", helpUrl);
-                intent.putExtra("appName", "");
+                intent.putExtra(Constant.WEB_FRAGMENT_APP_NAME, "");
                 startActivity(intent);
                 dialog.dismiss();
             }
@@ -409,7 +492,6 @@ public class ImpFragment extends Fragment {
      * @param view
      */
     private void initFontSizeDialogViews(View view) {
-
         if (!StringUtils.isBlank(getArguments().getString("is_zoomable")) && (getArguments().getInt("is_zoomable", 0) == 1)) {
             view.findViewById(R.id.app_imp_crm_font_text).setVisibility(View.VISIBLE);
             view.findViewById(R.id.app_imp_crm_font_layout).setVisibility(View.VISIBLE);

@@ -21,6 +21,8 @@ import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.bean.contact.GetContactOrgListUpateResult;
 import com.inspur.emmcloud.bean.contact.GetContactUserListUpateResult;
 import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
+import com.inspur.emmcloud.bean.system.ClientConfigItem;
+import com.inspur.emmcloud.bean.system.GetAllConfigVersionResult;
 import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.interf.CommonCallBack;
@@ -33,9 +35,11 @@ import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppConfigUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
-import com.inspur.emmcloud.util.privates.ClientIDUtils;
+import com.inspur.emmcloud.util.privates.ClientConfigUpdateUtils;
 import com.inspur.emmcloud.util.privates.MyAppWidgetUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
+import com.inspur.emmcloud.util.privates.ProfileUtils;
+import com.inspur.emmcloud.util.privates.ClientIDUtils;
 import com.inspur.emmcloud.util.privates.ReactNativeUtils;
 import com.inspur.emmcloud.util.privates.SplashPageUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
@@ -47,6 +51,8 @@ import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.WeakHandler;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
@@ -61,6 +67,7 @@ public class IndexActivity extends IndexBaseActivity {
     private WeakHandler handler;
     private boolean isHasCacheContact = false;
     private LoadingDialog loadingDlg;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,10 +102,16 @@ public class IndexActivity extends IndexBaseActivity {
         if (!isHasCacheContact) {
             loadingDlg.show();
         }
-        getAllRobotInfo();
-        getContactUser();
-        getAppTabInfo();  //从服务端获取显示tab
-        getMyAppRecommendWidgets();
+        new ClientConfigUpdateUtils(this, new CommonCallBack() {
+            @Override
+            public void execute() {
+                getAllRobotInfo();
+                getContactUser();
+                updateReactNative();  //从服务端获取显示tab
+                getMyAppRecommendWidgets();
+            }
+        }).getAllConfigUpdate();
+
     }
 
     /**
@@ -192,22 +205,43 @@ public class IndexActivity extends IndexBaseActivity {
 
 
     /**
-     * 获取应用显示tab
+     * 获取RN应用显示tab
      */
-    private void getAppTabInfo() {
-        new ClientIDUtils(IndexActivity.this, new CommonCallBack() {
-            @Override
-            public void execute() {
-                if (NetUtils.isNetworkConnected(getApplicationContext(), false)) {
+    private void updateReactNative() {
+        if (NetUtils.isNetworkConnected(getApplicationContext(), false)) {
+            new ClientIDUtils(MyApplication.getInstance(), new ClientIDUtils.OnGetClientIdListener() {
+                @Override
+                public void getClientIdSuccess(String clientId) {
+                    if (NetUtils.isNetworkConnected(getApplicationContext(), false)) {
+                        new ReactNativeUtils(IndexActivity.this).init(); //更新react
+                    }
+                }
+
+                @Override
+                public void getClientIdFail() {
+                }
+            }).getClientId();
+        }
+    }
+
+    private void getTabInfo() {
+        if (NetUtils.isNetworkConnected(getApplicationContext(), false)) {
+
+            new ClientIDUtils(MyApplication.getInstance(), new ClientIDUtils.OnGetClientIdListener() {
+                @Override
+                public void getClientIdSuccess(String clientId) {
                     AppAPIService apiService = new AppAPIService(IndexActivity.this);
                     apiService.setAPIInterface(new WebService());
+                    String mainTabSaveConfigVersion = ClientConfigUpdateUtils.getItemNewVersion(ClientConfigItem.CLIENT_CONFIG_MAINTAB);
                     String version = PreferencesByUserAndTanentUtils.getString(IndexActivity.this, Constant.PREF_APP_TAB_BAR_VERSION, "");
-                    apiService.getAppNewTabs(version);
-                    new SplashPageUtils(IndexActivity.this).update();//更新闪屏页面
-                    new ReactNativeUtils(IndexActivity.this).init(); //更新react
+                    apiService.getAppNewTabs(version,clientId,mainTabSaveConfigVersion);
                 }
-            }
-        }).getClientID();
+
+                @Override
+                public void getClientIdFail() {
+                }
+            }).getClientId();
+        }
     }
 
     private void handMessage() {
@@ -260,6 +294,40 @@ public class IndexActivity extends IndexBaseActivity {
         super.onDestroy();
     }
 
+
+    /**
+     * 客户端统一配置版本更新
+     *
+     * @param getAllConfigVersionResult
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onClientConfigVersionUpdate(final GetAllConfigVersionResult getAllConfigVersionResult) {
+        boolean isRouterUpdate = ClientConfigUpdateUtils.isItemNeedUpdate(ClientConfigItem.CLIENT_CONFIG_ROUTER, getAllConfigVersionResult);
+        if (isRouterUpdate) {
+            new ProfileUtils(IndexActivity.this, null).initProfile(false);
+        }
+
+        new ClientIDUtils(MyApplication.getInstance(), new ClientIDUtils.OnGetClientIdListener() {
+            @Override
+            public void getClientIdSuccess(String clientId) {
+                boolean isMainTabUpdate = ClientConfigUpdateUtils.isItemNeedUpdate(ClientConfigItem.CLIENT_CONFIG_MAINTAB, getAllConfigVersionResult);
+                if (isMainTabUpdate) {
+                    getTabInfo();
+                }
+                boolean isSplashUpdate = ClientConfigUpdateUtils.isItemNeedUpdate(ClientConfigItem.CLIENT_CONFIG_SPLASH, getAllConfigVersionResult);
+                if (isSplashUpdate) {
+                    new SplashPageUtils(IndexActivity.this).update();//更新闪屏页面
+                }
+            }
+
+            @Override
+            public void getClientIdFail() {
+            }
+        }).getClientId();
+
+    }
+
+
     class CacheContactUserThread extends Thread {
         private byte[] result;
 
@@ -272,7 +340,7 @@ public class IndexActivity extends IndexBaseActivity {
             try {
                 ContactProtoBuf.users users = ContactProtoBuf.users.parseFrom(result);
                 List<ContactProtoBuf.user> userList = users.getUsersList();
-                List<ContactUser> contactUserList = ContactUser.protoBufUserList2ContactUserList(userList,users.getLastQueryTime());
+                List<ContactUser> contactUserList = ContactUser.protoBufUserList2ContactUserList(userList, users.getLastQueryTime());
                 ContactUserCacheUtils.saveContactUserList(contactUserList);
                 ContactUserCacheUtils.setLastQueryTime(users.getLastQueryTime());
                 if (handler != null) {
@@ -346,7 +414,7 @@ public class IndexActivity extends IndexBaseActivity {
                 List<String> contactOrgIdDeleteList = getContactOrgListUpateResult.getContactOrgIdDeleteList();
                 ContactOrgCacheUtils.saveContactOrgList(contactOrgChangedList);
                 ContactOrgCacheUtils.deleteContactOrgList(contactOrgIdDeleteList);
-                if (getContactOrgListUpateResult.getRootID() != null){
+                if (getContactOrgListUpateResult.getRootID() != null) {
                     ContactOrgCacheUtils.setContactOrgRootId(getContactOrgListUpateResult.getRootID());
                 }
                 ContactOrgCacheUtils.setLastQueryTime(getContactOrgListUpateResult.getLastQueryTime());
@@ -372,7 +440,7 @@ public class IndexActivity extends IndexBaseActivity {
                 ChannelGroupCacheUtils.clearChannelGroupList(getApplicationContext());
                 ChannelGroupCacheUtils.saveChannelGroupList(
                         getApplicationContext(), channelGroupList);
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -397,7 +465,7 @@ public class IndexActivity extends IndexBaseActivity {
      */
     private void getAllChannelGroup() {
         // TODO Auto-generated method stub
-        if (!StringUtils.isBlank(MyApplication.getInstance().getClusterChatVersion())&&NetUtils.isNetworkConnected(getApplicationContext(), false)) {
+        if (!StringUtils.isBlank(MyApplication.getInstance().getClusterChatVersion()) && NetUtils.isNetworkConnected(getApplicationContext(), false)) {
             ChatAPIService apiService = new ChatAPIService(IndexActivity.this);
             apiService.setAPIInterface(new WebService());
             apiService.getAllGroupChannelList();
@@ -414,9 +482,9 @@ public class IndexActivity extends IndexBaseActivity {
         if (NetUtils.isNetworkConnected(getApplicationContext(), false)) {
             MyApplication.getInstance().setIsContactReady(false);
             long contactUserLastQuetyTime = ContactUserCacheUtils.getLastQueryTime();
-            if(contactUserLastQuetyTime == 0){
+            if (contactUserLastQuetyTime == 0) {
                 apiService.getContactUserList();
-            }else {
+            } else {
                 apiService.getContactUserListUpdate(contactUserLastQuetyTime);
             }
         } else if (handler != null) {
@@ -433,9 +501,9 @@ public class IndexActivity extends IndexBaseActivity {
             ContactAPIService apiService = new ContactAPIService(IndexActivity.this);
             apiService.setAPIInterface(new WebService());
             long contactOrgLastQuetyTime = ContactOrgCacheUtils.getLastQueryTime();
-            if (contactOrgLastQuetyTime == 0){
+            if (contactOrgLastQuetyTime == 0) {
                 apiService.getContactOrgList();
-            }else {
+            } else {
                 apiService.getContactOrgListUpdate(contactOrgLastQuetyTime);
             }
 
@@ -447,7 +515,7 @@ public class IndexActivity extends IndexBaseActivity {
      * 获取所有的Robot
      */
     private void getAllRobotInfo() {
-        if (!StringUtils.isBlank(MyApplication.getInstance().getClusterBot())&&NetUtils.isNetworkConnected(getApplicationContext(), false)) {
+        if (!StringUtils.isBlank(MyApplication.getInstance().getClusterBot()) && NetUtils.isNetworkConnected(getApplicationContext(), false)) {
             ContactAPIService apiService = new ContactAPIService(IndexActivity.this);
             apiService.setAPIInterface(new WebService());
             apiService.getAllRobotInfo();
@@ -524,7 +592,8 @@ public class IndexActivity extends IndexBaseActivity {
 
 
         @Override
-        public void returnAppTabAutoSuccess(GetAppMainTabResult getAppMainTabResult) {
+        public void returnAppTabAutoSuccess(GetAppMainTabResult getAppMainTabResult, String mainTabSaveConfigVersion) {
+            ClientConfigUpdateUtils.saveItemLocalVersion(ClientConfigItem.CLIENT_CONFIG_MAINTAB, mainTabSaveConfigVersion);
             updateTabbarWithOrder(getAppMainTabResult);
         }
 

@@ -56,6 +56,7 @@ import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 @ContentView(R.layout.activity_index)
@@ -101,7 +102,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
             GetAppMainTabResult getAppMainTabResult = new GetAppMainTabResult(appTabs);
             //发送到MessageFragment
             EventBus.getDefault().post(getAppMainTabResult);
-            ArrayList<MainTabResult> mainTabResultList = getAppMainTabResult.getMainTabResultList();
+            ArrayList<MainTabResult> mainTabResultList = getAppMainTabResult.getMainTabPayLoad().getMainTabResultList();
             if (mainTabResultList.size() > 0) {
                 tabBeans = new TabBean[mainTabResultList.size()];
                 for (int i = 0; i < mainTabResultList.size(); i++) {
@@ -194,7 +195,9 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
                 Bundle bundle = new Bundle();
                 bundle.putString("uri", tabBean.getMainTabResult().getUri());
                 if (tabBean.getMainTabResult().getMainTabProperty().isHaveNavbar()) {
-                    bundle.putString("appName", tabBean.getMainTabResult().getName());
+                    bundle.putString(Constant.WEB_FRAGMENT_APP_NAME, tabBean.getTabName());
+                    bundle.putString(Constant.WEB_FRAGMENT_VERSION,PreferencesByUserAndTanentUtils.getString(IndexBaseActivity.this, Constant.PREF_APP_TAB_BAR_VERSION, ""));
+                    bundle.putSerializable(Constant.WEB_FRAGMENT_MENU, (Serializable) tabBean.getMainTabResult().getMainTabProperty().getMainTabMenuList());
                 }
                 mTabHost.addTab(tab, tabBean.getClz(), bundle);
             } else {
@@ -392,7 +395,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
         int tabIndex = 0;
         String appTabs = PreferencesByUserAndTanentUtils.getString(IndexBaseActivity.this, Constant.PREF_APP_TAB_BAR_INFO_CURRENT, "");
         if (!StringUtils.isBlank(appTabs)) {
-            ArrayList<MainTabResult> mainTabResultList = new GetAppMainTabResult(appTabs).getMainTabResultList();
+            ArrayList<MainTabResult> mainTabResultList = new GetAppMainTabResult(appTabs).getMainTabPayLoad().getMainTabResultList();
             if (mainTabResultList.size() > 0) {
                 for (int i = 0; i < mainTabResultList.size(); i++) {
                     if (mainTabResultList.get(i).isSelected()) {
@@ -464,7 +467,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
     public void updateTabbarWithOrder(GetAppMainTabResult getAppMainTabResult) {
         String command = getAppMainTabResult.getCommand();
         if (command.equals("FORWARD")) {
-            PreferencesByUserAndTanentUtils.putString(IndexBaseActivity.this, Constant.PREF_APP_TAB_BAR_VERSION, getAppMainTabResult.getVersion());
+            PreferencesByUserAndTanentUtils.putString(IndexBaseActivity.this, Constant.PREF_APP_TAB_BAR_VERSION, getAppMainTabResult.getMainTabPayLoad().getVersion());
             PreferencesByUserAndTanentUtils.putString(IndexBaseActivity.this, Constant.PREF_APP_TAB_BAR_INFO_CURRENT, getAppMainTabResult.getAppTabInfo());
             mTabHost.clearAllTabs(); //更新tabbar
             initTabs();

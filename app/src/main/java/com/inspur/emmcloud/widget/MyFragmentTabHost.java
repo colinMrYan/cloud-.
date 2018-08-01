@@ -34,8 +34,6 @@ import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.TabWidget;
 
-import com.inspur.emmcloud.util.common.LogUtils;
-
 import java.util.ArrayList;
 
 /**
@@ -238,7 +236,6 @@ public class MyFragmentTabHost extends TabHost
 
 	public void addTab(@NonNull TabHost.TabSpec tabSpec, @NonNull Class<?> clss,
 					   @Nullable Bundle args) {
-		LogUtils.jasonDebug("addTab======================================================");
 		tabSpec.setContent(new DummyTabFactory(mContext));
 
 		final String tag = tabSpec.getTag();
@@ -257,7 +254,6 @@ public class MyFragmentTabHost extends TabHost
 		}
 		mTabs.add(info);
 		addTab(tabSpec);
-		LogUtils.jasonDebug("mTabs==="+mTabs.size());
 	}
 
 	@Override
@@ -340,7 +336,6 @@ public class MyFragmentTabHost extends TabHost
 	@Nullable
 	private FragmentTransaction doTabChanged(@Nullable String tag,
 											 @Nullable FragmentTransaction ft) {
-		LogUtils.jasonDebug("tag==="+tag);
 		final TabInfo newTab = getTabInfoForTag(tag);
 		if (mLastTab != newTab) {
 			if (ft == null) {

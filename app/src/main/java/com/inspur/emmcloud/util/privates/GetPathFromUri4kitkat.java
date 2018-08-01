@@ -27,7 +27,7 @@ public class GetPathFromUri4kitkat {
             // 低版本兼容方法
             filePath = GetPathFromUri4kitkat.getRealPathFromURI(context, uri);
         }
-        return filePath;
+        return (filePath == null ? "":filePath);
     }
 
     /**

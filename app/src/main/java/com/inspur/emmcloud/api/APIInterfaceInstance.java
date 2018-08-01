@@ -72,6 +72,7 @@ import com.inspur.emmcloud.bean.mine.UserProfileInfoBean;
 import com.inspur.emmcloud.bean.system.GetAppConfigResult;
 import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
 import com.inspur.emmcloud.bean.system.GetBoolenResult;
+import com.inspur.emmcloud.bean.system.GetAllConfigVersionResult;
 import com.inspur.emmcloud.bean.system.GetUpgradeResult;
 import com.inspur.emmcloud.bean.system.SplashPageBean;
 import com.inspur.emmcloud.bean.work.Attachment;
@@ -1298,7 +1299,7 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnAppTabAutoSuccess(GetAppMainTabResult getAppMainTabResult) {
+    public void returnAppTabAutoSuccess(GetAppMainTabResult getAppMainTabResult,String mainTabSaveConfigVersion) {
 
     }
 
@@ -1308,12 +1309,12 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnUserProfileSuccess(UserProfileInfoBean userProfileInfoBean) {
+    public void returnUserProfileConfigSuccess(UserProfileInfoBean userProfileInfoBean) {
 
     }
 
     @Override
-    public void returnUserProfileFail(String error, int errorCode) {
+    public void returnUserProfileConfigFail(String error, int errorCode) {
 
     }
 
@@ -1684,6 +1685,16 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnCardPackageListFail(String error, int errorCode) {
+
+    }
+
+    @Override
+    public void returnAllConfigVersionSuccess(GetAllConfigVersionResult getAllConfigVersionResult) {
+
+    }
+
+    @Override
+    public void returnAllConfigVersionFail(String error, int errorCode) {
 
     }
 }

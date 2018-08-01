@@ -8,11 +8,11 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.api.apiservice.ReactNativeAPIService;
+import com.inspur.emmcloud.bean.system.ClientConfigItem;
 import com.inspur.emmcloud.bean.system.SplashDefaultBean;
 import com.inspur.emmcloud.bean.system.SplashPageBean;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.emmcloud.interf.CommonCallBack;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -28,26 +28,32 @@ import java.util.List;
 
 public class SplashPageUtils {
     private Activity context;
+    private String saveConfigVersion="";
 
     public SplashPageUtils(Activity context) {
         this.context = context;
     }
 
     public void update() {
-        new ClientIDUtils(context, new CommonCallBack() {
+        saveConfigVersion = ClientConfigUpdateUtils.getItemNewVersion(ClientConfigItem.CLIENT_CONFIG_SPLASH);
+
+        new ClientIDUtils(MyApplication.getInstance(), new ClientIDUtils.OnGetClientIdListener() {
             @Override
-            public void execute() {
+            public void getClientIdSuccess(String chatClientId) {
                 if (NetUtils.isNetworkConnected(context, false)) {
                     AppAPIService apiService = new AppAPIService(context);
                     apiService.setAPIInterface(new WebService());
                     String splashInfo = PreferencesByUserAndTanentUtils.getString(context, "splash_page_info", "");
                     SplashPageBean splashPageBean = new SplashPageBean(splashInfo);
-                    String clientId = PreferencesByUserAndTanentUtils.getString(context, Constant.PREF_REACT_NATIVE_CLIENTID, "");
+                    String clientId = PreferencesByUserAndTanentUtils.getString(context, Constant.PREF_CLIENTID, "");
                     apiService.getSplashPageInfo(clientId, splashPageBean.getId().getVersion());
                 }
             }
-        }).getClientID();
 
+            @Override
+            public void getClientIdFail() {
+            }
+        }).getClientId();
     }
 
 
@@ -130,6 +136,7 @@ public class SplashPageUtils {
                         protectedFileNameList.add(getCurrentSplashFileName(splashPageBean.getPayload().getResource().getDefaultX()));
                         FileUtils.delFilesExceptNameList(MyAppConfig.getSplashPageImageShowPath(context,
                                 ((MyApplication) context.getApplicationContext()).getUid(), "splash/"),protectedFileNameList);
+                        ClientConfigUpdateUtils.saveItemLocalVersion(ClientConfigItem.CLIENT_CONFIG_SPLASH,saveConfigVersion);
                     } else {
                         AppExceptionCacheUtils.saveAppException(context,2,url,"splash sha256 Error",0);
                     }
@@ -181,7 +188,7 @@ public class SplashPageUtils {
         if (NetUtils.isNetworkConnected(context, false)) {
             String splashInfoOld = PreferencesByUserAndTanentUtils.getString(context, "splash_page_info_old", "");
             SplashPageBean splashPageBeanLocalOld = new SplashPageBean(splashInfoOld);
-            String clientId = PreferencesByUserAndTanentUtils.getString(context, Constant.PREF_REACT_NATIVE_CLIENTID, "");
+            String clientId = PreferencesByUserAndTanentUtils.getString(context, Constant.PREF_CLIENTID, "");
             ReactNativeAPIService reactNativeAPIService = new ReactNativeAPIService(context);
             reactNativeAPIService.setAPIInterface(new WebService());
             reactNativeAPIService.writeBackSplashPageVersionChange(splashPageBeanLocalOld.getId().getVersion(), currentVersion, clientId, s);

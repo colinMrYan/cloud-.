@@ -69,39 +69,43 @@ public final class CaptureActivityHandler extends Handler {
 
   @Override
   public void handleMessage(Message message) {
-	  if (Res.getWidgetID("auto_focus") == message.what) {
-		  if (state == State.PREVIEW) {
-	          CameraManager.get().requestAutoFocus(this, Res.getWidgetID("auto_focus"));
-	        }
-		} else if (Res.getWidgetID("restart_preview") == message.what) {
-			Log.d(TAG, "Got restart preview message");
-	        restartPreviewAndDecode();
-		} else if (Res.getWidgetID("decode_succeeded") == message.what) {
-			 Log.d(TAG, "Got decode succeeded message");
-	        String str_result=((Result) message.obj).getText();
-			// 返回结果的回调函数
-			//将内容区域的回车换行去除
-	        str_result = str_result.replaceAll("[\\t\\n\\r]", "");
-	        if (str_result == null || str_result.equals("")){
-                state = State.PREVIEW;
-                CameraManager.get().requestPreviewFrame(decodeThread.getHandler(), Res.getWidgetID("decode"));
-            }else {
-                state = State.SUCCESS;
-                activity.handDecodeResult(str_result);
-            }
-		} else if (Res.getWidgetID("decode_failed") == message.what) {
-			// We're decoding as fast as possible, so when one decode fails, init another.
-          if (message.obj != null && NetUtils.isNetworkConnected(activity,false)){
-              Bitmap cropBitmap = (Bitmap) message.obj;
-              activity.uploadImgToDecodeByServer(cropBitmap);
+      try {
+          if (Res.getWidgetID("auto_focus") == message.what) {
+              if (state == State.PREVIEW) {
+                  CameraManager.get().requestAutoFocus(this, Res.getWidgetID("auto_focus"));
+              }
+          } else if (Res.getWidgetID("restart_preview") == message.what) {
+              Log.d(TAG, "Got restart preview message");
+              restartPreviewAndDecode();
+          } else if (Res.getWidgetID("decode_succeeded") == message.what) {
+              Log.d(TAG, "Got decode succeeded message");
+              String str_result=((Result) message.obj).getText();
+              // 返回结果的回调函数
+              //将内容区域的回车换行去除
+              str_result = str_result.replaceAll("[\\t\\n\\r]", "");
+              if (str_result == null || str_result.equals("")){
+                  state = State.PREVIEW;
+                  CameraManager.get().requestPreviewFrame(decodeThread.getHandler(), Res.getWidgetID("decode"));
+              }else {
+                  state = State.SUCCESS;
+                  activity.handDecodeResult(str_result);
+              }
+          } else if (Res.getWidgetID("decode_failed") == message.what) {
+              // We're decoding as fast as possible, so when one decode fails, init another.
+              if (message.obj != null && NetUtils.isNetworkConnected(activity,false)){
+                  Bitmap cropBitmap = (Bitmap) message.obj;
+                  activity.uploadImgToDecodeByServer(cropBitmap);
+              }
+              state = State.PREVIEW;
+              CameraManager.get().requestPreviewFrame(decodeThread.getHandler(), Res.getWidgetID("decode"));
+          } else if (Res.getWidgetID("return_scan_result") == message.what) {
+              Log.d(TAG, "Got return scan result message");
+              activity.setResult(Activity.RESULT_OK, (Intent) message.obj);
+              activity.finish();
           }
-	        state = State.PREVIEW;
-	        CameraManager.get().requestPreviewFrame(decodeThread.getHandler(), Res.getWidgetID("decode"));
-		} else if (Res.getWidgetID("return_scan_result") == message.what) {
-			 Log.d(TAG, "Got return scan result message");
-	        activity.setResult(Activity.RESULT_OK, (Intent) message.obj);
-	        activity.finish();
-		}
+      }catch (Exception e){
+          e.printStackTrace();
+      }
   }
 
   public void quitSynchronously() {
