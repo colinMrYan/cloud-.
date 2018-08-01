@@ -45,7 +45,7 @@ public class SplashPageUtils {
                     apiService.setAPIInterface(new WebService());
                     String splashInfo = PreferencesByUserAndTanentUtils.getString(context, "splash_page_info", "");
                     SplashPageBean splashPageBean = new SplashPageBean(splashInfo);
-                    String clientId = PreferencesByUserAndTanentUtils.getString(context, Constant.PREF_REACT_NATIVE_CLIENTID, "");
+                    String clientId = PreferencesByUserAndTanentUtils.getString(context, Constant.PREF_CLIENTID, "");
                     apiService.getSplashPageInfo(clientId, splashPageBean.getId().getVersion());
                 }
             }
@@ -188,7 +188,7 @@ public class SplashPageUtils {
         if (NetUtils.isNetworkConnected(context, false)) {
             String splashInfoOld = PreferencesByUserAndTanentUtils.getString(context, "splash_page_info_old", "");
             SplashPageBean splashPageBeanLocalOld = new SplashPageBean(splashInfoOld);
-            String clientId = PreferencesByUserAndTanentUtils.getString(context, Constant.PREF_REACT_NATIVE_CLIENTID, "");
+            String clientId = PreferencesByUserAndTanentUtils.getString(context, Constant.PREF_CLIENTID, "");
             ReactNativeAPIService reactNativeAPIService = new ReactNativeAPIService(context);
             reactNativeAPIService.setAPIInterface(new WebService());
             reactNativeAPIService.writeBackSplashPageVersionChange(splashPageBeanLocalOld.getId().getVersion(), currentVersion, clientId, s);

@@ -18,7 +18,6 @@ public class Constant {
     public static final String PATTERN_URL = "(((https?)://[a-zA-Z0-9\\_\\-]+(\\.[a-zA-Z0-9\\_\\-]+)*(\\:\\d{2,4})?(/?[a-zA-Z0-9\\-\\_\\.\\?\\=\\&\\%\\#]+)*/?)" +
             "|([a-zA-Z0-9\\-\\_]+\\.)+([a-zA-Z\\-\\_]+)(\\:\\d{2,4})?(/?[a-zA-Z0-9\\-\\_\\.\\?\\=\\&\\%\\#]+)*/?|\\d+(\\.\\d+){3}(\\:\\d{2,4})?)";
     public static final String PREF_APP_RUN_BACKGROUND = "app_set_run_background";
-    public static final String PREF_REACT_NATIVE_CLIENTID = "react_native_clientid";
     public static final String PREF_CLIENTID = "chat_clientid";
     public static final String PREF_WORK_INFO_BAR_OPEN = "work_open_info";
     public static final String PREF_WORK_PORTLET_CONFIG_UPLOAD = "is_work_portlet_config_upload";
@@ -39,11 +38,6 @@ public class Constant {
     public static final String PREF_APP_TAB_BAR_INFO_CURRENT = "app_tabbar_info_current";
     public static final String PREF_APP_LOAD_ALIAS = "app_load_alias";
 
-//    public static final String PREF_V_CONFIG_LANG = "v_config_lang";
-//    public static final String PREF_V_CONFIG_MAINTAB = "v_config_maintab";
-//    public static final String PREF_V_CONFIG_CONTACT = "v_config_contact";
-//    public static final String PREF_V_CONFIG_SPLASH = "v_config_splash";
-//    public static final String PREF_V_CONFIG_ROUTER = "v_config_router";
     public static final String PREF_V_CONFIG_ALL = "v_config_all";
 
 

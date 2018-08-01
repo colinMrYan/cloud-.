@@ -13,7 +13,6 @@ import android.widget.TextView;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.bean.mine.Language;
@@ -31,7 +30,6 @@ import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.DataCleanManager;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.TabAndAppExistUtils;
-import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.AppConfigCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MyAppCacheUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
@@ -109,6 +107,9 @@ public class SettingActivity extends BaseActivity {
         public void toggleToOn(View view) {
             // TODO Auto-generated method stub
             if (view.getId() != R.id.background_run_switch) {
+                AppConfig appConfig = new AppConfig(Constant.CONCIG_WEB_AUTO_ROTATE,"true");
+                AppConfigCacheUtils.saveAppConfig(MyApplication.getInstance(), appConfig);
+                setWebAutoRotateState();
                 saveWebAutoRotateConfig(true);
             } else {
                 setAppRunBackground(true);
@@ -120,6 +121,9 @@ public class SettingActivity extends BaseActivity {
         public void toggleToOff(View view) {
             // TODO Auto-generated method stub
             if (view.getId() != R.id.background_run_switch) {
+                AppConfig appConfig = new AppConfig(Constant.CONCIG_WEB_AUTO_ROTATE,"false");
+                AppConfigCacheUtils.saveAppConfig(MyApplication.getInstance(), appConfig);
+                setWebAutoRotateState();
                 saveWebAutoRotateConfig(false);
             } else {
                 setAppRunBackground(false);
@@ -172,9 +176,6 @@ public class SettingActivity extends BaseActivity {
                 break;
             case R.id.signout_layout:
                 showSignoutDlg();
-                break;
-            case R.id.about_layout:
-                IntentUtils.startActivity(SettingActivity.this, AboutActivity.class);
                 break;
             case R.id.msg_languagechg_layout:
                 IntentUtils.startActivity(SettingActivity.this,
@@ -340,33 +341,8 @@ public class SettingActivity extends BaseActivity {
 
     private void saveWebAutoRotateConfig(boolean isWebAutoRotate) {
         if (NetUtils.isNetworkConnected(this)) {
-            loadingDlg.show();
             AppAPIService apiService = new AppAPIService(this);
-            apiService.setAPIInterface(new WebService());
             apiService.saveWebAutoRotateConfig(isWebAutoRotate);
-        } else {
-            setWebAutoRotateState();
-        }
-    }
-
-    private class WebService extends APIInterfaceInstance {
-        @Override
-        public void returnSaveWebAutoRotateConfigSuccess(boolean isWebAutoRotate) {
-            if (loadingDlg != null && loadingDlg.isShowing()) {
-                loadingDlg.dismiss();
-            }
-            AppConfig appConfig = new AppConfig(Constant.CONCIG_WEB_AUTO_ROTATE, isWebAutoRotate + "");
-            AppConfigCacheUtils.saveAppConfig(SettingActivity.this, appConfig);
-            setWebAutoRotateState();
-        }
-
-        @Override
-        public void returnSaveWebAutoRotateConfigFail(String error, int errorCode) {
-            if (loadingDlg != null && loadingDlg.isShowing()) {
-                loadingDlg.dismiss();
-            }
-            setWebAutoRotateState();
-            WebServiceMiddleUtils.hand(SettingActivity.this, error, errorCode);
         }
     }
 

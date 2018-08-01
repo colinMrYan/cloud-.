@@ -7,7 +7,6 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.bean.chat.GetUploadPushInfoResult;
 import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -34,7 +33,6 @@ public class ClientIDUtils {
         if (!MyApplication.getInstance().isHaveLogin()){
             return;
         }
-        LogUtils.jasonDebug("upload-------------------------");
         String pushTracer = AppUtils.getPushId(context);
         if (NetUtils.isNetworkConnected(context, false)) {
             ChatAPIService apiService = new ChatAPIService(context);

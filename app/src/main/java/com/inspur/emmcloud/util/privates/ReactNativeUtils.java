@@ -53,7 +53,7 @@ public class ReactNativeUtils {
      * 更新ReactNative
      */
     private void updateReactNative() {
-        String clientId = PreferencesByUserAndTanentUtils.getString(context, Constant.PREF_REACT_NATIVE_CLIENTID, "");
+        String clientId = PreferencesByUserAndTanentUtils.getString(context, Constant.PREF_CLIENTID, "");
         StringBuilder describeVersionAndTime = FileUtils.readFile(reactNativeCurrentPath + "/bundle.json", "UTF-8");
         AndroidBundleBean androidBundleBean = new AndroidBundleBean(describeVersionAndTime.toString());
         if (NetUtils.isNetworkConnected(context, false)) {

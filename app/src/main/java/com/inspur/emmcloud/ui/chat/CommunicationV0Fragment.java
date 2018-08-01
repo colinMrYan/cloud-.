@@ -55,7 +55,7 @@ import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.privates.AppTitleUtils;
+import com.inspur.emmcloud.util.privates.AppTabUtils;
 import com.inspur.emmcloud.util.privates.ChannelGroupIconUtils;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils.OnCreateGroupChannelListener;
@@ -419,7 +419,7 @@ public class CommunicationV0Fragment extends Fragment {
         for (Channel channel : channelList) {
             List<Msg> newMsgList = MsgCacheUtil.getHistoryMsgList(getActivity(), channel.getCid(), null,
                     15);
-            channel.setNewMsgList(getActivity().getApplicationContext(), newMsgList);
+            channel.setNewMsgList(MyApplication.getInstance(), newMsgList);
         }
         return channelList;
     }
@@ -987,7 +987,7 @@ public class CommunicationV0Fragment extends Fragment {
             isFirstConnectWebsockt = false;
             String appTabs = PreferencesByUserAndTanentUtils.getString(getActivity(), "app_tabbar_info_current", "");
             if (!StringUtils.isBlank(appTabs)) {
-                titleText.setText(AppTitleUtils.getTabTitle(getActivity(), getClass().getSimpleName()));
+                titleText.setText(AppTabUtils.getTabTitle(getActivity(), getClass().getSimpleName()));
             } else {
                 titleText.setText(R.string.communicate);
             }
