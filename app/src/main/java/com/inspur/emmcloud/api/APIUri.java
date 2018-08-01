@@ -121,8 +121,8 @@ public class APIUri {
     }
 
 
-    public static String getAppConfigUrl() {
-        return MyApplication.getInstance().getClusterEmm() + "v3.0/api/app/config/array?key=WebAutoRotate&key=CommonFunctions&key=IsShowFeedback&key=IsShowCustomerService&key=PosReportTimeInterval&key=WorkPortlet";
+    public static String getAppConfigUrl( boolean isGetCommonAppConfig, boolean isGetWorkPortletAppConfig, boolean isGetWebAutoRotate) {
+        return MyApplication.getInstance().getClusterEmm() + "v3.0/api/app/config/array?key=PosReportTimeInterval"+(isGetCommonAppConfig?"&key=CommonFunctions":"")+(isGetWorkPortletAppConfig?"&key=WorkPortlet":"")+(isGetWebAutoRotate?"&key=WebAutoRotate":"");
     }
 
     /**

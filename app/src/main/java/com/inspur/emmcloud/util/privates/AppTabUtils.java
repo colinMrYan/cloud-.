@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Configuration;
 
 import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
+import com.inspur.emmcloud.bean.system.MainTabProperty;
 import com.inspur.emmcloud.bean.system.MainTabResult;
 import com.inspur.emmcloud.config.Constant;
 
@@ -13,7 +14,7 @@ import java.util.ArrayList;
  * Created by yufuchang on 2017/4/27.
  */
 
-public class AppTitleUtils {
+public class AppTabUtils {
     public static String getTabTitle(Context context,String tabKey){
         String appTabs = PreferencesByUserAndTanentUtils.getString(context, Constant.PREF_APP_TAB_BAR_INFO_CURRENT,"");
         ArrayList<MainTabResult> tabList = new GetAppMainTabResult(appTabs).getMainTabPayLoad().getMainTabResultList();
@@ -70,6 +71,23 @@ public class AppTitleUtils {
             if(tabList.get(i).getUri().equals(tabCompont)){
                 return tabList.get(i);
             }
+        }
+        return null;
+    }
+
+    /**
+     * 获取MainTabProperty
+     * @param context
+     * @param tabKey
+     * @return
+     */
+    public static MainTabProperty getMainTabProperty(Context context,String tabKey){
+        String appTabs = PreferencesByUserAndTanentUtils.getString(context, Constant.PREF_APP_TAB_BAR_INFO_CURRENT,"");
+        ArrayList<MainTabResult> tabList = new GetAppMainTabResult(appTabs).getMainTabPayLoad().getMainTabResultList();
+        String tabCompont = getCompont(tabKey);
+        MainTabResult tab = getTabByTabKey(tabList,tabCompont);
+        if(tab != null){
+            return  tab.getMainTabProperty();
         }
         return null;
     }

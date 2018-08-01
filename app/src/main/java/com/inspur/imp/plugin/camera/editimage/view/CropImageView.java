@@ -11,9 +11,8 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.inspur.imp.plugin.camera.editimage.utils.PaintUtil;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.imp.plugin.camera.editimage.utils.PaintUtil;
 
 /**
  * 剪切图片
@@ -163,7 +162,6 @@ public class CropImageView extends View {
 		switch (action & MotionEvent.ACTION_MASK) {
 		case MotionEvent.ACTION_DOWN:
 			int selectCircle = isSeletedControllerCircle(x, y);
-			LogUtils.jasonDebug("selectCircle="+selectCircle);
 			if (selectCircle > 0) {// 选择控制点
 				ret = true;
 				selectedControllerCicle = selectCircle;// 记录选中控制点编号

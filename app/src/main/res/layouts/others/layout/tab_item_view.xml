@@ -11,14 +11,14 @@
         android:gravity="center_horizontal"
         android:orientation="vertical"
         android:paddingBottom="4dp"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
         android:paddingTop="7dp">
 
         <ImageView
             android:id="@+id/imageview"
             android:layout_width="25dp"
             android:layout_height="25dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
             android:focusable="false"
             android:scaleType="fitXY"></ImageView>
 

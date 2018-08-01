@@ -188,9 +188,7 @@ public class CropImageView extends ImageView {
         mFocusRect.right = mFocusMidPoint.x + mFocusWidth / 2;
         mFocusRect.top = mFocusMidPoint.y - mFocusHeight / 2;
         mFocusRect.bottom = mFocusMidPoint.y + mFocusHeight / 2;
-        LogUtils.jasonDebug("mFocusWidth="+mFocusWidth);
-        LogUtils.jasonDebug("mFocusHeight="+mFocusHeight);
-        
+
         mMaxScale = fitViewScale * MAX_SCALE;
         //确定最终的缩放比例,在适配焦点框的前提下适配显示图片的ImageView，
         //方案：首先满足适配焦点框，如果还能适配显示图片的ImageView，则适配它，即取缩放比例的最大值。

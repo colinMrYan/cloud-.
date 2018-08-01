@@ -513,8 +513,8 @@ public class AppAPIService {
     /**
      * 获取应用的配置信息
      */
-    public void getAppConfig() {
-        final String url = APIUri.getAppConfigUrl();
+    public void getAppConfig(final boolean isGetCommonAppConfig,final boolean isGetWorkPortletAppConfig,final boolean isGetWebAutoRotate) {
+        final String url = APIUri.getAppConfigUrl(isGetCommonAppConfig,isGetWorkPortletAppConfig,isGetWebAutoRotate);
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
         HttpUtils.request(context,CloudHttpMethod.GET,params,new APICallback(context, url) {
             @Override
@@ -532,7 +532,7 @@ public class AppAPIService {
                 OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        getAppConfig();
+                        getAppConfig(isGetCommonAppConfig,isGetWorkPortletAppConfig,isGetWebAutoRotate);
                     }
 
                     @Override
@@ -558,12 +558,12 @@ public class AppAPIService {
         HttpUtils.request(context,CloudHttpMethod.POST,params,new APICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
-                apiInterface.returnSaveWebAutoRotateConfigSuccess(isWebAutoRotate);
+               // apiInterface.returnSaveWebAutoRotateConfigSuccess(isWebAutoRotate);
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                apiInterface.returnSaveWebAutoRotateConfigFail(error, responseCode);
+              //  apiInterface.returnSaveWebAutoRotateConfigFail(error, responseCode);
             }
 
             @Override

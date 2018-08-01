@@ -406,7 +406,7 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
      * 向服务端写回目前版本
      */
     private void writeBackVersion(String preVersion, String currentVersion, String command) {
-        String clientId = PreferencesByUserAndTanentUtils.getString(ReactNativeAppActivity.this, Constant.PREF_REACT_NATIVE_CLIENTID, "");
+        String clientId = PreferencesByUserAndTanentUtils.getString(ReactNativeAppActivity.this, Constant.PREF_CLIENTID, "");
         reactNativeAPIService.writeBackVersionChange(preVersion, currentVersion, clientId, command, appModule);
     }
 

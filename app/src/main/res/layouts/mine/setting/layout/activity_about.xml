@@ -41,183 +41,186 @@
             android:textColor="@color/header_text"
             android:textSize="@dimen/header_textsize" />
     </RelativeLayout>
-<RelativeLayout
-    android:background="@color/content_bg"
-    android:layout_below="@id/header_layout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <LinearLayout
-        android:id="@+id/header_image_layout"
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="15dp"
-        android:paddingBottom="15dp"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:layout_below="@id/header_layout"
+        android:background="@color/content_bg">
 
-        <com.inspur.emmcloud.widget.CircleTextImageView
-            android:id="@+id/about_app_icon_img"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="5dp"
-            android:src="@drawable/ic_launcher_zhihuichengjian" />
-
-        <TextView
-            android:id="@+id/app_version_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#616f79" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/header_image_layout"
-        android:background="@color/content_bg"
-        android:orientation="vertical">
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@color/color_list_divider" />
-
-        <RelativeLayout
-            android:id="@+id/newfun_layout"
+        <LinearLayout
+            android:id="@+id/header_image_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/text_layout_selector"
-            android:onClick="onClick"
-            android:paddingLeft="12dp">
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingBottom="15dp"
+            android:paddingTop="15dp">
+
+            <com.inspur.emmcloud.widget.CircleTextImageView
+                android:id="@+id/about_app_icon_img"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="5dp"
+                android:src="@drawable/ic_launcher_zhihuichengjian" />
 
             <TextView
-                android:id="@+id/newfun_text"
+                android:id="@+id/app_version_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:paddingBottom="10dp"
-                android:paddingTop="10dp"
-                android:text="@string/about_welcome_text"
-                android:textSize="@dimen/content_normal_textsize" />
+                android:textColor="#616f79" />
+        </LinearLayout>
 
-            <ImageView
-                android:id="@+id/newfun_img"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:src="@drawable/icon_arrow_right" />
-        </RelativeLayout>
-
-
-        <RelativeLayout
-            android:id="@+id/protocol_layout"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/text_layout_selector"
-            android:onClick="onClick"
-            android:paddingLeft="12dp">
+            android:layout_below="@id/header_image_layout"
+            android:background="@color/content_bg"
+            android:orientation="vertical">
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
                 android:background="@color/color_list_divider" />
 
-            <TextView
-                android:id="@+id/protocol_text"
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:id="@+id/newfun_layout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:paddingBottom="10dp"
-                android:paddingTop="10dp"
-                android:text="@string/about_protocol_text"
-                android:textSize="@dimen/content_normal_textsize" />
+                android:background="@drawable/text_layout_selector"
+                android:onClick="onClick"
+                android:paddingLeft="12dp">
 
-            <ImageView
-                android:id="@+id/protocol_img"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:src="@drawable/icon_arrow_right" />
-        </RelativeLayout>
+                <TextView
+                    android:id="@+id/newfun_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:paddingBottom="10dp"
+                    android:paddingTop="10dp"
+                    android:text="@string/about_welcome_text"
+                    android:textSize="@dimen/content_normal_textsize" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@color/color_list_divider" />
+                <ImageView
+                    android:id="@+id/newfun_img"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/icon_arrow_right" />
+            </RelativeLayout>
 
-        <RelativeLayout
-            android:id="@+id/check_update_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/text_layout_selector"
-            android:onClick="onClick"
-            android:paddingLeft="12dp">
 
-            <TextView
-                android:id="@+id/check_update_text"
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:id="@+id/protocol_layout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:paddingBottom="10dp"
-                android:paddingTop="10dp"
-                android:text="@string/check_update_text"
-                android:textSize="@dimen/content_normal_textsize" />
+                android:background="@drawable/text_layout_selector"
+                android:onClick="onClick">
 
-            <ImageView
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:src="@drawable/icon_arrow_right" />
-        </RelativeLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/color_list_divider" />
 
-        <View
-            android:visibility="gone"
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@color/color_list_divider" />
+                <TextView
+                    android:id="@+id/protocol_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:paddingBottom="10dp"
+                    android:paddingLeft="12dp"
+                    android:paddingTop="10dp"
+                    android:text="@string/about_protocol_text"
+                    android:textSize="@dimen/content_normal_textsize" />
 
-        <RelativeLayout
-            android:id="@+id/invite_friends_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/text_layout_selector"
-            android:onClick="onClick"
-            android:visibility="gone"
-            android:paddingLeft="12dp">
+                <ImageView
+                    android:id="@+id/protocol_img"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/icon_arrow_right" />
+            </RelativeLayout>
 
-            <TextView
-                android:id="@+id/invite_friends_text"
-                android:layout_width="wrap_content"
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/color_list_divider" />
+
+            <RelativeLayout
+                android:id="@+id/check_update_layout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:paddingBottom="10dp"
-                android:paddingTop="10dp"
-                android:text="@string/invite_friends_text"
-                android:textSize="@dimen/content_normal_textsize" />
+                android:background="@drawable/text_layout_selector"
+                android:onClick="onClick"
+                android:paddingLeft="12dp">
 
-            <ImageView
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:src="@drawable/icon_arrow_right" />
-        </RelativeLayout>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@color/color_list_divider" />
-    </LinearLayout>
-</RelativeLayout>
+                <TextView
+                    android:id="@+id/check_update_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:paddingBottom="10dp"
+                    android:paddingTop="10dp"
+                    android:text="@string/check_update_text"
+                    android:textSize="@dimen/content_normal_textsize" />
+
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/icon_arrow_right" />
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/invite_friends_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/text_layout_selector"
+                android:onClick="onClick">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/color_list_divider" />
+
+                <TextView
+                    android:id="@+id/invite_friends_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:paddingBottom="10dp"
+                    android:paddingLeft="12dp"
+                    android:paddingTop="10dp"
+                    android:text="@string/invite_friends_text"
+                    android:textSize="@dimen/content_normal_textsize" />
+
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/icon_arrow_right" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/color_list_divider" />
+        </LinearLayout>
+    </RelativeLayout>
 
 
 </RelativeLayout>
