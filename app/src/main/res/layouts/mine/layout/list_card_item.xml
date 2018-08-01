@@ -7,38 +7,82 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    app:stackHeaderHeight="185dp"
-    android:background="@drawable/shape_rectangle_with_radius">
-
-    <FrameLayout
-        android:id="@+id/frame_list_card_item"
+    app:stackHeaderHeight="185dp">
+    <TextView
+        android:id="@+id/txt_company_name"
         android:layout_width="match_parent"
-        android:layout_height="185dp"
-        >
-
-        <TextView
-            android:id="@+id/text_list_card_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="20dp"
-            android:textColor="@android:color/white"
-            android:textSize="40sp"
-            android:textStyle="bold"
-            tools:text="12"/>
-    </FrameLayout>
+        android:layout_height="50dp"
+        android:textColor="@color/white"
+        android:textSize="17sp"
+        android:paddingLeft="22dp"
+        android:gravity="center_vertical"
+        android:background="@drawable/shape_top_rectangle_with_radius"
+        android:text="浪潮通用软件有限公司"/>
 
     <LinearLayout
-        android:id="@+id/container_list_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:animateLayoutChanges="true">
+        android:orientation="vertical"
+        android:paddingLeft="22dp"
+        android:paddingBottom="17dp"
+        android:background="@drawable/shape_bottom_rectangle_with_radius">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="12dp"
-            android:text="Every corner must (initially) be provided a corner radius greater than 1, or else no corners are rounded. If you want specific corners to not be rounded, a work-around is to use android:radius to set a default corner radius greater than 1, but then override each and every corner with the values you really want, providing zero (0dp) where you don't want rounded corners."
-            />
+            android:paddingTop="17dp"
+            android:textSize="12sp"
+            android:textColor="#ACACAC"
+            android:text="纳税人识别号"/>
+        <TextView
+            android:id="@+id/txt_taxpayer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:textColor="#666666"
+            android:text="91370000163075429X"/>
+        <TextView
+            android:id="@+id/txt_bank"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="#ACACAC"
+            android:text="中国建设银行济南泉城支行"/>
+        <TextView
+            android:id="@+id/txt_bank_code"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:textColor="#666666"
+            android:text="6217 0034 5887 2899 9392"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="#ACACAC"
+            android:text="地址"/>
+        <TextView
+            android:id="@+id/txt_address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:textColor="#666666"
+            android:text="山东省济南市浪潮路1036号"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="#ACACAC"
+            android:text="电话"/>
+        <TextView
+            android:id="@+id/txt_phone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:textColor="#666666"
+            android:text="0531-85102396"/>
     </LinearLayout>
+
 
 </LinearLayout>

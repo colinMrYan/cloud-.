@@ -183,6 +183,10 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait"/>
 
+        <activity android:name=".ui.mine.card.CardPackageSetActivity"
+            android:launchMode="singleTask"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".ui.login.LoginActivity"
             android:launchMode="singleTask"

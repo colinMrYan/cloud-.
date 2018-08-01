@@ -61,6 +61,7 @@ import com.inspur.emmcloud.bean.login.GetSignoutResult;
 import com.inspur.emmcloud.bean.login.GetUpdatePwdBySMSCodeBean;
 import com.inspur.emmcloud.bean.login.LoginDesktopCloudPlusBean;
 import com.inspur.emmcloud.bean.mine.GetBindingDeviceResult;
+import com.inspur.emmcloud.bean.mine.GetCardPackageResult;
 import com.inspur.emmcloud.bean.mine.GetDeviceLogResult;
 import com.inspur.emmcloud.bean.mine.GetFaceSettingResult;
 import com.inspur.emmcloud.bean.mine.GetLanguageResult;
@@ -1673,6 +1674,16 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnContactOrgListUpdateFail(String error, int errorCode) {
+
+    }
+
+    @Override
+    public void returnCardPackageListSuccess(GetCardPackageResult getCardPackageResult) {
+
+    }
+
+    @Override
+    public void returnCardPackageListFail(String error, int errorCode) {
 
     }
 }
