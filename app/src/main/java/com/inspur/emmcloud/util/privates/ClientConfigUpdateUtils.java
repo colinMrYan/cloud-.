@@ -66,13 +66,20 @@ public class ClientConfigUpdateUtils extends APIInterfaceInstance {
     }
 
     public static boolean isItemNeedUpdate(ClientConfigItem clientConfigItem, GetAllConfigVersionResult getAllConfigVersionResult) {
+        if (getAllConfigVersionResult == null){
+            return true;
+        }
         String itemLocalVersion = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), clientConfigItem.getValue(), "");
         String itemNewVersion = getAllConfigVersionResult.getItemVersion(clientConfigItem);
         return StringUtils.isBlank(itemLocalVersion) || StringUtils.isBlank(itemNewVersion) || !itemLocalVersion.equals(itemNewVersion);
     }
 
     public static String getItemNewVersion(ClientConfigItem clientConfigItem){
-        return  getCacheAllConfigVersionResult().getItemVersion(clientConfigItem);
+        String  itemNewVersion = "";
+        if (getCacheAllConfigVersionResult() != null){
+            itemNewVersion = getCacheAllConfigVersionResult().getItemVersion(clientConfigItem);
+        }
+        return  itemNewVersion;
     }
 
     public static void saveItemLocalVersion(ClientConfigItem clientConfigItem,String version) {
@@ -82,9 +89,13 @@ public class ClientConfigUpdateUtils extends APIInterfaceInstance {
     }
 
 
-    public static GetAllConfigVersionResult getCacheAllConfigVersionResult() {
+    private static GetAllConfigVersionResult getCacheAllConfigVersionResult() {
         String commonNewVersion = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_V_CONFIG_ALL, "");
-        return new GetAllConfigVersionResult(commonNewVersion);
+        if (StringUtils.isBlank(commonNewVersion)){
+            return new GetAllConfigVersionResult(commonNewVersion);
+        }
+        return null;
+
     }
 
 
