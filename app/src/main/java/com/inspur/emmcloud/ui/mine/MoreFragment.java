@@ -127,6 +127,7 @@ public class MoreFragment extends Fragment {
                         recordUserClick("setting");
                         break;
                     case "my_cardbox_function":
+                        IntentUtils.startActivity(getActivity(), CardPackageActivity.class);
                         recordUserClick("wallet");
                         break;
                     case "my_aboutUs_function":
