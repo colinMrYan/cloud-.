@@ -24,7 +24,7 @@ import com.inspur.emmcloud.widget.WeakHandler;
 import java.util.List;
 
 /**
- *通讯录页面的基类，进入应用当通讯录获取不成功，再进入通讯录页面会进行重新获取
+ * 通讯录页面的基类，进入应用当通讯录获取不成功，再进入通讯录页面会进行重新获取
  */
 
 public class ContactSearchBaseFragment extends Fragment {
@@ -40,7 +40,8 @@ public class ContactSearchBaseFragment extends Fragment {
         super.onCreate(savedInstanceState);
         loadingDlg = new LoadingDialog(getActivity());
         handMessage();
-        if (NetUtils.isNetworkConnected(MyApplication.getInstance(), false)) {
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance(), false) && MyApplication.getInstance()
+                .getIsContactReady()) {
             long contactUserLastQureryTime = ContactUserCacheUtils.getLastQueryTime();
             long contactOrgLastQureryTime = ContactOrgCacheUtils.getLastQueryTime();
             isContactUserReady = (contactUserLastQureryTime != 0);
@@ -72,7 +73,10 @@ public class ContactSearchBaseFragment extends Fragment {
         };
     }
 
-    protected void showSearchPop(){};
+    protected void showSearchPop() {
+    }
+
+    ;
 
 
     private void setLoadingDlgDimiss() {
@@ -134,11 +138,11 @@ public class ContactSearchBaseFragment extends Fragment {
             try {
                 ContactProtoBuf.users users = ContactProtoBuf.users.parseFrom(result);
                 List<ContactProtoBuf.user> userList = users.getUsersList();
-                List<ContactUser> contactUserList = ContactUser.protoBufUserList2ContactUserList(userList,users.getLastQueryTime());
+                List<ContactUser> contactUserList = ContactUser.protoBufUserList2ContactUserList(userList, users.getLastQueryTime());
                 ContactUserCacheUtils.saveContactUserList(contactUserList);
                 ContactUserCacheUtils.setLastQueryTime(users.getLastQueryTime());
                 isContactUserReady = true;
-                if (handler != null){
+                if (handler != null) {
                     handler.sendEmptyMessage(DATA_READY);
                 }
             } catch (Exception e) {
@@ -164,7 +168,7 @@ public class ContactSearchBaseFragment extends Fragment {
                 ContactOrgCacheUtils.setContactOrgRootId(orgs.getRootID());
                 ContactOrgCacheUtils.setLastQueryTime(orgs.getLastQueryTime());
                 isContactOrgReady = true;
-                if (handler != null){
+                if (handler != null) {
                     handler.sendEmptyMessage(DATA_READY);
                 }
             } catch (Exception e) {
@@ -172,7 +176,6 @@ public class ContactSearchBaseFragment extends Fragment {
             }
         }
     }
-
 
 
     public class WebService extends APIInterfaceInstance {
