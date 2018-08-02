@@ -263,12 +263,12 @@ public class TransferLayout extends FrameLayout {
      */
     public void bindOnOperationListener(final ImageView imageView, final int pos) {
         // bind click dismiss listener
-        imageView.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismiss(pos);
-            }
-        });
+//        imageView.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                dismiss(pos);
+//            }
+//        });
 
 //        // bind long click listener
 //        if (transConfig.getLongClickListener() != null)
