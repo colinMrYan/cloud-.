@@ -1285,4 +1285,12 @@ public class APIUri {
     public static String getDeviceCheckUrl() {
         return MyApplication.getInstance().getClusterEmm() + "api/mdm/v3.0/mdm/check_state";
     }
+
+    /**
+     * 获取卡包信息
+     * @return
+     */
+    public static String getCardPackageUrl(){
+        return MyApplication.getInstance().getClusterEmm()+"api/buildinapp/v6.0/CardPackage";
+    }
 }

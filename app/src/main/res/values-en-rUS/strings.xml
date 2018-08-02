@@ -957,4 +957,8 @@
     <string name="share_not_support">Unsupported sharing types</string>
 
     <string name="net_work_fail">Failed to get configuration information</string>
+
+    <string name="card_package_manage">Management card</string>
+    <string name="card_package_welcome">Welcome to use the package</string>
+    <string name="card_package_collect">Put your usual information cards in one place</string>
 </resources>
