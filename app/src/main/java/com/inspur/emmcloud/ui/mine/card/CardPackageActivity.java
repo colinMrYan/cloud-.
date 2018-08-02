@@ -11,7 +11,6 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MineAPIService;
 import com.inspur.emmcloud.bean.mine.CardPackageBean;
 import com.inspur.emmcloud.bean.mine.GetCardPackageResult;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.CardPackageCacheUtils;
@@ -59,6 +58,13 @@ public class CardPackageActivity extends BaseActivity  implements RxCardStackVie
      */
     private void reFreshCardPackage() {
         List<CardPackageBean> cardPackageBeanList = CardPackageCacheUtils.getSelectedCardPackageList(this);
+        if(cardPackageBeanList.size() == 0){
+            cardPackageBeanList = CardPackageCacheUtils.getCardPackageList(this);
+            for (int i = 0; i < cardPackageBeanList.size(); i++) {
+                cardPackageBeanList.get(i).setState(1);
+            }
+            CardPackageCacheUtils.saveCardPackageList(this,cardPackageBeanList);
+        }
         cardStackAdapter.updateData(cardPackageBeanList);
     }
 

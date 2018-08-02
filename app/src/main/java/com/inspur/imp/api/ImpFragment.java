@@ -28,6 +28,7 @@ import com.inspur.emmcloud.bean.system.MainTabMenu;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppWebConfig;
 import com.inspur.emmcloud.ui.IndexActivity;
+import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
@@ -232,6 +233,7 @@ public class ImpFragment extends Fragment {
                 ImageView imageViewFun1 = (ImageView) rootView.findViewById(R.id.imp_cloud_function1_img);
                 imageViewFun1.setVisibility(View.VISIBLE);
                 ImageDisplayUtils.getInstance().displayImage(imageViewFun1,mainTabMenuArrayList.get(0).getIco());
+                setHeadTitlePadding(1);
             }else if(mainTabMenuArrayList.size() == 2){
                 ImageView imageViewFun1 = (ImageView) rootView.findViewById(R.id.imp_cloud_function1_img);
                 ImageView imageViewFun2 = (ImageView) rootView.findViewById(R.id.imp_cloud_function2_img);
@@ -239,10 +241,21 @@ public class ImpFragment extends Fragment {
                 imageViewFun2.setVisibility(View.VISIBLE);
                 ImageDisplayUtils.getInstance().displayImage(imageViewFun1,mainTabMenuArrayList.get(0).getIco());
                 ImageDisplayUtils.getInstance().displayImage(imageViewFun2,mainTabMenuArrayList.get(1).getIco());
+                setHeadTitlePadding(2);
             }
         }
-
     }
+
+    /**
+     * MainTab居中计算
+     * @param i
+     */
+    private void setHeadTitlePadding(int i) {
+        if (getActivity().getClass().getName().equals(IndexActivity.class.getName())) {
+            rootView.findViewById(R.id.header_text).setPadding(DensityUtil.dip2px(getActivity(), i == 1 ? 48 : 96), 0, 0, 0);
+        }
+    }
+
 
     /**
      * 执行JS脚本
