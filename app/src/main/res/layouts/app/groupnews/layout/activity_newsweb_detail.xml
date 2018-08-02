@@ -29,17 +29,6 @@
                 android:scaleType="centerInside"
                 android:src="@drawable/selector_back_btn" />
 
-            <TextView
-                android:id="@+id/news_back_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_toRightOf="@id/back_btn"
-                android:background="@null"
-                android:gravity="center"
-                android:paddingRight="3dp"
-                android:text="@string/back"
-                android:textColor="#ffffff"
-                android:textSize="16sp" />
         </RelativeLayout>
         <TextView
             android:id="@+id/news_close_btn"
