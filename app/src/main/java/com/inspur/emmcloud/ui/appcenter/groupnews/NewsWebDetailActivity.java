@@ -199,6 +199,17 @@ public class NewsWebDetailActivity extends BaseActivity {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 //Android8.0以下的需要返回true 并且需要loadUrl；8.0之后效果相反
+
+                if (!url.startsWith("http") && !url.startsWith("ftp")) {
+                    try {
+                        Intent intent = Intent.parseUri(url, Intent.URI_INTENT_SCHEME);
+                        intent.setComponent(null);
+                        startActivity(intent);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return true;
+                }
                 if(Build.VERSION.SDK_INT<26) {
                     view.loadUrl(url+(StringUtils.isBlank(model) ? lightMode : model));
                     return true;

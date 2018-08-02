@@ -55,7 +55,6 @@ import com.inspur.emmcloud.widget.CircleTextImageView;
 import com.inspur.emmcloud.widget.FlowLayout;
 import com.inspur.emmcloud.widget.MaxHightScrollView;
 import com.inspur.emmcloud.widget.NoHorScrollView;
-import com.inspur.emmcloud.widget.WeakHandler;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -135,7 +134,6 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
     private List<FirstGroupTextModel> popThirdGroupTextList = new ArrayList<>();
     private GroupTitleAdapter popSecondGroupTitleAdapter;
     private GroupTitleAdapter popThirdGroupTitleAdapter;
-    private WeakHandler handler;
     private Runnable searchRunnbale;
     private String searchText;
     private long lastSearchTime = 0L;
@@ -212,6 +210,9 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        if (handler != null){
+            handler = null;
+        }
         EventBus.getDefault().unregister(this);
     }
 
