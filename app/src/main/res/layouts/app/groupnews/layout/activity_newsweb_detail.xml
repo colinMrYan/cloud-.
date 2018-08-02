@@ -64,11 +64,11 @@
             android:layout_toLeftOf="@id/news_share_img"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:ellipsize="end"
-            android:maxLines="1"
+            android:ellipsize="middle"
             android:text="@string/group_news_detail"
             android:textColor="@color/header_text"
-            android:textSize="@dimen/header_textsize" />
+            android:textSize="@dimen/header_textsize"
+            android:singleLine="true" />
 
 
         

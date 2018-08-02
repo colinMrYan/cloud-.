@@ -75,7 +75,7 @@
             android:layout_marginRight="15dp"
             android:layout_toRightOf="@id/function_layout"
             android:layout_toLeftOf="@id/ll_web_function"
-            android:ellipsize="end"
+            android:ellipsize="middle"
             android:gravity="left"
             android:singleLine="true"
             android:text="@string/about_text"
