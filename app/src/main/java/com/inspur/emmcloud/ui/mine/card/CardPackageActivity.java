@@ -1,24 +1,28 @@
 package com.inspur.emmcloud.ui.mine.card;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.CardStackAdapter;
+import com.inspur.emmcloud.api.APIInterfaceInstance;
+import com.inspur.emmcloud.api.apiservice.MineAPIService;
 import com.inspur.emmcloud.bean.mine.CardPackageBean;
-import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.bean.mine.GetCardPackageResult;
+import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.CardPackageCacheUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.cardstack.RxAdapterUpDownStackAnimator;
 import com.inspur.emmcloud.widget.cardstack.RxCardStackView;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,6 +30,7 @@ import java.util.List;
  */
 @ContentView(R.layout.activity_card_package)
 public class CardPackageActivity extends BaseActivity  implements RxCardStackView.ItemExpendListener{
+    private static final int CARD_PACKAGE_SET_REQUEST = 1;
     @ViewInject(R.id.stackview_card_package)
     private RxCardStackView cardStackView;
     private CardStackAdapter cardStackAdapter;
@@ -34,10 +39,12 @@ public class CardPackageActivity extends BaseActivity  implements RxCardStackVie
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initViews();
-        new CardPackageManager(this,loadingDialog).getCardPackageListFromNet();
-        EventBus.getDefault().register(this);
+        getCardPackageListFromNet();
     }
 
+    /**
+     * 初始化views
+     */
     private void initViews() {
         loadingDialog = new LoadingDialog(this);
         cardStackView.setItemExpendListener(this);
@@ -45,24 +52,6 @@ public class CardPackageActivity extends BaseActivity  implements RxCardStackVie
         cardStackView.setAdapter(cardStackAdapter);
         cardStackView.setRxAdapterAnimator(new RxAdapterUpDownStackAnimator(cardStackView));
         cardStackAdapter.updateData(CardPackageCacheUtils.getSelectedCardPackageList(CardPackageActivity.this));
-    }
-
-    /**
-     * 来自CardPackageManager
-     * @param cardPackageBeanList
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void updateCardPackageUI(List<CardPackageBean> cardPackageBeanList) {
-        reFreshCardPackage();
-    }
-
-    /**
-     * 来自CardPackageSetActivity，当增减Card时会调用
-     * @param cardPackageBean
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void updateCardPackageUI(CardPackageBean cardPackageBean) {
-        reFreshCardPackage();
     }
 
     /**
@@ -79,8 +68,18 @@ public class CardPackageActivity extends BaseActivity  implements RxCardStackVie
                 finish();
                 break;
             case R.id.txt_card_package_set:
-                IntentUtils.startActivity(CardPackageActivity.this,CardPackageSetActivity.class);
+                Intent intent = new Intent();
+                intent.setClass(CardPackageActivity.this,CardPackageSetActivity.class);
+                startActivityForResult(intent,CARD_PACKAGE_SET_REQUEST);
                 break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == RESULT_OK && requestCode == CARD_PACKAGE_SET_REQUEST){
+            reFreshCardPackage();
         }
     }
 
@@ -88,9 +87,47 @@ public class CardPackageActivity extends BaseActivity  implements RxCardStackVie
     public void onItemExpend(boolean expend) {
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        EventBus.getDefault().unregister(this);
+    /**
+     * 从网络获取package
+     */
+    public void getCardPackageListFromNet() {
+        if(NetUtils.isNetworkConnected(this)){
+            loadingDialog.show();
+            MineAPIService mineAPIService = new MineAPIService(this);
+            mineAPIService.setAPIInterface(new WebService());
+            mineAPIService.getCardPackageList();
+        }
     }
+
+    /**
+     * 处理网络获取的数据
+     * 先同步缓存里和网络数据里的选中状态
+     * 如果网络数据有删除，则剔除掉缓存中仍然存在的Card
+     * 保存同步过的状态的Card数据
+     * @param cardPackageBeanList
+     */
+    private void handleCardPackageData(ArrayList<CardPackageBean> cardPackageBeanList) {
+        List<CardPackageBean> cardPackageBeanListInCache = CardPackageCacheUtils.getCardPackageList(this);
+        List<CardPackageBean> cardPackageBeanListSync = CardPackageCacheUtils.syncCardPackageStateList(cardPackageBeanListInCache,cardPackageBeanList);
+        cardPackageBeanListInCache.removeAll(cardPackageBeanListSync);
+        CardPackageCacheUtils.deleteCardPackageList(this);
+        CardPackageCacheUtils.saveCardPackageList(this,cardPackageBeanListSync);
+        reFreshCardPackage();
+    }
+
+
+    class WebService extends APIInterfaceInstance {
+        @Override
+        public void returnCardPackageListSuccess(GetCardPackageResult getCardPackageResult) {
+            LoadingDialog.dimissDlg(loadingDialog);
+            handleCardPackageData(getCardPackageResult.getCardPackageBeanList());
+        }
+
+        @Override
+        public void returnCardPackageListFail(String error, int errorCode) {
+            LoadingDialog.dimissDlg(loadingDialog);
+            WebServiceMiddleUtils.hand(CardPackageActivity.this,error,errorCode);
+        }
+    }
+
 }

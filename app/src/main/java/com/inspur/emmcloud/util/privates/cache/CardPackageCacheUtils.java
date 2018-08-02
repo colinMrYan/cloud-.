@@ -43,6 +43,7 @@ public class CardPackageCacheUtils {
             }
             DbCacheUtils.getDb(context).saveOrUpdate(cardPackageBean);
         }catch (Exception e){
+            LogUtils.YfcDebug("存储数据报错："+e.getMessage());
             e.printStackTrace();
         }
 
@@ -70,14 +71,10 @@ public class CardPackageCacheUtils {
     /**
      * 删除去除的CardPackage list
      * @param context
-     * @param cardPackageBeanList
      */
-    public static void deleteCardPackageList(Context context,List<CardPackageBean> cardPackageBeanList){
-        if(cardPackageBeanList == null || cardPackageBeanList.size() == 0){
-            return;
-        }
+    public static void deleteCardPackageList(Context context){
         try {
-            DbCacheUtils.getDb(context).delete(cardPackageBeanList);
+            DbCacheUtils.getDb(context).delete(CardPackageBean.class);
         } catch (Exception e) {
             e.printStackTrace();
         }

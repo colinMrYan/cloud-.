@@ -12,7 +12,6 @@ import com.inspur.emmcloud.bean.mine.CardPackageBean;
 import com.inspur.emmcloud.interf.OnCardPackageClickListener;
 import com.inspur.emmcloud.util.privates.cache.CardPackageCacheUtils;
 
-import org.greenrobot.eventbus.EventBus;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 
@@ -44,8 +43,6 @@ public class CardPackageSetActivity extends BaseActivity {
             @Override
             public void onCardPackageClick(CardPackageBean cardPackageBean) {
                 CardPackageCacheUtils.saveCardPackage(CardPackageSetActivity.this,cardPackageBean);
-                //发往CardPackageActivity
-                EventBus.getDefault().post(cardPackageBean);
             }
         });
         cardPackageAdapter.setAndRefreshCardPackageAdapter(CardPackageCacheUtils.getCardPackageList(this));
@@ -54,9 +51,16 @@ public class CardPackageSetActivity extends BaseActivity {
     public void onClick(View view){
         switch (view.getId()){
             case R.id.back_layout:
+                setResult(RESULT_OK);
                 finish();
                 break;
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        setResult(RESULT_OK);
+        finish();
     }
 
     @Override
