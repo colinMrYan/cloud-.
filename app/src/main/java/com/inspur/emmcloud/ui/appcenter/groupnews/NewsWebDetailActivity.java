@@ -182,7 +182,7 @@ public class NewsWebDetailActivity extends BaseActivity {
         webView.setAnimation(null);
         webView.setNetworkAvailable(true);
         webView.setBackgroundColor(Color.WHITE);
-        String model = PreferencesByUserAndTanentUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", "");
+        final String model = PreferencesByUserAndTanentUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", "");
         webView.setBackgroundColor(ContextCompat.getColor(NewsWebDetailActivity.this, (model.equals(darkMode)) ? R.color.app_news_night_color : R.color.white));
         //没有确定这里的影响，暂时不去掉
         webView.setLayerType(WebView.LAYER_TYPE_SOFTWARE, null);
@@ -200,7 +200,7 @@ public class NewsWebDetailActivity extends BaseActivity {
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 //Android8.0以下的需要返回true 并且需要loadUrl；8.0之后效果相反
                 if(Build.VERSION.SDK_INT<26) {
-                    view.loadUrl(url);
+                    view.loadUrl(url+(StringUtils.isBlank(model) ? lightMode : model));
                     return true;
                 }
                 return false;
@@ -869,15 +869,6 @@ public class NewsWebDetailActivity extends BaseActivity {
 
     }
 
-    /**
-     * 自定义WebViewClient在应用中打开页面
-     */
-    private class GroupNewsWebViewClient extends WebViewClient {
-        public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            view.loadUrl(url);
-            return true;
-        }
-    }
 
     /**
      * 弹出分享失败toast
