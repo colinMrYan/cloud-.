@@ -37,17 +37,6 @@
                     android:scaleType="centerInside"
                     android:src="@drawable/selector_back_btn" />
 
-                <TextView
-                    android:id="@+id/imp_back_btn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_toRightOf="@id/back_btn"
-                    android:background="@null"
-                    android:gravity="center"
-                    android:paddingRight="3dp"
-                    android:text="@string/back"
-                    android:textColor="#ffffff"
-                    android:textSize="16sp" />
             </RelativeLayout>
 
 
@@ -75,7 +64,7 @@
             android:layout_marginRight="15dp"
             android:layout_toRightOf="@id/function_layout"
             android:layout_toLeftOf="@id/ll_web_function"
-            android:ellipsize="end"
+            android:ellipsize="middle"
             android:gravity="left"
             android:singleLine="true"
             android:text="@string/about_text"
@@ -94,10 +83,10 @@
             android:layout_gravity="center_vertical"
             android:clickable="true"
             android:onClick="onClick"
-            android:paddingLeft="12dp"
-            android:paddingRight="12dp"
-            android:paddingTop="16dp"
-            android:paddingBottom="16dp"
+            android:paddingLeft="14dp"
+            android:paddingRight="14dp"
+            android:paddingTop="18dp"
+            android:paddingBottom="18dp"
             android:scaleType="fitXY"
             android:visibility="gone"
             />
@@ -109,7 +98,7 @@
             android:layout_gravity="center_vertical"
             android:clickable="true"
             android:onClick="onClick"
-            android:paddingLeft="12dp"
+            android:paddingLeft="14dp"
             android:paddingRight="12dp"
             android:paddingTop="16dp"
             android:paddingBottom="16dp"
