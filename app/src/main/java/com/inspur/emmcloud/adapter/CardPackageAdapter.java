@@ -30,6 +30,7 @@ public class CardPackageAdapter extends RecyclerView.Adapter<CardPackageAdapter.
     public CardPackageAdapter(Context context){
         inflater = LayoutInflater.from(context);
     }
+
     @Override
     public CardPackageHold onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = inflater.inflate(R.layout.card_package_set_item,null);
@@ -47,15 +48,13 @@ public class CardPackageAdapter extends RecyclerView.Adapter<CardPackageAdapter.
             @Override
             public void toggleToOn(View view) {
                 holder.switchView.setOpened(true);
-                CardPackageBean cardPackageBean = cardPackageBeanList.get(position);
-                changeCardPackageState(CARD_PACKAGE_OPEN,cardPackageBean);
+                changeCardPackageState(CARD_PACKAGE_OPEN,cardPackageBeanList.get(position));
             }
 
             @Override
             public void toggleToOff(View view) {
                 holder.switchView.setOpened(false);
-                CardPackageBean cardPackageBean = cardPackageBeanList.get(position);
-                changeCardPackageState(CARD_PACKAGE_CLOUSE,cardPackageBean);
+                changeCardPackageState(CARD_PACKAGE_CLOUSE,cardPackageBeanList.get(position));
             }
         });
     }
@@ -74,12 +73,21 @@ public class CardPackageAdapter extends RecyclerView.Adapter<CardPackageAdapter.
         return cardPackageBeanList.size();
     }
 
+    /**
+     * 设置监听器
+     * @param l
+     */
     public void setOnCardPackageClickListener(OnCardPackageClickListener l){
         this.listener = l;
     }
 
+    /**
+     * 设置数据并刷新adapter
+     * @param cardPackageBeanList
+     */
     public void setAndRefreshCardPackageAdapter(List<CardPackageBean> cardPackageBeanList){
         this.cardPackageBeanList.addAll(cardPackageBeanList);
+        notifyDataSetChanged();
     }
 
     class CardPackageHold extends RecyclerView.ViewHolder {
