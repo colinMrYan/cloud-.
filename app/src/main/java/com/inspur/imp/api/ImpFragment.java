@@ -475,7 +475,7 @@ public class ImpFragment extends Fragment {
         view.findViewById(R.id.app_imp_crm_font_big_btn).setOnClickListener(listener);
         view.findViewById(R.id.app_imp_crm_font_biggest_btn).setOnClickListener(listener);
 
-        if (!StringUtils.isBlank(getArguments().getString("is_zoomable")) && (getArguments().getInt("is_zoomable", 0) == 1)) {
+        if (getArguments().getInt("is_zoomable", 0) == 1) {
             setWebViewButtonTextColor(0);
         }
         dialog.show();
@@ -505,7 +505,7 @@ public class ImpFragment extends Fragment {
      * @param view
      */
     private void initFontSizeDialogViews(View view) {
-        if (!StringUtils.isBlank(getArguments().getString("is_zoomable")) && (getArguments().getInt("is_zoomable", 0) == 1)) {
+        if (getArguments().getInt("is_zoomable", 0) == 1) {
             view.findViewById(R.id.app_imp_crm_font_text).setVisibility(View.VISIBLE);
             view.findViewById(R.id.app_imp_crm_font_layout).setVisibility(View.VISIBLE);
             normalBtn = (Button) view.findViewById(R.id.app_imp_crm_font_normal_btn);
