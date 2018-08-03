@@ -66,22 +66,22 @@ public class AppExceptionService extends Service {
 	private JSONObject getUploadContentJSONObj(List<AppException> appExceptionList) {
 		JSONObject contentObj = new JSONObject();
 		try {
-			contentObj.put("AppID", 1);
-			contentObj.put("UserCode", PreferencesUtils.getString(AppExceptionService.this, "userID", ""));
-			if (MyApplication.getInstance().getTanent() != null) {
-				contentObj.put("EnterpriseCode", MyApplication.getInstance().getTanent());
+			contentObj.put("appID", 1);
+			contentObj.put("userCode", PreferencesUtils.getString(AppExceptionService.this, "userID", ""));
+			if (MyApplication.getInstance().getCurrentEnterprise() != null) {
+				contentObj.put("enterpriseCode", MyApplication.getInstance().getCurrentEnterprise().getId());
 			} else {
-				contentObj.put("EnterpriseCode", "");
+				contentObj.put("enterpriseCode", "");
 			}
-			contentObj.put("DeviceOS", "Android");
-			contentObj.put("DeviceOSVersion ", android.os.Build.VERSION.RELEASE);
-			contentObj.put("DeviceModel", android.os.Build.MODEL);
+			contentObj.put("deviceOS", "Android");
+			contentObj.put("deviceOSVersion ", android.os.Build.VERSION.RELEASE);
+			contentObj.put("deviceModel", android.os.Build.MODEL);
 
 			JSONArray errorDataArray = new JSONArray();
 			for (int i = 0; i < appExceptionList.size(); i++) {
 				errorDataArray.put(appExceptionList.get(i).toJSONObject());
 			}
-			contentObj.put("ErrorData", errorDataArray);
+			contentObj.put("errorData", errorDataArray);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

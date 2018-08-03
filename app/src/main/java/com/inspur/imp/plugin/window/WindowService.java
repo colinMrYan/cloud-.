@@ -32,6 +32,9 @@ public class WindowService extends ImpPlugin {
         for (int i=0;i<array.length();i++){
             dropItemTitleList.add(new DropItemTitle(JSONUtils.getJSONObject(array,i,new JSONObject())));
         }
+        if (dropItemTitleList.size()>0 &&  getImpCallBackInterface() != null){
+            getImpCallBackInterface().onSetDropTitles(dropItemTitleList);
+        }
     }
 
     @Override

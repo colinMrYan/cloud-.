@@ -58,16 +58,15 @@
 
         <TextView
             android:id="@+id/header_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="15dp"
-            android:layout_toRightOf="@id/function_layout"
-            android:layout_toLeftOf="@id/ll_web_function"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:paddingRight="5dp"
+            android:paddingLeft="5dp"
+            android:drawablePadding="5dp"
             android:ellipsize="middle"
-            android:gravity="left"
+            android:gravity="center_vertical"
             android:singleLine="true"
-            android:text="@string/about_text"
             android:textColor="@color/header_text"
             android:textSize="@dimen/header_textsize" />
     <LinearLayout

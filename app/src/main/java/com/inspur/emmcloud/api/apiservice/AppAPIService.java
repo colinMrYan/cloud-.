@@ -224,7 +224,7 @@ public class AppAPIService {
      * @param exception
      */
     public void uploadException(final JSONObject exception) {
-        final String completeUrl = APIUri.uploadException();
+        final String completeUrl = APIUri.getUploadExceptionUrl();
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         params.setAsJsonContent(true);
@@ -299,7 +299,7 @@ public class AppAPIService {
      * @param collectInfo
      */
     public void uploadPVCollect(String collectInfo) {
-        String completeUrl = "http://u.inspur.com/analytics/api/v1.0/ECMClientPV/Post";
+        String completeUrl = APIUri.getUploadPVCollectUrl();
         RequestParams params = new RequestParams(completeUrl);
         params.setBodyContent(collectInfo);
         params.setAsJsonContent(true);

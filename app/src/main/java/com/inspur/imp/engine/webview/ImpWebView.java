@@ -23,7 +23,10 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.bean.mine.Language;
 import com.inspur.emmcloud.util.common.ParseHtmlUtils;
+import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.imp.api.ImpCallBackInterface;
 import com.inspur.imp.api.JsInterface;
@@ -65,7 +68,7 @@ public class ImpWebView extends WebView {
 	public static final String USERAGENT = "Mozilla/5.0 (Linux; U; Android "
 			+ Build.VERSION.RELEASE + "; en-us; " + Build.MODEL
 			+ " Build/FRF91) AppleWebKit/533.1 "
-			+ "(KHTML, like Gecko) Version/4.0 Chrome/51.0.2704.81 Mobile Safari/533.1";
+			+ "(KHTML, like Gecko) Version/4.0 Chrome/51.0.2704.81 Mobile Safari/533.1 ";
 	private ProgressBar progressbar;
 	private static final String TAG = "ImpWebView";
 	private ImpWebChromeClient impWebChromeClient;
@@ -99,8 +102,10 @@ public class ImpWebView extends WebView {
 			public void handleMessage(Message msg) {
 				switch (msg.what){
 					case SET_TITLE:
-						String title =(String) msg.obj;
-						titleText.setText(title);
+						if (titleText != null){
+							String title =(String) msg.obj;
+							titleText.setText(title);
+						}
 						break;
 					case DIMISS_LOADING:
 						if(impCallBackInterface != null){
@@ -258,7 +263,13 @@ public class ImpWebView extends WebView {
 	 */
 	private void setBaseConfig() {
 		// 代理字符串，如果字符串为空或者null系统默认字符串将被利用
-		String userAgent = USERAGENT + "/emmcloud/" + AppUtils.getVersion(context);
+		String userAgent = USERAGENT + "/emmcloud/" + AppUtils.getVersion(context)+" ";
+		String languageJson = PreferencesUtils.getString(
+				MyApplication.getInstance(), MyApplication.getInstance().getTanent() + "appLanguageObj");
+		if (languageJson != null) {
+			Language language = new Language(languageJson);
+			userAgent = userAgent+"lang/"+ language.getIana();
+		}
 		settings.setUserAgentString(userAgent);
 		settings.enableSmoothTransition();
 		settings.setGeolocationEnabled(true);

@@ -3,10 +3,10 @@ package com.inspur.imp.api;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -14,10 +14,13 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.webkit.WebSettings;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -30,10 +33,13 @@ import com.inspur.emmcloud.config.MyAppWebConfig;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
+import com.inspur.emmcloud.util.common.ResolutionUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.MDM.MDM;
 import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
+import com.inspur.emmcloud.widget.MaxHightListView;
 import com.inspur.emmcloud.widget.dialogs.EasyDialog;
 import com.inspur.imp.engine.webview.ImpWebView;
 import com.inspur.imp.plugin.IPlugin;
@@ -43,9 +49,11 @@ import com.inspur.imp.plugin.camera.CameraService;
 import com.inspur.imp.plugin.file.FileService;
 import com.inspur.imp.plugin.photo.PhotoService;
 import com.inspur.imp.plugin.staff.SelectStaffService;
+import com.inspur.imp.plugin.window.DropItemTitle;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -78,6 +86,10 @@ public class ImpFragment extends Fragment {
     private ArrayList<MainTabMenu> mainTabMenuArrayList;
     private String version;
     private ImpFragmentClickListener listener;
+    private PopupWindow dropTitlePopupWindow;
+    private RelativeLayout headerLayout;
+    private List<DropItemTitle> dropItemTitleList = new ArrayList<>();
+    private Adapter dropTitleAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -87,7 +99,7 @@ public class ImpFragment extends Fragment {
                 getActivity().LAYOUT_INFLATER_SERVICE);
         rootView = inflater.inflate(Res.getLayoutID("activity_imp"), null);
         initViews();
-        version = getArguments().getString(Constant.WEB_FRAGMENT_VERSION,"");
+        version = getArguments().getString(Constant.WEB_FRAGMENT_VERSION, "");
     }
 
     @Override
@@ -101,7 +113,7 @@ public class ImpFragment extends Fragment {
         if (parent != null) {
             parent.removeView(rootView);
         }
-        if(!version.equals(getArguments().getString(Constant.WEB_FRAGMENT_VERSION,""))){
+        if (!version.equals(getArguments().getString(Constant.WEB_FRAGMENT_VERSION, ""))) {
             initFragmentViews();
         }
         return rootView;
@@ -115,6 +127,7 @@ public class ImpFragment extends Fragment {
         if (getArguments() == null) {
             setArguments(new Bundle());
         }
+        headerLayout = (RelativeLayout) rootView.findViewById(Res.getWidgetID("header_layout"));
         loadingLayout = (RelativeLayout) rootView.findViewById(Res.getWidgetID("loading_layout"));
         loadingText = (TextView) rootView.findViewById(Res.getWidgetID("loading_text"));
         frameLayout = (FrameLayout) rootView.findViewById(Res.getWidgetID("videoContainer"));
@@ -123,7 +136,6 @@ public class ImpFragment extends Fragment {
         if (getActivity().getClass().getName().equals(IndexActivity.class.getName())) {
             rootView.findViewById(R.id.back_layout).setVisibility(View.GONE);
             rootView.findViewById(R.id.imp_close_btn).setVisibility(View.GONE);
-            ((TextView) rootView.findViewById(R.id.header_text)).setGravity(Gravity.CENTER_HORIZONTAL);
         }
         showLoadingDlg(getString(Res.getStringID("@string/loading_text")));
         if (!StringUtils.isBlank(getArguments().getString("help_url"))) {
@@ -178,7 +190,7 @@ public class ImpFragment extends Fragment {
         rootView.findViewById(R.id.imp_cloud_function2_img).setOnClickListener(listener);
     }
 
-    class ImpFragmentClickListener implements View.OnClickListener{
+    class ImpFragmentClickListener implements View.OnClickListener {
 
         @Override
         public void onClick(View v) {
@@ -211,11 +223,21 @@ public class ImpFragment extends Fragment {
                     loadFailLayout.setVisibility(View.GONE);
                     break;
                 case R.id.imp_cloud_function1_img:
-                    runJavaScript(JAVASCRIPT_PREFIX+mainTabMenuArrayList.get(0).getAction());
+                    runJavaScript(JAVASCRIPT_PREFIX + mainTabMenuArrayList.get(0).getAction());
                     break;
                 case R.id.imp_cloud_function2_img:
-                    runJavaScript(JAVASCRIPT_PREFIX+mainTabMenuArrayList.get(1).getAction());
+                    runJavaScript(JAVASCRIPT_PREFIX + mainTabMenuArrayList.get(1).getAction());
                     break;
+                case R.id.header_text:
+                    if (dropItemTitleList != null &&dropItemTitleList.size()>0){
+                        if (dropTitlePopupWindow != null && dropTitlePopupWindow.isShowing()){
+                            dropTitlePopupWindow.dismiss();
+                        }else {
+                            showDropTitlePop();
+                            setHeaderTitleTextDropImg();
+                        }
+                    }
+                        break;
                 default:
                     break;
             }
@@ -227,38 +249,26 @@ public class ImpFragment extends Fragment {
      * 最多两个功能，超过两个取前两个
      */
     private void initHeaderFunction() {
-        mainTabMenuArrayList = (ArrayList<MainTabMenu>)getArguments().getSerializable(Constant.WEB_FRAGMENT_MENU);
-        if(mainTabMenuArrayList != null){
-            if(mainTabMenuArrayList.size() == 1){
+        mainTabMenuArrayList = (ArrayList<MainTabMenu>) getArguments().getSerializable(Constant.WEB_FRAGMENT_MENU);
+        if (mainTabMenuArrayList != null) {
+            if (mainTabMenuArrayList.size() == 1) {
                 ImageView imageViewFun1 = (ImageView) rootView.findViewById(R.id.imp_cloud_function1_img);
                 imageViewFun1.setVisibility(View.VISIBLE);
-                ImageDisplayUtils.getInstance().displayImage(imageViewFun1,mainTabMenuArrayList.get(0).getIco());
-                setHeadTitlePadding(1);
-            }else if(mainTabMenuArrayList.size() == 2){
+                ImageDisplayUtils.getInstance().displayImage(imageViewFun1, mainTabMenuArrayList.get(0).getIco());
+            } else if (mainTabMenuArrayList.size() == 2) {
                 ImageView imageViewFun1 = (ImageView) rootView.findViewById(R.id.imp_cloud_function1_img);
                 ImageView imageViewFun2 = (ImageView) rootView.findViewById(R.id.imp_cloud_function2_img);
                 imageViewFun1.setVisibility(View.VISIBLE);
                 imageViewFun2.setVisibility(View.VISIBLE);
-                ImageDisplayUtils.getInstance().displayImage(imageViewFun1,mainTabMenuArrayList.get(0).getIco());
-                ImageDisplayUtils.getInstance().displayImage(imageViewFun2,mainTabMenuArrayList.get(1).getIco());
-                setHeadTitlePadding(2);
+                ImageDisplayUtils.getInstance().displayImage(imageViewFun1, mainTabMenuArrayList.get(0).getIco());
+                ImageDisplayUtils.getInstance().displayImage(imageViewFun2, mainTabMenuArrayList.get(1).getIco());
             }
         }
     }
 
     /**
-     * MainTab居中计算
-     * @param i
-     */
-    private void setHeadTitlePadding(int i) {
-        if (getActivity().getClass().getName().equals(IndexActivity.class.getName())) {
-            rootView.findViewById(R.id.header_text).setPadding(DensityUtil.dip2px(getActivity(), i == 1 ? 48 : 96), 0, 0, 0);
-        }
-    }
-
-
-    /**
      * 执行JS脚本
+     *
      * @param script
      */
     private void runJavaScript(String script) {
@@ -312,13 +322,92 @@ public class ImpFragment extends Fragment {
         if (getArguments().getString(Constant.WEB_FRAGMENT_APP_NAME) != null) {
             String title = getArguments().getString(Constant.WEB_FRAGMENT_APP_NAME);
             headerText = (TextView) rootView.findViewById(Res.getWidgetID("header_text"));
+            headerText.setMaxWidth(ResolutionUtils.getWidth(getActivity()) - DensityUtil.dip2px(MyApplication.getInstance(), 192));
+            headerText.setOnClickListener(new ImpFragmentClickListener());
             webView.setProperty(headerText, loadFailLayout, frameLayout, impCallBackInterface);
             initWebViewGoBackOrClose();
-            (rootView.findViewById(Res.getWidgetID("header_layout")))
-                    .setVisibility(View.VISIBLE);
+            headerLayout.setVisibility(View.VISIBLE);
             headerText.setText(title);
         } else {
             webView.setProperty(null, loadFailLayout, frameLayout, impCallBackInterface);
+        }
+    }
+
+    private void showDropTitlePop() {
+        // 一个自定义的布局，作为显示的内容
+        if (dropTitlePopupWindow == null){
+            View contentView = LayoutInflater.from(ImpFragment.this.getContext())
+                    .inflate(R.layout.plugin_pop_drop_title, null);
+            // 设置按钮的点击事件
+            dropTitlePopupWindow = new PopupWindow(contentView,
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT, true);
+            dropTitlePopupWindow.setTouchable(true);
+            dropTitlePopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                @Override
+                public void onDismiss() {
+                    AppUtils.setWindowBackgroundAlpha(getActivity(), 1.0f);
+                    setHeaderTitleTextDropImg();
+                }
+            });
+            MaxHightListView listView = (MaxHightListView)contentView.findViewById(R.id.list) ;
+            listView.setMaxHeight(DensityUtil.dip2px(MyApplication.getInstance(),240));
+            dropTitleAdapter = new Adapter();
+            listView.setAdapter(dropTitleAdapter);
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    DropItemTitle dropItemTitle = dropItemTitleList.get(position);
+                    if (!dropItemTitle.isSelected()){
+                        dropItemTitle.setSelected(true);
+                        runJavaScript(JAVASCRIPT_PREFIX + dropItemTitle.getAction());
+                        setTitle(dropItemTitle.getText());
+                        for (int i =0;i<dropItemTitleList.size();i++){
+                            if (i != position){
+                                dropItemTitleList.get(i).setSelected(false);
+                            }
+                        }
+                    }
+                    dropTitlePopupWindow.dismiss();
+                }
+            });
+        }else {
+            dropTitleAdapter.notifyDataSetChanged();
+        }
+        dropTitlePopupWindow.setBackgroundDrawable(getResources().getDrawable(
+                R.drawable.pop_window_view_tran));
+        AppUtils.setWindowBackgroundAlpha(getActivity(), 0.8f);
+        dropTitlePopupWindow.showAsDropDown(headerLayout);
+    }
+
+    private class Adapter extends BaseAdapter{
+
+        @Override
+        public int getCount() {
+            return dropItemTitleList.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            convertView = LayoutInflater.from(getActivity()).inflate(R.layout.plugin_pop_drop_list_item_view,null);
+            DropItemTitle dropItemTitle = dropItemTitleList.get(position);
+            ImageView iconImg = (ImageView)convertView.findViewById(R.id.iv_icon);
+            TextView titleText = (TextView)convertView.findViewById(R.id.tv_title);
+            ImageView selectImg = (ImageView)convertView.findViewById(R.id.iv_select);
+            ImageDisplayUtils.getInstance().displayImage(iconImg,dropItemTitle.getIco(),R.drawable.icon_photo_default);
+            titleText.setText(dropItemTitle.getText());
+            selectImg.setVisibility(dropItemTitle.isSelected()?View.VISIBLE:View.INVISIBLE);
+            return convertView;
         }
     }
 
@@ -368,8 +457,23 @@ public class ImpFragment extends Fragment {
             public void onStartActivityForResult(Intent intent, int requestCode) {
                 startActivityForResult(intent, requestCode);
             }
+
+            @Override
+            public void onSetDropTitles(List<DropItemTitle> dropItemTitleList) {
+                ImpFragment.this.dropItemTitleList = dropItemTitleList;
+                setHeaderTitleTextDropImg();
+            }
         };
 
+    }
+
+    private void setHeaderTitleTextDropImg() {
+        if (headerText != null) {
+            boolean isDropTitlePopShow = (dropTitlePopupWindow != null && dropTitlePopupWindow.isShowing());
+            Drawable drawable = ContextCompat.getDrawable(MyApplication.getInstance(), isDropTitlePopShow ? R.drawable.plugin_ic_header_title_drop_up : R.drawable.plugin_ic_header_title_drop_down);
+            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+            headerText.setCompoundDrawables(null, null, drawable, null);
+        }
     }
 
     /**
@@ -378,7 +482,7 @@ public class ImpFragment extends Fragment {
      */
     public void initWebViewGoBackOrClose() {
         if (headerText != null) {
-            if(getActivity().getClass().getName().equals(ImpActivity.class.getName())){
+            if (getActivity().getClass().getName().equals(ImpActivity.class.getName())) {
                 (rootView.findViewById(Res.getWidgetID("imp_close_btn"))).setVisibility(webView.canGoBack() ? View.VISIBLE : View.GONE);
             }
         }
@@ -439,7 +543,6 @@ public class ImpFragment extends Fragment {
     }
 
 
-
     /**
      * 打开修改字体的dialog
      */
@@ -475,7 +578,7 @@ public class ImpFragment extends Fragment {
         view.findViewById(R.id.app_imp_crm_font_big_btn).setOnClickListener(listener);
         view.findViewById(R.id.app_imp_crm_font_biggest_btn).setOnClickListener(listener);
 
-        if (!StringUtils.isBlank(getArguments().getString("is_zoomable")) && (getArguments().getInt("is_zoomable", 0) == 1)) {
+        if (getArguments().getInt("is_zoomable", 0) == 1) {
             setWebViewButtonTextColor(0);
         }
         dialog.show();
@@ -505,7 +608,7 @@ public class ImpFragment extends Fragment {
      * @param view
      */
     private void initFontSizeDialogViews(View view) {
-        if (!StringUtils.isBlank(getArguments().getString("is_zoomable")) && (getArguments().getInt("is_zoomable", 0) == 1)) {
+        if (getArguments().getInt("is_zoomable", 0) == 1) {
             view.findViewById(R.id.app_imp_crm_font_text).setVisibility(View.VISIBLE);
             view.findViewById(R.id.app_imp_crm_font_layout).setVisibility(View.VISIBLE);
             normalBtn = (Button) view.findViewById(R.id.app_imp_crm_font_normal_btn);
