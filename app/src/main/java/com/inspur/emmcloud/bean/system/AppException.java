@@ -100,12 +100,12 @@ public class AppException implements Serializable {
 	public JSONObject toJSONObject(){
 		JSONObject object = new JSONObject();
 		try {
-			object.put("HappenTime",HappenTime);
-			object.put("AppVersion",AppVersion);
-			object.put("ErrorLevel",ErrorLevel);
-			object.put("ErrorUrl",ErrorUrl);
-			object.put("ErrorInfo",ErrorInfo);
-			object.put("ErrorCode",ErrorCode);
+			object.put("happenTime",HappenTime);
+			object.put("appVersion",AppVersion);
+			object.put("errorLevel",ErrorLevel);
+			object.put("errorUrl",ErrorUrl);
+			object.put("errorInfo",ErrorInfo);
+			object.put("errorCode",ErrorCode);
 		}catch (Exception e){
 			e.printStackTrace();
 		}

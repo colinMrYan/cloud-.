@@ -2,6 +2,9 @@ package com.inspur.imp.api;
 
 import android.content.Intent;
 
+import com.inspur.imp.plugin.window.DropItemTitle;
+
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -17,5 +20,6 @@ public interface ImpCallBackInterface {
     void onFinishActivity();
     void onLoadingDlgShow(String content);
     void onStartActivityForResult(Intent intent,int requestCode);
+    void onSetDropTitles(List<DropItemTitle> dropItemTitleList);
 
 }
