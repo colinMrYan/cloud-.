@@ -108,6 +108,7 @@ public class ShareLinkActivity extends BaseActivity {
                     @Override
                     public void createDirectChannelFail() {
                         ToastUtils.show(ShareLinkActivity.this,getString(R.string.news_share_fail));
+                        finish();
                     }
                 });
     }
