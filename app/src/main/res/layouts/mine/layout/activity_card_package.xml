@@ -59,13 +59,14 @@
         android:id="@+id/rl_card_package"
         android:layout_width="match_parent"
         android:layout_height="120dp"
+        android:layout_centerHorizontal="true"
+        android:gravity="center_horizontal"
         android:layout_below="@id/header_layout">
         <ImageView
             android:id="@+id/img_card_package_icon"
             android:layout_width="81dp"
             android:layout_height="79dp"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="42dp"
             android:src="@drawable/icon_card_package"/>
         <TextView
             android:id="@+id/txt_title"
