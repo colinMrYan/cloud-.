@@ -9,7 +9,7 @@
     android:orientation="vertical"
     app:stackHeaderHeight="185dp">
     <TextView
-        android:id="@+id/txt_company_name"
+        android:id="@+id/tv_company_name"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:textColor="@color/white"
@@ -17,7 +17,7 @@
         android:paddingLeft="22dp"
         android:gravity="center_vertical"
         android:background="@drawable/shape_top_rectangle_with_radius"
-        android:text="浪潮通用软件有限公司"/>
+        />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -33,55 +33,54 @@
             android:paddingTop="17dp"
             android:textSize="12sp"
             android:textColor="#ACACAC"
-            android:text="纳税人识别号"/>
+            android:text="@string/card_package_taxpayer"/>
         <TextView
-            android:id="@+id/txt_taxpayer"
+            android:id="@+id/tv_taxpayer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="20sp"
-            android:textColor="#666666"
-            android:text="91370000163075429X"/>
+            android:textColor="#666666" />
         <TextView
             android:id="@+id/txt_bank"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="12sp"
             android:textColor="#ACACAC"
-            android:text="中国建设银行济南泉城支行"/>
+            />
         <TextView
-            android:id="@+id/txt_bank_code"
+            android:id="@+id/tv_bank_code"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="20sp"
             android:textColor="#666666"
-            android:text="6217 0034 5887 2899 9392"/>
+            />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="12sp"
             android:textColor="#ACACAC"
-            android:text="地址"/>
+            android:text="@string/card_package_address"/>
         <TextView
-            android:id="@+id/txt_address"
+            android:id="@+id/tv_address"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="20sp"
             android:textColor="#666666"
-            android:text="山东省济南市浪潮路1036号"/>
+            />
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="12sp"
             android:textColor="#ACACAC"
-            android:text="电话"/>
+            android:text="@string/card_package_phone_number"/>
         <TextView
-            android:id="@+id/txt_phone"
+            android:id="@+id/tv_phone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="20sp"
             android:textColor="#666666"
-            android:text="0531-85102396"/>
+            />
     </LinearLayout>
 
 

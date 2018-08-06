@@ -16,7 +16,7 @@ import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.CardPackageCacheUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
-import com.inspur.emmcloud.widget.cardstack.RxAdapterUpDownStackAnimator;
+import com.inspur.emmcloud.widget.cardstack.RxAdapterAllMoveDownAnimator;
 import com.inspur.emmcloud.widget.cardstack.RxCardStackView;
 
 import org.xutils.view.annotation.ContentView;
@@ -51,7 +51,7 @@ public class CardPackageActivity extends BaseActivity  implements RxCardStackVie
         cardStackView.setItemExpendListener(this);
         cardStackAdapter = new CardStackAdapter(this);
         cardStackView.setAdapter(cardStackAdapter);
-        cardStackView.setRxAdapterAnimator(new RxAdapterUpDownStackAnimator(cardStackView));
+        cardStackView.setRxAdapterAnimator(new RxAdapterAllMoveDownAnimator(cardStackView));
         cardStackAdapter.updateData(CardPackageCacheUtils.getSelectedCardPackageList(CardPackageActivity.this));
     }
 
@@ -100,7 +100,9 @@ public class CardPackageActivity extends BaseActivity  implements RxCardStackVie
      */
     public void getCardPackageListFromNet() {
         if(NetUtils.isNetworkConnected(this)){
-            loadingDialog.show();
+            if(CardPackageCacheUtils.getCardPackageList(this).size() == 0){
+                loadingDialog.show();
+            }
             MineAPIService mineAPIService = new MineAPIService(this);
             mineAPIService.setAPIInterface(new WebService());
             mineAPIService.getCardPackageList();

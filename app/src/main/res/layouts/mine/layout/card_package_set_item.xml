@@ -9,10 +9,13 @@
         android:background="@color/color_list_divider"
         android:layout_alignParentTop="true"/>
     <TextView
-        android:id="@+id/txt_card_package_set_item"
+        android:id="@+id/tv_card_package_set_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
+        android:layout_toLeftOf="@id/switch_card_package_set_item"
+        android:ellipsize="end"
+        android:singleLine="true"
         android:paddingLeft="12dp"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"

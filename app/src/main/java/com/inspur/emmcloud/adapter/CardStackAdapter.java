@@ -50,14 +50,15 @@ public class CardStackAdapter extends RxAdapterStack<CardPackageBean> {
         private TextView bankNumText;
         private TextView addressText;
         private TextView phoneText;
+
         public ColorItemViewHolder(View view) {
             super(view);
-            companyNameText = (TextView) view.findViewById(R.id.txt_company_name);
-            taxpayerText = (TextView) view.findViewById(R.id.txt_taxpayer);
+            companyNameText = (TextView) view.findViewById(R.id.tv_company_name);
+            taxpayerText = (TextView) view.findViewById(R.id.tv_taxpayer);
             bankText = (TextView) view.findViewById(R.id.txt_bank);
-            bankNumText =  (TextView) view.findViewById(R.id.txt_bank_code);
-            addressText = (TextView) view.findViewById(R.id.txt_address);
-            phoneText = (TextView) view.findViewById(R.id.txt_phone);
+            bankNumText = (TextView) view.findViewById(R.id.tv_bank_code);
+            addressText = (TextView) view.findViewById(R.id.tv_address);
+            phoneText = (TextView) view.findViewById(R.id.tv_phone);
         }
 
         @Override
@@ -66,6 +67,7 @@ public class CardStackAdapter extends RxAdapterStack<CardPackageBean> {
 
         public void onBind(CardPackageBean cardPackageBean, int position) {
             companyNameText.setText(cardPackageBean.getCompany());
+            companyNameText.setBackgroundResource(getBackGroundImg(position));
             taxpayerText.setText(cardPackageBean.getTaxpayer());
             bankText.setText(cardPackageBean.getBank());
             bankNumText.setText(cardPackageBean.getBankAccount());
@@ -75,5 +77,21 @@ public class CardStackAdapter extends RxAdapterStack<CardPackageBean> {
 
     }
 
-
+    /**
+     * @param position
+     * @return
+     */
+    private int getBackGroundImg(int position) {
+        int index = position % 3;
+        switch (index) {
+            case 0:
+                return R.drawable.icon_card_package_head_bg_1;
+            case 1:
+                return R.drawable.icon_card_package_head_bg_2;
+            case 2:
+                return R.drawable.icon_card_pakcage_head_bg_3;
+            default:
+                return R.drawable.icon_card_package_head_bg_1;
+        }
+    }
 }
