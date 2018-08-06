@@ -42,7 +42,11 @@ public class PVCollectService extends Service {
                 try {
                     jsonObject.put("userContent", collectInfos);
                     jsonObject.put("userID", MyApplication.getInstance().getUid());
-                    jsonObject.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
+                    if (MyApplication.getInstance().getCurrentEnterprise() != null) {
+                        jsonObject.put("enterpriseID", MyApplication.getInstance().getCurrentEnterprise().getId());
+                    } else {
+                        jsonObject.put("enterpriseID", "");
+                    }
                     jsonObject.put("userName", PreferencesUtils.getString(MyApplication.getInstance(), "userRealName", ""));
                 } catch (Exception e) {
                     e.printStackTrace();

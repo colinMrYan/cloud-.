@@ -106,8 +106,16 @@ public class APIUri {
      *
      * @return
      */
-    public static String uploadException() {
-        return "http://u.inspur.com/analytics/api/ECMException/Post";
+    public static String getUploadExceptionUrl() {
+        return "https://uvc1.inspuronline.com/cpexception";
+    }
+
+    /**
+     * PV收集
+     * @return
+     */
+    public static String getUploadPVCollectUrl(){
+        return "https://uvc1.inspuronline.com/clientpv";
     }
 
     /**

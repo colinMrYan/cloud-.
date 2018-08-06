@@ -29,7 +29,6 @@ import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PinyinUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -221,7 +220,6 @@ public class ChannelInfoActivity extends BaseActivity {
         @Override
         public void toggleToOn(View view) {
             // TODO Auto-generated method stub
-            LogUtils.debug("jason", "toggleToOn---------");
             if (view.getId() == R.id.msg_interruption_switch) {
                 updateIsNoInterruption(true);
             } else {
@@ -232,7 +230,6 @@ public class ChannelInfoActivity extends BaseActivity {
         @Override
         public void toggleToOff(View view) {
             // TODO Auto-generated method stub
-            LogUtils.debug("jason", "toggleToOff---------");
             if (view.getId() == R.id.msg_interruption_switch) {
                 updateIsNoInterruption(false);
             } else {
