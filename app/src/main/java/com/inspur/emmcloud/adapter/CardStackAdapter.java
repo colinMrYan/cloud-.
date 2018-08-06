@@ -54,11 +54,11 @@ public class CardStackAdapter extends RxAdapterStack<CardPackageBean> {
         public ColorItemViewHolder(View view) {
             super(view);
             companyNameText = (TextView) view.findViewById(R.id.tv_company_name);
-            taxpayerText = (TextView) view.findViewById(R.id.txt_taxpayer);
+            taxpayerText = (TextView) view.findViewById(R.id.tv_taxpayer);
             bankText = (TextView) view.findViewById(R.id.txt_bank);
-            bankNumText = (TextView) view.findViewById(R.id.txt_bank_code);
-            addressText = (TextView) view.findViewById(R.id.txt_address);
-            phoneText = (TextView) view.findViewById(R.id.txt_phone);
+            bankNumText = (TextView) view.findViewById(R.id.tv_bank_code);
+            addressText = (TextView) view.findViewById(R.id.tv_address);
+            phoneText = (TextView) view.findViewById(R.id.tv_phone);
         }
 
         @Override

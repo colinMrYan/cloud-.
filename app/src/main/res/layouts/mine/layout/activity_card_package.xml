@@ -60,7 +60,7 @@
             android:layout_centerVertical="true"
             android:src="@drawable/icon_card_package"/>
         <TextView
-            android:id="@+id/txt_title"
+            android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="40dp"
@@ -70,10 +70,10 @@
             android:text="@string/card_package_welcome"
             android:layout_toRightOf="@id/img_card_package_icon"/>
         <TextView
-            android:id="@+id/txt_digest"
+            android:id="@+id/tv_digest"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/txt_title"
+            android:layout_below="@id/tv_title"
             android:textSize="16sp"
             android:layout_marginLeft="25dp"
             android:textColor="#ff666666"
