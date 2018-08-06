@@ -12,6 +12,7 @@ import com.inspur.emmcloud.api.apiservice.MineAPIService;
 import com.inspur.emmcloud.bean.mine.CardPackageBean;
 import com.inspur.emmcloud.bean.mine.GetCardPackageResult;
 import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.CardPackageCacheUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
@@ -37,6 +38,7 @@ public class CardPackageActivity extends BaseActivity  implements RxCardStackVie
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        StateBarUtils.changeStateBarColor(this,R.color.content_bg);
         initViews();
         getCardPackageListFromNet();
     }
