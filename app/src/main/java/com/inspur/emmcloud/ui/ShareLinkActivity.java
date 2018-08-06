@@ -86,6 +86,7 @@ public class ShareLinkActivity extends BaseActivity {
             } catch (Exception e) {
                 e.printStackTrace();
                 ToastUtils.show(MyApplication.getInstance(),getString(R.string.news_share_fail));
+                finish();
             }
         }else{
             finish();

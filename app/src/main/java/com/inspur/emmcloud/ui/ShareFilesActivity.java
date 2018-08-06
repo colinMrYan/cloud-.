@@ -245,7 +245,6 @@ public class ShareFilesActivity extends BaseActivity {
                     @Override
                     public void createDirectChannelFail() {
                         ToastUtils.show(ShareFilesActivity.this,getString(R.string.news_share_fail));
-                        finish();
                     }
                 });
     }
