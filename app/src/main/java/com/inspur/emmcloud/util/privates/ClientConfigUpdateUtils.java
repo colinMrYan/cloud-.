@@ -91,7 +91,7 @@ public class ClientConfigUpdateUtils extends APIInterfaceInstance {
 
     private static GetAllConfigVersionResult getCacheAllConfigVersionResult() {
         String commonNewVersion = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_V_CONFIG_ALL, "");
-        if (StringUtils.isBlank(commonNewVersion)){
+        if (!StringUtils.isBlank(commonNewVersion)){
             return new GetAllConfigVersionResult(commonNewVersion);
         }
         return null;
