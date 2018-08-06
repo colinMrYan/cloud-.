@@ -142,6 +142,15 @@ public class SwitchView extends View {
 		shadowGradient = new RadialGradient(bWidth / 2, bWidth / 2, bWidth / 2, 0x00000000, 0x00000000, Shader.TileMode.CLAMP);
 	}
 
+	/**
+	 * 重新初始化状态
+	 */
+	public void init(){
+		state = STATE_SWITCH_OFF;
+		isOpened = false;
+		invalidate();
+	}
+
 	public void setEnable(boolean isEnable){
 		this.isEnable = isEnable;
 	}
