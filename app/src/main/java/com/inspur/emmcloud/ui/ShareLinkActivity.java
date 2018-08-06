@@ -86,6 +86,7 @@ public class ShareLinkActivity extends BaseActivity {
             } catch (Exception e) {
                 e.printStackTrace();
                 ToastUtils.show(MyApplication.getInstance(),getString(R.string.news_share_fail));
+                finish();
             }
         }else{
             finish();
@@ -108,6 +109,7 @@ public class ShareLinkActivity extends BaseActivity {
                     @Override
                     public void createDirectChannelFail() {
                         ToastUtils.show(ShareLinkActivity.this,getString(R.string.news_share_fail));
+                        finish();
                     }
                 });
     }

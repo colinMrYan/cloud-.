@@ -170,6 +170,7 @@ public class NewsWebDetailActivity extends BaseActivity {
         //修改model在第一次加载时直接带着model而不是加载两次
         String model = PreferencesByUserAndTanentUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", "");
         webView.loadUrl(url+(StringUtils.isBlank(model) ? lightMode : model));
+        setHeaderModel(model);
     }
 
     private void setWebView() {
@@ -722,14 +723,21 @@ public class NewsWebDetailActivity extends BaseActivity {
     }
 
     /**
+     * 改变原生导航栏
+     */
+    private void setHeaderModel(String model){
+        StateBarUtils.changeStateBarColor(NewsWebDetailActivity.this, model.equals(darkMode) ? R.color.app_news_night_color : R.color.header_bg);
+        (findViewById(R.id.header_layout)).setBackgroundColor(model.equals(darkMode) ? ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_news_night_color)
+                : ContextCompat.getColor(NewsWebDetailActivity.this, R.color.header_bg));
+    }
+
+    /**
      * 修改WebView的模式
      *
      * @param model
      */
     private void setWebViewModel(String model) {
-        StateBarUtils.changeStateBarColor(NewsWebDetailActivity.this, model.equals(darkMode) ? R.color.app_news_night_color : R.color.header_bg);
-        (findViewById(R.id.header_layout)).setBackgroundColor(model.equals(darkMode) ? ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_news_night_color)
-                : ContextCompat.getColor(NewsWebDetailActivity.this, R.color.header_bg));
+        setHeaderModel(model);
         webView.loadUrl(url + model);
         PreferencesByUserAndTanentUtils.putString(NewsWebDetailActivity.this, "app_news_webview_model", model);
     }
