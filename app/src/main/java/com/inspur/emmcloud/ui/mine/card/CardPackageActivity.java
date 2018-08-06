@@ -100,7 +100,9 @@ public class CardPackageActivity extends BaseActivity  implements RxCardStackVie
      */
     public void getCardPackageListFromNet() {
         if(NetUtils.isNetworkConnected(this)){
-            loadingDialog.show();
+            if(CardPackageCacheUtils.getCardPackageList(this).size() == 0){
+                loadingDialog.show();
+            }
             MineAPIService mineAPIService = new MineAPIService(this);
             mineAPIService.setAPIInterface(new WebService());
             mineAPIService.getCardPackageList();
