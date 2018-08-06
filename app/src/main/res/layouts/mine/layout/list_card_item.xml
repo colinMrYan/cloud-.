@@ -9,7 +9,7 @@
     android:orientation="vertical"
     app:stackHeaderHeight="185dp">
     <TextView
-        android:id="@+id/txt_company_name"
+        android:id="@+id/tv_company_name"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:textColor="@color/white"
@@ -33,7 +33,7 @@
             android:paddingTop="17dp"
             android:textSize="12sp"
             android:textColor="#ACACAC"
-            android:text="纳税人识别号"/>
+            android:text="@string/card_package_taxpayer"/>
         <TextView
             android:id="@+id/txt_taxpayer"
             android:layout_width="match_parent"
@@ -61,7 +61,7 @@
             android:layout_height="wrap_content"
             android:textSize="12sp"
             android:textColor="#ACACAC"
-            android:text="地址"/>
+            android:text="@string/card_package_address"/>
         <TextView
             android:id="@+id/txt_address"
             android:layout_width="match_parent"
@@ -74,7 +74,7 @@
             android:layout_height="wrap_content"
             android:textSize="12sp"
             android:textColor="#ACACAC"
-            android:text="电话"/>
+            android:text="@string/card_package_phone_number"/>
         <TextView
             android:id="@+id/txt_phone"
             android:layout_width="match_parent"

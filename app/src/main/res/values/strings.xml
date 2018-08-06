@@ -1009,4 +1009,7 @@
     <string name="card_package_manage">管理卡片</string>
     <string name="card_package_welcome">欢迎使用卡包</string>
     <string name="card_package_collect">将您常用信息卡片归集一处</string>
+    <string name="card_package_taxpayer">纳税人识别号</string>
+    <string name="card_package_address">地址</string>
+    <string name="card_package_phone_number">电话</string>
 </resources>

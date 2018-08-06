@@ -961,4 +961,7 @@
     <string name="card_package_manage">Management card</string>
     <string name="card_package_welcome">Welcome to use the package</string>
     <string name="card_package_collect">Put your usual information cards in one place</string>
+    <string name="card_package_taxpayer">Taxpayer identification number</string>
+    <string name="card_package_address">Address</string>
+    <string name="card_package_phone_number">Telephone</string>
 </resources>

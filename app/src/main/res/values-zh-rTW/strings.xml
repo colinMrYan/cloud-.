@@ -962,4 +962,7 @@
     <string name="card_package_manage">管理卡片</string>
     <string name="card_package_welcome">歡迎使用卡包</string>
     <string name="card_package_collect">將您常用資訊卡片歸集一處</string>
+    <string name="card_package_taxpayer">納稅人識別號</string>
+    <string name="card_package_address">地址</string>
+    <string name="card_package_phone_number">電話</string>
 </resources>
