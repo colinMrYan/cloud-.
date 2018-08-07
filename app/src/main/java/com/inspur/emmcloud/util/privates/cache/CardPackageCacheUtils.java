@@ -104,7 +104,7 @@ public class CardPackageCacheUtils {
     public static List<CardPackageBean> getSelectedCardPackageList(Context context){
         List<CardPackageBean> cardPackageBeanList = new ArrayList<>();
         try {
-            cardPackageBeanList = DbCacheUtils.getDb(context).selector(CardPackageBean.class).where(WhereBuilder.b("state", "=", 1)).findAll();
+            cardPackageBeanList = DbCacheUtils.getDb(context).selector(CardPackageBean.class).where(WhereBuilder.b("state", "=", 1)).orderBy("id").findAll();
         } catch (Exception e) {
             LogUtils.YfcDebug("查询状态报错："+e.getMessage());
             e.printStackTrace();
