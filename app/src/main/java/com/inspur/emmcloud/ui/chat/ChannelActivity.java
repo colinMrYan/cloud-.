@@ -279,52 +279,58 @@ public class ChannelActivity extends BaseActivity {
     private void initMsgListView() {
         final List<Message> cacheMessageList = MessageCacheUtil.getHistoryMessageList(MyApplication.getInstance(), cid, null, 20);
         uiMessageList = UIMessage.MessageList2UIMessageList(cacheMessageList);
-        adapter = new ChannelMessageAdapter(ChannelActivity.this, channel.getType(), chatInputMenu);
-        adapter.setItemClickListener(new ChannelMessageAdapter.MyItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                Message message = uiMessageList.get(position).getMessage();
-                //当消息处于发送中状态时无法点击
-                if (uiMessageList.get(position).getSendStatus() != 1) {
-                    return;
-                }
-                String msgType = message.getType();
-                Bundle bundle = new Bundle();
-                LogUtils.jasonDebug("msgType=" + msgType);
-                switch (msgType) {
-                    case "attachment/card":
-                        String uid = message.getMsgContentAttachmentCard().getUid();
-                        bundle.putString("uid", uid);
-                        IntentUtils.startActivity(ChannelActivity.this,
-                                UserInfoActivity.class, bundle);
-                        break;
-                    case "file/regular-file":
-                    case "media/image":
-                        bundle.putString("mid", message.getId());
-                        bundle.putString("cid", message.getChannel());
-                        IntentUtils.startActivity(ChannelActivity.this,
-                                ChannelMessageDetailActivity.class, bundle);
-                        break;
-                    case "comment/text-plain":
-                        String mid = message.getMsgContentComment().getMessage();
-                        bundle.putString("mid", mid);
-                        bundle.putString("cid", message.getChannel());
-                        IntentUtils.startActivity(ChannelActivity.this,
-                                ChannelMessageDetailActivity.class, bundle);
-                        break;
-                    case "extended/links":
-                        String url = message.getMsgContentExtendedLinks().getUrl();
-                        UriUtils.openUrl(ChannelActivity.this, url);
-                        break;
-                    default:
-                        break;
-                }
-            }
-        });
-        adapter.setMessageList(uiMessageList);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         msgListView.setLayoutManager(linearLayoutManager);
-        msgListView.setAdapter(adapter);
+        if (adapter == null){
+            adapter = new ChannelMessageAdapter(ChannelActivity.this, channel.getType(), chatInputMenu);
+            adapter.setItemClickListener(new ChannelMessageAdapter.MyItemClickListener() {
+                @Override
+                public void onItemClick(View view, int position) {
+                    Message message = uiMessageList.get(position).getMessage();
+                    //当消息处于发送中状态时无法点击
+                    if (uiMessageList.get(position).getSendStatus() != 1) {
+                        return;
+                    }
+                    String msgType = message.getType();
+                    Bundle bundle = new Bundle();
+                    LogUtils.jasonDebug("msgType=" + msgType);
+                    switch (msgType) {
+                        case "attachment/card":
+                            String uid = message.getMsgContentAttachmentCard().getUid();
+                            bundle.putString("uid", uid);
+                            IntentUtils.startActivity(ChannelActivity.this,
+                                    UserInfoActivity.class, bundle);
+                            break;
+                        case "file/regular-file":
+                        case "media/image":
+                            bundle.putString("mid", message.getId());
+                            bundle.putString("cid", message.getChannel());
+                            IntentUtils.startActivity(ChannelActivity.this,
+                                    ChannelMessageDetailActivity.class, bundle);
+                            break;
+                        case "comment/text-plain":
+                            String mid = message.getMsgContentComment().getMessage();
+                            bundle.putString("mid", mid);
+                            bundle.putString("cid", message.getChannel());
+                            IntentUtils.startActivity(ChannelActivity.this,
+                                    ChannelMessageDetailActivity.class, bundle);
+                            break;
+                        case "extended/links":
+                            String url = message.getMsgContentExtendedLinks().getUrl();
+                            UriUtils.openUrl(ChannelActivity.this, url);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            });
+            adapter.setMessageList(uiMessageList);
+            msgListView.setAdapter(adapter);
+        }else {
+            adapter.setChannelData(channel.getType(), chatInputMenu);
+            adapter.setMessageList(uiMessageList);
+            adapter.notifyDataSetChanged();
+        }
         msgListView.MoveToPosition(uiMessageList.size() - 1);
         msgListView.setOnTouchListener(new View.OnTouchListener() {
             @Override

@@ -336,70 +336,76 @@ public class ChannelV0Activity extends BaseActivity {
     private void initMsgListView() {
         msgList = MsgCacheUtil.getHistoryMsgList(getApplicationContext(),
                 cid, null, 15);
-        adapter = new ChannelMsgAdapter(ChannelV0Activity.this, apiService, channel.getType(), chatInputMenu);
-        adapter.setItemClickListener(new ChannelMsgAdapter.MyItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                Msg msg = msgList.get(position);
-                //当消息处于发送中状态时无法点击
-                if (msg.getSendStatus() != 1) {
-                    return;
-                }
-                String msgType = msg.getType();
-                Message message = null;
-                if (Message.isMessage(msg)) {
-                    message = new Message(msg);
-                    msgType = message.getType();
-                }
-
-                String mid = "";
-                Bundle bundle = new Bundle();
-                switch (msgType) {
-                    case "attachment/card":
-                        String uid = message.getMsgContentAttachmentCard().getUid();
-                        bundle.putString("uid", uid);
-                        IntentUtils.startActivity(ChannelV0Activity.this,
-                                UserInfoActivity.class, bundle);
-                        break;
-                    case "res_file":
-                        mid = msg.getMid();
-                        bundle.putString("mid", mid);
-                        bundle.putString("cid", msg.getCid());
-                        IntentUtils.startActivity(ChannelV0Activity.this,
-                                ChannelMsgDetailActivity.class, bundle);
-                        break;
-                    case "comment":
-                    case "txt_comment":
-                        mid = msg.getCommentMid();
-                        bundle.putString("mid", mid);
-                        bundle.putString("cid", msg.getCid());
-                        IntentUtils.startActivity(ChannelV0Activity.this,
-                                ChannelMsgDetailActivity.class, bundle);
-                        break;
-                    case "res_link":
-                        String msgBody = msg.getBody();
-                        String linkTitle = JSONUtils.getString(msgBody, "title", "");
-                        String linkDigest = JSONUtils.getString(msgBody, "digest", "");
-                        String linkUrl = JSONUtils.getString(msgBody, "url", "");
-                        String linkPoster = JSONUtils.getString(msgBody, "poster", "");
-                        GroupNews groupNews = new GroupNews();
-                        groupNews.setTitle(linkTitle);
-                        groupNews.setDigest(linkDigest);
-                        groupNews.setUrl(linkUrl);
-                        groupNews.setPoster(linkPoster);
-                        bundle.putSerializable("groupNews", groupNews);
-                        IntentUtils.startActivity(ChannelV0Activity.this,
-                                NewsWebDetailActivity.class, bundle);
-                        break;
-                    default:
-                        break;
-                }
-            }
-        });
-        adapter.setMsgList(msgList);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         msgListView.setLayoutManager(linearLayoutManager);
-        msgListView.setAdapter(adapter);
+        if (adapter == null){
+            adapter = new ChannelMsgAdapter(ChannelV0Activity.this, apiService, channel.getType(), chatInputMenu);
+            adapter.setItemClickListener(new ChannelMsgAdapter.MyItemClickListener() {
+                @Override
+                public void onItemClick(View view, int position) {
+                    Msg msg = msgList.get(position);
+                    //当消息处于发送中状态时无法点击
+                    if (msg.getSendStatus() != 1) {
+                        return;
+                    }
+                    String msgType = msg.getType();
+                    Message message = null;
+                    if (Message.isMessage(msg)) {
+                        message = new Message(msg);
+                        msgType = message.getType();
+                    }
+
+                    String mid = "";
+                    Bundle bundle = new Bundle();
+                    switch (msgType) {
+                        case "attachment/card":
+                            String uid = message.getMsgContentAttachmentCard().getUid();
+                            bundle.putString("uid", uid);
+                            IntentUtils.startActivity(ChannelV0Activity.this,
+                                    UserInfoActivity.class, bundle);
+                            break;
+                        case "res_file":
+                            mid = msg.getMid();
+                            bundle.putString("mid", mid);
+                            bundle.putString("cid", msg.getCid());
+                            IntentUtils.startActivity(ChannelV0Activity.this,
+                                    ChannelMsgDetailActivity.class, bundle);
+                            break;
+                        case "comment":
+                        case "txt_comment":
+                            mid = msg.getCommentMid();
+                            bundle.putString("mid", mid);
+                            bundle.putString("cid", msg.getCid());
+                            IntentUtils.startActivity(ChannelV0Activity.this,
+                                    ChannelMsgDetailActivity.class, bundle);
+                            break;
+                        case "res_link":
+                            String msgBody = msg.getBody();
+                            String linkTitle = JSONUtils.getString(msgBody, "title", "");
+                            String linkDigest = JSONUtils.getString(msgBody, "digest", "");
+                            String linkUrl = JSONUtils.getString(msgBody, "url", "");
+                            String linkPoster = JSONUtils.getString(msgBody, "poster", "");
+                            GroupNews groupNews = new GroupNews();
+                            groupNews.setTitle(linkTitle);
+                            groupNews.setDigest(linkDigest);
+                            groupNews.setUrl(linkUrl);
+                            groupNews.setPoster(linkPoster);
+                            bundle.putSerializable("groupNews", groupNews);
+                            IntentUtils.startActivity(ChannelV0Activity.this,
+                                    NewsWebDetailActivity.class, bundle);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            });
+            adapter.setMsgList(msgList);
+            msgListView.setAdapter(adapter);
+        }else {
+            adapter.setChannelData(channel.getType(), chatInputMenu);
+            adapter.setMsgList(msgList);
+            adapter.notifyDataSetChanged();
+        }
         msgListView.MoveToPosition(msgList.size() - 1);
         msgListView.setOnTouchListener(new View.OnTouchListener() {
             @Override
