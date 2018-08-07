@@ -664,6 +664,8 @@ public class ChannelActivity extends BaseActivity {
             IntentUtils.startActivity(ChannelActivity.this,
                     RobotInfoActivity.class, bundle);
         } else {
+            String uid = DirectChannelUtils.getDirctChannelOtherUid(MyApplication.getInstance(),channel.getTitle());
+            bundle.putString("uid", uid);
             IntentUtils.startActivity(ChannelActivity.this,
                     UserInfoActivity.class, bundle);
         }
