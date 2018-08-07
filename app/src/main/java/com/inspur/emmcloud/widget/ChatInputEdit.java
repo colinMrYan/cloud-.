@@ -5,7 +5,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.AppCompatEditText;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.SpannableString;
@@ -20,6 +19,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 
 import com.inspur.emmcloud.bean.chat.InsertModel;
 import com.inspur.emmcloud.config.Constant;
@@ -35,7 +35,7 @@ import java.util.regex.Pattern;
 /**
  * Created by yufuchang on 2017/3/9.
  */
-public class ChatInputEdit extends AppCompatEditText {
+public class ChatInputEdit extends EditText {
 
     private int size;
     private int maxLength = 2000;
