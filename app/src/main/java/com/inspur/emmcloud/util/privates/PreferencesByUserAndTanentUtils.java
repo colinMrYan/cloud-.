@@ -257,4 +257,17 @@ public class PreferencesByUserAndTanentUtils {
         SharedPreferences settings = MyApplication.getInstance().getSharedPreferences(getPreferenceName(context), Context.MODE_PRIVATE);
         return settings.getBoolean(key, defaultValue);
     }
+
+    /**
+     * 清除指定key的值
+     * @param context
+     * @param key
+     * @return
+     */
+    public static boolean clearDataByKey(Context context, String key) {
+        SharedPreferences sp = MyApplication.getInstance().getSharedPreferences(getPreferenceName(context), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.remove(key);
+        return editor.commit();
+    }
 }

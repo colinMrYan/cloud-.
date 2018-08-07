@@ -83,10 +83,19 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         StateBarUtils.changeStateBarColor(this);
+        clearOldMainTabData();
         PreferencesUtils.putLong(this, Constant.PREF_ENTER_APP_TIME, System.currentTimeMillis());
         x.view().inject(this);
         mTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
         initTabs();
+    }
+
+    /**
+     * 清除旧版本的MainTab数据
+     */
+    private void clearOldMainTabData() {
+        PreferencesByUserAndTanentUtils.clearDataByKey(this,"app_tabbar_version");
+        PreferencesByUserAndTanentUtils.clearDataByKey(this,"app_tabbar_info_current");
     }
 
     /**
