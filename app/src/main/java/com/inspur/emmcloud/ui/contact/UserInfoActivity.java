@@ -64,6 +64,17 @@ public class UserInfoActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
+        init();
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        init();
+    }
+
+    private void init(){
         String uid = null;
         String scheme = getIntent().getScheme();
         if (scheme != null) {
