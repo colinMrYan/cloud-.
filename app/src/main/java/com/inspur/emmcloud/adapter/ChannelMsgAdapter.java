@@ -65,6 +65,11 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
         this.msgList.addAll(msgList);
     }
 
+    public void setChannelData(String channelType, ECMChatInputMenu chatInputMenu){
+        this.channelType = channelType;
+        this.chatInputMenu = chatInputMenu;
+    }
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.chat_msg_card_parent_view, viewGroup, false);
