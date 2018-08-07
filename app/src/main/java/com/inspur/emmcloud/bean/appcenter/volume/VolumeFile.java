@@ -2,6 +2,7 @@ package com.inspur.emmcloud.bean.appcenter.volume;
 
 import com.alibaba.fastjson.TypeReference;
 import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.StringUtils;
 
 import org.json.JSONObject;
 
@@ -65,7 +66,9 @@ public class VolumeFile implements Serializable{
         this.othersPrivilege = JSONUtils.getInt(object,"othersPrivilege",0);
         this.owner = JSONUtils.getString(object, "owner", "");
         String groupPrivilegeJson = JSONUtils.getString(object, "groups", "");
-        groupPrivilegeMap = com.alibaba.fastjson.JSONObject.parseObject(groupPrivilegeJson, new TypeReference<Map<String, Integer>>() {});
+        if (!StringUtils.isBlank(groupPrivilegeJson)){
+            groupPrivilegeMap = com.alibaba.fastjson.JSONObject.parseObject(groupPrivilegeJson, new TypeReference<Map<String, Integer>>() {});
+        }
         path = JSONUtils.getString(object, "path", "");
     }
 
