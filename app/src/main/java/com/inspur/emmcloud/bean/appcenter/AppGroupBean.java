@@ -39,6 +39,16 @@ public class AppGroupBean {
 				}
 			}
 			categoryIco = JSONUtils.getString(jsonObject,"category_ico","");
+			if(jsonObject.has("groupList")){
+				JSONArray jsonArray = JSONUtils.getJSONArray(jsonObject,"groupList",new JSONArray());
+				for (int i = 0; i < jsonArray.length(); i++) {
+					App app = new App(JSONUtils.getJSONObject(jsonArray,i,new JSONObject()));
+					app.setCategoryID(categoryID);
+					app.setOrderId(1000);
+					app.setAppName(JSONUtils.getString(JSONUtils.getJSONObject(jsonArray,i,new JSONObject()),"name",""));
+					appItemList.add(app);
+				}
+			}
 	}
 
 	public String getCategoryID() {

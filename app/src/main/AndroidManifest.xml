@@ -539,6 +539,10 @@
             android:windowSoftInputMode="adjustPan">
 
         </activity>
+        <activity android:name=".ui.appcenter.AppGroupActivity"
+            android:launchMode="singleTask"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".ui.find.ScanResultActivity"
             android:launchMode="singleTask"
