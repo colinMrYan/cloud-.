@@ -1,12 +1,12 @@
 package com.inspur.emmcloud.bean.chat;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.alibaba.fastjson.JSON;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import com.alibaba.fastjson.JSON;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GetChannelInfoResult {
 	
@@ -88,6 +88,9 @@ public class GetChannelInfoResult {
 	
 	public List<String> getMemberList(){
 		List<String> memberList = new ArrayList<String>();
+		if (memberArray == null) {
+			memberArray = new JSONArray();
+		}
 		memberList = JSON.parseArray(memberArray.toString(), String.class);
 		return memberList;
 	}
