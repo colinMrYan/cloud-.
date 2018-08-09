@@ -593,8 +593,8 @@ public class IndexActivity extends IndexBaseActivity {
 
         @Override
         public void returnAppTabAutoSuccess(GetAppMainTabResult getAppMainTabResult, String mainTabSaveConfigVersion) {
-            ClientConfigUpdateUtils.saveItemLocalVersion(ClientConfigItem.CLIENT_CONFIG_MAINTAB, mainTabSaveConfigVersion);
             updateTabbarWithOrder(getAppMainTabResult);
+            ClientConfigUpdateUtils.saveItemLocalVersion(ClientConfigItem.CLIENT_CONFIG_MAINTAB, mainTabSaveConfigVersion);
         }
 
         @Override
