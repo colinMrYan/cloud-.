@@ -22,11 +22,11 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.WorkAPIService;
 import com.inspur.emmcloud.bean.work.TagColorBean;
-import com.inspur.emmcloud.util.privates.MessionTagColorUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.privates.MessionTagColorUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
@@ -122,7 +122,11 @@ public class MessionTagActivity extends BaseActivity {
     private void initData() {
         deleteTagName = getIntent().getStringExtra("title");
         String userId = ((MyApplication) getApplicationContext()).getUid();
-        messionTagList = (ArrayList<String>) JSON.parseArray(PreferencesUtils.getString(MessionTagActivity.this, MyApplication.getInstance().getTanent() + userId + "messionTags", ""), String.class);
+        try {
+            messionTagList = (ArrayList<String>) JSON.parseArray(PreferencesUtils.getString(MessionTagActivity.this, MyApplication.getInstance().getTanent() + userId + "messionTags", ""), String.class);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         if (messionTagList == null) {
             messionTagList = new ArrayList<String>();
         }

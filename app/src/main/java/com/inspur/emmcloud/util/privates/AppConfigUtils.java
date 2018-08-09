@@ -13,6 +13,7 @@ import com.inspur.emmcloud.bean.system.GetAppConfigResult;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.interf.CommonCallBack;
 import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.cache.AppCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.AppConfigCacheUtils;
 
@@ -62,7 +63,7 @@ public class AppConfigUtils {
      */
     private void syncCommonAppToLocalDb(){
         String commonAppListJson = AppConfigCacheUtils.getAppConfigValue(context, Constant.CONCIG_COMMON_FUNCTIONS,"null");
-        if (!commonAppListJson.equals("null")){
+        if (!commonAppListJson.equals("null") && !StringUtils.isBlank(commonAppListJson)){
             List<AppCommonlyUse> commonAppList = AppCacheUtils.getCommonlyUseList(context);
             if (commonAppList.size() == 0){
                 commonAppList = JSON.parseArray(commonAppListJson,AppCommonlyUse.class);

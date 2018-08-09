@@ -230,7 +230,13 @@ public class ChannelGroup {
     }
 
     public List<String> getMemberList() {
-        List<String> memberList = JSON.parseArray(members, String.class);
+        List<String> memberList = null;
+        try {
+            memberList = JSON.parseArray(members, String.class);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
         if (memberList == null) {
             memberList = new ArrayList<>();
         }

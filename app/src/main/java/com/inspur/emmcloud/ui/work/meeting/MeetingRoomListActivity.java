@@ -470,8 +470,12 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
 						getApplicationContext(), MyApplication.getInstance().getTanent() + uid
 								+ "selectCommonOfficeIds");
 				if (selectCommonOfficeIds != null) {
-					selectCommonOfficeIdList = (List) JSON.parseArray(
-							selectCommonOfficeIds, String.class);
+					try {
+						selectCommonOfficeIdList = (List) JSON.parseArray(
+								selectCommonOfficeIds, String.class);
+					}catch (Exception e){
+						e.printStackTrace();
+					}
 				}
 
 				getNoFilteMeetingRooms(true);
