@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     >
@@ -28,25 +29,44 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="3dp"
                 android:background="@drawable/ic_chat_input_voice" />
-
-            <com.inspur.emmcloud.widget.ChatInputEdit
-                android:id="@+id/input_edit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+            <RelativeLayout
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:layout_toLeftOf="@+id/right_layout"
                 android:layout_toRightOf="@id/voice_input_btn"
-                android:background="@drawable/bg_corner_fill_white_no_border"
-                android:focusableInTouchMode="true"
-                android:gravity="center_vertical"
-                android:maxLines="5"
-                android:paddingBottom="9dp"
-                android:paddingLeft="7dp"
-                android:paddingRight="7dp"
-                android:paddingTop="9dp"
-                android:textSize="15sp"></com.inspur.emmcloud.widget.ChatInputEdit>
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <com.inspur.emmcloud.widget.ChatInputEdit
+                    android:id="@+id/input_edit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_corner_fill_white_no_border"
+                    android:focusableInTouchMode="true"
+                    android:layout_centerVertical="true"
+                    android:gravity="center_vertical"
+                    android:maxLines="5"
+                    android:paddingBottom="9dp"
+                    android:paddingLeft="7dp"
+                    android:paddingRight="7dp"
+                    android:paddingTop="9dp"
+                    android:textSize="15sp"/>
+                <com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton
+                    android:id="@+id/btn_press_to_say"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_centerVertical="true"
+                    android:gravity="center"
+                    android:onClick="onClick"
+                    android:padding="10dp"
+                    android:text="按住说话"
+                    android:visibility="gone"
+                    android:textColor="#2586CD"
+                    app:qmui_borderColor="grey_line_color"
+                    app:qmui_borderWidth="0.6dp"
+                    app:qmui_radius="4dp" />
+            </RelativeLayout>
+
 
             <RelativeLayout
                 android:id="@+id/right_layout"
