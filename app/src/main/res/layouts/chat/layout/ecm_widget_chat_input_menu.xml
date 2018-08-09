@@ -27,7 +27,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="3dp"
-                android:background="@drawable/ic_chat_input_add_voice_robot" />
+                android:background="@drawable/ic_chat_input_voice" />
 
             <com.inspur.emmcloud.widget.ChatInputEdit
                 android:id="@+id/input_edit"

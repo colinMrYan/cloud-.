@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.os.Handler;
+import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -59,6 +60,8 @@ public class ECMChatInputMenu extends LinearLayout {
     private static final int CHOOSE_FILE = 4;
     private static final int MENTIONS_RESULT = 5;
     private static final long MENTIONS_BASE_TIME= 1515513600000L;
+    private static final int TAG_KEYBOARD_INPUT = 0;
+    private static final int TAG_VOICE_INPUT = 1;
 
     @ViewInject(R.id.input_edit)
     private ChatInputEdit inputEdit;
@@ -80,6 +83,9 @@ public class ECMChatInputMenu extends LinearLayout {
 
     @ViewInject(R.id.voice_input_layout)
     private LinearLayout voiceInputLayout;
+
+    @ViewInject(R.id.voice_input_btn)
+    private Button voiceInputBtn;
 
     private boolean canMentions = false;
     private ChatInputMenuListener chatInputMenuListener;
@@ -116,7 +122,7 @@ public class ECMChatInputMenu extends LinearLayout {
         x.view().inject(view);
         initInputEdit();
         initVoiceInput();
-        initViewpageLayout();
+ //       initViewpageLayout();
     }
 
     private void initInputEdit() {
@@ -357,31 +363,53 @@ public class ECMChatInputMenu extends LinearLayout {
         });
     }
 
-    private void initViewpageLayout() {
+//    private void initViewpageLayout() {
 //        InputTypeBean inputTypeBean = new InputTypeBean(R.drawable.ic_chat_input_add_gallery, "远程控制");
 //        List<InputTypeBean> inputTypeBeanList = new ArrayList<>();
 //        inputTypeBeanList.add(inputTypeBean);
 //        viewpagerLayout.setInputTypeBeanList(inputTypeBeanList);
+//   }
+
+    private void setVoiceInputBtnStatus(int tag){
+        if (voiceInputBtn.getTag() == null || (int)voiceInputBtn.getTag() != tag){
+            voiceInputBtn.setTag(tag);
+            voiceInputBtn.setBackground(ContextCompat.getDrawable(getContext(),(tag==0)?R.drawable.ic_chat_input_voice:R.drawable.ic_chat_input_keyboard));
+        }
     }
 
     @Event({R.id.voice_input_btn, R.id.send_msg_btn, R.id.add_btn, R.id.voice_input_close_img})
     private void onClick(View view) {
         switch (view.getId()) {
             case R.id.voice_input_btn:
-                if (addMenuLayout.isShown()) {
-                    addMenuLayout.setVisibility(View.GONE);
-                } else if (InputMethodUtils.isSoftInputShow((Activity) getContext())) {
-                    InputMethodUtils.hide((Activity) getContext());
-                }
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        voiceInputLayout.setVisibility(View.VISIBLE);
-                        volumeLevelImg.setImageLevel(0);
-                        mediaPlayerUtils.playVoiceOn();
-                        voice2StringMessageUtils.startVoiceListening();
+                if (view.getTag() == null || (int)view.getTag() == TAG_KEYBOARD_INPUT){
+                    setVoiceInputBtnStatus(TAG_VOICE_INPUT);
+                    if (addMenuLayout.isShown()) {
+                        addMenuLayout.setVisibility(View.GONE);
+                    } else if (InputMethodUtils.isSoftInputShow((Activity) getContext())) {
+                        InputMethodUtils.hide((Activity) getContext());
                     }
-                }, 100);
+                }else {
+                    setVoiceInputBtnStatus(TAG_KEYBOARD_INPUT);
+                    InputMethodUtils.display((Activity) getContext(), inputEdit, 0);
+                }
+
+
+
+
+//                if (addMenuLayout.isShown()) {
+//                    addMenuLayout.setVisibility(View.GONE);
+//                } else if (InputMethodUtils.isSoftInputShow((Activity) getContext())) {
+//                    InputMethodUtils.hide((Activity) getContext());
+//                }
+//                new Handler().postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        voiceInputLayout.setVisibility(View.VISIBLE);
+//                        volumeLevelImg.setImageLevel(0);
+//                        mediaPlayerUtils.playVoiceOn();
+//                        voice2StringMessageUtils.startVoiceListening();
+//                    }
+//                }, 100);
                 break;
             case R.id.send_msg_btn:
                 if (NetUtils.isNetworkConnected(getContext())) {
@@ -399,6 +427,7 @@ public class ECMChatInputMenu extends LinearLayout {
                 }
                 break;
             case R.id.add_btn:
+                setVoiceInputBtnStatus(TAG_KEYBOARD_INPUT);
                 if (addMenuLayout.isShown()) {
                     setOtherLayoutHeightLock(true);
                     setAddMenuLayoutShow(false);
