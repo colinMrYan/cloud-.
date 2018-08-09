@@ -3,6 +3,7 @@ package com.inspur.emmcloud.ui.appcenter;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
@@ -39,6 +40,9 @@ public class AppGroupActivity extends BaseActivity{
         initViews();
     }
 
+    /**
+     * 初始化Views
+     */
     private void initViews() {
         appGroupRecyclerView.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(MyApplication.getInstance(), 11)));
         GridLayoutManager gridLayoutManager = new GridLayoutManager(MyApplication.getInstance(), 4);
@@ -52,6 +56,14 @@ public class AppGroupActivity extends BaseActivity{
             }
         });
         textView.setText(getIntent().getStringExtra("categoryName"));
+    }
+
+    public void onClick(View view){
+        switch (view.getId()){
+            case R.id.back_layout:
+                finish();
+                break;
+        }
     }
 
     public interface GroupAppListClickListener{

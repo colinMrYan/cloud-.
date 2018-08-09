@@ -77,6 +77,7 @@ public class AppCenterActivity extends BaseActivity {
     private BaseAdapter recommendAppAdapter;
     private BaseAdapter categoriesAppAdapter;
     private BroadcastReceiver addAppReceiver;
+    private Timer timer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -377,7 +378,7 @@ public class AppCenterActivity extends BaseActivity {
                 }
             }
         };
-        Timer timer = new Timer();
+        timer = new Timer();
         TimerTask timerTask = new TimerTask() {
             @Override
             public void run() {
@@ -551,6 +552,10 @@ public class AppCenterActivity extends BaseActivity {
         if (addAppReceiver != null) {
             LocalBroadcastManager.getInstance(this).unregisterReceiver(addAppReceiver);
             addAppReceiver = null;
+        }
+        if(timer != null){
+            timer.cancel();
+            timer = null;
         }
     }
 
