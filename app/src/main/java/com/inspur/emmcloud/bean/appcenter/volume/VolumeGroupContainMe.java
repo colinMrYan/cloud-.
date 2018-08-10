@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.bean.appcenter.volume;
 
 import com.alibaba.fastjson.JSON;
+import com.inspur.emmcloud.util.common.StringUtils;
 
 import org.xutils.db.annotation.Column;
 import org.xutils.db.annotation.Table;
@@ -46,7 +47,9 @@ public class VolumeGroupContainMe {
     }
 
     public List<String> getGroupIdList() {
-        groupIdList = JSON.parseArray(groupIds,String.class);
+        if (!StringUtils.isBlank(groupIds)){
+            groupIdList = JSON.parseArray(groupIds,String.class);
+        }
         return groupIdList;
     }
 

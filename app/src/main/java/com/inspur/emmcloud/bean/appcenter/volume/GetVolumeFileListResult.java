@@ -2,6 +2,7 @@ package com.inspur.emmcloud.bean.appcenter.volume;
 
 import com.alibaba.fastjson.TypeReference;
 import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.StringUtils;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -21,7 +22,7 @@ public class GetVolumeFileListResult {
     private String id = "";
     private int ownerPrivilege = 0;
     private int othersPrivilege = 0;
-    private String volume= "";
+    private String volume = "";
     private List<VolumeFile> volumeFileList = new ArrayList<>();
     private List<VolumeFile> volumeFileDirectoryList = new ArrayList<>();
     private List<VolumeFile> volumeFileRegularList = new ArrayList<>();
@@ -34,7 +35,7 @@ public class GetVolumeFileListResult {
         this.id = JSONUtils.getString(obj, "id", "");
         this.ownerPrivilege = JSONUtils.getInt(obj, "ownerPrivilege", 0);
         this.othersPrivilege = JSONUtils.getInt(obj, "othersPrivilege", 0);
-        this.volume = JSONUtils.getString(obj,"volume","");
+        this.volume = JSONUtils.getString(obj, "volume", "");
         JSONArray array = JSONUtils.getJSONArray(obj, "children", new JSONArray());
         for (int i = 0; i < array.length(); i++) {
             JSONObject object = JSONUtils.getJSONObject(array, i, new JSONObject());
@@ -47,8 +48,10 @@ public class GetVolumeFileListResult {
             }
         }
         String groupPrivilegeJson = JSONUtils.getString(obj, "groups", "");
-        groupPrivilegeMap = com.alibaba.fastjson.JSONObject.parseObject(groupPrivilegeJson, new TypeReference<Map<String, Integer>>() {
-        });
+        if (!StringUtils.isBlank(groupPrivilegeJson)) {
+            groupPrivilegeMap = com.alibaba.fastjson.JSONObject.parseObject(groupPrivilegeJson, new TypeReference<Map<String, Integer>>() {
+            });
+        }
     }
 
     public List<VolumeFile> getVolumeFileList() {

@@ -1,5 +1,5 @@
 /**
- * 
+ *
  * LanguageUtils.java
  * classes : com.inspur.emmcloud.util.privates.LanguageUtils
  * V 1.0.0
@@ -53,8 +53,10 @@ public class LanguageUtils {
 		String languageResult = PreferencesUtils.getString(context,
 				MyApplication.getInstance().getTanent() + "languageResult");
 		if (!isLanguageUpdate && languageResult != null){
-			if (handler != null){
-				handler.sendEmptyMessage(GET_LANGUAGE_SUCCESS);
+			if (languageResult != null) {
+				handData(new GetLanguageResult(languageResult));
+			} else {
+				setAppLanguage(commonLanguageList);
 			}
 			return;
 		}
@@ -72,7 +74,7 @@ public class LanguageUtils {
 
 	/**
 	 * 处理数据
-	 * 
+	 *
 	 * @param getLanguageResult
 	 */
 	private void handData(GetLanguageResult getLanguageResult) {
@@ -84,7 +86,7 @@ public class LanguageUtils {
 
 	/**
 	 * 获取服务端和客户端统一的语言
-	 * 
+	 *
 	 * @param serverLanguageList
 	 * @return
 	 */
@@ -99,7 +101,7 @@ public class LanguageUtils {
 				commonLanguageList.add(language);
 			}
 		}
-		
+
 	}
 
 	public List<Language> getCommonLanguageList() {
@@ -108,7 +110,7 @@ public class LanguageUtils {
 
 	/**
 	 * 设置App的语言
-	 * 
+	 *
 	 * @param commonLanguageList
 	 */
 	private void setAppLanguage(List<Language> commonLanguageList) {
@@ -129,14 +131,14 @@ public class LanguageUtils {
 			languageName = new Language(languageJson).getIso();
 			savelanguageName = PreferencesUtils.getString(
 					context, MyApplication.getInstance().getTanent()+"language", "");
-		}   
+		}
 		Language language = getContainedLanguage(commonLanguageList,
 				languageName);
 		if (language == null) {
 			language = commonLanguageList.get(0);
 			savelanguageName = language.getIso();
 		}
-		
+
 		PreferencesUtils.putString(context, MyApplication.getInstance().getTanent()
 				+ "appLanguageObj", language.toString());
 		PreferencesUtils.putString(context, MyApplication.getInstance().getTanent()
@@ -145,7 +147,6 @@ public class LanguageUtils {
 		PreferencesUtils.putString(context, MyApplication.getInstance().getTanent()+"commonLanguageList", commonLanguageListJson);
 		((MyApplication) context.getApplicationContext())
 				.setAppLanguageAndFontScale();
-		ClientConfigUpdateUtils.saveItemLocalVersion(ClientConfigItem.CLIENT_CONFIG_LANGUAGE,saveConfigVersion);
 		if (handler != null){
 			handler.sendEmptyMessage(GET_LANGUAGE_SUCCESS);
 		}
@@ -214,6 +215,7 @@ public class LanguageUtils {
 			// TODO Auto-generated method stub
 			PreferencesUtils.putString(context, MyApplication.getInstance().getTanent()
 					+ "languageResult", getLanguageResult.getLanguageResult());
+            ClientConfigUpdateUtils.saveItemLocalVersion(ClientConfigItem.CLIENT_CONFIG_LANGUAGE,saveConfigVersion);
 			handData(getLanguageResult);
 		}
 
