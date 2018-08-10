@@ -42,10 +42,11 @@ public class AppGroupBean {
 			if(jsonObject.has("groupList")){
 				JSONArray jsonArray = JSONUtils.getJSONArray(jsonObject,"groupList",new JSONArray());
 				for (int i = 0; i < jsonArray.length(); i++) {
-					App app = new App(JSONUtils.getJSONObject(jsonArray,i,new JSONObject()));
+					JSONObject obj = JSONUtils.getJSONObject(jsonArray,i,new JSONObject());
+					App app = new App(obj);
 					app.setCategoryID(categoryID);
 					app.setOrderId(1000);
-					app.setAppName(JSONUtils.getString(JSONUtils.getJSONObject(jsonArray,i,new JSONObject()),"name",""));
+					app.setAppName(JSONUtils.getString(obj,"name",""));
 					appItemList.add(app);
 				}
 			}

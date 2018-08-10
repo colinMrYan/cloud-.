@@ -20,7 +20,7 @@ import java.util.List;
  * Created by yufuchang on 2018/8/8.
  */
 
-public class AppGroupAdapter extends RecyclerView.Adapter<AppGroupAdapter.AppGroupHodler>{
+public class AppGroupAdapter extends RecyclerView.Adapter<AppGroupAdapter.AppGroupHolder>{
 
     private Context context;
     private LayoutInflater inflater;
@@ -33,17 +33,17 @@ public class AppGroupAdapter extends RecyclerView.Adapter<AppGroupAdapter.AppGro
     }
 
     @Override
-    public AppGroupHodler onCreateViewHolder(ViewGroup parent, int viewType) {
+    public AppGroupHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = inflater.inflate(R.layout.my_app_group_item,null);
-        AppGroupHodler hodler = new AppGroupHodler(view);
-        hodler.imageView = (ImageView) view
+        AppGroupHolder holder = new AppGroupHolder(view);
+        holder.imageView = (ImageView) view
                 .findViewById(R.id.img_group_icon);
-        hodler.textView = (TextView) view.findViewById(R.id.tv_name);
-        return hodler;
+        holder.textView = (TextView) view.findViewById(R.id.tv_name);
+        return holder;
     }
 
     @Override
-    public void onBindViewHolder(AppGroupHodler holder, final int position) {
+    public void onBindViewHolder(AppGroupHolder holder, final int position) {
         ImageDisplayUtils.getInstance().displayImage(holder.imageView,appList.get(position).getAppIcon(),R.drawable.ic_app_default);
         holder.textView.setText(appList.get(position).getAppName());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -67,11 +67,11 @@ public class AppGroupAdapter extends RecyclerView.Adapter<AppGroupAdapter.AppGro
         return appList.size();
     }
 
-    class AppGroupHodler extends RecyclerView.ViewHolder{
+    class AppGroupHolder extends RecyclerView.ViewHolder{
         private ImageView imageView;
         private TextView textView;
         private View itemView;
-        public AppGroupHodler(View itemView) {
+        public AppGroupHolder(View itemView) {
             super(itemView);
             this.itemView = itemView;
         }

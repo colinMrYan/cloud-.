@@ -78,6 +78,7 @@ public class AppCenterActivity extends BaseActivity {
     private BaseAdapter categoriesAppAdapter;
     private BroadcastReceiver addAppReceiver;
     private Timer timer;
+    private Handler mHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,6 +116,14 @@ public class AppCenterActivity extends BaseActivity {
         viewList.add(classView);
         viewPager.setAdapter(new MyViewPagerAdapter(viewList, null));
         viewPager.addOnPageChangeListener(new PageChangeListener());
+        timer = new Timer();
+        TimerTask timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                mHandler.sendEmptyMessage(UPDATE_VIEWPAGER);
+            }
+        };
+        timer.schedule(timerTask, 3000, 3000);
     }
 
     class AppCenterRefreshListener implements SwipeRefreshLayout.OnRefreshListener {
@@ -369,23 +378,17 @@ public class AppCenterActivity extends BaseActivity {
             return;
         }
         //定时轮播图片，需要在主线程里面修改 UI
-        final Handler mHandler = new Handler() {
-            public void handleMessage(Message msg) {
-                switch (msg.what) {
-                    case UPDATE_VIEWPAGER:
-                        mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1);
-                        break;
+        if(mHandler == null){
+            mHandler = new Handler() {
+                public void handleMessage(Message msg) {
+                    switch (msg.what) {
+                        case UPDATE_VIEWPAGER:
+                            mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1);
+                            break;
+                    }
                 }
-            }
-        };
-        timer = new Timer();
-        TimerTask timerTask = new TimerTask() {
-            @Override
-            public void run() {
-                mHandler.sendEmptyMessage(UPDATE_VIEWPAGER);
-            }
-        };
-        timer.schedule(timerTask, 3000, 3000);
+            };
+        }
     }
 
     /**
