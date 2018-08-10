@@ -3,13 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/content_bg"
-    android:fitsSystemWindows="true" >
+    android:fitsSystemWindows="true">
 
     <RelativeLayout
         android:id="@+id/header_layout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/header_height"
-        android:background="@color/header_bg" >
+        android:background="@color/header_bg">
 
         <RelativeLayout
             android:id="@+id/back_layout"
@@ -18,7 +18,7 @@
             android:layout_centerVertical="true"
             android:onClick="onClick"
             android:paddingLeft="12dp"
-            android:paddingRight="12dp" >
+            android:paddingRight="12dp">
 
             <ImageView
                 android:id="@+id/back_btn"
@@ -42,14 +42,19 @@
             android:textSize="@dimen/header_textsize" />
 
 
-
     </RelativeLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerview_group_app"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/header_layout"/>
+        android:background="#FFFFFF"
+        android:paddingTop="15dp"
+        android:layout_below="@id/header_layout">
 
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerview_group_app"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
 
 </RelativeLayout>
