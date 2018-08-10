@@ -65,8 +65,12 @@ public class CreateCommonOfficeSpaceActivity extends BaseActivity {
 				getApplicationContext(), MyApplication.getInstance().getTanent() + uid
 						+ "allCommonBuildingIds");
 		if (allCommonBuildingIds != null) {
-			allCommonBuildingIdList = (List) JSON.parseArray(allCommonBuildingIds,
-					String.class);
+			try {
+				allCommonBuildingIdList = (List) JSON.parseArray(allCommonBuildingIds,
+						String.class);
+			}catch (Exception e){
+				e.printStackTrace();
+			}
 		}
 	}
 

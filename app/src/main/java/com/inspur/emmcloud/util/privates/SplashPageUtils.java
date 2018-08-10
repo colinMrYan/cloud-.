@@ -82,6 +82,8 @@ public class SplashPageUtils {
                     downloadSplashPage(APIUri.getPreviewUrl(defaultBean.getHdpi()), defaultBean.getHdpi(), splashPageBean);
                     break;
             }
+        }else {
+            ClientConfigUpdateUtils.saveItemLocalVersion(ClientConfigItem.CLIENT_CONFIG_SPLASH,saveConfigVersion);
         }
     }
 

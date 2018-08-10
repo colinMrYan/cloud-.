@@ -43,7 +43,10 @@ public class MyAppCacheUtils {
      */
     public static List<AppGroupBean> getMyAppList(Context context){
         String appListJson = PreferencesByUserAndTanentUtils.getString(context,"my_app_list","");
-        List<AppGroupBean> appGroupList = JSON.parseArray(appListJson,AppGroupBean.class);
+        List<AppGroupBean> appGroupList = null;
+        if (!StringUtils.isBlank(appListJson)){
+            appGroupList = JSON.parseArray(appListJson,AppGroupBean.class);
+        }
         if(appGroupList == null){
             appGroupList = new ArrayList<>();
         }
