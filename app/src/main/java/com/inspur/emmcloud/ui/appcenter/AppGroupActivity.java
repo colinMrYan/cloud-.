@@ -55,7 +55,8 @@ public class AppGroupActivity extends BaseActivity{
                 UriUtils.openApp(AppGroupActivity.this, app, "application");
             }
         });
-        textView.setText(getIntent().getStringExtra("categoryName"));
+        String categoryName = getIntent().getStringExtra("categoryName");
+        textView.setText(categoryName == null? "":categoryName);
     }
 
     public void onClick(View view){

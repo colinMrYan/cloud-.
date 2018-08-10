@@ -8,7 +8,7 @@
     android:paddingRight="10dp" >
 
     <ImageView
-        android:id="@+id/icon_image"
+        android:id="@+id/img_group_icon"
         android:layout_width="45dp"
         android:layout_height="45dp"
         android:layout_marginTop="3dp"
@@ -16,7 +16,7 @@
         android:src="@drawable/ic_app_default" />
 
     <TextView
-        android:id="@+id/name_text"
+        android:id="@+id/tv_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/icon_image"

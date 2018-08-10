@@ -37,8 +37,8 @@ public class AppGroupAdapter extends RecyclerView.Adapter<AppGroupAdapter.AppGro
         View view = inflater.inflate(R.layout.my_app_group_item,null);
         AppGroupHodler hodler = new AppGroupHodler(view);
         hodler.imageView = (ImageView) view
-                .findViewById(R.id.icon_image);
-        hodler.textView = (TextView) view.findViewById(R.id.name_text);
+                .findViewById(R.id.img_group_icon);
+        hodler.textView = (TextView) view.findViewById(R.id.tv_name);
         return hodler;
     }
 
