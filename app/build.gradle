@@ -228,6 +228,7 @@ dependencies {
     compile files('libs/SocialSDK_sms.jar')
     compile files('libs/Msc.jar')
     compile files('libs/Sunflower.jar')
+    compile files('libs/agora-rtc-sdk.jar')
     compile 'com.aliyun.dpa:oss-android-sdk:+'
     compile 'com.google.protobuf:protobuf-java:3.5.1'
 }
