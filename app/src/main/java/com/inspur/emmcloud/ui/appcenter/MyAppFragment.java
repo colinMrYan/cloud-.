@@ -80,6 +80,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -462,11 +463,20 @@ public class MyAppFragment extends Fragment {
 
 
                         if (NetUtils.isNetworkConnected(getActivity()) && !isFastDoubleClick()) {
-                            if ((listPosition == 0) && getNeedCommonlyUseApp() && AppCacheUtils.getCommonlyUseNeedShowList(getActivity()).size() > 0) {
-                                UriUtils.openApp(getActivity(), app, "commonapplications");
-                            } else {
-                                UriUtils.openApp(getActivity(), app, "application");
+                            if(app.getSubAppList().size() > 0){
+                                Intent intent = new Intent();
+                                intent.setClass(getActivity(),AppGroupActivity.class);
+                                intent.putExtra("categoryName",app.getAppName());
+                                intent.putExtra("appGroupList", (Serializable) app.getSubAppList());
+                                startActivity(intent);
+                            }else{
+                                if ((listPosition == 0) && getNeedCommonlyUseApp() && AppCacheUtils.getCommonlyUseNeedShowList(getActivity()).size() > 0) {
+                                    UriUtils.openApp(getActivity(), app, "commonapplications");
+                                } else {
+                                    UriUtils.openApp(getActivity(), app, "application");
+                                }
                             }
+
                         }
                         if (getNeedCommonlyUseApp()) {
                             saveOrChangeCommonlyUseAppList(app, appAdapterList);

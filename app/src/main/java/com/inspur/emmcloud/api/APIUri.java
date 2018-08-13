@@ -573,7 +573,7 @@ public class APIUri {
      * @return
      */
     public static String getUserApps() {
-        return MyApplication.getInstance().getClusterEmm() + "api/mam/v3.0/imp_app/userApps";
+        return MyApplication.getInstance().getClusterEmm() + "api/mam/v3.1/imp_app/userApps";
     }
 
     /**
