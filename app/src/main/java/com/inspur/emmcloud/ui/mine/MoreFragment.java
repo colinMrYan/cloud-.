@@ -21,10 +21,10 @@ import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.chat.ChannelActivity;
 import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
+import com.inspur.emmcloud.ui.chat.ChannelVoiceCommunicationActivity;
 import com.inspur.emmcloud.ui.mine.card.CardPackageActivity;
 import com.inspur.emmcloud.ui.mine.feedback.FeedBackActivity;
 import com.inspur.emmcloud.ui.mine.myinfo.MyInfoActivity;
-import com.inspur.emmcloud.ui.mine.setting.AboutActivity;
 import com.inspur.emmcloud.ui.mine.setting.SettingActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.IntentUtils;
@@ -131,9 +131,10 @@ public class MoreFragment extends Fragment {
                         recordUserClick("wallet");
                         break;
                     case "my_aboutUs_function":
-                        IntentUtils.startActivity(getActivity(),
-                                AboutActivity.class);
-                        recordUserClick("about");
+//                        IntentUtils.startActivity(getActivity(),
+//                                AboutActivity.class);
+//                        recordUserClick("about");
+                        IntentUtils.startActivity(getActivity(), ChannelVoiceCommunicationActivity.class);
                         break;
                     case "my_feedback_function":
                         IntentUtils.startActivity(getActivity(), FeedBackActivity.class);

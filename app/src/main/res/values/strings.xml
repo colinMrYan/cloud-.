@@ -1012,4 +1012,6 @@
     <string name="card_package_taxpayer">纳税人识别号</string>
     <string name="card_package_address">地址</string>
     <string name="card_package_phone_number">电话</string>
+
+    <string name="agora_app_id">36f73eb839f440a3a297a5c3b3977c13</string>
 </resources>
