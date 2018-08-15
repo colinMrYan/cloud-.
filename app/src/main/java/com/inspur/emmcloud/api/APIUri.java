@@ -1301,4 +1301,12 @@ public class APIUri {
     public static String getCardPackageUrl(){
         return MyApplication.getInstance().getClusterEmm()+"api/buildinapp/v6.0/CardPackage";
     }
+
+    /**
+     * 获取声网参数Url
+     * @return
+     */
+    public static String getAgoraUrl(){
+        return MyApplication.getInstance().getClusterEmm()+"";
+    }
 }

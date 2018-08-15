@@ -1,9 +1,6 @@
 package com.inspur.emmcloud.util.privates;
 
 import android.content.Context;
-import android.graphics.PorterDuff;
-import android.view.View;
-import android.widget.ImageView;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.util.common.LogUtils;
@@ -19,18 +16,88 @@ public class VoiceCommunicationUtils {
 
     private Context context;
     private RtcEngine mRtcEngine;
+    private int userCount = 1;
 
     private IRtcEngineEventHandler mRtcEventHandler = new IRtcEngineEventHandler() {
+        //用户离线回调
         @Override
         public void onUserOffline(int uid, int reason) {
-//            super.onUserOffline(uid, reason);
-            LogUtils.YfcDebug("用户离线："+uid);
-            LogUtils.YfcDebug("用户离线："+reason);
+            LogUtils.YfcDebug("用户离线uid:"+uid);
+            LogUtils.YfcDebug("用户离线reason:"+reason);
+            userCount = userCount - 1;
+            if(userCount < 2){
+                destroy();
+            }
+        }
+
+        //用户加入频道回调
+        @Override
+        public void onUserJoined(int uid, int elapsed) {
+            LogUtils.YfcDebug("用户上线："+uid);
+            LogUtils.YfcDebug("用户上线："+elapsed);
+        }
+
+        //加入频道成功
+        @Override
+        public void onJoinChannelSuccess(String channel, int uid, int elapsed) {
+            LogUtils.YfcDebug("onJoinChannelSuccess  channel:"+channel);
+            LogUtils.YfcDebug("onJoinChannelSuccess uid:"+uid);
+            LogUtils.YfcDebug("onJoinChannelSuccess eslapsed:"+elapsed);
+        }
+
+        //重新加入频道成功
+        @Override
+        public void onRejoinChannelSuccess(String channel, int uid, int elapsed) {
+            LogUtils.YfcDebug("onRejoinChannelSuccess");
+        }
+
+        //每隔两秒钟返回一次频道内的状态信息
+        @Override
+        public void onRtcStats(RtcStats stats) {
+            LogUtils.YfcDebug("RtcStats:"+stats.users);
+        }
+
+        //静音监听
+        @Override
+        public void onUserMuteAudio(int uid, boolean muted) {
+
+        }
+
+        //warning信息
+        @Override
+        public void onWarning(int warn) {
+            super.onWarning(warn);
+            LogUtils.YfcDebug("warning信息："+warn);
+        }
+
+        //error信息
+        @Override
+        public void onError(int err) {
+            super.onError(err);
+            LogUtils.YfcDebug("error信息："+err);
+        }
+
+        //失去连接信息
+        @Override
+        public void onConnectionLost() {
+            super.onConnectionLost();
         }
 
         @Override
-        public void onUserMuteAudio(int uid, boolean muted) {
-            super.onUserMuteAudio(uid, muted);
+        public void onConnectionBanned() {
+            super.onConnectionBanned();
+        }
+
+        //网络质量回调
+        @Override
+        public void onLastmileQuality(int quality) {
+            super.onLastmileQuality(quality);
+            LogUtils.YfcDebug("网络质量："+quality);
+        }
+
+        @Override
+        public void onAudioVolumeIndication(AudioVolumeInfo[] speakers, int totalVolume) {
+            super.onAudioVolumeIndication(speakers, totalVolume);
         }
     };
 
@@ -46,42 +113,45 @@ public class VoiceCommunicationUtils {
         }
     }
 
-    // Tutorial Step 2
+    /**
+     * 加入频道
+     * @param token
+     * @param channelName
+     * @param optionalInfo
+     * @param optionalUid
+     * @return
+     */
     public int joinChannel(String  token, String  channelName, String  optionalInfo, int  optionalUid) {
         // 如果不指定optionalUid将自动生成一个
         return mRtcEngine.joinChannel(token, channelName, optionalInfo, optionalUid);
     }
 
     /**
-     * 离开频道
+     * 离开频道，不让外部主动调用，外部可以主动调用destroy方法
      */
     private void leaveChannel() {
         mRtcEngine.leaveChannel();
     }
 
-    // Tutorial Step 4
-    private void onRemoteUserLeft(int uid, int reason) {
+    /**
+     * 设置频道模式
+     * @param profile
+     */
+    public void setChannelProfile(int profile){
+        mRtcEngine.setChannelProfile(profile);
     }
 
-    // Tutorial Step 5
-    public void onSwitchSpeakerphoneClicked(View view) {
-        ImageView iv = (ImageView) view;
-        if (iv.isSelected()) {
-            iv.setSelected(false);
-            iv.clearColorFilter();
-        } else {
-            iv.setSelected(true);
-            iv.setColorFilter(context.getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.MULTIPLY);
-        }
-
-        mRtcEngine.setEnableSpeakerphone(view.isSelected());
+    /**
+     * 打开外放
+     * @param isSpakerphoneOpen
+     */
+    public void onSwitchSpeakerphoneClicked(boolean isSpakerphoneOpen) {
+        mRtcEngine.setEnableSpeakerphone(isSpakerphoneOpen);
     }
 
-    // Tutorial Step 6
-    private void onRemoteUserVoiceMuted(int uid, boolean muted) {
-
-    }
-
+    /**
+     * 离开频道销毁资源
+     */
     public void destroy(){
         leaveChannel();
         RtcEngine.destroy();

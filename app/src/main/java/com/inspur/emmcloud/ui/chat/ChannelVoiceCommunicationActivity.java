@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.inspur.emmcloud.BaseActivity;
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.privates.VoiceCommunicationUtils;
@@ -15,13 +16,14 @@ import org.xutils.view.annotation.ContentView;
  */
 @ContentView(R.layout.activity_voice_channel)
 public class ChannelVoiceCommunicationActivity extends BaseActivity{
-    VoiceCommunicationUtils voiceCommunicationUtils;
+    private VoiceCommunicationUtils voiceCommunicationUtils;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         voiceCommunicationUtils = new VoiceCommunicationUtils(this);
         voiceCommunicationUtils.initializeAgoraEngine();
-        int joinChannel = voiceCommunicationUtils.joinChannel(null, "voiceDemoChannel1", "Extra Optional Data", 0);
+        int joinChannel = voiceCommunicationUtils.joinChannel(null, "100111111", "Extra Optional Data", Integer.parseInt(MyApplication.getInstance().getUid()));
         LogUtils.YfcDebug("加入channel返回值："+joinChannel);
     }
 

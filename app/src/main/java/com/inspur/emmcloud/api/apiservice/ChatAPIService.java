@@ -31,9 +31,11 @@ import com.inspur.emmcloud.bean.chat.GetNewsImgResult;
 import com.inspur.emmcloud.bean.chat.GetNewsInstructionResult;
 import com.inspur.emmcloud.bean.chat.GetSendMsgResult;
 import com.inspur.emmcloud.bean.chat.GetUploadPushInfoResult;
+import com.inspur.emmcloud.bean.chat.GetVoiceCommunicationResult;
 import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.system.GetBoolenResult;
 import com.inspur.emmcloud.interf.OauthCallBack;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.OauthUtils;
@@ -44,6 +46,7 @@ import org.xutils.http.RequestParams;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * com.inspur.emmcloud.api.apiservice.ChatAPIService create at 2016年11月8日
@@ -935,6 +938,7 @@ public class ChatAPIService {
      */
     public void uploadPushInfo(final String deviceId, final String deviceName, final String pushProvider, final String pushTracer) {
         final String url = APIUri.getUploadPushInfoUrl();
+        LogUtils.YfcDebug("url："+url);
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
         params.addParameter("deviceId", deviceId);
         params.addParameter("deviceName", deviceName);
@@ -943,6 +947,7 @@ public class ChatAPIService {
         HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
+                LogUtils.YfcDebug("获取到新的ClientId："+new String(arg0));
                 apiInterface.returnUploadPushInfoResultSuccess(new GetUploadPushInfoResult(new String(arg0)));
             }
 
@@ -1047,6 +1052,45 @@ public class ChatAPIService {
                         oauthCallBack, requestTime);
             }
 
+        });
+    }
+
+    /**
+     * 获取Agora建立频道时所需参数
+     * @param tantent
+     * @param deviceId
+     * @param userList
+     */
+    public void getAgoraParams(final String tantent, final String deviceId, final List<String> userList){
+        String url = APIUri.getAgoraUrl();
+        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context,url) {
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnGetVoiceCommunicationResultSuccess(new GetVoiceCommunicationResult(new String(arg0)));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnGetVoiceCommunicationResultFail(error,responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        getAgoraParams(tantent,deviceId,userList);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
         });
     }
 
