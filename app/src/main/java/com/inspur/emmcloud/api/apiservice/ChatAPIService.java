@@ -10,6 +10,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+import com.alibaba.fastjson.JSON;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APICallback;
 import com.inspur.emmcloud.api.APIInterface;
@@ -32,6 +33,7 @@ import com.inspur.emmcloud.bean.chat.GetNewsInstructionResult;
 import com.inspur.emmcloud.bean.chat.GetSendMsgResult;
 import com.inspur.emmcloud.bean.chat.GetUploadPushInfoResult;
 import com.inspur.emmcloud.bean.chat.GetVoiceCommunicationResult;
+import com.inspur.emmcloud.bean.chat.VoiceCommunicationUserInfoBean;
 import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.system.GetBoolenResult;
 import com.inspur.emmcloud.interf.OauthCallBack;
@@ -938,7 +940,6 @@ public class ChatAPIService {
      */
     public void uploadPushInfo(final String deviceId, final String deviceName, final String pushProvider, final String pushTracer) {
         final String url = APIUri.getUploadPushInfoUrl();
-        LogUtils.YfcDebug("url："+url);
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
         params.addParameter("deviceId", deviceId);
         params.addParameter("deviceName", deviceName);
@@ -947,7 +948,6 @@ public class ChatAPIService {
         HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
-                LogUtils.YfcDebug("获取到新的ClientId："+new String(arg0));
                 apiInterface.returnUploadPushInfoResultSuccess(new GetUploadPushInfoResult(new String(arg0)));
             }
 
@@ -1056,14 +1056,14 @@ public class ChatAPIService {
     }
 
     /**
-     * 获取Agora建立频道时所需参数
-     * @param tantent
-     * @param deviceId
-     * @param userList
+     * 获取建立频道的参数
+     * @param voiceCommunicationUserInfoBeanList
      */
-    public void getAgoraParams(final String tantent, final String deviceId, final List<String> userList){
+    public void getAgoraParams(final List<VoiceCommunicationUserInfoBean> voiceCommunicationUserInfoBeanList){
         String url = APIUri.getAgoraUrl();
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
+        params.addParameter("users", JSON.toJSONString(voiceCommunicationUserInfoBeanList));
+        LogUtils.YfcDebug("users："+JSON.toJSONString(voiceCommunicationUserInfoBeanList));
         HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context,url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
@@ -1080,7 +1080,7 @@ public class ChatAPIService {
                 OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        getAgoraParams(tantent,deviceId,userList);
+                        getAgoraParams(voiceCommunicationUserInfoBeanList);
                     }
 
                     @Override

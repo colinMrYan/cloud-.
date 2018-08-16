@@ -3,12 +3,16 @@ package com.inspur.emmcloud.util.privates;
 import android.content.Context;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.bean.chat.VoiceCommunicationAudioVolumeInfo;
+import com.inspur.emmcloud.bean.chat.VoiceCommunicationRtcStats;
+import com.inspur.emmcloud.interf.OnVoiceCommunicationCallbacks;
 import com.inspur.emmcloud.util.common.LogUtils;
 
 import io.agora.rtc.IRtcEngineEventHandler;
 import io.agora.rtc.RtcEngine;
 
 /**
+ * 详细回调接口解释见OnVoiceCommunicationCallbacks
  * Created by yufuchang on 2018/8/13.
  */
 
@@ -17,17 +21,17 @@ public class VoiceCommunicationUtils {
     private Context context;
     private RtcEngine mRtcEngine;
     private int userCount = 1;
+    private OnVoiceCommunicationCallbacks onVoiceCommunicationCallbacks;
 
     private IRtcEngineEventHandler mRtcEventHandler = new IRtcEngineEventHandler() {
-        //用户离线回调
+        //其他用户离线回调
         @Override
         public void onUserOffline(int uid, int reason) {
-            LogUtils.YfcDebug("用户离线uid:"+uid);
-            LogUtils.YfcDebug("用户离线reason:"+reason);
             userCount = userCount - 1;
             if(userCount < 2){
                 destroy();
             }
+            onVoiceCommunicationCallbacks.onUserOffline(uid,reason);
         }
 
         //用户加入频道回调
@@ -35,32 +39,35 @@ public class VoiceCommunicationUtils {
         public void onUserJoined(int uid, int elapsed) {
             LogUtils.YfcDebug("用户上线："+uid);
             LogUtils.YfcDebug("用户上线："+elapsed);
+            onVoiceCommunicationCallbacks.onUserJoined(uid,elapsed);
         }
 
         //加入频道成功
         @Override
         public void onJoinChannelSuccess(String channel, int uid, int elapsed) {
-            LogUtils.YfcDebug("onJoinChannelSuccess  channel:"+channel);
-            LogUtils.YfcDebug("onJoinChannelSuccess uid:"+uid);
-            LogUtils.YfcDebug("onJoinChannelSuccess eslapsed:"+elapsed);
+            onVoiceCommunicationCallbacks.onJoinChannelSuccess(channel,uid,elapsed);
         }
 
-        //重新加入频道成功
+        //断开重连，重新加入频道成功
         @Override
         public void onRejoinChannelSuccess(String channel, int uid, int elapsed) {
             LogUtils.YfcDebug("onRejoinChannelSuccess");
+            onVoiceCommunicationCallbacks.onRejoinChannelSuccess(channel,uid,elapsed);
         }
 
         //每隔两秒钟返回一次频道内的状态信息
         @Override
         public void onRtcStats(RtcStats stats) {
             LogUtils.YfcDebug("RtcStats:"+stats.users);
+            VoiceCommunicationRtcStats statsCloudPlus = new VoiceCommunicationRtcStats();
+            statsCloudPlus.users = stats.users;
+            onVoiceCommunicationCallbacks.onRtcStats(statsCloudPlus);
         }
 
         //静音监听
         @Override
         public void onUserMuteAudio(int uid, boolean muted) {
-
+            onVoiceCommunicationCallbacks.onUserMuteAudio(uid,muted);
         }
 
         //warning信息
@@ -68,6 +75,7 @@ public class VoiceCommunicationUtils {
         public void onWarning(int warn) {
             super.onWarning(warn);
             LogUtils.YfcDebug("warning信息："+warn);
+            onVoiceCommunicationCallbacks.onWarning(warn);
         }
 
         //error信息
@@ -75,29 +83,41 @@ public class VoiceCommunicationUtils {
         public void onError(int err) {
             super.onError(err);
             LogUtils.YfcDebug("error信息："+err);
+            onVoiceCommunicationCallbacks.onError(err);
         }
 
         //失去连接信息
         @Override
         public void onConnectionLost() {
             super.onConnectionLost();
+            onVoiceCommunicationCallbacks.onConnectionLost();
         }
 
+        //当你被服务端禁掉连接的权限时，会触发该回调。意外掉线之后，SDK 会自动进行重连，重连多次都失败之后，该回调会被触发，判定为连接不可用。
         @Override
         public void onConnectionBanned() {
             super.onConnectionBanned();
+            onVoiceCommunicationCallbacks.onConnectionBanned();
         }
 
         //网络质量回调
         @Override
         public void onLastmileQuality(int quality) {
             super.onLastmileQuality(quality);
-            LogUtils.YfcDebug("网络质量："+quality);
+            onVoiceCommunicationCallbacks.onLastmileQuality(quality);
         }
 
+        //提示谁在说话及其音量。默认禁用。可以通过 enableAudioVolumeIndication 方法设置。
         @Override
         public void onAudioVolumeIndication(AudioVolumeInfo[] speakers, int totalVolume) {
             super.onAudioVolumeIndication(speakers, totalVolume);
+            VoiceCommunicationAudioVolumeInfo[] voiceCommunicationAudioVolumeInfos = new VoiceCommunicationAudioVolumeInfo[speakers.length];
+            for (int i = 0; i < speakers.length; i++) {
+                VoiceCommunicationAudioVolumeInfo info = new VoiceCommunicationAudioVolumeInfo();
+                info.uid = speakers[i].uid;
+                info.volume = speakers[i].volume;
+            }
+            onVoiceCommunicationCallbacks.onAudioVolumeIndication(voiceCommunicationAudioVolumeInfos,totalVolume);
         }
     };
 
@@ -105,6 +125,9 @@ public class VoiceCommunicationUtils {
         this.context = context;
     }
 
+    /**
+     * 初始化引擎
+     */
     public void initializeAgoraEngine() {
         try {
             mRtcEngine = RtcEngine.create(context, context.getString(R.string.agora_app_id), mRtcEventHandler);
@@ -134,6 +157,14 @@ public class VoiceCommunicationUtils {
     }
 
     /**
+     * 设置加密密码
+     * @param secret
+     */
+    public void setEncryptionSecret(String secret){
+        mRtcEngine.setEncryptionSecret(secret);
+    }
+
+    /**
      * 设置频道模式
      * @param profile
      */
@@ -156,6 +187,14 @@ public class VoiceCommunicationUtils {
         leaveChannel();
         RtcEngine.destroy();
         mRtcEngine = null;
+    }
+
+    /**
+     * 设置回调
+     * @param l
+     */
+    public void setOnVoiceCommunicationCallbacks(OnVoiceCommunicationCallbacks l){
+        this.onVoiceCommunicationCallbacks = l;
     }
 
 }

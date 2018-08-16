@@ -5,6 +5,8 @@ package com.inspur.emmcloud.bean.chat;
  */
 
 public class GetVoiceCommunicationResult {
+
+    private String channelId = "";
     public GetVoiceCommunicationResult(String response){
 
     }
