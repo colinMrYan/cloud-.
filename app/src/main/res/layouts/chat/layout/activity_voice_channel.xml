@@ -3,33 +3,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/content_bg"
-    android:fitsSystemWindows="true" >
+    android:fitsSystemWindows="true">
 
     <RelativeLayout
         android:id="@+id/header_layout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/header_height"
-        android:background="@color/header_bg" >
+        android:background="@color/content_bg">
 
-        <RelativeLayout
-            android:id="@+id/back_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_centerVertical="true"
-            android:onClick="onClick"
-            android:paddingLeft="12dp"
-            android:paddingRight="12dp" >
-
-            <ImageView
-                android:id="@+id/back_btn"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_centerVertical="true"
-                android:background="@null"
-                android:paddingRight="8dp"
-                android:scaleType="centerInside"
-                android:src="@drawable/selector_back_btn" />
-        </RelativeLayout>
     </RelativeLayout>
 
     <Button
@@ -38,27 +19,90 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/header_layout"
         android:onClick="onClick"
-        android:text="打开选择人员界面"/>
-
-    <android.support.v4.widget.CircleImageView
-        android:id="@+id/img_user_head"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:layout_below="@id/header_layout"/>
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerview_voice_communication_first"
+        android:text="打开选择人员界面" />
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
         android:layout_centerHorizontal="true"
-        android:layout_below="@id/header_layout"/>
+        android:layout_below="@id/header_layout">
+        <com.inspur.emmcloud.widget.CircleTextImageView
+            android:id="@+id/img_user_head"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_marginTop="36dp"
+            android:src="@drawable/icon_hung_up"
+             />
+        <TextView
+            android:id="@+id/tv_user_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="21dp"
+            android:text="周祥国"
+            android:textSize="20sp"/>
+        <TextView
+            android:id="@+id/tv_invite_voice_communication"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="6dp"
+            android:text="邀请你进行语音通话"
+            android:textSize="13sp"/>
+    </LinearLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerview_voice_communication_second"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/header_layout"
         android:layout_centerHorizontal="true"
-        android:visibility="gone"
-        android:layout_below="@id/recyclerview_voice_communication_first"/>
+        android:orientation="vertical">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerview_voice_communication_first"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+             />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerview_voice_communication_second"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:layout_marginBottom="30dp"
+        android:layout_alignParentBottom="true">
+
+        <com.inspur.emmcloud.widget.CircleTextImageView
+            android:id="@+id/img_answer_the_phone"
+            android:layout_width="76dp"
+            android:layout_height="76dp"
+            android:layout_marginRight="100dp"
+            android:visibility="gone"
+            android:src="@drawable/icon_answer_the_phone"
+            />
+
+        <com.inspur.emmcloud.widget.CircleTextImageView
+            android:id="@+id/img_hung_up"
+            android:layout_width="76dp"
+            android:layout_height="76dp"
+            android:layout_toRightOf="@id/img_answer_the_phone"
+            android:src="@drawable/icon_hung_up"
+            />
+    </RelativeLayout>
+
 
 </RelativeLayout>
