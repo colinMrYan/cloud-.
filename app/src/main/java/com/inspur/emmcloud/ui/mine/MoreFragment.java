@@ -32,10 +32,12 @@ import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppTabUtils;
+import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
+import com.inspur.emmcloud.widget.CircleTextImageView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -238,7 +240,7 @@ public class MoreFragment extends Fragment {
         }
 
         private void setViewByLayoutItem(View convertView,String layoutItem){
-            ImageView iconImg = (ImageView)convertView.findViewById(R.id.iv_icon);
+            CircleTextImageView iconImg = (CircleTextImageView)convertView.findViewById(R.id.iv_icon);
             TextView titleText = (TextView)convertView.findViewById(R.id.tv_title);
             switch (layoutItem){
                 case "my_setting_function":
@@ -250,7 +252,7 @@ public class MoreFragment extends Fragment {
                     titleText.setText(R.string.wallet);
                     break;
                 case "my_aboutUs_function":
-                    iconImg.setImageResource(R.drawable.icon_circle_logo);
+                    ImageDisplayUtils.getInstance().displayImage(iconImg,"drawable://"+ AppUtils.getAppIconRes(MyApplication.getInstance()),R.drawable.ic_launcher);
                     titleText.setText(R.string.about_text);
                     break;
                 case "my_feedback_function":
