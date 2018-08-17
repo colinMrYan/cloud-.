@@ -38,6 +38,7 @@ import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.Voice2StringMessageUtils;
+import com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton;
 
 import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
@@ -86,6 +87,10 @@ public class ECMChatInputMenu extends LinearLayout {
 
     @ViewInject(R.id.voice_input_btn)
     private Button voiceInputBtn;
+
+    @ViewInject(R.id.btn_press_to_say)
+    private QMUIRoundButton pressToSayBtn;
+
 
     private boolean canMentions = false;
     private ChatInputMenuListener chatInputMenuListener;
@@ -370,11 +375,19 @@ public class ECMChatInputMenu extends LinearLayout {
 //        viewpagerLayout.setInputTypeBeanList(inputTypeBeanList);
 //   }
 
-    private void setVoiceInputBtnStatus(int tag){
+    private void setVoiceInputStatus(int tag){
         if (voiceInputBtn.getTag() == null || (int)voiceInputBtn.getTag() != tag){
             voiceInputBtn.setTag(tag);
             voiceInputBtn.setBackground(ContextCompat.getDrawable(getContext(),(tag==0)?R.drawable.ic_chat_input_voice:R.drawable.ic_chat_input_keyboard));
+            inputEdit.setVisibility((tag==0)?VISIBLE:GONE);
+            pressToSayBtn.setVisibility((tag==0)?GONE:VISIBLE);
         }
+    }
+
+    @Event(type = View.OnLongClickListener.class,value =R.id.btn_press_to_say)
+    private boolean longClick(View view){
+
+        return true;
     }
 
     @Event({R.id.voice_input_btn, R.id.send_msg_btn, R.id.add_btn, R.id.voice_input_close_img})
@@ -382,14 +395,14 @@ public class ECMChatInputMenu extends LinearLayout {
         switch (view.getId()) {
             case R.id.voice_input_btn:
                 if (view.getTag() == null || (int)view.getTag() == TAG_KEYBOARD_INPUT){
-                    setVoiceInputBtnStatus(TAG_VOICE_INPUT);
+                    setVoiceInputStatus(TAG_VOICE_INPUT);
                     if (addMenuLayout.isShown()) {
                         addMenuLayout.setVisibility(View.GONE);
                     } else if (InputMethodUtils.isSoftInputShow((Activity) getContext())) {
                         InputMethodUtils.hide((Activity) getContext());
                     }
                 }else {
-                    setVoiceInputBtnStatus(TAG_KEYBOARD_INPUT);
+                    setVoiceInputStatus(TAG_KEYBOARD_INPUT);
                     InputMethodUtils.display((Activity) getContext(), inputEdit, 0);
                 }
 
@@ -427,7 +440,7 @@ public class ECMChatInputMenu extends LinearLayout {
                 }
                 break;
             case R.id.add_btn:
-                setVoiceInputBtnStatus(TAG_KEYBOARD_INPUT);
+                setVoiceInputStatus(TAG_KEYBOARD_INPUT);
                 if (addMenuLayout.isShown()) {
                     setOtherLayoutHeightLock(true);
                     setAddMenuLayoutShow(false);
