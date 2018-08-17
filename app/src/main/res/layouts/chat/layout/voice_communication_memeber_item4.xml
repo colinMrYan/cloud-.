@@ -15,5 +15,6 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:layout_centerHorizontal="true"
+        android:textSize="12sp"
         android:layout_below="@id/img_voice_communication_member_head"/>
 </RelativeLayout>

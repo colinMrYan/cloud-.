@@ -7,7 +7,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.VoiceCommunicationMemberAdapter;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
@@ -16,6 +15,7 @@ import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.StateBarUtils;
+import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.VoiceCommunicationUtils;
 import com.inspur.emmcloud.widget.ECMSpaceItemDecoration;
 
@@ -54,13 +54,15 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity{
         voiceCommunicationUtils = new VoiceCommunicationUtils(this);
         voiceCommunicationUtils.initializeAgoraEngine();
         initCallbacks();
-        voiceCommunicationUtils.joinChannel(null, "10011", "Extra Optional Data", Integer.parseInt(MyApplication.getInstance().getUid()));
+        voiceCommunicationUtils.joinChannel("00636f73eb839f440a3a297a5c3b3977c13IABj5plqAhdjL9l3t2DKcp/dWHhdZ4FS0TfBnYndpbDc1V7mcSq5GPdSEAB7yAgAGtB3WwEAAQAAAAAA", "a392e5047f39430b9a920b45f4c4bd6d", "Extra Optional Data", 763702);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         recyclerViewFirst.setLayoutManager(layoutManager);
         recyclerViewFirst.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(this,8)));
-        voiceCommunicationMemberAdapter = new VoiceCommunicationMemberAdapter(this);
-        recyclerViewFirst.setAdapter(voiceCommunicationMemberAdapter);
+        LinearLayoutManager layoutManager2 = new LinearLayoutManager(this);
+        layoutManager2.setOrientation(LinearLayoutManager.HORIZONTAL);
+        recyclerViewSecond.setLayoutManager(layoutManager2);
+        recyclerViewSecond.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(this,8)));
     }
 
     @Override
@@ -79,7 +81,20 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity{
                     voiceCommunicationJoinChannelInfoBean.setUserId(selectMemList.get(i).getId());
                     voiceCommunicationJoinChannelInfoBeanList.add(voiceCommunicationJoinChannelInfoBean);
                 }
-                voiceCommunicationMemberAdapter.setAndRefreshVoiceCommunicationAdapterData(voiceCommunicationJoinChannelInfoBeanList);
+                if(voiceCommunicationJoinChannelInfoBeanList.size() <= 5){
+                    LogUtils.YfcDebug("小于等于五个人");
+                    recyclerViewFirst.setAdapter(new VoiceCommunicationMemberAdapter(this,voiceCommunicationJoinChannelInfoBeanList,1));
+                }else if(voiceCommunicationJoinChannelInfoBeanList.size() <= 9){
+                    LogUtils.YfcDebug("大于五个人小于九个人"+voiceCommunicationJoinChannelInfoBeanList.subList(0,5).size());
+                    LogUtils.YfcDebug("大于五个人小于九个人"+voiceCommunicationJoinChannelInfoBeanList.subList(5,voiceCommunicationJoinChannelInfoBeanList.size()).size());
+                    List<VoiceCommunicationJoinChannelInfoBean> list1 = voiceCommunicationJoinChannelInfoBeanList.subList(0,5);
+                    List<VoiceCommunicationJoinChannelInfoBean> list2 = voiceCommunicationJoinChannelInfoBeanList.subList(5,voiceCommunicationJoinChannelInfoBeanList.size());
+                    recyclerViewFirst.setAdapter(new VoiceCommunicationMemberAdapter(this,list1,1));
+                    recyclerViewSecond.setAdapter(new VoiceCommunicationMemberAdapter(this,list2,2));
+                }else{
+                    ToastUtils.show(ChannelVoiceCommunicationActivity.this,"超出限制");
+                }
+
             }
         }
     }
@@ -101,9 +116,9 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity{
 
             @Override
             public void onJoinChannelSuccess(String channel, int uid, int elapsed) {
-                LogUtils.YfcDebug("1111111111onJoinChannelSuccess  channel:"+channel);
-                LogUtils.YfcDebug("1111111111onJoinChannelSuccess uid:"+uid);
-                LogUtils.YfcDebug("1111111111onJoinChannelSuccess eslapsed:"+elapsed);
+                LogUtils.YfcDebug("onJoinChannelSuccess  channel:"+channel);
+                LogUtils.YfcDebug("onJoinChannelSuccess uid:"+uid);
+                LogUtils.YfcDebug("onJoinChannelSuccess eslapsed:"+elapsed);
             }
 
             @Override

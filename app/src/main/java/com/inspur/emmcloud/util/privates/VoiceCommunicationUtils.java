@@ -58,7 +58,7 @@ public class VoiceCommunicationUtils {
         //每隔两秒钟返回一次频道内的状态信息
         @Override
         public void onRtcStats(RtcStats stats) {
-//            LogUtils.YfcDebug("RtcStats:"+stats.users);
+            LogUtils.YfcDebug("RtcStats:"+stats.users);
             VoiceCommunicationRtcStats statsCloudPlus = new VoiceCommunicationRtcStats();
             statsCloudPlus.users = stats.users;
             onVoiceCommunicationCallbacks.onRtcStats(statsCloudPlus);
