@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
@@ -210,7 +211,7 @@ public class MoreFragment extends Fragment {
             ExpandableListView expandableListView = (ExpandableListView) parent;
             expandableListView.expandGroup(groupPosition);
             View view = new View(getActivity());
-            view.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, DensityUtil.dip2px(MyApplication.getInstance(),10)));
+            view.setLayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, DensityUtil.dip2px(MyApplication.getInstance(),10)));
             return view;
         }
 
