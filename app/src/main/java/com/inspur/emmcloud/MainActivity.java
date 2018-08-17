@@ -81,19 +81,19 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
     private void init() {
         String appFirstLoadAlis = PreferencesUtils.getString(MyApplication.getInstance(), Constant.PREF_APP_LOAD_ALIAS);
         if (appFirstLoadAlis == null) {
-            String appVersionFlag = AppUtils.getAppVersionFlag(this);
-            if (!appVersionFlag.equals("Standard")) {
-                PackageManager pm = getApplicationContext().getPackageManager();
-                pm.setComponentEnabledSetting(new ComponentName(
-                                MainActivity.this, getPackageName() + ".Standard"),
-                        PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
-                        PackageManager.DONT_KILL_APP);
-                pm.setComponentEnabledSetting(new ComponentName(
-                                MainActivity.this, getPackageName() + "." + appVersionFlag),
-                        PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
-                        PackageManager.DONT_KILL_APP);
-                PreferencesUtils.putString(MyApplication.getInstance(), Constant.PREF_APP_LOAD_ALIAS, appVersionFlag);
-            }
+            appFirstLoadAlis = AppUtils.getAppVersionFlag(this);
+            PreferencesUtils.putString(MyApplication.getInstance(), Constant.PREF_APP_LOAD_ALIAS, appFirstLoadAlis);
+        }
+        if (!appFirstLoadAlis.equals("Standard")) {
+            PackageManager pm = getApplicationContext().getPackageManager();
+            pm.setComponentEnabledSetting(new ComponentName(
+                            MainActivity.this, getPackageName() + ".Standard"),
+                    PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+                    PackageManager.DONT_KILL_APP);
+            pm.setComponentEnabledSetting(new ComponentName(
+                            MainActivity.this, getPackageName() + "." + appFirstLoadAlis),
+                    PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+                    PackageManager.DONT_KILL_APP);
         }
         activitySplashShowTime = System.currentTimeMillis();
         //进行app异常上传
