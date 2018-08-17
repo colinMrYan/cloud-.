@@ -104,9 +104,9 @@
 
     <application
         android:name=".MyApplication"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/ic_launcher_beiqi"
         android:allowBackup="false"
-        android:label="@string/app_name"
+        android:label="@string/app_name_beiqi"
         android:largeHeap="true"
         android:theme="@style/AppTheme"
         tools:replace="android:allowBackup,label"
@@ -114,7 +114,7 @@
         <!--custom-->
         <meta-data
             android:name="FLAG_APP_VERSION_TYPE"
-            android:value="Standard" />
+            android:value="beiqi" />
 
         <activity
             android:name=".MainActivity"
@@ -142,6 +142,18 @@
 
         <activity-alias
             android:enabled="true"
+            android:icon="@drawable/ic_launcher_beiqi"
+            android:label="@string/app_name_beiqi"
+            android:name=".beiqi"
+            android:targetActivity=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:enabled="false"
             android:icon="@drawable/ic_launcher"
             android:label="@string/app_name"
             android:name=".Standard"
