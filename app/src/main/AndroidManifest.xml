@@ -104,13 +104,12 @@
 
     <application
         android:name=".MyApplication"
-        android:icon="@drawable/ic_launcher"
         android:allowBackup="false"
+        android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:largeHeap="true"
         android:theme="@style/AppTheme"
-        tools:replace="android:allowBackup,label"
-        >
+        tools:replace="android:allowBackup,label">
         <!--custom-->
         <meta-data
             android:name="FLAG_APP_VERSION_TYPE"
@@ -129,38 +128,38 @@
 
 
         <activity-alias
+            android:name=".zhihuichengjian"
             android:enabled="false"
             android:icon="@drawable/ic_launcher_zhihuichengjian"
             android:label="@string/app_name_zhihuichengjian"
-            android:name=".zhihuichengjian"
             android:targetActivity=".MainActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity-alias>
 
         <activity-alias
+            android:name=".beiqi"
             android:enabled="false"
             android:icon="@drawable/ic_launcher_beiqi"
             android:label="@string/app_name_beiqi"
-            android:name=".beiqi"
             android:targetActivity=".MainActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity-alias>
 
         <activity-alias
+            android:name=".Standard"
             android:enabled="true"
             android:icon="@drawable/ic_launcher"
             android:label="@string/app_name"
-            android:name=".Standard"
             android:targetActivity=".MainActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity-alias>
 
@@ -180,12 +179,12 @@
             android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>
-        <activity android:name=".ui.mine.setting.NoPermissionDialogActivity"
-            android:resizeableActivity="true"
+        <activity
+            android:name=".ui.mine.setting.NoPermissionDialogActivity"
             android:launchMode="singleInstance"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"
-            android:theme="@style/dialog_activity"
-            />
+            android:theme="@style/dialog_activity" />
         <activity
             android:name=".ui.mine.setting.SwitchEnterpriseActivity"
             android:launchMode="singleTask"
@@ -220,15 +219,17 @@
             android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>
-        <activity android:name=".ui.mine.card.CardPackageActivity"
+        <activity
+            android:name=".ui.mine.card.CardPackageActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
-        <activity android:name=".ui.mine.card.CardPackageSetActivity"
+        <activity
+            android:name=".ui.mine.card.CardPackageSetActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.login.LoginActivity"
             android:launchMode="singleTask"
@@ -292,18 +293,20 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>
 
-        <activity android:name=".ui.ShareFilesActivity"
+        <activity
+            android:name=".ui.ShareFilesActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:screenOrientation="portrait">
 
         </activity>
 
-        <activity android:name=".ui.ShareLinkActivity"
+        <activity
+            android:name=".ui.ShareLinkActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar">
 
         </activity>
 
@@ -328,7 +331,7 @@
 
                 <data android:mimeType="image/*" />
                 <data android:mimeType="application/*" />
-                <data android:mimeType="text/plain"/>
+                <data android:mimeType="text/plain" />
             </intent-filter>
 
             <intent-filter>
@@ -419,6 +422,16 @@
                     android:host="com.huawei.pushtest"
                     android:scheme="customscheme" />
             </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="emm" />
+            </intent-filter>
+
         </activity>
 
 
@@ -551,10 +564,11 @@
             android:windowSoftInputMode="adjustPan">
 
         </activity>
-        <activity android:name=".ui.appcenter.AppGroupActivity"
+        <activity
+            android:name=".ui.appcenter.AppGroupActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.find.ScanResultActivity"
             android:launchMode="singleTask"
@@ -906,39 +920,39 @@
         <!-- ImagePicker -->
 
         <activity
-            android:resizeableActivity="true"
             android:name="com.inspur.imp.plugin.camera.imagepicker.ui.ImageGridActivity"
             android:configChanges="orientation|screenSize"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
         <activity
-            android:resizeableActivity="true"
             android:name="com.inspur.imp.plugin.camera.imagepicker.ui.ImagePreviewActivity"
             android:configChanges="orientation|screenSize"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
         <activity
-            android:resizeableActivity="true"
             android:name="com.inspur.imp.plugin.camera.imagepicker.ui.ImageCropActivity"
             android:configChanges="orientation|screenSize"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
         <activity
-            android:resizeableActivity="true"
             android:name="com.inspur.imp.plugin.camera.imagepicker.ui.ImagePreviewDelActivity"
             android:configChanges="orientation|screenSize"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
         <activity
-            android:resizeableActivity="true"
             android:name="com.inspur.imp.plugin.camera.editimage.EditImageActivity"
             android:configChanges="orientation|screenSize"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
         <activity
-            android:resizeableActivity="true"
             android:name="com.inspur.imp.plugin.camera.imageedit.IMGEditActivity"
             android:configChanges="orientation|screenSize"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
 
@@ -947,21 +961,21 @@
 
         <!-- imp插件 -->
         <activity
-            android:resizeableActivity="true"
             android:name="com.inspur.imp.api.ImpActivity"
             android:configChanges="orientation|screenSize"
+            android:resizeableActivity="true"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar"></activity>
         <activity
-            android:resizeableActivity="true"
             android:name="com.inspur.imp.plugin.barcode.scan.CaptureActivity"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"
             android:stateNotNeeded="true"
             android:supportsRtl="true"
             android:theme="@style/SplashTheme"></activity>
 
         <activity
-            android:resizeableActivity="true"
             android:name="com.inspur.imp.plugin.camera.mycamera.MyCameraActivity"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"
             android:stateNotNeeded="true"
             android:supportsRtl="true"
@@ -971,24 +985,22 @@
             android:label="@string/app_name"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar">
-        </activity>
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
 
         <activity
             android:name="com.inspur.imp.plugin.file.FileBrowerAppActivity"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:resizeableActivity="true"
-            ></activity>
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
 
         <activity
-            android:resizeableActivity="true"
             android:name="com.inspur.imp.plugin.filetransfer.TextFileShowActivity"
+            android:resizeableActivity="true"
             android:theme="@android:style/Theme.NoTitleBar"></activity>
 
         <!-- MDM设备管理 -->
         <activity
-            android:resizeableActivity="true"
             android:name="com.inspur.emmcloud.ui.mdm.DeviceRegisterFailDetailActivity"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>
 
         <!-- imp插件 -->
@@ -997,9 +1009,9 @@
         <!-- 极光推送开始 -->
         <!-- Rich push 核心功能 since 2.0.6-->
         <activity
-            android:resizeableActivity="true"
             android:name="cn.jpush.android.ui.PopWinActivity"
-            android:exported="false"></activity>
+            android:exported="false"
+            android:resizeableActivity="true"></activity>
         <!-- since 3.0.9 Required SDK 核心功能-->
         <provider
             android:name="cn.jpush.android.service.DataProvider"
@@ -1008,10 +1020,10 @@
 
         <!-- Required SDK核心功能-->
         <activity
-            android:resizeableActivity="true"
             android:name="cn.jpush.android.ui.PushActivity"
             android:configChanges="orientation|keyboardHidden"
             android:exported="false"
+            android:resizeableActivity="true"
             android:theme="@android:style/Theme.NoTitleBar">
             <intent-filter>.
                 <action android:name="cn.jpush.android.ui.PushActivity" />
@@ -1169,16 +1181,16 @@
 
         <activity
             android:name=".wxapi.WXEntryActivity"
-            android:resizeableActivity="true"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
             android:name="com.umeng.qq.tencent.AuthActivity"
-            android:resizeableActivity="true"
             android:launchMode="singleTask"
-            android:noHistory="true">
+            android:noHistory="true"
+            android:resizeableActivity="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -1190,14 +1202,14 @@
         </activity>
         <activity
             android:name="com.umeng.qq.tencent.AssistActivity"
-            android:resizeableActivity="true"
             android:configChanges="orientation|keyboardHidden|screenSize"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
             android:name="com.umeng.socialize.editorpage.ShareActivity"
-            android:resizeableActivity="true"
             android:excludeFromRecents="true"
+            android:resizeableActivity="true"
             android:theme="@style/Theme.UMDefault" />
     </application>
 
