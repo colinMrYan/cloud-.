@@ -1014,4 +1014,10 @@
     <string name="card_package_phone_number">电话</string>
 
     <string name="agora_app_id">36f73eb839f440a3a297a5c3b3977c13</string>
+
+    <string name="voice_communication_invite_you">邀请你进行语音通话</string>
+    <string name="voice_communication_members">通话成员</string>
+    <string name="voice_communication_excuse">禁言</string>
+    <string name="voice_communication_hands_free">免提</string>
+    <string name="voice_communication_tran_video">摄像头</string>
 </resources>

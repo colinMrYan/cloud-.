@@ -21,6 +21,7 @@
         android:onClick="onClick"
         android:text="打开选择人员界面" />
     <LinearLayout
+        android:id="@+id/ll_voice_communication_invite"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -39,6 +40,7 @@
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:layout_marginTop="21dp"
+            android:textColor="#333333"
             android:text="周祥国"
             android:textSize="20sp"/>
         <TextView
@@ -47,11 +49,13 @@
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:layout_marginTop="6dp"
-            android:text="邀请你进行语音通话"
+            android:textColor="#333333"
+            android:text="@string/voice_communication_invite_you"
             android:textSize="13sp"/>
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/ll_voice_communication_invite_members"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/header_layout"
@@ -75,14 +79,133 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/ll_voice_communication_memebers"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:orientation="horizontal">
+        android:layout_above="@id/tv_voice_communication_state"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="13dp"
+            android:textColor="#333333"
+            android:text="@string/voice_communication_members"
+            android:layout_gravity="center_horizontal"/>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerview_voice_communication_memebers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:overScrollMode="never"/>
+    </LinearLayout>
 
+
+    <TextView
+        android:id="@+id/tv_voice_communication_state"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@id/tv_voice_communication_time"
+        android:textColor="#333333"
+        android:textSize="16sp"
+        android:text="当前通话质量不佳"/>
+    <!--<TextView-->
+        <!--android:id="@+id/tv_voice_communication_time"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_above="@id/ll_voice_communication_function_group"-->
+        <!--android:layout_marginBottom="38dp"-->
+        <!--android:textColor="#333333"-->
+        <!--android:textSize="16sp"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:text="00:02"/>-->
+
+    <Chronometer
+        android:id="@+id/tv_voice_communication_time"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/ll_voice_communication_function_group"
+        android:layout_marginBottom="38dp"
+        android:textColor="#333333"
+        android:textSize="16sp"
+        android:layout_centerHorizontal="true"
+        android:text="Chronometer" />
+
+    <LinearLayout
+        android:id="@+id/ll_voice_communication_function_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@id/rl_voice_communication_operate"
+        android:layout_marginBottom="35dp"
+        android:orientation="horizontal"
+        >
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1">
+            <ImageView
+                android:id="@+id/img_an_excuse"
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/icon_mute_unselcected"/>
+            <TextView
+                android:id="@+id/tv_an_excuse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:textColor="#333333"
+                android:text="@string/voice_communication_excuse"
+                android:textSize="13sp"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1">
+            <ImageView
+                android:id="@+id/img_hands_free"
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/icon_hands_free_unselected"/>
+            <TextView
+                android:id="@+id/tv_hands_free"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:textColor="#333333"
+                android:text="@string/voice_communication_hands_free"
+                android:textSize="13sp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1">
+            <ImageView
+                android:id="@+id/img_tran_video"
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/icon_trans_video"/>
+            <TextView
+                android:id="@+id/tv_tran_video"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:textColor="#333333"
+                android:text="@string/voice_communication_tran_video"
+                android:textSize="13sp"/>
+        </LinearLayout>
     </LinearLayout>
 
     <RelativeLayout
+        android:id="@+id/rl_voice_communication_operate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
