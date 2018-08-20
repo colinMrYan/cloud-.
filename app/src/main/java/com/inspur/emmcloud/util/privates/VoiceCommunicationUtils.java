@@ -45,6 +45,7 @@ public class VoiceCommunicationUtils {
         //加入频道成功
         @Override
         public void onJoinChannelSuccess(String channel, int uid, int elapsed) {
+            userCount = userCount + 1;
             onVoiceCommunicationCallbacks.onJoinChannelSuccess(channel,uid,elapsed);
         }
 
@@ -52,6 +53,7 @@ public class VoiceCommunicationUtils {
         @Override
         public void onRejoinChannelSuccess(String channel, int uid, int elapsed) {
             LogUtils.YfcDebug("onRejoinChannelSuccess");
+            userCount = userCount + 1;
             onVoiceCommunicationCallbacks.onRejoinChannelSuccess(channel,uid,elapsed);
         }
 
@@ -178,6 +180,32 @@ public class VoiceCommunicationUtils {
      */
     public void onSwitchSpeakerphoneClicked(boolean isSpakerphoneOpen) {
         mRtcEngine.setEnableSpeakerphone(isSpakerphoneOpen);
+    }
+
+    /**
+     * 静音本地
+     * 该方法用于允许/禁止往网络发送本地音频流。
+     * @param isMute
+     */
+    public int muteLocalAudioStream(boolean isMute){
+        return mRtcEngine.muteLocalAudioStream(isMute);
+    }
+
+    /**
+     * 静音远端所有用户
+     * @param isMuteAllUser
+     */
+    public int muteAllRemoteAudioStreams(boolean isMuteAllUser){
+        return mRtcEngine.muteAllRemoteAudioStreams(isMuteAllUser);
+    }
+
+    /**
+     * 刷新token
+     * @param token
+     * @return
+     */
+    public int renewToken(String token){
+        return mRtcEngine.renewToken(token);
     }
 
     /**

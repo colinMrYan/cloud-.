@@ -2,6 +2,7 @@ package com.inspur.emmcloud.ui.chat;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,7 +17,6 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.VoiceCommunicationMemberAdapter;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
 import com.inspur.emmcloud.bean.contact.SearchModel;
-import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.StateBarUtils;
@@ -28,7 +28,6 @@ import com.inspur.emmcloud.widget.ECMSpaceItemDecoration;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,14 +36,18 @@ import java.util.List;
  */
 @ContentView(R.layout.activity_voice_channel)
 public class ChannelVoiceCommunicationActivity extends BaseActivity{
-    public static final int INVITER_LAYOUT_STATE = 0;
-    public static final int INVITEE_LAYOUT_STATE = 1;
-    public static final int COMMUNICATION_STATE = 2;
+    public static final String VOICE_COMMUNICATION_STATE = "voice_communication_state";//传递页面布局样式的
+    public static final int INVITER_LAYOUT_STATE = 0;//邀请人状态布局
+    public static final int INVITEE_LAYOUT_STATE = 1;//被邀请人状态布局
+    public static final int COMMUNICATION_LAYOUT_STATE = 2;//通话中布局状态
+    public static boolean IS_EXCUSE_AVAILIABLE = true;//禁言可用状态标识
+    public static boolean IS_HANDS_FREE_AVAILIABLE = true;//免提可用状态标识
+    public static boolean IS_MUTE_AVAILIABLE = true;//静音可用状态标识
     private VoiceCommunicationUtils voiceCommunicationUtils;
     private List<SearchModel> selectMemList = new ArrayList<SearchModel>();
     private static final int CHOOSE_MEMBERS = 1;
     @ViewInject(R.id.ll_voice_communication_invite)
-    private LinearLayout linearLayoutInviter;
+    private LinearLayout linearLayoutInvitee;
     @ViewInject(R.id.img_user_head)
     private CircleTextImageView imgUserHead;
     @ViewInject(R.id.tv_user_name)
@@ -73,12 +76,14 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity{
     private ImageView imgHandsFree;
     @ViewInject(R.id.tv_hands_free)
     private TextView tvHandsFree;
+    @ViewInject(R.id.img_mute)
+    private ImageView imgMute;
+    @ViewInject(R.id.tv_mute)
+    private TextView tvMute;
     @ViewInject(R.id.img_tran_video)
     private ImageView imgTranVideo;
     @ViewInject(R.id.tv_tran_video)
     private TextView tvTranVideo;
-    @ViewInject(R.id.rl_voice_communication_operate)
-    private LinearLayout linearLayoutInviteOperate;
     @ViewInject(R.id.img_answer_the_phone)
     private ImageView imgAnswerPhone;
     @ViewInject(R.id.img_hung_up)
@@ -111,22 +116,40 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity{
         GridLayoutManager layoutManagerMemebers = new GridLayoutManager(this,5);
         recyclerViewCommunicationMembers.setLayoutManager(layoutManagerMemebers);
         recyclerViewCommunicationMembers.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(this,8)));
-        chronometerCommunicationTime.start();
+        initCommunicationViewsVisibility(INVITEE_LAYOUT_STATE);
+        initFunctionState();
+    }
 
-        initViewsVisibility(INVITEE_LAYOUT_STATE);
-
+    /**
+     * 设置禁言，静音等
+     */
+    private void initFunctionState() {
+        if(!IS_EXCUSE_AVAILIABLE){
+            imgExcuse.setImageResource(R.drawable.icon_excuse_unavailable);
+            imgExcuse.setClickable(false);
+        }
+        if(!IS_HANDS_FREE_AVAILIABLE){
+            imgHandsFree.setImageResource(R.drawable.icon_hands_free_unavailable);
+            imgHandsFree.setClickable(false);
+        }
+        if(!IS_MUTE_AVAILIABLE){
+            imgMute.setImageResource(R.drawable.icon_mute_unavaiable);
+            imgMute.setClickable(false);
+        }
     }
 
     /**
      * 根据状态改变布局可见性
      * @param state
      */
-    private void initViewsVisibility(int state) {
-        linearLayoutInviter.setVisibility(View.VISIBLE);
-        linearLayoutInviteMemebersGroup.setVisibility(View.VISIBLE);
-        linearLayoutCommunicationMembers.setVisibility(View.VISIBLE);
-        linearLayoutFunction.setVisibility(View.VISIBLE);
-        linearLayoutInviteOperate.setVisibility(View.VISIBLE);
+    private void initCommunicationViewsVisibility(int state) {
+        linearLayoutInvitee.setVisibility(state == INVITEE_LAYOUT_STATE?View.VISIBLE:View.INVISIBLE);
+        linearLayoutInviteMemebersGroup.setVisibility((state == INVITER_LAYOUT_STATE || state == COMMUNICATION_LAYOUT_STATE)?View.VISIBLE:View.INVISIBLE);
+        linearLayoutCommunicationMembers.setVisibility(state == INVITEE_LAYOUT_STATE?View.VISIBLE:View.INVISIBLE);
+        linearLayoutFunction.setVisibility((state == INVITER_LAYOUT_STATE || state == COMMUNICATION_LAYOUT_STATE)? View.VISIBLE:View.INVISIBLE);
+        tvCommunicationState.setVisibility((state == INVITER_LAYOUT_STATE || state == COMMUNICATION_LAYOUT_STATE)?View.VISIBLE:View.INVISIBLE);
+        chronometerCommunicationTime.setVisibility(state == COMMUNICATION_LAYOUT_STATE ? View.VISIBLE:View.INVISIBLE);
+        imgAnswerPhone.setVisibility((state == INVITEE_LAYOUT_STATE)?View.VISIBLE:View.GONE);
     }
 
 
@@ -147,11 +170,11 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity{
                     voiceCommunicationJoinChannelInfoBeanList.add(voiceCommunicationJoinChannelInfoBean);
                 }
                 if(voiceCommunicationJoinChannelInfoBeanList.size() <= 5){
-                    LogUtils.YfcDebug("小于等于五个人");
+//                    LogUtils.YfcDebug("小于等于五个人");
                     recyclerViewFirst.setAdapter(new VoiceCommunicationMemberAdapter(this,voiceCommunicationJoinChannelInfoBeanList,1));
                 }else if(voiceCommunicationJoinChannelInfoBeanList.size() <= 9){
-                    LogUtils.YfcDebug("大于五个人小于九个人"+voiceCommunicationJoinChannelInfoBeanList.subList(0,5).size());
-                    LogUtils.YfcDebug("大于五个人小于九个人"+voiceCommunicationJoinChannelInfoBeanList.subList(5,voiceCommunicationJoinChannelInfoBeanList.size()).size());
+//                    LogUtils.YfcDebug("大于五个人小于九个人"+voiceCommunicationJoinChannelInfoBeanList.subList(0,5).size());
+//                    LogUtils.YfcDebug("大于五个人小于九个人"+voiceCommunicationJoinChannelInfoBeanList.subList(5,voiceCommunicationJoinChannelInfoBeanList.size()).size());
                     List<VoiceCommunicationJoinChannelInfoBean> list1 = voiceCommunicationJoinChannelInfoBeanList.subList(0,5);
                     List<VoiceCommunicationJoinChannelInfoBean> list2 = voiceCommunicationJoinChannelInfoBeanList.subList(5,voiceCommunicationJoinChannelInfoBeanList.size());
                     recyclerViewFirst.setAdapter(new VoiceCommunicationMemberAdapter(this,list1,1));
@@ -213,19 +236,53 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity{
             case R.id.back_layout:
                 finish();
                 break;
-            case R.id.btn_add_member:
-                Intent intent = new Intent();
-                intent.putExtra("select_content", 2);
-                intent.putExtra("isMulti_select", true);
-                intent.putExtra("isContainMe", true);
-                intent.putExtra("title", "选择人员");
-                if (selectMemList != null) {
-                    intent.putExtra("hasSearchResult", (Serializable) selectMemList);
-                }
-                intent.setClass(getApplicationContext(), ContactSearchActivity.class);
-                startActivityForResult(intent, CHOOSE_MEMBERS);
+            case R.id.img_an_excuse:
+                switchFunctionViewUIState(imgExcuse,tvExcuse);
+                imgExcuse.setImageResource(imgExcuse.isSelected()?R.drawable.icon_excuse_selected:R.drawable.icon_excuse_unselected);
                 break;
+            case R.id.img_hands_free:
+                switchFunctionViewUIState(imgHandsFree,tvHandsFree);
+                imgHandsFree.setImageResource(imgHandsFree.isSelected()?R.drawable.icon_hands_free_selected:R.drawable.icon_hands_free_unselected);
+                break;
+            case R.id.img_mute:
+                switchFunctionViewUIState(imgMute,tvMute);
+                imgMute.setImageResource(imgMute.isSelected()?R.drawable.icon_mute_selected:R.drawable.icon_mute_unselcected);
+                break;
+            case R.id.img_tran_video:
+                switchFunctionViewUIState(imgTranVideo,tvTranVideo);
+                imgTranVideo.setImageResource(imgTranVideo.isSelected()?R.drawable.icon_trans_video:R.drawable.icon_trans_video);
+                break;
+            case R.id.img_answer_the_phone:
+                initCommunicationViewsVisibility(COMMUNICATION_LAYOUT_STATE);
+                chronometerCommunicationTime.start();
+                break;
+            case R.id.img_hung_up:
+                finish();
+                break;
+//            case R.id.btn_add_member:
+//                Intent intent = new Intent();
+//                intent.putExtra("select_content", 2);
+//                intent.putExtra("isMulti_select", true);
+//                intent.putExtra("isContainMe", true);
+//                intent.putExtra("title", "选择人员");
+//                if (selectMemList != null) {
+//                    intent.putExtra("hasSearchResult", (Serializable) selectMemList);
+//                }
+//                intent.setClass(getApplicationContext(), ContactSearchActivity.class);
+//                startActivityForResult(intent, CHOOSE_MEMBERS);
+//                break;
         }
+    }
+
+    /**
+     * 修改Image选中状态和textView属性
+     * @param imageView
+     * @param textView
+     */
+    private void switchFunctionViewUIState(ImageView imageView, TextView textView) {
+        imageView.setSelected(imageView.isSelected()?false:true);
+        textView.setTextColor(imageView.isSelected()?ContextCompat.getColor(this,R.color.voice_communication_function_select)
+                :ContextCompat.getColor(this,R.color.voice_communication_function_default));
     }
 
     @Override
