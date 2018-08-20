@@ -11,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.NewsListAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
@@ -133,7 +134,7 @@ public class GroupNewsCardFragment extends Fragment implements MySwipeRefreshLay
         }
         List<GroupNews> newgroupNewsList = getGroupNewsDetailResult.getGroupNews();
         //返回结果少于20时，说明服务端暂时没有更新数据，则禁止上拉加载，并提示，减少向服务端发送无效请求
-        swipeRefreshLayout.setCanLoadMore(newgroupNewsList.size() == 20);
+        swipeRefreshLayout.setCanLoadMore(newgroupNewsList.size() >= 20);
         //添加新数据，如果page是0则重新添加，不是0则在末尾继续添加
         groupnNewsList.addAll(newgroupNewsList);
         //刷新数据
@@ -151,9 +152,11 @@ public class GroupNewsCardFragment extends Fragment implements MySwipeRefreshLay
     /**
      * 获取每个标题下的新闻列表
      */
-    private void getGroupNewsList(String catagoryId, int page, boolean needShowDialog) {
-        if (NetUtils.isNetworkConnected(getActivity())) {
-            loadingDlg.show(needShowDialog);
+    private void getGroupNewsList(String catagoryId, int page, boolean isRefresh) {
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
+            if(isRefresh){
+                swipeRefreshLayout.setRefreshing(true);
+            }
             MyAppAPIService apiService = new MyAppAPIService(getActivity());
             apiService.setAPIInterface(new WebService());
             apiService.getGroupNewsDetail(catagoryId, page);

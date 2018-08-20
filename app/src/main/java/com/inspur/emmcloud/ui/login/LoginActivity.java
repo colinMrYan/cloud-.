@@ -83,8 +83,9 @@ public class LoginActivity extends BaseActivity {
         userNameEdit = ((ClearEditText) findViewById(R.id.username_edit));
         passwordEdit = ((EditText) findViewById(R.id.password_edit));
         // 为用户名输入框设置输入监听
-        userNameEdit.addTextChangedListener(new EditWatcher(userNameEdit));
-        passwordEdit.addTextChangedListener(new EditWatcher(passwordEdit));
+        EditWatcher watcher = new EditWatcher();
+        userNameEdit.addTextChangedListener(watcher);
+        passwordEdit.addTextChangedListener(watcher);
         userName = PreferencesUtils.getString(getApplicationContext(),
                 "userName", "");
         EditTextUtils.setText(userNameEdit, userName);
@@ -118,7 +119,7 @@ public class LoginActivity extends BaseActivity {
     private void initCloudPlusCluster() {
         String enterpriseName = PreferencesUtils
                 .getString(LoginActivity.this, "login_enterprise_name", "");
-        enterpriseTextView = (TextView)findViewById(R.id.login_current_enterprise);
+        enterpriseTextView = (TextView) findViewById(R.id.login_current_enterprise);
         enterpriseTextView.setVisibility(StringUtils.isBlank(enterpriseName)
                 ? View.INVISIBLE : View.VISIBLE);
         enterpriseTextView.setText(enterpriseName);
@@ -129,10 +130,10 @@ public class LoginActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         String enterpriseName = PreferencesUtils
                 .getString(LoginActivity.this, "login_enterprise_name", "");
-        if(!StringUtils.isBlank(enterpriseName)){
+        if (!StringUtils.isBlank(enterpriseName)) {
             enterpriseTextView.setVisibility(View.VISIBLE);
             enterpriseTextView.setText(enterpriseName);
-        }else{
+        } else {
             enterpriseTextView.setVisibility(View.GONE);
             enterpriseTextView.setText("");
         }
@@ -169,8 +170,8 @@ public class LoginActivity extends BaseActivity {
                 break;
             case R.id.login_more_btn:
                 Intent intent = new Intent();
-                intent.setClass(LoginActivity.this,LoginMoreActivity.class);
-                startActivityForResult(intent,LOGIN_MORE);
+                intent.setClass(LoginActivity.this, LoginMoreActivity.class);
+                startActivityForResult(intent, LOGIN_MORE);
                 break;
             default:
                 break;
@@ -240,11 +241,6 @@ public class LoginActivity extends BaseActivity {
      */
     private class EditWatcher implements TextWatcher {
 
-        private EditText editText;
-
-        public EditWatcher(EditText editText) {
-            this.editText = editText;
-        }
 
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count,
@@ -263,18 +259,12 @@ public class LoginActivity extends BaseActivity {
         @Override
         public void afterTextChanged(Editable s) {
             // TODO Auto-generated method stub
-            if (editText.getId() != R.id.username_edit) {
-                if (passwordEdit.getText().toString().length() >= 6
-                        && !StringUtils.isBlank(userNameEdit.getText()
-                        .toString())) {
-                    loginBtn.setEnabled(true);
-                    loginBtn.setBackgroundResource(R.drawable.selector_login_btn);
-                } else {
-                    loginBtn.setEnabled(false);
-                    loginBtn.setBackgroundResource(R.drawable.bg_login_btn_unable);
-                }
+            boolean isInputComplete = passwordEdit.getText().toString().length() >= 6
+                    && !StringUtils.isBlank(userNameEdit.getText()
+                    .toString());
+            loginBtn.setEnabled(isInputComplete);
+            loginBtn.setBackgroundResource(isInputComplete ? R.drawable.selector_login_btn : R.drawable.bg_login_btn_unable);
 
-            }
         }
 
     }
