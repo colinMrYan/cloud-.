@@ -27,6 +27,12 @@ public class LogUtils {
 			Log.d("yfcLog", getTraceInfo() + message);
 		}
 	}
+
+	public static void LbcDebug(String message){
+		if (isDebug) {
+			Log.d("lbcLog", getTraceInfo() + message);
+		}
+	}
 	
 	public static void exceptionDebug(String tag, String message) {
 		if (isDebug) {

@@ -79,8 +79,7 @@ public class AmapLocateService extends ImpPlugin implements
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-        boolean isOpen = Settings.Secure.getInt(getFragmentContext().getContentResolver(),Settings.Secure.ALLOW_MOCK_LOCATION, 0) != 0;
+        boolean isOpen = (android.os.Build.VERSION.SDK_INT<21)&&(Settings.Secure.getInt(getFragmentContext().getContentResolver(),Settings.Secure.ALLOW_MOCK_LOCATION, 0) != 0);
         if (isOpen) {
             if (dialog == null){
                 final AlertDialog.Builder builder = new AlertDialog.Builder(
