@@ -44,6 +44,8 @@ public class App implements Serializable {
 	private int isZoomable = 0;
 	private int userHeader = 0;
 
+	private List<App> subAppList = new ArrayList<>();
+
 	public App(){}
 	public App(JSONObject obj) {
 		try {
@@ -122,6 +124,11 @@ public class App implements Serializable {
 				helpUrl = "";
 			}
 			userHeader = JSONUtils.getInt(obj,"use_header",1);
+			JSONArray jsonArray = JSONUtils.getJSONArray(obj,"appList",new JSONArray());
+			for (int i = 0; i < jsonArray.length(); i++) {
+				App app = new App(JSONUtils.getJSONObject(jsonArray,i,new JSONObject()));
+				subAppList.add(app);
+			}
 		} catch (Exception e) {
 			// TODO: handle exception
             e.printStackTrace();
@@ -138,88 +145,7 @@ public class App implements Serializable {
      * @param appJson
      */
 	public App(String appJson){
-        try {
-            JSONObject obj = new JSONObject(appJson);
-            if (obj.has("id")) {
-                this.appID = obj.getString("id");
-            }
-            if (obj.has("app_name")) {
-                this.appName = obj.getString("app_name");
-            }
-            if (obj.has("last_modify_time")) {
-                this.lastModifyTime = obj.getString("last_modify_time");
-            }
-            if (obj.has("ico")) {
-                this.appIcon = obj.getString("ico");
-            }
-            if (obj.has("uri")) {
-                this.uri = obj.getString("uri");
-            }
-            if (obj.has("essential")) {
-                int essential = obj.getInt("essential");
-                if (essential == 1) {
-                    isMustHave = true;
-                }
-            }
-            if (obj.has("use_status")) {
-                this.useStatus = obj.getInt("use_status");
-            }
-            if (obj.has("type")) {
-                this.appType = obj.getInt("type");
-            }
-            if (obj.has("disabled")) {
-                this.disabled = obj.getBoolean("disabled");
-            }
-            if (obj.has("note")) {
-                this.note = obj.getString("note");
-            }
-            if (obj.has("description")) {
-                this.description = obj.getString("description");
-            }
-            if (obj.has("ver")) {
-                this.version = obj.getString("ver");
-            }
-            if (obj.has("identifiers")) {
-                this.identifiers = obj.getString("identifiers");
-                if (appType == 2){
-                    if (identifiers.contains(",")){
-                        String[] array = identifiers.split(",");
-                        this.packageName = array[0];
-                        if (array.length == 2){
-                            this.MainActivityName = array[1];
-                        }
-                    }else {
-                        this.packageName = this.identifiers;
-                    }
-                }
-
-            }
-            if (obj.has("legends")) {
-                JSONArray jsonArray = obj.getJSONArray("legends");
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    JSONObject jsonObject = jsonArray.getJSONObject(i);
-                    String url = jsonObject.getString("url");
-                    legendList.add(url);
-                }
-            }
-            if(obj.has("install_uri")){
-                this.installUri = obj.getString("install_uri");
-            }
-            isZoomable = JSONUtils.getInt(obj,"is_zoomable",0);
-            categoryID = JSONUtils.getString(obj,"category_id","");
-            categoryName = JSONUtils.getString(obj,"category_name","");
-            helpUrl = JSONUtils.getString(obj,"help_url","");
-			isSSO = JSONUtils.getInt(obj,"is_sso",-1);
-            //对helpUrl特殊处理，因为服务端有时返回""，有时返回null返回null时fastJson会把此字段解析为字符串"null",需要特殊处理
-            if(helpUrl.equals("null")){
-                helpUrl = "";
-            }
-            userHeader = JSONUtils.getInt(obj,"use_header",1);
-        } catch (Exception e) {
-            // TODO: handle exception
-            e.printStackTrace();
-            LogUtils.exceptionDebug(TAG, e.toString());
-        }
+		this(JSONUtils.getJSONObject(appJson));
 	}
 
 	public Boolean getIsMustHave() {
@@ -425,6 +351,14 @@ public class App implements Serializable {
 
 	public void setUserHeader(int userHeader) {
 		this.userHeader = userHeader;
+	}
+
+	public List<App> getSubAppList() {
+		return subAppList;
+	}
+
+	public void setSubAppList(List<App> subAppList) {
+		this.subAppList = subAppList;
 	}
 
 	@Override

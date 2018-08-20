@@ -573,7 +573,7 @@ public class APIUri {
      * @return
      */
     public static String getUserApps() {
-        return MyApplication.getInstance().getClusterEmm() + "api/mam/v3.0/imp_app/userApps";
+        return MyApplication.getInstance().getClusterEmm() + "api/mam/v3.1/imp_app/userApps";
     }
 
     /**
@@ -662,6 +662,15 @@ public class APIUri {
      */
     public static String getGSMsgSchemeUrl(String host) {
         return getEMMBaseUrl() + "api/mam/v3.0/gs_sso/msg_uri?id=" + host;
+    }
+
+    /**
+     * 获取app真实地址
+     * @param appId
+     * @return
+     */
+    public static String getAppRealUrl(String appId) {
+        return getEMMBaseUrl() + "api/mam/v3.0/gs_sso/app_uri?id=" + appId;
     }
 
     /*****************************************ReactNative**************************************/

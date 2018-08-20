@@ -40,7 +40,7 @@
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
             android:scaleType="fitXY"
-            android:padding="19dp"
+            android:padding="17dp"
             android:src="@drawable/icon_card_package_set"
             android:onClick="onClick"
             android:clickable="true"

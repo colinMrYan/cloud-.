@@ -40,7 +40,6 @@ public class AboutActivity extends BaseActivity {
 						+ AppUtils.getVersion(this));
 		ImageView appIconImg = (ImageView)findViewById(R.id.about_app_icon_img);
 		ImageDisplayUtils.getInstance().displayImage(appIconImg,"drawable://"+AppUtils.getAppIconRes(MyApplication.getInstance()),R.drawable.ic_launcher);
-		((ImageView)findViewById(R.id.about_app_icon_img)).setImageResource(AppUtils.getAppIconRes(MyApplication.getInstance()));
 		findViewById(R.id.protocol_layout).setVisibility(AppUtils.isAppVersionStandard()?View.VISIBLE:View.GONE);
 		findViewById(R.id.invite_friends_layout).setVisibility(AppUtils.isAppVersionStandard()?View.VISIBLE:View.GONE);
 		showSysInfo();
