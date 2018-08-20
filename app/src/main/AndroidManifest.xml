@@ -453,6 +453,11 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden"/>
+        <activity android:name=".ui.chat.ChannelSelectVoiceVideoMembersActivity"
+            android:launchMode="singleTask"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|stateHidden"/>
         <activity
             android:name=".ui.chat.ChatFileDownloadActivtiy"
             android:launchMode="singleTask"

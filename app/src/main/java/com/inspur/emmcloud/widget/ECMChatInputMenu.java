@@ -220,12 +220,12 @@ public class ECMChatInputMenu extends LinearLayout {
             //功能组的图标，名称
             int[] functionIconArray = {R.drawable.ic_chat_input_add_gallery,
                     R.drawable.ic_chat_input_add_camera, R.drawable.ic_chat_input_add_file,
-                    R.drawable.ic_chat_input_add_mention};
+                    R.drawable.ic_chat_input_add_mention,R.drawable.icon_answer_the_phone};
             String[] functionNameArray = {getContext().getString(R.string.album),
                     getContext().getString(R.string.take_photo),
                     getContext().getString(R.string.file),
-                    "@"};
-            String[] functionActionArray = {"gallery", "camera", "file", "mention"};
+                    "@","语音通话"};
+            String[] functionActionArray = {"gallery", "camera", "file", "mention","voice"};
             String binaryString = "-1";
             if (!StringUtils.isBlank(inputs)) {
                 try {
@@ -267,6 +267,8 @@ public class ECMChatInputMenu extends LinearLayout {
                 InputTypeBean inputTypeBean = new InputTypeBean(functionIconArray[3], functionNameArray[3], functionActionArray[3]);
                 inputTypeBeanList.add(inputTypeBean);
             }
+            InputTypeBean inputTypeBean = new InputTypeBean(functionIconArray[4],functionNameArray[4],functionActionArray[4]);
+            inputTypeBeanList.add(inputTypeBean);
             viewpagerLayout.setOnGridItemClickListener(new AdapterView.OnItemClickListener() {
 
                 @Override
@@ -286,6 +288,9 @@ public class ECMChatInputMenu extends LinearLayout {
                             break;
                         case "mention":
                             openMentionPage(false);
+                            break;
+                        case "voice":
+                            AppUtils.openChannelMemeberSelect((Activity)getContext(),cid,6);
                             break;
                         default:
                             break;

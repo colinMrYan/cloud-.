@@ -24,6 +24,8 @@ import android.view.WindowManager;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.ui.chat.ChannelSelectVoiceVideoMembersActivity;
+import com.inspur.emmcloud.ui.chat.ChannelVoiceCommunicationActivity;
 import com.inspur.emmcloud.util.common.EncryptUtils;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
@@ -551,6 +553,18 @@ public class AppUtils {
         Intent intent = new Intent(activity,
                 ImageGridActivity.class);
         activity.startActivityForResult(intent, requestCode);
+    }
+
+    /**
+     * 根据channelId打开相应的频道
+     * @param activity
+     * @param channelId
+     */
+    public static void openChannelMemeberSelect(Activity activity,String channelId,int requestCode){
+        Intent intent = new Intent();
+        intent.setClass(activity, ChannelSelectVoiceVideoMembersActivity.class);
+        intent.putExtra("cid",channelId);
+        activity.startActivityForResult(intent,requestCode);
     }
 
     /**
