@@ -65,7 +65,8 @@ public class AppUtils {
     public static String getNetSpeed(int uid) {
         long nowTotalRxBytes = getTotalRxBytes(uid);
         long nowTimeStamp = System.currentTimeMillis();
-        long speed = ((nowTotalRxBytes - lastTotalRxBytes) * 1000 / (nowTimeStamp - lastTimeStamp));//毫秒转换
+        long divide = nowTimeStamp - lastTimeStamp;
+        long speed = ((nowTotalRxBytes - lastTotalRxBytes) * 1000 / (divide == 0? 1:divide));//毫秒转换
         lastTimeStamp = nowTimeStamp;
         lastTotalRxBytes = nowTotalRxBytes;
         return String.valueOf(speed) + " kb/s";

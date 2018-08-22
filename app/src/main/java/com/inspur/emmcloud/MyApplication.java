@@ -46,6 +46,7 @@ import com.inspur.emmcloud.util.privates.ECMShortcutBadgeNumberManagerUtils;
 import com.inspur.emmcloud.util.privates.HuaWeiPushMangerUtils;
 import com.inspur.emmcloud.util.privates.MutilClusterUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
+import com.inspur.emmcloud.util.privates.VoiceCommunicationUtils;
 import com.inspur.emmcloud.util.privates.cache.DbCacheUtils;
 import com.inspur.emmcloud.widget.CustomImageDownloader;
 import com.inspur.imp.api.Res;
@@ -108,6 +109,8 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     private String clusterClientRegistry = "";
     private String clusterScheduleVersion = "";//仅标识Schedule
     private String clusterBot = "";
+    //在Application里维护一个通信对象，其他相关的变量都存在这里
+    private VoiceCommunicationUtils voiceCommunicationUtils;
 
 
     public void onCreate() {
@@ -123,7 +126,6 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         String clusterId = PreferencesUtils.getString(this, "cloud_idm", Constant.DEFAULT_CLUSTER_ID);
         return StringUtils.isBlank(clusterId) ? Constant.DEFAULT_CLUSTER_ID : clusterId;
     }
-
 
     private void init() {
         // TODO Auto-generated method stub
@@ -154,6 +156,15 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         refreshToken = PreferencesUtils.getString(getInstance(), "refreshToken", "");
         //科大讯飞语音SDK初始化
         SpeechUtility.createUtility(this, SpeechConstant.APPID + "=5a6001bf");
+        setVoiceCommunicationUtils(new VoiceCommunicationUtils(this)) ;
+    }
+
+    public VoiceCommunicationUtils getVoiceCommunicationUtils() {
+        return voiceCommunicationUtils;
+    }
+
+    public void setVoiceCommunicationUtils(VoiceCommunicationUtils voiceCommunicationUtils) {
+        this.voiceCommunicationUtils = voiceCommunicationUtils;
     }
 
     /**

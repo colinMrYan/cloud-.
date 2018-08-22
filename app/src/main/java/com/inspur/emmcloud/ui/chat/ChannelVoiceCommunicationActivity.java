@@ -57,7 +57,6 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity{
     public static boolean IS_HANDS_FREE_AVAILIABLE = true;//免提可用状态标识
     public static boolean IS_MUTE_AVAILIABLE = true;//静音可用状态标识
     private static final int EXCEPTION_STATE = -1;
-    private VoiceCommunicationUtils voiceCommunicationUtils;
     @ViewInject(R.id.ll_voice_communication_invite)
     private LinearLayout linearLayoutInvitee;
     @ViewInject(R.id.img_user_head)
@@ -108,12 +107,14 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity{
     private List<VoiceCommunicationUserInfoBean> voiceCommunicationMemberList = new ArrayList<>();
     private VoiceCommunicationJoinChannelInfoBean inviteeInfoBean;
     private int userCount = 1;
+    private VoiceCommunicationUtils voiceCommunicationUtils;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         StateBarUtils.changeStateBarColor(this,R.color.content_bg);
         voiceCommunicationUserInfoBeanList = (List<VoiceCommunicationUserInfoBean>) getIntent().getSerializableExtra("userList");
-        voiceCommunicationUtils = new VoiceCommunicationUtils(this);
+        voiceCommunicationUtils = MyApplication.getInstance().getVoiceCommunicationUtils();
         voiceCommunicationUtils.initializeAgoraEngine();
         initViews();
     }
