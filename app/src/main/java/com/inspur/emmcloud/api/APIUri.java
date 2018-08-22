@@ -1307,6 +1307,39 @@ public class APIUri {
      * @return
      */
     public static String getAgoraUrl(){
-        return MyApplication.getInstance().getClusterEmm()+"";
+//        return MyApplication.getInstance().getClusterEmm()+"";
+        return "http://172.31.2.36:88/api/sys/v6.0/voice/create";
+    }
+
+    /**
+     * 加入频道成功后告诉服务端
+     * @return
+     */
+    public static String getAgoraJoinChannelSuccessUrl(){
+        return "http://172.31.2.36:88/api/sys/v6.0/voice/join/";
+    }
+
+    /**
+     * 获取频道信息url
+     * @return
+     */
+    public static String getAgoraChannelInfoUrl(){
+        return "http://172.31.2.36:88/api/sys/v6.0/voice/";
+    }
+
+    /**
+     * 拒绝频道url
+     * @return
+     */
+    public static String getAgoraRefuseChannelUrl(){
+        return "http://172.31.2.36:88/api/sys/v6.0/voice/refuse/";
+    }
+
+    /**
+     * 离开channel
+     * @return
+     */
+    public static String getAgoraLeaveChannelUrl(){
+        return "http://172.31.2.36:88/api/sys/v6.0/voice/leave/";
     }
 }

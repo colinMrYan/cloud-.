@@ -16,6 +16,9 @@ public class CustomProtocol {
     private String host;
     private Map<String,String> paramMap = new HashMap<>();
     public CustomProtocol(String response){
+        if(response.contains("\\")){
+            response = response.replaceAll("\\\\","");
+        }
         protocol = response.split("://")[0];
         String arg = response.split("://")[1];
         String[] hostAndParams = arg.split("\\?");

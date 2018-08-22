@@ -5,8 +5,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <com.inspur.emmcloud.widget.CircleTextImageView
         android:id="@+id/img_voice_communication_member_head"
-        android:layout_width="65dp"
-        android:layout_height="65dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:src="@drawable/ic_app_default"
         />
     <TextView
@@ -17,13 +17,14 @@
         android:layout_centerHorizontal="true"
         android:textSize="12sp"
         android:layout_below="@id/img_voice_communication_member_head"/>
-    <com.wang.avi.AVLoadingIndicatorView
-        android:id="@+id/avi_voice_communication"
-        style="@style/AVLoadingIndicatorView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:visibility="gone"
-        app:indicatorColor="#ffffff"
-        app:indicatorName="BallPulseIndicator" />
+
+    <!--<com.wang.avi.AVLoadingIndicatorView-->
+        <!--android:id="@+id/avi_voice_communication"-->
+        <!--style="@style/AVLoadingIndicatorView"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:visibility="gone"-->
+        <!--app:indicatorColor="#ffffff"-->
+        <!--app:indicatorName="BallPulseIndicator" />-->
 </RelativeLayout>

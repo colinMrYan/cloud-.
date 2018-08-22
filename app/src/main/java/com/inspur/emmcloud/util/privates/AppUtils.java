@@ -13,6 +13,7 @@ import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Paint;
 import android.graphics.Paint.FontMetrics;
+import android.net.TrafficStats;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -25,7 +26,6 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.chat.ChannelSelectVoiceVideoMembersActivity;
-import com.inspur.emmcloud.ui.chat.ChannelVoiceCommunicationActivity;
 import com.inspur.emmcloud.util.common.EncryptUtils;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
@@ -53,6 +53,27 @@ import java.util.regex.Pattern;
 public class AppUtils {
 
     private static final String TAG = "AppUtils";
+
+    private static long lastTotalRxBytes = 0;
+    private static long lastTimeStamp = 0;
+
+    /**
+     * 获取当前App网速
+     * @param uid
+     * @return
+     */
+    public static String getNetSpeed(int uid) {
+        long nowTotalRxBytes = getTotalRxBytes(uid);
+        long nowTimeStamp = System.currentTimeMillis();
+        long speed = ((nowTotalRxBytes - lastTotalRxBytes) * 1000 / (nowTimeStamp - lastTimeStamp));//毫秒转换
+        lastTimeStamp = nowTimeStamp;
+        lastTotalRxBytes = nowTotalRxBytes;
+        return String.valueOf(speed) + " kb/s";
+    }
+
+    public static long getTotalRxBytes(int uid) {
+        return TrafficStats.getUidRxBytes(uid) == TrafficStats.UNSUPPORTED ? 0 : (TrafficStats.getTotalRxBytes() / 1024);//转为KB
+    }
 
     /**
      * 判断应用是否运行在设备的最前端

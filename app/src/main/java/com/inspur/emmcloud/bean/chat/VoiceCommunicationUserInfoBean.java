@@ -1,15 +1,17 @@
 package com.inspur.emmcloud.bean.chat;
 
+import java.io.Serializable;
+
 /**
  * Created by yufuchang on 2018/8/16.
  */
 
-public class VoiceCommunicationUserInfoBean {
+public class VoiceCommunicationUserInfoBean implements Serializable{
     private String userId = "";
-    private String deviceId = "";
-    public VoiceCommunicationUserInfoBean(String userId,String deviceId){
+    private String userName = "";
+    public VoiceCommunicationUserInfoBean(String userId,String userName){
         this.userId = userId;
-        this.deviceId = deviceId;
+        this.userName = userName;
     }
 
     public String getUserId() {
@@ -20,11 +22,11 @@ public class VoiceCommunicationUserInfoBean {
         this.userId = userId;
     }
 
-    public String getDeviceId() {
-        return deviceId;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setDeviceId(String deviceId) {
-        this.deviceId = deviceId;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 }

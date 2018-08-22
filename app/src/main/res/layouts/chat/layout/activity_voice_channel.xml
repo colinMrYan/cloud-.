@@ -5,14 +5,6 @@
     android:background="@color/content_bg"
     android:fitsSystemWindows="true">
 
-    <RelativeLayout
-        android:id="@+id/header_layout"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/header_height"
-        android:background="@color/content_bg">
-
-    </RelativeLayout>
-
     <!--<Button-->
         <!--android:id="@+id/btn_add_member"-->
         <!--android:layout_width="match_parent"-->
@@ -20,6 +12,15 @@
         <!--android:layout_below="@id/header_layout"-->
         <!--android:onClick="onClick"-->
         <!--android:text="打开选择人员界面" />-->
+    <ImageView
+        android:id="@+id/img_voice_communication_pack_up"
+        android:layout_width="30dp"
+        android:layout_height="56dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        android:layout_marginLeft="20dp"
+        android:onClick="onClick"
+        android:src="@drawable/icon_voice_commucation_pack_up"/>
     <LinearLayout
         android:id="@+id/ll_voice_communication_invite"
         android:layout_width="wrap_content"
@@ -32,7 +33,6 @@
             android:layout_width="120dp"
             android:layout_height="120dp"
             android:layout_marginTop="36dp"
-            android:src="@drawable/icon_hung_up"
              />
         <TextView
             android:id="@+id/tv_user_name"
@@ -41,7 +41,6 @@
             android:gravity="center_horizontal"
             android:layout_marginTop="21dp"
             android:textColor="#333333"
-            android:text="周祥国"
             android:textSize="20sp"/>
         <TextView
             android:id="@+id/tv_invite_voice_communication"
@@ -58,6 +57,7 @@
         android:id="@+id/ll_voice_communication_invite_members"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
         android:layout_below="@id/header_layout"
         android:layout_centerHorizontal="true"
         android:orientation="vertical">
@@ -80,11 +80,13 @@
 
     <LinearLayout
         android:id="@+id/ll_voice_communication_memebers"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:layout_above="@id/tv_voice_communication_state"
-        android:orientation="vertical">
+        android:layout_marginTop="60dp"
+        android:layout_centerHorizontal="true"
+        android:orientation="vertical"
+        android:layout_below="@id/ll_voice_communication_invite"
+        android:layout_above="@id/tv_voice_communication_state">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -96,6 +98,8 @@
             android:id="@+id/recyclerview_voice_communication_memebers"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@color/black"
+            android:layout_marginTop="6dp"
             android:overScrollMode="never"/>
     </LinearLayout>
 
@@ -108,21 +112,11 @@
         android:layout_above="@id/tv_voice_communication_time"
         android:textColor="#333333"
         android:textSize="16sp"
-        android:text="当前通话质量不佳"/>
-    <!--<TextView-->
-        <!--android:id="@+id/tv_voice_communication_time"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_above="@id/ll_voice_communication_function_group"-->
-        <!--android:layout_marginBottom="38dp"-->
-        <!--android:textColor="#333333"-->
-        <!--android:textSize="16sp"-->
-        <!--android:layout_centerHorizontal="true"-->
-        <!--android:text="00:02"/>-->
+        android:text=""/>
 
     <Chronometer
         android:id="@+id/tv_voice_communication_time"
-        android:layout_gravity="center"
+        android:layout_gravity="center_horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@id/ll_voice_communication_function_group"
@@ -130,7 +124,7 @@
         android:textColor="#333333"
         android:textSize="16sp"
         android:layout_centerHorizontal="true"
-        android:text="Chronometer" />
+        />
 
     <LinearLayout
         android:id="@+id/ll_voice_communication_function_group"

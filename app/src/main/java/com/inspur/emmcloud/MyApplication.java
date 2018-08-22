@@ -109,6 +109,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     private String clusterScheduleVersion = "";//仅标识Schedule
     private String clusterBot = "";
 
+
     public void onCreate() {
         super.onCreate();
         init();
@@ -154,7 +155,6 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         //科大讯飞语音SDK初始化
         SpeechUtility.createUtility(this, SpeechConstant.APPID + "=5a6001bf");
     }
-
 
     /**
      * 单例获取application实例

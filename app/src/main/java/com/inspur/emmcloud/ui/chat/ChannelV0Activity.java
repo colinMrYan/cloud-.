@@ -50,6 +50,7 @@ import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ChannelInfoUtils;
 import com.inspur.emmcloud.util.privates.ConbineMsg;
+import com.inspur.emmcloud.util.privates.CustomProtocol;
 import com.inspur.emmcloud.util.privates.DirectChannelUtils;
 import com.inspur.emmcloud.util.privates.GetPathFromUri4kitkat;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
@@ -78,6 +79,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static android.R.attr.path;
 
@@ -518,6 +521,10 @@ public class ChannelV0Activity extends BaseActivity {
                     case HAND_CALLBACK_MESSAGE: // 接收推送的消息·
                         if (msg.arg1 == 0) {
                             Msg pushMsg = new Msg((JSONObject) msg.obj);
+                            CustomProtocol customProtocol = getCommandMessageProtocol(pushMsg);
+                            if(customProtocol != null){
+                                return;
+                            }
                             if (cid.equals(pushMsg.getCid())){
                                 if (Message.isMessage(pushMsg)) {
                                     Message message = new Message(pushMsg);
@@ -549,6 +556,28 @@ public class ChannelV0Activity extends BaseActivity {
             }
 
         };
+    }
+
+    /**
+     * 判定是
+     * @param receivedMsg
+     * @return
+     */
+    private CustomProtocol getCommandMessageProtocol(Msg receivedMsg) {
+        String msgBody = receivedMsg.getBody();
+        Pattern pattern = Pattern.compile("\\[[^\\]]+\\]\\([^\\)]+\\)");
+        Matcher matcher = pattern.matcher(msgBody);
+        while (matcher.find()){
+            String pattenString = matcher.group();
+            int indexBegin = pattenString.indexOf("(");
+            int indexEnd = pattenString.indexOf(")");
+            pattenString = pattenString.substring(indexBegin+1,indexEnd);
+            CustomProtocol customProtocol = new CustomProtocol(pattenString);
+            if(customProtocol.getProtocol().equals("ecc-cmd") && customProtocol.getParamMap().get("cmd").equals("join")){
+                return customProtocol;
+            }
+        }
+        return null;
     }
 
     private void intentFaceLogin(String token) {

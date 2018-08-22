@@ -1708,4 +1708,44 @@ public class APIInterfaceInstance implements APIInterface {
     public void returnGetVoiceCommunicationResultFail(String error, int errorCode) {
 
     }
+
+    @Override
+    public void returnGetVoiceCommunicationChannelInfoSuccess(GetVoiceCommunicationResult getVoiceCommunicationResult) {
+
+    }
+
+    @Override
+    public void returnGetVoiceCommunicationChannelInfoFail(String error, int errorCode) {
+
+    }
+
+    @Override
+    public void returnJoinVoiceCommunicationChannelSuccess(GetBoolenResult getBoolenResult) {
+
+    }
+
+    @Override
+    public void returnJoinVoiceCommunicationChannelFail(String error,int errorCode) {
+
+    }
+
+    @Override
+    public void returnRefuseVoiceCommunicationChannelSuccess(GetBoolenResult getBoolenResult) {
+
+    }
+
+    @Override
+    public void returnRefuseVoiceCommunicationChannelFail(String error, int errorCode) {
+
+    }
+
+    @Override
+    public void returnLeaveVoiceCommunicationChannelSuccess(GetBoolenResult getBoolenResult) {
+
+    }
+
+    @Override
+    public void returnLeaveVoiceCommunicationChannelFail(String error, int errorCode) {
+
+    }
 }

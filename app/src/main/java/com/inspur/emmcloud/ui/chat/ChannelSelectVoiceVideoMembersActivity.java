@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.ui.chat;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,6 +15,7 @@ import com.inspur.emmcloud.adapter.MemberSelectGridAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.bean.chat.GetChannelInfoResult;
+import com.inspur.emmcloud.bean.chat.VoiceCommunicationUserInfoBean;
 import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.NetUtils;
@@ -26,6 +28,7 @@ import com.inspur.emmcloud.widget.LoadingDialog;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -109,9 +112,26 @@ public class ChannelSelectVoiceVideoMembersActivity extends BaseActivity{
                 finish();
                 break;
             case R.id.tv_ok:
-                finish();
+                startCommunication();
                 break;
         }
+    }
+
+    /**
+     * 邀请开始通话
+     */
+    private void startCommunication() {
+//        VoiceCommunicationUserInfoBean
+        List<VoiceCommunicationUserInfoBean> voiceCommunicationUserInfoBeanList = new ArrayList<>();
+        for (int i = 0; i < selectUserList.size(); i++) {
+            voiceCommunicationUserInfoBeanList.add(new VoiceCommunicationUserInfoBean(selectUserList.get(i).getId(),selectUserList.get(i).getName()));
+        }
+        Intent intent = new Intent();
+        intent.setClass(ChannelSelectVoiceVideoMembersActivity.this,ChannelVoiceCommunicationActivity.class);
+        intent.putExtra("userList", (Serializable) voiceCommunicationUserInfoBeanList);
+        intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE,ChannelVoiceCommunicationActivity.INVITER_LAYOUT_STATE);
+        startActivity(intent);
+        finish();
     }
 
     class WebService extends APIInterfaceInstance{

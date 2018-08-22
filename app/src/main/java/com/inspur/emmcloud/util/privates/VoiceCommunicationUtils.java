@@ -20,17 +20,17 @@ public class VoiceCommunicationUtils {
 
     private Context context;
     private RtcEngine mRtcEngine;
-    private int userCount = 1;
+//    private int userCount = 1;
     private OnVoiceCommunicationCallbacks onVoiceCommunicationCallbacks;
 
     private IRtcEngineEventHandler mRtcEventHandler = new IRtcEngineEventHandler() {
         //其他用户离线回调
         @Override
         public void onUserOffline(int uid, int reason) {
-            userCount = userCount - 1;
-            if(userCount < 2){
-                destroy();
-            }
+//            userCount = userCount - 1;
+//            if(userCount < 2){
+//                destroy();
+//            }
             onVoiceCommunicationCallbacks.onUserOffline(uid,reason);
         }
 
@@ -45,7 +45,9 @@ public class VoiceCommunicationUtils {
         //加入频道成功
         @Override
         public void onJoinChannelSuccess(String channel, int uid, int elapsed) {
-            userCount = userCount + 1;
+            LogUtils.YfcDebug("加入频道成功："+channel);
+            LogUtils.YfcDebug("加入频道成功："+uid);
+//            userCount = userCount + 1;
             onVoiceCommunicationCallbacks.onJoinChannelSuccess(channel,uid,elapsed);
         }
 
@@ -53,7 +55,7 @@ public class VoiceCommunicationUtils {
         @Override
         public void onRejoinChannelSuccess(String channel, int uid, int elapsed) {
             LogUtils.YfcDebug("onRejoinChannelSuccess");
-            userCount = userCount + 1;
+//            userCount = userCount + 1;
             onVoiceCommunicationCallbacks.onRejoinChannelSuccess(channel,uid,elapsed);
         }
 
@@ -76,7 +78,7 @@ public class VoiceCommunicationUtils {
         @Override
         public void onWarning(int warn) {
             super.onWarning(warn);
-            LogUtils.YfcDebug("warning信息："+warn);
+//            LogUtils.YfcDebug("warning信息："+warn);
             onVoiceCommunicationCallbacks.onWarning(warn);
         }
 
@@ -155,7 +157,8 @@ public class VoiceCommunicationUtils {
      * 离开频道，不让外部主动调用，外部可以主动调用destroy方法
      */
     private void leaveChannel() {
-        mRtcEngine.leaveChannel();
+        int code = mRtcEngine.leaveChannel();
+        LogUtils.YfcDebug("调用Leave结果："+code);
     }
 
     /**

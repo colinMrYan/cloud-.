@@ -10,7 +10,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
-import com.alibaba.fastjson.JSON;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APICallback;
 import com.inspur.emmcloud.api.APIInterface;
@@ -33,7 +32,6 @@ import com.inspur.emmcloud.bean.chat.GetNewsInstructionResult;
 import com.inspur.emmcloud.bean.chat.GetSendMsgResult;
 import com.inspur.emmcloud.bean.chat.GetUploadPushInfoResult;
 import com.inspur.emmcloud.bean.chat.GetVoiceCommunicationResult;
-import com.inspur.emmcloud.bean.chat.VoiceCommunicationUserInfoBean;
 import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.system.GetBoolenResult;
 import com.inspur.emmcloud.interf.OauthCallBack;
@@ -48,7 +46,6 @@ import org.xutils.http.RequestParams;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * com.inspur.emmcloud.api.apiservice.ChatAPIService create at 2016年11月8日
@@ -1057,21 +1054,24 @@ public class ChatAPIService {
 
     /**
      * 获取建立频道的参数
-     * @param voiceCommunicationUserInfoBeanList
+     * @param jsonArray
      */
-    public void getAgoraParams(final List<VoiceCommunicationUserInfoBean> voiceCommunicationUserInfoBeanList){
-        String url = APIUri.getAgoraUrl();
-        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
-        params.addParameter("users", JSON.toJSONString(voiceCommunicationUserInfoBeanList));
-        LogUtils.YfcDebug("users："+JSON.toJSONString(voiceCommunicationUserInfoBeanList));
-        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context,url) {
+    public void getAgoraParams(final JSONArray jsonArray){
+        String compelteUrl = APIUri.getAgoraUrl();
+        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(compelteUrl);
+        params.addParameter("Users",jsonArray);
+        params.setAsJsonContent(true);
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context,compelteUrl) {
             @Override
             public void callbackSuccess(byte[] arg0) {
+                LogUtils.YfcDebug("创建成功");
                 apiInterface.returnGetVoiceCommunicationResultSuccess(new GetVoiceCommunicationResult(new String(arg0)));
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
+                LogUtils.YfcDebug("创建失败："+error);
+                LogUtils.YfcDebug("创建失败："+responseCode);
                 apiInterface.returnGetVoiceCommunicationResultFail(error,responseCode);
             }
 
@@ -1080,7 +1080,168 @@ public class ChatAPIService {
                 OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        getAgoraParams(voiceCommunicationUserInfoBeanList);
+                        getAgoraParams(jsonArray);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+        });
+    }
+
+    /**
+     * 告诉S已加入channel
+     * @param channelId
+     */
+    public void remindServerJoinChannelSuccess(final String channelId){
+        String compelteUrl = APIUri.getAgoraJoinChannelSuccessUrl()+channelId;
+        RequestParams params =  ((MyApplication) context.getApplicationContext()).getHttpRequestParams(compelteUrl);
+        params.setAsJsonContent(true);
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context,compelteUrl) {
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                LogUtils.YfcDebug("告知服务端加入频道成功："+new String(arg0));
+                apiInterface.returnJoinVoiceCommunicationChannelSuccess(new GetBoolenResult(new String(arg0)));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                LogUtils.YfcDebug("告知服务端加入频道失败："+error);
+                LogUtils.YfcDebug("告知服务端加入频道失败："+responseCode);
+                apiInterface.returnJoinVoiceCommunicationChannelFail(error,responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        remindServerJoinChannelSuccess(channelId);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+        });
+    }
+
+    /**
+     * 获取channel信息
+     * @param channelId
+     */
+    public void getAgoraChannelInfo(final String channelId){
+        String compelteUrl = APIUri.getAgoraChannelInfoUrl()+channelId;
+        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(compelteUrl);
+        params.setAsJsonContent(true);
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context,compelteUrl) {
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                LogUtils.YfcDebug("获取Channel信息成功："+new String(arg0));
+                apiInterface.returnGetVoiceCommunicationChannelInfoSuccess(new GetVoiceCommunicationResult(new String(arg0)));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                LogUtils.YfcDebug("获取Channel信息失败："+error+responseCode);
+                apiInterface.returnGetVoiceCommunicationChannelInfoFail(error,responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        getAgoraChannelInfo(channelId);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+        });
+    }
+
+    /**
+     * 拒绝频道
+     * @param channelId
+     */
+    public void refuseAgoraChannel(final String channelId){
+        String compelteUrl = APIUri.getAgoraRefuseChannelUrl()+channelId;
+        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(compelteUrl);
+        params.setAsJsonContent(true);
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context,compelteUrl) {
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                LogUtils.YfcDebug("拒绝成功"+new String(arg0));
+                apiInterface.returnRefuseVoiceCommunicationChannelSuccess(new GetBoolenResult(new String(arg0)));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                LogUtils.YfcDebug("拒绝失败："+error+responseCode);
+                apiInterface.returnRefuseVoiceCommunicationChannelFail(error,responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        refuseAgoraChannel(channelId);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+        });
+    }
+
+    /**
+     * 离开频道
+     * @param channelId
+     */
+    public void leaveAgoraChannel(final String channelId){
+        String compelteUrl = APIUri.getAgoraLeaveChannelUrl() + channelId;
+        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(compelteUrl);
+        params.setAsJsonContent(true);
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context,compelteUrl) {
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                LogUtils.YfcDebug("离开成功："+new String(arg0));
+                apiInterface.returnLeaveVoiceCommunicationChannelSuccess(new GetBoolenResult(new String(arg0)));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                LogUtils.YfcDebug("离开失败："+error+responseCode);
+                apiInterface.returnLeaveVoiceCommunicationChannelFail(error,responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        leaveAgoraChannel(channelId);
                     }
 
                     @Override

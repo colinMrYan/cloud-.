@@ -679,4 +679,16 @@ public interface APIInterface {
 
     void returnGetVoiceCommunicationResultSuccess(GetVoiceCommunicationResult getVoiceCommunicationResult);
     void returnGetVoiceCommunicationResultFail(String error,int errorCode);
+
+    void returnGetVoiceCommunicationChannelInfoSuccess(GetVoiceCommunicationResult getVoiceCommunicationResult);
+    void returnGetVoiceCommunicationChannelInfoFail(String error,int errorCode);
+
+    void returnJoinVoiceCommunicationChannelSuccess(GetBoolenResult getBoolenResult);
+    void returnJoinVoiceCommunicationChannelFail(String error,int errorCode);
+
+    void returnRefuseVoiceCommunicationChannelSuccess(GetBoolenResult getBoolenResult);
+    void returnRefuseVoiceCommunicationChannelFail(String error,int errorCode);
+
+    void returnLeaveVoiceCommunicationChannelSuccess(GetBoolenResult getBoolenResult);
+    void returnLeaveVoiceCommunicationChannelFail(String error,int errorCode);
 }

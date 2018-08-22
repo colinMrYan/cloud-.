@@ -2,6 +2,8 @@ package com.inspur.emmcloud.bean.chat;
 
 import com.inspur.emmcloud.util.common.JSONUtils;
 
+import org.json.JSONObject;
+
 /**
  * Created by yufuchang on 2018/8/16.
  */
@@ -13,13 +15,18 @@ public class VoiceCommunicationJoinChannelInfoBean {
     private String token;
     private int connectState;
     private String userName;
+
+    public VoiceCommunicationJoinChannelInfoBean(JSONObject jsonObject){
+        this(jsonObject.toString());
+    }
+
     public VoiceCommunicationJoinChannelInfoBean(String info){
-        this.userId = JSONUtils.getString(info,"","");
-        this.headImageUrl = JSONUtils.getString(info,"","");
-        this.token = JSONUtils.getString(info,"","");
-        this.agoraUid = JSONUtils.getInt(info,"",0);
-        this.connectState = JSONUtils.getInt(info,"",0);
-        this.userName = JSONUtils.getString(info,"username","");
+        this.userId = JSONUtils.getString(info,"id","");
+        this.headImageUrl = JSONUtils.getString(info,"headImgUrl","");
+        this.token = JSONUtils.getString(info,"token","");
+        this.agoraUid = JSONUtils.getInt(info,"agoraUid",0);
+        this.connectState = JSONUtils.getInt(info,"connectState",-1);
+        this.userName = JSONUtils.getString(info,"name","");
     }
 
     public String getUserId() {
@@ -60,5 +67,13 @@ public class VoiceCommunicationJoinChannelInfoBean {
 
     public void setConnectState(int connectState) {
         this.connectState = connectState;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 }

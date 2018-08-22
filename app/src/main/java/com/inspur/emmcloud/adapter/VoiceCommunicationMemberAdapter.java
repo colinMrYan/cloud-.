@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
-import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
+import com.inspur.emmcloud.bean.chat.VoiceCommunicationUserInfoBean;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.wang.avi.AVLoadingIndicatorView;
@@ -28,11 +28,11 @@ public class VoiceCommunicationMemberAdapter extends RecyclerView.Adapter<VoiceC
     private Context context;
     private LayoutInflater inflater;
     private int index = 0;
-    private List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationJoinChannelInfoBeanList = new ArrayList<>();
-    public VoiceCommunicationMemberAdapter(Context context,List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationJoinChannelInfoBeanList,int index){
+    private List<VoiceCommunicationUserInfoBean> voiceCommunicationUserInfoBeanList = new ArrayList<>();
+    public VoiceCommunicationMemberAdapter(Context context, List<VoiceCommunicationUserInfoBean> voiceCommunicationUserInfoBeanList, int index){
         this.context = context;
         inflater = LayoutInflater.from(context);
-        this.voiceCommunicationJoinChannelInfoBeanList = voiceCommunicationJoinChannelInfoBeanList;
+        this.voiceCommunicationUserInfoBeanList = voiceCommunicationUserInfoBeanList;
         this.index = index;
     }
 
@@ -40,7 +40,7 @@ public class VoiceCommunicationMemberAdapter extends RecyclerView.Adapter<VoiceC
     public VoiceCommunicationHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view;
         if(index == 1){
-            switch (voiceCommunicationJoinChannelInfoBeanList.size()){
+            switch (voiceCommunicationUserInfoBeanList.size()){
                 case 1:
                 case 2:
                     view = inflater.inflate(R.layout.voice_communication_memeber_item,null);
@@ -60,6 +60,8 @@ public class VoiceCommunicationMemberAdapter extends RecyclerView.Adapter<VoiceC
             }
         }else if(index == 2){
             view = inflater.inflate(R.layout.voice_communication_memeber_item5,null);
+        }else if(index == 3){
+            view = inflater.inflate(R.layout.voice_communication_memeber_item_bottom,null);
         }else {
             view = inflater.inflate(R.layout.voice_communication_memeber_item,null);
         }
@@ -73,19 +75,22 @@ public class VoiceCommunicationMemberAdapter extends RecyclerView.Adapter<VoiceC
 
     @Override
     public void onBindViewHolder(VoiceCommunicationHolder holder, int position) {
-        String url = APIUri.getUserIconUrl(context,voiceCommunicationJoinChannelInfoBeanList.get(position).getUserId());
+        String url = APIUri.getUserIconUrl(context, voiceCommunicationUserInfoBeanList.get(position).getUserId());
         ImageDisplayUtils.getInstance().displayImage(holder.headImg,url,R.drawable.icon_person_default);
-        holder.nameText.setText(ContactUserCacheUtils.getContactUserByUid(voiceCommunicationJoinChannelInfoBeanList.get(position).getUserId()).getName());
-        if(position %2 == 0){
-            holder.avLoadingIndicatorView.show();
-        }else{
-            holder.avLoadingIndicatorView.hide();
+        holder.nameText.setText(ContactUserCacheUtils.getContactUserByUid(voiceCommunicationUserInfoBeanList.get(position).getUserId()).getName());
+        if(holder.avLoadingIndicatorView != null){
+            holder.avLoadingIndicatorView.setVisibility(View.GONE);
+//            if(position %2 == 0){
+//                holder.avLoadingIndicatorView.show();
+//            }else{
+//                holder.avLoadingIndicatorView.hide();
+//            }
         }
     }
 
     @Override
     public int getItemCount() {
-        return voiceCommunicationJoinChannelInfoBeanList.size();
+        return voiceCommunicationUserInfoBeanList.size();
     }
 
     public class VoiceCommunicationHolder extends RecyclerView.ViewHolder {
