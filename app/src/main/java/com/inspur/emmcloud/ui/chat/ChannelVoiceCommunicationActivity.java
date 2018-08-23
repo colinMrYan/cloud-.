@@ -235,6 +235,12 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity{
         chronometerCommunicationTime.setVisibility(state == COMMUNICATION_LAYOUT_STATE ? View.VISIBLE:View.GONE);
         imgAnswerPhone.setVisibility((state == INVITEE_LAYOUT_STATE)?View.VISIBLE:View.GONE);
 
+        imgExcuse.setImageResource(state == COMMUNICATION_LAYOUT_STATE?R.drawable.icon_excuse_unselected:R.drawable.icon_excuse_unavailable);
+        imgExcuse.setClickable(state == COMMUNICATION_LAYOUT_STATE?true:false);
+
+        imgHandsFree.setImageResource(state == COMMUNICATION_LAYOUT_STATE?R.drawable.icon_hands_free_unselected:R.drawable.icon_hands_free_unavailable);
+        imgHandsFree.setClickable(state == COMMUNICATION_LAYOUT_STATE?true:false);
+
         if(state == COMMUNICATION_LAYOUT_STATE){
             if(voiceCommunicationMemberList == null){
                 LogUtils.YfcDebug("列表为空");
@@ -252,6 +258,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity{
                 return;
             }
         }
+
     }
 
 
