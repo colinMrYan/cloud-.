@@ -10,7 +10,6 @@
         android:layout_width="22dp"
         android:layout_height="22dp"
         android:layout_marginTop="27dp"
-        android:clickable="false"
         android:layout_centerHorizontal="true"
         android:background="@drawable/icon_void_commucation_back"
         />

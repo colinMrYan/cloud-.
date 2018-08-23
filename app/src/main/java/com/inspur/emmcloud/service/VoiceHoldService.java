@@ -21,19 +21,14 @@ import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.LogUtils;
 
 public class VoiceHoldService extends Service {
-
-
-    RelativeLayout relativeLayoutVoiceHold;
-    WindowManager.LayoutParams params;
-    WindowManager windowManager;
-
-    ImageButton imageButtonVoiceCommunication;
-    Chronometer chronometer;
-
+    private RelativeLayout relativeLayoutVoiceHold;
+    private WindowManager.LayoutParams params;
+    private WindowManager windowManager;
+    private ImageButton imageButtonVoiceCommunication;
+    private Chronometer chronometer;
     //状态栏高度.
-    int statusBarHeight = -1;
-
-    //不与Activity进行绑定.
+    private int statusBarHeight = -1;
+    private LayoutInflater inflater;
     @Override
     public IBinder onBind(Intent intent) {
         return null;
@@ -42,11 +37,29 @@ public class VoiceHoldService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        LogUtils.YfcDebug("VoiceHoldService Created");
+        inflater = LayoutInflater.from(getApplication());
+        initViews();
         createToucher();
+        LogUtils.YfcDebug("VoiceHoldService Created");
     }
 
-    private void createToucher() {
+    /**
+     * 初始化
+     */
+    private void initViews() {
+        initParams();
+        //获取浮动窗口视图所在布局.
+        relativeLayoutVoiceHold = (RelativeLayout) inflater.inflate(R.layout.service_voice_communication, null);
+        imageButtonVoiceCommunication = (ImageButton) relativeLayoutVoiceHold.findViewById(R.id.img_btn_voice_window);
+        chronometer = (Chronometer) relativeLayoutVoiceHold.findViewById(R.id.chronometer_voice_communication_time);
+        //添加toucherlayout
+        windowManager.addView(relativeLayoutVoiceHold, params);
+    }
+
+    /**
+     * 设置参数
+     */
+    private void initParams() {
         //赋值WindowManager&LayoutParam.
         params = new WindowManager.LayoutParams();
         windowManager = (WindowManager) getApplication().getSystemService(Context.WINDOW_SERVICE);
@@ -60,39 +73,35 @@ public class VoiceHoldService extends Service {
         params.gravity = Gravity.LEFT | Gravity.TOP;
         params.x = 0;
         params.y = 0;
-
         //设置悬浮窗口长宽数据.
         params.width = DensityUtil.dip2px(this,64);
         params.height = DensityUtil.dip2px(this,84);
+    }
 
-        LayoutInflater inflater = LayoutInflater.from(getApplication());
-        //获取浮动窗口视图所在布局.
-        relativeLayoutVoiceHold = (RelativeLayout) inflater.inflate(R.layout.service_voice_communication, null);
-        //添加toucherlayout
-        windowManager.addView(relativeLayoutVoiceHold, params);
-
+    private void createToucher() {
         LogUtils.YfcDebug("toucherlayout-->left:" + relativeLayoutVoiceHold.getLeft());
         LogUtils.YfcDebug("toucherlayout-->right:" + relativeLayoutVoiceHold.getRight());
         LogUtils.YfcDebug("toucherlayout-->top:" + relativeLayoutVoiceHold.getTop());
         LogUtils.YfcDebug("toucherlayout-->bottom:" + relativeLayoutVoiceHold.getBottom());
-
         //主动计算出当前View的宽高信息.
         relativeLayoutVoiceHold.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-
         //用于检测状态栏高度.
         int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
         if (resourceId > 0) {
             statusBarHeight = getResources().getDimensionPixelSize(resourceId);
         }
         LogUtils.YfcDebug("状态栏高度为:" + statusBarHeight);
-
         //浮动窗口按钮.
-        imageButtonVoiceCommunication = (ImageButton) relativeLayoutVoiceHold.findViewById(R.id.img_btn_voice_window);
-        chronometer = (Chronometer) relativeLayoutVoiceHold.findViewById(R.id.chronometer_voice_communication_time);
         chronometer.start();
-        imageButtonVoiceCommunication.setOnClickListener(new View.OnClickListener() {
-            long[] hints = new long[2];
+        initLinsters();
+    }
 
+    /**
+     * 初始化监听器
+     */
+    private void initLinsters() {
+        View.OnClickListener listener = new View.OnClickListener() {
+            long[] hints = new long[2];
             @Override
             public void onClick(View v) {
                 LogUtils.YfcDebug("点击了View");
@@ -106,17 +115,21 @@ public class VoiceHoldService extends Service {
                     stopSelf();
                 }
             }
-        });
+        };
+        relativeLayoutVoiceHold.setOnClickListener(listener);
+        imageButtonVoiceCommunication.setOnClickListener(listener);
 
-        relativeLayoutVoiceHold.setOnTouchListener(new View.OnTouchListener() {
+        View.OnTouchListener touchListener = new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                params.x = (int) event.getRawX() - 150;
-                params.y = (int) event.getRawY() - 150 - statusBarHeight;
+                params.x = (int) event.getRawX() - DensityUtil.dip2px(VoiceHoldService.this,32);
+                params.y = (int) event.getRawY() - DensityUtil.dip2px(VoiceHoldService.this,42) - statusBarHeight;
                 windowManager.updateViewLayout(relativeLayoutVoiceHold, params);
                 return false;
             }
-        });
+        };
+        relativeLayoutVoiceHold.setOnTouchListener(touchListener);
+        imageButtonVoiceCommunication.setOnTouchListener(touchListener);
     }
 
     @Override
