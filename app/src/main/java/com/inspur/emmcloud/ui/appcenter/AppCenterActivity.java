@@ -79,6 +79,7 @@ public class AppCenterActivity extends BaseActivity {
     private BroadcastReceiver addAppReceiver;
     private Timer timer;
     private Handler mHandler;
+    private TimerTask timerTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,13 +118,12 @@ public class AppCenterActivity extends BaseActivity {
         viewPager.setAdapter(new MyViewPagerAdapter(viewList, null));
         viewPager.addOnPageChangeListener(new PageChangeListener());
         timer = new Timer();
-        TimerTask timerTask = new TimerTask() {
+        timerTask = new TimerTask() {
             @Override
             public void run() {
                 mHandler.sendEmptyMessage(UPDATE_VIEWPAGER);
             }
         };
-        timer.schedule(timerTask, 3000, 3000);
     }
 
     class AppCenterRefreshListener implements SwipeRefreshLayout.OnRefreshListener {
@@ -389,6 +389,7 @@ public class AppCenterActivity extends BaseActivity {
                 }
             };
         }
+        timer.schedule(timerTask, 3000, 3000);
     }
 
     /**
@@ -559,6 +560,8 @@ public class AppCenterActivity extends BaseActivity {
         if(timer != null){
             timer.cancel();
             timer = null;
+            timerTask.cancel();
+            timerTask = null;
         }
     }
 
