@@ -2,8 +2,6 @@ package com.inspur.emmcloud.ui.chat;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +11,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.alibaba.fastjson.JSON;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -22,8 +19,6 @@ import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.bean.chat.Channel;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
-import com.inspur.emmcloud.bean.chat.GetAddMembersSuccessResult;
-import com.inspur.emmcloud.bean.chat.GetChannelInfoResult;
 import com.inspur.emmcloud.bean.contact.SearchModel;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
@@ -55,21 +50,18 @@ import java.util.List;
  */
 public class ChannelInfoActivity extends BaseActivity {
 
-    protected static final int GET_CHANNEL_INFO_SUCCESS = 0;
     private static final int MODIFY_NAME = 1;
     private static final int ADD_MEMBER = 2;
     private static final int DEL_MEMBER = 3;
     private NoScrollGridView memberGrid;
     private LoadingDialog loadingDlg;
-    private List<String> memberList = new ArrayList<>();
+    private ArrayList<String> memberList = new ArrayList<>();
     private String cid;
-    private String name;
-    private Handler handler;
+    private ChannelGroup channelGroup;
     private SwitchView setTopSwitch;
     private SwitchView msgInterruptionSwitch;
     private ChatAPIService apiService;
     private Adapter adapter;
-    private String owner = "";
     private TextView channelMemberNumText;
     private boolean isNoInterruption = false;
 
@@ -83,58 +75,27 @@ public class ChannelInfoActivity extends BaseActivity {
         apiService.setAPIInterface(new WebService());
         cid = getIntent().getExtras().getString("cid");
         loadingDlg = new LoadingDialog(ChannelInfoActivity.this);
-        handMessage();
         getChannelInfo();
     }
 
-    private void handMessage() {
-        // TODO Auto-generated method stub
-        handler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                switch (msg.what) {
-                    case GET_CHANNEL_INFO_SUCCESS:
-                        if (loadingDlg != null && loadingDlg.isShowing()) {
-                            loadingDlg.dismiss();
-                        }
-                        displayUI();
-                        break;
-                    default:
-                        break;
-                }
-            }
-
-        };
-    }
 
     /**
      * 获取频道信息
      */
     private void getChannelInfo() {
         // TODO Auto-generated method stub
-        if (NetUtils.isNetworkConnected(getApplicationContext())) {
-            loadingDlg.show();
+        channelGroup = ChannelGroupCacheUtils
+                .getChannelGroupById(getApplicationContext(), cid);
+        if (channelGroup != null) {
+            memberList = channelGroup.getMemberList();
+            displayUI();
+        }
+        if (NetUtils.isNetworkConnected(getApplicationContext(),(channelGroup == null))) {
             apiService.getChannelInfo(cid);
-        } else {
-            getChannelInfoFromCache();
         }
 
     }
 
-    private void getChannelInfoFromCache() {
-        final ChannelGroup channelGroup = ChannelGroupCacheUtils
-                .getChannelGroupById(getApplicationContext(), cid);
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                name = channelGroup.getChannelName();
-                memberList = channelGroup.getMemberList();
-                handler.sendEmptyMessage(GET_CHANNEL_INFO_SUCCESS);
-            }
-        };
-        new Thread(runnable).start();
-        loadingDlg.show();
-    }
 
     /**
      * 数据取出后显示ui
@@ -143,7 +104,7 @@ public class ChannelInfoActivity extends BaseActivity {
         channelMemberNumText.setText(getString(R.string.all_group_member) + "（"
                 + memberList.size() + "）");
         memberGrid = (NoScrollGridView) findViewById(R.id.member_grid);
-        ((TextView) findViewById(R.id.channel_name_text)).setText(name);
+        ((TextView) findViewById(R.id.channel_name_text)).setText(channelGroup.getChannelName());
         adapter = new Adapter();
         memberGrid.setAdapter(adapter);
         memberGrid.setOnItemClickListener(onItemClickListener);
@@ -180,18 +141,16 @@ public class ChannelInfoActivity extends BaseActivity {
         public void onItemClick(AdapterView<?> parent, View view, int position,
                                 long id) {
             // TODO Auto-generated method stub
-            String myUid = ((MyApplication) getApplicationContext()).getUid();
+            boolean isOwner = MyApplication.getInstance().getUid().equals(channelGroup.getOwner());
             Intent intent = new Intent();
-            if ((position == adapter.getCount() - 1) && owner.equals(myUid)) {
+            if ((position == adapter.getCount() - 1) && isOwner) {
                 intent.putExtra("memberUidList", (Serializable) memberList);
                 intent.setClass(getApplicationContext(),
                         ChannelMembersDelActivity.class);
                 startActivityForResult(intent, DEL_MEMBER);
 
-            } else if (((position == adapter.getCount() - 2) && owner
-                    .equals(myUid))
-                    || ((position == adapter.getCount() - 1) && !owner
-                    .equals(myUid))) {
+            } else if (((position == adapter.getCount() - 2) &&isOwner)
+                    || ((position == adapter.getCount() - 1) && !isOwner)) {
                 intent.putExtra("select_content", 2);
                 intent.putExtra("isMulti_select", true);
                 intent.putExtra("title", getString(R.string.add_group_member));
@@ -240,16 +199,17 @@ public class ChannelInfoActivity extends BaseActivity {
 
     public void onClick(View v) {
         Bundle bundle = new Bundle();
-        bundle.putString("cid", cid);
         switch (v.getId()) {
             case R.id.back_layout:
                 finish();
                 break;
             case R.id.channel_img:
+                bundle.putString("cid", cid);
                 IntentUtils.startActivity(ChannelInfoActivity.this,
                         GroupAlbumActivity.class, bundle);
                 break;
             case R.id.channel_file:
+                bundle.putString("cid", cid);
                 IntentUtils.startActivity(ChannelInfoActivity.this,
                         GroupFileActivity.class, bundle);
                 break;
@@ -258,12 +218,13 @@ public class ChannelInfoActivity extends BaseActivity {
                 intent.setClass(ChannelInfoActivity.this,
                         ModifyChannelGroupNameActivity.class);
                 intent.putExtra("cid", cid);
-                intent.putExtra("name", name);
+                intent.putExtra("name", channelGroup.getChannelName());
                 startActivityForResult(intent, MODIFY_NAME);
                 break;
             case R.id.member_layout:
                 bundle.putString("title", getString(R.string.group_member));
                 bundle.putString("search", "1");
+                bundle.putStringArrayList("uidList",memberList);
                 IntentUtils.startActivity(ChannelInfoActivity.this,
                         MembersActivity.class, bundle);
                 break;
@@ -310,24 +271,20 @@ public class ChannelInfoActivity extends BaseActivity {
      */
     private void ModifyChannelGroupName(Intent data) {
         String name = data.getStringExtra("name");
-        this.name = name;
         ((TextView) findViewById(R.id.channel_name_text)).setText(name);
         String pyFull = PinyinUtils.getPingYin(name);
         String pyShort = PinyinUtils.getPinYinHeadChar(name);
-        ChannelGroupCacheUtils.updateChannelGroupName(getApplicationContext(),
-                cid, name);
-        ChannelGroupCacheUtils.updateChannelGroupNameFull(
-                getApplicationContext(), cid, pyFull);
-        ChannelGroupCacheUtils.updateChannelGroupNameShort(
-                getApplicationContext(), cid, pyShort);
+        channelGroup.setChannelName(name);
+        channelGroup.setPyFull(pyFull);
+        channelGroup.setPyShort(pyShort);
+        ChannelGroupCacheUtils.saveChannelGroup(MyApplication.getInstance(),channelGroup);
     }
 
     private class Adapter extends BaseAdapter {
         @Override
         public int getCount() {
             // TODO Auto-generated method stub
-            String myUid = ((MyApplication) getApplicationContext()).getUid();
-            if (owner.equals(myUid)) {
+            if (channelGroup.getOwner().equals(MyApplication.getInstance().getUid())) {
                 return memberList.size() > 8 ? 10 : memberList.size() + 2;
             } else {
                 return memberList.size() > 9 ? 10 : memberList.size() + 1;
@@ -362,15 +319,16 @@ public class ChannelInfoActivity extends BaseActivity {
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
-            String myUid = ((MyApplication) getApplicationContext()).getUid();
+            String myUid = MyApplication.getInstance().getUid();
             String userPhotoUrl = "";
             String userName = "";
-            if ((position == getCount() - 1) && owner.equals(myUid)) {
+            boolean isOwner = channelGroup.getOwner().equals(myUid);
+            if ((position == getCount() - 1) && isOwner) {
                 userPhotoUrl = "drawable://" + R.drawable.icon_group_delete;
                 userName = getString(R.string.delete);
 
-            } else if (((position == getCount() - 2) && owner.equals(myUid))
-                    || ((position == getCount() - 1) && !owner.equals(myUid))) {
+            } else if (((position == getCount() - 2) && isOwner)
+                    || ((position == getCount() - 1) && !isOwner)) {
 
                 userPhotoUrl = "drawable://" + R.drawable.icon_member_add;
                 userName = getString(R.string.add);
@@ -435,59 +393,43 @@ public class ChannelInfoActivity extends BaseActivity {
 
         @Override
         public void returnChannelInfoSuccess(
-                GetChannelInfoResult getChannelInfoResult) {
+                ChannelGroup channelGroup) {
             // TODO Auto-generated method stub
-            if (loadingDlg != null && loadingDlg.isShowing()) {
-                loadingDlg.dismiss();
-            }
-            owner = getChannelInfoResult.getOwner();
-            name = getChannelInfoResult.getName();
-            memberList = getChannelInfoResult.getMemberList();
-            String members = JSON.toJSONString(memberList);
+            LoadingDialog.dimissDlg(loadingDlg);
+            memberList = channelGroup.getMemberList();
             // 同步缓存
-            ChannelGroupCacheUtils.updateChannelGroupMembers(
-                    ChannelInfoActivity.this, cid, members.toString());
+            ChannelGroupCacheUtils.saveChannelGroup(MyApplication.getInstance(),channelGroup);
             displayUI();
         }
 
         @Override
         public void returnChannelInfoFail(String error, int errorCode) {
             // TODO Auto-generated method stub
-            if (loadingDlg != null && loadingDlg.isShowing()) {
-                loadingDlg.dismiss();
+            LoadingDialog.dimissDlg(loadingDlg);
+            if (channelGroup == null){
+                WebServiceMiddleUtils.hand(ChannelInfoActivity.this, error, errorCode);
             }
-            WebServiceMiddleUtils.hand(ChannelInfoActivity.this, error, errorCode);
-            getChannelInfoFromCache();
         }
 
         @Override
         public void returnAddMembersSuccess(
-                GetAddMembersSuccessResult getAddMembersSuccessResult) {
+                ChannelGroup channelGroup) {
             // TODO Auto-generated method stub
-            if (loadingDlg != null && loadingDlg.isShowing()) {
-                loadingDlg.dismiss();
-            }
-
-            GetChannelInfoResult getChannelInfoResult = new GetChannelInfoResult(
-                    getAddMembersSuccessResult.getChannelInfo());
-            returnDelMembersSuccess(getChannelInfoResult);
+            LoadingDialog.dimissDlg(loadingDlg);
+            returnDelMembersSuccess(channelGroup);
         }
 
         @Override
         public void returnAddMembersFail(String error, int errorCode) {
             // TODO Auto-generated method stub
-            if (loadingDlg.isShowing()) {
-                loadingDlg.dismiss();
-            }
+            LoadingDialog.dimissDlg(loadingDlg);
             WebServiceMiddleUtils.hand(ChannelInfoActivity.this, error, errorCode);
         }
 
         @Override
         public void returnDndSuccess() {
             // TODO Auto-generated method stub
-            if (loadingDlg.isShowing()) {
-                loadingDlg.dismiss();
-            }
+            LoadingDialog.dimissDlg(loadingDlg);
             Channel channel = ChannelCacheUtils.getChannel(
                     ChannelInfoActivity.this, cid);
             channel.setDnd(isNoInterruption);
@@ -499,27 +441,19 @@ public class ChannelInfoActivity extends BaseActivity {
         @Override
         public void returnDndFail(String error, int errorCode) {
             // TODO Auto-generated method stub
-            if (loadingDlg.isShowing()) {
-                loadingDlg.dismiss();
-            }
+            LoadingDialog.dimissDlg(loadingDlg);
             isNoInterruption = !isNoInterruption;
             msgInterruptionSwitch.setOpened(isNoInterruption);
             WebServiceMiddleUtils.hand(ChannelInfoActivity.this, error, errorCode);
         }
 
         @Override
-        public void returnDelMembersSuccess(
-                GetChannelInfoResult getChannelInfoResult) {
+        public void returnDelMembersSuccess(ChannelGroup channelGroup) {
             // TODO Auto-generated method stub
-            if (loadingDlg != null && loadingDlg.isShowing()) {
-                loadingDlg.dismiss();
-            }
-
-            memberList = getChannelInfoResult.getMemberList();
-            String members = JSON.toJSONString(memberList);
+            LoadingDialog.dimissDlg(loadingDlg);
             // 同步缓存
-            ChannelGroupCacheUtils.updateChannelGroupMembers(
-                    ChannelInfoActivity.this, cid, members);
+            ChannelGroupCacheUtils.saveChannelGroup(MyApplication.getInstance(),channelGroup);
+            memberList = channelGroup.getMemberList();
             channelMemberNumText.setText(getString(R.string.all_group_member) + "（"
                     + memberList.size() + "）");
             adapter.notifyDataSetChanged();
@@ -528,10 +462,8 @@ public class ChannelInfoActivity extends BaseActivity {
         @Override
         public void returnDelMembersFail(String error, int errorCode) {
             // TODO Auto-generated method stub
+            LoadingDialog.dimissDlg(loadingDlg);
             WebServiceMiddleUtils.hand(ChannelInfoActivity.this, error, errorCode);
-            if (loadingDlg != null && loadingDlg.isShowing()) {
-                loadingDlg.dismiss();
-            }
         }
 
     }
