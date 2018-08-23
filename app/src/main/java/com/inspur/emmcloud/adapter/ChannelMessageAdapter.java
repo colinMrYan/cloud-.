@@ -264,7 +264,6 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
      * 展示用户名称
      *
      * @param holder
-     * @param msg
      */
     private void showUserName(ViewHolder holder, UIMessage UIMessage) {
         // TODO Auto-generated method stub
@@ -281,7 +280,6 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
      * 展示用户头像
      *
      * @param holder
-     * @param msg
      */
     private void showUserPhoto(ViewHolder holder, final UIMessage UImessage) {
         // TODO Auto-generated method stub

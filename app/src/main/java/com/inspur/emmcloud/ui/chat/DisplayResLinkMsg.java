@@ -43,7 +43,8 @@ public class DisplayResLinkMsg {
                 .findViewById(R.id.news_card_title_text);
         TextView linkDigestText = (TextView) cardContentView
                 .findViewById(R.id.news_card_digest_text);
-        linkTitleText.setText(StringUtils.isBlank(linkTitle)?context.getString(R.string.share_default_title):linkTitle);
+        linkTitle = StringUtils.isBlank(linkTitle)?context.getString(R.string.share_default_title):linkTitle;
+        linkTitleText.setText(linkTitle);
         linkDigestText.setText(linkDigest);
         if(StringUtils.isBlank(linkTitle)){
             linkTitleText.setVisibility(View.GONE);
