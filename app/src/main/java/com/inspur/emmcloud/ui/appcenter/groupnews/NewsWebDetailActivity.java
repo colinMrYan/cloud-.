@@ -116,7 +116,9 @@ public class NewsWebDetailActivity extends BaseActivity {
      * 两处使用本方法的，专门封一个方法
      */
     public void initWebViewGoBackOrClose() {
-        (findViewById(R.id.news_close_btn)).setVisibility(webView.canGoBack() ? View.VISIBLE : View.GONE);
+        if(webView != null){
+            (findViewById(R.id.news_close_btn)).setVisibility(webView.canGoBack() ? View.VISIBLE : View.GONE);
+        }
     }
 
 
