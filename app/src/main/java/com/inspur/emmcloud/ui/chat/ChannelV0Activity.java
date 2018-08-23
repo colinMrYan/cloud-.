@@ -386,7 +386,7 @@ public class ChannelV0Activity extends BaseActivity {
                             String linkUrl = JSONUtils.getString(msgBody, "url", "");
                             String linkPoster = JSONUtils.getString(msgBody, "poster", "");
                             GroupNews groupNews = new GroupNews();
-                            groupNews.setTitle(linkTitle);
+                            groupNews.setTitle(StringUtils.isBlank(linkTitle)?getString(R.string.share_default_title):linkTitle);
                             groupNews.setDigest(linkDigest);
                             groupNews.setUrl(linkUrl);
                             groupNews.setPoster(linkPoster);
