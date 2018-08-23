@@ -27,10 +27,6 @@ public class VoiceCommunicationUtils {
         //其他用户离线回调
         @Override
         public void onUserOffline(int uid, int reason) {
-//            userCount = userCount - 1;
-//            if(userCount < 2){
-//                destroy();
-//            }
             onVoiceCommunicationCallbacks.onUserOffline(uid,reason);
         }
 
@@ -55,7 +51,6 @@ public class VoiceCommunicationUtils {
         @Override
         public void onRejoinChannelSuccess(String channel, int uid, int elapsed) {
             LogUtils.YfcDebug("onRejoinChannelSuccess");
-//            userCount = userCount + 1;
             onVoiceCommunicationCallbacks.onRejoinChannelSuccess(channel,uid,elapsed);
         }
 
@@ -78,7 +73,6 @@ public class VoiceCommunicationUtils {
         @Override
         public void onWarning(int warn) {
             super.onWarning(warn);
-//            LogUtils.YfcDebug("warning信息："+warn);
             onVoiceCommunicationCallbacks.onWarning(warn);
         }
 

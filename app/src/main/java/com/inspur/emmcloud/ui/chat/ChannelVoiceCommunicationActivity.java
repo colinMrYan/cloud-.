@@ -118,12 +118,11 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity{
         voiceCommunicationUserInfoBeanList = (List<VoiceCommunicationJoinChannelInfoBean>) getIntent().getSerializableExtra("userList");
         voiceCommunicationUtils = MyApplication.getInstance().getVoiceCommunicationUtils();
         initViews();
-        createCommunicationService();
+//        createCommunicationService();
     }
 
     public void createCommunicationService(){
         Intent intent = new Intent(this,VoiceHoldService.class);
-//        Toast.makeText(this,"已开启Toucher",Toast.LENGTH_SHORT).show();
         startService(intent);
     }
 
@@ -147,6 +146,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity{
         recyclerViewCommunicationMembers.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(this,8)));
         int state = getIntent().getIntExtra(VOICE_COMMUNICATION_STATE,EXCEPTION_STATE);
         initCommunicationViewsVisibility(state);
+        initFunctionState();
 //        initFunctionState();
         switch (state){
             case INVITER_LAYOUT_STATE:
@@ -176,6 +176,15 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity{
             }
         });
 
+    }
+
+    /**
+     * 初始化功能模块的初始值
+     */
+    private void initFunctionState() {
+        voiceCommunicationUtils.muteLocalAudioStream(false);
+        voiceCommunicationUtils.muteAllRemoteAudioStreams(false);
+        voiceCommunicationUtils.onSwitchSpeakerphoneClicked(false);
     }
 
     /**

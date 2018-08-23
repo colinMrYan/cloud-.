@@ -17,6 +17,7 @@ public class VoiceCommunicationJoinChannelInfoBean implements Serializable{
     private String token;
     private int connectState;
     private String userName;
+    private int volume;
 
     public VoiceCommunicationJoinChannelInfoBean(JSONObject jsonObject){
         this(jsonObject.toString());

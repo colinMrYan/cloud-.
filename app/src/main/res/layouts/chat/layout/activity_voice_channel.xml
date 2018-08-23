@@ -141,8 +141,8 @@
             android:layout_weight="1">
             <ImageView
                 android:id="@+id/img_an_excuse"
-                android:layout_width="42dp"
-                android:layout_height="42dp"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
                 android:padding="2dp"
                 android:onClick="onClick"
                 android:layout_gravity="center_horizontal"
@@ -163,8 +163,8 @@
             android:layout_weight="1">
             <ImageView
                 android:id="@+id/img_hands_free"
-                android:layout_width="42dp"
-                android:layout_height="42dp"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
                 android:padding="2dp"
                 android:onClick="onClick"
                 android:layout_gravity="center_horizontal"
@@ -185,8 +185,8 @@
             android:layout_weight="1">
             <ImageView
                 android:id="@+id/img_mute"
-                android:layout_width="42dp"
-                android:layout_height="42dp"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
                 android:padding="2dp"
                 android:onClick="onClick"
                 android:layout_gravity="center_horizontal"
@@ -210,8 +210,8 @@
             android:layout_weight="1">
             <ImageView
                 android:id="@+id/img_tran_video"
-                android:layout_width="42dp"
-                android:layout_height="42dp"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
                 android:padding="2dp"
                 android:onClick="onClick"
                 android:layout_gravity="center_horizontal"

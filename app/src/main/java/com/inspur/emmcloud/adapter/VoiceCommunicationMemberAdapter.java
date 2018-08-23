@@ -9,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
@@ -75,8 +74,7 @@ public class VoiceCommunicationMemberAdapter extends RecyclerView.Adapter<VoiceC
 
     @Override
     public void onBindViewHolder(VoiceCommunicationHolder holder, int position) {
-        String url = APIUri.getUserIconUrl(context, voiceCommunicationUserInfoBeanList.get(position).getUserId());
-        ImageDisplayUtils.getInstance().displayImage(holder.headImg,url,R.drawable.icon_person_default);
+        ImageDisplayUtils.getInstance().displayImage(holder.headImg,voiceCommunicationUserInfoBeanList.get(position).getHeadImageUrl(),R.drawable.icon_person_default);
         holder.nameText.setText(ContactUserCacheUtils.getContactUserByUid(voiceCommunicationUserInfoBeanList.get(position).getUserId()).getName());
         if(holder.avLoadingIndicatorView != null){
             holder.avLoadingIndicatorView.setVisibility(View.GONE);
