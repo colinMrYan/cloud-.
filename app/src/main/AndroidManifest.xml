@@ -86,8 +86,11 @@
     <!-- 插件：设备震动 -->
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.GET_TASKS" />
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <!--悬浮窗相关-->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.SYSTEM_OVERLAY_WINDOW"/>
+
 
     <!--科大讯飞语音增加权限-->
     <!--获取手机录音机使用权限，听写、识别、语义理解需要用到此权限 -->
@@ -878,6 +881,7 @@
         <service android:name=".service.CoreInnerService"></service>
         <service android:name=".service.AppExceptionService"></service>
         <service android:name=".service.SyncCommonAppService"></service>
+        <service android:name=".service.VoiceHoldService"/>
 
         <!--AliveJobService需要BIND_JOB_SERVICE权限-->
         <service android:name=".service.BackgroundService"></service>

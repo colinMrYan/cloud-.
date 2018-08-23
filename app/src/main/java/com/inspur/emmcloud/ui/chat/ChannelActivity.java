@@ -27,6 +27,7 @@ import com.inspur.emmcloud.bean.chat.Channel;
 import com.inspur.emmcloud.bean.chat.GetNewMessagesResult;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.UIMessage;
+import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
 import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.bean.system.EventMessage;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
@@ -72,6 +73,7 @@ import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -233,6 +235,30 @@ public class ChannelActivity extends BaseActivity {
             public void onSendMsg(String content, List<String> mentionsUidList, List<String> urlList, Map<String, String> mentionsMap) {
                 // TODO Auto-generated method stub
                 sendTextMessage(content, false, mentionsMap);
+            }
+
+            @Override
+            public void onVoiceCommucaiton() {
+                List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationUserInfoBeanList = new ArrayList<>();
+                List<String> memberList = new ArrayList<>();
+                memberList.add(DirectChannelUtils.getDirctChannelOtherUid(MyApplication.getInstance(), channel.getTitle()));
+                memberList.add(MyApplication.getInstance().getUid());
+                List<ContactUser> contactUserList = ContactUserCacheUtils.getContactUserListById(memberList);
+                for (int i = 0; i < contactUserList.size(); i++) {
+                    JSONObject jsonObject = new JSONObject();
+                    try {
+                        jsonObject.put("id", contactUserList.get(i).getId());
+                        jsonObject.put("name", contactUserList.get(i).getName());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    voiceCommunicationUserInfoBeanList.add(new VoiceCommunicationJoinChannelInfoBean(jsonObject));
+                }
+                Intent intent = new Intent();
+                intent.setClass(ChannelActivity.this, ChannelVoiceCommunicationActivity.class);
+                intent.putExtra("userList", (Serializable) voiceCommunicationUserInfoBeanList);
+                intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE, ChannelVoiceCommunicationActivity.INVITER_LAYOUT_STATE);
+                startActivity(intent);
             }
         });
         chatInputMenu.setInputLayout(isSpecialUser ? "1" : channel.getInputs());

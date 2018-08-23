@@ -33,6 +33,7 @@ import com.inspur.emmcloud.bean.chat.GetSendMsgResult;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.Msg;
 import com.inspur.emmcloud.bean.chat.Robot;
+import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
 import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.broadcastreceiver.MsgReceiver;
@@ -76,6 +77,7 @@ import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -204,9 +206,9 @@ public class ChannelV0Activity extends BaseActivity {
                 case "link":
                     String content = getIntent().getExtras().getString(Constant.SHARE_LINK);
                     String fakeId = System.currentTimeMillis() + "";
-                    if(!StringUtils.isBlank(content)){
-                       sendMsg(content,"res_link",fakeId);
-                       addLocalMessage(ConbineMsg.conbineMsg(ChannelV0Activity.this,content,"","res_link",fakeId));
+                    if (!StringUtils.isBlank(content)) {
+                        sendMsg(content, "res_link", fakeId);
+                        addLocalMessage(ConbineMsg.conbineMsg(ChannelV0Activity.this, content, "", "res_link", fakeId));
                     }
                     break;
                 default:
@@ -215,7 +217,6 @@ public class ChannelV0Activity extends BaseActivity {
 
         }
     }
-
 
 
     /**
@@ -294,6 +295,30 @@ public class ChannelV0Activity extends BaseActivity {
                 // TODO Auto-generated method stub
                 sendTextMessage(content, mentionsUidList, urlList, false);
             }
+
+            @Override
+            public void onVoiceCommucaiton() {
+                List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationUserInfoBeanList = new ArrayList<>();
+                List<String> memberList = new ArrayList<>();
+                memberList.add(DirectChannelUtils.getDirctChannelOtherUid(MyApplication.getInstance(), channel.getTitle()));
+                memberList.add(MyApplication.getInstance().getUid());
+                List<ContactUser> contactUserList = ContactUserCacheUtils.getContactUserListById(memberList);
+                for (int i = 0; i < contactUserList.size(); i++) {
+                    JSONObject jsonObject = new JSONObject();
+                    try {
+                        jsonObject.put("id", contactUserList.get(i).getId());
+                        jsonObject.put("name", contactUserList.get(i).getName());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    voiceCommunicationUserInfoBeanList.add(new VoiceCommunicationJoinChannelInfoBean(jsonObject));
+                }
+                Intent intent = new Intent();
+                intent.setClass(ChannelV0Activity.this, ChannelVoiceCommunicationActivity.class);
+                intent.putExtra("userList", (Serializable) voiceCommunicationUserInfoBeanList);
+                intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE, ChannelVoiceCommunicationActivity.INVITER_LAYOUT_STATE);
+                startActivity(intent);
+            }
         });
         chatInputMenu.setInputLayout(isSpecialUser ? "1" : channel.getInputs());
     }
@@ -341,7 +366,7 @@ public class ChannelV0Activity extends BaseActivity {
                 cid, null, 15);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         msgListView.setLayoutManager(linearLayoutManager);
-        if (adapter == null){
+        if (adapter == null) {
             adapter = new ChannelMsgAdapter(ChannelV0Activity.this, apiService, channel.getType(), chatInputMenu);
             adapter.setItemClickListener(new ChannelMsgAdapter.MyItemClickListener() {
                 @Override
@@ -404,7 +429,7 @@ public class ChannelV0Activity extends BaseActivity {
             });
             adapter.setMsgList(msgList);
             msgListView.setAdapter(adapter);
-        }else {
+        } else {
             adapter.setChannelData(channel.getType(), chatInputMenu);
             adapter.setMsgList(msgList);
             adapter.notifyDataSetChanged();
@@ -449,17 +474,17 @@ public class ChannelV0Activity extends BaseActivity {
                 //拍照返回
             } else if (requestCode == CAMERA_RESULT) {
                 String imgPath = data.getExtras().getString(MyCameraActivity.OUT_FILE_PATH);
-               try {
-                   File file = new Compressor(ChannelV0Activity.this).setMaxHeight(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setMaxWidth(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setQuality(90).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
-                           .compressToFile(new File(imgPath));
-                   imgPath = file.getAbsolutePath();
-               }catch (Exception e){
-                   e.printStackTrace();
-               }
+                try {
+                    File file = new Compressor(ChannelV0Activity.this).setMaxHeight(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setMaxWidth(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setQuality(90).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
+                            .compressToFile(new File(imgPath));
+                    imgPath = file.getAbsolutePath();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 Msg localMsg = MsgRecourceUploadUtils.uploadResImg(
                         ChannelV0Activity.this, imgPath, apiService);
                 addLocalMessage(localMsg);
-            }  else if (requestCode == MENTIONS_RESULT) {
+            } else if (requestCode == MENTIONS_RESULT) {
                 // @返回
                 String result = data.getStringExtra("searchResult");
                 String uid = JSONUtils.getString(result, "uid", null);
@@ -474,16 +499,16 @@ public class ChannelV0Activity extends BaseActivity {
                     ArrayList<ImageItem> imageItemList = (ArrayList<ImageItem>) data
                             .getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
                     for (int i = 0; i < imageItemList.size(); i++) {
-                        String imgPath =imageItemList.get(i).path;
+                        String imgPath = imageItemList.get(i).path;
                         try {
                             File file = new Compressor(ChannelV0Activity.this).setMaxHeight(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setMaxWidth(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setQuality(90).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
                                     .compressToFile(new File(imgPath));
                             imgPath = file.getAbsolutePath();
-                        }catch (Exception e){
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
                         Msg localMsg = MsgRecourceUploadUtils.uploadResImg(
-                                ChannelV0Activity.this,imgPath, apiService);
+                                ChannelV0Activity.this, imgPath, apiService);
                         addLocalMessage(localMsg);
                     }
                 }
@@ -522,10 +547,10 @@ public class ChannelV0Activity extends BaseActivity {
                         if (msg.arg1 == 0) {
                             Msg pushMsg = new Msg((JSONObject) msg.obj);
                             CustomProtocol customProtocol = getCommandMessageProtocol(pushMsg);
-                            if(customProtocol != null){
+                            if (customProtocol != null) {
                                 return;
                             }
-                            if (cid.equals(pushMsg.getCid())){
+                            if (cid.equals(pushMsg.getCid())) {
                                 if (Message.isMessage(pushMsg)) {
                                     Message message = new Message(pushMsg);
                                     if (message.getType().equals("command/faceLogin")) {
@@ -560,6 +585,7 @@ public class ChannelV0Activity extends BaseActivity {
 
     /**
      * 判定是
+     *
      * @param receivedMsg
      * @return
      */
@@ -567,13 +593,13 @@ public class ChannelV0Activity extends BaseActivity {
         String msgBody = receivedMsg.getBody();
         Pattern pattern = Pattern.compile("\\[[^\\]]+\\]\\([^\\)]+\\)");
         Matcher matcher = pattern.matcher(msgBody);
-        while (matcher.find()){
+        while (matcher.find()) {
             String pattenString = matcher.group();
             int indexBegin = pattenString.indexOf("(");
             int indexEnd = pattenString.indexOf(")");
-            pattenString = pattenString.substring(indexBegin+1,indexEnd);
+            pattenString = pattenString.substring(indexBegin + 1, indexEnd);
             CustomProtocol customProtocol = new CustomProtocol(pattenString);
-            if(customProtocol.getProtocol().equals("ecc-cmd") && customProtocol.getParamMap().get("cmd").equals("join")){
+            if (customProtocol.getProtocol().equals("ecc-cmd") && customProtocol.getParamMap().get("cmd").equals("join")) {
                 return customProtocol;
             }
         }
@@ -685,7 +711,7 @@ public class ChannelV0Activity extends BaseActivity {
             IntentUtils.startActivity(ChannelV0Activity.this,
                     RobotInfoActivity.class, bundle);
         } else {
-            String uid = DirectChannelUtils.getDirctChannelOtherUid(MyApplication.getInstance(),channel.getTitle());
+            String uid = DirectChannelUtils.getDirctChannelOtherUid(MyApplication.getInstance(), channel.getTitle());
             bundle.putString("uid", uid);
             IntentUtils.startActivity(ChannelV0Activity.this,
                     UserInfoActivity.class, bundle);

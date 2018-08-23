@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.ui.chat;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v4.content.ContextCompat;
@@ -21,8 +22,10 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.bean.chat.GetVoiceCommunicationResult;
+import com.inspur.emmcloud.bean.chat.VoiceCommunicationAudioVolumeInfo;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
 import com.inspur.emmcloud.bean.system.GetBoolenResult;
+import com.inspur.emmcloud.service.VoiceHoldService;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
@@ -115,6 +118,13 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity{
         voiceCommunicationUserInfoBeanList = (List<VoiceCommunicationJoinChannelInfoBean>) getIntent().getSerializableExtra("userList");
         voiceCommunicationUtils = MyApplication.getInstance().getVoiceCommunicationUtils();
         initViews();
+        createCommunicationService();
+    }
+
+    public void createCommunicationService(){
+        Intent intent = new Intent(this,VoiceHoldService.class);
+//        Toast.makeText(this,"已开启Toucher",Toast.LENGTH_SHORT).show();
+        startService(intent);
     }
 
     /**
@@ -186,12 +196,14 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity{
             LogUtils.YfcDebug("创建channel");
             try {
                 JSONArray jsonArray = new JSONArray();
+                LogUtils.YfcDebug("创建频道时成员列表长度："+voiceCommunicationUserInfoBeanList.size());
                 for (int i = 0; i < voiceCommunicationUserInfoBeanList.size(); i++) {
                     JSONObject jsonObjectUserInfo = new JSONObject();
                     jsonObjectUserInfo.put("id",voiceCommunicationUserInfoBeanList.get(i).getUserId());
                     jsonObjectUserInfo.put("name",voiceCommunicationUserInfoBeanList.get(i).getUserName());
                     jsonArray.put(jsonObjectUserInfo);
                 }
+                LogUtils.YfcDebug("传递的人员信息："+jsonArray);
                 apiService.getAgoraParams(jsonArray);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -316,7 +328,12 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity{
 
             @Override
             public void onConnectionLost() {
-                LogUtils.YfcDebug("用户离开");
+                LogUtils.YfcDebug("用户断线");
+            }
+
+            @Override
+            public void onAudioVolumeIndication(VoiceCommunicationAudioVolumeInfo[] speakers, int totalVolume) {
+                LogUtils.YfcDebug("说话人员列表长度"+speakers.length);
             }
         });
     }

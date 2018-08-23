@@ -132,6 +132,11 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
                 // TODO Auto-generated method stub
                 sendComment(content, mentionsMap);
             }
+
+            @Override
+            public void onVoiceCommucaiton() {
+
+            }
         });
         chatInputMenu.setInputLayout("1");
     }
@@ -200,7 +205,6 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
     /**
      * 展示可以缩放的Image
      *
-     * @param path
      */
     protected void displayZoomImage(View view, String url) {
 

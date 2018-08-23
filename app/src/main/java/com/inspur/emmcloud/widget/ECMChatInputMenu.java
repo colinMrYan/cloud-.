@@ -220,7 +220,7 @@ public class ECMChatInputMenu extends LinearLayout {
             //功能组的图标，名称
             int[] functionIconArray = {R.drawable.ic_chat_input_add_gallery,
                     R.drawable.ic_chat_input_add_camera, R.drawable.ic_chat_input_add_file,
-                    R.drawable.ic_chat_input_add_mention,R.drawable.icon_answer_the_phone};
+                    R.drawable.ic_chat_input_add_mention,R.drawable.icon_voice_video_commucation};
             String[] functionNameArray = {getContext().getString(R.string.album),
                     getContext().getString(R.string.take_photo),
                     getContext().getString(R.string.file),
@@ -290,7 +290,11 @@ public class ECMChatInputMenu extends LinearLayout {
                             openMentionPage(false);
                             break;
                         case "voice":
-                            AppUtils.openChannelMemeberSelect((Activity)getContext(),cid,6);
+                            if(!canMentions){
+                                chatInputMenuListener.onVoiceCommucaiton();
+                            }else{
+                                AppUtils.openChannelMemeberSelect((Activity)getContext(),cid,6);
+                            }
                             break;
                         default:
                             break;
@@ -588,6 +592,8 @@ public class ECMChatInputMenu extends LinearLayout {
 
     public interface ChatInputMenuListener {
         void onSendMsg(String content, List<String> mentionsUidList, List<String> urlList, Map<String,String> mentionsMap);
+
+        void onVoiceCommucaiton();
     }
 
 

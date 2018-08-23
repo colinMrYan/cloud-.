@@ -98,7 +98,6 @@
             android:id="@+id/recyclerview_voice_communication_memebers"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/black"
             android:layout_marginTop="6dp"
             android:overScrollMode="never"/>
     </LinearLayout>
