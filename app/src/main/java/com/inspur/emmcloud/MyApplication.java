@@ -156,10 +156,18 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         refreshToken = PreferencesUtils.getString(getInstance(), "refreshToken", "");
         //科大讯飞语音SDK初始化
         SpeechUtility.createUtility(this, SpeechConstant.APPID + "=5a6001bf");
-        setVoiceCommunicationUtils(new VoiceCommunicationUtils(this)) ;
+
     }
 
     public VoiceCommunicationUtils getVoiceCommunicationUtils() {
+        if(voiceCommunicationUtils == null){
+            synchronized (VoiceCommunicationUtils.class){
+                if(voiceCommunicationUtils == null){
+                    voiceCommunicationUtils = new VoiceCommunicationUtils(this);
+                }
+            }
+        }
+        voiceCommunicationUtils.initializeAgoraEngine();
         return voiceCommunicationUtils;
     }
 

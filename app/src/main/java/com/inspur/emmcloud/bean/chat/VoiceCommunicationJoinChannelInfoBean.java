@@ -4,11 +4,13 @@ import com.inspur.emmcloud.util.common.JSONUtils;
 
 import org.json.JSONObject;
 
+import java.io.Serializable;
+
 /**
  * Created by yufuchang on 2018/8/16.
  */
 
-public class VoiceCommunicationJoinChannelInfoBean {
+public class VoiceCommunicationJoinChannelInfoBean implements Serializable{
     private String userId;
     private String headImageUrl;
     private int agoraUid;

@@ -22,7 +22,6 @@ import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.bean.chat.GetVoiceCommunicationResult;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
-import com.inspur.emmcloud.bean.chat.VoiceCommunicationUserInfoBean;
 import com.inspur.emmcloud.bean.system.GetBoolenResult;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.LogUtils;
@@ -101,10 +100,10 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity{
     private ImageView imgHungUp;
     @ViewInject(R.id.img_voice_communication_pack_up)
     private ImageView imgPackUp;
-    private List<VoiceCommunicationUserInfoBean> voiceCommunicationUserInfoBeanList = new ArrayList<>();
+    private List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationUserInfoBeanList = new ArrayList<>();
     private ChatAPIService apiService;
     private String channelId = "";
-    private List<VoiceCommunicationUserInfoBean> voiceCommunicationMemberList = new ArrayList<>();
+    private List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationMemberList = new ArrayList<>();
     private VoiceCommunicationJoinChannelInfoBean inviteeInfoBean;
     private int userCount = 1;
     private VoiceCommunicationUtils voiceCommunicationUtils;
@@ -113,9 +112,8 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         StateBarUtils.changeStateBarColor(this,R.color.content_bg);
-        voiceCommunicationUserInfoBeanList = (List<VoiceCommunicationUserInfoBean>) getIntent().getSerializableExtra("userList");
+        voiceCommunicationUserInfoBeanList = (List<VoiceCommunicationJoinChannelInfoBean>) getIntent().getSerializableExtra("userList");
         voiceCommunicationUtils = MyApplication.getInstance().getVoiceCommunicationUtils();
-        voiceCommunicationUtils.initializeAgoraEngine();
         initViews();
     }
 
@@ -139,14 +137,14 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity{
         recyclerViewCommunicationMembers.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(this,8)));
         int state = getIntent().getIntExtra(VOICE_COMMUNICATION_STATE,EXCEPTION_STATE);
         initCommunicationViewsVisibility(state);
-        initFunctionState();
+//        initFunctionState();
         switch (state){
             case INVITER_LAYOUT_STATE:
                 if(voiceCommunicationUserInfoBeanList.size() <= 5){
                     recyclerViewFirst.setAdapter(new VoiceCommunicationMemberAdapter(this,voiceCommunicationUserInfoBeanList,1));
                 }else if(voiceCommunicationUserInfoBeanList.size() <= 9){
-                    List<VoiceCommunicationUserInfoBean> list1 = voiceCommunicationUserInfoBeanList.subList(0,5);
-                    List<VoiceCommunicationUserInfoBean> list2 = voiceCommunicationUserInfoBeanList.subList(5,voiceCommunicationUserInfoBeanList.size());
+                    List<VoiceCommunicationJoinChannelInfoBean> list1 = voiceCommunicationUserInfoBeanList.subList(0,5);
+                    List<VoiceCommunicationJoinChannelInfoBean> list2 = voiceCommunicationUserInfoBeanList.subList(5,voiceCommunicationUserInfoBeanList.size());
                     recyclerViewFirst.setAdapter(new VoiceCommunicationMemberAdapter(this,list1,1));
                     recyclerViewSecond.setAdapter(new VoiceCommunicationMemberAdapter(this,list2,2));
                 }else{
@@ -201,23 +199,23 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity{
         }
     }
 
-    /**
-     * 设置禁言，静音等
-     */
-    private void initFunctionState() {
-        if(!IS_EXCUSE_AVAILIABLE){
-            imgExcuse.setImageResource(R.drawable.icon_excuse_unavailable);
-            imgExcuse.setClickable(false);
-        }
-        if(!IS_HANDS_FREE_AVAILIABLE){
-            imgHandsFree.setImageResource(R.drawable.icon_hands_free_unavailable);
-            imgHandsFree.setClickable(false);
-        }
-        if(!IS_MUTE_AVAILIABLE){
-            imgMute.setImageResource(R.drawable.icon_mute_unavaiable);
-            imgMute.setClickable(false);
-        }
-    }
+//    /**
+//     * 设置禁言，静音等
+//     */
+//    private void initFunctionState() {
+//        if(!IS_EXCUSE_AVAILIABLE){
+//            imgExcuse.setImageResource(R.drawable.icon_excuse_unavailable);
+//            imgExcuse.setClickable(false);
+//        }
+//        if(!IS_HANDS_FREE_AVAILIABLE){
+//            imgHandsFree.setImageResource(R.drawable.icon_hands_free_unavailable);
+//            imgHandsFree.setClickable(false);
+//        }
+//        if(!IS_MUTE_AVAILIABLE){
+//            imgMute.setImageResource(R.drawable.icon_mute_unavaiable);
+//            imgMute.setClickable(false);
+//        }
+//    }
 
     /**
      * 根据状态改变布局可见性
@@ -241,6 +239,9 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity{
         imgHandsFree.setImageResource(state == COMMUNICATION_LAYOUT_STATE?R.drawable.icon_hands_free_unselected:R.drawable.icon_hands_free_unavailable);
         imgHandsFree.setClickable(state == COMMUNICATION_LAYOUT_STATE?true:false);
 
+        imgMute.setImageResource(state == COMMUNICATION_LAYOUT_STATE?R.drawable.icon_mute_unselcected:R.drawable.icon_mute_unavaiable);
+        imgMute.setClickable(state == COMMUNICATION_LAYOUT_STATE?true:false);
+
         if(state == COMMUNICATION_LAYOUT_STATE){
             if(voiceCommunicationMemberList == null){
                 LogUtils.YfcDebug("列表为空");
@@ -249,8 +250,8 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity{
             if(voiceCommunicationMemberList.size() <= 5){
                 recyclerViewFirst.setAdapter(new VoiceCommunicationMemberAdapter(this,voiceCommunicationMemberList,1));
             }else if(voiceCommunicationMemberList.size() <= 9){
-                List<VoiceCommunicationUserInfoBean> list1 = voiceCommunicationMemberList.subList(0,5);
-                List<VoiceCommunicationUserInfoBean> list2 = voiceCommunicationMemberList.subList(5,voiceCommunicationMemberList.size());
+                List<VoiceCommunicationJoinChannelInfoBean> list1 = voiceCommunicationMemberList.subList(0,5);
+                List<VoiceCommunicationJoinChannelInfoBean> list2 = voiceCommunicationMemberList.subList(5,voiceCommunicationMemberList.size());
                 recyclerViewFirst.setAdapter(new VoiceCommunicationMemberAdapter(this,list1,1));
                 recyclerViewSecond.setAdapter(new VoiceCommunicationMemberAdapter(this,list2,2));
             }else{
@@ -415,9 +416,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity{
             for (int i = 0; i < getVoiceCommunicationResult.getVoiceCommunicationJoinChannelInfoBeanList().size(); i++) {
                 VoiceCommunicationJoinChannelInfoBean voiceCommunicationJoinChannelInfoBeanTemp = getVoiceCommunicationResult.getVoiceCommunicationJoinChannelInfoBeanList().get(i);
                 if(!voiceCommunicationJoinChannelInfoBeanTemp.getUserId().equals(MyApplication.getInstance().getUid())){
-                    VoiceCommunicationUserInfoBean voiceCommunicationUserInfoBean =
-                            new VoiceCommunicationUserInfoBean(voiceCommunicationJoinChannelInfoBeanTemp.getUserId(),voiceCommunicationJoinChannelInfoBeanTemp.getUserName());
-                    voiceCommunicationMemberList.add(voiceCommunicationUserInfoBean);
+                    voiceCommunicationMemberList.add(voiceCommunicationJoinChannelInfoBean);
                 }
             }
         }
@@ -438,9 +437,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity{
             for (int i = 0; i < getVoiceCommunicationResult.getVoiceCommunicationJoinChannelInfoBeanList().size(); i++) {
                 VoiceCommunicationJoinChannelInfoBean voiceCommunicationJoinChannelInfoBean = getVoiceCommunicationResult.getVoiceCommunicationJoinChannelInfoBeanList().get(i);
                 if(!voiceCommunicationJoinChannelInfoBean.getUserId().equals(MyApplication.getInstance().getUid())){
-                    VoiceCommunicationUserInfoBean voiceCommunicationUserInfoBean =
-                            new VoiceCommunicationUserInfoBean(voiceCommunicationJoinChannelInfoBean.getUserId(),voiceCommunicationJoinChannelInfoBean.getUserName());
-                    voiceCommunicationMemberList.add(voiceCommunicationUserInfoBean);
+                    voiceCommunicationMemberList.add(voiceCommunicationJoinChannelInfoBean);
                 }else{
                     inviteeInfoBean = voiceCommunicationJoinChannelInfoBean;
                 }

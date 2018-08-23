@@ -15,7 +15,7 @@ import com.inspur.emmcloud.adapter.MemberSelectGridAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.bean.chat.GetChannelInfoResult;
-import com.inspur.emmcloud.bean.chat.VoiceCommunicationUserInfoBean;
+import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
 import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.NetUtils;
@@ -25,6 +25,7 @@ import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.widget.ECMSpaceItemDecoration;
 import com.inspur.emmcloud.widget.LoadingDialog;
 
+import org.json.JSONObject;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 
@@ -121,10 +122,16 @@ public class ChannelSelectVoiceVideoMembersActivity extends BaseActivity{
      * 邀请开始通话
      */
     private void startCommunication() {
-//        VoiceCommunicationUserInfoBean
-        List<VoiceCommunicationUserInfoBean> voiceCommunicationUserInfoBeanList = new ArrayList<>();
+        List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationUserInfoBeanList = new ArrayList<>();
         for (int i = 0; i < selectUserList.size(); i++) {
-            voiceCommunicationUserInfoBeanList.add(new VoiceCommunicationUserInfoBean(selectUserList.get(i).getId(),selectUserList.get(i).getName()));
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("id",selectUserList.get(i).getId());
+                jsonObject.put("name",selectUserList.get(i).getName());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            voiceCommunicationUserInfoBeanList.add(new VoiceCommunicationJoinChannelInfoBean(jsonObject));
         }
         Intent intent = new Intent();
         intent.setClass(ChannelSelectVoiceVideoMembersActivity.this,ChannelVoiceCommunicationActivity.class);

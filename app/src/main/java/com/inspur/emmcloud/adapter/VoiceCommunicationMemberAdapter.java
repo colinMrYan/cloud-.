@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
-import com.inspur.emmcloud.bean.chat.VoiceCommunicationUserInfoBean;
+import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.wang.avi.AVLoadingIndicatorView;
@@ -28,8 +28,8 @@ public class VoiceCommunicationMemberAdapter extends RecyclerView.Adapter<VoiceC
     private Context context;
     private LayoutInflater inflater;
     private int index = 0;
-    private List<VoiceCommunicationUserInfoBean> voiceCommunicationUserInfoBeanList = new ArrayList<>();
-    public VoiceCommunicationMemberAdapter(Context context, List<VoiceCommunicationUserInfoBean> voiceCommunicationUserInfoBeanList, int index){
+    private List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationUserInfoBeanList = new ArrayList<>();
+    public VoiceCommunicationMemberAdapter(Context context, List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationUserInfoBeanList, int index){
         this.context = context;
         inflater = LayoutInflater.from(context);
         this.voiceCommunicationUserInfoBeanList = voiceCommunicationUserInfoBeanList;
