@@ -1004,6 +1004,7 @@
     <string name="share_no_suffix">不支持分享无后缀名的文件</string>
     <string name="share_has_not_exist_file">您分享的文件中有不存在的文件，请检查</string>
     <string name="share_not_support">暂不支持的分享类型</string>
+    <string name="share_default_title">网页链接</string>
 
     <string name="net_work_fail">获取配置信息失败</string>
 

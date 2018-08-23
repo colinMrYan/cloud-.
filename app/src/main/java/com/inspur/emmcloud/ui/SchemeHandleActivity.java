@@ -319,7 +319,7 @@ public class SchemeHandleActivity extends Activity {
             } else if (text == null && subject == null) {
                 return shareLinkMap;
             }
-            shareLinkMap.put("title", titleStr);
+            shareLinkMap.put("title", StringUtils.isBlank(titleStr)?getString(R.string.share_default_title):titleStr);
             shareLinkMap.put("url", urlStr);
             shareLinkMap.put("digest",digest);
         }
