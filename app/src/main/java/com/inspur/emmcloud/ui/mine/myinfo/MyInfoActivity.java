@@ -214,12 +214,6 @@ public class MyInfoActivity extends BaseActivity {
             }
         }
         if (userProfileInfoBean != null) {
-            if (userProfileInfoBean.getShowHead() == 0) {
-                (findViewById(R.id.myinfo_userhead_layout)).setVisibility(View.GONE);
-            }
-            if (userProfileInfoBean.getShowUserName() == 0) {
-                (findViewById(R.id.myinfo_username_layout)).setVisibility(View.GONE);
-            }
             if (userProfileInfoBean.getShowUserMail() == 0) {
                 (findViewById(R.id.myinfo_usermail_layout)).setVisibility(View.GONE);
             }
@@ -290,7 +284,6 @@ public class MyInfoActivity extends BaseActivity {
      */
     private void getUserInfoConfig() {
         if (NetUtils.isNetworkConnected(MyInfoActivity.this, false)) {
-            loadingDlg.show();
             apiService.getUserProfileConfigInfo();
         } else {
             setUserInfoConfig(null);
