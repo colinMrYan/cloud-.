@@ -4,13 +4,11 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.appcenter.App;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.ui.appcenter.ReactNativeAppActivity;
-import com.inspur.emmcloud.ui.appcenter.groupnews.GroupNewsActivity;
-import com.inspur.emmcloud.ui.appcenter.volume.VolumeHomePageActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
@@ -22,21 +20,17 @@ public class UriUtils {
 
     public static void openApp(final Activity activity, final App app, final String appCollectType) {
         String uri = app.getUri();
-        int appType = app.getAppType();
-        switch (appType) {
+        switch (app.getAppType()) {
             case 0:
             case 1:
-                switch (uri){
-                    case "emm://news":
-                        IntentUtils.startActivity(activity, GroupNewsActivity.class);
-                        break;
-                    case "emm://volume":
-                        IntentUtils.startActivity(activity, VolumeHomePageActivity.class);
-                        break;
-                    default:
-                        ToastUtils.show(activity,
-                                R.string.not_support_app_type);
-                        break;
+                try {
+                    Intent intent = Intent.parseUri(uri, Intent.URI_INTENT_SCHEME);
+                    intent.setComponent(null);
+                    activity.startActivity(intent);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    ToastUtils.show(activity,
+                            R.string.not_support_app_type);
                 }
                 break;
             case 2:
@@ -48,8 +42,7 @@ public class UriUtils {
                 if(app.getAppID().equals("456166a362436750d74bfeaef997693d")){
                     new AppCenterApprovalUtils().openApprovalApp(activity,app);
                 } else if(app.getIsSSO() == 1){
-//                    uri = uri.replace("ssohandler/gs/", "api/mam/v3.0/gs_sso/app_uri?id=");
-                    uri = MyApplication.getInstance().getClusterEmm() + "api/mam/v3.0/gs_sso/app_uri?id="+app.getAppID();
+                    String url = APIUri.getAppRealUrl(app.getAppID());
                     if (NetUtils.isNetworkConnected(activity)) {
                         new WebAppUtils(activity, new WebAppUtils.OnGetWebAppRealUrlListener() {
                             @Override
@@ -61,7 +54,7 @@ public class UriUtils {
                             public void getWebAppRealUrlFail() {
                                 ToastUtils.show(activity, R.string.react_native_app_open_failed);
                             }
-                        }).getWebAppRealUrl(uri);
+                        }).getWebAppRealUrl(url);
                     }
 
                 }else {

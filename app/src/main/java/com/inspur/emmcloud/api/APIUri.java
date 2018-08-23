@@ -664,6 +664,15 @@ public class APIUri {
         return getEMMBaseUrl() + "api/mam/v3.0/gs_sso/msg_uri?id=" + host;
     }
 
+    /**
+     * 获取app真实地址
+     * @param appId
+     * @return
+     */
+    public static String getAppRealUrl(String appId) {
+        return getEMMBaseUrl() + "api/mam/v3.0/gs_sso/app_uri?id=" + appId;
+    }
+
     /*****************************************ReactNative**************************************/
     /**
      * 更新的Native地址

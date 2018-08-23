@@ -20,6 +20,7 @@ import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.interf.CommonCallBack;
 import com.inspur.emmcloud.ui.appcenter.ReactNativeAppActivity;
 import com.inspur.emmcloud.ui.appcenter.groupnews.GroupNewsActivity;
+import com.inspur.emmcloud.ui.appcenter.volume.VolumeHomePageActivity;
 import com.inspur.emmcloud.ui.chat.ChannelActivity;
 import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
@@ -32,7 +33,10 @@ import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.ui.mine.setting.CreateGestureActivity;
 import com.inspur.emmcloud.ui.mine.setting.FaceVerifyActivity;
 import com.inspur.emmcloud.ui.mine.setting.GestureLoginActivity;
+import com.inspur.emmcloud.ui.work.calendar.CalActivity;
 import com.inspur.emmcloud.ui.work.calendar.CalEventAddActivity;
+import com.inspur.emmcloud.ui.work.meeting.MeetingListActivity;
+import com.inspur.emmcloud.ui.work.task.MessionListActivity;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
@@ -233,6 +237,22 @@ public class SchemeHandleActivity extends Activity {
                                 break;
                             case "ecc-app-change-tab":
                                 EventBus.getDefault().post(new ChangeTabBean(Constant.APP_TAB_BAR_APPLICATION));
+                                break;
+                            case "emm":
+                                if (host.equals("news")){
+                                    IntentUtils.startActivity(SchemeHandleActivity.this, GroupNewsActivity.class,true);
+                                }else if(host.equals("volume")){
+                                    IntentUtils.startActivity(SchemeHandleActivity.this, VolumeHomePageActivity.class,true);
+                                }
+                                break;
+                            case "ecc-calendar":
+                                IntentUtils.startActivity(SchemeHandleActivity.this, CalActivity.class,true);
+                                break;
+                            case "ecc-to-do ":
+                                IntentUtils.startActivity(SchemeHandleActivity.this, MessionListActivity.class,true);
+                                break;
+                            case "ecc-meeting":
+                                IntentUtils.startActivity(SchemeHandleActivity.this, MeetingListActivity.class,true);
                                 break;
                             default:
                                 finish();
