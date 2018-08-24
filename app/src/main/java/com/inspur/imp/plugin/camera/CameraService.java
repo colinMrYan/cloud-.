@@ -89,7 +89,7 @@ public class CameraService extends ImpPlugin {
     private String successCb, failCb;
     private static final int maxResolution = 1400;
 
-    public static int num = 8;// 可以选择的图片数目
+    public static int num = 9;// 可以选择的图片数目
     private int uploadOriginMaxSize = MyAppConfig.UPLOAD_ORIGIN_IMG_MAX_SIZE;
     private int uploadThumbnailMaxSize = MyAppConfig.UPLOAD_THUMBNAIL_IMG_MAX_SIZE;
     private String watermarkContent,color,background, align,valign;
@@ -201,7 +201,7 @@ public class CameraService extends ImpPlugin {
                             .getInt("num");
                 }
                 if (num < 0 || num > 15) {
-                    num = 8;
+                    num = 9;
                 }
                 if (!optionsObj.isNull("watermark")){
                     JSONObject watermarkObj = optionsObj.getJSONObject("watermark");
