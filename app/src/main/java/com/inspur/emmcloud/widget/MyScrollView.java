@@ -19,9 +19,9 @@ public class MyScrollView extends ScrollView {
 	private static final int size = 4;
 	private View inner;
 	private float y;
-	private Rect normal = new Rect();;
+	private Rect normal = new Rect();
 
-	public MyScrollView(Context context) {
+    public MyScrollView(Context context) {
 		super(context);
 	}
 
@@ -110,11 +110,8 @@ public class MyScrollView extends ScrollView {
 	public boolean isNeedMove() {
 //		int offset = inner.getMeasuredHeight() - getHeight();
 		int scrollY = getScrollY();
-		if (scrollY == 0) {
-			return true;
-		}
-		return false;
-	}
+        return scrollY == 0;
+    }
 
 }
 

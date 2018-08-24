@@ -218,9 +218,9 @@ public class NumberCircleProgressBar extends View {
 
 	public enum ProgressTextVisibility {
 		Visible, Invisible
-	};
+	}
 
-	public NumberCircleProgressBar(Context context) {
+    public NumberCircleProgressBar(Context context) {
 		this(context, null);
 	}
 
@@ -542,11 +542,8 @@ public class NumberCircleProgressBar extends View {
 	}
 
 	public boolean isFinished() {
-		if (mProgress >= mMax) {
-			return true;
-		}
-		return false;
-	}
+        return mProgress >= mMax;
+    }
 
 	public void setProgress(int Progress) {
 		if (Progress <= getMax() && Progress >= 0) {
@@ -566,11 +563,7 @@ public class NumberCircleProgressBar extends View {
 	}
 
 	public void setProgressTextVisibility(ProgressTextVisibility visibility) {
-		if (visibility == ProgressTextVisibility.Visible) {
-			mIfDrawText = true;
-		} else {
-			mIfDrawText = false;
-		}
+        mIfDrawText = visibility == ProgressTextVisibility.Visible;
 		invalidate();
 	}
 

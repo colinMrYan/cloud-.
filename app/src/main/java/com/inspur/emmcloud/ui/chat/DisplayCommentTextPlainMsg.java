@@ -60,8 +60,10 @@ public class DisplayCommentTextPlainMsg {
         }else {
             WSAPIService.getInstance().getMessageById(msgContentComment.getMessage());
         }
+        (cardContentView.findViewById(R.id.root_layout)).setBackgroundColor(context.getResources().getColor(
+                isMyMsg ? R.color.bg_my_card : R.color.white));
         (cardContentView
-                .findViewById(R.id.root_layout)).setBackgroundResource(isMyMsg ? R.drawable.ic_chat_msg_img_cover_arrow_right : R.drawable.ic_chat_msg_img_cover_arrow_left);
+                .findViewById(R.id.card_layout)).setBackgroundResource(isMyMsg?R.drawable.ic_chat_msg_img_cover_arrow_right:R.drawable.ic_chat_msg_img_cover_arrow_left);
 
         commentContentText.setTextColor(context.getResources().getColor(
                 isMyMsg ? R.color.white : R.color.black));

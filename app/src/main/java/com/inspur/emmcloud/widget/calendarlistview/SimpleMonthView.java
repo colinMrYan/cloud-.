@@ -270,9 +270,9 @@ public class SimpleMonthView extends View {
 	 */
 	protected void drawMonthNums(Canvas canvas) {
 		/** -6 为了获得canvas.drawText字体baseline处的y值 **/
-		int y = (int) ((mRowHeight - MINI_DAY_NUMBER_TEXT_SIZE
+		int y = (mRowHeight - MINI_DAY_NUMBER_TEXT_SIZE
 				- MINI_DAY_CHINNESE_TEXT_SIXE - DAY_NUM_CHINEST_DAY_SPACE)
-				/ 2 + MINI_DAY_NUMBER_TEXT_SIZE + MONTH_HEADER_SIZE - 6)-6;
+				/ 2 + MINI_DAY_NUMBER_TEXT_SIZE + MONTH_HEADER_SIZE - 6 -6;
 		int paddingDay = (mWidth - 2 * mPadding) / (2 * mNumDays);
 		int dayOffset = findDayOffset();
 		int day = 1;
@@ -632,8 +632,8 @@ public class SimpleMonthView extends View {
 		mOnDayClickListener = onDayClickListener;
 	}
 
-	public static abstract interface OnDayClickListener {
-		public abstract void onDayClick(SimpleMonthView simpleMonthView,
-										SimpleMonthAdapter.CalendarDay calendarDay);
+	public interface OnDayClickListener {
+		void onDayClick(SimpleMonthView simpleMonthView,
+                        SimpleMonthAdapter.CalendarDay calendarDay);
 	}
 }

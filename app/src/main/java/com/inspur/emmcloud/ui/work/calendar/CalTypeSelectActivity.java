@@ -71,7 +71,7 @@ public class CalTypeSelectActivity extends BaseActivity {
 				calendarAdapter.notifyDataSetChanged();
 				MyCalendar calendar = calendarList.get(position);
 				Intent intent = new Intent();
-				intent.putExtra("result", (Serializable)calendar);
+				intent.putExtra("result", calendar);
 				setResult(RESULT_OK, intent);
 				finish();
 
@@ -126,7 +126,7 @@ public class CalTypeSelectActivity extends BaseActivity {
 				calSelectImg.setVisibility(View.GONE);
 			}
 			textView.setText(calendar.getName());
-			View colorView = (View) convertView
+			View colorView = convertView
 					.findViewById(R.id.calendar_color_view);
 			int color = CalendarColorUtils.getColor(CalTypeSelectActivity.this,calendar.getColor());
 			colorView.setBackgroundColor(color);

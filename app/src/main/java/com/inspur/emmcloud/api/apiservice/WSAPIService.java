@@ -119,6 +119,29 @@ public class WSAPIService {
         }
     }
 
+    public void sendChatMediaVoiceMsg(String cid, Message message, VolumeFile volumeFile) {
+        try {
+            JSONObject object = new JSONObject();
+            JSONObject actionObj = new JSONObject();
+            actionObj.put("method", "post");
+            actionObj.put("path", "/channel/" + cid + "/message");
+            object.put("action", actionObj);
+            JSONObject headerObj = new JSONObject();
+            headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
+            headerObj.put("tracer", message.getId());
+            object.put("headers", headerObj);
+            JSONObject bodyObj = new JSONObject();
+            bodyObj.put("type", Message.MESSAGE_TYPE_MEDIA_VOICE);
+            bodyObj.put("duration", message.getMsgContentMediaVoice().getDuration());
+            bodyObj.put("media", volumeFile.getPath());
+            object.put("body", bodyObj);
+            EventMessage eventMessage = new EventMessage(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE,"",message.getId());
+            WebSocketPush.getInstance().sendEventMessage(eventMessage, object,message.getId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void sendChatExtendedLinksMsg(String cid, Message message) {
         try {
             JSONObject object = new JSONObject();
@@ -151,9 +174,8 @@ public class WSAPIService {
     }
 
 
-    public void sendChatMediaImageMsg(String cid, String tracer, VolumeFile volumeFile, Message fakeMessage) {
+    public void sendChatMediaImageMsg(String cid,  VolumeFile volumeFile, Message fakeMessage) {
         try {
-
             JSONObject object = new JSONObject();
             JSONObject actionObj = new JSONObject();
             actionObj.put("method", "post");
@@ -161,7 +183,7 @@ public class WSAPIService {
             object.put("action", actionObj);
             JSONObject headerObj = new JSONObject();
             headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
-            headerObj.put("tracer", tracer);
+            headerObj.put("tracer", fakeMessage.getId());
             object.put("headers", headerObj);
             JSONObject bodyObj = new JSONObject();
             bodyObj.put("type", "media/image");
@@ -186,8 +208,8 @@ public class WSAPIService {
             bodyObj.put("thumbnail", thumbnailObj);
             bodyObj.put("raw", rawObj);
             object.put("body", bodyObj);
-            EventMessage eventMessage = new EventMessage(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE,"",tracer);
-            WebSocketPush.getInstance().sendEventMessage( eventMessage, object,tracer);
+            EventMessage eventMessage = new EventMessage(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE,"",fakeMessage.getId());
+            WebSocketPush.getInstance().sendEventMessage( eventMessage, object,fakeMessage.getId());
 
         } catch (Exception e) {
             e.printStackTrace();

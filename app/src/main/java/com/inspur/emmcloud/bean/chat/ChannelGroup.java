@@ -246,9 +246,6 @@ public class ChannelGroup {
             return false;
 
         final ChannelGroup otherChannelGroup = (ChannelGroup) other;
-        if (getCid().equals(otherChannelGroup.getCid())) {
-            return true;
-        }
-        return false;
+        return getCid().equals(otherChannelGroup.getCid());
     }
 }

@@ -21,11 +21,7 @@ public class NetUtils {
         ConnectivityManager mConnectivityManager = (ConnectivityManager) context
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
-        if (mNetworkInfo != null && mNetworkInfo.isAvailable()) {
-            return true;
-        } else {
-            return false;
-        }
+        return mNetworkInfo != null && mNetworkInfo.isAvailable();
     }
 
     /**
@@ -57,7 +53,6 @@ public class NetUtils {
                 || (networkInfo = manager.getActiveNetworkInfo()) == null) {
             return type;
         }
-        ;
 
         if (networkInfo.isConnected()) {
             String typeName = networkInfo.getTypeName();

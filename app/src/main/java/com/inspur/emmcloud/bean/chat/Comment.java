@@ -10,9 +10,9 @@ public class Comment implements Serializable{
 
 	
 	private String mid = "";
-	private String uid = "";;
-	private String title= "";;
-	private String avatar = "";
+	private String uid = "";
+    private String title= "";
+    private String avatar = "";
 	private Long time = 0L;
 	private String order = "";
 	private String type = "";

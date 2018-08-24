@@ -130,7 +130,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         CrashHandler crashHandler = CrashHandler.getInstance();
         crashHandler.init(getInstance());
         x.Ext.init(MyApplication.this);
-        x.Ext.setDebug(false);
+        x.Ext.setDebug(true);
         SoLoader.init(this, false);//ReactNative相关初始化
         Res.init(this); // 注册imp的资源文件类
         initImageLoader();
@@ -319,7 +319,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     /******************************通讯录相关***************************************/
 
     public void setIsContactReady(boolean isContactReady) {
-        this.isContactReady = isContactReady;
+        MyApplication.isContactReady = isContactReady;
         PreferencesUtils.putBoolean(getInstance(), "isContactReady",
                 isContactReady);
     }
@@ -700,7 +700,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
                         getInstance(), MyApplication.getInstance().getTanent()
                                 + "commonLanguageList");
                 if (commonLanguageListJson != null) {
-                    List<Language> commonLanguageList = (List) JSON
+                    List<Language> commonLanguageList = JSON
                             .parseArray(commonLanguageListJson,
                                     Language.class);
                     boolean isContainDefault = false;
@@ -926,7 +926,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
 
         @Override
         protected List<ReactPackage> getPackages() {
-            return Arrays.<ReactPackage>asList(
+            return Arrays.asList(
                     new MainReactPackage(),
                     new AuthorizationManagerPackage(),
                     new PickerViewPackage(),

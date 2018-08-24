@@ -82,10 +82,8 @@ public class ImageDetailFragment extends Fragment {
 				: null;
 		locationY = getArguments() != null ? getArguments().getInt("y")
 				: null;
-		isNeedTransformOut = getArguments() != null ? getArguments().getBoolean("isNeedTransformOut")
-				: false;
-		isNeedTransformIn = getArguments() != null ? getArguments().getBoolean("isNeedTransformIn")
-				: false;
+		isNeedTransformOut = getArguments() != null && getArguments().getBoolean("isNeedTransformOut");
+		isNeedTransformIn = getArguments() != null && getArguments().getBoolean("isNeedTransformIn");
 
 	}
 

@@ -294,7 +294,7 @@ public class CalendarUtil {
 			return "二十";
 		if (day == 30)
 			return "三十";
-		int two = (int) ((day) / 10);
+		int two = (day) / 10;
 		if (two == 0)
 			a = "初";
 		if (two == 1)
@@ -303,7 +303,7 @@ public class CalendarUtil {
 			a = "廿";
 		if (two == 3)
 			a = "三";
-		int one = (int) (day % 10);
+		int one = day % 10;
 		switch (one) {
 		case 1:
 			a += "一";

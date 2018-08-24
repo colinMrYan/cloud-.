@@ -39,7 +39,7 @@ import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.InputMethodUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.emmcloud.util.common.MediaPlayUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
@@ -220,7 +220,6 @@ public class ChannelActivity extends BaseActivity {
      */
     private void initChatInputMenu() {
         chatInputMenu.setSpecialUser(isSpecialUser);
-        chatInputMenu.setIsMessageV0(false);
         chatInputMenu.setOtherLayoutView(swipeRefreshLayout);
         if (channel.getType().equals("GROUP")) {
             chatInputMenu.setCanMentions(true, cid);
@@ -233,6 +232,15 @@ public class ChannelActivity extends BaseActivity {
             public void onSendMsg(String content, List<String> mentionsUidList, List<String> urlList, Map<String, String> mentionsMap) {
                 // TODO Auto-generated method stub
                 sendTextMessage(content, false, mentionsMap);
+            }
+
+            @Override
+            public void onSendVoiceRecordMsg(float seconds, String filePath) {
+                int duration = (int)seconds;
+                if (duration == 0){
+                    duration = 1;
+                }
+                uploadResFileAndSendMessage(filePath,Message.MESSAGE_TYPE_MEDIA_VOICE,duration);
             }
         });
         chatInputMenu.setInputLayout(isSpecialUser ? "1" : channel.getInputs());
@@ -293,7 +301,6 @@ public class ChannelActivity extends BaseActivity {
                     }
                     String msgType = message.getType();
                     Bundle bundle = new Bundle();
-                    LogUtils.jasonDebug("msgType=" + msgType);
                     switch (msgType) {
                         case "attachment/card":
                             String uid = message.getMsgContentAttachmentCard().getUid();
@@ -353,7 +360,7 @@ public class ChannelActivity extends BaseActivity {
                 case "file":
                     List<String> pathList = getIntent().getStringArrayListExtra("share_paths");
                     for (String url : pathList) {
-                        uploadResFileAndSendMessage(url, type.equals("file"));
+                        uploadResFileAndSendMessage(url, type.equals("file")?Message.MESSAGE_TYPE_FILE_REGULAR_FILE:Message.MESSAGE_TYPE_MEDIA_IMAGE);
                     }
                     break;
                 case "link":
@@ -387,7 +394,7 @@ public class ChannelActivity extends BaseActivity {
                     ToastUtils.show(MyApplication.getInstance(),
                             getString(R.string.not_support_upload));
                 } else {
-                    uploadResFileAndSendMessage(filePath, true);
+                    uploadResFileAndSendMessage(filePath, Message.MESSAGE_TYPE_FILE_REGULAR_FILE);
                 }
                 //拍照返回
             } else if (requestCode == CAMERA_RESULT
@@ -400,7 +407,7 @@ public class ChannelActivity extends BaseActivity {
                 }catch (Exception e){
                     e.printStackTrace();
                 }
-                uploadResFileAndSendMessage(imgPath, false);
+                uploadResFileAndSendMessage(imgPath, Message.MESSAGE_TYPE_MEDIA_IMAGE);
                 //拍照后图片编辑返回
             }else if (requestCode == MENTIONS_RESULT) {
                 // @返回
@@ -425,23 +432,32 @@ public class ChannelActivity extends BaseActivity {
                         }catch (Exception e){
                             e.printStackTrace();
                         }
-                        uploadResFileAndSendMessage(imgPath, false);
+                        uploadResFileAndSendMessage(imgPath, Message.MESSAGE_TYPE_MEDIA_IMAGE);
                     }
                 }
         }
     }
 
-    private void uploadResFileAndSendMessage(String filePath, boolean isRegularFile) {
+    private void uploadResFileAndSendMessage(String filePath, String messageType){
+        uploadResFileAndSendMessage(filePath, messageType,0);
+    }
+    private void uploadResFileAndSendMessage(String filePath, String messageType,int duration) {
         File file = new File(filePath);
         if (!file.exists()) {
             ToastUtils.show(MyApplication.getInstance(), R.string.file_not_exist);
             return;
         }
         Message localMessage = null;
-        if (isRegularFile) {
-            localMessage = CommunicationUtils.combinLocalRegularFileMessage(cid, filePath);
-        } else {
-            localMessage = CommunicationUtils.combinLocalMediaImageMessage(cid, filePath);
+        switch (messageType){
+            case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
+                localMessage = CommunicationUtils.combinLocalRegularFileMessage(cid, filePath);
+                break;
+            case Message.MESSAGE_TYPE_MEDIA_IMAGE:
+                localMessage = CommunicationUtils.combinLocalMediaImageMessage(cid, filePath);
+                break;
+            case Message.MESSAGE_TYPE_MEDIA_VOICE:
+                localMessage = CommunicationUtils.combinLocalMediaVoiceMessage(cid, filePath,duration);
+                break;
         }
         final String fakeMessageId = localMessage.getId();
         MessageRecourceUploadUtils messageRecourceUploadUtils = new MessageRecourceUploadUtils(MyApplication.getInstance(), cid);
@@ -461,7 +477,7 @@ public class ChannelActivity extends BaseActivity {
                 setMessageSendFailStatus(fakeMessageId);
             }
         });
-        messageRecourceUploadUtils.uploadResFile(file, localMessage, isRegularFile);
+        messageRecourceUploadUtils.uploadResFile(file, localMessage);
         addLocalMessage(localMessage, 0);
     }
 
@@ -769,6 +785,7 @@ public class ChannelActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        MediaPlayUtils.release();
         if (handler != null) {
             handler = null;
         }

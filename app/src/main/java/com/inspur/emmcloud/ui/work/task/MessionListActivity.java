@@ -374,7 +374,7 @@ public class MessionListActivity extends BaseActivity{
 				// .findViewById(R.id.mession_state_img))
 				// .setVisibility(View.VISIBLE);
 			} else if (taskList.get(position).getPriority() == 2) {
-				((ImageView) convertView.findViewById(R.id.mession_state_img))
+				convertView.findViewById(R.id.mession_state_img)
 						.setVisibility(View.VISIBLE);
 				// 当重要程度为2时后续可能需要添加两个叹号
 				// ((ImageView) convertView
@@ -438,7 +438,7 @@ public class MessionListActivity extends BaseActivity{
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
 			Intent intent = new Intent();
-			intent.putExtra("task", (Serializable) taskList.get(position));
+			intent.putExtra("task", taskList.get(position));
 			intent.putExtra("tabIndex", nowIndex);
 			intent.setClass(MessionListActivity.this,
 					MessionDetailActivity.class);

@@ -65,9 +65,9 @@ public class VolumeGroupChangePermissionActivity extends BaseActivity {
         headerText.setText(group.getName());
         writePermissionText.setText(getString(R.string.volume_read_write_permission));
         readPermissionText.setText(getString(R.string.volume_read_permission));
-        writePermissionSwitch.setOpened(group.getPrivilege() > VOLUME_READ_PERMISSION ? true : false);
+        writePermissionSwitch.setOpened(group.getPrivilege() > VOLUME_READ_PERMISSION);
         readPermissionSwitch.setOpened(true);
-        readPermissionSwitch.setEnable(group.getPrivilege() > VOLUME_READ_PERMISSION ? false : true);
+        readPermissionSwitch.setEnable(group.getPrivilege() <= VOLUME_READ_PERMISSION);
         readPermissionSwitch.setPaintColorOn(group.getPrivilege() > 4?0x667fc5f6:0xff7fc5f6);
         readPermissionSwitch.setPaintCircleBtnColor(group.getPrivilege() > 4?0xbb7fc5f6:0xff008cee);
         final String currentVolumePath = getIntent().getStringExtra("volumeFilePath");

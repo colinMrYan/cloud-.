@@ -2,6 +2,8 @@ package com.inspur.emmcloud.widget.audiorecord;
 
 import android.media.MediaRecorder;
 
+import com.inspur.emmcloud.config.MyAppConfig;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
@@ -67,7 +69,7 @@ public class AudioManager {
 			// 一开始应该是false的
 			isPrepared = false;
 
-			File dir = new File(mDirString);
+			File dir = new File(MyAppConfig.LOCAL_CACHE_VOICE_PATH);
 			if (!dir.exists()) {
 				dir.mkdirs();
 			}
@@ -111,7 +113,7 @@ public class AudioManager {
 
 	/**
 	 * 随机生成文件的名称
-	 * 
+	 *
 	 * @return
 	 */
 	private String generalFileName() {
@@ -128,7 +130,6 @@ public class AudioManager {
             int db = 0;// 分贝  
             if (ratio > 1)  
                 db = (int) (20 * Math.log10(ratio));  
-            android.util.Log.d("jason","db==="+db);
             return (db/5+1);
 		}
 
@@ -149,11 +150,21 @@ public class AudioManager {
 	public void cancel() {
 		release();
 		if (mCurrentFilePathString != null) {
-			File file = new File(mCurrentFilePathString);
-			file.delete();
+			deleteAudioRecorderFile(mCurrentFilePathString);
 			mCurrentFilePathString = null;
 		}
 
+	}
+
+	/***
+	 * 删除录音文件
+	 * @param filePath
+	 */
+	public void deleteAudioRecorderFile(String filePath){
+		File file = new File(filePath);
+		if (file.exists()){
+			file.delete();
+		}
 	}
 
 	public String getCurrentFilePath() {

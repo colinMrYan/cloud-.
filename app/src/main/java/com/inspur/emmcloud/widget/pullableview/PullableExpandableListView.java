@@ -46,13 +46,9 @@ public class PullableExpandableListView extends ExpandableListView implements
 		}else if (getChildAt(0) == null) {  //解决上拉点击crash的问题
 			return false;
 		}
-		else if (getFirstVisiblePosition() == 0
-				&& getChildAt(0).getTop() >= 0)
-		{
-			// 滑到顶部了
-			return true;
-		} else
-			return false;
+		else // 滑到顶部了
+            return getFirstVisiblePosition() == 0
+                    && getChildAt(0).getTop() >= 0;
 	}
 
 	@Override

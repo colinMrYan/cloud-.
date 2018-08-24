@@ -79,8 +79,8 @@
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="8dp"
                     android:layout_marginLeft="14dp"
+                    android:layout_marginRight="8dp"
                     android:scaleType="fitXY"
                     android:visibility="gone" />
 
@@ -88,8 +88,7 @@
                     android:id="@+id/card_layout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toRightOf="@id/refreshing_img"
-                    android:background="@color/white"></RelativeLayout>
+                    android:layout_toRightOf="@id/refreshing_img"></RelativeLayout>
 
                 <View
                     android:id="@+id/card_cover_view"

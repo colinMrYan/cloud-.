@@ -121,15 +121,15 @@ public class CameraService extends ImpPlugin {
         try {
             if (!jsonObject.isNull("options")) {
                 JSONObject optionsObj =  jsonObject.getJSONObject("options");
-                this.destType = optionsObj.getInt(
+                destType = optionsObj.getInt(
                         "destinationType");
-                this.mQuality = optionsObj.getInt(
+                mQuality = optionsObj.getInt(
                         "quality");
-                this.targetWidth = optionsObj.getInt(
+                targetWidth = optionsObj.getInt(
                         "targetWidth");
-                this.targetHeight = optionsObj.getInt(
+                targetHeight = optionsObj.getInt(
                         "targetHeight");
-                this.encodingType = optionsObj.getInt(
+                encodingType = optionsObj.getInt(
                         "encodingType");
                 if (!optionsObj.isNull("watermark")){
                     JSONObject watermarkObj = optionsObj.getJSONObject("watermark");
@@ -150,11 +150,11 @@ public class CameraService extends ImpPlugin {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (this.targetWidth < 1) {
-            this.targetWidth = MyAppConfig.UPLOAD_ORIGIN_IMG_MAX_SIZE;
+        if (targetWidth < 1) {
+            targetWidth = MyAppConfig.UPLOAD_ORIGIN_IMG_MAX_SIZE;
         }
-        if (this.targetHeight < 1) {
-            this.targetHeight = MyAppConfig.UPLOAD_ORIGIN_IMG_MAX_SIZE;
+        if (targetHeight < 1) {
+            targetHeight = MyAppConfig.UPLOAD_ORIGIN_IMG_MAX_SIZE;
         }
         destoryImage();
         String state = Environment.getExternalStorageState();
@@ -186,22 +186,22 @@ public class CameraService extends ImpPlugin {
         try {
             if (!jsonObject.isNull("options")) {
                 JSONObject optionsObj =  jsonObject.getJSONObject("options");
-                this.destType = optionsObj.getInt(
+                destType = optionsObj.getInt(
                         "destinationType");
-                this.mQuality = optionsObj.getInt(
+                mQuality = optionsObj.getInt(
                         "quality");
-                this.targetWidth = optionsObj.getInt(
+                targetWidth = optionsObj.getInt(
                         "targetWidth");
-                this.targetHeight = optionsObj.getInt(
+                targetHeight = optionsObj.getInt(
                         "targetHeight");
-                this.encodingType = optionsObj.getInt(
+                encodingType = optionsObj.getInt(
                         "encodingType");
                 if (!optionsObj.isNull("num")) {
-                    this.num = jsonObject.getJSONObject("options")
+                    num = jsonObject.getJSONObject("options")
                             .getInt("num");
                 }
-                if (this.num < 0 || this.num > 15) {
-                    this.num = 8;
+                if (num < 0 || num > 15) {
+                    num = 8;
                 }
                 if (!optionsObj.isNull("watermark")){
                     JSONObject watermarkObj = optionsObj.getJSONObject("watermark");
@@ -220,11 +220,11 @@ public class CameraService extends ImpPlugin {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (this.targetWidth < 1) {
-            this.targetWidth = MyAppConfig.UPLOAD_ORIGIN_IMG_MAX_SIZE;
+        if (targetWidth < 1) {
+            targetWidth = MyAppConfig.UPLOAD_ORIGIN_IMG_MAX_SIZE;
         }
-        if (this.targetHeight < 1) {
-            this.targetHeight = MyAppConfig.UPLOAD_ORIGIN_IMG_MAX_SIZE;
+        if (targetHeight < 1) {
+            targetHeight = MyAppConfig.UPLOAD_ORIGIN_IMG_MAX_SIZE;
         }
         initImagePicker();
         Intent intent = new Intent(getFragmentContext(),
@@ -648,7 +648,6 @@ public class CameraService extends ImpPlugin {
     public static Bitmap rotaingImageView(int angle, Bitmap bitmap) {
         // 旋转图片 动作
         Matrix matrix = new Matrix();
-        ;
         matrix.postRotate(angle);
         System.out.println("angle2=" + angle);
         // 创建新的图片

@@ -144,7 +144,7 @@ public class ChannelInfoActivity extends BaseActivity {
             boolean isOwner = MyApplication.getInstance().getUid().equals(channelGroup.getOwner());
             Intent intent = new Intent();
             if ((position == adapter.getCount() - 1) && isOwner) {
-                intent.putExtra("memberUidList", (Serializable) memberList);
+                intent.putExtra("memberUidList", memberList);
                 intent.setClass(getApplicationContext(),
                         ChannelMembersDelActivity.class);
                 startActivityForResult(intent, DEL_MEMBER);

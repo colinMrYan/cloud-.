@@ -84,7 +84,7 @@ public class GestureManagerActivity extends BaseActivity {
     private void initShowResetGesturePassWord(boolean isHasGesturePassword) {
         findViewById(R.id.switch_gesture_change_code_layout).setVisibility(isHasGesturePassword ? View.VISIBLE : View.GONE);
         SwitchView switchView = ((SwitchView) findViewById(R.id.switch_gesture_switchview));
-        switchView.setOpened((getHasGesturePassword() && getGestureCodeIsOpen()) ? true : false);
+        switchView.setOpened(getHasGesturePassword() && getGestureCodeIsOpen());
     }
 
     public void onClick(View view) {

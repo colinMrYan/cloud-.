@@ -339,10 +339,7 @@ public class SchemeHandleActivity extends Activity {
      */
     private boolean isLinkShare() {
         Intent intent = getIntent();
-        if(intent.getExtras() != null && !StringUtils.isBlank(intent.getExtras().getString(Intent.EXTRA_TEXT))){
-            return true;
-        }
-        return false;
+        return intent.getExtras() != null && !StringUtils.isBlank(intent.getExtras().getString(Intent.EXTRA_TEXT));
     }
 
     /**
@@ -435,7 +432,7 @@ public class SchemeHandleActivity extends Activity {
             case "ecc-calendar":
                 IntentUtils.startActivity(SchemeHandleActivity.this, CalActivity.class,true);
                 break;
-            case "ecc-to-do ":
+            case "ecc-to-do":
                 IntentUtils.startActivity(SchemeHandleActivity.this, MessionListActivity.class,true);
                 break;
             case "ecc-meeting":

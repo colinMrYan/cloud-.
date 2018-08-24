@@ -218,8 +218,6 @@ public class CalendarEvent implements Serializable,Comparator{
 			return false;
 
 		final CalendarEvent otherCalendarEvent = (CalendarEvent) other;
-		if (!getId().equals(otherCalendarEvent.getId()))
-			return false;
-		return true;
-	}
+        return getId().equals(otherCalendarEvent.getId());
+    }
 }

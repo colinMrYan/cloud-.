@@ -19,45 +19,45 @@ public class CalRepeatActivity extends BaseActivity {
 		setContentView(R.layout.activity_cal_repeat);
 		repeatType = getIntent().getExtras().getString("repeatType");
 		if (repeatType.equals(getString(R.string.never))) {
-			((ImageView)findViewById(R.id.no_selected_img)).setVisibility(View.VISIBLE);
+			findViewById(R.id.no_selected_img).setVisibility(View.VISIBLE);
 		}else if (repeatType.equals(getString(R.string.every_day))) {
-			((ImageView)findViewById(R.id.every_day_selected_img)).setVisibility(View.VISIBLE);
+			findViewById(R.id.every_day_selected_img).setVisibility(View.VISIBLE);
 		}else if (repeatType.equals(getString(R.string.weekly))) {
-			((ImageView)findViewById(R.id.every_week_selected_img)).setVisibility(View.VISIBLE);
+			findViewById(R.id.every_week_selected_img).setVisibility(View.VISIBLE);
 		}else if (repeatType.equals(getString(R.string.monthly))) {
-			((ImageView)findViewById(R.id.every_month_selected_img)).setVisibility(View.VISIBLE);
+			findViewById(R.id.every_month_selected_img).setVisibility(View.VISIBLE);
 		}else {
-			((ImageView)findViewById(R.id.every_year_selected_img)).setVisibility(View.VISIBLE);
+			findViewById(R.id.every_year_selected_img).setVisibility(View.VISIBLE);
 		}
 		
 	}
 
 	private void selectItem(int count) {
-		((ImageView)findViewById(R.id.no_selected_img)).setVisibility(View.INVISIBLE);
-		((ImageView)findViewById(R.id.every_day_selected_img)).setVisibility(View.INVISIBLE);
-		((ImageView)findViewById(R.id.every_week_selected_img)).setVisibility(View.INVISIBLE);
-		((ImageView)findViewById(R.id.every_month_selected_img)).setVisibility(View.INVISIBLE);
-		((ImageView)findViewById(R.id.every_year_selected_img)).setVisibility(View.INVISIBLE);
+		findViewById(R.id.no_selected_img).setVisibility(View.INVISIBLE);
+		findViewById(R.id.every_day_selected_img).setVisibility(View.INVISIBLE);
+		findViewById(R.id.every_week_selected_img).setVisibility(View.INVISIBLE);
+		findViewById(R.id.every_month_selected_img).setVisibility(View.INVISIBLE);
+		findViewById(R.id.every_year_selected_img).setVisibility(View.INVISIBLE);
 		switch (count) {
 		case 1:
 			repeatType = getString(R.string.never);
-			((ImageView)findViewById(R.id.no_selected_img)).setVisibility(View.VISIBLE);
+			findViewById(R.id.no_selected_img).setVisibility(View.VISIBLE);
 			break;
 		case 2:
 			repeatType = getString(R.string.every_day);
-			((ImageView)findViewById(R.id.every_day_selected_img)).setVisibility(View.VISIBLE);
+			findViewById(R.id.every_day_selected_img).setVisibility(View.VISIBLE);
 			break;
 		case 3:
 			repeatType = getString(R.string.weekly);
-			((ImageView)findViewById(R.id.every_week_selected_img)).setVisibility(View.VISIBLE);
+			findViewById(R.id.every_week_selected_img).setVisibility(View.VISIBLE);
 			break;
 		case 4:
 			repeatType = getString(R.string.monthly);
-			((ImageView)findViewById(R.id.every_month_selected_img)).setVisibility(View.VISIBLE);
+			findViewById(R.id.every_month_selected_img).setVisibility(View.VISIBLE);
 			break;
 		case 5:
 			repeatType =  getString(R.string.every_year);
-			((ImageView)findViewById(R.id.every_year_selected_img)).setVisibility(View.VISIBLE);
+			findViewById(R.id.every_year_selected_img).setVisibility(View.VISIBLE);
 			break;
 
 		default:

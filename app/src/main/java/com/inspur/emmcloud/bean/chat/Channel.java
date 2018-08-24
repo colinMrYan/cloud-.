@@ -452,9 +452,7 @@ public class Channel implements Serializable {
             return false;
 
         final Channel otherChanel = (Channel) other;
-        if (!getCid().equals(otherChanel.getCid()))
-            return false;
-        return true;
+        return getCid().equals(otherChanel.getCid());
     }
 
     public class SortComparator implements Comparator {

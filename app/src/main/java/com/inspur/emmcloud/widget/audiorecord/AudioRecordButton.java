@@ -1,8 +1,5 @@
 package com.inspur.emmcloud.widget.audiorecord;
 
-import com.example.weixin_record.R;
-import com.example.weixin_record.R.string;
-import com.nickming.view.AudioManager.AudioStageListener;
 
 import android.content.Context;
 import android.os.Environment;
@@ -13,7 +10,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 
-public class AudioRecordButton extends Button implements AudioStageListener {
+import com.inspur.emmcloud.R;
+
+public class AudioRecordButton extends Button implements AudioManager.AudioStageListener {
 
 	private static final int STATE_NORMAL = 1;
 	private static final int STATE_RECORDING = 2;
@@ -123,12 +122,12 @@ public class AudioRecordButton extends Button implements AudioStageListener {
 				}
 				break;
 			case MSG_DIALOG_DIMISS:
-
+				mDialogManager.dimissDialog();
 				break;
 
 			}
-		};
-	};
+		}
+    };
 
 	// 在这里面发送一个handler的消息
 	@Override
@@ -175,7 +174,7 @@ public class AudioRecordButton extends Button implements AudioStageListener {
 			if (!isRecording || mTime < 0.6f) {
 				mDialogManager.tooShort();
 				mAudioManager.cancel();
-				mhandler.sendEmptyMessageDelayed(MSG_DIALOG_DIMISS, 1300);// 持续1.3s
+				mhandler.sendEmptyMessageDelayed(MSG_DIALOG_DIMISS, 500);// 持续1.3s
 			} else if (mCurrentState == STATE_RECORDING) {//正常录制结束
 
 				mDialogManager.dimissDialog();
@@ -222,12 +221,9 @@ public class AudioRecordButton extends Button implements AudioStageListener {
 		if (x < 0 || x > getWidth()) {// 判断是否在左边，右边，上边，下边
 			return true;
 		}
-		if (y < -DISTANCE_Y_CANCEL || y > getHeight() + DISTANCE_Y_CANCEL) {
-			return true;
-		}
+        return y < -DISTANCE_Y_CANCEL || y > getHeight() + DISTANCE_Y_CANCEL;
 
-		return false;
-	}
+    }
 
 	private void changeState(int state) {
 		// TODO Auto-generated method stub
@@ -235,13 +231,13 @@ public class AudioRecordButton extends Button implements AudioStageListener {
 			mCurrentState = state;
 			switch (mCurrentState) {
 			case STATE_NORMAL:
-				setBackgroundResource(R.drawable.button_recordnormal);
-				setText(R.string.normal);
+				setBackgroundResource(R.drawable.bg_record_btn_normal);
+				setText(R.string.hold_to_talk);
 
 				break;
 			case STATE_RECORDING:
-				setBackgroundResource(R.drawable.button_recording);
-				setText(R.string.recording);
+				setBackgroundResource(R.drawable.bg_record_btn_recording);
+				setText(R.string.release_to_send);
 				if (isRecording) {
 					mDialogManager.recording();
 					// 复写dialog.recording();
@@ -249,8 +245,8 @@ public class AudioRecordButton extends Button implements AudioStageListener {
 				break;
 
 			case STATE_WANT_TO_CANCEL:
-				setBackgroundResource(R.drawable.button_recording);
-				setText(R.string.want_to_cancle);
+				setBackgroundResource(R.drawable.bg_record_btn_recording);
+				setText(R.string.release_to_cancel);
 				// dialog want to cancel
 				mDialogManager.wantToCancel();
 				break;
@@ -259,6 +255,8 @@ public class AudioRecordButton extends Button implements AudioStageListener {
 		}
 
 	}
+
+
 
 	@Override
 	public boolean onPreDraw() {

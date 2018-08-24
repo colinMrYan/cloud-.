@@ -62,7 +62,6 @@ public class ProgressBarIndicator implements IProgressIndicator {
         if (progressBar == null) return;
 
         ViewGroup vg = (ViewGroup) progressBar.getParent();
-        ;
         if (vg != null) {
             vg.removeView(progressBar);
         }

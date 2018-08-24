@@ -379,7 +379,7 @@ public class CalActivity extends BaseActivity implements MySwipeRefreshLayout.On
 					Intent intent = new Intent();
 					intent.setClass(getApplicationContext(),
 							CalEventAddActivity.class);
-					intent.putExtra("calEvent", (Serializable) calendarEvent);
+					intent.putExtra("calEvent", calendarEvent);
 					startActivityForResult(intent, UPDATE_CAL_EVENT);
 				}
 			});

@@ -9,7 +9,6 @@ package com.inspur.emmcloud.widget;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.TypedArray;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
@@ -38,7 +37,7 @@ import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.Voice2StringMessageUtils;
-import com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton;
+import com.inspur.emmcloud.widget.audiorecord.AudioRecordButton;
 
 import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
@@ -47,8 +46,6 @@ import org.xutils.x;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 
 /**
@@ -60,7 +57,7 @@ public class ECMChatInputMenu extends LinearLayout {
     private static final int CAMERA_RESULT = 3;
     private static final int CHOOSE_FILE = 4;
     private static final int MENTIONS_RESULT = 5;
-    private static final long MENTIONS_BASE_TIME= 1515513600000L;
+    private static final long MENTIONS_BASE_TIME = 1515513600000L;
     private static final int TAG_KEYBOARD_INPUT = 0;
     private static final int TAG_VOICE_INPUT = 1;
 
@@ -88,8 +85,8 @@ public class ECMChatInputMenu extends LinearLayout {
     @ViewInject(R.id.voice_input_btn)
     private Button voiceInputBtn;
 
-    @ViewInject(R.id.btn_press_to_say)
-    private QMUIRoundButton pressToSayBtn;
+    @ViewInject(R.id.bt_audio_record)
+    private AudioRecordButton audioRecordBtn;
 
 
     private boolean canMentions = false;
@@ -101,7 +98,6 @@ public class ECMChatInputMenu extends LinearLayout {
     private String cid = "";
     private String inputs = "";
     private boolean isSpecialUser = false; //小智机器人进行特殊处理
-    private boolean isMessageV0 = true;
 
     public ECMChatInputMenu(Context context) {
         this(context, null);
@@ -120,14 +116,11 @@ public class ECMChatInputMenu extends LinearLayout {
 
     private void initView(final Context context, AttributeSet attrs) {
         // TODO Auto-generated method stub
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ECMChatInputMenu);
-        String layoutType = a.getString(R.styleable.ECMChatInputMenu_layoutType);
-        boolean isShowImgCommentType = layoutType != null && layoutType.equals("img_comment");
-        View view = LayoutInflater.from(context).inflate(isShowImgCommentType ? R.layout.ecm_widget_chat_input_menu_img_comment : R.layout.ecm_widget_chat_input_menu, this, true);
+        View view = LayoutInflater.from(context).inflate(R.layout.ecm_widget_chat_input_menu, this, true);
         x.view().inject(view);
         initInputEdit();
         initVoiceInput();
- //       initViewpageLayout();
+        initAudioRecord();
     }
 
     private void initInputEdit() {
@@ -163,6 +156,19 @@ public class ECMChatInputMenu extends LinearLayout {
         });
     }
 
+    private void initAudioRecord() {
+        audioRecordBtn.setAudioFinishRecorderListener(new AudioRecordButton.AudioFinishRecorderListener() {
+
+            @Override
+            public void onFinished(float seconds, String filePath) {
+                // TODO Auto-generated method stub
+                if (chatInputMenuListener != null){
+                    chatInputMenuListener.onSendVoiceRecordMsg(seconds, filePath);
+                }
+            }
+        });
+    }
+
     /**
      * 设置是否可以@
      *
@@ -174,13 +180,6 @@ public class ECMChatInputMenu extends LinearLayout {
         this.cid = cid;
     }
 
-    /**
-     * 设置是否是V0版本消息
-     * @param isMessageV0
-     */
-    public void setIsMessageV0(boolean isMessageV0){
-        this.isMessageV0 = isMessageV0;
-    }
     /**
      * 设置是否区分对待
      *
@@ -200,11 +199,7 @@ public class ECMChatInputMenu extends LinearLayout {
     public void addMentions(String uid, String name, boolean isInputKeyWord) {
         if (uid != null && name != null) {
             InsertModel insertModel;
-            if (isMessageV0){
-                insertModel= new InsertModel("@", uid, name);
-            }else {
-                insertModel = new InsertModel("@", (System.currentTimeMillis()-MENTIONS_BASE_TIME)+"", name,uid);
-            }
+            insertModel = new InsertModel("@", (System.currentTimeMillis() - MENTIONS_BASE_TIME) + "", name, uid);
             inputEdit.insertSpecialStr(isInputKeyWord, insertModel);
         }
     }
@@ -345,7 +340,9 @@ public class ECMChatInputMenu extends LinearLayout {
                 if (!StringUtils.isBlank(results)) {
                     if (isSpecialUser) {
                         inputEdit.clearInsertModelList();
-                        chatInputMenuListener.onSendMsg(results, null, null,null);
+                        if (chatInputMenuListener != null) {
+                            chatInputMenuListener.onSendMsg(results, null, null, null);
+                        }
                     } else {
                         int index = inputEdit.getSelectionStart();
                         Editable editable = inputEdit.getText();
@@ -368,73 +365,41 @@ public class ECMChatInputMenu extends LinearLayout {
         });
     }
 
-//    private void initViewpageLayout() {
-//        InputTypeBean inputTypeBean = new InputTypeBean(R.drawable.ic_chat_input_add_gallery, "远程控制");
-//        List<InputTypeBean> inputTypeBeanList = new ArrayList<>();
-//        inputTypeBeanList.add(inputTypeBean);
-//        viewpagerLayout.setInputTypeBeanList(inputTypeBeanList);
-//   }
 
-    private void setVoiceInputStatus(int tag){
-        if (voiceInputBtn.getTag() == null || (int)voiceInputBtn.getTag() != tag){
+    private void setVoiceInputStatus(int tag) {
+        if (voiceInputBtn.getTag() == null || (int) voiceInputBtn.getTag() != tag) {
             voiceInputBtn.setTag(tag);
-            voiceInputBtn.setBackground(ContextCompat.getDrawable(getContext(),(tag==0)?R.drawable.ic_chat_input_voice:R.drawable.ic_chat_input_keyboard));
-            inputEdit.setVisibility((tag==0)?VISIBLE:GONE);
-            pressToSayBtn.setVisibility((tag==0)?GONE:VISIBLE);
+            voiceInputBtn.setBackground(ContextCompat.getDrawable(getContext(), (tag == 0) ? R.drawable.ic_chat_input_voice : R.drawable.ic_chat_input_keyboard));
+            inputEdit.setVisibility((tag == 0) ? VISIBLE : GONE);
+            audioRecordBtn.setVisibility((tag == 0) ? GONE : VISIBLE);
         }
-    }
-
-    @Event(type = View.OnLongClickListener.class,value =R.id.btn_press_to_say)
-    private boolean longClick(View view){
-
-        return true;
     }
 
     @Event({R.id.voice_input_btn, R.id.send_msg_btn, R.id.add_btn, R.id.voice_input_close_img})
     private void onClick(View view) {
         switch (view.getId()) {
             case R.id.voice_input_btn:
-                if (view.getTag() == null || (int)view.getTag() == TAG_KEYBOARD_INPUT){
+                if (view.getTag() == null || (int) view.getTag() == TAG_KEYBOARD_INPUT) {
                     setVoiceInputStatus(TAG_VOICE_INPUT);
                     if (addMenuLayout.isShown()) {
                         addMenuLayout.setVisibility(View.GONE);
                     } else if (InputMethodUtils.isSoftInputShow((Activity) getContext())) {
                         InputMethodUtils.hide((Activity) getContext());
                     }
-                }else {
+                } else {
                     setVoiceInputStatus(TAG_KEYBOARD_INPUT);
                     InputMethodUtils.display((Activity) getContext(), inputEdit, 0);
                 }
-
-
-
-
-//                if (addMenuLayout.isShown()) {
-//                    addMenuLayout.setVisibility(View.GONE);
-//                } else if (InputMethodUtils.isSoftInputShow((Activity) getContext())) {
-//                    InputMethodUtils.hide((Activity) getContext());
-//                }
-//                new Handler().postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        voiceInputLayout.setVisibility(View.VISIBLE);
-//                        volumeLevelImg.setImageLevel(0);
-//                        mediaPlayerUtils.playVoiceOn();
-//                        voice2StringMessageUtils.startVoiceListening();
-//                    }
-//                }, 100);
                 break;
             case R.id.send_msg_btn:
                 if (NetUtils.isNetworkConnected(getContext())) {
-                    List<String> urlList= null;
-                    String content = inputEdit.getRichContent(isMessageV0);
-                    Map<String,String> mentionsMap = null;
-                    if (isMessageV0){
-                        urlList = getContentUrlList(inputEdit.getText().toString());
-                    }else {
-                        mentionsMap = inputEdit.getMentionsMap();
+                    List<String> urlList = null;
+                    String content = inputEdit.getRichContent(false);
+                    Map<String, String> mentionsMap = null;
+                    mentionsMap = inputEdit.getMentionsMap();
+                    if (chatInputMenuListener != null) {
+                        chatInputMenuListener.onSendMsg(content, getContentMentionUidList(), urlList, mentionsMap);
                     }
-                    chatInputMenuListener.onSendMsg(content, getContentMentionUidList(), urlList,mentionsMap);
                     inputEdit.clearInsertModelList();
                     inputEdit.setText("");
                 }
@@ -465,22 +430,6 @@ public class ECMChatInputMenu extends LinearLayout {
 
     public boolean isVoiceInput() {
         return voiceInputLayout.getVisibility() == View.VISIBLE;
-    }
-
-    /**
-     * 获取content中urlList
-     *
-     * @param content
-     * @return
-     */
-    private List<String> getContentUrlList(String content) {
-        Pattern pattern = Pattern.compile(Constant.PATTERN_URL);
-        ArrayList<String> urlList = new ArrayList<>();
-        Matcher matcher = pattern.matcher(content);
-        while (matcher.find()) {
-            urlList.add(matcher.group(0));
-        }
-        return urlList;
     }
 
     /**
@@ -554,15 +503,6 @@ public class ECMChatInputMenu extends LinearLayout {
 
     }
 
-    public void showSoftInput(boolean isShow) {
-        if (isShow) {
-            InputMethodUtils.display((Activity) getContext(), inputEdit, 0);
-        } else {
-            InputMethodUtils.hide((Activity) getContext());
-        }
-
-    }
-
     public boolean isAddMenuLayoutShow() {
         return addMenuLayout.isShown();
     }
@@ -624,7 +564,9 @@ public class ECMChatInputMenu extends LinearLayout {
 
 
     public interface ChatInputMenuListener {
-        void onSendMsg(String content, List<String> mentionsUidList, List<String> urlList, Map<String,String> mentionsMap);
+        void onSendMsg(String content, List<String> mentionsUidList, List<String> urlList, Map<String, String> mentionsMap);
+
+        void onSendVoiceRecordMsg(float seconds, String filePath);
     }
 
 

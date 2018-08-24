@@ -992,8 +992,6 @@ public class JSONUtils {
         return defaultValue;
     }
 
-    ;
-
     /**
      * @param array
      * @param index

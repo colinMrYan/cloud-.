@@ -914,11 +914,8 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
         // TODO Auto-generated method stub
         popLayout.setVisibility(View.GONE);
         originAllLayout.setVisibility(View.VISIBLE);
-        if (openGroupLayou.getVisibility() == View.VISIBLE) { // 重置origin页面的一些搜索参数
-            isSearchSingle = true;
-        } else {
-            isSearchSingle = false;
-        }
+        // 重置origin页面的一些搜索参数
+        isSearchSingle = openGroupLayou.getVisibility() == View.VISIBLE;
     }
 
     /**
@@ -1344,7 +1341,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
     }
 
     public interface MyItemClickListener {
-        public void onItemClick(View view, int position);
+        void onItemClick(View view, int position);
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder implements
