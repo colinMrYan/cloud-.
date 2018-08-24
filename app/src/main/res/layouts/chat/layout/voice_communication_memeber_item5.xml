@@ -23,12 +23,13 @@
         android:layout_height="16dp"
         android:layout_alignBottom="@id/img_voice_communication_member_head"
         android:layout_alignRight="@id/img_voice_communication_member_head"
-        android:src="@drawable/icon_signal_three"/>
+        />
     <com.wang.avi.AVLoadingIndicatorView
         android:id="@+id/avi_voice_communication"
         style="@style/AVLoadingIndicatorView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:layout_centerHorizontal="true"
         android:visibility="gone"
         app:indicatorColor="#ffffff"

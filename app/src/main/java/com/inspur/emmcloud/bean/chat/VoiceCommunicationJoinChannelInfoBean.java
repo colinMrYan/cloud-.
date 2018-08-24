@@ -17,7 +17,8 @@ public class VoiceCommunicationJoinChannelInfoBean implements Serializable{
     private String token;
     private int connectState;
     private String userName;
-    private int volume;
+    private int volume = -1;
+    private int userState = -1;
 
     public VoiceCommunicationJoinChannelInfoBean(JSONObject jsonObject){
         this(jsonObject.toString());
@@ -78,5 +79,21 @@ public class VoiceCommunicationJoinChannelInfoBean implements Serializable{
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public int getVolume() {
+        return volume;
+    }
+
+    public void setVolume(int volume) {
+        this.volume = volume;
+    }
+
+    public int getUserState() {
+        return userState;
+    }
+
+    public void setUserState(int userState) {
+        this.userState = userState;
     }
 }

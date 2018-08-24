@@ -1105,14 +1105,11 @@ public class ChatAPIService {
         HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context,compelteUrl) {
             @Override
             public void callbackSuccess(byte[] arg0) {
-                LogUtils.YfcDebug("告知服务端加入频道成功："+new String(arg0));
                 apiInterface.returnJoinVoiceCommunicationChannelSuccess(new GetBoolenResult(new String(arg0)));
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                LogUtils.YfcDebug("告知服务端加入频道失败："+error);
-                LogUtils.YfcDebug("告知服务端加入频道失败："+responseCode);
                 apiInterface.returnJoinVoiceCommunicationChannelFail(error,responseCode);
             }
 

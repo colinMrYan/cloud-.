@@ -8,10 +8,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
-import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.wang.avi.AVLoadingIndicatorView;
 
 import java.util.ArrayList;
@@ -64,10 +64,10 @@ public class VoiceCommunicationMemberAdapter extends RecyclerView.Adapter<VoiceC
         }else {
             view = inflater.inflate(R.layout.voice_communication_memeber_item,null);
         }
-
         VoiceCommunicationHolder holder = new VoiceCommunicationHolder(view);
         holder.headImg = (ImageView) view.findViewById(R.id.img_voice_communication_member_head);
         holder.nameText = (TextView) view.findViewById(R.id.tv_invite_voice_communication_member);
+        holder.volumeImg = (ImageView) view.findViewById(R.id.img_voice_signal);
         holder.avLoadingIndicatorView = (AVLoadingIndicatorView) view.findViewById(R.id.avi_voice_communication);
         return holder;
     }
@@ -75,25 +75,51 @@ public class VoiceCommunicationMemberAdapter extends RecyclerView.Adapter<VoiceC
     @Override
     public void onBindViewHolder(VoiceCommunicationHolder holder, int position) {
         ImageDisplayUtils.getInstance().displayImage(holder.headImg,voiceCommunicationUserInfoBeanList.get(position).getHeadImageUrl(),R.drawable.icon_person_default);
-        holder.nameText.setText(ContactUserCacheUtils.getContactUserByUid(voiceCommunicationUserInfoBeanList.get(position).getUserId()).getName());
-        if(holder.avLoadingIndicatorView != null){
+        holder.nameText.setText(voiceCommunicationUserInfoBeanList.get(position).getUserName());
+        int volume = voiceCommunicationUserInfoBeanList.get(position).getVolume();
+        if(volume>0 && volume <= 85){
+            holder.volumeImg.setVisibility(View.VISIBLE);
+            holder.volumeImg.setImageResource(R.drawable.icon_signal_one);
+        }else if(volume>0 && volume <= 170){
+            holder.volumeImg.setVisibility(View.VISIBLE);
+            holder.volumeImg.setImageResource(R.drawable.icon_signal_two);
+        }else if(volume>0 && volume <= 255){
+            holder.volumeImg.setVisibility(View.VISIBLE);
+            holder.volumeImg.setImageResource(R.drawable.icon_signal_three);
+        } else {
+            holder.volumeImg.setVisibility(View.GONE);
+        }
+        if(voiceCommunicationUserInfoBeanList.get(position).getUserState() == 1 ||
+                voiceCommunicationUserInfoBeanList.get(position).getUserId().
+                        equals(MyApplication.getInstance().getUid()) || index == 3){
+            holder.avLoadingIndicatorView.hide();
             holder.avLoadingIndicatorView.setVisibility(View.GONE);
-//            if(position %2 == 0){
-//                holder.avLoadingIndicatorView.show();
-//            }else{
-//                holder.avLoadingIndicatorView.hide();
-//            }
+        }else {
+            holder.avLoadingIndicatorView.setVisibility(View.VISIBLE);
+            holder.avLoadingIndicatorView.show();
         }
     }
 
     @Override
     public int getItemCount() {
-        return voiceCommunicationUserInfoBeanList.size();
+        return voiceCommunicationUserInfoBeanList == null ? 0:voiceCommunicationUserInfoBeanList.size();
+    }
+
+    /**
+     * 设置并刷新adapter
+     * @param voiceCommunicationJoinChannelInfoBeanList
+     * @param index
+     */
+    public void setMemberDataAndRefresh(List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationJoinChannelInfoBeanList,int index){
+        this.voiceCommunicationUserInfoBeanList = voiceCommunicationJoinChannelInfoBeanList;
+        this.index = index;
+        notifyDataSetChanged();
     }
 
     public class VoiceCommunicationHolder extends RecyclerView.ViewHolder {
         ImageView headImg;
         TextView nameText;
+        ImageView volumeImg;
         AVLoadingIndicatorView avLoadingIndicatorView;
         public VoiceCommunicationHolder(View itemView) {
             super(itemView);

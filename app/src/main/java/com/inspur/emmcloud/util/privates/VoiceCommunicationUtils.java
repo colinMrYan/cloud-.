@@ -2,6 +2,7 @@ package com.inspur.emmcloud.util.privates;
 
 import android.content.Context;
 
+import com.alibaba.fastjson.JSON;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationAudioVolumeInfo;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationRtcStats;
@@ -33,16 +34,12 @@ public class VoiceCommunicationUtils {
         //用户加入频道回调
         @Override
         public void onUserJoined(int uid, int elapsed) {
-            LogUtils.YfcDebug("用户上线："+uid);
-            LogUtils.YfcDebug("用户上线："+elapsed);
             onVoiceCommunicationCallbacks.onUserJoined(uid,elapsed);
         }
 
         //加入频道成功
         @Override
         public void onJoinChannelSuccess(String channel, int uid, int elapsed) {
-            LogUtils.YfcDebug("加入频道成功："+channel);
-            LogUtils.YfcDebug("加入频道成功："+uid);
 //            userCount = userCount + 1;
             onVoiceCommunicationCallbacks.onJoinChannelSuccess(channel,uid,elapsed);
         }
@@ -50,14 +47,13 @@ public class VoiceCommunicationUtils {
         //断开重连，重新加入频道成功
         @Override
         public void onRejoinChannelSuccess(String channel, int uid, int elapsed) {
-            LogUtils.YfcDebug("onRejoinChannelSuccess");
             onVoiceCommunicationCallbacks.onRejoinChannelSuccess(channel,uid,elapsed);
         }
 
         //每隔两秒钟返回一次频道内的状态信息
         @Override
         public void onRtcStats(RtcStats stats) {
-            LogUtils.YfcDebug("RtcStats:"+stats.users);
+//            LogUtils.YfcDebug("RtcStats:"+stats.users);
             VoiceCommunicationRtcStats statsCloudPlus = new VoiceCommunicationRtcStats();
             statsCloudPlus.users = stats.users;
             onVoiceCommunicationCallbacks.onRtcStats(statsCloudPlus);
@@ -80,7 +76,6 @@ public class VoiceCommunicationUtils {
         @Override
         public void onError(int err) {
             super.onError(err);
-            LogUtils.YfcDebug("error信息："+err);
             onVoiceCommunicationCallbacks.onError(err);
         }
 
@@ -108,12 +103,13 @@ public class VoiceCommunicationUtils {
         //提示谁在说话及其音量。默认禁用。可以通过 enableAudioVolumeIndication 方法设置。
         @Override
         public void onAudioVolumeIndication(AudioVolumeInfo[] speakers, int totalVolume) {
-            super.onAudioVolumeIndication(speakers, totalVolume);
+            LogUtils.YfcDebug("说话人信息："+ JSON.toJSONString(speakers));
             VoiceCommunicationAudioVolumeInfo[] voiceCommunicationAudioVolumeInfos = new VoiceCommunicationAudioVolumeInfo[speakers.length];
             for (int i = 0; i < speakers.length; i++) {
                 VoiceCommunicationAudioVolumeInfo info = new VoiceCommunicationAudioVolumeInfo();
                 info.uid = speakers[i].uid;
                 info.volume = speakers[i].volume;
+                voiceCommunicationAudioVolumeInfos[i] = info;
             }
             onVoiceCommunicationCallbacks.onAudioVolumeIndication(voiceCommunicationAudioVolumeInfos,totalVolume);
         }
@@ -132,6 +128,7 @@ public class VoiceCommunicationUtils {
         } catch (Exception e) {
             LogUtils.YfcDebug("初始化异常："+e.getMessage());
         }
+        mRtcEngine.enableAudioVolumeIndication(1000,3);
     }
 
     /**
