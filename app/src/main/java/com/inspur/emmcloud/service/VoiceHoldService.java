@@ -17,6 +17,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.ui.mine.setting.CreateGestureActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.LogUtils;
 
@@ -108,6 +109,9 @@ public class VoiceHoldService extends Service {
                 System.arraycopy(hints, 1, hints, 0, hints.length - 1);
                 hints[hints.length - 1] = SystemClock.uptimeMillis();
                 if (SystemClock.uptimeMillis() - hints[0] >= 700) {
+                    Intent intent = new Intent(getBaseContext(), CreateGestureActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    getApplication().startActivity(intent);
                     LogUtils.YfcDebug("要执行");
                     Toast.makeText(VoiceHoldService.this, "连续点击两次以退出", Toast.LENGTH_SHORT).show();
                 } else {

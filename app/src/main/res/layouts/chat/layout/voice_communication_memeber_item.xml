@@ -29,11 +29,12 @@
     <com.wang.avi.AVLoadingIndicatorView
         android:id="@+id/avi_voice_communication"
         style="@style/AVLoadingIndicatorView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         android:visibility="gone"
         app:indicatorColor="#ffffff"
-        app:indicatorName="BallPulseIndicator" />
+        app:indicatorName="BallPulseIndicator"
+        />
 </RelativeLayout>

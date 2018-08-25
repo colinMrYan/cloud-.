@@ -964,4 +964,15 @@
     <string name="card_package_taxpayer">Taxpayer identification number</string>
     <string name="card_package_address">Address</string>
     <string name="card_package_phone_number">Telephone</string>
+
+    <string name="voice_communication_invite_you">I invite you to make voice calls.</string>
+    <string name="voice_communication_members">Call member</string>
+    <string name="voice_communication_excuse">Excuse</string>
+    <string name="voice_communication_hands_free">Hands-free</string>
+    <string name="voice_communication_tran_video">Camera</string>
+    <string name="voice_communication_mute">Mute</string>
+    <string name="voice_communication_choice_members">Select members</string>
+    <string name="voice_communication_waitting_answer">Wait for the answer</string>
+    <string name="voice_communicaiton_watting_talking">In the call</string>
+    <string name="voice_communication_quality">The quality of current calls is poor.</string>
 </resources>

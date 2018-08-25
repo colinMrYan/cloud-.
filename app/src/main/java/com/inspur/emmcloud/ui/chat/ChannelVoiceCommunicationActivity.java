@@ -11,6 +11,7 @@ import android.widget.Chronometer;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
@@ -27,7 +28,6 @@ import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StateBarUtils;
-import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.VoiceCommunicationUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
@@ -69,7 +69,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity{
     private LinearLayout linearLayoutCommunicationMembers;
     @ViewInject(R.id.recyclerview_voice_communication_memebers_first)
     private RecyclerView recyclerViewCommunicationMembersFirst;
-    @ViewInject(R.id.recyclerview_voice_communication_second)
+    @ViewInject(R.id.recyclerview_voice_communication_memebers_second)
     private RecyclerView recyclerViewCommunicationMemeberSecond;
     @ViewInject(R.id.tv_voice_communication_state)
     private TextView tvCommunicationState;
@@ -101,7 +101,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity{
     private ImageView imgPackUp;
     private List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationUserInfoBeanList = new ArrayList<>();
     private ChatAPIService apiService;
-    private String channelId = "";
+    private String channelId = "";//声网的channelId
     private List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationMemberList = new ArrayList<>();
     private VoiceCommunicationJoinChannelInfoBean inviteeInfoBean;
     private int userCount = 1;
@@ -176,15 +176,6 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity{
                 getChannelInfoByChannelId(channelId);
                 break;
         }
-
-        if(state == COMMUNICATION_LAYOUT_STATE){
-            chronometerCommunicationTime.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener() {
-                @Override
-                public void onChronometerTick(Chronometer chronometer) {
-                    tvCommunicationState.setText(AppUtils.getNetSpeed(ChannelVoiceCommunicationActivity.this.getApplicationInfo().uid));
-                }
-            });
-        }
     }
 
     /**
@@ -219,7 +210,6 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity{
                     jsonObjectUserInfo.put("name",voiceCommunicationUserInfoBeanList.get(i).getUserName());
                     jsonArray.put(jsonObjectUserInfo);
                 }
-                LogUtils.YfcDebug("传递的人员信息："+jsonArray);
                 apiService.getAgoraParams(jsonArray);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -258,7 +248,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity{
         tvMute.setTextColor(state == COMMUNICATION_LAYOUT_STATE?colorNormal:colorUnavailiable);
         imgMute.setClickable(state == COMMUNICATION_LAYOUT_STATE?true:false);
 
-        tvCommunicationState.setText(state == INVITER_LAYOUT_STATE?"等待接听":(state == COMMUNICATION_LAYOUT_STATE?"通话中":""));
+        tvCommunicationState.setText(state == INVITER_LAYOUT_STATE? "拨号中..." : (state == INVITEE_LAYOUT_STATE?"等待接听":(state == COMMUNICATION_LAYOUT_STATE?"通话中":"")));
         if(state == COMMUNICATION_LAYOUT_STATE){
             if(voiceCommunicationMemberList == null){
                 return;
@@ -270,12 +260,15 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity{
                 List<VoiceCommunicationJoinChannelInfoBean> list1 = voiceCommunicationMemberList.subList(0,5);
                 List<VoiceCommunicationJoinChannelInfoBean> list2 = voiceCommunicationMemberList.subList(5,voiceCommunicationMemberList.size());
                 recyclerViewFirst.setAdapter(voiceCommunicationMemberAdapterFirst);
+                recyclerViewFirst.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(this,12)));
                 recyclerViewSecond.setAdapter(voiceCommunicationMemberAdapterSecond);
+                recyclerViewSecond.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(this,12)));
                 voiceCommunicationMemberAdapterFirst.setMemberDataAndRefresh(list1,1);
                 voiceCommunicationMemberAdapterSecond.setMemberDataAndRefresh(list2,2);
             }
         }
-
+        //如果是通话中则“通话中”文字显示一下就不再显示
+        tvCommunicationState.setText(state == COMMUNICATION_LAYOUT_STATE?"":tvCommunicationState.getText());
     }
 
 
@@ -340,6 +333,13 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity{
             @Override
             public void onConnectionLost() {
                 LogUtils.YfcDebug("用户断线");
+            }
+
+            @Override
+            public void onNetworkQuality(int uid, int txQuality, int rxQuality) {
+                if(STATE == COMMUNICATION_LAYOUT_STATE){
+                    tvCommunicationState.setText((uid == 0 && txQuality <= 2)?"当前通话质量不佳":"");
+                }
             }
 
             @Override
@@ -443,6 +443,8 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity{
                 break;
             case R.id.img_voice_communication_pack_up:
                 LogUtils.YfcDebug("点击了收起页面");
+                Toast.makeText(this, "点击了最小化", Toast.LENGTH_SHORT).show();
+//                finish();
                 break;
             default:
                 break;
@@ -494,11 +496,9 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity{
                     inviteeInfoBean = voiceCommunicationJoinChannelInfoBean;
                 }
             }
-            LogUtils.YfcDebug("通话人员列表大小："+voiceCommunicationMemberList.size());
             if(voiceCommunicationMemberList.size() <= 5){
                 recyclerViewCommunicationMembersFirst.setAdapter(new VoiceCommunicationMemberAdapter(ChannelVoiceCommunicationActivity.this,voiceCommunicationMemberList,3));
             }else if(voiceCommunicationMemberList.size() <= 9){
-                LogUtils.YfcDebug("1111111111111111111");
                 List<VoiceCommunicationJoinChannelInfoBean> list1 = voiceCommunicationMemberList.subList(0,5);
                 List<VoiceCommunicationJoinChannelInfoBean> list2 = voiceCommunicationMemberList.subList(5,voiceCommunicationMemberList.size());
                 recyclerViewCommunicationMembersFirst.setAdapter(new VoiceCommunicationMemberAdapter(ChannelVoiceCommunicationActivity.this,list1,3));

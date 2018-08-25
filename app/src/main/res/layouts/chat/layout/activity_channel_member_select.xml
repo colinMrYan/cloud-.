@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="选择成员"
+            android:text="@string/voice_communication_choice_members"
             android:textColor="@color/header_text"
             android:textSize="@dimen/header_textsize" />
         <TextView

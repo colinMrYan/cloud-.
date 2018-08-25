@@ -1021,4 +1021,10 @@
     <string name="voice_communication_excuse">禁言</string>
     <string name="voice_communication_hands_free">免提</string>
     <string name="voice_communication_tran_video">摄像头</string>
+    <string name="voice_communication_mute">静音</string>
+    <string name="voice_communication_choice_members">选择成员</string>
+    <string name="voice_communication_dialog">拨号中...</string>
+    <string name="voice_communication_waitting_answer">等待接听</string>
+    <string name="voice_communicaiton_watting_talking">通话中</string>
+    <string name="voice_communication_quality">当前通话质量不佳</string>
 </resources>

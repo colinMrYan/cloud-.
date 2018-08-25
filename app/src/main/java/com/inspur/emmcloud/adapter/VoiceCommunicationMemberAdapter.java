@@ -89,6 +89,10 @@ public class VoiceCommunicationMemberAdapter extends RecyclerView.Adapter<VoiceC
         } else {
             holder.volumeImg.setVisibility(View.GONE);
         }
+        //当通话人数为两个或者是邀请人的Adapter的时候不显示名字
+        if((index == 1 && voiceCommunicationUserInfoBeanList.size() <= 2) || index == 3){
+            holder.nameText.setVisibility(View.GONE);
+        }
         if(voiceCommunicationUserInfoBeanList.get(position).getUserState() == 1 ||
                 voiceCommunicationUserInfoBeanList.get(position).getUserId().
                         equals(MyApplication.getInstance().getUid()) || index == 3){

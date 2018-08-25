@@ -24,6 +24,7 @@ public abstract class OnVoiceCommunicationCallbacksImpl implements OnVoiceCommun
     }
     public abstract void onError(int err);
     public abstract void onConnectionLost();
+    public abstract void onNetworkQuality(int uid, int txQuality, int rxQuality);
     @Override
     public void onConnectionBanned() {
 

@@ -104,6 +104,7 @@
             android:id="@+id/recyclerview_voice_communication_memebers_second"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:layout_marginTop="6dp"
             android:overScrollMode="never"/>
     </LinearLayout>
@@ -157,6 +158,7 @@
                 android:id="@+id/tv_an_excuse"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="13dp"
                 android:layout_gravity="center_horizontal"
                 android:textColor="#333333"
                 android:text="@string/voice_communication_excuse"
@@ -179,6 +181,7 @@
                 android:id="@+id/tv_hands_free"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="13dp"
                 android:layout_gravity="center_horizontal"
                 android:textColor="#333333"
                 android:text="@string/voice_communication_hands_free"
@@ -201,9 +204,10 @@
                 android:id="@+id/tv_mute"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="13dp"
                 android:layout_gravity="center_horizontal"
                 android:textColor="#333333"
-                android:text="静音"
+                android:text="@string/voice_communication_mute"
                 android:textSize="13sp"/>
         </LinearLayout>
 
@@ -226,6 +230,7 @@
                 android:id="@+id/tv_tran_video"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="13dp"
                 android:layout_gravity="center_horizontal"
                 android:textColor="#333333"
                 android:text="@string/voice_communication_tran_video"

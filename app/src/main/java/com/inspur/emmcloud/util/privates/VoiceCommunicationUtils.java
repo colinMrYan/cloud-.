@@ -2,7 +2,6 @@ package com.inspur.emmcloud.util.privates;
 
 import android.content.Context;
 
-import com.alibaba.fastjson.JSON;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationAudioVolumeInfo;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationRtcStats;
@@ -103,7 +102,6 @@ public class VoiceCommunicationUtils {
         //提示谁在说话及其音量。默认禁用。可以通过 enableAudioVolumeIndication 方法设置。
         @Override
         public void onAudioVolumeIndication(AudioVolumeInfo[] speakers, int totalVolume) {
-            LogUtils.YfcDebug("说话人信息："+ JSON.toJSONString(speakers));
             VoiceCommunicationAudioVolumeInfo[] voiceCommunicationAudioVolumeInfos = new VoiceCommunicationAudioVolumeInfo[speakers.length];
             for (int i = 0; i < speakers.length; i++) {
                 VoiceCommunicationAudioVolumeInfo info = new VoiceCommunicationAudioVolumeInfo();
@@ -112,6 +110,12 @@ public class VoiceCommunicationUtils {
                 voiceCommunicationAudioVolumeInfos[i] = info;
             }
             onVoiceCommunicationCallbacks.onAudioVolumeIndication(voiceCommunicationAudioVolumeInfos,totalVolume);
+        }
+
+        @Override
+        public void onNetworkQuality(int uid, int txQuality, int rxQuality) {
+            super.onNetworkQuality(uid, txQuality, rxQuality);
+            onVoiceCommunicationCallbacks.onNetworkQuality(uid,txQuality,rxQuality);
         }
     };
 
