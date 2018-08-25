@@ -16,7 +16,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.inspur.emmcloud.BaseActivity;
+import com.inspur.emmcloud.MediaPlayBaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.ChannelMessageAdapter;
@@ -39,7 +39,6 @@ import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.InputMethodUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.MediaPlayUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
@@ -85,7 +84,7 @@ import static android.R.attr.path;
  * @author Fortune Yu; create at 2016年8月29日
  */
 @ContentView(R.layout.activity_channel)
-public class ChannelActivity extends BaseActivity {
+public class ChannelActivity extends MediaPlayBaseActivity {
 
     private static final int HAND_CALLBACK_MESSAGE = 1;
     private static final int GELLARY_RESULT = 2;
@@ -785,7 +784,6 @@ public class ChannelActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        MediaPlayUtils.release();
         if (handler != null) {
             handler = null;
         }

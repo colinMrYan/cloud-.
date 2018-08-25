@@ -202,7 +202,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
                 cardContentView = DisplayRegularFileMsg.getView(context,
                         message,uiMessage.getSendStatus());
                 break;
-            case Message.MESSAGE_TYPE_ATTACHMENT_CARD:
+            case Message.MESSAGE_TYPE_EXTENDED_CONTACT_CARD:
                 cardContentView = DisplayAttachmentCardMsg.getView(context,
                         message);
                 break;

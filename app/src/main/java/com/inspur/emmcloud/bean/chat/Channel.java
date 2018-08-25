@@ -261,10 +261,10 @@ public class Channel implements Serializable {
                 fromUserName = ContactUserCacheUtils.getUserName(message.getFromUser()) + "：";
             }
             switch (messageType) {
-                case "text/plain":
+                case Message.MESSAGE_TYPE_TEXT_PLAIN:
                     newMsgContent = fromUserName + ChatMsgContentUtils.mentionsAndUrl2Span(context, message.getMsgContentTextPlain().getText(), message.getMsgContentTextPlain().getMentionsMap()).toString();
                     break;
-                case "text/markdown":
+                case Message.MESSAGE_TYPE_TEXT_MARKDOWN:
                     SpannableString spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(context, message.getMsgContentTextMarkdown().getText(), message.getMsgContentTextMarkdown().getMentionsMap());
                     String markdownString =spannableString.toString();
                     if (!StringUtils.isBlank(markdownString)){
@@ -272,20 +272,23 @@ public class Channel implements Serializable {
                     }
                     newMsgContent = fromUserName + markdownString;
                     break;
-                case "comment/text-plain":
+                case Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN:
                     newMsgContent = fromUserName + context.getString(R.string.send_a_comment);
                     break;
-                case "file/regular-file":
+                case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
                     newMsgContent = fromUserName + context.getString(R.string.send_a_file);
                     break;
-                case "media/image":
+                case Message.MESSAGE_TYPE_MEDIA_IMAGE:
                     newMsgContent = fromUserName + context.getString(R.string.send_a_picture);
                     break;
-                case "extended/links":
+                case Message.MESSAGE_TYPE_EXTENDED_LINKS:
                     newMsgContent = fromUserName + context.getString(R.string.send_a_link);
                     break;
-                case "extended/contact-card":
+                case Message.MESSAGE_TYPE_EXTENDED_CONTACT_CARD:
                     newMsgContent = fromUserName + context.getString(R.string.send_a_link);
+                    break;
+                case Message.MESSAGE_TYPE_MEDIA_VOICE:
+                    newMsgContent = fromUserName + context.getString(R.string.send_a_voice);
                     break;
                 default:
                     newMsgContent = fromUserName + context

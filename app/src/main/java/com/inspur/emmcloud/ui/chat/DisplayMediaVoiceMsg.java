@@ -2,7 +2,6 @@ package com.inspur.emmcloud.ui.chat;
 
 import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
-import android.media.MediaPlayer;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -16,7 +15,7 @@ import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.MsgContentMediaVoice;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.DensityUtil;
-import com.inspur.emmcloud.util.common.MediaPlayUtils;
+import com.inspur.emmcloud.util.common.MediaPlayerManagerUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.DownLoaderUtils;
 
@@ -98,13 +97,30 @@ public class DisplayMediaVoiceMsg {
     }
 
     private static void playVoiceFile(String fileSavePath,final View voiceAnimView,final boolean isMyMsg) {
-        MediaPlayUtils.playSound(fileSavePath, new MediaPlayer.OnCompletionListener() {
+        MediaPlayerManagerUtils.getManager().play(fileSavePath, new MediaPlayerManagerUtils.PlayCallback() {
             @Override
-            public void onCompletion(MediaPlayer mp) {
+            public void onPrepared() {
+//                voiceAnimView.setBackgroundResource(isMyMsg?R.drawable.chat_voice_message_play_right:R.drawable.chat_voice_message_play_left);
+//                AnimationDrawable drawable = (AnimationDrawable) voiceAnimView
+//                        .getBackground();
+//                if (drawable.isRunning()){
+//                    drawable.stop();
+//                }
+//                drawable.start();
+            }
+
+            @Override
+            public void onComplete() {
                 if (voiceAnimView != null){
                     voiceAnimView.setBackgroundResource(isMyMsg?R.drawable.ic_chat_msg_card_voice_right_level_3 :R.drawable.ic_chat_msg_card_voice_left_level_3);
                 }
+            }
 
+            @Override
+            public void onStop() {
+                if (voiceAnimView != null){
+                    voiceAnimView.setBackgroundResource(isMyMsg?R.drawable.ic_chat_msg_card_voice_right_level_3 :R.drawable.ic_chat_msg_card_voice_left_level_3);
+                }
             }
         });
     }
