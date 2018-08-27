@@ -21,17 +21,18 @@
             android:paddingBottom="5dp"
             android:paddingTop="7dp">
 
-            <Button
+            <ImageButton
                 android:id="@+id/voice_input_btn"
-                android:layout_width="31dp"
+                android:layout_width="49dp"
                 android:layout_height="31dp"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="3dp"
-                android:background="@drawable/ic_chat_input_voice" />
+                android:paddingLeft="10dp"
+                android:paddingRight="8dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_chat_input_voice" />
             <RelativeLayout
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="5dp"
+                android:layout_marginLeft="2dp"
                 android:layout_marginRight="5dp"
                 android:layout_toLeftOf="@+id/right_layout"
                 android:layout_toRightOf="@id/voice_input_btn"
@@ -59,7 +60,7 @@
                     android:minHeight="0dp"
                     android:textSize="16sp"
                     android:paddingBottom="8dp"
-                    android:paddingTop="8dp"
+                    android:paddingTop="6dp"
                     android:text="@string/hold_to_talk"
                     android:visibility="gone"
                     android:textColor="#666666"

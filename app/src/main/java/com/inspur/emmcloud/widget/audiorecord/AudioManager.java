@@ -13,7 +13,7 @@ public class AudioManager {
 	private MediaRecorder mRecorder;
 	private String mDirString;
 	private String mCurrentFilePathString;
-	private int BASE = 600;  
+	private int BASE = 1;
 	//采用频率 
     //44100是目前的标准，但是某些设备仍然支持22050，16000，11025 
     private final static int AUDIO_SAMPLE_RATE = 44100;  //44.1KHz,普遍使用的频率   
@@ -125,12 +125,18 @@ public class AudioManager {
 	// 获得声音的level
 	public int getVoiceLevel() {
 		// mRecorder.getMaxAmplitude()这个是音频的振幅范围，值域是1-32767
-		if (isPrepared) {
+		if (isPrepared && mRecorder != null) {
 			int ratio = mRecorder.getMaxAmplitude() / BASE;  
             int db = 0;// 分贝  
             if (ratio > 1)  
-                db = (int) (20 * Math.log10(ratio));  
-            return (db/5+1);
+                db = (int) (20 * Math.log10(ratio));
+            db = db/15;
+            if (db ==0){
+            	db++;
+			}else if(db >6){
+            	db = 6;
+			}
+            return db;
 		}
 
 		return 1;

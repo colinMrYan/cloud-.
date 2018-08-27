@@ -10,7 +10,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
-import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -83,7 +82,7 @@ public class ECMChatInputMenu extends LinearLayout {
     private LinearLayout voiceInputLayout;
 
     @ViewInject(R.id.voice_input_btn)
-    private Button voiceInputBtn;
+    private ImageButton voiceInputBtn;
 
     @ViewInject(R.id.bt_audio_record)
     private AudioRecordButton audioRecordBtn;
@@ -369,7 +368,7 @@ public class ECMChatInputMenu extends LinearLayout {
     private void setVoiceInputStatus(int tag) {
         if (voiceInputBtn.getTag() == null || (int) voiceInputBtn.getTag() != tag) {
             voiceInputBtn.setTag(tag);
-            voiceInputBtn.setBackground(ContextCompat.getDrawable(getContext(), (tag == 0) ? R.drawable.ic_chat_input_voice : R.drawable.ic_chat_input_keyboard));
+            voiceInputBtn.setImageResource((tag == 0) ? R.drawable.ic_chat_input_voice : R.drawable.ic_chat_input_keyboard);
             inputEdit.setVisibility((tag == 0) ? VISIBLE : GONE);
             audioRecordBtn.setVisibility((tag == 0) ? GONE : VISIBLE);
         }
@@ -405,7 +404,6 @@ public class ECMChatInputMenu extends LinearLayout {
                 }
                 break;
             case R.id.add_btn:
-                setVoiceInputStatus(TAG_KEYBOARD_INPUT);
                 if (addMenuLayout.isShown()) {
                     setOtherLayoutHeightLock(true);
                     setAddMenuLayoutShow(false);
@@ -417,7 +415,7 @@ public class ECMChatInputMenu extends LinearLayout {
                 } else {
                     setAddMenuLayoutShow(true);
                 }
-
+                setVoiceInputStatus(TAG_KEYBOARD_INPUT);
                 break;
             case R.id.voice_input_close_img:
                 voiceInputLayout.setVisibility(View.GONE);
@@ -497,8 +495,8 @@ public class ECMChatInputMenu extends LinearLayout {
             addMenuLayout.getLayoutParams().height = softInputHeight;
             addMenuLayout.setVisibility(View.VISIBLE);
         } else if (addMenuLayout.isShown()) {
-            addMenuLayout.setVisibility(View.GONE);
             InputMethodUtils.display((Activity) getContext(), inputEdit, 0);
+            addMenuLayout.setVisibility(View.GONE);
         }
 
     }

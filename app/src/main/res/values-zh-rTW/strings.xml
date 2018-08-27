@@ -280,6 +280,7 @@
     <string name="slide_up_to_cancel">手指上滑，取消發送</string>
     <string name="recording_too_short">錄音時間過短</string>
     <string name="play_fail">播放失败</string>
+    <string name="record_count_down_text">還可以說 %1$d 秒</string>
 
 
     <!-- 會議卡片 -->

@@ -26,6 +26,7 @@ public class AudioDialogManager {
 
 	private Context mContext;
 	private boolean isStatusRecording = false;
+	private float recordTime = 0;
 
 	public AudioDialogManager(Context context) {
 		// TODO Auto-generated constructor stub
@@ -56,7 +57,11 @@ public class AudioDialogManager {
 		if (dialog != null && dialog.isShowing()) {
 			isStatusRecording = true;
 			recorderImg.setImageResource(R.drawable.ic_recorder_volume_level_v1);
-			lableText.setText(R.string.slide_up_to_cancel);
+			if (recordTime>=51){
+				lableText.setText(mContext.getString(R.string.record_count_down_text,(60-(int)recordTime)));
+			}else {
+				lableText.setText(R.string.slide_up_to_cancel);
+			}
 			lableText.setBackgroundColor(ContextCompat.getColor(mContext,android.R.color.transparent));
 		}
 	}
@@ -90,7 +95,7 @@ public class AudioDialogManager {
 	// 隐藏dialog
 	public void dimissDialog() {
 		// TODO Auto-generated method stub
-
+		recordTime = 0;
 		if (dialog != null && dialog.isShowing()) {
 			dialog.dismiss();
 			dialog = null;
@@ -98,13 +103,17 @@ public class AudioDialogManager {
 
 	}
 
-	public void updateVoiceLevel(int level) {
+	public void updateVoiceLevel(int level,float time) {
 		// TODO Auto-generated method stub
+		recordTime = time;
 		if (dialog != null && dialog.isShowing() && isStatusRecording) {
 			//通过level来找到图片的id，也可以用switch来寻址，但是代码可能会比较长
 			int resId = mContext.getResources().getIdentifier("ic_recorder_volume_level_v" + level,
 					"drawable", mContext.getPackageName());
 			recorderImg.setImageResource(resId);
+			if (recordTime>=51){
+				lableText.setText(mContext.getString(R.string.record_count_down_text,(60-(int)recordTime)));
+			}
 		}
 
 	}

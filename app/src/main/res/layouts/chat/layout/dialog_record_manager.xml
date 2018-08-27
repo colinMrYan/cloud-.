@@ -8,8 +8,10 @@
 
     <ImageView
         android:id="@+id/iv_recorder"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="160dp"
+        android:layout_height="110dp"
+        android:paddingLeft="25dp"
+        android:paddingRight="25dp"
         android:scaleType="fitXY"
         android:layout_centerHorizontal="true"
         android:src="@drawable/ic_recorder_volume_level_v1"
