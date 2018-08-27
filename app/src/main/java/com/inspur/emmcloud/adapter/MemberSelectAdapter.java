@@ -16,7 +16,6 @@ import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.ui.chat.ChannelSelectVoiceVideoMembersActivity;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
-import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,16 +28,16 @@ public class MemberSelectAdapter extends RecyclerView.Adapter<MemberSelectAdapte
 
     private Context context;
     private LayoutInflater inflater;
-    private List<ContactUser> contactUserList;
-    private List<ContactUser> selectedUserList = new ArrayList<>();
-    private List<ContactUser> lastSelectUserList = new ArrayList<>();
+    private List<ContactUser> contactUserList;//所有群成员list
+    private List<ContactUser> selectedUserList = new ArrayList<>();//选中的群成员list
+    private List<ContactUser> lastSelectUserList = new ArrayList<>();//上次选中的群成员list
+    private List<ContactUser> newSelectUserList = new ArrayList<>();//这次刚选的群成员list
     private ChannelSelectVoiceVideoMembersActivity.OnMemeberSelectedListener listener;
     public MemberSelectAdapter(Context context, List<ContactUser> contactUserList,List<ContactUser> lastSelectUserList){
         this.context = context;
         inflater = LayoutInflater.from(context);
         this.contactUserList = contactUserList;
         this.lastSelectUserList = lastSelectUserList;
-        this.lastSelectUserList.add(ContactUserCacheUtils.getContactUserByUid(MyApplication.getInstance().getUid()));
         selectedUserList.addAll(lastSelectUserList);
     }
 
@@ -60,7 +59,7 @@ public class MemberSelectAdapter extends RecyclerView.Adapter<MemberSelectAdapte
                 APIUri.getChannelImgUrl(MyApplication.getInstance(),
                         contactUser.getId()),R.drawable.icon_person_default);
         holder.tvUserName.setText(contactUserList.get(position).getName());
-        if(!lastSelectUserList.contains(contactUser)){
+        if(!lastSelectUserList.contains(contactUser) || newSelectUserList.contains(contactUser)){
             holder.linearLayoutMemberItem.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -70,24 +69,36 @@ public class MemberSelectAdapter extends RecyclerView.Adapter<MemberSelectAdapte
                             holder.imgSelected.setVisibility(View.VISIBLE);
                             holder.imgSelected.setImageResource(R.drawable.icon_other_selected);
                             selectedUserList.add(contactUser);
+                            newSelectUserList.add(contactUser);
+                            listener.onMemberSelected(contactUser,true);
                         }else {
                             holder.linearLayoutMemberItem.setSelected(false);
                             holder.imgSelected.setVisibility(View.GONE);
                             selectedUserList.remove(contactUser);
+                            newSelectUserList.remove(contactUser);
+                            listener.onMemberSelected(contactUser,false);
                         }
-                        listener.onMemberSelected(selectedUserList);
+//                        listener.onMemberSelected(selectedUserList);
                     }else {
-                        ToastUtils.show(context,"云+目前支持九人语音");
+                        ToastUtils.show(context,context.getString(R.string.voice_communication_support_nine_members));
                     }
                 }
             });
         }
         if(selectedUserList.contains(contactUser)){
             holder.imgSelected.setVisibility(View.VISIBLE);
-            holder.imgSelected.setImageResource(lastSelectUserList.contains(contactUser)?R.drawable.icon_self_selected:R.drawable.icon_other_selected);
+            holder.imgSelected.setImageResource((lastSelectUserList.contains(contactUser) && !newSelectUserList.contains(contactUser))?R.drawable.icon_self_selected:R.drawable.icon_other_selected);
         }else {
             holder.imgSelected.setVisibility(View.INVISIBLE);
         }
+    }
+
+    /**
+     * 设置并刷新data
+     */
+    public void setAndRefreshData(List<ContactUser> contactUserList){
+        this.contactUserList = contactUserList;
+        notifyDataSetChanged();
     }
 
     @Override
