@@ -23,16 +23,16 @@
 
             <ImageButton
                 android:id="@+id/voice_input_btn"
-                android:layout_width="49dp"
+                android:layout_width="43dp"
                 android:layout_height="31dp"
                 android:layout_centerVertical="true"
                 android:paddingLeft="10dp"
-                android:paddingRight="8dp"
+                android:paddingRight="2dp"
                 android:scaleType="fitXY"
                 android:src="@drawable/ic_chat_input_voice" />
             <RelativeLayout
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="2dp"
+                android:layout_marginLeft="8dp"
                 android:layout_marginRight="5dp"
                 android:layout_toLeftOf="@+id/right_layout"
                 android:layout_toRightOf="@id/voice_input_btn"

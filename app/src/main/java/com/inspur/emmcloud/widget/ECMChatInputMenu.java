@@ -15,6 +15,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -220,6 +221,7 @@ public class ECMChatInputMenu extends LinearLayout {
         } else if (inputs.equals("1")) {
             sendMsgBtn.setVisibility(VISIBLE);
             sendMsgBtn.setEnabled(false);
+            voiceInputBtn.setVisibility(GONE);
             addBtn.setVisibility(View.GONE);
         } else {
             //功能组的图标，名称
@@ -446,7 +448,7 @@ public class ECMChatInputMenu extends LinearLayout {
     }
 
 
-    public void setOtherLayoutView(View otherLayoutView) {
+    public void setOtherLayoutView(View otherLayoutView,View listContentView) {
         this.otherLayoutView = otherLayoutView;
         //当View有touch事件时把软键盘和输入菜单隐藏
         otherLayoutView.setOnTouchListener(new OnTouchListener() {
@@ -455,6 +457,15 @@ public class ECMChatInputMenu extends LinearLayout {
                 if (addMenuLayout.getVisibility() != View.GONE) {
                     addMenuLayout.setVisibility(View.GONE);
                 }
+                InputMethodUtils.hide((Activity) getContext());
+                return false;
+            }
+        });
+
+        listContentView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                hideAddMenuLayout();
                 InputMethodUtils.hide((Activity) getContext());
                 return false;
             }
@@ -474,12 +485,12 @@ public class ECMChatInputMenu extends LinearLayout {
                 params.height = otherLayoutView.getHeight();
                 params.weight = 0.0F;
             } else {
-                new Handler().post(new Runnable() {
+                new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         params.weight = 1.0F;
                     }
-                });
+                },200);
             }
         }
     }
@@ -495,8 +506,11 @@ public class ECMChatInputMenu extends LinearLayout {
             addMenuLayout.getLayoutParams().height = softInputHeight;
             addMenuLayout.setVisibility(View.VISIBLE);
         } else if (addMenuLayout.isShown()) {
-            InputMethodUtils.display((Activity) getContext(), inputEdit, 0);
             addMenuLayout.setVisibility(View.GONE);
+            inputEdit.requestFocus();
+            ((InputMethodManager) ((Activity)getContext())
+                    .getSystemService(Context.INPUT_METHOD_SERVICE)).showSoftInput(inputEdit, 0);
+           // InputMethodUtils.display((Activity) getContext(), inputEdit, 0);
         }
 
     }

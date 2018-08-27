@@ -11,7 +11,6 @@ import android.provider.MediaStore;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -36,7 +35,6 @@ import com.inspur.emmcloud.interf.ProgressCallback;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.common.FileUtils;
-import com.inspur.emmcloud.util.common.InputMethodUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
@@ -219,7 +217,7 @@ public class ChannelActivity extends MediaPlayBaseActivity {
      */
     private void initChatInputMenu() {
         chatInputMenu.setSpecialUser(isSpecialUser);
-        chatInputMenu.setOtherLayoutView(swipeRefreshLayout);
+        chatInputMenu.setOtherLayoutView(swipeRefreshLayout,msgListView);
         if (channel.getType().equals("GROUP")) {
             chatInputMenu.setCanMentions(true, cid);
         } else {
@@ -338,14 +336,6 @@ public class ChannelActivity extends MediaPlayBaseActivity {
             adapter.notifyDataSetChanged();
         }
         msgListView.MoveToPosition(uiMessageList.size() - 1);
-        msgListView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                chatInputMenu.hideAddMenuLayout();
-                InputMethodUtils.hide(ChannelActivity.this);
-                return false;
-            }
-        });
     }
 
     /**
