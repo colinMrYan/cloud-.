@@ -3,6 +3,7 @@ package com.inspur.emmcloud.util.privates;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
+import android.app.AppOpsManager;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -15,6 +16,7 @@ import android.graphics.Paint;
 import android.graphics.Paint.FontMetrics;
 import android.net.TrafficStats;
 import android.net.Uri;
+import android.os.Binder;
 import android.os.Build;
 import android.os.Environment;
 import android.support.v4.content.ContextCompat;
@@ -41,6 +43,7 @@ import com.inspur.imp.plugin.camera.imagepicker.ui.ImageGridActivity;
 import com.inspur.imp.plugin.camera.mycamera.MyCameraActivity;
 
 import java.io.File;
+import java.lang.reflect.Method;
 import java.util.List;
 import java.util.UUID;
 import java.util.regex.Matcher;
@@ -793,7 +796,6 @@ public class AppUtils {
     /**
      * app是否是标准版
      *
-     * @param context
      * @return
      */
     public static boolean isAppVersionStandard() {
@@ -808,7 +810,7 @@ public class AppUtils {
 
     /**
      * 获取版本名
-     * @param activity
+     * @param context
      * @return
      */
     public static String getAppVersionFlag(Context context){
@@ -817,7 +819,7 @@ public class AppUtils {
 
     /**
      * 获取manifest中的metadata值
-     * @param activity
+     * @param context
      * @param key
      * @return
      */
@@ -891,6 +893,39 @@ public class AppUtils {
     private static boolean lacksPermission(Context mContexts, String permission) {
         return ContextCompat.checkSelfPermission(mContexts, permission) ==
                 PackageManager.PERMISSION_DENIED;
+    }
+
+    /**
+     * 判断 悬浮窗口权限是否打开
+     *
+     * @param context
+     * @return true 允许  false禁止
+     */
+    public static boolean getAppOps(Context context) {
+        try {
+            Object object = context.getSystemService(Context.APP_OPS_SERVICE);
+            if (object == null) {
+                return false;
+            }
+            Class localClass = object.getClass();
+            Class[] arrayOfClass = new Class[3];
+            arrayOfClass[0] = Integer.TYPE;
+            arrayOfClass[1] = Integer.TYPE;
+            arrayOfClass[2] = String.class;
+            Method method = localClass.getMethod("checkOp", arrayOfClass);
+            if (method == null) {
+                return false;
+            }
+            Object[] arrayOfObject1 = new Object[3];
+            arrayOfObject1[0] = Integer.valueOf(24);
+            arrayOfObject1[1] = Integer.valueOf(Binder.getCallingUid());
+            arrayOfObject1[2] = context.getPackageName();
+            int m = ((Integer) method.invoke(object, arrayOfObject1)).intValue();
+            return m == AppOpsManager.MODE_ALLOWED;
+        } catch (Exception e) {
+            LogUtils.YfcDebug("判断悬浮窗权限异常："+e.getMessage());
+        }
+        return false;
     }
 
 }

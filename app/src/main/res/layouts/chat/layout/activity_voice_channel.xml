@@ -20,6 +20,7 @@
         android:paddingBottom="16dp"
         android:layout_marginLeft="20dp"
         android:onClick="onClick"
+        android:visibility="gone"
         android:src="@drawable/icon_voice_commucation_pack_up"/>
     <LinearLayout
         android:id="@+id/ll_voice_communication_invite"

@@ -11,7 +11,6 @@ import android.widget.Chronometer;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
@@ -51,6 +50,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity{
     public static final int INVITER_LAYOUT_STATE = 0;//邀请人状态布局
     public static final int INVITEE_LAYOUT_STATE = 1;//被邀请人状态布局
     public static final int COMMUNICATION_LAYOUT_STATE = 2;//通话中布局状态
+    public static final int COME_BACK_FROM_SERVICE = 3;//预留从小窗口回到聊天页面的状态
     private static final int EXCEPTION_STATE = -1;
     private static int STATE = -1;
     @ViewInject(R.id.ll_voice_communication_invite)
@@ -99,8 +99,8 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity{
     private ImageView imgHungUp;
     @ViewInject(R.id.img_voice_communication_pack_up)
     private ImageView imgPackUp;
-    private List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationUserInfoBeanList = new ArrayList<>();
     private ChatAPIService apiService;
+    private List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationUserInfoBeanList = new ArrayList<>();
     private String channelId = "";//声网的channelId
     private List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationMemberList = new ArrayList<>();
     private VoiceCommunicationJoinChannelInfoBean inviteeInfoBean;
@@ -115,8 +115,23 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity{
         StateBarUtils.changeStateBarColor(this,R.color.content_bg);
         voiceCommunicationUserInfoBeanList = (List<VoiceCommunicationJoinChannelInfoBean>) getIntent().getSerializableExtra("userList");
         voiceCommunicationUtils = MyApplication.getInstance().getVoiceCommunicationUtils();
+//        recoverData();
         initViews();
-//        createCommunicationService();
+    }
+
+    /**
+     * 如果是从小窗口来的，则恢复通话数据
+     */
+    private void recoverData() {
+        int state = getIntent().getIntExtra(VOICE_COMMUNICATION_STATE,EXCEPTION_STATE);
+        if(state != EXCEPTION_STATE){
+            STATE = voiceCommunicationUtils.getState();
+            voiceCommunicationUserInfoBeanList = voiceCommunicationUtils.getVoiceCommunicationUserInfoBeanList();
+            channelId = voiceCommunicationUtils.getChannelId();
+            voiceCommunicationMemberList = voiceCommunicationUtils.getVoiceCommunicationMemberList();
+            inviteeInfoBean = voiceCommunicationUtils.getInviteeInfoBean();
+            userCount = voiceCommunicationUtils.getUserCount();
+        }
     }
 
     /**
@@ -173,6 +188,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity{
                 break;
             case INVITEE_LAYOUT_STATE:
                 String channelId = getIntent().getStringExtra("channelId");
+                voiceCommunicationUtils.setEncryptionSecret(channelId);
                 getChannelInfoByChannelId(channelId);
                 break;
         }
@@ -442,13 +458,26 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity{
                 }
                 break;
             case R.id.img_voice_communication_pack_up:
-                LogUtils.YfcDebug("点击了收起页面");
-                Toast.makeText(this, "点击了最小化", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this, "点击了最小化，是否有悬浮窗权限："+ AppUtils.getAppOps(this), Toast.LENGTH_SHORT).show();
+//                saveCommunicationData();
+//                createCommunicationService();
 //                finish();
                 break;
             default:
                 break;
         }
+    }
+
+    /**
+     * 保存状态
+     */
+    private void saveCommunicationData() {
+        voiceCommunicationUtils.setState(STATE);
+        voiceCommunicationUtils.setVoiceCommunicationUserInfoBeanList(voiceCommunicationUserInfoBeanList);
+        voiceCommunicationUtils.setChannelId(channelId);
+        voiceCommunicationUtils.setVoiceCommunicationMemberList(voiceCommunicationMemberList);
+        voiceCommunicationUtils.setInviteeInfoBean(inviteeInfoBean);
+        voiceCommunicationUtils.setUserCount(userCount);
     }
 
     /**
@@ -474,6 +503,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity{
             channelId = getVoiceCommunicationResult.getChannelId();
             VoiceCommunicationJoinChannelInfoBean voiceCommunicationJoinChannelInfoBean = getMyCommunicationInfoBean(getVoiceCommunicationResult);
             if(voiceCommunicationJoinChannelInfoBean != null){
+                voiceCommunicationUtils.setEncryptionSecret(channelId);
                 voiceCommunicationUtils.joinChannel(voiceCommunicationJoinChannelInfoBean.getToken(),
                         getVoiceCommunicationResult.getChannelId(),voiceCommunicationJoinChannelInfoBean.getUserId(),voiceCommunicationJoinChannelInfoBean.getAgoraUid());
             }

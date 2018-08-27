@@ -4,9 +4,13 @@ import android.content.Context;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationAudioVolumeInfo;
+import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationRtcStats;
 import com.inspur.emmcloud.interf.OnVoiceCommunicationCallbacks;
 import com.inspur.emmcloud.util.common.LogUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import io.agora.rtc.IRtcEngineEventHandler;
 import io.agora.rtc.RtcEngine;
@@ -22,6 +26,12 @@ public class VoiceCommunicationUtils {
     private RtcEngine mRtcEngine;
 //    private int userCount = 1;
     private OnVoiceCommunicationCallbacks onVoiceCommunicationCallbacks;
+    private List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationUserInfoBeanList = new ArrayList<>();
+    private String channelId = "";//声网的channelId
+    private List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationMemberList = new ArrayList<>();
+    private VoiceCommunicationJoinChannelInfoBean inviteeInfoBean;
+    private int userCount = 1;
+    private int state = -1;
 
     private IRtcEngineEventHandler mRtcEventHandler = new IRtcEngineEventHandler() {
         //其他用户离线回调
@@ -223,4 +233,55 @@ public class VoiceCommunicationUtils {
         this.onVoiceCommunicationCallbacks = l;
     }
 
+    public OnVoiceCommunicationCallbacks getOnVoiceCommunicationCallbacks() {
+        return onVoiceCommunicationCallbacks;
+    }
+
+    public List<VoiceCommunicationJoinChannelInfoBean> getVoiceCommunicationUserInfoBeanList() {
+        return voiceCommunicationUserInfoBeanList;
+    }
+
+    public void setVoiceCommunicationUserInfoBeanList(List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationUserInfoBeanList) {
+        this.voiceCommunicationUserInfoBeanList = voiceCommunicationUserInfoBeanList;
+    }
+
+    public String getChannelId() {
+        return channelId;
+    }
+
+    public void setChannelId(String channelId) {
+        this.channelId = channelId;
+    }
+
+    public List<VoiceCommunicationJoinChannelInfoBean> getVoiceCommunicationMemberList() {
+        return voiceCommunicationMemberList;
+    }
+
+    public void setVoiceCommunicationMemberList(List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationMemberList) {
+        this.voiceCommunicationMemberList = voiceCommunicationMemberList;
+    }
+
+    public VoiceCommunicationJoinChannelInfoBean getInviteeInfoBean() {
+        return inviteeInfoBean;
+    }
+
+    public void setInviteeInfoBean(VoiceCommunicationJoinChannelInfoBean inviteeInfoBean) {
+        this.inviteeInfoBean = inviteeInfoBean;
+    }
+
+    public int getUserCount() {
+        return userCount;
+    }
+
+    public void setUserCount(int userCount) {
+        this.userCount = userCount;
+    }
+
+    public int getState() {
+        return state;
+    }
+
+    public void setState(int state) {
+        this.state = state;
+    }
 }
