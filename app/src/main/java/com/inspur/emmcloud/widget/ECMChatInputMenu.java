@@ -15,7 +15,6 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -82,8 +81,8 @@ public class ECMChatInputMenu extends LinearLayout {
     @ViewInject(R.id.voice_input_layout)
     private LinearLayout voiceInputLayout;
 
-    @ViewInject(R.id.voice_input_btn)
-    private ImageButton voiceInputBtn;
+    @ViewInject(R.id.voice_btn)
+    private ImageButton voiceBtn;
 
     @ViewInject(R.id.bt_audio_record)
     private AudioRecordButton audioRecordBtn;
@@ -162,7 +161,7 @@ public class ECMChatInputMenu extends LinearLayout {
             @Override
             public void onFinished(float seconds, String filePath) {
                 // TODO Auto-generated method stub
-                if (chatInputMenuListener != null){
+                if (chatInputMenuListener != null) {
                     chatInputMenuListener.onSendVoiceRecordMsg(seconds, filePath);
                 }
             }
@@ -218,62 +217,78 @@ public class ECMChatInputMenu extends LinearLayout {
         this.inputs = inputs;
         if (inputs.equals("0")) {
             this.setVisibility(View.GONE);
-        } else if (inputs.equals("1")) {
-            sendMsgBtn.setVisibility(VISIBLE);
-            sendMsgBtn.setEnabled(false);
-            voiceInputBtn.setVisibility(GONE);
-            addBtn.setVisibility(View.GONE);
         } else {
             //功能组的图标，名称
             int[] functionIconArray = {R.drawable.ic_chat_input_add_gallery,
-                    R.drawable.ic_chat_input_add_camera, R.drawable.ic_chat_input_add_file,
-                    R.drawable.ic_chat_input_add_mention};
+                    R.drawable.ic_chat_input_add_camera, R.drawable.ic_chat_input_add_file, R.drawable.ic_chat_input_add_voice_2_word,
+                    R.drawable.ic_chat_input_add_mention,};
             String[] functionNameArray = {getContext().getString(R.string.album),
                     getContext().getString(R.string.take_photo),
-                    getContext().getString(R.string.file),
-                    "@"};
-            String[] functionActionArray = {"gallery", "camera", "file", "mention"};
-            String binaryString = "-1";
+                    getContext().getString(R.string.file), getContext().getString(R.string.voice_input), "@"};
+            String[] functionActionArray = {"gallery", "camera", "file", "voice_input", "mention"};
+            String inputControl = "-1";
             if (!StringUtils.isBlank(inputs)) {
                 try {
-                    binaryString = new StringBuffer(Integer.toBinaryString(Integer.parseInt(inputs))).reverse().toString();
+                    inputControl = new StringBuffer(Integer.toBinaryString(Integer.parseInt(inputs))).reverse().toString();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
             //处理默认情况，也就是普通频道的情况
-            if (binaryString.equals("-1")) {
+            if (inputControl.equals("-1")) {
                 //目前开放三位，有可能扩展
-                binaryString = "111";
+                inputControl = "11101";
             }
             //控制binaryString长度，防止穿的数字过大
-            int binaryLength = binaryString.length() > 3 ? 3 : binaryString.length();
-            for (int i = 0; i < binaryLength; i++) {
-                //第一位已经处理过了，这里不再处理
-                //这里如果禁止输入文字时，inputEdit设置Enabled
-                if (i == 0) {
-                    inputEdit.setEnabled((binaryString.charAt(0) + "").equals("1"));
-                    continue;
+            int length = inputControl.length() > 5 ? 5 : inputControl.length();
+            boolean isInputTextEnable = true;
+            boolean isInputPhotoEnable = true;
+            boolean isInputFileEnable = true;
+            boolean isInputVoiceEnable = true;
+
+            for (int i = 0; i < length; i++) {
+                String controlValue = inputControl.charAt(i) + "";
+                switch (i) {
+                    case 0:
+                        isInputTextEnable = controlValue.equals("1");
+                        break;
+                    case 1:
+                        isInputPhotoEnable = controlValue.equals("1");
+                        break;
+                    case 2:
+                        isInputFileEnable = controlValue.equals("1");
+                        break;
+                    case 4:
+                        isInputVoiceEnable = controlValue.equals("1");
+                        break;
                 }
-                if ((binaryString.charAt(i) + "").equals("1")) {
-                    //对于第二位特殊处理，如果第二位是"1"则添加相册，拍照两个功能，与服务端确认目前这样实现
-                    //存在的疑问，如果仅显示相册或仅显示拍照应该如何处理？
-                    if (i == 1) {
-                        InputTypeBean inputTypeBeanGallery = new InputTypeBean(functionIconArray[0], functionNameArray[0], functionActionArray[0]);
-                        inputTypeBeanList.add(inputTypeBeanGallery);
-                        InputTypeBean inputTypeBeanCamera = new InputTypeBean(functionIconArray[1], functionNameArray[1], functionActionArray[1]);
-                        inputTypeBeanList.add(inputTypeBeanCamera);
-                    } else {
-                        InputTypeBean inputTypeBean = new InputTypeBean(functionIconArray[i], functionNameArray[i], functionActionArray[i]);
-                        inputTypeBeanList.add(inputTypeBean);
-                    }
-                }
+            }
+
+            if (isInputPhotoEnable) {
+                inputTypeBeanList.add(new InputTypeBean(functionIconArray[0], functionNameArray[0], functionActionArray[0]));
+                inputTypeBeanList.add(new InputTypeBean(functionIconArray[1], functionNameArray[1], functionActionArray[1]));
+            }
+            if (isInputFileEnable) {
+                inputTypeBeanList.add(new InputTypeBean(functionIconArray[2], functionNameArray[2], functionActionArray[2]));
+            }
+            if (isInputVoiceEnable) {
+                voiceBtn.setVisibility(VISIBLE);
+            }
+            if (isInputTextEnable) {
+                inputTypeBeanList.add(new InputTypeBean(functionIconArray[3], functionNameArray[3], functionActionArray[3]));
+            } else {
+                sendMsgBtn.setEnabled(false);
             }
             //如果是群组的话添加@功能
             if (canMentions) {
-                InputTypeBean inputTypeBean = new InputTypeBean(functionIconArray[3], functionNameArray[3], functionActionArray[3]);
-                inputTypeBeanList.add(inputTypeBean);
+                inputTypeBeanList.add(new InputTypeBean(functionIconArray[4], functionNameArray[4], functionActionArray[4]));
             }
+
+            if (inputTypeBeanList.size() > 0) {
+                addBtn.setVisibility(VISIBLE);
+                sendMsgBtn.setVisibility(GONE);
+            }
+
             viewpagerLayout.setOnGridItemClickListener(new AdapterView.OnItemClickListener() {
 
                 @Override
@@ -293,6 +308,13 @@ public class ECMChatInputMenu extends LinearLayout {
                             break;
                         case "mention":
                             openMentionPage(false);
+                            break;
+                        case "voice_input":
+                            addMenuLayout.setVisibility(GONE);
+                            voiceInputLayout.setVisibility(View.VISIBLE);
+                            volumeLevelImg.setImageLevel(0);
+                            mediaPlayerUtils.playVoiceOn();
+                            voice2StringMessageUtils.startVoiceListening();
                             break;
                         default:
                             break;
@@ -368,18 +390,18 @@ public class ECMChatInputMenu extends LinearLayout {
 
 
     private void setVoiceInputStatus(int tag) {
-        if (voiceInputBtn.getTag() == null || (int) voiceInputBtn.getTag() != tag) {
-            voiceInputBtn.setTag(tag);
-            voiceInputBtn.setImageResource((tag == 0) ? R.drawable.ic_chat_input_voice : R.drawable.ic_chat_input_keyboard);
+        if (voiceBtn.getTag() == null || (int) voiceBtn.getTag() != tag) {
+            voiceBtn.setTag(tag);
+            voiceBtn.setImageResource((tag == 0) ? R.drawable.ic_chat_input_voice : R.drawable.ic_chat_input_keyboard);
             inputEdit.setVisibility((tag == 0) ? VISIBLE : GONE);
             audioRecordBtn.setVisibility((tag == 0) ? GONE : VISIBLE);
         }
     }
 
-    @Event({R.id.voice_input_btn, R.id.send_msg_btn, R.id.add_btn, R.id.voice_input_close_img})
+    @Event({R.id.voice_btn, R.id.send_msg_btn, R.id.add_btn, R.id.voice_input_close_img})
     private void onClick(View view) {
         switch (view.getId()) {
-            case R.id.voice_input_btn:
+            case R.id.voice_btn:
                 if (view.getTag() == null || (int) view.getTag() == TAG_KEYBOARD_INPUT) {
                     setVoiceInputStatus(TAG_VOICE_INPUT);
                     if (addMenuLayout.isShown()) {
@@ -448,7 +470,7 @@ public class ECMChatInputMenu extends LinearLayout {
     }
 
 
-    public void setOtherLayoutView(View otherLayoutView,View listContentView) {
+    public void setOtherLayoutView(View otherLayoutView, View listContentView) {
         this.otherLayoutView = otherLayoutView;
         //当View有touch事件时把软键盘和输入菜单隐藏
         otherLayoutView.setOnTouchListener(new OnTouchListener() {
@@ -490,7 +512,7 @@ public class ECMChatInputMenu extends LinearLayout {
                     public void run() {
                         params.weight = 1.0F;
                     }
-                },200);
+                }, 200);
             }
         }
     }
@@ -507,10 +529,7 @@ public class ECMChatInputMenu extends LinearLayout {
             addMenuLayout.setVisibility(View.VISIBLE);
         } else if (addMenuLayout.isShown()) {
             addMenuLayout.setVisibility(View.GONE);
-            inputEdit.requestFocus();
-            ((InputMethodManager) ((Activity)getContext())
-                    .getSystemService(Context.INPUT_METHOD_SERVICE)).showSoftInput(inputEdit, 0);
-           // InputMethodUtils.display((Activity) getContext(), inputEdit, 0);
+             InputMethodUtils.display((Activity) getContext(), inputEdit, 0);
         }
 
     }

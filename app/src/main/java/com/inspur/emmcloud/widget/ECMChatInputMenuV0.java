@@ -349,10 +349,10 @@ public class ECMChatInputMenuV0 extends LinearLayout {
 //        viewpagerLayout.setInputTypeBeanList(inputTypeBeanList);
     }
 
-    @Event({R.id.voice_input_btn, R.id.send_msg_btn, R.id.add_btn, R.id.voice_input_close_img})
+    @Event({R.id.voice_btn, R.id.send_msg_btn, R.id.add_btn, R.id.voice_input_close_img})
     private void onClick(View view) {
         switch (view.getId()) {
-            case R.id.voice_input_btn:
+            case R.id.voice_btn:
                 if (addMenuLayout.isShown()) {
                     addMenuLayout.setVisibility(View.GONE);
                 } else if (InputMethodUtils.isSoftInputShow((Activity) getContext())) {

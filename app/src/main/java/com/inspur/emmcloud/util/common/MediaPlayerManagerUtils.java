@@ -110,6 +110,16 @@ public class MediaPlayerManagerUtils {
 
     /**
      * 播放音乐
+     * @param rawResId  raw目录下的文件id
+     * @param callback
+     */
+    public void play(int rawResId,PlayCallback callback){
+        String rawFileUri = "android.resource://" + MyApplication.getInstance().getPackageName() + "/"+ rawResId;
+        play(rawFileUri,callback);
+    }
+
+    /**
+     * 播放音乐
      *
      * @param path     音乐文件路径
      * @param callback 播放回调函数
@@ -146,6 +156,7 @@ public class MediaPlayerManagerUtils {
             e.printStackTrace();
         }
     }
+
 
     public boolean isPause() {
         return isPause;

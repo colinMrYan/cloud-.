@@ -22,7 +22,7 @@
             android:paddingTop="7dp">
 
             <ImageButton
-                android:id="@+id/voice_input_btn"
+                android:id="@+id/voice_btn"
                 android:layout_width="43dp"
                 android:layout_height="31dp"
                 android:layout_centerVertical="true"
@@ -35,7 +35,7 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="5dp"
                 android:layout_toLeftOf="@+id/right_layout"
-                android:layout_toRightOf="@id/voice_input_btn"
+                android:layout_toRightOf="@id/voice_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <com.inspur.emmcloud.widget.ChatInputEdit

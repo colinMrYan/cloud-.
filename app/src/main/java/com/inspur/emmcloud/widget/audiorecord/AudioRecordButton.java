@@ -2,6 +2,7 @@ package com.inspur.emmcloud.widget.audiorecord;
 
 
 import android.content.Context;
+import android.media.MediaPlayer;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
@@ -12,6 +13,7 @@ import android.widget.Button;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.emmcloud.util.common.MediaPlayerManagerUtils;
 
 public class AudioRecordButton extends Button implements AudioManager.AudioStageListener {
 
@@ -156,6 +158,10 @@ public class AudioRecordButton extends Button implements AudioManager.AudioStage
         mhandler.sendEmptyMessage(MSG_AUDIO_PREPARED);
     }
 
+    private void playRecordStartMusic(){
+        MediaPlayerManagerUtils.getManager().play(R.raw.voice_search_on, null);
+    }
+
     /**
      * 直接复写这个监听函数
      */
@@ -168,6 +174,7 @@ public class AudioRecordButton extends Button implements AudioManager.AudioStage
 
         switch (action) {
             case MotionEvent.ACTION_DOWN:
+                playRecordStartMusic();
                 changeState(STATE_RECORDING);
                 break;
             case MotionEvent.ACTION_MOVE:

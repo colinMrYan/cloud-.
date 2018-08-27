@@ -940,7 +940,7 @@
     <string name="qr_code_analysis_fail">Qr code parsing failed</string>
 
     <!--科大讯飞语音-->
-    <string name="voice_input">Speech input</string>
+    <string name="voice_input">Voice Input</string>
 
     <string name="clear">Clear</string>
     <string name="confirm_clear">Confirm clear?</string>
