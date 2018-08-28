@@ -41,6 +41,8 @@ public class MediaPlayerManagerUtils {
 
     private int currentMode = MODE_SPEAKER;
 
+    private boolean isLooping = false;
+
     public static MediaPlayerManagerUtils getManager() {
         if (mediaPlayerManagerUtils == null) {
             synchronized (MediaPlayerManagerUtils.class) {
@@ -84,7 +86,7 @@ public class MediaPlayerManagerUtils {
         } else {
             audioManager.setMode(AudioManager.MODE_IN_CALL);
         }
-        audioManager.setSpeakerphoneOn(true);            //默认为扬声器播放
+        audioManager.setSpeakerphoneOn(true);//默认为扬声器播放
     }
 
     /**
@@ -150,6 +152,10 @@ public class MediaPlayerManagerUtils {
                         callback.onComplete();
                     }
                     resetPlayMode();
+                    if(isLooping){
+                        mediaPlayer.start();
+                        mediaPlayer.setLooping(true);
+                    }
                 }
             });
         } catch (Exception e) {
@@ -294,6 +300,31 @@ public class MediaPlayerManagerUtils {
                 e.printStackTrace();
             }
         }
+    }
+
+    /**
+     * 设置是否循环播放
+     * @param looping
+     */
+    public void setMediaPlayerLooping(boolean looping){
+        isLooping = looping;
+    }
+
+    /**
+     * 设置左右声道的音量
+     * @param leftVolume
+     * @param rightVolume
+     */
+    public void setVolume(float leftVolume,float rightVolume){
+        mediaPlayer.setVolume(leftVolume,rightVolume);
+    }
+
+    /**
+     * 调到指定播放位置，以毫秒为单位
+     * @param time
+     */
+    public void setSeekTo(int time){
+        mediaPlayer.seekTo(time);
     }
 
     /**

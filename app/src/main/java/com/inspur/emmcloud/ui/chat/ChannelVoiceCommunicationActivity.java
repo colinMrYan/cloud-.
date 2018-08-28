@@ -25,6 +25,7 @@ import com.inspur.emmcloud.bean.system.GetBoolenResult;
 import com.inspur.emmcloud.service.VoiceHoldService;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.emmcloud.util.common.MediaPlayerManagerUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
@@ -108,6 +109,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity{
     private VoiceCommunicationUtils voiceCommunicationUtils;
     private VoiceCommunicationMemberAdapter voiceCommunicationMemberAdapterFirst;
     private VoiceCommunicationMemberAdapter voiceCommunicationMemberAdapterSecond;
+    private MediaPlayerManagerUtils mediaPlayerManagerUtils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,6 +153,8 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity{
         voiceCommunicationMemberAdapterFirst = new VoiceCommunicationMemberAdapter(this,voiceCommunicationUserInfoBeanList,0);
         voiceCommunicationMemberAdapterSecond = new VoiceCommunicationMemberAdapter(this,voiceCommunicationUserInfoBeanList,0);
         initCallbacks();
+        mediaPlayerManagerUtils = MediaPlayerManagerUtils.getManager();
+        mediaPlayerManagerUtils.setMediaPlayerLooping(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         recyclerViewFirst.setLayoutManager(layoutManager);
@@ -163,13 +167,12 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity{
         layoutManagerMemebersFirst.setOrientation(LinearLayoutManager.HORIZONTAL);
         recyclerViewCommunicationMembersFirst.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(this,8)));
         recyclerViewCommunicationMembersFirst.setLayoutManager(layoutManagerMemebersFirst);
-
         LinearLayoutManager layoutManagerMembersSecond = new LinearLayoutManager(this);
         layoutManagerMembersSecond.setOrientation(LinearLayoutManager.HORIZONTAL);
         recyclerViewCommunicationMemeberSecond.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(this,8)));
         recyclerViewCommunicationMemeberSecond.setLayoutManager(layoutManagerMembersSecond);
         int state = getIntent().getIntExtra(VOICE_COMMUNICATION_STATE,EXCEPTION_STATE);
-        initCommunicationViewsVisibility(state);
+        initCommunicationViewsAndMusicByState(state);
         initFunctionState();
         switch (state){
             case INVITER_LAYOUT_STATE:
@@ -237,7 +240,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity{
      * 根据状态改变布局可见性
      * @param state
      */
-    private void initCommunicationViewsVisibility(int state) {
+    private void initCommunicationViewsAndMusicByState(int state) {
         if(state == EXCEPTION_STATE){
             finish();
         }
@@ -285,6 +288,11 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity{
         }
         //如果是通话中则“通话中”文字显示一下就不再显示
         tvCommunicationState.setText(state == COMMUNICATION_LAYOUT_STATE?"":tvCommunicationState.getText());
+        if(state == INVITER_LAYOUT_STATE || state == INVITEE_LAYOUT_STATE){
+            mediaPlayerManagerUtils.play(R.raw.voice_communication_watting_answer,null);
+        }else {
+            mediaPlayerManagerUtils.stop();
+        }
     }
 
 
@@ -316,7 +324,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity{
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            initCommunicationViewsVisibility(COMMUNICATION_LAYOUT_STATE);
+                            initCommunicationViewsAndMusicByState(COMMUNICATION_LAYOUT_STATE);
                             chronometerCommunicationTime.setBase(SystemClock.elapsedRealtime());
                             chronometerCommunicationTime.start();
                             refreshCommunicationMemberAdapter();
@@ -443,7 +451,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity{
                 imgTranVideo.setImageResource(imgTranVideo.isSelected()?R.drawable.icon_trans_video:R.drawable.icon_trans_video);
                 break;
             case R.id.img_answer_the_phone:
-                initCommunicationViewsVisibility(COMMUNICATION_LAYOUT_STATE);
+                initCommunicationViewsAndMusicByState(COMMUNICATION_LAYOUT_STATE);
                 chronometerCommunicationTime.setBase(SystemClock.elapsedRealtime());
                 chronometerCommunicationTime.start();
                 voiceCommunicationUtils.joinChannel(inviteeInfoBean.getToken(),
@@ -495,6 +503,12 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity{
     public void onBackPressed() {
         //先通知S，后退出声网
         apiService.leaveAgoraChannel(channelId);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mediaPlayerManagerUtils.stop();
     }
 
     class WebService extends APIInterfaceInstance{

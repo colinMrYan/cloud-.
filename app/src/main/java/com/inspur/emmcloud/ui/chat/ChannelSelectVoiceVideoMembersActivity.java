@@ -16,7 +16,7 @@ import com.inspur.emmcloud.adapter.MemberSelectAdapter;
 import com.inspur.emmcloud.adapter.MemberSelectGridAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
-import com.inspur.emmcloud.bean.chat.GetChannelInfoResult;
+import com.inspur.emmcloud.bean.chat.ChannelGroup;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
 import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.util.common.DensityUtil;
@@ -190,7 +190,7 @@ public class ChannelSelectVoiceVideoMembersActivity extends BaseActivity impleme
 
     class WebService extends APIInterfaceInstance{
         @Override
-        public void returnChannelInfoSuccess(GetChannelInfoResult getChannelInfoResult) {
+        public void returnChannelInfoSuccess(ChannelGroup getChannelInfoResult) {
             LoadingDialog.dimissDlg(loadingDlg);
             contactUserList = ContactUserCacheUtils.getContactUserListById(getChannelInfoResult.getMemberList());
             initContactsView(contactUserList);

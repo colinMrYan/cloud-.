@@ -310,13 +310,6 @@ public class ECMChatInputMenu extends LinearLayout {
                         case "mention":
                             openMentionPage(false);
                             break;
-                        case "voice":
-                            if(!canMentions){
-                                chatInputMenuListener.onVoiceCommucaiton();
-                            }else{
-                                AppUtils.openChannelMemeberSelect((Activity)getContext(),cid,6);
-                            }
-                            break;
                         case "voice_input":
                             addMenuLayout.setVisibility(GONE);
                             voiceInputLayout.setVisibility(View.VISIBLE);
@@ -326,6 +319,11 @@ public class ECMChatInputMenu extends LinearLayout {
                             break;
                         case "voice_call":
                             //语音通话
+                            if(!canMentions){
+                                chatInputMenuListener.onVoiceCommucaiton();
+                            }else{
+                                AppUtils.openChannelMemeberSelect((Activity)getContext(),cid,6);
+                            }
                             break;
                         default:
                             break;
