@@ -11,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.alibaba.fastjson.JSON;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -21,6 +20,7 @@ import com.inspur.emmcloud.bean.work.GetCreateOfficeResult;
 import com.inspur.emmcloud.bean.work.GetLoctionResult;
 import com.inspur.emmcloud.bean.work.Location;
 import com.inspur.emmcloud.bean.work.OfficeBuilding;
+import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
@@ -64,14 +64,7 @@ public class CreateCommonOfficeSpaceActivity extends BaseActivity {
 		String allCommonBuildingIds = PreferencesUtils.getString(
 				getApplicationContext(), MyApplication.getInstance().getTanent() + uid
 						+ "allCommonBuildingIds");
-		if (allCommonBuildingIds != null) {
-			try {
-				allCommonBuildingIdList = JSON.parseArray(allCommonBuildingIds,
-						String.class);
-			}catch (Exception e){
-				e.printStackTrace();
-			}
-		}
+		allCommonBuildingIdList = JSONUtils.JSONArray2List(allCommonBuildingIds,new ArrayList<String>());
 	}
 
 	/**

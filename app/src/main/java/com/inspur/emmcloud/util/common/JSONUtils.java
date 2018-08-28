@@ -1,5 +1,9 @@
 package com.inspur.emmcloud.util.common;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
+import com.alibaba.fastjson.parser.Feature;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -987,7 +991,9 @@ public class JSONUtils {
             JSONObject obj = array.getJSONObject(index);
             return obj;
         } catch (Exception e) {
-            e.printStackTrace();
+            if (isPrintException) {
+                e.printStackTrace();
+            }
         }
         return defaultValue;
     }
@@ -1006,7 +1012,9 @@ public class JSONUtils {
             String obj = array.getString(index);
             return obj;
         } catch (Exception e) {
-            e.printStackTrace();
+            if (isPrintException) {
+                e.printStackTrace();
+            }
         }
         return defaultValue;
     }
@@ -1023,10 +1031,51 @@ public class JSONUtils {
         try {
             jsonObject = new JSONObject(content);
         } catch (Exception e) {
-            e.printStackTrace();
+            if (isPrintException) {
+                e.printStackTrace();
+            }
             return false;
         }
         return jsonObject.has(key);
+    }
+
+
+    public static String toJSONString(Object object) {
+        try {
+            return JSON.toJSONString(object);
+        }catch (Exception e){
+            if (isPrintException) {
+                e.printStackTrace();
+            }
+        }
+        return "";
+    }
+
+    public static <T> List<T> parseArray(String text, Class<T> clazz){
+        List<T> list = null;
+        try {
+            list =  JSON.parseArray(text,clazz);
+        }catch (Exception e){
+            if (isPrintException) {
+                e.printStackTrace();
+            }
+        }
+        if (list == null){
+            list= new ArrayList<>();
+        }
+        return list;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> T parseObject(String text, TypeReference<T> type, Feature... features) {
+        try {
+            return (T) JSON.parseObject(text,type,features);
+        }catch (Exception e){
+            if (isPrintException) {
+                e.printStackTrace();
+            }
+        }
+        return null;
     }
 
 }

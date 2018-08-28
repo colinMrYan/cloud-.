@@ -19,7 +19,6 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.alibaba.fastjson.JSON;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -30,6 +29,7 @@ import com.inspur.emmcloud.bean.work.GetTaskListResult;
 import com.inspur.emmcloud.bean.work.TaskColorTag;
 import com.inspur.emmcloud.bean.work.TaskResult;
 import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -42,7 +42,6 @@ import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -484,14 +483,7 @@ public class MessionListActivity extends BaseActivity{
 			String chooseTags = PreferencesUtils.getString(
 					MessionListActivity.this, MyApplication.getInstance().getTanent() + userId
 							+ "chooseTags", "");
-			ArrayList<String> chooseTagList;
-			if (!StringUtils.isBlank(chooseTags)) {
-				chooseTagList = (ArrayList<String>) JSON.parseArray(chooseTags,
-						String.class);
-			} else {
-				chooseTagList = new ArrayList<String>();
-			}
-
+			ArrayList<String> chooseTagList= JSONUtils.JSONArray2List(chooseTags,new ArrayList<String>());;
 			handleTaskList(getTaskListResult, chooseTagList);
 			handleResultUI(chooseTagList);
 			adapter = new MessionListAdapter();
