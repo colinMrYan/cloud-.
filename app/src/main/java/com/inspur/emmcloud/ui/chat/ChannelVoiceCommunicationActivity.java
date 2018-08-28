@@ -27,6 +27,7 @@ import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.MediaPlayerManagerUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.common.ResolutionUtils;
 import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
@@ -50,6 +51,7 @@ import java.util.List;
 public class ChannelVoiceCommunicationActivity extends BaseActivity{
     public static final String VOICE_COMMUNICATION_STATE = "voice_communication_state";//传递页面布局样式的
     public static final String VOICE_TIME = "voice_time";
+    public static final String SCREEN_SIZE = "screen_size";
     public static final int INVITER_LAYOUT_STATE = 0;//邀请人状态布局
     public static final int INVITEE_LAYOUT_STATE = 1;//被邀请人状态布局
     public static final int COMMUNICATION_LAYOUT_STATE = 2;//通话中布局状态
@@ -144,6 +146,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity{
     public void createCommunicationService(){
         Intent intent = new Intent(this,VoiceHoldService.class);
         intent.putExtra(VOICE_TIME, Long.parseLong(TimeUtils.getChronometerSeconds(chronometerCommunicationTime)));
+        intent.putExtra(SCREEN_SIZE, ResolutionUtils.getWidth(this));
         startService(intent);
     }
 

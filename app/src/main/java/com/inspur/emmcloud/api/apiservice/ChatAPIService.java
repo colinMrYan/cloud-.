@@ -1141,13 +1141,11 @@ public class ChatAPIService {
         HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context,compelteUrl) {
             @Override
             public void callbackSuccess(byte[] arg0) {
-                LogUtils.YfcDebug("获取Channel信息成功："+new String(arg0));
                 apiInterface.returnGetVoiceCommunicationChannelInfoSuccess(new GetVoiceCommunicationResult(new String(arg0)));
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                LogUtils.YfcDebug("获取Channel信息失败："+error+responseCode);
                 apiInterface.returnGetVoiceCommunicationChannelInfoFail(error,responseCode);
             }
 

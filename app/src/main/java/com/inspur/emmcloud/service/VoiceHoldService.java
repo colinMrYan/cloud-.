@@ -31,6 +31,7 @@ public class VoiceHoldService extends Service {
     private int statusBarHeight = -1;
     private LayoutInflater inflater;
     private long baseTime = 0;
+    private int screenSize;
     @Override
     public IBinder onBind(Intent intent) {
         return null;
@@ -40,12 +41,13 @@ public class VoiceHoldService extends Service {
     public void onCreate() {
         super.onCreate();
         inflater = LayoutInflater.from(getApplication());
-        initViews();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         baseTime = intent.getLongExtra(ChannelVoiceCommunicationActivity.VOICE_TIME, 0);
+        screenSize = intent.getIntExtra(ChannelVoiceCommunicationActivity.SCREEN_SIZE,0);
+        initViews();
         createToucher();
         return super.onStartCommand(intent, flags, startId);
     }
@@ -78,13 +80,16 @@ public class VoiceHoldService extends Service {
         params.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
         //设置窗口初始停靠位置.
         params.gravity = Gravity.LEFT | Gravity.TOP;
-        params.x = 0;
-        params.y = 0;
+        params.x = screenSize - DensityUtil.dip2px(this,74);
+        params.y = DensityUtil.dip2px(this,4);
         //设置悬浮窗口长宽数据.
         params.width = DensityUtil.dip2px(this,64);
         params.height = DensityUtil.dip2px(this,84);
     }
 
+    /**
+     * 创建悬浮窗
+     */
     private void createToucher() {
         //主动计算出当前View的宽高信息.
         relativeLayoutVoiceHold.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
@@ -93,7 +98,6 @@ public class VoiceHoldService extends Service {
         if (resourceId > 0) {
             statusBarHeight = getResources().getDimensionPixelSize(resourceId);
         }
-        LogUtils.YfcDebug("状态栏高度为:" + statusBarHeight);
         chronometer.setBase(SystemClock.elapsedRealtime() - (baseTime * 1000));
         chronometer.start();
         initLinsters();
@@ -107,7 +111,6 @@ public class VoiceHoldService extends Service {
             long[] hints = new long[2];
             @Override
             public void onClick(View v) {
-                LogUtils.YfcDebug("点击了View");
                 System.arraycopy(hints, 1, hints, 0, hints.length - 1);
 //                hints[hints.length - 1] = SystemClock.uptimeMillis();
 //                if (SystemClock.uptimeMillis() - hints[0] >= 700) {
