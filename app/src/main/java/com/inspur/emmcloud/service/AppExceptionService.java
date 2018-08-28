@@ -74,7 +74,7 @@ public class AppExceptionService extends Service {
 				contentObj.put("enterpriseCode", "");
 			}
 			contentObj.put("deviceOS", "Android");
-			contentObj.put("deviceOSVersion ", android.os.Build.VERSION.RELEASE);
+			contentObj.put("deviceOSVersion", android.os.Build.VERSION.RELEASE);
 			contentObj.put("deviceModel", android.os.Build.MODEL);
 
 			JSONArray errorDataArray = new JSONArray();
