@@ -171,5 +171,4 @@ public abstract class ImpPlugin implements IPlugin {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
     }
 
-    ;
 }

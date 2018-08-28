@@ -109,35 +109,17 @@ public class CameraUtils {
 
     public boolean equalRateLevel0(Size s, float rate){
         float r = (float)(s.width)/(float)(s.height);
-        if(Math.abs(r - rate) <= 0.01)
-        {
-            return true;
-        }
-        else{
-            return false;
-        }
+        return Math.abs(r - rate) <= 0.01;
     }
 
     public boolean equalRateLevel1(Size s, float rate){
         float r = (float)(s.width)/(float)(s.height);
-        if(Math.abs(r - rate) <= 0.2)
-        {
-            return true;
-        }
-        else{
-            return false;
-        }
+        return Math.abs(r - rate) <= 0.2;
     }
 
     public boolean equalRateLevel2(Size s, float rate){
         float r = (float)(s.width)/(float)(s.height);
-        if(Math.abs(r - rate) <= 0.5)
-        {
-            return true;
-        }
-        else{
-            return false;
-        }
+        return Math.abs(r - rate) <= 0.5;
     }
 
     public  class CameraSizeComparator implements Comparator<Size> {

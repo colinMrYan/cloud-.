@@ -57,7 +57,7 @@ public class MDM extends APIInterfaceInstance {
 	}
 
 	public void addOnMDMListener(MDMListener mdmListener) {
-		this.mdmListener = mdmListener;
+		MDM.mdmListener = mdmListener;
 	}
 
 	public void destroyOnMDMListener(){

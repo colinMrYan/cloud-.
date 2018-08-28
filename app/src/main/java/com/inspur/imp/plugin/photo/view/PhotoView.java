@@ -234,12 +234,9 @@ public class PhotoView extends ImageView {
     }
 
     private boolean hasSize(Drawable d) {
-        if ((d.getIntrinsicHeight() <= 0 || d.getIntrinsicWidth() <= 0)
+        return !((d.getIntrinsicHeight() <= 0 || d.getIntrinsicWidth() <= 0)
                 && (d.getMinimumWidth() <= 0 || d.getMinimumHeight() <= 0)
-                && (d.getBounds().width() <= 0 || d.getBounds().height() <= 0)) {
-            return false;
-        }
-        return true;
+                && (d.getBounds().width() <= 0 || d.getBounds().height() <= 0));
     }
 
     private static int getDrawableWidth(Drawable d) {
@@ -691,10 +688,7 @@ public class PhotoView extends ImageView {
                 return false;
             mScale *= scaleFactor;
             Log.d("jason","mScale===end============"+mScale);
-            if (mScale > 1.0f)
-                isZoonUp = true;
-            else
-                isZoonUp = false;
+            isZoonUp = mScale > 1.0f;
 //            mScaleCenter.set(detector.getFocusX(), detector.getFocusY());
             mAnimaMatrix.postScale(scaleFactor, scaleFactor, detector.getFocusX(), detector.getFocusY());
             executeTranslate();
@@ -930,18 +924,14 @@ public class PhotoView extends ImageView {
         if (mImgRect.width() <= mWidgetRect.width()) return false;
         if (direction < 0 && Math.round(mImgRect.left) - direction >= mWidgetRect.left)
             return false;
-        if (direction > 0 && Math.round(mImgRect.right) - direction <= mWidgetRect.right)
-            return false;
-        return true;
+        return !(direction > 0 && Math.round(mImgRect.right) - direction <= mWidgetRect.right);
     }
 
     public boolean canScrollVerticallySelf(float direction) {
         if (mImgRect.height() <= mWidgetRect.height()) return false;
         if (direction < 0 && Math.round(mImgRect.top) - direction >= mWidgetRect.top)
             return false;
-        if (direction > 0 && Math.round(mImgRect.bottom) - direction <= mWidgetRect.bottom)
-            return false;
-        return true;
+        return !(direction > 0 && Math.round(mImgRect.bottom) - direction <= mWidgetRect.bottom);
     }
 
     @Override

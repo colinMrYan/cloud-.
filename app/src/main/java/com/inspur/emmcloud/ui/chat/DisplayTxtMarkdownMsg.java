@@ -35,22 +35,21 @@ public class DisplayTxtMarkdownMsg {
     public static View getView(final Context context, Message msg) {
         View cardContentView = LayoutInflater.from(context).inflate(
                 R.layout.chat_msg_card_child_text_markdown_view, null);
-        final boolean isMyMsg = msg.getFromUser().equals(
-                ((MyApplication) context.getApplicationContext()).getUid());
+        final boolean isMyMsg = msg.getFromUser().equals(MyApplication.getInstance().getUid());
         final TextView richTitleText = (TextView) cardContentView
                 .findViewById(R.id.title_text);
         final TextView richContentText = (TextView) cardContentView
                 .findViewById(R.id.content_text);
 
-
+        (cardContentView.findViewById(R.id.root_layout)).setBackgroundColor(context.getResources().getColor(
+                isMyMsg ? R.color.bg_my_card : R.color.white));
         (cardContentView
-                .findViewById(R.id.root_layout)).setBackgroundResource(isMyMsg?R.drawable.ic_chat_msg_img_cover_arrow_right:R.drawable.ic_chat_msg_img_cover_arrow_left);;
+                .findViewById(R.id.card_layout)).setBackgroundResource(isMyMsg?R.drawable.ic_chat_msg_img_cover_arrow_right:R.drawable.ic_chat_msg_img_cover_arrow_left);
 
         richTitleText.setTextColor(context.getResources().getColor(
                 isMyMsg ? R.color.white : R.color.black));
         richContentText.setTextColor(context.getResources().getColor(
                 isMyMsg ? R.color.white : R.color.black));
-
 
         String text = msg.getMsgContentTextMarkdown().getText();
         String title = msg.getMsgContentTextMarkdown().getTitle();

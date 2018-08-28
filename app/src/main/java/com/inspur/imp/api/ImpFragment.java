@@ -277,21 +277,6 @@ public class ImpFragment extends Fragment {
 
 
     /**
-     * 返回逻辑
-     *
-     * @return
-     */
-    public boolean onKeyDown() {
-        if (webView.canGoBack()) {
-            webView.goBack();// 返回上一页面
-            return true;
-        } else {
-            finishActivity();// 退出程序
-        }
-        return false;
-    }
-
-    /**
      * 在WebClient获取header
      *
      * @return
@@ -481,7 +466,7 @@ public class ImpFragment extends Fragment {
      * （不是GS应用，GS应用有重定向，不容易实现返回）
      */
     public void initWebViewGoBackOrClose() {
-        if (headerText != null) {
+        if (headerText != null && webView != null) {
             if (getActivity().getClass().getName().equals(ImpActivity.class.getName())) {
                 (rootView.findViewById(Res.getWidgetID("imp_close_btn"))).setVisibility(webView.canGoBack() ? View.VISIBLE : View.GONE);
             }
@@ -510,13 +495,15 @@ public class ImpFragment extends Fragment {
     /**
      * 返回
      */
-    private void goBack() {
+    public boolean goBack() {
         if (webView.canGoBack()) {
             webView.goBack();// 返回上一页面
             setGoBackTitle();
+            return true;
         } else {
             finishActivity();
         }
+        return false;
     }
 
     public void finishActivity() {

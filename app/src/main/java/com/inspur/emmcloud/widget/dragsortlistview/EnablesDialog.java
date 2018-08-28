@@ -34,7 +34,7 @@ public class EnablesDialog extends DialogFragment {
     }
 
     public interface EnabledOkListener {
-        public void onEnabledOkClick(boolean drag, boolean sort, boolean remove);
+        void onEnabledOkClick(boolean drag, boolean sort, boolean remove);
     }
 
     public void setEnabledOkListener(EnabledOkListener l) {

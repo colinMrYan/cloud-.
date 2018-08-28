@@ -30,10 +30,6 @@ import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 import com.inspur.emmcloud.util.privates.cache.MsgCacheUtil;
 import com.inspur.emmcloud.widget.HorizontalProgressBarWithNumber;
 
-import org.xutils.http.HttpMethod;
-import org.xutils.http.RequestParams;
-import org.xutils.http.app.RedirectHandler;
-import org.xutils.http.request.UriRequest;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 
@@ -142,7 +138,7 @@ public class GroupFileActivity extends BaseActivity {
                 .findViewById(R.id.file_download_progressbar);
         GroupFileInfo groupFileInfo = fileInfoList.get(position);
         final String fileName = groupFileInfo.getName();
-        final String fileUrl = groupFileInfo.getUrl();
+        final String source = groupFileInfo.getUrl();
         fileNameText.setText(fileName);
         fileSizeText.setText(groupFileInfo.getSize());
         fileOwnerText.setText(groupFileInfo.getOwner());
@@ -161,7 +157,7 @@ public class GroupFileActivity extends BaseActivity {
                     return;
                 }
 
-                APIDownloadCallBack progressCallback = new APIDownloadCallBack(GroupFileActivity.this, fileUrl) {
+                APIDownloadCallBack progressCallback = new APIDownloadCallBack(GroupFileActivity.this, source) {
 
                     @Override
                     public void callbackStart() {
@@ -207,26 +203,7 @@ public class GroupFileActivity extends BaseActivity {
                 if (FileUtils.isFileExist(fileDownloadPath)) {
                     FileUtils.openFile(getApplicationContext(), fileDownloadPath);
                 } else {
-                    RequestParams params = MyApplication.getInstance().getHttpRequestParams(fileUrl);
-                    if (MyApplication.getInstance().isV0VersionChat()){
-                        params.setAutoResume(true);// 断点下载
-                        params.setSaveFilePath(fileDownloadPath);
-                        params.setCancelFast(true);
-                    }else {
-                        params.setRedirectHandler(new RedirectHandler() {
-                            @Override
-                            public RequestParams getRedirectParams(UriRequest uriRequest) throws Throwable {
-                                String locationUrl = uriRequest.getResponseHeader("Location");
-                                RequestParams params = new RequestParams(locationUrl);
-                                params.setAutoResume(true);// 断点下载
-                                params.setSaveFilePath(fileDownloadPath);
-                                params.setCancelFast(true);
-                                params.setMethod(HttpMethod.GET);
-                                return params;
-                            }
-                        });
-                    }
-                    new DownLoaderUtils().startDownLoad(params,progressCallback);
+                    new DownLoaderUtils().startDownLoad(source,fileDownloadPath,progressCallback);
                 }
             }
         });

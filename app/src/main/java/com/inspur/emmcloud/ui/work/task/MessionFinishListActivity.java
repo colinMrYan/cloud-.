@@ -186,7 +186,7 @@ public class MessionFinishListActivity extends BaseActivity implements
         public void onItemClick(AdapterView<?> parent, View view, int position,
                                 long id) {
             Intent intent = new Intent();
-            intent.putExtra("task", (Serializable) taskList.get(position));
+            intent.putExtra("task", taskList.get(position));
             intent.putExtra("tabIndex", CAN_NOT_CHANGE);
             intent.setClass(MessionFinishListActivity.this,
                     MessionDetailActivity.class);

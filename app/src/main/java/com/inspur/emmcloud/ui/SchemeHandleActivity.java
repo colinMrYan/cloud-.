@@ -245,14 +245,8 @@ public class SchemeHandleActivity extends Activity {
                                     IntentUtils.startActivity(SchemeHandleActivity.this, VolumeHomePageActivity.class,true);
                                 }
                                 break;
-                            case "ecc-calendar":
-                                IntentUtils.startActivity(SchemeHandleActivity.this, CalActivity.class,true);
-                                break;
-                            case "ecc-to-do ":
-                                IntentUtils.startActivity(SchemeHandleActivity.this, MessionListActivity.class,true);
-                                break;
-                            case "ecc-meeting":
-                                IntentUtils.startActivity(SchemeHandleActivity.this, MeetingListActivity.class,true);
+                            case "native":
+                                openNativeSchemeByHost(host);
                                 break;
                             default:
                                 finish();
@@ -345,10 +339,7 @@ public class SchemeHandleActivity extends Activity {
      */
     private boolean isLinkShare() {
         Intent intent = getIntent();
-        if(intent.getExtras() != null && !StringUtils.isBlank(intent.getExtras().getString(Intent.EXTRA_TEXT))){
-            return true;
-        }
-        return false;
+        return intent.getExtras() != null && !StringUtils.isBlank(intent.getExtras().getString(Intent.EXTRA_TEXT));
     }
 
     /**
@@ -433,6 +424,20 @@ public class SchemeHandleActivity extends Activity {
             indexIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
                     | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
             context.startActivity(indexIntent);
+        }
+    }
+
+    private void openNativeSchemeByHost(String host){
+        switch (host){
+            case "ecc-calendar":
+                IntentUtils.startActivity(SchemeHandleActivity.this, CalActivity.class,true);
+                break;
+            case "ecc-to-do":
+                IntentUtils.startActivity(SchemeHandleActivity.this, MessionListActivity.class,true);
+                break;
+            case "ecc-meeting":
+                IntentUtils.startActivity(SchemeHandleActivity.this, MeetingListActivity.class,true);
+                break;
         }
     }
 

@@ -1,7 +1,7 @@
 package com.inspur.emmcloud.bean.chat;
 
-import com.alibaba.fastjson.JSON;
 import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.util.common.JSONUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -10,7 +10,6 @@ import org.xutils.db.annotation.Column;
 import org.xutils.db.annotation.Table;
 
 import java.util.ArrayList;
-import java.util.List;
 
 @Table(name = "ChannelGroup")
 public class ChannelGroup {
@@ -229,17 +228,8 @@ public class ChannelGroup {
         return memberArray;
     }
 
-    public List<String> getMemberList() {
-        List<String> memberList = null;
-        try {
-            memberList = JSON.parseArray(members, String.class);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
-        if (memberList == null) {
-            memberList = new ArrayList<>();
-        }
+    public ArrayList<String> getMemberList() {
+        ArrayList<String> memberList = JSONUtils.JSONArray2List(members,new ArrayList<String>());
         return memberList;
     }
 
@@ -256,9 +246,6 @@ public class ChannelGroup {
             return false;
 
         final ChannelGroup otherChannelGroup = (ChannelGroup) other;
-        if (getCid().equals(otherChannelGroup.getCid())) {
-            return true;
-        }
-        return false;
+        return getCid().equals(otherChannelGroup.getCid());
     }
 }

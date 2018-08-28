@@ -136,7 +136,7 @@ public class ModifyUserFirstPsdActivity extends BaseActivity {
 			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			intent.setClass(ModifyUserFirstPsdActivity.this, LoginActivity.class);
 			ModifyUserFirstPsdActivity.this.startActivity(intent);
-			((Activity) ModifyUserFirstPsdActivity.this).finish();
+			ModifyUserFirstPsdActivity.this.finish();
 		}
 
 		@Override

@@ -91,8 +91,7 @@ public class MyAppWidgetUtils {
      * @return
      */
     public static boolean checkNeedUpdateMyAppWidget(Context context) {
-        return StringUtils.isBlank(PreferencesByUserAndTanentUtils.getString(context, Constant.PREF_MY_APP_RECOMMEND_DATA, "")) ? true
-                : Integer.parseInt(TimeUtils.getFormatYearMonthDay()) >
+        return StringUtils.isBlank(PreferencesByUserAndTanentUtils.getString(context, Constant.PREF_MY_APP_RECOMMEND_DATA, "")) || Integer.parseInt(TimeUtils.getFormatYearMonthDay()) >
                 Integer.parseInt(PreferencesByUserAndTanentUtils.getString(context, Constant.PREF_MY_APP_RECOMMEND_DATE, "0"));
     }
 

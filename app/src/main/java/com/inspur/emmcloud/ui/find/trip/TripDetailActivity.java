@@ -436,7 +436,7 @@ public class TripDetailActivity extends BaseActivity {
 			}
 			ToastUtils.show(getApplicationContext(), R.string.save_success);
 			Intent intent = new Intent();
-			intent.putExtra("newTrip", (Serializable) uploadTrip);
+			intent.putExtra("newTrip", uploadTrip);
 			setResult(RESULT_OK, intent);
 			Intent intentBroadCase = new Intent("refresh_trip_list");
 			LocalBroadcastManager.getInstance(TripDetailActivity.this).sendBroadcast(intentBroadCase);

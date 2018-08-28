@@ -63,10 +63,7 @@ public class AppCommonlyUse {
 			return false;
 		}
 		AppCommonlyUse appCommonlyUse = (AppCommonlyUse) other;
-		if(!getAppID().equals(appCommonlyUse.getAppID())){
-			return false;
-		}
-		return true;
-	}
+        return getAppID().equals(appCommonlyUse.getAppID());
+    }
 
 }

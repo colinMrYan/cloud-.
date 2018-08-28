@@ -191,11 +191,11 @@ public class CalEventAddActivity extends BaseActivity {
 			}
 		}
 		String startDateStr = TimeUtils.calendar2FormatString(getApplicationContext(), startCalendar, TimeUtils.FORMAT_YEAR_MONTH_DAY);
-		String startTimeStr = TimeUtils.calendar2FormatString(getApplicationContext(), startCalendar, TimeUtils.FORMAT_HOUR_MINUTE);;
-		String endDateStr = TimeUtils.calendar2FormatString(getApplicationContext(), endCalendar, TimeUtils.FORMAT_YEAR_MONTH_DAY);;
-		String endTimeStr = TimeUtils.calendar2FormatString(getApplicationContext(), endCalendar, TimeUtils.FORMAT_HOUR_MINUTE);;
+		String startTimeStr = TimeUtils.calendar2FormatString(getApplicationContext(), startCalendar, TimeUtils.FORMAT_HOUR_MINUTE);
+        String endDateStr = TimeUtils.calendar2FormatString(getApplicationContext(), endCalendar, TimeUtils.FORMAT_YEAR_MONTH_DAY);
+        String endTimeStr = TimeUtils.calendar2FormatString(getApplicationContext(), endCalendar, TimeUtils.FORMAT_HOUR_MINUTE);
 
-		startDateText.setText(startDateStr);
+        startDateText.setText(startDateStr);
 		startTimeText.setText(startTimeStr);
 		endDateText.setText(endDateStr);
 		endTimeText.setText(endTimeStr);
@@ -304,8 +304,8 @@ public class CalEventAddActivity extends BaseActivity {
 				startDateStr = startDateText.getText() + " "
 						+ startTimeText.getText();
 				startCalendar = TimeUtils.timeString2Calendar(getApplicationContext(),startDateStr,
-						TimeUtils.FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE);;
-				showTimePickerDlg(true, startCalendar);
+						TimeUtils.FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE);
+                showTimePickerDlg(true, startCalendar);
 			}
 
 			break;
@@ -316,8 +316,8 @@ public class CalEventAddActivity extends BaseActivity {
 						+ endTimeText.getText();
 				
 				endCalendar = TimeUtils.timeString2Calendar(getApplicationContext(),endDateStr,
-						TimeUtils.FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE);;
-				showDatePickerDlg(false, endCalendar);
+						TimeUtils.FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE);
+                showDatePickerDlg(false, endCalendar);
 			}
 
 			break;
@@ -347,7 +347,7 @@ public class CalEventAddActivity extends BaseActivity {
 						CalTypeSelectActivity.class);
 				intent.putExtra("calType", repeatText.getText());
 				if (calendar != null) {
-					intent.putExtra("selectCalendar", (Serializable) calendar);
+					intent.putExtra("selectCalendar", calendar);
 				}
 				startActivityForResult(intent, CAL_TYPE_REQUEST_CODE);
 			}
@@ -564,7 +564,7 @@ public class CalEventAddActivity extends BaseActivity {
 			ToastUtils.show(getApplicationContext(),
 					getString(R.string.modify_success));
 			Intent intent = new Intent();
-			intent.putExtra("calEvent", (Serializable) calEvent);
+			intent.putExtra("calEvent", calEvent);
 			LogUtils.debug("jason", "title="+calEvent.getTitle());
 			setResult(RESULT_OK, intent);
 			finish();

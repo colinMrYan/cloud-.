@@ -70,9 +70,9 @@
 
     </com.inspur.emmcloud.widget.MySwipeRefreshLayout>
 
-    <com.inspur.emmcloud.widget.ECMChatInputMenu
+    <com.inspur.emmcloud.widget.ECMChatInputMenuV0
         android:id="@+id/chat_input_menu"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"></com.inspur.emmcloud.widget.ECMChatInputMenu>
+        android:layout_height="wrap_content"></com.inspur.emmcloud.widget.ECMChatInputMenuV0>
 
 </LinearLayout>

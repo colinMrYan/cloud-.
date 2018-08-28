@@ -11,7 +11,15 @@ import java.io.Serializable;
 
 @Table(name = "Message",onCreated = "CREATE INDEX messageindex ON Message(channel)")
 public class Message implements Serializable {
-    private static final String TAG = "Msg";
+    public static final String MESSAGE_TYPE_FILE_REGULAR_FILE = "file/regular-file";
+    public static final String MESSAGE_TYPE_MEDIA_IMAGE = "media/image";
+    public static final String MESSAGE_TYPE_MEDIA_VOICE = "media/voice";
+    public static final String MESSAGE_TYPE_TEXT_PLAIN = "text/plain";
+    public static final String MESSAGE_TYPE_TEXT_MARKDOWN = "text/markdown";
+    public static final String MESSAGE_TYPE_EXTENDED_CONTACT_CARD = "extended/contact-card";
+    public static final String MESSAGE_TYPE_EXTENDED_ACTIONS = "extended/actions";
+    public static final String MESSAGE_TYPE_COMMENT_TEXT_PLAIN= "comment/text-plain";
+    public static final String MESSAGE_TYPE_EXTENDED_LINKS = "extended/links";
     @Column(name = "id", isId = true)
     private String id;
     @Column(name = "message")
@@ -95,6 +103,10 @@ public class Message implements Serializable {
 
     public MsgContentTextMarkdown getMsgContentTextMarkdown() {
         return new MsgContentTextMarkdown(content);
+    }
+
+    public MsgContentMediaVoice getMsgContentMediaVoice(){
+        return new MsgContentMediaVoice(content);
     }
 
     public MsgContentTextPlain getMsgContentTextPlain() {
@@ -199,9 +211,7 @@ public class Message implements Serializable {
             return false;
 
         final Message otherMsg = (Message) other;
-        if (!getId().equals(otherMsg.getId()))
-            return false;
-        return true;
+        return getId().equals(otherMsg.getId());
     }
 
     public String Message2MsgBody() {

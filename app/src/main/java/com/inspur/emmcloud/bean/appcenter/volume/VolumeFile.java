@@ -218,8 +218,6 @@ public class VolumeFile implements Serializable{
             return false;
 
         final VolumeFile otherVolumeFile = (VolumeFile) other;
-        if (getId().equals(otherVolumeFile.getId()))
-            return true;
-        return false;
+        return getId().equals(otherVolumeFile.getId());
     }
 }

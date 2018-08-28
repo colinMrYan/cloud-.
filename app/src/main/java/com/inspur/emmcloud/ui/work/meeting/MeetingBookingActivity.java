@@ -148,8 +148,8 @@ public class MeetingBookingActivity extends BaseActivity {
                 break;
             case R.id.meeting_booking_content_text:
             case R.id.meeting_booking_notice_text:
-                ((EditText) v).setFocusableInTouchMode(true);
-                ((EditText) v).setFocusable(true);
+                v.setFocusableInTouchMode(true);
+                v.setFocusable(true);
                 Editable editable = ((EditText) v).getEditableText();
                 Selection.setSelection(editable, editable.length());
                 break;

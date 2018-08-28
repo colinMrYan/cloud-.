@@ -21,8 +21,8 @@ import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.Msg;
 import com.inspur.emmcloud.ui.chat.ChannelMsgDetailActivity;
 import com.inspur.emmcloud.ui.chat.DisplayAttachmentCardMsg;
-import com.inspur.emmcloud.ui.chat.DisplayRegularFileMsg;
 import com.inspur.emmcloud.ui.chat.DisplayExtendedActionsMsg;
+import com.inspur.emmcloud.ui.chat.DisplayRegularFileMsg;
 import com.inspur.emmcloud.ui.chat.DisplayResFileMsg;
 import com.inspur.emmcloud.ui.chat.DisplayResImageMsg;
 import com.inspur.emmcloud.ui.chat.DisplayResLinkMsg;
@@ -36,7 +36,7 @@ import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
-import com.inspur.emmcloud.widget.ECMChatInputMenu;
+import com.inspur.emmcloud.widget.ECMChatInputMenuV0;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,9 +51,9 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
     private MyItemClickListener mItemClickListener;
     private ChatAPIService apiService;
     private String channelType;
-    private ECMChatInputMenu chatInputMenu;
+    private ECMChatInputMenuV0 chatInputMenu;
 
-    public ChannelMsgAdapter(Activity context, ChatAPIService apiService, String channelType, ECMChatInputMenu chatInputMenu) {
+    public ChannelMsgAdapter(Activity context, ChatAPIService apiService, String channelType, ECMChatInputMenuV0 chatInputMenu) {
         this.context = context;
         this.apiService = apiService;
         this.channelType = channelType;
@@ -65,7 +65,7 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
         this.msgList.addAll(msgList);
     }
 
-    public void setChannelData(String channelType, ECMChatInputMenu chatInputMenu){
+    public void setChannelData(String channelType, ECMChatInputMenuV0 chatInputMenu){
         this.channelType = channelType;
         this.chatInputMenu = chatInputMenu;
     }

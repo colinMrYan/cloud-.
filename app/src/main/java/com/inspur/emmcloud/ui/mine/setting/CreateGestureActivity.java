@@ -187,7 +187,7 @@ public class CreateGestureActivity extends BaseActivity {
 		//二次确认正确
 		CONFIRMCORRECT(R.string.create_gesture_confirm_correct, R.color.grey_a5a5a5);
 
-		private Status(int strId, int colorId) {
+		Status(int strId, int colorId) {
 			this.strId = strId;
 			this.colorId = colorId;
 		}

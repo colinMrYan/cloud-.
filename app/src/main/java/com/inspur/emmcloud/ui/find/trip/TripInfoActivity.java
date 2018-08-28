@@ -105,7 +105,7 @@ public class TripInfoActivity extends BaseActivity{
 			break;
 		case R.id.edit_text:
 			Intent intent = new Intent(getApplicationContext(),TripDetailActivity.class);
-			intent.putExtra("trip", (Serializable)trip);
+			intent.putExtra("trip", trip);
 			startActivityForResult(intent, EDIT_TRIP_INFO);
 			break;
 

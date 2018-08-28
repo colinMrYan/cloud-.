@@ -76,8 +76,6 @@ public class ContactSearchBaseFragment extends Fragment {
     protected void showSearchPop() {
     }
 
-    ;
-
 
     private void setLoadingDlgDimiss() {
         if (isContactUserReady && isContactOrgReady) {

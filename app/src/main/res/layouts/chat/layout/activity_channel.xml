@@ -102,7 +102,6 @@
         </RelativeLayout>
 
     </android.support.v4.widget.SwipeRefreshLayout>
-    >
 
     <com.inspur.emmcloud.widget.ECMChatInputMenu
         android:id="@+id/chat_input_menu"

@@ -196,10 +196,8 @@ public class Meeting implements Serializable,Comparator {
 			return false;
 
 		final Meeting otherMeeting = (Meeting) other;
-		if (!getMeetingId().equals(otherMeeting.getMeetingId()))
-			return false;
-		return true;
-	}
+        return getMeetingId().equals(otherMeeting.getMeetingId());
+    }
 	public void setMeetingId(String meetingId) {
 		this.meetingId = meetingId;
 	}

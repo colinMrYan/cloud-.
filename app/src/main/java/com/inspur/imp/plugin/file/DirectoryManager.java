@@ -80,14 +80,8 @@ public class DirectoryManager {
         boolean status;
 
         // 如果SD卡的权限是允许访问的
-        if (sDCardStatus.equals(Environment.MEDIA_MOUNTED)) {
-            status = true;
-        }
-
         // 如果没有SD卡
-        else {
-            status = false;
-        }
+        status = sDCardStatus.equals(Environment.MEDIA_MOUNTED);
         return status;
     }
 	
