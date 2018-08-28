@@ -29,6 +29,7 @@ import com.inspur.emmcloud.util.common.MediaPlayerManagerUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
+import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.VoiceCommunicationUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.CircleTextImageView;
@@ -48,6 +49,7 @@ import java.util.List;
 @ContentView(R.layout.activity_voice_channel)
 public class ChannelVoiceCommunicationActivity extends BaseActivity{
     public static final String VOICE_COMMUNICATION_STATE = "voice_communication_state";//传递页面布局样式的
+    public static final String VOICE_TIME = "voice_time";
     public static final int INVITER_LAYOUT_STATE = 0;//邀请人状态布局
     public static final int INVITEE_LAYOUT_STATE = 1;//被邀请人状态布局
     public static final int COMMUNICATION_LAYOUT_STATE = 2;//通话中布局状态
@@ -117,7 +119,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity{
         StateBarUtils.changeStateBarColor(this,R.color.content_bg);
         voiceCommunicationUserInfoBeanList = (List<VoiceCommunicationJoinChannelInfoBean>) getIntent().getSerializableExtra("userList");
         voiceCommunicationUtils = MyApplication.getInstance().getVoiceCommunicationUtils();
-//        recoverData();
+        recoverData();
         initViews();
     }
 
@@ -125,8 +127,8 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity{
      * 如果是从小窗口来的，则恢复通话数据
      */
     private void recoverData() {
-        int state = getIntent().getIntExtra(VOICE_COMMUNICATION_STATE,EXCEPTION_STATE);
-        if(state != EXCEPTION_STATE){
+        STATE = getIntent().getIntExtra(VOICE_COMMUNICATION_STATE,EXCEPTION_STATE);
+        if(STATE == COME_BACK_FROM_SERVICE){
             STATE = voiceCommunicationUtils.getState();
             voiceCommunicationUserInfoBeanList = voiceCommunicationUtils.getVoiceCommunicationUserInfoBeanList();
             channelId = voiceCommunicationUtils.getChannelId();
@@ -141,6 +143,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity{
      */
     public void createCommunicationService(){
         Intent intent = new Intent(this,VoiceHoldService.class);
+        intent.putExtra(VOICE_TIME, Long.parseLong(TimeUtils.getChronometerSeconds(chronometerCommunicationTime)));
         startService(intent);
     }
 
@@ -171,10 +174,11 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity{
         layoutManagerMembersSecond.setOrientation(LinearLayoutManager.HORIZONTAL);
         recyclerViewCommunicationMemeberSecond.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(this,8)));
         recyclerViewCommunicationMemeberSecond.setLayoutManager(layoutManagerMembersSecond);
-        int state = getIntent().getIntExtra(VOICE_COMMUNICATION_STATE,EXCEPTION_STATE);
-        initCommunicationViewsAndMusicByState(state);
+//        int state = getIntent().getIntExtra(VOICE_COMMUNICATION_STATE,EXCEPTION_STATE);
+//        STATE = state;
+        initCommunicationViewsAndMusicByState(STATE);
         initFunctionState();
-        switch (state){
+        switch (STATE){
             case INVITER_LAYOUT_STATE:
                 if(voiceCommunicationUserInfoBeanList.size() <= 5){
                     recyclerViewFirst.setAdapter(voiceCommunicationMemberAdapterFirst);
@@ -194,6 +198,10 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity{
                 voiceCommunicationUtils.setEncryptionSecret(channelId);
                 getChannelInfoByChannelId(channelId);
                 break;
+        }
+        if(getIntent().getLongExtra(VOICE_TIME,0)>0){
+            chronometerCommunicationTime.setBase(SystemClock.elapsedRealtime() - getIntent().getLongExtra(VOICE_TIME,0) * 1000);
+            chronometerCommunicationTime.start();
         }
     }
 
@@ -257,17 +265,20 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity{
         int colorUnavailiable = ContextCompat.getColor(this,R.color.voice_communication_function_unavailiable_text);
         imgExcuse.setImageResource(state == COMMUNICATION_LAYOUT_STATE?R.drawable.icon_excuse_unselected:R.drawable.icon_excuse_unavailable);
         tvExcuse.setTextColor(state == COMMUNICATION_LAYOUT_STATE?colorNormal:colorUnavailiable);
-        imgExcuse.setClickable(state == COMMUNICATION_LAYOUT_STATE?true:false);
+        imgExcuse.setClickable(state == COMMUNICATION_LAYOUT_STATE);
 
         imgHandsFree.setImageResource(state == COMMUNICATION_LAYOUT_STATE?R.drawable.icon_hands_free_unselected:R.drawable.icon_hands_free_unavailable);
         tvHandsFree.setTextColor(state == COMMUNICATION_LAYOUT_STATE?colorNormal:colorUnavailiable);
-        imgHandsFree.setClickable(state == COMMUNICATION_LAYOUT_STATE?true:false);
+        imgHandsFree.setClickable(state == COMMUNICATION_LAYOUT_STATE);
 
         imgMute.setImageResource(state == COMMUNICATION_LAYOUT_STATE?R.drawable.icon_mute_unselcected:R.drawable.icon_mute_unavaiable);
         tvMute.setTextColor(state == COMMUNICATION_LAYOUT_STATE?colorNormal:colorUnavailiable);
-        imgMute.setClickable(state == COMMUNICATION_LAYOUT_STATE?true:false);
+        imgMute.setClickable(state == COMMUNICATION_LAYOUT_STATE);
 
-        tvCommunicationState.setText(state == INVITER_LAYOUT_STATE? "拨号中..." : (state == INVITEE_LAYOUT_STATE?"等待接听":(state == COMMUNICATION_LAYOUT_STATE?"通话中":"")));
+        //启用悬浮窗打开这里
+        imgPackUp.setVisibility(state == COMMUNICATION_LAYOUT_STATE?View.VISIBLE:View.GONE);
+
+        tvCommunicationState.setText(state == INVITER_LAYOUT_STATE? getString(R.string.voice_communication_dialog) : (state == INVITEE_LAYOUT_STATE?getString(R.string.voice_communication_waitting_answer):(state == COMMUNICATION_LAYOUT_STATE?getString(R.string.voice_communicaiton_watting_talking):"")));
         if(state == COMMUNICATION_LAYOUT_STATE){
             if(voiceCommunicationMemberList == null){
                 return;
@@ -466,10 +477,9 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity{
                 }
                 break;
             case R.id.img_voice_communication_pack_up:
-//                Toast.makeText(this, "点击了最小化，是否有悬浮窗权限："+ AppUtils.getAppOps(this), Toast.LENGTH_SHORT).show();
-//                saveCommunicationData();
-//                createCommunicationService();
-//                finish();
+                saveCommunicationData();
+                createCommunicationService();
+                finish();
                 break;
             default:
                 break;

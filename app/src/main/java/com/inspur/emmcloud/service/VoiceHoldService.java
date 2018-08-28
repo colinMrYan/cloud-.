@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.IBinder;
+import android.os.SystemClock;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -13,12 +14,12 @@ import android.view.WindowManager;
 import android.widget.Chronometer;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.ui.chat.ChannelVoiceCommunicationActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.emmcloud.util.privates.TimeUtils;
 
 public class VoiceHoldService extends Service {
     private RelativeLayout relativeLayoutVoiceHold;
@@ -29,6 +30,7 @@ public class VoiceHoldService extends Service {
     //状态栏高度.
     private int statusBarHeight = -1;
     private LayoutInflater inflater;
+    private long baseTime = 0;
     @Override
     public IBinder onBind(Intent intent) {
         return null;
@@ -39,8 +41,13 @@ public class VoiceHoldService extends Service {
         super.onCreate();
         inflater = LayoutInflater.from(getApplication());
         initViews();
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        baseTime = intent.getLongExtra(ChannelVoiceCommunicationActivity.VOICE_TIME, 0);
         createToucher();
-        LogUtils.YfcDebug("VoiceHoldService Created");
+        return super.onStartCommand(intent, flags, startId);
     }
 
     /**
@@ -79,10 +86,6 @@ public class VoiceHoldService extends Service {
     }
 
     private void createToucher() {
-        LogUtils.YfcDebug("toucherlayout-->left:" + relativeLayoutVoiceHold.getLeft());
-        LogUtils.YfcDebug("toucherlayout-->right:" + relativeLayoutVoiceHold.getRight());
-        LogUtils.YfcDebug("toucherlayout-->top:" + relativeLayoutVoiceHold.getTop());
-        LogUtils.YfcDebug("toucherlayout-->bottom:" + relativeLayoutVoiceHold.getBottom());
         //主动计算出当前View的宽高信息.
         relativeLayoutVoiceHold.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         //用于检测状态栏高度.
@@ -91,7 +94,7 @@ public class VoiceHoldService extends Service {
             statusBarHeight = getResources().getDimensionPixelSize(resourceId);
         }
         LogUtils.YfcDebug("状态栏高度为:" + statusBarHeight);
-        //浮动窗口按钮.
+        chronometer.setBase(SystemClock.elapsedRealtime() - (baseTime * 1000));
         chronometer.start();
         initLinsters();
     }
@@ -143,9 +146,8 @@ public class VoiceHoldService extends Service {
         Intent intent = new Intent(getBaseContext(), ChannelVoiceCommunicationActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE,ChannelVoiceCommunicationActivity.COME_BACK_FROM_SERVICE);
+        intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_TIME, Long.parseLong(TimeUtils.getChronometerSeconds(chronometer)));
         getApplication().startActivity(intent);
-        LogUtils.YfcDebug("要执行");
-        Toast.makeText(VoiceHoldService.this, "连续点击两次以退出", Toast.LENGTH_SHORT).show();
         stopSelf();
     }
 
