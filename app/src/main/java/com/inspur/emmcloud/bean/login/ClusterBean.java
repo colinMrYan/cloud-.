@@ -67,9 +67,6 @@ public class ClusterBean {
         }
         ClusterBean clusterBean = (ClusterBean) other;
         //此处从==判断是否相等  改为equals
-        if(!(getServiceName().equals(clusterBean.getServiceName()))){
-            return false;
-        }
-        return true;
+        return getServiceName().equals(clusterBean.getServiceName());
     }
 }

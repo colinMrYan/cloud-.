@@ -18,8 +18,6 @@ import com.inspur.emmcloud.api.CloudHttpMethod;
 import com.inspur.emmcloud.api.HttpUtils;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileUploadTokenResult;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
-import com.inspur.emmcloud.bean.chat.GetAddMembersSuccessResult;
-import com.inspur.emmcloud.bean.chat.GetChannelInfoResult;
 import com.inspur.emmcloud.bean.chat.GetChannelListResult;
 import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.bean.chat.GetFileUploadResult;
@@ -241,7 +239,7 @@ public class ChatAPIService {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
-                apiInterface.returnChannelInfoSuccess(new GetChannelInfoResult(new String(arg0)));
+                apiInterface.returnChannelInfoSuccess(new ChannelGroup(new String(arg0)));
             }
 
             @Override
@@ -684,7 +682,7 @@ public class ChatAPIService {
             public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
                 apiInterface
-                        .returnAddMembersSuccess(new GetAddMembersSuccessResult(new String(arg0)));
+                        .returnAddMembersSuccess(new ChannelGroup(new String(arg0)));
             }
 
             @Override
@@ -733,7 +731,7 @@ public class ChatAPIService {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
-                apiInterface.returnDelMembersSuccess(new GetChannelInfoResult(new String(arg0)));
+                apiInterface.returnDelMembersSuccess(new ChannelGroup(new String(arg0)));
             }
 
             @Override
@@ -1017,8 +1015,8 @@ public class ChatAPIService {
      * @param fileName
      * @param cid
      */
-    public void getFileUploadToken(final String fileName, final String cid) {
-        final String url = APIUri.getUploadFileTokenUrl(cid);
+    public void getFileUploadToken(final String fileName, final String cid,final boolean isMediaVoice) {
+        final String url = isMediaVoice?APIUri.getUploadMediaVoiceFileTokenUrl(cid):APIUri.getUploadFileTokenUrl(cid);
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
         params.addParameter("name", fileName);
         HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, url) {
@@ -1037,7 +1035,7 @@ public class ChatAPIService {
                 OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        getFileUploadToken(fileName, cid);
+                        getFileUploadToken(fileName, cid,isMediaVoice);
                     }
 
                     @Override

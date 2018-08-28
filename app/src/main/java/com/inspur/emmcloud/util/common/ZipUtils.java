@@ -72,7 +72,7 @@ public class ZipUtils {
      * @param folderPath 解压缩的目标目录
      * @throws IOException 当解压缩过程出错时抛出
      */
-    public static void upZipFile(File zipFile, String folderPath) throws ZipException, IOException {
+    public static void upZipFile(File zipFile, String folderPath) throws IOException {
         File desDir = new File(folderPath);
         if (!desDir.exists()) {
             desDir.mkdirs();
@@ -117,7 +117,7 @@ public class ZipUtils {
      * @throws IOException  IO错误时抛出
      */
     public static ArrayList<File> upZipSelectedFile(File zipFile, String folderPath,
-                                                    String nameContains) throws ZipException, IOException {
+                                                    String nameContains) throws IOException {
         ArrayList<File> fileList = new ArrayList<File>();
 
         File desDir = new File(folderPath);
@@ -169,7 +169,7 @@ public class ZipUtils {
      * @throws ZipException 压缩文件格式有误时抛出
      * @throws IOException  当解压缩过程出错时抛出
      */
-    public static ArrayList<String> getEntriesNames(File zipFile) throws ZipException, IOException {
+    public static ArrayList<String> getEntriesNames(File zipFile) throws IOException {
         ArrayList<String> entryNames = new ArrayList<String>();
         Enumeration<?> entries = getEntriesEnumeration(zipFile);
         while (entries.hasMoreElements()) {
@@ -187,7 +187,7 @@ public class ZipUtils {
      * @throws ZipException 压缩文件格式有误时抛出
      * @throws IOException  IO操作有误时抛出
      */
-    public static Enumeration<?> getEntriesEnumeration(File zipFile) throws ZipException,
+    public static Enumeration<?> getEntriesEnumeration(File zipFile) throws
             IOException {
         ZipFile zf = new ZipFile(zipFile);
         return zf.entries();
@@ -226,7 +226,7 @@ public class ZipUtils {
      * @throws IOException           当压缩过程出错时抛出
      */
     private static void zipFile(File resFile, ZipOutputStream zipout, String rootpath)
-            throws FileNotFoundException, IOException {
+            throws IOException {
         rootpath = rootpath + (rootpath.trim().length() == 0 ? "" : File.separator)
                 + resFile.getName();
         rootpath = new String(rootpath.getBytes("8859_1"), "GB2312");

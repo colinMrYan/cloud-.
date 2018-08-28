@@ -31,9 +31,7 @@ import com.inspur.emmcloud.bean.appcenter.volume.Volume;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeDetail;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
-import com.inspur.emmcloud.bean.chat.GetAddMembersSuccessResult;
 import com.inspur.emmcloud.bean.chat.GetAllRobotsResult;
-import com.inspur.emmcloud.bean.chat.GetChannelInfoResult;
 import com.inspur.emmcloud.bean.chat.GetChannelListResult;
 import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.bean.chat.GetFileUploadResult;
@@ -70,10 +68,10 @@ import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
 import com.inspur.emmcloud.bean.mine.GetUploadMyHeadResult;
 import com.inspur.emmcloud.bean.mine.GetUserHeadUploadResult;
 import com.inspur.emmcloud.bean.mine.UserProfileInfoBean;
+import com.inspur.emmcloud.bean.system.GetAllConfigVersionResult;
 import com.inspur.emmcloud.bean.system.GetAppConfigResult;
 import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
 import com.inspur.emmcloud.bean.system.GetBoolenResult;
-import com.inspur.emmcloud.bean.system.GetAllConfigVersionResult;
 import com.inspur.emmcloud.bean.system.GetUpgradeResult;
 import com.inspur.emmcloud.bean.system.SplashPageBean;
 import com.inspur.emmcloud.bean.work.Attachment;
@@ -451,7 +449,7 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnChannelInfoSuccess(
-            GetChannelInfoResult getChannelInfoResult) {
+            ChannelGroup channelGroup) {
         // TODO Auto-generated method stub
 
     }
@@ -650,8 +648,7 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnAddMembersSuccess(
-            GetAddMembersSuccessResult getAddMembersSuccessResult) {
+    public void returnAddMembersSuccess(ChannelGroup channelGroup) {
         // TODO Auto-generated method stub
 
     }
@@ -967,7 +964,7 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnDelMembersSuccess(
-            GetChannelInfoResult getChannelInfoResult) {
+            ChannelGroup channelGroup) {
         // TODO Auto-generated method stub
 
     }
@@ -1300,7 +1297,7 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnAppTabAutoSuccess(GetAppMainTabResult getAppMainTabResult,String mainTabSaveConfigVersion) {
+    public void returnAppTabAutoSuccess(GetAppMainTabResult getAppMainTabResult, String mainTabSaveConfigVersion) {
 
     }
 

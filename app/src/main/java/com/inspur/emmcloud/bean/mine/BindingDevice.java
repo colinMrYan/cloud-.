@@ -47,9 +47,6 @@ public class BindingDevice implements Serializable{
 		}
 		BindingDevice bindingDevice = (BindingDevice) other;
 		//此处从==判断是否相等  改为equals
-		if(!(getDeviceId().equals(bindingDevice.getDeviceId()))){
-			return false;
-		}
-		return true;
-	}
+        return getDeviceId().equals(bindingDevice.getDeviceId());
+    }
 }

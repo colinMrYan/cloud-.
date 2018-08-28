@@ -140,7 +140,7 @@ public class CalFilterActivity extends BaseActivity {
 					.findViewById(R.id.calendar_status_switch);
 			final MyCalendar calendar = calendarList.get(position);
 			textView.setText(calendar.getName());
-			View colorView = (View) convertView
+			View colorView = convertView
 					.findViewById(R.id.calendar_color_view);
 			boolean isHide = MyCalendarOperationCacheUtils.getIsHide(getApplicationContext(), calendar.getId());
 			if (isHide) {

@@ -46,7 +46,7 @@ import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MsgCacheUtil;
 import com.inspur.emmcloud.widget.CircleTextImageView;
-import com.inspur.emmcloud.widget.ECMChatInputMenu;
+import com.inspur.emmcloud.widget.ECMChatInputMenuV0;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.ScrollViewWithListView;
 
@@ -83,7 +83,7 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
     private String cid = "";
     private RelativeLayout msgDisplayLayout;
     private LayoutInflater inflater;
-    private ECMChatInputMenu chatInputMenu;
+    private ECMChatInputMenuV0 chatInputMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,7 +122,7 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
     }
 
     private void initChatInputMenu() {
-        chatInputMenu = (ECMChatInputMenu) findViewById(R.id.chat_input_menu);
+        chatInputMenu = (ECMChatInputMenuV0) findViewById(R.id.chat_input_menu);
         cid = getIntent().getExtras().getString("cid");
         String channelType = ChannelCacheUtils.getChannelType(getApplicationContext(),
                 cid);
@@ -130,7 +130,7 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
             chatInputMenu.setCanMentions(true, cid);
         }
         chatInputMenu.hideAddMenuLayout();
-        chatInputMenu.setChatInputMenuListener(new ECMChatInputMenu.ChatInputMenuListener() {
+        chatInputMenu.setChatInputMenuListener(new ECMChatInputMenuV0.ChatInputMenuListener() {
             @Override
             public void onSendMsg(String content, List<String> mentionsUidList, List<String> urlList, Map<String,String> mentionsMap) {
                 // TODO Auto-generated method stub

@@ -374,11 +374,8 @@ public class App implements Serializable {
 		}
 		App app = (App) other;
 		//此处从==判断是否相等  改为equals
-		if(!(getAppID().equals(app.getAppID()))){
-			return false;
-		}
-		return true;
-	}
+        return getAppID().equals(app.getAppID());
+    }
 
 	@Override
 	public String toString() {

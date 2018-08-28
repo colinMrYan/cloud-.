@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.adapter;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
@@ -89,7 +90,7 @@ public class AppCenterAdapter extends BaseAdapter {
         if (convertView == null) {
             holder = new Holder();
             LayoutInflater vi = (LayoutInflater) activity
-                    .getSystemService(activity.LAYOUT_INFLATER_SERVICE);
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = vi.inflate(R.layout.all_app_item_view, null);
             holder.iconImg = (ImageView) convertView
                     .findViewById(R.id.app_icon_img);

@@ -45,8 +45,6 @@ public class PreferencesByUserAndTanentUtils {
         return userID + tanent;
     }
 
-    ;
-
     /**
      * put string preferences
      *

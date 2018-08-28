@@ -2,6 +2,7 @@ package com.inspur.emmcloud.api;
 
 import android.content.Context;
 
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.cache.AppExceptionCacheUtils;
@@ -27,6 +28,10 @@ public abstract class APIDownloadCallBack implements Callback.ProgressCallback<F
 
     public APIDownloadCallBack(Context context, String url) {
         this.context = context;
+        this.url = url;
+    }
+
+    public APIDownloadCallBack(String url) {
         this.url = url;
     }
 
@@ -104,19 +109,21 @@ public abstract class APIDownloadCallBack implements Callback.ProgressCallback<F
      * @param responseCode
      */
     private void saveNetException(String error, int responseCode, int errorLevel) {
-            AppExceptionCacheUtils.saveAppException(context,errorLevel,url,error,responseCode);
+        AppExceptionCacheUtils.saveAppException(MyApplication.getInstance(), errorLevel, url, error, responseCode);
     }
 
+    public void callbackStart() {
+    }
 
-    public abstract void callbackStart();
+    public void callbackLoading(long total, long current, boolean isUploading) {
+    }
 
-    public abstract void callbackLoading(long total, long current,
-                                         boolean isUploading);
 
     public abstract void callbackSuccess(File file);
 
     public abstract void callbackError(Throwable arg0, boolean arg1);
 
-    public abstract void callbackCanceled(CancelledException e);
+    public void callbackCanceled(CancelledException e) {
+    }
 
 }

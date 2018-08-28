@@ -92,11 +92,7 @@ public class TipsView extends FrameLayout {
 		float distance = (float) Math.sqrt(Math.pow(y - startY, 2)
 				+ Math.pow(x - startX, 2));
 		radius = -distance / 15 + DEFAULT_RADIUS;
-		if (radius < 7) {
-			isTrigger = true;
-		} else {
-			isTrigger = false;
-		}
+        isTrigger = radius < 7;
 
 		float offsetX = (float) (radius * Math.sin(Math.atan((y - startY)
 				/ (x - startX))));
@@ -269,7 +265,7 @@ public class TipsView extends FrameLayout {
 
 	private ViewGroup getScrollableParent(View target) {
 		ViewGroup viewGroup = null;
-		ViewParent parent = (ViewParent) target.getParent();
+		ViewParent parent = target.getParent();
 		if (parent == null)
 			return null;
 			
@@ -298,7 +294,7 @@ public class TipsView extends FrameLayout {
 		Tresult invoke();
 	}
 
-	public static interface Listener {
+	public interface Listener {
 		void onStart();
 
 		void onComplete();

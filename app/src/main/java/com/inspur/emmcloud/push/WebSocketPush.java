@@ -13,6 +13,7 @@ import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.ClientIDUtils;
@@ -60,12 +61,12 @@ public class WebSocketPush {
      */
     public void init(final boolean isForceNew) {
         // TODO Auto-generated method stub
-        if (MyApplication.getInstance().isV0VersionChat()){
+        if (MyApplication.getInstance().isV0VersionChat()) {
             String pushId = AppUtils.getPushId(MyApplication.getInstance());
-            if (!pushId.equals("UNKNOWN")){
+            if (!pushId.equals("UNKNOWN")) {
                 WebSocketConnect(isForceNew);
             }
-        }else if(MyApplication.getInstance().isV1xVersionChat()){
+        } else if (MyApplication.getInstance().isV1xVersionChat()) {
             if (NetUtils.isNetworkConnected(MyApplication.getInstance(), false)) {
                 new ClientIDUtils(MyApplication.getInstance(), new ClientIDUtils.OnGetClientIdListener() {
                     @Override
@@ -86,7 +87,7 @@ public class WebSocketPush {
 
 
     private void WebSocketConnect(boolean isForceNew) {
-        if (!isForceNew && isSocketConnect()){
+        if (!isForceNew && isSocketConnect()) {
             return;
         }
         String url = APIUri.getWebsocketConnectUrl();
@@ -106,7 +107,7 @@ public class WebSocketPush {
                 query.put("device.name", deviceName);
                 query.put("device.push", pushId);
             } else {
-                String clientId =  PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_CLIENTID, "");
+                String clientId = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_CLIENTID, "");
                 query.put("client", clientId);
             }
             query.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
@@ -296,18 +297,17 @@ public class WebSocketPush {
                 WSPushContent wsPushContent = new WSPushContent(arg0[0].toString());
                 String path = wsPushContent.getPath();
                 //客户端主动请求
-                //	if (StringUtils.isBlank(path)){
-                String tracer = wsPushContent.getTracer();
-                EventMessage eventMessage = tracerMap.get(tracer);
-                if (eventMessage != null) {
-                    tracerMap.remove(tracer);
-                    String body = wsPushContent.getBody();
-                    eventMessage.setContent(body);
-                    eventMessage.setStatus(wsPushContent.getStatus());
-                    EventBus.getDefault().post(eventMessage);
-                }
-                //		}
-                else {
+                if (StringUtils.isBlank(path)) {
+                    String tracer = wsPushContent.getTracer();
+                    EventMessage eventMessage = tracerMap.get(tracer);
+                    if (eventMessage != null) {
+                        tracerMap.remove(tracer);
+                        String body = wsPushContent.getBody();
+                        eventMessage.setContent(body);
+                        eventMessage.setStatus(wsPushContent.getStatus());
+                        EventBus.getDefault().post(eventMessage);
+                    }
+                } else {
                     if (path.equals("/channel/message") && wsPushContent.getMethod().equals("post")) {
                         EventMessage eventMessagea = new EventMessage(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE, wsPushContent.getBody());
                         EventBus.getDefault().post(eventMessagea);

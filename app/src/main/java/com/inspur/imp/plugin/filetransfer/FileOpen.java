@@ -487,7 +487,7 @@ public class FileOpen {
     private boolean isTopApp(Context context) {
         // TODO Auto-generated method stub
         ActivityManager manager = (ActivityManager) context
-                .getSystemService(context.ACTIVITY_SERVICE);
+                .getSystemService(Context.ACTIVITY_SERVICE);
         List<RunningTaskInfo> runningTaskInfos = manager.getRunningTasks(1);
         String activityName = "";
         if (null != runningTaskInfos) {

@@ -228,12 +228,12 @@ public class CaptchasLoginActivity extends BaseActivity {
             // TODO Auto-generated method stub
             if (isPhoneNumBlank || isCaptchasBlank
                     || phoneNumEdit.getText().toString().length() < 11) {
-                ((Button) findViewById(R.id.enter_app_btn)).setEnabled(false);
-                ((Button) findViewById(R.id.enter_app_btn))
+                findViewById(R.id.enter_app_btn).setEnabled(false);
+                findViewById(R.id.enter_app_btn)
                         .setBackgroundResource(R.drawable.bg_login_btn_unable);
             } else {
-                ((Button) findViewById(R.id.enter_app_btn)).setEnabled(true);
-                ((Button) findViewById(R.id.enter_app_btn))
+                findViewById(R.id.enter_app_btn).setEnabled(true);
+                findViewById(R.id.enter_app_btn)
                         .setBackgroundResource(R.drawable.selector_login_btn);
             }
 

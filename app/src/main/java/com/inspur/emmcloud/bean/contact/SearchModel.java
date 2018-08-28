@@ -185,9 +185,7 @@ public class SearchModel implements Serializable {
             return false;
         if (!getName().equals(otherSearchModel.getName()))
             return false;
-        if (!getType().equals(otherSearchModel.getType()))
-            return false;
-        return true;
+        return getType().equals(otherSearchModel.getType());
     }
 
     @Override

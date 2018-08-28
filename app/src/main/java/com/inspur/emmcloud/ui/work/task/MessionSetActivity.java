@@ -308,10 +308,10 @@ public class MessionSetActivity extends BaseActivity {
 			((TextView) (convertView.findViewById(R.id.mession_set_text)))
 					.setText(messionSetModel.get(position).getContent());
 			if (position == positionChoose) {
-				((ImageView) convertView.findViewById(R.id.mession_ring_img))
+				convertView.findViewById(R.id.mession_ring_img)
 						.setVisibility(View.VISIBLE);
 			} else {
-				((ImageView) convertView.findViewById(R.id.mession_ring_img))
+				convertView.findViewById(R.id.mession_ring_img)
 						.setVisibility(View.GONE);
 			}
 			return convertView;

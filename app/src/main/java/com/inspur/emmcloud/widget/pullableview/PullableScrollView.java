@@ -39,10 +39,7 @@ public class PullableScrollView extends ScrollView implements Pullable
 		if (!canPullDown) {
 			return false;
 		}
-		if (getScrollY() == 0)
-			return true;
-		else
-			return false;
+        return getScrollY() == 0;
 	}
 
 	@Override
@@ -51,10 +48,7 @@ public class PullableScrollView extends ScrollView implements Pullable
 		if (!canPullUp) {
 			return false;
 		}
-		if (getScrollY() >= (getChildAt(0).getHeight() - getMeasuredHeight()))
-			return true;
-		else
-			return false;
+        return getScrollY() >= (getChildAt(0).getHeight() - getMeasuredHeight());
 	}
 
 }

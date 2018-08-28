@@ -36,7 +36,7 @@ public class ImpActivity extends ImpFragmentBaseActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            return fragment.onKeyDown();
+            return fragment.goBack();
         }
         return super.onKeyDown(keyCode, event);
     }

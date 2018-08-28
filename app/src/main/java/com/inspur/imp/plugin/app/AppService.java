@@ -44,6 +44,6 @@ public class AppService extends ImpPlugin {
 	@Override
 	public void onDestroy() {
 		// TODO Auto-generated method stub
-	};
+	}
 
 }

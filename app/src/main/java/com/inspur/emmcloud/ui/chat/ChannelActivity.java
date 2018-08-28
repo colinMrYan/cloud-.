@@ -11,12 +11,11 @@ import android.provider.MediaStore;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.inspur.emmcloud.BaseActivity;
+import com.inspur.emmcloud.MediaPlayBaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.ChannelMessageAdapter;
@@ -37,15 +36,14 @@ import com.inspur.emmcloud.interf.ProgressCallback;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.common.FileUtils;
-import com.inspur.emmcloud.util.common.InputMethodUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.ChannelInfoUtils;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
+import com.inspur.emmcloud.util.privates.DataCleanManager;
 import com.inspur.emmcloud.util.privates.DirectChannelUtils;
 import com.inspur.emmcloud.util.privates.GetPathFromUri4kitkat;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
@@ -87,7 +85,7 @@ import static android.R.attr.path;
  * @author Fortune Yu; create at 2016年8月29日
  */
 @ContentView(R.layout.activity_channel)
-public class ChannelActivity extends BaseActivity {
+public class ChannelActivity extends MediaPlayBaseActivity {
 
     private static final int HAND_CALLBACK_MESSAGE = 1;
     private static final int GELLARY_RESULT = 2;
@@ -222,8 +220,7 @@ public class ChannelActivity extends BaseActivity {
      */
     private void initChatInputMenu() {
         chatInputMenu.setSpecialUser(isSpecialUser);
-        chatInputMenu.setIsMessageV0(false);
-        chatInputMenu.setOtherLayoutView(swipeRefreshLayout);
+        chatInputMenu.setOtherLayoutView(swipeRefreshLayout,msgListView);
         if (channel.getType().equals("GROUP")) {
             chatInputMenu.setCanMentions(true, cid);
         } else {
@@ -235,6 +232,15 @@ public class ChannelActivity extends BaseActivity {
             public void onSendMsg(String content, List<String> mentionsUidList, List<String> urlList, Map<String, String> mentionsMap) {
                 // TODO Auto-generated method stub
                 sendTextMessage(content, false, mentionsMap);
+            }
+
+            @Override
+            public void onSendVoiceRecordMsg(float seconds, String filePath) {
+                int duration = (int)seconds;
+                if (duration == 0){
+                    duration = 1;
+                }
+                uploadResFileAndSendMessage(filePath,Message.MESSAGE_TYPE_MEDIA_VOICE,duration);
             }
 
             @Override
@@ -319,7 +325,6 @@ public class ChannelActivity extends BaseActivity {
                     }
                     String msgType = message.getType();
                     Bundle bundle = new Bundle();
-                    LogUtils.jasonDebug("msgType=" + msgType);
                     switch (msgType) {
                         case "attachment/card":
                             String uid = message.getMsgContentAttachmentCard().getUid();
@@ -358,14 +363,6 @@ public class ChannelActivity extends BaseActivity {
             adapter.notifyDataSetChanged();
         }
         msgListView.MoveToPosition(uiMessageList.size() - 1);
-        msgListView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                chatInputMenu.hideAddMenuLayout();
-                InputMethodUtils.hide(ChannelActivity.this);
-                return false;
-            }
-        });
     }
 
     /**
@@ -379,7 +376,7 @@ public class ChannelActivity extends BaseActivity {
                 case "file":
                     List<String> pathList = getIntent().getStringArrayListExtra("share_paths");
                     for (String url : pathList) {
-                        uploadResFileAndSendMessage(url, type.equals("file"));
+                        uploadResFileAndSendMessage(url, type.equals("file")?Message.MESSAGE_TYPE_FILE_REGULAR_FILE:Message.MESSAGE_TYPE_MEDIA_IMAGE);
                     }
                     break;
                 case "link":
@@ -413,7 +410,7 @@ public class ChannelActivity extends BaseActivity {
                     ToastUtils.show(MyApplication.getInstance(),
                             getString(R.string.not_support_upload));
                 } else {
-                    uploadResFileAndSendMessage(filePath, true);
+                    uploadResFileAndSendMessage(filePath, Message.MESSAGE_TYPE_FILE_REGULAR_FILE);
                 }
                 //拍照返回
             } else if (requestCode == CAMERA_RESULT
@@ -426,7 +423,7 @@ public class ChannelActivity extends BaseActivity {
                 }catch (Exception e){
                     e.printStackTrace();
                 }
-                uploadResFileAndSendMessage(imgPath, false);
+                uploadResFileAndSendMessage(imgPath, Message.MESSAGE_TYPE_MEDIA_IMAGE);
                 //拍照后图片编辑返回
             }else if (requestCode == MENTIONS_RESULT) {
                 // @返回
@@ -451,23 +448,32 @@ public class ChannelActivity extends BaseActivity {
                         }catch (Exception e){
                             e.printStackTrace();
                         }
-                        uploadResFileAndSendMessage(imgPath, false);
+                        uploadResFileAndSendMessage(imgPath, Message.MESSAGE_TYPE_MEDIA_IMAGE);
                     }
                 }
         }
     }
 
-    private void uploadResFileAndSendMessage(String filePath, boolean isRegularFile) {
+    private void uploadResFileAndSendMessage(String filePath, String messageType){
+        uploadResFileAndSendMessage(filePath, messageType,0);
+    }
+    private void uploadResFileAndSendMessage(String filePath, String messageType,int duration) {
         File file = new File(filePath);
         if (!file.exists()) {
             ToastUtils.show(MyApplication.getInstance(), R.string.file_not_exist);
             return;
         }
         Message localMessage = null;
-        if (isRegularFile) {
-            localMessage = CommunicationUtils.combinLocalRegularFileMessage(cid, filePath);
-        } else {
-            localMessage = CommunicationUtils.combinLocalMediaImageMessage(cid, filePath);
+        switch (messageType){
+            case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
+                localMessage = CommunicationUtils.combinLocalRegularFileMessage(cid, filePath);
+                break;
+            case Message.MESSAGE_TYPE_MEDIA_IMAGE:
+                localMessage = CommunicationUtils.combinLocalMediaImageMessage(cid, filePath);
+                break;
+            case Message.MESSAGE_TYPE_MEDIA_VOICE:
+                localMessage = CommunicationUtils.combinLocalMediaVoiceMessage(cid, filePath,duration);
+                break;
         }
         final String fakeMessageId = localMessage.getId();
         MessageRecourceUploadUtils messageRecourceUploadUtils = new MessageRecourceUploadUtils(MyApplication.getInstance(), cid);
@@ -487,7 +493,7 @@ public class ChannelActivity extends BaseActivity {
                 setMessageSendFailStatus(fakeMessageId);
             }
         });
-        messageRecourceUploadUtils.uploadResFile(file, localMessage, isRegularFile);
+        messageRecourceUploadUtils.uploadResFile(file, localMessage);
         addLocalMessage(localMessage, 0);
     }
 
@@ -808,6 +814,7 @@ public class ChannelActivity extends BaseActivity {
         }
         chatInputMenu.releaseVoliceInput();
         EventBus.getDefault().unregister(this);
+        DataCleanManager.cleanCustomCache(MyAppConfig.LOCAL_CACHE_VOICE_PATH);
     }
 
 

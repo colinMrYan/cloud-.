@@ -85,7 +85,7 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_channel_msg_detail);
+        setContentView(R.layout.activity_channel_message_detail);
         EventBus.getDefault().register(this);
         initView();
         initData();
@@ -118,7 +118,6 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
 
     private void initChatInputMenu() {
         chatInputMenu = (ECMChatInputMenu) findViewById(R.id.chat_input_menu);
-        chatInputMenu.setIsMessageV0(false);
         cid = getIntent().getExtras().getString("cid");
         String channelType = ChannelCacheUtils.getChannelType(getApplicationContext(),
                 cid);
@@ -131,6 +130,11 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
             public void onSendMsg(String content, List<String> mentionsUidList, List<String> urlList, Map<String, String> mentionsMap) {
                 // TODO Auto-generated method stub
                 sendComment(content, mentionsMap);
+            }
+
+            @Override
+            public void onSendVoiceRecordMsg(float seconds, String filePath) {
+
             }
 
             @Override

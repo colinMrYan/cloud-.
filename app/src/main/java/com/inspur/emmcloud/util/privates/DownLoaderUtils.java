@@ -1,10 +1,13 @@
 package com.inspur.emmcloud.util.privates;
 
 import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.api.APIDownloadCallBack;
 
+import org.xutils.common.Callback;
 import org.xutils.common.Callback.Cancelable;
-import org.xutils.common.Callback.ProgressCallback;
 import org.xutils.http.RequestParams;
+import org.xutils.http.app.RedirectHandler;
+import org.xutils.http.request.UriRequest;
 import org.xutils.x;
 
 import java.io.File;
@@ -17,50 +20,40 @@ public class DownLoaderUtils {
     Cancelable cancelable;
 
     /**
-     * 下载
-     * @param params
-     * @param progressCallback
-     */
-    public void startDownLoad(RequestParams params,
-                              ProgressCallback<File> progressCallback) {
-        cancelable = x.http().get(params, progressCallback);
-
-    }
-
-    /**
      * 开始下载方法
      *
      * @param source
-     * @param target
+     * @param saveFilePath
      * @param callback
      */
-    public void startDownLoad(String source, String target,
-                              ProgressCallback<File> progressCallback) {
+    public Cancelable startDownLoad(String source, final String saveFilePath,
+                                    Callback.CommonCallback<File> callback) {
 
-        RequestParams params = MyApplication.getInstance().getHttpRequestParams(source);
+        final RequestParams params = MyApplication.getInstance().getHttpRequestParams(source);
         params.setAutoResume(true);// 断点下载
-        params.setSaveFilePath(target);
+        params.setSaveFilePath(saveFilePath);
         params.setCancelFast(true);
-        cancelable = x.http().get(params, progressCallback);
+        params.setRedirectHandler(new RedirectHandler() {
+            @Override
+            public RequestParams getRedirectParams(UriRequest uriRequest) throws Throwable {
+                String locationUrl = uriRequest.getResponseHeader("Location");
+                params.setUri(locationUrl);
+                return params;
+            }
+        });
+        if (callback == null) {
+            callback = new APIDownloadCallBack(source) {
+
+                @Override
+                public void callbackSuccess(File file) {
+                }
+
+                @Override
+                public void callbackError(Throwable arg0, boolean arg1) {
+                }
+            };
+        }
+        cancelable = x.http().get(params, callback);
+        return cancelable;
     }
-
-    public void startDownLoad(RequestParams params, String target,
-                              ProgressCallback<File> progressCallback) {
-
-        params.setAutoResume(true);// 断点下载
-        params.setSaveFilePath(target);
-        params.setCancelFast(true);
-        cancelable = x.http().get(params, progressCallback);
-    }
-
-
-    public void pauseDownLoad() {
-        cancelable.cancel();
-    }
-
-    public void resumeDownLoad(String source, String target,
-                               ProgressCallback<File> progressCallback) {
-        startDownLoad(source, target, progressCallback);
-    }
-
 }

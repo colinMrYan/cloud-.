@@ -6,5 +6,5 @@ package com.inspur.emmcloud.interf;
  */
 public interface OnTabReselectListener {
 	
-	public void onTabReselect();
+	void onTabReselect();
 }

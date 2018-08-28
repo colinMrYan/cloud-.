@@ -92,6 +92,11 @@
     <uses-permission android:name="android.permission.SYSTEM_OVERLAY_WINDOW"/>
 
 
+    <!-- 语音播放 -->
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.Manifest.permission.DEVICE_POWER" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
     <!--科大讯飞语音增加权限-->
     <!--获取手机录音机使用权限，听写、识别、语义理解需要用到此权限 -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
@@ -435,6 +440,14 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data android:scheme="emm" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="native" />
             </intent-filter>
 
         </activity>

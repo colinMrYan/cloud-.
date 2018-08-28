@@ -362,7 +362,7 @@ public class MyCommonOfficeActivity extends BaseActivity implements
         if (StringUtils.isBlank(localOfficeIds)) {
             originCommonOfficeList = officeListNet;
         } else {
-            List<String> allOfficeIdList = (List) JSON.parseArray(
+            List<String> allOfficeIdList = JSON.parseArray(
                     localOfficeIds, String.class);
             List<Office> allOfficeList = new ArrayList<Office>();
             for (int i = 0; i < allOfficeIdList.size(); i++) {

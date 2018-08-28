@@ -55,7 +55,7 @@ public class MyDialog extends Dialog {
 		p.y = 0;
 		p.width = (int) (width * ratio);
 		this.getWindow().setAttributes(
-				(WindowManager.LayoutParams) p);
+                p);
 	}
 
 }

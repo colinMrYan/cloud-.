@@ -52,7 +52,7 @@ public class Res {
     // 获取xml文件
     public static XmlResourceParser getXml(String xmlName) {
         int xmlId = getXmlID(xmlName);
-        return (XmlResourceParser) resources.getXml(xmlId);
+        return resources.getXml(xmlId);
     }
 
     /**

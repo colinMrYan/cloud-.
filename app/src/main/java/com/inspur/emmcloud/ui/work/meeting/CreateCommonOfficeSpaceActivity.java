@@ -66,7 +66,7 @@ public class CreateCommonOfficeSpaceActivity extends BaseActivity {
 						+ "allCommonBuildingIds");
 		if (allCommonBuildingIds != null) {
 			try {
-				allCommonBuildingIdList = (List) JSON.parseArray(allCommonBuildingIds,
+				allCommonBuildingIdList = JSON.parseArray(allCommonBuildingIds,
 						String.class);
 			}catch (Exception e){
 				e.printStackTrace();

@@ -471,7 +471,7 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
 								+ "selectCommonOfficeIds");
 				if (selectCommonOfficeIds != null) {
 					try {
-						selectCommonOfficeIdList = (List) JSON.parseArray(
+						selectCommonOfficeIdList = JSON.parseArray(
 								selectCommonOfficeIds, String.class);
 					}catch (Exception e){
 						e.printStackTrace();
@@ -847,7 +847,7 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
 				getApplicationContext(), MyApplication.getInstance().getTanent() + uid
 						+ "selectCommonOfficeIds");
 		if (!StringUtils.isBlank(selectCommonOfficeIds)) {
-			selectCommonOfficeIdList = (List) JSON.parseArray(
+			selectCommonOfficeIdList = JSON.parseArray(
 					selectCommonOfficeIds, String.class);
 		}
 		if (selectCommonOfficeIdList.size() > 0) {
@@ -910,7 +910,7 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
 							+ "selectCommonOfficeIds");
 			List<String> selectCommonOfficeIdList = new ArrayList<String>();
 			if (!StringUtils.isBlank(selectCommonOfficeIds)) {
-				selectCommonOfficeIdList = (List) JSON.parseArray(
+				selectCommonOfficeIdList = JSON.parseArray(
 						selectCommonOfficeIds, String.class);
 			}
 			// 修改开关

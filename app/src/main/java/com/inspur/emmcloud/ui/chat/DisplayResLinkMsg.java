@@ -11,10 +11,9 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.chat.Msg;
 import com.inspur.emmcloud.util.common.DensityUtil;
-import com.inspur.emmcloud.util.common.LogUtils;
-import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 
 /**
  * DisplayResLinkMsg
@@ -27,7 +26,6 @@ public class DisplayResLinkMsg {
      * 展示链接类卡片，如新闻
      *
      * @param context
-     * @param childView
      * @param msg
      * @param isShowCommentBtn
      */
@@ -45,6 +43,7 @@ public class DisplayResLinkMsg {
                 .findViewById(R.id.news_card_title_text);
         TextView linkDigestText = (TextView) cardContentView
                 .findViewById(R.id.news_card_digest_text);
+        linkTitle = StringUtils.isBlank(linkTitle)?context.getString(R.string.share_default_title):linkTitle;
         linkTitleText.setText(linkTitle);
         linkDigestText.setText(linkDigest);
         if(StringUtils.isBlank(linkTitle)){

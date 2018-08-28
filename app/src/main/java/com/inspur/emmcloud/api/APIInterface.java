@@ -31,9 +31,7 @@ import com.inspur.emmcloud.bean.appcenter.volume.Volume;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeDetail;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
-import com.inspur.emmcloud.bean.chat.GetAddMembersSuccessResult;
 import com.inspur.emmcloud.bean.chat.GetAllRobotsResult;
-import com.inspur.emmcloud.bean.chat.GetChannelInfoResult;
 import com.inspur.emmcloud.bean.chat.GetChannelListResult;
 import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.bean.chat.GetFileUploadResult;
@@ -70,10 +68,10 @@ import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
 import com.inspur.emmcloud.bean.mine.GetUploadMyHeadResult;
 import com.inspur.emmcloud.bean.mine.GetUserHeadUploadResult;
 import com.inspur.emmcloud.bean.mine.UserProfileInfoBean;
+import com.inspur.emmcloud.bean.system.GetAllConfigVersionResult;
 import com.inspur.emmcloud.bean.system.GetAppConfigResult;
 import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
 import com.inspur.emmcloud.bean.system.GetBoolenResult;
-import com.inspur.emmcloud.bean.system.GetAllConfigVersionResult;
 import com.inspur.emmcloud.bean.system.GetUpgradeResult;
 import com.inspur.emmcloud.bean.system.SplashPageBean;
 import com.inspur.emmcloud.bean.work.Attachment;
@@ -223,7 +221,7 @@ public interface APIInterface {
 
     void returnBookingRoomFail(String error, int errorCode);
 
-    void returnChannelInfoSuccess(GetChannelInfoResult getChannelInfoResult);
+    void returnChannelInfoSuccess(ChannelGroup channelGroup);
 
     void returnChannelInfoFail(String error, int errorCode);
 
@@ -289,7 +287,7 @@ public interface APIInterface {
 
     void returnCreatOfficeFail(String error, int errorCode);
 
-    void returnAddMembersSuccess(GetAddMembersSuccessResult getAddMembersSuccessResult);
+    void returnAddMembersSuccess(ChannelGroup channelGroup);
 
     void returnAddMembersFail(String error, int errorCode);
 
@@ -393,7 +391,7 @@ public interface APIInterface {
 
     void returnDelMeetingFail(String error, int errorCode);
 
-    void returnDelMembersSuccess(GetChannelInfoResult getChannelInfoResult);
+    void returnDelMembersSuccess(ChannelGroup channelGroup);
 
     void returnDelMembersFail(String error, int errorCode);
 

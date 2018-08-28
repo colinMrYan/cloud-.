@@ -35,7 +35,7 @@ public class APIUri {
 
     public static String getEcmUrl(){
         return MyApplication.getInstance().getClusterEcm();
-    };
+    }
 
     /**
      * EMM服务
@@ -470,13 +470,32 @@ public class APIUri {
     }
 
     /**
-     * 获取V1版消息中聊天下载资源文件地址
+     * 获取聊天语音文件token url
+     * @param cid
+     * @return
+     */
+    public static String getUploadMediaVoiceFileTokenUrl(String cid){
+        return getECMChatUrl() +"/api/v1/channel/"+cid+"/voice/request";
+    }
+
+    /**
+     * 获取V1版消息中聊天文件下载地址
      * @param cid
      * @param path
      * @return
      */
     public static String getChatFileResouceUrl(String cid,String path){
         return getECMChatUrl() +"/api/v1/channel/"+cid+"/file/request?path="+path;
+    }
+
+    /**
+     * 获取V1版消息中聊天语音文件下载地址
+     * @param cid
+     * @param path
+     * @return
+     */
+    public static String getChatVoiceFileResouceUrl(String cid,String path){
+        return getECMChatUrl() +"/api/v1/channel/"+cid+"/voice/request?path="+path;
     }
 
     /**

@@ -80,7 +80,6 @@ public class ProgressPieIndicator implements IProgressIndicator {
         if (progressPieView == null) return;
 
         ViewGroup vg = (ViewGroup) progressPieView.getParent();
-        ;
         if (vg != null) {
             vg.removeView(progressPieView);
         }

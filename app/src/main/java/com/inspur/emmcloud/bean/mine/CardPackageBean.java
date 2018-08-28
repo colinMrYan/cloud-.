@@ -139,10 +139,7 @@ public class CardPackageBean {
         }
         CardPackageBean cardPackageBean = (CardPackageBean) other;
         //此处从==判断是否相等  改为equals
-        if(!(getId().equals(cardPackageBean.getId()))){
-            return false;
-        }
-        return true;
+        return getId().equals(cardPackageBean.getId());
     }
 
 }

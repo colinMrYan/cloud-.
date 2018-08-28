@@ -29,6 +29,8 @@ public class MyAppConfig {
             .getExternalStorageDirectory() + "/IMP-Cloud/cache/img_create/";
     public static final String LOCAL_CACHE_PATH = Environment
             .getExternalStorageDirectory() + "/IMP-Cloud/cache/";
+    public static final String LOCAL_CACHE_VOICE_PATH = Environment
+            .getExternalStorageDirectory() + "/IMP-Cloud/cache/voice";
     public static final String LOCAL_CACHE_PHOTO_PATH = Environment
             .getExternalStorageDirectory() + "/IMP-Cloud/cache/photo";
     public static final String LOCAL_DOWNLOAD_PATH = Environment
@@ -61,6 +63,23 @@ public class MyAppConfig {
     public static String getReactAppFilePath(Context context, String userId, String module) {
         return context.getDir("ReactResource_046", MODE_PRIVATE).getPath() + "/" + MyApplication.getInstance().getTanent() + "/" + userId + "/" + module;
     }
+
+    /**
+     * 获取聊天语音存储目录
+     * @return
+     */
+    public static String getCacheVoiceDirPath(){
+        return Environment.getExternalStorageDirectory() + "/IMP-Cloud/"+MyApplication.getInstance().getUid()+"/"+MyApplication.getInstance().getTanent()+"/voice/";
+    }
+
+    /**
+     * 获取聊天语音存储目录
+     * @return
+     */
+    public static String getCacheVoiceFilePath(String cid,String messageId){
+        return Environment.getExternalStorageDirectory() + "/IMP-Cloud/"+MyApplication.getInstance().getUid()+"/"+MyApplication.getInstance().getTanent()+"/voice/"+cid+"/"+messageId+".amr";
+    }
+
 
     /**
      * 获取React上一版本缓存途径（用于Roback的版本）

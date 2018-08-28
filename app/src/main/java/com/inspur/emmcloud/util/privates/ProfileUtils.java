@@ -67,9 +67,10 @@ public class ProfileUtils {
             LoginAPIService apiServices = new LoginAPIService(activity);
             apiServices.setAPIInterface(new WebService());
             apiServices.getMyInfo();
-        }else{
-            showPromptDialog();
         }
+//        else{
+//            showPromptDialog();
+//        }
     }
 
     /**

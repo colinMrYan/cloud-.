@@ -61,8 +61,8 @@ import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MsgCacheUtil;
 import com.inspur.emmcloud.util.privates.cache.MsgReadCreationDateCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
-import com.inspur.emmcloud.widget.ECMChatInputMenu;
-import com.inspur.emmcloud.widget.ECMChatInputMenu.ChatInputMenuListener;
+import com.inspur.emmcloud.widget.ECMChatInputMenuV0.ChatInputMenuListener;
+import com.inspur.emmcloud.widget.ECMChatInputMenuV0;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.RecycleViewForSizeChange;
 import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
@@ -91,7 +91,7 @@ import static android.R.attr.path;
  *
  * @author Fortune Yu; create at 2016年8月29日
  */
-@ContentView(R.layout.activity_channel)
+@ContentView(R.layout.activity_channelv0)
 public class ChannelV0Activity extends BaseActivity {
 
     private static final int HAND_CALLBACK_MESSAGE = 1;
@@ -106,7 +106,7 @@ public class ChannelV0Activity extends BaseActivity {
     private SwipeRefreshLayout swipeRefreshLayout;
 
     @ViewInject(R.id.chat_input_menu)
-    private ECMChatInputMenu chatInputMenu;
+    private ECMChatInputMenuV0 chatInputMenu;
     @ViewInject(R.id.header_text)
     private TextView headerText;
 
@@ -414,7 +414,7 @@ public class ChannelV0Activity extends BaseActivity {
                             String linkUrl = JSONUtils.getString(msgBody, "url", "");
                             String linkPoster = JSONUtils.getString(msgBody, "poster", "");
                             GroupNews groupNews = new GroupNews();
-                            groupNews.setTitle(linkTitle);
+                            groupNews.setTitle(StringUtils.isBlank(linkTitle)?getString(R.string.share_default_title):linkTitle);
                             groupNews.setDigest(linkDigest);
                             groupNews.setUrl(linkUrl);
                             groupNews.setPoster(linkPoster);

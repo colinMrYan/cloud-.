@@ -161,11 +161,8 @@ public class DeviceService extends ImpPlugin {
 	 * @return
 	 */
 	public boolean isAmazonDevice() {
-		if (android.os.Build.MANUFACTURER.equals(AMAZON_DEVICE)) {
-			return true;
-		}
-		return false;
-	}
+        return android.os.Build.MANUFACTURER.equals(AMAZON_DEVICE);
+    }
 
 	private String getTimeZone() {
 		return TimeZone.getDefault().getID();

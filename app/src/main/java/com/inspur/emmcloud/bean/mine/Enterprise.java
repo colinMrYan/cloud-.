@@ -28,8 +28,6 @@ public class Enterprise implements Serializable {
     public Enterprise() {
     }
 
-    ;
-
     public Enterprise(JSONObject object) {
         code = JSONUtils.getString(object, "code", "");
         id = JSONUtils.getString(object, "id", "0");
