@@ -2,9 +2,9 @@ package com.inspur.emmcloud.util.privates;
 
 import android.content.Context;
 
-import com.alibaba.fastjson.JSON;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.work.CalendarEvent;
+import com.inspur.emmcloud.util.common.JSONUtils;
 
 import org.json.JSONObject;
 
@@ -49,7 +49,7 @@ public class CalEventNotificationUtils {
 			ln.setBroadcastTime(startCalendar.getTimeInMillis());
 
 			Map<String , Object> map = new HashMap<String, Object>() ;
-			String calEventJson = JSON.toJSONString(calEvent);
+			String calEventJson = JSONUtils.toJSONString(calEvent);
 			map.put("calEvent",calEventJson) ;
 			JSONObject json = new JSONObject(map) ;
 			ln.setExtras(json.toString()) ;

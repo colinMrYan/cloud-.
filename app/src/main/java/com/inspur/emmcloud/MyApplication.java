@@ -17,7 +17,6 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 
-import com.alibaba.fastjson.JSON;
 import com.beefe.picker.PickerViewPackage;
 import com.facebook.react.ReactApplication;
 import com.facebook.react.ReactNativeHost;
@@ -35,6 +34,7 @@ import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.interf.MyActivityLifecycleCallbacks;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.ui.login.LoginActivity;
+import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -700,7 +700,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
                         getInstance(), MyApplication.getInstance().getTanent()
                                 + "commonLanguageList");
                 if (commonLanguageListJson != null) {
-                    List<Language> commonLanguageList = JSON
+                    List<Language> commonLanguageList = JSONUtils
                             .parseArray(commonLanguageListJson,
                                     Language.class);
                     boolean isContainDefault = false;

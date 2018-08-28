@@ -14,7 +14,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
-import com.alibaba.fastjson.JSON;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
@@ -23,6 +22,7 @@ import com.inspur.emmcloud.bean.appcenter.GetIDResult;
 import com.inspur.emmcloud.bean.work.CalendarEvent;
 import com.inspur.emmcloud.bean.work.MyCalendar;
 import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -36,7 +36,6 @@ import com.inspur.emmcloud.widget.MyDatePickerDialog;
 import com.inspur.emmcloud.widget.SwitchView;
 import com.inspur.emmcloud.widget.SwitchView.OnStateChangedListener;
 
-import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -386,7 +385,7 @@ public class CalEventAddActivity extends BaseActivity {
 			addCalendarEvent.setEndDate(TimeUtils
 					.localCalendar2UTCCalendar(endCalendar));
 		}
-		addCalendarJson = JSON.toJSONString(addCalendarEvent);
+		addCalendarJson = JSONUtils.toJSONString(addCalendarEvent);
 		addCalendarEvent.setCalendar(calendar);
 	}
 
@@ -397,7 +396,7 @@ public class CalEventAddActivity extends BaseActivity {
 		// TODO Auto-generated method stub
 		if (NetUtils.isNetworkConnected(getApplicationContext())) {
 			loadingDlg.show();
-			String calEventJson = JSON.toJSONString(calEvent);
+			String calEventJson = JSONUtils.toJSONString(calEvent);
 			apiService.updateCalEvent(calEventJson);
 		}
 	}

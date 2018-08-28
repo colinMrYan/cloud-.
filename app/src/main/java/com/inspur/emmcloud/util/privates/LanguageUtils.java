@@ -16,7 +16,6 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.LocaleList;
 
-import com.alibaba.fastjson.JSON;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MineAPIService;
@@ -24,6 +23,7 @@ import com.inspur.emmcloud.bean.mine.GetLanguageResult;
 import com.inspur.emmcloud.bean.mine.Language;
 import com.inspur.emmcloud.bean.system.ClientConfigItem;
 import com.inspur.emmcloud.config.MyAppConfig;
+import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -143,7 +143,7 @@ public class LanguageUtils {
 				+ "appLanguageObj", language.toString());
 		PreferencesUtils.putString(context, MyApplication.getInstance().getTanent()
 				+ "language", savelanguageName);
-		String commonLanguageListJson = JSON.toJSONString(commonLanguageList);
+		String commonLanguageListJson = JSONUtils.toJSONString(commonLanguageList);
 		PreferencesUtils.putString(context, MyApplication.getInstance().getTanent()+"commonLanguageList", commonLanguageListJson);
 		((MyApplication) context.getApplicationContext())
 				.setAppLanguageAndFontScale();
