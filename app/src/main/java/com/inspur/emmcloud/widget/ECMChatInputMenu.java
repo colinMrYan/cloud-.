@@ -221,11 +221,11 @@ public class ECMChatInputMenu extends LinearLayout {
             //功能组的图标，名称
             int[] functionIconArray = {R.drawable.ic_chat_input_add_gallery,
                     R.drawable.ic_chat_input_add_camera, R.drawable.ic_chat_input_add_file, R.drawable.ic_chat_input_add_voice_2_word,
-                    R.drawable.ic_chat_input_add_mention,};
+                    R.drawable.ic_chat_input_add_mention,R.drawable.ic_chat_input_add_voice_call};
             String[] functionNameArray = {getContext().getString(R.string.album),
                     getContext().getString(R.string.take_photo),
-                    getContext().getString(R.string.file), getContext().getString(R.string.voice_input), "@"};
-            String[] functionActionArray = {"gallery", "camera", "file", "voice_input", "mention"};
+                    getContext().getString(R.string.file), getContext().getString(R.string.voice_input), "@",getContext().getString(R.string.voice_call)};
+            String[] functionActionArray = {"gallery", "camera", "file", "voice_input", "mention","voice_call"};
             String inputControl = "-1";
             if (!StringUtils.isBlank(inputs)) {
                 try {
@@ -245,6 +245,7 @@ public class ECMChatInputMenu extends LinearLayout {
             boolean isInputPhotoEnable = true;
             boolean isInputFileEnable = true;
             boolean isInputVoiceEnable = true;
+            boolean isVoiceCallEnable = true;
 
             for (int i = 0; i < length; i++) {
                 String controlValue = inputControl.charAt(i) + "";
@@ -315,6 +316,9 @@ public class ECMChatInputMenu extends LinearLayout {
                             volumeLevelImg.setImageLevel(0);
                             mediaPlayerUtils.playVoiceOn();
                             voice2StringMessageUtils.startVoiceListening();
+                            break;
+                        case "voice_call":
+                            //语音通话
                             break;
                         default:
                             break;
