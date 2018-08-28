@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.MediaPlayerManagerUtils;
 
@@ -50,8 +51,7 @@ public class AudioRecordButton extends Button implements AudioManager.AudioStage
         mDialogManager = new AudioDialogManager(getContext());
 
         // 这里没有判断储存卡是否存在，有空要判断
-        String dir = Environment.getExternalStorageDirectory()
-                + "/nickming_recorder_audios";
+        String dir = MyAppConfig.LOCAL_CACHE_VOICE_PATH;
         mAudioManager = AudioManager.getInstance(dir);
         mAudioManager.setOnAudioStageListener(this);
 
