@@ -325,7 +325,7 @@ public class ImpWebView extends WebView {
 			try {
 				Method method = WebSettings.class.getMethod(
 						"setAllowFileAccessFromFileURLs",
-						new Class[] { boolean.class });
+                        boolean.class);
 				method.invoke(settings, true);
 			} catch (Exception e) {
 				iLog.w(TAG, "设备api不支持：" + e.getMessage());
@@ -342,7 +342,7 @@ public class ImpWebView extends WebView {
 			try {
 				Method method = WebSettings.class.getMethod(
 						"setAllowUniversalAccessFromFileURLs",
-						new Class[] { boolean.class });
+                        boolean.class);
 				method.invoke(settings, true);
 			} catch (Exception e) {
 				iLog.w(TAG, e.getMessage() + "");

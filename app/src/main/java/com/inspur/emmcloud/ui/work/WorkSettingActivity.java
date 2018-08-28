@@ -156,5 +156,4 @@ public class WorkSettingActivity extends BaseActivity {
         }
     }
 
-    ;
 }

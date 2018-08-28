@@ -16,12 +16,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.inspur.emmcloud.BaseActivity;
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.ChannelMemberListAdapter;
 import com.inspur.emmcloud.bean.chat.PersonDto;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelGroupCacheUtils;
@@ -68,32 +68,32 @@ public class MembersActivity extends BaseActivity implements
         mDialog = (TextView) findViewById(R.id.channel_dialog);
         mSearchInput = (EditText) findViewById(R.id.channel_member_search_input);
         mHeadText = (TextView) findViewById(R.id.header_text);
-//        mSearchLayout = (RelativeLayout) findViewById(R.id.search_layout);
         mSideBar.setTextView(mDialog);
 
         mSideBar.setOnTouchingLetterChangedListener(this);
         channelID = getIntent().getStringExtra("cid");
+
         loadingDlg = new LoadingDialog(this);
-        final String userid = PreferencesUtils.getString(this, "userID");
         loadingDlg.show();
 
         Runnable runnable = new Runnable() {
 
             @Override
             public void run() {
-
                 if (!StringUtils.isBlank(channelID)) {
                     List<String> uidList = ChannelGroupCacheUtils.getMemberUidList(MembersActivity.this, channelID, 0);
                     personDtoList = ContactUserCacheUtils.getShowMemberList(uidList);
                 } else if (getIntent().getStringArrayListExtra("uidList") != null) {
                     personDtoList = ContactUserCacheUtils.getShowMemberList(getIntent().getStringArrayListExtra("uidList"));
                 }
-
-                Iterator<PersonDto> personDtoIterator = personDtoList.iterator();
-                while (personDtoIterator.hasNext()) {
-                    PersonDto personDto = personDtoIterator.next();
-                    if (personDto.getUid().contains(userid) && (!getIntent().hasExtra("search"))) {
-                        personDtoIterator.remove();
+                if (!getIntent().hasExtra("search")){
+                    Iterator<PersonDto> personDtoIterator = personDtoList.iterator();
+                    while (personDtoIterator.hasNext()) {
+                        PersonDto personDto = personDtoIterator.next();
+                        if (personDto.getUid().equals(MyApplication.getInstance().getUid())) {
+                            personDtoIterator.remove();
+                            break;
+                        }
                     }
                 }
                 handler.sendMessage(handler.obtainMessage(0));
@@ -101,23 +101,16 @@ public class MembersActivity extends BaseActivity implements
         };
 
         try {
-            final long start = System.currentTimeMillis();
             handler = new Handler() {
                 @Override
                 public void handleMessage(Message msg) {
                     if (msg.what == 0) {
                         initData();
-                        if (loadingDlg.isShowing()) {
-                            loadingDlg.dismiss();
-                        }
                     } else {
-                        if (loadingDlg.isShowing()) {
-                            loadingDlg.dismiss();
-                        }
                         Toast.makeText(MembersActivity.this, "加载数据出错",
                                 Toast.LENGTH_SHORT).show();
                     }
-
+                    LoadingDialog.dimissDlg(loadingDlg);
                 }
 
             };

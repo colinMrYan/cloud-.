@@ -25,6 +25,7 @@ import com.inspur.emmcloud.bean.system.ClientConfigItem;
 import com.inspur.emmcloud.bean.system.GetAllConfigVersionResult;
 import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
 import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.interf.CommonCallBack;
 import com.inspur.emmcloud.service.BackgroundService;
 import com.inspur.emmcloud.service.CoreService;
@@ -36,10 +37,11 @@ import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppConfigUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ClientConfigUpdateUtils;
+import com.inspur.emmcloud.util.privates.ClientIDUtils;
+import com.inspur.emmcloud.util.privates.DataCleanManager;
 import com.inspur.emmcloud.util.privates.MyAppWidgetUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.ProfileUtils;
-import com.inspur.emmcloud.util.privates.ClientIDUtils;
 import com.inspur.emmcloud.util.privates.ReactNativeUtils;
 import com.inspur.emmcloud.util.privates.SplashPageUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
@@ -82,6 +84,7 @@ public class IndexActivity extends IndexBaseActivity {
      * 初始化app的运行环境
      */
     private void initAppEnvironment() {
+        DataCleanManager.cleanCustomCache(MyAppConfig.LOCAL_CACHE_VOICE_PATH);
         MyApplication.getInstance().setIndexActvityRunning(true);
         MyApplication.getInstance().restartAllDb();
         MyApplication.getInstance().clearUserPhotoMap();

@@ -239,6 +239,7 @@
     <string name="send_a_file">[文件]</string>
     <string name="send_a_link">[連結]</string>
     <string name="send_a_contact_card">[名片]</string>
+    <string name="send_a_voice">[語音]</string>
     <string name="send_a_meeting_invitation">[會議邀請]</string>
     <string name="cancel_a_meeting">[會議取消通知]</string>
     <string name="send_a_meeting_request">[會議審批]</string>
@@ -273,6 +274,14 @@
     <string name="business_card">個人名片</string>
     <string name="no_channel_album">當前沒有頻道圖片</string>
     <string name="no_channel_file">當前沒有頻道文件</string>
+    <string name="hold_to_talk">按住 說話</string>
+    <string name="release_to_send">鬆開 結束</string>
+    <string name="release_to_cancel">鬆開手指，取消發送</string>
+    <string name="slide_up_to_cancel">手指上滑，取消發送</string>
+    <string name="recording_too_short">錄音時間過短</string>
+    <string name="play_fail">播放失败</string>
+    <string name="record_count_down_text">還可以說 %1$d 秒</string>
+    <string name="voice_call">語音通話</string>
 
 
     <!-- 會議卡片 -->

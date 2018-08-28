@@ -149,7 +149,7 @@ public class TagListView extends MyFlowLayout implements OnClickListener {
 
     public void addTags(List<Tag> lists, boolean b) {
         for (int i = 0; i < lists.size(); i++) {
-            addTag((Tag) lists.get(i), b);
+            addTag(lists.get(i), b);
         }
     }
 
@@ -195,16 +195,16 @@ public class TagListView extends MyFlowLayout implements OnClickListener {
         removeAllViews();
         mTags.clear();
         for (int i = 0; i < lists.size(); i++) {
-            addTag((Tag) lists.get(i), b);
+            addTag(lists.get(i), b);
         }
     }
 
-    public static abstract interface OnTagCheckedChangedListener {
-        public abstract void onTagCheckedChanged(TagView tagView, Tag tag);
+    public interface OnTagCheckedChangedListener {
+        void onTagCheckedChanged(TagView tagView, Tag tag);
     }
 
-    public static abstract interface OnTagClickListener {
-        public abstract void onTagClick(TagView tagView, Tag tag);
+    public interface OnTagClickListener {
+        void onTagClick(TagView tagView, Tag tag);
     }
 
 }

@@ -97,8 +97,6 @@ public class Volume implements Serializable {
             return false;
 
         final Volume otherVolume = (Volume) other;
-        if (getId().equals(otherVolume.getId()))
-            return true;
-        return false;
+        return getId().equals(otherVolume.getId());
     }
 }

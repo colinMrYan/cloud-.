@@ -57,10 +57,7 @@ public class AppOrder {
             return false;
         }
         AppOrder appOrder = (AppOrder) other;
-        if (!getAppID().equals(appOrder.getAppID())) {
-            return false;
-        }
-        return true;
+        return getAppID().equals(appOrder.getAppID());
     }
 }
  

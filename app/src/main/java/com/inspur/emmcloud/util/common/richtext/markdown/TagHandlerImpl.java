@@ -820,7 +820,7 @@ public class TagHandlerImpl implements TagHandler {
 //        flag = email(line) || flag;
 //        flag = image(line) || flag;
 //        flag = image2(line) || flag;
-        flag = link(line) || flag;;
+        flag = link(line) || flag;
 //        flag = link2(line) || flag;
 //        flag = autoLink(line) || flag;
         flag = emItalic(line) || flag;

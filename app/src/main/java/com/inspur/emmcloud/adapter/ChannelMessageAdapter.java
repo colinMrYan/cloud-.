@@ -22,6 +22,7 @@ import com.inspur.emmcloud.ui.chat.DisplayCommentTextPlainMsg;
 import com.inspur.emmcloud.ui.chat.DisplayExtendedActionsMsg;
 import com.inspur.emmcloud.ui.chat.DisplayExtendedLinksMsg;
 import com.inspur.emmcloud.ui.chat.DisplayMediaImageMsg;
+import com.inspur.emmcloud.ui.chat.DisplayMediaVoiceMsg;
 import com.inspur.emmcloud.ui.chat.DisplayRegularFileMsg;
 import com.inspur.emmcloud.ui.chat.DisplayResUnknownMsg;
 import com.inspur.emmcloud.ui.chat.DisplayTxtMarkdownMsg;
@@ -184,39 +185,41 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         holder.cardLayout.removeAllViews();
         boolean isMyMsg = message.getFromUser().equals(
                 MyApplication.getInstance().getUid());
-        holder.cardCoverView.setVisibility(View.VISIBLE);
+        holder.cardCoverView.setVisibility(View.GONE);
         View cardContentView;
         String type = message.getType();
         switch (type) {
-            case "text/plain":
-                holder.cardCoverView.setVisibility(View.GONE);
+            case Message.MESSAGE_TYPE_TEXT_PLAIN:
+
                 cardContentView = DisplayTxtPlainMsg.getView(context,
                         message);
                 break;
-            case "text/markdown":
-                holder.cardCoverView.setVisibility(View.GONE);
+            case Message.MESSAGE_TYPE_TEXT_MARKDOWN:
                 cardContentView = DisplayTxtMarkdownMsg.getView(context,
                         message);
                 break;
-            case "file/regular-file":
+            case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
                 cardContentView = DisplayRegularFileMsg.getView(context,
                         message,uiMessage.getSendStatus());
                 break;
-            case "attachment/card":
+            case Message.MESSAGE_TYPE_EXTENDED_CONTACT_CARD:
                 cardContentView = DisplayAttachmentCardMsg.getView(context,
                         message);
                 break;
-            case "extended/actions":
+            case Message.MESSAGE_TYPE_EXTENDED_ACTIONS:
                 cardContentView = DisplayExtendedActionsMsg.getInstance(context).getView(message);
                 break;
-            case "media/image":
+            case Message.MESSAGE_TYPE_MEDIA_IMAGE:
                 cardContentView = DisplayMediaImageMsg.getView(context,uiMessage);
                 break;
-            case "comment/text-plain":
+            case Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN:
                 cardContentView = DisplayCommentTextPlainMsg.getView(context,message);
                 break;
-            case "extended/links":
+            case Message.MESSAGE_TYPE_EXTENDED_LINKS:
                 cardContentView = DisplayExtendedLinksMsg.getView(context,message);
+                break;
+            case Message.MESSAGE_TYPE_MEDIA_VOICE:
+                cardContentView = DisplayMediaVoiceMsg.getView(context,message);
                 break;
             default:
                 cardContentView = DisplayResUnknownMsg.getView(context, isMyMsg);
@@ -225,9 +228,9 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
 
 
         holder.cardLayout.addView(cardContentView);
-        holder.cardLayout.setBackgroundColor(context.getResources().getColor(
-                isMyMsg ? R.color.bg_my_card : R.color.white));
-        holder.cardCoverView.setBackgroundResource(isMyMsg ? R.drawable.ic_chat_msg_img_cover_arrow_right : R.drawable.ic_chat_msg_img_cover_arrow_left);
+//        holder.cardLayout.setBackgroundColor(context.getResources().getColor(
+//                isMyMsg ? R.color.bg_my_card : R.color.white));
+//        holder.cardCoverView.setBackgroundResource(isMyMsg ? R.drawable.ic_chat_msg_img_cover_arrow_right : R.drawable.ic_chat_msg_img_cover_arrow_left);
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) holder.cardParentLayout.getLayoutParams();
         //此处实际执行params.removeRule();
         params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 0);

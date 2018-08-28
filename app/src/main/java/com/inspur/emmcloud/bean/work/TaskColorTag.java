@@ -78,9 +78,7 @@ public class TaskColorTag implements Serializable{
 			return false;
 
 		final TaskColorTag otherTag = (TaskColorTag) other;
-		if (!getId().equals(otherTag.getId()))
-			return false;
-		return true;
-	}
+        return getId().equals(otherTag.getId());
+    }
 	
 }

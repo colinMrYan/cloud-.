@@ -13,6 +13,7 @@ import com.inspur.emmcloud.bean.chat.MsgContentAttachmentCard;
 import com.inspur.emmcloud.bean.chat.MsgContentComment;
 import com.inspur.emmcloud.bean.chat.MsgContentExtendedLinks;
 import com.inspur.emmcloud.bean.chat.MsgContentMediaImage;
+import com.inspur.emmcloud.bean.chat.MsgContentMediaVoice;
 import com.inspur.emmcloud.bean.chat.MsgContentRegularFile;
 import com.inspur.emmcloud.bean.chat.MsgContentTextPlain;
 import com.inspur.emmcloud.bean.chat.Phone;
@@ -118,7 +119,7 @@ public class CommunicationUtils {
         Message message = combinLocalMessageCommon();
         message.setChannel(cid);
         message.setId(getTracer());
-        message.setType("media/image");
+        message.setType(Message.MESSAGE_TYPE_MEDIA_IMAGE);
         File file = new File(localFilePath);
         Bitmap bitmap = BitmapFactory.decodeFile(localFilePath);
         int imgHeight = bitmap.getHeight();
@@ -142,6 +143,20 @@ public class CommunicationUtils {
         message.setContent(msgContentMediaImage.toString());
         return message;
     }
+
+
+    public static Message combinLocalMediaVoiceMessage(String cid, String localFilePath,int duration) {
+        Message message = combinLocalMessageCommon();
+        message.setChannel(cid);
+        message.setId(getTracer());
+        message.setType(Message.MESSAGE_TYPE_MEDIA_VOICE);
+        MsgContentMediaVoice msgContentMediaVoice = new MsgContentMediaVoice();
+        msgContentMediaVoice.setDuration(duration);
+        msgContentMediaVoice.setMedia("");
+        message.setContent(msgContentMediaVoice.toString());
+        return message;
+    }
+
 
     public static Message combinLocalReplyAttachmentCardMessage(ContactUser contactUser, String cid, String fromUser) {
         Message msgRobot = new Message();
@@ -240,7 +255,6 @@ public class CommunicationUtils {
             case "ppt":
             case "pptx":
                 fileCategory = "Microsoft PPT";
-                ;
                 break;
             default:
                 fileCategory = "Unknown";

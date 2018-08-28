@@ -160,8 +160,6 @@ public class TimeUtils {
         return calendar;
     }
 
-    ;
-
     /**
      * 时间字符串转为Calendar
      *
@@ -669,11 +667,8 @@ public class TimeUtils {
                     .get(Calendar.MONTH)) {
                 return false;
             }
-            if (todayCalendar.get(Calendar.DAY_OF_MONTH) != targetCalendar
-                    .get(Calendar.DAY_OF_MONTH)) {
-                return false;
-            }
-            return true;
+            return todayCalendar.get(Calendar.DAY_OF_MONTH) == targetCalendar
+                    .get(Calendar.DAY_OF_MONTH);
 
         }
 

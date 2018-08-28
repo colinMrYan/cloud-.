@@ -229,12 +229,12 @@ public class ModifyUserPwdBySMSActivity extends BaseActivity{
 					.getText().toString());
 			if (isPhoneNumBlank || isCodeBlank
 					|| !FomatUtils.isPhoneNum(phoneNumEdit.getText().toString())) {
-				((Button) findViewById(R.id.next_step_btn)).setEnabled(false);
-				((Button) findViewById(R.id.next_step_btn))
+				findViewById(R.id.next_step_btn).setEnabled(false);
+				findViewById(R.id.next_step_btn)
 						.setBackgroundResource(R.drawable.bg_login_btn_unable);
 			} else {
-				((Button) findViewById(R.id.next_step_btn)).setEnabled(true);
-				((Button) findViewById(R.id.next_step_btn))
+				findViewById(R.id.next_step_btn).setEnabled(true);
+				findViewById(R.id.next_step_btn)
 						.setBackgroundResource(R.drawable.selector_login_btn);
 			}
 			// 修改填完验证码后修改手机号置空

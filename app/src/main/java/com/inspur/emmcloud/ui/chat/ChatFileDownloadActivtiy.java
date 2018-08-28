@@ -9,7 +9,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIDownloadCallBack;
 import com.inspur.emmcloud.api.APIUri;
@@ -20,17 +19,13 @@ import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
+import com.inspur.emmcloud.util.privates.DownLoaderUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.imp.plugin.file.FileUtil;
 
 import org.xutils.common.Callback;
-import org.xutils.http.HttpMethod;
-import org.xutils.http.RequestParams;
-import org.xutils.http.app.RedirectHandler;
-import org.xutils.http.request.UriRequest;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
-import org.xutils.x;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -167,22 +162,7 @@ public class ChatFileDownloadActivtiy extends BaseActivity {
 
             }
         };
-
-
-        RequestParams params = MyApplication.getInstance().getHttpRequestParams(source);
-        params.setRedirectHandler(new RedirectHandler() {
-            @Override
-            public RequestParams getRedirectParams(UriRequest uriRequest) throws Throwable {
-                String locationUrl = uriRequest.getResponseHeader("Location");
-                RequestParams params = new RequestParams(locationUrl);
-                params.setAutoResume(true);// 断点下载
-                params.setSaveFilePath(fileSavePath);
-                params.setCancelFast(true);
-                params.setMethod(HttpMethod.GET);
-                return params;
-            }
-        });
-        cancelable = x.http().get(params, callBack);
+        cancelable= new DownLoaderUtils().startDownLoad(source,fileSavePath,callBack);
     }
 
 }

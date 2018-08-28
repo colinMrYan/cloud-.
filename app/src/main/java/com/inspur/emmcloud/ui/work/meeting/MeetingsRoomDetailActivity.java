@@ -200,15 +200,15 @@ public class MeetingsRoomDetailActivity extends BaseActivity {
             for (int i = 0; i < equipmentList.size(); i++) {
                 if (!StringUtils.isEmpty(equipmentList.get(i))
                         && equipmentList.get(i).equals("WIFI")) {
-                    ((ImageView) findViewById(R.id.meeting_room_detail_wifi_icon))
+                    findViewById(R.id.meeting_room_detail_wifi_icon)
                             .setVisibility(View.VISIBLE);
                 } else if (!StringUtils.isEmpty(equipmentList.get(i))
                         && equipmentList.get(i).equals("PROJECTOR")) {
-                    ((ImageView) findViewById(R.id.meeting_room_detail_projector_icon))
+                    findViewById(R.id.meeting_room_detail_projector_icon)
                             .setVisibility(View.VISIBLE);
                 } else if (!StringUtils.isEmpty(equipmentList.get(i))
                         && equipmentList.get(i).equals("CONFERENCE_PHONE")) {
-                    ((ImageView) findViewById(R.id.meeting_room_detail_phone_icon))
+                    findViewById(R.id.meeting_room_detail_phone_icon)
                             .setVisibility(View.VISIBLE);
                 } else if (!StringUtils.isEmpty(equipmentList.get(i))
                         && equipmentList.get(i).equals("WHITE_BOARD")) {
@@ -284,7 +284,7 @@ public class MeetingsRoomDetailActivity extends BaseActivity {
                         R.layout.meeting_no_schedule_item_view, null);
                 ((TextView) convertView.findViewById(R.id.time_text))
                         .setText(timeSegment + " " + getString(R.string.free));
-                ((RelativeLayout) convertView.findViewById(R.id.meeting_layout))
+                convertView.findViewById(R.id.meeting_layout)
                         .setOnClickListener(new OnClickListener() {
 
                             @Override
@@ -319,7 +319,7 @@ public class MeetingsRoomDetailActivity extends BaseActivity {
                 ((TextView) convertView.findViewById(R.id.meeting_title_text))
                         .setText(meeting.getTopic());
 
-                ((LinearLayout) convertView.findViewById(R.id.meeting_layout))
+                convertView.findViewById(R.id.meeting_layout)
                         .setOnClickListener(new OnClickListener() {
 
                             @Override
@@ -335,7 +335,7 @@ public class MeetingsRoomDetailActivity extends BaseActivity {
                             }
                         });
 
-                ((LinearLayout) convertView.findViewById(R.id.meeting_layout))
+                convertView.findViewById(R.id.meeting_layout)
                         .setOnLongClickListener(new OnLongClickListener() {
 
                             @Override
@@ -554,7 +554,6 @@ public class MeetingsRoomDetailActivity extends BaseActivity {
                     if ((meetingSchedule.getFrom() + "").equals(meeting
                             .getFrom())) {
                         meetingSchedule.setMeeting(meeting);
-                        ;
                     }
                 }
             }

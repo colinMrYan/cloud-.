@@ -83,7 +83,7 @@ public class SelectStaffService extends ImpPlugin {
         intent.setClass(getActivity(),
                 ContactSearchActivity.class);
         intent.putExtra(ContactSearchFragment.EXTRA_TYPE, 2);
-        intent.putExtra(ContactSearchFragment.EXTRA_MULTI_SELECT, multiSelection == 0 ? false : true);
+        intent.putExtra(ContactSearchFragment.EXTRA_MULTI_SELECT, multiSelection != 0);
         intent.putExtra(ContactSearchFragment.EXTRA_TITLE, getActivity().getString(R.string.adress_list));
         if (getImpCallBackInterface() != null){
             getImpCallBackInterface().onStartActivityForResult(intent, ImpFragment.SELECT_STAFF_SERVICE_REQUEST);

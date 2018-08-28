@@ -55,7 +55,7 @@ public class FillCaptchasActivity extends BaseActivity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_fill_captchas);
-		((RelativeLayout) findViewById(R.id.main_layout))
+		findViewById(R.id.main_layout)
 				.setOnTouchListener(new OnTouchListener() {
 
 					@Override
@@ -148,14 +148,13 @@ public class FillCaptchasActivity extends BaseActivity {
 		public void afterTextChanged(Editable s) {
 			// TODO Auto-generated method stub
 			if (StringUtils.isBlank(captchasEdit.getText().toString())) {
-				((Button) findViewById(R.id.next_step_btn)).setEnabled(false);
-				((Button) findViewById(R.id.next_step_btn))
+				findViewById(R.id.next_step_btn).setEnabled(false);
+				findViewById(R.id.next_step_btn)
 						.setBackgroundDrawable(getResources().getDrawable(
 								R.drawable.bg_login_btn_unable));
-				;
-			} else {
-				((Button) findViewById(R.id.next_step_btn)).setEnabled(true);
-				((Button) findViewById(R.id.next_step_btn))
+            } else {
+				findViewById(R.id.next_step_btn).setEnabled(true);
+				findViewById(R.id.next_step_btn)
 						.setBackgroundDrawable(getResources().getDrawable(
 								R.drawable.selector_login_btn));
 			}

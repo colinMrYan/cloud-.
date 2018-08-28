@@ -101,9 +101,7 @@ public class UIMessage implements Serializable {
             return false;
 
         final UIMessage otherUIMsg = (UIMessage) other;
-        if (!getId().equals(otherUIMsg.getId()) )
-            return false;
-        return true;
+        return getId().equals(otherUIMsg.getId());
     }
 
 

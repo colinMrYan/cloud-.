@@ -331,15 +331,12 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                 break;
             case SORT_BY_TIME_UP:
                 sortTypeShowTxt = getString(R.string.sort_by_time_asc);
-                ;
                 break;
             case SORT_BY_TIME_DOWN:
                 sortTypeShowTxt = getString(R.string.sort_by_time_dasc);
-                ;
                 break;
             default:
                 sortTypeShowTxt = getString(R.string.sort_by_name_asc);
-                ;
                 break;
         }
         operationSortText.setText(sortTypeShowTxt);
@@ -468,8 +465,6 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
         }
 
     }
-
-    ;
 
     /**
      * 设置是否是多选状态

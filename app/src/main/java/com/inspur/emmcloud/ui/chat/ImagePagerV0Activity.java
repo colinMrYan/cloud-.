@@ -224,8 +224,8 @@ public class ImagePagerV0Activity extends BaseFragmentActivity {
 
 			@Override
 			public void onSoftKeyboardClosed() {
-				ecmChatInputMenu.setAddMenuLayoutShow(false);;
-			}
+				ecmChatInputMenu.setAddMenuLayoutShow(false);
+            }
 		});
 	}
 

@@ -198,8 +198,6 @@ public class ContactUser {
             return false;
 
         final ContactUser otherContactUser = (ContactUser) other;
-        if (!getId().equals(otherContactUser.getId()))
-            return false;
-        return true;
+        return getId().equals(otherContactUser.getId());
     }
 }

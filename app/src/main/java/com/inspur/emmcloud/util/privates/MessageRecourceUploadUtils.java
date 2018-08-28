@@ -24,7 +24,6 @@ public class MessageRecourceUploadUtils {
 	private ProgressCallback callback;
 	private Message message;
 	private File file;
-	private boolean isRegularFile = false;
 	public MessageRecourceUploadUtils(Context context,String cid){
 		this.context = context;
 		apiService = new ChatAPIService(context);
@@ -34,13 +33,12 @@ public class MessageRecourceUploadUtils {
 	}
 
 
-	public void uploadResFile(File file,Message message,boolean isRegularFile) {
+	public void uploadResFile(File file,Message message) {
 		// TODO Auto-generated method stub
 		this.file = file;
 		this.message = message;
-		this.isRegularFile = isRegularFile;
 		if (NetUtils.isNetworkConnected(MyApplication.getInstance())){
-			apiService.getFileUploadToken(file.getName(),cid);
+			apiService.getFileUploadToken(file.getName(),cid,message.getType().equals(Message.MESSAGE_TYPE_MEDIA_VOICE));
 		}else {
 			callbackFail();
 		}
@@ -82,10 +80,16 @@ public class MessageRecourceUploadUtils {
 			volumeFileUploadService.setProgressCallback(new ProgressCallback() {
 				@Override
 				public void onSuccess(VolumeFile volumeFile) {
-					if (isRegularFile){
-						WSAPIService.getInstance().sendChatRegularFileMsg(cid,message.getId(),volumeFile);
-					}else {
-						WSAPIService.getInstance().sendChatMediaImageMsg(cid,message.getId(),volumeFile,message);
+					switch (message.getType()){
+						case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
+							WSAPIService.getInstance().sendChatRegularFileMsg(cid,message.getId(),volumeFile);
+							break;
+						case Message.MESSAGE_TYPE_MEDIA_IMAGE:
+							WSAPIService.getInstance().sendChatMediaImageMsg(cid,volumeFile,message);
+							break;
+						case Message.MESSAGE_TYPE_MEDIA_VOICE:
+							WSAPIService.getInstance().sendChatMediaVoiceMsg(cid,message,volumeFile);
+							break;
 					}
 
 				}

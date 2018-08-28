@@ -19,7 +19,7 @@ public enum CloudHttpMethod {
 
     private final String value;
 
-    private CloudHttpMethod(String value) {
+    CloudHttpMethod(String value) {
         this.value = value;
     }
 

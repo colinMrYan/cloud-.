@@ -151,15 +151,13 @@ public class StringUtils {
         if(0xFF3B <= ch && ch <= 0xFF40) return true;
         if(0xFF5B <= ch && ch <= 0xFF60) return true;
         if(ch == 0xFF62 || ch == 0xFF63) return true;
-        if(ch == 0x0020 || ch == 0x3000) return true;
-        return false;
+        return ch == 0x0020 || ch == 0x3000;
 
     }
 
     static boolean isCnSymbol(char ch) {
         if (0x3004 <= ch && ch <= 0x301C) return true;
-        if (0x3020 <= ch && ch <= 0x303F) return true;
-        return false;
+        return 0x3020 <= ch && ch <= 0x303F;
     }
     static boolean isEnSymbol(char ch){
 
@@ -169,9 +167,8 @@ public class StringUtils {
         if (0x28 <= ch && ch <= 0x2B) return true;
         if (0x3C <= ch && ch <= 0x3E) return true;
         if (0x5B <= ch && ch <= 0x60) return true;
-        if (0x7B <= ch && ch <= 0x7E) return true;
+        return 0x7B <= ch && ch <= 0x7E;
 
-        return false;
     }
 
     /**
@@ -367,11 +364,7 @@ public class StringUtils {
     public static boolean isFirstCharEnglish(String s) {
         char c = s.charAt(0);
         int i = (int) c;
-        if ((i >= 65 && i <= 90) || (i >= 97 && i <= 122)) {
-            return true;
-        } else {
-            return false;
-        }
+        return (i >= 65 && i <= 90) || (i >= 97 && i <= 122);
     }
 
 

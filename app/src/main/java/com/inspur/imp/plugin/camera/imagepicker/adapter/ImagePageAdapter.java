@@ -1,4 +1,4 @@
-package com.inspur.imp.plugin.camera.imagepicker.adapter;;
+package com.inspur.imp.plugin.camera.imagepicker.adapter;
 
 import android.app.Activity;
 import android.support.v4.view.PagerAdapter;

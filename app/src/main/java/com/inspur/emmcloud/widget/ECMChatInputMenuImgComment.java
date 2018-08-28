@@ -97,13 +97,6 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
             }
         });
     }
-    /**
-     * 设置是否是V0版本消息
-     * @param isMessageV0
-     */
-    public void setIsMessageV0(boolean isMessageV0){
-        this.isMessageV0 = isMessageV0;
-    }
 
     public ChatInputEdit getChatInputEdit(){
         return inputEdit;

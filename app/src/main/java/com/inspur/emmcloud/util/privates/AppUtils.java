@@ -206,10 +206,7 @@ public class AppUtils {
                 "previousVersion", "");
         String[] savedArray = savedVersion.split("\\.");
         int savedVersionNum = Integer.parseInt(savedArray[0])*1000000+Integer.parseInt(savedArray[1])*1000+Integer.parseInt(savedArray[2]);
-        if(savedVersionNum < 2000002){
-            return true;
-        }
-        return false;
+        return savedVersionNum < 2000002;
     }
 
     /**
@@ -521,11 +518,8 @@ public class AppUtils {
      * @return
      */
     public static boolean isHasSDCard(Context context) {
-        if (Environment.getExternalStorageState().equals(
-                Environment.MEDIA_MOUNTED)) {
-            return true;
-        }
-        return false;
+        return Environment.getExternalStorageState().equals(
+                Environment.MEDIA_MOUNTED);
 
     }
 
@@ -734,10 +728,7 @@ public class AppUtils {
      */
     private static boolean canConnectHuawei(Context context) {
         String pushFlag = PreferencesUtils.getString(context, "pushFlag", "");
-        if (StringUtils.isBlank(pushFlag) || pushFlag.equals("huawei")) {
-            return true;
-        }
-        return false;
+        return StringUtils.isBlank(pushFlag) || pushFlag.equals("huawei");
     }
 
 

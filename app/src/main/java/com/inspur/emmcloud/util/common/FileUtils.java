@@ -593,7 +593,7 @@ public class FileUtils {
         }
 
         File folder = new File(folderName);
-        return (folder.exists() && folder.isDirectory()) ? true : folder
+        return (folder.exists() && folder.isDirectory()) || folder
                 .mkdirs();
     }
 
@@ -728,7 +728,7 @@ public class FileUtils {
             }
             return tempSize + "K";
         } else if (size >= MBDATA) {
-            size = (float) (size / MBDATA);
+            size = size / MBDATA;
             String tempSize = df.format(size);
             if (tempSize.length() < 3) {
                 tempSize = "0" + tempSize;
@@ -1027,7 +1027,7 @@ public class FileUtils {
         Bundle extras = intent.getExtras();
         // 判断Intent是否是“分享”功能(Share Via)
         if (extras.containsKey(Intent.EXTRA_STREAM)) {
-            Uri uri = (Uri) extras.getParcelable(Intent.EXTRA_STREAM);
+            Uri uri = extras.getParcelable(Intent.EXTRA_STREAM);
             return uri;
         }
         return null;
