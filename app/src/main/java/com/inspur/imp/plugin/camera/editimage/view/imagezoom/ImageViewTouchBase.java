@@ -33,9 +33,9 @@ public abstract class ImageViewTouchBase extends ImageView {
 		 * @param drawable
 		 */
 		void onDrawableChanged(Drawable drawable);
-	};
+	}
 
-	public interface OnLayoutChangeListener {
+    public interface OnLayoutChangeListener {
 		/**
 		 * Callback invoked when the layout bounds changed
 		 * 
@@ -47,9 +47,9 @@ public abstract class ImageViewTouchBase extends ImageView {
 		 */
 		void onLayoutChanged(boolean changed, int left, int top, int right,
 							 int bottom);
-	};
+	}
 
-	/**
+    /**
 	 * Use this to change the
 	 * {@link ImageViewTouchBase#setDisplayType(DisplayType)} of this View
 	 * 
@@ -63,9 +63,9 @@ public abstract class ImageViewTouchBase extends ImageView {
 		FIT_TO_SCREEN,
 		/** Image will be scaled only if bigger than the bounds of this view */
 		FIT_IF_BIGGER
-	};
+	}
 
-	public static final String LOG_TAG = "ImageViewTouchBase";
+    public static final String LOG_TAG = "ImageViewTouchBase";
 	protected static final boolean LOG_ENABLED = false;
 
 	public static final float ZOOM_INVALID = -1f;

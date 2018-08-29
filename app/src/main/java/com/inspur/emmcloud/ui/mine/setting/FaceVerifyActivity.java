@@ -238,8 +238,8 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
                 parameters.setFlashMode(cameraFlashModel);
             }
             List<String> focusModeList = parameters.getSupportedFocusModes();
-            if (focusModeList != null && focusModeList.contains(parameters.FOCUS_MODE_CONTINUOUS_PICTURE))
-                parameters.setFocusMode(parameters.FOCUS_MODE_CONTINUOUS_PICTURE);//连续对焦
+            if (focusModeList != null && focusModeList.contains(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE))
+                parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);//连续对焦
             mCamera.setParameters(parameters);
             mCamera.startPreview();
             mCamera.cancelAutoFocus();// 如果要实现连续的自动对焦，这一句必须加上，这句必须要在startPreview后面加上去

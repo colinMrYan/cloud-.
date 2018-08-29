@@ -15,7 +15,6 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.alibaba.fastjson.JSON;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -23,6 +22,7 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.WorkAPIService;
 import com.inspur.emmcloud.bean.work.GetTagResult;
 import com.inspur.emmcloud.bean.work.TaskColorTag;
+import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
@@ -204,7 +204,7 @@ public class MessionTagsManageActivity extends BaseActivity {
 			String userId = ((MyApplication) getApplicationContext()).getUid();
 			PreferencesUtils.putString(MessionTagsManageActivity.this,
 					MyApplication.getInstance().getTanent() + userId + "messionTags",
-					JSON.toJSONString(allTags));
+					JSONUtils.toJSONString(allTags));
 		}
 
 		@Override

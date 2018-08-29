@@ -57,7 +57,7 @@ public class IntentUtils {
 		}
 		context.startActivity(intent);
 		if (isFinishCurrentActivity) {
-			((Activity) context).finish();
+			context.finish();
 		}
 	}
 

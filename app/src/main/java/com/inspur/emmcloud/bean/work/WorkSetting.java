@@ -74,8 +74,6 @@ public class WorkSetting {
             return false;
 
         final WorkSetting workSetting = (WorkSetting) other;
-        if (!getId().equals(workSetting.getId()))
-            return false;
-        return true;
+        return getId().equals(workSetting.getId());
     }
 }

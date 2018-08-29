@@ -43,13 +43,9 @@ public class PullableGridView extends GridView implements Pullable
 		{
 			// 没有item的时候也可以下拉刷新
 			return true;
-		} else if (getFirstVisiblePosition() == 0
-				&& getChildAt(0).getTop() >= getPaddingTop())
-		{
-			// 滑到顶部了
-			return true;
-		} else
-			return false;
+		} else // 滑到顶部了
+            return getFirstVisiblePosition() == 0
+                    && getChildAt(0).getTop() >= getPaddingTop();
 	}
 
 	@Override

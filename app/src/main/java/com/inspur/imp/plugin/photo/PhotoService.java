@@ -101,7 +101,7 @@ public class PhotoService extends ImpPlugin {
             if (!paramsObject.isNull("fail"))
                 failCb = paramsObject.getString("fail");
 
-            int picTotal = 6;
+            int picTotal = 9;
             this.parm_uploadUrl = JSONUtils.getString(paramsObject, "uploadUrl", null);
             if (!paramsObject.isNull("options")) {
                 JSONObject optionsObj = paramsObject.getJSONObject("options");
@@ -144,8 +144,8 @@ public class PhotoService extends ImpPlugin {
         imagePicker.setImageLoader(ImageDisplayUtils.getInstance()); // 设置图片加载器
         imagePicker.setShowCamera(false); // 显示拍照按钮
         imagePicker.setCrop(false); // 允许裁剪（单选才有效）
-        if (picTotal < 0 || picTotal > 6) {
-            picTotal = 6;
+        if (picTotal < 0 || picTotal > 9) {
+            picTotal = 9;
         }
         imagePicker.setSelectLimit(picTotal);
         imagePicker.setMultiMode(true);

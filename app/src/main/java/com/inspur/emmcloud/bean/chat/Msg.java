@@ -252,9 +252,7 @@ public class Msg implements Serializable {
             return false;
 
         final Msg otherMsg = (Msg) other;
-        if (!getMid().equals(otherMsg.getMid()))
-            return false;
-        return true;
+        return getMid().equals(otherMsg.getMid());
     }
 }
 

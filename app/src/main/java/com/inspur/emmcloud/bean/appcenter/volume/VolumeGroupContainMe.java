@@ -1,7 +1,6 @@
 package com.inspur.emmcloud.bean.appcenter.volume;
 
-import com.alibaba.fastjson.JSON;
-import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.common.JSONUtils;
 
 import org.xutils.db.annotation.Column;
 import org.xutils.db.annotation.Table;
@@ -26,7 +25,7 @@ public class VolumeGroupContainMe {
 
     public VolumeGroupContainMe(){}
     public VolumeGroupContainMe(String volumeId,List<String> groupIdList){
-        this.groupIds = JSON.toJSONString(groupIdList);
+        this.groupIds = JSONUtils.toJSONString(groupIdList);
         this.volumeId = volumeId;
     }
 
@@ -47,14 +46,12 @@ public class VolumeGroupContainMe {
     }
 
     public List<String> getGroupIdList() {
-        if (!StringUtils.isBlank(groupIds)){
-            groupIdList = JSON.parseArray(groupIds,String.class);
-        }
+        groupIdList = JSONUtils.JSONArray2List(groupIds,new ArrayList<String>());
         return groupIdList;
     }
 
     public void setGroupIdList(List<String> groupIdList) {
-        this.groupIds = JSON.toJSONString(groupIdList);
+        this.groupIds = JSONUtils.toJSONString(groupIdList);
         this.groupIdList = groupIdList;
     }
 }

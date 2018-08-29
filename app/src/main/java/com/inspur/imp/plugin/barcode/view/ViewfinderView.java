@@ -150,11 +150,11 @@ public void onDraw(Canvas canvas) {
 		FontMetrics fm = paint.getFontMetrics();
 		float textWidth = paint.measureText(getResources().getString(Res.getStringID("put_qrcode_in_frame")));
 		double textheight = Math.ceil(fm.descent - fm.ascent); 
-		textCenterX = (float) (width-textWidth) / 2;
+		textCenterX = (width-textWidth) / 2;
 		canvas.drawText(getResources().getString(Res.getStringID("put_qrcode_in_frame")), textCenterX,
-				(float) (frame.bottom + (float) 30 * density), paint);
+                frame.bottom + (float) 30 * density, paint);
 		textWidth = paint.measureText(getResources().getString(Res.getStringID("can_auto_scan")));
-		textCenterX = (float) (width-textWidth) / 2;
+		textCenterX = (width-textWidth) / 2;
 		canvas.drawText(getResources().getString(Res.getStringID("can_auto_scan")), textCenterX,
 				(float) (frame.bottom + (float) 30 * density +textheight), paint);
 		

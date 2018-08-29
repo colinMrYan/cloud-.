@@ -17,7 +17,7 @@ import java.util.List;
  * Created by chenmch on 2018/5/10.
  */
 
-@Table(name="ContactUser")
+@Table(name="ContactUser",onCreated = "CREATE INDEX contactUserIndex ON ContactUser(id)")
 public class ContactUser {
     @Column(name = "id", isId = true)
     private String id="";
@@ -37,6 +37,8 @@ public class ContactUser {
     private int hasHead = 0;
     @Column(name = "sortOrder")
     private int sortOrder= 0;
+    @Column(name = "employeeNum")
+    private String employeeNum="";
     @Column(name = "lastQueryTime")
     private String lastQueryTime = "";
     public ContactUser(){
@@ -57,6 +59,7 @@ public class ContactUser {
         this.email = JSONUtils.getString(object,"email","");
         this.hasHead =JSONUtils.getInt(object,"has_head",0);
         this.sortOrder = JSONUtils.getInt(object,"sort_order",0);
+        this.employeeNum = JSONUtils.getString(object,"emp_no","");
         this.lastQueryTime = lastQueryTime;
     }
 
@@ -163,6 +166,14 @@ public class ContactUser {
         return lastQueryTime;
     }
 
+    public String getEmployeeNum() {
+        return employeeNum;
+    }
+
+    public void setEmployeeNum(String employeeNum) {
+        this.employeeNum = employeeNum;
+    }
+
     public void setLastQueryTime(String lastQueryTime) {
         this.lastQueryTime = lastQueryTime;
     }
@@ -198,8 +209,6 @@ public class ContactUser {
             return false;
 
         final ContactUser otherContactUser = (ContactUser) other;
-        if (!getId().equals(otherContactUser.getId()))
-            return false;
-        return true;
+        return getId().equals(otherContactUser.getId());
     }
 }

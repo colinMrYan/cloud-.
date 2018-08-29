@@ -16,7 +16,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
-import com.alibaba.fastjson.JSON;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
@@ -24,6 +23,7 @@ import com.inspur.emmcloud.api.apiservice.FindAPIService;
 import com.inspur.emmcloud.bean.find.GetTripArriveCity;
 import com.inspur.emmcloud.bean.find.Trip;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
+import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
@@ -36,7 +36,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -419,7 +418,7 @@ public class TripDetailActivity extends BaseActivity {
 			uploadTrip.setFromCity(tripStartCity);
 			uploadTrip.setDestinationCity(tripDestinationCity);
 			uploadTicketInfoList.add(uploadTrip);
-			String uploadTicketInfos = JSON.toJSONString(uploadTicketInfoList);
+			String uploadTicketInfos = JSONUtils.toJSONString(uploadTicketInfoList);
 			// APIService apiService = new APIService(getApplicationContext());
 			// apiService.setAPIInterface(new WebService());
 			apiService.updateTrainTicket(uploadTicketInfos);
@@ -436,7 +435,7 @@ public class TripDetailActivity extends BaseActivity {
 			}
 			ToastUtils.show(getApplicationContext(), R.string.save_success);
 			Intent intent = new Intent();
-			intent.putExtra("newTrip", (Serializable) uploadTrip);
+			intent.putExtra("newTrip", uploadTrip);
 			setResult(RESULT_OK, intent);
 			Intent intentBroadCase = new Intent("refresh_trip_list");
 			LocalBroadcastManager.getInstance(TripDetailActivity.this).sendBroadcast(intentBroadCase);

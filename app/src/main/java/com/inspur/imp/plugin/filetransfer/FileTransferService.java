@@ -496,8 +496,6 @@ public class FileTransferService extends ImpPlugin {
         }).start();
     }
 
-    ;
-
     /**
      * 上传文件
      *
@@ -530,9 +528,9 @@ public class FileTransferService extends ImpPlugin {
                 X509TrustManager[] xtmArray = new X509TrustManager[]{xtm};
                 sslContext.init(null, xtmArray, new java.security.SecureRandom());
                 if (sslContext != null) {
-                    httpsConn.setDefaultSSLSocketFactory(sslContext.getSocketFactory());
+                    HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.getSocketFactory());
                 }
-                httpsConn.setDefaultHostnameVerifier(hnv);
+                HttpsURLConnection.setDefaultHostnameVerifier(hnv);
                 conn = httpsConn;
             } else {
                 conn = (HttpURLConnection) url.openConnection();
@@ -581,10 +579,10 @@ public class FileTransferService extends ImpPlugin {
                     dos.write(bytes, 0, len);
                     downnum += len;
                     if ((downcount == 0)
-                            || (int) (downnum * 100 / fileLength) - 1 > downcount) {
+                            || downnum * 100 / fileLength - 1 > downcount) {
                         downcount += 1;
                         Message msg = handler.obtainMessage(3);
-                        msg.obj = (int) downnum * 100 / fileLength;
+                        msg.obj = downnum * 100 / fileLength;
                         handler.sendMessage(msg);
                     }
                 }

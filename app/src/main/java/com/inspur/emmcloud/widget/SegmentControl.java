@@ -459,12 +459,12 @@ public class SegmentControl extends View {
 
         int mV;
 
-        private Direction(int v) {
+        Direction(int v) {
             mV = v;
         }
     }
 
     public interface OnSegmentControlClickListener {
-        public void onSegmentControlClick(int index);
+        void onSegmentControlClick(int index);
     }
 }

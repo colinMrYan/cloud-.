@@ -27,11 +27,7 @@ public class ResolutionUtils {
 		int width = displayMetrics.widthPixels;
 		int height = getHeight(context);
 		// 判断设备的分辨率，要求不小于800*480
-		if (width * height >= 384000) {
-			return true;
-		} else {
-			return false;
-		}
+        return width * height >= 384000;
 	}
 
 	/**

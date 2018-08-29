@@ -101,9 +101,6 @@ public class AppGroupBean {
 		}
 		AppGroupBean appGroupBean = (AppGroupBean) other;
 		//此处从==判断是否相等  改为equals
-		if(!(getCategoryID().equals(appGroupBean.getCategoryID()))){
-			return false;
-		}
-		return true;
-	}
+        return getCategoryID().equals(appGroupBean.getCategoryID());
+    }
 }

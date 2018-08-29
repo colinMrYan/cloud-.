@@ -32,7 +32,7 @@ public class RemoveModeDialog extends DialogFragment {
     }
 
     public interface RemoveOkListener {
-        public void onRemoveOkClick(int removeMode);
+        void onRemoveOkClick(int removeMode);
     }
 
     public void setRemoveOkListener(RemoveOkListener l) {

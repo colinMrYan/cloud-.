@@ -1,5 +1,9 @@
 package com.inspur.emmcloud.util.common;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
+import com.alibaba.fastjson.parser.Feature;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -448,27 +452,62 @@ public class JSONUtils {
      * <li>return string array</li>
      * </ul>
      */
-    public static List<String> getStringList(JSONObject jsonObject, String key, List<String> defaultValue) {
+    public static ArrayList<String> getStringList(JSONObject jsonObject, String key, ArrayList<String> defaultValue) {
         if (jsonObject == null || StringUtils.isEmpty(key) || !jsonObject.has(key) || jsonObject.isNull(key)) {
             return defaultValue;
         }
-
         try {
             JSONArray statusArray = jsonObject.getJSONArray(key);
-            if (statusArray != null) {
-                List<String> list = new ArrayList<String>();
-                for (int i = 0; i < statusArray.length(); i++) {
-                    list.add(statusArray.getString(i));
-                }
-                return list;
-            }
+            return JSONArray2List(statusArray,defaultValue);
         } catch (Exception e) {
             if (isPrintException) {
                 e.printStackTrace();
             }
             return defaultValue;
         }
-        return defaultValue;
+    }
+
+    /**
+     *JSONArray转list<String>
+     * @param json
+     * @param defaultValue
+     * @return
+     */
+    public static ArrayList<String> JSONArray2List(String json, ArrayList<String> defaultValue) {
+        try {
+            JSONArray array = new JSONArray(json);
+            return JSONArray2List(array, defaultValue);
+        } catch (Exception e) {
+            if (isPrintException) {
+                e.printStackTrace();
+            }
+            return defaultValue;
+        }
+
+    }
+
+    /**
+     * JSONArray转list<String>
+     * @param array
+     * @param defaultValue
+     * @return
+     */
+    public static ArrayList<String> JSONArray2List(JSONArray array, ArrayList<String> defaultValue) {
+        if (array == null || array.length() == 0) {
+            return defaultValue;
+        }
+        try {
+            ArrayList<String> list = new ArrayList<String>();
+            for (int i = 0; i < array.length(); i++) {
+                list.add(array.getString(i));
+            }
+            return list;
+        } catch (Exception e) {
+            if (isPrintException) {
+                e.printStackTrace();
+            }
+            return defaultValue;
+        }
     }
 
     /**
@@ -483,7 +522,7 @@ public class JSONUtils {
      * <li>return {@link JSONUtils#getStringList(JSONObject, String, List)}</li>
      * </ul>
      */
-    public static List<String> getStringList(String jsonData, String key, List<String> defaultValue) {
+    public static ArrayList<String> getStringList(String jsonData, String key, ArrayList<String> defaultValue) {
         if (StringUtils.isEmpty(jsonData)) {
             return defaultValue;
         }
@@ -672,7 +711,7 @@ public class JSONUtils {
      * </ul>
      */
     public static JSONArray getJSONArray(JSONArray jsonArray, int index, JSONArray defaultValue) {
-        if (jsonArray == null ) {
+        if (jsonArray == null) {
             return defaultValue;
         }
 
@@ -849,7 +888,7 @@ public class JSONUtils {
             String key = it.next();
             try {
                 obj.put(key, map.get(key));
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -952,12 +991,12 @@ public class JSONUtils {
             JSONObject obj = array.getJSONObject(index);
             return obj;
         } catch (Exception e) {
-            e.printStackTrace();
+            if (isPrintException) {
+                e.printStackTrace();
+            }
         }
         return defaultValue;
     }
-
-    ;
 
     /**
      * @param array
@@ -973,26 +1012,70 @@ public class JSONUtils {
             String obj = array.getString(index);
             return obj;
         } catch (Exception e) {
-            e.printStackTrace();
+            if (isPrintException) {
+                e.printStackTrace();
+            }
         }
         return defaultValue;
     }
 
     /**
      * 判断一个Json字符串是否含有某个key
+     *
      * @param content
      * @param key
      * @return
      */
-    public static boolean isJsonObjStringHasKey(String content,String key){
+    public static boolean isJsonObjStringHasKey(String content, String key) {
         JSONObject jsonObject;
         try {
             jsonObject = new JSONObject(content);
         } catch (Exception e) {
-            e.printStackTrace();
+            if (isPrintException) {
+                e.printStackTrace();
+            }
             return false;
         }
         return jsonObject.has(key);
+    }
+
+
+    public static String toJSONString(Object object) {
+        try {
+            return JSON.toJSONString(object);
+        }catch (Exception e){
+            if (isPrintException) {
+                e.printStackTrace();
+            }
+        }
+        return "";
+    }
+
+    public static <T> List<T> parseArray(String text, Class<T> clazz){
+        List<T> list = null;
+        try {
+            list =  JSON.parseArray(text,clazz);
+        }catch (Exception e){
+            if (isPrintException) {
+                e.printStackTrace();
+            }
+        }
+        if (list == null){
+            list= new ArrayList<>();
+        }
+        return list;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> T parseObject(String text, TypeReference<T> type, Feature... features) {
+        try {
+            return (T) JSON.parseObject(text,type,features);
+        }catch (Exception e){
+            if (isPrintException) {
+                e.printStackTrace();
+            }
+        }
+        return null;
     }
 
 }

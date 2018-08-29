@@ -44,8 +44,6 @@ public class PreferencesByUsersUtils {
         return userID ;
     }
 
-    ;
-
     /**
      * put string preferences
      *

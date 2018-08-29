@@ -95,8 +95,6 @@ public class InsertModel {
             return false;
 
         final InsertModel otherInsertModel = (InsertModel) other;
-        if (!getInsertId().equals(otherInsertModel.getInsertId()))
-            return false;
-        return true;
+        return getInsertId().equals(otherInsertModel.getInsertId());
     }
 }

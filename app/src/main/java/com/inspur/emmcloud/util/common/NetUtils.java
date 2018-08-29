@@ -70,9 +70,8 @@ public class NetUtils {
 				|| (networkInfo = manager.getActiveNetworkInfo()) == null) {
 			return type;
 		}
-		;
 
-		if (networkInfo.isConnected()) {
+        if (networkInfo.isConnected()) {
 			String typeName = networkInfo.getTypeName();
 			if ("WIFI".equalsIgnoreCase(typeName)) {
 				type = NETWORK_TYPE_WIFI;

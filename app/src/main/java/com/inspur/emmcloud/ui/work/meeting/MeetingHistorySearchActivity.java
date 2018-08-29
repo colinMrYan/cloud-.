@@ -271,7 +271,7 @@ public class MeetingHistorySearchActivity extends BaseActivity implements
                         .findViewById(R.id.meeting_time_text);
                 holder.meetingRoom = (TextView) convertView
                         .findViewById(R.id.meeting_location_text);
-                holder.meetingCardLineView = (View) convertView
+                holder.meetingCardLineView = convertView
                         .findViewById(R.id.meeting_card_line);
                 convertView.setTag(holder);
             } else {

@@ -377,7 +377,7 @@ public class FileService extends ImpPlugin {
 	 * 当文件移动在不同的文件系统之间的时候需要调用的一个方法，被copyTo和moveTo调用
 	 */
 	private void copyAction(File srcFile, File destFile)
-			throws FileNotFoundException, IOException {
+			throws IOException {
 		FileInputStream istream = new FileInputStream(srcFile);
 		FileOutputStream ostream = new FileOutputStream(destFile);
 		FileChannel input = istream.getChannel();
@@ -447,13 +447,10 @@ public class FileService extends ImpPlugin {
 	 * @return
 	 */
 	private boolean isCopyOnItself(String src, String dest) {
-		if (dest.startsWith(src)
-				&& dest.indexOf(File.separator, src.length() - 1) != -1) {
-			return true;
-		}
+        return dest.startsWith(src)
+                && dest.indexOf(File.separator, src.length() - 1) != -1;
 
-		return false;
-	}
+    }
 
 	/**
 	 * @description 移动文件方法 被TransferTo调用
@@ -778,18 +775,15 @@ public class FileService extends ImpPlugin {
 	private boolean atRootDirectory(String filePath) {
 		filePath = FileHelper.getRealPath(filePath, getFragmentContext());
 
-		if (filePath.equals(Environment.getExternalStorageDirectory()
-				.getAbsolutePath()
-				+ "/Android/data/"
-				+ getActivity().getPackageName() + "/cache")
-				|| filePath.equals(Environment.getExternalStorageDirectory()
-						.getAbsolutePath())
-				|| filePath.equals("/data/data/"
-						+ getActivity().getPackageName())) {
-			return true;
-		}
-		return false;
-	}
+        return filePath.equals(Environment.getExternalStorageDirectory()
+                .getAbsolutePath()
+                + "/Android/data/"
+                + getActivity().getPackageName() + "/cache")
+                || filePath.equals(Environment.getExternalStorageDirectory()
+                .getAbsolutePath())
+                || filePath.equals("/data/data/"
+                + getActivity().getPackageName());
+    }
 
 	/**
 	 * @description 获取文件的信息元数据

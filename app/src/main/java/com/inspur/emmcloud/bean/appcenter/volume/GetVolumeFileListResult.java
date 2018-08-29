@@ -49,8 +49,10 @@ public class GetVolumeFileListResult {
         }
         String groupPrivilegeJson = JSONUtils.getString(obj, "groups", "");
         if (!StringUtils.isBlank(groupPrivilegeJson)) {
-            groupPrivilegeMap = com.alibaba.fastjson.JSONObject.parseObject(groupPrivilegeJson, new TypeReference<Map<String, Integer>>() {
-            });
+            groupPrivilegeMap = JSONUtils.parseObject(groupPrivilegeJson, new TypeReference<Map<String, Integer>>() {});
+            if (groupPrivilegeMap == null){
+                groupPrivilegeMap = new HashMap<>();
+            }
         }
     }
 

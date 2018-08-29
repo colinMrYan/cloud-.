@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:background="@color/header_bg"
         android:paddingBottom="10dp"
-        android:paddingTop="10dp" >
+        android:paddingTop="5dp" >
 
         <RelativeLayout
             android:id="@+id/back_layout"
@@ -64,7 +64,37 @@
         android:background="@color/white"
         android:orientation="vertical"
         android:paddingLeft="20dp" >
+        <LinearLayout
+            android:id="@+id/employee_num_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:orientation="vertical" >
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:paddingBottom="8dp"
+                android:paddingTop="10dp"
+                android:text="@string/employee_num"
+                android:textColor="#999999"
+                android:textSize="@dimen/content_normal_textsize" />
+
+            <TextView
+                android:id="@+id/employee_num_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="12dp"
+                android:textColor="#333333"
+                android:textIsSelectable="true"
+                android:textSize="@dimen/content_title_textsize" />
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/color_list_divider" />
+        </LinearLayout>
         <LinearLayout
             android:id="@+id/department_layout"
             android:layout_width="match_parent"
@@ -228,7 +258,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:paddingBottom="30dp"
+        android:paddingBottom="20dp"
         android:paddingLeft="12dp"
         android:paddingRight="12dp" >
 

@@ -311,8 +311,8 @@ public class ChannelGroupIconUtils {
         // TODO Auto-generated method stub
         int width = bitmap.getWidth();
         int height = bitmap.getHeight();
-        bitmap = Bitmap.createBitmap(bitmap, (int) (width / 4), 0,
-                (int) (width / 2), height);
+        bitmap = Bitmap.createBitmap(bitmap, width / 4, 0,
+                width / 2, height);
         return bitmap;
     }
 

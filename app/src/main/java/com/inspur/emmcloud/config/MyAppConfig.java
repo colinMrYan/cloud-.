@@ -29,6 +29,8 @@ public class MyAppConfig {
             .getExternalStorageDirectory() + "/IMP-Cloud/cache/img_create/";
     public static final String LOCAL_CACHE_PATH = Environment
             .getExternalStorageDirectory() + "/IMP-Cloud/cache/";
+    public static final String LOCAL_CACHE_VOICE_PATH = Environment
+            .getExternalStorageDirectory() + "/IMP-Cloud/cache/voice";
     public static final String LOCAL_CACHE_PHOTO_PATH = Environment
             .getExternalStorageDirectory() + "/IMP-Cloud/cache/photo";
     public static final String LOCAL_DOWNLOAD_PATH = Environment
@@ -41,7 +43,7 @@ public class MyAppConfig {
     public static final int UPLOAD_ORIGIN_IMG_DEFAULT_SIZE = 1280;
     public static final int UPLOAD_THUMBNAIL_IMG_MAX_SIZE = 600;
     public static final int VOLUME_MAX_FILE_NAME_LENGTH = 40;
-
+    public static Boolean test = true;
     public static Map<String, String> getLocalLanguageMap() {
         Map<String, String> languageMap = new HashMap<String, String>();
         languageMap.put("zh-CN", "zh-CN");
@@ -61,6 +63,23 @@ public class MyAppConfig {
     public static String getReactAppFilePath(Context context, String userId, String module) {
         return context.getDir("ReactResource_046", MODE_PRIVATE).getPath() + "/" + MyApplication.getInstance().getTanent() + "/" + userId + "/" + module;
     }
+
+    /**
+     * 获取聊天语音存储目录
+     * @return
+     */
+    public static String getCacheVoiceDirPath(){
+        return Environment.getExternalStorageDirectory() + "/IMP-Cloud/"+MyApplication.getInstance().getUid()+"/"+MyApplication.getInstance().getTanent()+"/voice/";
+    }
+
+    /**
+     * 获取聊天语音存储目录
+     * @return
+     */
+    public static String getCacheVoiceFilePath(String cid,String messageId){
+        return Environment.getExternalStorageDirectory() + "/IMP-Cloud/"+MyApplication.getInstance().getUid()+"/"+MyApplication.getInstance().getTanent()+"/voice/"+cid+"/"+messageId+".amr";
+    }
+
 
     /**
      * 获取React上一版本缓存途径（用于Roback的版本）

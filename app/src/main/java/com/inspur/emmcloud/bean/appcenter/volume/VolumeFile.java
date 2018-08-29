@@ -67,7 +67,10 @@ public class VolumeFile implements Serializable{
         this.owner = JSONUtils.getString(object, "owner", "");
         String groupPrivilegeJson = JSONUtils.getString(object, "groups", "");
         if (!StringUtils.isBlank(groupPrivilegeJson)){
-            groupPrivilegeMap = com.alibaba.fastjson.JSONObject.parseObject(groupPrivilegeJson, new TypeReference<Map<String, Integer>>() {});
+            groupPrivilegeMap = JSONUtils.parseObject(groupPrivilegeJson, new TypeReference<Map<String, Integer>>() {});
+            if (groupPrivilegeMap == null){
+                groupPrivilegeMap =  new HashMap<>();
+            }
         }
         path = JSONUtils.getString(object, "path", "");
     }
@@ -218,8 +221,6 @@ public class VolumeFile implements Serializable{
             return false;
 
         final VolumeFile otherVolumeFile = (VolumeFile) other;
-        if (getId().equals(otherVolumeFile.getId()))
-            return true;
-        return false;
+        return getId().equals(otherVolumeFile.getId());
     }
 }

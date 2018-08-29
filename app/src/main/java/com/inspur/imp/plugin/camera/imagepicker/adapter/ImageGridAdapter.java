@@ -16,8 +16,6 @@ import com.inspur.imp.plugin.camera.imagepicker.util.Utils;
 
 import java.util.ArrayList;
 
-;
-
 public class ImageGridAdapter extends BaseAdapter {
 
     private static final int ITEM_TYPE_CAMERA = 0;  //第一个条目是相机

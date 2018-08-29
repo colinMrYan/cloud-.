@@ -13,7 +13,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.alibaba.fastjson.JSON;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -21,6 +20,7 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.WorkAPIService;
 import com.inspur.emmcloud.bean.work.GetOfficeResult;
 import com.inspur.emmcloud.bean.work.GetOfficeResult.Office;
+import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
@@ -98,11 +98,7 @@ public class MyCommonOfficeActivity extends BaseActivity implements
         String selectCommonOfficeIds = PreferencesUtils.getString(
                 MyCommonOfficeActivity.this, MyApplication.getInstance().getTanent() + userId
                         + "selectCommonOfficeIds");
-        if (!StringUtils.isBlank(selectCommonOfficeIds)) {
-            selectOfficeIdList = JSON.parseArray(selectCommonOfficeIds,
-                    String.class);
-        }
-
+        selectOfficeIdList = JSONUtils.JSONArray2List(selectCommonOfficeIds,new ArrayList<String>());
     }
 
     /**
@@ -224,13 +220,13 @@ public class MyCommonOfficeActivity extends BaseActivity implements
         LogUtils.debug("jason", "selectOfficeIdList.size=" + selectOfficeIdList.size());
         PreferencesUtils.putString(MyCommonOfficeActivity.this, MyApplication.getInstance().getTanent()
                         + userId + "allCommonOfficeIds",
-                JSON.toJSONString(allCommonOfficeIdList));
+                JSONUtils.toJSONString(allCommonOfficeIdList));
         PreferencesUtils.putString(MyCommonOfficeActivity.this, MyApplication.getInstance().getTanent()
                         + userId + "allCommonBuildingIds",
-                JSON.toJSONString(allCommonBuildingIdList));
+                JSONUtils.toJSONString(allCommonBuildingIdList));
         PreferencesUtils.putString(MyCommonOfficeActivity.this, MyApplication.getInstance().getTanent()
                         + userId + "selectCommonOfficeIds",
-                JSON.toJSONString(selectOfficeIdList));
+                JSONUtils.toJSONString(selectOfficeIdList));
     }
 
     @Override
@@ -362,8 +358,7 @@ public class MyCommonOfficeActivity extends BaseActivity implements
         if (StringUtils.isBlank(localOfficeIds)) {
             originCommonOfficeList = officeListNet;
         } else {
-            List<String> allOfficeIdList = (List) JSON.parseArray(
-                    localOfficeIds, String.class);
+            List<String> allOfficeIdList = JSONUtils.JSONArray2List(localOfficeIds,new ArrayList<String>());
             List<Office> allOfficeList = new ArrayList<Office>();
             for (int i = 0; i < allOfficeIdList.size(); i++) {
                 String officeId = allOfficeIdList.get(i);
@@ -408,7 +403,7 @@ public class MyCommonOfficeActivity extends BaseActivity implements
         myCommonOfficeAdapter.notifyDataSetChanged();
         PreferencesUtils.putString(MyCommonOfficeActivity.this, MyApplication.getInstance().getTanent()
                         + userId + "selectCommonOfficeIds",
-                JSON.toJSONString(selectOfficeIdList));
+                JSONUtils.toJSONString(selectOfficeIdList));
     }
 
     /**

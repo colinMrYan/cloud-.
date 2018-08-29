@@ -25,7 +25,6 @@ public class DisplayExtendedLinksMsg {
      * 富文本卡片
      *
      * @param context
-     * @param convertView
      * @param message
      */
     public static View getView(final Context context,
@@ -42,7 +41,7 @@ public class DisplayExtendedLinksMsg {
                 .findViewById(R.id.news_card_title_text);
         TextView linkDigestText = (TextView) cardContentView
                 .findViewById(R.id.news_card_digest_text);
-        linkTitleText.setText(title);
+        linkTitleText.setText(StringUtils.isBlank(title)?context.getString(R.string.share_default_title):title);
         linkDigestText.setText(subTitle);
 
         ImageView linkImageview = (ImageView) cardContentView

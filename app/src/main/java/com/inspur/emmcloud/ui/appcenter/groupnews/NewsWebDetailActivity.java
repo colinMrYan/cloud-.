@@ -116,7 +116,9 @@ public class NewsWebDetailActivity extends BaseActivity {
      * 两处使用本方法的，专门封一个方法
      */
     public void initWebViewGoBackOrClose() {
-        (findViewById(R.id.news_close_btn)).setVisibility(webView.canGoBack() ? View.VISIBLE : View.GONE);
+        if(webView != null){
+            (findViewById(R.id.news_close_btn)).setVisibility(webView.canGoBack() ? View.VISIBLE : View.GONE);
+        }
     }
 
 
@@ -336,7 +338,7 @@ public class NewsWebDetailActivity extends BaseActivity {
             try {
                 Method method = WebSettings.class.getMethod(
                         "setAllowFileAccessFromFileURLs",
-                        new Class[] { boolean.class });
+                        boolean.class);
                 method.invoke(settings, true);
             } catch (Exception e) {
                 iLog.w("yfcLog", "设备api不支持：" + e.getMessage());
@@ -353,7 +355,7 @@ public class NewsWebDetailActivity extends BaseActivity {
             try {
                 Method method = WebSettings.class.getMethod(
                         "setAllowUniversalAccessFromFileURLs",
-                        new Class[] { boolean.class });
+                        boolean.class);
                 method.invoke(settings, true);
             } catch (Exception e) {
                 iLog.w("yfcLog", e.getMessage() + "");
@@ -424,7 +426,7 @@ public class NewsWebDetailActivity extends BaseActivity {
         final SwitchView nightModeSwitchBtn = (SwitchView) dialog.findViewById(R.id.app_news_mode_switch);
         nightModeSwitchBtn.setPaintColorOn(0x7E000000);
         nightModeSwitchBtn.setPaintCircleBtnColor(0x1A666666);
-        nightModeSwitchBtn.setOpened(model.endsWith(darkMode) ? true : false);
+        nightModeSwitchBtn.setOpened(model.endsWith(darkMode));
         nightModeSwitchBtn.setOnStateChangedListener(new SwitchView.OnStateChangedListener() {
             @Override
             public void toggleToOn(View view) {

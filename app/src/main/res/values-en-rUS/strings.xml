@@ -237,6 +237,7 @@
     <string name="send_a_comment">[Comment]</string>
     <string name="send_a_file">[File]</string>
     <string name="send_a_link">[Link]</string>
+    <string name="send_a_voice">[Voice]</string>
     <string name="send_a_contact_card">[Buisiness Card]</string>
     <string name="send_a_meeting_invitation">[Meeting Invitation]</string>
     <string name="cancel_a_meeting">[Meeting Cancellation]</string>
@@ -271,6 +272,16 @@
     <string name="group_name_longth_valid">Group name, word overrun (no more than 40 characters)</string>
     <string name="message_create_group">Group Chat</string>
     <string name="business_card">Business Card</string>
+    <string name="no_channel_album">No channel picture </string>
+    <string name="no_channel_file">No channel file </string>
+    <string name="hold_to_talk">Hold to Talk</string>
+    <string name="release_to_send">Release to Send</string>
+    <string name="release_to_cancel">release to cancel</string>
+    <string name="slide_up_to_cancel">Slide up to cancel</string>
+    <string name="recording_too_short">Message too short</string>
+    <string name="play_fail">Unable to play</string>
+    <string name="record_count_down_text">%1$d seconds left</string>
+    <string name="voice_call">Voice Call</string>
 
 
     <!-- 会议卡片 -->
@@ -283,8 +294,6 @@
     <string name="meeting_refused">Reject</string>
     <string name="meeting_cancel_confirm">Cancel Confirmation</string>
     <string name="meeting_cancel_reject">Cancel Rejection</string>
-    <string name="no_channel_album">No channel picture </string>
-    <string name="no_channel_file">No channel file </string>
 
     <!-- 工作页面部分 -->
     <string name="work">Work</string>
@@ -564,6 +573,7 @@
     <string name="user_info_organ">Inspur</string>
     <string name="user_info_phone_number">Phone Number</string>
     <string name="user_no_storage">No Storage</string>
+    <string name="employee_num">NO.</string>
 
     <!-- 集团新闻 部分 -->
     <string name="group_news">Group News</string>
@@ -932,7 +942,7 @@
     <string name="qr_code_analysis_fail">Qr code parsing failed</string>
 
     <!--科大讯飞语音-->
-    <string name="voice_input">Speech input</string>
+    <string name="voice_input">Voice Input</string>
 
     <string name="clear">Clear</string>
     <string name="confirm_clear">Confirm clear?</string>
@@ -955,6 +965,7 @@
     <string name="share_no_suffix">Do not support a file sharing the name without suffix</string>
     <string name="share_has_not_exist_file">There are nonexistent files in the files you shared, please check.</string>
     <string name="share_not_support">Unsupported sharing types</string>
+    <string name="share_default_title">Web link</string>
 
     <string name="net_work_fail">Failed to get configuration information</string>
 
