@@ -33,6 +33,7 @@ public class MemberSelectAdapter extends RecyclerView.Adapter<MemberSelectAdapte
     private List<ContactUser> lastSelectUserList = new ArrayList<>();//上次选中的群成员list
     private List<ContactUser> newSelectUserList = new ArrayList<>();//这次刚选的群成员list
     private ChannelSelectVoiceVideoMembersActivity.OnMemeberSelectedListener listener;
+
     public MemberSelectAdapter(Context context, List<ContactUser> contactUserList,List<ContactUser> lastSelectUserList){
         this.context = context;
         inflater = LayoutInflater.from(context);

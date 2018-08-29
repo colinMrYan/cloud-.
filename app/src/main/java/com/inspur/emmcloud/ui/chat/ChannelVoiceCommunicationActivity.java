@@ -1,6 +1,5 @@
 package com.inspur.emmcloud.ui.chat;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v4.content.ContextCompat;
@@ -22,7 +21,6 @@ import com.inspur.emmcloud.bean.chat.GetVoiceCommunicationResult;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationAudioVolumeInfo;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
 import com.inspur.emmcloud.bean.system.GetBoolenResult;
-import com.inspur.emmcloud.service.VoiceHoldService;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.MediaPlayerManagerUtils;
@@ -30,6 +28,7 @@ import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.ResolutionUtils;
 import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
+import com.inspur.emmcloud.util.privates.SuspensionWindowManagerUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.VoiceCommunicationUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
@@ -140,15 +139,15 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity{
         }
     }
 
-    /**
-     * 创建通话小窗口
-     */
-    public void createCommunicationService(){
-        Intent intent = new Intent(this,VoiceHoldService.class);
-        intent.putExtra(VOICE_TIME, Long.parseLong(TimeUtils.getChronometerSeconds(chronometerCommunicationTime)));
-        intent.putExtra(SCREEN_SIZE, ResolutionUtils.getWidth(this));
-        startService(intent);
-    }
+//    /**
+//     * 创建通话小窗口
+//     */
+//    public void createCommunicationService(){
+//        Intent intent = new Intent(this,VoiceHoldService.class);
+//        intent.putExtra(VOICE_TIME, Long.parseLong(TimeUtils.getChronometerSeconds(chronometerCommunicationTime)));
+//        intent.putExtra(SCREEN_SIZE, ResolutionUtils.getWidth(this));
+//        startService(intent);
+//    }
 
     /**
      * 初始化Views
@@ -481,7 +480,8 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity{
                 break;
             case R.id.img_voice_communication_pack_up:
                 saveCommunicationData();
-                createCommunicationService();
+//                createCommunicationService();
+                SuspensionWindowManagerUtils.getInstance().showCommunicationSmallWindow(this, ResolutionUtils.getWidth(this),Long.parseLong(TimeUtils.getChronometerSeconds(chronometerCommunicationTime)));
                 finish();
                 break;
             default:

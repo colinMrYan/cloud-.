@@ -159,6 +159,10 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
 
     }
 
+    /**
+     * 获得声网控制工具类
+     * @return
+     */
     public VoiceCommunicationUtils getVoiceCommunicationUtils() {
         if(voiceCommunicationUtils == null){
             synchronized (VoiceCommunicationUtils.class){
