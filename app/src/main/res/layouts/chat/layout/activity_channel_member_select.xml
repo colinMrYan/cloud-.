@@ -65,6 +65,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+            android:overScrollMode="never"
             android:layout_gravity="center_horizontal"/>
         <RelativeLayout
             android:id="@+id/search_layout"
@@ -99,6 +100,7 @@
             android:id="@+id/recyclerview_voice_communication_members"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:overScrollMode="never"
             android:layout_gravity="center_horizontal"/>
     </LinearLayout>
 
