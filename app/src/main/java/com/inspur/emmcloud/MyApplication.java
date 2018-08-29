@@ -130,7 +130,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         CrashHandler crashHandler = CrashHandler.getInstance();
         crashHandler.init(getInstance());
         x.Ext.init(MyApplication.this);
-        x.Ext.setDebug(true);
+        x.Ext.setDebug(false);
         SoLoader.init(this, false);//ReactNative相关初始化
         Res.init(this); // 注册imp的资源文件类
         initImageLoader();
