@@ -57,10 +57,10 @@ public class DisplayMediaVoiceMsg {
         coverLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (message.getSendStatus() != 1 ) {
+                if (message.getSendStatus() != 1) {
                     return;
                 }
-                if (downloadLoadingView.getVisibility() == View.VISIBLE){
+                if (downloadLoadingView.getVisibility() == View.VISIBLE) {
                     return;
                 }
                 final String fileSavePath = MyAppConfig.getCacheVoiceFilePath(message.getChannel(), message.getId());
@@ -73,7 +73,7 @@ public class DisplayMediaVoiceMsg {
                         public void callbackSuccess(File file) {
                             downloadLoadingView.setVisibility(View.GONE);
                             //当下载完成时如果mediaplayer没有被占用则播放语音
-                            if (!MediaPlayerManagerUtils.getManager().isPlaying()){
+                            if (!MediaPlayerManagerUtils.getManager().isPlaying()) {
                                 setVoiceAnimViewBgByPlayStatus(voiceAnimView, true, isMyMsg);
                                 playVoiceFile(fileSavePath, voiceAnimView, isMyMsg);
                             }
@@ -124,15 +124,16 @@ public class DisplayMediaVoiceMsg {
 
     /**
      * 播放语音
+     *
      * @param fileSavePath
      * @param voiceAnimView
      * @param isMyMsg
      */
     private static void playVoiceFile(String fileSavePath, final View voiceAnimView, final boolean isMyMsg) {
         //当此语音正在播放时，用户点击会暂停播放
-        if (MediaPlayerManagerUtils.getManager().isPlaying(fileSavePath)){
+        if (MediaPlayerManagerUtils.getManager().isPlaying(fileSavePath)) {
             MediaPlayerManagerUtils.getManager().stop();
-        }else {
+        } else {
             MediaPlayerManagerUtils.getManager().play(fileSavePath, new MediaPlayerManagerUtils.PlayCallback() {
                 @Override
                 public void onPrepared() {
