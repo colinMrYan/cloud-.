@@ -40,12 +40,16 @@ import com.inspur.emmcloud.bean.appcenter.AppGroupBean;
 import com.inspur.emmcloud.bean.appcenter.GetAllAppResult;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
+import com.inspur.emmcloud.widget.AdsViewPager;
 import com.inspur.emmcloud.widget.CircularProgress;
 import com.inspur.emmcloud.widget.ECMSpaceItemDecoration;
+import com.inspur.emmcloud.widget.MySwipeRefreshLayout;
+import com.inspur.emmcloud.widget.ScrollViewWithListView;
 import com.inspur.imp.api.ImpActivity;
 
 import java.io.Serializable;
@@ -69,8 +73,10 @@ public class AppCenterActivity extends BaseActivity {
     private static final String APP_CENTER_APP_NAME_PROTOCOL = "ecc-app-store://app";
     private ViewPager viewPager;
     private CircularProgress recommendCircleProgress, classCircleProgress;
-    private ListView recommendListView, classListView;
-    private SwipeRefreshLayout recommendSwipeRefreshLayout, classSwipeRefreshLayout;
+    private ListView classListView;
+    private ScrollViewWithListView recommendListView;
+    private SwipeRefreshLayout classSwipeRefreshLayout;
+    private MySwipeRefreshLayout recommendSwipeRefreshLayout;
     private List<AppAdsBean> adsList = new ArrayList<>();
     private List<AppGroupBean> categoryAppList = new ArrayList<AppGroupBean>();
     private List<List<App>> appList = new ArrayList<>();
@@ -79,6 +85,8 @@ public class AppCenterActivity extends BaseActivity {
     private BroadcastReceiver addAppReceiver;
     private Timer timer;
     private Handler mHandler;
+    private AdsViewPager adsViewPager;
+    private AdsAppPagerAdapter adspagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +98,8 @@ public class AppCenterActivity extends BaseActivity {
     }
 
     /**
+     * modified: lbc
+     * modified Data:18/08/29
      * 初始化视图
      */
     private void initView() {
@@ -98,14 +108,20 @@ public class AppCenterActivity extends BaseActivity {
                 R.layout.app_recommend_layout, null);
         View classView = LayoutInflater.from(this).inflate(
                 R.layout.app_categories_layout, null);
-        recommendListView = (ListView) recommendView.findViewById(R.id.list);
+        recommendListView = (ScrollViewWithListView) recommendView.findViewById(R.id.scrollviewwithlistview_apps);
+        recommendListView.setFocusable(false); //lbc
         classListView = (ListView) classView.findViewById(R.id.app_center_categories_list);
-        recommendSwipeRefreshLayout = (SwipeRefreshLayout) recommendView.findViewById(R.id.refresh_layout);
+        recommendSwipeRefreshLayout = (MySwipeRefreshLayout) recommendView.findViewById(R.id.refresh_layout);
         recommendSwipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.header_bg), getResources().getColor(R.color.header_bg));
         recommendSwipeRefreshLayout.setOnRefreshListener(new AppCenterRefreshListener());
         classSwipeRefreshLayout = (SwipeRefreshLayout) classView.findViewById(R.id.refresh_layout);
         classSwipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.header_bg), getResources().getColor(R.color.header_bg));
         classSwipeRefreshLayout.setOnRefreshListener(new AppCenterRefreshListener());
+
+
+        adsViewPager = (AdsViewPager) recommendView.findViewById(R.id.adsviewpager_ads);//lbc
+        adspagerAdapter = new AdsAppPagerAdapter(); //lbc
+
         recommendAppAdapter = new RecommendAppAdapter();
         recommendListView.setAdapter(recommendAppAdapter);
         categoriesAppAdapter = new CategoriesAppAdapter();
@@ -117,18 +133,14 @@ public class AppCenterActivity extends BaseActivity {
         viewPager.setAdapter(new MyViewPagerAdapter(viewList, null));
         viewPager.addOnPageChangeListener(new PageChangeListener());
         timer = new Timer();
-        TimerTask timerTask = new TimerTask() {
-            @Override
-            public void run() {
-                mHandler.sendEmptyMessage(UPDATE_VIEWPAGER);
-            }
-        };
-        timer.schedule(timerTask, 3000, 3000);
+
+        //  timer.schedule(timerTask, 10000, 5000);
     }
 
     class AppCenterRefreshListener implements SwipeRefreshLayout.OnRefreshListener {
         @Override
         public void onRefresh() {
+            LogUtils.LbcDebug("AppCenterRefreshListener");
             getAllApp();
         }
     }
@@ -252,50 +264,52 @@ public class AppCenterActivity extends BaseActivity {
     class RecommendAppAdapter extends BaseAdapter {
         @Override
         public View getView(final int listPosition, View convertView, ViewGroup parent) {
-            if (listPosition == 0 && adsList.size() > 0) {
-                convertView = LayoutInflater.from(AppCenterActivity.this).inflate(R.layout.my_app_recommand_banner_app_item_view, null);
-                RelativeLayout appRecommendLayout = (RelativeLayout) convertView.findViewById(R.id.app_center_recomand_viewpager_layout);
-                ViewPager viewPager = (ViewPager) convertView.findViewById(R.id.app_center_banner_viewpager);
-                viewPager.setOffscreenPageLimit(DensityUtil.dip2px(AppCenterActivity.this, 3));
-                //推荐带横向滑动时解决滑动冲突
-//                viewPager.getParent().requestDisallowInterceptTouchEvent(true);
-//                viewPager.setClipChildren(false);
-                viewPager.setPageMargin(DensityUtil.dip2px(AppCenterActivity.this, 5));
-                initRecommendViewPager(appRecommendLayout, viewPager);
-            } else {
-                convertView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.my_app_recommand_app_item_view, null);
-                final int appListIndex = adsList.size() == 0 ? listPosition : (listPosition - 1);
-                List<App> appItemList = appList.get(appListIndex);
-                if (appItemList.size() > 0) {
-                    ((TextView) convertView.findViewById(R.id.app_center_recommand_text)).setText(appItemList.get(0).getCategoryName());
-                }
-                if (appItemList.size() <= 10) {
-                    (convertView.findViewById(R.id.app_center_more_text)).setVisibility(View.GONE);
-                }
-                convertView.findViewById(R.id.app_center_recommand_layout).setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable(APP_CENTER_APPLIST, (Serializable) appList.get(appListIndex));
-                        bundle.putString(APP_CENTER_CATEGORY_NAME, appList.get(appListIndex).get(0).getCategoryName());
-                        IntentUtils.startActivity(AppCenterActivity.this, AppCenterMoreActivity.class, bundle);
-                    }
-                });
-                RecyclerView recommendRecyclerView = (RecyclerView) convertView.findViewById(R.id.app_center_recomand_recycleview);
-                recommendRecyclerView.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(AppCenterActivity.this, 11)));
-                GridLayoutManager gridLayoutManager = new GridLayoutManager(AppCenterActivity.this, 5);
-                recommendRecyclerView.setLayoutManager(gridLayoutManager);
-                RecommendAppListAdapter recommendAppListAdapter = new RecommendAppListAdapter(AppCenterActivity.this, listPosition);
-                recommendRecyclerView.setAdapter(recommendAppListAdapter);
-                recommendAppListAdapter.setOnRecommendItemClickListener(new OnRecommendItemClickListener() {
-                    @Override
-                    public void onRecommendItemClick(View view, int position) {
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("app", appList.get(appListIndex).get(position));
-                        IntentUtils.startActivity(AppCenterActivity.this, AppDetailActivity.class, bundle);
-                    }
-                });
+//            if (listPosition == 0 && adsList.size() > 0) {
+//                convertView = LayoutInflater.from(AppCenterActivity.this).inflate(R.layout.my_app_recommand_banner_app_item_view, null);
+//                RelativeLayout appRecommendLayout = (RelativeLayout) convertView.findViewById(R.id.app_center_recomand_viewpager_layout);
+//                ViewPager viewPager = (ViewPager) convertView.findViewById(R.id.app_center_banner_viewpager);
+//                viewPager.setOffscreenPageLimit(DensityUtil.dip2px(AppCenterActivity.this, 3));
+//                //推荐带横向滑动时解决滑动冲突
+////                viewPager.getParent().requestDisallowInterceptTouchEvent(true);
+////                viewPager.setClipChildren(false);
+//                viewPager.setPageMargin(DensityUtil.dip2px(AppCenterActivity.this, 5));
+//
+//                initRecommendViewPager(appRecommendLayout, viewPager);
+//            } else {
+            convertView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.my_app_recommand_app_item_view, null);
+            //final int appListIndex = adsList.size() == 0 ? listPosition : (listPosition - 1);
+            final int appListIndex = listPosition;
+            List<App> appItemList = appList.get(appListIndex);
+            if (appItemList.size() > 0) {
+                ((TextView) convertView.findViewById(R.id.app_center_recommand_text)).setText(appItemList.get(0).getCategoryName());
             }
+            if (appItemList.size() <= 10) {
+                (convertView.findViewById(R.id.app_center_more_text)).setVisibility(View.GONE);
+            }
+            convertView.findViewById(R.id.app_center_recommand_layout).setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable(APP_CENTER_APPLIST, (Serializable) appList.get(appListIndex));
+                    bundle.putString(APP_CENTER_CATEGORY_NAME, appList.get(appListIndex).get(0).getCategoryName());
+                    IntentUtils.startActivity(AppCenterActivity.this, AppCenterMoreActivity.class, bundle);
+                }
+            });
+            RecyclerView recommendRecyclerView = (RecyclerView) convertView.findViewById(R.id.app_center_recomand_recycleview);
+            recommendRecyclerView.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(AppCenterActivity.this, 11)));
+            GridLayoutManager gridLayoutManager = new GridLayoutManager(AppCenterActivity.this, 5);
+            recommendRecyclerView.setLayoutManager(gridLayoutManager);
+            RecommendAppListAdapter recommendAppListAdapter = new RecommendAppListAdapter(AppCenterActivity.this, listPosition);
+            recommendRecyclerView.setAdapter(recommendAppListAdapter);
+            recommendAppListAdapter.setOnRecommendItemClickListener(new OnRecommendItemClickListener() {
+                @Override
+                public void onRecommendItemClick(View view, int position) {
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("app", appList.get(appListIndex).get(position));
+                    IntentUtils.startActivity(AppCenterActivity.this, AppDetailActivity.class, bundle);
+                }
+            });
+//            }
             return convertView;
         }
 
@@ -311,7 +325,8 @@ public class AppCenterActivity extends BaseActivity {
 
         @Override
         public int getCount() {
-            return (adsList.size() == 0 ? appList.size() : (appList.size() + 1));
+//            return (adsList.size() == 0 ? appList.size() : (appList.size() + 1));
+            return appList.size();
         }
     }
 
@@ -348,24 +363,41 @@ public class AppCenterActivity extends BaseActivity {
     }
 
     /**
-     * 初始化banner
-     *
-     * @param mViewPagerContainer
-     * @param mViewPager
+     * writer: lbc
+     * data:18/08/29
+     * 初始化AdsViewPager
+     * @param mAdsAdapter 未賦值的ViewPagerAdapter
+     * @param mAdsPager 初始化後的AdsViewPager
      */
-    private void initRecommendViewPager(RelativeLayout mViewPagerContainer, final ViewPager mViewPager) {
-        mViewPager.setAdapter(new AdsAppPagerAdapter());
-        startAutoSlide(mViewPager);
+    private void initAdsViewPager(final ViewPager mAdsPager, AdsAppPagerAdapter mAdsAdapter) {
+        mAdsPager.setOffscreenPageLimit(DensityUtil.dip2px(AppCenterActivity.this, 3));
+        mAdsPager.setPageMargin(DensityUtil.dip2px(AppCenterActivity.this, 5));
+        View recommendView = LayoutInflater.from(this).inflate(
+                R.layout.app_recommend_layout, null);
+        RelativeLayout adsPagerContainer = (RelativeLayout) recommendView.findViewById(R.id.rl_adsandapp);
+        mAdsPager.setAdapter(mAdsAdapter);
+        mAdsPager.setFocusable(true);
+        mAdsPager.setFocusableInTouchMode(true);
+        startAutoSlide(mAdsPager);
         if (adsList.size() > 1) {
-            mViewPager.setCurrentItem(1);
+            mAdsPager.setCurrentItem(1);
+            //或者可以拿出来
+            TimerTask timerTask = new TimerTask() {
+                @Override
+                public void run() {
+                    mHandler.sendEmptyMessage(UPDATE_VIEWPAGER);
+                }
+            };
+            timer.schedule(timerTask, 5000, 5000);
         }
-        //将容器的触摸事件反馈给ViewPager
-        mViewPagerContainer.setOnTouchListener(new View.OnTouchListener() {
+        adsPagerContainer.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                return mViewPager.dispatchTouchEvent(event);
+                LogUtils.LbcDebug("将容器的触摸事件反馈给ViewPager");
+                return mAdsPager.dispatchTouchEvent(event);
             }
         });
+
     }
 
     /**
@@ -378,7 +410,7 @@ public class AppCenterActivity extends BaseActivity {
             return;
         }
         //定时轮播图片，需要在主线程里面修改 UI
-        if(mHandler == null){
+        if (mHandler == null) {
             mHandler = new Handler() {
                 public void handleMessage(Message msg) {
                     switch (msg.what) {
@@ -398,6 +430,11 @@ public class AppCenterActivity extends BaseActivity {
         @Override
         public int getCount() {
             return adsList.size() == 0 ? 0 : Integer.MAX_VALUE;
+        }
+
+        @Override
+        public void notifyDataSetChanged() {
+            super.notifyDataSetChanged();
         }
 
         @Override
@@ -513,7 +550,8 @@ public class AppCenterActivity extends BaseActivity {
 
         @Override
         public void onBindViewHolder(final RecommendViewHolder holder, final int position) {
-            int size = adsList.size() == 0 ? listPosition : (listPosition - 1);
+            // int size = adsList.size() == 0 ? listPosition : (listPosition - 1);
+            int size = listPosition;
             ImageDisplayUtils.getInstance().displayImage(holder.recommendAppImg, appList.get(size).get(position).getAppIcon(), R.drawable.ic_app_default);
             holder.recommendAppText.setText(appList.get(size).get(position).getAppName());
             if (onRecommendItemClickListener != null) {
@@ -528,7 +566,8 @@ public class AppCenterActivity extends BaseActivity {
 
         @Override
         public int getItemCount() {
-            int size = (adsList.size() == 0 ? listPosition : (listPosition - 1));
+            // int size = (adsList.size() == 0 ? listPosition : (listPosition - 1));
+            int size = listPosition;
             return (appList.get(size).size() > 10 ? 10 : appList.get(size).size());
         }
 
@@ -539,6 +578,7 @@ public class AppCenterActivity extends BaseActivity {
         public class RecommendViewHolder extends RecyclerView.ViewHolder {
             ImageView recommendAppImg;
             TextView recommendAppText;
+
             public RecommendViewHolder(View itemView) {
                 super(itemView);
             }
@@ -556,7 +596,7 @@ public class AppCenterActivity extends BaseActivity {
             LocalBroadcastManager.getInstance(this).unregisterReceiver(addAppReceiver);
             addAppReceiver = null;
         }
-        if(timer != null){
+        if (timer != null) {
             timer.cancel();
             timer = null;
         }
@@ -569,6 +609,9 @@ public class AppCenterActivity extends BaseActivity {
             classCircleProgress.setVisibility(View.GONE);
             appList = getAllAppResult.getRecommendList();
             adsList = getAllAppResult.getAdsList();
+            if (adsList.size() > 0) {
+                initAdsViewPager(adsViewPager, adspagerAdapter);   //lbc
+            }
             categoryAppList = getAllAppResult.getCategoriesGroupBeanList();
             recommendAppAdapter.notifyDataSetChanged();
             categoriesAppAdapter.notifyDataSetChanged();

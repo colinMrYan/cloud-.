@@ -10,6 +10,7 @@ import android.widget.AbsListView;
 import android.widget.ListView;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.util.common.LogUtils;
 
 
 /**
@@ -22,6 +23,11 @@ public class MySwipeRefreshLayout extends SwipeRefreshLayout {
     private ListView mListView;
     private OnLoadListener mOnLoadListener;
     private boolean canLoadMore = false;  //是否可以上拉加载更多
+    private float startY;
+    private float startX;
+    // 记录viewPager是否拖拽的标记
+    private boolean mIsVpDragger;
+
 
     /**
      * 正在加载状态
@@ -56,6 +62,59 @@ public class MySwipeRefreshLayout extends SwipeRefreshLayout {
             }
         }
     }
+
+
+
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+        int action = ev.getAction();
+        switch (action) {
+            case MotionEvent.ACTION_DOWN:
+                LogUtils.jasonDebug("ACTION_DOWN-==============================");
+                // 记录手指按下的位置
+                startY = ev.getY();
+                startX = ev.getX();
+                // 初始化标记
+                mIsVpDragger = false;
+                break;
+            case MotionEvent.ACTION_MOVE:
+                LogUtils.jasonDebug("ACTION_MOVE-==============================");
+                // 如果viewpager正在拖拽中，那么不拦截它的事件，直接return false；
+                if(mIsVpDragger) {
+                    LogUtils.jasonDebug("1111111111111拦截---------------");
+                    return false;
+                }
+
+                // 获取当前手指位置
+                float endY = ev.getY();
+                float endX = ev.getX();
+                float distanceX = Math.abs(endX - startX);
+                float distanceY = Math.abs(endY - startY);
+                // 如果X轴位移大于Y轴位移，那么将事件交给viewPager处理。
+                if(distanceX > mScaledTouchSlop && distanceX > distanceY) {
+                    LogUtils.jasonDebug("拦截---------------");
+                    mIsVpDragger = true;
+                    return false;
+                }else{
+                    LogUtils.jasonDebug("不不--------拦截---------------");
+                    LogUtils.jasonDebug("(distanceX > mScaledTouchSlop==-"+(distanceX > mScaledTouchSlop));
+                    LogUtils.jasonDebug("distanceX=="+distanceX);
+                    LogUtils.jasonDebug("distanceY=="+distanceY);
+                }
+                break;
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_CANCEL:
+                // 初始化标记
+                LogUtils.jasonDebug("ACTION_CANCEL---------------------------------");
+                mIsVpDragger = false;
+                break;
+        }
+        // 如果是Y轴位移大于X轴，事件交给swipeRefreshLayout处理。
+        return super.onInterceptTouchEvent(ev);
+    }
+
+
+
 
     /**
      * 在分发事件的时候处理子控件的触摸事件
