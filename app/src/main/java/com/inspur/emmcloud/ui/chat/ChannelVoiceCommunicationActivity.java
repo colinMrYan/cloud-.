@@ -22,7 +22,6 @@ import com.inspur.emmcloud.bean.chat.VoiceCommunicationAudioVolumeInfo;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
 import com.inspur.emmcloud.bean.system.GetBoolenResult;
 import com.inspur.emmcloud.util.common.DensityUtil;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.MediaPlayerManagerUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.ResolutionUtils;
@@ -316,8 +315,6 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity{
         voiceCommunicationUtils.setOnVoiceCommunicationCallbacks(new OnVoiceCommunicationCallbacksImpl() {
             @Override
             public void onUserOffline(int uid, int reason) {
-                LogUtils.YfcDebug("用户离开："+uid);
-                LogUtils.YfcDebug("用户离开："+reason);
                 userCount = userCount - 1;
                 if(userCount < 2){
                     leaveChannelSuccess(channelId);
@@ -326,7 +323,6 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity{
 
             @Override
             public void onUserJoined(int uid, int elapsed) {
-                LogUtils.YfcDebug("用户加入："+uid);
                 for (int i = 0; i < voiceCommunicationMemberList.size(); i++) {
                     if(voiceCommunicationMemberList.get(i).getAgoraUid() == uid){
                         voiceCommunicationMemberList.get(i).setUserState(1);
@@ -369,13 +365,12 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity{
 
             @Override
             public void onConnectionLost() {
-                LogUtils.YfcDebug("用户断线");
             }
 
             @Override
             public void onNetworkQuality(int uid, int txQuality, int rxQuality) {
                 if(STATE == COMMUNICATION_LAYOUT_STATE){
-                    tvCommunicationState.setText((uid == 0 && txQuality <= 2)?"当前通话质量不佳":"");
+                    tvCommunicationState.setText((uid == 0 && txQuality <= 2)?getString(R.string.voice_communication_quality):"");
                 }
             }
 
@@ -570,12 +565,11 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity{
 
         @Override
         public void returnJoinVoiceCommunicationChannelSuccess(GetBoolenResult getBoolenResult) {
-            LogUtils.YfcDebug("加入群组成功");
         }
 
         @Override
         public void returnJoinVoiceCommunicationChannelFail(String error,int errorCode) {
-            LogUtils.YfcDebug("加入群组失败");
+            WebServiceMiddleUtils.hand(ChannelVoiceCommunicationActivity.this,error,errorCode);
         }
 
         @Override

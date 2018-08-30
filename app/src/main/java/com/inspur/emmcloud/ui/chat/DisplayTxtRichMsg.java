@@ -74,13 +74,11 @@ public class DisplayTxtRichMsg {
                     .urlClick(new OnUrlClickListener() {
                         @Override
                         public boolean urlClicked(String url) {
-                            LogUtils.YfcDebug("url:"+url);
                             if (url.startsWith("http")) {
                                 UriUtils.openUrl((Activity) context, url);
                                 return true;
                             }else if(url.startsWith("ecc-cmd")){
                                 CustomProtocol customProtocol = new CustomProtocol(url);
-                                LogUtils.YfcDebug("协议解析内容："+ JSON.toJSONString(customProtocol));
                             }
                             return false;
                         }

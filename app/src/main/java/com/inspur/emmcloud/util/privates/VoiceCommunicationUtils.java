@@ -62,7 +62,6 @@ public class VoiceCommunicationUtils {
         //每隔两秒钟返回一次频道内的状态信息
         @Override
         public void onRtcStats(RtcStats stats) {
-//            LogUtils.YfcDebug("RtcStats:"+stats.users);
             VoiceCommunicationRtcStats statsCloudPlus = new VoiceCommunicationRtcStats();
             statsCloudPlus.users = stats.users;
             onVoiceCommunicationCallbacks.onRtcStats(statsCloudPlus);
@@ -140,7 +139,7 @@ public class VoiceCommunicationUtils {
         try {
             mRtcEngine = RtcEngine.create(context, context.getString(R.string.agora_app_id), mRtcEventHandler);
         } catch (Exception e) {
-            LogUtils.YfcDebug("初始化异常："+e.getMessage());
+            LogUtils.YfcDebug("初始化声网异常："+e.getMessage());
         }
         mRtcEngine.enableAudioVolumeIndication(1000,3);
     }
@@ -163,7 +162,6 @@ public class VoiceCommunicationUtils {
      */
     private void leaveChannel() {
         int code = mRtcEngine.leaveChannel();
-        LogUtils.YfcDebug("调用Leave结果："+code);
     }
 
     /**
