@@ -11,6 +11,7 @@ import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.webkit.CookieManager;
 import android.webkit.DownloadListener;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebBackForwardList;
@@ -133,6 +134,10 @@ public class ImpWebView extends WebView {
 		//显示webview网页标题
 		this.addJavascriptInterface(new GetContent(), "getContent");
 		setDownloadListener(new MyWebViewDownLoadListener());
+		if(android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+			CookieManager.getInstance().setAcceptThirdPartyCookies(this,true);
+		}
+
 	}
 
 	private class MyWebViewDownLoadListener implements DownloadListener {
