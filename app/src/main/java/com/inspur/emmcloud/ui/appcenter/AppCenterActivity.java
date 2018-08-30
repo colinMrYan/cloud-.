@@ -88,6 +88,7 @@ public class AppCenterActivity extends BaseActivity {
     private AdsViewPager adsViewPager;
     private AdsAppPagerAdapter adspagerAdapter;
     private View recommendView;
+    private RelativeLayout adsPagerContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,6 +122,16 @@ public class AppCenterActivity extends BaseActivity {
         recommendAppAdapter = new RecommendAppAdapter();
         recommendListView.setAdapter(recommendAppAdapter);
         categoriesAppAdapter = new CategoriesAppAdapter();
+        classListView.setAdapter(categoriesAppAdapter);
+        classListView.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(AppCenterMoreActivity.APP_CENTER_APPLIST, (Serializable) categoryAppList.get(position).getAppItemList());
+                bundle.putString(AppCenterMoreActivity.APP_CENTER_CATEGORY_NAME, categoryAppList.get(position).getCategoryName());
+                IntentUtils.startActivity(AppCenterActivity.this, AppCenterMoreActivity.class, bundle);
+            }
+        });
         recommendCircleProgress = (CircularProgress) recommendView.findViewById(R.id.circle_progress);
         classCircleProgress = (CircularProgress) classView.findViewById(R.id.app_center_categories_circle_progress);
         List<View> viewList = new ArrayList<View>();
@@ -160,20 +171,6 @@ public class AppCenterActivity extends BaseActivity {
             ((TextView) findViewById(R.id.class_tab_text)).setTextColor(classTabTextColor);
             findViewById(R.id.recommand_tab_footer_view).setVisibility(recommendTabFooterViewVisible);
             findViewById(R.id.class_tab_footer_view).setVisibility(classTabFooterViewVisible);
-            if (arg0 == 0) {
-                recommendListView.setAdapter(recommendAppAdapter);
-            } else if (arg0 == 1) {
-                classListView.setAdapter(categoriesAppAdapter);
-                classListView.setOnItemClickListener(new OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable(AppCenterMoreActivity.APP_CENTER_APPLIST, (Serializable) categoryAppList.get(position).getAppItemList());
-                        bundle.putString(AppCenterMoreActivity.APP_CENTER_CATEGORY_NAME, categoryAppList.get(position).getCategoryName());
-                        IntentUtils.startActivity(AppCenterActivity.this, AppCenterMoreActivity.class, bundle);
-                    }
-                });
-            }
         }
     }
 
@@ -341,18 +338,28 @@ public class AppCenterActivity extends BaseActivity {
         }
     }
 
+
+    private void destoryTimer(Timer timer) {
+        if (timer != null) {
+            timer.cancel();
+            timer = null;
+        }
+    }
+
     /**
      * writer: lbc
      * data:18/08/29
      * 初始化AdsViewPager
      */
     private void initAdsViewPager() {
+        if (adsPagerContainer == null) {
+            adsPagerContainer = (RelativeLayout) recommendView.findViewById(R.id.rl_ads_app);
+        }
         // 当个数大于0时
         if (adsList.size() > 0) {
+            adsPagerContainer.setVisibility(View.VISIBLE); //设置显示
             //当adapter 为空时
-            if (adspagerAdapter == null) {
-                RelativeLayout adsPagerContainer = (RelativeLayout) recommendView.findViewById(R.id.rl_ads_app);
-                adsPagerContainer.setVisibility(View.VISIBLE); //设置显示
+            if (adsViewPager == null) {
                 adsViewPager = (AdsViewPager) recommendView.findViewById(R.id.avp_ads);
                 adspagerAdapter = new AdsAppPagerAdapter();
                 adsViewPager.setOffscreenPageLimit(DensityUtil.dip2px(AppCenterActivity.this, 3));
@@ -360,7 +367,6 @@ public class AppCenterActivity extends BaseActivity {
                 adsViewPager.setAdapter(adspagerAdapter);
                 adsViewPager.setFocusable(true);
                 adsViewPager.setFocusableInTouchMode(true);
-                adsViewPager.setCurrentItem(0);
                 //触摸事件通过mAdspager下发触摸事件
                 adsPagerContainer.setOnTouchListener(new View.OnTouchListener() {
                     @Override
@@ -368,44 +374,32 @@ public class AppCenterActivity extends BaseActivity {
                         return adsViewPager.dispatchTouchEvent(event);
                     }
                 });
-                //判断定时器有无如果没有创建
-                if (adsList.size() > 1) {
-                    if (timer == null) {
-                        timer = new Timer();
-                        TimerTask timerTask = new TimerTask() {
-                            @Override
-                            public void run() {
-                                mHandler.sendEmptyMessage(UPDATE_VIEWPAGER);
-                            }
-                        };
-                        adsViewPager.setCurrentItem(1);
-                        startAutoSlide(adsViewPager);
-                        timer.schedule(timerTask, 5000, 5000);
-                    }
-                } else {
-                    //取消定时器和handler 资源
-                    if (timer != null) {
-                        timer.cancel();
-                        timer = null;
-                    }
-                    if (mHandler != null) {
-                        mHandler = null;
-                    }
-                }
             } else {
-                //如果已经初始化只执行Adapter更新数据
                 adspagerAdapter.notifyDataSetChanged();
             }
-        } else {
-            //判断是否初始化，如果初始化去除缓存设置不可见减少运行时内存消耗
-            RelativeLayout adsPagerContainer = (RelativeLayout) recommendView.findViewById(R.id.rl_ads_app);
-            adsPagerContainer.setVisibility(View.GONE); //设置不显示
-            adspagerAdapter = null;
-            adsViewPager = null;
-            if (timer != null) {
-                timer.cancel();
-                timer = null;
+            //如果广告数目大于1则启动定时器
+            if (adsList.size() > 1) {
+                if (timer == null) {
+                    timer = new Timer();
+                    TimerTask timerTask = new TimerTask() {
+                        @Override
+                        public void run() {
+                            if (mHandler != null) {
+                                mHandler.sendEmptyMessage(UPDATE_VIEWPAGER);
+                            }
+                        }
+                    };
+                    adsViewPager.setCurrentItem(1);
+                    startAutoSlide(adsViewPager);
+                    timer.schedule(timerTask, 3000, 3000);
+                }
+            } else {
+                destoryTimer(timer);
             }
+
+        } else {
+            adsPagerContainer.setVisibility(View.GONE); //设置不显示
+            destoryTimer(timer);
         }
     }
 
@@ -416,9 +410,6 @@ public class AppCenterActivity extends BaseActivity {
      * @param mViewPager
      */
     private void startAutoSlide(final ViewPager mViewPager) {
-        if (!(mViewPager.getAdapter().getCount() > 2)) {
-            return;
-        }
         //定时轮播图片，需要在主线程里面修改 UI
         if (mHandler == null) {
             mHandler = new Handler() {
@@ -609,6 +600,9 @@ public class AppCenterActivity extends BaseActivity {
         if (timer != null) {
             timer.cancel();
             timer = null;
+        }
+        if (mHandler != null) {
+            mHandler = null;
         }
     }
 
