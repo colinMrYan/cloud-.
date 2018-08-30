@@ -4,14 +4,14 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 
-import com.alibaba.fastjson.JSON;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.appcenter.AppCommonlyUse;
+import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.cache.AppCacheUtils;
-import com.inspur.emmcloud.util.common.NetUtils;
 
 import java.util.List;
 
@@ -39,7 +39,7 @@ public class SyncCommonAppService extends Service {
 
         List<AppCommonlyUse> commonAppList = AppCacheUtils.getUploadCommonlyUseAppList(MyApplication.getInstance());
         if (commonAppList.size()>0){
-            String commonAppListJson = JSON.toJSONString(commonAppList);
+            String commonAppListJson = JSONUtils.toJSONString(commonAppList);
             MyAppAPIService apiService = new MyAppAPIService(getApplicationContext());
             apiService.setAPIInterface(new WebService());
             apiService.syncCommonApp(commonAppListJson);

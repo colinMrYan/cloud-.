@@ -43,7 +43,7 @@ public class MyAppConfig {
     public static final int UPLOAD_ORIGIN_IMG_DEFAULT_SIZE = 1280;
     public static final int UPLOAD_THUMBNAIL_IMG_MAX_SIZE = 600;
     public static final int VOLUME_MAX_FILE_NAME_LENGTH = 40;
-
+    public static Boolean test = true;
     public static Map<String, String> getLocalLanguageMap() {
         Map<String, String> languageMap = new HashMap<String, String>();
         languageMap.put("zh-CN", "zh-CN");

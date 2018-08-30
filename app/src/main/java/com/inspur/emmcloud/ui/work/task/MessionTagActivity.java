@@ -15,13 +15,13 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.alibaba.fastjson.JSON;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.WorkAPIService;
 import com.inspur.emmcloud.bean.work.TagColorBean;
+import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -122,15 +122,7 @@ public class MessionTagActivity extends BaseActivity {
     private void initData() {
         deleteTagName = getIntent().getStringExtra("title");
         String userId = ((MyApplication) getApplicationContext()).getUid();
-        try {
-            messionTagList = (ArrayList<String>) JSON.parseArray(PreferencesUtils.getString(MessionTagActivity.this, MyApplication.getInstance().getTanent() + userId + "messionTags", ""), String.class);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        if (messionTagList == null) {
-            messionTagList = new ArrayList<String>();
-        }
-
+        messionTagList = JSONUtils.JSONArray2List(PreferencesUtils.getString(MessionTagActivity.this, MyApplication.getInstance().getTanent() + userId + "messionTags", ""),new ArrayList<String>());
         if (getIntent().hasExtra("color")) {
             color = getIntent().getStringExtra("color");
         }
@@ -359,13 +351,7 @@ public class MessionTagActivity extends BaseActivity {
         String userId = ((MyApplication) getApplicationContext()).getUid();
         String choosenTags = PreferencesUtils.getString(MessionTagActivity.this,
                 MyApplication.getInstance().getTanent() + userId + "chooseTags", "");
-        ArrayList<String> afterDeleteList;
-        if (!StringUtils.isBlank(choosenTags)) {
-            afterDeleteList = (ArrayList<String>) JSON
-                    .parseArray(choosenTags, String.class);
-        } else {
-            afterDeleteList = new ArrayList<String>();
-        }
+        ArrayList<String> afterDeleteList = JSONUtils.JSONArray2List(choosenTags,new ArrayList<String>());
         if (afterDeleteList.size() > 0) {
             Iterator<String> afterIteror = afterDeleteList.iterator();
             while (afterIteror.hasNext()) {
@@ -377,7 +363,7 @@ public class MessionTagActivity extends BaseActivity {
             PreferencesUtils
                     .putString(MessionTagActivity.this, MyApplication.getInstance().getTanent()
                                     + userId + "chooseTags",
-                            JSON.toJSONString(afterDeleteList));
+                            JSONUtils.toJSONString(afterDeleteList));
         } else {
             PreferencesUtils
                     .putString(MessionTagActivity.this, MyApplication.getInstance().getTanent()
