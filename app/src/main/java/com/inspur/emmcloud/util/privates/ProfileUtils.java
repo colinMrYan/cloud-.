@@ -16,6 +16,7 @@ import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.interf.CommonCallBack;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
+import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.dialogs.MyDialog;
@@ -124,7 +125,10 @@ public class ProfileUtils {
         @Override
         public void returnMyInfoFail(String error, int errorCode) {
             LoadingDialog.dimissDlg(loadingDialog);
-            showPromptDialog();
+            //当统一更新接口无法返回正确消息，同时路由又无法获取成功时暂时不弹出提示框
+            if (!StringUtils.isBlank(saveConfigVersion)){
+                showPromptDialog();
+            }
         }
     }
 

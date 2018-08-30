@@ -883,7 +883,7 @@ public class NewsWebDetailActivity extends BaseActivity {
             } else {
                 Message message = CommunicationUtils.combinLocalExtendedLinksMessage(cid, groupNews.getPoster(), groupNews.getTitle(), groupNews.getSummary(), url);
                 fakeMessageId = message.getId();
-                WSAPIService.getInstance().sendChatExtendedLinksMsg(cid, message);
+                WSAPIService.getInstance().sendChatExtendedLinksMsg(message);
             }
 
         }

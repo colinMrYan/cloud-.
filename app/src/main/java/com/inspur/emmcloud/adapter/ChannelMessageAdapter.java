@@ -101,7 +101,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         public RelativeLayout cardLayout;
         public TextView senderNameText;
         public ImageView senderPhotoImg;
-        public ImageView refreshingImg;
+        public ImageView sendStatusImg;
         public View cardCoverView;
         public TextView sendTimeText;
         public TextView newsCommentText;
@@ -119,7 +119,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
                     .findViewById(R.id.sender_name_text);
             senderPhotoImg = (ImageView) view
                     .findViewById(R.id.sender_photo_img);
-            refreshingImg = (ImageView) view.findViewById(R.id.refreshing_img);
+            sendStatusImg = (ImageView) view.findViewById(R.id.send_status_img);
             cardCoverView = view.findViewById(R.id.card_cover_view);
             sendTimeText = (TextView) view
                     .findViewById(R.id.send_time_text);
@@ -141,6 +141,13 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
             }
 
         }
+
+        public void onMessageResendClick(UIMessage uiMessage){
+            if (mListener != null) {
+                mListener.onMessageResend(uiMessage);
+            }
+
+        }
     }
 
 
@@ -150,26 +157,31 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
      * @param holder
      * @param msg
      */
-    private void showRefreshingImg(ViewHolder holder, UIMessage UIMessage) {
-        if (UIMessage.getSendStatus() == 0) {
-            holder.refreshingImg.setImageResource(R.drawable.pull_loading);
+    private void showRefreshingImg(final ViewHolder holder, final UIMessage uiMessage) {
+        if (uiMessage.getSendStatus() == 0) {
+            holder.sendStatusImg.setImageResource(R.drawable.pull_loading);
             RotateAnimation refreshingAnimation = (RotateAnimation) AnimationUtils.loadAnimation(
                     context, R.anim.pull_rotating);
             // 添加匀速转动动画
             LinearInterpolator lir = new LinearInterpolator();
             refreshingAnimation.setInterpolator(lir);
-            holder.refreshingImg.setVisibility(View.VISIBLE);
-            holder.refreshingImg.startAnimation(refreshingAnimation);
-        } else if (UIMessage.getSendStatus() == 2) {
-            holder.refreshingImg.clearAnimation();
-            holder.refreshingImg.setVisibility(View.VISIBLE);
-            holder.refreshingImg.setImageResource(R.drawable.ic_chat_msg_send_fail);
+            holder.sendStatusImg.setVisibility(View.VISIBLE);
+            holder.sendStatusImg.startAnimation(refreshingAnimation);
+        } else if (uiMessage.getSendStatus() == 2) {
+            holder.sendStatusImg.clearAnimation();
+            holder.sendStatusImg.setVisibility(View.VISIBLE);
+            holder.sendStatusImg.setImageResource(R.drawable.ic_chat_msg_send_fail);
         } else {
-            holder.refreshingImg.clearAnimation();
-            boolean isMyMsg = UIMessage.getMessage().getFromUser().equals(MyApplication.getInstance().getUid());
-            holder.refreshingImg.setVisibility(isMyMsg ? View.INVISIBLE : View.GONE);
+            holder.sendStatusImg.clearAnimation();
+            boolean isMyMsg = uiMessage.getMessage().getFromUser().equals(MyApplication.getInstance().getUid());
+            holder.sendStatusImg.setVisibility(isMyMsg ? View.INVISIBLE : View.GONE);
         }
-
+        holder.sendStatusImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                    holder.onMessageResendClick(uiMessage);
+            }
+        });
     }
 
     /**
@@ -228,9 +240,6 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
 
 
         holder.cardLayout.addView(cardContentView);
-//        holder.cardLayout.setBackgroundColor(context.getResources().getColor(
-//                isMyMsg ? R.color.bg_my_card : R.color.white));
-//        holder.cardCoverView.setBackgroundResource(isMyMsg ? R.drawable.ic_chat_msg_img_cover_arrow_right : R.drawable.ic_chat_msg_img_cover_arrow_left);
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) holder.cardParentLayout.getLayoutParams();
         //此处实际执行params.removeRule();
         params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 0);
@@ -328,5 +337,6 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
      */
     public interface MyItemClickListener {
         void onItemClick(View view, int position);
+        void onMessageResend(UIMessage uiMessage);
     }
 }

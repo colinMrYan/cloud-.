@@ -54,7 +54,6 @@ public class CommunicationUtils {
         return title;
     }
 
-
     public static Message combinLocalTextPlainMessage(String text, String cid, Map<String, String> mentionsMap) {
         Message message = combinLocalMessageCommon();
         message.setChannel(cid);
@@ -79,7 +78,7 @@ public class CommunicationUtils {
         msgContentRegularFile.setCategory(CommunicationUtils.getChatFileCategory(file.getName()));
         msgContentRegularFile.setName(file.getName());
         msgContentRegularFile.setSize(FileUtils.getFileSize(localFilePath));
-        msgContentRegularFile.setMedia("");
+        msgContentRegularFile.setMedia(localFilePath);
         message.setContent(msgContentRegularFile.toString());
         return message;
     }
@@ -128,18 +127,18 @@ public class CommunicationUtils {
         bitmap.recycle();
         MsgContentMediaImage msgContentMediaImage = new MsgContentMediaImage();
         msgContentMediaImage.setName(file.getName());
-        msgContentMediaImage.setPreviewHeight(imgHeight);
-        msgContentMediaImage.setPreviewWidth(imgWidth);
-        msgContentMediaImage.setPreviewSize(fileSize);
-        msgContentMediaImage.setPreviewMedia("file://"+localFilePath);
-        msgContentMediaImage.setThumbnailHeight(imgHeight);
-        msgContentMediaImage.setThumbnailWidth(imgWidth);
-        msgContentMediaImage.setThumbnailSize(fileSize);
-        msgContentMediaImage.setThumbnailMedia("file://"+localFilePath);
+//        msgContentMediaImage.setPreviewHeight(imgHeight);
+//        msgContentMediaImage.setPreviewWidth(imgWidth);
+//        msgContentMediaImage.setPreviewSize(fileSize);
+//        msgContentMediaImage.setPreviewMedia(localFilePath);
+//        msgContentMediaImage.setThumbnailHeight(imgHeight);
+//        msgContentMediaImage.setThumbnailWidth(imgWidth);
+//        msgContentMediaImage.setThumbnailSize(fileSize);
+//        msgContentMediaImage.setThumbnailMedia(localFilePath);
         msgContentMediaImage.setRawHeight(imgHeight);
         msgContentMediaImage.setRawWidth(imgWidth);
         msgContentMediaImage.setRawSize(fileSize);
-        msgContentMediaImage.setRawMedia("file://"+localFilePath);
+        msgContentMediaImage.setRawMedia(localFilePath);
         message.setContent(msgContentMediaImage.toString());
         return message;
     }
@@ -152,7 +151,7 @@ public class CommunicationUtils {
         message.setType(Message.MESSAGE_TYPE_MEDIA_VOICE);
         MsgContentMediaVoice msgContentMediaVoice = new MsgContentMediaVoice();
         msgContentMediaVoice.setDuration(duration);
-        msgContentMediaVoice.setMedia("");
+        msgContentMediaVoice.setMedia(localFilePath);
         message.setContent(msgContentMediaVoice.toString());
         return message;
     }

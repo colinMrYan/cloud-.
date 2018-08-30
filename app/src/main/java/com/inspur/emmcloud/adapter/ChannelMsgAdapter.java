@@ -125,7 +125,7 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
                     .findViewById(R.id.sender_name_text);
             senderPhotoImg = (ImageView) view
                     .findViewById(R.id.sender_photo_img);
-            refreshingImg = (ImageView) view.findViewById(R.id.refreshing_img);
+            refreshingImg = (ImageView) view.findViewById(R.id.send_status_img);
             cardCoverView = view.findViewById(R.id.card_cover_view);
             sendTimeText = (TextView) view
                     .findViewById(R.id.send_time_text);
