@@ -56,6 +56,12 @@ public class UserInfoActivity extends BaseActivity {
     private TextView nameText;
     @ViewInject(R.id.start_chat_img)
     private ImageView startChatImg;
+    @ViewInject(R.id.employee_num_text)
+    private TextView employeeNumText;
+
+    @ViewInject(R.id.employee_num_layout)
+    private LinearLayout employeeNumLayout;
+
     private ContactUser contactUser;
     private final static int MY_PERMISSIONS_PHONECALL = 0;
     private final static int MY_PERMISSIONS_SMS = 1;
@@ -87,7 +93,7 @@ public class UserInfoActivity extends BaseActivity {
             contactUser = ContactUserCacheUtils.getContactUserByUid(uid);
         }
         if (contactUser == null) {
-            ToastUtils.show(UserInfoActivity.this, R.string.cannot_view_info);
+            ToastUtils.show(MyApplication.getInstance(), R.string.cannot_view_info);
             finish();
             return;
         }
@@ -95,33 +101,34 @@ public class UserInfoActivity extends BaseActivity {
     }
 
     private void initView() {
-        String id = contactUser.getId();
         String mail = contactUser.getEmail();
         String phoneNum = contactUser.getMobile();
         String name = contactUser.getName();
         String headUrl = APIUri.getUserIconUrl(UserInfoActivity.this, contactUser.getId());
-        String organize= null;
         ContactOrg contactOrg = ContactOrgCacheUtils.getContactOrg(contactUser.getParentId());
         if (contactOrg != null){
-            organize = contactOrg.getName();
+            String organize = contactOrg.getName();
+            if (!StringUtils.isBlank(organize)) {
+                departmentLayout.setVisibility(View.VISIBLE);
+                departmentText.setText(organize);
+            }
         }
-        if (!StringUtils.isEmpty(organize)) {
-            departmentLayout.setVisibility(View.VISIBLE);
-            departmentText.setText(organize);
-        }
-
-        if (!StringUtils.isEmpty(mail)) {
+        if (!StringUtils.isBlank(mail)) {
             mailLayout.setVisibility(View.VISIBLE);
             mailText.setText(mail);
         }
 
-        if (!StringUtils.isEmpty(phoneNum)) {
+        if (!StringUtils.isBlank(phoneNum)) {
             contactLayout.setVisibility(View.VISIBLE);
             phoneNumText.setText(phoneNum);
         }
-        nameText.setText(StringUtils.isEmpty(name)?getString(R.string.not_set):name);
+        if (!StringUtils.isBlank(contactUser.getEmployeeNum())){
+            employeeNumLayout.setVisibility(View.VISIBLE);
+            employeeNumText.setText(contactUser.getEmployeeNum());
+        }
+        nameText.setText(StringUtils.isBlank(name)?getString(R.string.not_set):name);
         ImageDisplayUtils.getInstance().displayImage(photoImg, headUrl, R.drawable.icon_person_default);
-        if (StringUtils.isBlank(id) || id.equals(MyApplication.getInstance().getUid())) {
+        if (contactOrg.getId().equals(MyApplication.getInstance().getUid())) {
             startChatImg.setVisibility(View.GONE);
         }
 

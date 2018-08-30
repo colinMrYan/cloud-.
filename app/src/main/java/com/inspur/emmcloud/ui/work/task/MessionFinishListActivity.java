@@ -15,7 +15,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.alibaba.fastjson.JSON;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
@@ -23,6 +22,7 @@ import com.inspur.emmcloud.api.apiservice.WorkAPIService;
 import com.inspur.emmcloud.bean.work.GetTaskListResult;
 import com.inspur.emmcloud.bean.work.TaskResult;
 import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.privates.MessionTagColorUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
@@ -30,7 +30,6 @@ import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.MySwipeRefreshLayout;
 import com.inspur.emmcloud.widget.dialogs.EasyDialog;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 public class MessionFinishListActivity extends BaseActivity implements
@@ -177,7 +176,7 @@ public class MessionFinishListActivity extends BaseActivity implements
 	protected void updateTask(TaskResult taskResult,int position) {
 		if (NetUtils.isNetworkConnected(MessionFinishListActivity.this)) {
 			loadingDialog.show();
-			apiService.updateTask(JSON.toJSONString(taskResult),position);
+			apiService.updateTask(JSONUtils.toJSONString(taskResult),position);
 		}
 	}
 

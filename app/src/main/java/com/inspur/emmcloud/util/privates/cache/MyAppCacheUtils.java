@@ -2,10 +2,10 @@ package com.inspur.emmcloud.util.privates.cache;
 
 import android.content.Context;
 
-import com.alibaba.fastjson.JSON;
 import com.inspur.emmcloud.bean.appcenter.AppGroupBean;
-import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
+import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +22,7 @@ public class MyAppCacheUtils {
      * @param appGroupList
      */
     public static void saveMyAppList(Context context, List<AppGroupBean> appGroupList){
-        String appListJson = JSON.toJSONString(appGroupList);
+        String appListJson = JSONUtils.toJSONString(appGroupList);
         if(!appListJson.equals("null") && !StringUtils.isBlank(appListJson)){
             PreferencesByUserAndTanentUtils.putString(context,"my_app_list",appListJson);
         }
@@ -45,7 +45,7 @@ public class MyAppCacheUtils {
         String appListJson = PreferencesByUserAndTanentUtils.getString(context,"my_app_list","");
         List<AppGroupBean> appGroupList = null;
         if (!StringUtils.isBlank(appListJson)){
-            appGroupList = JSON.parseArray(appListJson,AppGroupBean.class);
+            appGroupList = JSONUtils.parseArray(appListJson,AppGroupBean.class);
         }
         if(appGroupList == null){
             appGroupList = new ArrayList<>();

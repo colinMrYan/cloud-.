@@ -30,7 +30,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
-import com.alibaba.fastjson.JSON;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -41,6 +40,7 @@ import com.inspur.emmcloud.bean.work.GetOfficeResult;
 import com.inspur.emmcloud.bean.work.MeetingArea;
 import com.inspur.emmcloud.bean.work.MeetingRoom;
 import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
@@ -469,15 +469,7 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
 				String selectCommonOfficeIds = PreferencesUtils.getString(
 						getApplicationContext(), MyApplication.getInstance().getTanent() + uid
 								+ "selectCommonOfficeIds");
-				if (selectCommonOfficeIds != null) {
-					try {
-						selectCommonOfficeIdList = JSON.parseArray(
-								selectCommonOfficeIds, String.class);
-					}catch (Exception e){
-						e.printStackTrace();
-					}
-				}
-
+				selectCommonOfficeIdList = JSONUtils.JSONArray2List(selectCommonOfficeIds,new ArrayList<String>());
 				getNoFilteMeetingRooms(true);
 				break;
 			case CHECK_MEETING_ROOM_DETAIL:
@@ -846,10 +838,7 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
 		String selectCommonOfficeIds = PreferencesUtils.getString(
 				getApplicationContext(), MyApplication.getInstance().getTanent() + uid
 						+ "selectCommonOfficeIds");
-		if (!StringUtils.isBlank(selectCommonOfficeIds)) {
-			selectCommonOfficeIdList = JSON.parseArray(
-					selectCommonOfficeIds, String.class);
-		}
+		selectCommonOfficeIdList = JSONUtils.JSONArray2List(selectCommonOfficeIds,new ArrayList<String>());
 		if (selectCommonOfficeIdList.size() > 0) {
 			getNoFilteMeetingRooms(isShowDlg);
 		} else if (NetUtils.isNetworkConnected(getApplicationContext())) {
@@ -908,11 +897,7 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
 			String selectCommonOfficeIds = PreferencesUtils.getString(
 					getApplicationContext(), MyApplication.getInstance().getTanent() + uid
 							+ "selectCommonOfficeIds");
-			List<String> selectCommonOfficeIdList = new ArrayList<String>();
-			if (!StringUtils.isBlank(selectCommonOfficeIds)) {
-				selectCommonOfficeIdList = JSON.parseArray(
-						selectCommonOfficeIds, String.class);
-			}
+			List<String> selectCommonOfficeIdList = JSONUtils.JSONArray2List(selectCommonOfficeIds,new ArrayList<String>());
 			// 修改开关
 			apiService.getFiltMeetingRooms(beginTimeLong, endTimeLong,
 					selectCommonOfficeIdList, isFilte);

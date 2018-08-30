@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 
-import com.alibaba.fastjson.JSON;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.bean.appcenter.AppCommonlyUse;
@@ -12,6 +11,7 @@ import com.inspur.emmcloud.bean.system.AppConfig;
 import com.inspur.emmcloud.bean.system.GetAppConfigResult;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.interf.CommonCallBack;
+import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.cache.AppCacheUtils;
@@ -66,7 +66,7 @@ public class AppConfigUtils {
         if (!commonAppListJson.equals("null") && !StringUtils.isBlank(commonAppListJson)){
             List<AppCommonlyUse> commonAppList = AppCacheUtils.getCommonlyUseList(context);
             if (commonAppList.size() == 0){
-                commonAppList = JSON.parseArray(commonAppListJson,AppCommonlyUse.class);
+                commonAppList = JSONUtils.parseArray(commonAppListJson,AppCommonlyUse.class);
                 AppCacheUtils.saveAppCommonlyUseList(context,commonAppList);
             }
         }

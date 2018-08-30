@@ -15,7 +15,7 @@ public final class ContactProtoBuf {
         (com.google.protobuf.ExtensionRegistryLite) registry);
   }
   public interface orgOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:com.inspur.emmcloud.bean.contact.org)
+      // @@protoc_insertion_point(interface_extends:contacts.org)
       com.google.protobuf.MessageOrBuilder {
 
     /**
@@ -74,11 +74,11 @@ public final class ContactProtoBuf {
     int getSortOrder();
   }
   /**
-   * Protobuf type {@code com.inspur.emmcloud.bean.contact.org}
+   * Protobuf type {@code contacts.org}
    */
   public  static final class org extends
       com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:com.inspur.emmcloud.bean.contact.org)
+      // @@protoc_insertion_point(message_implements:contacts.org)
       orgOrBuilder {
   private static final long serialVersionUID = 0L;
     // Use org.newBuilder() to construct.
@@ -174,12 +174,12 @@ public final class ContactProtoBuf {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ContactProtoBuf.internal_static_com_inspur_emmcloud_bean_contact_org_descriptor;
+      return ContactProtoBuf.internal_static_contacts_org_descriptor;
     }
 
     protected FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ContactProtoBuf.internal_static_com_inspur_emmcloud_bean_contact_org_fieldAccessorTable
+      return ContactProtoBuf.internal_static_contacts_org_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               org.class, Builder.class);
     }
@@ -565,20 +565,20 @@ public final class ContactProtoBuf {
       return builder;
     }
     /**
-     * Protobuf type {@code com.inspur.emmcloud.bean.contact.org}
+     * Protobuf type {@code contacts.org}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:com.inspur.emmcloud.bean.contact.org)
+        // @@protoc_insertion_point(builder_implements:contacts.org)
         orgOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ContactProtoBuf.internal_static_com_inspur_emmcloud_bean_contact_org_descriptor;
+        return ContactProtoBuf.internal_static_contacts_org_descriptor;
       }
 
       protected FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ContactProtoBuf.internal_static_com_inspur_emmcloud_bean_contact_org_fieldAccessorTable
+        return ContactProtoBuf.internal_static_contacts_org_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 org.class, Builder.class);
       }
@@ -617,7 +617,7 @@ public final class ContactProtoBuf {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ContactProtoBuf.internal_static_com_inspur_emmcloud_bean_contact_org_descriptor;
+        return ContactProtoBuf.internal_static_contacts_org_descriptor;
       }
 
       public org getDefaultInstanceForType() {
@@ -645,30 +645,30 @@ public final class ContactProtoBuf {
       }
 
       public Builder clone() {
-        return super.clone();
+        return (Builder) super.clone();
       }
       public Builder setField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
           Object value) {
-        return super.setField(field, value);
+        return (Builder) super.setField(field, value);
       }
       public Builder clearField(
           com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return super.clearField(field);
+        return (Builder) super.clearField(field);
       }
       public Builder clearOneof(
           com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return super.clearOneof(oneof);
+        return (Builder) super.clearOneof(oneof);
       }
       public Builder setRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
           int index, Object value) {
-        return super.setRepeatedField(field, index, value);
+        return (Builder) super.setRepeatedField(field, index, value);
       }
       public Builder addRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
           Object value) {
-        return super.addRepeatedField(field, value);
+        return (Builder) super.addRepeatedField(field, value);
       }
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof org) {
@@ -1112,10 +1112,10 @@ public final class ContactProtoBuf {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:com.inspur.emmcloud.bean.contact.org)
+      // @@protoc_insertion_point(builder_scope:contacts.org)
     }
 
-    // @@protoc_insertion_point(class_scope:com.inspur.emmcloud.bean.contact.org)
+    // @@protoc_insertion_point(class_scope:contacts.org)
     private static final org DEFAULT_INSTANCE;
     static {
       DEFAULT_INSTANCE = new org();
@@ -1151,7 +1151,7 @@ public final class ContactProtoBuf {
   }
 
   public interface userOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:com.inspur.emmcloud.bean.contact.user)
+      // @@protoc_insertion_point(interface_extends:contacts.user)
       com.google.protobuf.MessageOrBuilder {
 
     /**
@@ -1233,13 +1233,23 @@ public final class ContactProtoBuf {
      * <code>int32 sort_order = 9;</code>
      */
     int getSortOrder();
+
+    /**
+     * <code>string emp_no = 10;</code>
+     */
+    String getEmpNo();
+    /**
+     * <code>string emp_no = 10;</code>
+     */
+    com.google.protobuf.ByteString
+        getEmpNoBytes();
   }
   /**
-   * Protobuf type {@code com.inspur.emmcloud.bean.contact.user}
+   * Protobuf type {@code contacts.user}
    */
   public  static final class user extends
       com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:com.inspur.emmcloud.bean.contact.user)
+      // @@protoc_insertion_point(message_implements:contacts.user)
       userOrBuilder {
   private static final long serialVersionUID = 0L;
     // Use user.newBuilder() to construct.
@@ -1256,6 +1266,7 @@ public final class ContactProtoBuf {
       parentId_ = "";
       hasHead_ = 0;
       sortOrder_ = 0;
+      empNo_ = "";
     }
 
     @Override
@@ -1341,6 +1352,12 @@ public final class ContactProtoBuf {
               sortOrder_ = input.readInt32();
               break;
             }
+            case 82: {
+              String s = input.readStringRequireUtf8();
+
+              empNo_ = s;
+              break;
+            }
           }
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -1355,12 +1372,12 @@ public final class ContactProtoBuf {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ContactProtoBuf.internal_static_com_inspur_emmcloud_bean_contact_user_descriptor;
+      return ContactProtoBuf.internal_static_contacts_user_descriptor;
     }
 
     protected FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ContactProtoBuf.internal_static_com_inspur_emmcloud_bean_contact_user_fieldAccessorTable
+      return ContactProtoBuf.internal_static_contacts_user_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               user.class, Builder.class);
     }
@@ -1621,6 +1638,40 @@ public final class ContactProtoBuf {
       return sortOrder_;
     }
 
+    public static final int EMP_NO_FIELD_NUMBER = 10;
+    private volatile Object empNo_;
+    /**
+     * <code>string emp_no = 10;</code>
+     */
+    public String getEmpNo() {
+      Object ref = empNo_;
+      if (ref instanceof String) {
+        return (String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        empNo_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string emp_no = 10;</code>
+     */
+    public com.google.protobuf.ByteString
+        getEmpNoBytes() {
+      Object ref = empNo_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (String) ref);
+        empNo_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -1660,6 +1711,9 @@ public final class ContactProtoBuf {
       if (sortOrder_ != 0) {
         output.writeInt32(9, sortOrder_);
       }
+      if (!getEmpNoBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 10, empNo_);
+      }
       unknownFields.writeTo(output);
     }
 
@@ -1697,6 +1751,9 @@ public final class ContactProtoBuf {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(9, sortOrder_);
       }
+      if (!getEmpNoBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(10, empNo_);
+      }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
       return size;
@@ -1731,6 +1788,8 @@ public final class ContactProtoBuf {
           == other.getHasHead());
       result = result && (getSortOrder()
           == other.getSortOrder());
+      result = result && getEmpNo()
+          .equals(other.getEmpNo());
       result = result && unknownFields.equals(other.unknownFields);
       return result;
     }
@@ -1760,6 +1819,8 @@ public final class ContactProtoBuf {
       hash = (53 * hash) + getHasHead();
       hash = (37 * hash) + SORT_ORDER_FIELD_NUMBER;
       hash = (53 * hash) + getSortOrder();
+      hash = (37 * hash) + EMP_NO_FIELD_NUMBER;
+      hash = (53 * hash) + getEmpNo().hashCode();
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -1854,20 +1915,20 @@ public final class ContactProtoBuf {
       return builder;
     }
     /**
-     * Protobuf type {@code com.inspur.emmcloud.bean.contact.user}
+     * Protobuf type {@code contacts.user}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:com.inspur.emmcloud.bean.contact.user)
+        // @@protoc_insertion_point(builder_implements:contacts.user)
         userOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ContactProtoBuf.internal_static_com_inspur_emmcloud_bean_contact_user_descriptor;
+        return ContactProtoBuf.internal_static_contacts_user_descriptor;
       }
 
       protected FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ContactProtoBuf.internal_static_com_inspur_emmcloud_bean_contact_user_fieldAccessorTable
+        return ContactProtoBuf.internal_static_contacts_user_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 user.class, Builder.class);
       }
@@ -1907,12 +1968,14 @@ public final class ContactProtoBuf {
 
         sortOrder_ = 0;
 
+        empNo_ = "";
+
         return this;
       }
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ContactProtoBuf.internal_static_com_inspur_emmcloud_bean_contact_user_descriptor;
+        return ContactProtoBuf.internal_static_contacts_user_descriptor;
       }
 
       public user getDefaultInstanceForType() {
@@ -1938,35 +2001,36 @@ public final class ContactProtoBuf {
         result.parentId_ = parentId_;
         result.hasHead_ = hasHead_;
         result.sortOrder_ = sortOrder_;
+        result.empNo_ = empNo_;
         onBuilt();
         return result;
       }
 
       public Builder clone() {
-        return super.clone();
+        return (Builder) super.clone();
       }
       public Builder setField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
           Object value) {
-        return super.setField(field, value);
+        return (Builder) super.setField(field, value);
       }
       public Builder clearField(
           com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return super.clearField(field);
+        return (Builder) super.clearField(field);
       }
       public Builder clearOneof(
           com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return super.clearOneof(oneof);
+        return (Builder) super.clearOneof(oneof);
       }
       public Builder setRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
           int index, Object value) {
-        return super.setRepeatedField(field, index, value);
+        return (Builder) super.setRepeatedField(field, index, value);
       }
       public Builder addRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
           Object value) {
-        return super.addRepeatedField(field, value);
+        return (Builder) super.addRepeatedField(field, value);
       }
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof user) {
@@ -2012,6 +2076,10 @@ public final class ContactProtoBuf {
         }
         if (other.getSortOrder() != 0) {
           setSortOrder(other.getSortOrder());
+        }
+        if (!other.getEmpNo().isEmpty()) {
+          empNo_ = other.empNo_;
+          onChanged();
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -2574,6 +2642,75 @@ public final class ContactProtoBuf {
         onChanged();
         return this;
       }
+
+      private Object empNo_ = "";
+      /**
+       * <code>string emp_no = 10;</code>
+       */
+      public String getEmpNo() {
+        Object ref = empNo_;
+        if (!(ref instanceof String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          String s = bs.toStringUtf8();
+          empNo_ = s;
+          return s;
+        } else {
+          return (String) ref;
+        }
+      }
+      /**
+       * <code>string emp_no = 10;</code>
+       */
+      public com.google.protobuf.ByteString
+          getEmpNoBytes() {
+        Object ref = empNo_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (String) ref);
+          empNo_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string emp_no = 10;</code>
+       */
+      public Builder setEmpNo(
+          String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        empNo_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string emp_no = 10;</code>
+       */
+      public Builder clearEmpNo() {
+        
+        empNo_ = getDefaultInstance().getEmpNo();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string emp_no = 10;</code>
+       */
+      public Builder setEmpNoBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        empNo_ = value;
+        onChanged();
+        return this;
+      }
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.setUnknownFieldsProto3(unknownFields);
@@ -2585,10 +2722,10 @@ public final class ContactProtoBuf {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:com.inspur.emmcloud.bean.contact.user)
+      // @@protoc_insertion_point(builder_scope:contacts.user)
     }
 
-    // @@protoc_insertion_point(class_scope:com.inspur.emmcloud.bean.contact.user)
+    // @@protoc_insertion_point(class_scope:contacts.user)
     private static final user DEFAULT_INSTANCE;
     static {
       DEFAULT_INSTANCE = new user();
@@ -2624,7 +2761,7 @@ public final class ContactProtoBuf {
   }
 
   public interface orgsOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:com.inspur.emmcloud.bean.contact.orgs)
+      // @@protoc_insertion_point(interface_extends:contacts.orgs)
       com.google.protobuf.MessageOrBuilder {
 
     /**
@@ -2633,25 +2770,25 @@ public final class ContactProtoBuf {
     long getLastQueryTime();
 
     /**
-     * <code>repeated .com.inspur.emmcloud.bean.contact.org orgs = 2;</code>
+     * <code>repeated .contacts.org orgs = 2;</code>
      */
     java.util.List<org>
         getOrgsList();
     /**
-     * <code>repeated .com.inspur.emmcloud.bean.contact.org orgs = 2;</code>
+     * <code>repeated .contacts.org orgs = 2;</code>
      */
     org getOrgs(int index);
     /**
-     * <code>repeated .com.inspur.emmcloud.bean.contact.org orgs = 2;</code>
+     * <code>repeated .contacts.org orgs = 2;</code>
      */
     int getOrgsCount();
     /**
-     * <code>repeated .com.inspur.emmcloud.bean.contact.org orgs = 2;</code>
+     * <code>repeated .contacts.org orgs = 2;</code>
      */
     java.util.List<? extends orgOrBuilder>
         getOrgsOrBuilderList();
     /**
-     * <code>repeated .com.inspur.emmcloud.bean.contact.org orgs = 2;</code>
+     * <code>repeated .contacts.org orgs = 2;</code>
      */
     orgOrBuilder getOrgsOrBuilder(
             int index);
@@ -2667,11 +2804,11 @@ public final class ContactProtoBuf {
         getRootIDBytes();
   }
   /**
-   * Protobuf type {@code com.inspur.emmcloud.bean.contact.orgs}
+   * Protobuf type {@code contacts.orgs}
    */
   public  static final class orgs extends
       com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:com.inspur.emmcloud.bean.contact.orgs)
+      // @@protoc_insertion_point(message_implements:contacts.orgs)
       orgsOrBuilder {
   private static final long serialVersionUID = 0L;
     // Use orgs.newBuilder() to construct.
@@ -2752,12 +2889,12 @@ public final class ContactProtoBuf {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ContactProtoBuf.internal_static_com_inspur_emmcloud_bean_contact_orgs_descriptor;
+      return ContactProtoBuf.internal_static_contacts_orgs_descriptor;
     }
 
     protected FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ContactProtoBuf.internal_static_com_inspur_emmcloud_bean_contact_orgs_fieldAccessorTable
+      return ContactProtoBuf.internal_static_contacts_orgs_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               orgs.class, Builder.class);
     }
@@ -2775,32 +2912,32 @@ public final class ContactProtoBuf {
     public static final int ORGS_FIELD_NUMBER = 2;
     private java.util.List<org> orgs_;
     /**
-     * <code>repeated .com.inspur.emmcloud.bean.contact.org orgs = 2;</code>
+     * <code>repeated .contacts.org orgs = 2;</code>
      */
     public java.util.List<org> getOrgsList() {
       return orgs_;
     }
     /**
-     * <code>repeated .com.inspur.emmcloud.bean.contact.org orgs = 2;</code>
+     * <code>repeated .contacts.org orgs = 2;</code>
      */
     public java.util.List<? extends orgOrBuilder>
         getOrgsOrBuilderList() {
       return orgs_;
     }
     /**
-     * <code>repeated .com.inspur.emmcloud.bean.contact.org orgs = 2;</code>
+     * <code>repeated .contacts.org orgs = 2;</code>
      */
     public int getOrgsCount() {
       return orgs_.size();
     }
     /**
-     * <code>repeated .com.inspur.emmcloud.bean.contact.org orgs = 2;</code>
+     * <code>repeated .contacts.org orgs = 2;</code>
      */
     public org getOrgs(int index) {
       return orgs_.get(index);
     }
     /**
-     * <code>repeated .com.inspur.emmcloud.bean.contact.org orgs = 2;</code>
+     * <code>repeated .contacts.org orgs = 2;</code>
      */
     public orgOrBuilder getOrgsOrBuilder(
         int index) {
@@ -3017,20 +3154,20 @@ public final class ContactProtoBuf {
       return builder;
     }
     /**
-     * Protobuf type {@code com.inspur.emmcloud.bean.contact.orgs}
+     * Protobuf type {@code contacts.orgs}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:com.inspur.emmcloud.bean.contact.orgs)
+        // @@protoc_insertion_point(builder_implements:contacts.orgs)
         orgsOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ContactProtoBuf.internal_static_com_inspur_emmcloud_bean_contact_orgs_descriptor;
+        return ContactProtoBuf.internal_static_contacts_orgs_descriptor;
       }
 
       protected FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ContactProtoBuf.internal_static_com_inspur_emmcloud_bean_contact_orgs_fieldAccessorTable
+        return ContactProtoBuf.internal_static_contacts_orgs_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 orgs.class, Builder.class);
       }
@@ -3068,7 +3205,7 @@ public final class ContactProtoBuf {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ContactProtoBuf.internal_static_com_inspur_emmcloud_bean_contact_orgs_descriptor;
+        return ContactProtoBuf.internal_static_contacts_orgs_descriptor;
       }
 
       public orgs getDefaultInstanceForType() {
@@ -3104,30 +3241,30 @@ public final class ContactProtoBuf {
       }
 
       public Builder clone() {
-        return super.clone();
+        return (Builder) super.clone();
       }
       public Builder setField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
           Object value) {
-        return super.setField(field, value);
+        return (Builder) super.setField(field, value);
       }
       public Builder clearField(
           com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return super.clearField(field);
+        return (Builder) super.clearField(field);
       }
       public Builder clearOneof(
           com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return super.clearOneof(oneof);
+        return (Builder) super.clearOneof(oneof);
       }
       public Builder setRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
           int index, Object value) {
-        return super.setRepeatedField(field, index, value);
+        return (Builder) super.setRepeatedField(field, index, value);
       }
       public Builder addRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
           Object value) {
-        return super.addRepeatedField(field, value);
+        return (Builder) super.addRepeatedField(field, value);
       }
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof orgs) {
@@ -3240,7 +3377,7 @@ public final class ContactProtoBuf {
           org, org.Builder, orgOrBuilder> orgsBuilder_;
 
       /**
-       * <code>repeated .com.inspur.emmcloud.bean.contact.org orgs = 2;</code>
+       * <code>repeated .contacts.org orgs = 2;</code>
        */
       public java.util.List<org> getOrgsList() {
         if (orgsBuilder_ == null) {
@@ -3250,7 +3387,7 @@ public final class ContactProtoBuf {
         }
       }
       /**
-       * <code>repeated .com.inspur.emmcloud.bean.contact.org orgs = 2;</code>
+       * <code>repeated .contacts.org orgs = 2;</code>
        */
       public int getOrgsCount() {
         if (orgsBuilder_ == null) {
@@ -3260,7 +3397,7 @@ public final class ContactProtoBuf {
         }
       }
       /**
-       * <code>repeated .com.inspur.emmcloud.bean.contact.org orgs = 2;</code>
+       * <code>repeated .contacts.org orgs = 2;</code>
        */
       public org getOrgs(int index) {
         if (orgsBuilder_ == null) {
@@ -3270,7 +3407,7 @@ public final class ContactProtoBuf {
         }
       }
       /**
-       * <code>repeated .com.inspur.emmcloud.bean.contact.org orgs = 2;</code>
+       * <code>repeated .contacts.org orgs = 2;</code>
        */
       public Builder setOrgs(
           int index, org value) {
@@ -3287,7 +3424,7 @@ public final class ContactProtoBuf {
         return this;
       }
       /**
-       * <code>repeated .com.inspur.emmcloud.bean.contact.org orgs = 2;</code>
+       * <code>repeated .contacts.org orgs = 2;</code>
        */
       public Builder setOrgs(
           int index, org.Builder builderForValue) {
@@ -3301,7 +3438,7 @@ public final class ContactProtoBuf {
         return this;
       }
       /**
-       * <code>repeated .com.inspur.emmcloud.bean.contact.org orgs = 2;</code>
+       * <code>repeated .contacts.org orgs = 2;</code>
        */
       public Builder addOrgs(org value) {
         if (orgsBuilder_ == null) {
@@ -3317,7 +3454,7 @@ public final class ContactProtoBuf {
         return this;
       }
       /**
-       * <code>repeated .com.inspur.emmcloud.bean.contact.org orgs = 2;</code>
+       * <code>repeated .contacts.org orgs = 2;</code>
        */
       public Builder addOrgs(
           int index, org value) {
@@ -3334,7 +3471,7 @@ public final class ContactProtoBuf {
         return this;
       }
       /**
-       * <code>repeated .com.inspur.emmcloud.bean.contact.org orgs = 2;</code>
+       * <code>repeated .contacts.org orgs = 2;</code>
        */
       public Builder addOrgs(
           org.Builder builderForValue) {
@@ -3348,7 +3485,7 @@ public final class ContactProtoBuf {
         return this;
       }
       /**
-       * <code>repeated .com.inspur.emmcloud.bean.contact.org orgs = 2;</code>
+       * <code>repeated .contacts.org orgs = 2;</code>
        */
       public Builder addOrgs(
           int index, org.Builder builderForValue) {
@@ -3362,7 +3499,7 @@ public final class ContactProtoBuf {
         return this;
       }
       /**
-       * <code>repeated .com.inspur.emmcloud.bean.contact.org orgs = 2;</code>
+       * <code>repeated .contacts.org orgs = 2;</code>
        */
       public Builder addAllOrgs(
           Iterable<? extends org> values) {
@@ -3377,7 +3514,7 @@ public final class ContactProtoBuf {
         return this;
       }
       /**
-       * <code>repeated .com.inspur.emmcloud.bean.contact.org orgs = 2;</code>
+       * <code>repeated .contacts.org orgs = 2;</code>
        */
       public Builder clearOrgs() {
         if (orgsBuilder_ == null) {
@@ -3390,7 +3527,7 @@ public final class ContactProtoBuf {
         return this;
       }
       /**
-       * <code>repeated .com.inspur.emmcloud.bean.contact.org orgs = 2;</code>
+       * <code>repeated .contacts.org orgs = 2;</code>
        */
       public Builder removeOrgs(int index) {
         if (orgsBuilder_ == null) {
@@ -3403,14 +3540,14 @@ public final class ContactProtoBuf {
         return this;
       }
       /**
-       * <code>repeated .com.inspur.emmcloud.bean.contact.org orgs = 2;</code>
+       * <code>repeated .contacts.org orgs = 2;</code>
        */
       public org.Builder getOrgsBuilder(
           int index) {
         return getOrgsFieldBuilder().getBuilder(index);
       }
       /**
-       * <code>repeated .com.inspur.emmcloud.bean.contact.org orgs = 2;</code>
+       * <code>repeated .contacts.org orgs = 2;</code>
        */
       public orgOrBuilder getOrgsOrBuilder(
           int index) {
@@ -3420,7 +3557,7 @@ public final class ContactProtoBuf {
         }
       }
       /**
-       * <code>repeated .com.inspur.emmcloud.bean.contact.org orgs = 2;</code>
+       * <code>repeated .contacts.org orgs = 2;</code>
        */
       public java.util.List<? extends orgOrBuilder>
            getOrgsOrBuilderList() {
@@ -3431,14 +3568,14 @@ public final class ContactProtoBuf {
         }
       }
       /**
-       * <code>repeated .com.inspur.emmcloud.bean.contact.org orgs = 2;</code>
+       * <code>repeated .contacts.org orgs = 2;</code>
        */
       public org.Builder addOrgsBuilder() {
         return getOrgsFieldBuilder().addBuilder(
             org.getDefaultInstance());
       }
       /**
-       * <code>repeated .com.inspur.emmcloud.bean.contact.org orgs = 2;</code>
+       * <code>repeated .contacts.org orgs = 2;</code>
        */
       public org.Builder addOrgsBuilder(
           int index) {
@@ -3446,7 +3583,7 @@ public final class ContactProtoBuf {
             index, org.getDefaultInstance());
       }
       /**
-       * <code>repeated .com.inspur.emmcloud.bean.contact.org orgs = 2;</code>
+       * <code>repeated .contacts.org orgs = 2;</code>
        */
       public java.util.List<org.Builder>
            getOrgsBuilderList() {
@@ -3546,10 +3683,10 @@ public final class ContactProtoBuf {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:com.inspur.emmcloud.bean.contact.orgs)
+      // @@protoc_insertion_point(builder_scope:contacts.orgs)
     }
 
-    // @@protoc_insertion_point(class_scope:com.inspur.emmcloud.bean.contact.orgs)
+    // @@protoc_insertion_point(class_scope:contacts.orgs)
     private static final orgs DEFAULT_INSTANCE;
     static {
       DEFAULT_INSTANCE = new orgs();
@@ -3585,7 +3722,7 @@ public final class ContactProtoBuf {
   }
 
   public interface usersOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:com.inspur.emmcloud.bean.contact.users)
+      // @@protoc_insertion_point(interface_extends:contacts.users)
       com.google.protobuf.MessageOrBuilder {
 
     /**
@@ -3594,35 +3731,35 @@ public final class ContactProtoBuf {
     long getLastQueryTime();
 
     /**
-     * <code>repeated .com.inspur.emmcloud.bean.contact.user users = 2;</code>
+     * <code>repeated .contacts.user users = 2;</code>
      */
     java.util.List<user>
         getUsersList();
     /**
-     * <code>repeated .com.inspur.emmcloud.bean.contact.user users = 2;</code>
+     * <code>repeated .contacts.user users = 2;</code>
      */
     user getUsers(int index);
     /**
-     * <code>repeated .com.inspur.emmcloud.bean.contact.user users = 2;</code>
+     * <code>repeated .contacts.user users = 2;</code>
      */
     int getUsersCount();
     /**
-     * <code>repeated .com.inspur.emmcloud.bean.contact.user users = 2;</code>
+     * <code>repeated .contacts.user users = 2;</code>
      */
     java.util.List<? extends userOrBuilder>
         getUsersOrBuilderList();
     /**
-     * <code>repeated .com.inspur.emmcloud.bean.contact.user users = 2;</code>
+     * <code>repeated .contacts.user users = 2;</code>
      */
     userOrBuilder getUsersOrBuilder(
             int index);
   }
   /**
-   * Protobuf type {@code com.inspur.emmcloud.bean.contact.users}
+   * Protobuf type {@code contacts.users}
    */
   public  static final class users extends
       com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:com.inspur.emmcloud.bean.contact.users)
+      // @@protoc_insertion_point(message_implements:contacts.users)
       usersOrBuilder {
   private static final long serialVersionUID = 0L;
     // Use users.newBuilder() to construct.
@@ -3696,12 +3833,12 @@ public final class ContactProtoBuf {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ContactProtoBuf.internal_static_com_inspur_emmcloud_bean_contact_users_descriptor;
+      return ContactProtoBuf.internal_static_contacts_users_descriptor;
     }
 
     protected FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ContactProtoBuf.internal_static_com_inspur_emmcloud_bean_contact_users_fieldAccessorTable
+      return ContactProtoBuf.internal_static_contacts_users_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               users.class, Builder.class);
     }
@@ -3719,32 +3856,32 @@ public final class ContactProtoBuf {
     public static final int USERS_FIELD_NUMBER = 2;
     private java.util.List<user> users_;
     /**
-     * <code>repeated .com.inspur.emmcloud.bean.contact.user users = 2;</code>
+     * <code>repeated .contacts.user users = 2;</code>
      */
     public java.util.List<user> getUsersList() {
       return users_;
     }
     /**
-     * <code>repeated .com.inspur.emmcloud.bean.contact.user users = 2;</code>
+     * <code>repeated .contacts.user users = 2;</code>
      */
     public java.util.List<? extends userOrBuilder>
         getUsersOrBuilderList() {
       return users_;
     }
     /**
-     * <code>repeated .com.inspur.emmcloud.bean.contact.user users = 2;</code>
+     * <code>repeated .contacts.user users = 2;</code>
      */
     public int getUsersCount() {
       return users_.size();
     }
     /**
-     * <code>repeated .com.inspur.emmcloud.bean.contact.user users = 2;</code>
+     * <code>repeated .contacts.user users = 2;</code>
      */
     public user getUsers(int index) {
       return users_.get(index);
     }
     /**
-     * <code>repeated .com.inspur.emmcloud.bean.contact.user users = 2;</code>
+     * <code>repeated .contacts.user users = 2;</code>
      */
     public userOrBuilder getUsersOrBuilder(
         int index) {
@@ -3917,20 +4054,20 @@ public final class ContactProtoBuf {
       return builder;
     }
     /**
-     * Protobuf type {@code com.inspur.emmcloud.bean.contact.users}
+     * Protobuf type {@code contacts.users}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:com.inspur.emmcloud.bean.contact.users)
+        // @@protoc_insertion_point(builder_implements:contacts.users)
         usersOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ContactProtoBuf.internal_static_com_inspur_emmcloud_bean_contact_users_descriptor;
+        return ContactProtoBuf.internal_static_contacts_users_descriptor;
       }
 
       protected FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ContactProtoBuf.internal_static_com_inspur_emmcloud_bean_contact_users_fieldAccessorTable
+        return ContactProtoBuf.internal_static_contacts_users_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 users.class, Builder.class);
       }
@@ -3966,7 +4103,7 @@ public final class ContactProtoBuf {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ContactProtoBuf.internal_static_com_inspur_emmcloud_bean_contact_users_descriptor;
+        return ContactProtoBuf.internal_static_contacts_users_descriptor;
       }
 
       public users getDefaultInstanceForType() {
@@ -4001,30 +4138,30 @@ public final class ContactProtoBuf {
       }
 
       public Builder clone() {
-        return super.clone();
+        return (Builder) super.clone();
       }
       public Builder setField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
           Object value) {
-        return super.setField(field, value);
+        return (Builder) super.setField(field, value);
       }
       public Builder clearField(
           com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return super.clearField(field);
+        return (Builder) super.clearField(field);
       }
       public Builder clearOneof(
           com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return super.clearOneof(oneof);
+        return (Builder) super.clearOneof(oneof);
       }
       public Builder setRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
           int index, Object value) {
-        return super.setRepeatedField(field, index, value);
+        return (Builder) super.setRepeatedField(field, index, value);
       }
       public Builder addRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
           Object value) {
-        return super.addRepeatedField(field, value);
+        return (Builder) super.addRepeatedField(field, value);
       }
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof users) {
@@ -4133,7 +4270,7 @@ public final class ContactProtoBuf {
           user, user.Builder, userOrBuilder> usersBuilder_;
 
       /**
-       * <code>repeated .com.inspur.emmcloud.bean.contact.user users = 2;</code>
+       * <code>repeated .contacts.user users = 2;</code>
        */
       public java.util.List<user> getUsersList() {
         if (usersBuilder_ == null) {
@@ -4143,7 +4280,7 @@ public final class ContactProtoBuf {
         }
       }
       /**
-       * <code>repeated .com.inspur.emmcloud.bean.contact.user users = 2;</code>
+       * <code>repeated .contacts.user users = 2;</code>
        */
       public int getUsersCount() {
         if (usersBuilder_ == null) {
@@ -4153,7 +4290,7 @@ public final class ContactProtoBuf {
         }
       }
       /**
-       * <code>repeated .com.inspur.emmcloud.bean.contact.user users = 2;</code>
+       * <code>repeated .contacts.user users = 2;</code>
        */
       public user getUsers(int index) {
         if (usersBuilder_ == null) {
@@ -4163,7 +4300,7 @@ public final class ContactProtoBuf {
         }
       }
       /**
-       * <code>repeated .com.inspur.emmcloud.bean.contact.user users = 2;</code>
+       * <code>repeated .contacts.user users = 2;</code>
        */
       public Builder setUsers(
           int index, user value) {
@@ -4180,7 +4317,7 @@ public final class ContactProtoBuf {
         return this;
       }
       /**
-       * <code>repeated .com.inspur.emmcloud.bean.contact.user users = 2;</code>
+       * <code>repeated .contacts.user users = 2;</code>
        */
       public Builder setUsers(
           int index, user.Builder builderForValue) {
@@ -4194,7 +4331,7 @@ public final class ContactProtoBuf {
         return this;
       }
       /**
-       * <code>repeated .com.inspur.emmcloud.bean.contact.user users = 2;</code>
+       * <code>repeated .contacts.user users = 2;</code>
        */
       public Builder addUsers(user value) {
         if (usersBuilder_ == null) {
@@ -4210,7 +4347,7 @@ public final class ContactProtoBuf {
         return this;
       }
       /**
-       * <code>repeated .com.inspur.emmcloud.bean.contact.user users = 2;</code>
+       * <code>repeated .contacts.user users = 2;</code>
        */
       public Builder addUsers(
           int index, user value) {
@@ -4227,7 +4364,7 @@ public final class ContactProtoBuf {
         return this;
       }
       /**
-       * <code>repeated .com.inspur.emmcloud.bean.contact.user users = 2;</code>
+       * <code>repeated .contacts.user users = 2;</code>
        */
       public Builder addUsers(
           user.Builder builderForValue) {
@@ -4241,7 +4378,7 @@ public final class ContactProtoBuf {
         return this;
       }
       /**
-       * <code>repeated .com.inspur.emmcloud.bean.contact.user users = 2;</code>
+       * <code>repeated .contacts.user users = 2;</code>
        */
       public Builder addUsers(
           int index, user.Builder builderForValue) {
@@ -4255,7 +4392,7 @@ public final class ContactProtoBuf {
         return this;
       }
       /**
-       * <code>repeated .com.inspur.emmcloud.bean.contact.user users = 2;</code>
+       * <code>repeated .contacts.user users = 2;</code>
        */
       public Builder addAllUsers(
           Iterable<? extends user> values) {
@@ -4270,7 +4407,7 @@ public final class ContactProtoBuf {
         return this;
       }
       /**
-       * <code>repeated .com.inspur.emmcloud.bean.contact.user users = 2;</code>
+       * <code>repeated .contacts.user users = 2;</code>
        */
       public Builder clearUsers() {
         if (usersBuilder_ == null) {
@@ -4283,7 +4420,7 @@ public final class ContactProtoBuf {
         return this;
       }
       /**
-       * <code>repeated .com.inspur.emmcloud.bean.contact.user users = 2;</code>
+       * <code>repeated .contacts.user users = 2;</code>
        */
       public Builder removeUsers(int index) {
         if (usersBuilder_ == null) {
@@ -4296,14 +4433,14 @@ public final class ContactProtoBuf {
         return this;
       }
       /**
-       * <code>repeated .com.inspur.emmcloud.bean.contact.user users = 2;</code>
+       * <code>repeated .contacts.user users = 2;</code>
        */
       public user.Builder getUsersBuilder(
           int index) {
         return getUsersFieldBuilder().getBuilder(index);
       }
       /**
-       * <code>repeated .com.inspur.emmcloud.bean.contact.user users = 2;</code>
+       * <code>repeated .contacts.user users = 2;</code>
        */
       public userOrBuilder getUsersOrBuilder(
           int index) {
@@ -4313,7 +4450,7 @@ public final class ContactProtoBuf {
         }
       }
       /**
-       * <code>repeated .com.inspur.emmcloud.bean.contact.user users = 2;</code>
+       * <code>repeated .contacts.user users = 2;</code>
        */
       public java.util.List<? extends userOrBuilder>
            getUsersOrBuilderList() {
@@ -4324,14 +4461,14 @@ public final class ContactProtoBuf {
         }
       }
       /**
-       * <code>repeated .com.inspur.emmcloud.bean.contact.user users = 2;</code>
+       * <code>repeated .contacts.user users = 2;</code>
        */
       public user.Builder addUsersBuilder() {
         return getUsersFieldBuilder().addBuilder(
             user.getDefaultInstance());
       }
       /**
-       * <code>repeated .com.inspur.emmcloud.bean.contact.user users = 2;</code>
+       * <code>repeated .contacts.user users = 2;</code>
        */
       public user.Builder addUsersBuilder(
           int index) {
@@ -4339,7 +4476,7 @@ public final class ContactProtoBuf {
             index, user.getDefaultInstance());
       }
       /**
-       * <code>repeated .com.inspur.emmcloud.bean.contact.user users = 2;</code>
+       * <code>repeated .contacts.user users = 2;</code>
        */
       public java.util.List<user.Builder>
            getUsersBuilderList() {
@@ -4370,10 +4507,10 @@ public final class ContactProtoBuf {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:com.inspur.emmcloud.bean.contact.users)
+      // @@protoc_insertion_point(builder_scope:contacts.users)
     }
 
-    // @@protoc_insertion_point(class_scope:com.inspur.emmcloud.bean.contact.users)
+    // @@protoc_insertion_point(class_scope:contacts.users)
     private static final users DEFAULT_INSTANCE;
     static {
       DEFAULT_INSTANCE = new users();
@@ -4409,25 +4546,25 @@ public final class ContactProtoBuf {
   }
 
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_com_inspur_emmcloud_bean_contact_org_descriptor;
+    internal_static_contacts_org_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_com_inspur_emmcloud_bean_contact_org_fieldAccessorTable;
+      internal_static_contacts_org_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_com_inspur_emmcloud_bean_contact_user_descriptor;
+    internal_static_contacts_user_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_com_inspur_emmcloud_bean_contact_user_fieldAccessorTable;
+      internal_static_contacts_user_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_com_inspur_emmcloud_bean_contact_orgs_descriptor;
+    internal_static_contacts_orgs_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_com_inspur_emmcloud_bean_contact_orgs_fieldAccessorTable;
+      internal_static_contacts_orgs_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_com_inspur_emmcloud_bean_contact_users_descriptor;
+    internal_static_contacts_users_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_com_inspur_emmcloud_bean_contact_users_fieldAccessorTable;
+      internal_static_contacts_users_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -4437,21 +4574,19 @@ public final class ContactProtoBuf {
       descriptor;
   static {
     String[] descriptorData = {
-      "\n\016contacts.proto\022 com.inspur.emmcloud.be" +
-      "an.contact\"k\n\003org\022\n\n\002id\030\001 \001(\t\022\014\n\004name\030\002 " +
-      "\001(\t\022\023\n\013name_global\030\003 \001(\t\022\016\n\006pinyin\030\004 \001(\t" +
-      "\022\021\n\tparent_id\030\005 \001(\t\022\022\n\nsort_order\030\006 \001(\005\"" +
-      "\242\001\n\004user\022\n\n\002id\030\001 \001(\t\022\021\n\treal_name\030\002 \001(\t\022" +
-      "\023\n\013name_global\030\003 \001(\t\022\016\n\006pinyin\030\004 \001(\t\022\016\n\006" +
-      "mobile\030\005 \001(\t\022\r\n\005email\030\006 \001(\t\022\021\n\tparent_id" +
-      "\030\007 \001(\t\022\020\n\010has_head\030\010 \001(\005\022\022\n\nsort_order\030\t" +
-      " \001(\005\"b\n\004orgs\022\025\n\rlastQueryTime\030\001 \001(\003\0223\n\004o" +
-      "rgs\030\002 \003(\0132%.com.inspur.emmcloud.bean.con" +
-      "tact.org\022\016\n\006rootID\030\003 \001(\t\"U\n\005users\022\025\n\rlas" +
-      "tQueryTime\030\001 \001(\003\0225\n\005users\030\002 \003(\0132&.com.in" +
-      "spur.emmcloud.bean.contact.userB3\n com.i" +
-      "nspur.emmcloud.bean.contactB\017ContactProt" +
-      "oBufb\006proto3"
+      "\n\016contacts.proto\022\010contacts\"k\n\003org\022\n\n\002id\030" +
+      "\001 \001(\t\022\014\n\004name\030\002 \001(\t\022\023\n\013name_global\030\003 \001(\t" +
+      "\022\016\n\006pinyin\030\004 \001(\t\022\021\n\tparent_id\030\005 \001(\t\022\022\n\ns" +
+      "ort_order\030\006 \001(\005\"\262\001\n\004user\022\n\n\002id\030\001 \001(\t\022\021\n\t" +
+      "real_name\030\002 \001(\t\022\023\n\013name_global\030\003 \001(\t\022\016\n\006" +
+      "pinyin\030\004 \001(\t\022\016\n\006mobile\030\005 \001(\t\022\r\n\005email\030\006 " +
+      "\001(\t\022\021\n\tparent_id\030\007 \001(\t\022\020\n\010has_head\030\010 \001(\005" +
+      "\022\022\n\nsort_order\030\t \001(\005\022\016\n\006emp_no\030\n \001(\t\"J\n\004" +
+      "orgs\022\025\n\rlastQueryTime\030\001 \001(\003\022\033\n\004orgs\030\002 \003(" +
+      "\0132\r.contacts.org\022\016\n\006rootID\030\003 \001(\t\"=\n\005user" +
+      "s\022\025\n\rlastQueryTime\030\001 \001(\003\022\035\n\005users\030\002 \003(\0132" +
+      "\016.contacts.userB3\n com.inspur.emmcloud.b" +
+      "ean.contactB\017ContactProtoBufb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -4465,29 +4600,29 @@ public final class ContactProtoBuf {
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
         }, assigner);
-    internal_static_com_inspur_emmcloud_bean_contact_org_descriptor =
+    internal_static_contacts_org_descriptor =
       getDescriptor().getMessageTypes().get(0);
-    internal_static_com_inspur_emmcloud_bean_contact_org_fieldAccessorTable = new
+    internal_static_contacts_org_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_com_inspur_emmcloud_bean_contact_org_descriptor,
+        internal_static_contacts_org_descriptor,
         new String[] { "Id", "Name", "NameGlobal", "Pinyin", "ParentId", "SortOrder", });
-    internal_static_com_inspur_emmcloud_bean_contact_user_descriptor =
+    internal_static_contacts_user_descriptor =
       getDescriptor().getMessageTypes().get(1);
-    internal_static_com_inspur_emmcloud_bean_contact_user_fieldAccessorTable = new
+    internal_static_contacts_user_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_com_inspur_emmcloud_bean_contact_user_descriptor,
-        new String[] { "Id", "RealName", "NameGlobal", "Pinyin", "Mobile", "Email", "ParentId", "HasHead", "SortOrder", });
-    internal_static_com_inspur_emmcloud_bean_contact_orgs_descriptor =
+        internal_static_contacts_user_descriptor,
+        new String[] { "Id", "RealName", "NameGlobal", "Pinyin", "Mobile", "Email", "ParentId", "HasHead", "SortOrder", "EmpNo", });
+    internal_static_contacts_orgs_descriptor =
       getDescriptor().getMessageTypes().get(2);
-    internal_static_com_inspur_emmcloud_bean_contact_orgs_fieldAccessorTable = new
+    internal_static_contacts_orgs_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_com_inspur_emmcloud_bean_contact_orgs_descriptor,
+        internal_static_contacts_orgs_descriptor,
         new String[] { "LastQueryTime", "Orgs", "RootID", });
-    internal_static_com_inspur_emmcloud_bean_contact_users_descriptor =
+    internal_static_contacts_users_descriptor =
       getDescriptor().getMessageTypes().get(3);
-    internal_static_com_inspur_emmcloud_bean_contact_users_fieldAccessorTable = new
+    internal_static_contacts_users_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_com_inspur_emmcloud_bean_contact_users_descriptor,
+        internal_static_contacts_users_descriptor,
         new String[] { "LastQueryTime", "Users", });
   }
 

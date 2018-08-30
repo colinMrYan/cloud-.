@@ -22,7 +22,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.alibaba.fastjson.JSON;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -691,7 +690,7 @@ public class MessionDetailActivity extends BaseActivity {
             if (dueDate != null) {
                 task.setDueDate(TimeUtils.localCalendar2UTCCalendar(dueDate));
             }
-            String taskJson = JSON.toJSONString(task);
+            String taskJson = JSONUtils.toJSONString(task);
             updateTask(taskJson);
         }
     }

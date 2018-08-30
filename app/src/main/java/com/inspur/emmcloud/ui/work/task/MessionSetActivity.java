@@ -14,7 +14,6 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.alibaba.fastjson.JSON;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -23,9 +22,9 @@ import com.inspur.emmcloud.api.apiservice.WorkAPIService;
 import com.inspur.emmcloud.bean.work.GetTagResult;
 import com.inspur.emmcloud.bean.work.MessionSetModel;
 import com.inspur.emmcloud.bean.work.TaskColorTag;
+import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.tag.Tag;
@@ -188,7 +187,7 @@ public class MessionSetActivity extends BaseActivity {
 		String userId = ((MyApplication) getApplicationContext()).getUid();
 		if (tagList.size() > 0) {
 			PreferencesUtils.putString(MessionSetActivity.this, MyApplication.getInstance().getTanent()
-					+ userId + "chooseTags", JSON.toJSONString(tagList));
+					+ userId + "chooseTags", JSONUtils.toJSONString(tagList));
 		} else {
 			PreferencesUtils.putString(MessionSetActivity.this, MyApplication.getInstance().getTanent()
 					+ userId + "chooseTags", "");
@@ -226,14 +225,7 @@ public class MessionSetActivity extends BaseActivity {
 		String choosenTags = PreferencesUtils.getString(
 				MessionSetActivity.this, MyApplication.getInstance().getTanent() + userId
 						+ "chooseTags", "");
-		ArrayList<String> chooseTagList;
-		if (!StringUtils.isBlank(choosenTags)) {
-			chooseTagList = (ArrayList<String>) JSON.parseArray(choosenTags,
-					String.class);
-		} else {
-			chooseTagList = new ArrayList<String>();
-		}
-
+		ArrayList<String> chooseTagList= JSONUtils.JSONArray2List(choosenTags,new ArrayList<String>());
 		if (chooseTagList.size() > 0) {
 			for (int i = 0; i < chooseTagList.size(); i++) {
 				for (int j = 0; j < allTags.size(); j++) {
