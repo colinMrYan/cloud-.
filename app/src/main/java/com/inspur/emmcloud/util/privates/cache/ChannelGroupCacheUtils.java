@@ -141,6 +141,25 @@ public class ChannelGroupCacheUtils {
 
     }
 
+    /**
+     * 群头像获取群里人员id在通讯录里存在的人
+     * @param context
+     * @param cid
+     * @param limit
+     * @return
+     */
+    public static List<String> getExistMemberUidList(Context context, String cid,
+                                                     int limit){
+        List<String> userList = new ArrayList<>();
+        try {
+            ChannelGroup channelGroup = DbCacheUtils.getDb(context).findById(ChannelGroup.class,cid);
+            List<String> allMemeberList = channelGroup.getMemberList();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return userList;
+    }
+
     public static List<String> getMemberUidList(Context context, String cid,
                                                 int limit) {
         List<String> userList = new ArrayList<String>();
