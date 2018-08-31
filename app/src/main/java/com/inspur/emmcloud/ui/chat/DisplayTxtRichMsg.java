@@ -9,13 +9,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
-import com.alibaba.fastjson.JSON;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.chat.Msg;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.common.richtext.CacheType;
 import com.inspur.emmcloud.util.common.richtext.LinkHolder;
@@ -24,7 +22,6 @@ import com.inspur.emmcloud.util.common.richtext.RichType;
 import com.inspur.emmcloud.util.common.richtext.callback.LinkFixCallback;
 import com.inspur.emmcloud.util.common.richtext.callback.OnUrlClickListener;
 import com.inspur.emmcloud.util.common.richtext.callback.OnUrlLongClickListener;
-import com.inspur.emmcloud.util.privates.CustomProtocol;
 import com.inspur.emmcloud.util.privates.MentionsAndUrlShowUtils;
 import com.inspur.emmcloud.util.privates.TransHtmlToTextUtils;
 import com.inspur.emmcloud.util.privates.UriUtils;
@@ -77,9 +74,11 @@ public class DisplayTxtRichMsg {
                             if (url.startsWith("http")) {
                                 UriUtils.openUrl((Activity) context, url);
                                 return true;
-                            }else if(url.startsWith("ecc-cmd")){
-                                CustomProtocol customProtocol = new CustomProtocol(url);
                             }
+                            //屏蔽语音通话逻辑
+//                            else if(url.startsWith("ecc-cmd")){
+//                                CustomProtocol customProtocol = new CustomProtocol(url);
+//                            }
                             return false;
                         }
                     })

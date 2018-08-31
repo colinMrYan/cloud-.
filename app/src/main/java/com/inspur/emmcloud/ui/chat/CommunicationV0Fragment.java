@@ -556,15 +556,16 @@ public class CommunicationV0Fragment extends Fragment {
                         if (receivedMsg.getType().equals("command/faceLogin")) {
                             return;
                         }
-                        CustomProtocol customProtocol = getCommandMessageProtocol(receivedMsg);
-                        if(customProtocol != null){
-                            MsgReadCreationDateCacheUtils.saveMessageReadCreationDate(getActivity(),receivedMsg.getCid(),receivedMsg.getTime());
-                            Intent intent = new Intent();
-                            intent.setClass(getActivity(),ChannelVoiceCommunicationActivity.class);
-                            intent.putExtra("channelId",customProtocol.getParamMap().get("id"));
-                            intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE,ChannelVoiceCommunicationActivity.INVITEE_LAYOUT_STATE);
-                            startActivity(intent);
-                        }
+                        //消息拦截逻辑，以后应当拦截命令消息
+//                        CustomProtocol customProtocol = getCommandMessageProtocol(receivedMsg);
+//                        if(customProtocol != null){
+//                            MsgReadCreationDateCacheUtils.saveMessageReadCreationDate(getActivity(),receivedMsg.getCid(),receivedMsg.getTime());
+//                            Intent intent = new Intent();
+//                            intent.setClass(getActivity(),ChannelVoiceCommunicationActivity.class);
+//                            intent.putExtra("channelId",customProtocol.getParamMap().get("id"));
+//                            intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE,ChannelVoiceCommunicationActivity.INVITEE_LAYOUT_STATE);
+//                            startActivity(intent);
+//                        }
                         Channel receiveMsgChannel = ChannelCacheUtils.getChannel(
                                 getActivity(), receivedMsg.getCid());
                         if (receiveMsgChannel == null) {
