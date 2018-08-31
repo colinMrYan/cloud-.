@@ -1062,14 +1062,11 @@ public class ChatAPIService {
         HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context,compelteUrl) {
             @Override
             public void callbackSuccess(byte[] arg0) {
-                LogUtils.YfcDebug("创建成功");
                 apiInterface.returnGetVoiceCommunicationResultSuccess(new GetVoiceCommunicationResult(new String(arg0)));
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                LogUtils.YfcDebug("创建失败："+error);
-                LogUtils.YfcDebug("创建失败："+responseCode);
                 apiInterface.returnGetVoiceCommunicationResultFail(error,responseCode);
             }
 

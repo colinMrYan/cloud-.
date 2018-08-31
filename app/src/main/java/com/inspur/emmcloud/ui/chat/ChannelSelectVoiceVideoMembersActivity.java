@@ -204,7 +204,6 @@ public class ChannelSelectVoiceVideoMembersActivity extends BaseActivity impleme
     }
 
     public interface OnMemeberSelectedListener{
-//        void onMemberSelected(List<ContactUser> contactUserList);
         void onMemberSelected(ContactUser contactUser,boolean isSelected);
     }
 }
