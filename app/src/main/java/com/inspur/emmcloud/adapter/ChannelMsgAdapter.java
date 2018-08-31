@@ -36,6 +36,7 @@ import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
+import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.widget.ECMChatInputMenuV0;
 
 import java.util.ArrayList;
@@ -106,12 +107,12 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
         private MyItemClickListener mListener;
         public RelativeLayout cardLayout;
         public TextView senderNameText;
-        public ImageView senderPhotoImg;
+        public ImageView senderPhotoImgLeft;
+        public ImageView senderPhotoImgRight;
         public ImageView refreshingImg;
         public View cardCoverView;
         public TextView sendTimeText;
         public TextView newsCommentText;
-        public View senderPhotoRightView;
         public RelativeLayout cardParentLayout;
 
         public ViewHolder(View view, MyItemClickListener myItemClickListener) {
@@ -123,15 +124,16 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
                     .findViewById(R.id.card_layout);
             senderNameText = (TextView) view
                     .findViewById(R.id.sender_name_text);
-            senderPhotoImg = (ImageView) view
-                    .findViewById(R.id.sender_photo_img);
+            senderPhotoImgLeft = (ImageView) view
+                    .findViewById(R.id.iv_sender_photo_left);
+            senderPhotoImgRight = (ImageView) view
+                    .findViewById(R.id.iv_sender_photo_right);
             refreshingImg = (ImageView) view.findViewById(R.id.send_status_img);
             cardCoverView = view.findViewById(R.id.card_cover_view);
             sendTimeText = (TextView) view
                     .findViewById(R.id.send_time_text);
             newsCommentText = (TextView) view
                     .findViewById(R.id.news_comment_text);
-            senderPhotoRightView = view.findViewById(R.id.sender_photo_right_view);
             cardParentLayout =(RelativeLayout)view.findViewById(R.id.card_parent_layout);
         }
 
@@ -316,13 +318,13 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
      */
     private void showUserName(ViewHolder holder, Msg msg) {
         // TODO Auto-generated method stub
-        boolean isMyMsg = msg.getUid().equals(MyApplication.getInstance().getUid());
-        if (channelType.equals("GROUP") && !isMyMsg) {
-            holder.senderNameText.setVisibility(View.VISIBLE);
-            holder.senderNameText.setText(msg.getTitle());
-        } else {
+        if (channelType.equals("GROUP")&&!msg.getUid().equals(MyApplication.getInstance().getUid())){
+            String userName = ContactUserCacheUtils.getUserName(msg.getUid());
+            holder.senderNameText.setText(userName);
+        }else {
             holder.senderNameText.setVisibility(View.GONE);
         }
+
     }
 
     /**
@@ -340,41 +342,38 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
         }else {
             fromUserUid = msg.getUid();
         }
-        if (MyApplication.getInstance().getUid().equals(fromUserUid)) {
-            holder.senderPhotoImg.setVisibility(View.INVISIBLE);
-            holder.senderPhotoRightView.setVisibility(View.GONE);
-        } else {
-            holder.senderPhotoImg.setVisibility(View.VISIBLE);
-            holder.senderPhotoRightView.setVisibility(View.VISIBLE);
-            String iconUrl = APIUri.getUserIconUrl(context,fromUserUid);
-            ImageDisplayUtils.getInstance().displayImage(holder.senderPhotoImg,
-                    iconUrl, R.drawable.icon_person_default);
-            holder.senderPhotoImg.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Bundle bundle = new Bundle();
-                    bundle.putString("uid", fromUserUid);
-                    if (fromUserUid.startsWith("BOT") || channelType.endsWith("SERVICE")) {
-                        bundle.putString("type", channelType);
-                        IntentUtils.startActivity(context,
-                                RobotInfoActivity.class, bundle);
-                    } else {
-                        IntentUtils.startActivity(context,
-                                UserInfoActivity.class, bundle);
-                    }
-                }
-            });
-            holder.senderPhotoImg.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    if (channelType.equals("GROUP")) {
-                        chatInputMenu.addMentions(msg.getUid(), msg.getTitle(), false);
-                    }
-                    return true;
-                }
-            });
+        boolean isMyMsg = MyApplication.getInstance().getUid().equals(fromUserUid);
+        holder.senderPhotoImgRight.setVisibility(isMyMsg?View.VISIBLE:View.INVISIBLE);
+        holder.senderPhotoImgLeft.setVisibility(isMyMsg?View.INVISIBLE:View.VISIBLE);
+        String iconUrl = APIUri.getUserIconUrl(context,fromUserUid);
+        ImageView senderPhotoImg = isMyMsg?holder.senderPhotoImgRight:holder.senderPhotoImgLeft;
 
-        }
+        ImageDisplayUtils.getInstance().displayImage(senderPhotoImg,
+                iconUrl, R.drawable.icon_person_default);
+        senderPhotoImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putString("uid", fromUserUid);
+                if (fromUserUid.startsWith("BOT") || channelType.endsWith("SERVICE")) {
+                    bundle.putString("type", channelType);
+                    IntentUtils.startActivity(context,
+                            RobotInfoActivity.class, bundle);
+                } else {
+                    IntentUtils.startActivity(context,
+                            UserInfoActivity.class, bundle);
+                }
+            }
+        });
+        senderPhotoImg.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if (channelType.equals("GROUP") &&  !MyApplication.getInstance().getUid().equals(fromUserUid)) {
+                    chatInputMenu.addMentions(msg.getUid(), msg.getTitle(), false);
+                }
+                return true;
+            }
+        });
     }
 
     /**

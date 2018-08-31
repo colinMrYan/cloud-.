@@ -100,12 +100,12 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         private MyItemClickListener mListener;
         public RelativeLayout cardLayout;
         public TextView senderNameText;
-        public ImageView senderPhotoImg;
+        public ImageView senderPhotoImgLeft;
+        public ImageView senderPhotoImgRight;
         public ImageView sendStatusImg;
         public View cardCoverView;
         public TextView sendTimeText;
         public TextView newsCommentText;
-        public View senderPhotoRightView;
         public RelativeLayout cardParentLayout;
 
         public ViewHolder(View view, MyItemClickListener myItemClickListener) {
@@ -117,15 +117,16 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
                     .findViewById(R.id.card_layout);
             senderNameText = (TextView) view
                     .findViewById(R.id.sender_name_text);
-            senderPhotoImg = (ImageView) view
-                    .findViewById(R.id.sender_photo_img);
+            senderPhotoImgLeft = (ImageView) view
+                    .findViewById(R.id.iv_sender_photo_left);
+            senderPhotoImgRight = (ImageView) view
+                    .findViewById(R.id.iv_sender_photo_right);
             sendStatusImg = (ImageView) view.findViewById(R.id.send_status_img);
             cardCoverView = view.findViewById(R.id.card_cover_view);
             sendTimeText = (TextView) view
                     .findViewById(R.id.send_time_text);
             newsCommentText = (TextView) view
                     .findViewById(R.id.news_comment_text);
-            senderPhotoRightView = view.findViewById(R.id.sender_photo_right_view);
             cardParentLayout = (RelativeLayout) view.findViewById(R.id.card_parent_layout);
         }
 
@@ -279,11 +280,10 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
      */
     private void showUserName(ViewHolder holder, UIMessage UIMessage) {
         // TODO Auto-generated method stub
-        boolean isMyMsg = UIMessage.getMessage().getFromUser().equals(MyApplication.getInstance().getUid());
-        if (channelType.equals("GROUP") && !isMyMsg) {
-            holder.senderNameText.setVisibility(View.VISIBLE);
+        if (channelType.equals("GROUP") && !UIMessage.getMessage().getFromUser().equals(
+                MyApplication.getInstance().getUid())){
             holder.senderNameText.setText(UIMessage.getSenderName());
-        } else {
+        }else {
             holder.senderNameText.setVisibility(View.GONE);
         }
     }
@@ -296,41 +296,37 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
     private void showUserPhoto(ViewHolder holder, final UIMessage UImessage) {
         // TODO Auto-generated method stub
         final String fromUser = UImessage.getMessage().getFromUser();
-        if (MyApplication.getInstance().getUid().equals(fromUser)) {
-            holder.senderPhotoImg.setVisibility(View.INVISIBLE);
-            holder.senderPhotoRightView.setVisibility(View.GONE);
-        } else {
-            holder.senderPhotoImg.setVisibility(View.VISIBLE);
-            holder.senderPhotoRightView.setVisibility(View.VISIBLE);
-            ImageDisplayUtils.getInstance().displayImage(holder.senderPhotoImg,
-                    UImessage.getSenderPhotoUrl(), R.drawable.icon_person_default);
-            holder.senderPhotoImg.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Bundle bundle = new Bundle();
-                    bundle.putString("uid", fromUser);
-                    if (fromUser.startsWith("BOT") || channelType.endsWith("SERVICE")) {
-                        bundle.putString("type", channelType);
-                        IntentUtils.startActivity(context,
-                                RobotInfoActivity.class, bundle);
-                    } else {
-                        IntentUtils.startActivity(context,
-                                UserInfoActivity.class, bundle);
-                    }
+        boolean isMyMsg = MyApplication.getInstance().getUid().equals(fromUser);
+        holder.senderPhotoImgRight.setVisibility(isMyMsg?View.VISIBLE:View.INVISIBLE);
+        holder.senderPhotoImgLeft.setVisibility(isMyMsg?View.INVISIBLE:View.VISIBLE);
+        ImageView senderPhotoImg = isMyMsg?holder.senderPhotoImgRight:holder.senderPhotoImgLeft;
+        ImageDisplayUtils.getInstance().displayImage(senderPhotoImg,
+                UImessage.getSenderPhotoUrl(), R.drawable.icon_person_default);
+        senderPhotoImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putString("uid", fromUser);
+                if (fromUser.startsWith("BOT") || channelType.endsWith("SERVICE")) {
+                    bundle.putString("type", channelType);
+                    IntentUtils.startActivity(context,
+                            RobotInfoActivity.class, bundle);
+                } else {
+                    IntentUtils.startActivity(context,
+                            UserInfoActivity.class, bundle);
                 }
-            });
-            holder.senderPhotoImg.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    if (channelType.equals("GROUP")) {
-                        chatInputMenu.addMentions(fromUser, UImessage.getSenderName(), false);
-                    }
-                    return true;
+            }
+        });
+        senderPhotoImg.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if (channelType.equals("GROUP")) {
+                    chatInputMenu.addMentions(fromUser, UImessage.getSenderName(), false);
                 }
-            });
-
+                return true;
+            }
+        });
         }
-    }
 
     /**
      * 创建一个回调接口

@@ -1,8 +1,6 @@
 package com.inspur.emmcloud.push;
 
 import android.content.Intent;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
@@ -17,8 +15,8 @@ import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
-import com.inspur.emmcloud.util.privates.ClientIDUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
+import com.inspur.emmcloud.util.privates.ClientIDUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -27,9 +25,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Timer;
 
-import io.socket.client.Ack;
 import io.socket.client.IO;
 import io.socket.client.Manager;
 import io.socket.client.Socket;
@@ -44,12 +40,9 @@ public class WebSocketPush {
     private static WebSocketPush webSocketPush = null;
     private Socket mSocket = null;
     private Map<String, EventMessage> tracerMap = new HashMap<>();
-    private Timer timer;
-    private Handler handler;
 
     public WebSocketPush() {
         tracerMap = new HashMap<>();
-        handMessage();
     }
 
     public static WebSocketPush getInstance() {
@@ -62,16 +55,6 @@ public class WebSocketPush {
         }
         return webSocketPush;
     }
-
-    private void handMessage(){
-       handler = new Handler(){
-           @Override
-           public void handleMessage(Message msg) {
-               super.handleMessage(msg);
-           }
-       };
-    }
-
 
     /**
      * 开始WebSocket推送
@@ -256,6 +239,7 @@ public class WebSocketPush {
                         e.printStackTrace();
                     }
                 }
+
                 sendWebSocketStatusBroadcast(Socket.EVENT_CONNECT_ERROR);
 
             }
@@ -360,23 +344,8 @@ public class WebSocketPush {
     }
 
     public void sendContent(Object content) {
-        LogUtils.jasonDebug("0000000000");
         if (isSocketConnect()) {
-            LogUtils.jasonDebug("111111");
-            mSocket.emit("com.inspur.ecm.c", content,new Ack(){
-                @Override
-                public void call(Object... arg0) {
-                    LogUtils.jasonDebug("call==================");
-                    if (arg0[0] != null) {
-                        try {
-                            ((Exception) arg0[0]).printStackTrace();
-                            LogUtils.debug(TAG, "sendContent-----------arg0[0]==" + arg0[0].toString());
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            });
+            mSocket.emit("com.inspur.ecm.chat", content);
         }
     }
 

@@ -13,11 +13,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:minWidth="40dp"
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp"
+            android:paddingBottom="9dp"
+            android:paddingTop="9dp"
+            android:lineSpacingMultiplier="1.15"
             android:textColor="@color/black"
             android:textIsSelectable="false"
-            android:textSize="@dimen/content_title_textsize" />
+            android:textSize="16sp" />
     </RelativeLayout>
 
 
