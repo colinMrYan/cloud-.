@@ -105,7 +105,6 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         public ImageView sendStatusImg;
         public View cardCoverView;
         public TextView sendTimeText;
-        public TextView newsCommentText;
         public RelativeLayout cardParentLayout;
 
         public ViewHolder(View view, MyItemClickListener myItemClickListener) {
@@ -125,8 +124,6 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
             cardCoverView = view.findViewById(R.id.card_cover_view);
             sendTimeText = (TextView) view
                     .findViewById(R.id.send_time_text);
-            newsCommentText = (TextView) view
-                    .findViewById(R.id.news_comment_text);
             cardParentLayout = (RelativeLayout) view.findViewById(R.id.card_parent_layout);
         }
 

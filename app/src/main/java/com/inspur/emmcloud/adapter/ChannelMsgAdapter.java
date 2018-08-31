@@ -147,6 +147,12 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
             if (mListener != null) {
                 mListener.onItemClick(v, getAdapterPosition());
             }
+        }
+
+        public void onMessageResendClick(Msg msg){
+            if (mListener != null) {
+                mListener.onMessageResend(msg);
+            }
 
         }
     }
@@ -158,7 +164,7 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
      * @param holder
      * @param msg
      */
-    private void showRefreshingImg(ViewHolder holder, Msg msg) {
+    private void showRefreshingImg(final ViewHolder holder, final Msg msg) {
         if (msg.getSendStatus() == 0) {
             holder.refreshingImg.setImageResource(R.drawable.pull_loading);
             RotateAnimation refreshingAnimation = (RotateAnimation) AnimationUtils.loadAnimation(
@@ -183,7 +189,12 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
             }
             holder.refreshingImg.setVisibility(isMyMsg?View.INVISIBLE:View.GONE);
         }
-
+        holder.refreshingImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                holder.onMessageResendClick(msg);
+            }
+        });
     }
 
     /**
@@ -381,5 +392,6 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
      */
     public interface MyItemClickListener {
         void onItemClick(View view, int position);
+        void onMessageResend(Msg msg);
     }
 }

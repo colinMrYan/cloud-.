@@ -90,6 +90,7 @@ public class ImpFragment extends Fragment {
     private RelativeLayout headerLayout;
     private List<DropItemTitle> dropItemTitleList = new ArrayList<>();
     private Adapter dropTitleAdapter;
+    private ImpCallBackInterface impCallBackInterface;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -303,7 +304,7 @@ public class ImpFragment extends Fragment {
      * 初始化webview haader layout
      */
     private void initWebViewHeaderLayout() {
-        ImpCallBackInterface impCallBackInterface = getImpCallBackInterface();
+        impCallBackInterface = getImpCallBackInterface();
         if (getArguments().getString(Constant.WEB_FRAGMENT_APP_NAME) != null) {
             String title = getArguments().getString(Constant.WEB_FRAGMENT_APP_NAME);
             headerText = (TextView) rootView.findViewById(Res.getWidgetID("header_text"));
@@ -658,7 +659,9 @@ public class ImpFragment extends Fragment {
         if (webView != null) {
             webView.removeAllViews();
             webView.destroy();
+            webView = null;
         }
+        impCallBackInterface = null;
         //清除掉图片缓存
 //        DataCleanManager.cleanCustomCache(MyAppConfig.LOCAL_IMG_CREATE_PATH);
         super.onDestroy();

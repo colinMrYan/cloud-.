@@ -124,11 +124,13 @@ public class NewsWebDetailActivity extends BaseActivity {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (webView.canGoBack()) {
-            webView.goBack();// 返回上一页面
-            return true;
-        } else {
-            finish();// 退出
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (webView.canGoBack()) {
+                webView.goBack();// 返回上一页面
+                return true;
+            } else {
+                finish();// 退出
+            }
         }
         return super.onKeyDown(keyCode, event);
     }
@@ -923,6 +925,7 @@ public class NewsWebDetailActivity extends BaseActivity {
         if (webView != null) {
             webView.removeAllViews();
             webView.destroy();
+            webView= null;
         }
         EventBus.getDefault().unregister(this);
     }

@@ -54,6 +54,7 @@ public class CommunicationUtils {
         return title;
     }
 
+
     public static Message combinLocalTextPlainMessage(String text, String cid, Map<String, String> mentionsMap) {
         Message message = combinLocalMessageCommon();
         message.setChannel(cid);
