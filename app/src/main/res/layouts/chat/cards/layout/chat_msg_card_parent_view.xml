@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingBottom="7dp"
@@ -23,25 +24,25 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:layout_below="@id/send_time_text">
 
         <com.inspur.emmcloud.widget.CircleTextImageView
             android:id="@+id/iv_sender_photo_left"
             android:layout_width="42dp"
             android:layout_height="42dp"
-            android:layout_marginLeft="10dp" />
+             />
         <com.inspur.emmcloud.widget.CircleTextImageView
             android:id="@+id/iv_sender_photo_right"
             android:layout_width="42dp"
             android:layout_height="42dp"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="10dp" />
+             />
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
             android:layout_toLeftOf="@id/iv_sender_photo_right"
             android:layout_toRightOf="@id/iv_sender_photo_left">
 
@@ -60,23 +61,38 @@
                 android:id="@+id/card_parent_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="#000000"
                 android:layout_below="@id/sender_name_text">
-
-                <ImageView
-                    android:id="@+id/send_status_img"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                <RelativeLayout
+                    android:id="@+id/rl_send_status"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
                     android:layout_centerVertical="true"
-                    android:padding="10dp"
-                    android:scaleType="fitXY"
-                    android:visibility="gone" />
+                    android:layout_marginLeft="12dp"
+                    android:padding="5dp">
+                    <ImageView
+                        android:id="@+id/iv_send_fail"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/ic_chat_msg_send_fail"
+                        android:visibility="gone" />
+                    <com.qmuiteam.qmui.widget.QMUILoadingView
+                        android:id="@+id/qlv_sending"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:color="#666666"
+                        android:visibility="gone"
+                        app:qmui_loading_view_size="18dp" />
+                </RelativeLayout>
 
                 <RelativeLayout
                     android:id="@+id/card_layout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toRightOf="@id/send_status_img"></RelativeLayout>
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_toRightOf="@id/rl_send_status"></RelativeLayout>
 
                 <View
                     android:id="@+id/card_cover_view"
@@ -86,7 +102,7 @@
                     android:layout_alignLeft="@id/card_layout"
                     android:layout_alignRight="@id/card_layout"
                     android:layout_alignTop="@id/card_layout"
-                    android:layout_toRightOf="@id/send_status_img"
+                    android:layout_toRightOf="@id/rl_send_status"
                     android:background="@drawable/ic_chat_msg_img_cover_arrow_left" />
             </RelativeLayout>
         </RelativeLayout>

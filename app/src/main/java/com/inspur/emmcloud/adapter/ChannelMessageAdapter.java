@@ -6,9 +6,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
-import android.view.animation.LinearInterpolator;
-import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -33,6 +30,7 @@ import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.widget.ECMChatInputMenu;
+import com.qmuiteam.qmui.widget.QMUILoadingView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -102,7 +100,9 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         public TextView senderNameText;
         public ImageView senderPhotoImgLeft;
         public ImageView senderPhotoImgRight;
-        public ImageView sendStatusImg;
+        private RelativeLayout sendStatusLayout;
+        private ImageView sendFailImg;
+        private QMUILoadingView sendingLoadingView;
         public View cardCoverView;
         public TextView sendTimeText;
         public RelativeLayout cardParentLayout;
@@ -120,7 +120,9 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
                     .findViewById(R.id.iv_sender_photo_left);
             senderPhotoImgRight = (ImageView) view
                     .findViewById(R.id.iv_sender_photo_right);
-            sendStatusImg = (ImageView) view.findViewById(R.id.send_status_img);
+            sendStatusLayout = (RelativeLayout) view.findViewById(R.id.rl_send_status);
+            sendFailImg = (ImageView) view.findViewById(R.id.iv_send_fail);
+            sendingLoadingView = (QMUILoadingView) view.findViewById(R.id.qlv_sending);
             cardCoverView = view.findViewById(R.id.card_cover_view);
             sendTimeText = (TextView) view
                     .findViewById(R.id.send_time_text);
@@ -157,24 +159,18 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
      */
     private void showRefreshingImg(final ViewHolder holder, final UIMessage uiMessage) {
         if (uiMessage.getSendStatus() == 0) {
-            holder.sendStatusImg.setImageResource(R.drawable.pull_loading);
-            RotateAnimation refreshingAnimation = (RotateAnimation) AnimationUtils.loadAnimation(
-                    context, R.anim.pull_rotating);
-            // 添加匀速转动动画
-            LinearInterpolator lir = new LinearInterpolator();
-            refreshingAnimation.setInterpolator(lir);
-            holder.sendStatusImg.setVisibility(View.VISIBLE);
-            holder.sendStatusImg.startAnimation(refreshingAnimation);
+            holder.sendStatusLayout.setVisibility(View.VISIBLE);
+            holder.sendFailImg.setVisibility(View.GONE);
+            holder.sendingLoadingView.setVisibility(View.VISIBLE);
         } else if (uiMessage.getSendStatus() == 2) {
-            holder.sendStatusImg.clearAnimation();
-            holder.sendStatusImg.setVisibility(View.VISIBLE);
-            holder.sendStatusImg.setImageResource(R.drawable.ic_chat_msg_send_fail);
+            holder.sendStatusLayout.setVisibility(View.VISIBLE);
+            holder.sendFailImg.setVisibility(View.VISIBLE);
+            holder.sendingLoadingView.setVisibility(View.GONE);
         } else {
-            holder.sendStatusImg.clearAnimation();
             boolean isMyMsg = uiMessage.getMessage().getFromUser().equals(MyApplication.getInstance().getUid());
-            holder.sendStatusImg.setVisibility(isMyMsg ? View.INVISIBLE : View.GONE);
+            holder.sendStatusLayout.setVisibility(isMyMsg ? View.INVISIBLE : View.GONE);
         }
-        holder.sendStatusImg.setOnClickListener(new View.OnClickListener() {
+        holder.sendStatusLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                     holder.onMessageResendClick(uiMessage);

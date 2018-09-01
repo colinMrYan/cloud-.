@@ -75,6 +75,9 @@ public class DisplayResFileMsg {
                 .setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        if (msg.getSendStatus() != 1){
+                            return;
+                        }
                         if ((0 < fileProgressBar.getProgress())
                                 && (fileProgressBar.getProgress() < 100)) {
                             return;

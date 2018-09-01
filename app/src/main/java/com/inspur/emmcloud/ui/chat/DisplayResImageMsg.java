@@ -44,10 +44,6 @@ public class DisplayResImageMsg {
                 .findViewById(R.id.content_img);
         final TextView longImgText = (TextView) cardContentView.findViewById(R.id.long_img_text);
         String imageUri = JSONUtils.getString(msg.getBody(), "key", "");
-        if (!imageUri.startsWith("content:") && !imageUri.startsWith("file:")) {
-            imageUri = APIUri.getPreviewUrl(imageUri);
-
-        }
         DisplayImageOptions options = new DisplayImageOptions.Builder()
                 .showImageForEmptyUri(R.drawable.default_image)
                 .showImageOnFail(R.drawable.default_image)
@@ -56,7 +52,11 @@ public class DisplayResImageMsg {
                 .bitmapConfig(Bitmap.Config.RGB_565).cacheInMemory(true)
                 .cacheOnDisk(true).build();
         if (!imageUri.startsWith("http") && !imageUri.startsWith("file:") && !imageUri.startsWith("content:") && !imageUri.startsWith("assets:") && !imageUri.startsWith("drawable:")) {
-            imageUri = "file://" + imageUri;
+            if (msg.getSendStatus() == 1){
+                imageUri = APIUri.getPreviewUrl(imageUri);
+            }else {
+                imageUri = "file://" + imageUri;
+            }
         }
         String body = msg.getBody();
         int w = JSONUtils.getInt(body, "width", 0);
@@ -115,10 +115,10 @@ public class DisplayResImageMsg {
         if (w == 0 || h == 0) {
             return false;
         }
-        int minW = DensityUtil.dip2px(context, 116);
+        int minW = DensityUtil.dip2px(context, 100);
         int minH = DensityUtil.dip2px(context, 94);
         int maxW = DensityUtil.dip2px(context, 287);
-        int maxH = DensityUtil.dip2px(context, 210);
+        int maxH = DensityUtil.dip2px(context, 232);
         LayoutParams params = imageView.getLayoutParams();
         if (w == h) {
             params.width = minW;
