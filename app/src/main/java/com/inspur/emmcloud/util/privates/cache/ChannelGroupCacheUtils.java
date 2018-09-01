@@ -3,6 +3,7 @@ package com.inspur.emmcloud.util.privates.cache;
 import android.content.Context;
 
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
+import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.util.common.StringUtils;
 
 import org.xutils.common.util.KeyValue;
@@ -142,7 +143,7 @@ public class ChannelGroupCacheUtils {
     }
 
     /**
-     * 群头像获取群里人员id在通讯录里存在的人
+     * 群头像获取群里人员id在通讯录里存在的人，保证群头像完整
      * @param context
      * @param cid
      * @param limit
@@ -153,7 +154,39 @@ public class ChannelGroupCacheUtils {
         List<String> userList = new ArrayList<>();
         try {
             ChannelGroup channelGroup = DbCacheUtils.getDb(context).findById(ChannelGroup.class,cid);
-            List<String> allMemeberList = channelGroup.getMemberList();
+            List<String> allMemberList = channelGroup.getMemberList();
+            int listSize = allMemberList.size();
+            int toIndex = 10;
+            List<List<String>> allMemberGroupList = new ArrayList<>();
+            //十个一组分组算法
+            for(int i = 0;i < allMemberList.size();i+=10){
+                if(i+10>listSize){        //作用为toIndex最后没有10条数据则剩余几条newList中就装几条
+                    toIndex=listSize-i;
+                }
+                List newList = allMemberList.subList(i,i+toIndex);
+                allMemberGroupList.add(newList);
+            }
+            //十个一组在通讯录中查询，直到查到4个存在的人或者查完整个列表
+            List<ContactUser> searchContactUserList = new ArrayList<>();
+            for (int i = 0; i < allMemberGroupList.size(); i++) {
+                List<ContactUser> contactUserList = ContactUserCacheUtils.getContactUserListById(allMemberGroupList.get(i));
+                if(contactUserList.size() >= limit){
+                    searchContactUserList.addAll(contactUserList);
+                    break;
+                }else{
+                    searchContactUserList.addAll(contactUserList);
+                }
+            }
+            //如果查到的列表大于4个人取前四个，小于四个人取全部
+            if(searchContactUserList.size() >= limit){
+                for (int i = 0; i < limit; i++) {
+                    userList.add(searchContactUserList.get(i).getId());
+                }
+            }else{
+                for (int i = 0; i < searchContactUserList.size(); i++) {
+                    userList.add(searchContactUserList.get(i).getId());
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -129,7 +129,8 @@ public class ChannelGroupIconUtils {
                 for (int i = 0; i < channelTypeGroupList.size(); i++) {
                     Channel channel = channelTypeGroupList.get(i);
                     isCreateNewGroupIcon = true;
-                    List<String> memberUidList = ChannelGroupCacheUtils.getMemberUidList(context, channel.getCid(), 4);
+                    List<String> memberUidList = ChannelGroupCacheUtils.getExistMemberUidList(context,channel.getCid(),4);
+//                    List<String> memberUidList = ChannelGroupCacheUtils.getMemberUidList(context, channel.getCid(), 4);
                     List<Bitmap> bitmapList = new ArrayList<Bitmap>();
                     for (int j = 0; j < memberUidList.size(); j++) {
                         String pid = memberUidList.get(j);
