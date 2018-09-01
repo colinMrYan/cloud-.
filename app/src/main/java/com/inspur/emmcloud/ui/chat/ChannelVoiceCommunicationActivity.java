@@ -57,68 +57,68 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity{
     private static final int EXCEPTION_STATE = -1;
     private static int STATE = -1;
     @ViewInject(R.id.ll_voice_communication_invite)
-    private LinearLayout linearLayoutInvitee;
+    private LinearLayout inviteeLinearLayout;
     @ViewInject(R.id.img_user_head)
-    private CircleTextImageView imgUserHead;
+    private CircleTextImageView userHeadImg;
     @ViewInject(R.id.tv_user_name)
-    private TextView tvUserName;
+    private TextView userNameTv;
     @ViewInject(R.id.ll_voice_communication_invite_members)
-    private LinearLayout linearLayoutInviteMemebersGroup;
+    private LinearLayout inviteMemebersGroupLinearLayout;
     @ViewInject(R.id.recyclerview_voice_communication_first)
-    private RecyclerView recyclerViewFirst;
+    private RecyclerView firstRecyclerview;
     @ViewInject(R.id.recyclerview_voice_communication_second)
-    private RecyclerView recyclerViewSecond;
+    private RecyclerView secondRecyclerview;
     @ViewInject(R.id.ll_voice_communication_memebers)
-    private LinearLayout linearLayoutCommunicationMembers;
+    private LinearLayout communicationMembersLinearLayout;
     @ViewInject(R.id.recyclerview_voice_communication_memebers_first)
-    private RecyclerView recyclerViewCommunicationMembersFirst;
+    private RecyclerView communicationMembersFirstRecyclerview;
     @ViewInject(R.id.recyclerview_voice_communication_memebers_second)
-    private RecyclerView recyclerViewCommunicationMemeberSecond;
+    private RecyclerView communicationMemberSecondRecyclerview;
     @ViewInject(R.id.tv_voice_communication_state)
-    private TextView tvCommunicationState;
+    private TextView communicationStateTv;
     @ViewInject(R.id.tv_voice_communication_time)
-    private Chronometer chronometerCommunicationTime;
+    private Chronometer communicationTimeChronometer;
     @ViewInject(R.id.ll_voice_communication_function_group)
-    private LinearLayout linearLayoutFunction;
+    private LinearLayout functionLinearLayout;
     @ViewInject(R.id.img_an_excuse)
-    private ImageView imgExcuse;
+    private ImageView excuseImg;
     @ViewInject(R.id.tv_an_excuse)
-    private TextView tvExcuse;
+    private TextView excuseTv;
     @ViewInject(R.id.img_hands_free)
-    private ImageView imgHandsFree;
+    private ImageView handsFreeImg;
     @ViewInject(R.id.tv_hands_free)
-    private TextView tvHandsFree;
+    private TextView handsFreeTv;
     @ViewInject(R.id.img_mute)
-    private ImageView imgMute;
+    private ImageView muteImg;
     @ViewInject(R.id.tv_mute)
-    private TextView tvMute;
+    private TextView muteTv;
     @ViewInject(R.id.img_tran_video)
-    private ImageView imgTranVideo;
+    private ImageView tranVideoImg;
     @ViewInject(R.id.tv_tran_video)
-    private TextView tvTranVideo;
+    private TextView tranVideoTv;
     @ViewInject(R.id.img_answer_the_phone)
-    private ImageView imgAnswerPhone;
+    private ImageView answerPhoneImg;
     @ViewInject(R.id.img_hung_up)
-    private ImageView imgHungUp;
+    private ImageView hungUpImg;
     @ViewInject(R.id.img_voice_communication_pack_up)
-    private ImageView imgPackUp;
+    private ImageView packUpImg;
     private ChatAPIService apiService;
     private List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationUserInfoBeanList = new ArrayList<>();
     private String channelId = "";//声网的channelId
     private List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationMemberList = new ArrayList<>();
     private VoiceCommunicationJoinChannelInfoBean inviteeInfoBean;
     private int userCount = 1;
-    private VoiceCommunicationUtils voiceCommunicationUtils;
     private VoiceCommunicationMemberAdapter voiceCommunicationMemberAdapterFirst;
     private VoiceCommunicationMemberAdapter voiceCommunicationMemberAdapterSecond;
     private MediaPlayerManagerUtils mediaPlayerManagerUtils;
+    private VoiceCommunicationUtils voiceCommunicationUtils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         StateBarUtils.changeStateBarColor(this,R.color.content_bg);
         voiceCommunicationUserInfoBeanList = (List<VoiceCommunicationJoinChannelInfoBean>) getIntent().getSerializableExtra("userList");
-        voiceCommunicationUtils = MyApplication.getInstance().getVoiceCommunicationUtils();
+        voiceCommunicationUtils = VoiceCommunicationUtils.getVoiceCommunicationUtils(this);
         recoverData();
         initViews();
     }
@@ -138,16 +138,6 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity{
         }
     }
 
-//    /**
-//     * 创建通话小窗口
-//     */
-//    public void createCommunicationService(){
-//        Intent intent = new Intent(this,VoiceHoldService.class);
-//        intent.putExtra(VOICE_TIME, Long.parseLong(TimeUtils.getChronometerSeconds(chronometerCommunicationTime)));
-//        intent.putExtra(SCREEN_SIZE, ResolutionUtils.getWidth(this));
-//        startService(intent);
-//    }
-
     /**
      * 初始化Views
      */
@@ -161,34 +151,32 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity{
         mediaPlayerManagerUtils.setMediaPlayerLooping(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        recyclerViewFirst.setLayoutManager(layoutManager);
-        recyclerViewFirst.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(this,8)));
+        firstRecyclerview.setLayoutManager(layoutManager);
+        firstRecyclerview.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(this,8)));
         LinearLayoutManager layoutManager2 = new LinearLayoutManager(this);
         layoutManager2.setOrientation(LinearLayoutManager.HORIZONTAL);
-        recyclerViewSecond.setLayoutManager(layoutManager2);
-        recyclerViewSecond.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(this,8)));
+        secondRecyclerview.setLayoutManager(layoutManager2);
+        secondRecyclerview.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(this,8)));
         LinearLayoutManager layoutManagerMemebersFirst = new LinearLayoutManager(this);
         layoutManagerMemebersFirst.setOrientation(LinearLayoutManager.HORIZONTAL);
-        recyclerViewCommunicationMembersFirst.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(this,8)));
-        recyclerViewCommunicationMembersFirst.setLayoutManager(layoutManagerMemebersFirst);
+        communicationMembersFirstRecyclerview.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(this,8)));
+        communicationMembersFirstRecyclerview.setLayoutManager(layoutManagerMemebersFirst);
         LinearLayoutManager layoutManagerMembersSecond = new LinearLayoutManager(this);
         layoutManagerMembersSecond.setOrientation(LinearLayoutManager.HORIZONTAL);
-        recyclerViewCommunicationMemeberSecond.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(this,8)));
-        recyclerViewCommunicationMemeberSecond.setLayoutManager(layoutManagerMembersSecond);
-//        int state = getIntent().getIntExtra(VOICE_COMMUNICATION_STATE,EXCEPTION_STATE);
-//        STATE = state;
+        communicationMemberSecondRecyclerview.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(this,8)));
+        communicationMemberSecondRecyclerview.setLayoutManager(layoutManagerMembersSecond);
         initCommunicationViewsAndMusicByState(STATE);
         initFunctionState();
         switch (STATE){
             case INVITER_LAYOUT_STATE:
                 if(voiceCommunicationUserInfoBeanList.size() <= 5){
-                    recyclerViewFirst.setAdapter(voiceCommunicationMemberAdapterFirst);
+                    firstRecyclerview.setAdapter(voiceCommunicationMemberAdapterFirst);
                     voiceCommunicationMemberAdapterFirst.setMemberDataAndRefresh(voiceCommunicationUserInfoBeanList,1);
                 }else if(voiceCommunicationUserInfoBeanList.size() <= 9){
                     List<VoiceCommunicationJoinChannelInfoBean> list1 = voiceCommunicationUserInfoBeanList.subList(0,5);
                     List<VoiceCommunicationJoinChannelInfoBean> list2 = voiceCommunicationUserInfoBeanList.subList(5,voiceCommunicationUserInfoBeanList.size());
-                    recyclerViewFirst.setAdapter(voiceCommunicationMemberAdapterFirst);
-                    recyclerViewSecond.setAdapter(voiceCommunicationMemberAdapterSecond);
+                    firstRecyclerview.setAdapter(voiceCommunicationMemberAdapterFirst);
+                    secondRecyclerview.setAdapter(voiceCommunicationMemberAdapterSecond);
                     voiceCommunicationMemberAdapterFirst.setMemberDataAndRefresh(list1,1);
                     voiceCommunicationMemberAdapterSecond.setMemberDataAndRefresh(list2,2);
                 }
@@ -201,8 +189,8 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity{
                 break;
         }
         if(getIntent().getLongExtra(VOICE_TIME,0)>0){
-            chronometerCommunicationTime.setBase(SystemClock.elapsedRealtime() - getIntent().getLongExtra(VOICE_TIME,0) * 1000);
-            chronometerCommunicationTime.start();
+            communicationTimeChronometer.setBase(SystemClock.elapsedRealtime() - getIntent().getLongExtra(VOICE_TIME,0) * 1000);
+            communicationTimeChronometer.start();
         }
     }
 
@@ -254,52 +242,52 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity{
             finish();
         }
         STATE = state;
-        linearLayoutInvitee.setVisibility(state == INVITEE_LAYOUT_STATE?View.VISIBLE:View.GONE);
-        linearLayoutInviteMemebersGroup.setVisibility((state == INVITER_LAYOUT_STATE || state == COMMUNICATION_LAYOUT_STATE)?View.VISIBLE:View.GONE);
-        linearLayoutCommunicationMembers.setVisibility(state == INVITEE_LAYOUT_STATE?View.VISIBLE:View.GONE);
-        linearLayoutFunction.setVisibility((state == INVITER_LAYOUT_STATE || state == COMMUNICATION_LAYOUT_STATE)? View.VISIBLE:View.GONE);
-        tvCommunicationState.setVisibility((state == INVITER_LAYOUT_STATE || state == COMMUNICATION_LAYOUT_STATE)?View.VISIBLE:View.GONE);
-        chronometerCommunicationTime.setVisibility(state == COMMUNICATION_LAYOUT_STATE ? View.VISIBLE:View.GONE);
-        imgAnswerPhone.setVisibility((state == INVITEE_LAYOUT_STATE)?View.VISIBLE:View.GONE);
+        inviteeLinearLayout.setVisibility(state == INVITEE_LAYOUT_STATE?View.VISIBLE:View.GONE);
+        inviteMemebersGroupLinearLayout.setVisibility((state == INVITER_LAYOUT_STATE || state == COMMUNICATION_LAYOUT_STATE)?View.VISIBLE:View.GONE);
+        communicationMembersLinearLayout.setVisibility(state == INVITEE_LAYOUT_STATE?View.VISIBLE:View.GONE);
+        functionLinearLayout.setVisibility((state == INVITER_LAYOUT_STATE || state == COMMUNICATION_LAYOUT_STATE)? View.VISIBLE:View.GONE);
+        communicationStateTv.setVisibility((state == INVITER_LAYOUT_STATE || state == COMMUNICATION_LAYOUT_STATE)?View.VISIBLE:View.GONE);
+        communicationTimeChronometer.setVisibility(state == COMMUNICATION_LAYOUT_STATE ? View.VISIBLE:View.GONE);
+        answerPhoneImg.setVisibility((state == INVITEE_LAYOUT_STATE)?View.VISIBLE:View.GONE);
 
         int colorNormal = ContextCompat.getColor(this,R.color.voice_communication_function_default);
         int colorUnavailiable = ContextCompat.getColor(this,R.color.voice_communication_function_unavailiable_text);
-        imgExcuse.setImageResource(state == COMMUNICATION_LAYOUT_STATE?R.drawable.icon_excuse_unselected:R.drawable.icon_excuse_unavailable);
-        tvExcuse.setTextColor(state == COMMUNICATION_LAYOUT_STATE?colorNormal:colorUnavailiable);
-        imgExcuse.setClickable(state == COMMUNICATION_LAYOUT_STATE);
+        excuseImg.setImageResource(state == COMMUNICATION_LAYOUT_STATE?R.drawable.icon_excuse_unselected:R.drawable.icon_excuse_unavailable);
+        excuseTv.setTextColor(state == COMMUNICATION_LAYOUT_STATE?colorNormal:colorUnavailiable);
+        excuseImg.setClickable(state == COMMUNICATION_LAYOUT_STATE);
 
-        imgHandsFree.setImageResource(state == COMMUNICATION_LAYOUT_STATE?R.drawable.icon_hands_free_unselected:R.drawable.icon_hands_free_unavailable);
-        tvHandsFree.setTextColor(state == COMMUNICATION_LAYOUT_STATE?colorNormal:colorUnavailiable);
-        imgHandsFree.setClickable(state == COMMUNICATION_LAYOUT_STATE);
+        handsFreeImg.setImageResource(state == COMMUNICATION_LAYOUT_STATE?R.drawable.icon_hands_free_unselected:R.drawable.icon_hands_free_unavailable);
+        handsFreeTv.setTextColor(state == COMMUNICATION_LAYOUT_STATE?colorNormal:colorUnavailiable);
+        handsFreeImg.setClickable(state == COMMUNICATION_LAYOUT_STATE);
 
-        imgMute.setImageResource(state == COMMUNICATION_LAYOUT_STATE?R.drawable.icon_mute_unselcected:R.drawable.icon_mute_unavaiable);
-        tvMute.setTextColor(state == COMMUNICATION_LAYOUT_STATE?colorNormal:colorUnavailiable);
-        imgMute.setClickable(state == COMMUNICATION_LAYOUT_STATE);
+        muteImg.setImageResource(state == COMMUNICATION_LAYOUT_STATE?R.drawable.icon_mute_unselcected:R.drawable.icon_mute_unavaiable);
+        muteTv.setTextColor(state == COMMUNICATION_LAYOUT_STATE?colorNormal:colorUnavailiable);
+        muteImg.setClickable(state == COMMUNICATION_LAYOUT_STATE);
 
         //启用悬浮窗打开这里
-        imgPackUp.setVisibility(state == COMMUNICATION_LAYOUT_STATE?View.VISIBLE:View.GONE);
+        packUpImg.setVisibility(state == COMMUNICATION_LAYOUT_STATE?View.VISIBLE:View.GONE);
 
-        tvCommunicationState.setText(state == INVITER_LAYOUT_STATE? getString(R.string.voice_communication_dialog) : (state == INVITEE_LAYOUT_STATE?getString(R.string.voice_communication_waitting_answer):(state == COMMUNICATION_LAYOUT_STATE?getString(R.string.voice_communicaiton_watting_talking):"")));
+        communicationStateTv.setText(state == INVITER_LAYOUT_STATE? getString(R.string.voice_communication_dialog) : (state == INVITEE_LAYOUT_STATE?getString(R.string.voice_communication_waitting_answer):(state == COMMUNICATION_LAYOUT_STATE?getString(R.string.voice_communicaiton_watting_talking):"")));
         if(state == COMMUNICATION_LAYOUT_STATE){
             if(voiceCommunicationMemberList == null){
                 return;
             }
             if(voiceCommunicationMemberList.size() <= 5){
-                recyclerViewFirst.setAdapter(voiceCommunicationMemberAdapterFirst);
+                firstRecyclerview.setAdapter(voiceCommunicationMemberAdapterFirst);
                 voiceCommunicationMemberAdapterFirst.setMemberDataAndRefresh(voiceCommunicationMemberList,1);
             }else if(voiceCommunicationMemberList.size() <= 9){
                 List<VoiceCommunicationJoinChannelInfoBean> list1 = voiceCommunicationMemberList.subList(0,5);
                 List<VoiceCommunicationJoinChannelInfoBean> list2 = voiceCommunicationMemberList.subList(5,voiceCommunicationMemberList.size());
-                recyclerViewFirst.setAdapter(voiceCommunicationMemberAdapterFirst);
-                recyclerViewFirst.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(this,12)));
-                recyclerViewSecond.setAdapter(voiceCommunicationMemberAdapterSecond);
-                recyclerViewSecond.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(this,12)));
+                firstRecyclerview.setAdapter(voiceCommunicationMemberAdapterFirst);
+                firstRecyclerview.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(this,12)));
+                secondRecyclerview.setAdapter(voiceCommunicationMemberAdapterSecond);
+                secondRecyclerview.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(this,12)));
                 voiceCommunicationMemberAdapterFirst.setMemberDataAndRefresh(list1,1);
                 voiceCommunicationMemberAdapterSecond.setMemberDataAndRefresh(list2,2);
             }
         }
         //如果是通话中则“通话中”文字显示一下就不再显示
-        tvCommunicationState.setText(state == COMMUNICATION_LAYOUT_STATE?"":tvCommunicationState.getText());
+        communicationStateTv.setText(state == COMMUNICATION_LAYOUT_STATE?"": communicationStateTv.getText());
         if(state == INVITER_LAYOUT_STATE || state == INVITEE_LAYOUT_STATE){
             mediaPlayerManagerUtils.play(R.raw.voice_communication_watting_answer,null);
         }else {
@@ -334,8 +322,8 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity{
                         @Override
                         public void run() {
                             initCommunicationViewsAndMusicByState(COMMUNICATION_LAYOUT_STATE);
-                            chronometerCommunicationTime.setBase(SystemClock.elapsedRealtime());
-                            chronometerCommunicationTime.start();
+                            communicationTimeChronometer.setBase(SystemClock.elapsedRealtime());
+                            communicationTimeChronometer.start();
                             refreshCommunicationMemberAdapter();
                         }
                     });
@@ -370,7 +358,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity{
             @Override
             public void onNetworkQuality(int uid, int txQuality, int rxQuality) {
                 if(STATE == COMMUNICATION_LAYOUT_STATE){
-                    tvCommunicationState.setText((uid == 0 && txQuality <= 2)?getString(R.string.voice_communication_quality):"");
+                    communicationStateTv.setText((uid == 0 && txQuality <= 2)?getString(R.string.voice_communication_quality):"");
                 }
             }
 
@@ -440,34 +428,34 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity{
     public void onClick(View view){
         switch (view.getId()){
             case R.id.img_an_excuse:
-                switchFunctionViewUIState(imgExcuse,tvExcuse);
-                voiceCommunicationUtils.muteLocalAudioStream(imgExcuse.isSelected());
-                imgExcuse.setImageResource(imgExcuse.isSelected()?R.drawable.icon_excuse_selected:R.drawable.icon_excuse_unselected);
+                switchFunctionViewUIState(excuseImg, excuseTv);
+                voiceCommunicationUtils.muteLocalAudioStream(excuseImg.isSelected());
+                excuseImg.setImageResource(excuseImg.isSelected()?R.drawable.icon_excuse_selected:R.drawable.icon_excuse_unselected);
                 break;
             case R.id.img_hands_free:
-                switchFunctionViewUIState(imgHandsFree,tvHandsFree);
-                voiceCommunicationUtils.onSwitchSpeakerphoneClicked(imgHandsFree.isSelected());
-                imgHandsFree.setImageResource(imgHandsFree.isSelected()?R.drawable.icon_hands_free_selected:R.drawable.icon_hands_free_unselected);
+                switchFunctionViewUIState(handsFreeImg, handsFreeTv);
+                voiceCommunicationUtils.onSwitchSpeakerphoneClicked(handsFreeImg.isSelected());
+                handsFreeImg.setImageResource(handsFreeImg.isSelected()?R.drawable.icon_hands_free_selected:R.drawable.icon_hands_free_unselected);
                 break;
             case R.id.img_mute:
-                switchFunctionViewUIState(imgMute,tvMute);
-                voiceCommunicationUtils.muteAllRemoteAudioStreams(imgMute.isSelected());
-                imgMute.setImageResource(imgMute.isSelected()?R.drawable.icon_mute_selected:R.drawable.icon_mute_unselcected);
+                switchFunctionViewUIState(muteImg, muteTv);
+                voiceCommunicationUtils.muteAllRemoteAudioStreams(muteImg.isSelected());
+                muteImg.setImageResource(muteImg.isSelected()?R.drawable.icon_mute_selected:R.drawable.icon_mute_unselcected);
                 break;
             case R.id.img_tran_video:
-                switchFunctionViewUIState(imgTranVideo,tvTranVideo);
-                imgTranVideo.setImageResource(imgTranVideo.isSelected()?R.drawable.icon_trans_video:R.drawable.icon_trans_video);
+                switchFunctionViewUIState(tranVideoImg, tranVideoTv);
+                tranVideoImg.setImageResource(tranVideoImg.isSelected()?R.drawable.icon_trans_video:R.drawable.icon_trans_video);
                 break;
             case R.id.img_answer_the_phone:
                 initCommunicationViewsAndMusicByState(COMMUNICATION_LAYOUT_STATE);
-                chronometerCommunicationTime.setBase(SystemClock.elapsedRealtime());
-                chronometerCommunicationTime.start();
+                communicationTimeChronometer.setBase(SystemClock.elapsedRealtime());
+                communicationTimeChronometer.start();
                 voiceCommunicationUtils.joinChannel(inviteeInfoBean.getToken(),
                         channelId,inviteeInfoBean.getUserId(),inviteeInfoBean.getAgoraUid());
                 break;
             case R.id.img_hung_up:
                 //先通知S，后退出声网
-                if(imgAnswerPhone.getVisibility() == View.VISIBLE){
+                if(answerPhoneImg.getVisibility() == View.VISIBLE){
                     apiService.refuseAgoraChannel(channelId);
                 }else{
                     apiService.leaveAgoraChannel(channelId);
@@ -476,7 +464,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity{
             case R.id.img_voice_communication_pack_up:
                 saveCommunicationData();
 //                createCommunicationService();
-                SuspensionWindowManagerUtils.getInstance().showCommunicationSmallWindow(this, ResolutionUtils.getWidth(this),Long.parseLong(TimeUtils.getChronometerSeconds(chronometerCommunicationTime)));
+                SuspensionWindowManagerUtils.getInstance().showCommunicationSmallWindow(this, ResolutionUtils.getWidth(this),Long.parseLong(TimeUtils.getChronometerSeconds(communicationTimeChronometer)));
                 finish();
                 break;
             default:
@@ -549,12 +537,12 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity{
                 }
             }
             if(voiceCommunicationMemberList.size() <= 5){
-                recyclerViewCommunicationMembersFirst.setAdapter(new VoiceCommunicationMemberAdapter(ChannelVoiceCommunicationActivity.this,voiceCommunicationMemberList,3));
+                communicationMembersFirstRecyclerview.setAdapter(new VoiceCommunicationMemberAdapter(ChannelVoiceCommunicationActivity.this,voiceCommunicationMemberList,3));
             }else if(voiceCommunicationMemberList.size() <= 9){
                 List<VoiceCommunicationJoinChannelInfoBean> list1 = voiceCommunicationMemberList.subList(0,5);
                 List<VoiceCommunicationJoinChannelInfoBean> list2 = voiceCommunicationMemberList.subList(5,voiceCommunicationMemberList.size());
-                recyclerViewCommunicationMembersFirst.setAdapter(new VoiceCommunicationMemberAdapter(ChannelVoiceCommunicationActivity.this,list1,3));
-                recyclerViewCommunicationMemeberSecond.setAdapter(new VoiceCommunicationMemberAdapter(ChannelVoiceCommunicationActivity.this,list2,3));
+                communicationMembersFirstRecyclerview.setAdapter(new VoiceCommunicationMemberAdapter(ChannelVoiceCommunicationActivity.this,list1,3));
+                communicationMemberSecondRecyclerview.setAdapter(new VoiceCommunicationMemberAdapter(ChannelVoiceCommunicationActivity.this,list2,3));
             }
         }
 
@@ -603,8 +591,8 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity{
      */
     private void setInviterInfo(GetVoiceCommunicationResult getVoiceCommunicationResult) {
         VoiceCommunicationJoinChannelInfoBean infoBean = getVoiceCommunicationResult.getVoiceCommunicationJoinChannelInfoBeanList().get(0);
-        ImageDisplayUtils.getInstance().displayImage(imgUserHead,infoBean.getHeadImageUrl(),R.drawable.icon_person_default);
-        tvUserName.setText(infoBean.getUserName());
+        ImageDisplayUtils.getInstance().displayImage(userHeadImg,infoBean.getHeadImageUrl(),R.drawable.icon_person_default);
+        userNameTv.setText(infoBean.getUserName());
     }
 
     /**

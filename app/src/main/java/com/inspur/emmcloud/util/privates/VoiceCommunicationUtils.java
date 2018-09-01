@@ -24,7 +24,6 @@ public class VoiceCommunicationUtils {
 
     private Context context;
     private RtcEngine mRtcEngine;
-//    private int userCount = 1;
     private OnVoiceCommunicationCallbacks onVoiceCommunicationCallbacks;
     private List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationUserInfoBeanList = new ArrayList<>();
     private String channelId = "";//声网的channelId
@@ -32,6 +31,23 @@ public class VoiceCommunicationUtils {
     private VoiceCommunicationJoinChannelInfoBean inviteeInfoBean;
     private int userCount = 1;
     private int state = -1;
+    private static VoiceCommunicationUtils voiceCommunicationUtils;
+
+    /**
+     * 获得声网控制工具类
+     * @return
+     */
+    public static VoiceCommunicationUtils getVoiceCommunicationUtils(Context context) {
+        if(voiceCommunicationUtils == null){
+            synchronized (VoiceCommunicationUtils.class){
+                if(voiceCommunicationUtils == null){
+                    voiceCommunicationUtils = new VoiceCommunicationUtils(context);
+                }
+            }
+        }
+        voiceCommunicationUtils.initializeAgoraEngine();
+        return voiceCommunicationUtils;
+    }
 
     private IRtcEngineEventHandler mRtcEventHandler = new IRtcEngineEventHandler() {
         //其他用户离线回调
@@ -141,7 +157,9 @@ public class VoiceCommunicationUtils {
         } catch (Exception e) {
             LogUtils.YfcDebug("初始化声网异常："+e.getMessage());
         }
-        mRtcEngine.enableAudioVolumeIndication(1000,3);
+        if(mRtcEngine != null){
+            mRtcEngine.enableAudioVolumeIndication(1000,3);
+        }
     }
 
     /**
@@ -154,14 +172,16 @@ public class VoiceCommunicationUtils {
      */
     public int joinChannel(String  token, String  channelName, String  optionalInfo, int  optionalUid) {
         // 如果不指定optionalUid将自动生成一个
-        return mRtcEngine.joinChannel(token, channelName, optionalInfo, optionalUid);
+        return (mRtcEngine != null)?mRtcEngine.joinChannel(token, channelName, optionalInfo, optionalUid):-1;
     }
 
     /**
      * 离开频道，不让外部主动调用，外部可以主动调用destroy方法
      */
     private void leaveChannel() {
-        int code = mRtcEngine.leaveChannel();
+        if(mRtcEngine != null){
+            mRtcEngine.leaveChannel();
+        }
     }
 
     /**
@@ -185,7 +205,9 @@ public class VoiceCommunicationUtils {
      * @param isSpakerphoneOpen
      */
     public void onSwitchSpeakerphoneClicked(boolean isSpakerphoneOpen) {
-        mRtcEngine.setEnableSpeakerphone(isSpakerphoneOpen);
+        if(mRtcEngine != null){
+            mRtcEngine.setEnableSpeakerphone(isSpakerphoneOpen);
+        }
     }
 
     /**
@@ -193,16 +215,20 @@ public class VoiceCommunicationUtils {
      * 该方法用于允许/禁止往网络发送本地音频流。
      * @param isMute
      */
-    public int muteLocalAudioStream(boolean isMute){
-        return mRtcEngine.muteLocalAudioStream(isMute);
+    public void muteLocalAudioStream(boolean isMute){
+        if(mRtcEngine != null){
+            mRtcEngine.muteLocalAudioStream(isMute);
+        }
     }
 
     /**
      * 静音远端所有用户
      * @param isMuteAllUser
      */
-    public int muteAllRemoteAudioStreams(boolean isMuteAllUser){
-        return mRtcEngine.muteAllRemoteAudioStreams(isMuteAllUser);
+    public void muteAllRemoteAudioStreams(boolean isMuteAllUser){
+        if(mRtcEngine != null){
+            mRtcEngine.muteAllRemoteAudioStreams(isMuteAllUser);
+        }
     }
 
     /**

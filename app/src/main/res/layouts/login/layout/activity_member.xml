@@ -38,6 +38,21 @@
             android:text="Mentions"
             android:textColor="@color/header_text"
             android:textSize="@dimen/header_textsize" />
+
+        <TextView
+            android:id="@+id/tv_ok"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:clickable="true"
+            android:onClick="onClick"
+            android:gravity="center"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:text="@string/ok"
+            android:textColor="#ffffff"
+            android:textSize="@dimen/header_textsize" />
     </RelativeLayout>
     <LinearLayout
         android:background="@color/content_bg"
@@ -45,6 +60,14 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerview_voice_communication_select_members"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:visibility="gone"
+            android:overScrollMode="never"
+            android:layout_gravity="center_horizontal"/>
         <RelativeLayout
             android:id="@+id/search_layout"
             android:layout_width="fill_parent"

@@ -28,7 +28,6 @@ import com.inspur.emmcloud.widget.CustomEditText;
 import com.inspur.emmcloud.widget.ECMSpaceItemDecoration;
 import com.inspur.emmcloud.widget.LoadingDialog;
 
-import org.json.JSONObject;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 
@@ -150,14 +149,10 @@ public class ChannelSelectVoiceVideoMembersActivity extends BaseActivity impleme
     private void startCommunication() {
         List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationUserInfoBeanList = new ArrayList<>();
         for (int i = 0; i < selectUserList.size(); i++) {
-            JSONObject jsonObject = new JSONObject();
-            try {
-                jsonObject.put("id",selectUserList.get(i).getId());
-                jsonObject.put("name",selectUserList.get(i).getName());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            voiceCommunicationUserInfoBeanList.add(new VoiceCommunicationJoinChannelInfoBean(jsonObject));
+            VoiceCommunicationJoinChannelInfoBean voiceCommunicationJoinChannelInfoBean = new VoiceCommunicationJoinChannelInfoBean();
+            voiceCommunicationJoinChannelInfoBean.setUserName(selectUserList.get(i).getName());
+            voiceCommunicationJoinChannelInfoBean.setUserId(selectUserList.get(i).getId());
+            voiceCommunicationUserInfoBeanList.add(voiceCommunicationJoinChannelInfoBean);
         }
         Intent intent = new Intent();
         intent.setClass(ChannelSelectVoiceVideoMembersActivity.this,ChannelVoiceCommunicationActivity.class);

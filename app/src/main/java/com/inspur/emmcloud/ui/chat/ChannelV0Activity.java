@@ -304,14 +304,10 @@ public class ChannelV0Activity extends BaseActivity {
                 memberList.add(MyApplication.getInstance().getUid());
                 List<ContactUser> contactUserList = ContactUserCacheUtils.getContactUserListById(memberList);
                 for (int i = 0; i < contactUserList.size(); i++) {
-                    JSONObject jsonObject = new JSONObject();
-                    try {
-                        jsonObject.put("id", contactUserList.get(i).getId());
-                        jsonObject.put("name", contactUserList.get(i).getName());
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    voiceCommunicationUserInfoBeanList.add(new VoiceCommunicationJoinChannelInfoBean(jsonObject));
+                    VoiceCommunicationJoinChannelInfoBean voiceCommunicationJoinChannelInfoBean = new VoiceCommunicationJoinChannelInfoBean();
+                    voiceCommunicationJoinChannelInfoBean.setUserId(contactUserList.get(i).getId());
+                    voiceCommunicationJoinChannelInfoBean.setUserName(contactUserList.get(i).getName());
+                    voiceCommunicationUserInfoBeanList.add(voiceCommunicationJoinChannelInfoBean);
                 }
                 Intent intent = new Intent();
                 intent.setClass(ChannelV0Activity.this, ChannelVoiceCommunicationActivity.class);

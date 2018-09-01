@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -19,13 +21,17 @@ import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.ChannelMemberListAdapter;
+import com.inspur.emmcloud.adapter.MemberSelectGridAdapter;
 import com.inspur.emmcloud.bean.chat.PersonDto;
+import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
+import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
+import com.inspur.emmcloud.widget.ECMSpaceItemDecoration;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.slidebar.CharacterParser;
 import com.inspur.emmcloud.widget.slidebar.SideBar;
@@ -44,9 +50,11 @@ import java.util.Locale;
 public class MembersActivity extends BaseActivity implements
         SideBar.OnTouchingLetterChangedListener, TextWatcher {
 
+    private static final int SELECT_STATE = 1;
     private SideBar mSideBar;
-    private TextView mDialog;
-    private ListView mListView;
+    private TextView dialogTv;
+    private ListView allMemberListView;
+    private RecyclerView selectedMemberRecylerView;
     private TextView mHeadText;
     private EditText mSearchInput;
     private CharacterParser characterParser;// 汉字转拼音
@@ -58,17 +66,31 @@ public class MembersActivity extends BaseActivity implements
     private LoadingDialog loadingDlg;
     private List<PersonDto> filterList = new ArrayList<PersonDto>();
     private List<PersonDto> personDtoList = new ArrayList<>();
+    private int state = 1;
+    private MemberSelectGridAdapter selectGridAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_member);
-        mListView = (ListView) findViewById(R.id.channel_member);
+        allMemberListView = (ListView) findViewById(R.id.channel_member);
+        selectedMemberRecylerView = (RecyclerView) findViewById(R.id.recyclerview_voice_communication_select_members);
         mSideBar = (SideBar) findViewById(R.id.channel_sidrbar);
-        mDialog = (TextView) findViewById(R.id.channel_dialog);
+        dialogTv = (TextView) findViewById(R.id.channel_dialog);
         mSearchInput = (EditText) findViewById(R.id.channel_member_search_input);
         mHeadText = (TextView) findViewById(R.id.header_text);
-        mSideBar.setTextView(mDialog);
+        mSideBar.setTextView(dialogTv);
+
+        List<ContactUser> allreadySelectUserList = new ArrayList<>();
+        allreadySelectUserList.add(ContactUserCacheUtils.getContactUserByUid(MyApplication.getInstance().getUid()));
+        selectGridAdapter = new MemberSelectGridAdapter(this,allreadySelectUserList);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this,5);
+        selectedMemberRecylerView.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(this,8)));
+        selectedMemberRecylerView.setLayoutManager(gridLayoutManager);
+        selectedMemberRecylerView.setAdapter(selectGridAdapter);
+        if(state == SELECT_STATE && allreadySelectUserList.size() > 0){
+            selectedMemberRecylerView.setVisibility(View.VISIBLE);
+        }
 
         mSideBar.setOnTouchingLetterChangedListener(this);
         channelID = getIntent().getStringExtra("cid");
@@ -86,7 +108,7 @@ public class MembersActivity extends BaseActivity implements
                 } else if (getIntent().getStringArrayListExtra("uidList") != null) {
                     personDtoList = ContactUserCacheUtils.getShowMemberList(getIntent().getStringArrayListExtra("uidList"));
                 }
-                if (!getIntent().hasExtra("search")){
+                if (!getIntent().hasExtra("search") && state != 1){
                     Iterator<PersonDto> personDtoIterator = personDtoList.iterator();
                     while (personDtoIterator.hasNext()) {
                         PersonDto personDto = personDtoIterator.next();
@@ -122,11 +144,7 @@ public class MembersActivity extends BaseActivity implements
 
         mHeadText.setText(getIntent().getStringExtra("title"));
         if (getIntent().hasExtra("search")) {
-//			if (getIntent().getStringExtra("search").equals("1")) {
-//				mSearchLayout.setVisibility(View.GONE);
-//			}
-
-            mListView.setOnItemClickListener(new OnItemClickListener() {
+            allMemberListView.setOnItemClickListener(new OnItemClickListener() {
 
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view,
@@ -149,7 +167,7 @@ public class MembersActivity extends BaseActivity implements
                 }
             });
         } else {
-            mListView.setOnItemClickListener(new OnItemClickListener() {
+            allMemberListView.setOnItemClickListener(new OnItemClickListener() {
 
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view,
@@ -187,7 +205,7 @@ public class MembersActivity extends BaseActivity implements
         Collections.sort(personDtoList, pinyinComparator);
         mAdapter = new ChannelMemberListAdapter(MembersActivity.this,
                 personDtoList);
-        mListView.setAdapter(mAdapter);
+        allMemberListView.setAdapter(mAdapter);
         mSearchInput.addTextChangedListener(this);
     }
 
@@ -199,7 +217,7 @@ public class MembersActivity extends BaseActivity implements
             position = mAdapter.getPositionForSection(s.charAt(0));
         }
         if (position != -1) {
-            mListView.setSelection(position);
+            allMemberListView.setSelection(position);
         }
     }
 
@@ -255,7 +273,7 @@ public class MembersActivity extends BaseActivity implements
         // 根据a-z进行排序
         Collections.sort(filterDateList, pinyinComparator);
         mAdapter.updateListView(filterDateList);
-        mListView.setSelection(0);
+        allMemberListView.setSelection(0);
     }
 
     /**

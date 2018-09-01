@@ -6,11 +6,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
+import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.wang.avi.AVLoadingIndicatorView;
 
@@ -37,36 +39,10 @@ public class VoiceCommunicationMemberAdapter extends RecyclerView.Adapter<VoiceC
 
     @Override
     public VoiceCommunicationHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view;
-        if(index == 1){
-            switch (voiceCommunicationUserInfoBeanList.size()){
-                case 1:
-                case 2:
-                    view = inflater.inflate(R.layout.voice_communication_memeber_item,null);
-                    break;
-                case 3:
-                    view = inflater.inflate(R.layout.voice_communication_memeber_item3,null);
-                    break;
-                case 4:
-                    view = inflater.inflate(R.layout.voice_communication_memeber_item4,null);
-                    break;
-                case 5:
-                    view = inflater.inflate(R.layout.voice_communication_memeber_item5,null);
-                    break;
-                default:
-                    view = inflater.inflate(R.layout.voice_communication_memeber_item,null);
-                    break;
-            }
-        }else if(index == 2){
-            view = inflater.inflate(R.layout.voice_communication_memeber_item5,null);
-        }else if(index == 3){
-            view = inflater.inflate(R.layout.voice_communication_memeber_item_bottom,null);
-        }else {
-            view = inflater.inflate(R.layout.voice_communication_memeber_item,null);
-        }
+        View view = inflater.inflate(R.layout.voice_communication_memeber_item,null);
         VoiceCommunicationHolder holder = new VoiceCommunicationHolder(view);
         holder.headImg = (ImageView) view.findViewById(R.id.img_voice_communication_member_head);
-        holder.nameText = (TextView) view.findViewById(R.id.tv_invite_voice_communication_member);
+        holder.nameTv = (TextView) view.findViewById(R.id.tv_invite_voice_communication_member);
         holder.volumeImg = (ImageView) view.findViewById(R.id.img_voice_signal);
         holder.avLoadingIndicatorView = (AVLoadingIndicatorView) view.findViewById(R.id.avi_voice_communication);
         return holder;
@@ -74,24 +50,35 @@ public class VoiceCommunicationMemberAdapter extends RecyclerView.Adapter<VoiceC
 
     @Override
     public void onBindViewHolder(VoiceCommunicationHolder holder, int position) {
+        setUserHeadImgSize(holder.headImg,index);
         ImageDisplayUtils.getInstance().displayImage(holder.headImg,voiceCommunicationUserInfoBeanList.get(position).getHeadImageUrl(),R.drawable.icon_person_default);
-        holder.nameText.setText(voiceCommunicationUserInfoBeanList.get(position).getUserName());
+        holder.nameTv.setText(voiceCommunicationUserInfoBeanList.get(position).getUserName());
+        //音量控制逻辑
         int volume = voiceCommunicationUserInfoBeanList.get(position).getVolume();
-        if(volume>0 && volume <= 85){
-            holder.volumeImg.setVisibility(View.VISIBLE);
-            holder.volumeImg.setImageResource(R.drawable.icon_signal_one);
-        }else if(volume>0 && volume <= 170){
-            holder.volumeImg.setVisibility(View.VISIBLE);
-            holder.volumeImg.setImageResource(R.drawable.icon_signal_two);
-        }else if(volume>0 && volume <= 255){
-            holder.volumeImg.setVisibility(View.VISIBLE);
-            holder.volumeImg.setImageResource(R.drawable.icon_signal_three);
-        } else {
-            holder.volumeImg.setVisibility(View.GONE);
+        int volumeLevel = (int) Math.rint(volume / 85);
+        switch (volumeLevel){
+            case 0:
+                holder.volumeImg.setVisibility(View.GONE);
+                break;
+            case 1:
+                holder.volumeImg.setVisibility(View.VISIBLE);
+                holder.volumeImg.setImageResource(R.drawable.icon_signal_one);
+                break;
+            case 2:
+                holder.volumeImg.setVisibility(View.VISIBLE);
+                holder.volumeImg.setImageResource(R.drawable.icon_signal_two);
+                break;
+            case 3:
+                holder.volumeImg.setVisibility(View.VISIBLE);
+                holder.volumeImg.setImageResource(R.drawable.icon_signal_three);
+                break;
+            default:
+                holder.volumeImg.setVisibility(View.GONE);
+                break;
         }
         //当通话人数为两个或者是邀请人的Adapter的时候不显示名字
         if((index == 1 && voiceCommunicationUserInfoBeanList.size() <= 2) || index == 3){
-            holder.nameText.setVisibility(View.GONE);
+            holder.nameTv.setVisibility(View.GONE);
         }
         if(voiceCommunicationUserInfoBeanList.get(position).getUserState() == 1 ||
                 voiceCommunicationUserInfoBeanList.get(position).getUserId().
@@ -102,6 +89,46 @@ public class VoiceCommunicationMemberAdapter extends RecyclerView.Adapter<VoiceC
             holder.avLoadingIndicatorView.setVisibility(View.VISIBLE);
             holder.avLoadingIndicatorView.show();
         }
+    }
+
+    /**
+     * 设置头像大小，不同个数时大小有所不同,默认情况不改变size
+     * @param index
+     */
+    private void setUserHeadImgSize(ImageView headImg,int index) {
+        switch (index){
+            case 1:
+                switch (voiceCommunicationUserInfoBeanList.size()){
+                    case 3:
+                        setImgSize(headImg,1);
+                        break;
+                    case 4:
+                        setImgSize(headImg,2);
+                        break;
+                    case 5:
+                        setImgSize(headImg,3);
+                        break;
+                }
+                break;
+            case 2:
+                setImgSize(headImg,2);
+                break;
+            case 3:
+                setImgSize(headImg,3);
+                break;
+        }
+    }
+
+    /**
+     * 设置头像padding
+     * @param headImg
+     * @param i
+     */
+    private void setImgSize(ImageView headImg, int i) {
+        int size = DensityUtil.dip2px(context,70  - 5*i);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(size,
+                size);//两个400分别为添加图片的大小
+        headImg.setLayoutParams(params);
     }
 
     @Override
@@ -122,7 +149,7 @@ public class VoiceCommunicationMemberAdapter extends RecyclerView.Adapter<VoiceC
 
     public class VoiceCommunicationHolder extends RecyclerView.ViewHolder {
         ImageView headImg;
-        TextView nameText;
+        TextView nameTv;
         ImageView volumeImg;
         AVLoadingIndicatorView avLoadingIndicatorView;
         public VoiceCommunicationHolder(View itemView) {

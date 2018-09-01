@@ -20,6 +20,8 @@ public class VoiceCommunicationJoinChannelInfoBean implements Serializable{
     private int volume = -1;
     private int userState = -1;
 
+    public VoiceCommunicationJoinChannelInfoBean(){}
+
     public VoiceCommunicationJoinChannelInfoBean(JSONObject jsonObject){
         this(jsonObject.toString());
     }

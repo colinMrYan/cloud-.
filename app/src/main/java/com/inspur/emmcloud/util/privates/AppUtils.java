@@ -28,7 +28,7 @@ import android.view.WindowManager;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.ui.chat.ChannelSelectVoiceVideoMembersActivity;
+import com.inspur.emmcloud.ui.chat.MembersActivity;
 import com.inspur.emmcloud.util.common.EncryptUtils;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
@@ -59,7 +59,7 @@ public class AppUtils {
     private static final String TAG = "AppUtils";
 
     private static long lastTotalRxBytes = 0;
-    private static long lastTimeStamp = 0;
+    private static long lastTimeStamp = System.currentTimeMillis();
 
     /**
      * 获取当前App网速
@@ -67,17 +67,13 @@ public class AppUtils {
      * @return
      */
     public static String getNetSpeed(int uid) {
-        long nowTotalRxBytes = getTotalRxBytes(uid);
+        long nowTotalRxBytes = TrafficStats.getUidRxBytes(uid) == TrafficStats.UNSUPPORTED ? 0 : (TrafficStats.getTotalRxBytes() / 1024);;
         long nowTimeStamp = System.currentTimeMillis();
         long divide = nowTimeStamp - lastTimeStamp;
         long speed = ((nowTotalRxBytes - lastTotalRxBytes) * 1000 / (divide == 0? 1:divide));//毫秒转换
         lastTimeStamp = nowTimeStamp;
         lastTotalRxBytes = nowTotalRxBytes;
         return String.valueOf(speed) + " kb/s";
-    }
-
-    public static long getTotalRxBytes(int uid) {
-        return TrafficStats.getUidRxBytes(uid) == TrafficStats.UNSUPPORTED ? 0 : (TrafficStats.getTotalRxBytes() / 1024);//转为KB
     }
 
     /**
@@ -582,9 +578,9 @@ public class AppUtils {
      */
     public static void openChannelMemeberSelect(Activity activity,String channelId,int requestCode){
         Intent intent = new Intent();
-        intent.setClass(activity, ChannelSelectVoiceVideoMembersActivity.class);
+        intent.setClass(activity, MembersActivity.class);
         intent.putExtra("cid",channelId);
-        activity.startActivityForResult(intent,requestCode);
+        activity.startActivity(intent);
     }
 
     /**
