@@ -1167,7 +1167,7 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnUserAppsSuccess(GetAppGroupResult getAppGroupResult) {
+    public void returnUserAppsSuccess(GetAppGroupResult getAppGroupResult,String clientConfigMyAppVersion) {
         // TODO Auto-generated method stub
 
     }
@@ -1637,7 +1637,7 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnContactUserListSuccess(byte[] bytes) {
+    public void returnContactUserListSuccess(byte[] bytes,String saveConfigVersion) {
 
     }
 
@@ -1647,7 +1647,7 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnContactOrgListSuccess(byte[] bytes) {
+    public void returnContactOrgListSuccess(byte[] bytes,String saveConfigVersion) {
 
     }
 
@@ -1657,7 +1657,7 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnContactUserListUpdateSuccess(GetContactUserListUpateResult getContactUserListUpateResult) {
+    public void returnContactUserListUpdateSuccess(GetContactUserListUpateResult getContactUserListUpateResult,String saveConfigVersion) {
 
     }
 
@@ -1667,7 +1667,7 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnContactOrgListUpdateSuccess(GetContactOrgListUpateResult getContactOrgListUpateResult) {
+    public void returnContactOrgListUpdateSuccess(GetContactOrgListUpateResult getContactOrgListUpateResult,String saveConfigVersion) {
 
     }
 

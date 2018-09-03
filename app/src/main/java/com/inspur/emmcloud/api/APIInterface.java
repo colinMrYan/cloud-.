@@ -446,7 +446,7 @@ public interface APIInterface {
 
     void returnGetAppTabsFail(String error, int errorCode);
 
-    void returnUserAppsSuccess(GetAppGroupResult getAppGroupResult);
+    void returnUserAppsSuccess(GetAppGroupResult getAppGroupResult,String clientConfigMyAppVersion);
 
     void returnUserAppsFail(String error, int errorCode);
 
@@ -657,16 +657,16 @@ public interface APIInterface {
 
     void returnFaceLoginGSFail(String error, int errorCode);
 
-    void returnContactUserListSuccess(byte[] bytes);
+    void returnContactUserListSuccess(byte[] bytes,String saveConfigVersion);
     void returnContactUserListFail(String error, int errorCode);
 
-    void returnContactOrgListSuccess(byte[] bytes);
+    void returnContactOrgListSuccess(byte[] bytes,String saveConfigVersion);
     void returnContactOrgListFail(String error, int errorCode);
 
-    void returnContactUserListUpdateSuccess(GetContactUserListUpateResult getContactUserListUpateResult);
+    void returnContactUserListUpdateSuccess(GetContactUserListUpateResult getContactUserListUpateResult,String saveConfigVersion);
     void returnContactUserListUpdateFail(String error, int errorCode);
 
-    void returnContactOrgListUpdateSuccess(GetContactOrgListUpateResult getContactOrgListUpateResult);
+    void returnContactOrgListUpdateSuccess(GetContactOrgListUpateResult getContactOrgListUpateResult,String saveConfigVersion);
     void returnContactOrgListUpdateFail(String error, int errorCode);
 
     void returnCardPackageListSuccess(GetCardPackageResult getCardPackageResult);
