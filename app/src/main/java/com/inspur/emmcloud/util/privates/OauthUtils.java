@@ -6,6 +6,7 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.LoginAPIService;
 import com.inspur.emmcloud.bean.login.GetLoginResult;
 import com.inspur.emmcloud.interf.OauthCallBack;
+import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
@@ -67,7 +68,7 @@ public class OauthUtils {
             PreferencesUtils.putInt(MyApplication.getInstance(), "expiresIn", expiresIn);
             MyApplication.getInstance().setAccessToken(accessToken);
             MyApplication.getInstance().setRefreshToken(refreshToken);
-            MyApplication.getInstance().startWebSocket(false);
+            WebSocketPush.getInstance().startWebSocket(false);
             tokenGetTime = System.currentTimeMillis();
             isTokenRefreshing = false;
             for (OauthCallBack oauthCallBack : callBackList) {

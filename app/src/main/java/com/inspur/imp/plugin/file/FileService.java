@@ -1000,8 +1000,8 @@ public class FileService extends ImpPlugin {
 		if (!paramsObject.isNull("data")) {
 			data = paramsObject.getString("data");
 		}
-		if (!paramsObject.isNull("init")) {
-			start = paramsObject.getInt("init");
+		if (!paramsObject.isNull("startWebSocket")) {
+			start = paramsObject.getInt("startWebSocket");
 		}
 		if (!paramsObject.isNull("callback")) {
 			funct = paramsObject.getString("callback");
@@ -1095,8 +1095,8 @@ public class FileService extends ImpPlugin {
 			fileName = Environment.getExternalStorageDirectory() + "/"
 					+ paramsObject.getString("fileName");
 		}
-		if (!paramsObject.isNull("init")) {
-			start = paramsObject.getInt("init");
+		if (!paramsObject.isNull("startWebSocket")) {
+			start = paramsObject.getInt("startWebSocket");
 		}
 		if (!paramsObject.isNull("end")) {
 			end = paramsObject.getInt("end");

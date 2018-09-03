@@ -49,7 +49,7 @@ public class LockPatternIndicator extends View {
 	}
 
 	/**
-	 * init view size
+	 * startWebSocket view size
 	 * @param context
 	 * @param attrs
      */
