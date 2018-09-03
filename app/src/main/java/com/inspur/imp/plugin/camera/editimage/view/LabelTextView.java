@@ -34,26 +34,26 @@ public class LabelTextView
 //
 //	public LabelTextView(Context context) {
 //		super(context);
-//		init(context);
+//		startWebSocket(context);
 //	}
 //
 //	public LabelTextView(Context context, AttributeSet attrs) {
 //		super(context, attrs);
-//		init(context);
+//		startWebSocket(context);
 //	}
 //
 //	public LabelTextView(Context context, AttributeSet attrs, int defStyleAttr) {
 //		super(context, attrs, defStyleAttr);
-//		init(context);
+//		startWebSocket(context);
 //	}
 //
-//	private void init(Context context) {
+//	private void startWebSocket(Context context) {
 //		currentStatus = STATUS_IDLE;
 //	}
 //
 //	public void addText(Typeface typeface, String text) {
 //		TextItem item = new TextItem(this.getContext());
-//		item.init(text, typeface, this);
+//		item.startWebSocket(text, typeface, this);
 //		if (currentItem != null) {
 //			currentItem.isDrawHelpTool = false;
 //		}

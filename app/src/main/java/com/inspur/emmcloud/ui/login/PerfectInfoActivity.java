@@ -113,14 +113,14 @@ public class PerfectInfoActivity extends BaseActivity {
 //	private class EditWatcher implements TextWatcher {
 //
 //		@Override
-//		public void beforeTextChanged(CharSequence s, int init, int count,
+//		public void beforeTextChanged(CharSequence s, int startWebSocket, int count,
 //				int after) {
 //			// TODO Auto-generated method stub
 //
 //		}
 //
 //		@Override
-//		public void onTextChanged(CharSequence s, int init, int before,
+//		public void onTextChanged(CharSequence s, int startWebSocket, int before,
 //				int count) {
 //			// TODO Auto-generated method stub
 //
@@ -306,7 +306,7 @@ public class PerfectInfoActivity extends BaseActivity {
 //					apiService.saveUserHead(userHead, nickName, passWord, sex,
 //							mail);
 //				}
-//			}).init();
+//			}).startWebSocket();
 //		}
 //	}
 //	

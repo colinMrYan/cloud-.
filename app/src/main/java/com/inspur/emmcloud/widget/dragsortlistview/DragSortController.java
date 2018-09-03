@@ -22,7 +22,7 @@ import android.widget.AdapterView;
 public class DragSortController extends SimpleFloatViewManager implements View.OnTouchListener, GestureDetector.OnGestureListener {
 
     /**
-     * Drag init mode enum.
+     * Drag startWebSocket mode enum.
      */
     public static final int ON_DOWN = 0;
     public static final int ON_DRAG = 1;
@@ -84,7 +84,7 @@ public class DragSortController extends SimpleFloatViewManager implements View.O
     /**
      * Calls {@link #DragSortController(DragSortListView, int)} with a
      * 0 drag handle id, FLING_RIGHT_REMOVE remove mode,
-     * and ON_DOWN drag init. By default, sorting is enabled, and
+     * and ON_DOWN drag startWebSocket. By default, sorting is enabled, and
      * removal is disabled.
      *
      * @param dslv The DSLV instance
@@ -132,7 +132,7 @@ public class DragSortController extends SimpleFloatViewManager implements View.O
      * Set how a drag is initiated. Needs to be one of
      * {@link ON_DOWN}, {@link ON_DRAG}, or {@link ON_LONG_PRESS}.
      *
-     * @param mode The drag init mode.
+     * @param mode The drag startWebSocket mode.
      */
     public void setDragInitMode(int mode) {
         mDragInitMode = mode;
@@ -280,7 +280,7 @@ public class DragSortController extends SimpleFloatViewManager implements View.O
     }
 
     /**
-     * Get the position to init dragging based on the ACTION_DOWN
+     * Get the position to startWebSocket dragging based on the ACTION_DOWN
      * MotionEvent. This function simply calls
      * {@link #dragHandleHitPosition(MotionEvent)}. Override
      * to change drag handle behavior;
@@ -289,7 +289,7 @@ public class DragSortController extends SimpleFloatViewManager implements View.O
      *
      * @param ev The ACTION_DOWN MotionEvent.
      *
-     * @return The list position to drag if a drag-init gesture is
+     * @return The list position to drag if a drag-startWebSocket gesture is
      * detected; MISS if unsuccessful.
      */
     public int startDragPosition(MotionEvent ev) {

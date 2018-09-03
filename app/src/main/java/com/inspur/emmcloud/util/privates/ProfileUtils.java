@@ -46,7 +46,7 @@ public class ProfileUtils {
        initProfile(true);
     }
     public void initProfile(boolean isShowLoadingDlg){
-        if(ClientConfigUpdateUtils.isItemNeedUpdate(ClientConfigItem.CLIENT_CONFIG_ROUTER)){
+        if(ClientConfigUpdateUtils.getInstance().isItemNeedUpdate(ClientConfigItem.CLIENT_CONFIG_ROUTER)){
             getUserProfile(isShowLoadingDlg);
         }else{
             String appVersion = AppUtils.getVersion(activity);
@@ -64,7 +64,7 @@ public class ProfileUtils {
     private void getUserProfile(boolean isShowLoadingDlg) {
         if (NetUtils.isNetworkConnected(activity, false)) {
             loadingDialog.show(isShowLoadingDlg);
-            saveConfigVersion = ClientConfigUpdateUtils.getItemNewVersion(ClientConfigItem.CLIENT_CONFIG_ROUTER);
+            saveConfigVersion = ClientConfigUpdateUtils.getInstance().getItemNewVersion(ClientConfigItem.CLIENT_CONFIG_ROUTER);
             LoginAPIService apiServices = new LoginAPIService(activity);
             apiServices.setAPIInterface(new WebService());
             apiServices.getMyInfo();
@@ -115,7 +115,7 @@ public class ProfileUtils {
                 String appVersion = AppUtils.getVersion(activity);
                 PreferencesUtils.putString(activity, "previousVersion",
                         appVersion);
-                ClientConfigUpdateUtils.saveItemLocalVersion(ClientConfigItem.CLIENT_CONFIG_ROUTER,saveConfigVersion);
+                ClientConfigUpdateUtils.getInstance().saveItemLocalVersion(ClientConfigItem.CLIENT_CONFIG_ROUTER,saveConfigVersion);
                 if (commonCallBack != null){
                     commonCallBack.execute();
                 }

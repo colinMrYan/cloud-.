@@ -283,7 +283,7 @@ public class MyAppAPIService {
     /**
      * 获取用户所有apps
      */
-    public void getUserApps() {
+    public void getUserApps(final String clientConfigMyAppVersion) {
         final String completeUrl = APIUri.getUserApps();
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
@@ -294,7 +294,7 @@ public class MyAppAPIService {
                 OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        getUserApps();
+                        getUserApps(clientConfigMyAppVersion);
                     }
 
                     @Override
@@ -308,7 +308,7 @@ public class MyAppAPIService {
 
             @Override
             public void callbackSuccess(byte[] arg0) {
-                apiInterface.returnUserAppsSuccess(new GetAppGroupResult(new String(arg0)));
+                apiInterface.returnUserAppsSuccess(new GetAppGroupResult(new String(arg0)),clientConfigMyAppVersion);
             }
 
             @Override

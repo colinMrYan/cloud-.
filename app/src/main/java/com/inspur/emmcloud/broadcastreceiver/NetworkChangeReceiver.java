@@ -8,6 +8,7 @@ import android.net.NetworkInfo.State;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 
@@ -36,12 +37,12 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
 				if (isAppOnForeground) {
 					ToastUtils.show(context, R.string.Network_Mobile);
 				}
-				MyApplication.getInstance().startWebSocket(false);
+				WebSocketPush.getInstance().startWebSocket(false);
 			} else if (wifi == State.CONNECTED || wifi == State.CONNECTING) {
 				if (isAppOnForeground) {
 					ToastUtils.show(context, R.string.Network_WIFI);
 				}
-				MyApplication.getInstance().startWebSocket(false);
+				WebSocketPush.getInstance().startWebSocket(false);
 			} else if (isAppOnForeground) {
 				ToastUtils.show(context, R.string.network_exception);
 			}

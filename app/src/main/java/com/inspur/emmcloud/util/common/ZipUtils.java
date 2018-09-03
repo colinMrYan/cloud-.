@@ -283,7 +283,7 @@ public class ZipUtils {
                 }
                 OutputStream os = null;
                 FileOutputStream fos = null;
-                // ze.getName()会返回 script/init.script这样的，是为了返回实体的File
+                // ze.getName()会返回 script/startWebSocket.script这样的，是为了返回实体的File
                 File realFile = getRealFileName(folderPath, zipEntryName);
                 if (!realFile.exists()) {
                     realFile = new File(folderPath, zipEntryName);

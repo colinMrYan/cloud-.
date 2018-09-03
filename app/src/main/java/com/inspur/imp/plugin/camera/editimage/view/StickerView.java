@@ -1,15 +1,7 @@
 package com.inspur.imp.plugin.camera.editimage.view;
 
 
-import java.util.LinkedHashMap;
-
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.util.AttributeSet;
-import android.view.MotionEvent;
 import android.view.View;
 
 /**
@@ -35,20 +27,20 @@ public class StickerView extends View {
 //
 	public StickerView(Context context) {
 		super(context);
-//		init(context);
+//		startWebSocket(context);
 	}
 
 //	public StickerView(Context context, AttributeSet attrs) {
 //		super(context, attrs);
-//		init(context);
+//		startWebSocket(context);
 //	}
 //
 //	public StickerView(Context context, AttributeSet attrs, int defStyleAttr) {
 //		super(context, attrs, defStyleAttr);
-//		init(context);
+//		startWebSocket(context);
 //	}
 //
-//	private void init(Context context) {
+//	private void startWebSocket(Context context) {
 //		currentStatus = STATUS_IDLE;
 //
 //		rectPaint.setColor(Color.RED);
@@ -58,7 +50,7 @@ public class StickerView extends View {
 //
 //	public void addBitImage(final Bitmap addBit) {
 //		StickerItem item = new StickerItem(this.getContext());
-//		item.init(addBit, this);
+//		item.startWebSocket(addBit, this);
 //		if (currentItem != null) {
 //			currentItem.isDrawHelpTool = false;
 //		}
