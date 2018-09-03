@@ -11,7 +11,7 @@ import android.widget.RelativeLayout;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
-import com.inspur.emmcloud.bean.contact.ContactUser;
+import com.inspur.emmcloud.bean.chat.PersonDto;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 
@@ -24,9 +24,9 @@ import java.util.List;
 public class MemberSelectGridAdapter extends RecyclerView.Adapter<MemberSelectGridAdapter.MemberSelectedGridHold>{
 
     private Context context;
-    private List<ContactUser> contactUserList;
+    private List<PersonDto> contactUserList;
     private LayoutInflater inflater;
-    public MemberSelectGridAdapter(Context context,List<ContactUser> contactUserList){
+    public MemberSelectGridAdapter(Context context,List<PersonDto> contactUserList){
         this.context = context;
         this.contactUserList = contactUserList;
         inflater = LayoutInflater.from(context);
@@ -43,7 +43,7 @@ public class MemberSelectGridAdapter extends RecyclerView.Adapter<MemberSelectGr
     public void onBindViewHolder(MemberSelectedGridHold holder, int position) {
         setImgSize(holder.userHeadImg);
         ImageDisplayUtils.getInstance().displayImage(holder.userHeadImg, APIUri.getChannelImgUrl(MyApplication.getInstance(),
-                contactUserList.get(position).getId()),R.drawable.icon_person_default);
+                contactUserList.get(position).getUid()),R.drawable.icon_person_default);
     }
 
     /**
@@ -66,7 +66,7 @@ public class MemberSelectGridAdapter extends RecyclerView.Adapter<MemberSelectGr
      * 设置并刷新数据
      * @param contactUserList
      */
-    public void setAndRefreshSelectMemberData(List<ContactUser> contactUserList){
+    public void setAndRefreshSelectMemberData(List<PersonDto> contactUserList){
         this.contactUserList = contactUserList;
         notifyDataSetChanged();
     }

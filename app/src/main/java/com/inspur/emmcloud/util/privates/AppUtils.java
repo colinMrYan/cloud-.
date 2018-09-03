@@ -579,6 +579,8 @@ public class AppUtils {
     public static void openChannelMemeberSelect(Activity activity,String channelId,int requestCode){
         Intent intent = new Intent();
         intent.setClass(activity, MembersActivity.class);
+        intent.putExtra("title",activity.getString(R.string.voice_communication_choice_members));
+        intent.putExtra(MembersActivity.MEMBER_PAGE_STATE, MembersActivity.SELECT_STATE);
         intent.putExtra("cid",channelId);
         activity.startActivity(intent);
     }

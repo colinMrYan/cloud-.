@@ -101,6 +101,7 @@
     <string name="app_init">正在初始化</string>
     <string name="news_content_cant_empty">内容不能为空</string>
     <string name="help">帮助</string>
+    <string name="load_data_failed">加载数据失败</string>
 
     <!-- 新添加部分 -->
     <string name="alert">提醒</string>

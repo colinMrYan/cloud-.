@@ -98,6 +98,7 @@
     <string name="app_init">init</string>
     <string name="news_content_cant_empty">Content cannot be empty</string>
     <string name="help">Help</string>
+    <string name="load_data_failed">Failed to load data</string>
 
     <!-- 新添加部分 -->
     <string name="alert">Remind</string>

@@ -129,7 +129,7 @@ public class ShareVolumeInfoActivity extends BaseActivity {
             case R.id.volume_member_layout:
                 Bundle bundle = new Bundle();
                 bundle.putString("title", getString(R.string.volume_member));
-                bundle.putString("search", "1");
+                bundle.putInt(MembersActivity.MEMBER_PAGE_STATE,MembersActivity.CHECK_STATE);
                 bundle.putStringArrayList("uidList", volumeDetail.getMemberUidList());
                 IntentUtils.startActivity(ShareVolumeInfoActivity.this,
                         MembersActivity.class, bundle);
