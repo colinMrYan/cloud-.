@@ -37,7 +37,7 @@ import java.util.Map;
  */
 public class ImpWebViewClient extends WebViewClient {
     private String urlparam = "";
-    private final String F_UEX_SCRIPT_SELF_FINISH = "javascript:if(window.init){window.init();}";
+    private final String F_UEX_SCRIPT_SELF_FINISH = "javascript:if(window.startWebSocket){window.startWebSocket();}";
     private ImpWebView myWebView;
     private String errolUrl = "file:///android_asset/error/error.html";
     private LinearLayout loadFailLayout;

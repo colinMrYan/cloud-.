@@ -388,16 +388,16 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         DbCacheUtils.deleteDb(getInstance());
     }
 
-    /******************************Websocket********************************************/
-
-    /**
-     * 开启websocket推送
-     */
-    public void startWebSocket(boolean isForceNew) {
-        if (isHaveLogin()) {
-            WebSocketPush.getInstance().init(isForceNew);
-        }
-    }
+//    /******************************Websocket********************************************/
+//
+//    /**
+//     * 开启websocket推送
+//     */
+//    public void startWebSocket(boolean isForceNew) {
+//        if (isHaveLogin()) {
+//            WebSocketPush.getInstance().startWebSocket(isForceNew);
+//        }
+//    }
 
 
     /******************************租户信息*******************************************/
@@ -756,7 +756,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
 
 
     /**
-     * init ImageLoaderCommon
+     * startWebSocket ImageLoaderCommon
      **/
     private void initImageLoader() {
         // TODO Auto-generated method stub

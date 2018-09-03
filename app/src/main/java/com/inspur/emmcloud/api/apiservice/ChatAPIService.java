@@ -1176,13 +1176,11 @@ public class ChatAPIService {
         HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context,compelteUrl) {
             @Override
             public void callbackSuccess(byte[] arg0) {
-                LogUtils.YfcDebug("拒绝成功"+new String(arg0));
                 apiInterface.returnRefuseVoiceCommunicationChannelSuccess(new GetBoolenResult(new String(arg0)));
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                LogUtils.YfcDebug("拒绝失败："+error+responseCode);
                 apiInterface.returnRefuseVoiceCommunicationChannelFail(error,responseCode);
             }
 

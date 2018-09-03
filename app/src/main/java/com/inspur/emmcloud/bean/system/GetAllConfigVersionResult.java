@@ -49,6 +49,13 @@ public class GetAllConfigVersionResult {
                 break;
             case CLIENT_CONFIG_MY_APP:
                 itemVersion = JSONUtils.getString(allConfigVersionObj,"app","");
+                break;
+            case CLIENT_CONFIG_CONTACT_USER:
+                itemVersion = JSONUtils.getString(allConfigVersionObj,"contact_user","");
+                break;
+            case CLIENT_CONFIG_CONTACT_ORG:
+                itemVersion = JSONUtils.getString(allConfigVersionObj,"contact_org","");
+                break;
             default:
                 break;
         }

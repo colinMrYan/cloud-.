@@ -27,6 +27,7 @@ import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.interf.CommonCallBack;
+import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.service.BackgroundService;
 import com.inspur.emmcloud.service.CoreService;
 import com.inspur.emmcloud.service.LocationService;
@@ -259,7 +260,7 @@ public class IndexActivity extends IndexBaseActivity {
                         MyApplication.getInstance()
                                 .setIsContactReady(true);
                         notifySyncAllBaseDataSuccess();
-                        MyApplication.getInstance().startWebSocket(true);// 启动webSocket推送
+                        WebSocketPush.getInstance().startWebSocket(true);// 启动webSocket推送
                         getContactOrg();
                         getAllChannelGroup();
                         break;

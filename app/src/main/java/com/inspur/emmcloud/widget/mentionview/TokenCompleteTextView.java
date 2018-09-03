@@ -130,7 +130,7 @@ package com.inspur.emmcloud.widget.mentionview;//package com.inspur.emmcloud.wid
 //    /**
 //     * Initialise the variables and various listeners
 //     */
-//    private void init() {
+//    private void startWebSocket() {
 //        if (initialized) return;
 //
 //        // Initialise variables
@@ -158,7 +158,7 @@ package com.inspur.emmcloud.widget.mentionview;//package com.inspur.emmcloud.wid
 //        // Initialise the textfilter (listens for the splitchars)
 //        setFilters(new InputFilter[]{new InputFilter() {
 //            @Override
-//            public CharSequence filter(CharSequence source, int init, int end, Spanned dest, int dstart, int dend) {
+//            public CharSequence filter(CharSequence source, int startWebSocket, int end, Spanned dest, int dstart, int dend) {
 //                // Token limit check
 //                if (tokenLimit != -1 && objects.size() == tokenLimit) {
 //                    return "";
@@ -196,31 +196,31 @@ package com.inspur.emmcloud.widget.mentionview;//package com.inspur.emmcloud.wid
 //
 //    public TokenCompleteTextView(Context context) {
 //        super(context);
-//        init();
+//        startWebSocket();
 //    }
 //
 //    public TokenCompleteTextView(Context context, AttributeSet attrs) {
 //        super(context, attrs);
-//        init();
+//        startWebSocket();
 //    }
 //
 //    public TokenCompleteTextView(Context context, AttributeSet attrs, int defStyle) {
 //        super(context, attrs, defStyle);
-//        init();
+//        startWebSocket();
 //    }
 //
 //    @Override
-//    protected void performFiltering(@NonNull CharSequence text, int init, int end,
+//    protected void performFiltering(@NonNull CharSequence text, int startWebSocket, int end,
 //                                    int keyCode) {
-//        if (init < prefix.length()) {
-//            init = prefix.length();
+//        if (startWebSocket < prefix.length()) {
+//            startWebSocket = prefix.length();
 //        }
 //        Filter filter = getFilter();
 //        if (filter != null) {
 //            if (hintVisible) {
 //                filter.filter("");
 //            } else {
-//                filter.filter(text.subSequence(init, end), this);
+//                filter.filter(text.subSequence(startWebSocket, end), this);
 //            }
 //        }
 //    }
@@ -406,11 +406,11 @@ package com.inspur.emmcloud.widget.mentionview;//package com.inspur.emmcloud.wid
 //    }
 //
 //    private int getCorrectedTokenBeginning(int end) {
-//        int init = tokenizer.findTokenStart(getText(), end);
-//        if (init < prefix.length()) {
-//            init = prefix.length();
+//        int startWebSocket = tokenizer.findTokenStart(getText(), end);
+//        if (startWebSocket < prefix.length()) {
+//            startWebSocket = prefix.length();
 //        }
-//        return init;
+//        return startWebSocket;
 //    }
 //
 //    protected String currentCompletionText() {
@@ -418,10 +418,10 @@ package com.inspur.emmcloud.widget.mentionview;//package com.inspur.emmcloud.wid
 //
 //        Editable editable = getText();
 //        int end = getCorrectedTokenEnd();
-//        int init = getCorrectedTokenBeginning(end);
+//        int startWebSocket = getCorrectedTokenBeginning(end);
 //
 //        //Some keyboards add extra spaces when doing corrections, so
-//        return TextUtils.substring(editable, init, end);
+//        return TextUtils.substring(editable, startWebSocket, end);
 //    }
 //
 //    protected float maxTextWidth() {
@@ -462,10 +462,10 @@ package com.inspur.emmcloud.widget.mentionview;//package com.inspur.emmcloud.wid
 //        }
 //
 //        int end = getCorrectedTokenEnd();
-//        int init = getCorrectedTokenBeginning(end);
+//        int startWebSocket = getCorrectedTokenBeginning(end);
 //
 //        //Don't allow 0 length entries to filter
-//        return end - init >= Math.max(getThreshold(), 1);
+//        return end - startWebSocket >= Math.max(getThreshold(), 1);
 //    }
 //
 //    @Override
@@ -802,25 +802,25 @@ package com.inspur.emmcloud.widget.mentionview;//package com.inspur.emmcloud.wid
 //        Editable editable = getText();
 //        int cursorPosition = getSelectionEnd();
 //        int end = cursorPosition;
-//        int init = cursorPosition;
+//        int startWebSocket = cursorPosition;
 //        if (!hintVisible) {
 //            //If you force the drop down to show when the hint is visible, you can run a completion
 //            //on the hint. If the hint includes commas, this truncates and inserts the hint in the field
 //            end = getCorrectedTokenEnd();
-//            init = getCorrectedTokenBeginning(end);
+//            startWebSocket = getCorrectedTokenBeginning(end);
 //        }
 //
-//        String original = TextUtils.substring(editable, init, end);
+//        String original = TextUtils.substring(editable, startWebSocket, end);
 //
 //        if (editable != null) {
 //            if (tokenSpan == null) {
-//                editable.replace(init, end, "");
+//                editable.replace(startWebSocket, end, "");
 //            } else if (!allowDuplicates && objects.contains(tokenSpan.getToken())) {
-//                editable.replace(init, end, "");
+//                editable.replace(startWebSocket, end, "");
 //            } else {
-//                QwertyKeyListener.markAsReplaced(editable, init, end, original);
-//                editable.replace(init, end, ssb);
-//                editable.setSpan(tokenSpan, init, init + ssb.length() - 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+//                QwertyKeyListener.markAsReplaced(editable, startWebSocket, end, original);
+//                editable.replace(startWebSocket, end, ssb);
+//                editable.setSpan(tokenSpan, startWebSocket, startWebSocket + ssb.length() - 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 //            }
 //        }
 //    }
@@ -1153,7 +1153,7 @@ package com.inspur.emmcloud.widget.mentionview;//package com.inspur.emmcloud.wid
 //
 //        @SuppressWarnings("unchecked cast")
 //        @Override
-//        public void onSpanAdded(Spannable text, Object what, int init, int end) {
+//        public void onSpanAdded(Spannable text, Object what, int startWebSocket, int end) {
 //            if (what instanceof TokenImageSpan && !savingState && !focusChanging) {
 //                TokenImageSpan token = (TokenImageSpan) what;
 //                objects.add(token.getToken());
@@ -1165,7 +1165,7 @@ package com.inspur.emmcloud.widget.mentionview;//package com.inspur.emmcloud.wid
 //
 //        @SuppressWarnings("unchecked cast")
 //        @Override
-//        public void onSpanRemoved(Spannable text, Object what, int init, int end) {
+//        public void onSpanRemoved(Spannable text, Object what, int startWebSocket, int end) {
 //            if (what instanceof TokenImageSpan && !savingState && !focusChanging) {
 //                TokenImageSpan token = (TokenImageSpan) what;
 //                if (objects.contains(token.getToken())) {
@@ -1194,24 +1194,24 @@ package com.inspur.emmcloud.widget.mentionview;//package com.inspur.emmcloud.wid
 //        }
 //
 //        @Override
-//        public void beforeTextChanged(CharSequence s, int init, int count, int after) {
+//        public void beforeTextChanged(CharSequence s, int startWebSocket, int count, int after) {
 //            // count > 0 means something will be deleted
 //            if (count > 0 && getText() != null) {
 //                Editable text = getText();
-//                int end = init + count;
+//                int end = startWebSocket + count;
 //
-//                //If we're deleting a space, we want spans from 1 character before this init
-//                if (text.charAt(init) == ' ') {
-//                    init -= 1;
+//                //If we're deleting a space, we want spans from 1 character before this startWebSocket
+//                if (text.charAt(startWebSocket) == ' ') {
+//                    startWebSocket -= 1;
 //                }
 //
-//                TokenImageSpan[] spans = text.getSpans(init, end, TokenImageSpan.class);
+//                TokenImageSpan[] spans = text.getSpans(startWebSocket, end, TokenImageSpan.class);
 //
 //                //NOTE: I'm not completely sure this won't cause problems if we get stuck in a text changed loop
 //                //but it appears to work fine. Spans will stop getting removed if this breaks.
 //                spansToRemove = new ArrayList<TokenImageSpan>();
 //                for (TokenImageSpan token : spans) {
-//                    if (text.getSpanStart(token) < end && init < text.getSpanEnd(token)) {
+//                    if (text.getSpanStart(token) < end && startWebSocket < text.getSpanEnd(token)) {
 //                        spansToRemove.add(token);
 //                    }
 //                }
@@ -1245,7 +1245,7 @@ package com.inspur.emmcloud.widget.mentionview;//package com.inspur.emmcloud.wid
 //        }
 //
 //        @Override
-//        public void onTextChanged(CharSequence s, int init, int before, int count) {
+//        public void onTextChanged(CharSequence s, int startWebSocket, int before, int count) {
 //        }
 //    }
 //

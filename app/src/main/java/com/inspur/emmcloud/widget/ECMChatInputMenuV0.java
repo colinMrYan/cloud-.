@@ -252,8 +252,9 @@ public class ECMChatInputMenuV0 extends LinearLayout {
                 InputTypeBean inputTypeBean = new InputTypeBean(functionIconArray[3], functionNameArray[3], functionActionArray[3]);
                 inputTypeBeanList.add(inputTypeBean);
             }
-            InputTypeBean inputTypeBean = new InputTypeBean(functionIconArray[4],functionNameArray[4],functionActionArray[4]);
-            inputTypeBeanList.add(inputTypeBean);
+            //语音通话图标开启处
+//            InputTypeBean inputTypeBean = new InputTypeBean(functionIconArray[4],functionNameArray[4],functionActionArray[4]);
+//            inputTypeBeanList.add(inputTypeBean);
             viewpagerLayout.setOnGridItemClickListener(new AdapterView.OnItemClickListener() {
 
                 @Override

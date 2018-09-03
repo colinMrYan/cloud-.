@@ -49,6 +49,7 @@ import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.broadcastreceiver.MsgReceiver;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
+import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
@@ -556,16 +557,16 @@ public class CommunicationV0Fragment extends Fragment {
                         if (receivedMsg.getType().equals("command/faceLogin")) {
                             return;
                         }
-                        //消息拦截逻辑，以后应当拦截命令消息
-                        CustomProtocol customProtocol = getCommandMessageProtocol(receivedMsg);
-                        if(customProtocol != null){
-                            MsgReadCreationDateCacheUtils.saveMessageReadCreationDate(getActivity(),receivedMsg.getCid(),receivedMsg.getTime());
-                            Intent intent = new Intent();
-                            intent.setClass(getActivity(),ChannelVoiceCommunicationActivity.class);
-                            intent.putExtra("channelId",customProtocol.getParamMap().get("id"));
-                            intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE,ChannelVoiceCommunicationActivity.INVITEE_LAYOUT_STATE);
-                            startActivity(intent);
-                        }
+                        //消息拦截逻辑，以后应当拦截命令消息，此时注释掉，以后解开注意判空
+//                        CustomProtocol customProtocol = getCommandMessageProtocol(receivedMsg);
+//                        if(customProtocol != null){
+//                            MsgReadCreationDateCacheUtils.saveMessageReadCreationDate(getActivity(),receivedMsg.getCid(),receivedMsg.getTime());
+//                            Intent intent = new Intent();
+//                            intent.setClass(getActivity(),ChannelVoiceCommunicationActivity.class);
+//                            intent.putExtra("channelId",customProtocol.getParamMap().get("id"));
+//                            intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE,ChannelVoiceCommunicationActivity.INVITEE_LAYOUT_STATE);
+//                            startActivity(intent);
+//                        }
                         Channel receiveMsgChannel = ChannelCacheUtils.getChannel(
                                 getActivity(), receivedMsg.getCid());
                         if (receiveMsgChannel == null) {
@@ -587,7 +588,7 @@ public class CommunicationV0Fragment extends Fragment {
                         displayChannelList.addAll(channelList);
                         displayData();// 展示数据
                         registerMsgReceiver();// 注册接收消息的广播
-                        MyApplication.getInstance().startWebSocket(false);
+                        WebSocketPush.getInstance().startWebSocket(false);
                         break;
                     default:
                         break;

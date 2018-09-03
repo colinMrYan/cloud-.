@@ -13,10 +13,11 @@ import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
-import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.ClientIDUtils;
+import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -59,8 +60,11 @@ public class WebSocketPush {
     /**
      * 开始WebSocket推送
      */
-    public void init(final boolean isForceNew) {
+    public void startWebSocket(final boolean isForceNew) {
         // TODO Auto-generated method stub
+        if (!isHaveLogin()){
+            return;
+        }
         if (MyApplication.getInstance().isV0VersionChat()) {
             String pushId = AppUtils.getPushId(MyApplication.getInstance());
             if (!pushId.equals("UNKNOWN")) {
@@ -83,6 +87,20 @@ public class WebSocketPush {
                 sendWebSocketStatusBroadcast(Socket.EVENT_DISCONNECT);
             }
         }
+    }
+
+    /**
+     * 判断是否已登录
+     *
+     * @return
+     */
+    private boolean isHaveLogin() {
+        String accessToken = PreferencesUtils.getString(MyApplication.getInstance(),
+                "accessToken", "");
+        String myInfo = PreferencesUtils.getString(MyApplication.getInstance(),
+                "myInfo", "");
+        boolean isMDMStatusPass = PreferencesUtils.getBoolean(MyApplication.getInstance(), "isMDMStatusPass", true);
+        return (!StringUtils.isBlank(accessToken) && !StringUtils.isBlank(myInfo) && isMDMStatusPass);
     }
 
 
@@ -182,7 +200,7 @@ public class WebSocketPush {
                 LogUtils.debug(TAG, "发送App状态：" + (isActive ? "ACTIVED" : "SUSPEND"));
             }
         } else {
-            init(false);
+            startWebSocket(false);
         }
     }
 
@@ -339,7 +357,7 @@ public class WebSocketPush {
             eventMessage.setContent("time out");
             eventMessage.setStatus(-1);
             EventBus.getDefault().post(eventMessage);
-            init(false);
+            startWebSocket(false);
         }
     }
 
