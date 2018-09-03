@@ -18,6 +18,7 @@ import org.json.JSONObject;
 
 public class ClientConfigUpdateUtils extends APIInterfaceInstance {
     private static ClientConfigUpdateUtils mInstance;
+    private boolean isCheckClientConfigUpdate = false; //是否正在检查更新中
 
     public static ClientConfigUpdateUtils getInstance() {
         if (mInstance == null) {
@@ -31,9 +32,10 @@ public class ClientConfigUpdateUtils extends APIInterfaceInstance {
     }
 
     public void getAllConfigUpdate() {
+        isCheckClientConfigUpdate= true;
         if (!NetUtils.isNetworkConnected(MyApplication.getInstance(), false)) {
             PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), Constant.PREF_V_CONFIG_ALL, "");
-            EventBus.getDefault().post(new GetAllConfigVersionResult(""));
+            sendClientConfigUpdateInfo(new GetAllConfigVersionResult(""));
             return;
         }
         AppAPIService apiService = new AppAPIService(MyApplication.getInstance());
@@ -58,6 +60,10 @@ public class ClientConfigUpdateUtils extends APIInterfaceInstance {
             e.printStackTrace();
         }
         apiService.getAllConfigVersion(clientConfigVersionObj);
+    }
+
+    public boolean isCheckClientConfigUpdate(){
+        return isCheckClientConfigUpdate;
     }
 
     public boolean isItemNeedUpdate(ClientConfigItem clientConfigItem) {
@@ -110,12 +116,22 @@ public class ClientConfigUpdateUtils extends APIInterfaceInstance {
     @Override
     public void returnAllConfigVersionSuccess(GetAllConfigVersionResult getAllConfigVersionResult) {
         PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), Constant.PREF_V_CONFIG_ALL, getAllConfigVersionResult.getResponse());
-        EventBus.getDefault().post(getAllConfigVersionResult);
+        sendClientConfigUpdateInfo(getAllConfigVersionResult);
     }
 
     @Override
     public void returnAllConfigVersionFail(String error, int errorCode) {
         PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), Constant.PREF_V_CONFIG_ALL, "");
-        EventBus.getDefault().post(new GetAllConfigVersionResult(""));
+        sendClientConfigUpdateInfo(new GetAllConfigVersionResult(""));
+    }
+
+
+    /**
+     * 发送客户端统一更新信息，各个功能分别以eventbus接收处理
+     * @param getAllConfigVersionResult
+     */
+    private void sendClientConfigUpdateInfo(GetAllConfigVersionResult getAllConfigVersionResult){
+        isCheckClientConfigUpdate = false;
+        EventBus.getDefault().post(getAllConfigVersionResult);
     }
 }

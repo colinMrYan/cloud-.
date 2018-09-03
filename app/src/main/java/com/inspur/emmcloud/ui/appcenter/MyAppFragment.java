@@ -159,7 +159,7 @@ public class MyAppFragment extends Fragment {
         super.onResume();
         if (ClientConfigUpdateUtils.getInstance().isItemNeedUpdate(ClientConfigItem.CLIENT_CONFIG_MY_APP)){
             getMyApp();
-        }else {
+        }else if(!ClientConfigUpdateUtils.getInstance().isCheckClientConfigUpdate()){
             ClientConfigUpdateUtils.getInstance().getAllConfigUpdate();
         }
         getAppBadgeNum();
