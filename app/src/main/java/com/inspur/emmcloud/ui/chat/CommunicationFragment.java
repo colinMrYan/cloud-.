@@ -171,7 +171,7 @@ public class CommunicationFragment extends Fragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                MyApplication.getInstance().startWebSocket(false);
+                WebSocketPush.getInstance().startWebSocket(false);
                 getChannelList();
                 getMessage();
             }

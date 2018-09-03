@@ -158,7 +158,7 @@ public class Base64 {
      * if any are present, there must be the correct number of them.
      *
      * @param input  the data to decode
-     * @param offset the position within the input array at which to init
+     * @param offset the position within the input array at which to startWebSocket
      * @param len    the number of bytes of input to decode
      * @param flags  controls certain features of the decoded output.
      *               Pass {@code DEFAULT} to decode standard Base64.

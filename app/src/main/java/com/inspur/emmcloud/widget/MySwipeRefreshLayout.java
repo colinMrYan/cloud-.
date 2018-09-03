@@ -22,13 +22,18 @@ public class MySwipeRefreshLayout extends SwipeRefreshLayout {
     private ListView mListView;
     private OnLoadListener mOnLoadListener;
     private boolean canLoadMore = false;  //是否可以上拉加载更多
+    private float startY;
+    private float startX;
+    // 记录viewPager是否拖拽的标记
+    private boolean mIsVpDragger;
+
 
     /**
      * 正在加载状态
      */
     private boolean isLoading;
 
-    public MySwipeRefreshLayout(Context context, AttributeSet attrs){
+    public MySwipeRefreshLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
         // 填充底部加载布局
         mFooterView = View.inflate(context, R.layout.swiperefreshlayout_view_footer, null);
@@ -39,7 +44,7 @@ public class MySwipeRefreshLayout extends SwipeRefreshLayout {
     }
 
     @Override
-    protected void onLayout(boolean changed, int left, int top, int right, int bottom){
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
         // 获取ListView,设置ListView的布局位置
         if (mListView == null) {
@@ -57,26 +62,66 @@ public class MySwipeRefreshLayout extends SwipeRefreshLayout {
         }
     }
 
+
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+        int action = ev.getAction();
+        switch (action) {
+            case MotionEvent.ACTION_DOWN:
+                // 记录手指按下的位置
+                startY = ev.getY();
+                startX = ev.getX();
+                // 初始化标记
+                mIsVpDragger = false;
+                break;
+            case MotionEvent.ACTION_MOVE:
+                // 如果viewpager正在拖拽中，那么不拦截它的事件，直接return false；
+                if (mIsVpDragger) {
+                    return false;
+                }
+
+                // 获取当前手指位置
+                float endY = ev.getY();
+                float endX = ev.getX();
+                float distanceX = Math.abs(endX - startX);
+                float distanceY = Math.abs(endY - startY);
+                // 如果X轴位移大于Y轴位移，那么将事件交给viewPager处理。
+                if (distanceX > mScaledTouchSlop && distanceX > distanceY) {
+                    mIsVpDragger = true;
+                    return false;
+                } else {
+                }
+                break;
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_CANCEL:
+                // 初始化标记
+                mIsVpDragger = false;
+                break;
+        }
+        // 如果是Y轴位移大于X轴，事件交给swipeRefreshLayout处理。
+        return super.onInterceptTouchEvent(ev);
+    }
+
+
     /**
      * 在分发事件的时候处理子控件的触摸事件
      */
     private float mDownY, mUpY;
 
     @Override
-    public boolean dispatchTouchEvent(MotionEvent ev){
+    public boolean dispatchTouchEvent(MotionEvent ev) {
 
-        switch (ev.getAction()){
+        switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 // 移动的起点
                 mDownY = ev.getY();
                 break;
             case MotionEvent.ACTION_MOVE:
                 // 移动过程中判断时候能下拉加载更多
-                if (canLoadMore()){
+                if (canLoadMore()) {
                     // 加载数据
                     loadData();
                 }
-
                 break;
             case MotionEvent.ACTION_UP:
                 // 移动的终点
@@ -88,17 +133,18 @@ public class MySwipeRefreshLayout extends SwipeRefreshLayout {
 
     /**
      * 设置是否上拉加载更多
+     *
      * @param canLoadMore
      */
-    public void setCanLoadMore(boolean canLoadMore){
+    public void setCanLoadMore(boolean canLoadMore) {
         this.canLoadMore = canLoadMore;
     }
 
     /**
      * 判断是否满足加载更多条件
      */
-    private boolean canLoadMore(){
-        if (!canLoadMore){
+    private boolean canLoadMore() {
+        if (!canLoadMore) {
             return false;
         }
         // 1. 是上拉状态
@@ -106,19 +152,17 @@ public class MySwipeRefreshLayout extends SwipeRefreshLayout {
         if (condition1) {
             // 是上拉状态
         }
-
         // 2. 当前页面可见的item是最后一个条目
         boolean condition2 = false;
-        if (mListView != null && mListView.getAdapter() != null){
+        if (mListView != null && mListView.getAdapter() != null) {
             condition2 = mListView.getLastVisiblePosition() == (mListView.getAdapter().getCount() - 1);
         }
-
-        if (condition2){
+        if (condition2) {
             // 是最后一个条目
         }
         // 3. 正在加载状态
         boolean condition3 = !isLoading;
-        if (condition3){
+        if (condition3) {
             // 不是正在加载状态
         }
         return condition1 && condition2 && condition3;
@@ -127,9 +171,9 @@ public class MySwipeRefreshLayout extends SwipeRefreshLayout {
     /**
      * 处理加载数据的逻辑
      */
-    private void loadData(){
+    private void loadData() {
         // 加载数据
-        if (mOnLoadListener != null){
+        if (mOnLoadListener != null) {
             // 设置加载状态，让布局显示出来
             setLoading(true);
             mOnLoadListener.onLoadMore();
@@ -140,9 +184,9 @@ public class MySwipeRefreshLayout extends SwipeRefreshLayout {
     /**
      * 设置加载状态，是否加载传入boolean值进行判断
      */
-    public void setLoading(boolean loading){
+    public void setLoading(boolean loading) {
         // 修改当前的状态
-        if (mListView != null){
+        if (mListView != null) {
             isLoading = loading;
             if (isLoading) {
                 // 显示布局
@@ -150,14 +194,13 @@ public class MySwipeRefreshLayout extends SwipeRefreshLayout {
             } else {
                 // 隐藏布局
                 mListView.removeFooterView(mFooterView);
-
                 // 重置滑动的坐标
                 mDownY = 0;
                 mUpY = 0;
             }
         }
 
-        if (isRefreshing()){
+        if (isRefreshing()) {
             setRefreshing(loading);
         }
     }
@@ -166,21 +209,21 @@ public class MySwipeRefreshLayout extends SwipeRefreshLayout {
     /**
      * 设置ListView的滑动监听
      */
-    private void setListViewOnScroll(){
+    private void setListViewOnScroll() {
 
 
-        mListView.setOnScrollListener(new AbsListView.OnScrollListener(){
+        mListView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState){
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
                 // 移动过程中判断时候能下拉加载更多
-                if (canLoadMore()){
+                if (canLoadMore()) {
                     // 加载数据
                     loadData();
                 }
             }
 
             @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount){
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
 
             }
         });
@@ -189,11 +232,11 @@ public class MySwipeRefreshLayout extends SwipeRefreshLayout {
     /**
      * 上拉加载的接口回调
      */
-    public interface OnLoadListener{
+    public interface OnLoadListener {
         void onLoadMore();
     }
 
-    public void setOnLoadListener(OnLoadListener listener){
+    public void setOnLoadListener(OnLoadListener listener) {
         this.mOnLoadListener = listener;
     }
 

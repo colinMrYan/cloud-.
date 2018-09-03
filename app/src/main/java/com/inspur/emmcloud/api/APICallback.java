@@ -8,6 +8,7 @@ package com.inspur.emmcloud.api;
 
 import android.content.Context;
 
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.cache.AppExceptionCacheUtils;
@@ -80,7 +81,7 @@ public abstract class APICallback implements CommonCallback<byte[]> {
                 callbackTokenExpire(requestTime);
             } else {
                 callbackFail(error, responseCode);
-                AppExceptionCacheUtils.saveAppException(context,errorLevel,url,error,responseCode);
+                AppExceptionCacheUtils.saveAppException(MyApplication.getInstance(),errorLevel,url,error,responseCode);
             }
         } catch (Exception e) {
             // TODO: handle exception

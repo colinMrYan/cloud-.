@@ -137,7 +137,7 @@ public class HorizontalProgressBarWithNumber extends ProgressBar
  	 */ 
  	private void obtainStyledAttributes(AttributeSet attrs) 
  	{ 
- 		// init values from custom attributes 
+ 		// startWebSocket values from custom attributes
  		final TypedArray attributes = getContext().obtainStyledAttributes( 
  				attrs, R.styleable.HorizontalProgressBarWithNumber); 
  
@@ -231,10 +231,10 @@ public class HorizontalProgressBarWithNumber extends ProgressBar
  		// draw unreached bar 
 // 		if (!noNeedBg) 
 // 		{ 
-// 			float init = progressPosX + mTextOffset / 2 + textWidth;
+// 			float startWebSocket = progressPosX + mTextOffset / 2 + textWidth;
 // 			mPaint.setColor(mUnReachedBarColor); 
 // 			mPaint.setStrokeWidth(mUnReachedProgressBarHeight); 
-// 			canvas.drawLine(init, 0, mRealWidth, 0, mPaint);
+// 			canvas.drawLine(startWebSocket, 0, mRealWidth, 0, mPaint);
 // 		} 
  
 

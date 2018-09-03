@@ -116,13 +116,13 @@ public class ContactAPIService {
 		});
 	}
 
-	public void getContactUserList(){
+	public void getContactUserList(final String saveConfigVersion){
 		String url = APIUri.getContactUserUrl();
 		RequestParams params = MyApplication.getInstance().getHttpRequestParams(url);
 		x.http().post(params, new APICallback(context,url){
 			@Override
 			public void callbackSuccess(byte[] arg0) {
-				apiInterface.returnContactUserListSuccess(arg0);
+				apiInterface.returnContactUserListSuccess(arg0,saveConfigVersion);
 			}
 
 			@Override
@@ -135,7 +135,7 @@ public class ContactAPIService {
 				OauthCallBack oauthCallBack = new OauthCallBack() {
 					@Override
 					public void reExecute() {
-						getContactUserList();
+						getContactUserList(saveConfigVersion);
 					}
 
 					@Override
@@ -149,14 +149,14 @@ public class ContactAPIService {
 		} );
 	}
 
-	public void getContactUserListUpdate(final long lastQuetyTime){
+	public void getContactUserListUpdate(final long lastQuetyTime,final String saveConfigVersion){
 		String url = APIUri.getContactUserUrlUpdate();
 		RequestParams params = MyApplication.getInstance().getHttpRequestParams(url);
 		params.addParameter("lastQueryTime", lastQuetyTime);
 		x.http().post(params, new APICallback(context,url){
 			@Override
 			public void callbackSuccess(byte[] arg0) {
-				apiInterface.returnContactUserListUpdateSuccess(new GetContactUserListUpateResult(new String(arg0)));
+				apiInterface.returnContactUserListUpdateSuccess(new GetContactUserListUpateResult(new String(arg0)),saveConfigVersion);
 			}
 
 			@Override
@@ -169,7 +169,7 @@ public class ContactAPIService {
 				OauthCallBack oauthCallBack = new OauthCallBack() {
 					@Override
 					public void reExecute() {
-						getContactUserListUpdate(lastQuetyTime);
+						getContactUserListUpdate(lastQuetyTime,saveConfigVersion);
 					}
 
 					@Override
@@ -185,13 +185,13 @@ public class ContactAPIService {
 
 
 
-	public void getContactOrgList(){
+	public void getContactOrgList(final String saveConfigVersion){
 		String url = APIUri.getContactOrgUrl();
 		RequestParams params =  MyApplication.getInstance().getHttpRequestParams(url);
 		x.http().post(params, new APICallback(context,url){
 			@Override
 			public void callbackSuccess(byte[] arg0) {
-				apiInterface.returnContactOrgListSuccess(arg0);
+				apiInterface.returnContactOrgListSuccess(arg0,saveConfigVersion);
 			}
 
 			@Override
@@ -204,7 +204,7 @@ public class ContactAPIService {
 				OauthCallBack oauthCallBack = new OauthCallBack() {
 					@Override
 					public void reExecute() {
-						getContactOrgList();
+						getContactOrgList(saveConfigVersion);
 					}
 
 					@Override
@@ -219,14 +219,14 @@ public class ContactAPIService {
 	}
 
 
-	public void getContactOrgListUpdate(final long lastQuetyTime){
+	public void getContactOrgListUpdate(final long lastQuetyTime,final String saveConfigVersion){
 		String url = APIUri.getContactOrgUrlUpdate();
 		RequestParams params = MyApplication.getInstance().getHttpRequestParams(url);
 		params.addParameter("lastQueryTime", lastQuetyTime);
 		x.http().post(params, new APICallback(context,url){
 			@Override
 			public void callbackSuccess(byte[] arg0) {
-				apiInterface.returnContactOrgListUpdateSuccess(new GetContactOrgListUpateResult(new String(arg0)));
+				apiInterface.returnContactOrgListUpdateSuccess(new GetContactOrgListUpateResult(new String(arg0)),saveConfigVersion);
 			}
 
 			@Override
@@ -239,7 +239,7 @@ public class ContactAPIService {
 				OauthCallBack oauthCallBack = new OauthCallBack() {
 					@Override
 					public void reExecute() {
-						getContactOrgListUpdate(lastQuetyTime);
+						getContactOrgListUpdate(lastQuetyTime,saveConfigVersion);
 					}
 
 					@Override

@@ -76,7 +76,7 @@ public class StickerItem {
 //        }// end if
 //    }
 //
-//    public void init(Bitmap addBit, View parentView) {
+//    public void startWebSocket(Bitmap addBit, View parentView) {
 //        this.bitmap = addBit;
 //        this.srcRect = new Rect(0, 0, addBit.getWidth(), addBit.getHeight());
 //        int bitWidth = Math.min(addBit.getWidth(), parentView.getWidth() >> 1);

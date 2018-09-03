@@ -27,6 +27,7 @@ import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.privates.ClientConfigUpdateUtils;
 import com.inspur.emmcloud.util.privates.DataCleanManager;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.TabAndAppExistUtils;
@@ -294,6 +295,9 @@ public class SettingActivity extends BaseActivity {
                         String imgCachePath = MyAppConfig.LOCAL_CACHE_PATH;
                         DataCleanManager.cleanApplicationData(SettingActivity.this,
                                 msgCachePath, imgCachePath);
+                        MyApplication.getInstance().setIsContactReady(false);
+                        //当清除所有缓存的时候清空以db形式存储数据的configVersion
+                        ClientConfigUpdateUtils.getInstance().clearDbDataConfigWithClearAllCache();
                         ImageDisplayUtils.getInstance().clearAllCache();
                         MyAppCacheUtils.clearMyAppList(SettingActivity.this);
                         //清除全部缓存时是否需要清除掉小程序，如果需要，解开下面一行的注释
