@@ -91,7 +91,7 @@ public final class CaptureActivityHandler extends Handler {
                   activity.handDecodeResult(str_result);
               }
           } else if (Res.getWidgetID("decode_failed") == message.what) {
-              // We're decoding as fast as possible, so when one decode fails, init another.
+              // We're decoding as fast as possible, so when one decode fails, startWebSocket another.
               if (message.obj != null && NetUtils.isNetworkConnected(activity,false)){
                   Bitmap cropBitmap = (Bitmap) message.obj;
                   activity.uploadImgToDecodeByServer(cropBitmap);

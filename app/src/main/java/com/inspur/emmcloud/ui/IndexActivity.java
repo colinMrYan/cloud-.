@@ -27,6 +27,7 @@ import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.interf.CommonCallBack;
+import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.service.BackgroundService;
 import com.inspur.emmcloud.service.CoreService;
 import com.inspur.emmcloud.service.LocationService;
@@ -106,16 +107,10 @@ public class IndexActivity extends IndexBaseActivity {
         if (!isHasCacheContact) {
             loadingDlg.show();
         }
-        new ClientConfigUpdateUtils(this, new CommonCallBack() {
-            @Override
-            public void execute() {
-                getAllRobotInfo();
-                getContactUser();
-                updateReactNative();  //从服务端获取显示tab
-                getMyAppRecommendWidgets();
-            }
-        }).getAllConfigUpdate();
-
+        ClientConfigUpdateUtils.getInstance().getAllConfigUpdate();
+        getAllRobotInfo();
+        updateReactNative();  //从服务端获取显示tab
+        getMyAppRecommendWidgets();
     }
 
     /**
@@ -236,7 +231,7 @@ public class IndexActivity extends IndexBaseActivity {
                 public void getClientIdSuccess(String clientId) {
                     AppAPIService apiService = new AppAPIService(IndexActivity.this);
                     apiService.setAPIInterface(new WebService());
-                    String mainTabSaveConfigVersion = ClientConfigUpdateUtils.getItemNewVersion(ClientConfigItem.CLIENT_CONFIG_MAINTAB);
+                    String mainTabSaveConfigVersion = ClientConfigUpdateUtils.getInstance().getItemNewVersion(ClientConfigItem.CLIENT_CONFIG_MAINTAB);
                     String version = PreferencesByUserAndTanentUtils.getString(IndexActivity.this, Constant.PREF_APP_TAB_BAR_VERSION, "");
                     apiService.getAppNewTabs(version,clientId,mainTabSaveConfigVersion);
                 }
@@ -257,12 +252,14 @@ public class IndexActivity extends IndexBaseActivity {
                 switch (msg.what) {
                     case SYNC_ALL_BASE_DATA_SUCCESS:
                         LoadingDialog.dimissDlg(loadingDlg);
-                        MyApplication.getInstance()
-                                .setIsContactReady(true);
-                        notifySyncAllBaseDataSuccess();
-                        MyApplication.getInstance().startWebSocket(true);// 启动webSocket推送
-                        getContactOrg();
-                        getAllChannelGroup();
+                        if (!MyApplication.getInstance().getIsContactReady()){
+                            MyApplication.getInstance()
+                                    .setIsContactReady(true);
+                            notifySyncAllBaseDataSuccess();
+                            WebSocketPush.getInstance().startWebSocket(true);// 启动webSocket推送
+                            getContactOrg();
+                            getAllChannelGroup();
+                        }
                         break;
                     case RELOAD_WEB:
                         if (webView != null) {
@@ -306,19 +303,28 @@ public class IndexActivity extends IndexBaseActivity {
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onClientConfigVersionUpdate(final GetAllConfigVersionResult getAllConfigVersionResult) {
-        boolean isRouterUpdate = ClientConfigUpdateUtils.isItemNeedUpdate(ClientConfigItem.CLIENT_CONFIG_ROUTER, getAllConfigVersionResult);
+        boolean isRouterUpdate = ClientConfigUpdateUtils.getInstance().isItemNeedUpdate(ClientConfigItem.CLIENT_CONFIG_ROUTER, getAllConfigVersionResult);
+        boolean isContactUserUpdate = ClientConfigUpdateUtils.getInstance().isItemNeedUpdate(ClientConfigItem.CLIENT_CONFIG_CONTACT_USER, getAllConfigVersionResult);
+        boolean isContactOrgUpdate = ClientConfigUpdateUtils.getInstance().isItemNeedUpdate(ClientConfigItem.CLIENT_CONFIG_CONTACT_ORG, getAllConfigVersionResult);
         if (isRouterUpdate) {
             new ProfileUtils(IndexActivity.this, null).initProfile(false);
         }
-
+        if (isContactUserUpdate){
+            getContactUser();
+        }else if (handler != null) {
+            handler.sendEmptyMessage(SYNC_ALL_BASE_DATA_SUCCESS);
+        }
+        if (isContactOrgUpdate){
+            getContactOrg();
+        }
         new ClientIDUtils(MyApplication.getInstance(), new ClientIDUtils.OnGetClientIdListener() {
             @Override
             public void getClientIdSuccess(String clientId) {
-                boolean isMainTabUpdate = ClientConfigUpdateUtils.isItemNeedUpdate(ClientConfigItem.CLIENT_CONFIG_MAINTAB, getAllConfigVersionResult);
+                boolean isMainTabUpdate = ClientConfigUpdateUtils.getInstance().isItemNeedUpdate(ClientConfigItem.CLIENT_CONFIG_MAINTAB, getAllConfigVersionResult);
                 if (isMainTabUpdate) {
                     getTabInfo();
                 }
-                boolean isSplashUpdate = ClientConfigUpdateUtils.isItemNeedUpdate(ClientConfigItem.CLIENT_CONFIG_SPLASH, getAllConfigVersionResult);
+                boolean isSplashUpdate = ClientConfigUpdateUtils.getInstance().isItemNeedUpdate(ClientConfigItem.CLIENT_CONFIG_SPLASH, getAllConfigVersionResult);
                 if (isSplashUpdate) {
                     new SplashPageUtils(IndexActivity.this).update();//更新闪屏页面
                 }
@@ -334,9 +340,11 @@ public class IndexActivity extends IndexBaseActivity {
 
     class CacheContactUserThread extends Thread {
         private byte[] result;
+        private String saveConfigVersion;
 
-        public CacheContactUserThread(byte[] result) {
+        public CacheContactUserThread(byte[] result,String saveConfigVersion) {
             this.result = result;
+            this.saveConfigVersion = saveConfigVersion;
         }
 
         @Override
@@ -347,6 +355,7 @@ public class IndexActivity extends IndexBaseActivity {
                 List<ContactUser> contactUserList = ContactUser.protoBufUserList2ContactUserList(userList, users.getLastQueryTime());
                 ContactUserCacheUtils.saveContactUserList(contactUserList);
                 ContactUserCacheUtils.setLastQueryTime(users.getLastQueryTime());
+                ClientConfigUpdateUtils.getInstance().saveItemLocalVersion(ClientConfigItem.CLIENT_CONFIG_CONTACT_USER,saveConfigVersion);
                 if (handler != null) {
                     handler.sendEmptyMessage(SYNC_ALL_BASE_DATA_SUCCESS);
                 }
@@ -358,9 +367,11 @@ public class IndexActivity extends IndexBaseActivity {
 
     class CacheContactUserUpdateThread extends Thread {
         private GetContactUserListUpateResult getContactUserListUpateResult;
+        private String saveConfigVersion;
 
-        public CacheContactUserUpdateThread(GetContactUserListUpateResult getContactUserListUpateResult) {
+        public CacheContactUserUpdateThread(GetContactUserListUpateResult getContactUserListUpateResult,String saveConfigVersion) {
             this.getContactUserListUpateResult = getContactUserListUpateResult;
+            this.saveConfigVersion = saveConfigVersion;
         }
 
         @Override
@@ -371,6 +382,7 @@ public class IndexActivity extends IndexBaseActivity {
                 ContactUserCacheUtils.saveContactUserList(contactUserChangedList);
                 ContactUserCacheUtils.deleteContactUserList(contactUserIdDeleteList);
                 ContactUserCacheUtils.setLastQueryTime(getContactUserListUpateResult.getLastQueryTime());
+                ClientConfigUpdateUtils.getInstance().saveItemLocalVersion(ClientConfigItem.CLIENT_CONFIG_CONTACT_USER,saveConfigVersion);
                 if (handler != null) {
                     handler.sendEmptyMessage(SYNC_ALL_BASE_DATA_SUCCESS);
                 }
@@ -382,9 +394,11 @@ public class IndexActivity extends IndexBaseActivity {
 
     class CacheContactOrgThread extends Thread {
         private byte[] result;
+        private String saveConfigVersion;
 
-        public CacheContactOrgThread(byte[] result) {
+        public CacheContactOrgThread(byte[] result,String saveConfigVersion) {
             this.result = result;
+            this.saveConfigVersion = saveConfigVersion;
         }
 
         @Override
@@ -396,6 +410,7 @@ public class IndexActivity extends IndexBaseActivity {
                 ContactOrgCacheUtils.saveContactOrgList(contactOrgList);
                 ContactOrgCacheUtils.setContactOrgRootId(orgs.getRootID());
                 ContactOrgCacheUtils.setLastQueryTime(orgs.getLastQueryTime());
+                ClientConfigUpdateUtils.getInstance().saveItemLocalVersion(ClientConfigItem.CLIENT_CONFIG_CONTACT_ORG,saveConfigVersion);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -405,9 +420,11 @@ public class IndexActivity extends IndexBaseActivity {
 
     class CacheContactOrgUpdateThread extends Thread {
         private GetContactOrgListUpateResult getContactOrgListUpateResult;
+        private String saveConfigVersion;
 
-        public CacheContactOrgUpdateThread(GetContactOrgListUpateResult getContactOrgListUpateResult) {
+        public CacheContactOrgUpdateThread(GetContactOrgListUpateResult getContactOrgListUpateResult,String saveConfigVersion) {
             this.getContactOrgListUpateResult = getContactOrgListUpateResult;
+            this.saveConfigVersion=saveConfigVersion;
         }
 
         @Override
@@ -422,6 +439,7 @@ public class IndexActivity extends IndexBaseActivity {
                     ContactOrgCacheUtils.setContactOrgRootId(getContactOrgListUpateResult.getRootID());
                 }
                 ContactOrgCacheUtils.setLastQueryTime(getContactOrgListUpateResult.getLastQueryTime());
+                ClientConfigUpdateUtils.getInstance().saveItemLocalVersion(ClientConfigItem.CLIENT_CONFIG_CONTACT_ORG,saveConfigVersion);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -484,12 +502,12 @@ public class IndexActivity extends IndexBaseActivity {
         ContactAPIService apiService = new ContactAPIService(IndexActivity.this);
         apiService.setAPIInterface(new WebService());
         if (NetUtils.isNetworkConnected(getApplicationContext(), false)) {
-            MyApplication.getInstance().setIsContactReady(false);
+            String saveConfigVersion = ClientConfigUpdateUtils.getInstance().getItemNewVersion(ClientConfigItem.CLIENT_CONFIG_CONTACT_USER);
             long contactUserLastQuetyTime = ContactUserCacheUtils.getLastQueryTime();
             if (contactUserLastQuetyTime == 0) {
-                apiService.getContactUserList();
+                apiService.getContactUserList(saveConfigVersion);
             } else {
-                apiService.getContactUserListUpdate(contactUserLastQuetyTime);
+                apiService.getContactUserListUpdate(contactUserLastQuetyTime,saveConfigVersion);
             }
         } else if (handler != null) {
             handler.sendEmptyMessage(SYNC_ALL_BASE_DATA_SUCCESS);
@@ -504,11 +522,12 @@ public class IndexActivity extends IndexBaseActivity {
         if (NetUtils.isNetworkConnected(getApplicationContext(), false)) {
             ContactAPIService apiService = new ContactAPIService(IndexActivity.this);
             apiService.setAPIInterface(new WebService());
+            String saveConfigVersion = ClientConfigUpdateUtils.getInstance().getItemNewVersion(ClientConfigItem.CLIENT_CONFIG_CONTACT_ORG);
             long contactOrgLastQuetyTime = ContactOrgCacheUtils.getLastQueryTime();
             if (contactOrgLastQuetyTime == 0) {
-                apiService.getContactOrgList();
+                apiService.getContactOrgList(saveConfigVersion);
             } else {
-                apiService.getContactOrgListUpdate(contactOrgLastQuetyTime);
+                apiService.getContactOrgListUpdate(contactOrgLastQuetyTime,saveConfigVersion);
             }
 
         }
@@ -528,8 +547,8 @@ public class IndexActivity extends IndexBaseActivity {
 
     public class WebService extends APIInterfaceInstance {
         @Override
-        public void returnContactUserListSuccess(byte[] bytes) {
-            new CacheContactUserThread(bytes).start();
+        public void returnContactUserListSuccess(byte[] bytes,String saveConfigVersion) {
+            new CacheContactUserThread(bytes,saveConfigVersion).start();
         }
 
         @Override
@@ -541,8 +560,8 @@ public class IndexActivity extends IndexBaseActivity {
         }
 
         @Override
-        public void returnContactUserListUpdateSuccess(GetContactUserListUpateResult getContactUserListUpateResult) {
-            new CacheContactUserUpdateThread(getContactUserListUpateResult).start();
+        public void returnContactUserListUpdateSuccess(GetContactUserListUpateResult getContactUserListUpateResult,String saveConfigVersion) {
+            new CacheContactUserUpdateThread(getContactUserListUpateResult,saveConfigVersion).start();
         }
 
         @Override
@@ -555,8 +574,8 @@ public class IndexActivity extends IndexBaseActivity {
 
 
         @Override
-        public void returnContactOrgListSuccess(byte[] bytes) {
-            new CacheContactOrgThread(bytes).start();
+        public void returnContactOrgListSuccess(byte[] bytes,String saveConfigVersion) {
+            new CacheContactOrgThread(bytes,saveConfigVersion).start();
         }
 
         @Override
@@ -565,8 +584,8 @@ public class IndexActivity extends IndexBaseActivity {
         }
 
         @Override
-        public void returnContactOrgListUpdateSuccess(GetContactOrgListUpateResult getContactOrgListUpateResult) {
-            new CacheContactOrgUpdateThread(getContactOrgListUpateResult).start();
+        public void returnContactOrgListUpdateSuccess(GetContactOrgListUpateResult getContactOrgListUpateResult,String saveConfigVersion) {
+            new CacheContactOrgUpdateThread(getContactOrgListUpateResult,saveConfigVersion).start();
         }
 
         @Override
@@ -598,7 +617,7 @@ public class IndexActivity extends IndexBaseActivity {
         @Override
         public void returnAppTabAutoSuccess(GetAppMainTabResult getAppMainTabResult, String mainTabSaveConfigVersion) {
             updateTabbarWithOrder(getAppMainTabResult);
-            ClientConfigUpdateUtils.saveItemLocalVersion(ClientConfigItem.CLIENT_CONFIG_MAINTAB, mainTabSaveConfigVersion);
+            ClientConfigUpdateUtils.getInstance().saveItemLocalVersion(ClientConfigItem.CLIENT_CONFIG_MAINTAB, mainTabSaveConfigVersion);
         }
 
         @Override

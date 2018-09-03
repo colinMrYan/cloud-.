@@ -300,7 +300,7 @@ public final class CameraManager {
 			}
 			Point screenResolution = configManager.getScreenResolution();
 			if (screenResolution == null) {
-				// Called early, before init even finished
+				// Called early, before startWebSocket even finished
 				return null;
 			}
 

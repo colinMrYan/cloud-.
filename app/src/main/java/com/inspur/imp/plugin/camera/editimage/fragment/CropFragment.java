@@ -48,7 +48,7 @@ public class CropFragment extends Fragment {
 	private LinearLayout ratioList;
 	private static List<RatioItem> dataList = new ArrayList<RatioItem>();
 	static {
-		// init data
+		// startWebSocket data
 		dataList.add(new RatioItem("任意", -1f));
 		dataList.add(new RatioItem("1:1", 1f));
 		dataList.add(new RatioItem("1:2", 1 / 2f));
@@ -90,7 +90,7 @@ public class CropFragment extends Fragment {
 	}
 
 	private void setUpRatioList() {
-		// init UI
+		// startWebSocket UI
 		ratioList.removeAllViews();
 		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
 				LinearLayout.LayoutParams.WRAP_CONTENT,

@@ -49,7 +49,7 @@ public class LanguageUtils {
 	}
 
 	public void getServerSupportLanguage() {
-		boolean isLanguageUpdate = ClientConfigUpdateUtils.isItemNeedUpdate(ClientConfigItem.CLIENT_CONFIG_LANGUAGE);
+		boolean isLanguageUpdate = ClientConfigUpdateUtils.getInstance().isItemNeedUpdate(ClientConfigItem.CLIENT_CONFIG_LANGUAGE);
 		String languageResult = PreferencesUtils.getString(context,
 				MyApplication.getInstance().getTanent() + "languageResult");
 		if (!isLanguageUpdate && languageResult != null){
@@ -61,7 +61,7 @@ public class LanguageUtils {
 			return;
 		}
 		if (NetUtils.isNetworkConnected(context,false)) {
-			saveConfigVersion = ClientConfigUpdateUtils.getItemNewVersion(ClientConfigItem.CLIENT_CONFIG_LANGUAGE);
+			saveConfigVersion = ClientConfigUpdateUtils.getInstance().getItemNewVersion(ClientConfigItem.CLIENT_CONFIG_LANGUAGE);
 			MineAPIService apiService = new MineAPIService(context);
 			apiService.setAPIInterface(new WebService());
 			apiService.getLanguage();
@@ -215,7 +215,7 @@ public class LanguageUtils {
 			// TODO Auto-generated method stub
 			PreferencesUtils.putString(context, MyApplication.getInstance().getTanent()
 					+ "languageResult", getLanguageResult.getLanguageResult());
-            ClientConfigUpdateUtils.saveItemLocalVersion(ClientConfigItem.CLIENT_CONFIG_LANGUAGE,saveConfigVersion);
+            ClientConfigUpdateUtils.getInstance().saveItemLocalVersion(ClientConfigItem.CLIENT_CONFIG_LANGUAGE,saveConfigVersion);
 			handData(getLanguageResult);
 		}
 

@@ -35,7 +35,7 @@ public class SplashPageUtils {
     }
 
     public void update() {
-        saveConfigVersion = ClientConfigUpdateUtils.getItemNewVersion(ClientConfigItem.CLIENT_CONFIG_SPLASH);
+        saveConfigVersion = ClientConfigUpdateUtils.getInstance().getItemNewVersion(ClientConfigItem.CLIENT_CONFIG_SPLASH);
 
         new ClientIDUtils(MyApplication.getInstance(), new ClientIDUtils.OnGetClientIdListener() {
             @Override
@@ -83,7 +83,7 @@ public class SplashPageUtils {
                     break;
             }
         }else {
-            ClientConfigUpdateUtils.saveItemLocalVersion(ClientConfigItem.CLIENT_CONFIG_SPLASH,saveConfigVersion);
+            ClientConfigUpdateUtils.getInstance().saveItemLocalVersion(ClientConfigItem.CLIENT_CONFIG_SPLASH,saveConfigVersion);
         }
     }
 
@@ -138,7 +138,7 @@ public class SplashPageUtils {
                         protectedFileNameList.add(getCurrentSplashFileName(splashPageBean.getPayload().getResource().getDefaultX()));
                         FileUtils.delFilesExceptNameList(MyAppConfig.getSplashPageImageShowPath(context,
                                 ((MyApplication) context.getApplicationContext()).getUid(), "splash/"),protectedFileNameList);
-                        ClientConfigUpdateUtils.saveItemLocalVersion(ClientConfigItem.CLIENT_CONFIG_SPLASH,saveConfigVersion);
+                        ClientConfigUpdateUtils.getInstance().saveItemLocalVersion(ClientConfigItem.CLIENT_CONFIG_SPLASH,saveConfigVersion);
                     } else {
                         AppExceptionCacheUtils.saveAppException(context,2,url,"splash sha256 Error",0);
                     }

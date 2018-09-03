@@ -50,6 +50,8 @@ import com.inspur.emmcloud.bean.appcenter.GetAppGroupResult;
 import com.inspur.emmcloud.bean.appcenter.GetRecommendAppWidgetListResult;
 import com.inspur.emmcloud.bean.appcenter.RecommendAppWidgetBean;
 import com.inspur.emmcloud.bean.chat.TransparentBean;
+import com.inspur.emmcloud.bean.system.ClientConfigItem;
+import com.inspur.emmcloud.bean.system.GetAllConfigVersionResult;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.interf.OnRecommendAppWidgetItemClickListener;
@@ -60,6 +62,7 @@ import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ShortCutUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppTabUtils;
+import com.inspur.emmcloud.util.privates.ClientConfigUpdateUtils;
 import com.inspur.emmcloud.util.privates.MyAppWidgetUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
@@ -109,7 +112,6 @@ public class MyAppFragment extends Fragment {
     private BroadcastReceiver mBroadcastReceiver;
     private PopupWindow popupWindow;
     private boolean isNeedCommonlyUseApp = false;
-    private List<String> shortCutAppList = new ArrayList<>();
     private MyAppSaveTask myAppSaveTask;
     private Map<String, AppBadgeBean> appBadgeBeanMap = new HashMap<>();
     private RecyclerView recommendAppWidgetListView = null;
@@ -142,28 +144,6 @@ public class MyAppFragment extends Fragment {
     }
 
     /**
-     * 更推荐应用小部件信息
-     * 从MyAppWidgetUtils发送通知而来
-     *
-     * @param getRecommendAppWidgetListResult
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void updateRecommendAppWidegtList(GetRecommendAppWidgetListResult getRecommendAppWidgetListResult) {
-        refreshRecommendAppWidgetView();
-    }
-
-    /**
-     * 更新常用应用数据
-     * 来自AppDetailActivity打开应用
-     *
-     * @param app
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void updateCommonlyUseAppList(App app) {
-        saveOrChangeCommonlyUseAppList(app, appListAdapter.getAppAdapterList());
-    }
-
-    /**
      * 检查获取我的应用推荐应用小部件更新
      * 过期则更新不过期不更新
      */
@@ -177,7 +157,11 @@ public class MyAppFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        getMyApp();
+        if (ClientConfigUpdateUtils.getInstance().isItemNeedUpdate(ClientConfigItem.CLIENT_CONFIG_MY_APP)){
+            getMyApp();
+        }else {
+            ClientConfigUpdateUtils.getInstance().getAllConfigUpdate();
+        }
         getAppBadgeNum();
         refreshRecommendAppWidgetView();
     }
@@ -328,12 +312,50 @@ public class MyAppFragment extends Fragment {
         }
     }
 
+
+    /**
+     * 更推荐应用小部件信息
+     * 从MyAppWidgetUtils发送通知而来
+     *
+     * @param getRecommendAppWidgetListResult
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void updateRecommendAppWidegtList(GetRecommendAppWidgetListResult getRecommendAppWidgetListResult) {
+        refreshRecommendAppWidgetView();
+    }
+
+    /**
+     * 更新常用应用数据
+     * 来自AppDetailActivity打开应用
+     *
+     * @param app
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void updateCommonlyUseAppList(App app) {
+        saveOrChangeCommonlyUseAppList(app, appListAdapter.getAppAdapterList());
+    }
+
+    /**
+     * 客户端统一配置版本更新
+     *
+     * @param getAllConfigVersionResult
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onClientConfigVersionUpdate(final GetAllConfigVersionResult getAllConfigVersionResult) {
+        boolean isMyAppUpdate = ClientConfigUpdateUtils.getInstance().isItemNeedUpdate(ClientConfigItem.CLIENT_CONFIG_MY_APP, getAllConfigVersionResult);
+        if (isMyAppUpdate){
+            getMyApp();
+        }
+    }
+
+
     /**
      * 获取我的apps
      */
     private void getMyApp() {
         if (NetUtils.isNetworkConnected(getActivity(), false)) {
-            apiService.getUserApps();
+            String saveConfigVersion = ClientConfigUpdateUtils.getInstance().getItemNewVersion(ClientConfigItem.CLIENT_CONFIG_MY_APP);
+            apiService.getUserApps(saveConfigVersion);
         } else {
             swipeRefreshLayout.setRefreshing(false);
         }
@@ -1102,6 +1124,11 @@ public class MyAppFragment extends Fragment {
 
 
     class MyAppSaveTask extends AsyncTask<GetAppGroupResult, Void, List<AppGroupBean>> {
+        private String clientConfigMyAppVersion;
+
+        public MyAppSaveTask(String clientConfigMyAppVersion){
+            this.clientConfigMyAppVersion = clientConfigMyAppVersion;
+        }
 
         @Override
         protected List<AppGroupBean> doInBackground(GetAppGroupResult... params) {
@@ -1109,10 +1136,11 @@ public class MyAppFragment extends Fragment {
                 List<AppGroupBean> appGroupList = handleAppList((params[0])
                         .getAppGroupBeanList());
                 MyAppCacheUtils.saveMyAppList(getActivity(), appGroupList);
+                ClientConfigUpdateUtils.getInstance().saveItemLocalVersion(ClientConfigItem.CLIENT_CONFIG_MY_APP,clientConfigMyAppVersion);
                 return appGroupList;
             } catch (Exception e) {
                 e.printStackTrace();
-                return new ArrayList<AppGroupBean>();
+                return new ArrayList<>();
             }
 
         }
@@ -1151,13 +1179,11 @@ public class MyAppFragment extends Fragment {
         EventBus.getDefault().post(getAppBadgeResult);
     }
 
-    /**
-     * 网络请求处理类，一般放最后
-     */
+
     class WebService extends APIInterfaceInstance {
         @Override
-        public void returnUserAppsSuccess(final GetAppGroupResult getAppGroupResult) {
-            myAppSaveTask = new MyAppSaveTask();
+        public void returnUserAppsSuccess(final GetAppGroupResult getAppGroupResult,String clientConfigMyAppVersion) {
+            myAppSaveTask = new MyAppSaveTask(clientConfigMyAppVersion);
             myAppSaveTask.execute(getAppGroupResult);
             appListSizeExceptCommonlyUse = getAppGroupResult.getAppGroupBeanList().size();
         }
@@ -1179,7 +1205,6 @@ public class MyAppFragment extends Fragment {
         @Override
         public void returnGetAppBadgeResultFail(String error, int errorCode) {
             swipeRefreshLayout.setRefreshing(false);
-//            WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
         }
     }
 }

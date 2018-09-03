@@ -178,7 +178,7 @@ public class NumberCircleProgressBar extends View {
 	private float mDrawTextHeight;
 
 	/**
-	 * the drawn text init
+	 * the drawn text startWebSocket
 	 */
 	private float mDrawTextStart;
 
@@ -355,7 +355,7 @@ public class NumberCircleProgressBar extends View {
 							.sin(PERCENT_TO_ARC[percent]));
 					float rCos = (float) (mCircleRadius * Math
 							.cos(PERCENT_TO_ARC[percent]));
-					path.moveTo(centerX, centerY);// triangle init
+					path.moveTo(centerX, centerY);// triangle startWebSocket
 					path.lineTo(centerX + rSin, centerY + rCos);
 					path.lineTo(centerX - rSin, centerY + rCos);
 					path.lineTo(centerX, centerY);
@@ -373,7 +373,7 @@ public class NumberCircleProgressBar extends View {
 							.sin(PERCENT_TO_ARC[percent]));
 					float rCos = (float) (mCircleRadius * Math
 							.cos(PERCENT_TO_ARC[percent]));
-					path.moveTo(centerX, centerY);// triangle init
+					path.moveTo(centerX, centerY);// triangle startWebSocket
 					path.lineTo(centerX + rSin, centerY + rCos);
 					path.lineTo(centerX - rSin, centerY + rCos);
 					path.lineTo(centerX, centerY);
@@ -432,7 +432,7 @@ public class NumberCircleProgressBar extends View {
 	}
 
 	/**
-	 * init all painters
+	 * startWebSocket all painters
 	 */
 	private void initializePainters() {
 		mCirclePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
