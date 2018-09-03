@@ -44,7 +44,7 @@ public class PluginMgr {
 //	 * @param ctx
 //	 * @param
 //	 */
-//	public static void init(Context ctx, ImpWebView ImpWebView) {
+//	public static void startWebSocket(Context ctx, ImpWebView ImpWebView) {
 //		context = ctx;
 //		webView = ImpWebView;
 //	}

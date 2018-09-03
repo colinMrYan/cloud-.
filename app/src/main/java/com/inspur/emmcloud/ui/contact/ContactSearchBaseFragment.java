@@ -14,7 +14,9 @@ import com.inspur.emmcloud.api.apiservice.ContactAPIService;
 import com.inspur.emmcloud.bean.contact.ContactOrg;
 import com.inspur.emmcloud.bean.contact.ContactProtoBuf;
 import com.inspur.emmcloud.bean.contact.ContactUser;
+import com.inspur.emmcloud.bean.system.ClientConfigItem;
 import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.privates.ClientConfigUpdateUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactOrgCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
@@ -105,9 +107,10 @@ public class ContactSearchBaseFragment extends Fragment {
         if (!loadingDlg.isShowing()) {
             loadingDlg.show();
         }
+        String saveConfigVersion = ClientConfigUpdateUtils.getInstance().getItemNewVersion(ClientConfigItem.CLIENT_CONFIG_CONTACT_USER);
         ContactAPIService apiService = new ContactAPIService(getActivity());
         apiService.setAPIInterface(new WebService());
-        apiService.getContactUserList();
+        apiService.getContactUserList(saveConfigVersion);
     }
 
     /**
@@ -118,17 +121,20 @@ public class ContactSearchBaseFragment extends Fragment {
         if (!loadingDlg.isShowing()) {
             loadingDlg.show();
         }
+        String saveConfigVersion = ClientConfigUpdateUtils.getInstance().getItemNewVersion(ClientConfigItem.CLIENT_CONFIG_CONTACT_ORG);
         ContactAPIService apiService = new ContactAPIService(getActivity());
         apiService.setAPIInterface(new WebService());
-        apiService.getContactOrgList();
+        apiService.getContactOrgList(saveConfigVersion);
     }
 
 
     class CacheContactUserThread extends Thread {
         private byte[] result;
+        private String saveConfigVersion;
 
-        public CacheContactUserThread(byte[] result) {
+        public CacheContactUserThread(byte[] result,String saveConfigVersion) {
             this.result = result;
+            this.saveConfigVersion = saveConfigVersion;
         }
 
         @Override
@@ -139,6 +145,7 @@ public class ContactSearchBaseFragment extends Fragment {
                 List<ContactUser> contactUserList = ContactUser.protoBufUserList2ContactUserList(userList, users.getLastQueryTime());
                 ContactUserCacheUtils.saveContactUserList(contactUserList);
                 ContactUserCacheUtils.setLastQueryTime(users.getLastQueryTime());
+                ClientConfigUpdateUtils.getInstance().saveItemLocalVersion(ClientConfigItem.CLIENT_CONFIG_CONTACT_USER,saveConfigVersion);
                 isContactUserReady = true;
                 if (handler != null) {
                     handler.sendEmptyMessage(DATA_READY);
@@ -151,9 +158,11 @@ public class ContactSearchBaseFragment extends Fragment {
 
     class CacheContactOrgThread extends Thread {
         private byte[] result;
+        private String saveConfigVersion;
 
-        public CacheContactOrgThread(byte[] result) {
+        public CacheContactOrgThread(byte[] result,String saveConfigVersion) {
             this.result = result;
+            this.saveConfigVersion = saveConfigVersion;
         }
 
         @Override
@@ -165,6 +174,7 @@ public class ContactSearchBaseFragment extends Fragment {
                 ContactOrgCacheUtils.saveContactOrgList(contactOrgList);
                 ContactOrgCacheUtils.setContactOrgRootId(orgs.getRootID());
                 ContactOrgCacheUtils.setLastQueryTime(orgs.getLastQueryTime());
+                ClientConfigUpdateUtils.getInstance().saveItemLocalVersion(ClientConfigItem.CLIENT_CONFIG_CONTACT_ORG,saveConfigVersion);
                 isContactOrgReady = true;
                 if (handler != null) {
                     handler.sendEmptyMessage(DATA_READY);
@@ -178,8 +188,8 @@ public class ContactSearchBaseFragment extends Fragment {
 
     public class WebService extends APIInterfaceInstance {
         @Override
-        public void returnContactOrgListSuccess(byte[] bytes) {
-            new CacheContactOrgThread(bytes).start();
+        public void returnContactOrgListSuccess(byte[] bytes,String saveConfigVersion) {
+            new CacheContactOrgThread(bytes,saveConfigVersion).start();
         }
 
         @Override
@@ -197,8 +207,8 @@ public class ContactSearchBaseFragment extends Fragment {
         }
 
         @Override
-        public void returnContactUserListSuccess(byte[] bytes) {
-            new CacheContactUserThread(bytes).start();
+        public void returnContactUserListSuccess(byte[] bytes,String saveConfigVersion) {
+            new CacheContactUserThread(bytes,saveConfigVersion).start();
         }
     }
 }

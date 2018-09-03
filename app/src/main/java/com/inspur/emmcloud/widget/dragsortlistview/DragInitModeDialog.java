@@ -12,7 +12,7 @@ import com.inspur.emmcloud.R;
 
 
 /**
- * Sets drag init mode on DSLV controller passed into ctor.
+ * Sets drag startWebSocket mode on DSLV controller passed into ctor.
  */
 public class DragInitModeDialog extends DialogFragment {
 

@@ -667,10 +667,10 @@ public class CalendarUtil {
 //				for (int j = 0; j < getRoomAvailableResult.getRoomAvailableDays().get(i).size(); j++) {
 //
 //					
-//					String init = getRoomAvailableResult
+//					String startWebSocket = getRoomAvailableResult
 //							.getRoomAvailableDays().get(i).get(j)
 //							.getStart();
-//					long starttime = Long.parseLong(init);
+//					long starttime = Long.parseLong(startWebSocket);
 //					String end = getRoomAvailableResult
 //							.getRoomAvailableDays().get(i).get(j).getEnd();
 //					long endtime = Long.parseLong(end);

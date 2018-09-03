@@ -8,13 +8,14 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.privates.ECMTransparentUtils;
 import com.inspur.emmcloud.util.privates.ClientIDUtils;
+import com.inspur.emmcloud.util.privates.ECMTransparentUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -42,7 +43,7 @@ public class JpushReceiver extends BroadcastReceiver {
             LogUtils.debug(TAG, "[MyReceiver] 接收Registration Id : " + regId);
             PreferencesUtils.putString(context, "JpushRegId", regId);
             new ClientIDUtils(context).upload();
-            MyApplication.getInstance().startWebSocket(false);
+            WebSocketPush.getInstance().startWebSocket(false);
         } else if (JPushInterface.ACTION_MESSAGE_RECEIVED.equals(intent
                 .getAction())) {
             ECMTransparentUtils.handleTransparentMsg(context,bundle.getString(JPushInterface.EXTRA_MESSAGE));
