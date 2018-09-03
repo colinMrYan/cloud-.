@@ -32,6 +32,7 @@ import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppWebConfig;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ResolutionUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -174,6 +175,7 @@ public class ImpFragment extends Fragment {
                 return false;
             }
         });
+        LogUtils.jasonDebug("url===="+url);
         webView.loadUrl(url, webViewHeaders);
         setWebViewFunctionVisiable();
     }
@@ -671,9 +673,11 @@ public class ImpFragment extends Fragment {
 
     @Override
     public void onDestroy() {
+        LogUtils.jasonDebug("onDestroy------------");
         if (webView != null) {
             webView.removeAllViews();
             webView.destroy();
+            webView=null;
         }
         //清除掉图片缓存
 //        DataCleanManager.cleanCustomCache(MyAppConfig.LOCAL_IMG_CREATE_PATH);

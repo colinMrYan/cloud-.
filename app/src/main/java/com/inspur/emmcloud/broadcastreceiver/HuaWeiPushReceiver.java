@@ -5,10 +5,10 @@ import android.content.Context;
 import android.os.Bundle;
 
 import com.huawei.hms.support.api.push.PushReceiver;
-import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.privates.ECMTransparentUtils;
 import com.inspur.emmcloud.util.privates.ClientIDUtils;
+import com.inspur.emmcloud.util.privates.ECMTransparentUtils;
 
 /**
  * Created by yufuchang on 2017/6/20.
@@ -25,7 +25,7 @@ public class HuaWeiPushReceiver extends PushReceiver {
     public void onToken(Context context, String token, Bundle extras) {
         PreferencesUtils.putString(context, "huawei_push_token", token);
         new ClientIDUtils(context).upload();
-        MyApplication.getInstance().startWebSocket(false);
+        WebSocketPush.getInstance().startWebSocket(false);
     }
 
     /**

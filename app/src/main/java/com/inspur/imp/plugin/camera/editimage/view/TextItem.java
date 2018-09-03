@@ -236,7 +236,7 @@ public class TextItem {
 //    }
 //
 //
-//    public void init(String text, Typeface typeface, View parentView) {
+//    public void startWebSocket(String text, Typeface typeface, View parentView) {
 //        this.text = text;
 //        this.textPaint.setTypeface(typeface);
 //        Rect srcRect = new Rect();

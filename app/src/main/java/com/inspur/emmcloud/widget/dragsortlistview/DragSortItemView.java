@@ -30,7 +30,7 @@ public class DragSortItemView extends ViewGroup {
     public DragSortItemView(Context context) {
         super(context);
 
-        // always init with standard ListView layout params
+        // always startWebSocket with standard ListView layout params
         setLayoutParams(new AbsListView.LayoutParams(
                 LayoutParams.FILL_PARENT,
                 LayoutParams.WRAP_CONTENT));

@@ -49,6 +49,7 @@ import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.broadcastreceiver.MsgReceiver;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
+import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
@@ -574,7 +575,7 @@ public class CommunicationV0Fragment extends Fragment {
                         displayChannelList.addAll(channelList);
                         displayData();// 展示数据
                         registerMsgReceiver();// 注册接收消息的广播
-                        MyApplication.getInstance().startWebSocket(false);
+                        WebSocketPush.getInstance().startWebSocket(false);
                         break;
                     default:
                         break;
