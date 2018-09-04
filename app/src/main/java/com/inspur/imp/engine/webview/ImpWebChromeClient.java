@@ -27,6 +27,7 @@ import android.webkit.WebView;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 
+import com.inspur.imp.api.ImpCallBackInterface;
 import com.inspur.imp.api.Res;
 import com.inspur.imp.api.iLog;
 
@@ -44,11 +45,11 @@ public class ImpWebChromeClient extends WebChromeClient {
 	public static final int FILE_CHOOSER_RESULT_CODE = 5173;
 	private ValueCallback<Uri> mUploadMessage;// 回调图片选择，4.4以下
 	private ValueCallback<Uri[]> mUploadCallbackAboveL;// 回调图片选择，5.0以上
-	private WebView mWebView;
+	private ImpWebView mWebView;
 	private FrameLayout mVideoContainer;
 	private CustomViewCallback mCallBack;
 
-	public ImpWebChromeClient(Context context,  WebView webView, FrameLayout frameLayout) {
+	public ImpWebChromeClient(Context context,  ImpWebView webView, FrameLayout frameLayout) {
 		// TODO Auto-generated constructor stub
 		this.context = context;
 		this.mWebView = webView;
@@ -318,7 +319,10 @@ public class ImpWebChromeClient extends WebChromeClient {
 	@Override
 	public void onReceivedTitle(WebView view, String title) {
 		if(null != title && !getRemoveHttpUrl(title).equals(getRemoveHttpUrl(view.getUrl()))  && !getRemoveHttpUrl(title).equals(getRemoveHttpUrl(view.getOriginalUrl()))){
-			getActivity().setTitle(title);
+			ImpCallBackInterface impCallBackInterface = mWebView.getImpCallBackInterface();
+			if(impCallBackInterface != null){
+				impCallBackInterface.onSetTitle(title);
+			}
 		}
 	}
 
