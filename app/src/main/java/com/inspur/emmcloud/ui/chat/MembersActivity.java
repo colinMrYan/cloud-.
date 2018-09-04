@@ -4,13 +4,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,20 +20,28 @@ import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.ChannelMemberListAdapter;
+import com.inspur.emmcloud.adapter.MemberSelectGridAdapter;
 import com.inspur.emmcloud.bean.chat.PersonDto;
+import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
+import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
+import com.inspur.emmcloud.util.common.DensityUtil;
+import com.inspur.emmcloud.util.common.PinyinUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
+import com.inspur.emmcloud.widget.ECMSpaceItemDecoration;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.slidebar.CharacterParser;
 import com.inspur.emmcloud.widget.slidebar.SideBar;
 
-import org.json.JSONException;
 import org.json.JSONObject;
+import org.xutils.view.annotation.ContentView;
+import org.xutils.view.annotation.ViewInject;
 
+import java.io.Serializable;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -41,52 +50,86 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
-public class MembersActivity extends BaseActivity implements
-        SideBar.OnTouchingLetterChangedListener, TextWatcher {
-
-    private SideBar mSideBar;
-    private TextView mDialog;
-    private ListView mListView;
-    private TextView mHeadText;
-    private EditText mSearchInput;
+@ContentView(R.layout.activity_member)
+public class MembersActivity extends BaseActivity implements TextWatcher {
+    public static final String MEMBER_PAGE_STATE = "member_page_state";
+    public static final int SELECT_STATE = 1;//选择人员
+    public static final int MENTIONS_STATE = 2;//@人员选择
+    public static final int CHECK_STATE = 3;//查看人员
+    private static final int TOTAL_MEMBERS_NUM = 9;//最多可选择的人数配置，修改这个配置应当同时修改toast提示里的配置数量
+    @ViewInject(R.id.sidrbar_channel_member_select)
+    private SideBar lettersSideBar;
+    @ViewInject(R.id.tv_channel_member_select_dialog)
+    private TextView dialogTv;
+    @ViewInject(R.id.tv_ok)
+    private TextView okTv;
+    @ViewInject(R.id.lv_channel_member_select)
+    private ListView allMemberListView;
+    @ViewInject(R.id.recyclerview_voice_communication_select_members)
+    private RecyclerView selectedMemberRecylerView;
+    @ViewInject(R.id.header_text)
+    private TextView userHeadText;
+    @ViewInject(R.id.ev_channel_member_search_input)
+    private EditText searchInputEv;
     private CharacterParser characterParser;// 汉字转拼音
     private PinyinComparator pinyinComparator;// 根据拼音来排列ListView里面的数据类
-    private ChannelMemberListAdapter mAdapter;
-    private JSONObject jsonResult;
-    private String channelID = "";
+    private ChannelMemberListAdapter channelMemberListAdapter;
+    private String channelId = "";
     private Handler handler;
     private LoadingDialog loadingDlg;
     private List<PersonDto> filterList = new ArrayList<PersonDto>();
     private List<PersonDto> personDtoList = new ArrayList<>();
+    private MemberSelectGridAdapter selectGridAdapter;
+    private List<ContactUser> allReadySelectUserList = new ArrayList<>();
+    private List<PersonDto> newSelectUserList = new ArrayList<>();//这次刚选的群成员list
+    private List<PersonDto> selectedUserList = new ArrayList<>();//选中的群成员list
+    private List<PersonDto> allReadySelectPersonDtoList = new ArrayList<>();
+    private int state = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_member);
-        mListView = (ListView) findViewById(R.id.channel_member);
-        mSideBar = (SideBar) findViewById(R.id.channel_sidrbar);
-        mDialog = (TextView) findViewById(R.id.channel_dialog);
-        mSearchInput = (EditText) findViewById(R.id.channel_member_search_input);
-        mHeadText = (TextView) findViewById(R.id.header_text);
-        mSideBar.setTextView(mDialog);
+        initViews();
+        initChannelMemberDataInThread();
+        initListener();
+    }
 
-        mSideBar.setOnTouchingLetterChangedListener(this);
-        channelID = getIntent().getStringExtra("cid");
-
+    private void initViews() {
+        state = getIntent().getIntExtra(MEMBER_PAGE_STATE,-1);
         loadingDlg = new LoadingDialog(this);
         loadingDlg.show();
+        selectedMemberRecylerView = (RecyclerView) findViewById(R.id.recyclerview_voice_communication_select_members);
+        okTv.setVisibility(state == SELECT_STATE?View.VISIBLE:View.GONE);
+        lettersSideBar.setTextView(dialogTv);
+        allReadySelectUserList = new ArrayList<>();
+        allReadySelectUserList.add(ContactUserCacheUtils.getContactUserByUid(MyApplication.getInstance().getUid()));
+        allReadySelectPersonDtoList = tranContactUserList2PersonDtoList(allReadySelectUserList);
+        selectedUserList.add(tranContactUser2PersonDto(ContactUserCacheUtils.getContactUserByUid(MyApplication.getInstance().getUid())));
+        selectGridAdapter = new MemberSelectGridAdapter(this, allReadySelectPersonDtoList);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this,5);
+        selectedMemberRecylerView.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(this,8)));
+        selectedMemberRecylerView.setLayoutManager(gridLayoutManager);
+        selectedMemberRecylerView.setAdapter(selectGridAdapter);
+        selectedMemberRecylerView.setVisibility((state == SELECT_STATE && allReadySelectUserList.size() > 0)?View.VISIBLE:View.GONE);
+        lettersSideBar.setVisibility(state == SELECT_STATE?View.GONE:View.VISIBLE);
+        channelId = getIntent().getStringExtra("cid");
+        userHeadText.setText(getIntent().getStringExtra("title"));
+    }
 
+    /**
+     * 在线程里组织群成员data
+     */
+    private void initChannelMemberDataInThread() {
         Runnable runnable = new Runnable() {
-
             @Override
             public void run() {
-                if (!StringUtils.isBlank(channelID)) {
-                    List<String> uidList = ChannelGroupCacheUtils.getMemberUidList(MembersActivity.this, channelID, 0);
+                if (!StringUtils.isBlank(channelId)) {
+                    List<String> uidList = ChannelGroupCacheUtils.getMemberUidList(MembersActivity.this, channelId, 0);
                     personDtoList = ContactUserCacheUtils.getShowMemberList(uidList);
                 } else if (getIntent().getStringArrayListExtra("uidList") != null) {
                     personDtoList = ContactUserCacheUtils.getShowMemberList(getIntent().getStringArrayListExtra("uidList"));
                 }
-                if (!getIntent().hasExtra("search")){
+                if (state == MENTIONS_STATE){
                     Iterator<PersonDto> personDtoIterator = personDtoList.iterator();
                     while (personDtoIterator.hasNext()) {
                         PersonDto personDto = personDtoIterator.next();
@@ -99,7 +142,6 @@ public class MembersActivity extends BaseActivity implements
                 handler.sendMessage(handler.obtainMessage(0));
             }
         };
-
         try {
             handler = new Handler() {
                 @Override
@@ -107,71 +149,15 @@ public class MembersActivity extends BaseActivity implements
                     if (msg.what == 0) {
                         initData();
                     } else {
-                        Toast.makeText(MembersActivity.this, "加载数据出错",
+                        Toast.makeText(MembersActivity.this, getString(R.string.load_data_failed),
                                 Toast.LENGTH_SHORT).show();
                     }
                     LoadingDialog.dimissDlg(loadingDlg);
                 }
-
             };
             new Thread(runnable).start();
         } catch (Exception e) {
-            // TODO: handle exception
             e.printStackTrace();
-        }
-
-        mHeadText.setText(getIntent().getStringExtra("title"));
-        if (getIntent().hasExtra("search")) {
-//			if (getIntent().getStringExtra("search").equals("1")) {
-//				mSearchLayout.setVisibility(View.GONE);
-//			}
-
-            mListView.setOnItemClickListener(new OnItemClickListener() {
-
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view,
-                                        int position, long id) {
-                    String uid = "";
-                    if (mSearchInput.getText().toString().length() > 0) {
-                        uid = filterList.get(position).getUid();
-                    } else {
-                        uid = personDtoList.get(position).getUid();
-                    }
-                    Intent intent = new Intent();
-                    intent.putExtra("uid", uid);
-                    if (uid.startsWith("BOT")) {
-                        intent.setClass(getApplicationContext(), RobotInfoActivity.class);
-                    } else {
-                        intent.setClass(getApplicationContext(),
-                                UserInfoActivity.class);
-                    }
-                    startActivity(intent);
-                }
-            });
-        } else {
-            mListView.setOnItemClickListener(new OnItemClickListener() {
-
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view,
-                                        int position, long id) {
-                    jsonResult = new JSONObject();
-                    try {
-                        String uid, name;
-                        uid = (filterList.size() != 0) ? filterList.get(position).getUid() : personDtoList.get(position).getUid();
-                        name = (filterList.size() != 0) ? filterList.get(position).getName() : personDtoList.get(position).getName();
-                        jsonResult.put("uid", uid);
-                        jsonResult.put("name", name);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    Intent intent = new Intent();
-                    intent.putExtra("searchResult", jsonResult.toString());
-                    boolean isInputKeyWord = getIntent().getBooleanExtra("isInputKeyWord",false);
-                    intent.putExtra("isInputKeyWord",isInputKeyWord);
-                    setResult(RESULT_OK, intent);
-                    finish();
-                }
-            });
         }
     }
 
@@ -185,22 +171,166 @@ public class MembersActivity extends BaseActivity implements
         fillData(personDtoList);
         // 根据a-z进行排序源数据
         Collections.sort(personDtoList, pinyinComparator);
-        mAdapter = new ChannelMemberListAdapter(MembersActivity.this,
-                personDtoList);
-        mListView.setAdapter(mAdapter);
-        mSearchInput.addTextChangedListener(this);
+//        ArrayList<String> letterIndexList = getSideBarLetterList();
+//        lettersSideBar.setIndexArray(letterIndexList);
+        if(state == SELECT_STATE){
+            channelMemberListAdapter = new ChannelMemberListAdapter(MembersActivity.this,
+                    personDtoList, allReadySelectPersonDtoList);
+        }else{
+            channelMemberListAdapter = new ChannelMemberListAdapter(MembersActivity.this,
+                    personDtoList);
+        }
+        lettersSideBar.invalidate();
+        allMemberListView.setAdapter(channelMemberListAdapter);
+        searchInputEv.addTextChangedListener(this);
     }
 
-    @Override
-    public void onTouchingLetterChanged(String s) {
-        int position = 0;
-        // 该字母首次出现的位置
-        if (mAdapter != null) {
-            position = mAdapter.getPositionForSection(s.charAt(0));
+    /**
+     * 备用方法，获取索引letters
+     * @return
+     */
+    private ArrayList<String> getSideBarLetterList() {
+        ArrayList<String> letterIndexList = new ArrayList<>();
+        for (PersonDto personDto:personDtoList){
+            String sortLetter = personDto.getSortLetters();
+            if(!letterIndexList.contains(sortLetter)){
+                letterIndexList.add(sortLetter);
+            }
         }
-        if (position != -1) {
-            mListView.setSelection(position);
+        letterIndexList.add("#");
+        return letterIndexList;
+    }
+
+    /**
+     * 设置监听器
+     */
+    private void initListener() {
+        allMemberListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+                Intent intent = new Intent();
+                switch (state){
+                    case SELECT_STATE:
+                        PersonDto dto = (filterList.size() != 0)?filterList.get(position):personDtoList.get(position);
+                        if(!allReadySelectPersonDtoList.contains(dto)){
+                            if(selectedUserList.size() < TOTAL_MEMBERS_NUM){
+                                if(!selectedUserList.contains(dto)){
+                                    selectedUserList.add(dto);
+                                    newSelectUserList.add(dto);
+                                    updateView(view,View.VISIBLE);
+                                }else{
+                                    selectedUserList.remove(dto);
+                                    newSelectUserList.remove(dto);
+                                    updateView(view,View.GONE);
+                                }
+                                channelMemberListAdapter.updateSelectListViewData(selectedUserList);
+                                selectGridAdapter.setAndRefreshSelectMemberData(selectedUserList);
+                            }else{
+                                ToastUtils.show(MembersActivity.this,getString(R.string.voice_communication_support_nine_members));
+                            }
+                        }
+                        break;
+                    case MENTIONS_STATE:
+                        JSONObject jsonResult = new JSONObject();
+                        try {
+                            String uid, name;
+                            uid = (filterList.size() != 0) ? filterList.get(position).getUid() : personDtoList.get(position).getUid();
+                            name = (filterList.size() != 0) ? filterList.get(position).getName() : personDtoList.get(position).getName();
+                            jsonResult.put("uid", uid);
+                            jsonResult.put("name", name);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        intent.putExtra("searchResult", jsonResult.toString());
+                        boolean isInputKeyWord = getIntent().getBooleanExtra("isInputKeyWord",false);
+                        intent.putExtra("isInputKeyWord",isInputKeyWord);
+                        setResult(RESULT_OK, intent);
+                        finish();
+                        break;
+                    case CHECK_STATE:
+                        String uid = "";
+                        if (searchInputEv.getText().toString().length() > 0) {
+                            uid = filterList.get(position).getUid();
+                        } else {
+                            uid = personDtoList.get(position).getUid();
+                        }
+                        intent.putExtra("uid", uid);
+                        if (uid.startsWith("BOT")) {
+                            intent.setClass(getApplicationContext(), RobotInfoActivity.class);
+                        } else {
+                            intent.setClass(getApplicationContext(),
+                                    UserInfoActivity.class);
+                        }
+                        startActivity(intent);
+                        break;
+                    default:
+                        break;
+                }
+
+            }
+        });
+
+        lettersSideBar.setOnTouchingLetterChangedListener(new SideBar.OnTouchingLetterChangedListener() {
+            @Override
+            public void onTouchingLetterChanged(String s) {
+                int position = 0;
+                // 该字母首次出现的位置
+                if (channelMemberListAdapter != null) {
+                    position = channelMemberListAdapter.getPositionForSection(s.charAt(0));
+                }
+                if (position != -1) {
+                    allMemberListView.setSelection(position);
+                }
+            }
+        });
+    }
+
+    /**
+     * 更新view
+     * @param view
+     * @param visible
+     */
+    private void updateView(View view, int visible) {
+        ImageView imageView = (ImageView) view.findViewById(R.id.img_member_selected);
+        imageView.setVisibility(visible);
+        imageView.setImageResource(R.drawable.icon_other_selected);
+    }
+
+
+
+    /**
+     * 数据转换器
+     * @param contactUserList
+     * @return
+     */
+    private List<PersonDto> tranContactUserList2PersonDtoList(List<ContactUser> contactUserList){
+        List<PersonDto> resultList = new ArrayList<>();
+        if (contactUserList != null) {
+            Iterator<ContactUser> contactListIterator = contactUserList.iterator();
+            while (contactListIterator.hasNext()) {
+                ContactUser contactUser = contactListIterator.next();
+                resultList.add(tranContactUser2PersonDto(contactUser));
+            }
         }
+        return resultList;
+    }
+
+    /**
+     * 单个数据转换
+     * @param contactUser
+     * @return
+     */
+    private PersonDto tranContactUser2PersonDto(ContactUser contactUser){
+        PersonDto personDto = new PersonDto();
+        personDto.setName(contactUser.getName());
+        personDto.setUid(contactUser.getId());
+        personDto.setSortLetters(contactUser.getPinyin().substring(0, 1));
+        personDto.setPinyinFull(contactUser.getPinyin());
+        personDto.setSuoxie(PinyinUtils.getPinYinHeadChar(contactUser
+                .getName()));
+        personDto.setUtype("contact");
+        return personDto;
     }
 
     @Override
@@ -231,7 +361,7 @@ public class MembersActivity extends BaseActivity implements
      */
     private void filterData(String filterStr, List<PersonDto> list) {
         List<PersonDto> filterDateList = new ArrayList<PersonDto>();
-        if (TextUtils.isEmpty(filterStr)) {
+        if (StringUtils.isEmpty(filterStr)) {
             filterDateList = list;
         } else {
             filterDateList.clear();
@@ -254,8 +384,8 @@ public class MembersActivity extends BaseActivity implements
         }
         // 根据a-z进行排序
         Collections.sort(filterDateList, pinyinComparator);
-        mAdapter.updateListView(filterDateList);
-        mListView.setSelection(0);
+        channelMemberListAdapter.updateListView(filterDateList);
+        allMemberListView.setSelection(0);
     }
 
     /**
@@ -265,21 +395,18 @@ public class MembersActivity extends BaseActivity implements
      */
     private void fillData(List<PersonDto> list) {
         ArrayList<String> indexList = new ArrayList<>();
-        for (PersonDto cUserInfoDto : list) {
-            if (cUserInfoDto != null && cUserInfoDto.getName() != null) {
-                String pinyin = cUserInfoDto.getPinyinFull();
+        for (PersonDto userInfoDto : list) {
+            if (userInfoDto != null && userInfoDto.getName() != null) {
+                String pinyin = userInfoDto.getPinyinFull();
                 String sortString = pinyin.substring(0, 1).toUpperCase();
                 indexList.add(sortString);
-//                mSideBar.setIndexArray(indexList);
-//                mSideBar.invalidate();
-                if ("1".equals(cUserInfoDto.getUtype())) {// 判断是否是管理员
-                    cUserInfoDto.setSortLetters("☆");
+                if ("1".equals(userInfoDto.getUtype())) {// 判断是否是管理员
+                    userInfoDto.setSortLetters("☆");
                 } else if (sortString.matches("[A-Z]")) {// 正则表达式，判断首字母是否是英文字母   jason修改crash
-                    cUserInfoDto.setSortLetters(sortString);
+                    userInfoDto.setSortLetters(sortString);
                 } else {
-                    cUserInfoDto.setSortLetters("#");
+                    userInfoDto.setSortLetters("#");
                 }
-
             }
         }
     }
@@ -289,22 +416,40 @@ public class MembersActivity extends BaseActivity implements
             case R.id.back_layout:
                 finish();
                 break;
-
+            case R.id.tv_ok:
+                startCommunication();
+                break;
             default:
                 break;
         }
     }
 
+    /**
+     * 邀请开始通话
+     */
+    private void startCommunication() {
+        List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationUserInfoBeanList = new ArrayList<>();
+        for (int i = 0; i < selectedUserList.size(); i++) {
+            VoiceCommunicationJoinChannelInfoBean voiceCommunicationJoinChannelInfoBean = new VoiceCommunicationJoinChannelInfoBean();
+            voiceCommunicationJoinChannelInfoBean.setUserName(selectedUserList.get(i).getName());
+            voiceCommunicationJoinChannelInfoBean.setUserId(selectedUserList.get(i).getUid());
+            voiceCommunicationUserInfoBeanList.add(voiceCommunicationJoinChannelInfoBean);
+        }
+        Intent intent = new Intent();
+        intent.setClass(MembersActivity.this,ChannelVoiceCommunicationActivity.class);
+        intent.putExtra("userList", (Serializable) voiceCommunicationUserInfoBeanList);
+        intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE,ChannelVoiceCommunicationActivity.INVITER_LAYOUT_STATE);
+        startActivity(intent);
+        finish();
+    }
+
     @Override
     public void onBackPressed() {
-        // TODO Auto-generated method stub
         super.onBackPressed();
         finish();
     }
 
-
     public class PinyinComparator implements Comparator<PersonDto> {
-
         @Override
         public int compare(PersonDto o1, PersonDto o2) {
             if (o1.getSortLetters().equals("☆")) {
@@ -332,6 +477,4 @@ public class MembersActivity extends BaseActivity implements
             }
         }
     }
-
-
 }

@@ -85,7 +85,7 @@ public class GroupInfoActivity extends BaseActivity {
             case R.id.volume_member_layout:
                 Bundle bundle = new Bundle();
                 bundle.putString("title", getString(R.string.volume_group_member));
-                bundle.putString("search", "1");
+                bundle.putInt(MembersActivity.MEMBER_PAGE_STATE, MembersActivity.CHECK_STATE);
                 bundle.putStringArrayList("uidList", group.getMemberUidList());
                 IntentUtils.startActivity(GroupInfoActivity.this,
                         MembersActivity.class, bundle);

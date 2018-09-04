@@ -14,7 +14,6 @@ import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
-import com.inspur.imp.api.ImpActivity;
 import com.inspur.imp.api.ImpFragment;
 import com.inspur.imp.plugin.ImpPlugin;
 
@@ -69,7 +68,7 @@ public class SelectStaffService extends ImpPlugin {
         Bundle bundle = new Bundle();
         bundle.putString("cid", "");
         bundle.putString("title", getActivity().getString(R.string.meeting_memebers));
-        bundle.putString("search", "1");
+        bundle.putInt(MembersActivity.MEMBER_PAGE_STATE, MembersActivity.CHECK_STATE);
         bundle.putStringArrayList("uidList", contactIdList);
         IntentUtils.startActivity(getActivity(),
                 MembersActivity.class, bundle);

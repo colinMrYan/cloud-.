@@ -44,6 +44,7 @@ import com.inspur.emmcloud.bean.chat.GetNewsImgResult;
 import com.inspur.emmcloud.bean.chat.GetNewsInstructionResult;
 import com.inspur.emmcloud.bean.chat.GetSendMsgResult;
 import com.inspur.emmcloud.bean.chat.GetUploadPushInfoResult;
+import com.inspur.emmcloud.bean.chat.GetVoiceCommunicationResult;
 import com.inspur.emmcloud.bean.chat.GetWebSocketUrlResult;
 import com.inspur.emmcloud.bean.chat.Robot;
 import com.inspur.emmcloud.bean.contact.GetContactOrgListUpateResult;
@@ -1692,6 +1693,56 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnAllConfigVersionFail(String error, int errorCode) {
+
+    }
+
+    @Override
+    public void returnGetVoiceCommunicationResultSuccess(GetVoiceCommunicationResult getVoiceCommunicationResult) {
+
+    }
+
+    @Override
+    public void returnGetVoiceCommunicationResultFail(String error, int errorCode) {
+
+    }
+
+    @Override
+    public void returnGetVoiceCommunicationChannelInfoSuccess(GetVoiceCommunicationResult getVoiceCommunicationResult) {
+
+    }
+
+    @Override
+    public void returnGetVoiceCommunicationChannelInfoFail(String error, int errorCode) {
+
+    }
+
+    @Override
+    public void returnJoinVoiceCommunicationChannelSuccess(GetBoolenResult getBoolenResult) {
+
+    }
+
+    @Override
+    public void returnJoinVoiceCommunicationChannelFail(String error,int errorCode) {
+
+    }
+
+    @Override
+    public void returnRefuseVoiceCommunicationChannelSuccess(GetBoolenResult getBoolenResult) {
+
+    }
+
+    @Override
+    public void returnRefuseVoiceCommunicationChannelFail(String error, int errorCode) {
+
+    }
+
+    @Override
+    public void returnLeaveVoiceCommunicationChannelSuccess(GetBoolenResult getBoolenResult) {
+
+    }
+
+    @Override
+    public void returnLeaveVoiceCommunicationChannelFail(String error, int errorCode) {
 
     }
 }

@@ -60,6 +60,7 @@ import com.inspur.emmcloud.util.privates.AppTabUtils;
 import com.inspur.emmcloud.util.privates.ChannelGroupIconUtils;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils.OnCreateGroupChannelListener;
+import com.inspur.emmcloud.util.privates.CustomProtocol;
 import com.inspur.emmcloud.util.privates.DirectChannelUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
@@ -93,6 +94,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import io.socket.client.Socket;
 
@@ -554,6 +557,16 @@ public class CommunicationV0Fragment extends Fragment {
                         if (receivedMsg.getType().equals("command/faceLogin")) {
                             return;
                         }
+                        //消息拦截逻辑，以后应当拦截命令消息，此时注释掉，以后解开注意判空
+//                        CustomProtocol customProtocol = getCommandMessageProtocol(receivedMsg);
+//                        if(customProtocol != null){
+//                            MsgReadCreationDateCacheUtils.saveMessageReadCreationDate(getActivity(),receivedMsg.getCid(),receivedMsg.getTime());
+//                            Intent intent = new Intent();
+//                            intent.setClass(getActivity(),ChannelVoiceCommunicationActivity.class);
+//                            intent.putExtra("channelId",customProtocol.getParamMap().get("id"));
+//                            intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE,ChannelVoiceCommunicationActivity.INVITEE_LAYOUT_STATE);
+//                            startActivity(intent);
+//                        }
                         Channel receiveMsgChannel = ChannelCacheUtils.getChannel(
                                 getActivity(), receivedMsg.getCid());
                         if (receiveMsgChannel == null) {
@@ -584,6 +597,28 @@ public class CommunicationV0Fragment extends Fragment {
             }
 
         };
+    }
+
+    /**
+     * 判定是
+     * @param receivedMsg
+     * @return
+     */
+    private CustomProtocol getCommandMessageProtocol(Msg receivedMsg) {
+        String msgBody = receivedMsg.getBody();
+        Pattern pattern = Pattern.compile("\\[[^\\]]+\\]\\([^\\)]+\\)");
+        Matcher matcher = pattern.matcher(msgBody);
+        while (matcher.find()){
+            String pattenString = matcher.group();
+            int indexBegin = pattenString.indexOf("(");
+            int indexEnd = pattenString.indexOf(")");
+            pattenString = pattenString.substring(indexBegin+1,indexEnd);
+            CustomProtocol customProtocol = new CustomProtocol(pattenString);
+            if(customProtocol.getProtocol().equals("ecc-cmd") && customProtocol.getParamMap().get("cmd").equals("join")){
+                return customProtocol;
+            }
+        }
+        return null;
     }
 
     /**

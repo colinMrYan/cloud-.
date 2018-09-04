@@ -319,6 +319,11 @@ public class ECMChatInputMenu extends LinearLayout {
                             break;
                         case "voice_call":
                             //语音通话
+                            if(!canMentions){
+                                chatInputMenuListener.onVoiceCommucaiton();
+                            }else{
+                                AppUtils.openChannelMemeberSelect((Activity)getContext(),cid,6);
+                            }
                             break;
                         default:
                             break;
@@ -339,6 +344,7 @@ public class ECMChatInputMenu extends LinearLayout {
         intent.setClass(getContext(), MembersActivity.class);
         intent.putExtra("title", getContext().getString(R.string.friend_list));
         intent.putExtra("cid", cid);
+        intent.putExtra(MembersActivity.MEMBER_PAGE_STATE, MembersActivity.MENTIONS_STATE);
         intent.putExtra("isInputKeyWord", isInputKeyWord);
         ((Activity) getContext()).overridePendingTransition(
                 R.anim.activity_open, 0);
@@ -602,6 +608,9 @@ public class ECMChatInputMenu extends LinearLayout {
         void onSendMsg(String content, List<String> mentionsUidList, List<String> urlList, Map<String, String> mentionsMap);
 
         void onSendVoiceRecordMsg(float seconds, String filePath);
+
+
+        void onVoiceCommucaiton();
     }
 
 

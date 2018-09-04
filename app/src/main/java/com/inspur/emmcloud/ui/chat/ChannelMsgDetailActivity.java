@@ -136,6 +136,11 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
                 // TODO Auto-generated method stub
                 sendComment(content, mentionsUidList, urlList);
             }
+
+            @Override
+            public void onVoiceCommucaiton() {
+
+            }
         });
         chatInputMenu.setInputLayout("1");
     }

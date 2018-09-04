@@ -14,10 +14,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.chat.Msg;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.privates.MentionsAndUrlShowUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.privates.TransHtmlToTextUtils;
-import com.inspur.emmcloud.util.privates.UriUtils;
 import com.inspur.emmcloud.util.common.richtext.CacheType;
 import com.inspur.emmcloud.util.common.richtext.LinkHolder;
 import com.inspur.emmcloud.util.common.richtext.RichText;
@@ -25,6 +22,9 @@ import com.inspur.emmcloud.util.common.richtext.RichType;
 import com.inspur.emmcloud.util.common.richtext.callback.LinkFixCallback;
 import com.inspur.emmcloud.util.common.richtext.callback.OnUrlClickListener;
 import com.inspur.emmcloud.util.common.richtext.callback.OnUrlLongClickListener;
+import com.inspur.emmcloud.util.privates.MentionsAndUrlShowUtils;
+import com.inspur.emmcloud.util.privates.TransHtmlToTextUtils;
+import com.inspur.emmcloud.util.privates.UriUtils;
 import com.inspur.emmcloud.widget.LinkMovementClickMethod;
 
 import java.util.Arrays;
@@ -41,7 +41,6 @@ public class DisplayTxtRichMsg {
      * 富文本卡片
      *
      * @param context
-     * @param childView
      * @param msg
      */
     public static View displayRichTextMsg(final Context context,
@@ -76,6 +75,10 @@ public class DisplayTxtRichMsg {
                                 UriUtils.openUrl((Activity) context, url);
                                 return true;
                             }
+                            //屏蔽语音通话逻辑
+//                            else if(url.startsWith("ecc-cmd")){
+//                                CustomProtocol customProtocol = new CustomProtocol(url);
+//                            }
                             return false;
                         }
                     })
