@@ -205,12 +205,12 @@ public class ECMChatInputMenuV0 extends LinearLayout {
             //功能组的图标，名称
             int[] functionIconArray = {R.drawable.ic_chat_input_add_gallery,
                     R.drawable.ic_chat_input_add_camera, R.drawable.ic_chat_input_add_file,
-                    R.drawable.ic_chat_input_add_mention};
+                    R.drawable.ic_chat_input_add_mention,R.drawable.ic_chat_input_add_voice_call};
             String[] functionNameArray = {getContext().getString(R.string.album),
                     getContext().getString(R.string.take_photo),
                     getContext().getString(R.string.file),
-                    "@"};
-            String[] functionActionArray = {"gallery", "camera", "file", "mention"};
+                    "@",getContext().getString(R.string.voice_call)};
+            String[] functionActionArray = {"gallery", "camera", "file", "mention","voice_call"};
             String binaryString = "-1";
             if (!StringUtils.isBlank(inputs)) {
                 try {
@@ -252,6 +252,9 @@ public class ECMChatInputMenuV0 extends LinearLayout {
                 InputTypeBean inputTypeBean = new InputTypeBean(functionIconArray[3], functionNameArray[3], functionActionArray[3]);
                 inputTypeBeanList.add(inputTypeBean);
             }
+            //语音通话图标开启处
+//            InputTypeBean inputTypeBean = new InputTypeBean(functionIconArray[4],functionNameArray[4],functionActionArray[4]);
+//            inputTypeBeanList.add(inputTypeBean);
             viewpagerLayout.setOnGridItemClickListener(new AdapterView.OnItemClickListener() {
 
                 @Override
@@ -272,6 +275,14 @@ public class ECMChatInputMenuV0 extends LinearLayout {
                         case "mention":
                             openMentionPage(false);
                             break;
+                        case "voice_call":
+                            //语音通话
+                            if(!canMentions){
+                                chatInputMenuListener.onVoiceCommucaiton();
+                            }else{
+                                AppUtils.openChannelMemeberSelect((Activity)getContext(),cid,6);
+                            }
+                            break;
                         default:
                             break;
                     }
@@ -291,6 +302,7 @@ public class ECMChatInputMenuV0 extends LinearLayout {
         intent.setClass(getContext(), MembersActivity.class);
         intent.putExtra("title", getContext().getString(R.string.friend_list));
         intent.putExtra("cid", cid);
+        intent.putExtra(MembersActivity.MEMBER_PAGE_STATE, MembersActivity.MENTIONS_STATE);
         intent.putExtra("isInputKeyWord", isInputKeyWord);
         ((Activity) getContext()).overridePendingTransition(
                 R.anim.activity_open, 0);
@@ -563,7 +575,11 @@ public class ECMChatInputMenuV0 extends LinearLayout {
 
 
     public interface ChatInputMenuListener {
-        void onSendMsg(String content, List<String> mentionsUidList, List<String> urlList, Map<String,String> mentionsMap);
+        void onSendMsg(String content, List<String> mentionsUidList, List<String> urlList, Map<String, String> mentionsMap);
+
+
+
+        void onVoiceCommucaiton();
     }
 
 

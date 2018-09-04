@@ -1,5 +1,6 @@
 package com.inspur.imp.plugin.device;
 
+import android.content.Context;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -228,7 +229,7 @@ public class DeviceService extends ImpPlugin {
 			time = 500L;
 		// 调用系统服务的vibrator组件
 		Vibrator vibrator = (Vibrator) this.getActivity().getSystemService(
-				"vibrator");
+				Context.VIBRATOR_SERVICE);
 		vibrator.vibrate(time);
 	}
 

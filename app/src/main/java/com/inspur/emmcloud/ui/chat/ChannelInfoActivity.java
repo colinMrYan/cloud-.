@@ -39,7 +39,6 @@ import com.inspur.emmcloud.widget.NoScrollGridView;
 import com.inspur.emmcloud.widget.SwitchView;
 import com.inspur.emmcloud.widget.SwitchView.OnStateChangedListener;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -223,7 +222,7 @@ public class ChannelInfoActivity extends BaseActivity {
                 break;
             case R.id.member_layout:
                 bundle.putString("title", getString(R.string.group_member));
-                bundle.putString("search", "1");
+                bundle.putInt(MembersActivity.MEMBER_PAGE_STATE,MembersActivity.CHECK_STATE);
                 bundle.putStringArrayList("uidList",memberList);
                 IntentUtils.startActivity(ChannelInfoActivity.this,
                         MembersActivity.class, bundle);
