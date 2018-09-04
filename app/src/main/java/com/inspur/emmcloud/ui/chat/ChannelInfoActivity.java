@@ -19,6 +19,7 @@ import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.bean.chat.Channel;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
+import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.bean.contact.SearchModel;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
@@ -77,7 +78,6 @@ public class ChannelInfoActivity extends BaseActivity {
         getChannelInfo();
     }
 
-
     /**
      * 获取频道信息
      */
@@ -87,6 +87,14 @@ public class ChannelInfoActivity extends BaseActivity {
                 .getChannelGroupById(getApplicationContext(), cid);
         if (channelGroup != null) {
             memberList = channelGroup.getMemberList();
+            List<ContactUser> contactUserList = ContactUserCacheUtils.getContactUserListById(memberList);
+            //如果群信息和通讯录信息不一样，以通讯录信息为准，避免出现头像为空，且没有名字的情况
+            if(memberList.size() != contactUserList.size()){
+                List<String> contactUserIdList = new ArrayList<>();
+                for (int i = 0; i < contactUserList.size(); i++) {
+                    contactUserIdList.add(contactUserList.get(i).getId());
+                }
+            }
             displayUI();
         }
         if (NetUtils.isNetworkConnected(getApplicationContext(),(channelGroup == null))) {
@@ -94,7 +102,6 @@ public class ChannelInfoActivity extends BaseActivity {
         }
 
     }
-
 
     /**
      * 数据取出后显示ui
@@ -116,7 +123,6 @@ public class ChannelInfoActivity extends BaseActivity {
                 this, cid);
         setTopSwitch.setOpened(isSetTop);
         setTopSwitch.setOnStateChangedListener(onStateChangedListener);
-
     }
 
     /**
@@ -135,11 +141,9 @@ public class ChannelInfoActivity extends BaseActivity {
     }
 
     private OnItemClickListener onItemClickListener = new OnItemClickListener() {
-
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position,
                                 long id) {
-            // TODO Auto-generated method stub
             boolean isOwner = MyApplication.getInstance().getUid().equals(channelGroup.getOwner());
             Intent intent = new Intent();
             if ((position == adapter.getCount() - 1) && isOwner) {
