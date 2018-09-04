@@ -101,6 +101,7 @@
     <string name="app_init">正在初始化</string>
     <string name="news_content_cant_empty">内容不能为空</string>
     <string name="help">帮助</string>
+    <string name="load_data_failed">加载数据失败</string>
 
     <!-- 新添加部分 -->
     <string name="alert">提醒</string>
@@ -1024,4 +1025,19 @@
     <string name="card_package_taxpayer">纳税人识别号</string>
     <string name="card_package_address">地址</string>
     <string name="card_package_phone_number">电话</string>
+
+    <string name="agora_app_id">36f73eb839f440a3a297a5c3b3977c13</string>
+
+    <string name="voice_communication_invite_you">邀请你进行语音通话</string>
+    <string name="voice_communication_members">通话成员</string>
+    <string name="voice_communication_excuse">禁言</string>
+    <string name="voice_communication_hands_free">免提</string>
+    <string name="voice_communication_tran_video">摄像头</string>
+    <string name="voice_communication_mute">静音</string>
+    <string name="voice_communication_choice_members">选择成员</string>
+    <string name="voice_communication_dialog">拨号中...</string>
+    <string name="voice_communication_waitting_answer">等待接听</string>
+    <string name="voice_communicaiton_watting_talking">通话中</string>
+    <string name="voice_communication_quality">当前通话质量不佳</string>
+    <string name="voice_communication_support_nine_members">云+目前支持九人语音</string>
 </resources>

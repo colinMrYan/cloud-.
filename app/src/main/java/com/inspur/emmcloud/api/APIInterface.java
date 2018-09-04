@@ -44,6 +44,7 @@ import com.inspur.emmcloud.bean.chat.GetNewsImgResult;
 import com.inspur.emmcloud.bean.chat.GetNewsInstructionResult;
 import com.inspur.emmcloud.bean.chat.GetSendMsgResult;
 import com.inspur.emmcloud.bean.chat.GetUploadPushInfoResult;
+import com.inspur.emmcloud.bean.chat.GetVoiceCommunicationResult;
 import com.inspur.emmcloud.bean.chat.GetWebSocketUrlResult;
 import com.inspur.emmcloud.bean.chat.Robot;
 import com.inspur.emmcloud.bean.contact.GetContactOrgListUpateResult;
@@ -673,4 +674,19 @@ public interface APIInterface {
 
     void returnAllConfigVersionSuccess(GetAllConfigVersionResult getAllConfigVersionResult);
     void returnAllConfigVersionFail(String error, int errorCode);
+
+    void returnGetVoiceCommunicationResultSuccess(GetVoiceCommunicationResult getVoiceCommunicationResult);
+    void returnGetVoiceCommunicationResultFail(String error,int errorCode);
+
+    void returnGetVoiceCommunicationChannelInfoSuccess(GetVoiceCommunicationResult getVoiceCommunicationResult);
+    void returnGetVoiceCommunicationChannelInfoFail(String error,int errorCode);
+
+    void returnJoinVoiceCommunicationChannelSuccess(GetBoolenResult getBoolenResult);
+    void returnJoinVoiceCommunicationChannelFail(String error,int errorCode);
+
+    void returnRefuseVoiceCommunicationChannelSuccess(GetBoolenResult getBoolenResult);
+    void returnRefuseVoiceCommunicationChannelFail(String error,int errorCode);
+
+    void returnLeaveVoiceCommunicationChannelSuccess(GetBoolenResult getBoolenResult);
+    void returnLeaveVoiceCommunicationChannelFail(String error,int errorCode);
 }
