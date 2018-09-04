@@ -63,7 +63,7 @@ public class ContactUser {
         this.lastQueryTime = lastQueryTime;
     }
 
-    public ContactUser(String id, String name, String nameGlobal, String pinyin, String parentId, String mobile, String email, int hasHead, int sortOrder,String lastQueryTime) {
+    public ContactUser(String id, String name, String nameGlobal, String pinyin, String parentId, String mobile, String email, int hasHead, int sortOrder,String lastQueryTime,String employeeNum) {
         this.id = id;
         this.name = name;
         this.nameGlobal = nameGlobal;
@@ -73,6 +73,7 @@ public class ContactUser {
         this.email = email;
         this.hasHead = hasHead;
         this.sortOrder = sortOrder;
+        this.employeeNum = employeeNum;
         this.lastQueryTime =lastQueryTime;
     }
 
@@ -82,7 +83,7 @@ public class ContactUser {
             int size = userList.size();
             for (int i=0;i<size;i++){
                 ContactProtoBuf.user user = userList.get(i);
-                ContactUser contactUser = new ContactUser(user.getId(),user.getRealName(),user.getNameGlobal(),user.getPinyin(),user.getParentId(),user.getMobile(),user.getEmail(),user.getHasHead(),user.getSortOrder(),lastQueryTime+"");
+                ContactUser contactUser = new ContactUser(user.getId(),user.getRealName(),user.getNameGlobal(),user.getPinyin(),user.getParentId(),user.getMobile(),user.getEmail(),user.getHasHead(),user.getSortOrder(),lastQueryTime+"",user.getEmpNo());
                 contactUserList.add(contactUser);
             }
         }
