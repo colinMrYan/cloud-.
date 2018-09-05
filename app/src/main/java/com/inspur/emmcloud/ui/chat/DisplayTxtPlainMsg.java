@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
+import com.cpiz.android.bubbleview.BubbleStyle;
+import com.cpiz.android.bubbleview.BubbleTextView;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.chat.Message;
@@ -36,25 +38,23 @@ public class DisplayTxtPlainMsg {
                 R.layout.chat_msg_card_child_text_rich_view, null);
         final boolean isMyMsg = message.getFromUser().equals(
                 MyApplication.getInstance().getUid());
-        final TextView richText = (TextView) cardContentView
-                .findViewById(R.id.content_text);
-        richText.setTextColor(context.getResources().getColor(
+        final BubbleTextView contentText = (BubbleTextView) cardContentView
+                .findViewById(R.id.btv_content);
+        contentText.setTextColor(context.getResources().getColor(
                 isMyMsg ? R.color.white : R.color.black));
-        (cardContentView.findViewById(R.id.card_layout)).setBackgroundColor(context.getResources().getColor(
-                isMyMsg ? R.color.bg_my_card : R.color.white));
-
-        (cardContentView.findViewById(R.id.text_layout)).setBackgroundResource(isMyMsg ? R.drawable.ic_chat_msg_img_cover_arrow_right : R.drawable.ic_chat_msg_img_cover_arrow_left);
         String text = message.getMsgContentTextPlain().getText();
-        richText.setMovementMethod(LinkMovementClickMethod.getInstance());
+        contentText.setMovementMethod(LinkMovementClickMethod.getInstance());
         SpannableString spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(context, text, message.getMsgContentTextPlain().getMentionsMap());
-        richText.setText(spannableString);
+        contentText.setText(spannableString);
+        contentText.setArrowDirection(isMyMsg? BubbleStyle.ArrowDirection.Right:BubbleStyle.ArrowDirection.Left);
+        contentText.setFillColor(context.getResources().getColor(isMyMsg ? R.color.bg_my_card : R.color.white));
         TransHtmlToTextUtils.stripUnderlines(
-                richText,context.getResources().getColor(isMyMsg ? R.color.hightlight_in_blue_bg
+                contentText,context.getResources().getColor(isMyMsg ? R.color.hightlight_in_blue_bg
                         : R.color.header_bg));
-        richText.setOnLongClickListener(new View.OnLongClickListener() {
+        contentText.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                copyContentToPasteBoard(context, richText);
+                copyContentToPasteBoard(context, contentText);
                 return true;
             }
         });

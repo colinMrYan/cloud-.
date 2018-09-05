@@ -229,13 +229,13 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
         @ViewInject(R.id.file_type_img)
         private ImageView fileTypeImg;
 
-        @ViewInject(R.id.file_name_text)
+        @ViewInject(R.id.tv_file_name)
         private TextView fileNameText;
 
         @ViewInject(R.id.file_time_text)
         private TextView fileTimeText;
 
-        @ViewInject(R.id.file_size_text)
+        @ViewInject(R.id.tv_file_size)
         private TextView fileSizeText;
 
         @ViewInject(R.id.file_select_img)

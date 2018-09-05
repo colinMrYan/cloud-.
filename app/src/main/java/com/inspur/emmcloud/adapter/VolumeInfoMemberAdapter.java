@@ -54,7 +54,7 @@ public class VolumeInfoMemberAdapter extends BaseAdapter {
         CircleTextImageView memberHeadImg = (CircleTextImageView) convertView
                 .findViewById(R.id.member_head_img);
         TextView nameText = (TextView) convertView
-                .findViewById(R.id.name_text);
+                .findViewById(R.id.tv_name);
         String userPhotoUrl= null;
         String userName = null;
         if ((position == getCount() - 1) && isOwner) {

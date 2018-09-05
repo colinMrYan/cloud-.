@@ -42,9 +42,9 @@ public class DisplayResFileMsg {
         View cardContentView = LayoutInflater.from(context).inflate(
                 R.layout.chat_msg_card_child_res_file_view, null);
         TextView fileTitleText = (TextView) cardContentView
-                .findViewById(R.id.file_name_text);
+                .findViewById(R.id.tv_file_name);
         TextView fileSizeText = (TextView) cardContentView
-                .findViewById(R.id.file_size_text);
+                .findViewById(R.id.tv_file_size);
         final ImageView fileDownLoadImg = (ImageView) cardContentView
                 .findViewById(R.id.filecard_download_img);
         String msgBody = msg.getBody();

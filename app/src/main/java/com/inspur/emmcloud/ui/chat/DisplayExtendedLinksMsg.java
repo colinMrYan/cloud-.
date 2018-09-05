@@ -6,11 +6,12 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.cpiz.android.bubbleview.BubbleRelativeLayout;
+import com.cpiz.android.bubbleview.BubbleStyle;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.MsgContentExtendedLinks;
-import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 
@@ -31,34 +32,31 @@ public class DisplayExtendedLinksMsg {
                                Message message) {
         View cardContentView = LayoutInflater.from(context).inflate(
                 R.layout.chat_msg_card_child_res_link_view, null);
-        boolean isMyMsg = message.getFromUser().equals(
-                MyApplication.getInstance().getUid());
+        boolean isMyMsg = message.getFromUser().equals(MyApplication.getInstance().getUid());
+        BubbleRelativeLayout cardLayout = (BubbleRelativeLayout) cardContentView.findViewById(R.id.brl_card);
+        cardLayout.setArrowDirection(isMyMsg? BubbleStyle.ArrowDirection.Right:BubbleStyle.ArrowDirection.Left);
         MsgContentExtendedLinks msgContentExtendedLinks = message.getMsgContentExtendedLinks();
         String title = msgContentExtendedLinks.getTitle();
         String subTitle = msgContentExtendedLinks.getSubtitle();
         String poster = msgContentExtendedLinks.getPoster();
         TextView linkTitleText = (TextView) cardContentView
-                .findViewById(R.id.news_card_title_text);
+                .findViewById(R.id.tv_news_card_title);
         TextView linkDigestText = (TextView) cardContentView
-                .findViewById(R.id.news_card_digest_text);
+                .findViewById(R.id.tv_news_card_digest);
         linkTitleText.setText(StringUtils.isBlank(title)?context.getString(R.string.share_default_title):title);
-        linkDigestText.setText(subTitle);
 
-        ImageView linkImageview = (ImageView) cardContentView
-                .findViewById(R.id.news_card_content_img);
+        ImageView linkImg = (ImageView) cardContentView
+                .findViewById(R.id.img_news_card);
         if (!StringUtils.isBlank(poster)) {
-            ImageDisplayUtils.getInstance().displayImage(linkImageview, poster, R.drawable.icon_photo_default);
+            ImageDisplayUtils.getInstance().displayImage(linkImg, poster, R.drawable.icon_photo_default);
         } else {
-            linkImageview.setVisibility(View.GONE);
+            linkImg.setVisibility(View.GONE);
         }
-        int normalPadding = DensityUtil.dip2px(context, 10);
-        int arrowPadding = DensityUtil.dip2px(context, 8);
-        if (isMyMsg) {
-            (cardContentView.findViewById(R.id.text_layout)).setPadding(normalPadding, normalPadding, normalPadding
-                    + arrowPadding, normalPadding);
+
+        if (!StringUtils.isBlank(subTitle)) {
+            linkDigestText.setText(subTitle);
         } else {
-            (cardContentView.findViewById(R.id.text_layout)).setPadding(normalPadding + arrowPadding, normalPadding,
-                    normalPadding, normalPadding);
+            linkDigestText.setVisibility(View.GONE);
         }
         return cardContentView;
     }

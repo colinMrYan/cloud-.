@@ -14,9 +14,9 @@ public class DisplayResUnknownMsg {
 				R.layout.chat_msg_card_child_res_unknown_view, null);
 		int arrowPadding = DensityUtil.dip2px(context, 7);
 		if (isMyMsg) {
-			( cardContentView.findViewById(R.id.root_layout)).setPadding(0, 0, arrowPadding, 0);
+			( cardContentView.findViewById(R.id.brl_card)).setPadding(0, 0, arrowPadding, 0);
 		} else {
-			(cardContentView.findViewById(R.id.root_layout)).setPadding(arrowPadding, 0,
+			(cardContentView.findViewById(R.id.brl_card)).setPadding(arrowPadding, 0,
 					0, 0);
 		}
 		cardContentView.setOnClickListener(new View.OnClickListener() {

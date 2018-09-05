@@ -1,25 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/card_layout"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
-    <RelativeLayout
-        android:id="@+id/text_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-        <TextView
-            android:id="@+id/content_text"
+        <com.cpiz.android.bubbleview.BubbleTextView
+            android:id="@+id/btv_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:minWidth="40dp"
-            android:paddingBottom="9dp"
-            android:paddingTop="9dp"
-            android:lineSpacingMultiplier="1.15"
-            android:textColor="@color/black"
+            android:layout_centerVertical="true"
             android:textIsSelectable="false"
-            android:textSize="16sp" />
-    </RelativeLayout>
-
+            android:textSize="16sp"
+            android:padding="10dp"
+            android:minWidth="40dp"
+            app:bb_borderColor="#bbbbbb"
+            app:bb_arrowPosPolicy="SelfBegin"
+            app:bb_arrowPosDelta="21dp"
+            app:bb_cornerRadius="4dp"/>
 
 </RelativeLayout>

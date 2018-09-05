@@ -7,6 +7,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.cpiz.android.bubbleview.BubbleRelativeLayout;
+import com.cpiz.android.bubbleview.BubbleStyle;
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.MsgContentRegularFile;
@@ -28,14 +31,21 @@ public class DisplayRegularFileMsg {
      * @param msg
      */
     public static View getView(final Context context,
-                               final Message message,final int sendStauts) {
+                               final Message message,final int sendStauts,boolean isMsgDetial) {
+        boolean isMyMsg = message.getFromUser().equals(MyApplication.getInstance().getUid());
         View convertView = LayoutInflater.from(context).inflate(
                 R.layout.chat_msg_card_child_attachment_file_view, null);
         TextView fileNameText = (TextView) convertView
-                .findViewById(R.id.file_name_text);
+                .findViewById(R.id.tv_file_name);
         TextView fileSizeText = (TextView) convertView
-                .findViewById(R.id.file_size_text);
-        ImageView img = (ImageView)convertView.findViewById(R.id.file_icon_img);
+                .findViewById(R.id.tv_file_size);
+        BubbleRelativeLayout cardLayout = (BubbleRelativeLayout)convertView.findViewById(R.id.brl_card);
+        if (!isMsgDetial){
+            cardLayout.setArrowDirection(isMyMsg? BubbleStyle.ArrowDirection.Right:BubbleStyle.ArrowDirection.Left);
+        }else {
+            cardLayout.setCornerRadius(0);
+        }
+        ImageView img = (ImageView)convertView.findViewById(R.id.iv_file_icon);
         final MsgContentRegularFile msgContentFile = message.getMsgContentAttachmentFile();
         ImageDisplayUtils.getInstance().displayImage(img, "drawable://" + FileUtils.getRegularFileIconResId(msgContentFile.getName()));
         fileNameText.setText(msgContentFile.getName());

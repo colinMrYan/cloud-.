@@ -8,10 +8,10 @@
 
     <ImageView
         android:id="@+id/iv_recorder"
-        android:layout_width="160dp"
-        android:layout_height="110dp"
-        android:paddingLeft="25dp"
-        android:paddingRight="25dp"
+        android:layout_width="140dp"
+        android:layout_height="100dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
         android:scaleType="fitXY"
         android:layout_centerHorizontal="true"
         android:src="@drawable/ic_recorder_volume_level_v1"
@@ -21,7 +21,7 @@
         android:id="@+id/tv_recorder"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="15sp"
+        android:textSize="13sp"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/iv_recorder"
         android:layout_marginTop="5dp"

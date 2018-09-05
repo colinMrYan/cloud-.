@@ -4,9 +4,12 @@ import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.cpiz.android.bubbleview.BubbleRelativeLayout;
+import com.cpiz.android.bubbleview.BubbleStyle;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIDownloadCallBack;
@@ -29,13 +32,13 @@ import java.io.File;
 
 public class DisplayMediaVoiceMsg {
     public static View getView(final Context context, final Message message) {
-        View cardContentView = LayoutInflater.from(context).inflate(R.layout.chat_msg_card_child_media_voice_view, null);
-        RelativeLayout voiceLayout = (RelativeLayout) cardContentView.findViewById(R.id.rl_voice);
-        RelativeLayout coverLayout = (RelativeLayout) cardContentView.findViewById(R.id.rl_cover);
-        final View voiceAnimView = cardContentView.findViewById(R.id.v_voice_anim);
         final boolean isMyMsg = message.getFromUser().equals(MyApplication.getInstance().getUid());
+        View cardContentView = LayoutInflater.from(context).inflate(R.layout.chat_msg_card_child_media_voice_view, null);
+        BubbleRelativeLayout voiceLayout = (BubbleRelativeLayout) cardContentView.findViewById(R.id.brl_voice);
+        voiceLayout.setArrowDirection(isMyMsg? BubbleStyle.ArrowDirection.Right:BubbleStyle.ArrowDirection.Left);
+        voiceLayout.setFillColor(context.getResources().getColor(isMyMsg ? R.color.bg_my_card : R.color.white));
+        final View voiceAnimView = cardContentView.findViewById(R.id.v_voice_anim);
         final QMUILoadingView downloadLoadingView = (QMUILoadingView) cardContentView.findViewById(isMyMsg ? R.id.qlv_downloading_left : R.id.qlv_downloading_right);
-        coverLayout.setBackgroundResource(isMyMsg ? R.drawable.selector_chat_voice_view_right : R.drawable.selector_chat_voice_view_left);
         TextView durationText = (TextView) cardContentView.findViewById(isMyMsg ? R.id.tv_duration_left : R.id.tv_duration_right);
         durationText.setVisibility(View.VISIBLE);
         MsgContentMediaVoice msgContentMediaVoice = message.getMsgContentMediaVoice();
@@ -45,7 +48,7 @@ public class DisplayMediaVoiceMsg {
         if (widthDip > 230) {
             widthDip = 230;
         }
-        RelativeLayout.LayoutParams voiceLayoutParams = new RelativeLayout.LayoutParams(DensityUtil.dip2px(context, widthDip), DensityUtil.dip2px(context, 40));
+        LinearLayout.LayoutParams voiceLayoutParams = new LinearLayout.LayoutParams(DensityUtil.dip2px(context, widthDip), DensityUtil.dip2px(context, 40));
         voiceLayout.setLayoutParams(voiceLayoutParams);
         RelativeLayout.LayoutParams voiceAnimViewLayoutParams = (RelativeLayout.LayoutParams) voiceAnimView.getLayoutParams();
         //此处实际执行params.removeRule();
@@ -54,7 +57,7 @@ public class DisplayMediaVoiceMsg {
         voiceAnimView.setLayoutParams(voiceAnimViewLayoutParams);
         voiceAnimView.setBackgroundResource(isMyMsg ? R.drawable.ic_chat_msg_card_voice_right_level_3 : R.drawable.ic_chat_msg_card_voice_left_level_3);
         voiceLayout.setBackgroundResource(isMyMsg ? R.drawable.ic_chat_msg_img_cover_arrow_right : R.drawable.ic_chat_msg_img_cover_arrow_left);
-        coverLayout.setOnClickListener(new View.OnClickListener() {
+        voiceLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (message.getSendStatus() != 1) {

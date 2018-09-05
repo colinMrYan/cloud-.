@@ -119,7 +119,7 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
             this.mListener = myItemClickListener;
             itemView.setOnClickListener(this);
             cardLayout = (RelativeLayout) view
-                    .findViewById(R.id.card_layout);
+                    .findViewById(R.id.bll_card);
             senderNameText = (TextView) view
                     .findViewById(R.id.sender_name_text);
             senderPhotoImgLeft = (ImageView) view
@@ -201,7 +201,6 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
         holder.cardLayout.removeAllViews();
         boolean isMyMsg = msg.getUid().equals(
                 MyApplication.getInstance().getUid());
-        holder.cardCoverView.setVisibility(View.VISIBLE);
         View cardContentView;
         Message message = null;
         String type = msg.getType();
@@ -245,7 +244,7 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
                 break;
             case "attachment/file":
                 cardContentView = DisplayRegularFileMsg.getView(context,
-                        message, 1);
+                        message, 1,false);
                 break;
             case "attachment/card":
                 cardContentView = DisplayAttachmentCardMsg.getView(context,
@@ -262,9 +261,9 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
 
 
         holder.cardLayout.addView(cardContentView);
-        holder.cardLayout.setBackgroundColor(context.getResources().getColor(
-                isMyMsg ? R.color.bg_my_card : R.color.white));
-        holder.cardCoverView.setBackgroundResource(isMyMsg ? R.drawable.ic_chat_msg_img_cover_arrow_right : R.drawable.ic_chat_msg_img_cover_arrow_left);
+//        holder.cardLayout.setBackgroundColor(context.getResources().getColor(
+//                isMyMsg ? R.color.bg_my_card : R.color.white));
+//        holder.cardCoverView.setBackgroundResource(isMyMsg ? R.drawable.ic_chat_msg_img_cover_arrow_right : R.drawable.ic_chat_msg_img_cover_arrow_left);
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) holder.cardParentLayout.getLayoutParams();
         //此处实际执行params.removeRule();
         params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 0);

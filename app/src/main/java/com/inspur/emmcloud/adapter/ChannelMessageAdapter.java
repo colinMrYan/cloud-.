@@ -19,7 +19,6 @@ import com.inspur.emmcloud.ui.chat.DisplayCommentTextPlainMsg;
 import com.inspur.emmcloud.ui.chat.DisplayExtendedActionsMsg;
 import com.inspur.emmcloud.ui.chat.DisplayExtendedLinksMsg;
 import com.inspur.emmcloud.ui.chat.DisplayMediaImageMsg;
-import com.inspur.emmcloud.ui.chat.DisplayMediaVoiceMsg;
 import com.inspur.emmcloud.ui.chat.DisplayRegularFileMsg;
 import com.inspur.emmcloud.ui.chat.DisplayResUnknownMsg;
 import com.inspur.emmcloud.ui.chat.DisplayTxtMarkdownMsg;
@@ -113,7 +112,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
             this.mListener = myItemClickListener;
             itemView.setOnClickListener(this);
             cardLayout = (RelativeLayout) view
-                    .findViewById(R.id.card_layout);
+                    .findViewById(R.id.bll_card);
             senderNameText = (TextView) view
                     .findViewById(R.id.sender_name_text);
             senderPhotoImgLeft = (ImageView) view
@@ -206,7 +205,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
                 break;
             case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
                 cardContentView = DisplayRegularFileMsg.getView(context,
-                        message,uiMessage.getSendStatus());
+                        message,uiMessage.getSendStatus(),false);
                 break;
             case Message.MESSAGE_TYPE_EXTENDED_CONTACT_CARD:
                 cardContentView = DisplayAttachmentCardMsg.getView(context,
@@ -225,7 +224,8 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
                 cardContentView = DisplayExtendedLinksMsg.getView(context,message);
                 break;
             case Message.MESSAGE_TYPE_MEDIA_VOICE:
-                cardContentView = DisplayMediaVoiceMsg.getView(context,message);
+                cardContentView = DisplayAttachmentCardMsg.getView(context,
+                        message);
                 break;
             default:
                 cardContentView = DisplayResUnknownMsg.getView(context, isMyMsg);
@@ -291,7 +291,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         final String fromUser = UImessage.getMessage().getFromUser();
         boolean isMyMsg = MyApplication.getInstance().getUid().equals(fromUser);
         holder.senderPhotoImgRight.setVisibility(isMyMsg?View.VISIBLE:View.INVISIBLE);
-        holder.senderPhotoImgLeft.setVisibility(isMyMsg?View.INVISIBLE:View.VISIBLE);
+        holder.senderPhotoImgLeft.setVisibility(isMyMsg?View.GONE:View.VISIBLE);
         ImageView senderPhotoImg = isMyMsg?holder.senderPhotoImgRight:holder.senderPhotoImgLeft;
         ImageDisplayUtils.getInstance().displayImage(senderPhotoImg,
                 UImessage.getSenderPhotoUrl(), R.drawable.icon_person_default);

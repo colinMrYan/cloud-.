@@ -86,7 +86,7 @@ public class ChannelMemActivity extends BaseActivity {
                 viewHolder.memberHeadImg = (CircleTextImageView) convertView
                         .findViewById(R.id.member_head_img);
                 viewHolder.nameText = (TextView) convertView
-                        .findViewById(R.id.name_text);
+                        .findViewById(R.id.tv_name);
                 convertView.setTag(viewHolder);
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();

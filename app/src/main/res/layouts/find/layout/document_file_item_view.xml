@@ -27,7 +27,7 @@
         >
 
         <TextView
-            android:id="@+id/file_name_text"
+            android:id="@+id/tv_file_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:maxLines="2"

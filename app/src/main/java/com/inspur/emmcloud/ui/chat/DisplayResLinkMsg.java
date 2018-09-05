@@ -6,6 +6,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.cpiz.android.bubbleview.BubbleRelativeLayout;
+import com.cpiz.android.bubbleview.BubbleStyle;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
@@ -33,16 +35,17 @@ public class DisplayResLinkMsg {
                                           final Msg msg, boolean isShowCommentBtn) {
         View cardContentView = LayoutInflater.from(context).inflate(
                 R.layout.chat_msg_card_child_res_link_view, null);
-        boolean isMyMsg = msg.getUid().equals(
-                ((MyApplication) context.getApplicationContext()).getUid());
+        boolean isMyMsg = msg.getUid().equals(MyApplication.getInstance().getUid());
+        BubbleRelativeLayout cardLayout = (BubbleRelativeLayout) cardContentView.findViewById(R.id.brl_card);
+        cardLayout.setArrowDirection(isMyMsg? BubbleStyle.ArrowDirection.Right:BubbleStyle.ArrowDirection.Left);
         String msgBody = msg.getBody();
         String linkTitle = JSONUtils.getString(msgBody, "title", "");
         String linkDigest = JSONUtils.getString(msgBody, "digest", "");
         String linkPoster = JSONUtils.getString(msgBody, "poster", "");
         TextView linkTitleText = (TextView) cardContentView
-                .findViewById(R.id.news_card_title_text);
+                .findViewById(R.id.tv_news_card_title);
         TextView linkDigestText = (TextView) cardContentView
-                .findViewById(R.id.news_card_digest_text);
+                .findViewById(R.id.tv_news_card_digest);
         linkTitle = StringUtils.isBlank(linkTitle)?context.getString(R.string.share_default_title):linkTitle;
         linkTitleText.setText(linkTitle);
         linkDigestText.setText(linkDigest);
@@ -53,7 +56,7 @@ public class DisplayResLinkMsg {
             linkDigestText.setVisibility(View.GONE);
         }
         ImageView linkImageview = (ImageView) cardContentView
-                .findViewById(R.id.news_card_content_img);
+                .findViewById(R.id.img_news_card);
         if (!StringUtils.isBlank(linkPoster)) {
             ImageDisplayUtils.getInstance().displayImage(linkImageview, APIUri.getPreviewUrl(linkPoster), R.drawable.icon_photo_default);
         } else {
@@ -63,10 +66,10 @@ public class DisplayResLinkMsg {
             int normalPadding = DensityUtil.dip2px(context, 10);
             int arrowPadding = DensityUtil.dip2px(context, 8);
             if (isMyMsg) {
-                (cardContentView.findViewById(R.id.text_layout)).setPadding(normalPadding, normalPadding, normalPadding
+                (cardContentView.findViewById(R.id.rl_text)).setPadding(normalPadding, normalPadding, normalPadding
                         + arrowPadding, normalPadding);
             } else {
-                (cardContentView.findViewById(R.id.text_layout)).setPadding(normalPadding + arrowPadding, normalPadding,
+                (cardContentView.findViewById(R.id.rl_text)).setPadding(normalPadding + arrowPadding, normalPadding,
                         normalPadding, normalPadding);
             }
         }

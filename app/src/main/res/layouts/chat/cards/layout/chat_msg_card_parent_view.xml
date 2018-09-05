@@ -87,7 +87,7 @@
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:id="@+id/card_layout"
+                    android:id="@+id/bll_card"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
@@ -98,10 +98,10 @@
                     android:id="@+id/card_cover_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignBottom="@id/card_layout"
-                    android:layout_alignLeft="@id/card_layout"
-                    android:layout_alignRight="@id/card_layout"
-                    android:layout_alignTop="@id/card_layout"
+                    android:layout_alignBottom="@id/bll_card"
+                    android:layout_alignLeft="@id/bll_card"
+                    android:layout_alignRight="@id/bll_card"
+                    android:layout_alignTop="@id/bll_card"
                     android:layout_toRightOf="@id/rl_send_status"
                     android:background="@drawable/ic_chat_msg_img_cover_arrow_left" />
             </RelativeLayout>

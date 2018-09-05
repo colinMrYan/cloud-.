@@ -9,6 +9,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.chat.Message;
@@ -19,6 +20,7 @@ import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
+import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
 import java.io.Serializable;
@@ -51,6 +53,7 @@ public class DisplayMediaImageMsg {
                 .showImageForEmptyUri(R.drawable.default_image)
                 .showImageOnFail(R.drawable.default_image)
                 .showImageOnLoading(R.drawable.default_image)
+                .displayer(new RoundedBitmapDisplayer(DensityUtil.dip2px(MyApplication.getInstance(),4)))
                 // 设置图片的解码类型
                 .bitmapConfig(Bitmap.Config.RGB_565).cacheInMemory(true)
                 .cacheOnDisk(true).build();

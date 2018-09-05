@@ -66,13 +66,13 @@ public class DisplayExtendedActionsMsg extends APIInterfaceInstance {
                 R.layout.chat_msg_card_child_extended_actions_view, null);
         final boolean isMyMsg = msg.getFromUser().equals(
                 ((MyApplication) context.getApplicationContext()).getUid());
-        LinearLayout cardLayout = (LinearLayout) convertView.findViewById(R.id.card_layout);
+        LinearLayout cardLayout = (LinearLayout) convertView.findViewById(R.id.bll_card);
         cardLayout.setPadding(isMyMsg ? 0 : 11, 0, isMyMsg ? 11 : 0, 0);
         ImageView posterImg = (ImageView) convertView.findViewById(R.id.poster_img);
         final MsgContentExtendedActions msgContentActions = msg.getMsgContentExtendedActions();
         RelativeLayout singleActionLayout = (RelativeLayout) convertView.findViewById(R.id.single_action_layout);
         NoScrollGridView actionGrid = (NoScrollGridView) convertView.findViewById(R.id.action_grid);
-        TextView titleText = (TextView) convertView.findViewById(R.id.title_text);
+        TextView titleText = (TextView) convertView.findViewById(R.id.tv_title);
         TextView descriptionText = (TextView) convertView.findViewById(R.id.description_text);
         Action singleAction = msgContentActions.getSingleAction();
         String poster = msgContentActions.getPoster();
