@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.cpiz.android.bubbleview.BubbleLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/brl_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/bll_card"
+    app:bb_arrowPosDelta="21dp"
+    app:bb_arrowPosPolicy="SelfBegin"
+    app:bb_borderColor="#bbbbbb"
+    app:bb_cornerRadius="4dp"
+    app:bb_fillColor="#ffffff"
     android:orientation="vertical">
 
 
@@ -90,4 +96,4 @@
         android:listSelector="@android:color/transparent"
         android:stretchMode="columnWidth"
         android:verticalSpacing="0.5dp"></com.inspur.emmcloud.widget.NoScrollGridView>
-</LinearLayout>
+</com.cpiz.android.bubbleview.BubbleLinearLayout>

@@ -10,6 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
+import com.cpiz.android.bubbleview.BubbleRelativeLayout;
+import com.cpiz.android.bubbleview.BubbleStyle;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.apiservice.WSAPIService;
@@ -43,6 +45,9 @@ public class DisplayCommentTextPlainMsg {
         boolean isMyMsg = message.getFromUser().equals(MyApplication.getInstance().getUid());
         final TextViewWithSpan commentContentText = (TextViewWithSpan) cardContentView
                 .findViewById(R.id.comment_text);
+        BubbleRelativeLayout cardLayout = (BubbleRelativeLayout)cardContentView.findViewById(R.id.brl_card);
+        cardLayout.setArrowDirection(isMyMsg? BubbleStyle.ArrowDirection.Right:BubbleStyle.ArrowDirection.Left);
+        cardLayout.setFillColor(context.getResources().getColor(isMyMsg ? R.color.bg_my_card : R.color.white));
         TextView commentTitleText = (TextView) cardContentView
                 .findViewById(R.id.comment_title_text);
         MsgContentComment msgContentComment = message.getMsgContentComment();
@@ -60,10 +65,6 @@ public class DisplayCommentTextPlainMsg {
         }else {
             WSAPIService.getInstance().getMessageById(msgContentComment.getMessage());
         }
-        (cardContentView.findViewById(R.id.brl_card)).setBackgroundColor(context.getResources().getColor(
-                isMyMsg ? R.color.bg_my_card : R.color.white));
-        (cardContentView
-                .findViewById(R.id.bll_card)).setBackgroundResource(isMyMsg?R.drawable.ic_chat_msg_img_cover_arrow_right:R.drawable.ic_chat_msg_img_cover_arrow_left);
 
         commentContentText.setTextColor(context.getResources().getColor(
                 isMyMsg ? R.color.white : R.color.black));

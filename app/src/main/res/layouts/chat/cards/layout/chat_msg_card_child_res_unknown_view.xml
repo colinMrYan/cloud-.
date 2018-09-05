@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.cpiz.android.bubbleview.BubbleRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/brl_card"
+    android:padding="10dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_centerInParent="true"
-    android:background="#ffffff"
+    app:bb_arrowPosDelta="21dp"
+    app:bb_arrowPosPolicy="SelfBegin"
+    app:bb_borderColor="#bbbbbb"
+    app:bb_cornerRadius="4dp"
+    app:bb_fillColor="#ffffff"
    >
 
     <com.inspur.emmcloud.widget.CircleTextImageView
@@ -29,4 +35,4 @@
         android:textColor="@color/msg_content_color"
         android:textSize="@dimen/content_title_textsize" />
 
-</RelativeLayout>
+</com.cpiz.android.bubbleview.BubbleRelativeLayout>

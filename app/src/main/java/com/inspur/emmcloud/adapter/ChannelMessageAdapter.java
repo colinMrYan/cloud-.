@@ -19,6 +19,7 @@ import com.inspur.emmcloud.ui.chat.DisplayCommentTextPlainMsg;
 import com.inspur.emmcloud.ui.chat.DisplayExtendedActionsMsg;
 import com.inspur.emmcloud.ui.chat.DisplayExtendedLinksMsg;
 import com.inspur.emmcloud.ui.chat.DisplayMediaImageMsg;
+import com.inspur.emmcloud.ui.chat.DisplayMediaVoiceMsg;
 import com.inspur.emmcloud.ui.chat.DisplayRegularFileMsg;
 import com.inspur.emmcloud.ui.chat.DisplayResUnknownMsg;
 import com.inspur.emmcloud.ui.chat.DisplayTxtMarkdownMsg;
@@ -102,7 +103,6 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         private RelativeLayout sendStatusLayout;
         private ImageView sendFailImg;
         private QMUILoadingView sendingLoadingView;
-        public View cardCoverView;
         public TextView sendTimeText;
         public RelativeLayout cardParentLayout;
 
@@ -122,7 +122,6 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
             sendStatusLayout = (RelativeLayout) view.findViewById(R.id.rl_send_status);
             sendFailImg = (ImageView) view.findViewById(R.id.iv_send_fail);
             sendingLoadingView = (QMUILoadingView) view.findViewById(R.id.qlv_sending);
-            cardCoverView = view.findViewById(R.id.card_cover_view);
             sendTimeText = (TextView) view
                     .findViewById(R.id.send_time_text);
             cardParentLayout = (RelativeLayout) view.findViewById(R.id.card_parent_layout);
@@ -186,11 +185,16 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
     private void showCardLayout(ViewHolder holder, final UIMessage uiMessage) {
         // TODO Auto-generated method stub
         Message message = uiMessage.getMessage();
-        holder.cardLayout.removeAllViewsInLayout();
-        holder.cardLayout.removeAllViews();
         boolean isMyMsg = message.getFromUser().equals(
                 MyApplication.getInstance().getUid());
-        holder.cardCoverView.setVisibility(View.GONE);
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) holder.cardParentLayout.getLayoutParams();
+        //此处实际执行params.removeRule();
+        params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 0);
+        params.addRule(RelativeLayout.ALIGN_LEFT, 0);
+        params.addRule(isMyMsg ? RelativeLayout.ALIGN_PARENT_RIGHT : RelativeLayout.ALIGN_LEFT);
+        holder.cardParentLayout.setLayoutParams(params);
+        holder.cardLayout.removeAllViewsInLayout();
+        holder.cardLayout.removeAllViews();
         View cardContentView;
         String type = message.getType();
         switch (type) {
@@ -224,7 +228,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
                 cardContentView = DisplayExtendedLinksMsg.getView(context,message);
                 break;
             case Message.MESSAGE_TYPE_MEDIA_VOICE:
-                cardContentView = DisplayAttachmentCardMsg.getView(context,
+                cardContentView = DisplayMediaVoiceMsg.getView(context,
                         message);
                 break;
             default:
@@ -234,12 +238,6 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
 
 
         holder.cardLayout.addView(cardContentView);
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) holder.cardParentLayout.getLayoutParams();
-        //此处实际执行params.removeRule();
-        params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 0);
-        params.addRule(RelativeLayout.ALIGN_LEFT, 0);
-        params.addRule(isMyMsg ? RelativeLayout.ALIGN_PARENT_RIGHT : RelativeLayout.ALIGN_LEFT);
-        holder.cardParentLayout.setLayoutParams(params);
     }
 
 

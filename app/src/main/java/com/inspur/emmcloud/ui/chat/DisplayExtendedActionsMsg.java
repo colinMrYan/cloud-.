@@ -7,17 +7,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.cpiz.android.bubbleview.BubbleLinearLayout;
+import com.cpiz.android.bubbleview.BubbleStyle;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.MsgActionAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.bean.chat.Action;
-import com.inspur.emmcloud.bean.chat.MsgContentExtendedActions;
 import com.inspur.emmcloud.bean.chat.Message;
+import com.inspur.emmcloud.bean.chat.MsgContentExtendedActions;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -64,10 +65,9 @@ public class DisplayExtendedActionsMsg extends APIInterfaceInstance {
     public View getView(Message msg) {
         View convertView = LayoutInflater.from(context).inflate(
                 R.layout.chat_msg_card_child_extended_actions_view, null);
-        final boolean isMyMsg = msg.getFromUser().equals(
-                ((MyApplication) context.getApplicationContext()).getUid());
-        LinearLayout cardLayout = (LinearLayout) convertView.findViewById(R.id.bll_card);
-        cardLayout.setPadding(isMyMsg ? 0 : 11, 0, isMyMsg ? 11 : 0, 0);
+        final boolean isMyMsg = msg.getFromUser().equals(MyApplication.getInstance().getUid());
+        BubbleLinearLayout cardLayout = (BubbleLinearLayout) convertView.findViewById(R.id.bll_card);
+        cardLayout.setArrowDirection(isMyMsg? BubbleStyle.ArrowDirection.Right:BubbleStyle.ArrowDirection.Left);
         ImageView posterImg = (ImageView) convertView.findViewById(R.id.poster_img);
         final MsgContentExtendedActions msgContentActions = msg.getMsgContentExtendedActions();
         RelativeLayout singleActionLayout = (RelativeLayout) convertView.findViewById(R.id.single_action_layout);

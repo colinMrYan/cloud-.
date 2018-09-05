@@ -831,7 +831,7 @@ public class ChannelActivity extends MediaPlayBaseActivity {
         if (fakeUIMessageIndex != -1) {
             uiMessageList.get(fakeUIMessageIndex).setSendStatus(2);
             adapter.setMessageList(uiMessageList);
-            adapter.notifyDataSetChanged();
+            adapter.notifyItemChanged(fakeUIMessageIndex);
         }
     }
 

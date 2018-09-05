@@ -7,16 +7,19 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.cpiz.android.bubbleview.BubbleLinearLayout;
+import com.cpiz.android.bubbleview.BubbleStyle;
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIDownloadCallBack;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.chat.Msg;
 import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.emmcloud.util.privates.DownLoaderUtils;
 import com.inspur.emmcloud.util.common.FileUtils;
-import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.privates.DownLoaderUtils;
+import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.widget.HorizontalProgressBarWithNumber;
 import com.inspur.emmcloud.widget.RoundAngleImageView;
 
@@ -38,7 +41,7 @@ public class DisplayResFileMsg {
      * @param msg
      */
     public static View displayResFileMsg(final Context context,
-                                          final Msg msg) {
+                                          final Msg msg,boolean isMsgDetial) {
         View cardContentView = LayoutInflater.from(context).inflate(
                 R.layout.chat_msg_card_child_res_file_view, null);
         TextView fileTitleText = (TextView) cardContentView
@@ -47,6 +50,13 @@ public class DisplayResFileMsg {
                 .findViewById(R.id.tv_file_size);
         final ImageView fileDownLoadImg = (ImageView) cardContentView
                 .findViewById(R.id.filecard_download_img);
+        boolean isMyMsg = msg.getUid().equals(MyApplication.getInstance().getUid());
+        BubbleLinearLayout cardLayout = (BubbleLinearLayout)cardContentView.findViewById(R.id.brl_card);
+        if (!isMsgDetial){
+            cardLayout.setArrowDirection(isMyMsg? BubbleStyle.ArrowDirection.Right:BubbleStyle.ArrowDirection.Left);
+        }else {
+            cardLayout.setCornerRadius(0);
+        }
         String msgBody = msg.getBody();
         String fileSize = JSONUtils.getString(msgBody, "size", "");
         String fileName = JSONUtils.getString(msgBody, "name", "");

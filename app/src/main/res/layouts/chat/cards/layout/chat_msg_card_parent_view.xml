@@ -93,17 +93,6 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_toRightOf="@id/rl_send_status"></RelativeLayout>
-
-                <View
-                    android:id="@+id/card_cover_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignBottom="@id/bll_card"
-                    android:layout_alignLeft="@id/bll_card"
-                    android:layout_alignRight="@id/bll_card"
-                    android:layout_alignTop="@id/bll_card"
-                    android:layout_toRightOf="@id/rl_send_status"
-                    android:background="@drawable/ic_chat_msg_img_cover_arrow_left" />
             </RelativeLayout>
         </RelativeLayout>
     </RelativeLayout>

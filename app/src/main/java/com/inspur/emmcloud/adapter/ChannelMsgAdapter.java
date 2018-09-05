@@ -78,11 +78,11 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         final Msg msg = msgList.get(position);
-        showCardLayout(holder, msg);
         showUserName(holder, msg);
         showMsgSendTime(holder, msg, position);
         showUserPhoto(holder, msg);
         showRefreshingImg(holder, msg);
+        showCardLayout(holder, msg);
     }
 
     /**
@@ -109,7 +109,6 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
         private RelativeLayout sendStatusLayout;
         private ImageView sendFailImg;
         private QMUILoadingView sendingLoadingView;
-        public View cardCoverView;
         public TextView sendTimeText;
         public RelativeLayout cardParentLayout;
 
@@ -129,7 +128,6 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
             sendStatusLayout = (RelativeLayout) view.findViewById(R.id.rl_send_status);
             sendFailImg = (ImageView) view.findViewById(R.id.iv_send_fail);
             sendingLoadingView = (QMUILoadingView) view.findViewById(R.id.qlv_sending);
-            cardCoverView = view.findViewById(R.id.card_cover_view);
             sendTimeText = (TextView) view
                     .findViewById(R.id.send_time_text);
             cardParentLayout = (RelativeLayout) view.findViewById(R.id.card_parent_layout);
@@ -213,7 +211,6 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
         switch (type) {
             case "txt_comment":
             case "comment":
-                holder.cardCoverView.setVisibility(View.GONE);
                 cardContentView = DisplayTxtCommentMsg.displayCommentMsg(context, msg, apiService);
                 break;
             case "res_image":
@@ -225,20 +222,17 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
                 cardContentView = DisplayResLinkMsg.displayResLinkMsg(context, msg);
                 break;
             case "res_file":
-                cardContentView = DisplayResFileMsg.displayResFileMsg(context, msg);
+                cardContentView = DisplayResFileMsg.displayResFileMsg(context, msg,false);
                 break;
             case "txt_rich":
-                holder.cardCoverView.setVisibility(View.GONE);
                 cardContentView = DisplayTxtRichMsg.displayRichTextMsg(context, msg);
                 break;
 
             case "text/plain":
-                holder.cardCoverView.setVisibility(View.GONE);
                 cardContentView = DisplayTxtPlainMsg.getView(context,
                         message);
                 break;
             case "text/markdown":
-                holder.cardCoverView.setVisibility(View.GONE);
                 cardContentView = DisplayTxtMarkdownMsg.getView(context,
                         message);
                 break;
