@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.cpiz.android.bubbleview.BubbleRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.inspur.emmcloud.widget.bubble.BubbleLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/bl_card"
     android:layout_width="wrap_content"
@@ -7,34 +7,38 @@
     app:bl_arrowDirection="right"
     app:bl_arrowHeight="10dp"
     app:bl_arrowPosition="16dp"
-    app:bl_cornersRadius="8dp"
     app:bl_arrowWidth="4.5dp"
+    app:bl_cornersRadius="8dp"
     app:bl_strokeColor="#AAAAAA"
     app:bl_strokeWidth="0.5px">
-<RelativeLayout
-    android:padding="10dp"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"></RelativeLayout>
-    <com.inspur.emmcloud.widget.CircleTextImageView
-        android:id="@+id/channel_unknown_img"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
-        android:src="@drawable/icon_photo_default" />
 
-    <TextView
-        android:id="@+id/channel_unknown_text"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:layout_below="@id/channel_unknown_img"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-         android:paddingBottom="20dp"
-        android:text="@string/channel_unknown_text"
-        android:textColor="@color/msg_content_color"
-        android:textSize="@dimen/content_title_textsize" />
+        android:padding="10dp">
 
-</com.cpiz.android.bubbleview.BubbleRelativeLayout>
+        <com.inspur.emmcloud.widget.CircleTextImageView
+            android:id="@+id/channel_unknown_img"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/icon_photo_default" />
+
+        <TextView
+            android:id="@+id/channel_unknown_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/channel_unknown_img"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:gravity="center_horizontal"
+            android:paddingBottom="10dp"
+            android:text="@string/channel_unknown_text"
+            android:textColor="@color/msg_content_color"
+            android:textSize="@dimen/content_title_textsize" />
+    </RelativeLayout>
+
+
+</com.inspur.emmcloud.widget.bubble.BubbleLayout>

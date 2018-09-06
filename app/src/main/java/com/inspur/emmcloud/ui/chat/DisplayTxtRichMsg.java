@@ -50,6 +50,7 @@ public class DisplayTxtRichMsg {
         BubbleLayout cardLayout = (BubbleLayout) cardContentView.findViewById(R.id.bl_card);
         cardLayout.setArrowDirection(isMyMsg? ArrowDirection.RIGHT:ArrowDirection.LEFT);
         cardLayout.setBubbleColor(context.getResources().getColor(isMyMsg ? R.color.bg_my_card : R.color.white));
+        cardLayout.setStrokeWidth(isMyMsg ?0: 0.5f);
         String msgBody = msg.getBody();
         String source = JSONUtils.getString(msgBody, "source", "");
         RichText.from(source)

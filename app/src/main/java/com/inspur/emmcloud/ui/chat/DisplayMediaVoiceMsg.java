@@ -38,6 +38,7 @@ public class DisplayMediaVoiceMsg {
         BubbleLayout voiceLayout = (BubbleLayout) cardContentView.findViewById(R.id.bl_voice);
         voiceLayout.setArrowDirection(isMyMsg? ArrowDirection.RIGHT:ArrowDirection.LEFT);
         voiceLayout.setBubbleColor(context.getResources().getColor(isMyMsg ? R.color.bg_my_card : R.color.white));
+        voiceLayout.setStrokeWidth(isMyMsg ?0: 0.5f);
         final View voiceAnimView = cardContentView.findViewById(R.id.v_voice_anim);
         final QMUILoadingView downloadLoadingView = (QMUILoadingView) cardContentView.findViewById(isMyMsg ? R.id.qlv_downloading_left : R.id.qlv_downloading_right);
         TextView durationText = (TextView) cardContentView.findViewById(isMyMsg ? R.id.tv_duration_left : R.id.tv_duration_right);

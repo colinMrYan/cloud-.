@@ -48,6 +48,7 @@ public class DisplayCommentTextPlainMsg {
         BubbleLayout cardLayout = (BubbleLayout)cardContentView.findViewById(R.id.bl_card);
         cardLayout.setArrowDirection(isMyMsg? ArrowDirection.RIGHT:ArrowDirection.LEFT);
         cardLayout.setBubbleColor(context.getResources().getColor(isMyMsg ? R.color.bg_my_card : R.color.white));
+        cardLayout.setStrokeWidth(isMyMsg ?0: 0.5f);
         TextView commentTitleText = (TextView) cardContentView
                 .findViewById(R.id.comment_title_text);
         MsgContentComment msgContentComment = message.getMsgContentComment();

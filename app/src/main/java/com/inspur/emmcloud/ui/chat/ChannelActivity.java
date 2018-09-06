@@ -38,6 +38,7 @@ import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
@@ -110,7 +111,7 @@ public class ChannelActivity extends MediaPlayBaseActivity {
     private ImageView robotPhotoImg;
 
     private LoadingDialog loadingDlg;
-    private String robotUid = "BOT6006";
+    private String robotUid = "BOT6004";
     private String cid;
     private Channel channel;
     private List<UIMessage> uiMessageList = new ArrayList<>();
@@ -149,6 +150,8 @@ public class ChannelActivity extends MediaPlayBaseActivity {
             public void getChannelInfoSuccess(Channel channel) {
                 ChannelActivity.this.channel = channel;
                 isSpecialUser = channel.getType().equals("SERVICE") && channel.getTitle().contains(robotUid);
+                LogUtils.jasonDebug("channel.getTitle()=-"+channel.getTitle());
+                LogUtils.jasonDebug("isSpecialUser=-"+isSpecialUser);
                 if (getIntent().hasExtra("get_new_msg") && NetUtils.isNetworkConnected(getApplicationContext(), false)) {//通过scheme打开的频道
                     getNewMsgOfChannel();
                 } else {

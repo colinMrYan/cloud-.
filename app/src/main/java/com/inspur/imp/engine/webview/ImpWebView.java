@@ -121,11 +121,6 @@ public class ImpWebView extends WebView {
 
 	}
 
-	public ImpCallBackInterface getImpCallBackInterface(){
-		return impCallBackInterface;
-	}
-
-
 	//imp修改处
 	public ImpWebChromeClient getWebChromeClient(){
 		return impWebChromeClient;

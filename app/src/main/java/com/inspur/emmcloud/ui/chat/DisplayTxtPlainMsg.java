@@ -41,6 +41,7 @@ public class DisplayTxtPlainMsg {
         BubbleLayout cardLayout = (BubbleLayout) cardContentView.findViewById(R.id.bl_card);
         cardLayout.setArrowDirection(isMyMsg? ArrowDirection.RIGHT:ArrowDirection.LEFT);
         cardLayout.setBubbleColor(context.getResources().getColor(isMyMsg ? R.color.bg_my_card : R.color.white));
+        cardLayout.setStrokeWidth(isMyMsg ?0: 0.5f);
         final TextView contentText = (TextView) cardContentView
                 .findViewById(R.id.tv_content);
         contentText.setTextColor(context.getResources().getColor(
