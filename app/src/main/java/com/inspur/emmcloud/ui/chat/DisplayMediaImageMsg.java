@@ -50,9 +50,9 @@ public class DisplayMediaImageMsg {
         MsgContentMediaImage msgContentMediaImage = message.getMsgContentMediaImage();
         String imageUri = msgContentMediaImage.getRawMedia();
         DisplayImageOptions options = new DisplayImageOptions.Builder()
-                .showImageForEmptyUri(R.drawable.default_image)
-                .showImageOnFail(R.drawable.default_image)
-                .showImageOnLoading(R.drawable.default_image)
+                .showImageForEmptyUri(R.drawable.icon_photo_default)
+                .showImageOnFail(R.drawable.icon_photo_default)
+                .showImageOnLoading(R.drawable.icon_photo_default)
                 .displayer(new RoundedBitmapDisplayer(DensityUtil.dip2px(MyApplication.getInstance(),4)))
                 // 设置图片的解码类型
                 .bitmapConfig(Bitmap.Config.RGB_565).cacheInMemory(true)
