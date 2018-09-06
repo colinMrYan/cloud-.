@@ -3,6 +3,7 @@ package com.inspur.emmcloud.util.privates;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
+import android.app.AppOpsManager;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -13,9 +14,12 @@ import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Paint;
 import android.graphics.Paint.FontMetrics;
+import android.net.TrafficStats;
 import android.net.Uri;
+import android.os.Binder;
 import android.os.Build;
 import android.os.Environment;
+import android.support.v4.content.ContextCompat;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -24,6 +28,7 @@ import android.view.WindowManager;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.ui.chat.MembersActivity;
 import com.inspur.emmcloud.util.common.EncryptUtils;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
@@ -38,6 +43,7 @@ import com.inspur.imp.plugin.camera.imagepicker.ui.ImageGridActivity;
 import com.inspur.imp.plugin.camera.mycamera.MyCameraActivity;
 
 import java.io.File;
+import java.lang.reflect.Method;
 import java.util.List;
 import java.util.UUID;
 import java.util.regex.Matcher;
@@ -51,6 +57,24 @@ import java.util.regex.Pattern;
 public class AppUtils {
 
     private static final String TAG = "AppUtils";
+
+    private static long lastTotalRxBytes = 0;
+    private static long lastTimeStamp = System.currentTimeMillis();
+
+    /**
+     * 获取当前App网速
+     * @param uid
+     * @return
+     */
+    public static String getNetSpeed(int uid) {
+        long nowTotalRxBytes = TrafficStats.getUidRxBytes(uid) == TrafficStats.UNSUPPORTED ? 0 : (TrafficStats.getTotalRxBytes() / 1024);;
+        long nowTimeStamp = System.currentTimeMillis();
+        long divide = nowTimeStamp - lastTimeStamp;
+        long speed = ((nowTotalRxBytes - lastTotalRxBytes) * 1000 / (divide == 0? 1:divide));//毫秒转换
+        lastTimeStamp = nowTimeStamp;
+        lastTotalRxBytes = nowTotalRxBytes;
+        return String.valueOf(speed) + " kb/s";
+    }
 
     /**
      * 判断应用是否运行在设备的最前端
@@ -548,6 +572,20 @@ public class AppUtils {
     }
 
     /**
+     * 根据channelId打开相应的频道
+     * @param activity
+     * @param channelId
+     */
+    public static void openChannelMemeberSelect(Activity activity,String channelId,int requestCode){
+        Intent intent = new Intent();
+        intent.setClass(activity, MembersActivity.class);
+        intent.putExtra("title",activity.getString(R.string.voice_communication_choice_members));
+        intent.putExtra(MembersActivity.MEMBER_PAGE_STATE, MembersActivity.SELECT_STATE);
+        intent.putExtra("cid",channelId);
+        activity.startActivity(intent);
+    }
+
+    /**
      * 调用系统相机
      *
      * @param activity
@@ -747,7 +785,6 @@ public class AppUtils {
     /**
      * app是否是标准版
      *
-     * @param context
      * @return
      */
     public static boolean isAppVersionStandard() {
@@ -762,7 +799,7 @@ public class AppUtils {
 
     /**
      * 获取版本名
-     * @param activity
+     * @param context
      * @return
      */
     public static String getAppVersionFlag(Context context){
@@ -771,7 +808,7 @@ public class AppUtils {
 
     /**
      * 获取manifest中的metadata值
-     * @param activity
+     * @param context
      * @param key
      * @return
      */
@@ -823,6 +860,61 @@ public class AppUtils {
             appIconRes = Res.getDrawableID("ic_launcher_"+appFirstLoadAlis);
         }
         return appIconRes;
+    }
+
+    /**
+     * 判断权限集合
+     * permissions 权限数组
+     * return true-表示没有改权限  false-表示权限已开启
+     */
+    public static boolean lacksPermissions(Context context,String[] permissions) {
+        for (String permission : permissions) {
+            if (lacksPermission(context,permission)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 判断是否缺少权限
+     */
+    private static boolean lacksPermission(Context mContexts, String permission) {
+        return ContextCompat.checkSelfPermission(mContexts, permission) ==
+                PackageManager.PERMISSION_DENIED;
+    }
+
+    /**
+     * 判断 悬浮窗口权限是否打开
+     *
+     * @param context
+     * @return true 允许  false禁止
+     */
+    public static boolean getAppOps(Context context) {
+        try {
+            Object object = context.getSystemService(Context.APP_OPS_SERVICE);
+            if (object == null) {
+                return false;
+            }
+            Class localClass = object.getClass();
+            Class[] arrayOfClass = new Class[3];
+            arrayOfClass[0] = Integer.TYPE;
+            arrayOfClass[1] = Integer.TYPE;
+            arrayOfClass[2] = String.class;
+            Method method = localClass.getMethod("checkOp", arrayOfClass);
+            if (method == null) {
+                return false;
+            }
+            Object[] arrayOfObject1 = new Object[3];
+            arrayOfObject1[0] = Integer.valueOf(24);
+            arrayOfObject1[1] = Integer.valueOf(Binder.getCallingUid());
+            arrayOfObject1[2] = context.getPackageName();
+            int m = ((Integer) method.invoke(object, arrayOfObject1)).intValue();
+            return m == AppOpsManager.MODE_ALLOWED;
+        } catch (Exception e) {
+            LogUtils.YfcDebug("判断悬浮窗权限异常："+e.getMessage());
+        }
+        return false;
     }
 
 }

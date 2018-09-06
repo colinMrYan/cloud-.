@@ -112,6 +112,7 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
         intent.setClass(getContext(), MembersActivity.class);
         intent.putExtra("title", getContext().getString(R.string.friend_list));
         intent.putExtra("cid", cid);
+        intent.putExtra(MembersActivity.MEMBER_PAGE_STATE, MembersActivity.MENTIONS_STATE);
         intent.putExtra("isInputKeyWord", isInputKeyWord);
         ((Activity) getContext()).overridePendingTransition(
                 R.anim.activity_open, 0);

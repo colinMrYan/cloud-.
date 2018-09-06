@@ -98,6 +98,7 @@
     <string name="app_init">init</string>
     <string name="news_content_cant_empty">Content cannot be empty</string>
     <string name="help">Help</string>
+    <string name="load_data_failed">Failed to load data</string>
 
     <!-- 新添加部分 -->
     <string name="alert">Remind</string>
@@ -976,4 +977,16 @@
     <string name="card_package_taxpayer">Taxpayer identification number</string>
     <string name="card_package_address">Address</string>
     <string name="card_package_phone_number">Telephone</string>
+
+    <string name="voice_communication_invite_you">I invite you to make voice calls.</string>
+    <string name="voice_communication_members">Call member</string>
+    <string name="voice_communication_excuse">Excuse</string>
+    <string name="voice_communication_hands_free">Hands-free</string>
+    <string name="voice_communication_tran_video">Camera</string>
+    <string name="voice_communication_mute">Mute</string>
+    <string name="voice_communication_choice_members">Select members</string>
+    <string name="voice_communication_waitting_answer">Wait for the answer</string>
+    <string name="voice_communicaiton_watting_talking">In the call</string>
+    <string name="voice_communication_quality">The quality of current calls is poor.</string>
+    <string name="voice_communication_support_nine_members">Cloud + supports nine voice at present.</string>
 </resources>

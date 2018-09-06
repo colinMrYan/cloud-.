@@ -23,7 +23,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:background="#4D000000"
+                android:background="#E6000000"
                 android:paddingBottom="10dp">
 
                 <ImageView
@@ -59,7 +59,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_alignParentBottom="true"
-                android:background="#4D000000"
+                android:background="#E6000000"
                 android:gravity="right"
                 android:orientation="horizontal"
                 android:paddingBottom="7dp"
@@ -136,7 +136,6 @@
             android:visibility="gone" />
 
     </FrameLayout>
-
 
 
 </LinearLayout>

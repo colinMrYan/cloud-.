@@ -145,6 +145,8 @@ public class PluginMgr {
                 serviceName = "com.inspur.imp.plugin.startapp.StartAppService";
             }else if(serviceName.endsWith("WindowService")){
                 serviceName = "com.inspur.imp.plugin.window.WindowService";
+            }else if(serviceName.endsWith("DeviceService")){
+                serviceName = "com.inspur.imp.plugin.device.DeviceService";
             }
         }
         return serviceName;

@@ -27,6 +27,7 @@ import android.webkit.WebView;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 
+import com.inspur.imp.api.ImpCallBackInterface;
 import com.inspur.imp.api.Res;
 import com.inspur.imp.api.iLog;
 
@@ -318,7 +319,10 @@ public class ImpWebChromeClient extends WebChromeClient {
 	@Override
 	public void onReceivedTitle(WebView view, String title) {
 		if(null != title && !getRemoveHttpUrl(title).equals(getRemoveHttpUrl(view.getUrl()))  && !getRemoveHttpUrl(title).equals(getRemoveHttpUrl(view.getOriginalUrl()))){
-			getActivity().setTitle(title);
+			ImpCallBackInterface impCallBackInterface = mWebView.getImpCallBackInterface();
+			if(impCallBackInterface != null){
+				impCallBackInterface.onSetTitle(title);
+			}
 		}
 	}
 

@@ -136,6 +136,11 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
             public void onSendVoiceRecordMsg(float seconds, String filePath) {
 
             }
+
+            @Override
+            public void onVoiceCommucaiton() {
+
+            }
         });
         chatInputMenu.setInputLayout("1");
     }
@@ -204,7 +209,6 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
     /**
      * 展示可以缩放的Image
      *
-     * @param path
      */
     protected void displayZoomImage(View view, String url) {
 

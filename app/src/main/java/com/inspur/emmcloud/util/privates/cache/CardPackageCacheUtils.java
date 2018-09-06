@@ -26,7 +26,6 @@ public class CardPackageCacheUtils {
             }
             DbCacheUtils.getDb(context).saveOrUpdate(cardPackageBeanList);
         } catch (Exception e) {
-            LogUtils.YfcDebug("存储数据报错："+e.getMessage());
             e.printStackTrace();
         }
     }

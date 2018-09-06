@@ -1,24 +1,14 @@
 package com.inspur.emmcloud.bean.chat;
 
 public class PersonDto {
-    private Integer userId;// 用户ID
     private String name;// 姓名
     private String head;// 头像
     private String utype;// 用户类型
     private String sortLetters; // 显示数据拼音的首字母
     private String suoxie;// 姓名缩写
-    private String signature;// 个性签名
     private String uid; //userid
     private String pinyinFull; //全拼音
-    private String pinyinJShort; //简拼
 
-    public final Integer getUserId() {
-        return userId;
-    }
-
-    public final void setUserId(Integer userId) {
-        this.userId = userId;
-    }
 
     public final String getName() {
         return name;
@@ -60,13 +50,6 @@ public class PersonDto {
         this.suoxie = suoxie;
     }
 
-    public final String getSignature() {
-        return signature;
-    }
-
-    public final void setSignature(String signature) {
-        this.signature = signature;
-    }
 
 	public String getUid() {
 		return uid;
@@ -84,12 +67,19 @@ public class PersonDto {
 		this.pinyinFull = pinyinFull;
 	}
 
-	public String getPinyinJShort() {
-		return pinyinJShort;
-	}
-
-	public void setPinyinJShort(String pinyinJShort) {
-		this.pinyinJShort = pinyinJShort;
-	}
-    
+    /**
+     * 复写equals方法
+     * @param other
+     * @return
+     */
+    public boolean equals(Object other) {
+        if (this == other)
+            return true;
+        if (other == null)
+            return false;
+        if (!(other instanceof PersonDto))
+            return false;
+        final PersonDto personDto = (PersonDto) other;
+        return getUid().equals(personDto.getUid());
+    }
 }

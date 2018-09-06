@@ -222,7 +222,7 @@ public class ChannelInfoActivity extends BaseActivity {
                 break;
             case R.id.member_layout:
                 bundle.putString("title", getString(R.string.group_member));
-                bundle.putString("search", "1");
+                bundle.putInt(MembersActivity.MEMBER_PAGE_STATE,MembersActivity.CHECK_STATE);
                 bundle.putStringArrayList("uidList",memberList);
                 IntentUtils.startActivity(ChannelInfoActivity.this,
                         MembersActivity.class, bundle);
