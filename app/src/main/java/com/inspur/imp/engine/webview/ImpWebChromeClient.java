@@ -44,11 +44,11 @@ public class ImpWebChromeClient extends WebChromeClient {
 	public static final int FILE_CHOOSER_RESULT_CODE = 5173;
 	private ValueCallback<Uri> mUploadMessage;// 回调图片选择，4.4以下
 	private ValueCallback<Uri[]> mUploadCallbackAboveL;// 回调图片选择，5.0以上
-	private WebView mWebView;
+	private ImpWebView mWebView;
 	private FrameLayout mVideoContainer;
 	private CustomViewCallback mCallBack;
 
-	public ImpWebChromeClient(Context context,  WebView webView, FrameLayout frameLayout) {
+	public ImpWebChromeClient(Context context,  ImpWebView webView, FrameLayout frameLayout) {
 		// TODO Auto-generated constructor stub
 		this.context = context;
 		this.mWebView = webView;
@@ -264,9 +264,9 @@ public class ImpWebChromeClient extends WebChromeClient {
 			acceptType = "*/*";
 		}
 		i.setType(acceptType);
-		getActivity().startActivityForResult(
-				Intent.createChooser(i, "File Browser"),
-				FILE_CHOOSER_RESULT_CODE);
+		if (mWebView.getImpCallBackInterface() != null){
+			mWebView.getImpCallBackInterface().onStartActivityForResult(Intent.createChooser(i, "File Browser"),FILE_CHOOSER_RESULT_CODE);
+		}
 	}
 
 	// For Android 5.0+
@@ -287,9 +287,9 @@ public class ImpWebChromeClient extends WebChromeClient {
 		}
 		i.setType(type);
 
-		getActivity().startActivityForResult(
-				Intent.createChooser(i, "File Browser"),
-				FILE_CHOOSER_RESULT_CODE);
+		if (mWebView.getImpCallBackInterface() != null){
+			mWebView.getImpCallBackInterface().onStartActivityForResult(Intent.createChooser(i, "File Browser"),FILE_CHOOSER_RESULT_CODE);
+		}
 		return true;
 	}
 

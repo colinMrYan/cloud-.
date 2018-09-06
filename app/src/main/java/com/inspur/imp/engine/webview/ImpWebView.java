@@ -185,6 +185,10 @@ public class ImpWebView extends WebView {
 	}
 	private int mLastMotionX;
 	private int mLastMotionY;
+
+	public ImpCallBackInterface getImpCallBackInterface(){
+		return impCallBackInterface;
+	}
 	/**
 	 * 设置webview
 	 */
