@@ -8,8 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
-import com.cpiz.android.bubbleview.BubbleStyle;
-import com.cpiz.android.bubbleview.BubbleTextView;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.chat.Message;
@@ -17,6 +15,8 @@ import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.ChatMsgContentUtils;
 import com.inspur.emmcloud.util.privates.TransHtmlToTextUtils;
 import com.inspur.emmcloud.widget.LinkMovementClickMethod;
+import com.inspur.emmcloud.widget.bubble.ArrowDirection;
+import com.inspur.emmcloud.widget.bubble.BubbleLayout;
 
 /**
  * DisplayTxtRichMsg
@@ -38,16 +38,17 @@ public class DisplayTxtPlainMsg {
                 R.layout.chat_msg_card_child_text_rich_view, null);
         final boolean isMyMsg = message.getFromUser().equals(
                 MyApplication.getInstance().getUid());
-        final BubbleTextView contentText = (BubbleTextView) cardContentView
-                .findViewById(R.id.btv_content);
+        BubbleLayout cardLayout = (BubbleLayout) cardContentView.findViewById(R.id.bl_card);
+        cardLayout.setArrowDirection(isMyMsg? ArrowDirection.RIGHT:ArrowDirection.LEFT);
+        cardLayout.setBubbleColor(context.getResources().getColor(isMyMsg ? R.color.bg_my_card : R.color.white));
+        final TextView contentText = (TextView) cardContentView
+                .findViewById(R.id.tv_content);
         contentText.setTextColor(context.getResources().getColor(
                 isMyMsg ? R.color.white : R.color.black));
         String text = message.getMsgContentTextPlain().getText();
         contentText.setMovementMethod(LinkMovementClickMethod.getInstance());
         SpannableString spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(context, text, message.getMsgContentTextPlain().getMentionsMap());
         contentText.setText(spannableString);
-        contentText.setArrowDirection(isMyMsg? BubbleStyle.ArrowDirection.Right:BubbleStyle.ArrowDirection.Left);
-        contentText.setFillColor(context.getResources().getColor(isMyMsg ? R.color.bg_my_card : R.color.white));
         TransHtmlToTextUtils.stripUnderlines(
                 contentText,context.getResources().getColor(isMyMsg ? R.color.hightlight_in_blue_bg
                         : R.color.header_bg));

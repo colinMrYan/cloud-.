@@ -2,14 +2,13 @@ package com.inspur.emmcloud.ui.chat;
 
 import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.cpiz.android.bubbleview.BubbleRelativeLayout;
-import com.cpiz.android.bubbleview.BubbleStyle;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIDownloadCallBack;
@@ -22,6 +21,8 @@ import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.MediaPlayerManagerUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.DownLoaderUtils;
+import com.inspur.emmcloud.widget.bubble.ArrowDirection;
+import com.inspur.emmcloud.widget.bubble.BubbleLayout;
 import com.qmuiteam.qmui.widget.QMUILoadingView;
 
 import java.io.File;
@@ -34,9 +35,9 @@ public class DisplayMediaVoiceMsg {
     public static View getView(final Context context, final Message message) {
         final boolean isMyMsg = message.getFromUser().equals(MyApplication.getInstance().getUid());
         View cardContentView = LayoutInflater.from(context).inflate(R.layout.chat_msg_card_child_media_voice_view, null);
-        BubbleRelativeLayout voiceLayout = (BubbleRelativeLayout) cardContentView.findViewById(R.id.brl_voice);
-        voiceLayout.setArrowDirection(isMyMsg? BubbleStyle.ArrowDirection.Right:BubbleStyle.ArrowDirection.Left);
-        voiceLayout.setFillColor(context.getResources().getColor(isMyMsg ? R.color.bg_my_card : R.color.white));
+        BubbleLayout voiceLayout = (BubbleLayout) cardContentView.findViewById(R.id.bl_voice);
+        voiceLayout.setArrowDirection(isMyMsg? ArrowDirection.RIGHT:ArrowDirection.LEFT);
+        voiceLayout.setBubbleColor(context.getResources().getColor(isMyMsg ? R.color.bg_my_card : R.color.white));
         final View voiceAnimView = cardContentView.findViewById(R.id.v_voice_anim);
         final QMUILoadingView downloadLoadingView = (QMUILoadingView) cardContentView.findViewById(isMyMsg ? R.id.qlv_downloading_left : R.id.qlv_downloading_right);
         TextView durationText = (TextView) cardContentView.findViewById(isMyMsg ? R.id.tv_duration_left : R.id.tv_duration_right);
@@ -48,15 +49,12 @@ public class DisplayMediaVoiceMsg {
         if (widthDip > 230) {
             widthDip = 230;
         }
-        LinearLayout.LayoutParams voiceLayoutParams = new LinearLayout.LayoutParams(DensityUtil.dip2px(context, widthDip), DensityUtil.dip2px(context, 40));
+        LinearLayout.LayoutParams voiceLayoutParams = new LinearLayout.LayoutParams(DensityUtil.dip2px(context, widthDip), DensityUtil.dip2px(context, 42));
         voiceLayout.setLayoutParams(voiceLayoutParams);
-        RelativeLayout.LayoutParams voiceAnimViewLayoutParams = (RelativeLayout.LayoutParams) voiceAnimView.getLayoutParams();
-        //此处实际执行params.removeRule();
-        voiceAnimViewLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 0);
-        voiceAnimViewLayoutParams.addRule(isMyMsg ? RelativeLayout.ALIGN_PARENT_RIGHT : RelativeLayout.ALIGN_PARENT_LEFT);
+        FrameLayout.LayoutParams voiceAnimViewLayoutParams = (FrameLayout.LayoutParams) voiceAnimView.getLayoutParams();
+        voiceAnimViewLayoutParams.gravity=(isMyMsg? Gravity.RIGHT:Gravity.LEFT)|Gravity.CENTER_VERTICAL;
         voiceAnimView.setLayoutParams(voiceAnimViewLayoutParams);
         voiceAnimView.setBackgroundResource(isMyMsg ? R.drawable.ic_chat_msg_card_voice_right_level_3 : R.drawable.ic_chat_msg_card_voice_left_level_3);
-        voiceLayout.setBackgroundResource(isMyMsg ? R.drawable.ic_chat_msg_img_cover_arrow_right : R.drawable.ic_chat_msg_img_cover_arrow_left);
         voiceLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

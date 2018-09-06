@@ -232,10 +232,10 @@ public class ChannelV0Activity extends BaseActivity {
                             ChannelV0Activity.this, cid, msgList.get(0).getTime(),
                             15);
                     msgList.addAll(0, historyMsgList);
-                    swipeRefreshLayout.setRefreshing(false);
                     adapter.setMsgList(msgList);
                     adapter.notifyItemRangeInserted(0, historyMsgList.size());
                     msgListView.MoveToPosition(historyMsgList.size() - 1);
+                    swipeRefreshLayout.setRefreshing(false);
                 } else {
                     getNewsMsg();
                 }
@@ -983,7 +983,6 @@ public class ChannelV0Activity extends BaseActivity {
         @Override
         public void returnNewMsgsSuccess(GetNewMsgsResult getNewMsgsResult) {
             if (swipeRefreshLayout.isRefreshing()) {
-                swipeRefreshLayout.setRefreshing(false);
                 final List<Msg> historyMsgList = getNewMsgsResult
                         .getNewMsgList(cid);
                 if (historyMsgList.size() > 0) {
@@ -992,8 +991,9 @@ public class ChannelV0Activity extends BaseActivity {
                     msgList.addAll(0, historyMsgList);
                     adapter.setMsgList(msgList);
                     adapter.notifyItemRangeInserted(0, historyMsgList.size());
-                    msgListView.MoveToPosition(historyMsgList.size() - 1);
+                    msgListView.scrollToPosition(historyMsgList.size() - 1);
                 }
+                swipeRefreshLayout.setRefreshing(false);
             } else {
                 LoadingDialog.dimissDlg(loadingDlg);
                 List<Msg> msgList = getNewMsgsResult.getNewMsgList(cid);

@@ -24,12 +24,15 @@
         android:textSize="15sp"
         android:visibility="gone" />
 
-    <com.cpiz.android.bubbleview.BubbleRelativeLayout
-        android:id="@+id/brl_voice"
-        app:bb_borderColor="#bbbbbb"
-        app:bb_arrowPosPolicy="SelfBegin"
-        app:bb_arrowPosDelta="21dp"
-        app:bb_cornerRadius="4dp"
+    <com.inspur.emmcloud.widget.bubble.BubbleLayout
+        android:id="@+id/bl_voice"
+        app:bl_arrowDirection="right"
+        app:bl_arrowHeight="10dp"
+        app:bl_arrowPosition="16dp"
+        app:bl_cornersRadius="8dp"
+        app:bl_arrowWidth="4.5dp"
+        app:bl_strokeColor="#AAAAAA"
+        app:bl_strokeWidth="0.5px"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
@@ -41,7 +44,7 @@
             android:layout_marginLeft="0dp"
             android:layout_marginRight="0dp"
             android:background="@drawable/ic_chat_msg_card_voice_left_level_3" />
-    </com.cpiz.android.bubbleview.BubbleRelativeLayout>
+    </com.inspur.emmcloud.widget.bubble.BubbleLayout>
 
     <TextView
         android:id="@+id/tv_duration_right"

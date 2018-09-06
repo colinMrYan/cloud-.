@@ -30,13 +30,13 @@
 
         <com.inspur.emmcloud.widget.CircleTextImageView
             android:id="@+id/iv_sender_photo_left"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
+            android:layout_width="43dp"
+            android:layout_height="43dp"
              />
         <com.inspur.emmcloud.widget.CircleTextImageView
             android:id="@+id/iv_sender_photo_right"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
+            android:layout_width="43dp"
+            android:layout_height="43dp"
             android:layout_alignParentRight="true"
              />
 
@@ -50,12 +50,12 @@
                 android:id="@+id/sender_name_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="4dp"
-                android:paddingLeft="4dp"
-                android:paddingRight="4dp"
+                android:layout_marginBottom="2dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
                 android:maxLines="1"
                 android:textColor="#666666"
-                android:textSize="@dimen/content_normal_textsize" />
+                android:textSize="14sp" />
 
             <RelativeLayout
                 android:id="@+id/card_parent_layout"
@@ -67,7 +67,7 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="12dp"
+                    android:layout_marginLeft="13dp"
                     android:padding="5dp">
                     <ImageView
                         android:id="@+id/iv_send_fail"

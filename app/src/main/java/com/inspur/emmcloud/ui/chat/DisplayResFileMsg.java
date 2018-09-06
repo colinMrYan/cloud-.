@@ -7,8 +7,6 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.cpiz.android.bubbleview.BubbleLinearLayout;
-import com.cpiz.android.bubbleview.BubbleStyle;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIDownloadCallBack;
@@ -22,6 +20,8 @@ import com.inspur.emmcloud.util.privates.DownLoaderUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.widget.HorizontalProgressBarWithNumber;
 import com.inspur.emmcloud.widget.RoundAngleImageView;
+import com.inspur.emmcloud.widget.bubble.ArrowDirection;
+import com.inspur.emmcloud.widget.bubble.BubbleLayout;
 
 import org.xutils.common.Callback.ProgressCallback;
 
@@ -51,11 +51,13 @@ public class DisplayResFileMsg {
         final ImageView fileDownLoadImg = (ImageView) cardContentView
                 .findViewById(R.id.filecard_download_img);
         boolean isMyMsg = msg.getUid().equals(MyApplication.getInstance().getUid());
-        BubbleLinearLayout cardLayout = (BubbleLinearLayout)cardContentView.findViewById(R.id.brl_card);
+        BubbleLayout cardLayout = (BubbleLayout) cardContentView.findViewById(R.id.bl_card);
         if (!isMsgDetial){
-            cardLayout.setArrowDirection(isMyMsg? BubbleStyle.ArrowDirection.Right:BubbleStyle.ArrowDirection.Left);
+            cardLayout.setArrowDirection(isMyMsg? ArrowDirection.RIGHT:ArrowDirection.LEFT);
         }else {
-            cardLayout.setCornerRadius(0);
+            cardLayout.setArrowHeight(0);
+            cardLayout.setArrowWidth(0);
+            cardLayout.setCornersRadius(0);
         }
         String msgBody = msg.getBody();
         String fileSize = JSONUtils.getString(msgBody, "size", "");

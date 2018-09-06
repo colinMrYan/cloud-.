@@ -187,10 +187,10 @@ public class ChannelActivity extends MediaPlayBaseActivity {
                             MyApplication.getInstance(), cid, uiMessageList.get(0).getCreationDate(),
                             20);
                     uiMessageList.addAll(0, UIMessage.MessageList2UIMessageList(historyMsgList));
-                    swipeRefreshLayout.setRefreshing(false);
                     adapter.setMessageList(uiMessageList);
                     adapter.notifyItemRangeInserted(0, historyMsgList.size());
-                    msgListView.MoveToPosition(historyMsgList.size() - 1);
+                    msgListView.scrollToPosition(historyMsgList.size() - 1);
+                    swipeRefreshLayout.setRefreshing(false);
                 } else {
                     getNewsMsg();
                 }
@@ -677,7 +677,7 @@ public class ChannelActivity extends MediaPlayBaseActivity {
                         uiMessageList.addAll(0, historyUIMessageList);
                         adapter.setMessageList(uiMessageList);
                         adapter.notifyItemRangeInserted(0, historyMessageList.size());
-                        msgListView.MoveToPosition(historyMessageList.size() - 1);
+                        msgListView.scrollToPosition(historyMessageList.size() - 1);
                     }
                 } else {
                     if (historyMessageList.size() > 0) {

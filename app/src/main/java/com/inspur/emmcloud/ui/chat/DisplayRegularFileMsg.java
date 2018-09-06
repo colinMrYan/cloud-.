@@ -7,8 +7,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.cpiz.android.bubbleview.BubbleRelativeLayout;
-import com.cpiz.android.bubbleview.BubbleStyle;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.chat.Message;
@@ -16,6 +14,8 @@ import com.inspur.emmcloud.bean.chat.MsgContentRegularFile;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
+import com.inspur.emmcloud.widget.bubble.ArrowDirection;
+import com.inspur.emmcloud.widget.bubble.BubbleLayout;
 
 /**
  * DisplayRegularFileMsg
@@ -39,11 +39,13 @@ public class DisplayRegularFileMsg {
                 .findViewById(R.id.tv_file_name);
         TextView fileSizeText = (TextView) convertView
                 .findViewById(R.id.tv_file_size);
-        BubbleRelativeLayout cardLayout = (BubbleRelativeLayout)convertView.findViewById(R.id.brl_card);
+        BubbleLayout cardLayout = (BubbleLayout) convertView.findViewById(R.id.bl_card);
         if (!isMsgDetial){
-            cardLayout.setArrowDirection(isMyMsg? BubbleStyle.ArrowDirection.Right:BubbleStyle.ArrowDirection.Left);
+            cardLayout.setArrowDirection(isMyMsg? ArrowDirection.RIGHT:ArrowDirection.LEFT);
         }else {
-            cardLayout.setCornerRadius(0);
+            cardLayout.setArrowHeight(0);
+            cardLayout.setArrowWidth(0);
+            cardLayout.setCornersRadius(0);
         }
         ImageView img = (ImageView)convertView.findViewById(R.id.iv_file_icon);
         final MsgContentRegularFile msgContentFile = message.getMsgContentAttachmentFile();

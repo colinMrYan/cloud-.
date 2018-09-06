@@ -10,8 +10,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.cpiz.android.bubbleview.BubbleLinearLayout;
-import com.cpiz.android.bubbleview.BubbleStyle;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.MsgActionAdapter;
@@ -26,6 +24,8 @@ import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.NoScrollGridView;
+import com.inspur.emmcloud.widget.bubble.ArrowDirection;
+import com.inspur.emmcloud.widget.bubble.BubbleLayout;
 
 import java.util.List;
 
@@ -66,8 +66,8 @@ public class DisplayExtendedActionsMsg extends APIInterfaceInstance {
         View convertView = LayoutInflater.from(context).inflate(
                 R.layout.chat_msg_card_child_extended_actions_view, null);
         final boolean isMyMsg = msg.getFromUser().equals(MyApplication.getInstance().getUid());
-        BubbleLinearLayout cardLayout = (BubbleLinearLayout) convertView.findViewById(R.id.bll_card);
-        cardLayout.setArrowDirection(isMyMsg? BubbleStyle.ArrowDirection.Right:BubbleStyle.ArrowDirection.Left);
+        BubbleLayout cardLayout = (BubbleLayout) convertView.findViewById(R.id.bl_card);
+        cardLayout.setArrowDirection(isMyMsg? ArrowDirection.RIGHT:ArrowDirection.LEFT);
         ImageView posterImg = (ImageView) convertView.findViewById(R.id.poster_img);
         final MsgContentExtendedActions msgContentActions = msg.getMsgContentExtendedActions();
         RelativeLayout singleActionLayout = (RelativeLayout) convertView.findViewById(R.id.single_action_layout);

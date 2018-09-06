@@ -1,17 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.cpiz.android.bubbleview.BubbleRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.inspur.emmcloud.widget.bubble.BubbleLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/brl_card"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:id="@+id/bl_card"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:bl_arrowDirection="right"
+    app:bl_arrowHeight="10dp"
+    app:bl_arrowPosition="16dp"
+    app:bl_cornersRadius="8dp"
+    app:bl_arrowWidth="4.5dp"
+    app:bl_strokeColor="#AAAAAA"
+    app:bl_strokeWidth="0.5px">
+
+<RelativeLayout
     android:padding="10dp"
-    app:bb_arrowPosDelta="21dp"
-    app:bb_arrowPosPolicy="SelfBegin"
-    app:bb_borderColor="#bbbbbb"
-    app:bb_cornerRadius="4dp"
-    app:bb_fillColor="#ffffff">
-
-
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
     <ImageView
         android:id="@+id/img_news_card"
         android:layout_width="match_parent"
@@ -47,5 +51,5 @@
             android:textColor="#999999"
             android:textSize="15sp" />
     </RelativeLayout>
-
-</com.cpiz.android.bubbleview.BubbleRelativeLayout>
+</RelativeLayout>
+</com.inspur.emmcloud.widget.bubble.BubbleLayout>

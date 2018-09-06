@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.cpiz.android.bubbleview.BubbleRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/brl_card"
+    android:id="@+id/bl_card"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:bl_arrowDirection="right"
+    app:bl_arrowHeight="10dp"
+    app:bl_arrowPosition="16dp"
+    app:bl_cornersRadius="8dp"
+    app:bl_arrowWidth="4.5dp"
+    app:bl_strokeColor="#AAAAAA"
+    app:bl_strokeWidth="0.5px">
+<RelativeLayout
     android:padding="10dp"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_centerInParent="true"
-    app:bb_arrowPosDelta="21dp"
-    app:bb_arrowPosPolicy="SelfBegin"
-    app:bb_borderColor="#bbbbbb"
-    app:bb_cornerRadius="4dp"
-    app:bb_fillColor="#ffffff"
-   >
-
+    android:layout_height="wrap_content"></RelativeLayout>
     <com.inspur.emmcloud.widget.CircleTextImageView
         android:id="@+id/channel_unknown_img"
         android:layout_width="60dp"

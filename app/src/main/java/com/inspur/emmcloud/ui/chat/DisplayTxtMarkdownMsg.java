@@ -6,8 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
-import com.cpiz.android.bubbleview.BubbleRelativeLayout;
-import com.cpiz.android.bubbleview.BubbleStyle;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.chat.Message;
@@ -19,6 +17,8 @@ import com.inspur.emmcloud.util.common.richtext.RichType;
 import com.inspur.emmcloud.util.common.richtext.callback.LinkFixCallback;
 import com.inspur.emmcloud.util.common.richtext.callback.OnUrlClickListener;
 import com.inspur.emmcloud.util.privates.UriUtils;
+import com.inspur.emmcloud.widget.bubble.ArrowDirection;
+import com.inspur.emmcloud.widget.bubble.BubbleLayout;
 
 /**
  * DisplayTxtRichMsg
@@ -42,9 +42,9 @@ public class DisplayTxtMarkdownMsg {
                 .findViewById(R.id.tv_title);
         final TextView contentText = (TextView) cardContentView
                 .findViewById(R.id.tv_content);
-        BubbleRelativeLayout cardLayout = (BubbleRelativeLayout)cardContentView.findViewById(R.id.brl_card);
-        cardLayout.setArrowDirection(isMyMsg? BubbleStyle.ArrowDirection.Right:BubbleStyle.ArrowDirection.Left);
-        cardLayout.setFillColor(context.getResources().getColor(isMyMsg ? R.color.bg_my_card : R.color.white));
+        BubbleLayout cardLayout = (BubbleLayout) cardContentView.findViewById(R.id.bl_card);
+        cardLayout.setArrowDirection(isMyMsg? ArrowDirection.RIGHT:ArrowDirection.LEFT);
+        cardLayout.setBubbleColor(context.getResources().getColor(isMyMsg ? R.color.bg_my_card : R.color.white));
         titleText.setTextColor(context.getResources().getColor(
                 isMyMsg ? R.color.white : R.color.black));
         contentText.setTextColor(context.getResources().getColor(

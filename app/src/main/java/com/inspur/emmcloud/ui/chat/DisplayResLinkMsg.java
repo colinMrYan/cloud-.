@@ -6,8 +6,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.cpiz.android.bubbleview.BubbleRelativeLayout;
-import com.cpiz.android.bubbleview.BubbleStyle;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
@@ -16,6 +14,8 @@ import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
+import com.inspur.emmcloud.widget.bubble.ArrowDirection;
+import com.inspur.emmcloud.widget.bubble.BubbleLayout;
 
 /**
  * DisplayResLinkMsg
@@ -36,8 +36,8 @@ public class DisplayResLinkMsg {
         View cardContentView = LayoutInflater.from(context).inflate(
                 R.layout.chat_msg_card_child_res_link_view, null);
         boolean isMyMsg = msg.getUid().equals(MyApplication.getInstance().getUid());
-        BubbleRelativeLayout cardLayout = (BubbleRelativeLayout) cardContentView.findViewById(R.id.brl_card);
-        cardLayout.setArrowDirection(isMyMsg? BubbleStyle.ArrowDirection.Right:BubbleStyle.ArrowDirection.Left);
+        BubbleLayout cardLayout = (BubbleLayout) cardContentView.findViewById(R.id.bl_card);
+        cardLayout.setArrowDirection(isMyMsg? ArrowDirection.RIGHT:ArrowDirection.LEFT);
         String msgBody = msg.getBody();
         String linkTitle = JSONUtils.getString(msgBody, "title", "");
         String linkDigest = JSONUtils.getString(msgBody, "digest", "");

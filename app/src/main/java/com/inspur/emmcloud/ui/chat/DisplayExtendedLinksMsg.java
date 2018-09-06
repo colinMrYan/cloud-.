@@ -6,14 +6,14 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.cpiz.android.bubbleview.BubbleRelativeLayout;
-import com.cpiz.android.bubbleview.BubbleStyle;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.MsgContentExtendedLinks;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
+import com.inspur.emmcloud.widget.bubble.ArrowDirection;
+import com.inspur.emmcloud.widget.bubble.BubbleLayout;
 
 /**
  * DisplayTxtRichMsg
@@ -33,8 +33,8 @@ public class DisplayExtendedLinksMsg {
         View cardContentView = LayoutInflater.from(context).inflate(
                 R.layout.chat_msg_card_child_res_link_view, null);
         boolean isMyMsg = message.getFromUser().equals(MyApplication.getInstance().getUid());
-        BubbleRelativeLayout cardLayout = (BubbleRelativeLayout) cardContentView.findViewById(R.id.brl_card);
-        cardLayout.setArrowDirection(isMyMsg? BubbleStyle.ArrowDirection.Right:BubbleStyle.ArrowDirection.Left);
+        BubbleLayout cardLayout = (BubbleLayout) cardContentView.findViewById(R.id.bl_card);
+        cardLayout.setArrowDirection(isMyMsg? ArrowDirection.RIGHT:ArrowDirection.LEFT);
         MsgContentExtendedLinks msgContentExtendedLinks = message.getMsgContentExtendedLinks();
         String title = msgContentExtendedLinks.getTitle();
         String subTitle = msgContentExtendedLinks.getSubtitle();

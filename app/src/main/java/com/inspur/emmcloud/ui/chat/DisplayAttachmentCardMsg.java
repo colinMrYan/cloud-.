@@ -6,14 +6,14 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.cpiz.android.bubbleview.BubbleLinearLayout;
-import com.cpiz.android.bubbleview.BubbleStyle;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.chat.Email;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.MsgContentAttachmentCard;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
+import com.inspur.emmcloud.widget.bubble.ArrowDirection;
+import com.inspur.emmcloud.widget.bubble.BubbleLayout;
 
 import java.util.List;
 
@@ -36,7 +36,7 @@ public class DisplayAttachmentCardMsg {
         View convertView = LayoutInflater.from(context).inflate(
                 R.layout.chat_msg_card_child_attachment_card_view, null);
         boolean isMyMsg = message.getFromUser().equals(MyApplication.getInstance().getUid());
-        ((BubbleLinearLayout)convertView.findViewById(R.id.bll_card)).setArrowDirection(isMyMsg? BubbleStyle.ArrowDirection.Right:BubbleStyle.ArrowDirection.Left);
+        ((BubbleLayout)convertView.findViewById(R.id.bl_card)).setArrowDirection(isMyMsg? ArrowDirection.RIGHT:ArrowDirection.LEFT);
         ImageView cardPhotoImg = (ImageView) convertView.findViewById(R.id.img_photo);
         TextView cardNameText = (TextView) convertView.findViewById(R.id.tv_name);
         TextView cardEmailText = (TextView) convertView.findViewById(R.id.tv_mail);

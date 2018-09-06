@@ -10,8 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
-import com.cpiz.android.bubbleview.BubbleRelativeLayout;
-import com.cpiz.android.bubbleview.BubbleStyle;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
@@ -24,6 +22,8 @@ import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.TransHtmlToTextUtils;
 import com.inspur.emmcloud.util.privates.cache.MsgCacheUtil;
 import com.inspur.emmcloud.widget.TextViewWithSpan;
+import com.inspur.emmcloud.widget.bubble.ArrowDirection;
+import com.inspur.emmcloud.widget.bubble.BubbleLayout;
 
 import java.util.Arrays;
 import java.util.List;
@@ -52,9 +52,9 @@ public class DisplayTxtCommentMsg {
                 .findViewById(R.id.comment_text);
         TextView commentTitleText = (TextView) cardContentView
                 .findViewById(R.id.comment_title_text);
-        BubbleRelativeLayout cardLayout = (BubbleRelativeLayout)cardContentView.findViewById(R.id.brl_card);
-        cardLayout.setArrowDirection(isMyMsg? BubbleStyle.ArrowDirection.Right:BubbleStyle.ArrowDirection.Left);
-        cardLayout.setFillColor(context.getResources().getColor(isMyMsg ? R.color.bg_my_card : R.color.white));
+        BubbleLayout cardLayout = (BubbleLayout) cardContentView.findViewById(R.id.bl_card);
+        cardLayout.setArrowDirection(isMyMsg? ArrowDirection.RIGHT:ArrowDirection.LEFT);
+        cardLayout.setBubbleColor(context.getResources().getColor(isMyMsg ? R.color.bg_my_card : R.color.white));
         String commentContent = JSONUtils.getString(msgBody, "source", "");
         String[] mentions = JSONUtils.getString(msgBody, "mentions", "")
                 .replace("[", "").replace("]", "").split(",");
