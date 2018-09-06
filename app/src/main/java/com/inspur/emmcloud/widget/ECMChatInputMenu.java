@@ -156,6 +156,7 @@ public class ECMChatInputMenu extends LinearLayout {
     }
 
     private void initAudioRecord() {
+        voice2StringMessageUtils.startVoiceListening();
         audioRecordBtn.setAudioFinishRecorderListener(new AudioRecordButton.AudioFinishRecorderListener() {
 
             @Override
