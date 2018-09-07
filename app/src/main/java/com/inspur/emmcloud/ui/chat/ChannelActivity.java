@@ -150,8 +150,8 @@ public class ChannelActivity extends MediaPlayBaseActivity {
             public void getChannelInfoSuccess(Channel channel) {
                 ChannelActivity.this.channel = channel;
                 isSpecialUser = channel.getType().equals("SERVICE") && channel.getTitle().contains(robotUid);
-                LogUtils.jasonDebug("channel.getTitle()=-"+channel.getTitle());
-                LogUtils.jasonDebug("isSpecialUser=-"+isSpecialUser);
+                LogUtils.jasonDebug("channel.getTitle()=-" + channel.getTitle());
+                LogUtils.jasonDebug("isSpecialUser=-" + isSpecialUser);
                 if (getIntent().hasExtra("get_new_msg") && NetUtils.isNetworkConnected(getApplicationContext(), false)) {//通过scheme打开的频道
                     getNewMsgOfChannel();
                 } else {
@@ -387,7 +387,7 @@ public class ChannelActivity extends MediaPlayBaseActivity {
                 adapter.setMessageList(uiMessageList);
                 adapter.notifyDataSetChanged();
                 msgListView.MoveToPosition(uiMessageList.size() - 1);
-            }else {
+            } else {
                 adapter.setMessageList(uiMessageList);
                 adapter.notifyItemChanged(uiMessageList.size() - 1);
             }
@@ -627,7 +627,8 @@ public class ChannelActivity extends MediaPlayBaseActivity {
                 String content = eventMessage.getContent();
                 JSONObject contentobj = JSONUtils.getJSONObject(content);
                 Message receivedWSMessage = new Message(contentobj);
-                if (cid.equals(receivedWSMessage.getChannel())) {
+                //判断消息是否是当前频道并验重处理
+                if (cid.equals(receivedWSMessage.getChannel()) && !uiMessageList.contains(new UIMessage(receivedWSMessage.getId()))) {
                     MessageReadCreationDateCacheUtils.saveMessageReadCreationDate(MyApplication.getInstance(), cid, receivedWSMessage.getCreationDate());
                     int size = uiMessageList.size();
                     int index = -1;

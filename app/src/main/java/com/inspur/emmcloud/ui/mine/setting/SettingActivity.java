@@ -212,17 +212,14 @@ public class SettingActivity extends BaseActivity {
                     @Override
                     public void onClick(QMUIDialog dialog, int index) {
                         dialog.dismiss();
-                        if (NetUtils.isNetworkConnected(getApplicationContext())){
-                            // TODO Auto-generated method stub
-                            boolean isCommunicateExist = TabAndAppExistUtils.isTabExist(MyApplication.getInstance(),Constant.APP_TAB_BAR_COMMUNACATE);
-                            if (MyApplication.getInstance().isV1xVersionChat() && isCommunicateExist){
-                                loadingDlg.show();
-                                WSAPIService.getInstance().sendAppStatus("REMOVED");
-                            }else {
-                                MyApplication.getInstance().signout();
-                            }
-
+                        boolean isCommunicateExist = TabAndAppExistUtils.isTabExist(MyApplication.getInstance(),Constant.APP_TAB_BAR_COMMUNACATE);
+                        if (NetUtils.isNetworkConnected(getApplicationContext(),false) && MyApplication.getInstance().isV1xVersionChat() && isCommunicateExist){
+                            WSAPIService.getInstance().sendAppStatus("REMOVED");
+                            MyApplication.getInstance().signout(false);
+                        }else {
+                            MyApplication.getInstance().signout();
                         }
+                        stopAppService();
                     }
                 })
                 .show();
