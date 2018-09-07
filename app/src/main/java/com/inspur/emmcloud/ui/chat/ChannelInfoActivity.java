@@ -87,14 +87,7 @@ public class ChannelInfoActivity extends BaseActivity {
                 .getChannelGroupById(getApplicationContext(), cid);
         if (channelGroup != null) {
             memberList = channelGroup.getMemberList();
-            List<ContactUser> contactUserList = ContactUserCacheUtils.getContactUserListById(memberList);
-            //如果群信息和通讯录信息不一样，以通讯录信息为准，避免出现头像为空，且没有名字的情况
-            if(memberList.size() != contactUserList.size()){
-                List<String> contactUserIdList = new ArrayList<>();
-                for (int i = 0; i < contactUserList.size(); i++) {
-                    contactUserIdList.add(contactUserList.get(i).getId());
-                }
-            }
+            filterMemberData();
             displayUI();
         }
         if (NetUtils.isNetworkConnected(getApplicationContext(),(channelGroup == null))) {
@@ -392,6 +385,22 @@ public class ChannelInfoActivity extends BaseActivity {
         }
     }
 
+    /**
+     * 过滤不存在的群成员算法
+     */
+    private void filterMemberData() {
+        List<ContactUser> contactUserList = ContactUserCacheUtils.getContactUserListByIdListOrderBy(memberList);
+        //如果群信息和通讯录信息不一样，以通讯录信息为准，避免出现头像为空，且没有名字的情况
+        if(memberList.size() != contactUserList.size()){
+            ArrayList<String> contactUserIdList = new ArrayList<>();
+            for (int i = 0; i < contactUserList.size(); i++) {
+                contactUserIdList.add(contactUserList.get(i).getId());
+            }
+            memberList.clear();
+            memberList.addAll(contactUserIdList);
+        }
+    }
+
     private class WebService extends APIInterfaceInstance {
 
         @Override
@@ -402,6 +411,7 @@ public class ChannelInfoActivity extends BaseActivity {
             memberList = channelGroup.getMemberList();
             // 同步缓存
             ChannelGroupCacheUtils.saveChannelGroup(MyApplication.getInstance(),channelGroup);
+            filterMemberData();
             displayUI();
         }
 

@@ -126,58 +126,16 @@ public class ContactUserCacheUtils {
      */
     public static List<ContactUser> getContactUserListByIdListOrderBy(final List<String> uidList) {
         List<ContactUser> contactUserList = new ArrayList<>();
-        String sql = getSearchContactUserSql(uidList);
-        LogUtils.YfcDebug("查询语句sql："+sql);
-        try {
-            Cursor cursor = DbCacheUtils.getDb().execQuery(sql);
-            contactUserList = getContactUserFromCursor(cursor);
-        } catch (DbException e) {
-            LogUtils.YfcDebug("查询有异常："+e.getMessage());
-            e.printStackTrace();
+        for (int i = 0; i < uidList.size(); i++) {
+            ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(uidList.get(i));
+            if(contactUser != null){
+                contactUserList.add(contactUser);
+            }
         }
         if (contactUserList == null) {
             contactUserList = new ArrayList<>();
         }
         return contactUserList;
-    }
-
-    /**
-     * 获取cursor中的数据
-     * @param cursor
-     * @return
-     */
-    public static List<ContactUser> getContactUserFromCursor(Cursor cursor) {
-        List<ContactUser> contactUserList = new ArrayList<ContactUser>();
-        while (cursor.moveToNext()) {
-            ContactUser contactUser = new ContactUser();
-            contactUser.setId(cursor.getString(cursor.getColumnIndex("id")));
-            contactUser.setName(cursor.getString(cursor.getColumnIndex("name")));
-            contactUser.setNameGlobal(cursor.getString(cursor.getColumnIndex("nameGlobal")));
-            contactUser.setPinyin(cursor.getString(cursor.getColumnIndex("pinyin")));
-            contactUser.setParentId(cursor.getString(cursor.getColumnIndex("parentId")));
-            contactUser.setMobile(cursor.getString(cursor.getColumnIndex("mobile")));
-            contactUser.setEmail(cursor.getString(cursor.getColumnIndex("email")));
-            contactUser.setHasHead(cursor.getInt(cursor.getColumnIndex("hasHead")));
-            contactUser.setSortOrder(cursor.getInt(cursor.getColumnIndex("sortOrder")));
-            contactUser.setEmployeeNum(cursor.getString(cursor.getColumnIndex("employeeNum")));
-            contactUser.setLastQueryTime(cursor.getString(cursor.getColumnIndex("lastQueryTime")));
-            contactUserList.add(contactUser);
-        }
-        return contactUserList;
-    }
-
-    /**
-     * 拼装sql
-     *
-     * @param uidList
-     * @return
-     */
-    private static String getSearchContactUserSql(List<String> uidList) {
-        String ids = "";
-        for (int i = 0; i < uidList.size(); i++) {
-            ids = ids + uidList.get(i) + (i==(uidList.size()-1)?"":",");
-        }
-        return "select * from ContactUser where id in " + "(" + ids + ") order by charindex(','+ltrim(id)+',','," + ids + "')";
     }
 
 
