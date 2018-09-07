@@ -9,6 +9,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.chat.Msg;
@@ -18,6 +19,7 @@ import com.inspur.emmcloud.util.privates.cache.MsgCacheUtil;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
+import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
 import java.io.Serializable;
@@ -44,19 +46,20 @@ public class DisplayResImageMsg {
                 .findViewById(R.id.content_img);
         final TextView longImgText = (TextView) cardContentView.findViewById(R.id.long_img_text);
         String imageUri = JSONUtils.getString(msg.getBody(), "key", "");
-        if (!imageUri.startsWith("content:") && !imageUri.startsWith("file:")) {
-            imageUri = APIUri.getPreviewUrl(imageUri);
-
-        }
         DisplayImageOptions options = new DisplayImageOptions.Builder()
-                .showImageForEmptyUri(R.drawable.default_image)
-                .showImageOnFail(R.drawable.default_image)
-                .showImageOnLoading(R.drawable.default_image)
+                .showImageForEmptyUri(R.drawable.icon_photo_default)
+                .showImageOnFail(R.drawable.icon_photo_default)
+                .showImageOnLoading(R.drawable.icon_photo_default)
+                .displayer(new RoundedBitmapDisplayer(DensityUtil.dip2px(MyApplication.getInstance(),4)))
                 // 设置图片的解码类型
                 .bitmapConfig(Bitmap.Config.RGB_565).cacheInMemory(true)
                 .cacheOnDisk(true).build();
         if (!imageUri.startsWith("http") && !imageUri.startsWith("file:") && !imageUri.startsWith("content:") && !imageUri.startsWith("assets:") && !imageUri.startsWith("drawable:")) {
-            imageUri = "file://" + imageUri;
+            if (msg.getSendStatus() == 1){
+                imageUri = APIUri.getPreviewUrl(imageUri);
+            }else {
+                imageUri = "file://" + imageUri;
+            }
         }
         String body = msg.getBody();
         int w = JSONUtils.getInt(body, "width", 0);
@@ -115,10 +118,10 @@ public class DisplayResImageMsg {
         if (w == 0 || h == 0) {
             return false;
         }
-        int minW = DensityUtil.dip2px(context, 116);
+        int minW = DensityUtil.dip2px(context, 100);
         int minH = DensityUtil.dip2px(context, 94);
         int maxW = DensityUtil.dip2px(context, 287);
-        int maxH = DensityUtil.dip2px(context, 210);
+        int maxH = DensityUtil.dip2px(context, 232);
         LayoutParams params = imageView.getLayoutParams();
         if (w == h) {
             params.width = minW;

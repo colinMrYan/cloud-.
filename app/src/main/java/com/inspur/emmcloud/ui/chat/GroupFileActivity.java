@@ -127,9 +127,9 @@ public class GroupFileActivity extends BaseActivity {
         ImageView fileImg = (ImageView) convertView
                 .findViewById(R.id.file_img);
         TextView fileNameText = (TextView) convertView
-                .findViewById(R.id.file_name_text);
+                .findViewById(R.id.tv_file_name);
         TextView fileSizeText = (TextView) convertView
-                .findViewById(R.id.file_size_text);
+                .findViewById(R.id.tv_file_size);
         TextView fileOwnerText = (TextView) convertView
                 .findViewById(R.id.file_owner_text);
         TextView fileTimeText = (TextView) convertView

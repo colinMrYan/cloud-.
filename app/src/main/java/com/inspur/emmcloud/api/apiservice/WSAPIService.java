@@ -5,6 +5,7 @@ import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.MsgContentComment;
 import com.inspur.emmcloud.bean.chat.MsgContentExtendedLinks;
+import com.inspur.emmcloud.bean.chat.MsgContentTextPlain;
 import com.inspur.emmcloud.bean.chat.RelatedLink;
 import com.inspur.emmcloud.bean.system.EventMessage;
 import com.inspur.emmcloud.config.Constant;
@@ -39,27 +40,29 @@ public class WSAPIService {
     public WSAPIService() {
     }
 
-    public void sendChatTextPlainMsg(String content, String cid, Map<String, String> mentionsMap, String tracer) {
+    public void sendChatTextPlainMsg(Message fakeMessage){
         try {
             JSONObject object = new JSONObject();
             JSONObject actionObj = new JSONObject();
             actionObj.put("method", "post");
-            actionObj.put("path", "/channel/" + cid + "/message");
+            actionObj.put("path", "/channel/" + fakeMessage.getChannel() + "/message");
             object.put("action", actionObj);
             JSONObject headerObj = new JSONObject();
             headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
-            headerObj.put("tracer", tracer);
+            headerObj.put("tracer", fakeMessage.getId());
             object.put("headers", headerObj);
             JSONObject bodyObj = new JSONObject();
-            bodyObj.put("type", "text/plain");
-            bodyObj.put("text", content);
+            MsgContentTextPlain msgContentTextPlain = fakeMessage.getMsgContentTextPlain();
+            bodyObj.put("type", Message.MESSAGE_TYPE_TEXT_PLAIN);
+            bodyObj.put("text", msgContentTextPlain.getText());
+            Map<String, String> mentionsMap = msgContentTextPlain.getMentionsMap();
             if (mentionsMap != null && mentionsMap.size() > 0) {
                 JSONObject mentionsObj = JSONUtils.map2Json(mentionsMap);
                 bodyObj.put("mentions", mentionsObj);
             }
             object.put("body", bodyObj);
-            EventMessage eventMessage = new EventMessage(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE,"",tracer);
-            WebSocketPush.getInstance().sendEventMessage(eventMessage, object, tracer);
+            EventMessage eventMessage = new EventMessage(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE,"",fakeMessage.getId());
+            WebSocketPush.getInstance().sendEventMessage(eventMessage, object, fakeMessage.getId());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -119,12 +122,12 @@ public class WSAPIService {
         }
     }
 
-    public void sendChatMediaVoiceMsg(String cid, Message message, VolumeFile volumeFile) {
+    public void sendChatMediaVoiceMsg(Message message, VolumeFile volumeFile) {
         try {
             JSONObject object = new JSONObject();
             JSONObject actionObj = new JSONObject();
             actionObj.put("method", "post");
-            actionObj.put("path", "/channel/" + cid + "/message");
+            actionObj.put("path", "/channel/" + message.getChannel() + "/message");
             object.put("action", actionObj);
             JSONObject headerObj = new JSONObject();
             headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
@@ -142,12 +145,12 @@ public class WSAPIService {
         }
     }
 
-    public void sendChatExtendedLinksMsg(String cid, Message message) {
+    public void sendChatExtendedLinksMsg(Message message) {
         try {
             JSONObject object = new JSONObject();
             JSONObject actionObj = new JSONObject();
             actionObj.put("method", "post");
-            actionObj.put("path", "/channel/" + cid + "/message");
+            actionObj.put("path", "/channel/" + message.getChannel() + "/message");
             object.put("action", actionObj);
             JSONObject headerObj = new JSONObject();
             headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
@@ -174,12 +177,12 @@ public class WSAPIService {
     }
 
 
-    public void sendChatMediaImageMsg(String cid,  VolumeFile volumeFile, Message fakeMessage) {
+    public void sendChatMediaImageMsg(VolumeFile volumeFile, Message fakeMessage) {
         try {
             JSONObject object = new JSONObject();
             JSONObject actionObj = new JSONObject();
             actionObj.put("method", "post");
-            actionObj.put("path", "/channel/" + cid + "/message");
+            actionObj.put("path", "/channel/" + fakeMessage.getChannel() + "/message");
             object.put("action", actionObj);
             JSONObject headerObj = new JSONObject();
             headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());

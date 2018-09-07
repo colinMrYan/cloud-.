@@ -468,7 +468,7 @@ public class WorkFragment extends Fragment {
                 default:
                     break;
             }
-            ((TextView) convertView.findViewById(R.id.content_text)).setText(content);
+            ((TextView) convertView.findViewById(R.id.tv_content)).setText(content);
             countDownText.setText(countDown);
             return convertView;
         }

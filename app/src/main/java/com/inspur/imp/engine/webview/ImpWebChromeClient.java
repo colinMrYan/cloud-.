@@ -265,9 +265,9 @@ public class ImpWebChromeClient extends WebChromeClient {
 			acceptType = "*/*";
 		}
 		i.setType(acceptType);
-		getActivity().startActivityForResult(
-				Intent.createChooser(i, "File Browser"),
-				FILE_CHOOSER_RESULT_CODE);
+		if (mWebView.getImpCallBackInterface() != null){
+			mWebView.getImpCallBackInterface().onStartActivityForResult(Intent.createChooser(i, "File Browser"),FILE_CHOOSER_RESULT_CODE);
+		}
 	}
 
 	// For Android 5.0+
@@ -288,9 +288,9 @@ public class ImpWebChromeClient extends WebChromeClient {
 		}
 		i.setType(type);
 
-		getActivity().startActivityForResult(
-				Intent.createChooser(i, "File Browser"),
-				FILE_CHOOSER_RESULT_CODE);
+		if (mWebView.getImpCallBackInterface() != null){
+			mWebView.getImpCallBackInterface().onStartActivityForResult(Intent.createChooser(i, "File Browser"),FILE_CHOOSER_RESULT_CODE);
+		}
 		return true;
 	}
 

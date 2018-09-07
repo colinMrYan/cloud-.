@@ -15,6 +15,8 @@ import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.ChatMsgContentUtils;
 import com.inspur.emmcloud.util.privates.TransHtmlToTextUtils;
 import com.inspur.emmcloud.widget.LinkMovementClickMethod;
+import com.inspur.emmcloud.widget.bubble.ArrowDirection;
+import com.inspur.emmcloud.widget.bubble.BubbleLayout;
 
 /**
  * DisplayTxtRichMsg
@@ -36,25 +38,25 @@ public class DisplayTxtPlainMsg {
                 R.layout.chat_msg_card_child_text_rich_view, null);
         final boolean isMyMsg = message.getFromUser().equals(
                 MyApplication.getInstance().getUid());
-        final TextView richText = (TextView) cardContentView
-                .findViewById(R.id.content_text);
-        richText.setTextColor(context.getResources().getColor(
+        BubbleLayout cardLayout = (BubbleLayout) cardContentView.findViewById(R.id.bl_card);
+        cardLayout.setArrowDirection(isMyMsg? ArrowDirection.RIGHT:ArrowDirection.LEFT);
+        cardLayout.setBubbleColor(context.getResources().getColor(isMyMsg ? R.color.bg_my_card : R.color.white));
+        cardLayout.setStrokeWidth(isMyMsg ?0: 0.5f);
+        final TextView contentText = (TextView) cardContentView
+                .findViewById(R.id.tv_content);
+        contentText.setTextColor(context.getResources().getColor(
                 isMyMsg ? R.color.white : R.color.black));
-        (cardContentView.findViewById(R.id.card_layout)).setBackgroundColor(context.getResources().getColor(
-                isMyMsg ? R.color.bg_my_card : R.color.white));
-
-        (cardContentView.findViewById(R.id.text_layout)).setBackgroundResource(isMyMsg ? R.drawable.ic_chat_msg_img_cover_arrow_right : R.drawable.ic_chat_msg_img_cover_arrow_left);
         String text = message.getMsgContentTextPlain().getText();
-        richText.setMovementMethod(LinkMovementClickMethod.getInstance());
+        contentText.setMovementMethod(LinkMovementClickMethod.getInstance());
         SpannableString spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(context, text, message.getMsgContentTextPlain().getMentionsMap());
-        richText.setText(spannableString);
+        contentText.setText(spannableString);
         TransHtmlToTextUtils.stripUnderlines(
-                richText,context.getResources().getColor(isMyMsg ? R.color.hightlight_in_blue_bg
+                contentText,context.getResources().getColor(isMyMsg ? R.color.hightlight_in_blue_bg
                         : R.color.header_bg));
-        richText.setOnLongClickListener(new View.OnLongClickListener() {
+        contentText.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                copyContentToPasteBoard(context, richText);
+                copyContentToPasteBoard(context, contentText);
                 return true;
             }
         });

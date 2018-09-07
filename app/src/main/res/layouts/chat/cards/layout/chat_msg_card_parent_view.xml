@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingBottom="7dp"
@@ -10,8 +11,8 @@
         android:layout_width="wrap_content"
         android:layout_height="20dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="12dp"
         android:background="@drawable/shape_chat_msg_time"
         android:gravity="center"
         android:paddingLeft="15dp"
@@ -23,83 +24,75 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:layout_below="@id/send_time_text">
 
         <com.inspur.emmcloud.widget.CircleTextImageView
-            android:id="@+id/sender_photo_img"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
-            android:layout_marginLeft="10dp" />
-
-        <View
-            android:id="@+id/sender_photo_right_view"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
-            android:layout_alignParentRight="true"></View>
+            android:id="@+id/iv_sender_photo_left"
+            android:layout_width="43dp"
+            android:layout_height="43dp"
+             />
+        <com.inspur.emmcloud.widget.CircleTextImageView
+            android:id="@+id/iv_sender_photo_right"
+            android:layout_width="43dp"
+            android:layout_height="43dp"
+            android:layout_alignParentRight="true"
+             />
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="7dp"
-            android:layout_marginRight="17dp"
-            android:layout_toLeftOf="@id/sender_photo_right_view"
-            android:layout_toRightOf="@id/sender_photo_img">
-
-            <TextView
-                android:id="@+id/news_comment_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:maxLines="1"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:text="@string/comment"
-                android:textColor="#1596d2"
-                android:textSize="@dimen/content_normal_textsize"
-                android:visibility="gone" />
+            android:layout_toLeftOf="@id/iv_sender_photo_right"
+            android:layout_toRightOf="@id/iv_sender_photo_left">
 
             <TextView
                 android:id="@+id/sender_name_text"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="6dp"
-                android:layout_marginLeft="5dp"
+                android:layout_marginBottom="2dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
                 android:maxLines="1"
                 android:textColor="#666666"
-                android:textSize="@dimen/content_normal_textsize" />
+                android:textSize="14sp" />
 
             <RelativeLayout
                 android:id="@+id/card_parent_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/sender_name_text">
-
-                <ImageView
-                    android:id="@+id/refreshing_img"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                <RelativeLayout
+                    android:id="@+id/rl_send_status"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="14dp"
-                    android:layout_marginRight="8dp"
-                    android:scaleType="fitXY"
-                    android:visibility="gone" />
+                    android:layout_marginLeft="13dp"
+                    android:padding="5dp">
+                    <ImageView
+                        android:id="@+id/iv_send_fail"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/ic_chat_msg_send_fail"
+                        android:visibility="gone" />
+                    <com.qmuiteam.qmui.widget.QMUILoadingView
+                        android:id="@+id/qlv_sending"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:color="#666666"
+                        android:visibility="gone"
+                        app:qmui_loading_view_size="18dp" />
+                </RelativeLayout>
 
                 <RelativeLayout
-                    android:id="@+id/card_layout"
+                    android:id="@+id/bll_card"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toRightOf="@id/refreshing_img"></RelativeLayout>
-
-                <View
-                    android:id="@+id/card_cover_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignBottom="@id/card_layout"
-                    android:layout_alignLeft="@id/card_layout"
-                    android:layout_alignRight="@id/card_layout"
-                    android:layout_alignTop="@id/card_layout"
-                    android:layout_toRightOf="@id/refreshing_img"
-                    android:background="@drawable/ic_chat_msg_img_cover_arrow_left" />
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_toRightOf="@id/rl_send_status"></RelativeLayout>
             </RelativeLayout>
         </RelativeLayout>
     </RelativeLayout>

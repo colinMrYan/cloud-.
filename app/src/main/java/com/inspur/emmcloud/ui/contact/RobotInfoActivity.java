@@ -50,8 +50,8 @@ public class RobotInfoActivity extends BaseActivity implements OnStateChangedLis
 		apiService = new ContactAPIService(RobotInfoActivity.this);
 		apiService.setAPIInterface(new WebService());
 		loadingDialog = new LoadingDialog(RobotInfoActivity.this);
-		robotHeadImg = (CircleTextImageView) findViewById(R.id.photo_img);
-		robotNameText = (TextView) findViewById(R.id.name_text);
+		robotHeadImg = (CircleTextImageView) findViewById(R.id.img_photo);
+		robotNameText = (TextView) findViewById(R.id.tv_name);
 		supportText = (TextView) findViewById(R.id.support_text);
 		functionIntroductionText = (TextView) findViewById(R.id.function_introduction_text);
 		id = getIntent().getStringExtra("uid");

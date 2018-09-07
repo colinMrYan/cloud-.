@@ -5,20 +5,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.privates.UpgradeUtils;
+import com.inspur.emmcloud.widget.bubble.ArrowDirection;
+import com.inspur.emmcloud.widget.bubble.BubbleLayout;
 
 public class DisplayResUnknownMsg {
 	public static View getView(final Context context,boolean isMyMsg){
 		View cardContentView = LayoutInflater.from(context).inflate(
 				R.layout.chat_msg_card_child_res_unknown_view, null);
-		int arrowPadding = DensityUtil.dip2px(context, 7);
-		if (isMyMsg) {
-			( cardContentView.findViewById(R.id.root_layout)).setPadding(0, 0, arrowPadding, 0);
-		} else {
-			(cardContentView.findViewById(R.id.root_layout)).setPadding(arrowPadding, 0,
-					0, 0);
-		}
+		BubbleLayout cardLayout = (BubbleLayout) cardContentView.findViewById(R.id.bl_card);
+		cardLayout.setArrowDirection(isMyMsg? ArrowDirection.RIGHT:ArrowDirection.LEFT);
 		cardContentView.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {

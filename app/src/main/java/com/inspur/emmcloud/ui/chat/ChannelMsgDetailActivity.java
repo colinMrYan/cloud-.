@@ -175,7 +175,7 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
         disPlayCommonInfo();
         View msgDisplayView = null;
         if (msg.getType().equals("res_file")) {
-            msgDisplayView = DisplayResFileMsg.displayResFileMsg(ChannelMsgDetailActivity.this, msg);
+            msgDisplayView = DisplayResFileMsg.displayResFileMsg(ChannelMsgDetailActivity.this, msg,true);
         } else {
             msgDisplayView = inflater.inflate(R.layout.msg_common_detail, null);
             msgContentImg = (ImageView) msgDisplayView
@@ -380,7 +380,7 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
             LayoutInflater vi = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
             convertView = vi.inflate(R.layout.comment_item_view, null);
             TextView userNameText = (TextView) convertView
-                    .findViewById(R.id.name_text);
+                    .findViewById(R.id.tv_name);
             TextView sendTimeText = (TextView) convertView
                     .findViewById(R.id.commentdetail_time_text);
             final TextView contentText = (TextView) convertView

@@ -9,6 +9,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.chat.Message;
@@ -19,6 +20,7 @@ import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
+import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
 import java.io.Serializable;
@@ -38,8 +40,8 @@ public class DisplayMediaImageMsg {
      * @param msg
      */
     public static View getView(final Activity context,
-                                        final UIMessage UIMessage) {
-        final Message message = UIMessage.getMessage();
+                                        final UIMessage uiMessage) {
+        final Message message = uiMessage.getMessage();
         View cardContentView = LayoutInflater.from(context).inflate(
                 R.layout.chat_msg_card_child_res_img_view, null);
         final ImageView imageView = (ImageView) cardContentView
@@ -47,19 +49,21 @@ public class DisplayMediaImageMsg {
         final TextView longImgText = (TextView) cardContentView.findViewById(R.id.long_img_text);
         MsgContentMediaImage msgContentMediaImage = message.getMsgContentMediaImage();
         String imageUri = msgContentMediaImage.getRawMedia();
-
-        if (!imageUri.startsWith("content:") && !imageUri.startsWith("file:")) {
-            imageUri = APIUri.getChatFileResouceUrl(UIMessage.getMessage().getChannel(),imageUri);
-        }
         DisplayImageOptions options = new DisplayImageOptions.Builder()
-                .showImageForEmptyUri(R.drawable.default_image)
-                .showImageOnFail(R.drawable.default_image)
-                .showImageOnLoading(R.drawable.default_image)
+                .showImageForEmptyUri(R.drawable.icon_photo_default)
+                .showImageOnFail(R.drawable.icon_photo_default)
+                .showImageOnLoading(R.drawable.icon_photo_default)
+                .displayer(new RoundedBitmapDisplayer(DensityUtil.dip2px(MyApplication.getInstance(),4)))
                 // 设置图片的解码类型
                 .bitmapConfig(Bitmap.Config.RGB_565).cacheInMemory(true)
                 .cacheOnDisk(true).build();
         if (!imageUri.startsWith("http") && !imageUri.startsWith("file:") && !imageUri.startsWith("content:") && !imageUri.startsWith("assets:") && !imageUri.startsWith("drawable:")) {
-            imageUri = "file://" + imageUri;
+            if (uiMessage.getSendStatus() == 1){
+                imageUri = APIUri.getChatFileResouceUrl(message.getChannel(),imageUri);
+            }else {
+                imageUri = "file://" + imageUri;
+            }
+
         }
         int w = msgContentMediaImage.getRawWidth();
         int h = msgContentMediaImage.getRawHeight();
@@ -80,7 +84,7 @@ public class DisplayMediaImageMsg {
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (UIMessage.getSendStatus() != 1) {
+                if (uiMessage.getSendStatus() != 1) {
                     return;
                 }
                 int[] location = new int[2];

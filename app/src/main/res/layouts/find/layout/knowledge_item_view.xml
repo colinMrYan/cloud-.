@@ -13,7 +13,7 @@
         android:src="@drawable/icon_photo_default"/>
 
      <TextView
-            android:id="@+id/name_text"
+            android:id="@+id/tv_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/knowledge_img"

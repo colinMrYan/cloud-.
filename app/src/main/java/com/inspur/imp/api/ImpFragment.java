@@ -1,9 +1,12 @@
 package com.inspur.imp.api;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -13,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.webkit.ValueCallback;
 import android.webkit.WebSettings;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
@@ -32,7 +36,6 @@ import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppWebConfig;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ResolutionUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -73,6 +76,7 @@ public class ImpFragment extends Fragment {
     public static final int FILE_SERVICE_REQUEST = 6;
     public static final int DO_NOTHING_REQUEST = 7;
     public static final int BARCODE_SERVER__SCAN_REQUEST = 8;
+    public static final int FILE_CHOOSER_RESULT_CODE = 5173;
     private static final String JAVASCRIPT_PREFIX = "javascript:";
     private Map<String, String> webViewHeaders;
     private TextView headerText;
@@ -92,6 +96,7 @@ public class ImpFragment extends Fragment {
     private RelativeLayout headerLayout;
     private List<DropItemTitle> dropItemTitleList = new ArrayList<>();
     private Adapter dropTitleAdapter;
+    private ImpCallBackInterface impCallBackInterface;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -175,7 +180,6 @@ public class ImpFragment extends Fragment {
                 return false;
             }
         });
-        LogUtils.jasonDebug("url===="+url);
         webView.loadUrl(url, webViewHeaders);
         setWebViewFunctionVisiable();
     }
@@ -306,7 +310,7 @@ public class ImpFragment extends Fragment {
      * 初始化webview haader layout
      */
     private void initWebViewHeaderLayout() {
-        ImpCallBackInterface impCallBackInterface = getImpCallBackInterface();
+        impCallBackInterface = getImpCallBackInterface();
         if (getArguments().getString(Constant.WEB_FRAGMENT_APP_NAME) != null) {
             String title = getArguments().getString(Constant.WEB_FRAGMENT_APP_NAME);
             headerText = (TextView) rootView.findViewById(Res.getWidgetID("header_text"));
@@ -673,12 +677,12 @@ public class ImpFragment extends Fragment {
 
     @Override
     public void onDestroy() {
-        LogUtils.jasonDebug("onDestroy------------");
         if (webView != null) {
             webView.removeAllViews();
             webView.destroy();
-            webView=null;
+            webView = null;
         }
+        impCallBackInterface = null;
         //清除掉图片缓存
 //        DataCleanManager.cleanCustomCache(MyAppConfig.LOCAL_IMG_CREATE_PATH);
         super.onDestroy();
@@ -702,38 +706,66 @@ public class ImpFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        PluginMgr pluginMgr = webView.getPluginMgr();
-        if (pluginMgr != null) {
-            String serviceName = "";
-            switch (requestCode) {
-                case CAMERA_SERVICE_CAMERA_REQUEST:
-                case CAMERA_SERVICE_GALLERY_REQUEST:
-                    serviceName = CameraService.class.getCanonicalName().trim();
-                    break;
-                case PHOTO_SERVICE_CAMERA_REQUEST:
-                case PHOTO_SERVICE_GALLERY_REQUEST:
-                    serviceName = PhotoService.class.getCanonicalName().trim();
-                    break;
-                case SELECT_STAFF_SERVICE_REQUEST:
-                    serviceName = SelectStaffService.class.getCanonicalName().trim();
-                    break;
-                case FILE_SERVICE_REQUEST:
-                    serviceName = FileService.class.getCanonicalName().trim();
-                    break;
-                case BARCODE_SERVER__SCAN_REQUEST:
-                    serviceName = BarCodeService.class.getCanonicalName().trim();
-                default:
-                    break;
+
+        if (requestCode == FILE_CHOOSER_RESULT_CODE) {
+            Uri uri = data == null || resultCode != Activity.RESULT_OK ? null
+                    : data.getData();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+
+                ValueCallback<Uri[]> mUploadCallbackAboveL = webView
+                        .getWebChromeClient().getValueCallbackAboveL();
+                if (null == mUploadCallbackAboveL)
+                    return;
+                if (uri == null) {
+                    mUploadCallbackAboveL.onReceiveValue(null);
+                } else {
+                    Uri[] uris = new Uri[]{uri};
+                    mUploadCallbackAboveL.onReceiveValue(uris);
+                }
+                mUploadCallbackAboveL = null;
+            } else {
+                ValueCallback<Uri> mUploadMessage = webView
+                        .getWebChromeClient().getValueCallback();
+                if (null == mUploadMessage)
+                    return;
+                mUploadMessage.onReceiveValue(uri);
+                mUploadMessage = null;
             }
-            if (!StringUtils.isBlank(serviceName)) {
-                IPlugin plugin = pluginMgr.getPlugin(serviceName);
-                if (plugin != null) {
-                    plugin.onActivityResult(requestCode, resultCode, data);
+        }else {
+            PluginMgr pluginMgr = webView.getPluginMgr();
+            if (pluginMgr != null) {
+                String serviceName = "";
+                switch (requestCode) {
+                    case CAMERA_SERVICE_CAMERA_REQUEST:
+                    case CAMERA_SERVICE_GALLERY_REQUEST:
+                        serviceName = CameraService.class.getCanonicalName().trim();
+                        break;
+                    case PHOTO_SERVICE_CAMERA_REQUEST:
+                    case PHOTO_SERVICE_GALLERY_REQUEST:
+                        serviceName = PhotoService.class.getCanonicalName().trim();
+                        break;
+                    case SELECT_STAFF_SERVICE_REQUEST:
+                        serviceName = SelectStaffService.class.getCanonicalName().trim();
+                        break;
+                    case FILE_SERVICE_REQUEST:
+                        serviceName = FileService.class.getCanonicalName().trim();
+                        break;
+                    case BARCODE_SERVER__SCAN_REQUEST:
+                        serviceName = BarCodeService.class.getCanonicalName().trim();
+                    default:
+                        break;
+                }
+                if (!StringUtils.isBlank(serviceName)) {
+                    IPlugin plugin = pluginMgr.getPlugin(serviceName);
+                    if (plugin != null) {
+                        plugin.onActivityResult(requestCode, resultCode, data);
+                    }
+
                 }
 
             }
-
         }
+
 
     }
 }

@@ -72,9 +72,9 @@ public class ChannelAdapter extends BaseAdapter {
             holder.channelPhotoImg = (CircleTextImageView) convertView
                     .findViewById(R.id.msg_img);
             holder.channelTitleText = (TextView) convertView
-                    .findViewById(R.id.name_text);
+                    .findViewById(R.id.tv_name);
             holder.channelContentText = (TextView) convertView
-                    .findViewById(R.id.content_text);
+                    .findViewById(R.id.tv_content);
             holder.channelTimeText = (TextView) convertView
                     .findViewById(R.id.time_text);
             holder.channelNotReadCountLayout = (RelativeLayout) convertView

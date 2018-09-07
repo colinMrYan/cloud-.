@@ -63,6 +63,9 @@ public class ECMChatInputMenuV0 extends LinearLayout {
     @ViewInject(R.id.input_edit)
     private ChatInputEdit inputEdit;
 
+    @ViewInject(R.id.voice_btn)
+    private ImageButton voiceImgBtn;
+
     @ViewInject(R.id.add_btn)
     private ImageButton addBtn;
 
@@ -316,6 +319,7 @@ public class ECMChatInputMenuV0 extends LinearLayout {
      * 初始化语言输入相关
      */
     private void initVoiceInput() {
+        voiceImgBtn.setImageResource(R.drawable.ic_chat_input_voice_v0);
         mediaPlayerUtils = new MediaPlayerUtils(getContext());
         voice2StringMessageUtils = new Voice2StringMessageUtils(getContext());
         voice2StringMessageUtils.setOnVoiceResultCallback(new OnVoiceResultCallback() {

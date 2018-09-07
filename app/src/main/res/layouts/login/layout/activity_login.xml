@@ -24,7 +24,7 @@
             android:layout_weight="22">
 
             <ImageView
-                android:id="@+id/photo_img"
+                android:id="@+id/img_photo"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:src="@drawable/ic_login_logo"
@@ -40,7 +40,7 @@
         android:layout_height="wrap_content"
         android:textColor="#6FBDE1"
         android:textSize="13dp"
-        android:layout_below="@id/photo_img"
+        android:layout_below="@id/img_photo"
         android:gravity="center_horizontal"
         android:layout_marginBottom="10dp"
         android:visibility="invisible"

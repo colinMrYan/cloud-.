@@ -35,7 +35,7 @@
             android:layout_below="@id/comment_text">
 
             <TextView
-                android:id="@+id/name_text"
+                android:id="@+id/tv_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
@@ -49,7 +49,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_marginLeft="12dp"
-                android:layout_toRightOf="@id/name_text"
+                android:layout_toRightOf="@id/tv_name"
                 android:paddingRight="16dp"
                 android:textColor="#C7c7cd"
                 android:textSize="13sp"/>

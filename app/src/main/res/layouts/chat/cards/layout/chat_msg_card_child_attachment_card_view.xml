@@ -1,67 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-android:id="@+id/card_layout"
-android:orientation="vertical"
-android:layout_width="wrap_content"
-android:layout_height="wrap_content"
-android:background="@color/white">
+<com.inspur.emmcloud.widget.bubble.BubbleLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/bl_card"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:bl_arrowDirection="right"
+    app:bl_arrowHeight="10dp"
+    app:bl_arrowPosition="16dp"
+    app:bl_cornersRadius="8dp"
+    app:bl_arrowWidth="4.5dp"
+    app:bl_strokeColor="#AAAAAA"
+    app:bl_strokeWidth="0.5px">
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-<RelativeLayout
-	android:layout_width="match_parent"
-	android:layout_height="wrap_content"
-	android:paddingTop="12dp"
-	android:paddingLeft="18dp"
-	android:paddingBottom="9dp"
-	>
+        <ImageView
+            android:id="@+id/img_photo"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_margin="10dp"
+            android:scaleType="fitXY" />
 
-	<ImageView
-		android:id="@+id/photo_img"
-		android:layout_width="45dp"
-		android:layout_height="45dp"
-		android:layout_marginRight="10dp"
-		android:scaleType="fitXY" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/img_photo">
 
-	<RelativeLayout
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_centerVertical="true"
-		android:layout_toRightOf="@id/photo_img"
-		>
+            <TextView
+                android:id="@+id/tv_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="#333333"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
-		<TextView
-			android:id="@+id/name_text"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:textColor="#333333"
-			android:maxLines="1"
-			android:ellipsize="end"
-			android:textSize="16sp"
-			android:textStyle="bold" />
+            <TextView
+                android:id="@+id/tv_mail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv_name"
+                android:layout_marginTop="2dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="#999999"
+                android:textSize="15sp" />
+        </RelativeLayout>
+    </RelativeLayout>
 
-		<TextView
-			android:id="@+id/mail_text"
-			android:layout_below="@id/name_text"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_marginTop="2dp"
-			android:maxLines="1"
-			android:ellipsize="end"
-			android:textColor="#999999"
-			android:textSize="15sp" />
-	</RelativeLayout>
-</RelativeLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/color_list_divider"></View>
 
-<View
-	android:layout_width="match_parent"
-	android:layout_height="0.5dp"
-	android:background="@color/color_list_divider"></View>
-<TextView
-	android:layout_width="match_parent"
-	android:layout_height="wrap_content"
-	android:paddingLeft="17dp"
-	android:paddingTop="2dp"
-	android:paddingBottom="2dp"
-	android:text="@string/business_card"
-	android:textColor="#999999"
-	android:textSize="16sp" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="2dp"
+        android:paddingLeft="10dp"
+        android:paddingTop="2dp"
+        android:text="@string/business_card"
+        android:textColor="#999999"
+        android:textSize="16sp" />
 </LinearLayout>
+
+</com.inspur.emmcloud.widget.bubble.BubbleLayout>
