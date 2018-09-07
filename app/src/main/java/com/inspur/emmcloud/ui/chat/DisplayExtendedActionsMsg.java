@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -16,8 +15,8 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.MsgActionAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.bean.chat.Action;
-import com.inspur.emmcloud.bean.chat.MsgContentExtendedActions;
 import com.inspur.emmcloud.bean.chat.Message;
+import com.inspur.emmcloud.bean.chat.MsgContentExtendedActions;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -25,6 +24,8 @@ import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.NoScrollGridView;
+import com.inspur.emmcloud.widget.bubble.ArrowDirection;
+import com.inspur.emmcloud.widget.bubble.BubbleLayout;
 
 import java.util.List;
 
@@ -64,15 +65,14 @@ public class DisplayExtendedActionsMsg extends APIInterfaceInstance {
     public View getView(Message msg) {
         View convertView = LayoutInflater.from(context).inflate(
                 R.layout.chat_msg_card_child_extended_actions_view, null);
-        final boolean isMyMsg = msg.getFromUser().equals(
-                ((MyApplication) context.getApplicationContext()).getUid());
-        LinearLayout cardLayout = (LinearLayout) convertView.findViewById(R.id.card_layout);
-        cardLayout.setPadding(isMyMsg ? 0 : 11, 0, isMyMsg ? 11 : 0, 0);
+        final boolean isMyMsg = msg.getFromUser().equals(MyApplication.getInstance().getUid());
+        BubbleLayout cardLayout = (BubbleLayout) convertView.findViewById(R.id.bl_card);
+        cardLayout.setArrowDirection(isMyMsg? ArrowDirection.RIGHT:ArrowDirection.LEFT);
         ImageView posterImg = (ImageView) convertView.findViewById(R.id.poster_img);
         final MsgContentExtendedActions msgContentActions = msg.getMsgContentExtendedActions();
         RelativeLayout singleActionLayout = (RelativeLayout) convertView.findViewById(R.id.single_action_layout);
         NoScrollGridView actionGrid = (NoScrollGridView) convertView.findViewById(R.id.action_grid);
-        TextView titleText = (TextView) convertView.findViewById(R.id.title_text);
+        TextView titleText = (TextView) convertView.findViewById(R.id.tv_title);
         TextView descriptionText = (TextView) convertView.findViewById(R.id.description_text);
         Action singleAction = msgContentActions.getSingleAction();
         String poster = msgContentActions.getPoster();

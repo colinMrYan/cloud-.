@@ -22,6 +22,8 @@ import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.TransHtmlToTextUtils;
 import com.inspur.emmcloud.util.privates.cache.MsgCacheUtil;
 import com.inspur.emmcloud.widget.TextViewWithSpan;
+import com.inspur.emmcloud.widget.bubble.ArrowDirection;
+import com.inspur.emmcloud.widget.bubble.BubbleLayout;
 
 import java.util.Arrays;
 import java.util.List;
@@ -45,13 +47,15 @@ public class DisplayTxtCommentMsg {
         View cardContentView = LayoutInflater.from(context).inflate(
                 R.layout.chat_msg_card_child_text_comment_view, null);
         String msgBody = msg.getBody();
-        boolean isMyMsg = msg.getUid().equals(
-                ((MyApplication) context.getApplicationContext()).getUid());
+        boolean isMyMsg = msg.getUid().equals(MyApplication.getInstance().getUid());
         final TextViewWithSpan commentContentText = (TextViewWithSpan) cardContentView
                 .findViewById(R.id.comment_text);
         TextView commentTitleText = (TextView) cardContentView
                 .findViewById(R.id.comment_title_text);
-
+        BubbleLayout cardLayout = (BubbleLayout) cardContentView.findViewById(R.id.bl_card);
+        cardLayout.setArrowDirection(isMyMsg? ArrowDirection.RIGHT:ArrowDirection.LEFT);
+        cardLayout.setBubbleColor(context.getResources().getColor(isMyMsg ? R.color.bg_my_card : R.color.white));
+        cardLayout.setStrokeWidth(isMyMsg ?0: 0.5f);
         String commentContent = JSONUtils.getString(msgBody, "source", "");
         String[] mentions = JSONUtils.getString(msgBody, "mentions", "")
                 .replace("[", "").replace("]", "").split(",");
@@ -85,10 +89,6 @@ public class DisplayTxtCommentMsg {
         } else if (NetUtils.isNetworkConnected(context)) {
             apiService.getMsg(msg.getCommentMid());
         }
-
-        (cardContentView
-                .findViewById(R.id.root_layout)).setBackgroundResource(isMyMsg ? R.drawable.ic_chat_msg_img_cover_arrow_right : R.drawable.ic_chat_msg_img_cover_arrow_left);
-
         commentContentText.setTextColor(context.getResources().getColor(
                 isMyMsg ? R.color.white : R.color.black));
         commentTitleText.setTextColor(context.getResources().getColor(

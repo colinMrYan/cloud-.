@@ -78,7 +78,7 @@ public class DragAdapter extends BaseAdapter {
                 .findViewById(R.id.icon_image);
         setAppIconImg(app, appIconImg);
         //应用名称
-        TextView appNameText = (TextView) convertView.findViewById(R.id.name_text);
+        TextView appNameText = (TextView) convertView.findViewById(R.id.tv_name);
         appNameText.setText(app.getAppName());
         //未处理消息条数
         TextView unhandledBadges = (TextView) convertView.findViewById(R.id.unhandled_badges_text);

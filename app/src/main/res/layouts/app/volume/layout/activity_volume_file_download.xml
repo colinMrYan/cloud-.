@@ -64,7 +64,7 @@
             android:textColor="#333333"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="4dp"
-            android:id="@+id/file_name_text"
+            android:id="@+id/tv_file_name"
             android:maxLines="1"
             android:maxWidth="300dp"
             android:ellipsize="end"

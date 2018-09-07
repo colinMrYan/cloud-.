@@ -545,9 +545,9 @@ public class CommunicationFragment extends Fragment {
                 - msgListView.getFirstVisiblePosition());
         if (childAt != null) {
             TextView channelTitleText = (TextView) childAt
-                    .findViewById(R.id.name_text);
+                    .findViewById(R.id.tv_name);
             TextView channelContentText = (TextView) childAt
-                    .findViewById(R.id.content_text);
+                    .findViewById(R.id.tv_content);
             TextView channelTimeText = (TextView) childAt
                     .findViewById(R.id.time_text);
             RelativeLayout channelNotReadCountLayout = (RelativeLayout) childAt

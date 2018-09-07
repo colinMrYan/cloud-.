@@ -7,18 +7,21 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIDownloadCallBack;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.chat.Msg;
 import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.emmcloud.util.privates.DownLoaderUtils;
 import com.inspur.emmcloud.util.common.FileUtils;
-import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.privates.DownLoaderUtils;
+import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.widget.HorizontalProgressBarWithNumber;
 import com.inspur.emmcloud.widget.RoundAngleImageView;
+import com.inspur.emmcloud.widget.bubble.ArrowDirection;
+import com.inspur.emmcloud.widget.bubble.BubbleLayout;
 
 import org.xutils.common.Callback.ProgressCallback;
 
@@ -38,15 +41,24 @@ public class DisplayResFileMsg {
      * @param msg
      */
     public static View displayResFileMsg(final Context context,
-                                          final Msg msg) {
+                                          final Msg msg,boolean isMsgDetial) {
         View cardContentView = LayoutInflater.from(context).inflate(
                 R.layout.chat_msg_card_child_res_file_view, null);
         TextView fileTitleText = (TextView) cardContentView
-                .findViewById(R.id.file_name_text);
+                .findViewById(R.id.tv_file_name);
         TextView fileSizeText = (TextView) cardContentView
-                .findViewById(R.id.file_size_text);
+                .findViewById(R.id.tv_file_size);
         final ImageView fileDownLoadImg = (ImageView) cardContentView
                 .findViewById(R.id.filecard_download_img);
+        boolean isMyMsg = msg.getUid().equals(MyApplication.getInstance().getUid());
+        BubbleLayout cardLayout = (BubbleLayout) cardContentView.findViewById(R.id.bl_card);
+        if (!isMsgDetial){
+            cardLayout.setArrowDirection(isMyMsg? ArrowDirection.RIGHT:ArrowDirection.LEFT);
+        }else {
+            cardLayout.setArrowHeight(0);
+            cardLayout.setArrowWidth(0);
+            cardLayout.setCornersRadius(0);
+        }
         String msgBody = msg.getBody();
         String fileSize = JSONUtils.getString(msgBody, "size", "");
         String fileName = JSONUtils.getString(msgBody, "name", "");
@@ -75,6 +87,9 @@ public class DisplayResFileMsg {
                 .setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        if (msg.getSendStatus() != 1){
+                            return;
+                        }
                         if ((0 < fileProgressBar.getProgress())
                                 && (fileProgressBar.getProgress() < 100)) {
                             return;

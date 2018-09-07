@@ -17,6 +17,8 @@ import com.inspur.emmcloud.util.common.richtext.RichType;
 import com.inspur.emmcloud.util.common.richtext.callback.LinkFixCallback;
 import com.inspur.emmcloud.util.common.richtext.callback.OnUrlClickListener;
 import com.inspur.emmcloud.util.privates.UriUtils;
+import com.inspur.emmcloud.widget.bubble.ArrowDirection;
+import com.inspur.emmcloud.widget.bubble.BubbleLayout;
 
 /**
  * DisplayTxtRichMsg
@@ -36,24 +38,21 @@ public class DisplayTxtMarkdownMsg {
         View cardContentView = LayoutInflater.from(context).inflate(
                 R.layout.chat_msg_card_child_text_markdown_view, null);
         final boolean isMyMsg = msg.getFromUser().equals(MyApplication.getInstance().getUid());
-        final TextView richTitleText = (TextView) cardContentView
-                .findViewById(R.id.title_text);
-        final TextView richContentText = (TextView) cardContentView
-                .findViewById(R.id.content_text);
-
-        (cardContentView.findViewById(R.id.root_layout)).setBackgroundColor(context.getResources().getColor(
-                isMyMsg ? R.color.bg_my_card : R.color.white));
-        (cardContentView
-                .findViewById(R.id.card_layout)).setBackgroundResource(isMyMsg?R.drawable.ic_chat_msg_img_cover_arrow_right:R.drawable.ic_chat_msg_img_cover_arrow_left);
-
-        richTitleText.setTextColor(context.getResources().getColor(
+        final TextView titleText = (TextView) cardContentView
+                .findViewById(R.id.tv_title);
+        final TextView contentText = (TextView) cardContentView
+                .findViewById(R.id.tv_content);
+        BubbleLayout cardLayout = (BubbleLayout) cardContentView.findViewById(R.id.bl_card);
+        cardLayout.setArrowDirection(isMyMsg? ArrowDirection.RIGHT:ArrowDirection.LEFT);
+        cardLayout.setBubbleColor(context.getResources().getColor(isMyMsg ? R.color.bg_my_card : R.color.white));
+        cardLayout.setStrokeWidth(isMyMsg ?0: 0.5f);
+        titleText.setTextColor(context.getResources().getColor(
                 isMyMsg ? R.color.white : R.color.black));
-        richContentText.setTextColor(context.getResources().getColor(
+        contentText.setTextColor(context.getResources().getColor(
                 isMyMsg ? R.color.white : R.color.black));
-
         String text = msg.getMsgContentTextMarkdown().getText();
         String title = msg.getMsgContentTextMarkdown().getTitle();
-        richTitleText.setVisibility(StringUtils.isBlank(title)?View.GONE:View.VISIBLE);
+        titleText.setVisibility(StringUtils.isBlank(title)?View.GONE:View.VISIBLE);
         RichText.from(title)
                 .type(RichType.MARKDOWN)
                 .linkFix(new LinkFixCallback() {
@@ -78,7 +77,7 @@ public class DisplayTxtMarkdownMsg {
                 .noImage(true)
                 .singleLoad(false)
                 .cache(CacheType.ALL)
-                .into(richTitleText);
+                .into(titleText);
 
 
 
@@ -106,7 +105,7 @@ public class DisplayTxtMarkdownMsg {
                 .noImage(true)
                 .singleLoad(false)
                 .cache(CacheType.ALL)
-                .into(richContentText);
+                .into(contentText);
         return cardContentView;
     }
 
