@@ -387,6 +387,7 @@ public class ECMChatInputMenuV0 extends LinearLayout {
                     @Override
                     public void run() {
                         voiceInputLayout.setVisibility(View.VISIBLE);
+                        lastVolume=0;
                         waterWaveProgress.setProgress(0);
                         mediaPlayerUtils.playVoiceOn();
                         voice2StringMessageUtils.startVoiceListening();
@@ -566,6 +567,10 @@ public class ECMChatInputMenuV0 extends LinearLayout {
         if((currentLevel-lastVolume)>=0){
             if(delayTimes!=TOPDELY_TIMES ) {
                 delayTimes=TOPDELY_TIMES ;
+            }
+
+            if((showLevel<4)&&(showLevel>0)){
+                waterWaveProgress.setProgress(4);
             }
             waterWaveProgress.setProgress(showLevel);
             lastVolume=currentLevel;

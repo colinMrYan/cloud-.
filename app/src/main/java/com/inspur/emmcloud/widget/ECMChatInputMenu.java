@@ -315,6 +315,7 @@ public class ECMChatInputMenu extends LinearLayout {
                         case "voice_input":
                             addMenuLayout.setVisibility(GONE);
                             voiceInputLayout.setVisibility(View.VISIBLE);
+                            lastVolume=0;
                             waterWaveProgress.setProgress(0);
                             mediaPlayerUtils.playVoiceOn();
                             voice2StringMessageUtils.startVoiceListening();
