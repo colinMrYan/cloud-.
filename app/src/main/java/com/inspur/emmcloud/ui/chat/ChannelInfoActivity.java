@@ -389,16 +389,14 @@ public class ChannelInfoActivity extends BaseActivity {
      * 过滤不存在的群成员算法
      */
     private void filterMemberData() {
-        List<ContactUser> contactUserList = ContactUserCacheUtils.getContactUserListByIdListOrderBy(memberList);
-        //如果群信息和通讯录信息不一样，以通讯录信息为准，避免出现头像为空，且没有名字的情况
-        if(memberList.size() != contactUserList.size()){
-            ArrayList<String> contactUserIdList = new ArrayList<>();
-            for (int i = 0; i < contactUserList.size(); i++) {
-                contactUserIdList.add(contactUserList.get(i).getId());
-            }
-            memberList.clear();
-            memberList.addAll(contactUserIdList);
+        //查三十人，如果不满三十人则查实际人数保证查到的人都是存在的群成员
+        List<ContactUser> contactUserList = ContactUserCacheUtils.getContactUserListByIdListOrderBy(memberList,30);
+        ArrayList<String> contactUserIdList = new ArrayList<>();
+        for (int i = 0; i < contactUserList.size(); i++) {
+            contactUserIdList.add(contactUserList.get(i).getId());
         }
+        memberList.clear();
+        memberList.addAll(contactUserIdList);
     }
 
     private class WebService extends APIInterfaceInstance {

@@ -2,8 +2,8 @@ package com.inspur.emmcloud.util.privates.cache;
 
 import android.content.Context;
 
+import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
-import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.util.common.StringUtils;
 
 import org.xutils.common.util.KeyValue;
@@ -158,25 +158,14 @@ public class ChannelGroupCacheUtils {
                 return new ArrayList<>();
             }
             List<String> allMemberList = channelGroup.getMemberList();
-            List<ContactUser> searchContactUserList = new ArrayList<>();
-            int listSize = allMemberList.size();
-            int toIndex = 10;
-            //十个一组分组算法
-            for(int i = 0;i < allMemberList.size();i += 10){
-                if(i + 10 > listSize){        //作用为toIndex最后没有10条数据则剩余几条newList中就装几条
-                    toIndex = listSize - i;
-                }
-                List newList = allMemberList.subList(i,i+toIndex);
-                //十个一组在通讯录中查询，直到查到4个存在的人或者查完整个列表
-                List<ContactUser> contactUserList = ContactUserCacheUtils.getContactUserListByIdListOrderBy(newList);
-                searchContactUserList.addAll(contactUserList);
-                if((allMemberList.size() <= 10 || contactUserList.size() >= limit)){
-                    //如果查到的列表大于limit个人取前limit个，小于limit个人取全部
-                    int size = searchContactUserList.size() >= limit?limit:searchContactUserList.size();
-                    for (int j = 0; j < size; j++) {
-                        userList.add(searchContactUserList.get(j).getId());
+            //遍历如果头像存在则加入
+            for (int i = 0; i < allMemberList.size(); i++) {
+                String url = APIUri.getChannelImgUrl(context, allMemberList.get(i));
+                if(!StringUtils.isBlank(url)){
+                    userList.add(allMemberList.get(i));
+                    if(userList.size()>=4){
+                        break;
                     }
-                    break;
                 }
             }
         } catch (Exception e) {

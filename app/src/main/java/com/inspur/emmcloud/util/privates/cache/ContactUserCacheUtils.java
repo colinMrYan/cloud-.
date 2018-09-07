@@ -124,9 +124,10 @@ public class ContactUserCacheUtils {
      * @param uidList
      * @return
      */
-    public static List<ContactUser> getContactUserListByIdListOrderBy(final List<String> uidList) {
+    public static List<ContactUser> getContactUserListByIdListOrderBy(final List<String> uidList,int limit) {
         List<ContactUser> contactUserList = new ArrayList<>();
-        for (int i = 0; i < uidList.size(); i++) {
+        int size = uidList.size() > limit ? limit : uidList.size();
+        for (int i = 0; i < size; i++) {
             ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(uidList.get(i));
             if(contactUser != null){
                 contactUserList.add(contactUser);
