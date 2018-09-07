@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
 import com.inspur.emmcloud.bean.contact.ContactUser;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 
 import org.xutils.common.util.KeyValue;
@@ -169,23 +170,18 @@ public class ChannelGroupCacheUtils {
             //十个一组在通讯录中查询，直到查到4个存在的人或者查完整个列表
             List<ContactUser> searchContactUserList = new ArrayList<>();
             for (int i = 0; i < allMemberGroupList.size(); i++) {
-                List<ContactUser> contactUserList = ContactUserCacheUtils.getContactUserListById(allMemberGroupList.get(i));
+//                List<ContactUser> contactUserList = ContactUserCacheUtils.getContactUserListById(allMemberGroupList.get(i));
+                List<ContactUser> contactUserList = ContactUserCacheUtils.getContactUserListByIdListOrderBy(allMemberGroupList.get(i));
+                LogUtils.YfcDebug("查询到的联系人个数："+contactUserList.size());
+                searchContactUserList.addAll(contactUserList);
                 if(contactUserList.size() >= limit){
-                    searchContactUserList.addAll(contactUserList);
                     break;
-                }else{
-                    searchContactUserList.addAll(contactUserList);
                 }
             }
             //如果查到的列表大于4个人取前四个，小于四个人取全部
-            if(searchContactUserList.size() >= limit){
-                for (int i = 0; i < limit; i++) {
-                    userList.add(searchContactUserList.get(i).getId());
-                }
-            }else{
-                for (int i = 0; i < searchContactUserList.size(); i++) {
-                    userList.add(searchContactUserList.get(i).getId());
-                }
+            int size = searchContactUserList.size() >= limit?limit:searchContactUserList.size();
+            for (int i = 0; i < size; i++) {
+                userList.add(searchContactUserList.get(i).getId());
             }
         } catch (Exception e) {
             e.printStackTrace();

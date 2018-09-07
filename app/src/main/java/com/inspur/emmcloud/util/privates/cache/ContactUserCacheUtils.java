@@ -1,27 +1,33 @@
 package com.inspur.emmcloud.util.privates.cache;
 
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.bean.chat.PersonDto;
 import com.inspur.emmcloud.bean.chat.Robot;
 import com.inspur.emmcloud.bean.contact.Contact;
 import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PinyinUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 
 import org.xutils.db.sqlite.WhereBuilder;
+import org.xutils.ex.DbException;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Created by chenmch on 2018/5/10.
  */
 
 public class ContactUserCacheUtils {
-    public static void saveContactUserList(List<ContactUser> contactUserList){
+    public static void saveContactUserList(List<ContactUser> contactUserList) {
         if (contactUserList == null || contactUserList.size() == 0) {
             return;
         }
@@ -34,8 +40,8 @@ public class ContactUserCacheUtils {
         }
     }
 
-    public static void saveContactUser(ContactUser contactUser){
-        if (contactUser == null ) {
+    public static void saveContactUser(ContactUser contactUser) {
+        if (contactUser == null) {
             return;
         }
         try {
@@ -47,72 +53,135 @@ public class ContactUserCacheUtils {
         }
     }
 
-    public static void deleteContactUserList(List<String> uidList){
+    public static void deleteContactUserList(List<String> uidList) {
         if (uidList == null || uidList.size() == 0) {
             return;
         }
         try {
 
-            DbCacheUtils.getDb().delete(ContactUser.class,WhereBuilder.b("id","in", uidList));
+            DbCacheUtils.getDb().delete(ContactUser.class, WhereBuilder.b("id", "in", uidList));
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
 
-    public static void setLastQueryTime(long lastQueryTime){
-        PreferencesByUserAndTanentUtils.putLong(MyApplication.getInstance(), Constant.PREF_CONTACT_USER_LASTQUERYTIME,lastQueryTime);
+    public static void setLastQueryTime(long lastQueryTime) {
+        PreferencesByUserAndTanentUtils.putLong(MyApplication.getInstance(), Constant.PREF_CONTACT_USER_LASTQUERYTIME, lastQueryTime);
     }
 
-    public static Long getLastQueryTime(){
-        return  PreferencesByUserAndTanentUtils.getLong(MyApplication.getInstance(), Constant.PREF_CONTACT_USER_LASTQUERYTIME,0L);
+    public static Long getLastQueryTime() {
+        return PreferencesByUserAndTanentUtils.getLong(MyApplication.getInstance(), Constant.PREF_CONTACT_USER_LASTQUERYTIME, 0L);
     }
 
     /**
      * 获取用户名（机器人和人）
+     *
      * @param uid
      * @return
      */
-    public static String getUserName(String uid){
+    public static String getUserName(String uid) {
         String userName = "";
         try {
-            if (uid.startsWith("BOT")){
-                Robot robot =  RobotCacheUtils
+            if (uid.startsWith("BOT")) {
+                Robot robot = RobotCacheUtils
                         .getRobotById(MyApplication.getInstance(), uid);
-                if (robot != null){
+                if (robot != null) {
                     userName = robot.getName();
                 }
-            }else {
+            } else {
                 ContactUser contactUser = DbCacheUtils.getDb().findById(ContactUser.class, uid);
                 if (contactUser != null) {
                     userName = contactUser.getName();
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return userName;
     }
 
 
-        /**
+    /**
      * 通过用户名获取Contact
+     *
      * @param userName
      * @return
      */
-    public static ContactUser getContactUserByUserName(String userName){
+    public static ContactUser getContactUserByUserName(String userName) {
         ContactUser contactUser = null;
         try {
             contactUser = DbCacheUtils.getDb().selector(ContactUser.class).where(
                     "name", "=", userName).findFirst();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return contactUser;
     }
 
+    /**
+     * 按传入顺序查询
+     * @param uidList
+     * @return
+     */
+    public static List<ContactUser> getContactUserListByIdListOrderBy(final List<String> uidList) {
+        List<ContactUser> contactUserList = new ArrayList<>();
+        String sql = getSearchContactUserSql(uidList);
+        LogUtils.YfcDebug("查询语句sql："+sql);
+        try {
+            Cursor cursor = DbCacheUtils.getDb().execQuery(sql);
+            contactUserList = getContactUserFromCursor(cursor);
+        } catch (DbException e) {
+            LogUtils.YfcDebug("查询有异常："+e.getMessage());
+            e.printStackTrace();
+        }
+        if (contactUserList == null) {
+            contactUserList = new ArrayList<>();
+        }
+        return contactUserList;
+    }
 
-        /**
+    /**
+     * 获取cursor中的数据
+     * @param cursor
+     * @return
+     */
+    public static List<ContactUser> getContactUserFromCursor(Cursor cursor) {
+        List<ContactUser> contactUserList = new ArrayList<ContactUser>();
+        while (cursor.moveToNext()) {
+            ContactUser contactUser = new ContactUser();
+            contactUser.setId(cursor.getString(cursor.getColumnIndex("id")));
+            contactUser.setName(cursor.getString(cursor.getColumnIndex("name")));
+            contactUser.setNameGlobal(cursor.getString(cursor.getColumnIndex("nameGlobal")));
+            contactUser.setPinyin(cursor.getString(cursor.getColumnIndex("pinyin")));
+            contactUser.setParentId(cursor.getString(cursor.getColumnIndex("parentId")));
+            contactUser.setMobile(cursor.getString(cursor.getColumnIndex("mobile")));
+            contactUser.setEmail(cursor.getString(cursor.getColumnIndex("email")));
+            contactUser.setHasHead(cursor.getInt(cursor.getColumnIndex("hasHead")));
+            contactUser.setSortOrder(cursor.getInt(cursor.getColumnIndex("sortOrder")));
+            contactUser.setEmployeeNum(cursor.getString(cursor.getColumnIndex("employeeNum")));
+            contactUser.setLastQueryTime(cursor.getString(cursor.getColumnIndex("lastQueryTime")));
+            contactUserList.add(contactUser);
+        }
+        return contactUserList;
+    }
+
+    /**
+     * 拼装sql
+     *
+     * @param uidList
+     * @return
+     */
+    private static String getSearchContactUserSql(List<String> uidList) {
+        String ids = "";
+        for (int i = 0; i < uidList.size(); i++) {
+            ids = ids + uidList.get(i) + (i==(uidList.size()-1)?"":",");
+        }
+        return "select * from ContactUser where id in " + "(" + ids + ") order by charindex(','+ltrim(id)+',','," + ids + "')";
+    }
+
+
+    /**
      * 获取通讯录列表
      *
      * @param uidList
@@ -135,14 +204,13 @@ public class ContactUserCacheUtils {
     }
 
 
-        /**
+    /**
      * 通过id List获取PersonDto对象的List
      *
-     * @param context
      * @param uidList
      * @return
      */
-    public static List<PersonDto> getShowMemberList( List<String> uidList) {
+    public static List<PersonDto> getShowMemberList(List<String> uidList) {
         List<ContactUser> userList = new ArrayList<>();
         List<Robot> robotList = new ArrayList<>();
         List<PersonDto> unitMemberList = new ArrayList<>();
@@ -196,7 +264,7 @@ public class ContactUserCacheUtils {
     }
 
 
-        /**
+    /**
      * 按顺序通过id List获取contact对象的List
      *
      * @param uidList
@@ -205,7 +273,7 @@ public class ContactUserCacheUtils {
     public static List<ContactUser> getSoreUserList(List<String> uidList) {
         List<ContactUser> userList = new ArrayList<>();
         try {
-            for (String uid:uidList) {
+            for (String uid : uidList) {
                 ContactUser contactUser = getContactUserByUid(uid);
                 if (contactUser != null) {
                     userList.add(contactUser);
@@ -222,12 +290,13 @@ public class ContactUserCacheUtils {
 
     /**
      * 通过id获取ContactUser
+     *
      * @param uid
      * @return
      */
-    public static ContactUser getContactUserByUid(String uid){
+    public static ContactUser getContactUserByUid(String uid) {
         try {
-            ContactUser contactUser = DbCacheUtils.getDb().findById(ContactUser.class,uid);
+            ContactUser contactUser = DbCacheUtils.getDb().findById(ContactUser.class, uid);
             return contactUser;
         } catch (Exception e) {
             // TODO: handle exception
@@ -240,7 +309,6 @@ public class ContactUserCacheUtils {
      * 根据Email查询联系人的接口
      * ReactNative中周计划使用
      *
-     * @param context
      * @param email
      * @return
      */
@@ -257,7 +325,7 @@ public class ContactUserCacheUtils {
     }
 
 
-        /**
+    /**
      * 通过手机号搜索通讯录
      *
      * @param searchText
@@ -276,7 +344,7 @@ public class ContactUserCacheUtils {
                     )
                     .and(WhereBuilder.b().expr("id not in" + noInSql))
                     .limit(limit).findAll();
-            if (contactUserList != null){
+            if (contactUserList != null) {
                 searchContactList = Contact.contactUserList2ContactList(contactUserList);
             }
         } catch (Exception e) {
@@ -291,8 +359,9 @@ public class ContactUserCacheUtils {
 
     /**
      * 搜索子目录中符合条件的通讯录
+     *
      * @param searchText
-     * @param excludeContactList  排除掉某些数据
+     * @param excludeContactList 排除掉某些数据
      * @param limit
      * @return
      */
@@ -320,7 +389,7 @@ public class ContactUserCacheUtils {
                             .or("code", "=", searchStr)
                     )
                     .limit(limit).findAll();
-            if (searchContactUserList1 != null){
+            if (searchContactUserList1 != null) {
                 searchContactList.addAll(Contact.contactUserList2ContactList(searchContactUserList1));
                 noInSql = getNoInSql(noInSql, searchContactList);
             }
@@ -335,7 +404,7 @@ public class ContactUserCacheUtils {
                                 .or("nameGlobal", "like", searchStr)
                                 .or("code", "like", searchStr))
                         .limit(limit - searchContactList.size()).findAll();
-                if (searchContactUserList2 != null){
+                if (searchContactUserList2 != null) {
                     searchContactList.addAll(Contact.contactUserList2ContactList(searchContactUserList2));
                     noInSql = getNoInSql(noInSql, searchContactList);
                 }
@@ -350,7 +419,7 @@ public class ContactUserCacheUtils {
                                 .or("name", "like", searchStr)
                                 .or("nameGlobal", "like", searchStr))
                         .limit(limit - searchContactList.size()).findAll();
-                if (searchContactUserList3 != null){
+                if (searchContactUserList3 != null) {
                     searchContactList.addAll(Contact.contactUserList2ContactList(searchContactUserList3));
                     noInSql = getNoInSql(noInSql, searchContactList);
                 }
@@ -364,7 +433,7 @@ public class ContactUserCacheUtils {
                                 .or("name", "like", searchStr)
                                 .or("nameGlobal", "like", searchStr))
                         .limit(limit - searchContactList.size()).findAll();
-                if (searchContactUserList4 != null){
+                if (searchContactUserList4 != null) {
                     searchContactList.addAll(Contact.contactUserList2ContactList(searchContactUserList4));
                     noInSql = getNoInSql(noInSql, searchContactList);
                 }
@@ -386,7 +455,7 @@ public class ContactUserCacheUtils {
                                 .or("name", "like", searchStr)
                                 .or("nameGlobal", "like", searchStr))
                         .limit(limit - searchContactList.size()).findAll();
-                if (searchContactList5 != null){
+                if (searchContactList5 != null) {
                     searchContactList.addAll(Contact.contactUserList2ContactList(searchContactList5));
                 }
             }
