@@ -163,7 +163,7 @@ public class ChannelGroupCacheUtils {
                 String url = APIUri.getChannelImgUrl(context, allMemberList.get(i));
                 if(!StringUtils.isBlank(url)){
                     userList.add(allMemberList.get(i));
-                    if(userList.size()>=4){
+                    if(userList.size()>=limit){
                         break;
                     }
                 }
