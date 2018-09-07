@@ -113,8 +113,8 @@ public class DbCacheUtils {
                             }
                             if (oldVersion<11){
                                 if (tableIsExist("ContactUser")) {
-                                    db.execNonQuery("alter table ContactUser add employeeNum text default ''");
-                                    db.execNonQuery("CREATE INDEX contactUserIndex ON ContactUser(id)");
+                                    db.execNonQuery("DROP TABLE ContactUser");
+                                    ContactUserCacheUtils.setLastQueryTime(0);
                                 }
                             }
                         } catch (Exception e) {
