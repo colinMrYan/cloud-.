@@ -484,6 +484,9 @@ public class CommunicationFragment extends Fragment {
                         displayChannelList.addAll(channelList);
                         displayData();// 展示数据
                         break;
+                    case SORT_CHANNEL_LIST:
+                        sortChannelList();
+                        break;
                     default:
                         break;
                 }
@@ -890,20 +893,23 @@ public class CommunicationFragment extends Fragment {
                 String content = eventMessage.getContent();
                 JSONObject contentObj = JSONUtils.getJSONObject(content);
                 Message receivedWSMessage = new Message(contentObj);
-                if (receivedWSMessage.getType().equals(Message.MESSAGE_TYPE_MEDIA_VOICE)){
-                    String fileSavePath = MyAppConfig.getCacheVoiceFilePath(receivedWSMessage.getChannel(),receivedWSMessage.getId());
-                    if (!new File(fileSavePath).exists()){
-                        String source = APIUri.getChatVoiceFileResouceUrl(receivedWSMessage.getChannel(),receivedWSMessage.getMsgContentMediaVoice().getMedia());
-                        new DownLoaderUtils().startDownLoad(source,fileSavePath,null);
+                //验重处理
+                if (MessageCacheUtil.getMessageByMid(MyApplication.getInstance(),receivedWSMessage.getId()) == null){
+                    if (receivedWSMessage.getType().equals(Message.MESSAGE_TYPE_MEDIA_VOICE)){
+                        String fileSavePath = MyAppConfig.getCacheVoiceFilePath(receivedWSMessage.getChannel(),receivedWSMessage.getId());
+                        if (!new File(fileSavePath).exists()){
+                            String source = APIUri.getChatVoiceFileResouceUrl(receivedWSMessage.getChannel(),receivedWSMessage.getMsgContentMediaVoice().getMedia());
+                            new DownLoaderUtils().startDownLoad(source,fileSavePath,null);
+                        }
                     }
-                }
-                Channel receiveMessageChannel = ChannelCacheUtils.getChannel(
-                        getActivity(), receivedWSMessage.getChannel());
-                cacheReceiveMessage(receivedWSMessage);
-                if (receiveMessageChannel == null) {
-                    getChannelList();
-                } else {
-                    sortChannelList();
+                    Channel receiveMessageChannel = ChannelCacheUtils.getChannel(
+                            getActivity(), receivedWSMessage.getChannel());
+                    cacheReceiveMessage(receivedWSMessage);
+                    if (receiveMessageChannel == null) {
+                        getChannelList();
+                    } else {
+                        sortChannelList();
+                    }
                 }
             } else {
                 WebServiceMiddleUtils.hand(getActivity(), eventMessage.getContent(), eventMessage.getStatus());
