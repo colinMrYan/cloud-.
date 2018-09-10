@@ -178,6 +178,7 @@ public class AudioRecordButton extends Button implements AudioManager.AudioStage
             case MotionEvent.ACTION_DOWN:
                 playRecordStartMusic();
                 changeState(STATE_RECORDING);
+                mListener.onStartRecordingVoice();
                 break;
             case MotionEvent.ACTION_MOVE:
 
@@ -194,6 +195,7 @@ public class AudioRecordButton extends Button implements AudioManager.AudioStage
 
                 break;
             case MotionEvent.ACTION_UP:
+                mListener.onFinished(mTime,mAudioManager.getCurrentFilePath());
                 // 首先判断是否有触发onlongclick事件，没有的话直接返回reset
                 if (!mReady) {
                     reset();

@@ -1124,7 +1124,6 @@ public class FileUtils {
             inputStream.close();
             return data;
         } catch (Exception e) {
-            LogUtils.YfcDebug("解析有异常："+e.getMessage());
             e.printStackTrace();
         }
         return null;

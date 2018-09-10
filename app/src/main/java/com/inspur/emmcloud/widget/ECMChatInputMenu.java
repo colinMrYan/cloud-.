@@ -30,7 +30,6 @@ import com.inspur.emmcloud.interf.OnVoiceResultCallback;
 import com.inspur.emmcloud.ui.chat.MembersActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.InputMethodUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.MediaPlayerUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
@@ -161,14 +160,12 @@ public class ECMChatInputMenu extends LinearLayout {
 
             @Override
             public void onStartRecordingVoice() {
-                LogUtils.YfcDebug("开始解析录音");
 //                voice2StringMessageUtils.startVoiceListening();
                 voice2StringMessageUtils.startVoiceListeningByVoiceFile("/msc/iat.wav");
             }
 
             @Override
             public void onFinished(float seconds, String filePath) {
-                LogUtils.YfcDebug("结束录音："+filePath);
                 // TODO Auto-generated method stub
                 if (chatInputMenuListener != null) {
                     chatInputMenuListener.onSendVoiceRecordMsg(seconds, filePath);
@@ -177,7 +174,6 @@ public class ECMChatInputMenu extends LinearLayout {
 
             @Override
             public void onErrorRecordingVoice() {
-                LogUtils.YfcDebug("异常结束录音");
                 voice2StringMessageUtils.stopListening();
             }
         });
