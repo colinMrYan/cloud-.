@@ -126,15 +126,32 @@ public class ContactUserCacheUtils {
      */
     public static List<ContactUser> getContactUserListByIdListOrderBy(final List<String> uidList,int limit) {
         List<ContactUser> contactUserList = new ArrayList<>();
-        int size = uidList.size() > limit ? limit : uidList.size();
-        for (int i = 0; i < size; i++) {
-            ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(uidList.get(i));
-            if(contactUser != null){
-                contactUserList.add(contactUser);
+        List<ContactUser> searchResultContactUserList = new ArrayList<>();
+        int listSize = uidList.size();
+        int toIndex = limit;
+        //三十个一组查询直到查完列表或者查到多于九个
+        for(int i = 0;i < uidList.size();i += limit){
+            if(i + limit > listSize){
+                toIndex = listSize - i;
+            }
+            List newList = uidList.subList(i,i+toIndex);
+            List<ContactUser> contactUserInList = ContactUserCacheUtils.getContactUserListById(newList);
+            searchResultContactUserList.addAll(contactUserInList);
+            if(contactUserInList.size() >= 9){
+                break;
             }
         }
-        if (contactUserList == null) {
-            contactUserList = new ArrayList<>();
+        //按照顺序取出需要显示的头像的ContactUser
+        for (int i = 0; i < uidList.size(); i++) {
+            ContactUser contactUser = new ContactUser();
+            contactUser.setId(uidList.get(i));
+            int index = searchResultContactUserList.indexOf(contactUser);
+            if(index != -1){
+                contactUserList.add(searchResultContactUserList.get(index));
+            }
+            if(contactUserList.size() >= 9){
+                break;
+            }
         }
         return contactUserList;
     }
