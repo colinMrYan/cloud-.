@@ -24,6 +24,7 @@ import com.inspur.emmcloud.bean.system.GetAllConfigVersionResult;
 import com.inspur.emmcloud.bean.system.GetUpgradeResult;
 import com.inspur.emmcloud.bean.system.SplashPageBean;
 import com.inspur.emmcloud.interf.OauthCallBack;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.OauthUtils;
@@ -225,6 +226,7 @@ public class AppAPIService {
      */
     public void uploadException(final JSONObject exception) {
         final String completeUrl = APIUri.getUploadExceptionUrl();
+        LogUtils.LbcDebug(completeUrl); //lbc
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         params.setAsJsonContent(true);

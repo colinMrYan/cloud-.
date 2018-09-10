@@ -42,6 +42,11 @@ public class UserInfoActivity extends BaseActivity {
     @ViewInject(R.id.department_text)
     private TextView departmentText;
 
+    @ViewInject(R.id.telephone_ll)
+    private LinearLayout telLayout;
+    @ViewInject(R.id.telephone_tv)
+    private TextView telText;
+
     @ViewInject(R.id.mail_layout)
     private LinearLayout mailLayout;
     @ViewInject(R.id.tv_mail)
@@ -54,18 +59,22 @@ public class UserInfoActivity extends BaseActivity {
     private ImageView photoImg;
     @ViewInject(R.id.tv_name)
     private TextView nameText;
+    @ViewInject(R.id.duty_tv)
+    private TextView dutyText;
+
+
+
+
+
     @ViewInject(R.id.start_chat_img)
     private ImageView startChatImg;
-    @ViewInject(R.id.employee_num_text)
-    private TextView employeeNumText;
 
-    @ViewInject(R.id.employee_num_layout)
-    private LinearLayout employeeNumLayout;
 
     private ContactUser contactUser;
+    private ContactOrg  contactOrg;
     private final static int MY_PERMISSIONS_PHONECALL = 0;
     private final static int MY_PERMISSIONS_SMS = 1;
-
+    private  String  parentUid;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
@@ -88,6 +97,7 @@ public class UserInfoActivity extends BaseActivity {
             uid = uri.split("//")[1];
         } else if (getIntent().hasExtra("uid")) {
             uid = getIntent().getExtras().getString("uid");
+            parentUid =uid;
         }
         if (!StringUtils.isBlank(uid)){
             contactUser = ContactUserCacheUtils.getContactUserByUid(uid);
@@ -104,8 +114,13 @@ public class UserInfoActivity extends BaseActivity {
         String mail = contactUser.getEmail();
         String phoneNum = contactUser.getMobile();
         String name = contactUser.getName();
+        String telStr= contactUser.getTel();
+        LogUtils.LbcDebug(telStr);
+        String officeStr= contactUser.getOffice();
+
         String headUrl = APIUri.getUserIconUrl(UserInfoActivity.this, contactUser.getId());
         ContactOrg contactOrg = ContactOrgCacheUtils.getContactOrg(contactUser.getParentId());
+
         if (contactOrg != null){
             String organize = contactOrg.getName();
             if (!StringUtils.isBlank(organize)) {
@@ -113,6 +128,7 @@ public class UserInfoActivity extends BaseActivity {
                 departmentText.setText(organize);
             }
         }
+
         if (!StringUtils.isBlank(mail)) {
             mailLayout.setVisibility(View.VISIBLE);
             mailText.setText(mail);
@@ -122,7 +138,20 @@ public class UserInfoActivity extends BaseActivity {
             contactLayout.setVisibility(View.VISIBLE);
             phoneNumText.setText(phoneNum);
         }
+        //添加固话
+        if (!StringUtils.isBlank(telStr)) {
+            telLayout.setVisibility(View.VISIBLE);
+            telText.setText(telStr);
+            LogUtils.LbcDebug("Telephone::"+telStr);
+        }
         nameText.setText(StringUtils.isBlank(name)?getString(R.string.not_set):name);
+
+        if(!StringUtils.isBlank(officeStr)){
+            dutyText.setVisibility(View.VISIBLE);
+            dutyText.setText(officeStr);  //lbc
+
+        }
+
         ImageDisplayUtils.getInstance().displayImage(photoImg, headUrl, R.drawable.icon_person_default);
         if (contactOrg.getId().equals(MyApplication.getInstance().getUid())) {
             startChatImg.setVisibility(View.GONE);
@@ -133,6 +162,9 @@ public class UserInfoActivity extends BaseActivity {
 
     public void onClick(View v) {
         String phoneNum = phoneNumText.getText().toString();
+        String TelephoneNum=telText.getText().toString();
+        LogUtils.LbcDebug("固定电话"+TelephoneNum);
+
         switch (v.getId()) {
             case R.id.mail_img:
                 String mail = mailText.getText().toString();
@@ -181,6 +213,14 @@ public class UserInfoActivity extends BaseActivity {
                 break;
             case R.id.start_chat_img:
                 createDireactChannel();
+                break;
+            case R.id.depart_btn_img:
+                Bundle bundle22 = new Bundle();
+                bundle22.putString("uid", parentUid);
+                IntentUtils.startActivity(UserInfoActivity.this, ContactOrgStructureActivity.class, bundle22);
+                break;
+            case R.id.telephone_iv:
+                AppUtils.call(UserInfoActivity.this,TelephoneNum,1);
                 break;
             default:
                 break;

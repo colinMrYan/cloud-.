@@ -34,7 +34,7 @@ android {
         }
     }
     compileSdkVersion 24
-    buildToolsVersion "26.0.2"
+    buildToolsVersion '26.0.1'
     aaptOptions.cruncherEnabled = false
     aaptOptions.useNewCruncher = false
     defaultConfig {
@@ -166,7 +166,7 @@ dependencies {
     compile 'com.baidu.mapapi:location:6.13'
     compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.alibaba:fastjson:1.2.24'
-    compile ('io.socket:socket.io-client:0.9.0') {
+    compile('io.socket:socket.io-client:0.9.0') {
         // excluding org.json which is provided by Android
         exclude group: 'org.json', module: 'json'
     }
