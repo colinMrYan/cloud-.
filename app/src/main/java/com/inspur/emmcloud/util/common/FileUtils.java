@@ -1110,12 +1110,11 @@ public class FileUtils {
     }
 
     /**
-     * 读取filePath下的数据
-     * @param context
+     * 读取filePath下的数据，读出格式为byte[]
      * @param filePath
      * @return
      */
-    public byte[] readAudioFileFromSDcard(Context context,String filePath){
+    public static byte[] readAudioFileFromSDcard(String filePath){
         try {
             File file = new File(Environment.getExternalStorageDirectory(),
                     filePath);
@@ -1123,10 +1122,9 @@ public class FileUtils {
             byte[] data = new byte[inputStream.available()];
             inputStream.read(data);
             inputStream.close();
-            LogUtils.YfcDebug("读取成功："+data.length);
             return data;
         } catch (Exception e) {
-            LogUtils.YfcDebug("读取失败："+e.getMessage());
+            LogUtils.YfcDebug("解析有异常："+e.getMessage());
             e.printStackTrace();
         }
         return null;
