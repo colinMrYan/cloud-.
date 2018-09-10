@@ -12,10 +12,10 @@ import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechError;
 import com.iflytek.cloud.SpeechRecognizer;
 import com.inspur.emmcloud.interf.OnVoiceResultCallback;
+import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Set;
@@ -67,29 +67,11 @@ public class Voice2StringMessageUtils {
         //注释掉的这几句是读取文件听写文字的
         speechRecognizer.setParameter(SpeechConstant.AUDIO_SOURCE, "-1");
         speechRecognizer.startListening(recognizerListener);
-        byte[] audioData = readAudioFile(context, "iattest.wav");
+        byte[] audioData = FileUtils.readAudioFile(context, "iattest.wav");
         speechRecognizer.writeAudio(audioData, 0, audioData.length);
         speechRecognizer.stopListening();
     }
 
-    /**
-     * 读取指定目录下音频文件。
-     *
-     * @return 二进制文件数据
-     */
-    public byte[] readAudioFile(Context context, String filename) {
-        try {
-            InputStream ins = context.getAssets().open(filename);
-            byte[] data = new byte[ins.available()];
-            ins.read(data);
-            ins.close();
-            return data;
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        return null;
-    }
 
     /**
      * 参数设置
@@ -164,6 +146,7 @@ public class Voice2StringMessageUtils {
                 addListeningResult2Map(results);
                 if (isLast) {
                     //最后的结果
+                    LogUtils.YfcDebug("results："+getLastListeningResult());
                     onVoiceResultCallback.onVoiceResult(getLastListeningResult(), isLast);
                 }
             }

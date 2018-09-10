@@ -7,6 +7,7 @@ import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.webkit.MimeTypeMap;
@@ -1087,5 +1088,47 @@ public class FileUtils {
             }
         }
         return true;
+    }
+
+    /**
+     * 读取指定目录Assets下音频文件。
+     *
+     * @return 二进制文件数据
+     */
+    public static byte[] readAudioFile(Context context, String filename) {
+        try {
+            InputStream ins = context.getAssets().open(filename);
+            byte[] data = new byte[ins.available()];
+            ins.read(data);
+            ins.close();
+            return data;
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * 读取filePath下的数据
+     * @param context
+     * @param filePath
+     * @return
+     */
+    public byte[] readAudioFileFromSDcard(Context context,String filePath){
+        try {
+            File file = new File(Environment.getExternalStorageDirectory(),
+                    filePath);
+            InputStream inputStream = new FileInputStream(file);
+            byte[] data = new byte[inputStream.available()];
+            inputStream.read(data);
+            inputStream.close();
+            LogUtils.YfcDebug("读取成功："+data.length);
+            return data;
+        } catch (Exception e) {
+            LogUtils.YfcDebug("读取失败："+e.getMessage());
+            e.printStackTrace();
+        }
+        return null;
     }
 }

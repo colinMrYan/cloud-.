@@ -74,7 +74,9 @@ public class AudioRecordButton extends Button implements AudioManager.AudioStage
      * @author nickming
      */
     public interface AudioFinishRecorderListener {
+        void onStartRecordingVoice();
         void onFinished(float seconds, String filePath);
+        void onErrorRecordingVoice();
     }
 
     private AudioFinishRecorderListener mListener;
