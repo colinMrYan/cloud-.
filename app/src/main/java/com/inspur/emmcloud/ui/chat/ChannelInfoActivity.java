@@ -101,7 +101,7 @@ public class ChannelInfoActivity extends BaseActivity {
      */
     private void displayUI() {
         channelMemberNumText.setText(getString(R.string.all_group_member) + "（"
-                + memberList.size() + "）");
+                + channelGroup.getMemberList().size() + "）");
         memberGrid = (NoScrollGridView) findViewById(R.id.member_grid);
         ((TextView) findViewById(R.id.channel_name_text)).setText(channelGroup.getChannelName());
         adapter = new Adapter();
@@ -220,7 +220,7 @@ public class ChannelInfoActivity extends BaseActivity {
             case R.id.member_layout:
                 bundle.putString("title", getString(R.string.group_member));
                 bundle.putInt(MembersActivity.MEMBER_PAGE_STATE,MembersActivity.CHECK_STATE);
-                bundle.putStringArrayList("uidList",memberList);
+                bundle.putStringArrayList("uidList",channelGroup.getMemberList());
                 IntentUtils.startActivity(ChannelInfoActivity.this,
                         MembersActivity.class, bundle);
                 break;
