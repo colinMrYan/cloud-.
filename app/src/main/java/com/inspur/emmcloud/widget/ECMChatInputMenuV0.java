@@ -30,7 +30,6 @@ import com.inspur.emmcloud.interf.OnVoiceResultCallback;
 import com.inspur.emmcloud.ui.chat.MembersActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.InputMethodUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.MediaPlayerUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
@@ -95,7 +94,7 @@ public class ECMChatInputMenuV0 extends LinearLayout {
     private String cid = "";
     private String inputs = "";
     private boolean isSpecialUser = false; //小智机器人进行特殊处理
-    private int lastVolume = 0;
+    private int lastVolumeLevel = 0;
     private int delayTimes = 0;
     public ECMChatInputMenuV0(Context context) {
         this(context, null);
@@ -327,7 +326,7 @@ public class ECMChatInputMenuV0 extends LinearLayout {
         waterWaveProgress.setShowNumerical(false);
         waterWaveProgress.setWaveSpeed(0.02F);
         waterWaveProgress.setAmplitude(5.0F);
-        lastVolume=0;
+        lastVolumeLevel=0;
         voiceImgBtn.setImageResource(R.drawable.ic_chat_input_voice_v0);
         mediaPlayerUtils = new MediaPlayerUtils(getContext());
         voice2StringMessageUtils = new Voice2StringMessageUtils(getContext());
@@ -387,7 +386,7 @@ public class ECMChatInputMenuV0 extends LinearLayout {
                     @Override
                     public void run() {
                         voiceInputLayout.setVisibility(View.VISIBLE);
-                        lastVolume=0;
+                        lastVolumeLevel=0;
                         waterWaveProgress.setProgress(0);
                         mediaPlayerUtils.playVoiceOn();
                         voice2StringMessageUtils.startVoiceListening();
@@ -563,26 +562,22 @@ public class ECMChatInputMenuV0 extends LinearLayout {
         } else {
             currentLevel = volume/3+1;
         }
-        int showLevel=(currentLevel+lastVolume)/2;
-        if((currentLevel-lastVolume)>=0){
-            if(delayTimes!=TOPDELY_TIMES ) {
+        int showLevel=(currentLevel+lastVolumeLevel)/2;
+        if(currentLevel>=lastVolumeLevel) {
                 delayTimes=TOPDELY_TIMES ;
-            }
-
-            if((showLevel<4)&&(showLevel>0)){
+            if((showLevel<4)&&(showLevel>0)) {
                 waterWaveProgress.setProgress(4);
             }
             waterWaveProgress.setProgress(showLevel);
-            lastVolume=currentLevel;
+            lastVolumeLevel=currentLevel;
         } else {
             //判断延时时间
             if (delayTimes>0) {
                 delayTimes=delayTimes-1;
-                LogUtils.LbcDebug("delay"+delayTimes);
             } else {
-                lastVolume = lastVolume-1;
+                lastVolumeLevel = lastVolumeLevel-1;
             }
-            waterWaveProgress.setProgress(lastVolume);
+            waterWaveProgress.setProgress( lastVolumeLevel);
         }
     }
 
