@@ -119,25 +119,31 @@ public class ContactUserCacheUtils {
         return contactUser;
     }
 
+
     /**
-     * 按传入顺序查询
+     * 按传入顺序返回ContactUser
+     * uidList为需要查询的完整列表
+     * limit为返回个数
+     * limit*3为每次查询的步长
      * @param uidList
+     * @param limit
      * @return
      */
     public static List<ContactUser> getContactUserListByIdListOrderBy(final List<String> uidList,int limit) {
         List<ContactUser> contactUserList = new ArrayList<>();
         List<ContactUser> searchResultContactUserList = new ArrayList<>();
         int listSize = uidList.size();
-        int toIndex = limit;
+        int stepSize = limit * 3;
+        int toIndex = stepSize;
         //三十个一组查询直到查完列表或者查到多于九个
-        for(int i = 0;i < uidList.size();i += limit){
-            if(i + limit > listSize){
+        for(int i = 0;i < uidList.size();i += stepSize){
+            if(i + stepSize > listSize){
                 toIndex = listSize - i;
             }
             List newList = uidList.subList(i,i+toIndex);
             List<ContactUser> contactUserInList = ContactUserCacheUtils.getContactUserListById(newList);
             searchResultContactUserList.addAll(contactUserInList);
-            if(contactUserInList.size() >= 9){
+            if(contactUserInList.size() >= limit){
                 break;
             }
         }
@@ -149,7 +155,7 @@ public class ContactUserCacheUtils {
             if(index != -1){
                 contactUserList.add(searchResultContactUserList.get(index));
             }
-            if(contactUserList.size() >= 9){
+            if(contactUserList.size() >= limit){
                 break;
             }
         }

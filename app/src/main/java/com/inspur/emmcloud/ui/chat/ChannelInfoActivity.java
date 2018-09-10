@@ -56,6 +56,7 @@ public class ChannelInfoActivity extends BaseActivity {
     private NoScrollGridView memberGrid;
     private LoadingDialog loadingDlg;
     private ArrayList<String> memberList = new ArrayList<>();
+    private ArrayList<String> uiMemberList = new ArrayList<>();
     private String cid;
     private ChannelGroup channelGroup;
     private SwitchView setTopSwitch;
@@ -78,6 +79,7 @@ public class ChannelInfoActivity extends BaseActivity {
         getChannelInfo();
     }
 
+
     /**
      * 获取频道信息
      */
@@ -96,12 +98,13 @@ public class ChannelInfoActivity extends BaseActivity {
 
     }
 
+
     /**
      * 数据取出后显示ui
      */
     private void displayUI() {
         channelMemberNumText.setText(getString(R.string.all_group_member) + "（"
-                + channelGroup.getMemberList().size() + "）");
+                + memberList.size() + "）");
         memberGrid = (NoScrollGridView) findViewById(R.id.member_grid);
         ((TextView) findViewById(R.id.channel_name_text)).setText(channelGroup.getChannelName());
         adapter = new Adapter();
@@ -116,6 +119,7 @@ public class ChannelInfoActivity extends BaseActivity {
                 this, cid);
         setTopSwitch.setOpened(isSetTop);
         setTopSwitch.setOnStateChangedListener(onStateChangedListener);
+
     }
 
     /**
@@ -134,9 +138,11 @@ public class ChannelInfoActivity extends BaseActivity {
     }
 
     private OnItemClickListener onItemClickListener = new OnItemClickListener() {
+
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position,
                                 long id) {
+            // TODO Auto-generated method stub
             boolean isOwner = MyApplication.getInstance().getUid().equals(channelGroup.getOwner());
             Intent intent = new Intent();
             if ((position == adapter.getCount() - 1) && isOwner) {
@@ -220,7 +226,7 @@ public class ChannelInfoActivity extends BaseActivity {
             case R.id.member_layout:
                 bundle.putString("title", getString(R.string.group_member));
                 bundle.putInt(MembersActivity.MEMBER_PAGE_STATE,MembersActivity.CHECK_STATE);
-                bundle.putStringArrayList("uidList",channelGroup.getMemberList());
+                bundle.putStringArrayList("uidList",memberList);
                 IntentUtils.startActivity(ChannelInfoActivity.this,
                         MembersActivity.class, bundle);
                 break;
@@ -281,9 +287,9 @@ public class ChannelInfoActivity extends BaseActivity {
         public int getCount() {
             // TODO Auto-generated method stub
             if (channelGroup.getOwner().equals(MyApplication.getInstance().getUid())) {
-                return memberList.size() > 8 ? 10 : memberList.size() + 2;
+                return uiMemberList.size() > 8 ? 10 : uiMemberList.size() + 2;
             } else {
-                return memberList.size() > 9 ? 10 : memberList.size() + 1;
+                return uiMemberList.size() > 9 ? 10 : uiMemberList.size() + 1;
             }
         }
 
@@ -330,7 +336,7 @@ public class ChannelInfoActivity extends BaseActivity {
                 userName = getString(R.string.add);
 
             } else {
-                String uid = memberList.get(position);
+                String uid = uiMemberList.get(position);
                 userName = ContactUserCacheUtils.getUserName(uid);
                 userPhotoUrl = APIUri.getUserIconUrl(MyApplication.getInstance(),uid);
             }
@@ -390,13 +396,13 @@ public class ChannelInfoActivity extends BaseActivity {
      */
     private void filterMemberData() {
         //查三十人，如果不满三十人则查实际人数保证查到的人都是存在的群成员
-        List<ContactUser> contactUserList = ContactUserCacheUtils.getContactUserListByIdListOrderBy(memberList,30);
+        List<ContactUser> contactUserList = ContactUserCacheUtils.getContactUserListByIdListOrderBy(memberList,9);
         ArrayList<String> contactUserIdList = new ArrayList<>();
         for (int i = 0; i < contactUserList.size(); i++) {
             contactUserIdList.add(contactUserList.get(i).getId());
         }
-        memberList.clear();
-        memberList.addAll(contactUserIdList);
+        uiMemberList.clear();
+        uiMemberList.addAll(contactUserIdList);
     }
 
     private class WebService extends APIInterfaceInstance {
@@ -467,6 +473,8 @@ public class ChannelInfoActivity extends BaseActivity {
             memberList = channelGroup.getMemberList();
             channelMemberNumText.setText(getString(R.string.all_group_member) + "（"
                     + memberList.size() + "）");
+            filterMemberData();
+            displayUI();
             adapter.notifyDataSetChanged();
         }
 
