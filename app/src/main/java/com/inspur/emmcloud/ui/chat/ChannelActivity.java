@@ -38,6 +38,7 @@ import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
@@ -58,10 +59,13 @@ import com.inspur.emmcloud.widget.ECMChatInputMenu;
 import com.inspur.emmcloud.widget.ECMChatInputMenu.ChatInputMenuListener;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.RecycleViewForSizeChange;
+import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
 import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
 import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
 import com.inspur.imp.plugin.camera.mycamera.MyCameraActivity;
 import com.inspur.imp.util.compressor.Compressor;
+import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
+import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -107,7 +111,7 @@ public class ChannelActivity extends MediaPlayBaseActivity {
     private ImageView robotPhotoImg;
 
     private LoadingDialog loadingDlg;
-    private String robotUid = "BOT6006";
+    private String robotUid = "BOT6004";
     private String cid;
     private Channel channel;
     private List<UIMessage> uiMessageList = new ArrayList<>();
@@ -146,6 +150,8 @@ public class ChannelActivity extends MediaPlayBaseActivity {
             public void getChannelInfoSuccess(Channel channel) {
                 ChannelActivity.this.channel = channel;
                 isSpecialUser = channel.getType().equals("SERVICE") && channel.getTitle().contains(robotUid);
+                LogUtils.jasonDebug("channel.getTitle()=-" + channel.getTitle());
+                LogUtils.jasonDebug("isSpecialUser=-" + isSpecialUser);
                 if (getIntent().hasExtra("get_new_msg") && NetUtils.isNetworkConnected(getApplicationContext(), false)) {//通过scheme打开的频道
                     getNewMsgOfChannel();
                 } else {
@@ -186,10 +192,10 @@ public class ChannelActivity extends MediaPlayBaseActivity {
                             MyApplication.getInstance(), cid, uiMessageList.get(0).getCreationDate(),
                             20);
                     uiMessageList.addAll(0, UIMessage.MessageList2UIMessageList(historyMsgList));
-                    swipeRefreshLayout.setRefreshing(false);
                     adapter.setMessageList(uiMessageList);
                     adapter.notifyItemRangeInserted(0, historyMsgList.size());
-                    msgListView.MoveToPosition(historyMsgList.size() - 1);
+                    msgListView.scrollToPosition(historyMsgList.size() - 1);
+                    swipeRefreshLayout.setRefreshing(false);
                 } else {
                     getNewsMsg();
                 }
@@ -220,7 +226,7 @@ public class ChannelActivity extends MediaPlayBaseActivity {
      */
     private void initChatInputMenu() {
         chatInputMenu.setSpecialUser(isSpecialUser);
-        chatInputMenu.setOtherLayoutView(swipeRefreshLayout,msgListView);
+        chatInputMenu.setOtherLayoutView(swipeRefreshLayout, msgListView);
         if (channel.getType().equals("GROUP")) {
             chatInputMenu.setCanMentions(true, cid);
         } else {
@@ -231,16 +237,16 @@ public class ChannelActivity extends MediaPlayBaseActivity {
             @Override
             public void onSendMsg(String content, List<String> mentionsUidList, List<String> urlList, Map<String, String> mentionsMap) {
                 // TODO Auto-generated method stub
-                sendTextMessage(content, false, mentionsMap);
+                sendMessageWithText(content, false, mentionsMap);
             }
 
             @Override
             public void onSendVoiceRecordMsg(float seconds, String filePath) {
-                int duration = (int)seconds;
-                if (duration == 0){
+                int duration = (int) seconds;
+                if (duration == 0) {
                     duration = 1;
                 }
-                uploadResFileAndSendMessage(filePath,Message.MESSAGE_TYPE_MEDIA_VOICE,duration);
+                combinAndSendMessageWithFile(filePath, Message.MESSAGE_TYPE_MEDIA_VOICE, duration);
             }
 
             @Override
@@ -290,7 +296,7 @@ public class ChannelActivity extends MediaPlayBaseActivity {
                 public void onReceive(Context context, Intent intent) {
                     String content = intent.getStringExtra("content");
                     if (!StringUtils.isBlank(content)) {
-                        sendTextMessage(content, true, null);
+                        sendMessageWithText(content, true, null);
                     }
                 }
             };
@@ -309,56 +315,136 @@ public class ChannelActivity extends MediaPlayBaseActivity {
         uiMessageList = UIMessage.MessageList2UIMessageList(cacheMessageList);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         msgListView.setLayoutManager(linearLayoutManager);
-        if (adapter == null){
+        if (adapter == null) {
             adapter = new ChannelMessageAdapter(ChannelActivity.this, channel.getType(), chatInputMenu);
             adapter.setItemClickListener(new ChannelMessageAdapter.MyItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {
-                    Message message = uiMessageList.get(position).getMessage();
+                    UIMessage uiMessage = uiMessageList.get(position);
+                    int messageSendStatus = uiMessage.getSendStatus();
                     //当消息处于发送中状态时无法点击
-                    if (uiMessageList.get(position).getSendStatus() != 1) {
-                        return;
+                    if (messageSendStatus == 1) {
+                        openMessage(uiMessage.getMessage());
                     }
-                    String msgType = message.getType();
-                    Bundle bundle = new Bundle();
-                    switch (msgType) {
-                        case "attachment/card":
-                            String uid = message.getMsgContentAttachmentCard().getUid();
-                            bundle.putString("uid", uid);
-                            IntentUtils.startActivity(ChannelActivity.this,
-                                    UserInfoActivity.class, bundle);
-                            break;
-                        case "file/regular-file":
-                        case "media/image":
-                            bundle.putString("mid", message.getId());
-                            bundle.putString("cid", message.getChannel());
-                            IntentUtils.startActivity(ChannelActivity.this,
-                                    ChannelMessageDetailActivity.class, bundle);
-                            break;
-                        case "comment/text-plain":
-                            String mid = message.getMsgContentComment().getMessage();
-                            bundle.putString("mid", mid);
-                            bundle.putString("cid", message.getChannel());
-                            IntentUtils.startActivity(ChannelActivity.this,
-                                    ChannelMessageDetailActivity.class, bundle);
-                            break;
-                        case "extended/links":
-                            String url = message.getMsgContentExtendedLinks().getUrl();
-                            UriUtils.openUrl(ChannelActivity.this, url);
-                            break;
-                        default:
-                            break;
+                }
+
+                @Override
+                public void onMessageResend(UIMessage uiMessage) {
+                    if (uiMessage.getSendStatus() == 2) {
+                        showResendMessageDlg(uiMessage);
                     }
                 }
             });
             adapter.setMessageList(uiMessageList);
             msgListView.setAdapter(adapter);
-        }else {
+        } else {
             adapter.setChannelData(channel.getType(), chatInputMenu);
             adapter.setMessageList(uiMessageList);
             adapter.notifyDataSetChanged();
         }
         msgListView.MoveToPosition(uiMessageList.size() - 1);
+    }
+
+    /**
+     * 弹出消息重新发送提示框
+     *
+     * @param uiMessage
+     */
+    private void showResendMessageDlg(final UIMessage uiMessage) {
+        new MyQMUIDialog.MessageDialogBuilder(ChannelActivity.this)
+                .setMessage(R.string.sure_to_resend_message)
+                .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
+                    @Override
+                    public void onClick(QMUIDialog dialog, int index) {
+                        dialog.dismiss();
+                    }
+                })
+                .addAction(R.string.ok, new QMUIDialogAction.ActionListener() {
+                    @Override
+                    public void onClick(QMUIDialog dialog, int index) {
+                        dialog.dismiss();
+                        resendMessage(uiMessage);
+                    }
+                })
+                .show();
+    }
+
+
+    /**
+     * 消息重新发送
+     *
+     * @param uiMessage
+     */
+    private void resendMessage(UIMessage uiMessage) {
+        if (NetUtils.isNetworkConnected(getApplicationContext())) {
+            // TODO Auto-generated method stub
+            Message message = uiMessage.getMessage();
+            uiMessage.setSendStatus(0);
+            int position = uiMessageList.indexOf(uiMessage);
+            if (position != uiMessageList.size() - 1) {
+                uiMessageList.remove(position);
+                uiMessageList.add(uiMessage);
+                adapter.setMessageList(uiMessageList);
+                adapter.notifyDataSetChanged();
+                msgListView.MoveToPosition(uiMessageList.size() - 1);
+            } else {
+                adapter.setMessageList(uiMessageList);
+                adapter.notifyItemChanged(uiMessageList.size() - 1);
+            }
+            switch (message.getType()) {
+                case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
+                case Message.MESSAGE_TYPE_MEDIA_IMAGE:
+                case Message.MESSAGE_TYPE_MEDIA_VOICE:
+                    sendMessageWithFile(message);
+                    break;
+                case Message.MESSAGE_TYPE_TEXT_PLAIN:
+                    WSAPIService.getInstance().sendChatTextPlainMsg(message);
+                    break;
+                case Message.MESSAGE_TYPE_EXTENDED_LINKS:
+                    WSAPIService.getInstance().sendChatExtendedLinksMsg(message);
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    /**
+     * 打开消息
+     *
+     * @param message
+     */
+    private void openMessage(Message message) {
+        String msgType = message.getType();
+        Bundle bundle = new Bundle();
+        switch (msgType) {
+            case "attachment/card":
+                String uid = message.getMsgContentAttachmentCard().getUid();
+                bundle.putString("uid", uid);
+                IntentUtils.startActivity(ChannelActivity.this,
+                        UserInfoActivity.class, bundle);
+                break;
+            case "file/regular-file":
+            case "media/image":
+                bundle.putString("mid", message.getId());
+                bundle.putString("cid", message.getChannel());
+                IntentUtils.startActivity(ChannelActivity.this,
+                        ChannelMessageDetailActivity.class, bundle);
+                break;
+            case "comment/text-plain":
+                String mid = message.getMsgContentComment().getMessage();
+                bundle.putString("mid", mid);
+                bundle.putString("cid", message.getChannel());
+                IntentUtils.startActivity(ChannelActivity.this,
+                        ChannelMessageDetailActivity.class, bundle);
+                break;
+            case "extended/links":
+                String url = message.getMsgContentExtendedLinks().getUrl();
+                UriUtils.openUrl(ChannelActivity.this, url);
+                break;
+            default:
+                break;
+        }
     }
 
     /**
@@ -372,16 +458,16 @@ public class ChannelActivity extends MediaPlayBaseActivity {
                 case "file":
                     List<String> pathList = getIntent().getStringArrayListExtra("share_paths");
                     for (String url : pathList) {
-                        uploadResFileAndSendMessage(url, type.equals("file")?Message.MESSAGE_TYPE_FILE_REGULAR_FILE:Message.MESSAGE_TYPE_MEDIA_IMAGE);
+                        combinAndSendMessageWithFile(url, type.equals("file") ? Message.MESSAGE_TYPE_FILE_REGULAR_FILE : Message.MESSAGE_TYPE_MEDIA_IMAGE);
                     }
                     break;
                 case "link":
                     String content = getIntent().getExtras().getString(Constant.SHARE_LINK);
-                    if(!StringUtils.isBlank(content)){
-                        Message message = CommunicationUtils.combinLocalExtendedLinksMessage(cid, JSONUtils.getString(content,"poster",""),JSONUtils.getString(content,"title","")
-                                , JSONUtils.getString(content,"digest",""), JSONUtils.getString(content,"url",""));
-                        WSAPIService.getInstance().sendChatExtendedLinksMsg(cid, message);
-                        addLocalMessage(message,0);
+                    if (!StringUtils.isBlank(content)) {
+                        Message message = CommunicationUtils.combinLocalExtendedLinksMessage(cid, JSONUtils.getString(content, "poster", ""), JSONUtils.getString(content, "title", "")
+                                , JSONUtils.getString(content, "digest", ""), JSONUtils.getString(content, "url", ""));
+                        WSAPIService.getInstance().sendChatExtendedLinksMsg(message);
+                        addLocalMessage(message, 0);
                     }
                     break;
                 default:
@@ -406,22 +492,22 @@ public class ChannelActivity extends MediaPlayBaseActivity {
                     ToastUtils.show(MyApplication.getInstance(),
                             getString(R.string.not_support_upload));
                 } else {
-                    uploadResFileAndSendMessage(filePath, Message.MESSAGE_TYPE_FILE_REGULAR_FILE);
+                    combinAndSendMessageWithFile(filePath, Message.MESSAGE_TYPE_FILE_REGULAR_FILE);
                 }
                 //拍照返回
             } else if (requestCode == CAMERA_RESULT
-                   ) {
+                    ) {
                 String imgPath = data.getExtras().getString(MyCameraActivity.OUT_FILE_PATH);
                 try {
                     File file = new Compressor(ChannelActivity.this).setMaxHeight(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setMaxWidth(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setQuality(90).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
                             .compressToFile(new File(imgPath));
                     imgPath = file.getAbsolutePath();
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
-                uploadResFileAndSendMessage(imgPath, Message.MESSAGE_TYPE_MEDIA_IMAGE);
+                combinAndSendMessageWithFile(imgPath, Message.MESSAGE_TYPE_MEDIA_IMAGE);
                 //拍照后图片编辑返回
-            }else if (requestCode == MENTIONS_RESULT) {
+            } else if (requestCode == MENTIONS_RESULT) {
                 // @返回
                 String result = data.getStringExtra("searchResult");
                 String uid = JSONUtils.getString(result, "uid", null);
@@ -436,47 +522,69 @@ public class ChannelActivity extends MediaPlayBaseActivity {
                     ArrayList<ImageItem> imageItemList = (ArrayList<ImageItem>) data
                             .getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
                     for (int i = 0; i < imageItemList.size(); i++) {
-                        String imgPath =imageItemList.get(i).path;
+                        String imgPath = imageItemList.get(i).path;
                         try {
                             File file = new Compressor(ChannelActivity.this).setMaxHeight(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setMaxWidth(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setQuality(90).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
                                     .compressToFile(new File(imgPath));
                             imgPath = file.getAbsolutePath();
-                        }catch (Exception e){
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
-                        uploadResFileAndSendMessage(imgPath, Message.MESSAGE_TYPE_MEDIA_IMAGE);
+                        combinAndSendMessageWithFile(imgPath, Message.MESSAGE_TYPE_MEDIA_IMAGE);
                     }
                 }
         }
     }
 
-    private void uploadResFileAndSendMessage(String filePath, String messageType){
-        uploadResFileAndSendMessage(filePath, messageType,0);
+    private void combinAndSendMessageWithFile(String filePath, String messageType) {
+        combinAndSendMessageWithFile(filePath, messageType, 0);
     }
-    private void uploadResFileAndSendMessage(String filePath, String messageType,int duration) {
+
+    private void combinAndSendMessageWithFile(String filePath, String messageType, int duration) {
         File file = new File(filePath);
         if (!file.exists()) {
             ToastUtils.show(MyApplication.getInstance(), R.string.file_not_exist);
             return;
         }
-        Message localMessage = null;
-        switch (messageType){
+        Message fakeMessage = null;
+        switch (messageType) {
             case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
-                localMessage = CommunicationUtils.combinLocalRegularFileMessage(cid, filePath);
+                fakeMessage = CommunicationUtils.combinLocalRegularFileMessage(cid, filePath);
                 break;
             case Message.MESSAGE_TYPE_MEDIA_IMAGE:
-                localMessage = CommunicationUtils.combinLocalMediaImageMessage(cid, filePath);
+                fakeMessage = CommunicationUtils.combinLocalMediaImageMessage(cid, filePath);
                 break;
             case Message.MESSAGE_TYPE_MEDIA_VOICE:
-                localMessage = CommunicationUtils.combinLocalMediaVoiceMessage(cid, filePath,duration);
+                fakeMessage = CommunicationUtils.combinLocalMediaVoiceMessage(cid, filePath, duration);
                 break;
         }
-        final String fakeMessageId = localMessage.getId();
+        if (fakeMessage != null) {
+            sendMessageWithFile(fakeMessage);
+            addLocalMessage(fakeMessage, 0);
+        }
+    }
+
+    /**
+     * 发送带有附件类型的消息
+     *
+     * @param fakeMessage
+     */
+    private void sendMessageWithFile(final Message fakeMessage) {
         MessageRecourceUploadUtils messageRecourceUploadUtils = new MessageRecourceUploadUtils(MyApplication.getInstance(), cid);
         messageRecourceUploadUtils.setProgressCallback(new ProgressCallback() {
             @Override
             public void onSuccess(VolumeFile volumeFile) {
-
+                switch (fakeMessage.getType()) {
+                    case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
+                        WSAPIService.getInstance().sendChatRegularFileMsg(cid, fakeMessage.getId(), volumeFile);
+                        break;
+                    case Message.MESSAGE_TYPE_MEDIA_IMAGE:
+                        WSAPIService.getInstance().sendChatMediaImageMsg(volumeFile, fakeMessage);
+                        break;
+                    case Message.MESSAGE_TYPE_MEDIA_VOICE:
+                        WSAPIService.getInstance().sendChatMediaVoiceMsg(fakeMessage, volumeFile);
+                        break;
+                }
             }
 
             @Override
@@ -486,11 +594,10 @@ public class ChannelActivity extends MediaPlayBaseActivity {
 
             @Override
             public void onFail() {
-                setMessageSendFailStatus(fakeMessageId);
+                setMessageSendFailStatus(fakeMessage.getId());
             }
         });
-        messageRecourceUploadUtils.uploadResFile(file, localMessage);
-        addLocalMessage(localMessage, 0);
+        messageRecourceUploadUtils.uploadResFile(fakeMessage);
     }
 
     /**
@@ -520,7 +627,8 @@ public class ChannelActivity extends MediaPlayBaseActivity {
                 String content = eventMessage.getContent();
                 JSONObject contentobj = JSONUtils.getJSONObject(content);
                 Message receivedWSMessage = new Message(contentobj);
-                if (cid.equals(receivedWSMessage.getChannel())) {
+                //判断消息是否是当前频道并验重处理
+                if (cid.equals(receivedWSMessage.getChannel()) && !uiMessageList.contains(new UIMessage(receivedWSMessage.getId()))) {
                     MessageReadCreationDateCacheUtils.saveMessageReadCreationDate(MyApplication.getInstance(), cid, receivedWSMessage.getCreationDate());
                     int size = uiMessageList.size();
                     int index = -1;
@@ -587,7 +695,7 @@ public class ChannelActivity extends MediaPlayBaseActivity {
                 if (adapter != null) {
                     if (historyMessageList.size() > 0) {
                         Long targetMessageCreationDate = null;
-                        if (uiMessageList.size()>0){
+                        if (uiMessageList.size() > 0) {
                             targetMessageCreationDate = uiMessageList.get(0).getCreationDate();
                         }
                         MessageCacheUtil.saveMessageList(MyApplication.getInstance(), historyMessageList, targetMessageCreationDate);
@@ -595,7 +703,7 @@ public class ChannelActivity extends MediaPlayBaseActivity {
                         uiMessageList.addAll(0, historyUIMessageList);
                         adapter.setMessageList(uiMessageList);
                         adapter.notifyItemRangeInserted(0, historyMessageList.size());
-                        msgListView.MoveToPosition(historyMessageList.size() - 1);
+                        msgListView.scrollToPosition(historyMessageList.size() - 1);
                     }
                 } else {
                     if (historyMessageList.size() > 0) {
@@ -630,7 +738,7 @@ public class ChannelActivity extends MediaPlayBaseActivity {
                     while (it.hasNext()) {
                         Message offlineMessage = it.next();
                         UIMessage uiMessage = new UIMessage(offlineMessage.getId());
-                        if (uiMessageList.contains(uiMessage)){
+                        if (uiMessageList.contains(uiMessage)) {
                             it.remove();
                         }
                     }
@@ -692,7 +800,7 @@ public class ChannelActivity extends MediaPlayBaseActivity {
             IntentUtils.startActivity(ChannelActivity.this,
                     RobotInfoActivity.class, bundle);
         } else {
-            String uid = DirectChannelUtils.getDirctChannelOtherUid(MyApplication.getInstance(),channel.getTitle());
+            String uid = DirectChannelUtils.getDirctChannelOtherUid(MyApplication.getInstance(), channel.getTitle());
             bundle.putString("uid", uid);
             IntentUtils.startActivity(ChannelActivity.this,
                     UserInfoActivity.class, bundle);
@@ -700,9 +808,9 @@ public class ChannelActivity extends MediaPlayBaseActivity {
     }
 
     /**
-     * 点击发送按钮后发送消息的逻辑
+     * 发送文本消息
      */
-    private void sendTextMessage(String content, boolean isActionMsg, Map<String, String> mentionsMap) {
+    private void sendMessageWithText(String content, boolean isActionMsg, Map<String, String> mentionsMap) {
         Message localMessage = CommunicationUtils.combinLocalTextPlainMessage(content, cid, mentionsMap);
         //当在机器人频道时输入小于4个汉字时先进行通讯录查找，查找到返回通讯路卡片
         if (isSpecialUser && !isActionMsg && content.length() < 4 && StringUtils.isChinese(content)) {
@@ -715,7 +823,7 @@ public class ChannelActivity extends MediaPlayBaseActivity {
             }
         }
         addLocalMessage(localMessage, 0);
-        WSAPIService.getInstance().sendChatTextPlainMsg(content, cid, mentionsMap, localMessage.getId());
+        WSAPIService.getInstance().sendChatTextPlainMsg(localMessage);
     }
 
 
@@ -749,7 +857,7 @@ public class ChannelActivity extends MediaPlayBaseActivity {
         if (fakeUIMessageIndex != -1) {
             uiMessageList.get(fakeUIMessageIndex).setSendStatus(2);
             adapter.setMessageList(uiMessageList);
-            adapter.notifyDataSetChanged();
+            adapter.notifyItemChanged(fakeUIMessageIndex);
         }
     }
 

@@ -6,9 +6,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
-import android.view.animation.LinearInterpolator;
-import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -33,6 +30,7 @@ import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.widget.ECMChatInputMenu;
+import com.qmuiteam.qmui.widget.QMUILoadingView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -100,12 +98,12 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         private MyItemClickListener mListener;
         public RelativeLayout cardLayout;
         public TextView senderNameText;
-        public ImageView senderPhotoImg;
-        public ImageView refreshingImg;
-        public View cardCoverView;
+        public ImageView senderPhotoImgLeft;
+        public ImageView senderPhotoImgRight;
+        private RelativeLayout sendStatusLayout;
+        private ImageView sendFailImg;
+        private QMUILoadingView sendingLoadingView;
         public TextView sendTimeText;
-        public TextView newsCommentText;
-        public View senderPhotoRightView;
         public RelativeLayout cardParentLayout;
 
         public ViewHolder(View view, MyItemClickListener myItemClickListener) {
@@ -114,18 +112,18 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
             this.mListener = myItemClickListener;
             itemView.setOnClickListener(this);
             cardLayout = (RelativeLayout) view
-                    .findViewById(R.id.card_layout);
+                    .findViewById(R.id.bll_card);
             senderNameText = (TextView) view
                     .findViewById(R.id.sender_name_text);
-            senderPhotoImg = (ImageView) view
-                    .findViewById(R.id.sender_photo_img);
-            refreshingImg = (ImageView) view.findViewById(R.id.refreshing_img);
-            cardCoverView = view.findViewById(R.id.card_cover_view);
+            senderPhotoImgLeft = (ImageView) view
+                    .findViewById(R.id.iv_sender_photo_left);
+            senderPhotoImgRight = (ImageView) view
+                    .findViewById(R.id.iv_sender_photo_right);
+            sendStatusLayout = (RelativeLayout) view.findViewById(R.id.rl_send_status);
+            sendFailImg = (ImageView) view.findViewById(R.id.iv_send_fail);
+            sendingLoadingView = (QMUILoadingView) view.findViewById(R.id.qlv_sending);
             sendTimeText = (TextView) view
                     .findViewById(R.id.send_time_text);
-            newsCommentText = (TextView) view
-                    .findViewById(R.id.news_comment_text);
-            senderPhotoRightView = view.findViewById(R.id.sender_photo_right_view);
             cardParentLayout = (RelativeLayout) view.findViewById(R.id.card_parent_layout);
         }
 
@@ -141,6 +139,13 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
             }
 
         }
+
+        public void onMessageResendClick(UIMessage uiMessage){
+            if (mListener != null) {
+                mListener.onMessageResend(uiMessage);
+            }
+
+        }
     }
 
 
@@ -150,26 +155,25 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
      * @param holder
      * @param msg
      */
-    private void showRefreshingImg(ViewHolder holder, UIMessage UIMessage) {
-        if (UIMessage.getSendStatus() == 0) {
-            holder.refreshingImg.setImageResource(R.drawable.pull_loading);
-            RotateAnimation refreshingAnimation = (RotateAnimation) AnimationUtils.loadAnimation(
-                    context, R.anim.pull_rotating);
-            // 添加匀速转动动画
-            LinearInterpolator lir = new LinearInterpolator();
-            refreshingAnimation.setInterpolator(lir);
-            holder.refreshingImg.setVisibility(View.VISIBLE);
-            holder.refreshingImg.startAnimation(refreshingAnimation);
-        } else if (UIMessage.getSendStatus() == 2) {
-            holder.refreshingImg.clearAnimation();
-            holder.refreshingImg.setVisibility(View.VISIBLE);
-            holder.refreshingImg.setImageResource(R.drawable.ic_chat_msg_send_fail);
+    private void showRefreshingImg(final ViewHolder holder, final UIMessage uiMessage) {
+        if (uiMessage.getSendStatus() == 0) {
+            holder.sendStatusLayout.setVisibility(View.VISIBLE);
+            holder.sendFailImg.setVisibility(View.GONE);
+            holder.sendingLoadingView.setVisibility(View.VISIBLE);
+        } else if (uiMessage.getSendStatus() == 2) {
+            holder.sendStatusLayout.setVisibility(View.VISIBLE);
+            holder.sendFailImg.setVisibility(View.VISIBLE);
+            holder.sendingLoadingView.setVisibility(View.GONE);
         } else {
-            holder.refreshingImg.clearAnimation();
-            boolean isMyMsg = UIMessage.getMessage().getFromUser().equals(MyApplication.getInstance().getUid());
-            holder.refreshingImg.setVisibility(isMyMsg ? View.INVISIBLE : View.GONE);
+            boolean isMyMsg = uiMessage.getMessage().getFromUser().equals(MyApplication.getInstance().getUid());
+            holder.sendStatusLayout.setVisibility(isMyMsg ? View.INVISIBLE : View.GONE);
         }
-
+        holder.sendStatusLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                    holder.onMessageResendClick(uiMessage);
+            }
+        });
     }
 
     /**
@@ -181,11 +185,16 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
     private void showCardLayout(ViewHolder holder, final UIMessage uiMessage) {
         // TODO Auto-generated method stub
         Message message = uiMessage.getMessage();
-        holder.cardLayout.removeAllViewsInLayout();
-        holder.cardLayout.removeAllViews();
         boolean isMyMsg = message.getFromUser().equals(
                 MyApplication.getInstance().getUid());
-        holder.cardCoverView.setVisibility(View.GONE);
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) holder.cardParentLayout.getLayoutParams();
+        //此处实际执行params.removeRule();
+        params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 0);
+        params.addRule(RelativeLayout.ALIGN_LEFT, 0);
+        params.addRule(isMyMsg ? RelativeLayout.ALIGN_PARENT_RIGHT : RelativeLayout.ALIGN_LEFT);
+        holder.cardParentLayout.setLayoutParams(params);
+        holder.cardLayout.removeAllViewsInLayout();
+        holder.cardLayout.removeAllViews();
         View cardContentView;
         String type = message.getType();
         switch (type) {
@@ -200,7 +209,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
                 break;
             case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
                 cardContentView = DisplayRegularFileMsg.getView(context,
-                        message,uiMessage.getSendStatus());
+                        message,uiMessage.getSendStatus(),false);
                 break;
             case Message.MESSAGE_TYPE_EXTENDED_CONTACT_CARD:
                 cardContentView = DisplayAttachmentCardMsg.getView(context,
@@ -219,7 +228,8 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
                 cardContentView = DisplayExtendedLinksMsg.getView(context,message);
                 break;
             case Message.MESSAGE_TYPE_MEDIA_VOICE:
-                cardContentView = DisplayMediaVoiceMsg.getView(context,message);
+                cardContentView = DisplayMediaVoiceMsg.getView(context,
+                        message);
                 break;
             default:
                 cardContentView = DisplayResUnknownMsg.getView(context, isMyMsg);
@@ -228,15 +238,6 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
 
 
         holder.cardLayout.addView(cardContentView);
-//        holder.cardLayout.setBackgroundColor(context.getResources().getColor(
-//                isMyMsg ? R.color.bg_my_card : R.color.white));
-//        holder.cardCoverView.setBackgroundResource(isMyMsg ? R.drawable.ic_chat_msg_img_cover_arrow_right : R.drawable.ic_chat_msg_img_cover_arrow_left);
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) holder.cardParentLayout.getLayoutParams();
-        //此处实际执行params.removeRule();
-        params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 0);
-        params.addRule(RelativeLayout.ALIGN_LEFT, 0);
-        params.addRule(isMyMsg ? RelativeLayout.ALIGN_PARENT_RIGHT : RelativeLayout.ALIGN_LEFT);
-        holder.cardParentLayout.setLayoutParams(params);
     }
 
 
@@ -270,11 +271,10 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
      */
     private void showUserName(ViewHolder holder, UIMessage UIMessage) {
         // TODO Auto-generated method stub
-        boolean isMyMsg = UIMessage.getMessage().getFromUser().equals(MyApplication.getInstance().getUid());
-        if (channelType.equals("GROUP") && !isMyMsg) {
-            holder.senderNameText.setVisibility(View.VISIBLE);
+        if (channelType.equals("GROUP") && !UIMessage.getMessage().getFromUser().equals(
+                MyApplication.getInstance().getUid())){
             holder.senderNameText.setText(UIMessage.getSenderName());
-        } else {
+        }else {
             holder.senderNameText.setVisibility(View.GONE);
         }
     }
@@ -287,46 +287,43 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
     private void showUserPhoto(ViewHolder holder, final UIMessage UImessage) {
         // TODO Auto-generated method stub
         final String fromUser = UImessage.getMessage().getFromUser();
-        if (MyApplication.getInstance().getUid().equals(fromUser)) {
-            holder.senderPhotoImg.setVisibility(View.INVISIBLE);
-            holder.senderPhotoRightView.setVisibility(View.GONE);
-        } else {
-            holder.senderPhotoImg.setVisibility(View.VISIBLE);
-            holder.senderPhotoRightView.setVisibility(View.VISIBLE);
-            ImageDisplayUtils.getInstance().displayImage(holder.senderPhotoImg,
-                    UImessage.getSenderPhotoUrl(), R.drawable.icon_person_default);
-            holder.senderPhotoImg.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Bundle bundle = new Bundle();
-                    bundle.putString("uid", fromUser);
-                    if (fromUser.startsWith("BOT") || channelType.endsWith("SERVICE")) {
-                        bundle.putString("type", channelType);
-                        IntentUtils.startActivity(context,
-                                RobotInfoActivity.class, bundle);
-                    } else {
-                        IntentUtils.startActivity(context,
-                                UserInfoActivity.class, bundle);
-                    }
+        boolean isMyMsg = MyApplication.getInstance().getUid().equals(fromUser);
+        holder.senderPhotoImgRight.setVisibility(isMyMsg?View.VISIBLE:View.INVISIBLE);
+        holder.senderPhotoImgLeft.setVisibility(isMyMsg?View.GONE:View.VISIBLE);
+        ImageView senderPhotoImg = isMyMsg?holder.senderPhotoImgRight:holder.senderPhotoImgLeft;
+        ImageDisplayUtils.getInstance().displayImage(senderPhotoImg,
+                UImessage.getSenderPhotoUrl(), R.drawable.icon_person_default);
+        senderPhotoImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putString("uid", fromUser);
+                if (fromUser.startsWith("BOT") || channelType.endsWith("SERVICE")) {
+                    bundle.putString("type", channelType);
+                    IntentUtils.startActivity(context,
+                            RobotInfoActivity.class, bundle);
+                } else {
+                    IntentUtils.startActivity(context,
+                            UserInfoActivity.class, bundle);
                 }
-            });
-            holder.senderPhotoImg.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    if (channelType.equals("GROUP")) {
-                        chatInputMenu.addMentions(fromUser, UImessage.getSenderName(), false);
-                    }
-                    return true;
+            }
+        });
+        senderPhotoImg.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if (channelType.equals("GROUP")) {
+                    chatInputMenu.addMentions(fromUser, UImessage.getSenderName(), false);
                 }
-            });
-
+                return true;
+            }
+        });
         }
-    }
 
     /**
      * 创建一个回调接口
      */
     public interface MyItemClickListener {
         void onItemClick(View view, int position);
+        void onMessageResend(UIMessage uiMessage);
     }
 }

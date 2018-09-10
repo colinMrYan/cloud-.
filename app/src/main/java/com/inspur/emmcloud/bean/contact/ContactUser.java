@@ -37,8 +37,10 @@ public class ContactUser {
     private int hasHead = 0;
     @Column(name = "sortOrder")
     private int sortOrder= 0;
-    @Column(name = "employeeNum")
-    private String employeeNum="";
+    @Column(name = "tel")
+    private String tel="";
+    @Column(name = "office")
+    private String office="";
     @Column(name = "lastQueryTime")
     private String lastQueryTime = "";
     public ContactUser(){
@@ -59,11 +61,12 @@ public class ContactUser {
         this.email = JSONUtils.getString(object,"email","");
         this.hasHead =JSONUtils.getInt(object,"has_head",0);
         this.sortOrder = JSONUtils.getInt(object,"sort_order",0);
-        this.employeeNum = JSONUtils.getString(object,"emp_no","");
+        this.office = JSONUtils.getString(object,"office","");
+        this.tel = JSONUtils.getString(object,"tel","");
         this.lastQueryTime = lastQueryTime;
     }
 
-    public ContactUser(String id, String name, String nameGlobal, String pinyin, String parentId, String mobile, String email, int hasHead, int sortOrder,String lastQueryTime) {
+    public ContactUser(String id, String name, String nameGlobal, String pinyin, String parentId, String mobile, String email, int hasHead, int sortOrder,String lastQueryTime,String tel,String office) {
         this.id = id;
         this.name = name;
         this.nameGlobal = nameGlobal;
@@ -73,6 +76,8 @@ public class ContactUser {
         this.email = email;
         this.hasHead = hasHead;
         this.sortOrder = sortOrder;
+        this.tel = tel;
+        this.office = office;
         this.lastQueryTime =lastQueryTime;
     }
 
@@ -82,7 +87,7 @@ public class ContactUser {
             int size = userList.size();
             for (int i=0;i<size;i++){
                 ContactProtoBuf.user user = userList.get(i);
-                ContactUser contactUser = new ContactUser(user.getId(),user.getRealName(),user.getNameGlobal(),user.getPinyin(),user.getParentId(),user.getMobile(),user.getEmail(),user.getHasHead(),user.getSortOrder(),lastQueryTime+"");
+                ContactUser contactUser = new ContactUser(user.getId(),user.getRealName(),user.getNameGlobal(),user.getPinyin(),user.getParentId(),user.getMobile(),user.getEmail(),user.getHasHead(),user.getSortOrder(),lastQueryTime+"",user.getTel(),user.getOffice());
                 contactUserList.add(contactUser);
             }
         }
@@ -166,16 +171,24 @@ public class ContactUser {
         return lastQueryTime;
     }
 
-    public String getEmployeeNum() {
-        return employeeNum;
-    }
-
-    public void setEmployeeNum(String employeeNum) {
-        this.employeeNum = employeeNum;
-    }
-
     public void setLastQueryTime(String lastQueryTime) {
         this.lastQueryTime = lastQueryTime;
+    }
+
+    public String getTel() {
+        return tel;
+    }
+
+    public void setTel(String tel) {
+        this.tel = tel;
+    }
+
+    public String getOffice() {
+        return office;
+    }
+
+    public void setOffice(String office) {
+        this.office = office;
     }
 
     public JSONObject contact2JSONObject(Context context) {

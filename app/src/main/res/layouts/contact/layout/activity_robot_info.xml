@@ -34,7 +34,7 @@
         </RelativeLayout>
 
         <com.inspur.emmcloud.widget.CircleTextImageView
-            android:id="@+id/photo_img"
+            android:id="@+id/img_photo"
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_below="@id/back_layout"
@@ -43,10 +43,10 @@
             android:src="@drawable/icon_photo_default" />
 
         <TextView
-            android:id="@+id/name_text"
+            android:id="@+id/tv_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/photo_img"
+            android:layout_below="@id/img_photo"
             android:layout_centerHorizontal="true"
             android:layout_marginRight="6dp"
             android:layout_marginTop="10dp"

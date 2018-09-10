@@ -38,7 +38,7 @@ public class DbCacheUtils {
                 .setDbName("emm.db")
                 // 不设置dbDir时, 默认存储在app的私有目录.
                 .setDbDir(new File(dbCachePath))
-                .setDbVersion(11)
+                .setDbVersion(12)
                 .setAllowTransaction(true)
                 .setDbOpenListener(new DbManager.DbOpenListener() {
                     @Override
@@ -111,10 +111,10 @@ public class DbCacheUtils {
                                     db.execNonQuery("DROP TABLE Contact");
                                 }
                             }
-                            if (oldVersion<11){
+                            if (oldVersion<12){
                                 if (tableIsExist("ContactUser")) {
-                                    db.execNonQuery("alter table ContactUser add employeeNum text default ''");
-                                    db.execNonQuery("CREATE INDEX contactUserIndex ON ContactUser(id)");
+                                    db.execNonQuery("DROP TABLE ContactUser");
+                                    ContactUserCacheUtils.setLastQueryTime(0);
                                 }
                             }
                         } catch (Exception e) {

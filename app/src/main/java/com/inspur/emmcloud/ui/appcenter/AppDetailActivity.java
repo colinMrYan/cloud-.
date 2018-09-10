@@ -80,7 +80,7 @@ public class AppDetailActivity extends BaseActivity {
             }
         });
         intrImgListView.setAdapter(appDetailImageAdapter);
-        ((TextView) findViewById(R.id.name_text)).setText(app.getAppName());
+        ((TextView) findViewById(R.id.tv_name)).setText(app.getAppName());
         ((TextView) findViewById(R.id.profile_text)).setText(app.getNote());
         if (!StringUtils.isBlank(app.getDescription())) {
             ((TextView) findViewById(R.id.intr_text)).setText(app

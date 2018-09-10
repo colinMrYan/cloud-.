@@ -17,7 +17,6 @@ import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.common.FileUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
@@ -57,7 +56,7 @@ public class VolumeFileDownloadActivtiy extends BaseActivity {
     @ViewInject(R.id.progress_text)
     private TextView progressText;
 
-    @ViewInject(R.id.file_name_text)
+    @ViewInject(R.id.tv_file_name)
     private TextView fileNameText;
 
     @ViewInject(R.id.file_type_img)

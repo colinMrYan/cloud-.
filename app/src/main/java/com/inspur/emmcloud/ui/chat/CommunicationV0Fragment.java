@@ -695,9 +695,9 @@ public class CommunicationV0Fragment extends Fragment {
                 - msgListView.getFirstVisiblePosition());
         if (childAt != null) {
             TextView channelTitleText = (TextView) childAt
-                    .findViewById(R.id.name_text);
+                    .findViewById(R.id.tv_name);
             TextView channelContentText = (TextView) childAt
-                    .findViewById(R.id.content_text);
+                    .findViewById(R.id.tv_content);
             TextView channelTimeText = (TextView) childAt
                     .findViewById(R.id.time_text);
             RelativeLayout channelNotReadCountLayout = (RelativeLayout) childAt
@@ -813,9 +813,9 @@ public class CommunicationV0Fragment extends Fragment {
                 holder.channelPhotoImg = (CircleTextImageView) convertView
                         .findViewById(R.id.msg_img);
                 holder.channelTitleText = (TextView) convertView
-                        .findViewById(R.id.name_text);
+                        .findViewById(R.id.tv_name);
                 holder.channelContentText = (TextView) convertView
-                        .findViewById(R.id.content_text);
+                        .findViewById(R.id.tv_content);
                 holder.channelTimeText = (TextView) convertView
                         .findViewById(R.id.time_text);
                 holder.channelNotReadCountLayout = (RelativeLayout) convertView

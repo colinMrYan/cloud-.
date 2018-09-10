@@ -55,20 +55,22 @@ import com.inspur.emmcloud.util.privates.CustomProtocol;
 import com.inspur.emmcloud.util.privates.DirectChannelUtils;
 import com.inspur.emmcloud.util.privates.GetPathFromUri4kitkat;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
-import com.inspur.emmcloud.util.privates.MsgRecourceUploadUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MsgCacheUtil;
 import com.inspur.emmcloud.util.privates.cache.MsgReadCreationDateCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
-import com.inspur.emmcloud.widget.ECMChatInputMenuV0.ChatInputMenuListener;
 import com.inspur.emmcloud.widget.ECMChatInputMenuV0;
+import com.inspur.emmcloud.widget.ECMChatInputMenuV0.ChatInputMenuListener;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.RecycleViewForSizeChange;
+import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
 import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
 import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
 import com.inspur.imp.plugin.camera.mycamera.MyCameraActivity;
 import com.inspur.imp.util.compressor.Compressor;
+import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
+import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -196,19 +198,21 @@ public class ChannelV0Activity extends BaseActivity {
                 case "image":
                 case "file":
                     List<String> pathList = getIntent().getStringArrayListExtra("share_paths");
-                    for (String url : pathList) {
-                        Msg msg = type.equals("file") ? MsgRecourceUploadUtils.uploadResFile(
-                                MyApplication.getInstance(), url, apiService) : MsgRecourceUploadUtils.uploadResImg(
-                                MyApplication.getInstance(), url, apiService);
-                        addLocalMessage(msg);
+                    for (String filePath : pathList) {
+                        if (type.equals("file")) {
+                            combinAndSendResFileMsg(filePath);
+                        } else {
+                            combinAndSendResImgMsg(filePath);
+                        }
                     }
                     break;
                 case "link":
                     String content = getIntent().getExtras().getString(Constant.SHARE_LINK);
                     String fakeId = System.currentTimeMillis() + "";
                     if (!StringUtils.isBlank(content)) {
+                        Msg fakeMsg = ConbineMsg.conbineCommonMsg( content, "res_link", fakeId);
                         sendMsg(content, "res_link", fakeId);
-                        addLocalMessage(ConbineMsg.conbineMsg(ChannelV0Activity.this, content, "", "res_link", fakeId));
+                        addLocalMessage(fakeMsg);
                     }
                     break;
                 default:
@@ -217,6 +221,7 @@ public class ChannelV0Activity extends BaseActivity {
 
         }
     }
+
 
 
     /**
@@ -233,10 +238,10 @@ public class ChannelV0Activity extends BaseActivity {
                             ChannelV0Activity.this, cid, msgList.get(0).getTime(),
                             15);
                     msgList.addAll(0, historyMsgList);
-                    swipeRefreshLayout.setRefreshing(false);
                     adapter.setMsgList(msgList);
                     adapter.notifyItemRangeInserted(0, historyMsgList.size());
                     msgListView.MoveToPosition(historyMsgList.size() - 1);
+                    swipeRefreshLayout.setRefreshing(false);
                 } else {
                     getNewsMsg();
                 }
@@ -365,62 +370,22 @@ public class ChannelV0Activity extends BaseActivity {
         if (adapter == null) {
             adapter = new ChannelMsgAdapter(ChannelV0Activity.this, apiService, channel.getType(), chatInputMenu);
             adapter.setItemClickListener(new ChannelMsgAdapter.MyItemClickListener() {
+
+                @Override
+                public void onMessageResend(Msg msg) {
+                    if (msg.getSendStatus() == 2){
+                        showResendMessageDlg(msg);
+                    }
+                }
+
                 @Override
                 public void onItemClick(View view, int position) {
                     Msg msg = msgList.get(position);
                     //当消息处于发送中状态时无法点击
-                    if (msg.getSendStatus() != 1) {
-                        return;
-                    }
-                    String msgType = msg.getType();
-                    Message message = null;
-                    if (Message.isMessage(msg)) {
-                        message = new Message(msg);
-                        msgType = message.getType();
+                    if (msg.getSendStatus() == 1) {
+                        openMsg(msg);
                     }
 
-                    String mid = "";
-                    Bundle bundle = new Bundle();
-                    switch (msgType) {
-                        case "attachment/card":
-                            String uid = message.getMsgContentAttachmentCard().getUid();
-                            bundle.putString("uid", uid);
-                            IntentUtils.startActivity(ChannelV0Activity.this,
-                                    UserInfoActivity.class, bundle);
-                            break;
-                        case "res_file":
-                            mid = msg.getMid();
-                            bundle.putString("mid", mid);
-                            bundle.putString("cid", msg.getCid());
-                            IntentUtils.startActivity(ChannelV0Activity.this,
-                                    ChannelMsgDetailActivity.class, bundle);
-                            break;
-                        case "comment":
-                        case "txt_comment":
-                            mid = msg.getCommentMid();
-                            bundle.putString("mid", mid);
-                            bundle.putString("cid", msg.getCid());
-                            IntentUtils.startActivity(ChannelV0Activity.this,
-                                    ChannelMsgDetailActivity.class, bundle);
-                            break;
-                        case "res_link":
-                            String msgBody = msg.getBody();
-                            String linkTitle = JSONUtils.getString(msgBody, "title", "");
-                            String linkDigest = JSONUtils.getString(msgBody, "digest", "");
-                            String linkUrl = JSONUtils.getString(msgBody, "url", "");
-                            String linkPoster = JSONUtils.getString(msgBody, "poster", "");
-                            GroupNews groupNews = new GroupNews();
-                            groupNews.setTitle(StringUtils.isBlank(linkTitle)?getString(R.string.share_default_title):linkTitle);
-                            groupNews.setDigest(linkDigest);
-                            groupNews.setUrl(linkUrl);
-                            groupNews.setPoster(linkPoster);
-                            bundle.putSerializable("groupNews", groupNews);
-                            IntentUtils.startActivity(ChannelV0Activity.this,
-                                    NewsWebDetailActivity.class, bundle);
-                            break;
-                        default:
-                            break;
-                    }
                 }
             });
             adapter.setMsgList(msgList);
@@ -439,6 +404,122 @@ public class ChannelV0Activity extends BaseActivity {
                 return false;
             }
         });
+    }
+
+    /**
+     * 弹出消息重新发送提示框
+     *
+     * @param uiMessage
+     */
+    private void showResendMessageDlg(final Msg msg) {
+        new MyQMUIDialog.MessageDialogBuilder(ChannelV0Activity.this)
+                .setMessage(R.string.sure_to_resend_message)
+                .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
+                    @Override
+                    public void onClick(QMUIDialog dialog, int index) {
+                        dialog.dismiss();
+                    }
+                })
+                .addAction(R.string.ok, new QMUIDialogAction.ActionListener() {
+                    @Override
+                    public void onClick(QMUIDialog dialog, int index) {
+                        dialog.dismiss();
+                        resendMessage(msg);
+                    }
+                })
+                .show();
+    }
+
+    /**
+     * 消息重新发送
+     *
+     * @param uiMessage
+     */
+    private void resendMessage(Msg msg) {
+        if (NetUtils.isNetworkConnected(getApplicationContext())) {
+            // TODO Auto-generated method stub
+            msg.setSendStatus(0);
+            int position = msgList.indexOf(msg);
+            if (position != msgList.size() - 1) {
+                msgList.remove(position);
+                msgList.add(msg);
+                adapter.setMsgList(msgList);
+                adapter.notifyDataSetChanged();
+                msgListView.MoveToPosition(msgList.size() - 1);
+            }else {
+                adapter.setMsgList(msgList);
+                adapter.notifyItemChanged(msgList.size() - 1);
+            }
+            switch (msg.getType()) {
+                case "res_image":
+                case "res_file":
+                    uploadResource(msg);
+                    break;
+                case "txt_rich":
+                case "res_link":
+                    sendMsg(msg.getBody(),msg.getType(),msg.getMid());
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+
+    /**
+     * 打开消息
+     * @param msg
+     */
+    private void openMsg(Msg msg){
+        String msgType = msg.getType();
+        Message message = null;
+        if (Message.isMessage(msg)) {
+            message = new Message(msg);
+            msgType = message.getType();
+        }
+
+        String mid = "";
+        Bundle bundle = new Bundle();
+        switch (msgType) {
+            case "attachment/card":
+                String uid = message.getMsgContentAttachmentCard().getUid();
+                bundle.putString("uid", uid);
+                IntentUtils.startActivity(ChannelV0Activity.this,
+                        UserInfoActivity.class, bundle);
+                break;
+            case "res_file":
+                mid = msg.getMid();
+                bundle.putString("mid", mid);
+                bundle.putString("cid", msg.getCid());
+                IntentUtils.startActivity(ChannelV0Activity.this,
+                        ChannelMsgDetailActivity.class, bundle);
+                break;
+            case "comment":
+            case "txt_comment":
+                mid = msg.getCommentMid();
+                bundle.putString("mid", mid);
+                bundle.putString("cid", msg.getCid());
+                IntentUtils.startActivity(ChannelV0Activity.this,
+                        ChannelMsgDetailActivity.class, bundle);
+                break;
+            case "res_link":
+                String msgBody = msg.getBody();
+                String linkTitle = JSONUtils.getString(msgBody, "title", "");
+                String linkDigest = JSONUtils.getString(msgBody, "digest", "");
+                String linkUrl = JSONUtils.getString(msgBody, "url", "");
+                String linkPoster = JSONUtils.getString(msgBody, "poster", "");
+                GroupNews groupNews = new GroupNews();
+                groupNews.setTitle(StringUtils.isBlank(linkTitle) ? getString(R.string.share_default_title) : linkTitle);
+                groupNews.setDigest(linkDigest);
+                groupNews.setUrl(linkUrl);
+                groupNews.setPoster(linkPoster);
+                bundle.putSerializable("groupNews", groupNews);
+                IntentUtils.startActivity(ChannelV0Activity.this,
+                        NewsWebDetailActivity.class, bundle);
+                break;
+            default:
+                break;
+        }
     }
 
 
@@ -464,9 +545,7 @@ public class ChannelV0Activity extends BaseActivity {
             if (requestCode == CHOOSE_FILE
                     && NetUtils.isNetworkConnected(getApplicationContext())) {
                 String filePath = GetPathFromUri4kitkat.getPathByUri(MyApplication.getInstance(), data.getData());
-                Msg localMsg = MsgRecourceUploadUtils.uploadResFile(
-                        ChannelV0Activity.this, filePath, apiService);
-                addLocalMessage(localMsg);
+                combinAndSendResFileMsg(filePath);
                 //拍照返回
             } else if (requestCode == CAMERA_RESULT) {
                 String imgPath = data.getExtras().getString(MyCameraActivity.OUT_FILE_PATH);
@@ -477,9 +556,7 @@ public class ChannelV0Activity extends BaseActivity {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                Msg localMsg = MsgRecourceUploadUtils.uploadResImg(
-                        ChannelV0Activity.this, imgPath, apiService);
-                addLocalMessage(localMsg);
+                combinAndSendResImgMsg(imgPath);
             } else if (requestCode == MENTIONS_RESULT) {
                 // @返回
                 String result = data.getStringExtra("searchResult");
@@ -503,13 +580,34 @@ public class ChannelV0Activity extends BaseActivity {
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                        Msg localMsg = MsgRecourceUploadUtils.uploadResImg(
-                                ChannelV0Activity.this, imgPath, apiService);
-                        addLocalMessage(localMsg);
+                        combinAndSendResImgMsg(imgPath);
                     }
                 }
         }
     }
+
+    private void combinAndSendResImgMsg(String filePath) {
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
+            Msg fakeMsg = ConbineMsg.conbineResImgMsg(filePath);
+            if (fakeMsg != null) {
+                addLocalMessage(fakeMsg);
+                uploadResource(fakeMsg);
+            }
+        }
+    }
+
+    private void combinAndSendResFileMsg(String filePath) {
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
+            Msg fakeMsg = ConbineMsg.conbineResFileMsg(filePath);
+            if (fakeMsg != null) {
+                addLocalMessage(fakeMsg);
+                uploadResource(fakeMsg);
+            }
+        }
+    }
+
+
+
 
     /**
      * 保存并显示把图片展示出来
@@ -707,7 +805,7 @@ public class ChannelV0Activity extends BaseActivity {
             IntentUtils.startActivity(ChannelV0Activity.this,
                     RobotInfoActivity.class, bundle);
         } else {
-            String uid = DirectChannelUtils.getDirctChannelOtherUid(MyApplication.getInstance(), channel.getTitle());
+            String uid = DirectChannelUtils.getDirctChannelOtherUid(MyApplication.getInstance(),channel.getTitle());
             bundle.putString("uid", uid);
             IntentUtils.startActivity(ChannelV0Activity.this,
                     UserInfoActivity.class, bundle);
@@ -730,8 +828,7 @@ public class ChannelV0Activity extends BaseActivity {
                     e.printStackTrace();
                 }
 
-                Msg localMsg = ConbineMsg.conbineMsg(ChannelV0Activity.this,
-                        sourceObj.toString(), "", "txt_rich", fakeMessageId);
+                Msg localMsg = ConbineMsg.conbineCommonMsg(sourceObj.toString(), "txt_rich", fakeMessageId);
                 addLocalMessage(localMsg, 1);
                 Message conbineReplyMessage = ConbineMsg.conbineReplyAttachmentCardMsg(contactUser, cid, robotUid, fakeMessageId);
                 Msg replyLocalMsg = ConbineMsg.conbineRobotMsg(ChannelV0Activity.this,
@@ -753,11 +850,9 @@ public class ChannelV0Activity extends BaseActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        Msg localMsg = ConbineMsg.conbineMsg(ChannelV0Activity.this,
-                richTextObj.toString(), "", "txt_rich", fakeMessageId);
+        Msg localMsg = ConbineMsg.conbineCommonMsg(richTextObj.toString(),"txt_rich", fakeMessageId);
         addLocalMessage(localMsg);
         sendMsg(richTextObj.toString(), "txt_rich", fakeMessageId);
-
     }
 
     /**
@@ -850,6 +945,18 @@ public class ChannelV0Activity extends BaseActivity {
     }
 
     /**
+     * 上传资源文件
+     * @param fakeMsg
+     * @param isResImgMsg
+     */
+    private void uploadResource(Msg fakeMsg) {
+        if (NetUtils.isNetworkConnected(getApplicationContext())) {
+            String filePath = JSONUtils.getString(fakeMsg.getBody(), "key", "");
+            apiService.uploadMsgResource(filePath, fakeMsg.getMid(), fakeMsg.getType().equals("res_image"));
+        }
+    }
+
+    /**
      * 发送消息
      *
      * @param content
@@ -929,7 +1036,6 @@ public class ChannelV0Activity extends BaseActivity {
         @Override
         public void returnNewMsgsSuccess(GetNewMsgsResult getNewMsgsResult) {
             if (swipeRefreshLayout.isRefreshing()) {
-                swipeRefreshLayout.setRefreshing(false);
                 final List<Msg> historyMsgList = getNewMsgsResult
                         .getNewMsgList(cid);
                 if (historyMsgList.size() > 0) {
@@ -938,8 +1044,9 @@ public class ChannelV0Activity extends BaseActivity {
                     msgList.addAll(0, historyMsgList);
                     adapter.setMsgList(msgList);
                     adapter.notifyItemRangeInserted(0, historyMsgList.size());
-                    msgListView.MoveToPosition(historyMsgList.size() - 1);
+                    msgListView.scrollToPosition(historyMsgList.size() - 1);
                 }
+                swipeRefreshLayout.setRefreshing(false);
             } else {
                 LoadingDialog.dimissDlg(loadingDlg);
                 List<Msg> msgList = getNewMsgsResult.getNewMsgList(cid);

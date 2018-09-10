@@ -6,9 +6,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
-import android.view.animation.LinearInterpolator;
-import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -19,7 +16,6 @@ import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.Msg;
-import com.inspur.emmcloud.ui.chat.ChannelMsgDetailActivity;
 import com.inspur.emmcloud.ui.chat.DisplayAttachmentCardMsg;
 import com.inspur.emmcloud.ui.chat.DisplayExtendedActionsMsg;
 import com.inspur.emmcloud.ui.chat.DisplayRegularFileMsg;
@@ -36,7 +32,9 @@ import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
+import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.widget.ECMChatInputMenuV0;
+import com.qmuiteam.qmui.widget.QMUILoadingView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,7 +63,7 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
         this.msgList.addAll(msgList);
     }
 
-    public void setChannelData(String channelType, ECMChatInputMenuV0 chatInputMenu){
+    public void setChannelData(String channelType, ECMChatInputMenuV0 chatInputMenu) {
         this.channelType = channelType;
         this.chatInputMenu = chatInputMenu;
     }
@@ -80,11 +78,11 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         final Msg msg = msgList.get(position);
-        showCardLayout(holder, msg);
         showUserName(holder, msg);
         showMsgSendTime(holder, msg, position);
         showUserPhoto(holder, msg);
         showRefreshingImg(holder, msg);
+        showCardLayout(holder, msg);
     }
 
     /**
@@ -106,12 +104,12 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
         private MyItemClickListener mListener;
         public RelativeLayout cardLayout;
         public TextView senderNameText;
-        public ImageView senderPhotoImg;
-        public ImageView refreshingImg;
-        public View cardCoverView;
+        public ImageView senderPhotoImgLeft;
+        public ImageView senderPhotoImgRight;
+        private RelativeLayout sendStatusLayout;
+        private ImageView sendFailImg;
+        private QMUILoadingView sendingLoadingView;
         public TextView sendTimeText;
-        public TextView newsCommentText;
-        public View senderPhotoRightView;
         public RelativeLayout cardParentLayout;
 
         public ViewHolder(View view, MyItemClickListener myItemClickListener) {
@@ -120,19 +118,19 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
             this.mListener = myItemClickListener;
             itemView.setOnClickListener(this);
             cardLayout = (RelativeLayout) view
-                    .findViewById(R.id.card_layout);
+                    .findViewById(R.id.bll_card);
             senderNameText = (TextView) view
                     .findViewById(R.id.sender_name_text);
-            senderPhotoImg = (ImageView) view
-                    .findViewById(R.id.sender_photo_img);
-            refreshingImg = (ImageView) view.findViewById(R.id.refreshing_img);
-            cardCoverView = view.findViewById(R.id.card_cover_view);
+            senderPhotoImgLeft = (ImageView) view
+                    .findViewById(R.id.iv_sender_photo_left);
+            senderPhotoImgRight = (ImageView) view
+                    .findViewById(R.id.iv_sender_photo_right);
+            sendStatusLayout = (RelativeLayout) view.findViewById(R.id.rl_send_status);
+            sendFailImg = (ImageView) view.findViewById(R.id.iv_send_fail);
+            sendingLoadingView = (QMUILoadingView) view.findViewById(R.id.qlv_sending);
             sendTimeText = (TextView) view
                     .findViewById(R.id.send_time_text);
-            newsCommentText = (TextView) view
-                    .findViewById(R.id.news_comment_text);
-            senderPhotoRightView = view.findViewById(R.id.sender_photo_right_view);
-            cardParentLayout =(RelativeLayout)view.findViewById(R.id.card_parent_layout);
+            cardParentLayout = (RelativeLayout) view.findViewById(R.id.card_parent_layout);
         }
 
         /**
@@ -145,6 +143,12 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
             if (mListener != null) {
                 mListener.onItemClick(v, getAdapterPosition());
             }
+        }
+
+        public void onMessageResendClick(Msg msg) {
+            if (mListener != null) {
+                mListener.onMessageResend(msg);
+            }
 
         }
     }
@@ -156,32 +160,31 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
      * @param holder
      * @param msg
      */
-    private void showRefreshingImg(ViewHolder holder, Msg msg) {
+    private void showRefreshingImg(final ViewHolder holder, final Msg msg) {
         if (msg.getSendStatus() == 0) {
-            holder.refreshingImg.setImageResource(R.drawable.pull_loading);
-            RotateAnimation refreshingAnimation = (RotateAnimation) AnimationUtils.loadAnimation(
-                    context, R.anim.pull_rotating);
-            // 添加匀速转动动画
-            LinearInterpolator lir = new LinearInterpolator();
-            refreshingAnimation.setInterpolator(lir);
-            holder.refreshingImg.setVisibility(View.VISIBLE);
-            holder.refreshingImg.startAnimation(refreshingAnimation);
+            holder.sendStatusLayout.setVisibility(View.VISIBLE);
+            holder.sendFailImg.setVisibility(View.GONE);
+            holder.sendingLoadingView.setVisibility(View.VISIBLE);
         } else if (msg.getSendStatus() == 2) {
-            holder.refreshingImg.clearAnimation();
-            holder.refreshingImg.setVisibility(View.VISIBLE);
-            holder.refreshingImg.setImageResource(R.drawable.ic_chat_msg_send_fail);
+            holder.sendStatusLayout.setVisibility(View.VISIBLE);
+            holder.sendFailImg.setVisibility(View.VISIBLE);
+            holder.sendingLoadingView.setVisibility(View.GONE);
         } else {
-            holder.refreshingImg.clearAnimation();
-           boolean isMyMsg;
-            if (Message.isMessage(msg)){
+            boolean isMyMsg;
+            if (Message.isMessage(msg)) {
                 Message message = new Message(msg);
                 isMyMsg = message.getFromUser().equals(MyApplication.getInstance().getUid());
-            }else {
-                isMyMsg =  msg.getUid().equals(MyApplication.getInstance().getUid());
+            } else {
+                isMyMsg = msg.getUid().equals(MyApplication.getInstance().getUid());
             }
-            holder.refreshingImg.setVisibility(isMyMsg?View.INVISIBLE:View.GONE);
+            holder.sendStatusLayout.setVisibility(isMyMsg ? View.INVISIBLE : View.GONE);
         }
-
+        holder.sendStatusLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                holder.onMessageResendClick(msg);
+            }
+        });
     }
 
     /**
@@ -196,7 +199,6 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
         holder.cardLayout.removeAllViews();
         boolean isMyMsg = msg.getUid().equals(
                 MyApplication.getInstance().getUid());
-        holder.cardCoverView.setVisibility(View.VISIBLE);
         View cardContentView;
         Message message = null;
         String type = msg.getType();
@@ -209,7 +211,6 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
         switch (type) {
             case "txt_comment":
             case "comment":
-                holder.cardCoverView.setVisibility(View.GONE);
                 cardContentView = DisplayTxtCommentMsg.displayCommentMsg(context, msg, apiService);
                 break;
             case "res_image":
@@ -218,42 +219,26 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
                         msg);
                 break;
             case "res_link":
-                holder.newsCommentText.setOnClickListener(new View.OnClickListener() {
-
-                    @Override
-                    public void onClick(View v) {
-                        // TODO Auto-generated method stub
-                        Bundle bundle = new Bundle();
-                        bundle.putString("mid", msg.getMid());
-                        bundle.putString("cid", msg.getCid());
-                        IntentUtils.startActivity(context,
-                                ChannelMsgDetailActivity.class, bundle);
-                    }
-                });
-
-                cardContentView = DisplayResLinkMsg.displayResLinkMsg(context,msg);
+                cardContentView = DisplayResLinkMsg.displayResLinkMsg(context, msg);
                 break;
             case "res_file":
-                cardContentView = DisplayResFileMsg.displayResFileMsg(context,msg);
+                cardContentView = DisplayResFileMsg.displayResFileMsg(context, msg,false);
                 break;
             case "txt_rich":
-                holder.cardCoverView.setVisibility(View.GONE);
-                cardContentView = DisplayTxtRichMsg.displayRichTextMsg(context,msg);
+                cardContentView = DisplayTxtRichMsg.displayRichTextMsg(context, msg);
                 break;
 
             case "text/plain":
-                holder.cardCoverView.setVisibility(View.GONE);
                 cardContentView = DisplayTxtPlainMsg.getView(context,
                         message);
                 break;
             case "text/markdown":
-                holder.cardCoverView.setVisibility(View.GONE);
                 cardContentView = DisplayTxtMarkdownMsg.getView(context,
                         message);
                 break;
             case "attachment/file":
                 cardContentView = DisplayRegularFileMsg.getView(context,
-                        message,1);
+                        message, 1,false);
                 break;
             case "attachment/card":
                 cardContentView = DisplayAttachmentCardMsg.getView(context,
@@ -270,9 +255,9 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
 
 
         holder.cardLayout.addView(cardContentView);
-        holder.cardLayout.setBackgroundColor(context.getResources().getColor(
-                isMyMsg ? R.color.bg_my_card : R.color.white));
-        holder.cardCoverView.setBackgroundResource(isMyMsg ? R.drawable.ic_chat_msg_img_cover_arrow_right : R.drawable.ic_chat_msg_img_cover_arrow_left);
+//        holder.cardLayout.setBackgroundColor(context.getResources().getColor(
+//                isMyMsg ? R.color.bg_my_card : R.color.white));
+//        holder.cardCoverView.setBackgroundResource(isMyMsg ? R.drawable.ic_chat_msg_img_cover_arrow_right : R.drawable.ic_chat_msg_img_cover_arrow_left);
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) holder.cardParentLayout.getLayoutParams();
         //此处实际执行params.removeRule();
         params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 0);
@@ -316,13 +301,13 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
      */
     private void showUserName(ViewHolder holder, Msg msg) {
         // TODO Auto-generated method stub
-        boolean isMyMsg = msg.getUid().equals(MyApplication.getInstance().getUid());
-        if (channelType.equals("GROUP") && !isMyMsg) {
-            holder.senderNameText.setVisibility(View.VISIBLE);
-            holder.senderNameText.setText(msg.getTitle());
+        if (channelType.equals("GROUP") && !msg.getUid().equals(MyApplication.getInstance().getUid())) {
+            String userName = ContactUserCacheUtils.getUserName(msg.getUid());
+            holder.senderNameText.setText(userName);
         } else {
             holder.senderNameText.setVisibility(View.GONE);
         }
+
     }
 
     /**
@@ -334,47 +319,44 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
     private void showUserPhoto(ViewHolder holder, final Msg msg) {
         // TODO Auto-generated method stub
         final String fromUserUid;
-        if (Message.isMessage(msg)){
+        if (Message.isMessage(msg)) {
             Message message = new Message(msg);
             fromUserUid = message.getFromUser();
-        }else {
+        } else {
             fromUserUid = msg.getUid();
         }
-        if (MyApplication.getInstance().getUid().equals(fromUserUid)) {
-            holder.senderPhotoImg.setVisibility(View.INVISIBLE);
-            holder.senderPhotoRightView.setVisibility(View.GONE);
-        } else {
-            holder.senderPhotoImg.setVisibility(View.VISIBLE);
-            holder.senderPhotoRightView.setVisibility(View.VISIBLE);
-            String iconUrl = APIUri.getUserIconUrl(context,fromUserUid);
-            ImageDisplayUtils.getInstance().displayImage(holder.senderPhotoImg,
-                    iconUrl, R.drawable.icon_person_default);
-            holder.senderPhotoImg.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Bundle bundle = new Bundle();
-                    bundle.putString("uid", fromUserUid);
-                    if (fromUserUid.startsWith("BOT") || channelType.endsWith("SERVICE")) {
-                        bundle.putString("type", channelType);
-                        IntentUtils.startActivity(context,
-                                RobotInfoActivity.class, bundle);
-                    } else {
-                        IntentUtils.startActivity(context,
-                                UserInfoActivity.class, bundle);
-                    }
-                }
-            });
-            holder.senderPhotoImg.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    if (channelType.equals("GROUP")) {
-                        chatInputMenu.addMentions(msg.getUid(), msg.getTitle(), false);
-                    }
-                    return true;
-                }
-            });
+        boolean isMyMsg = MyApplication.getInstance().getUid().equals(fromUserUid);
+        holder.senderPhotoImgRight.setVisibility(isMyMsg ? View.VISIBLE : View.INVISIBLE);
+        holder.senderPhotoImgLeft.setVisibility(isMyMsg ? View.GONE : View.VISIBLE);
+        String iconUrl = APIUri.getUserIconUrl(context, fromUserUid);
+        ImageView senderPhotoImg = isMyMsg ? holder.senderPhotoImgRight : holder.senderPhotoImgLeft;
 
-        }
+        ImageDisplayUtils.getInstance().displayImage(senderPhotoImg,
+                iconUrl, R.drawable.icon_person_default);
+        senderPhotoImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putString("uid", fromUserUid);
+                if (fromUserUid.startsWith("BOT") || channelType.endsWith("SERVICE")) {
+                    bundle.putString("type", channelType);
+                    IntentUtils.startActivity(context,
+                            RobotInfoActivity.class, bundle);
+                } else {
+                    IntentUtils.startActivity(context,
+                            UserInfoActivity.class, bundle);
+                }
+            }
+        });
+        senderPhotoImg.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if (channelType.equals("GROUP") && !MyApplication.getInstance().getUid().equals(fromUserUid)) {
+                    chatInputMenu.addMentions(msg.getUid(), msg.getTitle(), false);
+                }
+                return true;
+            }
+        });
     }
 
     /**
@@ -382,5 +364,7 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
      */
     public interface MyItemClickListener {
         void onItemClick(View view, int position);
+
+        void onMessageResend(Msg msg);
     }
 }

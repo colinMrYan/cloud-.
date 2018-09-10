@@ -44,15 +44,15 @@ public class UserInfoActivity extends BaseActivity {
 
     @ViewInject(R.id.mail_layout)
     private LinearLayout mailLayout;
-    @ViewInject(R.id.mail_text)
+    @ViewInject(R.id.tv_mail)
     private TextView mailText;
     @ViewInject(R.id.contact_layout)
     private RelativeLayout contactLayout;
     @ViewInject(R.id.phone_num_text)
     private TextView phoneNumText;
-    @ViewInject(R.id.photo_img)
+    @ViewInject(R.id.img_photo)
     private ImageView photoImg;
-    @ViewInject(R.id.name_text)
+    @ViewInject(R.id.tv_name)
     private TextView nameText;
     @ViewInject(R.id.start_chat_img)
     private ImageView startChatImg;
@@ -122,10 +122,6 @@ public class UserInfoActivity extends BaseActivity {
             contactLayout.setVisibility(View.VISIBLE);
             phoneNumText.setText(phoneNum);
         }
-        if (!StringUtils.isBlank(contactUser.getEmployeeNum())){
-            employeeNumLayout.setVisibility(View.VISIBLE);
-            employeeNumText.setText(contactUser.getEmployeeNum());
-        }
         nameText.setText(StringUtils.isBlank(name)?getString(R.string.not_set):name);
         ImageDisplayUtils.getInstance().displayImage(photoImg, headUrl, R.drawable.icon_person_default);
         if (contactOrg.getId().equals(MyApplication.getInstance().getUid())) {
@@ -174,7 +170,7 @@ public class UserInfoActivity extends BaseActivity {
             case R.id.back_layout:
                 finish();
                 break;
-            case R.id.photo_img:
+            case R.id.img_photo:
                 Intent intent = new Intent(UserInfoActivity.this,
                         ImagePagerV0Activity.class);
                 ArrayList<String> urls = new ArrayList<>();

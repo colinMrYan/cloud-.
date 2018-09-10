@@ -13,7 +13,7 @@
 
 
         <com.inspur.emmcloud.widget.CircleTextImageView
-            android:id="@+id/photo_img"
+            android:id="@+id/img_photo"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_centerVertical="true"
@@ -24,12 +24,12 @@
             ></com.inspur.emmcloud.widget.CircleTextImageView>
 
         <TextView
-            android:id="@+id/name_text"
+            android:id="@+id/tv_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/selected_img"
-            android:layout_toRightOf="@id/photo_img"
+            android:layout_toRightOf="@id/img_photo"
             android:ellipsize="end"
             android:paddingBottom="13dp"
             android:paddingTop="13dp"

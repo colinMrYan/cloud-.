@@ -77,7 +77,7 @@ public class KnowledgeActivity extends BaseActivity {
             LayoutInflater vi = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
             convertView = vi.inflate(R.layout.knowledge_item_view, null);
             TextView nameText = (TextView) convertView
-                    .findViewById(R.id.name_text);
+                    .findViewById(R.id.tv_name);
             ImageView knowledgeImageView = (ImageView) convertView.findViewById(R.id.knowledge_img);
             nameText.setText(knowledgeList.get(position).getName());
             ImageDisplayUtils.getInstance().displayImage(knowledgeImageView, APIUri.getPreviewUrl(knowledgeList.get(position).getIcon()), R.drawable.icon_photo_default);

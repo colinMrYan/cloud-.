@@ -51,7 +51,7 @@ public class ChatFileDownloadActivtiy extends BaseActivity {
     @ViewInject(R.id.progress_text)
     private TextView progressText;
 
-    @ViewInject(R.id.file_name_text)
+    @ViewInject(R.id.tv_file_name)
     private TextView fileNameText;
 
     @ViewInject(R.id.file_type_img)

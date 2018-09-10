@@ -439,8 +439,8 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
                 convertView = mInflater.inflate(
                         R.layout.member_search_item_view, null);
                 viewHolder.nameText = (TextView) convertView
-                        .findViewById(R.id.name_text);
-                viewHolder.photoImg = (CircleTextImageView) convertView.findViewById(R.id.photo_img);
+                        .findViewById(R.id.tv_name);
+                viewHolder.photoImg = (CircleTextImageView) convertView.findViewById(R.id.img_photo);
                 viewHolder.selectedImg = (ImageView) convertView
                         .findViewById(R.id.selected_img);
                 convertView.setTag(viewHolder);
@@ -574,7 +574,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
 
         public MyViewHolder(View view) {
             super(view);
-            titleText = (TextView) view.findViewById(R.id.title_text);
+            titleText = (TextView) view.findViewById(R.id.tv_title);
             titleImg = (ImageView) view.findViewById(R.id.title_img);
 
         }

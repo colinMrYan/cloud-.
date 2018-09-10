@@ -85,8 +85,8 @@ public class IndexActivity extends IndexBaseActivity {
      * 初始化app的运行环境
      */
     private void initAppEnvironment() {
+        MyApplication.getInstance().setIsContactReady(false);
         DataCleanManager.cleanCustomCache(MyAppConfig.LOCAL_CACHE_VOICE_PATH);
-        DataCleanManager.cleanWebViewCache(this);
         MyApplication.getInstance().setIndexActvityRunning(true);
         MyApplication.getInstance().restartAllDb();
         MyApplication.getInstance().clearUserPhotoMap();

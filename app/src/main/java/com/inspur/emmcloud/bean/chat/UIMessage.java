@@ -20,15 +20,14 @@ public class UIMessage implements Serializable {
         this.message = message;
         this.id = message.getId();
         this.creationDate = message.getCreationDate();
-        if (!message.getFromUser().equals(MyApplication.getInstance().getUid())){
-            senderName = ContactUserCacheUtils.getUserName(message.getFromUser());
-            senderPhotoUrl = APIUri.getUserIconUrl(MyApplication.getInstance(), message.getFromUser());
-        }
+        senderName = ContactUserCacheUtils.getUserName(message.getFromUser());
+        senderPhotoUrl = APIUri.getUserIconUrl(MyApplication.getInstance(), message.getFromUser());
     }
 
-    public UIMessage(){}
+    public UIMessage() {
+    }
 
-    public UIMessage(String id){
+    public UIMessage(String id) {
         this.id = id;
     }
 
@@ -80,14 +79,15 @@ public class UIMessage implements Serializable {
     public void setMessage(Message message) {
         this.message = message;
     }
-    public static List<UIMessage> MessageList2UIMessageList(List<Message> messageList){
+
+    public static List<UIMessage> MessageList2UIMessageList(List<Message> messageList) {
         List<UIMessage> UIMessageList = new ArrayList<>();
-        if (messageList != null && messageList.size()>0){
-            for (Message message:messageList){
+        if (messageList != null && messageList.size() > 0) {
+            for (Message message : messageList) {
                 UIMessageList.add(new UIMessage(message));
             }
         }
-        return  UIMessageList;
+        return UIMessageList;
 
     }
 

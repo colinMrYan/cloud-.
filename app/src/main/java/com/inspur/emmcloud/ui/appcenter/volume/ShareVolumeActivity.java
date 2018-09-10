@@ -301,7 +301,7 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
             convertView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.app_volume_share_item_view, null);
-            ((TextView) convertView.findViewById(R.id.name_text)).setText(shareVolumeList.get(position).getName());
+            ((TextView) convertView.findViewById(R.id.tv_name)).setText(shareVolumeList.get(position).getName());
             (convertView.findViewById(R.id.file_operation_drop_down_img)).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

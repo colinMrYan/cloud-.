@@ -119,7 +119,7 @@ public class DocumentActivity extends BaseActivity {
 			ImageView fileImg = (ImageView) convertView
 					.findViewById(R.id.file_img);
 			TextView fileNameText = (TextView) convertView
-					.findViewById(R.id.file_name_text);
+					.findViewById(R.id.tv_file_name);
 			final HorizontalProgressBarWithNumber progressBar = (HorizontalProgressBarWithNumber) convertView
 					.findViewById(R.id.file_download_progressbar);
 			DocumentInfo documentInfo = documentInfoList.get(position);

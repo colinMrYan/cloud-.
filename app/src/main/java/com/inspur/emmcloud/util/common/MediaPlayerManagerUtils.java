@@ -37,7 +37,7 @@ public class MediaPlayerManagerUtils {
     private Context context;
 
     private boolean isPause = false;
-    private String filePath;
+    private String path;
 
     private int currentMode = MODE_SPEAKER;
 
@@ -127,10 +127,8 @@ public class MediaPlayerManagerUtils {
      * @param callback 播放回调函数
      */
     public void play(String path, final PlayCallback callback) {
-        if (mediaPlayer.isPlaying()&&callback != null){
-            callback.onStop();
-        }
-        this.filePath = path;
+        stop();
+        this.path = path;
         this.callback = callback;
         try {
             mediaPlayer.reset();
@@ -334,5 +332,14 @@ public class MediaPlayerManagerUtils {
      */
     public boolean isPlaying() {
         return mediaPlayer != null && mediaPlayer.isPlaying();
+    }
+
+    /**是否正在播放某个文件
+     *
+     * @param path
+     * @return
+     */
+    public boolean isPlaying(String path){
+        return  isPlaying() && this.path.equals(path);
     }
 }

@@ -1045,12 +1045,12 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
                 convertView = mInflater.inflate(
                         R.layout.member_search_item_view, null);
                 viewHolder.nameText = (TextView) convertView
-                        .findViewById(R.id.name_text);
+                        .findViewById(R.id.tv_name);
                 viewHolder.rightArrowImg = (ImageView) convertView
                         .findViewById(R.id.arrow_img);
                 viewHolder.selectedImg = (ImageView) convertView
                         .findViewById(R.id.selected_img);
-                viewHolder.photoImg = (CircleTextImageView) convertView.findViewById(R.id.photo_img);
+                viewHolder.photoImg = (CircleTextImageView) convertView.findViewById(R.id.img_photo);
                 convertView.setTag(viewHolder);
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
@@ -1125,10 +1125,10 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
                 convertView = LayoutInflater.from(getActivity()).inflate(
                         R.layout.member_search_item_view, null);
                 viewHolder.nameText = (TextView) convertView
-                        .findViewById(R.id.name_text);
+                        .findViewById(R.id.tv_name);
                 viewHolder.selectedImg = (ImageView) convertView
                         .findViewById(R.id.selected_img);
-                viewHolder.photoImg = (CircleTextImageView) convertView.findViewById(R.id.photo_img);
+                viewHolder.photoImg = (CircleTextImageView) convertView.findViewById(R.id.img_photo);
                 convertView.setTag(viewHolder);
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
@@ -1200,10 +1200,10 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
                 convertView = mInflater.inflate(
                         R.layout.member_search_item_view, null);
                 viewHolder.nameText = (TextView) convertView
-                        .findViewById(R.id.name_text);
+                        .findViewById(R.id.tv_name);
                 viewHolder.selectedImg = (ImageView) convertView
                         .findViewById(R.id.selected_img);
-                viewHolder.photoImg = (CircleTextImageView) convertView.findViewById(R.id.photo_img);
+                viewHolder.photoImg = (CircleTextImageView) convertView.findViewById(R.id.img_photo);
                 convertView.setTag(viewHolder);
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
@@ -1354,7 +1354,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
         public MyViewHolder(View view, MyItemClickListener listener) {
             super(view);
             this.view = view;
-            titleText = (TextView) view.findViewById(R.id.title_text);
+            titleText = (TextView) view.findViewById(R.id.tv_title);
             titleImg = (ImageView) view.findViewById(R.id.title_img);
             this.mListener = listener;
             view.setOnClickListener(this);

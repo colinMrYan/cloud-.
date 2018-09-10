@@ -283,6 +283,7 @@
     <string name="play_fail">播放失败</string>
     <string name="record_count_down_text">還可以說 %1$d 秒</string>
     <string name="voice_call">語音通話</string>
+    <string name="sure_to_resend_message">確認重新發送該消息?</string>
 
 
     <!-- 會議卡片 -->
