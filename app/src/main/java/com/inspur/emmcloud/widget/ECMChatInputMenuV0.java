@@ -19,7 +19,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
@@ -37,6 +36,7 @@ import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.Voice2StringMessageUtils;
+import com.inspur.emmcloud.widget.waveprogress.WaterWaveProgress;
 
 import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
@@ -58,6 +58,7 @@ public class ECMChatInputMenuV0 extends LinearLayout {
     private static final int CAMERA_RESULT = 3;
     private static final int CHOOSE_FILE = 4;
     private static final int MENTIONS_RESULT = 5;
+    private static final int TOPDELY_TIMES = 17;
     private static final long MENTIONS_BASE_TIME= 1515513600000L;
 
     @ViewInject(R.id.input_edit)
@@ -78,11 +79,11 @@ public class ECMChatInputMenuV0 extends LinearLayout {
     @ViewInject(R.id.viewpager_layout)
     private ECMChatInputMenuViewpageLayout viewpagerLayout;
 
-    @ViewInject(R.id.volume_level_img)
-    private ImageView volumeLevelImg;
+    @ViewInject(R.id.wave_progress_input)
+    private WaterWaveProgress waterWaveProgress;
 
     @ViewInject(R.id.voice_input_layout)
-    private LinearLayout voiceInputLayout;
+    private RelativeLayout voiceInputLayout;
 
     private boolean canMentions = false;
     private ChatInputMenuListener chatInputMenuListener;
@@ -93,6 +94,8 @@ public class ECMChatInputMenuV0 extends LinearLayout {
     private String cid = "";
     private String inputs = "";
     private boolean isSpecialUser = false; //小智机器人进行特殊处理
+    private int lastVolumeLevel = 0;
+    private int delayTimes = 0;
     public ECMChatInputMenuV0(Context context) {
         this(context, null);
         // TODO Auto-generated constructor stub
@@ -319,6 +322,11 @@ public class ECMChatInputMenuV0 extends LinearLayout {
      * 初始化语言输入相关
      */
     private void initVoiceInput() {
+        waterWaveProgress.setShowProgress(false);
+        waterWaveProgress.setShowNumerical(false);
+        waterWaveProgress.setWaveSpeed(0.02F);
+        waterWaveProgress.setAmplitude(5.0F);
+        lastVolumeLevel=0;
         voiceImgBtn.setImageResource(R.drawable.ic_chat_input_voice_v0);
         mediaPlayerUtils = new MediaPlayerUtils(getContext());
         voice2StringMessageUtils = new Voice2StringMessageUtils(getContext());
@@ -378,7 +386,8 @@ public class ECMChatInputMenuV0 extends LinearLayout {
                     @Override
                     public void run() {
                         voiceInputLayout.setVisibility(View.VISIBLE);
-                        volumeLevelImg.setImageLevel(0);
+                        lastVolumeLevel=0;
+                        waterWaveProgress.setProgress(0);
                         mediaPlayerUtils.playVoiceOn();
                         voice2StringMessageUtils.startVoiceListening();
                     }
@@ -476,7 +485,7 @@ public class ECMChatInputMenuV0 extends LinearLayout {
 
     private void setOtherLayoutHeightLock(boolean isLock) {
         if (otherLayoutView != null) {
-            final LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) otherLayoutView
+            final LayoutParams params = (LayoutParams) otherLayoutView
                     .getLayoutParams();
             if (isLock) {
                 params.height = otherLayoutView.getHeight();
@@ -540,30 +549,35 @@ public class ECMChatInputMenuV0 extends LinearLayout {
 
     /**
      * 设置音量
-     *
+     * 功能描述：采用十级，新采样数据比当前数据小时，
+     * 延迟预定周期以一定速度下降，
+     * 下降过程中新采样数据大于下降当前值时继续上升
      * @param volume
      */
     public void setVoiceImageViewLevel(int volume) {
-        if (volume <= 5) {
-            volumeLevelImg.setImageLevel(0);
-        } else if (volume <= 8) {
-            volumeLevelImg.setImageLevel(1);
-        } else if (volume <= 10) {
-            volumeLevelImg.setImageLevel(2);
-        } else if (volume <= 13) {
-            volumeLevelImg.setImageLevel(3);
-        } else if (volume <= 15) {
-            volumeLevelImg.setImageLevel(4);
-        } else if (volume <= 18) {
-            volumeLevelImg.setImageLevel(5);
-        } else if (volume <= 20) {
-            volumeLevelImg.setImageLevel(6);
-        } else if (volume <= 23) {
-            volumeLevelImg.setImageLevel(7);
-        } else if (volume <= 25) {
-            volumeLevelImg.setImageLevel(8);
+
+        int currentLevel = 0;
+        if(0==volume) {
+            currentLevel=0;
         } else {
-            volumeLevelImg.setImageLevel(9);
+            currentLevel = volume/3+1;
+        }
+        int showLevel=(currentLevel+lastVolumeLevel)/2;
+        if(currentLevel>=lastVolumeLevel) {
+                delayTimes=TOPDELY_TIMES ;
+            if((showLevel<4)&&(showLevel>0)) {
+                waterWaveProgress.setProgress(4);
+            }
+            waterWaveProgress.setProgress(showLevel);
+            lastVolumeLevel=currentLevel;
+        } else {
+            //判断延时时间
+            if (delayTimes>0) {
+                delayTimes=delayTimes-1;
+            } else {
+                lastVolumeLevel = lastVolumeLevel-1;
+            }
+            waterWaveProgress.setProgress( lastVolumeLevel);
         }
     }
 
@@ -573,7 +587,6 @@ public class ECMChatInputMenuV0 extends LinearLayout {
     public void stopVoiceInput() {
         voiceInputLayout.setVisibility(View.GONE);
         voice2StringMessageUtils.stopListening();
-        volumeLevelImg.setImageLevel(10);
         mediaPlayerUtils.playVoiceOff();
     }
 
@@ -584,6 +597,7 @@ public class ECMChatInputMenuV0 extends LinearLayout {
 
 
         void onVoiceCommucaiton();
+
     }
 
 
