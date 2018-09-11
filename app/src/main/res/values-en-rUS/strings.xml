@@ -563,6 +563,7 @@
     <string name="user_info_name">Name</string>
     <string name="user_info_sex">Sex</string>
     <string name="depart">Department</string>
+    <string name="telephone">Office phone</string>
     <string name="function_introduction">Function Introduction</string>
     <string name="service_and_support">Service And Support</string>
     <string name="user_qr_code">My Qr Code</string>
