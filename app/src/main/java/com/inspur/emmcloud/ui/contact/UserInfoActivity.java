@@ -115,7 +115,6 @@ public class UserInfoActivity extends BaseActivity {
         String phoneNum = contactUser.getMobile();
         String name = contactUser.getName();
         String telStr= contactUser.getTel();
-        LogUtils.LbcDebug(telStr);
         String officeStr= contactUser.getOffice();
 
         String headUrl = APIUri.getUserIconUrl(UserInfoActivity.this, contactUser.getId());
@@ -142,7 +141,6 @@ public class UserInfoActivity extends BaseActivity {
         if (!StringUtils.isBlank(telStr)) {
             telLayout.setVisibility(View.VISIBLE);
             telText.setText(telStr);
-            LogUtils.LbcDebug("Telephone::"+telStr);
         }
         nameText.setText(StringUtils.isBlank(name)?getString(R.string.not_set):name);
 
@@ -163,7 +161,6 @@ public class UserInfoActivity extends BaseActivity {
     public void onClick(View v) {
         String phoneNum = phoneNumText.getText().toString();
         String TelephoneNum=telText.getText().toString();
-        LogUtils.LbcDebug("固定电话"+TelephoneNum);
 
         switch (v.getId()) {
             case R.id.mail_img:

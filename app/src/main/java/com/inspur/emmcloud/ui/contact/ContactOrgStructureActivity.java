@@ -16,7 +16,6 @@ import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.contact.ContactOrg;
 import com.inspur.emmcloud.bean.contact.ContactUser;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactOrgCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
@@ -35,11 +34,8 @@ public class ContactOrgStructureActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        LogUtils.LbcDebug("lbc setsetContentView11");
         setContentView(R.layout.activity_contact_org_structure);
-        LogUtils.LbcDebug("lbc setsetContentView");
         init();
-        LogUtils.LbcDebug("ini finished");
         adapter = new OrgStrContactAdapter(this, R.layout.contact_org_structure_item, orgItemsList);
         listView = (ListView) findViewById(R.id.org_structure_lv);
         listView.setAdapter(adapter);
@@ -73,7 +69,6 @@ public class ContactOrgStructureActivity extends BaseActivity {
         } else if (getIntent().hasExtra("uid")) {
             uid = getIntent().getExtras().getString("uid");
         }
-        LogUtils.LbcDebug( "lbc uid  :"+ uid);
         if (!StringUtils.isBlank(uid)) {
             contactUser = ContactUserCacheUtils.getContactUserByUid(uid);
         }
@@ -88,7 +83,6 @@ public class ContactOrgStructureActivity extends BaseActivity {
                     org3Str = contactOrgTest.getName();
                     strList.add(org3Str);
                     org3Str = contactOrgTest.getParentId();
-                   // LogUtils.LbcDebug(org3Str);
                 }
                 for (int i = (strList.size() - 1); i >= 0; i--) {
                     if (fristInit == true) {
