@@ -9,10 +9,10 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.bean.system.AppException;
+import com.inspur.emmcloud.util.privates.cache.AppExceptionCacheUtils;
+import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.privates.AppUtils;
-import com.inspur.emmcloud.util.privates.cache.AppExceptionCacheUtils;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -44,7 +44,6 @@ public class AppExceptionService extends Service {
 	}
 
 	public void uploadException() {
-
 		if (NetUtils.isNetworkConnected(AppExceptionService.this,false) && !AppUtils.isApkDebugable(AppExceptionService.this)) {
 			List<AppException> appExceptionList = AppExceptionCacheUtils.getAppExceptionList(AppExceptionService.this);
 			if (appExceptionList.size() != 0) {
