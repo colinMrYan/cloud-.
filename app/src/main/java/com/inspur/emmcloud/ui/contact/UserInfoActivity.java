@@ -62,13 +62,8 @@ public class UserInfoActivity extends BaseActivity {
     @ViewInject(R.id.duty_tv)
     private TextView dutyText;
 
-
-
-
-
     @ViewInject(R.id.start_chat_img)
     private ImageView startChatImg;
-
 
     private ContactUser contactUser;
     private ContactOrg  contactOrg;
