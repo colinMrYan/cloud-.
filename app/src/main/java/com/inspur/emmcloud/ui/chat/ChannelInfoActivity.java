@@ -19,6 +19,7 @@ import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.bean.chat.Channel;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
+import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.bean.contact.SearchModel;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
@@ -55,6 +56,7 @@ public class ChannelInfoActivity extends BaseActivity {
     private NoScrollGridView memberGrid;
     private LoadingDialog loadingDlg;
     private ArrayList<String> memberList = new ArrayList<>();
+    private ArrayList<String> uiMemberList = new ArrayList<>();
     private String cid;
     private ChannelGroup channelGroup;
     private SwitchView setTopSwitch;
@@ -87,6 +89,7 @@ public class ChannelInfoActivity extends BaseActivity {
                 .getChannelGroupById(getApplicationContext(), cid);
         if (channelGroup != null) {
             memberList = channelGroup.getMemberList();
+            filterMemberData();
             displayUI();
         }
         if (NetUtils.isNetworkConnected(getApplicationContext(),(channelGroup == null))) {
@@ -284,9 +287,9 @@ public class ChannelInfoActivity extends BaseActivity {
         public int getCount() {
             // TODO Auto-generated method stub
             if (channelGroup.getOwner().equals(MyApplication.getInstance().getUid())) {
-                return memberList.size() > 8 ? 10 : memberList.size() + 2;
+                return uiMemberList.size() > 8 ? 10 : uiMemberList.size() + 2;
             } else {
-                return memberList.size() > 9 ? 10 : memberList.size() + 1;
+                return uiMemberList.size() > 9 ? 10 : uiMemberList.size() + 1;
             }
         }
 
@@ -333,7 +336,7 @@ public class ChannelInfoActivity extends BaseActivity {
                 userName = getString(R.string.add);
 
             } else {
-                String uid = memberList.get(position);
+                String uid = uiMemberList.get(position);
                 userName = ContactUserCacheUtils.getUserName(uid);
                 userPhotoUrl = APIUri.getUserIconUrl(MyApplication.getInstance(),uid);
             }
@@ -388,6 +391,20 @@ public class ChannelInfoActivity extends BaseActivity {
         }
     }
 
+    /**
+     * 过滤不存在的群成员算法
+     */
+    private void filterMemberData() {
+        //查三十人，如果不满三十人则查实际人数保证查到的人都是存在的群成员
+        List<ContactUser> contactUserList = ContactUserCacheUtils.getContactUserListByIdListOrderBy(memberList,9);
+        ArrayList<String> contactUserIdList = new ArrayList<>();
+        for (int i = 0; i < contactUserList.size(); i++) {
+            contactUserIdList.add(contactUserList.get(i).getId());
+        }
+        uiMemberList.clear();
+        uiMemberList.addAll(contactUserIdList);
+    }
+
     private class WebService extends APIInterfaceInstance {
 
         @Override
@@ -398,6 +415,7 @@ public class ChannelInfoActivity extends BaseActivity {
             memberList = channelGroup.getMemberList();
             // 同步缓存
             ChannelGroupCacheUtils.saveChannelGroup(MyApplication.getInstance(),channelGroup);
+            filterMemberData();
             displayUI();
         }
 
@@ -455,6 +473,8 @@ public class ChannelInfoActivity extends BaseActivity {
             memberList = channelGroup.getMemberList();
             channelMemberNumText.setText(getString(R.string.all_group_member) + "（"
                     + memberList.size() + "）");
+            filterMemberData();
+            displayUI();
             adapter.notifyDataSetChanged();
         }
 
