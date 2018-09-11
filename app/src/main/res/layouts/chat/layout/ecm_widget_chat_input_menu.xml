@@ -123,29 +123,39 @@
 
     </LinearLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/voice_input_layout"
         android:visibility="gone"
-        android:orientation="vertical"
         android:background="@color/white"
         android:layout_width="match_parent"
-        android:gravity="center"
         android:paddingTop="60dp"
         android:paddingBottom="20dp"
         android:layout_height="wrap_content">
+        <com.inspur.emmcloud.widget.waveprogress.WaterWaveProgress
+            android:id="@+id/wave_progress_input"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="165dp"
+            app:maxProgress="10"
+            app:progress="10"
+            app:waterWaveBgColor="#28A0DF"
+            app:waterWaveColor="#ffffff"/>
         <ImageView
             android:id="@+id/volume_level_img"
             android:layout_width="80dp"
             android:layout_height="80dp"
+            android:layout_centerHorizontal="true"
             android:scaleType="fitXY"
-            android:src="@drawable/ic_chat_input_voice_level"
-            />
+            android:src="@drawable/ic_chat_input_add_voice_level_0" />
         <ImageView
             android:id="@+id/voice_input_close_img"
             android:layout_width="80dp"
             android:layout_height="70dp"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/volume_level_img"
             android:src="@drawable/ic_arrow_down"
             android:padding="25dp"
             />
-    </LinearLayout>
+    </RelativeLayout>
 </RelativeLayout>
