@@ -2,8 +2,6 @@ package com.inspur.emmcloud.widget.audiorecord;
 
 
 import android.content.Context;
-import android.media.MediaPlayer;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
@@ -13,7 +11,6 @@ import android.widget.Button;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.MediaPlayerManagerUtils;
 
 public class AudioRecordButton extends Button implements AudioManager.AudioStageListener {

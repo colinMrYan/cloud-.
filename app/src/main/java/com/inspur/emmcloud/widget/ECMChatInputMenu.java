@@ -76,7 +76,7 @@ public class ECMChatInputMenu extends LinearLayout {
     private ECMChatInputMenuViewpageLayout viewpagerLayout;
 
     @ViewInject(R.id.voice_input_layout)
-    private LinearLayout voiceInputLayout;
+    private RelativeLayout voiceInputLayout;
 
     @ViewInject(R.id.voice_btn)
     private ImageButton voiceBtn;
@@ -162,7 +162,7 @@ public class ECMChatInputMenu extends LinearLayout {
             @Override
             public void onStartRecordingVoice() {
 //                voice2StringMessageUtils.startVoiceListening();
-                voice2StringMessageUtils.startVoiceListeningByVoiceFile("/msc/iat.wav");
+                voice2StringMessageUtils.startVoiceListeningByVoiceFile("/IMP-Cloud/99999/test/iat.wav");
             }
 
             @Override

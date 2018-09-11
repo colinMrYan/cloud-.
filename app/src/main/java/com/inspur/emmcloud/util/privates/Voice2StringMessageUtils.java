@@ -67,9 +67,7 @@ public class Voice2StringMessageUtils {
         //注释掉的这几句是读取文件听写文字的
         speechRecognizer.setParameter(SpeechConstant.AUDIO_SOURCE, "-1");
         speechRecognizer.startListening(recognizerListener);
-//        byte[] audioData = FileUtils.readAudioFile(context, "iattest.wav");
         byte[] audioData = FileUtils.readAudioFileFromSDcard(voiceFilePath);
-        LogUtils.YfcDebug("读出来的音频数据长度:"+audioData.length);
         speechRecognizer.writeAudio(audioData, 0, audioData.length);
         speechRecognizer.stopListening();
     }
