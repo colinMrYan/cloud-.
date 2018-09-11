@@ -226,7 +226,6 @@ public class AppAPIService {
      */
     public void uploadException(final JSONObject exception) {
         final String completeUrl = APIUri.getUploadExceptionUrl();
-        LogUtils.LbcDebug(completeUrl); //lbc
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         params.setAsJsonContent(true);
