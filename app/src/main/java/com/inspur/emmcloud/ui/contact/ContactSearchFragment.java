@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.ui.contact;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -55,6 +56,7 @@ import com.inspur.emmcloud.widget.CircleTextImageView;
 import com.inspur.emmcloud.widget.FlowLayout;
 import com.inspur.emmcloud.widget.MaxHightScrollView;
 import com.inspur.emmcloud.widget.NoHorScrollView;
+import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -408,7 +410,50 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
                 changeMembers(searchModel);
             }
         });
+       // secondGroupListView.setOnItemLongClickListener();  //lbc
+
+        secondGroupListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view,
+                                           int position, long id) {
+                // TODO Auto-generated method stub
+                showRecentChannelOperationDlg(position);
+                return true;
+            }
+
+        });
     }
+
+    private  void  showRecentChannelOperationDlg(int position) {
+        String[]  dataStr={"删除该目录"};
+
+        new QMUIDialog.MenuDialogBuilder(getActivity())
+                .addItems(dataStr, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        if(0==which){
+
+                        }
+//                        Channel channel = displayChannelList.get(position);
+//                        if (which == 0) {
+//                            ChannelOperationCacheUtils.setChannelTop(MyApplication.getInstance(),
+//                                    channel.getCid(), !isChannelSetTop);
+//                            sortChannelList();
+//                        } else {
+//                            ChannelOperationCacheUtils.setChannelHide(
+//                                    MyApplication.getInstance(), channel.getCid(), true);
+//                            // 当隐藏会话时，把该会话的所有消息置为已读
+//                            MessageReadCreationDateCacheUtils.saveMessageReadCreationDate(MyApplication.getInstance(), channel.getCid(), channel.getMsgLastUpdate());
+//                            displayChannelList.remove(position);
+//                            displayData();
+//                        }
+                    }
+                })
+                .show();
+    }
+
 
     /**
      * 群组或通讯录打开浏览页面
