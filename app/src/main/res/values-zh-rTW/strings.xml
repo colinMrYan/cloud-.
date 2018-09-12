@@ -564,6 +564,7 @@
     <string name="user_info_head">頭像</string>
     <string name="user_info_name">姓名</string>
     <string name="depart">部門</string>
+    <string name="depart_info_text">部門資訊</string>
     <string name="telephone">辦公電話</string>
     <string name="user_info_sex">性別</string>
     <string name="user_qr_code">我的二維碼</string>

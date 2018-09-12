@@ -564,6 +564,7 @@
 
     <!-- 用户信息页面部分 -->
     <string name="user_info_text">个人信息</string>
+    <string name="depart_info_text">部门信息</string>
     <string name="user_info_head">头像</string>
     <string name="user_info_name">姓名</string>
     <string name="depart">部门</string>

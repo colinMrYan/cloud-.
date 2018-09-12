@@ -66,7 +66,6 @@ public class UserInfoActivity extends BaseActivity {
     private ImageView startChatImg;
 
     private ContactUser contactUser;
-    private ContactOrg  contactOrg;
     private final static int MY_PERMISSIONS_PHONECALL = 0;
     private final static int MY_PERMISSIONS_SMS = 1;
     private  String  parentUid;
@@ -84,7 +83,7 @@ public class UserInfoActivity extends BaseActivity {
         init();
     }
 
-    private void init(){
+    private void init() {
         String uid = null;
         String scheme = getIntent().getScheme();
         if (scheme != null) {
