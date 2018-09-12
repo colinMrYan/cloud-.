@@ -440,7 +440,6 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
                         dialog.dismiss();
                             commonContactList.remove(position);
                             secondGroupListAdapter.notifyDataSetChanged();
-
                     }
                 })
                 .show();
