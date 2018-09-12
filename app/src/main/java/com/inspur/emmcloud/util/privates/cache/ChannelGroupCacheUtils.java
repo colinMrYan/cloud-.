@@ -2,6 +2,7 @@ package com.inspur.emmcloud.util.privates.cache;
 
 import android.content.Context;
 
+import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
 import com.inspur.emmcloud.util.common.StringUtils;
 
@@ -139,6 +140,38 @@ public class ChannelGroupCacheUtils {
         }
         return searchChannelGroupList;
 
+    }
+
+    /**
+     * 群头像获取群里人员id在通讯录里存在的人，保证群头像完整
+     * @param context
+     * @param cid
+     * @param limit 指定返回的成员个数，遍历所有的人员直到满足个数或者所有人员已全部遍历
+     * @return
+     */
+    public static List<String> getExistMemberUidList(Context context, String cid,
+                                                     int limit){
+        List<String> userList = new ArrayList<>();
+        try {
+            ChannelGroup channelGroup = DbCacheUtils.getDb(context).findById(ChannelGroup.class,cid);
+            if(channelGroup == null){
+                return new ArrayList<>();
+            }
+            List<String> allMemberList = channelGroup.getMemberList();
+            //遍历如果头像存在则加入
+            for (int i = 0; i < allMemberList.size(); i++) {
+                String url = APIUri.getChannelImgUrl(context, allMemberList.get(i));
+                if(!StringUtils.isBlank(url)){
+                    userList.add(allMemberList.get(i));
+                    if(userList.size()>=limit){
+                        break;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return userList;
     }
 
     public static List<String> getMemberUidList(Context context, String cid,

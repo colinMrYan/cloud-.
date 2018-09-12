@@ -122,10 +122,6 @@ public class UserInfoActivity extends BaseActivity {
             contactLayout.setVisibility(View.VISIBLE);
             phoneNumText.setText(phoneNum);
         }
-        if (!StringUtils.isBlank(contactUser.getEmployeeNum())){
-            employeeNumLayout.setVisibility(View.VISIBLE);
-            employeeNumText.setText(contactUser.getEmployeeNum());
-        }
         nameText.setText(StringUtils.isBlank(name)?getString(R.string.not_set):name);
         ImageDisplayUtils.getInstance().displayImage(photoImg, headUrl, R.drawable.icon_person_default);
         if (contactOrg.getId().equals(MyApplication.getInstance().getUid())) {

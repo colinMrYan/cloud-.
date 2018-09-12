@@ -55,6 +55,7 @@ import com.inspur.imp.plugin.photo.PhotoService;
 import com.inspur.imp.plugin.staff.SelectStaffService;
 import com.inspur.imp.plugin.window.DropItemTitle;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -164,7 +165,7 @@ public class ImpFragment extends Fragment {
         initHeaderFunction();
         initListeners();
         initWebViewHeaderLayout();
-        setWebViewHeader();
+        setWebViewHeader(url);
         webView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -519,13 +520,12 @@ public class ImpFragment extends Fragment {
         getActivity().finish();// 退出程序
     }
 
-
-    private void setWebViewHeader() {
+    /**
+     * 设置WebView的Header参数
+     */
+    private void setWebViewHeader(String url) {
         webViewHeaders = new HashMap<>();
-        String token = MyApplication.getInstance().getToken();
-        if (token != null) {
-            webViewHeaders.put("Authorization", token);
-        }
+        addAuthorizationToken(url);
         webViewHeaders.put("X-ECC-Current-Enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
         String languageJson = PreferencesUtils.getString(
                 getActivity(), MyApplication.getInstance().getTanent() + "appLanguageObj");
@@ -535,6 +535,22 @@ public class ImpFragment extends Fragment {
         }
     }
 
+    /**
+     * 根据规则添加token
+     * 当URL主域名是Constant.INSPUR_HOST_URL
+     * 或者Constant.INSPURONLINE_HOST_URL结尾时添加token
+     */
+    private void addAuthorizationToken(String url) {
+        try {
+            URL urlHost = new URL(url);
+            String token = MyApplication.getInstance().getToken();
+            if (token != null && (urlHost.getHost().endsWith(Constant.INSPUR_HOST_URL)) || urlHost.getHost().endsWith(Constant.INSPURONLINE_HOST_URL)) {
+                webViewHeaders.put("Authorization", token);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * 打开修改字体的dialog
