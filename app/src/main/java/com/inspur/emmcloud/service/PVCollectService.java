@@ -7,7 +7,6 @@ import android.os.IBinder;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
@@ -25,13 +24,11 @@ public class PVCollectService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        LogUtils.LbcDebug("上传数据post");
         uploadPV();
         return super.onStartCommand(intent, flags, startId);
     }
 
     private void uploadPV() {
-        LogUtils.LbcDebug("上传数据post");
         if (apiService == null) {
             apiService = new AppAPIService(getApplicationContext());
             apiService.setAPIInterface(new WebService());
@@ -53,10 +50,8 @@ public class PVCollectService extends Service {
                     e.printStackTrace();
                 }
                 apiService.uploadPVCollect(jsonObject.toString());
-                LogUtils.LbcDebug("上传数据post");
                 return;
             }
-            LogUtils.LbcDebug("数据长度为 0");
             stopSelf();
         }
     }
@@ -68,7 +63,7 @@ public class PVCollectService extends Service {
         @Override
         public void returnUploadCollectSuccess() {
             int  CurrentSize = PVCollectModelCacheUtils.deletePartCollectModel(getApplicationContext(),50);
-                           if(CurrentSize<50){
+                           if(CurrentSize<50) {
                                stopSelf();
                            } else {
                                uploadPV();
