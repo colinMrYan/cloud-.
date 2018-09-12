@@ -142,9 +142,7 @@ public class ECMChatInputMenu extends LinearLayout {
                 sendMsgBtn.setVisibility(isContentBlank ? (inputs.equals("1")) ? VISIBLE : GONE : VISIBLE);
                 sendMsgBtn.setEnabled(!isContentBlank);
                 sendMsgBtn.setBackgroundResource(isContentBlank ? R.drawable.bg_chat_input_send_btn_disable : R.drawable.bg_chat_input_send_btn_enable);
-                if (StringUtils.isBlank(inputs) || (!StringUtils.isBlank(inputs) && !inputs.equals("1"))) {
-                    addBtn.setVisibility(isContentBlank ? VISIBLE : GONE);
-                }
+                addBtn.setVisibility(isContentBlank ? VISIBLE : GONE);
                 if (canMentions && count == 1) {
                     String inputWord = s.toString().substring(start, start + count);
                     if (inputWord.equals("@")) {
@@ -212,6 +210,7 @@ public class ECMChatInputMenu extends LinearLayout {
      * @param inputs
      */
     public void setInputLayout(String inputs) {
+        //每一位（bit）分别代表：（高位）video voice command file photo text （低位）
         inputTypeBeanList.clear();
         inputEdit.clearInsertModelList();
         this.inputs = inputs;

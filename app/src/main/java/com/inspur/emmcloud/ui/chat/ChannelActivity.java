@@ -120,6 +120,7 @@ public class ChannelActivity extends MediaPlayBaseActivity {
     private boolean isSpecialUser = false; //小智机器人进行特殊处理
     private BroadcastReceiver sendActionMsgReceiver;
     private BroadcastReceiver refreshNameReceiver;
+    private RecycleViewForSizeChange msgListView1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -207,13 +208,12 @@ public class ChannelActivity extends MediaPlayBaseActivity {
      * 显示聊天频道的title
      */
     private void setChannelTitle() {
-
         if (isSpecialUser) {
             robotPhotoImg.setVisibility(View.VISIBLE);
             headerText.setVisibility(View.GONE);
             String uid = DirectChannelUtils.getDirctChannelOtherUid(MyApplication.getInstance(), channel.getTitle());
             String iconUrl = APIUri.getUserIconUrl(MyApplication.getInstance(), uid);
-            ImageDisplayUtils.getInstance().displayImage(robotPhotoImg, iconUrl, R.drawable.ic_robot_new);
+            ImageDisplayUtils.getInstance().displayImage(robotPhotoImg, iconUrl, R.drawable.icon_person_default);
         } else {
             robotPhotoImg.setVisibility(View.GONE);
             headerText.setVisibility(View.VISIBLE);
@@ -226,7 +226,7 @@ public class ChannelActivity extends MediaPlayBaseActivity {
      */
     private void initChatInputMenu() {
         chatInputMenu.setSpecialUser(isSpecialUser);
-        chatInputMenu.setOtherLayoutView(swipeRefreshLayout, msgListView);
+        chatInputMenu.setOtherLayoutView(swipeRefreshLayout, msgListView1);
         if (channel.getType().equals("GROUP")) {
             chatInputMenu.setCanMentions(true, cid);
         } else {

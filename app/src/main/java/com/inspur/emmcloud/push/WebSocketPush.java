@@ -41,7 +41,7 @@ public class WebSocketPush {
     private static WebSocketPush webSocketPush = null;
     private Socket mSocket = null;
     private Map<String, EventMessage> tracerMap = new HashMap<>();
-
+    private boolean isWSStatusConnectedV1 = false;
     public WebSocketPush() {
         tracerMap = new HashMap<>();
     }
@@ -183,7 +183,12 @@ public class WebSocketPush {
      */
     public boolean isSocketConnect() {
         if (mSocket != null) {
-            return mSocket.connected();
+            if (MyApplication.getInstance().isV0VersionChat()){
+                return mSocket.connected();
+            }else if (MyApplication.getInstance().isV1xVersionChat()){
+                return mSocket.connected() && isWSStatusConnectedV1;
+            }
+
         }
         return false;
 
@@ -284,6 +289,7 @@ public class WebSocketPush {
                 LogUtils.debug(TAG, "连接成功");
                 int code = JSONUtils.getInt(arg0[0].toString(), "code", 0);
                 if (code == 100) {
+                    isWSStatusConnectedV1 = true;
                     sendWebSocketStatusBroadcast(Socket.EVENT_CONNECT);
                     // 当第一次连接成功后发送App目前的状态消息
                     sendAppStatus(MyApplication.getInstance().getIsActive());
@@ -338,6 +344,7 @@ public class WebSocketPush {
             @Override
             public void call(Object... arg0) {
                 // TODO Auto-generated method stub
+                isWSStatusConnectedV1 = false;
                 sendWebSocketStatusBroadcast(Socket.EVENT_DISCONNECT);
                 LogUtils.debug(TAG, "断开连接");
                 LogUtils.debug(TAG, arg0[0].toString());

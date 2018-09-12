@@ -260,7 +260,7 @@ public class ChannelV0Activity extends BaseActivity {
             Robot robot = DirectChannelUtils.getRobotInfo(getApplicationContext(),
                     channel.getTitle());
             String robotPhotoUrl = APIUri.getUserIconUrl(getApplicationContext(), robot.getId());
-            ImageDisplayUtils.getInstance().displayImage(robotPhotoImg, robotPhotoUrl, R.drawable.ic_robot_new);
+            ImageDisplayUtils.getInstance().displayImage(robotPhotoImg, robotPhotoUrl, R.drawable.icon_person_default);
         } else {
             robotPhotoImg.setVisibility(View.GONE);
             headerText.setVisibility(View.VISIBLE);
