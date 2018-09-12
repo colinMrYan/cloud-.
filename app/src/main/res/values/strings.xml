@@ -29,6 +29,7 @@
     <string name="next_step">下一步</string>
     <string name="pull_down_load_history">下拉加载历史消息</string>
     <string name="if_confirm_signout">您确定要退出登录吗?</string>
+    <string name="if_delect_current_item">删除当前选项</string>
     <string name="exit">退出</string>
     <string name="open">打开</string>
     <string name="add">添加</string>
