@@ -1,6 +1,8 @@
 package com.inspur.emmcloud.push;
 
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
@@ -10,10 +12,10 @@ import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.bean.chat.WSPushContent;
 import com.inspur.emmcloud.bean.system.EventMessage;
 import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ClientIDUtils;
@@ -22,10 +24,14 @@ import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import org.greenrobot.eventbus.EventBus;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import io.socket.client.IO;
 import io.socket.client.Manager;
@@ -40,12 +46,11 @@ public class WebSocketPush {
     private static final String TAG = "WebSocketPush";
     private static WebSocketPush webSocketPush = null;
     private Socket mSocket = null;
-    private Map<String, EventMessage> tracerMap = new HashMap<>();
-
-    public WebSocketPush() {
-        tracerMap = new HashMap<>();
-    }
-
+    private List<EventMessage> requestEventMessageList = new ArrayList<>();
+    private int timeCount = 0;
+    private Timer timer;
+    private Handler handler;
+    private boolean isWebsocketConnecting = false;
     public static WebSocketPush getInstance() {
         if (webSocketPush == null) {
             synchronized (WebSocketPush.class) {
@@ -57,25 +62,76 @@ public class WebSocketPush {
         return webSocketPush;
     }
 
+    public WebSocketPush() {
+        handler = new Handler(){
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                LogUtils.jasonDebug("handleMessage=======================================");
+                if (msg.what == 1){
+                    timeCount++;
+                    Iterator<EventMessage> it = requestEventMessageList.iterator();
+                    while(it.hasNext()){
+                        EventMessage eventMessage = it.next();
+                        LogUtils.jasonDebug("eventMessage.getStartQuestTime()="+eventMessage.getStartQuestTime());
+                        LogUtils.jasonDebug("MyAppConfig.WEBSOCKET_QEQUEST_TIMEOUT="+MyAppConfig.WEBSOCKET_QEQUEST_TIMEOUT);
+                        LogUtils.jasonDebug("timeCount="+timeCount);
+                        if(eventMessage.getStartQuestTime()+ MyAppConfig.WEBSOCKET_QEQUEST_TIMEOUT <= timeCount){
+                            setRequestEventMessageTimeout(eventMessage);
+                            it.remove();
+                            LogUtils.jasonDebug("move----------------");
+                        }
+                    }
+                    if (requestEventMessageList.size() == 0){
+                        endTimeCount();
+                    }
+
+                }
+            }
+        };
+    }
+
+    private void startTimeCount(){
+        if (timer == null){
+            timer = new Timer();
+            TimerTask task = new TimerTask() {
+                @Override
+                public void run() {
+                    if (handler != null){
+                        handler.sendEmptyMessage(1);
+                    }
+                }
+            };
+            timer.schedule(task,1000,1000);
+        }
+    }
+
+    private void endTimeCount(){
+        if (timer != null){
+            timer.cancel();
+            timer = null;
+        }
+    }
+
     /**
      * 开始WebSocket推送
      */
-    public void startWebSocket(final boolean isForceNew) {
+    public void startWebSocket() {
         // TODO Auto-generated method stub
-        if (!isHaveLogin()){
+        if (!MyApplication.getInstance().isHaveLogin()){
             return;
         }
         if (MyApplication.getInstance().isV0VersionChat()) {
             String pushId = AppUtils.getPushId(MyApplication.getInstance());
             if (!pushId.equals("UNKNOWN")) {
-                WebSocketConnect(isForceNew);
+                WebSocketConnect();
             }
         } else if (MyApplication.getInstance().isV1xVersionChat()) {
             if (NetUtils.isNetworkConnected(MyApplication.getInstance(), false)) {
                 new ClientIDUtils(MyApplication.getInstance(), new ClientIDUtils.OnGetClientIdListener() {
                     @Override
                     public void getClientIdSuccess(String clientId) {
-                        WebSocketConnect(isForceNew);
+                        WebSocketConnect();
                     }
 
                     @Override
@@ -89,23 +145,8 @@ public class WebSocketPush {
         }
     }
 
-    /**
-     * 判断是否已登录
-     *
-     * @return
-     */
-    private boolean isHaveLogin() {
-        String accessToken = PreferencesUtils.getString(MyApplication.getInstance(),
-                "accessToken", "");
-        String myInfo = PreferencesUtils.getString(MyApplication.getInstance(),
-                "myInfo", "");
-        boolean isMDMStatusPass = PreferencesUtils.getBoolean(MyApplication.getInstance(), "isMDMStatusPass", true);
-        return (!StringUtils.isBlank(accessToken) && !StringUtils.isBlank(myInfo) && isMDMStatusPass);
-    }
-
-
-    private void WebSocketConnect(boolean isForceNew) {
-        if (!isForceNew && isSocketConnect()) {
+    private void WebSocketConnect() {
+        if (isSocketConnect() || isWebsocketConnecting) {
             return;
         }
         String url = APIUri.getWebsocketConnectUrl();
@@ -115,7 +156,7 @@ public class WebSocketPush {
         IO.Options opts = new IO.Options();
         opts.reconnectionAttempts = 5; // 设置websocket重连次数
         opts.forceNew = true;
-        Map<String, String> query = new HashMap<String, String>();
+        Map<String, String> query = new HashMap<>();
         try {
             if (MyApplication.getInstance().isV0VersionChat()) {
                 String uuid = AppUtils.getMyUUID(MyApplication.getInstance());
@@ -133,6 +174,7 @@ public class WebSocketPush {
             LogUtils.debug(TAG, "query.toString()=" + ParseQS.encode(query));
             opts.query = ParseQS.encode(query);
             opts.transports = new String[]{WebSocket.NAME};
+            opts.forceNew = true;
             webSocketSignout();
             Manager manager = new Manager(new URI(url), opts);
             mSocket = manager.socket(MyApplication.getInstance().getChatSocketNameSpace());
@@ -161,8 +203,10 @@ public class WebSocketPush {
             });
             addListeners();
             mSocket.open();
+            isWebsocketConnecting = true;
         } catch (Exception e) {
             // TODO Auto-generated catch block
+            isWebsocketConnecting = false;
             e.printStackTrace();
             sendWebSocketStatusBroadcast(Socket.EVENT_CONNECT_ERROR);
             Log.d(TAG, "e=" + e.toString());
@@ -186,7 +230,6 @@ public class WebSocketPush {
             return mSocket.connected();
         }
         return false;
-
     }
 
     public void sendAppStatus(boolean isActive) {
@@ -200,7 +243,7 @@ public class WebSocketPush {
                 LogUtils.debug(TAG, "发送App状态：" + (isActive ? "ACTIVED" : "SUSPEND"));
             }
         } else {
-            startWebSocket(false);
+            startWebSocket();
         }
     }
 
@@ -222,15 +265,17 @@ public class WebSocketPush {
      * 切换租户的时候直接断开Websocket
      */
     public void closeWebsocket() {
+        endTimeCount();
         if (mSocket != null) {
             mSocket.disconnect();
             removeListeners();
             mSocket.close();
             mSocket = null;
         }
-        if (tracerMap != null) {
-            tracerMap.clear();
+        for (EventMessage eventMessage:requestEventMessageList){
+            setRequestEventMessageTimeout(eventMessage);
         }
+        requestEventMessageList.clear();
     }
 
     private void removeListeners() {
@@ -238,6 +283,7 @@ public class WebSocketPush {
         mSocket.off("com.inspur.ecm.chat");
         mSocket.off(Socket.EVENT_CONNECT_ERROR);
         mSocket.off(Socket.EVENT_CONNECT);
+        mSocket.off(Socket.EVENT_CONNECTING);
         mSocket.off(Socket.EVENT_DISCONNECT);
     }
 
@@ -248,6 +294,7 @@ public class WebSocketPush {
             @Override
             public void call(Object... arg0) {
                 // TODO Auto-generated method stub
+                isWebsocketConnecting = false;
                 LogUtils.debug(TAG, "连接失败");
                 if (arg0[0] != null) {
                     try {
@@ -257,9 +304,18 @@ public class WebSocketPush {
                         e.printStackTrace();
                     }
                 }
-
                 sendWebSocketStatusBroadcast(Socket.EVENT_CONNECT_ERROR);
 
+            }
+        });
+
+        mSocket.on(Socket.EVENT_CONNECTING, new Emitter.Listener() {
+
+            @Override
+            public void call(Object... arg0) {
+                // TODO Auto-generated method stub
+                isWebsocketConnecting = true;
+                LogUtils.jasonDebug("正在连接");
             }
         });
         mSocket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
@@ -267,6 +323,7 @@ public class WebSocketPush {
             @Override
             public void call(Object... arg0) {
                 // TODO Auto-generated method stub
+                isWebsocketConnecting = false;
                 if (MyApplication.getInstance().isV0VersionChat()) {
                     LogUtils.debug(TAG, "连接成功");
                     sendWebSocketStatusBroadcast(Socket.EVENT_CONNECT);
@@ -281,6 +338,7 @@ public class WebSocketPush {
             @Override
             public void call(Object... arg0) {
                 // TODO Auto-generated method stub
+                isWebsocketConnecting = false;
                 LogUtils.debug(TAG, "连接成功");
                 int code = JSONUtils.getInt(arg0[0].toString(), "code", 0);
                 if (code == 100) {
@@ -311,25 +369,30 @@ public class WebSocketPush {
             @Override
             public void call(Object... arg0) {
                 // TODO Auto-generated method stub
-                LogUtils.debug(TAG, "arg0[0].toString()=" + arg0[0].toString());
-                WSPushContent wsPushContent = new WSPushContent(arg0[0].toString());
-                String path = wsPushContent.getPath();
-                //客户端主动请求
-                if (StringUtils.isBlank(path)) {
-                    String tracer = wsPushContent.getTracer();
-                    EventMessage eventMessage = tracerMap.get(tracer);
-                    if (eventMessage != null) {
-                        tracerMap.remove(tracer);
-                        String body = wsPushContent.getBody();
-                        eventMessage.setContent(body);
-                        eventMessage.setStatus(wsPushContent.getStatus());
-                        EventBus.getDefault().post(eventMessage);
+                try {
+                    LogUtils.debug(TAG, "arg0[0].toString()=" + arg0[0].toString());
+                    WSPushContent wsPushContent = new WSPushContent(arg0[0].toString());
+                    String path = wsPushContent.getPath();
+                    //客户端主动请求
+                    if (StringUtils.isBlank(path)) {
+                        String tracer = wsPushContent.getTracer();
+                        int index = requestEventMessageList.indexOf(new EventMessage(tracer));
+                        if (index != -1){
+                            EventMessage eventMessage = requestEventMessageList.get(index);
+                            requestEventMessageList.remove(index);
+                            String body = wsPushContent.getBody();
+                            eventMessage.setContent(body);
+                            eventMessage.setStatus(wsPushContent.getStatus());
+                            EventBus.getDefault().post(eventMessage);
+                        }
+                    } else {
+                        if (path.equals("/channel/message") && wsPushContent.getMethod().equals("post")) {
+                            EventMessage eventMessagea = new EventMessage("",Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE, wsPushContent.getBody());
+                            EventBus.getDefault().post(eventMessagea);
+                        }
                     }
-                } else {
-                    if (path.equals("/channel/message") && wsPushContent.getMethod().equals("post")) {
-                        EventMessage eventMessagea = new EventMessage(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE, wsPushContent.getBody());
-                        EventBus.getDefault().post(eventMessagea);
-                    }
+                }catch (Exception e){
+                    e.printStackTrace();
                 }
             }
         });
@@ -350,14 +413,22 @@ public class WebSocketPush {
         if (isSocketConnect()) {
             LogUtils.debug(TAG, "eventMessage.getTag()=" + eventMessage.getTag());
             LogUtils.debug(TAG, "eventMessage.content=" + content);
+            eventMessage.setStartQuestTime(timeCount);
+            requestEventMessageList.add(eventMessage);
+            startTimeCount();
             sendContent(content);
-            tracerMap.put(tracer, eventMessage);
         } else {
             LogUtils.jasonDebug("isSocketConnect=false");
+            setRequestEventMessageTimeout(eventMessage);
+            startWebSocket();
+        }
+    }
+
+    private void setRequestEventMessageTimeout(EventMessage eventMessage){
+        if (eventMessage != null){
             eventMessage.setContent("time out");
             eventMessage.setStatus(-1);
             EventBus.getDefault().post(eventMessage);
-            startWebSocket(false);
         }
     }
 

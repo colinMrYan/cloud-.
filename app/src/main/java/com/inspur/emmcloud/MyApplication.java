@@ -177,9 +177,6 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
      */
     public void signout(boolean isWebSocketSignout) {
         // TODO Auto-generated method stub
-        if (isWebSocketSignout){
-            WebSocketPush.getInstance().webSocketSignout();
-        }
         //清除日历提醒极光推送本地通知
         CalEventNotificationUtils.cancelAllCalEventNotification(this);
         stopPush();
@@ -195,6 +192,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setClass(this, LoginActivity.class);
         startActivity(intent);
+        WebSocketPush.getInstance().webSocketSignout();
         ECMShortcutBadgeNumberManagerUtils.setDesktopBadgeNumber(getInstance(), 0);
     }
 /****************************通知相关（极光和华为推送）******************************************/

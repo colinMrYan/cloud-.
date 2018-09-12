@@ -25,7 +25,7 @@ public class HuaWeiPushReceiver extends PushReceiver {
     public void onToken(Context context, String token, Bundle extras) {
         PreferencesUtils.putString(context, "huawei_push_token", token);
         new ClientIDUtils(context).upload();
-        WebSocketPush.getInstance().startWebSocket(false);
+        WebSocketPush.getInstance().startWebSocket();
     }
 
     /**
