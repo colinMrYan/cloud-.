@@ -499,6 +499,7 @@
             android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>
+
         <activity
             android:name=".ui.mine.myinfo.MyInfoActivity"
             android:launchMode="singleTask"
@@ -508,6 +509,11 @@
             android:name=".ui.contact.ContactSearchActivity"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.contact.ContactOrgStructureActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait"></activity>
+
         <activity
             android:name=".ui.mine.setting.SettingActivity"
             android:launchMode="singleTask"
