@@ -193,6 +193,7 @@ dependencies {
     compile 'com.wei.android.lib:fingerprintidentify:1.2.1'
     //指纹识别库暂未启用
     compile 'me.leolin:ShortcutBadger:1.1.19@aar'
+    compile 'com.github.adrielcafe:AndroidAudioConverter:0.0.8'
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5.4'
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
     // React Naive Components
