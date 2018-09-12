@@ -32,6 +32,7 @@ import com.inspur.emmcloud.service.BackgroundService;
 import com.inspur.emmcloud.service.CoreService;
 import com.inspur.emmcloud.service.LocationService;
 import com.inspur.emmcloud.service.PVCollectService;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -141,7 +142,9 @@ public class IndexActivity extends IndexBaseActivity {
             Intent intent = new Intent();
             intent.setClass(this, PVCollectService.class);
             startService(intent);
+            LogUtils.LbcDebug("上传数据post");
         }
+        LogUtils.LbcDebug("上传数据post");
     }
 
 

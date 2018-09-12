@@ -85,6 +85,30 @@ public class AppExceptionCacheUtils {
         return appExceptionList;
     }
 
+
+    /**
+     * 获取异常list
+     *
+     * @param context
+     * @param maxUpLoadItemsNum  一次上传最大数量
+     * @return
+     */
+    public static List<AppException> getAppExceptionList(final Context context, int maxUpLoadItemsNum) {
+        List<AppException> appExceptionList = new ArrayList<>();
+        try {
+            appExceptionList = DbCacheUtils.getDb(context).selector(AppException.class).limit(maxUpLoadItemsNum).findAll();
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
+        if (appExceptionList == null) {
+            appExceptionList = new ArrayList<>();
+        }
+        return appExceptionList;
+    }
+
+
+
     /**
      * 清除AppException表信息
      *
@@ -96,6 +120,23 @@ public class AppExceptionCacheUtils {
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * 清除AppException表信息
+     *@param  maxDelectItemsNum 最大删除条数
+     * @param context
+     */
+    public static int clearPartAppException(Context context,int maxDelectItemsNum) {
+        try {
+            List<AppException> collectModelList = getAppExceptionList(context, maxDelectItemsNum);
+            DbCacheUtils.getDb(context).delete(collectModelList);
+            return collectModelList.size();
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return  -1;
         }
     }
 
