@@ -16,7 +16,6 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.contact.ContactOrg;
 import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.util.common.LogUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactOrgCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 
@@ -31,7 +30,7 @@ public class ContactOrgStructureActivity extends BaseActivity {
     private ContactUser contactUser;
     private OrgStrContactAdapter adapter;
     private ListView listView;
-    private List<String> orgNameList;
+    private List<String> orgNameList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +39,7 @@ public class ContactOrgStructureActivity extends BaseActivity {
         setContentView(R.layout.activity_contact_org_structure);
         init();
         adapter = new OrgStrContactAdapter(this, orgNameList);
-        listView = (ListView) findViewById(R.id.org_structure_lv);
+        listView = (ListView) findViewById(R.id.lv_org_structure);
         listView.setAdapter(adapter);
     }
 
@@ -49,7 +48,7 @@ public class ContactOrgStructureActivity extends BaseActivity {
      * **/
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.org_back_layout:
+            case R.id.rl_org_back:
                 finish();
         }
     }
@@ -60,10 +59,7 @@ public class ContactOrgStructureActivity extends BaseActivity {
     private void init() {
         String uid = null;
         uid = getIntent().getExtras().getString("uid");
-        if (!StringUtils.isBlank(uid)) {
             contactUser = ContactUserCacheUtils.getContactUserByUid(uid);
-        }
-        if (!StringUtils.isBlank(uid)) {
             orgNameList = new ArrayList<>();
             String root = "root";
             String orgNameOrID = contactUser.getParentId();
@@ -74,7 +70,6 @@ public class ContactOrgStructureActivity extends BaseActivity {
                 orgNameOrID = contactOrgTest.getParentId();
             }
             Collections.reverse(orgNameList);
-        }
     }
 }
 
@@ -85,18 +80,16 @@ public class ContactOrgStructureActivity extends BaseActivity {
 class OrgStrContactAdapter extends BaseAdapter {
 
     private Context adpContext;
-    private List<String> groupOrgList = new ArrayList<>();
+    private List<String> groupOrgList;
 
     public OrgStrContactAdapter(Context context, List<String> orgNameAdpList) {
         adpContext = context;
-        if (orgNameAdpList != null) {
-            groupOrgList = orgNameAdpList;
-        }
+        groupOrgList = orgNameAdpList;
     }
 
     @Override
     public int getCount() {
-        return groupOrgList == null ? 0 : groupOrgList.size();
+        return groupOrgList.size();
     }
 
     @Override
@@ -118,9 +111,9 @@ class OrgStrContactAdapter extends BaseAdapter {
             convertView = inflater.inflate(R.layout.contact_org_structure_item, null);
         }
 
-        ImageView logImage = (ImageView) convertView.findViewById(R.id.org_item_log_iv);
-        ImageView lineImage = (ImageView) convertView.findViewById(R.id.org_item_line_iv);
-        TextView Name = (TextView) convertView.findViewById(R.id.org_item_name_tv);
+        ImageView logImage = (ImageView) convertView.findViewById(R.id.iv_org_item_log);
+        ImageView lineImage = (ImageView) convertView.findViewById(R.id.iv_org_item_line);
+        TextView Name = (TextView) convertView.findViewById(R.id.tv_org_item_name);
         logImage.setImageResource((position == 0) ? R.drawable.ic_org_structure_head_log : R.drawable.ic_org_structure_mid_log);
         lineImage.setImageResource(R.drawable.ic_org_structure_liner);
         lineImage.setVisibility(position == (getCount() - 1) ? View.GONE : View.VISIBLE);

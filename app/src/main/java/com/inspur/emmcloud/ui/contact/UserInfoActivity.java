@@ -91,9 +91,10 @@ public class UserInfoActivity extends BaseActivity {
             uid = uri.split("//")[1];
         } else if (getIntent().hasExtra("uid")) {
             uid = getIntent().getExtras().getString("uid");
-            parentUid =uid;
+
         }
         if (!StringUtils.isBlank(uid)){
+            parentUid =uid;
             contactUser = ContactUserCacheUtils.getContactUserByUid(uid);
         }
         if (contactUser == null) {

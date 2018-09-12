@@ -14,13 +14,13 @@
         android:orientation="vertical">
 
         <RelativeLayout
-            android:id="@+id/org_Structure_header_layout"
+            android:id="@+id/rl_org_Structure_header"
             android:layout_width="match_parent"
             android:layout_height="@dimen/header_height"
             android:background="@color/header_bg">
 
             <RelativeLayout
-                android:id="@+id/org_back_layout"
+                android:id="@+id/rl_org_back"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_centerVertical="true"
@@ -31,7 +31,7 @@
 
                 <ImageView
 
-                    android:id="@+id/back_btn"
+                    android:id="@+id/iv_back_btn"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_centerVertical="true"
@@ -43,7 +43,7 @@
 
             <TextView
 
-                android:id="@+id/org_header_text"
+                android:id="@+id/tv_org_header"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
@@ -55,10 +55,10 @@
         </RelativeLayout>
 
         <ListView
-            android:id="@+id/org_structure_lv"
+            android:id="@+id/lv_org_structure"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/org_Structure_header_layout"
+            android:layout_below="@id/rl_org_Structure_header"
             android:layout_marginTop="20dp"
             android:divider="@null">
 
