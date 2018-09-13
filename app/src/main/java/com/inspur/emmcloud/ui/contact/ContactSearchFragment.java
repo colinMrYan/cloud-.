@@ -396,6 +396,10 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
         secondTitleText.setText(getString(R.string.recently_used));
         commonContactList = CommonContactCacheUtils.getCommonContactList(
                 getActivity().getApplicationContext(), 5, searchContent, excludeContactList);
+        /********/
+
+
+        /********/
         secondGroupListAdapter = new SecondGroupListAdapter();
         secondGroupListView.setAdapter(secondGroupListAdapter);
         secondGroupListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
