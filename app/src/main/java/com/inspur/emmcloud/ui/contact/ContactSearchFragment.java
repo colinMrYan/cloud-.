@@ -442,6 +442,9 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
                     @Override
                     public void onClick(QMUIDialog dialog, int index) {
                         dialog.dismiss();
+                        SearchModel tempData = commonContactList.get(position);
+                        String toDelectItemId = tempData.getId();
+                        CommonContactCacheUtils.delectSingleCommonContactList( getActivity().getApplicationContext(),toDelectItemId);
                             commonContactList.remove(position);
                             secondGroupListAdapter.notifyDataSetChanged();
                     }
