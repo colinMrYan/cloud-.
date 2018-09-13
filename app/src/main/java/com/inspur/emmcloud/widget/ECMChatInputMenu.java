@@ -181,7 +181,7 @@ public class ECMChatInputMenu extends LinearLayout {
                     @Override
                     public void onSuccess(File file) {
                         LogUtils.YfcDebug("转格式完成的文件路径："+file.getAbsolutePath());
-                        voice2StringMessageUtils.startVoiceListeningByVoiceFile(seconds,filePath);
+                        voice2StringMessageUtils.startVoiceListeningByVoiceFile(seconds,filePath,file.getAbsolutePath());
                     }
 
                     @Override
