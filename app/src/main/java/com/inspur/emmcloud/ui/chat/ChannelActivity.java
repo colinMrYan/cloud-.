@@ -120,7 +120,6 @@ public class ChannelActivity extends MediaPlayBaseActivity {
     private boolean isSpecialUser = false; //小智机器人进行特殊处理
     private BroadcastReceiver sendActionMsgReceiver;
     private BroadcastReceiver refreshNameReceiver;
-    private RecycleViewForSizeChange msgListView1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -226,7 +225,7 @@ public class ChannelActivity extends MediaPlayBaseActivity {
      */
     private void initChatInputMenu() {
         chatInputMenu.setSpecialUser(isSpecialUser);
-        chatInputMenu.setOtherLayoutView(swipeRefreshLayout, msgListView1);
+        chatInputMenu.setOtherLayoutView(swipeRefreshLayout, msgListView);
         if (channel.getType().equals("GROUP")) {
             chatInputMenu.setCanMentions(true, cid);
         } else {

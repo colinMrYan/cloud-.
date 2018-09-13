@@ -76,7 +76,7 @@ public class ECMChatInputMenu extends LinearLayout {
     private ECMChatInputMenuViewpageLayout viewpagerLayout;
 
     @ViewInject(R.id.voice_input_layout)
-    private LinearLayout voiceInputLayout;
+    private RelativeLayout voiceInputLayout;
 
     @ViewInject(R.id.voice_btn)
     private ImageButton voiceBtn;

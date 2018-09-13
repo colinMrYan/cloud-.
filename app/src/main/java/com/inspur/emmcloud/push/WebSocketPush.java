@@ -111,7 +111,6 @@ public class WebSocketPush {
         String url = APIUri.getWebsocketConnectUrl();
         String path = MyApplication.getInstance().isV0VersionChat() ? "/" + MyApplication.getInstance().getCurrentEnterprise().getCode() + "/socket/handshake" :
                 "/chat/socket/handshake";
-        sendWebSocketStatusBroadcast("socket_connecting");
         IO.Options opts = new IO.Options();
         opts.reconnectionAttempts = 5; // 设置websocket重连次数
         opts.forceNew = true;
@@ -244,6 +243,8 @@ public class WebSocketPush {
         mSocket.off(Socket.EVENT_CONNECT_ERROR);
         mSocket.off(Socket.EVENT_CONNECT);
         mSocket.off(Socket.EVENT_DISCONNECT);
+        mSocket.off(Socket.EVENT_CONNECTING);
+        mSocket.off(Socket.EVENT_RECONNECTING);
     }
 
     private void addListeners() {
@@ -281,6 +282,24 @@ public class WebSocketPush {
             }
         });
 
+        mSocket.on(Socket.EVENT_CONNECTING, new Emitter.Listener() {
+
+            @Override
+            public void call(Object... arg0) {
+                // TODO Auto-generated method stub
+                sendWebSocketStatusBroadcast("socket_connecting");
+            }
+        });
+
+        mSocket.on(Socket.EVENT_RECONNECTING, new Emitter.Listener() {
+
+            @Override
+            public void call(Object... arg0) {
+                // TODO Auto-generated method stub
+                sendWebSocketStatusBroadcast("socket_connecting");
+            }
+        });
+
         mSocket.on("status", new Emitter.Listener() {
 
             @Override
@@ -304,7 +323,6 @@ public class WebSocketPush {
             public void call(Object... arg0) {
                 // TODO Auto-generated method stub
                 LogUtils.debug(TAG, "message:" + arg0[0].toString());
-
                 String content = arg0[0].toString();
                 Intent intent = new Intent("com.inspur.msg");
                 intent.putExtra("push", content);

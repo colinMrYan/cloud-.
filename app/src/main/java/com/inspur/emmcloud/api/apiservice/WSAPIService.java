@@ -244,7 +244,10 @@ public class WSAPIService {
             JSONObject object = new JSONObject();
             JSONObject actionObj = new JSONObject();
             actionObj.put("method", "get");
-            actionObj.put("path", "/channel/message");
+            actionObj.put("path", "/channel/message-with-unread-count");
+            JSONObject queryObj = new JSONObject();
+            queryObj.put("limit", 15);
+            actionObj.put("query", queryObj);
             object.put("action", actionObj);
             JSONObject headerObj = new JSONObject();
             headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());

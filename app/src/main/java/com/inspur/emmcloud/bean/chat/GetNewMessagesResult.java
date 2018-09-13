@@ -14,7 +14,7 @@ public class GetNewMessagesResult {
 	private JSONObject messageObj;
 	private List<Message> allMessageList = new ArrayList<>();
 	public GetNewMessagesResult(String response) {
-		messageObj = JSONUtils.getJSONObject(response);
+		messageObj = JSONUtils.getJSONObject(response,"messages",new JSONObject());
 		Iterator<String> keys = messageObj.keys();
 		while(keys.hasNext()){
 			String key = keys.next();
