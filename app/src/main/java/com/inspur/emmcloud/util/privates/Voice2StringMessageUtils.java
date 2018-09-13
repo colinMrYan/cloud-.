@@ -11,6 +11,7 @@ import com.iflytek.cloud.RecognizerResult;
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechError;
 import com.iflytek.cloud.SpeechRecognizer;
+import com.inspur.emmcloud.bean.system.VoiceResult;
 import com.inspur.emmcloud.interf.OnVoiceResultCallback;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
@@ -41,6 +42,9 @@ public class Voice2StringMessageUtils {
     //初始化监听器，监听是否初始化成功
     private InitListener initListener;
 
+    private float durationTime = 0;
+    private String filePath = "";
+
     public Voice2StringMessageUtils(Context context) {
         this.context = context;
         initListeners();
@@ -60,7 +64,9 @@ public class Voice2StringMessageUtils {
      * 通过音频文件启动听写
      * 以后需要发送语音时可以单独录制一段语音存到sd卡当做文件发送
      */
-    public void startVoiceListeningByVoiceFile(String voiceFilePath) {
+    public void startVoiceListeningByVoiceFile(float seconds,String voiceFilePath) {
+        this.durationTime = seconds;
+        this.filePath = voiceFilePath;
         // 使用SpeechRecognizer对象，可根据回调消息自定义界面；
         speechRecognizer = SpeechRecognizer.createRecognizer(context, initListener);
         setParam();
@@ -105,7 +111,7 @@ public class Voice2StringMessageUtils {
         // 设置音频保存路径，保存音频格式支持pcm、wav，设置路径为sd卡请注意WRITE_EXTERNAL_STORAGE权限
         // 注：AUDIO_FORMAT参数语记需要更新版本才能生效
         speechRecognizer.setParameter(SpeechConstant.AUDIO_FORMAT, "wav");
-        speechRecognizer.setParameter(SpeechConstant.ASR_AUDIO_PATH, Environment.getExternalStorageDirectory() + "/msc/iat.wav");
+        speechRecognizer.setParameter(SpeechConstant.ASR_AUDIO_PATH, Environment.getExternalStorageDirectory() + "");
     }
 
     /**
@@ -131,6 +137,7 @@ public class Voice2StringMessageUtils {
 
             @Override
             public void onError(SpeechError error) {
+                LogUtils.YfcDebug("出错："+error.getErrorDescription());
                 //返回错误停止录音
                 stopListening();
             }
@@ -146,8 +153,7 @@ public class Voice2StringMessageUtils {
                 addListeningResult2Map(results);
                 if (isLast) {
                     //最后的结果
-                    LogUtils.YfcDebug("results："+getLastListeningResult());
-                    onVoiceResultCallback.onVoiceResult(getLastListeningResult(), isLast);
+                    onVoiceResultCallback.onVoiceResult(new VoiceResult(getLastListeningResult(),durationTime,filePath), isLast);
                 }
             }
 

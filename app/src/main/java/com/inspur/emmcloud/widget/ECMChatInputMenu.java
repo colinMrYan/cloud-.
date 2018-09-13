@@ -24,15 +24,18 @@ import android.widget.RelativeLayout;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.chat.InputTypeBean;
 import com.inspur.emmcloud.bean.chat.InsertModel;
+import com.inspur.emmcloud.bean.system.VoiceResult;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.interf.OnVoiceResultCallback;
 import com.inspur.emmcloud.ui.chat.MembersActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.InputMethodUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.MediaPlayerUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.common.audioformat.ConvertAudioFileFormatUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.Voice2StringMessageUtils;
 import com.inspur.emmcloud.widget.audiorecord.AudioRecordButton;
@@ -42,9 +45,13 @@ import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import cafe.adriel.androidaudioconverter.callback.IConvertCallback;
+import cafe.adriel.androidaudioconverter.model.AudioFormat;
 
 
 /**
@@ -162,15 +169,27 @@ public class ECMChatInputMenu extends LinearLayout {
             @Override
             public void onStartRecordingVoice() {
 //                voice2StringMessageUtils.startVoiceListening();
-                voice2StringMessageUtils.startVoiceListeningByVoiceFile("/IMP-Cloud/99999/test/iat.wav");
+//                voice2StringMessageUtils.startVoiceListeningByVoiceFile("/IMP-Cloud/99999/test/iat.wav");
             }
 
             @Override
-            public void onFinished(float seconds, String filePath) {
+            public void onFinished(final float seconds, final String filePath) {
                 // TODO Auto-generated method stub
-                if (chatInputMenuListener != null) {
-                    chatInputMenuListener.onSendVoiceRecordMsg(seconds, filePath);
-                }
+                LogUtils.YfcDebug("录制的时间："+seconds);
+                LogUtils.YfcDebug("录制的文件存储路径："+filePath);
+                IConvertCallback callback = new IConvertCallback() {
+                    @Override
+                    public void onSuccess(File file) {
+                        LogUtils.YfcDebug("转格式完成的文件路径："+file.getAbsolutePath());
+                        voice2StringMessageUtils.startVoiceListeningByVoiceFile(seconds,filePath);
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+
+                    }
+                };
+                ConvertAudioFileFormatUtils.getInstance().convertAudioFile2SpecifiedFormat(getContext(),filePath, AudioFormat.MP3,callback);
             }
 
             @Override
@@ -384,22 +403,31 @@ public class ECMChatInputMenu extends LinearLayout {
             }
 
             @Override
-            public void onVoiceResult(String results, boolean isLast) {
-                if (results.length() == 1 && StringUtils.isSymbol(results)) {
-                    results = "";
-                }
-                if (!StringUtils.isBlank(results)) {
-                    if (isSpecialUser) {
-                        inputEdit.clearInsertModelList();
-                        if (chatInputMenuListener != null) {
-                            chatInputMenuListener.onSendMsg(results, null, null, null);
-                        }
-                    } else {
-                        int index = inputEdit.getSelectionStart();
-                        Editable editable = inputEdit.getText();
-                        editable.insert(index, results);
+            public void onVoiceResult(VoiceResult voiceResult, boolean isLast) {
+                if(!StringUtils.isBlank(voiceResult.getFilePath())){
+                    LogUtils.YfcDebug("发送语音消息");
+                    if (chatInputMenuListener != null) {
+                        chatInputMenuListener.onSendVoiceRecordMsg(voiceResult.getResults(),voiceResult.getSeconds(), voiceResult.getFilePath());
                     }
+                }else{
+                    String results = voiceResult.getResults();
+                    if (results.length() == 1 && StringUtils.isSymbol(results)) {
+                        results = "";
+                    }
+                    LogUtils.YfcDebug("转写翻译结果："+results);
+                    if (!StringUtils.isBlank(results)) {
+                        if (isSpecialUser) {
+                            inputEdit.clearInsertModelList();
+                            if (chatInputMenuListener != null) {
+                                chatInputMenuListener.onSendMsg(results, null, null, null);
+                            }
+                        } else {
+                            int index = inputEdit.getSelectionStart();
+                            Editable editable = inputEdit.getText();
+                            editable.insert(index, results);
+                        }
 
+                    }
                 }
             }
 
@@ -629,7 +657,7 @@ public class ECMChatInputMenu extends LinearLayout {
     public interface ChatInputMenuListener {
         void onSendMsg(String content, List<String> mentionsUidList, List<String> urlList, Map<String, String> mentionsMap);
 
-        void onSendVoiceRecordMsg(float seconds, String filePath);
+        void onSendVoiceRecordMsg(String results,float seconds, String filePath);
 
 
         void onVoiceCommucaiton();

@@ -5,20 +5,25 @@ import android.media.AudioRecord;
 import android.media.MediaRecorder;
 import android.os.Environment;
 
+import com.inspur.emmcloud.config.MyAppConfig;
+import com.inspur.emmcloud.util.common.LogUtils;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.text.DecimalFormat;
+
 public class AudioRecorderManager {
 
     //录音输出文件
-    private final static String AUDIO_RAW_FILENAME = "RawAudio.raw";//原生音频文件
-    private final static String AUDIO_WAV_FILENAME = "FinalAudio.wav";//Wav格式的文件
-    public final static String AUDIO_AMR_FILENAME = "FinalAudio.amr";//amr格式的文件
+    public final static String AUDIO_RAW_FILENAME = "RawAudio.raw";//原生音频文件
+    public final static String AUDIO_WAV_FILENAME = "WavAudio.wav";//wav格式的文件
+    public final static String AUDIO_AMR_FILENAME = "AmrAudio.amr";//amr格式的文件
     //音频输入-麦克风
     public final static int AUDIO_INPUT = MediaRecorder.AudioSource.MIC;
     //采用频率
     //44100是目前的标准，但是某些设备仍然支持22050，16000，11025
-    public final static int AUDIO_SAMPLE_RATE = 44100;  //44.1KHz,普遍使用的频率
+    public final static int AUDIO_SAMPLE_RATE = 16000;  //44.1KHz,普遍使用的频率
     // 缓冲区字节大小
     private int bufferSizeInBytes = 0;
     //AudioName裸音频数据文件 ，麦克风
@@ -28,14 +33,17 @@ public class AudioRecorderManager {
     //录音工具
     private AudioRecord audioRecord;
     //正在录制的标志
-    private boolean isRecord = false;
+    private boolean isRecording = false;
     //音量
-    private double volume = 0;
+    private int volume = 0;
     //持续录制的时间
     private long duration = 0;
+    //开始时间
     private long beginTime = 0;
     //管理类的引用
     private static AudioRecorderManager mInstance;
+
+    private AudioRecordButton.AudioDataCallBack callBack;
 
     public static AudioRecorderManager getInstance() {
         if (mInstance == null) {
@@ -55,41 +63,67 @@ public class AudioRecorderManager {
      * 开始录制
      * @return
      */
-    public int startRecordAndFile() {
+    public int startRecord() {
         //判断是否有外部存储设备sdcard
         if (isSdcardExit()) {
-            if (isRecord) {
-                return ErrorCode.E_STATE_RECODING;
+            if (isRecording) {
+                return AudioRecordErrorCode.E_STATE_RECODING;
             } else {
                 if (audioRecord == null) {
                     createAudioRecord();
                 }
                 audioRecord.startRecording();
                 // 让录制状态为true
-                isRecord = true;
+                isRecording = true;
                 beginTime = System.currentTimeMillis();
                 // 开启音频文件写入线程
                 new Thread(new AudioRecordThread()).start();
-                return ErrorCode.SUCCESS;
+                return AudioRecordErrorCode.SUCCESS;
             }
         } else {
-            return ErrorCode.E_NOSDCARD;
+            return AudioRecordErrorCode.E_NOSDCARD;
         }
+    }
+
+    /**
+     * 获取持续时间
+     * @return
+     */
+    public float getDuration(){
+        return duration/1000;
+    }
+
+    /**
+     * 获取录制状态
+     * @return
+     */
+    public boolean isRecording(){
+        return isRecording;
     }
 
     /**
      * 停止录音和写文件
      */
-    public void stopRecordAndFile() {
+    public void stopRecord() {
         close();
+    }
+
+    /**
+     * 重置变量
+     */
+    private void reset(){
+        isRecording = false;
+        volume = 0;
+        beginTime = 0;
     }
 
     /**
      * 关闭，对内使用
      */
     private void close() {
+        reset();
         if (audioRecord != null) {
-            isRecord = false;//停止文件写入
+            isRecording = false;//停止文件写入
             audioRecord.stop();
             audioRecord.release();//释放资源
             audioRecord = null;
@@ -108,7 +142,7 @@ public class AudioRecorderManager {
                 AudioFormat.CHANNEL_IN_STEREO, AudioFormat.ENCODING_PCM_16BIT);
         // 创建AudioRecord对象
         audioRecord = new AudioRecord(AUDIO_INPUT, AUDIO_SAMPLE_RATE,
-                AudioFormat.CHANNEL_IN_STEREO, AudioFormat.ENCODING_PCM_16BIT, bufferSizeInBytes);
+                AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, bufferSizeInBytes);
     }
 
     /**
@@ -117,7 +151,7 @@ public class AudioRecorderManager {
     class AudioRecordThread implements Runnable {
         @Override
         public void run() {
-            writeDateTOFile();//往文件中写入裸数据
+            writeData2File();//往文件中写入裸数据
             copyWaveFile(rawAudioFilePath, wavAudioFilePath);//给裸数据加上头文件
         }
     }
@@ -127,29 +161,39 @@ public class AudioRecorderManager {
      * 如果需要播放就必须加入一些格式或者编码的头信息。但是这样的好处就是你可以对音频的 裸数据进行处理，比如你要做一个爱说话的TOM
      * 猫在这里就进行音频的处理，然后重新封装 所以说这样得到的音频比较容易做一些音频的处理。
      */
-    private void writeDateTOFile() {
+    private void writeData2File() {
         // new一个byte数组用来存一些字节数据，大小为缓冲区大小
         byte[] audioData = new byte[bufferSizeInBytes];
         FileOutputStream fos = null;
         int readSize = 0;
         try {
+            File dir = new File(MyAppConfig.LOCAL_CACHE_VOICE_PATH);
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }
             File file = new File(rawAudioFilePath);
             if (file.exists()) {
                 file.delete();
             }
             fos = new FileOutputStream(file);// 建立一个可存取字节的文件
-            while (isRecord == true) {
+            while (isRecording == true) {
                 readSize = audioRecord.read(audioData, 0, bufferSizeInBytes);
                 if (AudioRecord.ERROR_INVALID_OPERATION != readSize && fos != null) {
                     fos.write(audioData);
                 }
                 volume = getVolume(audioData,readSize);
                 duration = System.currentTimeMillis() - beginTime;
+                if(duration <= 60*1000){
+                    DecimalFormat decimalFormat = new  DecimalFormat("##0.0");
+                    String time = decimalFormat.format(duration/1000f);
+                    callBack.onDataChange(volume,Float.parseFloat(time));
+                }
             }
             if (fos != null) {
                 fos.close();// 关闭写入流
             }
         } catch (Exception e) {
+            LogUtils.YfcDebug("发生异常："+e.getMessage());
             e.printStackTrace();
         }
     }
@@ -159,15 +203,25 @@ public class AudioRecorderManager {
      * @param audioData
      * @return
      */
-    private double getVolume(byte[] audioData,int readSize) {
-        long v = 0;
+    private int getVolume(byte[] audioData,int readSize) {
+        long  quadraticSum = 0;
         // 将 buffer 内容取出，进行平方和运算
         for (int i = 0; i < audioData.length; i++) {
-            v += audioData[i] * audioData[i];
+            quadraticSum += audioData[i] * audioData[i];
         }
         // 平方和除以数据总长度，得到音量大小。
-        double mean = v / (double) readSize;
-        return 10 * Math.log10(mean);
+        double mean = quadraticSum / (double) readSize;
+
+        int db = 0;// 分贝
+        if (mean > 1)
+            db = (int) (20 * Math.log10(mean));
+        db = db/15;
+        if (db ==0){
+            db++;
+        }else if(db >6){
+            db = 6;
+        }
+        return db;
     }
 
     // 这里得到可播放的音频文件
@@ -262,12 +316,7 @@ public class AudioRecorderManager {
      * @return
      */
     private String getRawFilePath(){
-        String mAudioRawPath = "";
-        if(isSdcardExit()){
-            String fileBasePath = Environment.getExternalStorageDirectory().getAbsolutePath();
-            mAudioRawPath = fileBasePath+"/"+AUDIO_RAW_FILENAME;
-        }
-        return mAudioRawPath;
+        return MyAppConfig.LOCAL_CACHE_VOICE_PATH+"/"+AUDIO_RAW_FILENAME;
     }
 
     /**
@@ -275,14 +324,8 @@ public class AudioRecorderManager {
      * @return
      */
     private String getWavFilePath(){
-        String mAudioWavPath = "";
-        if(isSdcardExit()){
-            String fileBasePath = Environment.getExternalStorageDirectory().getAbsolutePath();
-            mAudioWavPath = fileBasePath+"/"+AUDIO_WAV_FILENAME;
-        }
-        return mAudioWavPath;
+        return MyAppConfig.LOCAL_CACHE_VOICE_PATH +"/"+AUDIO_WAV_FILENAME;
     }
-
 
     /**
      * 获取编码后的AMR格式音频文件路径
@@ -324,5 +367,13 @@ public class AudioRecorderManager {
     public String getCurrentFilePath() {
         // TODO Auto-generated method stub
         return wavAudioFilePath;
+    }
+
+    /**
+     * 持续时间，音量回调
+     * @param callBack
+     */
+    public void setCallBack(AudioRecordButton.AudioDataCallBack callBack) {
+        this.callBack = callBack;
     }
 }

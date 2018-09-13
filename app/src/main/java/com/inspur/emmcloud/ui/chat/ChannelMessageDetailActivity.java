@@ -133,7 +133,7 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
             }
 
             @Override
-            public void onSendVoiceRecordMsg(float seconds, String filePath) {
+            public void onSendVoiceRecordMsg(String results,float seconds, String filePath) {
 
             }
 

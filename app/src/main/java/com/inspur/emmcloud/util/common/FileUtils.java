@@ -1116,7 +1116,7 @@ public class FileUtils {
      */
     public static byte[] readAudioFileFromSDcard(String filePath){
         try {
-            File file = new File(Environment.getExternalStorageDirectory(),
+            File file = new File(
                     filePath);
             InputStream inputStream = new FileInputStream(file);
             byte[] data = new byte[inputStream.available()];

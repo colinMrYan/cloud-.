@@ -241,7 +241,10 @@ public class ChannelActivity extends MediaPlayBaseActivity {
             }
 
             @Override
-            public void onSendVoiceRecordMsg(float seconds, String filePath) {
+            public void onSendVoiceRecordMsg(String results,float seconds, String filePath) {
+                LogUtils.YfcDebug("转义结果："+results);
+                LogUtils.YfcDebug("语音时间："+seconds);
+                LogUtils.YfcDebug("文件路径："+filePath);
                 int duration = (int) seconds;
                 if (duration == 0) {
                     duration = 1;
