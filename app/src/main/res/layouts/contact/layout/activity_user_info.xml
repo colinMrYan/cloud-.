@@ -57,17 +57,19 @@
             android:textSize="17sp" />
         <TextView
             android:id="@+id/duty_tv"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_name"
             android:layout_centerHorizontal="true"
-            android:layout_marginRight="6dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
             android:layout_marginTop="4dp"
             android:textColor="@color/white"
             android:textSize="15sp"
             android:visibility="gone"
             android:ellipsize="end"
-            android:maxLines="2" />
+            android:maxLines="2"
+            android:gravity="center"/>
     </RelativeLayout>
 
     <LinearLayout
