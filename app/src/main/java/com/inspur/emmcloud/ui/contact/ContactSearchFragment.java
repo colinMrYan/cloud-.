@@ -396,10 +396,6 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
         secondTitleText.setText(getString(R.string.recently_used));
         commonContactList = CommonContactCacheUtils.getCommonContactList(
                 getActivity().getApplicationContext(), 5, searchContent, excludeContactList);
-        /********/
-
-
-        /********/
         secondGroupListAdapter = new SecondGroupListAdapter();
         secondGroupListView.setAdapter(secondGroupListAdapter);
         secondGroupListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -442,9 +438,8 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
                     @Override
                     public void onClick(QMUIDialog dialog, int index) {
                         dialog.dismiss();
-                        SearchModel tempData = commonContactList.get(position);
-                        String toDelectItemId = tempData.getId();
-                        CommonContactCacheUtils.delectSingleCommonContactList( getActivity().getApplicationContext(),toDelectItemId);
+                        SearchModel searchModel = commonContactList.get(position);
+                        CommonContactCacheUtils.delectCommonContact( getActivity().getApplicationContext(),searchModel);
                             commonContactList.remove(position);
                             secondGroupListAdapter.notifyDataSetChanged();
                     }

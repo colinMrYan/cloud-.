@@ -93,22 +93,14 @@ public class CommonContactCacheUtils {
      *删除单个常用联系人(只删除组)
      * lbc 2018/09/13
      * @param context
-     * @param groupID 删除联系人groupID
+     * @param searchModel 删除联系人groupID
      * **/
-    public static boolean delectSingleCommonContactList(Context context,String groupID) {
-        List<SearchModel> delectSingleContact = new ArrayList<>();
+    public static void delectCommonContact(Context context,SearchModel searchModel) {
         try {
-              delectSingleContact = DbCacheUtils.getDb(context).selector(SearchModel.class).where("id","=",groupID).findAll();
-            if(1==delectSingleContact.size()) {
-                DbCacheUtils.getDb(context).delete(delectSingleContact);
-            } else {
-                 return false;
-            }
+                DbCacheUtils.getDb(context).delete(searchModel);
         } catch (DbException e) {
             e.printStackTrace();
-            return  false;
         }
-        return  true;
     }
 
 
