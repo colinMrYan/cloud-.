@@ -215,7 +215,6 @@ public class SettingActivity extends BaseActivity {
                         boolean isCommunicateExist = TabAndAppExistUtils.isTabExist(MyApplication.getInstance(),Constant.APP_TAB_BAR_COMMUNACATE);
                         if (NetUtils.isNetworkConnected(getApplicationContext(),false) && MyApplication.getInstance().isV1xVersionChat() && isCommunicateExist){
                             WSAPIService.getInstance().sendAppStatus("REMOVED");
-                            MyApplication.getInstance().signout(false);
                         }else {
                             MyApplication.getInstance().signout();
                         }
@@ -328,13 +327,8 @@ public class SettingActivity extends BaseActivity {
     public void onReiceiveWebsocketRemoveCallback(EventMessage eventMessage) {
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_WEBSOCKET_STATUS_REMOVE)) {
             LoadingDialog.dimissDlg(loadingDlg);
-            if (eventMessage.getStatus() == 200) {
-                MyApplication.getInstance().signout(false);
-                stopAppService();
-            }else {
-                ToastUtils.show(MyApplication.getInstance(),R.string.signout_fail);
-            }
-
+            MyApplication.getInstance().signout(true);
+            stopAppService();
         }
 
     }
