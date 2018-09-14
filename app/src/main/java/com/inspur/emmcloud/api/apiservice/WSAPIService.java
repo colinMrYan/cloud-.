@@ -61,7 +61,7 @@ public class WSAPIService {
                 bodyObj.put("mentions", mentionsObj);
             }
             object.put("body", bodyObj);
-            EventMessage eventMessage = new EventMessage(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE,"",fakeMessage.getId());
+            EventMessage eventMessage = new EventMessage(fakeMessage.getId(),Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE,"",fakeMessage.getId());
             WebSocketPush.getInstance().sendEventMessage(eventMessage, object, fakeMessage.getId());
         } catch (Exception e) {
             e.printStackTrace();
@@ -90,7 +90,7 @@ public class WSAPIService {
                 bodyObj.put("mentions", mentionsObj);
             }
             object.put("body", bodyObj);
-            EventMessage eventMessage = new EventMessage(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE,"",fakeMessage.getId());
+            EventMessage eventMessage = new EventMessage(fakeMessage.getId(),Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE,"",fakeMessage.getId());
             WebSocketPush.getInstance().sendEventMessage(eventMessage, object,fakeMessage.getId());
         } catch (Exception e) {
             e.printStackTrace();
@@ -115,7 +115,7 @@ public class WSAPIService {
             bodyObj.put("size", volumeFile.getSize());
             bodyObj.put("media", volumeFile.getPath());
             object.put("body", bodyObj);
-            EventMessage eventMessage = new EventMessage(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE,"",tracer);
+            EventMessage eventMessage = new EventMessage(tracer,Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE,"",tracer);
             WebSocketPush.getInstance().sendEventMessage(eventMessage, object,tracer);
         } catch (Exception e) {
             e.printStackTrace();
@@ -138,7 +138,7 @@ public class WSAPIService {
             bodyObj.put("duration", message.getMsgContentMediaVoice().getDuration());
             bodyObj.put("media", volumeFile.getPath());
             object.put("body", bodyObj);
-            EventMessage eventMessage = new EventMessage(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE,"",message.getId());
+            EventMessage eventMessage = new EventMessage(message.getId(),Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE,"",message.getId());
             WebSocketPush.getInstance().sendEventMessage(eventMessage, object,message.getId());
         } catch (Exception e) {
             e.printStackTrace();
@@ -169,7 +169,7 @@ public class WSAPIService {
             }
             bodyObj.put("relatedLinks", array);
             object.put("body", bodyObj);
-            EventMessage eventMessage = new EventMessage(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE,"",message.getId());
+            EventMessage eventMessage = new EventMessage(message.getId(),Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE,"",message.getId());
             WebSocketPush.getInstance().sendEventMessage(eventMessage, object,message.getId());
         } catch (Exception e) {
             e.printStackTrace();
@@ -211,7 +211,7 @@ public class WSAPIService {
             bodyObj.put("thumbnail", thumbnailObj);
             bodyObj.put("raw", rawObj);
             object.put("body", bodyObj);
-            EventMessage eventMessage = new EventMessage(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE,"",fakeMessage.getId());
+            EventMessage eventMessage = new EventMessage(fakeMessage.getId(),Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE,"",fakeMessage.getId());
             WebSocketPush.getInstance().sendEventMessage( eventMessage, object,fakeMessage.getId());
 
         } catch (Exception e) {
@@ -231,7 +231,7 @@ public class WSAPIService {
             headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
             headerObj.put("tracer", tracer);
             object.put("headers", headerObj);
-            EventMessage eventMessage = new EventMessage(Constant.EVENTBUS_TAG_GET_OFFLINE_WS_MESSAGE);
+            EventMessage eventMessage = new EventMessage(tracer,Constant.EVENTBUS_TAG_GET_OFFLINE_WS_MESSAGE);
             WebSocketPush.getInstance().sendEventMessage(eventMessage, object,tracer);
         } catch (Exception e) {
             e.printStackTrace();
@@ -250,7 +250,7 @@ public class WSAPIService {
             headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
             headerObj.put("tracer", tracer);
             object.put("headers", headerObj);
-            EventMessage eventMessage = new EventMessage(Constant.EVENTBUS_TAG_GET_CHANNEL_RECENT_MESSAGE);
+            EventMessage eventMessage = new EventMessage(tracer,Constant.EVENTBUS_TAG_GET_CHANNEL_RECENT_MESSAGE);
             WebSocketPush.getInstance().sendEventMessage(eventMessage, object,tracer);
         } catch (Exception e) {
             e.printStackTrace();
@@ -269,7 +269,7 @@ public class WSAPIService {
             headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
             headerObj.put("tracer", tracer);
             object.put("headers", headerObj);
-            EventMessage eventMessage = new EventMessage(Constant.EVENTBUS_TAG_GET_MESSAGE_BY_ID);
+            EventMessage eventMessage = new EventMessage(tracer,Constant.EVENTBUS_TAG_GET_MESSAGE_BY_ID);
             WebSocketPush.getInstance().sendEventMessage(eventMessage, object,tracer);
         } catch (Exception e) {
             e.printStackTrace();
@@ -289,7 +289,7 @@ public class WSAPIService {
             headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
             headerObj.put("tracer", tracer);
             object.put("headers", headerObj);
-            EventMessage eventMessage = new EventMessage(Constant.EVENTBUS_TAG_GET_MESSAGE_COMMENT);
+            EventMessage eventMessage = new EventMessage(tracer,Constant.EVENTBUS_TAG_GET_MESSAGE_COMMENT);
             WebSocketPush.getInstance().sendEventMessage( eventMessage, object,tracer);
         } catch (Exception e) {
             e.printStackTrace();
@@ -308,7 +308,7 @@ public class WSAPIService {
             headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
             headerObj.put("tracer", tracer);
             object.put("headers", headerObj);
-            EventMessage eventMessage = new EventMessage(Constant.EVENTBUS_TAG_GET_MESSAGE_COMMENT_COUNT,"",mid);
+            EventMessage eventMessage = new EventMessage(tracer,Constant.EVENTBUS_TAG_GET_MESSAGE_COMMENT_COUNT,"",mid);
             WebSocketPush.getInstance().sendEventMessage(eventMessage, object,tracer);
         } catch (Exception e) {
             e.printStackTrace();
@@ -331,7 +331,7 @@ public class WSAPIService {
             headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
             headerObj.put("tracer", tracer);
             object.put("headers", headerObj);
-            EventMessage eventMessage = new EventMessage(Constant.EVENTBUS_TAG_GET_HISTORY_MESSAGE,"","");
+            EventMessage eventMessage = new EventMessage(tracer,Constant.EVENTBUS_TAG_GET_HISTORY_MESSAGE,"","");
             WebSocketPush.getInstance().sendEventMessage(eventMessage, object,tracer);
         } catch (Exception e) {
             e.printStackTrace();
@@ -358,7 +358,7 @@ public class WSAPIService {
                 bodyObject.put("state",state);
                 object.put("body", bodyObject);
                 if (state.equals("REMOVED")){
-                    EventMessage eventMessage = new EventMessage(Constant.EVENTBUS_TAG_WEBSOCKET_STATUS_REMOVE,"","");
+                    EventMessage eventMessage = new EventMessage(tracer,Constant.EVENTBUS_TAG_WEBSOCKET_STATUS_REMOVE,"","");
                     WebSocketPush.getInstance().sendEventMessage(eventMessage, object,tracer);
                 }else {
                     WebSocketPush.getInstance().sendContent(object);
