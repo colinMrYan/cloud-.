@@ -43,11 +43,13 @@ public class OauthUtils {
         } else {
             callBackList.add(callBack);
             // 防止多次刷新token
-            if (!isTokenRefreshing) {
-                isTokenRefreshing = true;
-                LoginAPIService apiService = new LoginAPIService(MyApplication.getInstance());
-                apiService.setAPIInterface(new WebService());
-                apiService.refreshToken();
+            synchronized (this){
+                    if (!isTokenRefreshing){
+                        isTokenRefreshing = true;
+                        LoginAPIService apiService = new LoginAPIService(MyApplication.getInstance());
+                        apiService.setAPIInterface(new WebService());
+                        apiService.refreshToken();
+                    }
             }
         }
     }
