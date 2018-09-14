@@ -67,19 +67,14 @@ public class WebSocketPush {
             @Override
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
-                LogUtils.jasonDebug("handleMessage=======================================");
                 if (msg.what == 1){
                     timeCount++;
                     Iterator<EventMessage> it = requestEventMessageList.iterator();
                     while(it.hasNext()){
                         EventMessage eventMessage = it.next();
-                        LogUtils.jasonDebug("eventMessage.getStartQuestTime()="+eventMessage.getStartQuestTime());
-                        LogUtils.jasonDebug("MyAppConfig.WEBSOCKET_QEQUEST_TIMEOUT="+MyAppConfig.WEBSOCKET_QEQUEST_TIMEOUT);
-                        LogUtils.jasonDebug("timeCount="+timeCount);
                         if(eventMessage.getStartQuestTime()+ MyAppConfig.WEBSOCKET_QEQUEST_TIMEOUT <= timeCount){
                             setRequestEventMessageTimeout(eventMessage);
                             it.remove();
-                            LogUtils.jasonDebug("move----------------");
                         }
                     }
                     if (requestEventMessageList.size() == 0){
@@ -146,75 +141,77 @@ public class WebSocketPush {
     }
 
     private void WebSocketConnect() {
-        if (isSocketConnect() || isWebsocketConnecting) {
-            return;
-        }
-        String url = APIUri.getWebsocketConnectUrl();
-        String path = MyApplication.getInstance().isV0VersionChat() ? "/" + MyApplication.getInstance().getCurrentEnterprise().getCode() + "/socket/handshake" :
-                "/chat/socket/handshake";
-        sendWebSocketStatusBroadcast("socket_connecting");
-        IO.Options opts = new IO.Options();
-        opts.reconnectionAttempts = 5; // 设置websocket重连次数
-        opts.forceNew = true;
-        Map<String, String> query = new HashMap<>();
-        try {
-            if (MyApplication.getInstance().isV0VersionChat()) {
-                String uuid = AppUtils.getMyUUID(MyApplication.getInstance());
-                String deviceName = AppUtils.getDeviceName(MyApplication.getInstance());
-                String pushId = AppUtils.getPushId(MyApplication.getInstance());
-                query.put("device.id", uuid);
-                query.put("device.name", deviceName);
-                query.put("device.push", pushId);
-            } else {
-                String clientId = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_CLIENTID, "");
-                query.put("client", clientId);
+        synchronized (this){
+            if (isSocketConnect() || isWebsocketConnecting) {
+                return;
             }
-            query.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
-            opts.path = path;
-            LogUtils.debug(TAG, "query.toString()=" + ParseQS.encode(query));
-            opts.query = ParseQS.encode(query);
-            opts.transports = new String[]{WebSocket.NAME};
+            String url = APIUri.getWebsocketConnectUrl();
+            String path = MyApplication.getInstance().isV0VersionChat() ? "/" + MyApplication.getInstance().getCurrentEnterprise().getCode() + "/socket/handshake" :
+                    "/chat/socket/handshake";
+            sendWebSocketStatusBroadcast("socket_connecting");
+            IO.Options opts = new IO.Options();
+            opts.reconnectionAttempts = 5; // 设置websocket重连次数
             opts.forceNew = true;
-            webSocketSignout();
-            Manager manager = new Manager(new URI(url), opts);
-            mSocket = manager.socket(MyApplication.getInstance().getChatSocketNameSpace());
-            mSocket.io().on(Manager.EVENT_TRANSPORT, new Emitter.Listener() {
-                @Override
-                public void call(Object... args) {
-
-                    Transport transport = (Transport) args[0];
-                    transport.on(Transport.EVENT_REQUEST_HEADERS,
-                            new Emitter.Listener() {
-                                @Override
-                                public void call(Object... args) {
-                                    @SuppressWarnings("unchecked")
-                                    Map<String, List<String>> headers = (Map<String, List<String>>) args[0];
-                                    if (MyApplication.getInstance().getToken() != null) {
-                                        headers.put("Authorization", Arrays.asList(MyApplication.getInstance().getToken()));
-                                    }
-                                }
-                            }).on(Transport.EVENT_RESPONSE_HEADERS,
-                            new Emitter.Listener() {
-                                @Override
-                                public void call(Object... args) {
-                                }
-                            });
+            Map<String, String> query = new HashMap<>();
+            try {
+                if (MyApplication.getInstance().isV0VersionChat()) {
+                    String uuid = AppUtils.getMyUUID(MyApplication.getInstance());
+                    String deviceName = AppUtils.getDeviceName(MyApplication.getInstance());
+                    String pushId = AppUtils.getPushId(MyApplication.getInstance());
+                    query.put("device.id", uuid);
+                    query.put("device.name", deviceName);
+                    query.put("device.push", pushId);
+                } else {
+                    String clientId = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_CLIENTID, "");
+                    query.put("client", clientId);
                 }
-            });
-            addListeners();
-            mSocket.open();
-            isWebsocketConnecting = true;
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            isWebsocketConnecting = false;
-            e.printStackTrace();
-            sendWebSocketStatusBroadcast(Socket.EVENT_CONNECT_ERROR);
-            Log.d(TAG, "e=" + e.toString());
-            if (mSocket != null) {
-                mSocket.disconnect();
-                mSocket.off();
-                mSocket.close();
-                mSocket = null;
+                query.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
+                opts.path = path;
+                LogUtils.debug(TAG, "query.toString()=" + ParseQS.encode(query));
+                opts.query = ParseQS.encode(query);
+                opts.transports = new String[]{WebSocket.NAME};
+                opts.forceNew = true;
+                webSocketSignout();
+                Manager manager = new Manager(new URI(url), opts);
+                mSocket = manager.socket(MyApplication.getInstance().getChatSocketNameSpace());
+                mSocket.io().on(Manager.EVENT_TRANSPORT, new Emitter.Listener() {
+                    @Override
+                    public void call(Object... args) {
+
+                        Transport transport = (Transport) args[0];
+                        transport.on(Transport.EVENT_REQUEST_HEADERS,
+                                new Emitter.Listener() {
+                                    @Override
+                                    public void call(Object... args) {
+                                        @SuppressWarnings("unchecked")
+                                        Map<String, List<String>> headers = (Map<String, List<String>>) args[0];
+                                        if (MyApplication.getInstance().getToken() != null) {
+                                            headers.put("Authorization", Arrays.asList(MyApplication.getInstance().getToken()));
+                                        }
+                                    }
+                                }).on(Transport.EVENT_RESPONSE_HEADERS,
+                                new Emitter.Listener() {
+                                    @Override
+                                    public void call(Object... args) {
+                                    }
+                                });
+                    }
+                });
+                addListeners();
+                mSocket.open();
+                isWebsocketConnecting = true;
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                isWebsocketConnecting = false;
+                e.printStackTrace();
+                sendWebSocketStatusBroadcast(Socket.EVENT_CONNECT_ERROR);
+                Log.d(TAG, "e=" + e.toString());
+                if (mSocket != null) {
+                    mSocket.disconnect();
+                    mSocket.off();
+                    mSocket.close();
+                    mSocket = null;
+                }
             }
         }
     }
