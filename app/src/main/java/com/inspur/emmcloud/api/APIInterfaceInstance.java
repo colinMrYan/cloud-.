@@ -68,11 +68,13 @@ import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
 import com.inspur.emmcloud.bean.mine.GetUploadMyHeadResult;
 import com.inspur.emmcloud.bean.mine.GetUserHeadUploadResult;
 import com.inspur.emmcloud.bean.mine.UserProfileInfoBean;
+import com.inspur.emmcloud.bean.system.AppException;
 import com.inspur.emmcloud.bean.system.GetAllConfigVersionResult;
 import com.inspur.emmcloud.bean.system.GetAppConfigResult;
 import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
 import com.inspur.emmcloud.bean.system.GetBoolenResult;
 import com.inspur.emmcloud.bean.system.GetUpgradeResult;
+import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.bean.system.SplashPageBean;
 import com.inspur.emmcloud.bean.work.Attachment;
 import com.inspur.emmcloud.bean.work.GetCalendarEventsResult;
@@ -95,6 +97,16 @@ import java.util.List;
 public class APIInterfaceInstance implements APIInterface {
     @Override
     public void returnDeviceCheckSuccess(GetDeviceCheckResult getDeviceCheckResult) {
+    }
+
+    @Override
+    public void returnUploadExceptionSuccess(List<AppException> appExceptionList) {
+
+    }
+
+    @Override
+    public void returnUploadCollectSuccess(List<PVCollectModel> collectModelList) {
+
     }
 
     @Override

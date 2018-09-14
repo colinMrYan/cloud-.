@@ -60,12 +60,13 @@ public class PVCollectModelCacheUtils {
 
 	/**
 	 *@param  context
-	 *@param  maxGetItemsNum  如果数据库剩余数据大于该值，获取数据库前maxGetItemnum条
+	 *如果数据库剩余数据大于该值，获取数据库前maxGetItemnum条
 	 *                        否则 获取数据库全部条数，生成JSON对象
 	 * **/
-	public static JSONArray getPartCollectModelListJson(Context context ,int maxGetItemsNum) {
+	public static JSONArray getCollectModelListJson(Context context ,  List<PVCollectModel> parCollectModelList) {
+		List<PVCollectModel> collectModelList = new ArrayList<>();
+		    collectModelList = parCollectModelList;
 		JSONArray array = new JSONArray();
-		List<PVCollectModel> collectModelList = getPartCollectModelList(context,maxGetItemsNum);
 		if (collectModelList.size()>0){
 			for (int i=0;i< collectModelList.size();i++){
 				PVCollectModel pvCollectModel = collectModelList.get(i);
@@ -81,27 +82,25 @@ public class PVCollectModelCacheUtils {
 	 *@param  maxGetItemsNum  如果数据库剩余数据大于该值，获取数据库前maxGetItemnum条
 	 *                        否则 获取数据库全部条数,存入List
 	 * **/
-	public static List<PVCollectModel> getPartCollectModelList(Context context,int maxGetItemsNum){
-		List<PVCollectModel> collectModelList = null;
+	public static List<PVCollectModel> getCollectModelList(Context context,int maxGetItemsNum){
+		List<PVCollectModel> collectModelList =  new ArrayList<PVCollectModel>();
 		try {
-			collectModelList = DbCacheUtils.getDb(context).selector(PVCollectModel.class).limit(maxGetItemsNum).findAll();
+		  collectModelList = DbCacheUtils.getDb(context).selector(PVCollectModel.class).orderBy("id").limit(maxGetItemsNum).findAll();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		if (collectModelList == null) {
-			collectModelList = new ArrayList<PVCollectModel>();
+		if(collectModelList==null) {
+			collectModelList =  new ArrayList<PVCollectModel>();
 		}
 		return collectModelList;
 	}
 
 	/**
 	 * @param context
-	 * @param maxDelectItemsNum
 	 * **/
-	public static int deletePartCollectModel(Context context,int maxDelectItemsNum) {
+	public static int deleteCollectModel(Context context,List<PVCollectModel> collectModelList) {
 		try {
-			List<PVCollectModel> collectModelList = getPartCollectModelList(context,maxDelectItemsNum);
 			DbCacheUtils.getDb(context).delete(collectModelList);
 			return collectModelList.size();
 		} catch (Exception e) {

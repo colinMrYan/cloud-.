@@ -68,11 +68,13 @@ import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
 import com.inspur.emmcloud.bean.mine.GetUploadMyHeadResult;
 import com.inspur.emmcloud.bean.mine.GetUserHeadUploadResult;
 import com.inspur.emmcloud.bean.mine.UserProfileInfoBean;
+import com.inspur.emmcloud.bean.system.AppException;
 import com.inspur.emmcloud.bean.system.GetAllConfigVersionResult;
 import com.inspur.emmcloud.bean.system.GetAppConfigResult;
 import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
 import com.inspur.emmcloud.bean.system.GetBoolenResult;
 import com.inspur.emmcloud.bean.system.GetUpgradeResult;
+import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.bean.system.SplashPageBean;
 import com.inspur.emmcloud.bean.work.Attachment;
 import com.inspur.emmcloud.bean.work.GetCalendarEventsResult;
@@ -273,6 +275,8 @@ public interface APIInterface {
 
     void returnUploadExceptionSuccess();
 
+    void returnUploadExceptionSuccess(final List<AppException> appExceptionList);
+
     void returnUploadExceptionFail(String error, int errorCode);
 
     void returnLoctionResultSuccess(GetLoctionResult getLoctionResult);
@@ -451,6 +455,8 @@ public interface APIInterface {
     void returnUserAppsFail(String error, int errorCode);
 
     void returnUploadCollectSuccess();
+
+    void returnUploadCollectSuccess( final List<PVCollectModel> collectModelList);
 
     void returnUploadCollectFail(String error, int errorCode);
 

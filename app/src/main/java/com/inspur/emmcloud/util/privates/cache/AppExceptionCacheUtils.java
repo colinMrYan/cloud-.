@@ -125,14 +125,12 @@ public class AppExceptionCacheUtils {
 
     /**
      * 清除AppException表信息
-     *@param  maxDelectItemsNum 最大删除条数
      * @param context
      */
-    public static int clearPartAppException(Context context,int maxDelectItemsNum) {
+    public static int delectAppException(Context context,List<AppException> appExceptionList) {
         try {
-            List<AppException> collectModelList = getAppExceptionList(context, maxDelectItemsNum);
-            DbCacheUtils.getDb(context).delete(collectModelList);
-            return collectModelList.size();
+            DbCacheUtils.getDb(context).delete(appExceptionList);
+            return appExceptionList.size();
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

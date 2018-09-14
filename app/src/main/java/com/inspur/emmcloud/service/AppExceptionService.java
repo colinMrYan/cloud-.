@@ -50,7 +50,7 @@ public class AppExceptionService extends Service {
 				JSONObject uploadContentJSONObj = getUploadContentJSONObj(appExceptionList);
 				AppAPIService apiService = new AppAPIService(AppExceptionService.this);
 				apiService.setAPIInterface(new WebService());
-				apiService.uploadException(uploadContentJSONObj);
+				apiService.uploadException(uploadContentJSONObj,appExceptionList);
 				return;
 			}
 		}
@@ -91,9 +91,8 @@ public class AppExceptionService extends Service {
 
 	private class WebService extends APIInterfaceInstance {
 		@Override
-		public void returnUploadExceptionSuccess() {
-			AppExceptionCacheUtils.clearAppException(AppExceptionService.this);
-		   int clearSize =	AppExceptionCacheUtils.clearPartAppException(AppExceptionService.this,50);
+		public void returnUploadExceptionSuccess(final List<AppException> appExceptionList) {
+		   int clearSize =	AppExceptionCacheUtils.delectAppException(AppExceptionService.this,appExceptionList);
 			if(clearSize<50) {
 				stopSelf();
 			} else {
