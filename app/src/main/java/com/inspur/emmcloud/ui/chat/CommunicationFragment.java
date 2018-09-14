@@ -172,7 +172,7 @@ public class CommunicationFragment extends Fragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                WebSocketPush.getInstance().startWebSocket(false);
+                WebSocketPush.getInstance().startWebSocket();
                 getChannelList();
                 getMessage();
             }
@@ -539,9 +539,14 @@ public class CommunicationFragment extends Fragment {
      *
      * @param channel
      */
-    private void setChannelAllMsgRead(Channel channel) {
+    private void setChannelAllMsgRead(final Channel channel) {
         // TODO Auto-generated method stub
-        MessageCacheUtil.setChannelMessageRead(MyApplication.getInstance(), channel.getCid());
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                MessageCacheUtil.setChannelMessageRead(MyApplication.getInstance(), channel.getCid());
+            }
+        }).start();
         int position = displayChannelList.indexOf(channel);
         channel.setUnReadCount(0);
         View childAt = msgListView.getChildAt(position
@@ -611,19 +616,19 @@ public class CommunicationFragment extends Fragment {
     }
 
     class CacheChannelTask extends AsyncTask<GetChannelListResult, Void, List<Channel>> {
-        private List<Channel> allchannelList = new ArrayList<>();
+        private List<Channel> allChannelList = new ArrayList<>();
 
         @Override
         protected void onPostExecute(List<Channel> addchannelList) {
             sortChannelList();
-            createGroupIcon(isHaveCreatGroupIcon ? addchannelList : allchannelList);
-            getChannelInfoResult(allchannelList);
+            createGroupIcon(isHaveCreatGroupIcon ? addchannelList : allChannelList);
+            getChannelInfoResult(allChannelList);
         }
 
         @Override
         protected List<Channel> doInBackground(GetChannelListResult... params) {
             List<Channel> allchannelList = params[0].getChannelList();
-            this.allchannelList = allchannelList;
+            this.allChannelList = allchannelList;
             List<Channel> cacheChannelList = ChannelCacheUtils
                     .getCacheChannelList(getActivity());
             List<Channel> addchannelList = new ArrayList<>();

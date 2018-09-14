@@ -392,7 +392,7 @@ public class WSAPIService {
                 headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
                 headerObj.put("tracer", tracer);
                 object.put("headers", headerObj);
-                EventMessage eventMessage = new EventMessage(Constant.EVENTBUS_TAG_SET_CHANNEL_MESSAGE_READ, "", "");
+                EventMessage eventMessage = new EventMessage(tracer,Constant.EVENTBUS_TAG_SET_CHANNEL_MESSAGE_READ, "", "");
                 WebSocketPush.getInstance().sendEventMessage(eventMessage, object, tracer);
             } catch (Exception e) {
                 e.printStackTrace();
