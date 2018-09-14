@@ -15,7 +15,6 @@ import com.inspur.emmcloud.bean.system.VoiceResult;
 import com.inspur.emmcloud.interf.OnVoiceResultCallback;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -66,7 +65,6 @@ public class Voice2StringMessageUtils {
      * 以后需要发送语音时可以单独录制一段语音存到sd卡当做文件发送
      */
     public void startVoiceListeningByVoiceFile(float seconds,String voiceFilePath,String mp3VoiceFilePath) {
-        LogUtils.YfcDebug("voiceFilePath:"+voiceFilePath);
         this.durationTime = seconds;
         this.wavFilePath = voiceFilePath;
         this.mp3FilePath = mp3VoiceFilePath;
@@ -94,17 +92,32 @@ public class Voice2StringMessageUtils {
         speechRecognizer.setParameter(SpeechConstant.ENGINE_TYPE, engineType);
         // 设置返回结果格式
         speechRecognizer.setParameter(SpeechConstant.RESULT_TYPE, "json");
-        // 设置语言
-        speechRecognizer.setParameter(SpeechConstant.LANGUAGE, "zh_cn");
-        // 设置语言区域
-        speechRecognizer.setParameter(SpeechConstant.ACCENT, "mandarin");
+
+        String laguage = AppUtils.getCurrentAppLanguage(context);
+        switch (laguage){
+            case "zh-Hans":
+                // 设置语言
+                speechRecognizer.setParameter(SpeechConstant.LANGUAGE, "zh_cn");
+                // 设置语言区域
+                speechRecognizer.setParameter(SpeechConstant.ACCENT, "mandarin");
+                break;
+            case "en":
+                // 设置语言
+                speechRecognizer.setParameter(SpeechConstant.LANGUAGE, "en_us");
+                break;
+            default:
+                // 设置语言
+                speechRecognizer.setParameter(SpeechConstant.LANGUAGE, "zh_cn");
+                // 设置语言区域
+                speechRecognizer.setParameter(SpeechConstant.ACCENT, "mandarin");
+                break;
+        }
         // 设置语音前端点:静音超时时间，即用户多长时间不说话则当做超时处理
         speechRecognizer.setParameter(SpeechConstant.VAD_BOS, "5000");
         // 设置语音后端点:后端点静音检测时间，即用户停止说话多长时间内即认为不再输入， 自动停止录音
         speechRecognizer.setParameter(SpeechConstant.VAD_EOS, "1800");
         // 设置标点符号,设置为"0"返回结果无标点,设置为"1"返回结果有标点
         speechRecognizer.setParameter(SpeechConstant.ASR_PTT, "0");
-
         //根据IOS参数新加参数
         speechRecognizer.setParameter(SpeechConstant.KEY_SPEECH_TIMEOUT, "-1");
         speechRecognizer.setParameter(SpeechConstant.SAMPLE_RATE, "16000");
@@ -140,7 +153,7 @@ public class Voice2StringMessageUtils {
 
             @Override
             public void onError(SpeechError error) {
-                LogUtils.YfcDebug("出错："+error.getErrorDescription());
+                onVoiceResultCallback.onError(new VoiceResult("...",durationTime,mp3FilePath));
                 //返回错误停止录音
                 stopListening();
             }

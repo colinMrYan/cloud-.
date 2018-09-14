@@ -37,6 +37,7 @@ public class Constant {
     public static final String PREF_APP_TAB_BAR_VERSION = "app_tab_bar_version";
     public static final String PREF_APP_TAB_BAR_INFO_CURRENT = "app_tab_bar_info_current";
     public static final String PREF_APP_LOAD_ALIAS = "app_load_alias";
+    public static final String PREF_APP_OPEN_VOICE_WORD_SWITCH = "voice_2_word_switch";
 
     public static final String PREF_V_CONFIG_ALL = "v_config_all";
 

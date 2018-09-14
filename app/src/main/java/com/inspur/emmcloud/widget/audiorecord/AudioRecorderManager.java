@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.text.DecimalFormat;
+import java.util.UUID;
 
 public class AudioRecorderManager {
 
@@ -26,9 +27,9 @@ public class AudioRecorderManager {
     public final static int AUDIO_SAMPLE_RATE = 16000;  //44.1KHz,普遍使用的频率
     // 缓冲区字节大小
     private int bufferSizeInBytes = 0;
-    //AudioName裸音频数据文件 ，麦克风
+    //rawAudioFilePath ，麦克风
     private String rawAudioFilePath = "";
-    //NewAudioName可播放的音频文件
+    //wavAudioFilePath可播放的音频文件
     private String wavAudioFilePath = "";
     //录音工具
     private AudioRecord audioRecord;
@@ -157,6 +158,16 @@ public class AudioRecorderManager {
     }
 
     /**
+     * 随机生成文件的名称
+     *
+     * @return
+     */
+    private String generalFileName() {
+        // TODO Auto-generated method stub
+        return UUID.randomUUID().toString() + ".wav";
+    }
+
+    /**
      * 这里将数据写入文件，但是并不能播放，因为AudioRecord获得的音频是原始的裸音频，
      * 如果需要播放就必须加入一些格式或者编码的头信息。但是这样的好处就是你可以对音频的 裸数据进行处理，比如你要做一个爱说话的TOM
      * 猫在这里就进行音频的处理，然后重新封装 所以说这样得到的音频比较容易做一些音频的处理。
@@ -231,7 +242,7 @@ public class AudioRecorderManager {
         long totalAudioLen = 0;
         long totalDataLen = totalAudioLen + 36;
         long longSampleRate = AUDIO_SAMPLE_RATE;
-        int channels = 2;
+        int channels = 1;
         long byteRate = 16 * AUDIO_SAMPLE_RATE * channels / 8;
         byte[] data = new byte[bufferSizeInBytes];
         try {

@@ -365,6 +365,11 @@ public class ECMChatInputMenuV0 extends LinearLayout {
 
                 setVoiceImageViewLevel(volume);
             }
+
+            @Override
+            public void onError(VoiceResult errorResult) {
+
+            }
         });
     }
 

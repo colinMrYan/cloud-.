@@ -22,7 +22,6 @@ import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactOrgCacheUtils;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -146,7 +145,7 @@ public class CommunicationUtils {
     }
 
 
-    public static Message combinLocalMediaVoiceMessage(String cid, String localFilePath,int duration,String results) {
+    public static Message combinLocalMediaVoiceMessage(String cid, String localFilePath,int duration,JSONObject jsonObject) {
         Message message = combinLocalMessageCommon();
         message.setChannel(cid);
         message.setId(getTracer());
@@ -154,12 +153,6 @@ public class CommunicationUtils {
         MsgContentMediaVoice msgContentMediaVoice = new MsgContentMediaVoice();
         msgContentMediaVoice.setDuration(duration);
         msgContentMediaVoice.setMedia(localFilePath);
-        JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put("zh-cn",results);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
         msgContentMediaVoice.setJsonObject(jsonObject);
         message.setContent(msgContentMediaVoice.toString());
         return message;

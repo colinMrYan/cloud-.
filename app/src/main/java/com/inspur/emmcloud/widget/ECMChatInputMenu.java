@@ -30,7 +30,6 @@ import com.inspur.emmcloud.interf.OnVoiceResultCallback;
 import com.inspur.emmcloud.ui.chat.MembersActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.InputMethodUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.MediaPlayerUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
@@ -175,12 +174,9 @@ public class ECMChatInputMenu extends LinearLayout {
             @Override
             public void onFinished(final float seconds, final String filePath) {
                 // TODO Auto-generated method stub
-                LogUtils.YfcDebug("录制的时间："+seconds);
-                LogUtils.YfcDebug("录制的文件存储路径："+filePath);
                 IConvertCallback callback = new IConvertCallback() {
                     @Override
                     public void onSuccess(File file) {
-                        LogUtils.YfcDebug("转格式完成的文件路径："+file.getAbsolutePath());
                         voice2StringMessageUtils.startVoiceListeningByVoiceFile(seconds,filePath,file.getAbsolutePath());
                     }
 
@@ -404,31 +400,7 @@ public class ECMChatInputMenu extends LinearLayout {
 
             @Override
             public void onVoiceResult(VoiceResult voiceResult, boolean isLast) {
-                if(!StringUtils.isBlank(voiceResult.getFilePath())){
-                    LogUtils.YfcDebug("发送语音消息");
-                    if (chatInputMenuListener != null) {
-                        chatInputMenuListener.onSendVoiceRecordMsg(voiceResult.getResults(),voiceResult.getSeconds(), voiceResult.getFilePath());
-                    }
-                }else{
-                    String results = voiceResult.getResults();
-                    if (results.length() == 1 && StringUtils.isSymbol(results)) {
-                        results = "";
-                    }
-                    LogUtils.YfcDebug("转写翻译结果："+results);
-                    if (!StringUtils.isBlank(results)) {
-                        if (isSpecialUser) {
-                            inputEdit.clearInsertModelList();
-                            if (chatInputMenuListener != null) {
-                                chatInputMenuListener.onSendMsg(results, null, null, null);
-                            }
-                        } else {
-                            int index = inputEdit.getSelectionStart();
-                            Editable editable = inputEdit.getText();
-                            editable.insert(index, results);
-                        }
-
-                    }
-                }
+                handleVoiceResult(voiceResult);
             }
 
             @Override
@@ -438,10 +410,44 @@ public class ECMChatInputMenu extends LinearLayout {
 
             @Override
             public void onVoiceLevelChange(int volume) {
-
                 setVoiceImageViewLevel(volume);
             }
+
+            @Override
+            public void onError(VoiceResult errorResult) {
+                handleVoiceResult(errorResult);
+            }
         });
+    }
+
+    /**
+     * 处理录音结果
+     * @param voiceResult
+     */
+    private void handleVoiceResult(VoiceResult voiceResult) {
+        if(!StringUtils.isBlank(voiceResult.getFilePath())){
+            if (chatInputMenuListener != null) {
+                chatInputMenuListener.onSendVoiceRecordMsg(voiceResult.getResults(),voiceResult.getSeconds(), voiceResult.getFilePath());
+            }
+        }else{
+            String results = voiceResult.getResults();
+            if (results.length() == 1 && StringUtils.isSymbol(results)) {
+                results = "";
+            }
+            if (!StringUtils.isBlank(results)) {
+                if (isSpecialUser) {
+                    inputEdit.clearInsertModelList();
+                    if (chatInputMenuListener != null) {
+                        chatInputMenuListener.onSendMsg(results, null, null, null);
+                    }
+                } else {
+                    int index = inputEdit.getSelectionStart();
+                    Editable editable = inputEdit.getText();
+                    editable.insert(index, results);
+                }
+
+            }
+        }
     }
 
 

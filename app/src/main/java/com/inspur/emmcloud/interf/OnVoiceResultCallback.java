@@ -11,4 +11,5 @@ public interface OnVoiceResultCallback {
     void onVoiceResult(VoiceResult results, boolean isLast);
     void onVoiceFinish();
     void onVoiceLevelChange(int volume);
+    void onError(VoiceResult errorResult);
 }

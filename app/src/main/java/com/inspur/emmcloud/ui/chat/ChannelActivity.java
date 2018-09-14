@@ -42,6 +42,7 @@ import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ChannelInfoUtils;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
 import com.inspur.emmcloud.util.privates.DataCleanManager;
@@ -242,14 +243,12 @@ public class ChannelActivity extends MediaPlayBaseActivity {
 
             @Override
             public void onSendVoiceRecordMsg(String results,float seconds, String filePath) {
-                LogUtils.YfcDebug("转义结果："+results);
-                LogUtils.YfcDebug("语音时间："+seconds);
-                LogUtils.YfcDebug("文件路径："+filePath);
+                ToastUtils.show(ChannelActivity.this,"转义结果："+results+"\n语音时间："+seconds+"\n文件路径："+filePath);
                 int duration = (int) seconds;
                 if (duration == 0) {
                     duration = 1;
                 }
-                combinAndSendMessageWithFile(filePath, Message.MESSAGE_TYPE_MEDIA_VOICE, duration);
+                combinAndSendMessageWithFile(filePath, Message.MESSAGE_TYPE_MEDIA_VOICE, duration,results);
             }
 
             @Override
@@ -544,6 +543,10 @@ public class ChannelActivity extends MediaPlayBaseActivity {
     }
 
     private void combinAndSendMessageWithFile(String filePath, String messageType, int duration) {
+        combinAndSendMessageWithFile(filePath,messageType,duration,"");
+    }
+
+    private void combinAndSendMessageWithFile(String filePath, String messageType, int duration,String results) {
         File file = new File(filePath);
         if (!file.exists()) {
             ToastUtils.show(MyApplication.getInstance(), R.string.file_not_exist);
@@ -558,7 +561,23 @@ public class ChannelActivity extends MediaPlayBaseActivity {
                 fakeMessage = CommunicationUtils.combinLocalMediaImageMessage(cid, filePath);
                 break;
             case Message.MESSAGE_TYPE_MEDIA_VOICE:
-                fakeMessage = CommunicationUtils.combinLocalMediaVoiceMessage(cid, filePath, duration);
+                JSONObject jsonObject = new JSONObject();
+                try {
+                    switch(AppUtils.getCurrentAppLanguage(ChannelActivity.this)){
+                        case "zh-Hans":
+                            jsonObject.put("zh-cn",results);
+                            break;
+                        case "en":
+                            jsonObject.put("en-us",results);
+                            break;
+                        default:
+                            jsonObject.put("zh-cn",results);
+                            break;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                fakeMessage = CommunicationUtils.combinLocalMediaVoiceMessage(cid, filePath, duration,jsonObject);
                 break;
         }
         if (fakeMessage != null) {
