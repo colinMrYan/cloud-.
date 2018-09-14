@@ -119,8 +119,8 @@ public class DisplayResImageMsg {
             return false;
         }
         int minW = DensityUtil.dip2px(context, 100);
-        int minH = DensityUtil.dip2px(context, 94);
-        int maxW = DensityUtil.dip2px(context, 287);
+        int minH = DensityUtil.dip2px(context, 90);
+        int maxW = DensityUtil.dip2px(context, 270);
         int maxH = DensityUtil.dip2px(context, 232);
         LayoutParams params = imageView.getLayoutParams();
         if (w == h) {
@@ -134,6 +134,7 @@ public class DisplayResImageMsg {
                 longImgText.setVisibility(View.VISIBLE);
                 params.height = maxH;
             }
+            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         } else {
             params.width = maxW;
             params.height = (int) (maxW * 1.0 * h / w);
@@ -141,6 +142,7 @@ public class DisplayResImageMsg {
                 params.height = minH;
                 longImgText.setVisibility(View.VISIBLE);
             }
+            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         }
         imageView.setLayoutParams(params);
         return true;
