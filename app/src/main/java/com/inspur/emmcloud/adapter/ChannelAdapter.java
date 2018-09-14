@@ -138,7 +138,7 @@ public class ChannelAdapter extends BaseAdapter {
      */
     private void setChannelMsgReadStateUI(final Channel channel, ViewHolder holder) {
         // TODO Auto-generated method stub
-        int unReadCount = channel.getUnReadCount();
+        long unReadCount = channel.getUnReadCount();
         holder.channelTimeText.setText(TimeUtils.getDisplayTime(
                 context, channel.getMsgLastUpdate()));
         holder.channelContentText.setText(channel

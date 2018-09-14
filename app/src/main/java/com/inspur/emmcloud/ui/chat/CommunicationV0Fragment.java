@@ -461,7 +461,7 @@ public class CommunicationV0Fragment extends Fragment {
                                 it.remove();
                             }
                             channel.setIsSetTop(false);
-                            int unReadCount = MsgReadCreationDateCacheUtils.getNotReadMessageCount(
+                            long unReadCount = MsgReadCreationDateCacheUtils.getNotReadMessageCount(
                                     getActivity(), channel.getCid());
                             channel.setUnReadCount(unReadCount);
                             setChannelDisplayTitle(channel);
@@ -880,7 +880,7 @@ public class CommunicationV0Fragment extends Fragment {
          */
         private void setChannelMsgReadStateUI(final Channel channel, ViewHolder holder) {
             // TODO Auto-generated method stub
-            int unReadCount = channel.getUnReadCount();
+            long unReadCount = channel.getUnReadCount();
             holder.channelTimeText.setText(TimeUtils.getDisplayTime(
                     getActivity(), channel.getMsgLastUpdate()));
             holder.channelContentText.setText(channel

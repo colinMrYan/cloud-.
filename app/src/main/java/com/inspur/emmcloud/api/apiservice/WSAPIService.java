@@ -246,7 +246,7 @@ public class WSAPIService {
             actionObj.put("method", "get");
             actionObj.put("path", "/channel/message-with-unread-count");
             JSONObject queryObj = new JSONObject();
-            queryObj.put("limit", 15);
+            queryObj.put("limit", 1);
             actionObj.put("query", queryObj);
             object.put("action", actionObj);
             JSONObject headerObj = new JSONObject();
@@ -385,14 +385,15 @@ public class WSAPIService {
             try {
                 String tracer = CommunicationUtils.getTracer();
                 JSONObject actionObj = new JSONObject();
-                actionObj.put("method", "post");
-                actionObj.put("path", "/channel/" + cid + "/message/state/read");
+                actionObj.put("method", "delete");
+                actionObj.put("path", "/channel/" + cid + "/message/state/unread");
                 object.put("action", actionObj);
                 JSONObject headerObj = new JSONObject();
                 headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
                 headerObj.put("tracer", tracer);
                 object.put("headers", headerObj);
-                WebSocketPush.getInstance().sendContent(object);
+                EventMessage eventMessage = new EventMessage(Constant.EVENTBUS_TAG_SET_CHANNEL_MESSAGE_READ, "", "");
+                WebSocketPush.getInstance().sendEventMessage(eventMessage, object, tracer);
             } catch (Exception e) {
                 e.printStackTrace();
             }

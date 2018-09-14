@@ -42,15 +42,28 @@ public class MessageCacheUtil {
      */
     public static void saveMessageList(final Context context,
                                        final List<Message> messageList, final Long targetMessageCreationDate) {
+        saveMessageList(context,messageList,targetMessageCreationDate,true);
+    }
 
-
-        // TODO Auto-generated method stub
+    /**
+     * 存储消息列表
+     * @param context
+     * @param messageList
+     * @param targetMessageCreationDate
+     * @param isUpdate  是否进行更新操作
+     */
+    public static void saveMessageList(final Context context,
+                                       final List<Message> messageList, final Long targetMessageCreationDate,boolean isUpdate) {
         try {
             if (messageList == null || messageList.size() == 0) {
                 return;
             }
+            if (isUpdate){
+                DbCacheUtils.getDb(context).saveOrUpdate(messageList);
+            }else {
+                DbCacheUtils.getDb(context).save(messageList);
+            }
 
-            DbCacheUtils.getDb(context).saveOrUpdate(messageList);
             MatheSet matheSet = new MatheSet();
             matheSet.setStart(messageList.get(0).getCreationDate());
             matheSet.setEnd((targetMessageCreationDate == null) ? messageList.get(messageList.size() - 1)
@@ -61,9 +74,79 @@ public class MessageCacheUtil {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-
     }
 
+    /**
+     * 将频道消息置为已读
+     * @param context
+     * @param cid
+     */
+    public static void setChannelMessageRead(Context context, String cid){
+        try {
+           DbCacheUtils.getDb(context).execNonQuery("update Message set read = 1 where channel = "+cid);
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 将频道消息置为已读
+     * @param context
+     * @param cid
+     */
+    public static void setAllMessageRead(Context context){
+        try {
+            DbCacheUtils.getDb(context).execNonQuery("update Message set read = 1 ");
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 获取频道未读消息条数
+     * @param context
+     * @param cid
+     * @return
+     */
+    public static long getChannelMessageUnreadCount(Context context,String cid){
+        long unreadCount = 0;
+        try {
+            Long lastReadMessageCreationDate = 0L;
+            Message lastReadMessage =  DbCacheUtils.getDb(context).selector(Message.class).where("read","=",1).and("channel", "=", cid).orderBy("creationDate", true).findFirst();
+            if (lastReadMessage != null){
+                lastReadMessageCreationDate = lastReadMessage.getCreationDate();
+            }
+            unreadCount = DbCacheUtils.getDb(context).selector(Message.class).where("creationDate",">",lastReadMessageCreationDate).and("channel", "=", cid).count();
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return unreadCount;
+    }
+
+    /**
+     * 设置消息已读
+     * @param context
+     * @param messageIdList
+     */
+    public static void setMessageStateRead(Context context,List<String> messageIdList){
+        try {
+            String sqlWhereIn = "(";
+            for (int i = 0; i < messageIdList.size(); i++) {
+                sqlWhereIn = sqlWhereIn + messageIdList.get(i) + ",";
+            }
+            if (sqlWhereIn.endsWith(",")) {
+                sqlWhereIn = sqlWhereIn.substring(0, sqlWhereIn.length() - 1);
+            }
+            sqlWhereIn = sqlWhereIn + ")";
+            DbCacheUtils.getDb(context).execNonQuery("update Message set read = 1 where id in "+sqlWhereIn);
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
 
     /**
      * 获取历史消息列表
@@ -269,10 +352,9 @@ public class MessageCacheUtil {
      * @param enterAppTime
      * @return
      */
-    public static boolean isHistoryMessageCache(Context context,long enterAppTime){
+    public static boolean isHistoryMessageCache(Context context){
         try {
-            Long count = DbCacheUtils.getDb(context).selector(Message.class)
-                    .where("creationDate", "<", enterAppTime).count();
+            Long count = DbCacheUtils.getDb(context).selector(Message.class).count();
             return count>0;
         }catch (Exception e){
             e.printStackTrace();

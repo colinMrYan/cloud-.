@@ -38,7 +38,7 @@ import com.inspur.emmcloud.bean.chat.GetFileUploadResult;
 import com.inspur.emmcloud.bean.chat.GetMsgCommentCountResult;
 import com.inspur.emmcloud.bean.chat.GetMsgCommentResult;
 import com.inspur.emmcloud.bean.chat.GetMsgResult;
-import com.inspur.emmcloud.bean.chat.GetNewMessagesResult;
+import com.inspur.emmcloud.bean.chat.GetChannelMessagesResult;
 import com.inspur.emmcloud.bean.chat.GetNewMsgsResult;
 import com.inspur.emmcloud.bean.chat.GetNewsImgResult;
 import com.inspur.emmcloud.bean.chat.GetNewsInstructionResult;
@@ -294,7 +294,7 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnNewMessagesSuccess(GetNewMessagesResult getNewMessagesResult) {
+    public void returnNewMessagesSuccess(GetChannelMessagesResult getChannelMessagesResult) {
 
     }
 
