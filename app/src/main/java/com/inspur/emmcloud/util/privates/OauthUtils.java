@@ -70,7 +70,7 @@ public class OauthUtils {
             PreferencesUtils.putInt(MyApplication.getInstance(), "expiresIn", expiresIn);
             MyApplication.getInstance().setAccessToken(accessToken);
             MyApplication.getInstance().setRefreshToken(refreshToken);
-            WebSocketPush.getInstance().startWebSocket(false);
+            WebSocketPush.getInstance().startWebSocket();
             tokenGetTime = System.currentTimeMillis();
             isTokenRefreshing = false;
             for (OauthCallBack oauthCallBack : callBackList) {

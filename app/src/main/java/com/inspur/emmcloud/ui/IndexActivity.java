@@ -256,7 +256,7 @@ public class IndexActivity extends IndexBaseActivity {
                             MyApplication.getInstance()
                                     .setIsContactReady(true);
                             notifySyncAllBaseDataSuccess();
-                            WebSocketPush.getInstance().startWebSocket(true);// 启动webSocket推送
+                            WebSocketPush.getInstance().startWebSocket();// 启动webSocket推送
                             getContactOrg();
                             getAllChannelGroup();
                         }

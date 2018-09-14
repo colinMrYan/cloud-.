@@ -588,7 +588,7 @@ public class CommunicationV0Fragment extends Fragment {
                         displayChannelList.addAll(channelList);
                         displayData();// 展示数据
                         registerMsgReceiver();// 注册接收消息的广播
-                        WebSocketPush.getInstance().startWebSocket(false);
+                        WebSocketPush.getInstance().startWebSocket();
                         break;
                     default:
                         break;
