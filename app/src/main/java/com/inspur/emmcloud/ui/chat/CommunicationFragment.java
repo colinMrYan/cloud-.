@@ -674,6 +674,11 @@ public class CommunicationFragment extends Fragment {
                     String socketStatus = intent.getExtras().getString("status");
                     showSocketStatusInTitle(socketStatus);
                     break;
+                case "refresh_adapter":
+                    if (adapter != null){
+                        adapter.notifyDataSetChanged();
+                    }
+                    break;
                 default:
                     break;
             }

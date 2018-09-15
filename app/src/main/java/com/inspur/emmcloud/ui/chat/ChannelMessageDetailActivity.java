@@ -141,6 +141,11 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
             public void onVoiceCommucaiton() {
 
             }
+
+            @Override
+            public void onChatDraftsClear() {
+
+            }
         });
         chatInputMenu.setInputLayout("1");
     }

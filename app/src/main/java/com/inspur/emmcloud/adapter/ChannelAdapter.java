@@ -2,6 +2,8 @@ package com.inspur.emmcloud.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Build;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +16,10 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.chat.Channel;
 import com.inspur.emmcloud.config.MyAppConfig;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.privates.DirectChannelUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
+import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.TransHtmlToTextUtils;
 import com.inspur.emmcloud.widget.CircleTextImageView;
@@ -89,6 +93,7 @@ public class ChannelAdapter extends BaseAdapter {
         }
         Channel channel = dataList.get(position);
         setChannelIcon(channel, holder.channelPhotoImg);
+        LogUtils.jasonDebug("000000000000000000000");
         setChannelMsgReadStateUI(channel, holder);
         holder.channelTitleText.setText(channel.getDisplayTitle());
         holder.dndImg.setVisibility(channel.getDnd() ? View.VISIBLE : View.GONE);
@@ -141,8 +146,19 @@ public class ChannelAdapter extends BaseAdapter {
         long unReadCount = channel.getUnReadCount();
         holder.channelTimeText.setText(TimeUtils.getDisplayTime(
                 context, channel.getMsgLastUpdate()));
-        holder.channelContentText.setText(channel
-                .getNewMsgContent());
+
+        String chatDrafts = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), MyAppConfig.getChannelDrafsPreKey(channel.getCid()),null);
+        if (chatDrafts != null){
+            String content = "<font color='#FF0000'>"+context.getString(R.string.message_type_drafts)+"</font>"+chatDrafts;
+            if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.N){
+                holder.channelContentText.setText(Html.fromHtml(content,Html.FROM_HTML_MODE_LEGACY, null, null));
+            }else {
+                holder.channelContentText.setText(Html.fromHtml(content));
+            }
+        }else {
+            holder.channelContentText.setText(channel
+                    .getNewMsgContent());
+        }
         TransHtmlToTextUtils.stripUnderlines(holder.channelContentText,
                 R.color.msg_content_color);
         boolean isHasUnReadMsg = (unReadCount != 0);
