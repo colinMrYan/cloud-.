@@ -146,7 +146,7 @@ public class UserInfoActivity extends BaseActivity {
         }
 
         ImageDisplayUtils.getInstance().displayImage(photoImg, headUrl, R.drawable.icon_person_default);
-        if (contactOrg.getId().equals(MyApplication.getInstance().getUid())) {
+        if (contactUser.getId().equals(MyApplication.getInstance().getUid())) {
             startChatImg.setVisibility(View.GONE);
         }
 
