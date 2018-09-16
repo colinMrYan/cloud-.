@@ -2,16 +2,12 @@ package com.inspur.emmcloud.widget.audiorecord;
 
 
 import android.content.Context;
-import android.os.Handler;
-import android.os.Message;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.MediaPlayerManagerUtils;
 
 public class AudioRecordButton extends Button {
@@ -52,7 +48,7 @@ public class AudioRecordButton extends Button {
                 isRecording = true;
                 mDialogManager.showRecordingDialog();
                 audioRecorderManager = AudioRecorderManager.getInstance();
-                audioRecorderManager.setCallBack(new AudioDataCallBack() {
+                audioRecorderManager.setCallBack(new AudioRecorderManager.AudioDataCallBack() {
                     @Override
                     public void onDataChange(int volume, float duration) {
                         if(audioRecorderManager.isRecording() && duration <= 60.0){
@@ -196,12 +192,5 @@ public class AudioRecordButton extends Button {
         void onStartRecordingVoice();
         void onFinished(float seconds, String filePath);
         void onErrorRecordingVoice();
-    }
-
-    /**
-     * 给AudioRecordButton返回数据的回调接口
-     */
-    public interface AudioDataCallBack{
-        void onDataChange(int volume,float duration);
     }
 }

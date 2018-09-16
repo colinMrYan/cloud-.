@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.bean.chat;
 
 import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 
 import org.json.JSONObject;
@@ -17,6 +18,7 @@ public class MsgContentMediaVoice {
     private String result;
     private JSONObject jsonObject;
     public MsgContentMediaVoice(String content) {
+        LogUtils.YfcDebug("原始内容："+content);
         JSONObject object = JSONUtils.getJSONObject(content);
         duration = JSONUtils.getInt(object,"duration",0);
         if (duration == 0){
@@ -24,7 +26,9 @@ public class MsgContentMediaVoice {
         }
         media = JSONUtils.getString(object,"media","");
         jsonObject = JSONUtils.getJSONObject(object,"subtitles",new JSONObject());
+        LogUtils.YfcDebug("消息内容："+jsonObject);
         result = getFinalResult(jsonObject);
+        LogUtils.YfcDebug("解析结果："+result);
     }
 
     /**

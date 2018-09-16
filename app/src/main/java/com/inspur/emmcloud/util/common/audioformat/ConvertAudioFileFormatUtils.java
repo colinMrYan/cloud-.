@@ -102,15 +102,12 @@ public class ConvertAudioFileFormatUtils {
      */
     public void convertAudioFile2SpecifiedFormat(Context context,File sourceFile,AudioFormat audioFormat){
         if(!sourceFile.exists()){
-            LogUtils.YfcDebug("文件不存在");
             return;
         }
-        final long beginTime = System.currentTimeMillis();
-        LogUtils.YfcDebug("开始转换");
         IConvertCallback callback = new IConvertCallback() {
             @Override
             public void onSuccess(File file) {
-                LogUtils.YfcDebug("转化成功"+(System.currentTimeMillis() - beginTime));
+                LogUtils.YfcDebug("转化成功");
             }
 
             @Override

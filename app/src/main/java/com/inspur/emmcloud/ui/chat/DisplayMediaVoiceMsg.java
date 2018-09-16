@@ -51,6 +51,7 @@ public class DisplayMediaVoiceMsg {
         MsgContentMediaVoice msgContentMediaVoice = message.getMsgContentMediaVoice();
         TextView speechText = (TextView) cardContentView.findViewById(R.id.tv_voice_card_word);
         speechText.setPadding(isMyMsg? DensityUtil.dip2px(context,10):0,0,isMyMsg?0:DensityUtil.dip2px(context,10),0);
+//        LogUtils.YfcDebug("显示文字："+ JSON.toJSONString(msgContentMediaVoice.getResult()));
         speechText.setText(msgContentMediaVoice.getResult());
         int duration = msgContentMediaVoice.getDuration();
         durationText.setText(duration + "''");

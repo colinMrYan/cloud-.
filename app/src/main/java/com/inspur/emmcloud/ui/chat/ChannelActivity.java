@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
 import com.inspur.emmcloud.MediaPlayBaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -578,6 +579,7 @@ public class ChannelActivity extends MediaPlayBaseActivity {
                     e.printStackTrace();
                 }
                 fakeMessage = CommunicationUtils.combinLocalMediaVoiceMessage(cid, filePath, duration,jsonObject);
+                LogUtils.YfcDebug("发送消息："+ JSON.toJSONString(fakeMessage));
                 break;
         }
         if (fakeMessage != null) {

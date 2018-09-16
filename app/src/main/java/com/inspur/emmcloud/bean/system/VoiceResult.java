@@ -24,6 +24,8 @@ public class VoiceResult {
         this(results,0,"");
     }
 
+    public VoiceResult(){};
+
     public String getResults() {
         return results;
     }

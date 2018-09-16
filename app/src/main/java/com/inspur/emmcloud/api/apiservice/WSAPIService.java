@@ -11,6 +11,7 @@ import com.inspur.emmcloud.bean.system.EventMessage;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 
@@ -137,6 +138,20 @@ public class WSAPIService {
             bodyObj.put("type", Message.MESSAGE_TYPE_MEDIA_VOICE);
             bodyObj.put("duration", message.getMsgContentMediaVoice().getDuration());
             bodyObj.put("media", volumeFile.getPath());
+            JSONObject subTitleObj = new JSONObject();
+            String language = AppUtils.getCurrentAppLanguage(MyApplication.getInstance());
+            switch (language){
+                case "zh-Hans":
+                    subTitleObj.put("zh-cn",message.getMsgContentMediaVoice().getResult());
+                    break;
+                case "en":
+                    subTitleObj.put("en-us",message.getMsgContentMediaVoice().getResult());
+                    break;
+                default:
+                    subTitleObj.put("zh-cn",message.getMsgContentMediaVoice().getResult());
+                    break;
+            }
+            bodyObj.put("subtitles",subTitleObj);
             object.put("body", bodyObj);
             EventMessage eventMessage = new EventMessage(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE,"",message.getId());
             WebSocketPush.getInstance().sendEventMessage(eventMessage, object,message.getId());

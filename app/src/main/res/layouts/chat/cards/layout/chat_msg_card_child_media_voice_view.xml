@@ -65,7 +65,7 @@
                 android:id="@+id/tv_voice_card_word"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:maxWidth="220dp"
+                android:maxWidth="210dp"
                 android:gravity="center_vertical"
                 android:layout_toRightOf="@id/v_voice_anim_left"
                 android:layout_centerVertical="true"

@@ -14,12 +14,11 @@ import java.io.FileOutputStream;
 import java.text.DecimalFormat;
 import java.util.UUID;
 
+/**
+ * 录音模块代码
+ */
 public class AudioRecorderManager {
 
-    //录音输出文件
-    public final static String AUDIO_RAW_FILENAME = "RawAudio.raw";//原生音频文件
-    public final static String AUDIO_WAV_FILENAME = "WavAudio.wav";//wav格式的文件
-    public final static String AUDIO_AMR_FILENAME = "AmrAudio.amr";//amr格式的文件
     //音频输入-麦克风
     public final static int AUDIO_INPUT = MediaRecorder.AudioSource.MIC;
     //采用频率
@@ -44,7 +43,7 @@ public class AudioRecorderManager {
     //管理类的引用
     private static AudioRecorderManager mInstance;
 
-    private AudioRecordButton.AudioDataCallBack callBack;
+    private AudioDataCallBack callBack;
 
     public static AudioRecorderManager getInstance() {
         if (mInstance == null) {
@@ -136,8 +135,9 @@ public class AudioRecorderManager {
      */
     private void createAudioRecord() {
         // 获取音频文件路径
-        rawAudioFilePath = getRawFilePath();
-        wavAudioFilePath = getWavFilePath();
+        String fileName = generalFileName();
+        rawAudioFilePath = getRawFilePath() + fileName+".raw";
+        wavAudioFilePath = getWavFilePath() + fileName+".wav";
         // 获得缓冲区字节大小
         bufferSizeInBytes = AudioRecord.getMinBufferSize(AUDIO_SAMPLE_RATE,
                 AudioFormat.CHANNEL_IN_STEREO, AudioFormat.ENCODING_PCM_16BIT);
@@ -164,7 +164,7 @@ public class AudioRecorderManager {
      */
     private String generalFileName() {
         // TODO Auto-generated method stub
-        return UUID.randomUUID().toString() + ".wav";
+        return UUID.randomUUID().toString();
     }
 
     /**
@@ -327,7 +327,7 @@ public class AudioRecorderManager {
      * @return
      */
     private String getRawFilePath(){
-        return MyAppConfig.LOCAL_CACHE_VOICE_PATH+"/"+AUDIO_RAW_FILENAME;
+        return MyAppConfig.LOCAL_CACHE_VOICE_PATH+"/";
     }
 
     /**
@@ -335,21 +335,9 @@ public class AudioRecorderManager {
      * @return
      */
     private String getWavFilePath(){
-        return MyAppConfig.LOCAL_CACHE_VOICE_PATH +"/"+AUDIO_WAV_FILENAME;
+        return MyAppConfig.LOCAL_CACHE_VOICE_PATH +"/";
     }
 
-    /**
-     * 获取编码后的AMR格式音频文件路径
-     * @return
-     */
-    private String getAMRFilePath(){
-        String mAudioAMRPath = "";
-        if(isSdcardExit()){
-            String fileBasePath = Environment.getExternalStorageDirectory().getAbsolutePath();
-            mAudioAMRPath = fileBasePath+"/"+AUDIO_AMR_FILENAME;
-        }
-        return mAudioAMRPath;
-    }
 
     /**
      * 获取文件大小
@@ -384,7 +372,14 @@ public class AudioRecorderManager {
      * 持续时间，音量回调
      * @param callBack
      */
-    public void setCallBack(AudioRecordButton.AudioDataCallBack callBack) {
+    public void setCallBack(AudioDataCallBack callBack) {
         this.callBack = callBack;
+    }
+
+    /**
+     * 给AudioRecordButton返回数据的回调接口
+     */
+    public interface AudioDataCallBack{
+        void onDataChange(int volume,float duration);
     }
 }

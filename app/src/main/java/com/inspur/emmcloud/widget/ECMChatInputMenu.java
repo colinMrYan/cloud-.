@@ -21,6 +21,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import com.alibaba.fastjson.JSON;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.chat.InputTypeBean;
 import com.inspur.emmcloud.bean.chat.InsertModel;
@@ -30,6 +31,7 @@ import com.inspur.emmcloud.interf.OnVoiceResultCallback;
 import com.inspur.emmcloud.ui.chat.MembersActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.InputMethodUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.MediaPlayerUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
@@ -400,6 +402,7 @@ public class ECMChatInputMenu extends LinearLayout {
 
             @Override
             public void onVoiceResult(VoiceResult voiceResult, boolean isLast) {
+                LogUtils.YfcDebug("语音消息结果："+ JSON.toJSONString(voiceResult));
                 handleVoiceResult(voiceResult);
             }
 

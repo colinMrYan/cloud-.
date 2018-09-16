@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Environment;
 
+import com.alibaba.fastjson.JSON;
 import com.iflytek.cloud.ErrorCode;
 import com.iflytek.cloud.InitListener;
 import com.iflytek.cloud.RecognizerListener;
@@ -15,6 +16,7 @@ import com.inspur.emmcloud.bean.system.VoiceResult;
 import com.inspur.emmcloud.interf.OnVoiceResultCallback;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -42,7 +44,6 @@ public class Voice2StringMessageUtils {
     private InitListener initListener;
 
     private float durationTime = 0;
-    private String wavFilePath = "";
     private String mp3FilePath = "";
 
     public Voice2StringMessageUtils(Context context) {
@@ -66,13 +67,14 @@ public class Voice2StringMessageUtils {
      */
     public void startVoiceListeningByVoiceFile(float seconds,String voiceFilePath,String mp3VoiceFilePath) {
         this.durationTime = seconds;
-        this.wavFilePath = voiceFilePath;
         this.mp3FilePath = mp3VoiceFilePath;
         // 使用SpeechRecognizer对象，可根据回调消息自定义界面；
         speechRecognizer = SpeechRecognizer.createRecognizer(context, initListener);
         setParam();
         //注释掉的这几句是读取文件听写文字的
         speechRecognizer.setParameter(SpeechConstant.AUDIO_SOURCE, "-1");
+        // 设置标点符号,设置为"0"返回结果无标点,设置为"1"返回结果有标点
+        speechRecognizer.setParameter(SpeechConstant.ASR_PTT, "1");
         speechRecognizer.startListening(recognizerListener);
         byte[] audioData = FileUtils.readAudioFileFromSDcard(voiceFilePath);
         speechRecognizer.writeAudio(audioData, 0, audioData.length);
@@ -93,8 +95,8 @@ public class Voice2StringMessageUtils {
         // 设置返回结果格式
         speechRecognizer.setParameter(SpeechConstant.RESULT_TYPE, "json");
 
-        String laguage = AppUtils.getCurrentAppLanguage(context);
-        switch (laguage){
+        String language = AppUtils.getCurrentAppLanguage(context);
+        switch (language){
             case "zh-Hans":
                 // 设置语言
                 speechRecognizer.setParameter(SpeechConstant.LANGUAGE, "zh_cn");
@@ -153,6 +155,7 @@ public class Voice2StringMessageUtils {
 
             @Override
             public void onError(SpeechError error) {
+                LogUtils.YfcDebug("转写失败："+error.getErrorDescription());
                 onVoiceResultCallback.onError(new VoiceResult("...",durationTime,mp3FilePath));
                 //返回错误停止录音
                 stopListening();
@@ -168,8 +171,14 @@ public class Voice2StringMessageUtils {
             public void onResult(RecognizerResult results, boolean isLast) {
                 addListeningResult2Map(results);
                 if (isLast) {
+                    String voiceWords = getLastListeningResult();
+                    VoiceResult voiceResult = new VoiceResult();
+                    voiceResult.setResults(voiceWords);
+                    voiceResult.setSeconds(durationTime);
+                    voiceResult.setFilePath(mp3FilePath);
+                    LogUtils.YfcDebug("回调结果："+ JSON.toJSONString(voiceResult));
                     //最后的结果
-                    onVoiceResultCallback.onVoiceResult(new VoiceResult(getLastListeningResult(),durationTime, mp3FilePath), isLast);
+                    onVoiceResultCallback.onVoiceResult(voiceResult, isLast);
                 }
             }
 
