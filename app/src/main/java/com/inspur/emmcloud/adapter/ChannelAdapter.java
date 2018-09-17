@@ -16,7 +16,6 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.chat.Channel;
 import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.privates.DirectChannelUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
@@ -93,7 +92,6 @@ public class ChannelAdapter extends BaseAdapter {
         }
         Channel channel = dataList.get(position);
         setChannelIcon(channel, holder.channelPhotoImg);
-        LogUtils.jasonDebug("000000000000000000000");
         setChannelMsgReadStateUI(channel, holder);
         holder.channelTitleText.setText(channel.getDisplayTitle());
         holder.dndImg.setVisibility(channel.getDnd() ? View.VISIBLE : View.GONE);

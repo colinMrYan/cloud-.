@@ -65,7 +65,9 @@ public class MessageCacheUtil {
                     messageIdList.add(message.getId());
                 }
                 List<Message> existMessageList = DbCacheUtils.getDb(context).selector(Message.class).where("id","in",messageIdList).findAll();
-                messageList.removeAll(existMessageList);
+                if (existMessageList != null && existMessageList.size()>0){
+                    messageList.removeAll(existMessageList);
+                }
                 if (messageList.size() == 0){
                     return;
                 }
