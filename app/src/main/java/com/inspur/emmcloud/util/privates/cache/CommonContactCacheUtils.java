@@ -6,6 +6,7 @@ import com.inspur.emmcloud.bean.contact.Contact;
 import com.inspur.emmcloud.bean.contact.SearchModel;
 
 import org.xutils.db.sqlite.WhereBuilder;
+import org.xutils.ex.DbException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,8 +77,6 @@ public class CommonContactCacheUtils {
                 default:
                     break;
             }
-
-
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -87,6 +86,23 @@ public class CommonContactCacheUtils {
         }
         return commonContactList;
     }
+
+
+
+    /**
+     *删除单个常用联系人(只删除组)
+     * lbc 2018/09/13
+     * @param context
+     * @param searchModel 删除联系人groupID
+     * **/
+    public static void delectCommonContact(Context context,SearchModel searchModel) {
+        try {
+                DbCacheUtils.getDb(context).delete(searchModel);
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 
     /**

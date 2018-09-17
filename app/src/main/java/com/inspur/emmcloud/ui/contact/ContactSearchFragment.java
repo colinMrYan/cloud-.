@@ -55,6 +55,9 @@ import com.inspur.emmcloud.widget.CircleTextImageView;
 import com.inspur.emmcloud.widget.FlowLayout;
 import com.inspur.emmcloud.widget.MaxHightScrollView;
 import com.inspur.emmcloud.widget.NoHorScrollView;
+import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
+import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
+import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -408,7 +411,43 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
                 changeMembers(searchModel);
             }
         });
+
+        secondGroupListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view,
+                                           int position, long id) {
+                // TODO Auto-generated method stub
+                showRecentChannelOperationDlg(position);
+                return true;
+            }
+
+        });
     }
+
+    private  void  showRecentChannelOperationDlg(final int position) {
+        new MyQMUIDialog.MessageDialogBuilder(getActivity())
+                .setMessage(R.string.if_delect_current_item)
+                .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
+                    @Override
+                    public void onClick(QMUIDialog dialog, int index) {
+                        dialog.dismiss();
+                    }
+                })
+                .addAction(R.string.ok, new QMUIDialogAction.ActionListener() {
+                    @Override
+                    public void onClick(QMUIDialog dialog, int index) {
+                        dialog.dismiss();
+                        SearchModel searchModel = commonContactList.get(position);
+                        CommonContactCacheUtils.delectCommonContact( getActivity().getApplicationContext(),searchModel);
+                            commonContactList.remove(position);
+                            secondGroupListAdapter.notifyDataSetChanged();
+                    }
+                })
+                .show();
+
+    }
+
 
     /**
      * 群组或通讯录打开浏览页面

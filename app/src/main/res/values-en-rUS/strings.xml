@@ -27,6 +27,7 @@
     <string name="next_step">Next</string>
     <string name="pull_down_load_history">Drop load history message</string>
     <string name="if_confirm_signout">Are you sure you want to log out?</string>
+    <string name="if_delect_current_item">Delete current option</string>
     <string name="exit">Exit</string>
     <string name="open">Open</string>
     <string name="add">Add</string>
