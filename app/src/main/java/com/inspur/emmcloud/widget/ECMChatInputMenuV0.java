@@ -138,6 +138,9 @@ public class ECMChatInputMenuV0 extends LinearLayout {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 boolean isContentBlank = (s.length() == 0);
+                if (isContentBlank){
+                    chatInputMenuListener.onChatDraftsClear();
+                }
                 sendMsgBtn.setVisibility(isContentBlank ? (inputs.equals("1")) ? VISIBLE : GONE : VISIBLE);
                 sendMsgBtn.setEnabled(!isContentBlank);
                 sendMsgBtn.setBackgroundResource(isContentBlank ? R.drawable.bg_chat_input_send_btn_disable : R.drawable.bg_chat_input_send_btn_enable);
@@ -296,6 +299,10 @@ public class ECMChatInputMenuV0 extends LinearLayout {
             });
             viewpagerLayout.setInputTypeBeanList(inputTypeBeanList);
         }
+    }
+
+    public void setChatDrafts(String drafts){
+        inputEdit.setText(drafts);
     }
 
     /**
@@ -590,13 +597,17 @@ public class ECMChatInputMenuV0 extends LinearLayout {
         mediaPlayerUtils.playVoiceOff();
     }
 
+    public String getInputContent(){
+        return inputEdit.getText().toString().trim();
+    }
+
 
     public interface ChatInputMenuListener {
         void onSendMsg(String content, List<String> mentionsUidList, List<String> urlList, Map<String, String> mentionsMap);
 
-
-
         void onVoiceCommucaiton();
+
+        void onChatDraftsClear();
 
     }
 

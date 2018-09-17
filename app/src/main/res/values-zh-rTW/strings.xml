@@ -27,6 +27,7 @@
     <string name="next_step">下一步</string>
     <string name="pull_down_load_history">下拉載入歷史消息</string>
     <string name="if_confirm_signout">您確定要退出登錄嗎？</string>
+    <string name="if_delect_current_item">刪除當前選項</string>
     <string name="exit">退出</string>
     <string name="open">打開</string>
     <string name="add">添加</string>
@@ -284,6 +285,7 @@
     <string name="record_count_down_text">還可以說 %1$d 秒</string>
     <string name="voice_call">語音通話</string>
     <string name="sure_to_resend_message">確認重新發送該消息?</string>
+    <string name="message_type_drafts">[草稿]</string>
 
 
     <!-- 會議卡片 -->

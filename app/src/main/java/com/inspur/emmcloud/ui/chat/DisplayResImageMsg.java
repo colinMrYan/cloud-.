@@ -9,17 +9,16 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.chat.Msg;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.privates.cache.MsgCacheUtil;
+import com.inspur.emmcloud.widget.RoundAngleImageView;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
-import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
 import java.io.Serializable;
@@ -42,7 +41,7 @@ public class DisplayResImageMsg {
                                         final Msg msg) {
         View cardContentView = LayoutInflater.from(context).inflate(
                 R.layout.chat_msg_card_child_res_img_view, null);
-        final ImageView imageView = (ImageView) cardContentView
+        final RoundAngleImageView imageView = (RoundAngleImageView) cardContentView
                 .findViewById(R.id.content_img);
         final TextView longImgText = (TextView) cardContentView.findViewById(R.id.long_img_text);
         String imageUri = JSONUtils.getString(msg.getBody(), "key", "");
@@ -50,7 +49,6 @@ public class DisplayResImageMsg {
                 .showImageForEmptyUri(R.drawable.icon_photo_default)
                 .showImageOnFail(R.drawable.icon_photo_default)
                 .showImageOnLoading(R.drawable.icon_photo_default)
-                .displayer(new RoundedBitmapDisplayer(DensityUtil.dip2px(MyApplication.getInstance(),4)))
                 // 设置图片的解码类型
                 .bitmapConfig(Bitmap.Config.RGB_565).cacheInMemory(true)
                 .cacheOnDisk(true).build();
@@ -119,8 +117,8 @@ public class DisplayResImageMsg {
             return false;
         }
         int minW = DensityUtil.dip2px(context, 100);
-        int minH = DensityUtil.dip2px(context, 94);
-        int maxW = DensityUtil.dip2px(context, 287);
+        int minH = DensityUtil.dip2px(context, 90);
+        int maxW = DensityUtil.dip2px(context, 270);
         int maxH = DensityUtil.dip2px(context, 232);
         LayoutParams params = imageView.getLayoutParams();
         if (w == h) {
@@ -134,6 +132,7 @@ public class DisplayResImageMsg {
                 longImgText.setVisibility(View.VISIBLE);
                 params.height = maxH;
             }
+            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         } else {
             params.width = maxW;
             params.height = (int) (maxW * 1.0 * h / w);
@@ -141,6 +140,7 @@ public class DisplayResImageMsg {
                 params.height = minH;
                 longImgText.setVisibility(View.VISIBLE);
             }
+            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         }
         imageView.setLayoutParams(params);
         return true;

@@ -15,7 +15,6 @@ import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.contact.ContactOrg;
 import com.inspur.emmcloud.bean.contact.ContactUser;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactOrgCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 
@@ -104,7 +103,6 @@ class OrgStrContactAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        LogUtils.LbcDebug("getView");
         String currentOrgName = groupOrgList.get(position).toString();
         LayoutInflater inflater = LayoutInflater.from(adpContext);
         if (convertView == null) {
