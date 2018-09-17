@@ -218,6 +218,7 @@ public class ChannelActivity extends MediaPlayBaseActivity {
             headerText.setVisibility(View.GONE);
             String uid = DirectChannelUtils.getDirctChannelOtherUid(MyApplication.getInstance(), channel.getTitle());
             String iconUrl = APIUri.getUserIconUrl(MyApplication.getInstance(), uid);
+            LogUtils.jasonDebug("iconUrl="+iconUrl);
             ImageDisplayUtils.getInstance().displayImage(robotPhotoImg, iconUrl, R.drawable.icon_person_default);
         } else {
             robotPhotoImg.setVisibility(View.GONE);
@@ -279,7 +280,7 @@ public class ChannelActivity extends MediaPlayBaseActivity {
                 setChatDrafts();
             }
         });
-        chatInputMenu.setInputLayout(isSpecialUser ? "1" : channel.getInputs());
+        chatInputMenu.setInputLayout(channel.getInputs());
         String chatDrafts = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), MyAppConfig.getChannelDrafsPreKey(cid));
         if (chatDrafts != null){
             chatInputMenu.setChatDrafts(chatDrafts);

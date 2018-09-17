@@ -48,6 +48,7 @@ import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.HtmlRegexpUtil;
 import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -116,6 +117,7 @@ public class NewsWebDetailActivity extends BaseActivity {
      * 两处使用本方法的，专门封一个方法
      */
     public void initWebViewGoBackOrClose() {
+        LogUtils.jasonDebug("webView != null------=="+(webView != null));
         if(webView != null){
             (findViewById(R.id.news_close_btn)).setVisibility(webView.canGoBack() ? View.VISIBLE : View.GONE);
         }
@@ -198,6 +200,7 @@ public class NewsWebDetailActivity extends BaseActivity {
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
+                LogUtils.jasonDebug("onPageFinished------");
                 initWebViewGoBackOrClose();
             }
 
@@ -556,7 +559,7 @@ public class NewsWebDetailActivity extends BaseActivity {
                 if (webView.canGoBack()) {
                     webView.goBack();// 返回上一页面
                 } else {
-                    finish();// 退出
+                    finishActivity();
                 }
                 break;
             case R.id.news_close_btn:
@@ -914,15 +917,34 @@ public class NewsWebDetailActivity extends BaseActivity {
 
     protected void onPause() {
         super.onPause();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && webView != null ) {
             webView.onPause(); // 暂停网页中正在播放的视频
         }
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    public void onBackPressed() {
+        super.onBackPressed();
+        if (intrcutionDialog != null && intrcutionDialog.isShowing()){
+            intrcutionDialog.dismiss();
+            return;
+        }
+        if (dialog != null && dialog.isShowing()){
+            dialog.dismiss();
+            return;
+        }
+        finishActivity();
+    }
+
+    /**
+     * 关闭页面
+     */
+    private void finishActivity(){
+        finish();
         if (webView != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ) {
+                webView.onPause(); // 暂停网页中正在播放的视频
+            }
             webView.removeAllViews();
             webView.destroy();
             webView= null;
@@ -930,12 +952,6 @@ public class NewsWebDetailActivity extends BaseActivity {
         EventBus.getDefault().unregister(this);
     }
 
-    @Override
-    public void finish() {
-        ViewGroup view = (ViewGroup) getWindow().getDecorView();
-        view.removeAllViews();
-        super.finish();
-    }
 
     //接收到websocket发过来的消息
     @Subscribe(threadMode = ThreadMode.MAIN)
