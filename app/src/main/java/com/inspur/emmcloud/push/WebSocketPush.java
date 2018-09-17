@@ -404,13 +404,13 @@ public class WebSocketPush {
                         switch (path){
                             case "/channel/message":
                                 if (wsPushContent.getMethod().equals("post")){
-                                    EventMessage eventMessagea = new EventMessage(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE, wsPushContent.getBody());
+                                    EventMessage eventMessagea = new EventMessage("",Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE, wsPushContent.getBody());
                                     EventBus.getDefault().post(eventMessagea);
                                 }
                                 break;
                             case "/channel/message/state/unread":
                                 if (wsPushContent.getMethod().equals("delete")){
-                                    EventMessage eventMessagea = new EventMessage(Constant.EVENTBUS_TAG_RECERIVER_MESSAGE_STATE_READ, wsPushContent.getBody());
+                                    EventMessage eventMessagea = new EventMessage("",Constant.EVENTBUS_TAG_RECERIVER_MESSAGE_STATE_READ, wsPushContent.getBody());
                                     EventBus.getDefault().post(eventMessagea);
                                 }
                                 break;

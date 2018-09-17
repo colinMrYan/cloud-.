@@ -219,13 +219,18 @@ public class WSAPIService {
         }
     }
 
-    public void getOfflineMessage() {
+    public void getOfflineMessage(String lastMessageId) {
         try {
             String tracer = CommunicationUtils.getTracer();
             JSONObject object = new JSONObject();
             JSONObject actionObj = new JSONObject();
             actionObj.put("method", "get");
             actionObj.put("path", "/message");
+            if (lastMessageId != null){
+                JSONObject queryObj = new JSONObject();
+                queryObj.put("MessageId", lastMessageId);
+                actionObj.put("query", queryObj);
+            }
             object.put("action", actionObj);
             JSONObject headerObj = new JSONObject();
             headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());

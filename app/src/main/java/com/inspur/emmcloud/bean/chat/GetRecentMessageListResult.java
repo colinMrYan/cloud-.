@@ -1,7 +1,6 @@
 package com.inspur.emmcloud.bean.chat;
 
 import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -27,7 +26,6 @@ public class GetRecentMessageListResult {
             String key = messageKeys.next();
             JSONArray array = JSONUtils.getJSONArray(messagesObj,key,new JSONArray());
             int unread =JSONUtils.getInt(unreadObj,key,0);
-            LogUtils.jasonDebug("unread="+unread);
             if (unread > 100){
                 unread = 100;
             }

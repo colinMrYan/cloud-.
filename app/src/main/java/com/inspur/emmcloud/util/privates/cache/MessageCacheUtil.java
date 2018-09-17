@@ -58,12 +58,19 @@ public class MessageCacheUtil {
             if (messageList == null || messageList.size() == 0) {
                 return;
             }
-            if (isUpdate){
-                DbCacheUtils.getDb(context).saveOrUpdate(messageList);
-            }else {
-                DbCacheUtils.getDb(context).save(messageList);
+            //去重操作，防止服务端重复消息覆盖本地消息导致已读未读状态错乱
+            if (!isUpdate){
+                List<String> messageIdList = new ArrayList<>();
+                for (Message message:messageList){
+                    messageIdList.add(message.getId());
+                }
+                List<Message> existMessageList = DbCacheUtils.getDb(context).selector(Message.class).where("id","in",messageIdList).findAll();
+                messageList.removeAll(existMessageList);
+                if (messageList.size() == 0){
+                    return;
+                }
             }
-
+            DbCacheUtils.getDb(context).saveOrUpdate(messageList);
             MatheSet matheSet = new MatheSet();
             matheSet.setStart(messageList.get(0).getCreationDate());
             matheSet.setEnd((targetMessageCreationDate == null) ? messageList.get(messageList.size() - 1)
@@ -360,6 +367,24 @@ public class MessageCacheUtil {
             e.printStackTrace();
         }
         return false;
+    }
+
+    /**
+     * 获取最新消息的消息id
+     * @param context
+     * @return
+     */
+    public static String getLastMessageId(Context context){
+        String lastMessageId = null;
+        try {
+            Message message = DbCacheUtils.getDb(context).selector(Message.class).orderBy("creationDate", true).findFirst();
+            if (message != null){
+                lastMessageId = message.getId();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return lastMessageId;
     }
 
 }

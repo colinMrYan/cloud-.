@@ -995,9 +995,10 @@ public class CommunicationFragment extends Fragment {
 
     public void getMessage() {
         if (NetUtils.isNetworkConnected(MyApplication.getInstance()) && WebSocketPush.getInstance().isSocketConnect()) {
-            if (MessageCacheUtil.isHistoryMessageCache(MyApplication.getInstance())) {
+            String lastMessageId = MessageCacheUtil.getLastMessageId(MyApplication.getInstance());
+            if (lastMessageId != null) {
                 //获取离线消息
-                WSAPIService.getInstance().getOfflineMessage();
+                WSAPIService.getInstance().getOfflineMessage(lastMessageId);
             } else {
                 //获取每个频道最近的15条消息
                 WSAPIService.getInstance().getChannelRecentMessage();
