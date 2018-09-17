@@ -45,12 +45,12 @@ public class AppExceptionService extends Service {
 
 	public void uploadException() {
 		if (NetUtils.isNetworkConnected(AppExceptionService.this,false) && !AppUtils.isApkDebugable(AppExceptionService.this)) {
-			List<AppException> appExceptionList = AppExceptionCacheUtils.getAppExceptionList(AppExceptionService.this);
+			List<AppException> appExceptionList = AppExceptionCacheUtils.getAppExceptionList(AppExceptionService.this,50);
 			if (appExceptionList.size() != 0) {
 				JSONObject uploadContentJSONObj = getUploadContentJSONObj(appExceptionList);
 				AppAPIService apiService = new AppAPIService(AppExceptionService.this);
 				apiService.setAPIInterface(new WebService());
-				apiService.uploadException(uploadContentJSONObj);
+				apiService.uploadException(uploadContentJSONObj,appExceptionList);
 				return;
 			}
 		}
@@ -86,15 +86,18 @@ public class AppExceptionService extends Service {
 			e.printStackTrace();
 		}
 
-
 		return contentObj;
 	}
 
 	private class WebService extends APIInterfaceInstance {
 		@Override
-		public void returnUploadExceptionSuccess() {
-			AppExceptionCacheUtils.clearAppException(AppExceptionService.this);
-			stopSelf();
+		public void returnUploadExceptionSuccess(final List<AppException> appExceptionList) {
+		 AppExceptionCacheUtils.deleteAppException(AppExceptionService.this,appExceptionList);
+			if( appExceptionList.size()<50) {
+				stopSelf();
+			} else {
+				uploadException();
+			}
 		}
 
 		@Override

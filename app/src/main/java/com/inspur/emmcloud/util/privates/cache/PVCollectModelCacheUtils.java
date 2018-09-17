@@ -57,4 +57,55 @@ public class PVCollectModelCacheUtils {
 			e.printStackTrace();
 		}
 	}
+
+	/**
+	 *@param  context
+	 *如果数据库剩余数据大于该值，获取数据库前maxGetItemnum条
+	 *                        否则 获取数据库全部条数，生成JSON对象
+	 * **/
+	public static JSONArray getCollectModelListJson(Context context ,  List<PVCollectModel> parCollectModelList) {
+		List<PVCollectModel> collectModelList = new ArrayList<>();
+		    collectModelList = parCollectModelList;
+		JSONArray array = new JSONArray();
+		if (collectModelList.size()>0){
+			for (int i=0;i< collectModelList.size();i++){
+				PVCollectModel pvCollectModel = collectModelList.get(i);
+				JSONObject obj = pvCollectModel.getObj();
+				array.put(obj);
+			}
+		}
+		return  array;
+	}
+
+	/**
+	 *@param  context
+	 *@param  maxGetItemsNum  如果数据库剩余数据大于该值，获取数据库前maxGetItemnum条
+	 *                        否则 获取数据库全部条数,存入List
+	 * **/
+	public static List<PVCollectModel> getCollectModelList(Context context,int maxGetItemsNum){
+		List<PVCollectModel> collectModelList =  new ArrayList<PVCollectModel>();
+		try {
+		  collectModelList = DbCacheUtils.getDb(context).selector(PVCollectModel.class).orderBy("id").limit(maxGetItemsNum).findAll();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if(collectModelList==null) {
+			collectModelList =  new ArrayList<PVCollectModel>();
+		}
+		return collectModelList;
+	}
+
+	/**
+	 * @param context
+	 * **/
+	public static void deleteCollectModel(Context context,List<PVCollectModel> collectModelList) {
+		try {
+			DbCacheUtils.getDb(context).delete(collectModelList);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
 }
