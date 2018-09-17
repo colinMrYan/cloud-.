@@ -43,7 +43,7 @@ public class JpushReceiver extends BroadcastReceiver {
             LogUtils.debug(TAG, "[MyReceiver] 接收Registration Id : " + regId);
             PreferencesUtils.putString(context, "JpushRegId", regId);
             new ClientIDUtils(context).upload();
-            WebSocketPush.getInstance().startWebSocket(false);
+            WebSocketPush.getInstance().startWebSocket();
         } else if (JPushInterface.ACTION_MESSAGE_RECEIVED.equals(intent
                 .getAction())) {
             ECMTransparentUtils.handleTransparentMsg(context,bundle.getString(JPushInterface.EXTRA_MESSAGE));
