@@ -15,7 +15,6 @@ import com.inspur.emmcloud.bean.system.VoiceResult;
 import com.inspur.emmcloud.interf.OnVoiceResultCallback;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -76,7 +75,9 @@ public class Voice2StringMessageUtils {
         speechRecognizer.setParameter(SpeechConstant.ASR_PTT, "1");
         speechRecognizer.startListening(recognizerListener);
         byte[] audioData = FileUtils.readAudioFileFromSDcard(voiceFilePath);
-        speechRecognizer.writeAudio(audioData, 0, audioData.length);
+        if(audioData != null){
+            speechRecognizer.writeAudio(audioData, 0, audioData.length);
+        }
         speechRecognizer.stopListening();
     }
 
