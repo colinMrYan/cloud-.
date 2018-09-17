@@ -57,7 +57,7 @@ public class Channel implements Serializable {
     private String inputs = "";
     private List<Msg> newMsgList = new ArrayList<>();
     private List<Message> newMessageList = new ArrayList<>();
-    private int unReadCount = 0;
+    private long unReadCount = 0;
     private String displayTitle = "";//session显示的名字
     private String newMsgContent = "";
 
@@ -417,11 +417,11 @@ public class Channel implements Serializable {
         this.inputs = inputs;
     }
 
-    public int getUnReadCount() {
+    public long getUnReadCount() {
         return unReadCount;
     }
 
-    public void setUnReadCount(int unReadCount) {
+    public void setUnReadCount(long unReadCount) {
         this.unReadCount = unReadCount;
     }
 

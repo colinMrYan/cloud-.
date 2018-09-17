@@ -7,12 +7,14 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -53,6 +55,7 @@ import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
@@ -461,7 +464,7 @@ public class CommunicationV0Fragment extends Fragment {
                                 it.remove();
                             }
                             channel.setIsSetTop(false);
-                            int unReadCount = MsgReadCreationDateCacheUtils.getNotReadMessageCount(
+                            long unReadCount = MsgReadCreationDateCacheUtils.getNotReadMessageCount(
                                     getActivity(), channel.getCid());
                             channel.setUnReadCount(unReadCount);
                             setChannelDisplayTitle(channel);
@@ -880,11 +883,24 @@ public class CommunicationV0Fragment extends Fragment {
          */
         private void setChannelMsgReadStateUI(final Channel channel, ViewHolder holder) {
             // TODO Auto-generated method stub
-            int unReadCount = channel.getUnReadCount();
+            long unReadCount = channel.getUnReadCount();
             holder.channelTimeText.setText(TimeUtils.getDisplayTime(
                     getActivity(), channel.getMsgLastUpdate()));
-            holder.channelContentText.setText(channel
-                    .getNewMsgContent());
+            String chatDrafts = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), MyAppConfig.getChannelDrafsPreKey(channel.getCid()),null);
+            if (chatDrafts != null){
+                String content = "<font color='#FF0000'>"+MyApplication.getInstance().getString(R.string.message_type_drafts)+"</font>"+chatDrafts;
+                if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.N){
+                    holder.channelContentText.setText(Html.fromHtml(content,Html.FROM_HTML_MODE_LEGACY, null, null));
+                }else {
+                    holder.channelContentText.setText(Html.fromHtml(content));
+                }
+            }else {
+                holder.channelContentText.setText(channel
+                        .getNewMsgContent());
+                TransHtmlToTextUtils.stripUnderlines(holder.channelContentText,
+                        R.color.msg_content_color);
+            }
+
             TransHtmlToTextUtils.stripUnderlines(holder.channelContentText,
                     R.color.msg_content_color);
             boolean isHasUnReadMsg = (unReadCount != 0);
@@ -1004,6 +1020,12 @@ public class CommunicationV0Fragment extends Fragment {
                     String cid = intent.getExtras().getString("cid");
                     long messageCreationDate = intent.getExtras().getLong("messageCreationDate");
                     setChannelMsgRead(cid, messageCreationDate);
+                    break;
+                case "refresh_adapter":
+                    LogUtils.jasonDebug("refresh_adapter============");
+                    if (adapter != null){
+                        adapter.notifyDataSetChanged();
+                    }
                     break;
                 default:
                     break;

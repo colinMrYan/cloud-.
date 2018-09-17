@@ -104,4 +104,8 @@ public class MyAppConfig {
 
 
     public static Language getDefaultLanguage = new Language("中文简体", "zh-CN", "zh-Hans", "zh-CN", "zh-CN", "zh-Hans");
+
+    public static String getChannelDrafsPreKey(String cid){
+        return "drafts"+cid;
+    }
 }

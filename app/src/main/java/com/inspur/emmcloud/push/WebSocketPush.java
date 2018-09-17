@@ -51,6 +51,7 @@ public class WebSocketPush {
     private Timer timer;
     private Handler handler;
     private boolean isWebsocketConnecting = false;
+    private boolean isWSStatusConnectedV1 = false;
     public static WebSocketPush getInstance() {
         if (webSocketPush == null) {
             synchronized (WebSocketPush.class) {
@@ -224,9 +225,15 @@ public class WebSocketPush {
      */
     public boolean isSocketConnect() {
         if (mSocket != null) {
-            return mSocket.connected();
+            if (MyApplication.getInstance().isV0VersionChat()){
+                return mSocket.connected();
+            }else if (MyApplication.getInstance().isV1xVersionChat()){
+                return mSocket.connected() && isWSStatusConnectedV1;
+            }
+
         }
         return false;
+
     }
 
     public void sendAppStatus(boolean isActive) {
@@ -280,8 +287,9 @@ public class WebSocketPush {
         mSocket.off("com.inspur.ecm.chat");
         mSocket.off(Socket.EVENT_CONNECT_ERROR);
         mSocket.off(Socket.EVENT_CONNECT);
-        mSocket.off(Socket.EVENT_CONNECTING);
         mSocket.off(Socket.EVENT_DISCONNECT);
+        mSocket.off(Socket.EVENT_CONNECTING);
+        mSocket.off(Socket.EVENT_RECONNECTING);
     }
 
     private void addListeners() {
@@ -313,6 +321,7 @@ public class WebSocketPush {
                 // TODO Auto-generated method stub
                 isWebsocketConnecting = true;
                 LogUtils.jasonDebug("正在连接");
+                sendWebSocketStatusBroadcast("socket_connecting");
             }
         });
         mSocket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
@@ -330,6 +339,15 @@ public class WebSocketPush {
             }
         });
 
+        mSocket.on(Socket.EVENT_RECONNECTING, new Emitter.Listener() {
+
+            @Override
+            public void call(Object... arg0) {
+                // TODO Auto-generated method stub
+                sendWebSocketStatusBroadcast("socket_connecting");
+            }
+        });
+
         mSocket.on("status", new Emitter.Listener() {
 
             @Override
@@ -339,6 +357,7 @@ public class WebSocketPush {
                 LogUtils.debug(TAG, "连接成功");
                 int code = JSONUtils.getInt(arg0[0].toString(), "code", 0);
                 if (code == 100) {
+                    isWSStatusConnectedV1 = true;
                     sendWebSocketStatusBroadcast(Socket.EVENT_CONNECT);
                     // 当第一次连接成功后发送App目前的状态消息
                     sendAppStatus(MyApplication.getInstance().getIsActive());
@@ -353,7 +372,6 @@ public class WebSocketPush {
             public void call(Object... arg0) {
                 // TODO Auto-generated method stub
                 LogUtils.debug(TAG, "message:" + arg0[0].toString());
-
                 String content = arg0[0].toString();
                 Intent intent = new Intent("com.inspur.msg");
                 intent.putExtra("push", content);
@@ -383,9 +401,19 @@ public class WebSocketPush {
                             EventBus.getDefault().post(eventMessage);
                         }
                     } else {
-                        if (path.equals("/channel/message") && wsPushContent.getMethod().equals("post")) {
-                            EventMessage eventMessagea = new EventMessage("",Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE, wsPushContent.getBody());
-                            EventBus.getDefault().post(eventMessagea);
+                        switch (path){
+                            case "/channel/message":
+                                if (wsPushContent.getMethod().equals("post")){
+                                    EventMessage eventMessagea = new EventMessage("",Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE, wsPushContent.getBody());
+                                    EventBus.getDefault().post(eventMessagea);
+                                }
+                                break;
+                            case "/channel/message/state/unread":
+                                if (wsPushContent.getMethod().equals("delete")){
+                                    EventMessage eventMessagea = new EventMessage("",Constant.EVENTBUS_TAG_RECERIVER_MESSAGE_STATE_READ, wsPushContent.getBody());
+                                    EventBus.getDefault().post(eventMessagea);
+                                }
+                                break;
                         }
                     }
                 }catch (Exception e){
@@ -398,6 +426,7 @@ public class WebSocketPush {
             @Override
             public void call(Object... arg0) {
                 // TODO Auto-generated method stub
+                isWSStatusConnectedV1 = false;
                 sendWebSocketStatusBroadcast(Socket.EVENT_DISCONNECT);
                 LogUtils.debug(TAG, "断开连接");
                 LogUtils.debug(TAG, arg0[0].toString());

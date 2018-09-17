@@ -55,6 +55,7 @@ import com.inspur.emmcloud.util.privates.CustomProtocol;
 import com.inspur.emmcloud.util.privates.DirectChannelUtils;
 import com.inspur.emmcloud.util.privates.GetPathFromUri4kitkat;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
+import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MsgCacheUtil;
@@ -260,7 +261,7 @@ public class ChannelV0Activity extends BaseActivity {
             Robot robot = DirectChannelUtils.getRobotInfo(getApplicationContext(),
                     channel.getTitle());
             String robotPhotoUrl = APIUri.getUserIconUrl(getApplicationContext(), robot.getId());
-            ImageDisplayUtils.getInstance().displayImage(robotPhotoImg, robotPhotoUrl, R.drawable.ic_robot_new);
+            ImageDisplayUtils.getInstance().displayImage(robotPhotoImg, robotPhotoUrl, R.drawable.icon_person_default);
         } else {
             robotPhotoImg.setVisibility(View.GONE);
             headerText.setVisibility(View.VISIBLE);
@@ -298,6 +299,7 @@ public class ChannelV0Activity extends BaseActivity {
             @Override
             public void onSendMsg(String content, List<String> mentionsUidList, List<String> urlList, Map<String, String> map) {
                 // TODO Auto-generated method stub
+                PreferencesByUserAndTanentUtils.clearDataByKey(MyApplication.getInstance(), MyAppConfig.getChannelDrafsPreKey(cid));
                 sendTextMessage(content, mentionsUidList, urlList, false);
             }
 
@@ -320,8 +322,17 @@ public class ChannelV0Activity extends BaseActivity {
                 intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE, ChannelVoiceCommunicationActivity.INVITER_LAYOUT_STATE);
                 startActivity(intent);
             }
+
+            @Override
+            public void onChatDraftsClear() {
+                setChatDrafts();
+            }
         });
         chatInputMenu.setInputLayout(isSpecialUser ? "1" : channel.getInputs());
+        String chatDrafts = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), MyAppConfig.getChannelDrafsPreKey(cid));
+        if (chatDrafts != null){
+            chatInputMenu.setChatDrafts(chatDrafts);
+        }
     }
 
 
@@ -782,10 +793,29 @@ public class ChannelV0Activity extends BaseActivity {
      * 关闭此页面
      */
     private void finishActivity() {
+        setChatDrafts();
         if (loadingDlg != null && loadingDlg.isShowing()) {
             loadingDlg.dismiss();
         }
         finish();
+    }
+
+    /**
+     * 设置当前频道草稿箱
+     */
+    private void setChatDrafts(){
+        String chatDraftsNew = chatInputMenu.getInputContent().trim();
+        String chatDraftsOld = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), MyAppConfig.getChannelDrafsPreKey(cid),"").trim();
+        if (!chatDraftsNew.equals(chatDraftsOld)){
+            if (!StringUtils.isBlank(chatDraftsNew)){
+                PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(),MyAppConfig.getChannelDrafsPreKey(cid),chatDraftsNew);
+            }else {
+                PreferencesByUserAndTanentUtils.clearDataByKey(MyApplication.getInstance(),MyAppConfig.getChannelDrafsPreKey(cid));
+            }
+            Intent mIntent = new Intent("message_notify");
+            mIntent.putExtra("command", "refresh_adapter");
+            LocalBroadcastManager.getInstance(this).sendBroadcast(mIntent);
+        }
     }
 
     /**
