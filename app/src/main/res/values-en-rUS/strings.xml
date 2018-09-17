@@ -284,6 +284,7 @@
     <string name="record_count_down_text">%1$d seconds left</string>
     <string name="voice_call">Voice Call</string>
     <string name="sure_to_resend_message">Sure to resend this message?</string>
+    <string name="message_type_drafts">[Drafts]</string>
 
 
     <!-- 会议卡片 -->

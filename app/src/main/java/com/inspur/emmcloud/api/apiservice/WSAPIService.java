@@ -234,13 +234,18 @@ public class WSAPIService {
         }
     }
 
-    public void getOfflineMessage() {
+    public void getOfflineMessage(String lastMessageId) {
         try {
             String tracer = CommunicationUtils.getTracer();
             JSONObject object = new JSONObject();
             JSONObject actionObj = new JSONObject();
             actionObj.put("method", "get");
             actionObj.put("path", "/message");
+            if (lastMessageId != null){
+                JSONObject queryObj = new JSONObject();
+                queryObj.put("MessageId", lastMessageId);
+                actionObj.put("query", queryObj);
+            }
             object.put("action", actionObj);
             JSONObject headerObj = new JSONObject();
             headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
@@ -259,7 +264,10 @@ public class WSAPIService {
             JSONObject object = new JSONObject();
             JSONObject actionObj = new JSONObject();
             actionObj.put("method", "get");
-            actionObj.put("path", "/channel/message");
+            actionObj.put("path", "/channel/message-with-unread-count");
+            JSONObject queryObj = new JSONObject();
+            queryObj.put("limit", 100);
+            actionObj.put("query", queryObj);
             object.put("action", actionObj);
             JSONObject headerObj = new JSONObject();
             headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
@@ -378,7 +386,35 @@ public class WSAPIService {
                 }else {
                     WebSocketPush.getInstance().sendContent(object);
                 }
-            }catch (Exception e){
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 将频道消息置为已读状态
+     * @param cid
+     */
+    public void setChannelMessgeStateRead(String cid) {
+        try {
+
+            JSONObject object = new JSONObject();
+            try {
+                String tracer = CommunicationUtils.getTracer();
+                JSONObject actionObj = new JSONObject();
+                actionObj.put("method", "delete");
+                actionObj.put("path", "/channel/" + cid + "/message/state/unread");
+                object.put("action", actionObj);
+                JSONObject headerObj = new JSONObject();
+                headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
+                headerObj.put("tracer", tracer);
+                object.put("headers", headerObj);
+                EventMessage eventMessage = new EventMessage(tracer,Constant.EVENTBUS_TAG_SET_CHANNEL_MESSAGE_READ, "", "");
+                WebSocketPush.getInstance().sendEventMessage(eventMessage, object, tracer);
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         } catch (Exception e) {

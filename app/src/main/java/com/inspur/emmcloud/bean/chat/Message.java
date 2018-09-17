@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.bean.chat;
 
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 
@@ -9,7 +10,7 @@ import org.xutils.db.annotation.Table;
 
 import java.io.Serializable;
 
-@Table(name = "Message",onCreated = "CREATE INDEX messageindex ON Message(channel)")
+@Table(name = "Message", onCreated = "CREATE INDEX messageindex ON Message(channel)")
 public class Message implements Serializable {
     public static final String MESSAGE_TYPE_FILE_REGULAR_FILE = "file/regular-file";
     public static final String MESSAGE_TYPE_MEDIA_IMAGE = "media/image";
@@ -18,7 +19,7 @@ public class Message implements Serializable {
     public static final String MESSAGE_TYPE_TEXT_MARKDOWN = "text/markdown";
     public static final String MESSAGE_TYPE_EXTENDED_CONTACT_CARD = "extended/contact-card";
     public static final String MESSAGE_TYPE_EXTENDED_ACTIONS = "extended/actions";
-    public static final String MESSAGE_TYPE_COMMENT_TEXT_PLAIN= "comment/text-plain";
+    public static final String MESSAGE_TYPE_COMMENT_TEXT_PLAIN = "comment/text-plain";
     public static final String MESSAGE_TYPE_EXTENDED_LINKS = "extended/links";
     @Column(name = "id", isId = true)
     private String id;
@@ -38,6 +39,8 @@ public class Message implements Serializable {
     private String content;
     @Column(name = "creationDate")
     private Long creationDate;
+    @Column(name = "read")
+    private int read = 0;  //0 未读，1 已读
 
     private int sendStatus = 1;//0 发送中  1发送成功  2发送失败
 
@@ -74,6 +77,11 @@ public class Message implements Serializable {
         content = JSONUtils.getString(obj, "content", "");
         String UTCTime = JSONUtils.getString(obj, "creationDate", "");
         creationDate = TimeUtils.UTCString2Long(UTCTime);
+        boolean readState = JSONUtils.getBoolean(obj, "read", false);
+        if (!readState && getFromUser().equals(MyApplication.getInstance().getUid())) {
+            readState = true;
+        }
+        read = readState?1:0;
     }
 
     public MsgContentExtendedActions getMsgContentExtendedActions() {
@@ -97,15 +105,15 @@ public class Message implements Serializable {
         return new MsgContentMediaImage(content);
     }
 
-    public MsgContentExtendedLinks getMsgContentExtendedLinks(){
-        return  new MsgContentExtendedLinks(content);
+    public MsgContentExtendedLinks getMsgContentExtendedLinks() {
+        return new MsgContentExtendedLinks(content);
     }
 
     public MsgContentTextMarkdown getMsgContentTextMarkdown() {
         return new MsgContentTextMarkdown(content);
     }
 
-    public MsgContentMediaVoice getMsgContentMediaVoice(){
+    public MsgContentMediaVoice getMsgContentMediaVoice() {
         return new MsgContentMediaVoice(content);
     }
 
@@ -198,9 +206,17 @@ public class Message implements Serializable {
         this.creationDate = creationDate;
     }
 
+    public int getRead() {
+        return read;
+    }
+
+    public void setRead(int read) {
+        this.read = read;
+    }
+
     /*
-             * 重写equals方法修饰符必须是public,因为是重写的Object的方法. 2.参数类型必须是Object.
-             */
+                     * 重写equals方法修饰符必须是public,因为是重写的Object的方法. 2.参数类型必须是Object.
+                     */
     public boolean equals(Object other) { // 重写equals方法，后面最好重写hashCode方法
 
         if (this == other) // 先检查是否其自反性，后比较other是否为空。这样效率高

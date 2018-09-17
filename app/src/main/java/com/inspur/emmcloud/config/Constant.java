@@ -32,7 +32,6 @@ public class Constant {
     public static final String PREF_CONTACT_USER_LASTQUERYTIME = "contact_user_lastquerytime";
     public static final String PREF_CONTACT_ORG_LASTQUERYTIME = "contact_org_lastquerytime";
     public static final String PREF_MY_INFO_OLD = "my_info_old";
-    public static final String PREF_ENTER_APP_TIME = "enter_app_time";
     public static final String PREF_CONTACT_ORG_ROOT_ID = "contact_org_root_id";
     public static final String PREF_APP_TAB_BAR_VERSION = "app_tab_bar_version";
     public static final String PREF_APP_TAB_BAR_INFO_CURRENT = "app_tab_bar_info_current";
@@ -61,6 +60,8 @@ public class Constant {
     public static final String EVENTBUS_TAG_GET_MESSAGE_COMMENT_COUNT = "tag_get_message_comment_count";
     public static final String EVENTBUS_TAG_ON_PHOTO_TAB = "tag_on_photo_tab";
     public static final String EVENTBUS_TAG_WEBSOCKET_STATUS_REMOVE = "tag_websocket_status_remove";
+    public static final String EVENTBUS_TAG_SET_CHANNEL_MESSAGE_READ = "tag_set_channel_message_read";
+    public static final String EVENTBUS_TAG_RECERIVER_MESSAGE_STATE_READ = "tag_receive_message_state_read";
 
     public static final String SERVICE_VERSION_CHAT_V0 = "v0";
     public static final String SERVICE_VERSION_CHAT_V1 = "v1";

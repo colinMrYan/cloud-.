@@ -148,12 +148,13 @@ public class ECMChatInputMenu extends LinearLayout {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 boolean isContentBlank = (s.length() == 0);
+                if (isContentBlank){
+                    chatInputMenuListener.onChatDraftsClear();
+                }
                 sendMsgBtn.setVisibility(isContentBlank ? (inputs.equals("1")) ? VISIBLE : GONE : VISIBLE);
                 sendMsgBtn.setEnabled(!isContentBlank);
                 sendMsgBtn.setBackgroundResource(isContentBlank ? R.drawable.bg_chat_input_send_btn_disable : R.drawable.bg_chat_input_send_btn_enable);
-                if (StringUtils.isBlank(inputs) || (!StringUtils.isBlank(inputs) && !inputs.equals("1"))) {
-                    addBtn.setVisibility(isContentBlank ? VISIBLE : GONE);
-                }
+                addBtn.setVisibility(isContentBlank ? VISIBLE : GONE);
                 if (canMentions && count == 1) {
                     String inputWord = s.toString().substring(start, start + count);
                     if (inputWord.equals("@")) {
@@ -239,6 +240,7 @@ public class ECMChatInputMenu extends LinearLayout {
      * @param inputs
      */
     public void setInputLayout(String inputs) {
+        //每一位（bit）分别代表：（高位）video voice command file photo text （低位）
         inputTypeBeanList.clear();
         inputEdit.clearInsertModelList();
         this.inputs = inputs;
@@ -360,6 +362,9 @@ public class ECMChatInputMenu extends LinearLayout {
             });
             viewpagerLayout.setInputTypeBeanList(inputTypeBeanList);
         }
+    }
+    public void setChatDrafts(String drafts){
+        inputEdit.setText(drafts);
     }
 
     /**
@@ -659,7 +664,9 @@ public class ECMChatInputMenu extends LinearLayout {
         mediaPlayerUtils.playVoiceOff();
     }
 
-
+    public String getInputContent(){
+        return inputEdit.getText().toString().trim();
+    }
     public interface ChatInputMenuListener {
         void onSendMsg(String content, List<String> mentionsUidList, List<String> urlList, Map<String, String> mentionsMap);
 
@@ -667,6 +674,7 @@ public class ECMChatInputMenu extends LinearLayout {
 
 
         void onVoiceCommucaiton();
+        void onChatDraftsClear();
     }
 
 

@@ -110,6 +110,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     private String clusterClientRegistry = "";
     private String clusterScheduleVersion = "";//仅标识Schedule
     private String clusterBot = "";
+    private String currentChannelCid= "";
 
     public void onCreate() {
         super.onCreate();
@@ -132,7 +133,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         CrashHandler crashHandler = CrashHandler.getInstance();
         crashHandler.init(getInstance());
         x.Ext.init(MyApplication.this);
-        x.Ext.setDebug(false);
+        x.Ext.setDebug(true);
         SoLoader.init(this, false);//ReactNative相关初始化
         Res.init(this); // 注册imp的资源文件类
         initImageLoader();
@@ -961,5 +962,12 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         return mReactNativeHost;
     }
 
+    /****************************标记当前正在某个频道中***************************************************/
+    public String getCurrentChannelCid() {
+        return currentChannelCid;
+    }
 
+    public void setCurrentChannelCid(String currentChannelCid) {
+        this.currentChannelCid = currentChannelCid;
+    }
 }
