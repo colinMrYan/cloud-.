@@ -120,7 +120,7 @@ public class AppUtils {
             Language language = new Language(languageJson);
             return language.getIana();
         }
-        return "";
+        return "zh-cn";
     }
 
     /**

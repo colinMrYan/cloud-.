@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Environment;
 
-import com.alibaba.fastjson.JSON;
 import com.iflytek.cloud.ErrorCode;
 import com.iflytek.cloud.InitListener;
 import com.iflytek.cloud.RecognizerListener;
@@ -155,7 +154,6 @@ public class Voice2StringMessageUtils {
 
             @Override
             public void onError(SpeechError error) {
-                LogUtils.YfcDebug("转写失败："+error.getErrorDescription());
                 onVoiceResultCallback.onError(new VoiceResult("...",durationTime,mp3FilePath));
                 //返回错误停止录音
                 stopListening();
@@ -176,7 +174,6 @@ public class Voice2StringMessageUtils {
                     voiceResult.setResults(voiceWords);
                     voiceResult.setSeconds(durationTime);
                     voiceResult.setFilePath(mp3FilePath);
-                    LogUtils.YfcDebug("回调结果："+ JSON.toJSONString(voiceResult));
                     //最后的结果
                     onVoiceResultCallback.onVoiceResult(voiceResult, isLast);
                 }

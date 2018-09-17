@@ -45,16 +45,17 @@ public class DisplayMediaVoiceMsg {
         voiceAnimView.setVisibility(View.VISIBLE);
         final QMUILoadingView downloadLoadingView = (QMUILoadingView) cardContentView.findViewById(isMyMsg ? R.id.qlv_downloading_left : R.id.qlv_downloading_right);
         TextView durationText = (TextView) cardContentView.findViewById(isMyMsg ? R.id.tv_duration_left : R.id.tv_duration_right);
-//        TextView correctedSpeechInputText = (TextView) cardContentView.findViewById(R.id.tv_corrected_speech_input);
-//        correctedSpeechInputText.setVisibility(((System.currentTimeMillis() - message.getCreationDate() <= 120 * 1000) && isMyMsg)?View.VISIBLE:View.GONE);
+        //校正UI，因消息部分未支持撤回机制，暂不开放，控制两分以内发送的消息才显示校正
+        //TextView correctedSpeechInputText = (TextView) cardContentView.findViewById(R.id.tv_corrected_speech_input);
+        //correctedSpeechInputText.setVisibility(((System.currentTimeMillis() - message.getCreationDate() <= 120 * 1000) && isMyMsg)?View.VISIBLE:View.GONE);
         durationText.setVisibility(View.VISIBLE);
         MsgContentMediaVoice msgContentMediaVoice = message.getMsgContentMediaVoice();
         TextView speechText = (TextView) cardContentView.findViewById(R.id.tv_voice_card_word);
         speechText.setPadding(isMyMsg? DensityUtil.dip2px(context,10):0,0,isMyMsg?0:DensityUtil.dip2px(context,10),0);
-//        LogUtils.YfcDebug("显示文字："+ JSON.toJSONString(msgContentMediaVoice.getResult()));
         speechText.setText(msgContentMediaVoice.getResult());
         int duration = msgContentMediaVoice.getDuration();
         durationText.setText(duration + "''");
+        //控制是否打开显示文字的功能，打开和不打开分两种UI控制逻辑
         switch (PreferencesByUserAndTanentUtils.getInt(context,Constant.PREF_APP_OPEN_VOICE_WORD_SWITCH,IS_VOICE_WORD_OPEN)){
             case IS_VOICE_WORD_OPEN:
                 speechText.setVisibility(View.VISIBLE);

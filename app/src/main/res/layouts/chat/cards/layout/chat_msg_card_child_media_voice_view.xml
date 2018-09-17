@@ -14,7 +14,7 @@
         android:textColor="#0F7BCA"
         android:textSize="15sp"
         android:visibility="gone"
-        android:text="[校正]"
+        android:text="@string/corrected_word_input"
          />
 
     <com.qmuiteam.qmui.widget.QMUILoadingView

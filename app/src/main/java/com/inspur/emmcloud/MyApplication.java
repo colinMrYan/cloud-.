@@ -158,15 +158,16 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         initAudioConverter();
     }
 
+    /**
+     * 加载语音转换库
+     */
     private void initAudioConverter() {
         AndroidAudioConverter.load(this, new ILoadCallback() {
             @Override
             public void onSuccess() {
-                // Great!
             }
             @Override
             public void onFailure(Exception error) {
-                // FFmpeg is not supported by device
             }
         });
     }

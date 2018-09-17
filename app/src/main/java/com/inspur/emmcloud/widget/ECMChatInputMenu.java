@@ -169,8 +169,6 @@ public class ECMChatInputMenu extends LinearLayout {
 
             @Override
             public void onStartRecordingVoice() {
-//                voice2StringMessageUtils.startVoiceListening();
-//                voice2StringMessageUtils.startVoiceListeningByVoiceFile("/IMP-Cloud/99999/test/iat.wav");
             }
 
             @Override
@@ -402,7 +400,6 @@ public class ECMChatInputMenu extends LinearLayout {
 
             @Override
             public void onVoiceResult(VoiceResult voiceResult, boolean isLast) {
-                LogUtils.YfcDebug("语音消息结果："+ JSON.toJSONString(voiceResult));
                 handleVoiceResult(voiceResult);
             }
 

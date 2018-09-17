@@ -22,7 +22,7 @@ public class AudioRecorderManager {
     //音频输入-麦克风
     public final static int AUDIO_INPUT = MediaRecorder.AudioSource.MIC;
     //采用频率
-    //44100是目前的标准，但是某些设备仍然支持22050，16000，11025
+    //44100是目前的标准，但是某些设备仍然支持22050，16000，11025，16000所有Android设备都支持
     public final static int AUDIO_SAMPLE_RATE = 16000;  //44.1KHz,普遍使用的频率
     // 缓冲区字节大小
     private int bufferSizeInBytes = 0;
@@ -336,19 +336,6 @@ public class AudioRecorderManager {
      */
     private String getWavFilePath(){
         return MyAppConfig.LOCAL_CACHE_VOICE_PATH +"/";
-    }
-
-
-    /**
-     * 获取文件大小
-     * @param path,文件的绝对路径
-     * @return
-     */
-    public long getFileSize(String path){
-        File mFile = new File(path);
-        if(!mFile.exists())
-            return -1;
-        return mFile.length();
     }
 
     /**

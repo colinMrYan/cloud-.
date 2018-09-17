@@ -989,4 +989,10 @@
     <string name="voice_communicaiton_watting_talking">In the call</string>
     <string name="voice_communication_quality">The quality of current calls is poor.</string>
     <string name="voice_communication_support_nine_members">Cloud + supports nine voice at present.</string>
+
+    <string name="error_no_sdcard">No SD card, no recording data.</string>
+    <string name="error_state_record">Please stop recording while recording</string>
+    <string name="error_unknown">Unrecognized errors</string>
+    <string name="corrected_speech_input">Automatic text recognition</string>
+    <string name="corrected_word_input">[Correcting]</string>
 </resources>

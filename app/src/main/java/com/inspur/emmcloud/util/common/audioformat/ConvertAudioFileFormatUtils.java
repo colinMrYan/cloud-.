@@ -121,19 +121,19 @@ public class ConvertAudioFileFormatUtils {
     /**
      * 转换方法
      * @param context
-     * @param sourceFile
-     * @param audioFormat
-     * @param callback
+     * @param sourceFile 音频源文件
+     * @param audioFormat 需要转成的格式
+     * @param callback 状态回调
      */
     private void startConvert(Context context, File sourceFile, AudioFormat audioFormat, IConvertCallback callback) {
         AndroidAudioConverter.with(context)
-                // Your current audio file
+                // 设置音频源文件
                 .setFile(sourceFile)
-                // Your desired audio format
+                // 设置需要转成的格式
                 .setFormat(audioFormat)
-                // An callback to know when conversion is finished
+                // 成功失败的回调
                 .setCallback(callback)
-                // Start conversion
+                // 开始音频转换
                 .convert();
     }
 }
