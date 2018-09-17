@@ -92,8 +92,8 @@ public class AppExceptionService extends Service {
 	private class WebService extends APIInterfaceInstance {
 		@Override
 		public void returnUploadExceptionSuccess(final List<AppException> appExceptionList) {
-		   int clearSize =	AppExceptionCacheUtils.delectAppException(AppExceptionService.this,appExceptionList);
-			if(clearSize<50) {
+		 AppExceptionCacheUtils.deleteAppException(AppExceptionService.this,appExceptionList);
+			if( appExceptionList.size()<50) {
 				stopSelf();
 			} else {
 				uploadException();

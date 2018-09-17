@@ -68,8 +68,8 @@ public class PVCollectService extends Service {
     private class WebService extends APIInterfaceInstance {
         @Override
         public void returnUploadCollectSuccess( List<PVCollectModel> collectModelList ) {
-            int  CurrentSize = PVCollectModelCacheUtils.deleteCollectModel(getApplicationContext(),collectModelList);
-                           if(CurrentSize<50) {
+           PVCollectModelCacheUtils.deleteCollectModel(getApplicationContext(),collectModelList);
+                           if(collectModelList.size()<50) {
                                stopSelf();
                            } else {
                                uploadPV();

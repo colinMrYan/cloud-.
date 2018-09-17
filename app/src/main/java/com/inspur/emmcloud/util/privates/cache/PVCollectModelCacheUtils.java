@@ -99,14 +99,12 @@ public class PVCollectModelCacheUtils {
 	/**
 	 * @param context
 	 * **/
-	public static int deleteCollectModel(Context context,List<PVCollectModel> collectModelList) {
+	public static void deleteCollectModel(Context context,List<PVCollectModel> collectModelList) {
 		try {
 			DbCacheUtils.getDb(context).delete(collectModelList);
-			return collectModelList.size();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return  -1;
 		}
 	}
 

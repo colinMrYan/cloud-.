@@ -127,14 +127,12 @@ public class AppExceptionCacheUtils {
      * 清除AppException表信息
      * @param context
      */
-    public static int delectAppException(Context context,List<AppException> appExceptionList) {
+    public static void deleteAppException(Context context,List<AppException> appExceptionList) {
         try {
             DbCacheUtils.getDb(context).delete(appExceptionList);
-            return appExceptionList.size();
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-            return  -1;
         }
     }
 
