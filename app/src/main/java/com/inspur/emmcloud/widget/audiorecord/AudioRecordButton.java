@@ -74,9 +74,9 @@ public class AudioRecordButton extends Button {
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
-            if(audioRecorderManager.isRecording() && durationTime < 60.0){
+            if( durationTime < 60.0){
                 mDialogManager.updateVoiceLevel(volumeSize,durationTime);
-            }else if(audioRecorderManager.isRecording() && durationTime >= 60.0){
+            }else if(durationTime >= 60.0){
                 isRecording = false;
                 voiceRecordFinish();
                 mListener.onFinished(60f,audioRecorderManager.getCurrentFilePath());
@@ -125,7 +125,7 @@ public class AudioRecordButton extends Button {
                 break;
             case MotionEvent.ACTION_UP:
                 // 如果按的时间太短，还没准备好或者时间录制太短，就离开了，则显示这个dialog
-                if (!isRecording || audioRecorderManager.getDuration() < 0.8f) {
+                if (!isRecording || durationTime < 0.8f) {
                     mDialogManager.tooShort();
                     voiceRecordFinish();
                 } else if (mCurrentState == STATE_RECORDING && (durationTime < 60)) {//正常录制结束

@@ -117,7 +117,6 @@ public class AudioRecorderManager {
     private void reset() {
         isRecording = false;
         volume = 0;
-        beginTime = 0;
     }
 
     /**
@@ -131,6 +130,7 @@ public class AudioRecorderManager {
             audioRecord.release();//释放资源
             audioRecord = null;
         }
+        beginTime = 0;
     }
 
     /**
@@ -197,11 +197,9 @@ public class AudioRecorderManager {
                 }
                 volume = getVolume(audioData, readSize);
                 duration = System.currentTimeMillis() - beginTime;
-                if (duration <= 60.2 * 1000) {
-                    DecimalFormat decimalFormat = new DecimalFormat("##0.0");
-                    String time = decimalFormat.format(duration / 1000f);
-                    callBack.onDataChange(volume, Float.parseFloat(time));
-                }
+                DecimalFormat decimalFormat = new DecimalFormat("##0.0");
+                String time = decimalFormat.format(duration / 1000f);
+                callBack.onDataChange(volume, Float.parseFloat(time));
             }
             if (fos != null) {
                 fos.close();// 关闭写入流
