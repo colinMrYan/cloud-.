@@ -137,7 +137,7 @@ public class FileBrowerAppActivity extends ListActivity {
  //显示不可读对话框
    public void showFileCanNOTReadMyDialog()
    {
-  	 new AlertDialog.Builder(FileBrowerAppActivity.this)
+  	 new AlertDialog.Builder(FileBrowerAppActivity.this,AlertDialog.THEME_HOLO_LIGHT)
        .setIcon(Res.getDrawable("plugin_file_dialogtitle_icon"))
        .setMessage(getResources().getString(Res.getStringID("nopermission")))
        .setTitle(getResources().getString(Res.getStringID("dialogtitle")))
