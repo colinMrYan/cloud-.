@@ -2,6 +2,8 @@ package com.inspur.emmcloud.widget.audiorecord;
 
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -20,6 +22,7 @@ public class AudioRecordButton extends Button {
     private static final int STATE_WANT_TO_CANCEL = 3;
     //上滑取消辅助变量
     private static final int DISTANCE_Y_CANCEL = 50;
+    private static final int VOICE_MESSAGE = 4;
     private int mCurrentState = STATE_NORMAL;
     // 已经开始录音
     private boolean isRecording = false;
@@ -29,6 +32,7 @@ public class AudioRecordButton extends Button {
     private AudioRecorderManager audioRecorderManager;
     //录音时间
     private float durationTime = 0;
+    private int volumeSize = 0;
     //录音回调
     private AudioFinishRecorderListener mListener;
 
@@ -51,12 +55,10 @@ public class AudioRecordButton extends Button {
                 audioRecorderManager.setCallBack(new AudioRecorderManager.AudioDataCallBack() {
                     @Override
                     public void onDataChange(int volume, float duration) {
-                        if(audioRecorderManager.isRecording() && duration <= 60.0){
-                            mDialogManager.updateVoiceLevel(volume,duration);
+                        if(isRecording){
                             durationTime = duration;
-                        }else{
-                            isRecording = false;
-                            mDialogManager.dimissDialog();
+                            volumeSize = volume;
+                            handler.sendEmptyMessage(VOICE_MESSAGE);
                         }
                     }
                 });
@@ -65,6 +67,19 @@ public class AudioRecordButton extends Button {
             }
         });
     }
+
+    private Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            if(audioRecorderManager.isRecording() && durationTime <= 60.0){
+                mDialogManager.updateVoiceLevel(volumeSize,durationTime);
+            }else if(audioRecorderManager.isRecording() && durationTime >= 60.0){
+                isRecording = false;
+                voiceRecordFinish();
+                mListener.onFinished(60f,audioRecorderManager.getCurrentFilePath());
+            }
+        }
+    };
 
     /**
      * 设置Audio回调
@@ -109,17 +124,14 @@ public class AudioRecordButton extends Button {
                 // 如果按的时间太短，还没准备好或者时间录制太短，就离开了，则显示这个dialog
                 if (!isRecording || audioRecorderManager.getDuration() < 0.8f) {
                     mDialogManager.tooShort();
-                    mDialogManager.dimissDialog();
-                    audioRecorderManager.stopRecord();
-                } else if (mCurrentState == STATE_RECORDING) {//正常录制结束
-                    mDialogManager.dimissDialog();
-                    audioRecorderManager.stopRecord();
+                    voiceRecordFinish();
+                } else if (mCurrentState == STATE_RECORDING && (durationTime < 60)) {//正常录制结束
+                    voiceRecordFinish();
                     if (mListener != null) {// 并且callbackActivity，保存录音
                         mListener.onFinished(durationTime,audioRecorderManager.getCurrentFilePath());
                     }
                 } else if (mCurrentState == STATE_WANT_TO_CANCEL) {
-                    audioRecorderManager.stopRecord();
-                    mDialogManager.dimissDialog();
+                    voiceRecordFinish();
                 }
                 reset();// 恢复标志位
                 break;
@@ -128,10 +140,24 @@ public class AudioRecordButton extends Button {
     }
 
     /**
+     * 结束处理
+     */
+    private void voiceRecordFinish() {
+        if(mDialogManager != null){
+            mDialogManager.dimissDialog();
+        }
+        if(audioRecorderManager != null){
+            audioRecorderManager.stopRecord();
+        }
+    }
+
+    /**
      * 回复标志位以及状态
      */
     private void reset() {
         isRecording = false;
+        durationTime = 0;
+        volumeSize = 0;
         changeState(STATE_NORMAL);
     }
 

@@ -42,7 +42,7 @@ public class Voice2StringMessageUtils {
     private InitListener initListener;
 
     private float durationTime = 0;
-    private String mp3FilePath = "";
+    private String voiceFilePath = "";
 
     public Voice2StringMessageUtils(Context context) {
         this.context = context;
@@ -63,9 +63,9 @@ public class Voice2StringMessageUtils {
      * 通过音频文件启动听写
      * 以后需要发送语音时可以单独录制一段语音存到sd卡当做文件发送
      */
-    public void startVoiceListeningByVoiceFile(float seconds,String voiceFilePath,String mp3VoiceFilePath) {
+    public void startVoiceListeningByVoiceFile(float seconds,String voiceFilePath) {
         this.durationTime = seconds;
-        this.mp3FilePath = mp3VoiceFilePath;
+        this.voiceFilePath = voiceFilePath;
         // 使用SpeechRecognizer对象，可根据回调消息自定义界面；
         speechRecognizer = SpeechRecognizer.createRecognizer(context, initListener);
         setParam();
@@ -155,7 +155,11 @@ public class Voice2StringMessageUtils {
 
             @Override
             public void onError(SpeechError error) {
-                onVoiceResultCallback.onError(new VoiceResult("...",durationTime,mp3FilePath));
+                VoiceResult voiceResult = new VoiceResult();
+                voiceResult.setResults("...");
+                voiceResult.setSeconds(durationTime);
+                voiceResult.setFilePath(voiceFilePath);
+                onVoiceResultCallback.onError(voiceResult);
                 //返回错误停止录音
                 stopListening();
             }
@@ -174,7 +178,7 @@ public class Voice2StringMessageUtils {
                     VoiceResult voiceResult = new VoiceResult();
                     voiceResult.setResults(voiceWords);
                     voiceResult.setSeconds(durationTime);
-                    voiceResult.setFilePath(mp3FilePath);
+                    voiceResult.setFilePath(voiceFilePath);
                     //最后的结果
                     onVoiceResultCallback.onVoiceResult(voiceResult, isLast);
                 }

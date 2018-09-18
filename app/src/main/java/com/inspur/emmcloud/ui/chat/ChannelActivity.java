@@ -248,7 +248,6 @@ public class ChannelActivity extends MediaPlayBaseActivity {
 
             @Override
             public void onSendVoiceRecordMsg(String results,float seconds, String filePath) {
-//                ToastUtils.show(ChannelActivity.this,"转义结果："+results+"\n语音时间："+seconds+"\n文件路径："+filePath);
                 int duration = (int) seconds;
                 if (duration == 0) {
                     duration = 1;

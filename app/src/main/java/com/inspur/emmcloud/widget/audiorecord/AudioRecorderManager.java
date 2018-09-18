@@ -194,7 +194,7 @@ public class AudioRecorderManager {
                 }
                 volume = getVolume(audioData,readSize);
                 duration = System.currentTimeMillis() - beginTime;
-                if(duration <= 60*1000){
+                if(duration <= 60.2*1000){
                     DecimalFormat decimalFormat = new  DecimalFormat("##0.0");
                     String time = decimalFormat.format(duration/1000f);
                     callBack.onDataChange(volume,Float.parseFloat(time));
