@@ -61,6 +61,7 @@ public class AudioRecorderManager {
 
     /**
      * 开始录制
+     *
      * @return
      */
     public int startRecord() {
@@ -87,17 +88,19 @@ public class AudioRecorderManager {
 
     /**
      * 获取持续时间
+     *
      * @return
      */
-    public float getDuration(){
-        return duration/1000;
+    public float getDuration() {
+        return duration / 1000;
     }
 
     /**
      * 获取录制状态
+     *
      * @return
      */
-    public boolean isRecording(){
+    public boolean isRecording() {
         return isRecording;
     }
 
@@ -111,7 +114,7 @@ public class AudioRecorderManager {
     /**
      * 重置变量
      */
-    private void reset(){
+    private void reset() {
         isRecording = false;
         volume = 0;
         beginTime = 0;
@@ -136,8 +139,8 @@ public class AudioRecorderManager {
     private void createAudioRecord() {
         // 获取音频文件路径
         String fileName = generalFileName();
-        rawAudioFilePath = getRawFilePath() + fileName+".raw";
-        wavAudioFilePath = getWavFilePath() + fileName+".wav";
+        rawAudioFilePath = getRawFilePath() + fileName + ".raw";
+        wavAudioFilePath = getWavFilePath() + fileName + ".wav";
         // 获得缓冲区字节大小
         bufferSizeInBytes = AudioRecord.getMinBufferSize(AUDIO_SAMPLE_RATE,
                 AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT);
@@ -192,30 +195,39 @@ public class AudioRecorderManager {
                 if (AudioRecord.ERROR_INVALID_OPERATION != readSize && fos != null) {
                     fos.write(audioData);
                 }
-                volume = getVolume(audioData,readSize);
+                volume = getVolume(audioData, readSize);
                 duration = System.currentTimeMillis() - beginTime;
-                if(duration <= 60.2*1000){
-                    DecimalFormat decimalFormat = new  DecimalFormat("##0.0");
-                    String time = decimalFormat.format(duration/1000f);
-                    callBack.onDataChange(volume,Float.parseFloat(time));
+                if (duration <= 60.2 * 1000) {
+                    DecimalFormat decimalFormat = new DecimalFormat("##0.0");
+                    String time = decimalFormat.format(duration / 1000f);
+                    callBack.onDataChange(volume, Float.parseFloat(time));
                 }
             }
             if (fos != null) {
                 fos.close();// 关闭写入流
             }
         } catch (Exception e) {
-            LogUtils.YfcDebug("发生异常："+e.getMessage());
+            LogUtils.YfcDebug("发生异常：" + e.getMessage());
             e.printStackTrace();
+        } finally {
+            if (fos != null) {
+                try {
+                    fos.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
     /**
      * 获取音量
+     *
      * @param audioData
      * @return
      */
-    private int getVolume(byte[] audioData,int readSize) {
-        long  quadraticSum = 0;
+    private int getVolume(byte[] audioData, int readSize) {
+        long quadraticSum = 0;
         // 将 buffer 内容取出，进行平方和运算
         for (int i = 0; i < audioData.length; i++) {
             quadraticSum += audioData[i] * audioData[i];
@@ -226,10 +238,10 @@ public class AudioRecorderManager {
         int db = 0;// 分贝
         if (mean > 1)
             db = (int) (20 * Math.log10(mean));
-        db = db/15;
-        if (db ==0){
+        db = db / 15;
+        if (db == 0) {
             db++;
-        }else if(db >6){
+        } else if (db > 6) {
             db = 6;
         }
         return db;
@@ -259,6 +271,17 @@ public class AudioRecorderManager {
             out.close();
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            try {
+                if (in != null) {
+                    in.close();
+                }
+                if (out != null) {
+                    out.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -269,8 +292,7 @@ public class AudioRecorderManager {
      * 自己特有的头文件。
      */
     private void WriteWaveFileHeader(FileOutputStream out, long totalAudioLen,
-                                     long totalDataLen, long longSampleRate, int channels, long byteRate) {
-        try {
+                                     long totalDataLen, long longSampleRate, int channels, long byteRate) throws Exception {
             byte[] header = new byte[44];
             header[0] = 'R'; // RIFF/WAVE header
             header[1] = 'I';
@@ -317,37 +339,39 @@ public class AudioRecorderManager {
             header[42] = (byte) ((totalAudioLen >> 16) & 0xff);
             header[43] = (byte) ((totalAudioLen >> 24) & 0xff);
             out.write(header, 0, 44);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
     }
 
     /**
      * 获取麦克风输入的原始音频流文件路径
+     *
      * @return
      */
-    private String getRawFilePath(){
-        return MyAppConfig.LOCAL_CACHE_VOICE_PATH+"/";
+    private String getRawFilePath() {
+        return MyAppConfig.LOCAL_CACHE_VOICE_PATH + "/";
     }
 
     /**
      * 获取编码后的WAV格式音频文件路径
+     *
      * @return
      */
-    private String getWavFilePath(){
-        return MyAppConfig.LOCAL_CACHE_VOICE_PATH +"/";
+    private String getWavFilePath() {
+        return MyAppConfig.LOCAL_CACHE_VOICE_PATH + "/";
     }
 
     /**
      * 判断是否有外部存储设备sdcard
+     *
      * @return true | false
      */
-    private boolean isSdcardExit(){
-        return  Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED);
+    private boolean isSdcardExit() {
+        return Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED);
     }
 
     /**
      * 获取wav文件路径
+     *
      * @return
      */
     public String getCurrentFilePath() {
@@ -357,6 +381,7 @@ public class AudioRecorderManager {
 
     /**
      * 持续时间，音量回调
+     *
      * @param callBack
      */
     public void setCallBack(AudioDataCallBack callBack) {
@@ -366,7 +391,7 @@ public class AudioRecorderManager {
     /**
      * 给AudioRecordButton返回数据的回调接口
      */
-    public interface AudioDataCallBack{
-        void onDataChange(int volume,float duration);
+    public interface AudioDataCallBack {
+        void onDataChange(int volume, float duration);
     }
 }
