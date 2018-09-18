@@ -127,7 +127,7 @@ public class ImpWebChromeClient extends WebChromeClient {
 	public boolean onJsAlert(WebView view, String url, String message,
 			final JsResult result) {
 		final AlertDialog.Builder builder = new AlertDialog.Builder(
-				view.getContext());
+				view.getContext(),AlertDialog.THEME_HOLO_LIGHT);
 
 		builder.setTitle(Res.getStringID("msg_title")).setMessage(message);
 
@@ -160,7 +160,7 @@ public class ImpWebChromeClient extends WebChromeClient {
 	public boolean onJsConfirm(WebView view, String url, String message,
 			final JsResult result) {
 		final AlertDialog.Builder builder = new AlertDialog.Builder(
-				view.getContext());
+				view.getContext(),AlertDialog.THEME_HOLO_LIGHT);
 		builder.setTitle(Res.getStringID("msg_makesure"))
 				.setMessage(message)
 				.setPositiveButton(Res.getStringID("file_ok"),
@@ -205,7 +205,7 @@ public class ImpWebChromeClient extends WebChromeClient {
 	public boolean onJsPrompt(WebView view, String url, String message,
 			String defaultValue, final JsPromptResult result) {
 		final AlertDialog.Builder builder = new AlertDialog.Builder(
-				view.getContext());
+				view.getContext(),AlertDialog.THEME_HOLO_LIGHT);
 
 		builder.setTitle(Res.getStringID("edit")).setMessage(message);
 

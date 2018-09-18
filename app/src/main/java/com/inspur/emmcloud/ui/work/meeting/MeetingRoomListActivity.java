@@ -355,7 +355,7 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
 		Locale locale = getResources().getConfiguration().locale;
 		 Locale.setDefault(locale);
 		MyDatePickerDialog datePickerDialog = new MyDatePickerDialog(
-				MeetingRoomListActivity.this,
+				MeetingRoomListActivity.this,DatePickerDialog.THEME_HOLO_LIGHT,
 				new DatePickerDialog.OnDateSetListener() {
 					@Override
 					public void onDateSet(DatePicker view, int year,
@@ -428,7 +428,7 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
 	private void showTimeDialog(int hour, int minute, final int beginOrEnd) {
 		isHasModifyTime = true;
 		TimePickerDialog beginTimePickerDialog = new TimePickerDialog(
-				MeetingRoomListActivity.this, new OnTimeSetListener() {
+				MeetingRoomListActivity.this, TimePickerDialog.THEME_HOLO_LIGHT,new OnTimeSetListener() {
 
 					@Override
 					public void onTimeSet(TimePicker view, int hourOfDay,
