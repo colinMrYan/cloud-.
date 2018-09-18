@@ -56,9 +56,12 @@ public class AudioRecordButton extends Button {
                     @Override
                     public void onDataChange(int volume, float duration) {
                         if(isRecording){
-                            durationTime = duration;
-                            volumeSize = volume;
-                            handler.sendEmptyMessage(VOICE_MESSAGE);
+                            //超过0.2秒再回调
+                            if(duration - durationTime > 0.2){
+                                durationTime = duration;
+                                volumeSize = volume;
+                                handler.sendEmptyMessage(VOICE_MESSAGE);
+                            }
                         }
                     }
                 });
