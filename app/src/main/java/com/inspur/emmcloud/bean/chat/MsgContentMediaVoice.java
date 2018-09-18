@@ -38,7 +38,7 @@ public class MsgContentMediaVoice {
         while (jsonObjectKeyIter.hasNext()){
             String key = jsonObjectKeyIter.next();
             String value = JSONUtils.getString(jsonObject,key,"");
-            if(!StringUtils.isBlank(key)){
+            if(!StringUtils.isBlank(value)){
                 resultStr = value;
             }
         }
