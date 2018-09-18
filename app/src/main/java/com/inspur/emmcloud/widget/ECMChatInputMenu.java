@@ -352,11 +352,11 @@ public class ECMChatInputMenu extends LinearLayout {
             }
             //控制binaryString长度，防止穿的数字过大
             int length = inputControl.length() > 5 ? 5 : inputControl.length();
-            boolean isInputTextEnable = true;
-            boolean isInputPhotoEnable = true;
-            boolean isInputFileEnable = true;
-            boolean isInputVoiceEnable = true;
-            boolean isVoiceCallEnable = true;
+            boolean isInputTextEnable = false;
+            boolean isInputPhotoEnable = false;
+            boolean isInputFileEnable = false;
+            boolean isInputVoiceEnable = false;
+            boolean isVoiceCallEnable = false;
 
             for (int i = 0; i < length; i++) {
                 String controlValue = inputControl.charAt(i) + "";
@@ -385,6 +385,8 @@ public class ECMChatInputMenu extends LinearLayout {
             }
             if (isInputVoiceEnable) {
                 voiceBtn.setVisibility(VISIBLE);
+            }else {
+                voiceBtn.setVisibility(GONE);
             }
             if (isInputTextEnable) {
                 inputTypeBeanList.add(new InputTypeBean(functionIconArray[3], functionNameArray[3], functionActionArray[3]));

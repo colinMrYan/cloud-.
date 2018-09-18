@@ -165,7 +165,7 @@ public class CommunicationUtils {
         msgRobot.setMessage("1.0");
         msgRobot.setId(System.currentTimeMillis() + "");
         msgRobot.setCreationDate(System.currentTimeMillis());
-        msgRobot.setType("attachment/card");
+        msgRobot.setType(Message.MESSAGE_TYPE_EXTENDED_CONTACT_CARD);
         JSONObject fromObj = new JSONObject();
         try {
             fromObj.put("user", fromUser);

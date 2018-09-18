@@ -18,10 +18,12 @@ import com.inspur.emmcloud.bean.appcenter.GetClientIdRsult;
 import com.inspur.emmcloud.bean.appcenter.ReactNativeUpdateBean;
 import com.inspur.emmcloud.bean.login.GetDeviceCheckResult;
 import com.inspur.emmcloud.bean.login.LoginDesktopCloudPlusBean;
+import com.inspur.emmcloud.bean.system.AppException;
+import com.inspur.emmcloud.bean.system.GetAllConfigVersionResult;
 import com.inspur.emmcloud.bean.system.GetAppConfigResult;
 import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
-import com.inspur.emmcloud.bean.system.GetAllConfigVersionResult;
 import com.inspur.emmcloud.bean.system.GetUpgradeResult;
+import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.bean.system.SplashPageBean;
 import com.inspur.emmcloud.interf.OauthCallBack;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
@@ -30,6 +32,8 @@ import com.inspur.emmcloud.util.privates.OauthUtils;
 
 import org.json.JSONObject;
 import org.xutils.http.RequestParams;
+
+import java.util.List;
 
 
 /**
@@ -223,7 +227,7 @@ public class AppAPIService {
      *
      * @param exception
      */
-    public void uploadException(final JSONObject exception) {
+    public void uploadException(final JSONObject exception,final List<AppException> appExceptionList) {
         final String completeUrl = APIUri.getUploadExceptionUrl();
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
@@ -241,7 +245,7 @@ public class AppAPIService {
             public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
                 apiInterface
-                        .returnUploadExceptionSuccess();
+                        .returnUploadExceptionSuccess(appExceptionList);
             }
 
             @Override
@@ -298,7 +302,7 @@ public class AppAPIService {
      *
      * @param collectInfo
      */
-    public void uploadPVCollect(String collectInfo) {
+    public void uploadPVCollect(String collectInfo , final List<PVCollectModel> collectModelList) {
         String completeUrl = APIUri.getUploadPVCollectUrl();
         RequestParams params = new RequestParams(completeUrl);
         params.setBodyContent(collectInfo);
@@ -306,7 +310,7 @@ public class AppAPIService {
         HttpUtils.request(context,CloudHttpMethod.POST,params,new APICallback(context, completeUrl) {
             @Override
             public void callbackSuccess(byte[] arg0) {
-                apiInterface.returnUploadCollectSuccess();
+                apiInterface.returnUploadCollectSuccess(collectModelList);
             }
 
             @Override
@@ -629,7 +633,7 @@ public class AppAPIService {
     /**
      * app通用检查更新
      *
-     * @param positionJson
+     * @param
      */
     public void getAllConfigVersion(final JSONObject clientConfigVersionObj) {
         final String url = APIUri.getAllConfigVersionUrl();
