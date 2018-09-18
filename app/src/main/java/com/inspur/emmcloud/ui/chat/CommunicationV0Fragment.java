@@ -55,7 +55,6 @@ import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
@@ -1022,16 +1021,31 @@ public class CommunicationV0Fragment extends Fragment {
                     setChannelMsgRead(cid, messageCreationDate);
                     break;
                 case "refresh_adapter":
-                    LogUtils.jasonDebug("refresh_adapter============");
                     if (adapter != null){
                         adapter.notifyDataSetChanged();
                     }
+                    break;
+                case "removeChannelFromUI":
+                    String deleteCid = intent.getExtras().getString("cid");
+                    ChannelCacheUtils.deleteChannel(MyApplication.getInstance(),deleteCid);
+                    removeChannelFromUI(deleteCid);
                     break;
                 default:
                     break;
             }
         }
+    }
 
+    /**
+     * 从ui中移除这个频道
+     * @param cid
+     */
+    private void removeChannelFromUI(String cid){
+        Channel removeChannel = new Channel(cid);
+        if (displayChannelList.contains(removeChannel)){
+            displayChannelList.remove(removeChannel);
+            adapter.notifyDataSetChanged();
+        }
     }
 
     private void showSocketStatusInTitle(String socketStatus) {

@@ -290,6 +290,9 @@
     <string name="voice_call">语音通话</string>
     <string name="sure_to_resend_message">确认重新发送该消息?</string>
     <string name="message_type_drafts">[草稿]</string>
+    <string name="quit_group">退出群组</string>
+    <string name="quit_group_warning_text">确定要退出群组？</string>
+
 
     <!-- 会议卡片 -->
     <string name="meeting_has_confirmed">已确认</string>

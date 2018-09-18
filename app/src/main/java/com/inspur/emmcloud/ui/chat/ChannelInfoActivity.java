@@ -39,6 +39,9 @@ import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.NoScrollGridView;
 import com.inspur.emmcloud.widget.SwitchView;
 import com.inspur.emmcloud.widget.SwitchView.OnStateChangedListener;
+import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
+import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
+import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -230,9 +233,31 @@ public class ChannelInfoActivity extends BaseActivity {
                 IntentUtils.startActivity(ChannelInfoActivity.this,
                         MembersActivity.class, bundle);
                 break;
+            case R.id.btn_exit:
+                showQuitGroupWarningDlg();
+                break;
             default:
                 break;
         }
+    }
+
+    private void showQuitGroupWarningDlg(){
+        new MyQMUIDialog.MessageDialogBuilder(ChannelInfoActivity.this)
+                .setMessage(getString(R.string.quit_group_warning_text))
+                .addAction(getString(R.string.cancel), new QMUIDialogAction.ActionListener() {
+                    @Override
+                    public void onClick(QMUIDialog dialog, int index) {
+                        dialog.dismiss();
+                    }
+                })
+                .addAction(getString(R.string.ok), new QMUIDialogAction.ActionListener() {
+                    @Override
+                    public void onClick(QMUIDialog dialog, int index) {
+                        dialog.dismiss();
+                        quitChannelGroup();
+                    }
+                })
+                .show();
     }
 
     @Override
@@ -244,8 +269,7 @@ public class ChannelInfoActivity extends BaseActivity {
                     ModifyChannelGroupName(data);
                     break;
                 case DEL_MEMBER:
-                    ArrayList<String> delUidList = new ArrayList<String>();
-                    delUidList = (ArrayList<String>) data.getSerializableExtra("selectMemList");
+                    ArrayList<String> delUidList = (ArrayList<String>) data.getSerializableExtra("selectMemList");
                     if (delUidList != null && delUidList.size() > 0) {
                         delChannelGroupMember(delUidList);
                     }
@@ -351,6 +375,31 @@ public class ChannelInfoActivity extends BaseActivity {
         TextView nameText;
     }
 
+
+    /**
+     * 过滤不存在的群成员算法
+     */
+    private void filterMemberData() {
+        //查三十人，如果不满三十人则查实际人数保证查到的人都是存在的群成员
+        List<ContactUser> contactUserList = ContactUserCacheUtils.getContactUserListByIdListOrderBy(memberList,9);
+        ArrayList<String> contactUserIdList = new ArrayList<>();
+        for (int i = 0; i < contactUserList.size(); i++) {
+            contactUserIdList.add(contactUserList.get(i).getId());
+        }
+        uiMemberList.clear();
+        uiMemberList.addAll(contactUserIdList);
+    }
+
+    /**
+     * 发送广播
+     */
+    private void sendBroadCast() {
+        Intent mIntent = new Intent("message_notify");
+        mIntent.putExtra("command", "refresh_session_list");
+        LocalBroadcastManager.getInstance(this).sendBroadcast(mIntent);
+    }
+
+
     /**
      * 更改是否频道消息免打扰
      *
@@ -392,18 +441,15 @@ public class ChannelInfoActivity extends BaseActivity {
     }
 
     /**
-     * 过滤不存在的群成员算法
+     * 退出群聊
      */
-    private void filterMemberData() {
-        //查三十人，如果不满三十人则查实际人数保证查到的人都是存在的群成员
-        List<ContactUser> contactUserList = ContactUserCacheUtils.getContactUserListByIdListOrderBy(memberList,9);
-        ArrayList<String> contactUserIdList = new ArrayList<>();
-        for (int i = 0; i < contactUserList.size(); i++) {
-            contactUserIdList.add(contactUserList.get(i).getId());
+    public void quitChannelGroup(){
+        if (NetUtils.isNetworkConnected(ChannelInfoActivity.this)) {
+            loadingDlg.show();
+            apiService.quitChannelGroup(cid);
         }
-        uiMemberList.clear();
-        uiMemberList.addAll(contactUserIdList);
     }
+
 
     private class WebService extends APIInterfaceInstance {
 
@@ -485,15 +531,21 @@ public class ChannelInfoActivity extends BaseActivity {
             WebServiceMiddleUtils.hand(ChannelInfoActivity.this, error, errorCode);
         }
 
-    }
+        @Override
+        public void returnQuitChannelGroupSuccess() {
+            Intent mIntent = new Intent("message_notify");
+            mIntent.putExtra("command", "refresh_adapter");
+            LocalBroadcastManager.getInstance(MyApplication.getInstance()).sendBroadcast(mIntent);
+            LoadingDialog.dimissDlg(loadingDlg);
+            setResult(RESULT_OK);
+            finish();
+        }
 
-    /**
-     * 发送广播
-     */
-    private void sendBroadCast() {
-        Intent mIntent = new Intent("message_notify");
-        mIntent.putExtra("command", "refresh_session_list");
-        LocalBroadcastManager.getInstance(this).sendBroadcast(mIntent);
+        @Override
+        public void returnQuitChannelGroupSuccessFail(String error, int errorCode) {
+            LoadingDialog.dimissDlg(loadingDlg);
+            WebServiceMiddleUtils.hand(ChannelInfoActivity.this, error, errorCode);
+        }
     }
 
 }

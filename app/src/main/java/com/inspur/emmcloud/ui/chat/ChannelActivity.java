@@ -92,11 +92,11 @@ import static android.R.attr.path;
 @ContentView(R.layout.activity_channel)
 public class ChannelActivity extends MediaPlayBaseActivity {
 
-    private static final int HAND_CALLBACK_MESSAGE = 1;
+    private static final int REQUEST_QUIT_CHANNELGROUP = 1;
     private static final int GELLARY_RESULT = 2;
-    private static final int CAMERA_RESULT = 3;
-    private static final int MENTIONS_RESULT = 5;
-    private static final int CHOOSE_FILE = 4;
+    private static final int REQUEST_CAMERA = 3;
+    private static final int REQUEST_MENTIONS = 5;
+    private static final int RQQUEST_CHOOSE_FILE = 4;
     @ViewInject(R.id.msg_list)
     private RecycleViewForSizeChange msgListView;
 
@@ -498,37 +498,44 @@ public class ChannelActivity extends MediaPlayBaseActivity {
                                     final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
-            // 文件管理器返回
-            if (requestCode == CHOOSE_FILE
-                    && NetUtils.isNetworkConnected(MyApplication.getInstance())) {
-                String filePath = GetPathFromUri4kitkat.getPathByUri(MyApplication.getInstance(), data.getData());
-                File file = new File(filePath);
-                if (StringUtils.isBlank(FileUtils.getSuffix(file))) {
-                    ToastUtils.show(MyApplication.getInstance(),
-                            getString(R.string.not_support_upload));
-                } else {
-                    combinAndSendMessageWithFile(filePath, Message.MESSAGE_TYPE_FILE_REGULAR_FILE);
-                }
-                //拍照返回
-            } else if (requestCode == CAMERA_RESULT
-                    ) {
-                String imgPath = data.getExtras().getString(MyCameraActivity.OUT_FILE_PATH);
-                try {
-                    File file = new Compressor(ChannelActivity.this).setMaxHeight(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setMaxWidth(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setQuality(90).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
-                            .compressToFile(new File(imgPath));
-                    imgPath = file.getAbsolutePath();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                combinAndSendMessageWithFile(imgPath, Message.MESSAGE_TYPE_MEDIA_IMAGE);
-                //拍照后图片编辑返回
-            } else if (requestCode == MENTIONS_RESULT) {
-                // @返回
-                String result = data.getStringExtra("searchResult");
-                String uid = JSONUtils.getString(result, "uid", null);
-                String name = JSONUtils.getString(result, "name", null);
-                boolean isInputKeyWord = data.getBooleanExtra("isInputKeyWord", false);
-                chatInputMenu.addMentions(uid, name, isInputKeyWord);
+            switch (requestCode){
+                case RQQUEST_CHOOSE_FILE:
+                    if (NetUtils.isNetworkConnected(MyApplication.getInstance())){
+                        String filePath = GetPathFromUri4kitkat.getPathByUri(MyApplication.getInstance(), data.getData());
+                        File file = new File(filePath);
+                        if (StringUtils.isBlank(FileUtils.getSuffix(file))) {
+                            ToastUtils.show(MyApplication.getInstance(),
+                                    getString(R.string.not_support_upload));
+                        } else {
+                            combinAndSendMessageWithFile(filePath, Message.MESSAGE_TYPE_FILE_REGULAR_FILE);
+                        }
+                    }
+                    break;
+                case REQUEST_CAMERA:
+                    if (NetUtils.isNetworkConnected(MyApplication.getInstance())){
+                        String imgPath = data.getExtras().getString(MyCameraActivity.OUT_FILE_PATH);
+                        try {
+                            File file = new Compressor(ChannelActivity.this).setMaxHeight(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setMaxWidth(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setQuality(90).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
+                                    .compressToFile(new File(imgPath));
+                            imgPath = file.getAbsolutePath();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        combinAndSendMessageWithFile(imgPath, Message.MESSAGE_TYPE_MEDIA_IMAGE);
+                    }
+                    break;
+                case REQUEST_MENTIONS:
+                    // @返回
+                    String result = data.getStringExtra("searchResult");
+                    String uid = JSONUtils.getString(result, "uid", null);
+                    String name = JSONUtils.getString(result, "name", null);
+                    boolean isInputKeyWord = data.getBooleanExtra("isInputKeyWord", false);
+                    chatInputMenu.addMentions(uid, name, isInputKeyWord);
+                    break;
+                case REQUEST_QUIT_CHANNELGROUP:
+                    MyApplication.getInstance().setCurrentChannelCid("");
+                    finish();
+                    break;
             }
         } else {
             // 图库选择图片返回
@@ -745,10 +752,8 @@ public class ChannelActivity extends MediaPlayBaseActivity {
         if (offlineMessageList.size()>0){
             int currentPostion = uiMessageList.size() - 1;
             List<UIMessage> offlineUIMessageList = UIMessage.MessageList2UIMessageList(offlineMessageList);
-            LogUtils.jasonDebug("size1="+uiMessageList.size());
             uiMessageList.addAll(offlineUIMessageList);
             adapter.setMessageList(uiMessageList);
-            LogUtils.jasonDebug("size1="+uiMessageList.size());
             adapter.notifyItemRangeInserted(currentPostion+1, offlineUIMessageList.size());
             msgListView.MoveToPosition(uiMessageList.size()-1);
             WSAPIService.getInstance().setChannelMessgeStateRead(cid);
@@ -813,8 +818,9 @@ public class ChannelActivity extends MediaPlayBaseActivity {
         Bundle bundle = new Bundle();
         bundle.putString("cid", cid);
         if (channel.getType().equals("GROUP")) {
-            IntentUtils.startActivity(ChannelActivity.this,
-                    ChannelInfoActivity.class, bundle);
+            Intent intent = new Intent(this,ChannelInfoActivity.class);
+            intent.putExtras(bundle);
+            startActivityForResult(intent, REQUEST_QUIT_CHANNELGROUP);
         } else if (channel.getType().equals("SERVICE")) {
             String botUid = DirectChannelUtils.getRobotInfo(getApplicationContext(),
                     channel.getTitle()).getId();

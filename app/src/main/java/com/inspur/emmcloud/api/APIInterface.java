@@ -695,4 +695,7 @@ public interface APIInterface {
 
     void returnLeaveVoiceCommunicationChannelSuccess(GetBoolenResult getBoolenResult);
     void returnLeaveVoiceCommunicationChannelFail(String error,int errorCode);
+
+    void returnQuitChannelGroupSuccess();
+    void returnQuitChannelGroupSuccessFail(String error,int errorCode);
 }

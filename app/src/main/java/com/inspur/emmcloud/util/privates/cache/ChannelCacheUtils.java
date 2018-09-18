@@ -76,7 +76,20 @@ public class ChannelCacheUtils {
             // TODO: handle exception
             e.printStackTrace();
         }
+    }
 
+    /**
+     * 删除频道
+     * @param context
+     * @param cid
+     */
+    public static void deleteChannel(Context context,String cid){
+        try {
+            DbCacheUtils.getDb(context).delete(Channel.class,WhereBuilder.b("cid","=",cid));
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
     }
 
 

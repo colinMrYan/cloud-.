@@ -286,6 +286,8 @@
     <string name="voice_call">Voice Call</string>
     <string name="sure_to_resend_message">Sure to resend this message?</string>
     <string name="message_type_drafts">[Drafts]</string>
+    <string name="quit_group">Quit Group</string>
+    <string name="quit_group_warning_text">Confirm to leave team?</string>
 
 
     <!-- 会议卡片 -->

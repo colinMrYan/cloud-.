@@ -547,6 +547,15 @@ public class APIUri {
     public static String getUpdateChannelGroupNameUrl(String cid){
         return  getECMChatChannelUrl()+"/channel?cid="+cid;
     }
+
+    /**
+     * 获取退出群聊url
+     * @param cid
+     * @return
+     */
+    public static String getQuitChannelGroupUrl(String cid){
+        return  getECMChatChannelUrl()+"/channel/group/"+cid+"/participation";
+    }
     /**************************************************应用和应用中心********************************************************************/
 
 

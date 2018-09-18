@@ -1243,4 +1243,41 @@ public class ChatAPIService {
         });
     }
 
+    /**
+     * 退出群聊
+     * @param cid
+     */
+    public void quitChannelGroup(final String cid){
+        String compelteUrl = APIUri.getQuitChannelGroupUrl(cid);
+        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(compelteUrl);
+        HttpUtils.request(context, CloudHttpMethod.DELETE, params, new APICallback(context,compelteUrl) {
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnQuitChannelGroupSuccess();
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnQuitChannelGroupSuccessFail(error,responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        quitChannelGroup(cid);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+        });
+    }
+
 }

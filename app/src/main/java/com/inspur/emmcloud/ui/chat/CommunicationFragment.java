@@ -679,11 +679,28 @@ public class CommunicationFragment extends Fragment {
                         adapter.notifyDataSetChanged();
                     }
                     break;
+                case "removeChannelFromUI":
+                    String deleteCid = intent.getExtras().getString("cid");
+                    ChannelCacheUtils.deleteChannel(MyApplication.getInstance(),deleteCid);
+                    removeChannelFromUI(deleteCid);
+                    break;
                 default:
                     break;
             }
         }
 
+    }
+
+    /**
+     * 从ui中移除这个频道
+     * @param cid
+     */
+    private void removeChannelFromUI(String cid){
+        Channel removeChannel = new Channel(cid);
+        if (displayChannelList.contains(removeChannel)){
+            displayChannelList.remove(removeChannel);
+            adapter.notifyDataSetChanged();
+        }
     }
 
     private void showSocketStatusInTitle(String socketStatus) {

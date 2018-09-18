@@ -1757,4 +1757,14 @@ public class APIInterfaceInstance implements APIInterface {
     public void returnLeaveVoiceCommunicationChannelFail(String error, int errorCode) {
 
     }
+
+    @Override
+    public void returnQuitChannelGroupSuccess() {
+
+    }
+
+    @Override
+    public void returnQuitChannelGroupSuccessFail(String error, int errorCode) {
+
+    }
 }

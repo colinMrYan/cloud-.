@@ -102,6 +102,7 @@ public class ChannelV0Activity extends BaseActivity {
     private static final int CAMERA_RESULT = 3;
     private static final int MENTIONS_RESULT = 5;
     private static final int CHOOSE_FILE = 4;
+    private static final int REQUEST_QUIT_CHANNELGROUP = 6;
     @ViewInject(R.id.msg_list)
     private RecycleViewForSizeChange msgListView;
 
@@ -575,6 +576,8 @@ public class ChannelV0Activity extends BaseActivity {
                 String name = JSONUtils.getString(result, "name", null);
                 boolean isInputKeyWord = data.getBooleanExtra("isInputKeyWord", false);
                 chatInputMenu.addMentions(uid, name, isInputKeyWord);
+            }else if(requestCode == REQUEST_QUIT_CHANNELGROUP){
+                finish();
             }
         } else {
             // 图库选择图片返回
@@ -825,8 +828,9 @@ public class ChannelV0Activity extends BaseActivity {
         Bundle bundle = new Bundle();
         bundle.putString("cid", cid);
         if (channel.getType().equals("GROUP")) {
-            IntentUtils.startActivity(ChannelV0Activity.this,
-                    ChannelInfoActivity.class, bundle);
+            Intent intent = new Intent(this,ChannelInfoActivity.class);
+            intent.putExtras(bundle);
+            startActivityForResult(intent, REQUEST_QUIT_CHANNELGROUP);
         } else if (channel.getType().equals("SERVICE")) {
             String botUid = DirectChannelUtils.getRobotInfo(getApplicationContext(),
                     channel.getTitle()).getId();
@@ -1022,6 +1026,14 @@ public class ChannelV0Activity extends BaseActivity {
             loadingDlg.show();
             apiService.getNewMsgs(cid, "", 15);
         }
+    }
+
+    /**
+     * 设置频道是否置顶
+     * @param isFoucus
+     */
+    public void setChannelFoucs(boolean isFoucus){
+
     }
 
 
