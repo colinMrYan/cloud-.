@@ -225,7 +225,7 @@ public class ECMChatInputMenu extends LinearLayout {
             }
 
             @Override
-            public void onVoiceResult(VoiceResult voiceResult, boolean isLast) {
+            public void onVoiceResultSuccess(VoiceResult voiceResult, boolean isLast) {
                 if(!StringUtils.isBlank(voiceResult.getFilePath())){
                     String fileName = FileUtils.getFileNameWithoutExtension(voiceResult.getFilePath());
                     voiceResultList.add(voiceResult);
@@ -266,7 +266,7 @@ public class ECMChatInputMenu extends LinearLayout {
             }
 
             @Override
-            public void onError(VoiceResult errorResult) {
+            public void onVoiceResultError(VoiceResult errorResult) {
                 String fileName = FileUtils.getFileNameWithoutExtension(errorResult.getFilePath());
                 voiceResultList.add(errorResult);
                 if(voiceBooleanMap.get(fileName) == null ||  !voiceBooleanMap.get(fileName)){

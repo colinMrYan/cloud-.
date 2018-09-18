@@ -156,10 +156,10 @@ public class Voice2StringMessageUtils {
             @Override
             public void onError(SpeechError error) {
                 VoiceResult voiceResult = new VoiceResult();
-                voiceResult.setResults("...");
+                voiceResult.setResults("");
                 voiceResult.setSeconds(durationTime);
                 voiceResult.setFilePath(voiceFilePath);
-                onVoiceResultCallback.onError(voiceResult);
+                onVoiceResultCallback.onVoiceResultError(voiceResult);
                 //返回错误停止录音
                 stopListening();
             }
@@ -180,7 +180,7 @@ public class Voice2StringMessageUtils {
                     voiceResult.setSeconds(durationTime);
                     voiceResult.setFilePath(voiceFilePath);
                     //最后的结果
-                    onVoiceResultCallback.onVoiceResult(voiceResult, isLast);
+                    onVoiceResultCallback.onVoiceResultSuccess(voiceResult, isLast);
                 }
             }
 

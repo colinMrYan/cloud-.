@@ -344,7 +344,7 @@ public class ECMChatInputMenuV0 extends LinearLayout {
             }
 
             @Override
-            public void onVoiceResult(VoiceResult voiceResult, boolean isLast) {
+            public void onVoiceResultSuccess(VoiceResult voiceResult, boolean isLast) {
                 String results = voiceResult.getResults();
                 if (results.length() == 1 && StringUtils.isSymbol(results)) {
                     results = "";
@@ -374,7 +374,7 @@ public class ECMChatInputMenuV0 extends LinearLayout {
             }
 
             @Override
-            public void onError(VoiceResult errorResult) {
+            public void onVoiceResultError(VoiceResult errorResult) {
 
             }
         });

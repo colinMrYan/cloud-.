@@ -8,8 +8,8 @@ import com.inspur.emmcloud.bean.system.VoiceResult;
 
 public interface OnVoiceResultCallback {
     void onVoiceStart();
-    void onVoiceResult(VoiceResult results, boolean isLast);
+    void onVoiceResultSuccess(VoiceResult results, boolean isLast);
     void onVoiceFinish();
     void onVoiceLevelChange(int volume);
-    void onError(VoiceResult errorResult);
+    void onVoiceResultError(VoiceResult errorResult);
 }
