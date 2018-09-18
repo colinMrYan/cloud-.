@@ -1,7 +1,9 @@
 package com.inspur.emmcloud.bean.chat;
 
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.privates.AppUtils;
 
 import org.json.JSONObject;
 
@@ -73,8 +75,24 @@ public class MsgContentMediaVoice {
         return jsonObject;
     }
 
-    public void setJsonObject(JSONObject jsonObject) {
-        this.jsonObject = jsonObject;
+    public void setJsonResults(String results) {
+        JSONObject jsonObj = new JSONObject();
+        try {
+            switch(AppUtils.getCurrentAppLanguage(MyApplication.getInstance())){
+                case "zh-Hans":
+                    jsonObject.put("zh-cn",results);
+                    break;
+                case "en":
+                    jsonObject.put("en-us",results);
+                    break;
+                default:
+                    jsonObject.put("zh-cn",results);
+                    break;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        this.jsonObject = jsonObj;
     }
 
     public String toString() {

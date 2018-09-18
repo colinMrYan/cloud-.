@@ -145,7 +145,7 @@ public class CommunicationUtils {
     }
 
 
-    public static Message combinLocalMediaVoiceMessage(String cid, String localFilePath,int duration,JSONObject jsonObject) {
+    public static Message combinLocalMediaVoiceMessage(String cid, String localFilePath,int duration,String results) {
         Message message = combinLocalMessageCommon();
         message.setChannel(cid);
         message.setId(getTracer());
@@ -153,7 +153,7 @@ public class CommunicationUtils {
         MsgContentMediaVoice msgContentMediaVoice = new MsgContentMediaVoice();
         msgContentMediaVoice.setDuration(duration);
         msgContentMediaVoice.setMedia(localFilePath);
-        msgContentMediaVoice.setJsonObject(jsonObject);
+        msgContentMediaVoice.setJsonResults(results);
         message.setContent(msgContentMediaVoice.toString());
         return message;
     }

@@ -43,7 +43,6 @@ import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ChannelInfoUtils;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
 import com.inspur.emmcloud.util.privates.DataCleanManager;
@@ -575,23 +574,8 @@ public class ChannelActivity extends MediaPlayBaseActivity {
                 fakeMessage = CommunicationUtils.combinLocalMediaImageMessage(cid, filePath);
                 break;
             case Message.MESSAGE_TYPE_MEDIA_VOICE:
-                JSONObject jsonObject = new JSONObject();
-                try {
-                    switch(AppUtils.getCurrentAppLanguage(ChannelActivity.this)){
-                        case "zh-Hans":
-                            jsonObject.put("zh-cn",results);
-                            break;
-                        case "en":
-                            jsonObject.put("en-us",results);
-                            break;
-                        default:
-                            jsonObject.put("zh-cn",results);
-                            break;
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                fakeMessage = CommunicationUtils.combinLocalMediaVoiceMessage(cid, filePath, duration,jsonObject);
+
+                fakeMessage = CommunicationUtils.combinLocalMediaVoiceMessage(cid, filePath, duration,results);
                 break;
         }
         if (fakeMessage != null) {
