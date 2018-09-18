@@ -74,7 +74,7 @@ public class AudioRecordButton extends Button {
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
-            if(audioRecorderManager.isRecording() && durationTime <= 60.0){
+            if(audioRecorderManager.isRecording() && durationTime < 60.0){
                 mDialogManager.updateVoiceLevel(volumeSize,durationTime);
             }else if(audioRecorderManager.isRecording() && durationTime >= 60.0){
                 isRecording = false;
