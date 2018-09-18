@@ -63,10 +63,7 @@ public class ConvertAudioFileFormatUtils {
      */
     public void convertAudioFile2SpecifiedFormat (Context context,String sourceFilePath,AudioFormat audioFormat,IConvertCallback callback) {
         File sourceFile = new File(sourceFilePath);
-        if(!sourceFile.exists()){
-            return;
-        }
-        startConvert(context,sourceFile,audioFormat,callback);
+        convertAudioFile2SpecifiedFormat(context,sourceFile,audioFormat,callback);
     }
 
     /**
@@ -77,21 +74,7 @@ public class ConvertAudioFileFormatUtils {
      */
     public void convertAudioFile2SpecifiedFormat(Context context,String sourceFilePath,AudioFormat audioFormat){
         File sourceFile = new File(sourceFilePath);
-        if(!sourceFile.exists()){
-            return;
-        }
-        IConvertCallback callback = new IConvertCallback() {
-            @Override
-            public void onSuccess(File file) {
-                LogUtils.YfcDebug("转化成功");
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-                LogUtils.YfcDebug("转化失败");
-            }
-        };
-        startConvert(context,sourceFile,audioFormat,callback);
+        convertAudioFile2SpecifiedFormat(context,sourceFile,audioFormat);
     }
 
     /**
