@@ -54,8 +54,8 @@ import java.util.List;
 public class ChannelInfoActivity extends BaseActivity {
 
     private static final int REQUEST_UPDATE_CHANNEL_NAME = 1;
-    private static final int ADD_MEMBER = 2;
-    private static final int DEL_MEMBER = 3;
+    private static final int QEQUEST_ADD_MEMBER = 2;
+    private static final int QEQUEST_DEL_MEMBER = 3;
     private NoScrollGridView memberGrid;
     private LoadingDialog loadingDlg;
     private ArrayList<String> memberList = new ArrayList<>();
@@ -152,7 +152,7 @@ public class ChannelInfoActivity extends BaseActivity {
                 intent.putExtra("memberUidList", memberList);
                 intent.setClass(getApplicationContext(),
                         ChannelMembersDelActivity.class);
-                startActivityForResult(intent, DEL_MEMBER);
+                startActivityForResult(intent, QEQUEST_DEL_MEMBER);
 
             } else if (((position == adapter.getCount() - 2) &&isOwner)
                     || ((position == adapter.getCount() - 1) && !isOwner)) {
@@ -161,7 +161,7 @@ public class ChannelInfoActivity extends BaseActivity {
                 intent.putExtra("title", getString(R.string.add_group_member));
                 intent.setClass(getApplicationContext(),
                         ContactSearchActivity.class);
-                startActivityForResult(intent, ADD_MEMBER);
+                startActivityForResult(intent, QEQUEST_ADD_MEMBER);
 
             } else {
                 String uid = memberList.get(position);
@@ -268,13 +268,11 @@ public class ChannelInfoActivity extends BaseActivity {
                 case REQUEST_UPDATE_CHANNEL_NAME:
                     ModifyChannelGroupName(data);
                     break;
-                case DEL_MEMBER:
+                case QEQUEST_DEL_MEMBER:
                     ArrayList<String> delUidList = (ArrayList<String>) data.getSerializableExtra("selectMemList");
-                    if (delUidList != null && delUidList.size() > 0) {
-                        delChannelGroupMember(delUidList);
-                    }
+                    delChannelGroupMember(delUidList);
                     break;
-                case ADD_MEMBER:
+                case QEQUEST_ADD_MEMBER:
                     ArrayList<String> addUidList = new ArrayList<>();
                     List<SearchModel> addMemberList = (List<SearchModel>) data
                             .getSerializableExtra("selectMemList");
