@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.ui.chat;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,6 +54,7 @@ public class DisplayMediaVoiceMsg {
         TextView speechText = (TextView) cardContentView.findViewById(R.id.tv_voice_card_word);
         speechText.setPadding(isMyMsg? DensityUtil.dip2px(context,10):0,0,isMyMsg?0:DensityUtil.dip2px(context,10),0);
         speechText.setText(msgContentMediaVoice.getResult());
+        speechText.setTextColor(isMyMsg? Color.parseColor("#FFFFFF"):Color.parseColor("#666666"));
         int duration = msgContentMediaVoice.getDuration();
         durationText.setText(duration + "''");
         //控制是否打开显示文字的功能，打开和不打开分两种UI控制逻辑
