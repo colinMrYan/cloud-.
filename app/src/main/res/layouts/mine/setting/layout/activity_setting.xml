@@ -253,6 +253,36 @@
             android:background="@color/color_list_divider" />
 
         <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/text_layout_selector">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="12dp"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp"
+                android:text="语音自动识别"
+                android:textSize="@dimen/content_normal_textsize" />
+
+            <com.inspur.emmcloud.widget.SwitchView
+                android:id="@+id/switch_voice_word"
+                android:layout_width="37dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="20dp" />
+        </RelativeLayout>
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/color_list_divider" />
+
+        <RelativeLayout
             android:id="@+id/signout_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
