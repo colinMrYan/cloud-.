@@ -574,7 +574,6 @@ public class ChannelActivity extends MediaPlayBaseActivity {
                 fakeMessage = CommunicationUtils.combinLocalMediaImageMessage(cid, filePath);
                 break;
             case Message.MESSAGE_TYPE_MEDIA_VOICE:
-
                 fakeMessage = CommunicationUtils.combinLocalMediaVoiceMessage(cid, filePath, duration,results);
                 break;
         }

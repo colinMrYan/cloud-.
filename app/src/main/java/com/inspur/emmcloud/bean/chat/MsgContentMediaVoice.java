@@ -80,13 +80,13 @@ public class MsgContentMediaVoice {
         try {
             switch(AppUtils.getCurrentAppLanguage(MyApplication.getInstance())){
                 case "zh-Hans":
-                    jsonObject.put("zh-cn",results);
+                    jsonObj.put("zh-cn",results);
                     break;
                 case "en":
-                    jsonObject.put("en-us",results);
+                    jsonObj.put("en-us",results);
                     break;
                 default:
-                    jsonObject.put("zh-cn",results);
+                    jsonObj.put("zh-cn",results);
                     break;
             }
         } catch (Exception e) {
