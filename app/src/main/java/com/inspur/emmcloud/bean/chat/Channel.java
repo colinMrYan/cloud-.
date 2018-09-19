@@ -11,6 +11,7 @@ import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.richtext.markdown.MarkDown;
 import com.inspur.emmcloud.util.privates.ChatMsgContentUtils;
 import com.inspur.emmcloud.util.privates.DirectChannelUtils;
+import com.inspur.emmcloud.util.privates.MentionsAndUrlShowUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 
@@ -221,9 +222,10 @@ public class Channel implements Serializable {
                 case "txt_rich":
                     String msgBody = msg.getBody();
                     String source = JSONUtils.getString(msgBody, "source", "");
-                    newMsgContent = source;
-                    if (!StringUtils.isBlank(source)) {
+                    if (!StringUtils.isBlank(source) && msg.getUid().toLowerCase().startsWith("bot")) {
                         newMsgContent = MarkDown.fromMarkdown(source);
+                    }else {
+                        newMsgContent = MentionsAndUrlShowUtils.getMsgContentSpannableString(msgBody).toString();
                     }
                     if (type.equals("GROUP")) {
                         newMsgContent = title + newMsgContent;

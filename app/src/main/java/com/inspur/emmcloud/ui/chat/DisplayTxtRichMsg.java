@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.text.SpannableString;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -20,7 +21,10 @@ import com.inspur.emmcloud.util.common.richtext.RichType;
 import com.inspur.emmcloud.util.common.richtext.callback.LinkFixCallback;
 import com.inspur.emmcloud.util.common.richtext.callback.OnUrlClickListener;
 import com.inspur.emmcloud.util.common.richtext.callback.OnUrlLongClickListener;
+import com.inspur.emmcloud.util.privates.MentionsAndUrlShowUtils;
+import com.inspur.emmcloud.util.privates.TransHtmlToTextUtils;
 import com.inspur.emmcloud.util.privates.UriUtils;
+import com.inspur.emmcloud.widget.LinkMovementClickMethod;
 import com.inspur.emmcloud.widget.bubble.ArrowDirection;
 import com.inspur.emmcloud.widget.bubble.BubbleLayout;
 
@@ -48,43 +52,56 @@ public class DisplayTxtRichMsg {
         contentText.setTextColor(context.getResources().getColor(
                 isMyMsg ? R.color.white : R.color.black));
         BubbleLayout cardLayout = (BubbleLayout) cardContentView.findViewById(R.id.bl_card);
-        cardLayout.setArrowDirection(isMyMsg? ArrowDirection.RIGHT:ArrowDirection.LEFT);
+        cardLayout.setArrowDirection(isMyMsg ? ArrowDirection.RIGHT : ArrowDirection.LEFT);
         cardLayout.setBubbleColor(context.getResources().getColor(isMyMsg ? R.color.bg_my_card : R.color.white));
-        cardLayout.setStrokeWidth(isMyMsg ?0: 0.5f);
+        cardLayout.setStrokeWidth(isMyMsg ? 0 : 0.5f);
         String msgBody = msg.getBody();
         String source = JSONUtils.getString(msgBody, "source", "");
-        RichText.from(source)
-                .type(RichType.MARKDOWN)
-                .linkFix(new LinkFixCallback() {
-                    @Override
-                    public void fix(LinkHolder holder) {
-                        holder.setUnderLine(false);
-                        holder.setColor(context.getResources().getColor(
-                                isMyMsg ? R.color.hightlight_in_blue_bg
-                                        : R.color.header_bg));
-                    }
-                })
-                .urlClick(new OnUrlClickListener() {
-                    @Override
-                    public boolean urlClicked(String url) {
-                        if (url.startsWith("http")) {
-                            UriUtils.openUrl((Activity) context, url);
+        if (msg.getUid().toLowerCase().startsWith("bot")) {
+            RichText.from(source)
+                    .type(RichType.MARKDOWN)
+                    .linkFix(new LinkFixCallback() {
+                        @Override
+                        public void fix(LinkHolder holder) {
+                            holder.setUnderLine(false);
+                            holder.setColor(context.getResources().getColor(
+                                    isMyMsg ? R.color.hightlight_in_blue_bg
+                                            : R.color.header_bg));
+                        }
+                    })
+                    .urlClick(new OnUrlClickListener() {
+                        @Override
+                        public boolean urlClicked(String url) {
+                            if (url.startsWith("http")) {
+                                UriUtils.openUrl((Activity) context, url);
+                                return true;
+                            }
+                            return false;
+                        }
+                    })
+                    .urlLongClick(new OnUrlLongClickListener() {
+                        @Override
+                        public boolean urlLongClick(String url) {
+                            copyContentToPasteBoard(context, contentText);
                             return true;
                         }
-                        return false;
-                    }
-                })
-                .urlLongClick(new OnUrlLongClickListener() {
-                    @Override
-                    public boolean urlLongClick(String url) {
-                        copyContentToPasteBoard(context, contentText);
-                        return true;
-                    }
-                })
-                .noImage(true)
-                .singleLoad(false)
-                .cache(CacheType.ALL)
-                .into(contentText);
+                    })
+                    .noImage(true)
+                    .singleLoad(false)
+                    .cache(CacheType.ALL)
+                    .into(contentText);
+        } else {
+            contentText.setMovementMethod(LinkMovementClickMethod.getInstance());
+            SpannableString spannableString = MentionsAndUrlShowUtils
+                    .getMsgContentSpannableString(msgBody);
+            contentText.setText(spannableString);
+            TransHtmlToTextUtils.stripUnderlines(
+                    contentText,
+                    context.getResources().getColor(
+                            isMyMsg ? R.color.hightlight_in_blue_bg
+                                    : R.color.header_bg));
+
+        }
         contentText.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
