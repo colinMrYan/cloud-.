@@ -20,13 +20,13 @@ import com.inspur.emmcloud.BaseFragmentActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.appcenter.GetAppBadgeResult;
-import com.inspur.emmcloud.bean.chat.EventMessageUnReadCount;
 import com.inspur.emmcloud.bean.chat.TransparentBean;
 import com.inspur.emmcloud.bean.contact.ContactClickMessage;
 import com.inspur.emmcloud.bean.system.ChangeTabBean;
 import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
 import com.inspur.emmcloud.bean.system.MainTabResult;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
+import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.appcenter.MyAppFragment;
 import com.inspur.emmcloud.ui.chat.CommunicationFragment;
@@ -37,7 +37,6 @@ import com.inspur.emmcloud.ui.mine.MoreFragment;
 import com.inspur.emmcloud.ui.notsupport.NotSupportFragment;
 import com.inspur.emmcloud.ui.work.TabBean;
 import com.inspur.emmcloud.ui.work.WorkFragment;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
@@ -226,12 +225,13 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
      * @param eventMessageUnReadCount
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void updateMessageUnReadCount(EventMessageUnReadCount eventMessageUnReadCount) {
+    public void setMessageUnreadCount(SimpleEventMessage eventMessage) {
         if (newMessageTipsText != null) {
-            if (eventMessageUnReadCount.getMessageUnReadCount() == 0) {
+            int unreadCount = (Integer) eventMessage.getMessageObj();
+            if (unreadCount == 0) {
                 newMessageTipsLayout.setVisibility(View.GONE);
             } else {
-                String shoWNum = (eventMessageUnReadCount.getMessageUnReadCount() > 99) ? "99+" : eventMessageUnReadCount.getMessageUnReadCount() + "";
+                String shoWNum = (unreadCount > 99) ? "99+" : unreadCount + "";
                 newMessageTipsLayout.setVisibility(View.VISIBLE);
                 newMessageTipsText.setText(shoWNum);
             }
@@ -383,7 +383,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
                 Intent intent = new Intent("message_notify");
                 intent.putExtra("command", "set_all_message_read");
                 LocalBroadcastManager.getInstance(IndexBaseActivity.this).sendBroadcast(intent);
-                updateMessageUnReadCount(new EventMessageUnReadCount(0));
+                setMessageUnreadCount(new SimpleEventMessage(Constant.EVENTBUS_TAG_SET_ALL_MESSAGE_UNREAD_COUNT,0));
             }
 
             @Override
