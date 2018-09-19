@@ -36,7 +36,6 @@ import com.inspur.emmcloud.bean.chat.ChannelGroup;
 import com.inspur.emmcloud.bean.chat.ChannelMessageReadStateResult;
 import com.inspur.emmcloud.bean.chat.ChannelMessageSet;
 import com.inspur.emmcloud.bean.chat.ChannelOperationInfo;
-import com.inspur.emmcloud.bean.chat.EventMessageUnReadCount;
 import com.inspur.emmcloud.bean.chat.GetChannelListResult;
 import com.inspur.emmcloud.bean.chat.GetOfflineMessageListResult;
 import com.inspur.emmcloud.bean.chat.GetRecentMessageListResult;
@@ -49,6 +48,7 @@ import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
 import com.inspur.emmcloud.bean.system.MainTabProperty;
 import com.inspur.emmcloud.bean.system.MainTabResult;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
+import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.push.WebSocketPush;
@@ -612,7 +612,7 @@ public class CommunicationFragment extends Fragment {
         for (Channel channel : displayChannelList) {
             unReadCount += channel.getUnReadCount();
         }
-        EventBus.getDefault().post(new EventMessageUnReadCount(unReadCount));
+        EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SET_ALL_MESSAGE_UNREAD_COUNT,unReadCount));
     }
 
     class CacheChannelTask extends AsyncTask<GetChannelListResult, Void, List<Channel>> {

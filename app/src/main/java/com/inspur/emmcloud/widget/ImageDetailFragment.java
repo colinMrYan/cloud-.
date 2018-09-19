@@ -112,13 +112,12 @@ public class ImageDetailFragment extends Fragment {
 		mAttacher.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
 			@Override
 			public void onPhotoTap(View view, float x, float y) {
-				EventMessage eventMessage = new EventMessage(Constant.EVENTBUS_TAG_ON_PHOTO_TAB);
-				EventBus.getDefault().post(eventMessage);
+				onOutsidePhotoTap();
 			}
 
 			@Override
 			public void onOutsidePhotoTap() {
-				EventMessage eventMessage = new EventMessage(Constant.EVENTBUS_TAG_ON_PHOTO_TAB);
+				EventMessage eventMessage = new EventMessage("",Constant.EVENTBUS_TAG_ON_PHOTO_TAB);
 				EventBus.getDefault().post(eventMessage);
 			}
 		});
