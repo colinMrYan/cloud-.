@@ -93,10 +93,10 @@ import static android.R.attr.path;
 public class ChannelActivity extends MediaPlayBaseActivity {
 
     private static final int REQUEST_QUIT_CHANNELGROUP = 1;
-    private static final int GELLARY_RESULT = 2;
+    private static final int REQUEST_GELLARY = 2;
     private static final int REQUEST_CAMERA = 3;
-    private static final int REQUEST_MENTIONS = 5;
     private static final int RQQUEST_CHOOSE_FILE = 4;
+    private static final int REQUEST_MENTIONS = 5;
     @ViewInject(R.id.msg_list)
     private RecycleViewForSizeChange msgListView;
 
@@ -540,7 +540,7 @@ public class ChannelActivity extends MediaPlayBaseActivity {
         } else {
             // 图库选择图片返回
             if (resultCode == ImagePicker.RESULT_CODE_ITEMS)
-                if (data != null && requestCode == GELLARY_RESULT) {
+                if (data != null && requestCode == REQUEST_GELLARY) {
                     ArrayList<ImageItem> imageItemList = (ArrayList<ImageItem>) data
                             .getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
                     for (int i = 0; i < imageItemList.size(); i++) {

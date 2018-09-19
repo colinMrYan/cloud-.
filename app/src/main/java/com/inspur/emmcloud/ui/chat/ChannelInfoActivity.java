@@ -53,7 +53,7 @@ import java.util.List;
  */
 public class ChannelInfoActivity extends BaseActivity {
 
-    private static final int MODIFY_NAME = 1;
+    private static final int REQUEST_UPDATE_CHANNEL_NAME = 1;
     private static final int ADD_MEMBER = 2;
     private static final int DEL_MEMBER = 3;
     private NoScrollGridView memberGrid;
@@ -224,7 +224,7 @@ public class ChannelInfoActivity extends BaseActivity {
                         ModifyChannelGroupNameActivity.class);
                 intent.putExtra("cid", cid);
                 intent.putExtra("name", channelGroup.getChannelName());
-                startActivityForResult(intent, MODIFY_NAME);
+                startActivityForResult(intent, REQUEST_UPDATE_CHANNEL_NAME);
                 break;
             case R.id.member_layout:
                 bundle.putString("title", getString(R.string.group_member));
@@ -265,7 +265,7 @@ public class ChannelInfoActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
-                case MODIFY_NAME:
+                case REQUEST_UPDATE_CHANNEL_NAME:
                     ModifyChannelGroupName(data);
                     break;
                 case DEL_MEMBER:
@@ -275,7 +275,7 @@ public class ChannelInfoActivity extends BaseActivity {
                     }
                     break;
                 case ADD_MEMBER:
-                    ArrayList<String> addUidList = new ArrayList<String>();
+                    ArrayList<String> addUidList = new ArrayList<>();
                     List<SearchModel> addMemberList = (List<SearchModel>) data
                             .getSerializableExtra("selectMemList");
                     for (int i = 0; i < addMemberList.size(); i++) {
