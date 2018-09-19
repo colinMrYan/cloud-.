@@ -289,8 +289,6 @@ public class NewsWebDetailActivity extends BaseActivity {
         // 支持多窗口
         settings.supportMultipleWindows();
         settings.setJavaScriptCanOpenWindowsAutomatically(true);
-        // 设置webview推荐使用的窗口
-        settings.setUseWideViewPort(false);
         // 页面适应手机屏幕的分辨率
         settings.setLoadWithOverviewMode(true);
         settings.setDefaultTextEncodingName("utf-8");//设置自适应屏幕

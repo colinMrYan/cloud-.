@@ -289,7 +289,6 @@ public class ImpWebView extends WebView {
 	private void setJSConfig() {
 		// 设置WebView的属性，此时可以去执行JavaScript脚本
 		settings.setJavaScriptEnabled(true);
-		settings.setUseWideViewPort(true);
 		settings.setSupportZoom(true);
 		settings.setBuiltInZoomControls(true);
 		settings.setDisplayZoomControls(false);
@@ -310,7 +309,7 @@ public class ImpWebView extends WebView {
 		settings.supportMultipleWindows();
 		settings.setJavaScriptCanOpenWindowsAutomatically(true);
 		// 设置webview推荐使用的窗口
-		settings.setUseWideViewPort(false);
+		settings.setUseWideViewPort(true);
 		// 页面适应手机屏幕的分辨率
 		settings.setLoadWithOverviewMode(true);
 		settings.setDefaultTextEncodingName("utf-8");//设置自适应屏幕
