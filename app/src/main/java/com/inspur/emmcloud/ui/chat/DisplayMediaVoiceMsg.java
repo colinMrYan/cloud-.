@@ -56,7 +56,7 @@ public class DisplayMediaVoiceMsg {
         int duration = msgContentMediaVoice.getDuration();
         durationText.setText(duration + "''");
         //控制是否打开显示文字的功能，打开和不打开分两种UI控制逻辑
-        switch (PreferencesByUserAndTanentUtils.getInt(context,Constant.PREF_APP_OPEN_VOICE_WORD_SWITCH,IS_VOICE_WORD_OPEN)){
+        switch (PreferencesByUserAndTanentUtils.getInt(context,Constant.PREF_APP_OPEN_VOICE_WORD_SWITCH,IS_VOICE_WORD_CLOUSE)){
             case IS_VOICE_WORD_OPEN:
                 speechText.setVisibility(View.VISIBLE);
                 break;
@@ -72,8 +72,6 @@ public class DisplayMediaVoiceMsg {
             default:
                 break;
         }
-
-
         voiceAnimView.setBackgroundResource(isMyMsg ? R.drawable.ic_chat_msg_card_voice_right_level_3 : R.drawable.ic_chat_msg_card_voice_left_level_3);
         voiceLayout.setOnClickListener(new View.OnClickListener() {
             @Override
