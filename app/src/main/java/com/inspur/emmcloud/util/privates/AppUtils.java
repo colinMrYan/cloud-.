@@ -29,6 +29,7 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.mine.Language;
 import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.ui.chat.DisplayMediaVoiceMsg;
 import com.inspur.emmcloud.ui.chat.MembersActivity;
 import com.inspur.emmcloud.util.common.EncryptUtils;
 import com.inspur.emmcloud.util.common.FileUtils;
@@ -898,6 +899,24 @@ public class AppUtils {
     private static boolean lacksPermission(Context mContexts, String permission) {
         return ContextCompat.checkSelfPermission(mContexts, permission) ==
                 PackageManager.PERMISSION_DENIED;
+    }
+
+    /**
+     * 获取是否开启语音转字
+     * @return
+     */
+    public static boolean getIsVoiceWordOpen(){
+        return PreferencesByUserAndTanentUtils.getInt(MyApplication.getInstance(), Constant.PREF_APP_OPEN_VOICE_WORD_SWITCH,0) == DisplayMediaVoiceMsg.IS_VOICE_WORD_OPEN;
+    }
+
+    /**
+     * 随机生成文件的名称
+     *
+     * @return
+     */
+    public static String generalFileName() {
+        // TODO Auto-generated method stub
+        return UUID.randomUUID().toString();
     }
 
     /**

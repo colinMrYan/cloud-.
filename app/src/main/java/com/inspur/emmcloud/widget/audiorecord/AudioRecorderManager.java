@@ -7,12 +7,12 @@ import android.os.Environment;
 
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.emmcloud.util.privates.AppUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.text.DecimalFormat;
-import java.util.UUID;
 
 /**
  * 录音模块代码
@@ -138,7 +138,7 @@ public class AudioRecorderManager {
      */
     private void createAudioRecord() {
         // 获取音频文件路径
-        String fileName = generalFileName();
+        String fileName = AppUtils.generalFileName();
         rawAudioFilePath = getRawFilePath() + fileName + ".raw";
         wavAudioFilePath = getWavFilePath() + fileName + ".wav";
         // 获得缓冲区字节大小
@@ -160,15 +160,6 @@ public class AudioRecorderManager {
         }
     }
 
-    /**
-     * 随机生成文件的名称
-     *
-     * @return
-     */
-    private String generalFileName() {
-        // TODO Auto-generated method stub
-        return UUID.randomUUID().toString();
-    }
 
     /**
      * 这里将数据写入文件，但是并不能播放，因为AudioRecord获得的音频是原始的裸音频，

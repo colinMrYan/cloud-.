@@ -179,26 +179,32 @@ public class ECMChatInputMenu extends LinearLayout {
             @Override
             public void onFinished(final float seconds, final String filePath) {
                 // TODO Auto-generated method stub
-                IConvertCallback callback = new IConvertCallback() {
-                    @Override
-                    public void onSuccess(File file) {
-                        String fileName = FileUtils.getFileNameWithoutExtension(file.getName());
-                        mp3FilePathList.add(file.getAbsolutePath());
-                        if(voiceBooleanMap.get(fileName) == null || !voiceBooleanMap.get(fileName)){
-                            voiceBooleanMap.put(fileName,true);
-                        }else{
-                            sendVoiceMessage(fileName);
+                if(AppUtils.getIsVoiceWordOpen()){
+                    IConvertCallback callback = new IConvertCallback() {
+                        @Override
+                        public void onSuccess(File file) {
+                            String fileName = FileUtils.getFileNameWithoutExtension(file.getName());
+                            mp3FilePathList.add(file.getAbsolutePath());
+                            if(voiceBooleanMap.get(fileName) == null || !voiceBooleanMap.get(fileName)){
+                                voiceBooleanMap.put(fileName,true);
+                            }else{
+                                callBackVoiceMessage(fileName);
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onFailure(Exception e) {
+                        @Override
+                        public void onFailure(Exception e) {
 
+                        }
+                    };
+                    //转写和转文件格式同时进行
+                    voice2StringMessageUtils.startVoiceListeningByVoiceFile(seconds,filePath);
+                    ConvertAudioFileFormatUtils.getInstance().convertAudioFile2SpecifiedFormat(getContext(),filePath, AudioFormat.MP3,callback);
+                }else {
+                    if (chatInputMenuListener != null) {
+                        chatInputMenuListener.onSendVoiceRecordMsg("",seconds, filePath);
                     }
-                };
-                //转写和转文件格式同时进行
-                voice2StringMessageUtils.startVoiceListeningByVoiceFile(seconds,filePath);
-                ConvertAudioFileFormatUtils.getInstance().convertAudioFile2SpecifiedFormat(getContext(),filePath, AudioFormat.MP3,callback);
+                }
             }
 
             @Override
@@ -232,7 +238,7 @@ public class ECMChatInputMenu extends LinearLayout {
                     if(voiceBooleanMap.get(fileName) == null || !voiceBooleanMap.get(fileName)){
                         voiceBooleanMap.put(fileName,new Boolean(true));
                     }else{
-                        sendVoiceMessage(fileName);
+                        callBackVoiceMessage(fileName);
                     }
                 }else{
                     String results = voiceResult.getResults();
@@ -272,7 +278,7 @@ public class ECMChatInputMenu extends LinearLayout {
                 if(voiceBooleanMap.get(fileName) == null ||  !voiceBooleanMap.get(fileName)){
                     voiceBooleanMap.put(fileName,new Boolean(true));
                 }else{
-                    sendVoiceMessage(fileName);
+                    callBackVoiceMessage(fileName);
                 }
             }
         });
@@ -475,7 +481,7 @@ public class ECMChatInputMenu extends LinearLayout {
      * 发送语音消息
      * @param fileNameWithoutExtension
      */
-    private void sendVoiceMessage(String fileNameWithoutExtension) {
+    private void callBackVoiceMessage(String fileNameWithoutExtension) {
         VoiceResult voiceResult = getVoiceResult(fileNameWithoutExtension);
         String mp3VoiceFilePath = getVoiceFilePath(fileNameWithoutExtension);
         if (chatInputMenuListener != null) {
