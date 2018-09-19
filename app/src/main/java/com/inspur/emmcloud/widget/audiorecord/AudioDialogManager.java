@@ -4,6 +4,8 @@ package com.inspur.emmcloud.widget.audiorecord;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,21 +14,31 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+
 public class AudioDialogManager {
 
 	/**
 	 * 以下为dialog的初始化控件，包括其中的布局文件
 	 */
-
 	private Dialog dialog;
-
 	private ImageView recorderImg;
-
 	private TextView lableText;
-
 	private Context mContext;
 	private boolean isStatusRecording = false;
 	private float recordTime = 0;
+
+	/**
+	 * 以下为语音转字动画的dialog
+	 *
+	 */
+	private Timer timer;
+	private TimerTask timerTask;
+	private int count = 0;
+	private List<ImageView> imageViewList = new ArrayList<>();
 
 	public AudioDialogManager(Context context) {
 		// TODO Auto-generated constructor stub
@@ -34,8 +46,6 @@ public class AudioDialogManager {
 	}
 
 	public void showRecordingDialog() {
-		// TODO Auto-generated method stub
-
 		dialog = new Dialog(mContext);
 		// 用layoutinflater来引用布局
 		dialog.getWindow().setBackgroundDrawable(new BitmapDrawable());
@@ -116,6 +126,75 @@ public class AudioDialogManager {
 			}
 		}
 
+	}
+
+	/**
+	 * 控制动画的handler
+	 */
+	private Handler handler = new Handler(){
+		@Override
+		public void handleMessage(Message msg) {
+			if(imageViewList != null && imageViewList.size()>0){
+				imageViewList.get(0).setVisibility(View.VISIBLE);
+				imageViewList.get(1).setVisibility((count % 2 == 0 || count % 3 == 0)?View.VISIBLE:View.INVISIBLE);
+				imageViewList.get(2).setVisibility((count % 3 == 0)?View.VISIBLE:View.INVISIBLE);
+			}
+		}
+	};
+
+	/**
+	 * 展示dialog
+	 */
+	public void showVoice2WordProgressDialog(){
+		if(dialog != null && dialog.isShowing()){
+			return;
+		}
+		timer = new Timer();
+		timerTask = new TimerTask() {
+			@Override
+			public void run() {
+				count = count + 1;
+				handler.sendEmptyMessage(count);
+			}
+		};
+		dialog = new Dialog(mContext);
+		// 用layoutinflater来引用布局
+		dialog.getWindow().setBackgroundDrawable(new BitmapDrawable());
+		dialog.getWindow().setDimAmount(0);
+		View view = LayoutInflater.from(mContext).inflate(R.layout.dialog_voice_word_manager, null);
+		dialog.setContentView(view);
+		imageViewList.add((ImageView) dialog.findViewById(R.id.iv_arrow_first));
+		imageViewList.add((ImageView) dialog.findViewById(R.id.iv_arrow_second));
+		imageViewList.add((ImageView) dialog.findViewById(R.id.iv_arrow_third));
+		dialog.setCancelable(false);
+		dialog.setCanceledOnTouchOutside(false);
+		dialog.show();
+		timer.schedule(timerTask,10,300);
+	}
+
+	/**
+	 * 取消dialog
+	 */
+	public void dismissVoice2WordProgressDialog(){
+		if(dialog != null){
+			dimissDialog();
+		}
+		destroyTimerAndData();
+	}
+
+	/**
+	 * 销毁timer和timertask
+	 */
+	private void destroyTimerAndData() {
+		if (timer != null) {
+			timer.cancel();
+			timer = null;
+		}
+		if (timerTask != null) {
+			timerTask.cancel();
+			timerTask = null;
+		}
+		count = 0;
 	}
 
 }

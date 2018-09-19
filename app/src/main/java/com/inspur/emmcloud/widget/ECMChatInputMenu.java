@@ -38,6 +38,7 @@ import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.audioformat.ConvertAudioFileFormatUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.Voice2StringMessageUtils;
+import com.inspur.emmcloud.widget.audiorecord.AudioDialogManager;
 import com.inspur.emmcloud.widget.audiorecord.AudioRecordButton;
 import com.inspur.emmcloud.widget.waveprogress.WaterWaveProgress;
 
@@ -110,6 +111,7 @@ public class ECMChatInputMenu extends LinearLayout {
     private List<VoiceResult> voiceResultList = new ArrayList<>();
     private List<String> mp3FilePathList = new ArrayList<>();
     private Map<String,Boolean> voiceBooleanMap = new HashMap<>();
+    private AudioDialogManager audioDialogManager;
 
     public ECMChatInputMenu(Context context) {
         this(context, null);
@@ -197,6 +199,8 @@ public class ECMChatInputMenu extends LinearLayout {
 
                         }
                     };
+                    audioDialogManager = new AudioDialogManager(getContext());
+                    audioDialogManager.showVoice2WordProgressDialog();
                     //转写和转文件格式同时进行
                     voice2StringMessageUtils.startVoiceListeningByVoiceFile(seconds,filePath);
                     ConvertAudioFileFormatUtils.getInstance().convertAudioFile2SpecifiedFormat(getContext(),filePath, AudioFormat.MP3,callback);
@@ -486,6 +490,9 @@ public class ECMChatInputMenu extends LinearLayout {
         String mp3VoiceFilePath = getVoiceFilePath(fileNameWithoutExtension);
         if (chatInputMenuListener != null) {
             chatInputMenuListener.onSendVoiceRecordMsg(voiceResult.getResults(),voiceResult.getSeconds(), mp3VoiceFilePath);
+        }
+        if(audioDialogManager != null){
+            audioDialogManager.dismissVoice2WordProgressDialog();
         }
         removeDataFromList(fileNameWithoutExtension);
     }
