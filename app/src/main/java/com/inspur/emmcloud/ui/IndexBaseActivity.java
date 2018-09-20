@@ -222,7 +222,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
     /**
      * 显示消息tab上的小红点（未读消息提醒）
      *
-     * @param eventMessageUnReadCount
+     * @param eventMessage
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void setMessageUnreadCount(SimpleEventMessage eventMessage) {
@@ -459,12 +459,31 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
                 @Override
                 public void run() {
                     //记录打开的tab页
-                    PVCollectModel pvCollectModel = new PVCollectModel(tabId, tabId);
+                    PVCollectModel pvCollectModel = new PVCollectModel(getMainTabName(tabId), tabId);
                     PVCollectModelCacheUtils.saveCollectModel(IndexBaseActivity.this, pvCollectModel);
                 }
             }).start();
             isSystemChangeTag = true;
         }
+    }
+
+    /**
+     * 根据tabId获取mainTab的name
+     * @param tabId
+     * @return
+     */
+    private String getMainTabName(String tabId){
+        String functionId = "";
+        String appTabs = PreferencesByUserAndTanentUtils.getString(this, Constant.PREF_APP_TAB_BAR_INFO_CURRENT,"");
+        ArrayList<MainTabResult> tabList = new GetAppMainTabResult(appTabs).getMainTabPayLoad().getMainTabResultList();
+        for (int i = 0; i < tabList.size(); i++) {
+            MainTabResult mainTabResult = tabList.get(i);
+            if(mainTabResult.getUri().equals(tabId)){
+                functionId = mainTabResult.getName();
+                break;
+            }
+        }
+        return functionId;
     }
 
     /**
