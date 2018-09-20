@@ -78,6 +78,14 @@ public class MessageMatheSetCacheUtils {
 		return null;
 
 	}
+
+	public static void clearMessageMatheSet(Context context){
+		try {
+			DbCacheUtils.getDb(context).delete(MessageMatheSet.class);
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+	}
 	
 
 
