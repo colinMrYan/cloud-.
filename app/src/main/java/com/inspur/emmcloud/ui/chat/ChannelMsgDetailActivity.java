@@ -54,7 +54,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -394,15 +393,8 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
                     .findViewById(R.id.msg_img);
             final Comment comment = commentList.get(position);
             userNameText.setText(comment.getTitle());
-            String source = comment.getSource();
             contentText.setMovementMethod(LinkMovementMethod.getInstance());
-            String mentionsString = comment.getMentions();
-            String urlsString = comment.getUrls();
-            String[] mentions = mentionsString.replace("[", "").replace("]", "").split(",");
-            String[] urls = urlsString.replace("[", "").replace("]", "").split(",");
-            List<String> mentionList = Arrays.asList(mentions);
-            List<String> urlList = Arrays.asList(urls);
-            SpannableString spannableString = MentionsAndUrlShowUtils.handleMentioin(source, mentionList, urlList);
+            SpannableString spannableString = MentionsAndUrlShowUtils.getMsgContentSpannableString(comment.getMsgBody());
             contentText.setText(spannableString);
             TransHtmlToTextUtils.stripUnderlines(contentText,
                     Color.parseColor("#0f7bca"));
