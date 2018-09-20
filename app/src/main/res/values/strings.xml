@@ -1050,4 +1050,8 @@
     <string name="error_unknown">无法识别的错误</string>
     <string name="corrected_speech_input">校正自动识别文字</string>
     <string name="corrected_word_input">[校正]</string>
+    <string name="voice_word_voice">语</string>
+    <string name="voice_word_word">字</string>
+    <string name="voice_word_tran">正在语音转文字</string>
+    <string name="voice_word_setting">语音自动识别</string>
 </resources>

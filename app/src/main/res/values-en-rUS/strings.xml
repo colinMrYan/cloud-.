@@ -999,4 +999,8 @@
     <string name="error_unknown">Unrecognized errors</string>
     <string name="corrected_speech_input">Automatic text recognition</string>
     <string name="corrected_word_input">[Correcting]</string>
+    <string name="voice_word_voice">Voice</string>
+    <string name="voice_word_word">Word</string>
+    <string name="voice_word_tran">Voice to text</string>
+    <string name="voice_word_setting">Automatic speech recognition</string>
 </resources>

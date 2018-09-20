@@ -264,7 +264,7 @@
                 android:layout_marginLeft="12dp"
                 android:paddingBottom="10dp"
                 android:paddingTop="10dp"
-                android:text="语音自动识别"
+                android:text="@string/voice_word_setting"
                 android:textSize="@dimen/content_normal_textsize" />
 
             <com.inspur.emmcloud.widget.SwitchView

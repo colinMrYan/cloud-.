@@ -26,14 +26,13 @@ public class AudioDialogManager {
 	 */
 	private Dialog dialog;
 	private ImageView recorderImg;
-	private TextView lableText;
+	private TextView labelText;
 	private Context mContext;
 	private boolean isStatusRecording = false;
 	private float recordTime = 0;
 
 	/**
 	 * 以下为语音转字动画的dialog
-	 *
 	 */
 	private Timer timer;
 	private TimerTask timerTask;
@@ -53,7 +52,7 @@ public class AudioDialogManager {
 		View view = LayoutInflater.from(mContext).inflate(R.layout.dialog_record_manager, null);
 		dialog.setContentView(view);
 		recorderImg = (ImageView) dialog.findViewById(R.id.iv_recorder);
-		lableText = (TextView) dialog.findViewById(R.id.tv_recorder);
+		labelText = (TextView) dialog.findViewById(R.id.tv_recorder);
 		dialog.setCancelable(false);
 		dialog.setCanceledOnTouchOutside(false);
 		dialog.show();
@@ -68,11 +67,11 @@ public class AudioDialogManager {
 			isStatusRecording = true;
 			recorderImg.setImageResource(R.drawable.ic_recorder_volume_level_v1);
 			if (recordTime>=51){
-				lableText.setText(mContext.getString(R.string.record_count_down_text,(60-(int)recordTime)));
+				labelText.setText(mContext.getString(R.string.record_count_down_text,(60-(int)recordTime)));
 			}else {
-				lableText.setText(R.string.slide_up_to_cancel);
+				labelText.setText(R.string.slide_up_to_cancel);
 			}
-			lableText.setBackgroundColor(ContextCompat.getColor(mContext,android.R.color.transparent));
+			labelText.setBackgroundColor(ContextCompat.getColor(mContext,android.R.color.transparent));
 		}
 	}
 
@@ -84,8 +83,8 @@ public class AudioDialogManager {
 		if (dialog != null && dialog.isShowing()) {
 			isStatusRecording= false;
 			recorderImg.setImageResource(R.drawable.ic_recorder_cancel);
-			lableText.setText(R.string.release_to_cancel);
-			lableText.setBackgroundResource(R.drawable.bg_record_dialog_text);
+			labelText.setText(R.string.release_to_cancel);
+			labelText.setBackgroundResource(R.drawable.bg_record_dialog_text);
 		}
 
 	}
@@ -96,8 +95,8 @@ public class AudioDialogManager {
 		if (dialog != null && dialog.isShowing()) {
 			isStatusRecording= false;
 			recorderImg.setImageResource(R.drawable.ic_recorder_too_short);
-			lableText.setText(R.string.recording_too_short);
-			lableText.setBackgroundColor(ContextCompat.getColor(mContext,android.R.color.transparent));
+			labelText.setText(R.string.recording_too_short);
+			labelText.setBackgroundColor(ContextCompat.getColor(mContext,android.R.color.transparent));
 		}
 
 	}
@@ -122,12 +121,13 @@ public class AudioDialogManager {
 					"drawable", mContext.getPackageName());
 			recorderImg.setImageResource(resId);
 			if (recordTime>=51){
-				lableText.setText(mContext.getString(R.string.record_count_down_text,(60-(int)recordTime)));
+				labelText.setText(mContext.getString(R.string.record_count_down_text,(60-(int)recordTime)));
 			}
 		}
 
 	}
 
+	/**以下是语音转字动画UI部分**/
 	/**
 	 * 控制动画的handler
 	 */
@@ -183,7 +183,7 @@ public class AudioDialogManager {
 	}
 
 	/**
-	 * 销毁timer和timertask
+	 * 销毁timer和timertask，清空count
 	 */
 	private void destroyTimerAndData() {
 		if (timer != null) {
