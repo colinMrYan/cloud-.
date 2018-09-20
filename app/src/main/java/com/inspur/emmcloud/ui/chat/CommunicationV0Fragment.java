@@ -1088,7 +1088,7 @@ public class CommunicationV0Fragment extends Fragment {
      * @param channelList
      */
     private void firstEnterToSetAllChannelMsgRead(List<Channel> channelList) {
-        if (!DbCacheUtils.tableIsExist("MessageReadCreationDate")) {
+        if (!DbCacheUtils.tableIsExist(null,"MessageReadCreationDate")) {
             List<MessageReadCreationDate> MessageReadCreationDateList = new ArrayList<>();
             for (Channel channel : channelList) {
                 MessageReadCreationDateList.add(new MessageReadCreationDate(channel.getCid(), System.currentTimeMillis()));
