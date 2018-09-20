@@ -375,7 +375,6 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
         return mineTabResult;
     }
 
-
     /**
      * 根据语言设置tab，扩展语言从这里扩展
      *
@@ -463,6 +462,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
+            //如果是通讯录tab逐级返回功能，发送到ContactSearchFragment  updateUI方法
             if (tabId.equals(Constant.APP_TAB_BAR_CONTACT)) {
                 ContactClickMessage contactClickMessage = new ContactClickMessage();
                 contactClickMessage.setTabId(Constant.APP_TAB_BAR_CONTACT);
@@ -478,7 +478,6 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
             return true;
         }
         return super.onKeyDown(keyCode, event);
-
     }
 
     @Override
@@ -493,6 +492,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
 
     @Override
     public void onTabChanged(final String tabId) {
+        this.tabId = tabId;
         tipsView.setCanTouch(tabId.equals(Constant.APP_TAB_BAR_COMMUNACATE));
         if (!isSystemChangeTag) {
             new Thread(new Runnable() {
