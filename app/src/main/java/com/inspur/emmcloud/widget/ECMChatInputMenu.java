@@ -531,12 +531,12 @@ public class ECMChatInputMenu extends LinearLayout {
                 params.height = otherLayoutView.getHeight();
                 params.weight = 0.0F;
             } else {
-                new Handler().postDelayed(new Runnable() {
+                new Handler().post(new Runnable() {
                     @Override
                     public void run() {
                         params.weight = 1.0F;
                     }
-                }, 200);
+                });
             }
         }
     }
