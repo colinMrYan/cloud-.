@@ -38,7 +38,7 @@ public class DbCacheUtils {
                 .setDbName("emm.db")
                 // 不设置dbDir时, 默认存储在app的私有目录.
                 .setDbDir(new File(dbCachePath))
-                .setDbVersion(13)
+                .setDbVersion(14)
                 .setAllowTransaction(true)
                 .setDbOpenListener(new DbManager.DbOpenListener() {
                     @Override
@@ -58,72 +58,55 @@ public class DbCacheUtils {
                                 db.dropTable(Channel.class);
                             }
                             if (oldVersion < 6) {
-                                if (tableIsExist("com_inspur_emmcloud_bean_Contact")) {
+                                if (tableIsExist(db,"com_inspur_emmcloud_bean_Contact")) {
                                     db.execNonQuery("alter table com_inspur_emmcloud_bean_Contact rename to Contact");
                                     db.execNonQuery("alter table Contact add lastUpdateTime String");
                                 }
 
-                                if (tableIsExist("com_inspur_emmcloud_bean_Channel")) {
+                                if (tableIsExist(db,"com_inspur_emmcloud_bean_Channel")) {
                                     db.execNonQuery("alter table com_inspur_emmcloud_bean_Channel rename to Channel");
                                 }
 
-                                if (tableIsExist("com_inspur_emmcloud_bean_ChannelOperationInfo")) {
+                                if (tableIsExist(db,"com_inspur_emmcloud_bean_ChannelOperationInfo")) {
                                     db.execNonQuery("alter table com_inspur_emmcloud_bean_ChannelOperationInfo rename to ChannelOperationInfo");
                                 }
 
-                                if (tableIsExist("com_inspur_emmcloud_bean_SearchModel")) {
+                                if (tableIsExist(db,"com_inspur_emmcloud_bean_SearchModel")) {
                                     db.execNonQuery("alter table com_inspur_emmcloud_bean_SearchModel rename to SearchModel");
                                 }
-                                if (tableIsExist("com_inspur_emmcloud_bean_MyCalendarOperation")) {
+                                if (tableIsExist(db,"com_inspur_emmcloud_bean_MyCalendarOperation")) {
                                     db.execNonQuery("alter table com_inspur_emmcloud_bean_MyCalendarOperation rename to MyCalendarOperation");
                                 }
 
-                                if (tableIsExist("com_inspur_emmcloud_bean_Robot")) {
+                                if (tableIsExist(db,"com_inspur_emmcloud_bean_Robot")) {
                                     db.execNonQuery("alter table com_inspur_emmcloud_bean_Robot rename to Robot");
                                 }
 
-                                if (tableIsExist("com_inspur_emmcloud_bean_AppOrder")) {
+                                if (tableIsExist(db,"com_inspur_emmcloud_bean_AppOrder")) {
                                     db.execNonQuery("alter table com_inspur_emmcloud_bean_AppOrder rename to AppOrder");
                                 }
 
                             }
                             if (oldVersion < 7) {
                                 db.dropTable(PVCollectModel.class);
-
                             }
                             if (oldVersion < 8) {
-                                if (tableIsExist("Contact")) {
+                                if (tableIsExist(db,"Contact")) {
                                     db.execNonQuery("CREATE INDEX contactindex ON Contact(inspurID)");
                                 }
 
                             }
                             if (oldVersion < 9) {
                                 db.dropTable(Msg.class);
-                                if (tableIsExist("MsgReadId")) {
-                                    db.execNonQuery("DROP TABLE MsgReadId");
-                                }
-                                if (tableIsExist("MsgMatheSet")) {
-                                    db.execNonQuery("DROP TABLE MsgMatheSet");
-                                }
+                                db.execNonQuery("DROP TABLE IF EXISTS MsgReadId");
+                                db.execNonQuery("DROP TABLE IF EXISTS MsgMatheSet");
                             }
-                            if (oldVersion < 10) {
-                                if (tableIsExist("Contact")) {
-                                    db.execNonQuery("DROP TABLE Contact");
-                                }
-                            }
-                            if (oldVersion<12){
-                                if (tableIsExist("ContactUser")) {
-                                    db.execNonQuery("DROP TABLE ContactUser");
-                                    ContactUserCacheUtils.setLastQueryTime(0);
-                                }
-                            }
-                            if (oldVersion<13){
-                                if (tableIsExist("Message")) {
-                                    db.execNonQuery("DROP TABLE Message");
-                                }
-                                if (tableIsExist("MessageMatheSet")){
-                                    db.execNonQuery("DROP TABLE MessageMatheSet");
-                                }
+                            if (oldVersion<14){
+                                db.execNonQuery("DROP TABLE IF EXISTS Contact");
+                                db.execNonQuery("DROP TABLE IF EXISTS ContactUser");
+                                ContactUserCacheUtils.setLastQueryTime(0);
+                                db.execNonQuery("DROP TABLE IF EXISTS Message");
+                                db.execNonQuery("DROP TABLE IF EXISTS MessageMatheSet");
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -141,15 +124,19 @@ public class DbCacheUtils {
         return db == null;
     }
 
-    public static boolean tableIsExist(String tabName) {
+    public static boolean tableIsExist(DbManager dbManager,String tabName) {
         boolean result = false;
         if (tabName == null) {
             return false;
         }
-        if (db == null) {
+        SQLiteDatabase sqliteDatabase =null;
+        if (dbManager != null){
+            sqliteDatabase = dbManager.getDatabase();
+        }else if(db != null){
+            sqliteDatabase = db.getDatabase();
+        }else {
             return false;
         }
-        SQLiteDatabase sqliteDatabase = db.getDatabase();
         Cursor cursor = null;
         try {
             String sql = "select count(*) as c from sqlite_master where type ='table' and name ='" + tabName.trim() + "' ";
