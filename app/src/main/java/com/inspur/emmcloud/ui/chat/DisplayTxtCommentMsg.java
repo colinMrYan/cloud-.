@@ -14,9 +14,7 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.bean.chat.Msg;
-import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.MentionsAndUrlShowUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.TransHtmlToTextUtils;
@@ -24,9 +22,6 @@ import com.inspur.emmcloud.util.privates.cache.MsgCacheUtil;
 import com.inspur.emmcloud.widget.TextViewWithSpan;
 import com.inspur.emmcloud.widget.bubble.ArrowDirection;
 import com.inspur.emmcloud.widget.bubble.BubbleLayout;
-
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * DisplayTxtCommentMsg
@@ -56,23 +51,7 @@ public class DisplayTxtCommentMsg {
         cardLayout.setArrowDirection(isMyMsg? ArrowDirection.RIGHT:ArrowDirection.LEFT);
         cardLayout.setBubbleColor(context.getResources().getColor(isMyMsg ? R.color.bg_my_card : R.color.white));
         cardLayout.setStrokeWidth(isMyMsg ?0: 0.5f);
-        String commentContent = JSONUtils.getString(msgBody, "source", "");
-        String[] mentions = JSONUtils.getString(msgBody, "mentions", "")
-                .replace("[", "").replace("]", "").split(",");
-        String[] urls = JSONUtils.getString(msgBody, "urlList", "")
-                .replace("[", "").replace("]", "").split(",");
-        List<String> mentionList = Arrays.asList(mentions);
-        List<String> urlList = Arrays.asList(urls);
-
-        if (StringUtils.isBlank(commentContent)) {
-            commentContent = msg.getCommentContent();
-        }
-        // 为了兼容原来的评论类型的消息
-        if (StringUtils.isBlank(commentContent)) {
-            commentContent = JSONUtils.getString(msgBody, "content", "");
-        }
-        SpannableString spannableString = MentionsAndUrlShowUtils
-                .handleMentioin(commentContent, mentionList, urlList);
+        SpannableString spannableString = MentionsAndUrlShowUtils.getMsgContentSpannableString(msgBody);
         commentContentText.setText(spannableString);
         TransHtmlToTextUtils.stripUnderlines(
                 commentContentText,

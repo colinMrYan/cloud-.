@@ -4,6 +4,7 @@ import android.text.SpannableStringBuilder;
 import android.util.Pair;
 import android.util.SparseArray;
 
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.zzhoujay.markdown.parser.Line;
 import com.zzhoujay.markdown.parser.LineQueue;
 import com.zzhoujay.markdown.parser.StyleBuilder;
@@ -24,13 +25,15 @@ public class TagHandlerImpl implements TagHandler {
     private static final Pattern patternH1_2 = Pattern.compile("^\\s*=+\\s*$");
     private static final Pattern patternH2_2 = Pattern.compile("^\\s*-+\\s*$");
 
-    private static final Pattern patternH = Pattern.compile("^\\s*#{1,6}\\s*([^#]*)(\\s*#)?");
-    private static final Pattern patternH1 = Pattern.compile("^\\s*#\\s*([^#]*)(\\s*#)?");
-    private static final Pattern patternH2 = Pattern.compile("^\\s*#{2}\\s*([^#]*)(\\s*#)?");
-    private static final Pattern patternH3 = Pattern.compile("^\\s*#{3}\\s*([^#]*)(\\s*#)?");
-    private static final Pattern patternH4 = Pattern.compile("^\\s*#{4}\\s*([^#]*)(\\s*#)?");
-    private static final Pattern patternH5 = Pattern.compile("^\\s*#{5}\\s*([^#]*)(\\s*#)?");
-    private static final Pattern patternH6 = Pattern.compile("^\\s*#{6}\\s*([^#]*)(\\s*#)?");
+    private static final Pattern patternH = Pattern.compile("^\\s*#{1,6} \\s*([^#]*)(\\s*#)?");
+    private static final Pattern patternH1 = Pattern.compile("^\\s*# \\s*([^#]*)(\\s*#)?");
+    private static final Pattern patternH2 = Pattern.compile("^\\s*#{2} \\s*([^#]*)(\\s*#)?");
+    private static final Pattern patternH3 = Pattern.compile("^\\s*#{3} \\s*([^#]*)(\\s*#)?");
+    private static final Pattern patternH4 = Pattern.compile("^\\s*#{4} \\s*([^#]*)(\\s*#)?");
+    private static final Pattern patternH5 = Pattern.compile("^\\s*#{5} \\s*([^#]*)(\\s*#)?");
+    private static final Pattern patternH6 = Pattern.compile("^\\s*#{6} \\s*([^#]*)(\\s*#)?");
+
+
 
     private static final Pattern patternQuota = Pattern.compile("^\\s{0,3}>\\s(.*)");
     private static final Pattern patternUl = Pattern.compile("^\\s*[*+-]\\s+(.*)");

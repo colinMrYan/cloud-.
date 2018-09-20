@@ -89,12 +89,6 @@ public class Msg implements Serializable {
                     this.avatar = jsonObject.getString("avatar");
                 }
             }
-            if (type.equals("txt_comment")) {
-                JSONObject bodyJsonObject = new JSONObject(body);
-                if (bodyJsonObject.has("content")) {
-                    this.commentContent = bodyJsonObject.getString("content");
-                }
-            }
             if (obj.has("privates")) {
                 this.privates = obj.getString("privates");
             }
@@ -137,9 +131,9 @@ public class Msg implements Serializable {
         return avatar;
     }
 
-    public String getCommentContent() {
-        return commentContent;
-    }
+//    public String getCommentContent() {
+//        return commentContent;
+//    }
 
     public int getSendStatus() {
         return sendStatus;
