@@ -16,6 +16,7 @@ public class MainTabResult {
     private boolean selected;
     private MainTabTitleResult mainTabTitleResult;
     private MainTabProperty mainTabProperty;
+    public MainTabResult(){}
     public MainTabResult(JSONObject jsonObject){
         this.name = JSONUtils.getString(jsonObject,"name","");
         this.type = JSONUtils.getString(jsonObject,"type","");
