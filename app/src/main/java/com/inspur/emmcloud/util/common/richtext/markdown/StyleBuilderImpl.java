@@ -14,7 +14,6 @@ import android.text.style.QuoteSpan;
 import android.text.style.StrikethroughSpan;
 import android.widget.TextView;
 
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.zzhoujay.markdown.parser.StyleBuilder;
 import com.zzhoujay.markdown.style.CodeSpan;
 import com.zzhoujay.markdown.style.EmailSpan;
@@ -41,10 +40,10 @@ public class StyleBuilderImpl implements StyleBuilder {
     private static  int h_under_line_color = Color.parseColor("#eeeeee");
 
     private static final float scale_h1 = 2.25f;
-    private static final float scale_h2 = 1.75f;
-    private static final float scale_h3 = 1.5f;
-    private static final float scale_h4 = 1.25f;
-    private static final float scale_h5 = 1, scale_h6 = 1;
+    private static final float scale_h2 = 2.0f;
+    private static final float scale_h3 = 1.75f;
+    private static final float scale_h4 = 1.5f;
+    private static final float scale_h5 = 1.25F, scale_h6 = 1;
     private static final float scale_normal = 1;
 
     private WeakReference<TextView> textViewWeakReference;
@@ -245,25 +244,22 @@ public class StyleBuilderImpl implements StyleBuilder {
 
     private SpannableStringBuilder hWithUnderLine(CharSequence charSequence, float s) {
         SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(charSequence);
-        int start = 0;
+        //int start = 0;
         FontSpan fontSpan = new FontSpan(s, Typeface.BOLD, h1_color);
         spannableStringBuilder.setSpan(fontSpan, 0, spannableStringBuilder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        Drawable underLine = new ColorDrawable(h_under_line_color);
-        UnderLineSpan underLineSpan = new UnderLineSpan(underLine, getTextViewRealWidth(), 5);
-        spannableStringBuilder.append('\n');
-        start += charSequence.length() + 1;
-        spannableStringBuilder.append(" ");
-        spannableStringBuilder.setSpan(underLineSpan, start, spannableStringBuilder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        //去除标题的下划线
+//        Drawable underLine = new ColorDrawable(h_under_line_color);
+//        UnderLineSpan underLineSpan = new UnderLineSpan(underLine, getTextViewRealWidth(), 5);
+//        spannableStringBuilder.append('\n');
+//        start += charSequence.length() + 1;
+//        spannableStringBuilder.append(" ");
+//        spannableStringBuilder.setSpan(underLineSpan, start, spannableStringBuilder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         return spannableStringBuilder;
     }
 
     private int getTextViewRealWidth() {
         TextView textView = textViewWeakReference.get();
         if (textView != null) {
-            LogUtils.jasonDebug("textView.getWidth()="+textView.getWidth());
-            LogUtils.jasonDebug("textView.getPaddingRight()="+textView.getPaddingRight());
-            LogUtils.jasonDebug("textView.getPaddingLeft()="+textView.getPaddingLeft());
-
             return textView.getWidth() - textView.getPaddingRight() - textView.getPaddingLeft();
         }
         return 0;
@@ -273,7 +269,6 @@ public class StyleBuilderImpl implements StyleBuilder {
     public SpannableStringBuilder gap() {
         SpannableStringBuilder builder = new SpannableStringBuilder(" ");
         Drawable underLine = new ColorDrawable(h_under_line_color);
-        LogUtils.jasonDebug("getTextViewRealWidth()="+getTextViewRealWidth());
         UnderLineSpan underLineSpan = new UnderLineSpan(underLine, getTextViewRealWidth(), 10);
         builder.setSpan(underLineSpan, 0, builder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         return builder;

@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.bean.chat;
 
+import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 
 import org.json.JSONObject;
@@ -7,8 +8,6 @@ import org.json.JSONObject;
 import java.io.Serializable;
 
 public class Comment implements Serializable{
-
-	
 	private String mid = "";
 	private String uid = "";
     private String title= "";
@@ -19,8 +18,7 @@ public class Comment implements Serializable{
 	private String preview = "";
 	private String content = "";
 	private String source = "";
-	private String mentions = "";
-	private String urls = "";
+	private String msgBody = "";
 	public Comment (String title,String content,String uid,Long time){
 		this.title = title;
 		this.source = content;
@@ -80,34 +78,7 @@ public class Comment implements Serializable{
 				type = jsonObject.getString("type");
 			}
 			if(jsonObject.has("body")){
-				JSONObject jsonBody = null;
-				try {
-					jsonBody = jsonObject.getJSONObject("body");
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				
-				if (jsonBody == null) {
-					if(jsonObject.has("body")){
-						jsonBody = new JSONObject(jsonObject.getString("body"));
-					}
-				}
-				
-				if (jsonBody.has("content")) {
-					content = jsonBody.getString("content");
-				}
-				
-				if(jsonBody.has("source")){
-					this.source = jsonBody.getString("source");
-				}
-				
-				if(jsonBody.has("mentions")){
-					this.mentions = jsonBody.getString("mentions");
-				}
-				
-				if(jsonBody.has("urlList")){
-					this.urls = jsonBody.getString("urlList");
-				}
+				msgBody = JSONUtils.getString(jsonObject,"body","");
 			}
 			
 			
@@ -176,21 +147,11 @@ public class Comment implements Serializable{
 		this.source = source;
 	}
 
-	public String getMentions() {
-		return mentions;
+	public String getMsgBody() {
+		return msgBody;
 	}
 
-	public void setMentions(String mentions) {
-		this.mentions = mentions;
+	public void setMsgBody(String msgBody) {
+		this.msgBody = msgBody;
 	}
-
-	public String getUrls() {
-		return urls;
-	}
-
-	public void setUrls(String urls) {
-		this.urls = urls;
-	}
-	
-	
 }
