@@ -14,7 +14,6 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.APIUri;
-import com.inspur.emmcloud.api.apiservice.LoginAPIService;
 import com.inspur.emmcloud.api.apiservice.MineAPIService;
 import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.bean.mine.Enterprise;
@@ -63,7 +62,6 @@ public class MyInfoActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_info);
         initView();
-        getUserProfile();
         getUserInfoConfig();
         showMyInfo();
 
@@ -91,21 +89,16 @@ public class MyInfoActivity extends BaseActivity {
                 .getChannelImgUrl(MyInfoActivity.this, getMyInfoResult.getID());
         ImageDisplayUtils.getInstance().displayImage(userHeadImg, photoUri, R.drawable.icon_photo_default);
         String userName = getMyInfoResult.getName();
-        ((TextView) findViewById(R.id.myinfo_username_text)).setText(userName.equals("null") ? getString(R.string.not_set) : userName);
+        ((TextView) findViewById(R.id.myinfo_username_text)).setText((StringUtils.isBlank(userName) ||userName.equals("null")) ? getString(R.string.not_set) : userName);
         String mail = getMyInfoResult.getMail();
-        userMailText.setText(mail.equals("null") ? getString(R.string.not_set) : mail);
+        userMailText.setText((StringUtils.isBlank(mail) ||mail.equals("null")) ? getString(R.string.not_set) : mail);
         String phoneNumber = getMyInfoResult.getPhoneNumber();
-        ((TextView) findViewById(R.id.myinfo_userphone_text)).setText(phoneNumber.equals("null") ? getString(R.string.not_set) : phoneNumber);
-        ((TextView) findViewById(R.id.myinfo_usercompanytext_text)).setText(((MyApplication) getApplicationContext()).getCurrentEnterprise().getName());
+        ((TextView) findViewById(R.id.myinfo_userphone_text)).setText((StringUtils.isBlank(phoneNumber) || phoneNumber.equals("null")) ? getString(R.string.not_set) : phoneNumber);
+        ((TextView) findViewById(R.id.myinfo_usercompanytext_text)).setText(MyApplication.getInstance().getCurrentEnterprise().getName());
+        List<Enterprise> enterpriseList = getMyInfoResult.getEnterpriseList();
+        findViewById(R.id.switch_enterprese_text).setVisibility((enterpriseList.size() > 1)?View.VISIBLE:View.GONE);
 
     }
-
-    private void dimissDlg() {
-        if (loadingDlg != null && loadingDlg.isShowing()) {
-            loadingDlg.dismiss();
-        }
-    }
-
 
     public void onClick(View v) {
         // TODO Auto-generated method stub
@@ -237,21 +230,6 @@ public class MyInfoActivity extends BaseActivity {
     }
 
     /**
-     * 设置多企业切换按钮的显示和隐藏
-     */
-    private void setSwitchEnterpriseState() {
-        if (getMyInfoResult == null) {
-            String myInfo = PreferencesUtils.getString(this, "myInfo", "");
-            getMyInfoResult = new GetMyInfoResult(myInfo);
-        }
-        List<Enterprise> enterpriseList = getMyInfoResult.getEnterpriseList();
-        if (enterpriseList.size() > 1) {
-            (findViewById(R.id.switch_enterprese_text)).setVisibility(View.VISIBLE);
-        }
-    }
-
-
-    /**
      * 上传用户头像
      *
      * @param
@@ -262,20 +240,6 @@ public class MyInfoActivity extends BaseActivity {
             loadingDlg.show();
             photoLocalPath = photoPath;
             apiService.updateUserHead(photoPath);
-        }
-    }
-
-    /**
-     * 获取用户profile信息
-     */
-    private void getUserProfile() {
-        if (NetUtils.isNetworkConnected(MyInfoActivity.this, false)) {
-            LoginAPIService apiServices = new LoginAPIService(MyInfoActivity.this);
-            apiServices.setAPIInterface(new WebService());
-            apiServices.getMyInfo();
-        } else {
-            dimissDlg();
-            setSwitchEnterpriseState();
         }
     }
 
@@ -294,10 +258,9 @@ public class MyInfoActivity extends BaseActivity {
     public class WebService extends APIInterfaceInstance {
 
         @Override
-        public void returnUploadMyHeadSuccess(
-                GetUploadMyHeadResult getUploadMyHeadResult) {
+        public void returnUploadMyHeadSuccess(GetUploadMyHeadResult getUploadMyHeadResult) {
             // TODO Auto-generated method stub
-            dimissDlg();
+            LoadingDialog.dimissDlg(loadingDlg);
             saveUpdateHeadTime();
             isUpdateUserPhoto = true;
             ImageDisplayUtils.getInstance().displayImage(userHeadImg, photoLocalPath);
@@ -310,7 +273,7 @@ public class MyInfoActivity extends BaseActivity {
         @Override
         public void returnUploadMyHeadFail(String error, int errorCode) {
             // TODO Auto-generated method stub
-            dimissDlg();
+            LoadingDialog.dimissDlg(loadingDlg);
             WebServiceMiddleUtils.hand(MyInfoActivity.this, error, errorCode);
         }
 
@@ -323,29 +286,6 @@ public class MyInfoActivity extends BaseActivity {
         @Override
         public void returnUserProfileConfigFail(String error, int errorCode) {
             setUserInfoConfig(null);
-        }
-
-        @Override
-        public void returnMyInfoSuccess(GetMyInfoResult getMyInfoResult) {
-            // TODO Auto-generated method stub
-            dimissDlg();
-            MyInfoActivity.this.getMyInfoResult = getMyInfoResult;
-            List<Enterprise> enterpriseList = getMyInfoResult.getEnterpriseList();
-            Enterprise defaultEnterprise = getMyInfoResult.getDefaultEnterprise();
-            if (enterpriseList.size() == 0 && defaultEnterprise == null){
-                ToastUtils.show(MyApplication.getInstance(),  R.string.user_not_bound_enterprise);
-                MyApplication.getInstance().signout();
-            }else {
-                PreferencesUtils.putString(MyInfoActivity.this, "myInfo", getMyInfoResult.getResponse());
-                showMyInfo();
-                setSwitchEnterpriseState();
-            }
-        }
-
-        @Override
-        public void returnMyInfoFail(String error, int errorCode) {
-            // TODO Auto-generated method stub
-            dimissDlg();
         }
     }
 
