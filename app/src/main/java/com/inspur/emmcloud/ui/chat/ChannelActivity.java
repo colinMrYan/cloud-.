@@ -298,7 +298,7 @@ public class ChannelActivity extends MediaPlayBaseActivity {
                 setChatDrafts();
             }
         });
-        chatInputMenu.setInputLayout(channel.getInputs());
+        chatInputMenu.setInputLayout(isSpecialUser?"1":channel.getInputs());
         String chatDrafts = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), MyAppConfig.getChannelDrafsPreKey(cid));
         if (chatDrafts != null){
             chatInputMenu.setChatDrafts(chatDrafts);

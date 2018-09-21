@@ -10,6 +10,7 @@ import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,7 +18,7 @@ import java.util.List;
  */
 
 public class MutilClusterUtils {
-    private static final String ECM_CHAT = "com.inspur.ecm.chat";
+    public static final String ECM_CHAT = "com.inspur.ecm.chat";
     private static final String ECM_SCHEDULE = "com.inspur.ecm.schedule";
     private static final String ECM_DISTRIBUTION = "com.inspur.ecm.distribution";
     private static final String ECM_NEWS = "com.inspur.ecm.news";
@@ -161,6 +162,21 @@ public class MutilClusterUtils {
             }
         }
         return null;
+    }
+
+    /**
+     * 获取ClusterBean
+     * @param serviceName
+     * @return
+     */
+    public static ClusterBean getClusterBean(String serviceName){
+        ArrayList<ClusterBean> clusterBeanArrayListOld = MyApplication.getInstance().getCurrentEnterprise().getClusterBeanList();
+        int index = clusterBeanArrayListOld.indexOf(new ClusterBean(serviceName));
+        ClusterBean clusterBean = null;
+        if (index != -1){
+            clusterBean = clusterBeanArrayListOld.get(index);
+        }
+        return clusterBean;
     }
 
 }

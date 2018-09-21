@@ -2,6 +2,7 @@ package com.inspur.emmcloud.util.privates;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Intent;
 import android.view.View;
 import android.widget.TextView;
 
@@ -9,11 +10,14 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.LoginAPIService;
+import com.inspur.emmcloud.bean.login.ClusterBean;
 import com.inspur.emmcloud.bean.mine.Enterprise;
 import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
 import com.inspur.emmcloud.bean.system.ClientConfigItem;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.interf.CommonCallBack;
+import com.inspur.emmcloud.push.WebSocketPush;
+import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -33,7 +37,8 @@ public class ProfileUtils {
     private CommonCallBack commonCallBack;
     private LoadingDialog loadingDialog;
     private String saveConfigVersion = "";
-    public ProfileUtils(Activity activity,CommonCallBack commonCallBack){
+
+    public ProfileUtils(Activity activity, CommonCallBack commonCallBack) {
         this.activity = activity;
         this.commonCallBack = commonCallBack;
         loadingDialog = new LoadingDialog(activity);
@@ -42,17 +47,15 @@ public class ProfileUtils {
     /**
      * 初始化Profile，如果已经有了直接用，如果没有则从网络获取
      */
-    public void initProfile(){
-       initProfile(true);
+    public void initProfile() {
+        initProfile(true);
     }
-    public void initProfile(boolean isShowLoadingDlg){
-        if(ClientConfigUpdateUtils.getInstance().isItemNeedUpdate(ClientConfigItem.CLIENT_CONFIG_ROUTER)){
+
+    public void initProfile(boolean isShowLoadingDlg) {
+        if (ClientConfigUpdateUtils.getInstance().isItemNeedUpdate(ClientConfigItem.CLIENT_CONFIG_ROUTER)) {
             getUserProfile(isShowLoadingDlg);
-        }else{
-            String appVersion = AppUtils.getVersion(activity);
-            PreferencesUtils.putString(activity, "previousVersion",
-                    appVersion);
-            if (commonCallBack != null){
+        } else {
+            if (commonCallBack != null) {
                 commonCallBack.execute();
             }
         }
@@ -104,20 +107,30 @@ public class ProfileUtils {
             LoadingDialog.dimissDlg(loadingDialog);
             List<Enterprise> enterpriseList = getMyInfoResult.getEnterpriseList();
             Enterprise defaultEnterprise = getMyInfoResult.getDefaultEnterprise();
-            if (enterpriseList.size() == 0 && defaultEnterprise == null){
-                ToastUtils.show(MyApplication.getInstance(),  R.string.user_not_bound_enterprise);
+            if (enterpriseList.size() == 0 && defaultEnterprise == null) {
+                ToastUtils.show(MyApplication.getInstance(), R.string.user_not_bound_enterprise);
                 MyApplication.getInstance().signout();
-            }else {
+            } else {
                 //存储上一个版本，不再有本地默认版本
-                PreferencesUtils.putString(activity, Constant.PREF_MY_INFO_OLD, PreferencesUtils.getString(activity, "myInfo", ""));
+                String myInfoOld = PreferencesUtils.getString(activity, "myInfo", "");
+                PreferencesUtils.putString(activity, Constant.PREF_MY_INFO_OLD, myInfoOld);
                 PreferencesUtils.putString(activity, "myInfo", getMyInfoResult.getResponse());
+                ClusterBean chatClusterBeanOld = MutilClusterUtils.getClusterBean(MutilClusterUtils.ECM_CHAT);
                 MyApplication.getInstance().initTanent();
-                String appVersion = AppUtils.getVersion(activity);
-                PreferencesUtils.putString(activity, "previousVersion",
-                        appVersion);
-                ClientConfigUpdateUtils.getInstance().saveItemLocalVersion(ClientConfigItem.CLIENT_CONFIG_ROUTER,saveConfigVersion);
-                if (commonCallBack != null){
+                ClusterBean chatClusterBeanNew = MutilClusterUtils.getClusterBean(MutilClusterUtils.ECM_CHAT);
+                ClientConfigUpdateUtils.getInstance().saveItemLocalVersion(ClientConfigItem.CLIENT_CONFIG_ROUTER, saveConfigVersion);
+                if (commonCallBack != null) {
                     commonCallBack.execute();
+                }
+                boolean isChatClusterBeanUnchanged = (chatClusterBeanOld == null && chatClusterBeanNew == null) || ((chatClusterBeanOld != null) && (chatClusterBeanNew != null) && (chatClusterBeanOld.getServiceVersion() == chatClusterBeanNew.getServiceVersion()));
+
+                if (!isChatClusterBeanUnchanged) {
+                    WebSocketPush.getInstance().closeWebsocket();
+                    Intent intentLog = new Intent(activity,
+                            IndexActivity.class);
+                    intentLog.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                            | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    activity.startActivity(intentLog);
                 }
             }
         }
@@ -126,7 +139,7 @@ public class ProfileUtils {
         public void returnMyInfoFail(String error, int errorCode) {
             LoadingDialog.dimissDlg(loadingDialog);
             //当统一更新接口无法返回正确消息，同时路由又无法获取成功时暂时不弹出提示框
-            if (!StringUtils.isBlank(saveConfigVersion)){
+            if (!StringUtils.isBlank(saveConfigVersion)) {
                 showPromptDialog();
             }
         }
@@ -135,10 +148,8 @@ public class ProfileUtils {
     /**
      * 转到LoginActivity
      */
-    private void startLoginActivity(){
+    private void startLoginActivity() {
         MyApplication.getInstance().signout();
         String appVersion = AppUtils.getVersion(activity);
-        PreferencesUtils.putString(activity.getApplicationContext(), "previousVersion",
-                appVersion);
     }
 }
