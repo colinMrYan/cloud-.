@@ -44,6 +44,9 @@ public class AudioDialogManager {
 		mContext = context;
 	}
 
+	/**
+	 * 展示录制音频dialog
+	 */
 	public void showRecordingDialog() {
 		dialog = new Dialog(mContext);
 		// 用layoutinflater来引用布局
@@ -86,10 +89,11 @@ public class AudioDialogManager {
 			labelText.setText(R.string.release_to_cancel);
 			labelText.setBackgroundResource(R.drawable.bg_record_dialog_text);
 		}
-
 	}
 
-	// 时间过短
+	/**
+	 * 录音过短
+	 */
 	public void tooShort() {
 		// TODO Auto-generated method stub
 		if (dialog != null && dialog.isShowing()) {
@@ -98,21 +102,27 @@ public class AudioDialogManager {
 			labelText.setText(R.string.recording_too_short);
 			labelText.setBackgroundColor(ContextCompat.getColor(mContext,android.R.color.transparent));
 		}
-
 	}
 
-	// 隐藏dialog
-	public void dimissDialog() {
+	/**
+	 * 	隐藏dialog
+	 *
+ 	 */
+	public void dismissRecordingDialog() {
 		// TODO Auto-generated method stub
 		recordTime = 0;
 		if (dialog != null && dialog.isShowing()) {
 			dialog.dismiss();
 			dialog = null;
 		}
-
 	}
 
-	public void updateVoiceLevel(int level,float time) {
+	/**
+	 * 更新音量和持续时间
+	 * @param level
+	 * @param time
+	 */
+	public void updateVoiceLevelAndDurationTime(int level, float time) {
 		// TODO Auto-generated method stub
 		recordTime = time;
 		if (dialog != null && dialog.isShowing() && isStatusRecording) {
@@ -124,7 +134,6 @@ public class AudioDialogManager {
 				labelText.setText(mContext.getString(R.string.record_count_down_text,(60-(int)recordTime)));
 			}
 		}
-
 	}
 
 	/**以下是语音转字动画UI部分**/
@@ -177,7 +186,7 @@ public class AudioDialogManager {
 	 */
 	public void dismissVoice2WordProgressDialog(){
 		if(dialog != null){
-			dimissDialog();
+			dismissRecordingDialog();
 		}
 		destroyTimerAndData();
 	}
@@ -196,5 +205,4 @@ public class AudioDialogManager {
 		}
 		count = 0;
 	}
-
 }

@@ -175,7 +175,7 @@ public class AudioRecordButton extends Button {
             switch (msg.what){
                 case VOICE_MESSAGE:
                     if( durationTime < 60.0){
-                        mDialogManager.updateVoiceLevel(volumeSize,durationTime);
+                        mDialogManager.updateVoiceLevelAndDurationTime(volumeSize,durationTime);
                     }else if(durationTime >= 60.0){
                         isRecording = false;
                         voiceRecordFinish();
@@ -262,7 +262,7 @@ public class AudioRecordButton extends Button {
      */
     private void voiceRecordFinish() {
         if(mDialogManager != null){
-            mDialogManager.dimissDialog();
+            mDialogManager.dismissRecordingDialog();
         }
         if(audioRecorderManager != null){
             audioRecorderManager.stopRecord();
