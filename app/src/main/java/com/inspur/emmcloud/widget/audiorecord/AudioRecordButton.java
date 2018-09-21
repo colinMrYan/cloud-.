@@ -5,16 +5,16 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 
 import com.czt.mp3recorder.MP3Recorder;
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.MediaPlayerManagerUtils;
+import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.shuyu.waveview.FileUtils;
 
@@ -85,6 +85,14 @@ public class AudioRecordButton extends Button {
                             changeState(STATE_RECORDING);
                             audioRecorderManager.startRecord();
                             mListener.onStartRecordingVoice();
+                        }
+
+                        @Override
+                        public void onAudioPrepareError() {
+                            if(mDialogManager != null){
+                                mDialogManager.dismissRecordingDialog();
+                            }
+                            ToastUtils.show(MyApplication.getInstance(),"当前录音设备不可用，请检查录音权限权限是否开启");
                         }
                     });
                     //按下开关，先调用准备Audio

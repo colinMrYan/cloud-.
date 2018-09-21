@@ -65,12 +65,18 @@ public class AudioRecorderManager {
      * @return
      */
     public void startRecord() {
-        audioRecord.startRecording();
-        // 让录制状态为true
-        isRecording = true;
-        beginTime = System.currentTimeMillis();
-        // 开启音频文件写入线程
-        new Thread(new AudioRecordThread()).start();
+        try {
+            audioRecord.startRecording();
+            // 让录制状态为true
+            isRecording = true;
+            beginTime = System.currentTimeMillis();
+            // 开启音频文件写入线程
+            new Thread(new AudioRecordThread()).start();
+        }catch (Exception e){
+            callBack.onAudioPrepareError();
+            e.printStackTrace();
+        }
+
     }
 
     /**
@@ -130,14 +136,18 @@ public class AudioRecorderManager {
      * 关闭，对内使用
      */
     private void close() {
-        reset();
-        if (audioRecord != null) {
-            isRecording = false;//停止文件写入
-            audioRecord.stop();
-            audioRecord.release();//释放资源
-            audioRecord = null;
+        try {
+            reset();
+            if (audioRecord != null) {
+                isRecording = false;//停止文件写入
+                audioRecord.stop();
+                audioRecord.release();//释放资源
+                audioRecord = null;
+            }
+            beginTime = 0;
+        }catch (Exception e){
+            e.printStackTrace();
         }
-        beginTime = 0;
     }
 
     /**
@@ -390,5 +400,6 @@ public class AudioRecorderManager {
     public interface AudioDataCallBack {
         void onDataChange(int volume, float duration);
         void onAudioPrepared(int state);
+        void onAudioPrepareError();
     }
 }
