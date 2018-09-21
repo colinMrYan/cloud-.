@@ -64,25 +64,32 @@ public class AudioRecorderManager {
      *
      * @return
      */
-    public int startRecord() {
+    public void startRecord() {
+        audioRecord.startRecording();
+        // 让录制状态为true
+        isRecording = true;
+        beginTime = System.currentTimeMillis();
+        // 开启音频文件写入线程
+        new Thread(new AudioRecordThread()).start();
+    }
+
+    /**
+     * 准备
+     * @return
+     */
+    public void prepareAudioRecord(){
         //判断是否有外部存储设备sdcard
         if (isSdcardExit()) {
             if (isRecording) {
-                return AudioRecordErrorCode.E_STATE_RECODING;
+                callBack.onAudioPrepared(AudioRecordErrorCode.E_STATE_RECODING);
             } else {
                 if (audioRecord == null) {
                     createAudioRecord();
                 }
-                audioRecord.startRecording();
-                // 让录制状态为true
-                isRecording = true;
-                beginTime = System.currentTimeMillis();
-                // 开启音频文件写入线程
-                new Thread(new AudioRecordThread()).start();
-                return AudioRecordErrorCode.SUCCESS;
+                callBack.onAudioPrepared(AudioRecordErrorCode.SUCCESS);
             }
         } else {
-            return AudioRecordErrorCode.E_NOSDCARD;
+            callBack.onAudioPrepared(AudioRecordErrorCode.E_NOSDCARD);
         }
     }
 
@@ -382,5 +389,6 @@ public class AudioRecorderManager {
      */
     public interface AudioDataCallBack {
         void onDataChange(int volume, float duration);
+        void onAudioPrepared(int state);
     }
 }

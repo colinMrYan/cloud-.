@@ -8,18 +8,15 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.czt.mp3recorder.MP3Recorder;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.MediaPlayerManagerUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.shuyu.waveview.FileUtils;
 
 import java.io.File;
-import java.io.IOException;
 
 public class AudioRecordButton extends Button {
 
@@ -80,8 +77,16 @@ public class AudioRecordButton extends Button {
                                 }
                             }
                         }
+
+                        @Override
+                        public void onAudioPrepared(int state) {
+                            changeState(STATE_RECORDING);
+                            audioRecorderManager.startRecord();
+                            mListener.onStartRecordingVoice();
+                        }
                     });
-                    audioRecorderManager.startRecord();
+                    //按下开关，先调用准备Audio
+                    audioRecorderManager.prepareAudioRecord();
                 }else{
                     mp3FilePath = getMp3FilePath()+AppUtils.generalFileName()+".mp3";
                     File file = new File(mp3FilePath);
@@ -217,8 +222,6 @@ public class AudioRecordButton extends Button {
         switch (action) {
             case MotionEvent.ACTION_DOWN:
                 playRecordStartMusic();
-                changeState(STATE_RECORDING);
-                mListener.onStartRecordingVoice();
                 break;
             case MotionEvent.ACTION_MOVE:
                 if (isRecording) {
@@ -234,6 +237,7 @@ public class AudioRecordButton extends Button {
                 // 如果按的时间太短，还没准备好或者时间录制太短，就离开了，则显示这个dialog
                 if (!isRecording || durationTime < 0.8f) {
                     mDialogManager.tooShort();
+                    //延迟500毫秒
                     handler.sendEmptyMessageDelayed(VOICE_DISMISS_DIALOG,500);
                 } else if (mCurrentState == STATE_RECORDING && (durationTime < 60)) {//正常录制结束
                     voiceRecordFinish();
