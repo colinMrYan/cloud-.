@@ -52,7 +52,6 @@ public class DisplayMediaVoiceMsg {
         durationText.setVisibility(View.VISIBLE);
         MsgContentMediaVoice msgContentMediaVoice = message.getMsgContentMediaVoice();
         TextView speechText = (TextView) cardContentView.findViewById(R.id.tv_voice_card_word);
-        speechText.setPadding(isMyMsg? DensityUtil.dip2px(context,10):0,0,isMyMsg?0:DensityUtil.dip2px(context,10),0);
         speechText.setText(msgContentMediaVoice.getResult());
         speechText.setTextColor(isMyMsg? Color.parseColor("#FFFFFF"):Color.parseColor("#666666"));
         int duration = msgContentMediaVoice.getDuration();
@@ -68,7 +67,7 @@ public class DisplayMediaVoiceMsg {
                 if (widthDip > 230) {
                     widthDip = 230;
                 }
-                LinearLayout.LayoutParams voiceLayoutParams = new LinearLayout.LayoutParams(DensityUtil.dip2px(context, widthDip), DensityUtil.dip2px(context, 42));
+                LinearLayout.LayoutParams voiceLayoutParams = new LinearLayout.LayoutParams(DensityUtil.dip2px(context, widthDip), LinearLayout.LayoutParams.WRAP_CONTENT);
                 voiceLayout.setLayoutParams(voiceLayoutParams);
                 break;
             default:

@@ -71,8 +71,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import cafe.adriel.androidaudioconverter.AndroidAudioConverter;
-import cafe.adriel.androidaudioconverter.callback.ILoadCallback;
 import cn.jpush.android.api.JPushInterface;
 
 import static com.inspur.emmcloud.config.MyAppConfig.LOCAL_CACHE_MARKDOWN_PATH;
@@ -156,23 +154,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         refreshToken = PreferencesUtils.getString(getInstance(), "refreshToken", "");
         //科大讯飞语音SDK初始化
         SpeechUtility.createUtility(this, SpeechConstant.APPID + "=5a6001bf");
-        initAudioConverter();
     }
-
-    /**
-     * 加载语音转换库
-     */
-    private void initAudioConverter() {
-        AndroidAudioConverter.load(this, new ILoadCallback() {
-            @Override
-            public void onSuccess() {
-            }
-            @Override
-            public void onFailure(Exception error) {
-            }
-        });
-    }
-
 
     /**
      * 单例获取application实例

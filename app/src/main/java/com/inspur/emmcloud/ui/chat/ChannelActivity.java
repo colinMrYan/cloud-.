@@ -82,6 +82,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import cafe.adriel.androidaudioconverter.AndroidAudioConverter;
+import cafe.adriel.androidaudioconverter.callback.ILoadCallback;
+
 import static android.R.attr.path;
 
 /**
@@ -130,6 +133,21 @@ public class ChannelActivity extends MediaPlayBaseActivity {
         registeRefreshNameReceiver();
         registeSendActionMsgReceiver();
         recordUserClickChannel();
+        initAudioConverter();
+    }
+
+    /**
+     * 加载语音转换库
+     */
+    private void initAudioConverter() {
+        AndroidAudioConverter.load(this, new ILoadCallback() {
+            @Override
+            public void onSuccess() {
+            }
+            @Override
+            public void onFailure(Exception error) {
+            }
+        });
     }
 
     // Activity在SingleTask的启动模式下多次打开传递Intent无效，用此方法解决

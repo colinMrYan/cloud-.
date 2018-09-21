@@ -49,8 +49,8 @@
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
+            android:paddingTop="0dp"
+            android:paddingBottom="0dp"
             >
 
             <View
@@ -58,17 +58,21 @@
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:visibility="gone"
+                android:layout_marginTop="11dp"
                 android:layout_marginLeft="10dp"
-                android:layout_marginRight="5dp"
                 android:background="@drawable/ic_chat_msg_card_voice_left_level_3" />
             <TextView
                 android:id="@+id/tv_voice_card_word"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:maxWidth="210dp"
+                android:minWidth="55dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:paddingRight="10dp"
+                android:textSize="16sp"
                 android:gravity="center_vertical"
                 android:layout_toRightOf="@id/v_voice_anim_left"
-                android:layout_centerVertical="true"
                 android:paddingLeft="10dp" />
 
             <View
@@ -77,7 +81,7 @@
                 android:layout_height="20dp"
                 android:visibility="gone"
                 android:layout_toRightOf="@id/tv_voice_card_word"
-                android:layout_marginLeft="10dp"
+                android:layout_marginTop="11dp"
                 android:layout_marginRight="10dp"
                 android:background="@drawable/ic_chat_msg_card_voice_left_level_3" />
         </RelativeLayout>
