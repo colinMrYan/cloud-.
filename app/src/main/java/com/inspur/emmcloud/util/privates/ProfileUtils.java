@@ -122,7 +122,7 @@ public class ProfileUtils {
                 if (commonCallBack != null) {
                     commonCallBack.execute();
                 }
-                boolean isChatClusterBeanUnchanged = (chatClusterBeanOld == null && chatClusterBeanNew == null) || ((chatClusterBeanOld != null) && (chatClusterBeanNew != null) && (chatClusterBeanOld.getServiceVersion() == chatClusterBeanNew.getServiceVersion()) && (chatClusterBeanOld.getBaseUrl() == chatClusterBeanNew.getBaseUrl()));
+                boolean isChatClusterBeanUnchanged = (chatClusterBeanOld == null && chatClusterBeanNew == null) || ((chatClusterBeanOld != null) && (chatClusterBeanNew != null) && (chatClusterBeanOld.getServiceVersion() == chatClusterBeanNew.getServiceVersion()));
 
                 if (!isChatClusterBeanUnchanged) {
                     WebSocketPush.getInstance().closeWebsocket();
