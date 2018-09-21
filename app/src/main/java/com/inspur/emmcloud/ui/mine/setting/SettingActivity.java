@@ -23,6 +23,7 @@ import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.service.BackgroundService;
 import com.inspur.emmcloud.service.CoreService;
 import com.inspur.emmcloud.ui.IndexActivity;
+import com.inspur.emmcloud.ui.chat.DisplayMediaVoiceMsg;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
@@ -30,6 +31,7 @@ import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.ClientConfigUpdateUtils;
 import com.inspur.emmcloud.util.privates.DataCleanManager;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
+import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.TabAndAppExistUtils;
 import com.inspur.emmcloud.util.privates.cache.AppConfigCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MyAppCacheUtils;
@@ -50,6 +52,7 @@ public class SettingActivity extends BaseActivity {
     private LoadingDialog loadingDlg;
     private SwitchView webAutoRotateSwitch;
     private SwitchView backgroundRunSwitch;
+    private SwitchView voice2WordSwitch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,9 +71,13 @@ public class SettingActivity extends BaseActivity {
         setWebAutoRotateState();
         webAutoRotateSwitch.setOnStateChangedListener(onStateChangedListener);
         backgroundRunSwitch = (SwitchView) findViewById(R.id.background_run_switch);
+        voice2WordSwitch = (SwitchView) findViewById(R.id.switch_voice_word);
         boolean isAppSetRunBackground = PreferencesUtils.getBoolean(getApplicationContext(), Constant.PREF_APP_RUN_BACKGROUND, false);
         backgroundRunSwitch.setOpened(isAppSetRunBackground);
         backgroundRunSwitch.setOnStateChangedListener(onStateChangedListener);
+        voice2WordSwitch.setOpened(PreferencesByUserAndTanentUtils.getInt(this, Constant.PREF_APP_OPEN_VOICE_WORD_SWITCH,
+                DisplayMediaVoiceMsg.IS_VOICE_WORD_CLOUSE) == DisplayMediaVoiceMsg.IS_VOICE_WORD_OPEN);
+        voice2WordSwitch.setOnStateChangedListener(onStateChangedListener);
     }
 
     private void setWebAutoRotateState() {
@@ -106,28 +113,43 @@ public class SettingActivity extends BaseActivity {
 
         @Override
         public void toggleToOn(View view) {
-            // TODO Auto-generated method stub
-            if (view.getId() != R.id.background_run_switch) {
-                AppConfig appConfig = new AppConfig(Constant.CONCIG_WEB_AUTO_ROTATE,"true");
-                AppConfigCacheUtils.saveAppConfig(MyApplication.getInstance(), appConfig);
-                setWebAutoRotateState();
-                saveWebAutoRotateConfig(true);
-            } else {
-                setAppRunBackground(true);
+            switch (view.getId()) {
+                case R.id.background_run_switch:
+                    setAppRunBackground(true);
+                    break;
+                case R.id.switch_voice_word:
+                    PreferencesByUserAndTanentUtils.putInt(SettingActivity.this, Constant.PREF_APP_OPEN_VOICE_WORD_SWITCH, DisplayMediaVoiceMsg.IS_VOICE_WORD_OPEN);
+                    voice2WordSwitch.setOpened(true);
+                    break;
+                case R.id.web_auto_rotate_switch:
+                    AppConfig appConfig = new AppConfig(Constant.CONCIG_WEB_AUTO_ROTATE, "true");
+                    AppConfigCacheUtils.saveAppConfig(MyApplication.getInstance(), appConfig);
+                    setWebAutoRotateState();
+                    saveWebAutoRotateConfig(true);
+                    break;
+                default:
+                    break;
             }
-
         }
 
         @Override
         public void toggleToOff(View view) {
-            // TODO Auto-generated method stub
-            if (view.getId() != R.id.background_run_switch) {
-                AppConfig appConfig = new AppConfig(Constant.CONCIG_WEB_AUTO_ROTATE,"false");
-                AppConfigCacheUtils.saveAppConfig(MyApplication.getInstance(), appConfig);
-                setWebAutoRotateState();
-                saveWebAutoRotateConfig(false);
-            } else {
-                setAppRunBackground(false);
+            switch (view.getId()) {
+                case R.id.background_run_switch:
+                    setAppRunBackground(false);
+                    break;
+                case R.id.switch_voice_word:
+                    PreferencesByUserAndTanentUtils.putInt(SettingActivity.this, Constant.PREF_APP_OPEN_VOICE_WORD_SWITCH, DisplayMediaVoiceMsg.IS_VOICE_WORD_CLOUSE);
+                    voice2WordSwitch.setOpened(false);
+                    break;
+                case R.id.web_auto_rotate_switch:
+                    AppConfig appConfig = new AppConfig(Constant.CONCIG_WEB_AUTO_ROTATE, "false");
+                    AppConfigCacheUtils.saveAppConfig(MyApplication.getInstance(), appConfig);
+                    setWebAutoRotateState();
+                    saveWebAutoRotateConfig(false);
+                    break;
+                default:
+                    break;
             }
 
         }
@@ -216,7 +238,7 @@ public class SettingActivity extends BaseActivity {
                         if (NetUtils.isNetworkConnected(getApplicationContext(),false) && MyApplication.getInstance().isV1xVersionChat() && isCommunicateExist){
                             loadingDlg.show();
                             WSAPIService.getInstance().sendAppStatus("REMOVED");
-                        }else {
+                        } else {
                             MyApplication.getInstance().signout();
                         }
                         stopAppService();

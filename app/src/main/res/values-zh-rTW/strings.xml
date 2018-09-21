@@ -994,4 +994,14 @@
     <string name="voice_communicaiton_watting_talking">通話中</string>
     <string name="voice_communication_quality">當前通話品質不佳</string>
     <string name="voice_communication_support_nine_members">雲+現時支持九人語音</string>
+
+    <string name="error_no_sdcard">沒有SD卡，無法存儲錄音數據</string>
+    <string name="error_state_record">正在錄音中，請先停止錄音</string>
+    <string name="error_unknown">無法識別的錯誤</string>
+    <string name="corrected_speech_input">校正自動識別文字</string>
+    <string name="corrected_word_input">[校正]</string>
+    <string name="voice_word_voice">語</string>
+    <string name="voice_word_word">字</string>
+    <string name="voice_word_tran">正在語音轉文字</string>
+    <string name="voice_word_setting">語音自動識別</string>
 </resources>

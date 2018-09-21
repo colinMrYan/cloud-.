@@ -1044,4 +1044,14 @@
     <string name="voice_communicaiton_watting_talking">通话中</string>
     <string name="voice_communication_quality">当前通话质量不佳</string>
     <string name="voice_communication_support_nine_members">云+目前支持九人语音</string>
+
+    <string name="error_no_sdcard">没有SD卡，无法存储录音数据</string>
+    <string name="error_state_record">正在录音中，请先停止录音</string>
+    <string name="error_unknown">无法识别的错误</string>
+    <string name="corrected_speech_input">校正自动识别文字</string>
+    <string name="corrected_word_input">[校正]</string>
+    <string name="voice_word_voice">语</string>
+    <string name="voice_word_word">字</string>
+    <string name="voice_word_tran">正在语音转文字</string>
+    <string name="voice_word_setting">语音自动识别</string>
 </resources>

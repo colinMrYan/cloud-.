@@ -156,7 +156,6 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         SpeechUtility.createUtility(this, SpeechConstant.APPID + "=5a6001bf");
     }
 
-
     /**
      * 单例获取application实例
      *

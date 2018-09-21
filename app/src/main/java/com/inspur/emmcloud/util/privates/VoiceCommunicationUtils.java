@@ -197,7 +197,9 @@ public class VoiceCommunicationUtils {
      * @param profile
      */
     public void setChannelProfile(int profile){
-        mRtcEngine.setChannelProfile(profile);
+        if(mRtcEngine != null){
+            mRtcEngine.setChannelProfile(profile);
+        }
     }
 
     /**
@@ -237,7 +239,7 @@ public class VoiceCommunicationUtils {
      * @return
      */
     public int renewToken(String token){
-        return mRtcEngine.renewToken(token);
+        return mRtcEngine != null?mRtcEngine.renewToken(token):-1;
     }
 
     /**
