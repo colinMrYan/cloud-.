@@ -32,6 +32,7 @@ public class AudioRecordButton extends Button {
     //上滑取消辅助变量
     private static final int DISTANCE_Y_CANCEL = 50;
     private static final int VOICE_MESSAGE = 4;
+    private static final int VOICE_DISMISS_DIALOG = 5;
     private int mCurrentState = STATE_NORMAL;
     // 已经开始录音
     private boolean isRecording = false;
@@ -166,19 +167,27 @@ public class AudioRecordButton extends Button {
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
-            if( durationTime < 60.0){
-                mDialogManager.updateVoiceLevel(volumeSize,durationTime);
-            }else if(durationTime >= 60.0){
-                isRecording = false;
-                voiceRecordFinish();
-                if(AppUtils.getIsVoiceWordOpen()){
-                    mListener.onFinished(60f,audioRecorderManager.getCurrentFilePath());
-                }else{
-                    reset();
+            switch (msg.what){
+                case VOICE_MESSAGE:
+                    if( durationTime < 60.0){
+                        mDialogManager.updateVoiceLevel(volumeSize,durationTime);
+                    }else if(durationTime >= 60.0){
+                        isRecording = false;
+                        voiceRecordFinish();
+                        if(AppUtils.getIsVoiceWordOpen()){
+                            mListener.onFinished(60f,audioRecorderManager.getCurrentFilePath());
+                        }else{
+                            reset();
+                            voiceRecordFinish();
+                            mListener.onFinished(60f,mp3FilePath);
+                        }
+                    }
+                    break;
+                case VOICE_DISMISS_DIALOG:
                     voiceRecordFinish();
-                    mListener.onFinished(60f,mp3FilePath);
-                }
+                    break;
             }
+
         }
     };
 
@@ -225,7 +234,7 @@ public class AudioRecordButton extends Button {
                 // 如果按的时间太短，还没准备好或者时间录制太短，就离开了，则显示这个dialog
                 if (!isRecording || durationTime < 0.8f) {
                     mDialogManager.tooShort();
-                    voiceRecordFinish();
+                    handler.sendEmptyMessageDelayed(VOICE_DISMISS_DIALOG,500);
                 } else if (mCurrentState == STATE_RECORDING && (durationTime < 60)) {//正常录制结束
                     voiceRecordFinish();
                     if (mListener != null) {// 并且callbackActivity，保存录音
