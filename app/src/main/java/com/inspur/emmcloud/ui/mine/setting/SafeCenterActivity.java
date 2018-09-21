@@ -2,6 +2,7 @@ package com.inspur.emmcloud.ui.mine.setting;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
@@ -14,9 +15,9 @@ import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
-import com.inspur.emmcloud.widget.LoadingDialog;
 
 import org.xutils.view.annotation.ContentView;
+import org.xutils.view.annotation.ViewInject;
 
 /**
  * 账号、设备安全
@@ -25,16 +26,21 @@ import org.xutils.view.annotation.ContentView;
 @ContentView(R.layout.activity_safe_center)
 public class SafeCenterActivity extends BaseActivity {
 
+    @ViewInject(R.id.safe_center_gesture_open_text)
+    private TextView getstureOpenText;
+
+    @ViewInject(R.id.safe_center_face_open_text)
+    private TextView faceOpenText;
+
+    @ViewInject(R.id.device_manager_layout)
+    private RelativeLayout deviceManagerLayout;
+
+
     public static final String FINGER_PRINT_STATE = "finger_print_state";
-    private static final int REQUEST_FACE_SETTING = 2;
-
-    private LoadingDialog loadingDlg;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_safe_center);
-        loadingDlg = new LoadingDialog(this);
+        setMDMLayoutState();
         getMDMState();
     }
 
@@ -44,19 +50,15 @@ public class SafeCenterActivity extends BaseActivity {
      * @param mdmState
      */
     private void setMDMLayoutState() {
-        int mdmState = PreferencesByUserAndTanentUtils.getInt(getApplicationContext(), "mdm_state", 1);
-        (findViewById(R.id.device_manager_layout)).setVisibility((mdmState == 1) ? View.VISIBLE : View.GONE);
+        int mdmState = PreferencesByUserAndTanentUtils.getInt(getApplicationContext(), "mdm_state", 0);
+        deviceManagerLayout.setVisibility((mdmState == 1) ? View.VISIBLE : View.GONE);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        ((TextView) (findViewById(R.id.safe_center_gesture_open_text))).setText((getHasGesturePassword() && getGestureCodeIsOpen())
-                ? getString(R.string.safe_center_enable)
-                : getString(R.string.safe_center_unenable));
-        ((TextView) (findViewById(R.id.safe_center_face_open_text))).setText(FaceVerifyActivity.getFaceVerifyIsOpenByUser(this)
-                ? getString(R.string.safe_center_enable)
-                : getString(R.string.safe_center_unenable));
+        getstureOpenText.setText((getHasGesturePassword() && getGestureCodeIsOpen())? getString(R.string.safe_center_enable): getString(R.string.safe_center_unenable));
+        faceOpenText.setText(FaceVerifyActivity.getFaceVerifyIsOpenByUser(this) ? getString(R.string.safe_center_enable) : getString(R.string.safe_center_unenable));
     }
 
 
@@ -108,12 +110,9 @@ public class SafeCenterActivity extends BaseActivity {
      */
     private void getMDMState() {
         if (NetUtils.isNetworkConnected(this)) {
-            loadingDlg.show();
             MineAPIService apiService = new MineAPIService(this);
             apiService.setAPIInterface(new Webservice());
             apiService.getMDMState();
-        } else {
-            setMDMLayoutState();
         }
     }
 
@@ -121,9 +120,6 @@ public class SafeCenterActivity extends BaseActivity {
 
         @Override
         public void returnMDMStateSuccess(GetMDMStateResult getMDMStateResult) {
-            if (loadingDlg != null && loadingDlg.isShowing()) {
-                loadingDlg.dismiss();
-            }
             int mdmState = getMDMStateResult.getMdmState();
             PreferencesByUserAndTanentUtils.putInt(getApplicationContext(), "mdm_state", mdmState);
             setMDMLayoutState();
@@ -132,10 +128,6 @@ public class SafeCenterActivity extends BaseActivity {
 
         @Override
         public void returnMDMStateFail(String error, int errorCode) {
-            if (loadingDlg != null && loadingDlg.isShowing()) {
-                loadingDlg.dismiss();
-            }
-            setMDMLayoutState();
             WebServiceMiddleUtils.hand(SafeCenterActivity.this, error, errorCode);
         }
 
