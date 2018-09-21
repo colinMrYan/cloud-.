@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -12,6 +13,7 @@ import android.widget.Button;
 import com.czt.mp3recorder.MP3Recorder;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.config.MyAppConfig;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.MediaPlayerManagerUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.shuyu.waveview.FileUtils;
@@ -125,6 +127,7 @@ public class AudioRecordButton extends Button {
      */
     private void recorderMp3Voice() {
         try {
+            changeState(STATE_RECORDING);
             mp3BeginTime = System.currentTimeMillis();
             mp3Recorder.start();
             Runnable runnable = new Runnable() {

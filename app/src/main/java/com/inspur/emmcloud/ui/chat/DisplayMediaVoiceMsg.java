@@ -52,17 +52,17 @@ public class DisplayMediaVoiceMsg {
         durationText.setVisibility(View.VISIBLE);
         MsgContentMediaVoice msgContentMediaVoice = message.getMsgContentMediaVoice();
         TextView speechText = (TextView) cardContentView.findViewById(R.id.tv_voice_card_word);
-        speechText.setText(msgContentMediaVoice.getResult());
-        speechText.setTextColor(isMyMsg? Color.parseColor("#FFFFFF"):Color.parseColor("#666666"));
         int duration = msgContentMediaVoice.getDuration();
         durationText.setText(duration + "''");
         //控制是否打开显示文字的功能，打开和不打开分两种UI控制逻辑
         switch (PreferencesByUserAndTanentUtils.getInt(context,Constant.PREF_APP_OPEN_VOICE_WORD_SWITCH,IS_VOICE_WORD_OPEN)){
             case IS_VOICE_WORD_OPEN:
                 speechText.setVisibility(View.VISIBLE);
+                speechText.setText(msgContentMediaVoice.getResult());
+                speechText.setTextColor(isMyMsg? Color.parseColor("#FFFFFF"):Color.parseColor("#666666"));
                 break;
             case IS_VOICE_WORD_CLOUSE:
-                speechText.setVisibility(View.GONE);
+                speechText.setVisibility(View.INVISIBLE);
                 int widthDip = 90 + duration;
                 if (widthDip > 230) {
                     widthDip = 230;
