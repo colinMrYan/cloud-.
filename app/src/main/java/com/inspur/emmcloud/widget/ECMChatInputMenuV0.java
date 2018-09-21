@@ -25,6 +25,7 @@ import android.widget.RelativeLayout;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.chat.InputTypeBean;
 import com.inspur.emmcloud.bean.chat.InsertModel;
+import com.inspur.emmcloud.bean.system.VoiceResult;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.interf.OnVoiceResultCallback;
 import com.inspur.emmcloud.ui.chat.MembersActivity;
@@ -343,7 +344,8 @@ public class ECMChatInputMenuV0 extends LinearLayout {
             }
 
             @Override
-            public void onVoiceResult(String results, boolean isLast) {
+            public void onVoiceResultSuccess(VoiceResult voiceResult, boolean isLast) {
+                String results = voiceResult.getResults();
                 if (results.length() == 1 && StringUtils.isSymbol(results)) {
                     results = "";
                 }
@@ -369,6 +371,11 @@ public class ECMChatInputMenuV0 extends LinearLayout {
             public void onVoiceLevelChange(int volume) {
 
                 setVoiceImageViewLevel(volume);
+            }
+
+            @Override
+            public void onVoiceResultError(VoiceResult errorResult) {
+
             }
         });
     }
