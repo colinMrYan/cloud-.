@@ -22,6 +22,10 @@ public class ClusterBean {
         serviceVersion = JSONUtils.getString(clusterObj,"service_version","");
     }
 
+    public ClusterBean(String serviceName){
+        this.serviceName = serviceName;
+    }
+
     public String getClusterId() {
         return clusterId;
     }
