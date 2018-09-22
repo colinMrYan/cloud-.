@@ -142,13 +142,13 @@ public class AudioRecorderManager {
             reset();
             if (audioRecord != null) {
                 isRecording = false;//停止文件写入
-                audioRecord.stop();
-                audioRecord.release();//释放资源
+                if (audioRecord.getState() != AudioRecord.STATE_UNINITIALIZED){
+                    audioRecord.release();//释放资源
+                }
                 audioRecord = null;
             }
             beginTime = 0;
         }catch (Exception e){
-            LogUtils.YfcDebug("释放有异常："+e.getMessage());
             e.printStackTrace();
         }
     }
