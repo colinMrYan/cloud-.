@@ -111,6 +111,7 @@ public class AudioRecordButton extends Button {
                             super.handleMessage(msg);
                             if (msg.what == MP3Recorder.ERROR_TYPE) {
                                 mDialogManager.dismissRecordingDialog();
+                                changeState(STATE_NORMAL);
                                 mListener.onErrorRecordingVoice(MP3Recorder.ERROR_TYPE);
                                 resolveMp3Error();
                                 isDeviceError = true;
@@ -260,6 +261,7 @@ public class AudioRecordButton extends Button {
                     //延迟500毫秒
                     handler.sendEmptyMessageDelayed(VOICE_DISMISS_DIALOG,500);
                 } else if (mCurrentState == STATE_RECORDING && (durationTime < 60)) {//正常录制结束
+                    LogUtils.YfcDebug("正常录制结束111111111111");
                     voiceRecordFinish();
                     if (mListener != null) {// 并且callbackActivity，保存录音
                         if(AppUtils.getIsVoiceWordOpen()){

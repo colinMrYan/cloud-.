@@ -580,7 +580,9 @@ public class ChannelActivity extends MediaPlayBaseActivity {
     private void combinAndSendMessageWithFile(String filePath, String messageType, int duration,String results) {
         File file = new File(filePath);
         if (!file.exists()) {
-            ToastUtils.show(MyApplication.getInstance(), R.string.file_not_exist);
+            if(messageType != Message.MESSAGE_TYPE_MEDIA_VOICE){
+                ToastUtils.show(MyApplication.getInstance(), R.string.file_not_exist);
+            }
             return;
         }
         Message fakeMessage = null;
