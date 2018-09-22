@@ -13,6 +13,7 @@ import com.czt.mp3recorder.MP3Recorder;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.config.MyAppConfig;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.MediaPlayerManagerUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
@@ -49,6 +50,7 @@ public class AudioRecordButton extends Button {
     //录制mp3的文件路径
     private String mp3FilePath = "";
     private long mp3BeginTime;
+    private boolean isDeviceError = false;
 
     /**
      * 先实现两个参数的构造方法，布局会默认引用这个构造方法， 用一个 构造参数的构造方法来引用这个方法 * @param context
@@ -92,12 +94,13 @@ public class AudioRecordButton extends Button {
                             if(mDialogManager != null){
                                 mDialogManager.dismissRecordingDialog();
                             }
-                            ToastUtils.show(MyApplication.getInstance(),"当前录音设备不可用，请检查录音权限权限是否开启");
+                            ToastUtils.show(MyApplication.getInstance(),getContext().getString(R.string.voice_audio_record_unavailiable));
                         }
                     });
                     //按下开关，先调用准备Audio
                     audioRecorderManager.prepareAudioRecord();
                 }else{
+                    isDeviceError = false;
                     mp3FilePath = getMp3FilePath()+AppUtils.generalFileName()+".mp3";
                     File file = new File(mp3FilePath);
                     mp3Recorder = new MP3Recorder(file);
@@ -107,11 +110,17 @@ public class AudioRecordButton extends Button {
                         public void handleMessage(Message msg) {
                             super.handleMessage(msg);
                             if (msg.what == MP3Recorder.ERROR_TYPE) {
+                                mDialogManager.dismissRecordingDialog();
+                                mListener.onErrorRecordingVoice(MP3Recorder.ERROR_TYPE);
                                 resolveMp3Error();
+                                isDeviceError = true;
                             }
                         }
                     });
-                    recorderMp3Voice();
+                    //设备正常则录音
+                    if(!isDeviceError){
+                        recorderMp3Voice();
+                    }
                 }
                 return false;
             }
@@ -256,7 +265,9 @@ public class AudioRecordButton extends Button {
                         if(AppUtils.getIsVoiceWordOpen()){
                             mListener.onFinished(durationTime,audioRecorderManager.getCurrentFilePath());
                         }else{
-                            mListener.onFinished(durationTime,mp3FilePath);
+                            if(!isDeviceError){
+                                mListener.onFinished(durationTime,mp3FilePath);
+                            }
                         }
                     }
                 } else if (mCurrentState == STATE_WANT_TO_CANCEL) {
@@ -350,7 +361,7 @@ public class AudioRecordButton extends Button {
     public interface AudioFinishRecorderListener {
         void onStartRecordingVoice();
         void onFinished(float seconds, String filePath);
-        void onErrorRecordingVoice();
+        void onErrorRecordingVoice(int errorType);
     }
 
     /**
