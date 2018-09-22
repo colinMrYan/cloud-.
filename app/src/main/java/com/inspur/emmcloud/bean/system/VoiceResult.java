@@ -9,6 +9,8 @@ public class VoiceResult {
     private String results = "";
     private float seconds = 0;
     private String filePath = "";
+    private int msgState = -1;
+    private int xunFeiPrepareError = -1;
 
     public VoiceResult(String results,float seconds,String filePath){
         this.results = results;
@@ -48,5 +50,21 @@ public class VoiceResult {
 
     public void setFilePath(String filePath) {
         this.filePath = filePath;
+    }
+
+    public int getMsgState() {
+        return msgState;
+    }
+
+    public void setMsgState(int msgState) {
+        this.msgState = msgState;
+    }
+
+    public int getXunFeiPrepareError() {
+        return xunFeiPrepareError;
+    }
+
+    public void setXunFeiPrepareError(int xunFeiPrepareError) {
+        this.xunFeiPrepareError = xunFeiPrepareError;
     }
 }

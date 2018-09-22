@@ -20,12 +20,17 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Set;
 
+import static com.iflytek.cloud.ErrorCode.ERROR_AUDIO_RECORD;
+
 
 /**
  * Created by yufuchang on 2018/1/18.
  */
 
 public class Voice2StringMessageUtils {
+    public static final int MSG_FROM_XUNFEI = 1;
+    public static final int MSG_FROM_CUSTOM = 2;
+    public static final int MSG_XUNFEI_PREPARE_FAIL = 3;
     // 语音听写对象
     private SpeechRecognizer speechRecognizer;
     // 用HashMap存储听写结果
@@ -43,6 +48,7 @@ public class Voice2StringMessageUtils {
 
     private float durationTime = 0;
     private String voiceFilePath = "";
+    private int voiceState = -1;
 
     public Voice2StringMessageUtils(Context context) {
         this.context = context;
@@ -57,6 +63,7 @@ public class Voice2StringMessageUtils {
         speechRecognizer = SpeechRecognizer.createRecognizer(context, initListener);
         setParam();
         speechRecognizer.startListening(recognizerListener);
+        voiceState = MSG_FROM_XUNFEI;
     }
 
     /**
@@ -79,6 +86,7 @@ public class Voice2StringMessageUtils {
             speechRecognizer.writeAudio(audioData, 0, audioData.length);
         }
         speechRecognizer.stopListening();
+        voiceState = MSG_FROM_CUSTOM;
     }
 
 
@@ -156,6 +164,10 @@ public class Voice2StringMessageUtils {
             @Override
             public void onError(SpeechError error) {
                 VoiceResult voiceResult = new VoiceResult();
+                if(error.getErrorCode() == ERROR_AUDIO_RECORD){
+                    voiceResult.setXunFeiPrepareError(MSG_XUNFEI_PREPARE_FAIL);
+                }
+                voiceResult.setMsgState(voiceState);
                 voiceResult.setResults("");
                 voiceResult.setSeconds(durationTime);
                 voiceResult.setFilePath(voiceFilePath);

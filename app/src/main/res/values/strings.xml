@@ -1054,4 +1054,5 @@
     <string name="voice_word_word">字</string>
     <string name="voice_word_tran">正在语音转文字</string>
     <string name="voice_word_setting">语音自动识别</string>
+    <string name="voice_audio_record_unavailiable">当前录音设备不可用，请检查录音权限是否开启</string>
 </resources>
