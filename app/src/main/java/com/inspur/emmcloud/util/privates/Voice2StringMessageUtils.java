@@ -189,6 +189,7 @@ public class Voice2StringMessageUtils {
                     String voiceWords = getLastListeningResult();
                     VoiceResult voiceResult = new VoiceResult();
                     voiceResult.setResults(voiceWords);
+                    voiceResult.setMsgState(voiceState);
                     voiceResult.setSeconds(durationTime);
                     voiceResult.setFilePath(voiceFilePath);
                     //最后的结果

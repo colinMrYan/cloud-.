@@ -73,7 +73,7 @@ public class AudioRecorderManager {
             // 开启音频文件写入线程
             new Thread(new AudioRecordThread()).start();
         }catch (Exception e){
-            callBack.onAudioPrepareError();
+            callBack.onWavAudioPrepareState(AudioRecordErrorCode.E_ERROR);
             e.printStackTrace();
         }
 
@@ -83,19 +83,21 @@ public class AudioRecorderManager {
      * 准备
      * @return
      */
-    public void prepareAudioRecord(){
+    public void prepareWavAudioRecord(){
         //判断是否有外部存储设备sdcard
         if (isSdcardExit()) {
             if (isRecording) {
-                callBack.onAudioPrepared(AudioRecordErrorCode.E_STATE_RECODING);
+                callBack.onWavAudioPrepareState(AudioRecordErrorCode.E_STATE_RECODING);
+                return;
             } else {
                 if (audioRecord == null) {
                     createAudioRecord();
                 }
-                callBack.onAudioPrepared(AudioRecordErrorCode.SUCCESS);
+                callBack.onWavAudioPrepareState(AudioRecordErrorCode.SUCCESS);
             }
         } else {
-            callBack.onAudioPrepared(AudioRecordErrorCode.E_NOSDCARD);
+            callBack.onWavAudioPrepareState(AudioRecordErrorCode.E_NOSDCARD);
+            return;
         }
     }
 
@@ -140,8 +142,9 @@ public class AudioRecorderManager {
             reset();
             if (audioRecord != null) {
                 isRecording = false;//停止文件写入
-                audioRecord.stop();
-                audioRecord.release();//释放资源
+                if (audioRecord.getState() != AudioRecord.STATE_UNINITIALIZED){
+                    audioRecord.release();//释放资源
+                }
                 audioRecord = null;
             }
             beginTime = 0;
@@ -399,7 +402,6 @@ public class AudioRecorderManager {
      */
     public interface AudioDataCallBack {
         void onDataChange(int volume, float duration);
-        void onAudioPrepared(int state);
-        void onAudioPrepareError();
+        void onWavAudioPrepareState(int state);
     }
 }

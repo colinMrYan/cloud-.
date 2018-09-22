@@ -2,6 +2,7 @@ package com.inspur.emmcloud.widget.audiorecord;
 
 
 import android.content.Context;
+import android.media.tv.TvContract;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
@@ -13,7 +14,6 @@ import com.czt.mp3recorder.MP3Recorder;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.MediaPlayerManagerUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
@@ -68,6 +68,7 @@ public class AudioRecordButton extends Button {
                 isRecording = true;
                 mDialogManager.showRecordingDialog();
                 if(AppUtils.getIsVoiceWordOpen()){
+                    //录制wav的分支
                     audioRecorderManager = AudioRecorderManager.getInstance();
                     audioRecorderManager.setCallBack(new AudioRecorderManager.AudioDataCallBack() {
                         @Override
@@ -83,23 +84,40 @@ public class AudioRecordButton extends Button {
                         }
 
                         @Override
-                        public void onAudioPrepared(int state) {
-                            changeState(STATE_RECORDING);
-                            audioRecorderManager.startRecord();
-                            mListener.onStartRecordingVoice();
+                        public void onWavAudioPrepareState(int state) {
+                            switch (state){
+                                case AudioRecordErrorCode.SUCCESS:
+                                    changeState(STATE_RECORDING);
+                                    if(audioRecorderManager != null){
+                                        audioRecorderManager.startRecord();
+                                        mListener.onStartRecordingVoice();
+                                    }
+                                    break;
+                                case AudioRecordErrorCode.E_NOSDCARD:
+                                    recoveryState();
+                                    ToastUtils.show(MyApplication.getInstance(),MyApplication.getInstance().getString(R.string.error_no_sdcard));
+                                    if(audioRecorderManager != null){
+                                        audioRecorderManager.stopRecord();
+                                    }
+                                    break;
+                                case AudioRecordErrorCode.E_ERROR:
+                                    recoveryState();
+                                    ToastUtils.show(MyApplication.getInstance(),getContext().getString(R.string.voice_audio_record_unavailiable));
+                                    if(audioRecorderManager != null){
+                                        audioRecorderManager.stopRecord();
+                                    }
+                                    break;
+                                default:
+                                    recoveryState();
+                                    break;
+                            }
                         }
 
-                        @Override
-                        public void onAudioPrepareError() {
-                            if(mDialogManager != null){
-                                mDialogManager.dismissRecordingDialog();
-                            }
-                            ToastUtils.show(MyApplication.getInstance(),getContext().getString(R.string.voice_audio_record_unavailiable));
-                        }
                     });
                     //按下开关，先调用准备Audio
-                    audioRecorderManager.prepareAudioRecord();
+                    audioRecorderManager.prepareWavAudioRecord();
                 }else{
+                    //录制mp3的分支
                     isDeviceError = false;
                     mp3FilePath = getMp3FilePath()+AppUtils.generalFileName()+".mp3";
                     File file = new File(mp3FilePath);
@@ -110,7 +128,7 @@ public class AudioRecordButton extends Button {
                         public void handleMessage(Message msg) {
                             super.handleMessage(msg);
                             if (msg.what == MP3Recorder.ERROR_TYPE) {
-                                mDialogManager.dismissRecordingDialog();
+                                recoveryState();
                                 mListener.onErrorRecordingVoice(MP3Recorder.ERROR_TYPE);
                                 resolveMp3Error();
                                 isDeviceError = true;
@@ -128,10 +146,18 @@ public class AudioRecordButton extends Button {
     }
 
     /**
+     * 出现异常后恢复dialog和按钮状态
+     */
+    private void recoveryState() {
+        changeState(STATE_NORMAL);
+        voiceRecordFinish();
+    }
+
+    /**
      * 录音异常
      */
     private void resolveMp3Error() {
-        changeState(STATE_NORMAL);
+        recoveryState();
         FileUtils.deleteFile(mp3FilePath);
         mp3FilePath = "";
         if (mp3Recorder != null && mp3Recorder.isRecording()) {
@@ -163,6 +189,8 @@ public class AudioRecordButton extends Button {
             };
             new Thread(runnable).start();
         } catch (Exception e) {
+            recoveryState();
+            mListener.onErrorRecordingVoice(MP3Recorder.ERROR_TYPE);
             e.printStackTrace();
         }
     }
@@ -263,9 +291,15 @@ public class AudioRecordButton extends Button {
                     voiceRecordFinish();
                     if (mListener != null) {// 并且callbackActivity，保存录音
                         if(AppUtils.getIsVoiceWordOpen()){
+                            if(audioRecorderManager != null){
+                                audioRecorderManager.stopRecord();
+                            }
                             mListener.onFinished(durationTime,audioRecorderManager.getCurrentFilePath());
                         }else{
                             if(!isDeviceError){
+                                if(mp3Recorder != null){
+                                    mp3Recorder.stop();
+                                }
                                 mListener.onFinished(durationTime,mp3FilePath);
                             }
                         }
