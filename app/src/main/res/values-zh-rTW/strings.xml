@@ -1004,5 +1004,5 @@
     <string name="voice_word_word">字</string>
     <string name="voice_word_tran">正在語音轉文字</string>
     <string name="voice_word_setting">語音自動識別</string>
-    <string name="voice_audio_record_unavailiable">當前錄音設備不可用，請檢查錄音許可權許可權是否開啟</string>
+    <string name="voice_audio_record_unavailiable">當前錄音設備不可用，請檢查錄音許可權是否開啟</string>
 </resources>
