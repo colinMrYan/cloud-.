@@ -82,6 +82,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import cafe.adriel.androidaudioconverter.AndroidAudioConverter;
+import cafe.adriel.androidaudioconverter.callback.ILoadCallback;
+
 import static android.R.attr.path;
 
 /**
@@ -130,6 +133,21 @@ public class ChannelActivity extends MediaPlayBaseActivity {
         registeRefreshNameReceiver();
         registeSendActionMsgReceiver();
         recordUserClickChannel();
+        initAudioConverter();
+    }
+
+    /**
+     * 加载语音转换库
+     */
+    private void initAudioConverter() {
+        AndroidAudioConverter.load(this, new ILoadCallback() {
+            @Override
+            public void onSuccess() {
+            }
+            @Override
+            public void onFailure(Exception error) {
+            }
+        });
     }
 
     // Activity在SingleTask的启动模式下多次打开传递Intent无效，用此方法解决
@@ -247,12 +265,12 @@ public class ChannelActivity extends MediaPlayBaseActivity {
             }
 
             @Override
-            public void onSendVoiceRecordMsg(float seconds, String filePath) {
+            public void onSendVoiceRecordMsg(String results,float seconds, String filePath) {
                 int duration = (int) seconds;
                 if (duration == 0) {
                     duration = 1;
                 }
-                combinAndSendMessageWithFile(filePath, Message.MESSAGE_TYPE_MEDIA_VOICE, duration);
+                combinAndSendMessageWithFile(filePath, Message.MESSAGE_TYPE_MEDIA_VOICE, duration,results);
             }
 
             @Override
@@ -563,6 +581,10 @@ public class ChannelActivity extends MediaPlayBaseActivity {
     }
 
     private void combinAndSendMessageWithFile(String filePath, String messageType, int duration) {
+        combinAndSendMessageWithFile(filePath,messageType,duration,"");
+    }
+
+    private void combinAndSendMessageWithFile(String filePath, String messageType, int duration,String results) {
         File file = new File(filePath);
         if (!file.exists()) {
             ToastUtils.show(MyApplication.getInstance(), R.string.file_not_exist);
@@ -577,7 +599,7 @@ public class ChannelActivity extends MediaPlayBaseActivity {
                 fakeMessage = CommunicationUtils.combinLocalMediaImageMessage(cid, filePath);
                 break;
             case Message.MESSAGE_TYPE_MEDIA_VOICE:
-                fakeMessage = CommunicationUtils.combinLocalMediaVoiceMessage(cid, filePath, duration);
+                fakeMessage = CommunicationUtils.combinLocalMediaVoiceMessage(cid, filePath, duration,results);
                 break;
         }
         if (fakeMessage != null) {

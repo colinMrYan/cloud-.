@@ -1,11 +1,10 @@
 package com.inspur.emmcloud.ui.chat;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -15,12 +14,14 @@ import com.inspur.emmcloud.api.APIDownloadCallBack;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.MsgContentMediaVoice;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.MediaPlayerManagerUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.DownLoaderUtils;
+import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.widget.bubble.ArrowDirection;
 import com.inspur.emmcloud.widget.bubble.BubbleLayout;
 import com.qmuiteam.qmui.widget.QMUILoadingView;
@@ -32,6 +33,8 @@ import java.io.File;
  */
 
 public class DisplayMediaVoiceMsg {
+    public static final int IS_VOICE_WORD_OPEN = 1;
+    public static final int IS_VOICE_WORD_CLOUSE = 0;
     public static View getView(final Context context, final Message message) {
         final boolean isMyMsg = message.getFromUser().equals(MyApplication.getInstance().getUid());
         View cardContentView = LayoutInflater.from(context).inflate(R.layout.chat_msg_card_child_media_voice_view, null);
@@ -39,22 +42,39 @@ public class DisplayMediaVoiceMsg {
         voiceLayout.setArrowDirection(isMyMsg? ArrowDirection.RIGHT:ArrowDirection.LEFT);
         voiceLayout.setBubbleColor(context.getResources().getColor(isMyMsg ? R.color.bg_my_card : R.color.white));
         voiceLayout.setStrokeWidth(isMyMsg ?0: 0.5f);
-        final View voiceAnimView = cardContentView.findViewById(R.id.v_voice_anim);
+        final View voiceAnimView = isMyMsg?cardContentView.findViewById(R.id.v_voice_anim_right):cardContentView.findViewById(R.id.v_voice_anim_left);
+        voiceAnimView.setVisibility(View.VISIBLE);
         final QMUILoadingView downloadLoadingView = (QMUILoadingView) cardContentView.findViewById(isMyMsg ? R.id.qlv_downloading_left : R.id.qlv_downloading_right);
         TextView durationText = (TextView) cardContentView.findViewById(isMyMsg ? R.id.tv_duration_left : R.id.tv_duration_right);
+        //校正UI，因消息部分未支持撤回机制，暂不开放，控制两分以内发送的消息才显示校正
+        //TextView correctedSpeechInputText = (TextView) cardContentView.findViewById(R.id.tv_corrected_speech_input);
+        //correctedSpeechInputText.setVisibility(((System.currentTimeMillis() - message.getCreationDate() <= 120 * 1000) && isMyMsg)?View.VISIBLE:View.GONE);
         durationText.setVisibility(View.VISIBLE);
         MsgContentMediaVoice msgContentMediaVoice = message.getMsgContentMediaVoice();
+        TextView speechText = (TextView) cardContentView.findViewById(R.id.tv_voice_card_word);
+        speechText.setText(msgContentMediaVoice.getResult());
+        speechText.setTextColor(isMyMsg? Color.parseColor("#FFFFFF"):Color.parseColor("#666666"));
         int duration = msgContentMediaVoice.getDuration();
         durationText.setText(duration + "''");
-        int widthDip = 90 + duration;
-        if (widthDip > 230) {
-            widthDip = 230;
+        //控制是否打开显示文字的功能，打开和不打开分两种UI控制逻辑
+        switch (PreferencesByUserAndTanentUtils.getInt(context,Constant.PREF_APP_OPEN_VOICE_WORD_SWITCH,IS_VOICE_WORD_OPEN)){
+            case IS_VOICE_WORD_OPEN:
+                speechText.setVisibility(View.VISIBLE);
+                break;
+            case IS_VOICE_WORD_CLOUSE:
+                speechText.setVisibility(View.GONE);
+                int widthDip = 90 + duration;
+                if (widthDip > 230) {
+                    widthDip = 230;
+                }
+                LinearLayout.LayoutParams voiceLayoutParams = new LinearLayout.LayoutParams(DensityUtil.dip2px(context, widthDip), LinearLayout.LayoutParams.WRAP_CONTENT);
+                voiceLayout.setLayoutParams(voiceLayoutParams);
+                break;
+            default:
+                break;
         }
-        LinearLayout.LayoutParams voiceLayoutParams = new LinearLayout.LayoutParams(DensityUtil.dip2px(context, widthDip), DensityUtil.dip2px(context, 42));
-        voiceLayout.setLayoutParams(voiceLayoutParams);
-        FrameLayout.LayoutParams voiceAnimViewLayoutParams = (FrameLayout.LayoutParams) voiceAnimView.getLayoutParams();
-        voiceAnimViewLayoutParams.gravity=(isMyMsg? Gravity.RIGHT:Gravity.LEFT)|Gravity.CENTER_VERTICAL;
-        voiceAnimView.setLayoutParams(voiceAnimViewLayoutParams);
+
+
         voiceAnimView.setBackgroundResource(isMyMsg ? R.drawable.ic_chat_msg_card_voice_right_level_3 : R.drawable.ic_chat_msg_card_voice_left_level_3);
         voiceLayout.setOnClickListener(new View.OnClickListener() {
             @Override

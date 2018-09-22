@@ -11,11 +11,11 @@ import com.iflytek.cloud.RecognizerResult;
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechError;
 import com.iflytek.cloud.SpeechRecognizer;
+import com.inspur.emmcloud.bean.system.VoiceResult;
 import com.inspur.emmcloud.interf.OnVoiceResultCallback;
+import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Set;
@@ -41,6 +41,9 @@ public class Voice2StringMessageUtils {
     //初始化监听器，监听是否初始化成功
     private InitListener initListener;
 
+    private float durationTime = 0;
+    private String voiceFilePath = "";
+
     public Voice2StringMessageUtils(Context context) {
         this.context = context;
         initListeners();
@@ -60,36 +63,24 @@ public class Voice2StringMessageUtils {
      * 通过音频文件启动听写
      * 以后需要发送语音时可以单独录制一段语音存到sd卡当做文件发送
      */
-    public void startVoiceListeningByVoiceFile(String voiceFilePath) {
+    public void startVoiceListeningByVoiceFile(float seconds,String voiceFilePath) {
+        this.durationTime = seconds;
+        this.voiceFilePath = voiceFilePath;
         // 使用SpeechRecognizer对象，可根据回调消息自定义界面；
         speechRecognizer = SpeechRecognizer.createRecognizer(context, initListener);
         setParam();
         //注释掉的这几句是读取文件听写文字的
         speechRecognizer.setParameter(SpeechConstant.AUDIO_SOURCE, "-1");
+        // 设置标点符号,设置为"0"返回结果无标点,设置为"1"返回结果有标点
+        speechRecognizer.setParameter(SpeechConstant.ASR_PTT, "1");
         speechRecognizer.startListening(recognizerListener);
-        byte[] audioData = readAudioFile(context, "iattest.wav");
-        speechRecognizer.writeAudio(audioData, 0, audioData.length);
+        byte[] audioData = FileUtils.readAudioFileFromSDcard(voiceFilePath);
+        if(audioData != null){
+            speechRecognizer.writeAudio(audioData, 0, audioData.length);
+        }
         speechRecognizer.stopListening();
     }
 
-    /**
-     * 读取指定目录下音频文件。
-     *
-     * @return 二进制文件数据
-     */
-    public byte[] readAudioFile(Context context, String filename) {
-        try {
-            InputStream ins = context.getAssets().open(filename);
-            byte[] data = new byte[ins.available()];
-            ins.read(data);
-            ins.close();
-            return data;
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        return null;
-    }
 
     /**
      * 参数设置
@@ -103,17 +94,32 @@ public class Voice2StringMessageUtils {
         speechRecognizer.setParameter(SpeechConstant.ENGINE_TYPE, engineType);
         // 设置返回结果格式
         speechRecognizer.setParameter(SpeechConstant.RESULT_TYPE, "json");
-        // 设置语言
-        speechRecognizer.setParameter(SpeechConstant.LANGUAGE, "zh_cn");
-        // 设置语言区域
-        speechRecognizer.setParameter(SpeechConstant.ACCENT, "mandarin");
+
+        String language = AppUtils.getCurrentAppLanguage(context);
+        switch (language){
+            case "zh-Hans":
+                // 设置语言
+                speechRecognizer.setParameter(SpeechConstant.LANGUAGE, "zh_cn");
+                // 设置语言区域
+                speechRecognizer.setParameter(SpeechConstant.ACCENT, "mandarin");
+                break;
+            case "en":
+                // 设置语言
+                speechRecognizer.setParameter(SpeechConstant.LANGUAGE, "en_us");
+                break;
+            default:
+                // 设置语言
+                speechRecognizer.setParameter(SpeechConstant.LANGUAGE, "zh_cn");
+                // 设置语言区域
+                speechRecognizer.setParameter(SpeechConstant.ACCENT, "mandarin");
+                break;
+        }
         // 设置语音前端点:静音超时时间，即用户多长时间不说话则当做超时处理
         speechRecognizer.setParameter(SpeechConstant.VAD_BOS, "5000");
         // 设置语音后端点:后端点静音检测时间，即用户停止说话多长时间内即认为不再输入， 自动停止录音
         speechRecognizer.setParameter(SpeechConstant.VAD_EOS, "1800");
         // 设置标点符号,设置为"0"返回结果无标点,设置为"1"返回结果有标点
         speechRecognizer.setParameter(SpeechConstant.ASR_PTT, "0");
-
         //根据IOS参数新加参数
         speechRecognizer.setParameter(SpeechConstant.KEY_SPEECH_TIMEOUT, "-1");
         speechRecognizer.setParameter(SpeechConstant.SAMPLE_RATE, "16000");
@@ -149,6 +155,11 @@ public class Voice2StringMessageUtils {
 
             @Override
             public void onError(SpeechError error) {
+                VoiceResult voiceResult = new VoiceResult();
+                voiceResult.setResults("");
+                voiceResult.setSeconds(durationTime);
+                voiceResult.setFilePath(voiceFilePath);
+                onVoiceResultCallback.onVoiceResultError(voiceResult);
                 //返回错误停止录音
                 stopListening();
             }
@@ -163,8 +174,13 @@ public class Voice2StringMessageUtils {
             public void onResult(RecognizerResult results, boolean isLast) {
                 addListeningResult2Map(results);
                 if (isLast) {
+                    String voiceWords = getLastListeningResult();
+                    VoiceResult voiceResult = new VoiceResult();
+                    voiceResult.setResults(voiceWords);
+                    voiceResult.setSeconds(durationTime);
+                    voiceResult.setFilePath(voiceFilePath);
                     //最后的结果
-                    onVoiceResultCallback.onVoiceResult(getLastListeningResult(), isLast);
+                    onVoiceResultCallback.onVoiceResultSuccess(voiceResult, isLast);
                 }
             }
 

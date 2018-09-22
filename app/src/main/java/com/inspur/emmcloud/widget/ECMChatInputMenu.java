@@ -24,17 +24,21 @@ import android.widget.RelativeLayout;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.chat.InputTypeBean;
 import com.inspur.emmcloud.bean.chat.InsertModel;
+import com.inspur.emmcloud.bean.system.VoiceResult;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.interf.OnVoiceResultCallback;
 import com.inspur.emmcloud.ui.chat.MembersActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
+import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.InputMethodUtils;
 import com.inspur.emmcloud.util.common.MediaPlayerUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.common.audioformat.ConvertAudioFileFormatUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.Voice2StringMessageUtils;
+import com.inspur.emmcloud.widget.audiorecord.AudioDialogManager;
 import com.inspur.emmcloud.widget.audiorecord.AudioRecordButton;
 import com.inspur.emmcloud.widget.waveprogress.WaterWaveProgress;
 
@@ -42,9 +46,15 @@ import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import cafe.adriel.androidaudioconverter.callback.IConvertCallback;
+import cafe.adriel.androidaudioconverter.model.AudioFormat;
 
 
 /**
@@ -98,6 +108,10 @@ public class ECMChatInputMenu extends LinearLayout {
     private boolean isSpecialUser = false; //小智机器人进行特殊处理
     private int lastVolumeLevel = 0;
     private int delayTimes = 0;
+    private List<VoiceResult> voiceResultList = new ArrayList<>();
+    private List<String> mp3FilePathList = new ArrayList<>();
+    private Map<String,Boolean> voiceBooleanMap = new HashMap<>();
+    private AudioDialogManager audioDialogManager;
 
     public ECMChatInputMenu(Context context) {
         this(context, null);
@@ -161,10 +175,114 @@ public class ECMChatInputMenu extends LinearLayout {
         audioRecordBtn.setAudioFinishRecorderListener(new AudioRecordButton.AudioFinishRecorderListener() {
 
             @Override
-            public void onFinished(float seconds, String filePath) {
+            public void onStartRecordingVoice() {
+            }
+
+            @Override
+            public void onFinished(final float seconds, final String filePath) {
                 // TODO Auto-generated method stub
-                if (chatInputMenuListener != null) {
-                    chatInputMenuListener.onSendVoiceRecordMsg(seconds, filePath);
+                if(AppUtils.getIsVoiceWordOpen()){
+                    IConvertCallback callback = new IConvertCallback() {
+                        @Override
+                        public void onSuccess(File file) {
+                            String fileName = FileUtils.getFileNameWithoutExtension(file.getName());
+                            mp3FilePathList.add(file.getAbsolutePath());
+                            if(voiceBooleanMap.get(fileName) == null || !voiceBooleanMap.get(fileName)){
+                                voiceBooleanMap.put(fileName,true);
+                            }else{
+                                callBackVoiceMessage(fileName);
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Exception e) {
+
+                        }
+                    };
+                    audioDialogManager = new AudioDialogManager(getContext());
+                    audioDialogManager.showVoice2WordProgressDialog();
+                    //转写和转文件格式同时进行
+                    voice2StringMessageUtils.startVoiceListeningByVoiceFile(seconds,filePath);
+                    ConvertAudioFileFormatUtils.getInstance().convertAudioFile2SpecifiedFormat(getContext(),filePath, AudioFormat.MP3,callback);
+                }else {
+                    if (chatInputMenuListener != null) {
+                        chatInputMenuListener.onSendVoiceRecordMsg("",seconds, filePath);
+                    }
+                }
+            }
+
+            @Override
+            public void onErrorRecordingVoice() {
+                voice2StringMessageUtils.stopListening();
+            }
+        });
+    }
+
+    /**
+     * 初始化语言输入相关
+     */
+    private void initVoiceInput() {
+        waterWaveProgress.setShowProgress(false);
+        waterWaveProgress.setShowNumerical(false);
+        waterWaveProgress.setWaveSpeed(0.02F);
+        waterWaveProgress.setAmplitude(5.0F);
+        lastVolumeLevel=0;
+        mediaPlayerUtils = new MediaPlayerUtils(getContext());
+        voice2StringMessageUtils = new Voice2StringMessageUtils(getContext());
+        voice2StringMessageUtils.setOnVoiceResultCallback(new OnVoiceResultCallback() {
+            @Override
+            public void onVoiceStart() {
+            }
+
+            @Override
+            public void onVoiceResultSuccess(VoiceResult voiceResult, boolean isLast) {
+                if(!StringUtils.isBlank(voiceResult.getFilePath())){
+                    String fileName = FileUtils.getFileNameWithoutExtension(voiceResult.getFilePath());
+                    voiceResultList.add(voiceResult);
+                    if(voiceBooleanMap.get(fileName) == null || !voiceBooleanMap.get(fileName)){
+                        voiceBooleanMap.put(fileName,new Boolean(true));
+                    }else{
+                        callBackVoiceMessage(fileName);
+                    }
+                }else{
+                    String results = voiceResult.getResults();
+                    if (results.length() == 1 && StringUtils.isSymbol(results)) {
+                        results = "";
+                    }
+                    if (!StringUtils.isBlank(results)) {
+                        if (isSpecialUser) {
+                            inputEdit.clearInsertModelList();
+                            if (chatInputMenuListener != null) {
+                                chatInputMenuListener.onSendMsg(results, null, null, null);
+                            }
+                        } else {
+                            int index = inputEdit.getSelectionStart();
+                            Editable editable = inputEdit.getText();
+                            editable.insert(index, results);
+                        }
+
+                    }
+                }
+            }
+
+            @Override
+            public void onVoiceFinish() {
+                stopVoiceInput();
+            }
+
+            @Override
+            public void onVoiceLevelChange(int volume) {
+                setVoiceImageViewLevel(volume);
+            }
+
+            @Override
+            public void onVoiceResultError(VoiceResult errorResult) {
+                String fileName = FileUtils.getFileNameWithoutExtension(errorResult.getFilePath());
+                voiceResultList.add(errorResult);
+                if(voiceBooleanMap.get(fileName) == null ||  !voiceBooleanMap.get(fileName)){
+                    voiceBooleanMap.put(fileName,new Boolean(true));
+                }else{
+                    callBackVoiceMessage(fileName);
                 }
             }
         });
@@ -364,52 +482,77 @@ public class ECMChatInputMenu extends LinearLayout {
     }
 
     /**
-     * 初始化语言输入相关
+     * 发送语音消息
+     * @param fileNameWithoutExtension
      */
-    private void initVoiceInput() {
-        waterWaveProgress.setShowProgress(false);
-        waterWaveProgress.setShowNumerical(false);
-        waterWaveProgress.setWaveSpeed(0.02F);
-        waterWaveProgress.setAmplitude(5.0F);
-        lastVolumeLevel=0;
-        mediaPlayerUtils = new MediaPlayerUtils(getContext());
-        voice2StringMessageUtils = new Voice2StringMessageUtils(getContext());
-        voice2StringMessageUtils.setOnVoiceResultCallback(new OnVoiceResultCallback() {
-            @Override
-            public void onVoiceStart() {
+    private void callBackVoiceMessage(String fileNameWithoutExtension) {
+        VoiceResult voiceResult = getVoiceResult(fileNameWithoutExtension);
+        String mp3VoiceFilePath = getVoiceFilePath(fileNameWithoutExtension);
+        if (chatInputMenuListener != null) {
+            chatInputMenuListener.onSendVoiceRecordMsg(voiceResult.getResults(),voiceResult.getSeconds(), mp3VoiceFilePath);
+        }
+        if(audioDialogManager != null){
+            audioDialogManager.dismissVoice2WordProgressDialog();
+        }
+        removeDataFromList(fileNameWithoutExtension);
+    }
+
+    /**
+     * 查找转写内容
+     * @param fileNameWithoutExtension
+     * @return
+     */
+    private VoiceResult getVoiceResult(String fileNameWithoutExtension) {
+        VoiceResult voiceResult = new VoiceResult();
+        voiceResult.setResults("...");
+        for (int i = 0; i < voiceResultList.size(); i++) {
+            if(fileNameWithoutExtension.equals(FileUtils.getFileNameWithoutExtension(voiceResultList.get(i).getFilePath()))){
+                voiceResult = voiceResultList.get(i);
+                break;
             }
+        }
+        return voiceResult;
+    }
 
-            @Override
-            public void onVoiceResult(String results, boolean isLast) {
-                if (results.length() == 1 && StringUtils.isSymbol(results)) {
-                    results = "";
-                }
-                if (!StringUtils.isBlank(results)) {
-                    if (isSpecialUser) {
-                        inputEdit.clearInsertModelList();
-                        if (chatInputMenuListener != null) {
-                            chatInputMenuListener.onSendMsg(results, null, null, null);
-                        }
-                    } else {
-                        int index = inputEdit.getSelectionStart();
-                        Editable editable = inputEdit.getText();
-                        editable.insert(index, results);
-                    }
-
-                }
+    /**
+     * 查找文件路径
+     * @param fileNameWithoutExtension
+     * @return
+     */
+    private String getVoiceFilePath(String fileNameWithoutExtension){
+        for (int i = 0; i < mp3FilePathList.size(); i++) {
+            if(fileNameWithoutExtension.equals(FileUtils.getFileNameWithoutExtension(mp3FilePathList.get(i)))){
+                return mp3FilePathList.get(i);
             }
+        }
+        return "";
+    }
 
-            @Override
-            public void onVoiceFinish() {
-                stopVoiceInput();
+    /**
+     * 根据名称删除list里的数据
+     * @param fileNameWithoutExtension
+     */
+    private void removeDataFromList(String fileNameWithoutExtension) {
+        //移除标志位
+        voiceBooleanMap.remove(fileNameWithoutExtension);
+        //移除voice转写结果
+        Iterator<VoiceResult> voiceResultIterator = voiceResultList.iterator();
+        while (voiceResultIterator.hasNext()){
+            VoiceResult voiceResult = voiceResultIterator.next();
+            if(fileNameWithoutExtension.equals(FileUtils.getFileNameWithoutExtension(voiceResult.getFilePath()))){
+               voiceResultIterator.remove();
+               break;
             }
-
-            @Override
-            public void onVoiceLevelChange(int volume) {
-
-                setVoiceImageViewLevel(volume);
+        }
+        //移除mp3文件路径
+        Iterator<String> mp3FilePathIterator = mp3FilePathList.iterator();
+        while (mp3FilePathIterator.hasNext()){
+            String mp3FilePath = mp3FilePathIterator.next();
+            if(fileNameWithoutExtension.equals(FileUtils.getFileNameWithoutExtension(mp3FilePath))){
+                mp3FilePathIterator.remove();
+                break;
             }
-        });
+        }
     }
 
 
@@ -627,7 +770,7 @@ public class ECMChatInputMenu extends LinearLayout {
     public interface ChatInputMenuListener {
         void onSendMsg(String content, List<String> mentionsUidList, List<String> urlList, Map<String, String> mentionsMap);
 
-        void onSendVoiceRecordMsg(float seconds, String filePath);
+        void onSendVoiceRecordMsg(String results,float seconds, String filePath);
 
 
         void onVoiceCommucaiton();
