@@ -9,6 +9,7 @@ import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.privates.ClientIDUtils;
 import com.inspur.emmcloud.util.privates.ECMTransparentUtils;
+import com.inspur.emmcloud.util.privates.PushIdManagerUtils;
 
 /**
  * Created by yufuchang on 2017/6/20.
@@ -24,6 +25,7 @@ public class HuaWeiPushReceiver extends PushReceiver {
     @Override
     public void onToken(Context context, String token, Bundle extras) {
         PreferencesUtils.putString(context, "huawei_push_token", token);
+        new PushIdManagerUtils(context).registerPushId2Emm();
         new ClientIDUtils(context).upload();
         WebSocketPush.getInstance().startWebSocket();
     }
