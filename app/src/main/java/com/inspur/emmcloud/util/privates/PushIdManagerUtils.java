@@ -2,6 +2,7 @@ package com.inspur.emmcloud.util.privates;
 
 import android.content.Context;
 
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.util.common.NetUtils;
 
@@ -20,6 +21,9 @@ public class PushIdManagerUtils {
      * 如果为空则等待Jpush或者其他推送注册成功后上传token
      */
     public void registerPushId2Emm(){
+        if (!MyApplication.getInstance().isHaveLogin()){
+            return;
+        }
         if(NetUtils.isNetworkConnected(context,false)){
             String pushId = AppUtils.getPushId(context);
             if(!pushId.equals("UNKNOWN")){
