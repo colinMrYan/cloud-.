@@ -119,7 +119,12 @@ public class AudioRecordButton extends Button {
                 }else{
                     //录制mp3的分支
                     isDeviceError = false;
-                    mp3FilePath = getMp3FilePath()+AppUtils.generalFileName()+".mp3";
+                    String mp3FileDir = getMp3FilePath();
+                    File fileDir = new File(mp3FileDir);
+                    if(!fileDir.exists()){
+                        fileDir.mkdirs();
+                    }
+                    mp3FilePath = mp3FileDir + AppUtils.generalFileName()+".mp3";
                     File file = new File(mp3FilePath);
                     mp3Recorder = new MP3Recorder(file);
                     //处理异常
