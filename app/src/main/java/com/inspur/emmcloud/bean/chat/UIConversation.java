@@ -1,5 +1,11 @@
 package com.inspur.emmcloud.bean.chat;
 
+import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.util.privates.CommunicationUtils;
+import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
+
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -25,7 +31,24 @@ public class UIConversation {
     public UIConversation(Conversation conversation) {
         this.conversation = conversation;
         this.id = conversation.getId();
-        if (conversation.getType().equals())
+        this.title = CommunicationUtils.getConversationTitle(conversation);
+        messageList = MessageCacheUtil.getHistoryMessageList(MyApplication.getInstance(),id,null,15);
+        if (messageList.size()==0){
+            lastUpdate = conversation.getLastUpdate();
+        }else {
+            lastUpdate = messageList.get(messageList.size()-1).getCreationDate();
+            unReadCount = MessageCacheUtil.getChannelMessageUnreadCount(MyApplication.getInstance(),id);
+        }
+    }
+
+    public static List<UIConversation> conversationList2UIConversationList(List<Conversation> conversationList){
+        List<UIConversation> uiConversationList = new ArrayList<>();
+        if (conversationList != null && conversationList.size() > 0) {
+            for (Conversation conversation : conversationList) {
+                uiConversationList.add(new UIConversation(conversation));
+            }
+        }
+        return uiConversationList;
     }
 
     public String getId() {
@@ -95,5 +118,22 @@ public class UIConversation {
 
         final UIConversation uiConversation = (UIConversation) other;
         return getId().equals(uiConversation.getId());
+    }
+
+    public class SortComparator implements Comparator {
+
+        @Override
+        public int compare(Object lhs, Object rhs) {
+            UIConversation uiConversationA = (UIConversation) lhs;
+            UIConversation uiConversationB = (UIConversation) rhs;
+            long diff = uiConversationA.getLastUpdate()- uiConversationB.getLastUpdate();
+            if (diff > 0) {
+                return -1;
+            } else if (diff == 0) {
+                return 0;
+            } else {
+                return 1;
+            }
+        }
     }
 }

@@ -52,7 +52,6 @@ import com.inspur.emmcloud.broadcastreceiver.MsgReceiver;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.push.WebSocketPush;
-import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
@@ -143,7 +142,7 @@ public class CommunicationV0Fragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        ((IndexActivity) getActivity()).openTargetFragment();
+        EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_OPEN_DEFALT_TAB,null));
     }
 
     @Override

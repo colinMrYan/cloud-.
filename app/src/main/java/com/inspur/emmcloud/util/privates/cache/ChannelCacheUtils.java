@@ -104,7 +104,10 @@ public class ChannelCacheUtils {
         String type = "";
         try {
             if (!StringUtils.isBlank(cid)) {
-                type = DbCacheUtils.getDb(context).findById(Channel.class, cid).getType();
+                Channel channel = DbCacheUtils.getDb(context).findById(Channel.class, cid);
+                if (channel != null){
+                    type = channel.getType();
+                }
             }
         } catch (Exception e) {
             // TODO: handle exception

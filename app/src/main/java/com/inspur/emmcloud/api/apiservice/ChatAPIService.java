@@ -110,7 +110,7 @@ public class ChatAPIService {
      * @param count
      */
     public void getNewMsgs(final String cid, final String msgId, final int count) {
-        final String completeUrl = APIUri.getECMChatChannelUrl()+("/session/message");
+        final String completeUrl = APIUri.getECMChatChannelUrl() + ("/session/message");
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         params.addParameter("limit", count);
@@ -169,7 +169,7 @@ public class ChatAPIService {
      */
     public void getComment(final String mid) {
 
-        final String completeUrl = APIUri.getECMChatChannelUrl()+("/message/" + mid
+        final String completeUrl = APIUri.getECMChatChannelUrl() + ("/message/" + mid
                 + "/comment");
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
@@ -274,7 +274,7 @@ public class ChatAPIService {
      */
     public void sendMsg(final String channelId, final String msgContent,
                         final String type, final String mid, final String fakeMessageId) {
-        final String completeUrl = APIUri.getECMChatChannelUrl()+("/message");
+        final String completeUrl = APIUri.getECMChatChannelUrl() + ("/message");
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         try {
@@ -341,7 +341,7 @@ public class ChatAPIService {
      * @param mid
      */
     public void getMsg(final String mid) {
-        final String completeUrl = APIUri.getECMChatChannelUrl()+("/message/" + mid);
+        final String completeUrl = APIUri.getECMChatChannelUrl() + ("/message/" + mid);
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
@@ -844,7 +844,7 @@ public class ChatAPIService {
     }
 
     public void getMsgCommentCount(final String mid) {
-        final String completeUrl = APIUri.getECMChatChannelUrl()+("/message/" + mid
+        final String completeUrl = APIUri.getECMChatChannelUrl() + ("/message/" + mid
                 + "/comment/count");
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
@@ -1015,8 +1015,8 @@ public class ChatAPIService {
      * @param fileName
      * @param cid
      */
-    public void getFileUploadToken(final String fileName, final String cid,final boolean isMediaVoice) {
-        final String url = isMediaVoice?APIUri.getUploadMediaVoiceFileTokenUrl(cid):APIUri.getUploadFileTokenUrl(cid);
+    public void getFileUploadToken(final String fileName, final String cid, final boolean isMediaVoice) {
+        final String url = isMediaVoice ? APIUri.getUploadMediaVoiceFileTokenUrl(cid) : APIUri.getUploadFileTokenUrl(cid);
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
         params.addParameter("name", fileName);
         HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, url) {
@@ -1035,7 +1035,7 @@ public class ChatAPIService {
                 OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        getFileUploadToken(fileName, cid,isMediaVoice);
+                        getFileUploadToken(fileName, cid, isMediaVoice);
                     }
 
                     @Override
@@ -1052,14 +1052,15 @@ public class ChatAPIService {
 
     /**
      * 获取建立频道的参数
+     *
      * @param jsonArray
      */
-    public void getAgoraParams(final JSONArray jsonArray){
+    public void getAgoraParams(final JSONArray jsonArray) {
         String compelteUrl = APIUri.getAgoraUrl();
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(compelteUrl);
-        params.addParameter("Users",jsonArray);
+        params.addParameter("Users", jsonArray);
         params.setAsJsonContent(true);
-        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context,compelteUrl) {
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, compelteUrl) {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnGetVoiceCommunicationResultSuccess(new GetVoiceCommunicationResult(new String(arg0)));
@@ -1067,7 +1068,7 @@ public class ChatAPIService {
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                apiInterface.returnGetVoiceCommunicationResultFail(error,responseCode);
+                apiInterface.returnGetVoiceCommunicationResultFail(error, responseCode);
             }
 
             @Override
@@ -1091,13 +1092,14 @@ public class ChatAPIService {
 
     /**
      * 告诉S已加入channel
+     *
      * @param channelId
      */
-    public void remindServerJoinChannelSuccess(final String channelId){
-        String compelteUrl = APIUri.getAgoraJoinChannelSuccessUrl()+channelId;
-        RequestParams params =  ((MyApplication) context.getApplicationContext()).getHttpRequestParams(compelteUrl);
+    public void remindServerJoinChannelSuccess(final String channelId) {
+        String compelteUrl = APIUri.getAgoraJoinChannelSuccessUrl() + channelId;
+        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(compelteUrl);
         params.setAsJsonContent(true);
-        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context,compelteUrl) {
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, compelteUrl) {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnJoinVoiceCommunicationChannelSuccess(new GetBoolenResult(new String(arg0)));
@@ -1105,7 +1107,7 @@ public class ChatAPIService {
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                apiInterface.returnJoinVoiceCommunicationChannelFail(error,responseCode);
+                apiInterface.returnJoinVoiceCommunicationChannelFail(error, responseCode);
             }
 
             @Override
@@ -1129,13 +1131,14 @@ public class ChatAPIService {
 
     /**
      * 获取channel信息
+     *
      * @param channelId
      */
-    public void getAgoraChannelInfo(final String channelId){
-        String compelteUrl = APIUri.getAgoraChannelInfoUrl()+channelId;
+    public void getAgoraChannelInfo(final String channelId) {
+        String compelteUrl = APIUri.getAgoraChannelInfoUrl() + channelId;
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(compelteUrl);
         params.setAsJsonContent(true);
-        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context,compelteUrl) {
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, compelteUrl) {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnGetVoiceCommunicationChannelInfoSuccess(new GetVoiceCommunicationResult(new String(arg0)));
@@ -1143,7 +1146,7 @@ public class ChatAPIService {
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                apiInterface.returnGetVoiceCommunicationChannelInfoFail(error,responseCode);
+                apiInterface.returnGetVoiceCommunicationChannelInfoFail(error, responseCode);
             }
 
             @Override
@@ -1167,13 +1170,14 @@ public class ChatAPIService {
 
     /**
      * 拒绝频道
+     *
      * @param channelId
      */
-    public void refuseAgoraChannel(final String channelId){
-        String compelteUrl = APIUri.getAgoraRefuseChannelUrl()+channelId;
+    public void refuseAgoraChannel(final String channelId) {
+        String compelteUrl = APIUri.getAgoraRefuseChannelUrl() + channelId;
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(compelteUrl);
         params.setAsJsonContent(true);
-        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context,compelteUrl) {
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, compelteUrl) {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnRefuseVoiceCommunicationChannelSuccess(new GetBoolenResult(new String(arg0)));
@@ -1181,7 +1185,7 @@ public class ChatAPIService {
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                apiInterface.returnRefuseVoiceCommunicationChannelFail(error,responseCode);
+                apiInterface.returnRefuseVoiceCommunicationChannelFail(error, responseCode);
             }
 
             @Override
@@ -1205,23 +1209,24 @@ public class ChatAPIService {
 
     /**
      * 离开频道
+     *
      * @param channelId
      */
-    public void leaveAgoraChannel(final String channelId){
+    public void leaveAgoraChannel(final String channelId) {
         String compelteUrl = APIUri.getAgoraLeaveChannelUrl() + channelId;
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(compelteUrl);
         params.setAsJsonContent(true);
-        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context,compelteUrl) {
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, compelteUrl) {
             @Override
             public void callbackSuccess(byte[] arg0) {
-                LogUtils.YfcDebug("离开成功："+new String(arg0));
+                LogUtils.YfcDebug("离开成功：" + new String(arg0));
                 apiInterface.returnLeaveVoiceCommunicationChannelSuccess(new GetBoolenResult(new String(arg0)));
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                LogUtils.YfcDebug("离开失败："+error+responseCode);
-                apiInterface.returnLeaveVoiceCommunicationChannelFail(error,responseCode);
+                LogUtils.YfcDebug("离开失败：" + error + responseCode);
+                apiInterface.returnLeaveVoiceCommunicationChannelFail(error, responseCode);
             }
 
             @Override
@@ -1245,12 +1250,13 @@ public class ChatAPIService {
 
     /**
      * 退出群聊
+     *
      * @param cid
      */
-    public void quitChannelGroup(final String cid){
+    public void quitChannelGroup(final String cid) {
         String compelteUrl = APIUri.getQuitChannelGroupUrl(cid);
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(compelteUrl);
-        HttpUtils.request(context, CloudHttpMethod.DELETE, params, new APICallback(context,compelteUrl) {
+        HttpUtils.request(context, CloudHttpMethod.DELETE, params, new APICallback(context, compelteUrl) {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnQuitChannelGroupSuccess();
@@ -1258,7 +1264,7 @@ public class ChatAPIService {
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                apiInterface.returnQuitChannelGroupSuccessFail(error,responseCode);
+                apiInterface.returnQuitChannelGroupSuccessFail(error, responseCode);
             }
 
             @Override
@@ -1280,4 +1286,42 @@ public class ChatAPIService {
         });
     }
 
+    /**
+     * 获取频道列表
+     */
+    public void getConversationList() {
+        final String completeUrl = APIUri.getConversationListUrl();
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        getConversationList();
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(oauthCallBack, requestTime);
+            }
+
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+                apiInterface.returnChannelListSuccess(new GetChannelListResult(new String(arg0)));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                apiInterface.returnChannelListFail(error, responseCode);
+            }
+        });
+    }
 }

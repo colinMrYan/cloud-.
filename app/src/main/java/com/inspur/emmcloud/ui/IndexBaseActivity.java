@@ -302,13 +302,16 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
     /**
      * IndexActiveX首先打开MessageFragment,然后打开其他tab
      */
-    public void openTargetFragment() {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void openDefaultTab(SimpleEventMessage eventMessage) {
         try {
-            isCommunicationRunning = true;
-            int targetTabIndex = getTabIndex();
-            boolean isOpenNotify = getIntent().hasExtra("command") && getIntent().getStringExtra("command").equals("open_notification");
-            if (mTabHost != null && mTabHost.getCurrentTab() != targetTabIndex && !isOpenNotify) {
-                mTabHost.setCurrentTab(targetTabIndex);
+            if (eventMessage.getAction().equals(Constant.EVENTBUS_TAG_OPEN_DEFALT_TAB)){
+                isCommunicationRunning = true;
+                int targetTabIndex = getTabIndex();
+                boolean isOpenNotify = getIntent().hasExtra("command") && getIntent().getStringExtra("command").equals("open_notification");
+                if (mTabHost != null && mTabHost.getCurrentTab() != targetTabIndex && !isOpenNotify) {
+                    mTabHost.setCurrentTab(targetTabIndex);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

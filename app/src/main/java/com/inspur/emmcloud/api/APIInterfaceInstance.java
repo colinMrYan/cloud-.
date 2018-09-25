@@ -33,12 +33,13 @@ import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
 import com.inspur.emmcloud.bean.chat.GetAllRobotsResult;
 import com.inspur.emmcloud.bean.chat.GetChannelListResult;
+import com.inspur.emmcloud.bean.chat.GetChannelMessagesResult;
+import com.inspur.emmcloud.bean.chat.GetConversationListResult;
 import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.bean.chat.GetFileUploadResult;
 import com.inspur.emmcloud.bean.chat.GetMsgCommentCountResult;
 import com.inspur.emmcloud.bean.chat.GetMsgCommentResult;
 import com.inspur.emmcloud.bean.chat.GetMsgResult;
-import com.inspur.emmcloud.bean.chat.GetChannelMessagesResult;
 import com.inspur.emmcloud.bean.chat.GetNewMsgsResult;
 import com.inspur.emmcloud.bean.chat.GetNewsImgResult;
 import com.inspur.emmcloud.bean.chat.GetNewsInstructionResult;
@@ -1179,7 +1180,7 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnUserAppsSuccess(GetAppGroupResult getAppGroupResult,String clientConfigMyAppVersion) {
+    public void returnUserAppsSuccess(GetAppGroupResult getAppGroupResult, String clientConfigMyAppVersion) {
         // TODO Auto-generated method stub
 
     }
@@ -1649,7 +1650,7 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnContactUserListSuccess(byte[] bytes,String saveConfigVersion) {
+    public void returnContactUserListSuccess(byte[] bytes, String saveConfigVersion) {
 
     }
 
@@ -1659,7 +1660,7 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnContactOrgListSuccess(byte[] bytes,String saveConfigVersion) {
+    public void returnContactOrgListSuccess(byte[] bytes, String saveConfigVersion) {
 
     }
 
@@ -1669,7 +1670,7 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnContactUserListUpdateSuccess(GetContactUserListUpateResult getContactUserListUpateResult,String saveConfigVersion) {
+    public void returnContactUserListUpdateSuccess(GetContactUserListUpateResult getContactUserListUpateResult, String saveConfigVersion) {
 
     }
 
@@ -1679,7 +1680,7 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnContactOrgListUpdateSuccess(GetContactOrgListUpateResult getContactOrgListUpateResult,String saveConfigVersion) {
+    public void returnContactOrgListUpdateSuccess(GetContactOrgListUpateResult getContactOrgListUpateResult, String saveConfigVersion) {
 
     }
 
@@ -1734,7 +1735,7 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnJoinVoiceCommunicationChannelFail(String error,int errorCode) {
+    public void returnJoinVoiceCommunicationChannelFail(String error, int errorCode) {
 
     }
 
@@ -1760,11 +1761,17 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnQuitChannelGroupSuccess() {
-
     }
 
     @Override
     public void returnQuitChannelGroupSuccessFail(String error, int errorCode) {
+    }
 
+    @Override
+    public void returnConversationListSuccess(GetConversationListResult getConversationListResult) {
+    }
+
+    @Override
+    public void returnConversationListFail(String error, int errorCode) {
     }
 }

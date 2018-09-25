@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.bean.chat;
 
 import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.privates.TimeUtils;
 
 import org.json.JSONObject;
 import org.xutils.db.annotation.Column;
@@ -62,7 +63,8 @@ public class Conversation implements Serializable{
         this.avatar = JSONUtils.getString(obj,"id","");
         this.type = JSONUtils.getString(obj,"id","");
         this.state = JSONUtils.getString(obj,"id","");
-        this.creationDate = JSONUtils.getLong(obj,"creationDate",0L);
+        String UTCTime = JSONUtils.getString(obj, "creationDate", "");
+        this.creationDate = TimeUtils.UTCString2Long(UTCTime);
         this.lastUpdate = JSONUtils.getLong(obj,"lastUpdate",0L);
         this.members = JSONUtils.getString(obj,"members","");
         this.input = JSONUtils.getString(obj,"input","");
