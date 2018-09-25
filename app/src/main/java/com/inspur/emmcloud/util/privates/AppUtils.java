@@ -777,6 +777,36 @@ public class AppUtils {
     }
 
     /**
+     * 获取pushProvider
+     *
+     * @param context
+     * @return
+     */
+    public static String getPushProvider(Context context) {
+        // 华为  com.hicloud.push
+        // 极光  cn.jpush
+        // 小米  com.xiaomi.xmpush
+        // 魅族  com.meizu.api - push
+        String pushProvider = "";
+        String pushFlag = PreferencesUtils.getString(context, "pushFlag", "");
+        switch (pushFlag) {
+            case "huawei":
+                pushProvider = "com.hicloud.push";
+                break;
+            case "xiaomi":
+                pushProvider = "com.xiaomi.xmpush";
+                break;
+            case "meizu":
+                pushProvider = "com.meizu.api-push";
+                break;
+            default:
+                pushProvider = "cn.jpush";
+                break;
+        }
+        return pushProvider;
+    }
+
+    /**
      * 判断是否可以连接华为推了送
      *
      * @return

@@ -1370,4 +1370,22 @@ public class APIUri {
     public static String getAgoraLeaveChannelUrl(){
         return "http://172.31.2.36:88/api/sys/v6.0/voice/leave/";
     }
+
+    /**
+     * 向emm注册推送token的url
+     * 固定地址
+     * @return
+     */
+    public static String getRegisterPushToken(){
+        return "https://emm.inspuronline.com/api/sys/v6.0/config/registerPushToken ";
+    }
+
+    /**
+     * 解除注册token的url
+     * 固定地址
+     * @return
+     */
+    public static String getUnRegisterPushToken(){
+        return "https://emm.inspuronline.com/api/sys/v6.0/config/unRegisterPushToken";
+    }
 }
