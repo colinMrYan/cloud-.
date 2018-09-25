@@ -1376,7 +1376,7 @@ public class APIUri {
      * 固定地址
      * @return
      */
-    public static String getRegisterPushToken(){
+    public static String getRegisterPushTokenUrl(){
         return "https://emm.inspuronline.com/api/sys/v6.0/config/registerPushToken ";
     }
 
@@ -1385,7 +1385,7 @@ public class APIUri {
      * 固定地址
      * @return
      */
-    public static String getUnRegisterPushToken(){
+    public static String getUnRegisterPushTokenUrl(){
         return "https://emm.inspuronline.com/api/sys/v6.0/config/unRegisterPushToken";
     }
 }

@@ -686,7 +686,7 @@ public class AppAPIService {
      * 不关心服务端返回
      */
     public void registerPushToken(){
-        String url = APIUri.getRegisterPushToken();
+        String url = APIUri.getRegisterPushTokenUrl();
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(url);
         JSONObject registerPushTokenJsonObject = new JSONObject();
         try{
@@ -733,7 +733,7 @@ public class AppAPIService {
      * 不关心服务端返回
      */
     public void unregisterPushToken(){
-        String url = APIUri.getUnRegisterPushToken();
+        String url = APIUri.getUnRegisterPushTokenUrl();
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(url);
         final JSONObject unregisterPushTokenJsonObject = new JSONObject();
         try{
