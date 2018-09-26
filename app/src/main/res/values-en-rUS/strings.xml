@@ -580,6 +580,7 @@
     <string name="user_info_phone_number">Phone Number</string>
     <string name="user_no_storage">No Storage</string>
     <string name="employee_num">NO.</string>
+    <string name="worker_num">NO.</string>
 
     <!-- 集团新闻 部分 -->
     <string name="group_news">Group News</string>

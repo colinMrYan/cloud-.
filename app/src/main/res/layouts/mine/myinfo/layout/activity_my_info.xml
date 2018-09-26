@@ -174,6 +174,56 @@
                 android:background="@color/color_list_divider" />
 
             <RelativeLayout
+                android:id="@+id/rl_myinfo_worknum_main"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/text_layout_selector"
+                android:paddingBottom="10dp"
+                android:paddingLeft="12dp"
+                android:paddingTop="10dp"
+                android:visibility="gone" >
+
+                <TextView
+                    android:id="@+id/tv_myinfo_worknum_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:text="@string/worker_num"
+                    android:textSize="@dimen/content_normal_textsize" />
+
+                <LinearLayout
+                    android:id="@+id/ll_myinfo_worknum_sub"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingRight="15dp" >
+
+                    <TextView
+                        android:id="@+id/tv_myinfo_worknum_rewrite"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingRight="10dp"
+                        android:textColor="@color/onekey_content_text"
+                        android:textSize="@dimen/content_normal_textsize" />
+
+                    <ImageView
+                        android:id="@+id/iv_myinfo_worknumarrow"
+                        style="@style/arrow_right"
+                        android:src="@drawable/icon_arrow_right"
+                        android:visibility="gone" />
+                </LinearLayout>
+            </RelativeLayout>
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginLeft="10dp"
+                android:background="@color/color_list_divider" />
+
+            <RelativeLayout
                 android:id="@+id/myinfo_userdepart_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -261,6 +311,56 @@
 
                     <ImageView
                         android:id="@+id/myinfo_usermailarrow_img"
+                        style="@style/arrow_right"
+                        android:src="@drawable/icon_arrow_right"
+                        android:visibility="gone" />
+                </LinearLayout>
+            </RelativeLayout>
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginLeft="10dp"
+                android:background="@color/color_list_divider" />
+
+            <RelativeLayout
+                android:id="@+id/rl_myinfo_telphone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/text_layout_selector"
+                android:paddingBottom="10dp"
+                android:paddingLeft="12dp"
+                android:paddingTop="10dp"
+                android:visibility="gone" >
+
+                <TextView
+                    android:id="@+id/tv_myinfo_telphone_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:text="@string/telephone"
+                    android:textSize="@dimen/content_normal_textsize" />
+
+                <LinearLayout
+                    android:id="@+id/ll_myinfo_telphone_sub"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingRight="15dp" >
+
+                    <TextView
+                        android:id="@+id/tv_myinfo_telphone_rewrite"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingRight="10dp"
+                        android:textColor="@color/onekey_content_text"
+                        android:textSize="@dimen/content_normal_textsize" />
+
+                    <ImageView
+                        android:id="@+id/iv_myinfo_telphonearrow"
                         style="@style/arrow_right"
                         android:src="@drawable/icon_arrow_right"
                         android:visibility="gone" />
@@ -490,7 +590,6 @@
                 android:background="@color/color_list_divider" />
         </RelativeLayout>
 
-
         <RelativeLayout
             android:id="@+id/myinfo_modifypsd_layout"
             android:layout_width="match_parent"
@@ -535,7 +634,6 @@
                 android:background="@color/color_list_divider" />
         </RelativeLayout>
 
-
         <!-- 隐藏重置密码和下面的线 -->
         <RelativeLayout
             android:id="@+id/myinfo_reset_layout"
@@ -578,7 +676,6 @@
                 android:layout_below="@id/myinfo_reset_text"
                 android:background="@color/color_list_divider" />
         </RelativeLayout>
-
 
     </LinearLayout>
 

@@ -26,31 +26,39 @@ public class UserProfileInfoBean {
     private int showResetPsd = 1;
     private String response;
 
+    private  int showEmpNum =0; // 初始值不显示
+    private  int showTe     =0; // 初始值不显示  为0
+
     public UserProfileInfoBean(String response){
         this.response = response;
         try {
             JSONObject jsonObject = new JSONObject(response);
-            if(jsonObject.has("showHead")){
-                this.showHead = JSONUtils.getInt(response,"showHead",1);
+            if(jsonObject.has("profile")) {
+              JSONObject  jsonObjectSubProfile =  jsonObject.getJSONObject("profile");
+                if(jsonObjectSubProfile.has("showHead")){
+                    this.showHead = JSONUtils.getInt(response,"showHead",1);
+                }
+                if(jsonObjectSubProfile.has("showUserName")){
+                    this.showUserName = JSONUtils.getInt(response,"showUserName",1);
+                }
+                if(jsonObjectSubProfile.has("showUserMail")){
+                    this.showUserMail = JSONUtils.getInt(response,"showUserMail",1);
+                }
+                if(jsonObjectSubProfile.has("showUserPhone")){
+                    this.showUserPhone = JSONUtils.getInt(response,"showUserPhone",1);
+                }
+                if(jsonObjectSubProfile.has("showEpInfo")){
+                    this.showEpInfo = JSONUtils.getInt(response,"showEpInfo",1);
+                }
+                if(jsonObjectSubProfile.has("showModifyPsd")){
+                    this.showModifyPsd = JSONUtils.getInt(response,"showModifyPsd",1);
+                }
+                if(jsonObjectSubProfile.has("showResetPsd")){
+                    this.showResetPsd = JSONUtils.getInt(response,"showResetPsd",1);
+                }
+
             }
-            if(jsonObject.has("showUserName")){
-                this.showUserName = JSONUtils.getInt(response,"showUserName",1);
-            }
-            if(jsonObject.has("showUserMail")){
-                this.showUserMail = JSONUtils.getInt(response,"showUserMail",1);
-            }
-            if(jsonObject.has("showUserPhone")){
-                this.showUserPhone = JSONUtils.getInt(response,"showUserPhone",1);
-            }
-            if(jsonObject.has("showEpInfo")){
-                this.showEpInfo = JSONUtils.getInt(response,"showEpInfo",1);
-            }
-            if(jsonObject.has("showModifyPsd")){
-                this.showModifyPsd = JSONUtils.getInt(response,"showModifyPsd",1);
-            }
-            if(jsonObject.has("showResetPsd")){
-                this.showResetPsd = JSONUtils.getInt(response,"showResetPsd",1);
-            }
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
