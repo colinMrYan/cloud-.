@@ -1,7 +1,9 @@
 package com.inspur.emmcloud.bean.chat;
 
 import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
+import com.inspur.emmcloud.util.privates.DirectChannelUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 
 import java.util.ArrayList;
@@ -20,6 +22,7 @@ public class UIConversation {
     private long lastUpdate;
     private long unReadCount = 0;
     private String content;
+    private String icon="";
 
     public UIConversation() {
     }
@@ -38,6 +41,17 @@ public class UIConversation {
         }else {
             lastUpdate = messageList.get(messageList.size()-1).getCreationDate();
             unReadCount = MessageCacheUtil.getChannelMessageUnreadCount(MyApplication.getInstance(),id);
+        }
+        switch (conversation.getType()){
+            case Conversation.CONVERSATION_TYPE_GROUP:
+                icon = "file://"+MyAppConfig.LOCAL_CACHE_PHOTO_PATH+"/"+MyApplication.getInstance().getTanent() + conversation.getId() + "_100.png1";
+                break;
+            case Conversation.CONVERSATION_TYPE_DIRECT:
+                icon = DirectChannelUtils.getDirectChannelIcon(MyApplication.getInstance(), conversation.getName());
+                break;
+            case Conversation.CONVERSATION_TYPE_CAST:
+                icon=DirectChannelUtils.getRobotIcon(MyApplication.getInstance(), conversation.getName());
+                break;
         }
     }
 
@@ -105,6 +119,14 @@ public class UIConversation {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
     }
 
     public boolean equals(Object other) { // 重写equals方法，后面最好重写hashCode方法

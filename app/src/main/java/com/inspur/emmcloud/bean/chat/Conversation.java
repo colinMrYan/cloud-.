@@ -63,9 +63,10 @@ public class Conversation implements Serializable{
         this.avatar = JSONUtils.getString(obj,"id","");
         this.type = JSONUtils.getString(obj,"id","");
         this.state = JSONUtils.getString(obj,"id","");
-        String UTCTime = JSONUtils.getString(obj, "creationDate", "");
-        this.creationDate = TimeUtils.UTCString2Long(UTCTime);
-        this.lastUpdate = JSONUtils.getLong(obj,"lastUpdate",0L);
+        String UTCCreationDate = JSONUtils.getString(obj, "creationDate", "");
+        this.creationDate = TimeUtils.UTCString2Long(UTCCreationDate);
+        String UTCLastUpdate = JSONUtils.getString(obj, "lastUpdate", "");
+        this.lastUpdate = TimeUtils.UTCString2Long(UTCLastUpdate);
         this.members = JSONUtils.getString(obj,"members","");
         this.input = JSONUtils.getString(obj,"input","");
         this.dnd = JSONUtils.getBoolean(obj,"dnd",false);
