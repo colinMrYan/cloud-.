@@ -1221,6 +1221,15 @@ public class APIUri {
     }
 
     /**
+     *获取个人信息及其显示配置
+     */
+    public  static String getUserProfileAndDisPlayUrl() {
+        return MyApplication.getInstance().getClusterEmm() + "api/sys/v3.0/userprofile/detail";
+    }
+
+
+
+    /**
      * 修改用户头像
      *
      * @param
