@@ -587,6 +587,7 @@
     <string name="telephone">办公电话</string>
     <string name="user_no_storage">没有存储设备</string>
     <string name="employee_num">员工编号</string>
+    <string name="worker_num">工号</string>
 
     <!-- 集团新闻 部分 -->
     <string name="group_news">集团新闻</string>
@@ -1057,4 +1058,5 @@
     <string name="voice_word_word">字</string>
     <string name="voice_word_tran">正在语音转文字</string>
     <string name="voice_word_setting">语音自动识别</string>
+    <string name="voice_audio_record_unavailiable">当前录音设备不可用，请检查录音权限是否开启</string>
 </resources>

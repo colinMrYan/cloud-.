@@ -396,14 +396,16 @@ public class ECMChatInputMenuV0 extends LinearLayout {
                 } else if (InputMethodUtils.isSoftInputShow((Activity) getContext())) {
                     InputMethodUtils.hide((Activity) getContext());
                 }
+                lastVolumeLevel=0;
+                waterWaveProgress.setProgress(0);
+                mediaPlayerUtils.playVoiceOn();
+                voice2StringMessageUtils.startVoiceListening();
+                voiceInputLayout.setVisibility(View.VISIBLE);
+                //为了防止在键盘弹出时显示语言输入界面导致页面闪动
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         voiceInputLayout.setVisibility(View.VISIBLE);
-                        lastVolumeLevel=0;
-                        waterWaveProgress.setProgress(0);
-                        mediaPlayerUtils.playVoiceOn();
-                        voice2StringMessageUtils.startVoiceListening();
                     }
                 }, 100);
                 break;

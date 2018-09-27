@@ -21,6 +21,8 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import com.czt.mp3recorder.MP3Recorder;
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.chat.InputTypeBean;
 import com.inspur.emmcloud.bean.chat.InsertModel;
@@ -31,10 +33,12 @@ import com.inspur.emmcloud.ui.chat.MembersActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.InputMethodUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.MediaPlayerUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.common.audioformat.ConvertAudioFileFormatUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.Voice2StringMessageUtils;
@@ -212,8 +216,12 @@ public class ECMChatInputMenu extends LinearLayout {
             }
 
             @Override
-            public void onErrorRecordingVoice() {
+            public void onErrorRecordingVoice(int errorType) {
+                if(errorType == MP3Recorder.ERROR_TYPE){
+                    ToastUtils.show(MyApplication.getInstance(),getContext().getString(R.string.voice_audio_record_unavailiable));
+                }
                 voice2StringMessageUtils.stopListening();
+                return;
             }
         });
     }
@@ -236,33 +244,7 @@ public class ECMChatInputMenu extends LinearLayout {
 
             @Override
             public void onVoiceResultSuccess(VoiceResult voiceResult, boolean isLast) {
-                if(!StringUtils.isBlank(voiceResult.getFilePath())){
-                    String fileName = FileUtils.getFileNameWithoutExtension(voiceResult.getFilePath());
-                    voiceResultList.add(voiceResult);
-                    if(voiceBooleanMap.get(fileName) == null || !voiceBooleanMap.get(fileName)){
-                        voiceBooleanMap.put(fileName,new Boolean(true));
-                    }else{
-                        callBackVoiceMessage(fileName);
-                    }
-                }else{
-                    String results = voiceResult.getResults();
-                    if (results.length() == 1 && StringUtils.isSymbol(results)) {
-                        results = "";
-                    }
-                    if (!StringUtils.isBlank(results)) {
-                        if (isSpecialUser) {
-                            inputEdit.clearInsertModelList();
-                            if (chatInputMenuListener != null) {
-                                chatInputMenuListener.onSendMsg(results, null, null, null);
-                            }
-                        } else {
-                            int index = inputEdit.getSelectionStart();
-                            Editable editable = inputEdit.getText();
-                            editable.insert(index, results);
-                        }
-
-                    }
-                }
+                handleVoiceResult(voiceResult);
             }
 
             @Override
@@ -277,15 +259,48 @@ public class ECMChatInputMenu extends LinearLayout {
 
             @Override
             public void onVoiceResultError(VoiceResult errorResult) {
-                String fileName = FileUtils.getFileNameWithoutExtension(errorResult.getFilePath());
-                voiceResultList.add(errorResult);
-                if(voiceBooleanMap.get(fileName) == null ||  !voiceBooleanMap.get(fileName)){
-                    voiceBooleanMap.put(fileName,new Boolean(true));
-                }else{
-                    callBackVoiceMessage(fileName);
-                }
+                handleVoiceResult(errorResult);
             }
         });
+    }
+
+    /**
+     * 处理返回结果
+     * @param voiceResult
+     */
+    private void handleVoiceResult(VoiceResult voiceResult) {
+        if(voiceResult.getMsgState() == Voice2StringMessageUtils.MSG_FROM_CUSTOM){
+            String fileName = FileUtils.getFileNameWithoutExtension(voiceResult.getFilePath());
+            voiceResultList.add(voiceResult);
+            if(voiceBooleanMap.get(fileName) == null || !voiceBooleanMap.get(fileName)){
+                voiceBooleanMap.put(fileName,new Boolean(true));
+            }else{
+                callBackVoiceMessage(fileName);
+            }
+        }else{
+            if(voiceResult.getXunFeiPrepareError() == Voice2StringMessageUtils.MSG_XUNFEI_PREPARE_FAIL){
+                ToastUtils.show(MyApplication.getInstance(),getContext().getString(R.string.voice_audio_record_unavailiable));
+                stopVoiceInput();
+                return;
+            }
+            String results = voiceResult.getResults();
+            if (results.length() == 1 && StringUtils.isSymbol(results)) {
+                results = "";
+            }
+            if (!StringUtils.isBlank(results)) {
+                if (isSpecialUser) {
+                    inputEdit.clearInsertModelList();
+                    if (chatInputMenuListener != null) {
+                        chatInputMenuListener.onSendMsg(results, null, null, null);
+                    }
+                } else {
+                    int index = inputEdit.getSelectionStart();
+                    Editable editable = inputEdit.getText();
+                    editable.insert(index, results);
+                }
+
+            }
+        }
     }
 
     /**
@@ -504,7 +519,7 @@ public class ECMChatInputMenu extends LinearLayout {
      */
     private VoiceResult getVoiceResult(String fileNameWithoutExtension) {
         VoiceResult voiceResult = new VoiceResult();
-        voiceResult.setResults("...");
+        voiceResult.setResults("");
         for (int i = 0; i < voiceResultList.size(); i++) {
             if(fileNameWithoutExtension.equals(FileUtils.getFileNameWithoutExtension(voiceResultList.get(i).getFilePath()))){
                 voiceResult = voiceResultList.get(i);
@@ -730,6 +745,7 @@ public class ECMChatInputMenu extends LinearLayout {
      */
     public void setVoiceImageViewLevel(int volume) {
         //回调函数30多毫秒执行一次
+        LogUtils.LbcDebug("30+毫秒回调函数  ：："+volume);
         int currentLevel = 0;
         if(0==volume) {
             currentLevel=0;

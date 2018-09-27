@@ -273,6 +273,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         // TODO Auto-generated method stub
         if (channelType.equals("GROUP") && !UIMessage.getMessage().getFromUser().equals(
                 MyApplication.getInstance().getUid())){
+            holder.senderNameText.setVisibility(View.VISIBLE);
             holder.senderNameText.setText(UIMessage.getSenderName());
         }else {
             holder.senderNameText.setVisibility(View.GONE);

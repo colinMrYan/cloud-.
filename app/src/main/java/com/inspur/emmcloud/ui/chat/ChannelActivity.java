@@ -298,7 +298,7 @@ public class ChannelActivity extends MediaPlayBaseActivity {
                 setChatDrafts();
             }
         });
-        chatInputMenu.setInputLayout(channel.getInputs());
+        chatInputMenu.setInputLayout(channel.getType().equals("SERVICE")?"1":channel.getInputs());
         String chatDrafts = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), MyAppConfig.getChannelDrafsPreKey(cid));
         if (chatDrafts != null){
             chatInputMenu.setChatDrafts(chatDrafts);
@@ -587,7 +587,9 @@ public class ChannelActivity extends MediaPlayBaseActivity {
     private void combinAndSendMessageWithFile(String filePath, String messageType, int duration,String results) {
         File file = new File(filePath);
         if (!file.exists()) {
-            ToastUtils.show(MyApplication.getInstance(), R.string.file_not_exist);
+            if(messageType != Message.MESSAGE_TYPE_MEDIA_VOICE){
+                ToastUtils.show(MyApplication.getInstance(), R.string.file_not_exist);
+            }
             return;
         }
         Message fakeMessage = null;

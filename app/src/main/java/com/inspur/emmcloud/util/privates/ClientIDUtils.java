@@ -8,7 +8,6 @@ import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.bean.chat.GetUploadPushInfoResult;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 
 /**
@@ -39,7 +38,7 @@ public class ClientIDUtils {
             apiService.setAPIInterface(new WebService());
             String deviceId = AppUtils.getMyUUID(context);
             String deviceName = AppUtils.getDeviceName(context);
-            String pushProvider = getPushProvider();
+            String pushProvider = AppUtils.getPushProvider(context);
             apiService.uploadPushInfo(deviceId, deviceName, pushProvider, pushTracer);
         }else {
             callbackClientIdFail();
@@ -73,35 +72,6 @@ public class ClientIDUtils {
         }
     }
 
-    /**
-     * 获取pushProvider
-     *
-     * @param context
-     * @return
-     */
-    public String getPushProvider() {
-        // 华为  com.hicloud.push
-        // 极光  cn.jpush
-        // 小米  com.xiaomi.xmpush
-        // 魅族  com.meizu.api - push
-        String pushProvider = "";
-        String pushFlag = PreferencesUtils.getString(context, "pushFlag", "");
-        switch (pushFlag) {
-            case "huawei":
-                pushProvider = "com.hicloud.push";
-                break;
-            case "xiaomi":
-                pushProvider = "com.xiaomi.xmpush";
-                break;
-            case "meizu":
-                pushProvider = "com.meizu.api-push";
-                break;
-            default:
-                pushProvider = "cn.jpush";
-                break;
-        }
-        return pushProvider;
-    }
 
     public interface OnGetClientIdListener {
         void getClientIdSuccess(String clientId);

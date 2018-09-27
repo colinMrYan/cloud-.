@@ -303,6 +303,7 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
         // TODO Auto-generated method stub
         if (channelType.equals("GROUP") && !msg.getUid().equals(MyApplication.getInstance().getUid())) {
             String userName = ContactUserCacheUtils.getUserName(msg.getUid());
+            holder.senderNameText.setVisibility(View.VISIBLE);
             holder.senderNameText.setText(userName);
         } else {
             holder.senderNameText.setVisibility(View.GONE);

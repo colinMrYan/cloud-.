@@ -3,9 +3,12 @@ package com.inspur.emmcloud.ui.chat;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
@@ -38,10 +41,10 @@ public class DisplayMediaVoiceMsg {
     public static View getView(final Context context, final Message message) {
         final boolean isMyMsg = message.getFromUser().equals(MyApplication.getInstance().getUid());
         View cardContentView = LayoutInflater.from(context).inflate(R.layout.chat_msg_card_child_media_voice_view, null);
-        BubbleLayout voiceLayout = (BubbleLayout) cardContentView.findViewById(R.id.bl_voice);
-        voiceLayout.setArrowDirection(isMyMsg? ArrowDirection.RIGHT:ArrowDirection.LEFT);
-        voiceLayout.setBubbleColor(context.getResources().getColor(isMyMsg ? R.color.bg_my_card : R.color.white));
-        voiceLayout.setStrokeWidth(isMyMsg ?0: 0.5f);
+        BubbleLayout voiceBubbleLayout = (BubbleLayout) cardContentView.findViewById(R.id.bl_voice);
+        voiceBubbleLayout.setArrowDirection(isMyMsg? ArrowDirection.RIGHT:ArrowDirection.LEFT);
+        voiceBubbleLayout.setBubbleColor(context.getResources().getColor(isMyMsg ? R.color.bg_my_card : R.color.white));
+        voiceBubbleLayout.setStrokeWidth(isMyMsg ?0: 0.5f);
         final View voiceAnimView = isMyMsg?cardContentView.findViewById(R.id.v_voice_anim_right):cardContentView.findViewById(R.id.v_voice_anim_left);
         voiceAnimView.setVisibility(View.VISIBLE);
         final QMUILoadingView downloadLoadingView = (QMUILoadingView) cardContentView.findViewById(isMyMsg ? R.id.qlv_downloading_left : R.id.qlv_downloading_right);
@@ -52,22 +55,26 @@ public class DisplayMediaVoiceMsg {
         durationText.setVisibility(View.VISIBLE);
         MsgContentMediaVoice msgContentMediaVoice = message.getMsgContentMediaVoice();
         TextView speechText = (TextView) cardContentView.findViewById(R.id.tv_voice_card_word);
-        speechText.setText(msgContentMediaVoice.getResult());
-        speechText.setTextColor(isMyMsg? Color.parseColor("#FFFFFF"):Color.parseColor("#666666"));
         int duration = msgContentMediaVoice.getDuration();
         durationText.setText(duration + "''");
         //控制是否打开显示文字的功能，打开和不打开分两种UI控制逻辑
-        switch (PreferencesByUserAndTanentUtils.getInt(context,Constant.PREF_APP_OPEN_VOICE_WORD_SWITCH,IS_VOICE_WORD_OPEN)){
+        switch (PreferencesByUserAndTanentUtils.getInt(context,Constant.PREF_APP_OPEN_VOICE_WORD_SWITCH,IS_VOICE_WORD_CLOUSE)){
             case IS_VOICE_WORD_OPEN:
                 speechText.setVisibility(View.VISIBLE);
+                speechText.setText(msgContentMediaVoice.getResult());
+                speechText.setTextColor(isMyMsg? Color.parseColor("#FFFFFF"):Color.parseColor("#666666"));
                 break;
             case IS_VOICE_WORD_CLOUSE:
-                speechText.setVisibility(View.GONE);
+                speechText.setVisibility(View.INVISIBLE);
                 int widthDip = 90 + duration;
                 if (widthDip > 230) {
                     widthDip = 230;
                 }
-                LinearLayout.LayoutParams voiceLayoutParams = new LinearLayout.LayoutParams(DensityUtil.dip2px(context, widthDip), LinearLayout.LayoutParams.WRAP_CONTENT);
+                LinearLayout.LayoutParams voiceBubbleLayoutParams = new LinearLayout.LayoutParams(DensityUtil.dip2px(context, widthDip), LinearLayout.LayoutParams.WRAP_CONTENT);
+                voiceBubbleLayout.setLayoutParams(voiceBubbleLayoutParams);
+                RelativeLayout voiceLayout=(RelativeLayout)cardContentView.findViewById(R.id.rl_voice);
+                FrameLayout.LayoutParams voiceLayoutParams = (FrameLayout.LayoutParams)voiceLayout.getLayoutParams();
+                voiceLayoutParams.gravity= isMyMsg?Gravity.RIGHT:Gravity.LEFT;
                 voiceLayout.setLayoutParams(voiceLayoutParams);
                 break;
             default:
@@ -76,7 +83,7 @@ public class DisplayMediaVoiceMsg {
 
 
         voiceAnimView.setBackgroundResource(isMyMsg ? R.drawable.ic_chat_msg_card_voice_right_level_3 : R.drawable.ic_chat_msg_card_voice_left_level_3);
-        voiceLayout.setOnClickListener(new View.OnClickListener() {
+        voiceBubbleLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (message.getSendStatus() != 1) {

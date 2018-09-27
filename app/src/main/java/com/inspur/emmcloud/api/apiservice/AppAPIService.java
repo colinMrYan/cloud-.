@@ -680,4 +680,98 @@ public class AppAPIService {
             }
         });
     }
+
+    /**
+     * 登录、切换企业和推送token发生变化时调用解除推送token
+     * 不关心服务端返回
+     */
+    public void registerPushToken(){
+        String url = APIUri.getRegisterPushTokenUrl();
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(url);
+        JSONObject registerPushTokenJsonObject = new JSONObject();
+        try{
+            registerPushTokenJsonObject.put("deviceId",AppUtils.getMyUUID(context));
+            registerPushTokenJsonObject.put("appId",context.getPackageName());
+            registerPushTokenJsonObject.put("appVersion",AppUtils.getVersion(context));
+            registerPushTokenJsonObject.put("type",AppUtils.getPushProvider(context));
+            registerPushTokenJsonObject.put("token",AppUtils.getPushId(context));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        params.setBodyContent(registerPushTokenJsonObject.toString());
+        params.setAsJsonContent(true);
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context,url) {
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+            }
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        registerPushToken();
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+        });
+    }
+
+    /**
+     * 注销时调用解除推送token
+     * 不关心服务端返回
+     */
+    public void unregisterPushToken(){
+        String url = APIUri.getUnRegisterPushTokenUrl();
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(url);
+        final JSONObject unregisterPushTokenJsonObject = new JSONObject();
+        try{
+            unregisterPushTokenJsonObject.put("deviceId",AppUtils.getMyUUID(context));
+            unregisterPushTokenJsonObject.put("appId",context.getPackageName());
+            unregisterPushTokenJsonObject.put("appVersion",AppUtils.getVersion(context));
+            unregisterPushTokenJsonObject.put("type",AppUtils.getPushProvider(context));
+            unregisterPushTokenJsonObject.put("token",AppUtils.getPushId(context));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        params.setBodyContent(unregisterPushTokenJsonObject.toString());
+        params.setAsJsonContent(true);
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context,url) {
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+            }
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        unregisterPushToken();
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+        });
+    }
 }

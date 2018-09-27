@@ -86,7 +86,12 @@ public class MessageRecourceUploadUtils {
         VolumeFileUploadService volumeFileUploadService = null;
         switch (getVolumeFileUploadTokenResult.getStorage()) {
             case "ali_oss":  //阿里云
-                volumeFileUploadService = new OssService(getVolumeFileUploadTokenResult, mockVolumeFile);
+                try {
+                    volumeFileUploadService = new OssService(getVolumeFileUploadTokenResult, mockVolumeFile);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
                 break;
             default:
                 break;

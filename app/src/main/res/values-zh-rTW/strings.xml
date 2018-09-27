@@ -584,6 +584,7 @@
     <string name="user_info_phone_number">聯繫方式</string>
     <string name="user_no_storage">沒有存放裝置</string>
     <string name="employee_num">員工編號</string>
+    <string name="worker_num">>工號</string>
 
     <!-- 集團新聞 部分 -->
     <string name="group_news">集團新聞</string>
@@ -1006,4 +1007,5 @@
     <string name="voice_word_word">字</string>
     <string name="voice_word_tran">正在語音轉文字</string>
     <string name="voice_word_setting">語音自動識別</string>
+    <string name="voice_audio_record_unavailiable">當前錄音設備不可用，請檢查錄音許可權是否開啟</string>
 </resources>

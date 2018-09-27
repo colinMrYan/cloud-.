@@ -1246,6 +1246,15 @@ public class APIUri {
     }
 
     /**
+     *获取个人信息及其显示配置
+     */
+    public  static String getUserProfileAndDisPlayUrl() {
+        return MyApplication.getInstance().getClusterEmm() + "api/sys/v3.0/userprofile/detail";
+    }
+
+
+
+    /**
      * 修改用户头像
      *
      * @param
@@ -1394,5 +1403,23 @@ public class APIUri {
      */
     public static String getAgoraLeaveChannelUrl(){
         return "http://172.31.2.36:88/api/sys/v6.0/voice/leave/";
+    }
+
+    /**
+     * 向emm注册推送token的url
+     * 固定地址
+     * @return
+     */
+    public static String getRegisterPushTokenUrl(){
+        return "https://emm.inspuronline.com/api/sys/v6.0/config/registerPushToken ";
+    }
+
+    /**
+     * 解除注册token的url
+     * 固定地址
+     * @return
+     */
+    public static String getUnRegisterPushTokenUrl(){
+        return "https://emm.inspuronline.com/api/sys/v6.0/config/unRegisterPushToken";
     }
 }

@@ -65,31 +65,39 @@ public class AudioRecorderManager {
      * @return
      */
     public void startRecord() {
-        audioRecord.startRecording();
-        // 让录制状态为true
-        isRecording = true;
-        beginTime = System.currentTimeMillis();
-        // 开启音频文件写入线程
-        new Thread(new AudioRecordThread()).start();
+        try {
+            audioRecord.startRecording();
+            // 让录制状态为true
+            isRecording = true;
+            beginTime = System.currentTimeMillis();
+            // 开启音频文件写入线程
+            new Thread(new AudioRecordThread()).start();
+        }catch (Exception e){
+            callBack.onWavAudioPrepareState(AudioRecordErrorCode.E_ERROR);
+            e.printStackTrace();
+        }
+
     }
 
     /**
      * 准备
      * @return
      */
-    public void prepareAudioRecord(){
+    public void prepareWavAudioRecord(){
         //判断是否有外部存储设备sdcard
         if (isSdcardExit()) {
             if (isRecording) {
-                callBack.onAudioPrepared(AudioRecordErrorCode.E_STATE_RECODING);
+                callBack.onWavAudioPrepareState(AudioRecordErrorCode.E_STATE_RECODING);
+                return;
             } else {
                 if (audioRecord == null) {
                     createAudioRecord();
                 }
-                callBack.onAudioPrepared(AudioRecordErrorCode.SUCCESS);
+                callBack.onWavAudioPrepareState(AudioRecordErrorCode.SUCCESS);
             }
         } else {
-            callBack.onAudioPrepared(AudioRecordErrorCode.E_NOSDCARD);
+            callBack.onWavAudioPrepareState(AudioRecordErrorCode.E_NOSDCARD);
+            return;
         }
     }
 
@@ -130,14 +138,19 @@ public class AudioRecorderManager {
      * 关闭，对内使用
      */
     private void close() {
-        reset();
-        if (audioRecord != null) {
-            isRecording = false;//停止文件写入
-            audioRecord.stop();
-            audioRecord.release();//释放资源
-            audioRecord = null;
+        try {
+            reset();
+            if (audioRecord != null) {
+                isRecording = false;//停止文件写入
+                if (audioRecord.getState() != AudioRecord.STATE_UNINITIALIZED){
+                    audioRecord.release();//释放资源
+                }
+                audioRecord = null;
+            }
+            beginTime = 0;
+        }catch (Exception e){
+            e.printStackTrace();
         }
-        beginTime = 0;
     }
 
     /**
@@ -389,6 +402,6 @@ public class AudioRecorderManager {
      */
     public interface AudioDataCallBack {
         void onDataChange(int volume, float duration);
-        void onAudioPrepared(int state);
+        void onWavAudioPrepareState(int state);
     }
 }

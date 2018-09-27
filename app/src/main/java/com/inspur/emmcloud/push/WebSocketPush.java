@@ -269,6 +269,7 @@ public class WebSocketPush {
      * 切换租户的时候直接断开Websocket
      */
     public void closeWebsocket() {
+        isWebsocketConnecting = false;
         endTimeCount();
         if (mSocket != null) {
             mSocket.disconnect();
@@ -321,7 +322,6 @@ public class WebSocketPush {
                 // TODO Auto-generated method stub
                 isWebsocketConnecting = true;
                 LogUtils.jasonDebug("正在连接");
-                sendWebSocketStatusBroadcast("socket_connecting");
             }
         });
         mSocket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
@@ -339,14 +339,6 @@ public class WebSocketPush {
             }
         });
 
-        mSocket.on(Socket.EVENT_RECONNECTING, new Emitter.Listener() {
-
-            @Override
-            public void call(Object... arg0) {
-                // TODO Auto-generated method stub
-                sendWebSocketStatusBroadcast("socket_connecting");
-            }
-        });
 
         mSocket.on("status", new Emitter.Listener() {
 
@@ -427,6 +419,7 @@ public class WebSocketPush {
             public void call(Object... arg0) {
                 // TODO Auto-generated method stub
                 isWSStatusConnectedV1 = false;
+                isWebsocketConnecting = false;
                 sendWebSocketStatusBroadcast(Socket.EVENT_DISCONNECT);
                 LogUtils.debug(TAG, "断开连接");
                 LogUtils.debug(TAG, arg0[0].toString());
