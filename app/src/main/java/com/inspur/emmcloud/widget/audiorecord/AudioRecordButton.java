@@ -2,6 +2,7 @@ package com.inspur.emmcloud.widget.audiorecord;
 
 
 import android.content.Context;
+import android.graphics.Rect;
 import android.media.tv.TvContract;
 import android.os.Handler;
 import android.os.Message;
@@ -51,6 +52,7 @@ public class AudioRecordButton extends Button {
     private String mp3FilePath = "";
     private long mp3BeginTime;
     private boolean isDeviceError = false;
+    private float lastCallBackDurationTime = 0;
 
     /**
      * 先实现两个参数的构造方法，布局会默认引用这个构造方法， 用一个 构造参数的构造方法来引用这个方法 * @param context
@@ -67,15 +69,15 @@ public class AudioRecordButton extends Button {
             public boolean onLongClick(View v) {
                 isRecording = true;
                 mDialogManager.showRecordingDialog();
-                if(AppUtils.getIsVoiceWordOpen()){
+                if (AppUtils.getIsVoiceWordOpen()) {
                     //录制wav的分支
                     audioRecorderManager = AudioRecorderManager.getInstance();
                     audioRecorderManager.setCallBack(new AudioRecorderManager.AudioDataCallBack() {
                         @Override
                         public void onDataChange(int volume, float duration) {
-                            if(isRecording){
+                            if (isRecording) {
                                 //超过0.2秒再回调
-                                if(duration - durationTime > 0.2){
+                                if (duration - durationTime > 0.2) {
                                     durationTime = duration;
                                     volumeSize = volume;
                                     handler.sendEmptyMessage(VOICE_MESSAGE);
@@ -85,25 +87,25 @@ public class AudioRecordButton extends Button {
 
                         @Override
                         public void onWavAudioPrepareState(int state) {
-                            switch (state){
+                            switch (state) {
                                 case AudioRecordErrorCode.SUCCESS:
-                                    changeState(STATE_RECORDING);
-                                    if(audioRecorderManager != null){
+                                    if (audioRecorderManager != null) {
                                         audioRecorderManager.startRecord();
                                         mListener.onStartRecordingVoice();
                                     }
+                                    changeState(STATE_RECORDING);
                                     break;
                                 case AudioRecordErrorCode.E_NOSDCARD:
                                     recoveryState();
-                                    ToastUtils.show(MyApplication.getInstance(),MyApplication.getInstance().getString(R.string.error_no_sdcard));
-                                    if(audioRecorderManager != null){
+                                    ToastUtils.show(MyApplication.getInstance(), MyApplication.getInstance().getString(R.string.error_no_sdcard));
+                                    if (audioRecorderManager != null) {
                                         audioRecorderManager.stopRecord();
                                     }
                                     break;
                                 case AudioRecordErrorCode.E_ERROR:
                                     recoveryState();
-                                    ToastUtils.show(MyApplication.getInstance(),getContext().getString(R.string.voice_audio_record_unavailiable));
-                                    if(audioRecorderManager != null){
+                                    ToastUtils.show(MyApplication.getInstance(), getContext().getString(R.string.voice_audio_record_unavailiable));
+                                    if (audioRecorderManager != null) {
                                         audioRecorderManager.stopRecord();
                                     }
                                     break;
@@ -116,19 +118,19 @@ public class AudioRecordButton extends Button {
                     });
                     //按下开关，先调用准备Audio
                     audioRecorderManager.prepareWavAudioRecord();
-                }else{
+                } else {
                     //录制mp3的分支
                     isDeviceError = false;
                     String mp3FileDir = getMp3FilePath();
                     File fileDir = new File(mp3FileDir);
-                    if(!fileDir.exists()){
+                    if (!fileDir.exists()) {
                         fileDir.mkdirs();
                     }
-                    mp3FilePath = mp3FileDir + AppUtils.generalFileName()+".mp3";
+                    mp3FilePath = mp3FileDir + AppUtils.generalFileName() + ".mp3";
                     File file = new File(mp3FilePath);
                     mp3Recorder = new MP3Recorder(file);
                     //处理异常
-                    mp3Recorder.setErrorHandler(new Handler(){
+                    mp3Recorder.setErrorHandler(new Handler() {
                         @Override
                         public void handleMessage(Message msg) {
                             super.handleMessage(msg);
@@ -141,7 +143,7 @@ public class AudioRecordButton extends Button {
                         }
                     });
                     //设备正常则录音
-                    if(!isDeviceError){
+                    if (!isDeviceError) {
                         recorderMp3Voice();
                     }
                 }
@@ -175,17 +177,18 @@ public class AudioRecordButton extends Button {
      */
     private void recorderMp3Voice() {
         try {
-            changeState(STATE_RECORDING);
             mp3BeginTime = System.currentTimeMillis();
             mp3Recorder.start();
+            changeState(STATE_RECORDING);
             Runnable runnable = new Runnable() {
                 @Override
                 public void run() {
-                    while (isRecording){
-                        float time = (System.currentTimeMillis() - mp3BeginTime)/1000f;
-                        float spacingTime = time - durationTime;
-                        if(spacingTime > 0.2){
-                            durationTime = time;
+                    while (isRecording) {
+                        float time = (System.currentTimeMillis() - mp3BeginTime) / 1000f;
+                        float spacingTime = time - lastCallBackDurationTime;
+                        durationTime = time;
+                        if (spacingTime > 0.2) {
+                            lastCallBackDurationTime = time;
                             volumeSize = getMp3Volume(mp3Recorder.getVolume());
                             handler.sendEmptyMessage(VOICE_MESSAGE);
                         }
@@ -202,42 +205,43 @@ public class AudioRecordButton extends Button {
 
     /**
      * 获取录制mp3时的音量
+     *
      * @param realVolume
      */
     private int getMp3Volume(int realVolume) {
         int db = 1;
-        if(realVolume <= 10){
+        if (realVolume <= 10) {
             db = 1;
-        }else if(realVolume <= 30){
+        } else if (realVolume <= 30) {
             db = 2;
-        }else if(realVolume <= 100){
+        } else if (realVolume <= 100) {
             db = 3;
-        }else if(realVolume <= 250){
+        } else if (realVolume <= 250) {
             db = 4;
-        }else if(realVolume <= 500){
+        } else if (realVolume <= 500) {
             db = 5;
-        }else{
+        } else {
             db = 6;
         }
         return db;
     }
 
-    private Handler handler = new Handler(){
+    private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            switch (msg.what){
+            switch (msg.what) {
                 case VOICE_MESSAGE:
-                    if( durationTime < 60.0){
-                        mDialogManager.updateVoiceLevelAndDurationTime(volumeSize,durationTime);
-                    }else if(durationTime >= 60.0){
+                    if (durationTime < 60.0) {
+                        mDialogManager.updateVoiceLevelAndDurationTime(volumeSize, durationTime);
+                    } else if (durationTime >= 60.0) {
                         isRecording = false;
                         voiceRecordFinish();
-                        if(AppUtils.getIsVoiceWordOpen()){
-                            mListener.onFinished(60f,audioRecorderManager.getCurrentFilePath());
-                        }else{
+                        if (AppUtils.getIsVoiceWordOpen()) {
+                            mListener.onFinished(60f, audioRecorderManager.getCurrentFilePath());
+                        } else {
                             reset();
                             voiceRecordFinish();
-                            mListener.onFinished(60f,mp3FilePath);
+                            mListener.onFinished(60f, mp3FilePath);
                         }
                     }
                     break;
@@ -251,6 +255,7 @@ public class AudioRecordButton extends Button {
 
     /**
      * 设置Audio回调
+     *
      * @param listener
      */
     public void setAudioFinishRecorderListener(AudioFinishRecorderListener listener) {
@@ -260,7 +265,7 @@ public class AudioRecordButton extends Button {
     /**
      * 播放开始录制音效
      */
-    private void playRecordStartMusic(){
+    private void playRecordStartMusic() {
         MediaPlayerManagerUtils.getManager().play(R.raw.voice_search_on, null);
     }
 
@@ -291,29 +296,36 @@ public class AudioRecordButton extends Button {
                 if (!isRecording || durationTime < 0.8f) {
                     mDialogManager.tooShort();
                     //延迟500毫秒
-                    handler.sendEmptyMessageDelayed(VOICE_DISMISS_DIALOG,500);
-                } else if (mCurrentState == STATE_RECORDING && (durationTime < 60)) {//正常录制结束
+                    handler.sendEmptyMessageDelayed(VOICE_DISMISS_DIALOG, 500);
+                } else if (mCurrentState == STATE_RECORDING) {//正常录制结束
                     voiceRecordFinish();
-                    if (mListener != null) {// 并且callbackActivity，保存录音
-                        if(AppUtils.getIsVoiceWordOpen()){
-                            if(audioRecorderManager != null){
-                                audioRecorderManager.stopRecord();
+                    if (AppUtils.getIsVoiceWordOpen()) {
+                        if (audioRecorderManager != null) {
+                            audioRecorderManager.stopRecord();
+                        }
+                        if (mListener != null) {
+                            mListener.onFinished(durationTime, audioRecorderManager.getCurrentFilePath());
+                        }
+
+                    } else {
+                        if (!isDeviceError) {
+                            if (mp3Recorder != null) {
+                                mp3Recorder.stop();
                             }
-                            mListener.onFinished(durationTime,audioRecorderManager.getCurrentFilePath());
-                        }else{
-                            if(!isDeviceError){
-                                if(mp3Recorder != null){
-                                    mp3Recorder.stop();
-                                }
-                                mListener.onFinished(durationTime,mp3FilePath);
+                            if (mListener != null) {
+                                mListener.onFinished(durationTime, mp3FilePath);
                             }
+
                         }
                     }
                 } else if (mCurrentState == STATE_WANT_TO_CANCEL) {
                     voiceRecordFinish();
+                }else {
+                    voiceRecordFinish();
                 }
                 reset();// 恢复标志位
                 break;
+
         }
         return super.onTouchEvent(event);
     }
@@ -322,13 +334,13 @@ public class AudioRecordButton extends Button {
      * 结束处理
      */
     private void voiceRecordFinish() {
-        if(mDialogManager != null){
+        if (mDialogManager != null) {
             mDialogManager.dismissRecordingDialog();
         }
-        if(audioRecorderManager != null){
+        if (audioRecorderManager != null) {
             audioRecorderManager.stopRecord();
         }
-        if(mp3Recorder != null){
+        if (mp3Recorder != null) {
             mp3Recorder.setPause(false);
             mp3Recorder.stop();
         }
@@ -340,12 +352,14 @@ public class AudioRecordButton extends Button {
     private void reset() {
         isRecording = false;
         durationTime = 0;
+        lastCallBackDurationTime = 0;
         volumeSize = 0;
         changeState(STATE_NORMAL);
     }
 
     /**
      * 根据手指所在的坐标判断用户是否想要取消发送
+     *
      * @param x
      * @param y
      * @return
@@ -359,6 +373,7 @@ public class AudioRecordButton extends Button {
 
     /**
      * 根据状态改变Dialog和button的UI
+     *
      * @param state
      */
     private void changeState(int state) {
@@ -399,7 +414,9 @@ public class AudioRecordButton extends Button {
      */
     public interface AudioFinishRecorderListener {
         void onStartRecordingVoice();
+
         void onFinished(float seconds, String filePath);
+
         void onErrorRecordingVoice(int errorType);
     }
 
