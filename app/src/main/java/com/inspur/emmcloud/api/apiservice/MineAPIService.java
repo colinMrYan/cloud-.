@@ -239,7 +239,7 @@ public class MineAPIService {
      * 获取我的信息
      */
     public void getUserProfileConfigInfo() {
-        final String completeUrl = APIUri.getUserProfileUrl();
+        final String completeUrl = APIUri.getUserProfileAndDisPlayUrl();
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {

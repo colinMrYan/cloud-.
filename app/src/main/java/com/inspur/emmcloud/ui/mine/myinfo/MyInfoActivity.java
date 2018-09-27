@@ -24,6 +24,7 @@ import com.inspur.emmcloud.ui.login.ModifyUserPsdActivity;
 import com.inspur.emmcloud.ui.login.ModifyUserPwdBySMSActivity;
 import com.inspur.emmcloud.ui.mine.setting.SwitchEnterpriseActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -56,6 +57,12 @@ public class MyInfoActivity extends BaseActivity {
     private GetMyInfoResult getMyInfoResult;
     private boolean isUpdateUserPhoto = false; //标记是否更改了头像
 
+    private  TextView tvUserName;
+    private  TextView tvMobile;
+    private  TextView tvEmpNum;
+    private  TextView tvTelPhone;
+    private  TextView tvUserdepart;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
@@ -75,6 +82,12 @@ public class MyInfoActivity extends BaseActivity {
         resetLayout = (RelativeLayout) findViewById(R.id.myinfo_reset_layout);
         apiService = new MineAPIService(MyInfoActivity.this);
         apiService.setAPIInterface(new WebService());
+
+        tvEmpNum   = (TextView)findViewById(R.id.tv_myinfo_worknum_rewrite);
+        tvMobile   = (TextView)findViewById(R.id.myinfo_userphone_text);
+        tvTelPhone = (TextView)findViewById(R.id.tv_myinfo_telphone_rewrite);
+        tvUserName = (TextView)findViewById(R.id.myinfo_username_text);
+        tvUserdepart = (TextView)findViewById(R.id.myinfo_userdepart_text);
     }
 
     /**
@@ -88,16 +101,17 @@ public class MyInfoActivity extends BaseActivity {
         String photoUri = APIUri
                 .getChannelImgUrl(MyInfoActivity.this, getMyInfoResult.getID());
         ImageDisplayUtils.getInstance().displayImage(userHeadImg, photoUri, R.drawable.icon_photo_default);
-        String userName = getMyInfoResult.getName();
-        ((TextView) findViewById(R.id.myinfo_username_text)).setText((StringUtils.isBlank(userName) ||userName.equals("null")) ? getString(R.string.not_set) : userName);
-        String mail = getMyInfoResult.getMail();
-        userMailText.setText((StringUtils.isBlank(mail) ||mail.equals("null")) ? getString(R.string.not_set) : mail);
-        String phoneNumber = getMyInfoResult.getPhoneNumber();
-        ((TextView) findViewById(R.id.myinfo_userphone_text)).setText((StringUtils.isBlank(phoneNumber) || phoneNumber.equals("null")) ? getString(R.string.not_set) : phoneNumber);
+
+//        String userName = getMyInfoResult.getName();
+//        ((TextView) findViewById(R.id.myinfo_username_text)).setText((StringUtils.isBlank(userName) ||userName.equals("null")) ? getString(R.string.not_set) : userName);
+//        String mail = getMyInfoResult.getMail();
+//        userMailText.setText((StringUtils.isBlank(mail) ||mail.equals("null")) ? getString(R.string.not_set) : mail);
+//        String phoneNumber = getMyInfoResult.getPhoneNumber();
+//        ((TextView) findViewById(R.id.myinfo_userphone_text)).setText((StringUtils.isBlank(phoneNumber) || phoneNumber.equals("null")) ? getString(R.string.not_set) : phoneNumber);
+//
         ((TextView) findViewById(R.id.myinfo_usercompanytext_text)).setText(MyApplication.getInstance().getCurrentEnterprise().getName());
         List<Enterprise> enterpriseList = getMyInfoResult.getEnterpriseList();
         findViewById(R.id.switch_enterprese_text).setVisibility((enterpriseList.size() > 1)?View.VISIBLE:View.GONE);
-
     }
 
     public void onClick(View v) {
@@ -207,12 +221,40 @@ public class MyInfoActivity extends BaseActivity {
             }
         }
         if (userProfileInfoBean != null) {
-            if (userProfileInfoBean.getShowUserMail() == 0) {
-                (findViewById(R.id.myinfo_usermail_layout)).setVisibility(View.GONE);
+            if(!userProfileInfoBean.getUserNameStr().equals("")) {
+                findViewById(R.id.myinfo_username_layout).setVisibility(View.VISIBLE);
+                tvUserName.setText(userProfileInfoBean.getUserNameStr());
             }
-            if (userProfileInfoBean.getShowUserPhone() == 0) {
-                (findViewById(R.id.myinfo_userphone_layout)).setVisibility(View.GONE);
+
+            if(!(userProfileInfoBean.getEmpNumStr().equals("")||userProfileInfoBean.getEmpNumStr().equals("null"))) {
+                findViewById(R.id.rl_myinfo_worknum_main).setVisibility(View.VISIBLE);
+                findViewById(R.id.v_workernum_top_Liner).setVisibility(View.VISIBLE);
+                tvEmpNum.setText(userProfileInfoBean.getEmpNumStr());
             }
+
+            if(!(userProfileInfoBean.getOrgName().equals("")||userProfileInfoBean.getOrgName().equals("null"))) {
+                findViewById(R.id.myinfo_userdepart_layout).setVisibility(View.VISIBLE);
+                findViewById(R.id.v_userdepart_topliner).setVisibility(View.VISIBLE);
+                tvUserdepart.setText(userProfileInfoBean.getOrgName());
+            }
+
+            if(!(userProfileInfoBean.getUserMailStr().equals("")||userProfileInfoBean.getUserMailStr().equals("null"))) {
+                (findViewById(R.id.myinfo_usermail_layout)).setVisibility(View.VISIBLE);
+                (findViewById(R.id.v_usermail_topliner)).setVisibility(View.VISIBLE);
+                userMailText.setText(userProfileInfoBean.getUserMailStr());
+            }
+            if(!(userProfileInfoBean.getMobileStr().equals("")||userProfileInfoBean.getMobileStr().equals("null"))) {
+                findViewById(R.id.myinfo_userphone_layout).setVisibility(View.VISIBLE);
+                findViewById(R.id.v_userphone_topliner).setVisibility(View.VISIBLE);
+                tvMobile.setText(userProfileInfoBean.getMobileStr());
+            }
+            if(!(userProfileInfoBean.getTelPhoneStr().equals("")||userProfileInfoBean.getTelPhoneStr().equals("null"))) {
+                (findViewById(R.id.rl_myinfo_telphone)).setVisibility(View.VISIBLE);
+                (findViewById(R.id.v_telphone_topliner)).setVisibility(View.VISIBLE);
+                tvMobile.setText(userProfileInfoBean.getTelPhoneStr());
+            }
+
+
             if (userProfileInfoBean.getShowEpInfo() == 0) {
                 (findViewById(R.id.myinfo_usercompany_layout)).setVisibility(View.GONE);
             }
@@ -223,7 +265,7 @@ public class MyInfoActivity extends BaseActivity {
                 resetLayout.setVisibility(View.VISIBLE);
             }
             //这里手机号格式的正确性由服务端保证，客户端只关心是否为空
-            if (StringUtils.isBlank(getMyInfoResult.getPhoneNumber())) {
+            if (userProfileInfoBean.getMobileStr().equals("")) {
                 resetLayout.setVisibility(View.GONE);
             }
         }
@@ -248,8 +290,10 @@ public class MyInfoActivity extends BaseActivity {
      */
     private void getUserInfoConfig() {
         if (NetUtils.isNetworkConnected(MyInfoActivity.this, false)) {
+           LogUtils.LbcDebug("网络状态连接");
             apiService.getUserProfileConfigInfo();
         } else {
+            LogUtils.LbcDebug("网络状态断开");
             setUserInfoConfig(null);
         }
     }
@@ -279,6 +323,8 @@ public class MyInfoActivity extends BaseActivity {
 
         @Override
         public void returnUserProfileConfigSuccess(UserProfileInfoBean userProfileInfoBean) {
+            LogUtils.LbcDebug("回调成功 显示配置参数"+userProfileInfoBean.getUserNameStr());
+
             setUserInfoConfig(userProfileInfoBean);
             PreferencesByUserAndTanentUtils.putString(getApplicationContext(), "user_profiles", userProfileInfoBean.getResponse());
         }

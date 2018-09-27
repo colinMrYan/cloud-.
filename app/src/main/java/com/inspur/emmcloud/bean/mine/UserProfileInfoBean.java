@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.bean.mine;
 
 import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,44 +25,120 @@ public class UserProfileInfoBean {
     private int showEpInfo = 1;
     private int showModifyPsd = 1;
     private int showResetPsd = 1;
+
+    private  int showEmpNum =0;      // 初始值不显示
+    private  int showTelePhone   =0; // 初始值不显示  为0
+
+
+    private String globalName="";
+    private String userName  ="";
+    private String userMail  ="";
+    private String userPhone ="";
+    private String empNum    ="";
+    private String telePhone ="";
+    private String id        ="";
+    private String orgName   ="";
+
+
     private String response;
 
-    private  int showEmpNum =0; // 初始值不显示
-    private  int showTe     =0; // 初始值不显示  为0
 
     public UserProfileInfoBean(String response){
         this.response = response;
+        LogUtils.LbcDebug("UserProfileInfoBean"+response);
         try {
             JSONObject jsonObject = new JSONObject(response);
             if(jsonObject.has("profile")) {
               JSONObject  jsonObjectSubProfile =  jsonObject.getJSONObject("profile");
-                if(jsonObjectSubProfile.has("showHead")){
-                    this.showHead = JSONUtils.getInt(response,"showHead",1);
+              String  jsonObjectSubProfileStr= jsonObjectSubProfile.toString();
+                if(jsonObjectSubProfile.has("id")){
+                    this.id = JSONUtils.getString(jsonObjectSubProfileStr,"id","");
                 }
-                if(jsonObjectSubProfile.has("showUserName")){
-                    this.showUserName = JSONUtils.getInt(response,"showUserName",1);
+                if(jsonObjectSubProfile.has("userName")){
+                    this.userName = JSONUtils.getString(jsonObjectSubProfileStr,"userName","");
                 }
-                if(jsonObjectSubProfile.has("showUserMail")){
-                    this.showUserMail = JSONUtils.getInt(response,"showUserMail",1);
+                if(jsonObjectSubProfile.has("email")){
+                    this.userMail = JSONUtils.getString(jsonObjectSubProfileStr,"email","");
                 }
-                if(jsonObjectSubProfile.has("showUserPhone")){
-                    this.showUserPhone = JSONUtils.getInt(response,"showUserPhone",1);
+                if(jsonObjectSubProfile.has("mobile")){
+                    this.userPhone = JSONUtils.getString(jsonObjectSubProfileStr,"mobile","");
                 }
-                if(jsonObjectSubProfile.has("showEpInfo")){
-                    this.showEpInfo = JSONUtils.getInt(response,"showEpInfo",1);
+                if(jsonObjectSubProfile.has("globalName")){
+                    this.globalName = JSONUtils.getString(jsonObjectSubProfileStr,"globalName","");
                 }
-                if(jsonObjectSubProfile.has("showModifyPsd")){
-                    this.showModifyPsd = JSONUtils.getInt(response,"showModifyPsd",1);
+                if(jsonObjectSubProfile.has("empNo")){
+                    this.empNum = JSONUtils.getString(jsonObjectSubProfileStr,"empNo","");
                 }
-                if(jsonObjectSubProfile.has("showResetPsd")){
-                    this.showResetPsd = JSONUtils.getInt(response,"showResetPsd",1);
+                if(jsonObjectSubProfile.has("tel")){
+                    this.telePhone = JSONUtils.getString(jsonObjectSubProfileStr,"tel","");
+                }
+
+                if(jsonObjectSubProfile.has("orgName")){
+                    this.orgName = JSONUtils.getString(jsonObjectSubProfileStr,"orgName","");
                 }
 
             }
 
+           if(jsonObject.has("display")) {
+               JSONObject  jsonObjectSubDisplaty =  jsonObject.getJSONObject("display");
+               String jsonObjectSubDisplatyStr = jsonObjectSubDisplaty.toString();
+               if(jsonObjectSubDisplaty.has("showHead")){
+                   this.showHead = JSONUtils.getInt(jsonObjectSubDisplatyStr,"showHead",1);
+               }
+               if(jsonObjectSubDisplaty.has("showUserName")){
+                   this.showUserName = JSONUtils.getInt(jsonObjectSubDisplatyStr,"showUserName",1);
+               }
+               if(jsonObjectSubDisplaty.has("showUserMail")){
+                   this.showUserMail = JSONUtils.getInt(jsonObjectSubDisplatyStr,"showUserMail",1);
+               }
+               if(jsonObjectSubDisplaty.has("showUserPhone")){
+                   this.showUserPhone = JSONUtils.getInt(jsonObjectSubDisplatyStr,"showUserPhone",1);
+               }
+               if(jsonObjectSubDisplaty.has("showEpInfo")){
+                   this.showEpInfo = JSONUtils.getInt(jsonObjectSubDisplatyStr,"showEpInfo",1);
+               }
+               if(jsonObjectSubDisplaty.has("showModifyPsd")){
+                   this.showModifyPsd = JSONUtils.getInt(jsonObjectSubDisplatyStr,"showModifyPsd",1);
+               }
+               if(jsonObjectSubDisplaty.has("showResetPsd")){
+                   this.showResetPsd = JSONUtils.getInt(jsonObjectSubDisplatyStr,"showResetPsd",1);
+               }
+           }
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    public  String getUserNameStr(){
+        return  userName;
+    }
+
+    public  String getIDStr() {
+        return  id;
+    }
+
+    public  String getUserMailStr(){
+        return  userMail;
+    }
+
+    public  String getTelPhoneStr() {
+        return  telePhone;
+    }
+
+    public  String getGlobalNameStr() {
+        return  globalName;
+    }
+
+    public  String getEmpNumStr() {
+        return  empNum;
+    }
+
+    public  String getMobileStr() {
+        return  userPhone;
+    }
+
+    public  String getOrgName () {
+        return  orgName;
     }
 
     public int getShowHead() {
