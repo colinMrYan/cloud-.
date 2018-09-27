@@ -13,6 +13,7 @@ import com.inspur.emmcloud.util.privates.DirectChannelUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -21,7 +22,7 @@ import java.util.List;
  * Created by chenmch on 2018/9/22.
  */
 
-public class UIConversation {
+public class UIConversation implements Serializable{
     private String id;
     private Conversation conversation;
     private List<Message> messageList;

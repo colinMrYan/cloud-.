@@ -17,7 +17,6 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.UIConversation;
 import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
@@ -52,7 +51,6 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
     }
 
     public void setData(List<UIConversation> uiConversationList){
-        LogUtils.jasonDebug("size=="+uiConversationList.size());
         synchronized (this){
             this.uiConversationList.clear();
             this.uiConversationList.addAll(uiConversationList);
@@ -175,7 +173,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
         @Override
         public boolean onLongClick(View v) {
             if (adapterListener != null){
-                adapterListener.onItemLongClick(v,getAdapterPosition());
+                return adapterListener.onItemLongClick(v,getAdapterPosition());
             }
             return false;
         }
@@ -186,7 +184,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
      */
     public interface AdapterListener {
         void onItemClick(View view, int position);
-        void onItemLongClick(View view, int position);
+        boolean onItemLongClick(View view, int position);
         void onDataChange();
     }
 

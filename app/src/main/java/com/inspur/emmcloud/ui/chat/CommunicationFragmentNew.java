@@ -182,11 +182,20 @@ public class CommunicationFragmentNew extends Fragment {
             @Override
             public void onItemClick(View view, int position) {
                 UIConversation uiConversation = displayUIConversationList.get(position);
+                Conversation conversation = uiConversation.getConversation();
+                String type = conversation.getType();
+                if (type.equals(Conversation.TYPE_CAST) || type.equals(Conversation.TYPE_DIRECT) || type.equals(Conversation.TYPE_GROUP)) {
+                    Bundle bundle = new Bundle();
+                    IntentUtils.startActivity(getActivity(), ChannelActivity.class, bundle);
+                } else {
+                    ToastUtils.show(MyApplication.getInstance(), R.string.not_support_open_channel);
+                }
+                setConversationRead(uiConversation);
             }
 
             @Override
-            public void onItemLongClick(View view, int position) {
-                LogUtils.jasonDebug("onItemLongClick--------------" + position);
+            public boolean onItemLongClick(View view, int position) {
+                return true;
             }
 
             @Override
@@ -456,7 +465,7 @@ public class CommunicationFragmentNew extends Fragment {
         MessageCacheUtil.saveMessage(MyApplication.getInstance(), receivedWSMessage);
         Long ChannelMessageMatheSetStart = (channelNewMessage == null) ? receivedWSMessage.getCreationDate() : channelNewMessage.getCreationDate();
         MessageMatheSetCacheUtils.add(MyApplication.getInstance(),
-                receivedWSMessage.getChannel(),new MatheSet(ChannelMessageMatheSetStart, receivedWSMessage.getCreationDate()));
+                receivedWSMessage.getChannel(), new MatheSet(ChannelMessageMatheSetStart, receivedWSMessage.getCreationDate()));
     }
 
     class CacheConversationThread extends Thread {
@@ -509,7 +518,7 @@ public class CommunicationFragmentNew extends Fragment {
                     sortConversationList();
                     break;
                 case "set_all_message_read":
-                    clearAllConversationUnread();
+                    setAllConversationRead();
                     break;
                 case "websocket_status":
                     String socketStatus = intent.getExtras().getString("status");
@@ -573,11 +582,16 @@ public class CommunicationFragmentNew extends Fragment {
     /**
      * 将所有频道的消息置为已读
      */
-    private void clearAllConversationUnread() {
+    private void setAllConversationRead() {
         // TODO Auto-generated method stub
-        MessageCacheUtil.setAllMessageRead(MyApplication.getInstance());
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                MessageCacheUtil.setAllMessageRead(MyApplication.getInstance());
+            }
+        }).start();
         for (UIConversation uiConversation : displayUIConversationList) {
-            if (uiConversation.getUnReadCount() != 0){
+            if (uiConversation.getUnReadCount() != 0) {
                 uiConversation.setUnReadCount(0);
                 WSAPIService.getInstance().setChannelMessgeStateRead(uiConversation.getId());
             }
@@ -585,6 +599,31 @@ public class CommunicationFragmentNew extends Fragment {
         conversationAdapter.setData(displayUIConversationList);
         conversationAdapter.notifyDataSetChanged();
     }
+
+    /**
+     * 将单个频道消息置为已读
+     *
+     * @param uiConversation
+     */
+    private void setConversationRead(final UIConversation uiConversation) {
+        if (uiConversation.getUnReadCount() > 0) {
+            int postion = displayUIConversationList.indexOf(uiConversation);
+            if (postion != -1) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        MessageCacheUtil.setChannelMessageRead(MyApplication.getInstance(), uiConversation.getId());
+                    }
+                }).start();
+                uiConversation.setUnReadCount(0);
+                conversationAdapter.setData(displayUIConversationList);
+                conversationAdapter.notifyItemChanged(postion);
+            }
+        }
+    }
+
+
+}
 
 
     @Override
@@ -669,34 +708,34 @@ public class CommunicationFragmentNew extends Fragment {
                 });
     }
 
-    class CacheMessageListThread extends Thread {
-        private List<Message> messageList;
-        private List<ChannelMessageSet> channelMessageSetList;
+class CacheMessageListThread extends Thread {
+    private List<Message> messageList;
+    private List<ChannelMessageSet> channelMessageSetList;
 
-        public CacheMessageListThread(List<Message> messageList, List<ChannelMessageSet> channelMessageSetList) {
-            this.messageList = messageList;
-            this.channelMessageSetList = channelMessageSetList;
-        }
+    public CacheMessageListThread(List<Message> messageList, List<ChannelMessageSet> channelMessageSetList) {
+        this.messageList = messageList;
+        this.channelMessageSetList = channelMessageSetList;
+    }
 
-        @Override
-        public void run() {
-            try {
-                if (messageList != null && messageList.size() > 0) {
-                    MessageCacheUtil.saveMessageList(MyApplication.getInstance(), messageList, null, false); // 获取的消息需要缓存
-                    if (channelMessageSetList != null && channelMessageSetList.size() > 0) {
-                        for (ChannelMessageSet channelMessageSet : channelMessageSetList) {
-                            MessageMatheSetCacheUtils.add(MyApplication.getInstance(), channelMessageSet.getCid(), channelMessageSet.getMatheSet());
-                        }
-                    }
-                    if (handler != null) {
-                        handler.sendEmptyMessage(SORT_CONVERSATION_LIST);
+    @Override
+    public void run() {
+        try {
+            if (messageList != null && messageList.size() > 0) {
+                MessageCacheUtil.saveMessageList(MyApplication.getInstance(), messageList, null, false); // 获取的消息需要缓存
+                if (channelMessageSetList != null && channelMessageSetList.size() > 0) {
+                    for (ChannelMessageSet channelMessageSet : channelMessageSetList) {
+                        MessageMatheSetCacheUtils.add(MyApplication.getInstance(), channelMessageSet.getCid(), channelMessageSet.getMatheSet());
                     }
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
+                if (handler != null) {
+                    handler.sendEmptyMessage(SORT_CONVERSATION_LIST);
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
+}
 
 
     //接收到websocket发过来的消息
@@ -824,25 +863,25 @@ public class CommunicationFragmentNew extends Fragment {
     }
 
 
-    class WebService extends APIInterfaceInstance {
-        @Override
-        public void returnConversationListSuccess(GetConversationListResult getConversationListResult) {
-            if (getActivity() != null) {
-                swipeRefreshLayout.setRefreshing(false);
-                new CacheConversationThread(getConversationListResult).run();
-            }
+class WebService extends APIInterfaceInstance {
+    @Override
+    public void returnConversationListSuccess(GetConversationListResult getConversationListResult) {
+        if (getActivity() != null) {
+            swipeRefreshLayout.setRefreshing(false);
+            new CacheConversationThread(getConversationListResult).run();
         }
-
-        @Override
-        public void returnConversationListFail(String error, int errorCode) {
-            if (getActivity() != null) {
-                swipeRefreshLayout.setRefreshing(false);
-                WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
-                getMessage();
-            }
-        }
-
     }
+
+    @Override
+    public void returnConversationListFail(String error, int errorCode) {
+        if (getActivity() != null) {
+            swipeRefreshLayout.setRefreshing(false);
+            WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
+            getMessage();
+        }
+    }
+
+}
 
 
 }
