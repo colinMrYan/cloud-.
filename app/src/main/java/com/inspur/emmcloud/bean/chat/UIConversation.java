@@ -1,9 +1,16 @@
 package com.inspur.emmcloud.bean.chat;
 
+import android.text.SpannableString;
+
 import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.config.MyAppConfig;
+import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.common.richtext.markdown.MarkDown;
+import com.inspur.emmcloud.util.privates.ChatMsgContentUtils;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
 import com.inspur.emmcloud.util.privates.DirectChannelUtils;
+import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 
 import java.util.ArrayList;
@@ -22,7 +29,7 @@ public class UIConversation {
     private long lastUpdate;
     private long unReadCount = 0;
     private String content;
-    private String icon="";
+    private String icon = "";
 
     public UIConversation() {
     }
@@ -35,27 +42,89 @@ public class UIConversation {
         this.conversation = conversation;
         this.id = conversation.getId();
         this.title = CommunicationUtils.getConversationTitle(conversation);
-        messageList = MessageCacheUtil.getHistoryMessageList(MyApplication.getInstance(),id,null,15);
-        if (messageList.size()==0){
+        messageList = MessageCacheUtil.getHistoryMessageList(MyApplication.getInstance(), id, null, 15);
+        if (messageList.size() == 0) {
             lastUpdate = conversation.getLastUpdate();
-        }else {
-            lastUpdate = messageList.get(messageList.size()-1).getCreationDate();
-            unReadCount = MessageCacheUtil.getChannelMessageUnreadCount(MyApplication.getInstance(),id);
+        } else {
+            lastUpdate = messageList.get(messageList.size() - 1).getCreationDate();
+            unReadCount = MessageCacheUtil.getChannelMessageUnreadCount(MyApplication.getInstance(), id);
         }
-        switch (conversation.getType()){
-            case Conversation.CONVERSATION_TYPE_GROUP:
-                icon = "file://"+MyAppConfig.LOCAL_CACHE_PHOTO_PATH+"/"+MyApplication.getInstance().getTanent() + conversation.getId() + "_100.png1";
+        setUIConversationIcon();
+        setUIConversationContent();
+
+    }
+
+    private void setUIConversationIcon() {
+        switch (conversation.getType()) {
+            case Conversation.TYPE_GROUP:
+                icon = "file://" + MyAppConfig.LOCAL_CACHE_PHOTO_PATH + "/" + MyApplication.getInstance().getTanent() + conversation.getId() + "_100.png1";
                 break;
-            case Conversation.CONVERSATION_TYPE_DIRECT:
+            case Conversation.TYPE_DIRECT:
                 icon = DirectChannelUtils.getDirectChannelIcon(MyApplication.getInstance(), conversation.getName());
                 break;
-            case Conversation.CONVERSATION_TYPE_CAST:
-                icon=DirectChannelUtils.getRobotIcon(MyApplication.getInstance(), conversation.getName());
+            case Conversation.TYPE_CAST:
+                icon = DirectChannelUtils.getRobotIcon(MyApplication.getInstance(), conversation.getName());
                 break;
         }
     }
 
-    public static List<UIConversation> conversationList2UIConversationList(List<Conversation> conversationList){
+
+    private void setUIConversationContent() {
+        String type = conversation.getType();
+        if (messageList.size() > 0) {
+            Message message = messageList.get(messageList.size() - 1);
+            String fromUserName = "";
+            String messageType = message.getType();
+            if (!type.equals(Conversation.TYPE_DIRECT) && !message.getFromUser().equals(MyApplication.getInstance().getUid())) {
+                fromUserName = ContactUserCacheUtils.getUserName(message.getFromUser()) + "：";
+            }
+            switch (messageType) {
+                case Message.MESSAGE_TYPE_TEXT_PLAIN:
+                    content = ChatMsgContentUtils.mentionsAndUrl2Span(MyApplication.getInstance(), message.getMsgContentTextPlain().getText(), message.getMsgContentTextPlain().getMentionsMap()).toString();
+                    break;
+                case Message.MESSAGE_TYPE_TEXT_MARKDOWN:
+                    SpannableString spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(MyApplication.getInstance(), message.getMsgContentTextMarkdown().getText(), message.getMsgContentTextMarkdown().getMentionsMap());
+                    content = spannableString.toString();
+                    if (!StringUtils.isBlank(content)) {
+                        content = MarkDown.fromMarkdown(content);
+                    }
+                    break;
+                case Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN:
+                    content = MyApplication.getInstance().getString(R.string.send_a_comment);
+                    break;
+                case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
+                    content = MyApplication.getInstance().getString(R.string.send_a_file);
+                    break;
+                case Message.MESSAGE_TYPE_MEDIA_IMAGE:
+                    content = MyApplication.getInstance().getString(R.string.send_a_picture);
+                    break;
+                case Message.MESSAGE_TYPE_EXTENDED_LINKS:
+                    content = MyApplication.getInstance().getString(R.string.send_a_link);
+                    break;
+                case Message.MESSAGE_TYPE_EXTENDED_CONTACT_CARD:
+                    content = MyApplication.getInstance().getString(R.string.send_a_link);
+                    break;
+                case Message.MESSAGE_TYPE_MEDIA_VOICE:
+                    content = MyApplication.getInstance().getString(R.string.send_a_voice);
+                    break;
+                default:
+                    content = MyApplication.getInstance()
+                            .getString(R.string.send_a_message_of_unknown_type);
+                    break;
+            }
+            content = fromUserName + content;
+        } else {
+            if (type.equals(Conversation.TYPE_CAST)) {
+                content = MyApplication.getInstance().getString(R.string.welcome_to_attention) + " " + conversation.getName();
+            } else if (type.equals(Conversation.TYPE_GROUP)) {
+                content = MyApplication.getInstance().getString(R.string.group_no_message);
+            } else {
+                content = MyApplication.getInstance().getString(R.string.direct_no_message);
+            }
+        }
+    }
+
+    public static List<UIConversation> conversationList2UIConversationList(List<Conversation> conversationList) {
         List<UIConversation> uiConversationList = new ArrayList<>();
         if (conversationList != null && conversationList.size() > 0) {
             for (Conversation conversation : conversationList) {
@@ -148,7 +217,7 @@ public class UIConversation {
         public int compare(Object lhs, Object rhs) {
             UIConversation uiConversationA = (UIConversation) lhs;
             UIConversation uiConversationB = (UIConversation) rhs;
-            long diff = uiConversationA.getLastUpdate()- uiConversationB.getLastUpdate();
+            long diff = uiConversationA.getLastUpdate() - uiConversationB.getLastUpdate();
             if (diff > 0) {
                 return -1;
             } else if (diff == 0) {

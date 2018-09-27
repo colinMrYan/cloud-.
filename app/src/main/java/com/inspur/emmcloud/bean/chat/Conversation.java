@@ -15,14 +15,14 @@ import java.io.Serializable;
 
 @Table(name = "Conversation")
 public class Conversation implements Serializable{
-    public static final String CONVERSATION_TYPE_DIRECT = "DIRECT";
-    public static final String CONVERSATION_TYPE_GROUP = "GROUP";
-    public static final String CONVERSATION_TYPE_CAST = "CAST";
+    public static final String TYPE_DIRECT = "DIRECT";
+    public static final String TYPE_GROUP = "GROUP";
+    public static final String TYPE_CAST = "CAST";
     @Column(name = "id", isId = true)
     private String id;
     @Column(name = "enterprise")
     private String enterprise;
-    @Column(name = "enterprise")
+    @Column(name = "name")
     private String name;
     @Column(name = "owner")
     private String owner;
@@ -57,12 +57,12 @@ public class Conversation implements Serializable{
 
     public Conversation(JSONObject obj) {
         this.id = JSONUtils.getString(obj,"id","");
-        this.enterprise = JSONUtils.getString(obj,"id","");
-        this.name = JSONUtils.getString(obj,"id","");
-        this.owner = JSONUtils.getString(obj,"id","");
-        this.avatar = JSONUtils.getString(obj,"id","");
-        this.type = JSONUtils.getString(obj,"id","");
-        this.state = JSONUtils.getString(obj,"id","");
+        this.enterprise = JSONUtils.getString(obj,"enterprise","");
+        this.name = JSONUtils.getString(obj,"name","");
+        this.owner = JSONUtils.getString(obj,"owner","");
+        this.avatar = JSONUtils.getString(obj,"avatar","");
+        this.type = JSONUtils.getString(obj,"type","");
+        this.state = JSONUtils.getString(obj,"state","");
         String UTCCreationDate = JSONUtils.getString(obj, "creationDate", "");
         this.creationDate = TimeUtils.UTCString2Long(UTCCreationDate);
         String UTCLastUpdate = JSONUtils.getString(obj, "lastUpdate", "");

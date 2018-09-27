@@ -61,19 +61,9 @@ public class CommunicationUtils {
     * @return
     */
     public static String getConversationTitle(Conversation conversation) {
-
-        String title = null;
-        switch (conversation.getType()) {
-            case Conversation.CONVERSATION_TYPE_DIRECT:
-                title = DirectChannelUtils.getDirectChannelTitle(MyApplication.getInstance(),
-                        conversation.getName());
-                break;
-            case Conversation.CONVERSATION_TYPE_CAST:
-                title = DirectChannelUtils.getRobotInfo(MyApplication.getInstance(), conversation.getName()).getName();
-                break;
-            default:
-                conversation.getName();
-                break;
+        String title = conversation.getName();
+        if (conversation.getType().equals(Conversation.TYPE_DIRECT)){
+            title = DirectChannelUtils.getDirectChannelTitle(MyApplication.getInstance(),title);
         }
         return title;
     }

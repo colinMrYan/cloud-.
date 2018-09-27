@@ -28,7 +28,6 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.api.apiservice.WSAPIService;
-import com.inspur.emmcloud.bean.chat.Channel;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
 import com.inspur.emmcloud.bean.chat.ChannelMessageReadStateResult;
 import com.inspur.emmcloud.bean.chat.ChannelMessageSet;
@@ -104,7 +103,7 @@ public class CommunicationFragmentNew extends Fragment {
     private RecyclerView conversionRecycleView;
     private SwipeRefreshLayout swipeRefreshLayout;
     private ChatAPIService apiService;
-    private List<UIConversation> displayUIConversationList= new ArrayList<>();
+    private List<UIConversation> displayUIConversationList = new ArrayList<>();
     private ConversationAdapter conversationAdapter;
     private Handler handler;
     private CommunicationFragmentReceiver receiver;
@@ -124,7 +123,7 @@ public class CommunicationFragmentNew extends Fragment {
         getMessage();
         registerMessageFragmentReceiver();
         getConversationList();
-        updateHeaderFunctionBtn(null);
+        setHeaderFunctionOptions(null);
     }
 
     private void initView() {
@@ -138,7 +137,7 @@ public class CommunicationFragmentNew extends Fragment {
         (rootView.findViewById(R.id.contact_img))
                 .setOnClickListener(onViewClickListener);
         titleText = (TextView) rootView.findViewById(R.id.header_text);
-        noDataLayout = (RelativeLayout)rootView.findViewById(R.id.rl_no_chat);
+        noDataLayout = (RelativeLayout) rootView.findViewById(R.id.rl_no_chat);
         initPullRefreshLayout();
         initRecycleView();
     }
@@ -178,21 +177,21 @@ public class CommunicationFragmentNew extends Fragment {
         conversionRecycleView = (RecyclerView) rootView.findViewById(R.id.rcv_conversation);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         conversionRecycleView.setLayoutManager(linearLayoutManager);
-        conversationAdapter = new ConversationAdapter(MyApplication.getInstance(),displayUIConversationList);
+        conversationAdapter = new ConversationAdapter(MyApplication.getInstance(), displayUIConversationList);
         conversationAdapter.setAdapterListener(new ConversationAdapter.AdapterListener() {
             @Override
             public void onItemClick(View view, int position) {
-                LogUtils.jasonDebug("onItemClick--------------"+position);
+                UIConversation uiConversation = displayUIConversationList.get(position);
             }
 
             @Override
             public void onItemLongClick(View view, int position) {
-                LogUtils.jasonDebug("onItemLongClick--------------"+position);
+                LogUtils.jasonDebug("onItemLongClick--------------" + position);
             }
 
             @Override
             public void onDataChange() {
-                noDataLayout.setVisibility(displayUIConversationList.size()>0?View.GONE:View.VISIBLE);
+                noDataLayout.setVisibility(displayUIConversationList.size() > 0 ? View.GONE : View.VISIBLE);
                 //设置消息tab页面的小红点（未读消息提醒）的显示
                 int unReadCount = 0;
                 for (UIConversation uiConversation : displayUIConversationList) {
@@ -210,7 +209,7 @@ public class CommunicationFragmentNew extends Fragment {
      * @param getAppMainTabResult
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void updateHeaderFunctionBtn(GetAppMainTabResult getAppMainTabResult) {
+    public void setHeaderFunctionOptions(GetAppMainTabResult getAppMainTabResult) {
         if (getAppMainTabResult != null) {
             ArrayList<MainTabResult> mainTabResultList = getAppMainTabResult.getMainTabPayLoad().getMainTabResultList();
             for (int i = 0; i < mainTabResultList.size(); i++) {
@@ -392,12 +391,12 @@ public class CommunicationFragmentNew extends Fragment {
                                 it.remove();
                             }
                         }
-                        Collections.sort(stickUIConversationList,new UIConversation().new SortComparator());
-                        Collections.sort(uiConversationList,new UIConversation().new SortComparator());
-                        uiConversationList.addAll(0,stickUIConversationList);
+                        Collections.sort(stickUIConversationList, new UIConversation().new SortComparator());
+                        Collections.sort(uiConversationList, new UIConversation().new SortComparator());
+                        uiConversationList.addAll(0, stickUIConversationList);
                     }
-                    if (handler != null){
-                        android.os.Message message = handler.obtainMessage(SORT_CONVERSATION_COMPLETE,uiConversationList);
+                    if (handler != null) {
+                        android.os.Message message = handler.obtainMessage(SORT_CONVERSATION_COMPLETE, uiConversationList);
                         message.sendToTarget();
                     }
 
@@ -425,17 +424,16 @@ public class CommunicationFragmentNew extends Fragment {
                         }
                         break;
                     case SORT_CONVERSATION_COMPLETE:
-                        List<UIConversation> uiConversationList= (List<UIConversation>) msg.obj;
-                        displayUIConversationList.clear();
-                        displayUIConversationList.addAll(uiConversationList);
-                       conversationAdapter.notifyDataSetChanged();
+                        displayUIConversationList = (List<UIConversation>) msg.obj;
+                        conversationAdapter.setData(displayUIConversationList);
+                        conversationAdapter.notifyDataSetChanged();
                         break;
                     case SORT_CONVERSATION_LIST:
                         sortConversationList();
                         break;
                     case CACHE_CONVERSATION_LIST_SUCCESS:
                         sortConversationList();
-                        List<Conversation> conversationList = (List<Conversation>)msg.obj;
+                        List<Conversation> conversationList = (List<Conversation>) msg.obj;
                         createGroupIcon(conversationList);
                         break;
                     default:
@@ -458,8 +456,7 @@ public class CommunicationFragmentNew extends Fragment {
         MessageCacheUtil.saveMessage(MyApplication.getInstance(), receivedWSMessage);
         Long ChannelMessageMatheSetStart = (channelNewMessage == null) ? receivedWSMessage.getCreationDate() : channelNewMessage.getCreationDate();
         MessageMatheSetCacheUtils.add(MyApplication.getInstance(),
-                receivedWSMessage.getChannel(),
-                new MatheSet(ChannelMessageMatheSetStart, receivedWSMessage.getCreationDate()));
+                receivedWSMessage.getChannel(),new MatheSet(ChannelMessageMatheSetStart, receivedWSMessage.getCreationDate()));
     }
 
     class CacheConversationThread extends Thread {
@@ -476,10 +473,10 @@ public class CommunicationFragmentNew extends Fragment {
             ConversationCacheUtils.deleteAllConversation(MyApplication.getInstance());
             ConversationCacheUtils.saveConversationList(MyApplication.getInstance(), conversationList);
             if (handler != null) {
-                if (isGroupIconCreate){
+                if (isGroupIconCreate) {
                     conversationList.removeAll(cacheConversationList);
                 }
-                android.os.Message message = handler.obtainMessage(CACHE_CONVERSATION_LIST_SUCCESS,conversationList);
+                android.os.Message message = handler.obtainMessage(CACHE_CONVERSATION_LIST_SUCCESS, conversationList);
                 message.sendToTarget();
             }
         }
@@ -541,13 +538,15 @@ public class CommunicationFragmentNew extends Fragment {
     private void removeConversation(String cid) {
         UIConversation deleteUIConversation = new UIConversation(cid);
         int position = displayUIConversationList.indexOf(deleteUIConversation);
-        if(position != -1){
+        if (position != -1) {
+            conversationAdapter.setData(displayUIConversationList);
             conversationAdapter.notifyItemRemoved(position);
         }
     }
 
     /**
      * 显示websocket的连接状态
+     *
      * @param socketStatus
      */
     private void showSocketStatusInTitle(String socketStatus) {
@@ -578,9 +577,12 @@ public class CommunicationFragmentNew extends Fragment {
         // TODO Auto-generated method stub
         MessageCacheUtil.setAllMessageRead(MyApplication.getInstance());
         for (UIConversation uiConversation : displayUIConversationList) {
-            uiConversation.setUnReadCount(0);
-            WSAPIService.getInstance().setChannelMessgeStateRead(uiConversation.getId());
+            if (uiConversation.getUnReadCount() != 0){
+                uiConversation.setUnReadCount(0);
+                WSAPIService.getInstance().setChannelMessgeStateRead(uiConversation.getId());
+            }
         }
+        conversationAdapter.setData(displayUIConversationList);
         conversationAdapter.notifyDataSetChanged();
     }
 
@@ -717,10 +719,9 @@ public class CommunicationFragmentNew extends Fragment {
                             new DownLoaderUtils().startDownLoad(source, fileSavePath, null);
                         }
                     }
-                    Channel receiveMessageChannel = ChannelCacheUtils.getChannel(
-                            getActivity(), receivedWSMessage.getChannel());
+                    Conversation receiveMessageConversation = ConversationCacheUtils.getConversation(MyApplication.getInstance(), receivedWSMessage.getChannel());
                     cacheReceiveMessage(receivedWSMessage);
-                    if (receiveMessageChannel == null) {
+                    if (receiveMessageConversation == null) {
                         getConversationList();
                     } else {
                         sortConversationList();
@@ -792,6 +793,7 @@ public class CommunicationFragmentNew extends Fragment {
                 long unReadCount = MessageCacheUtil.getChannelMessageUnreadCount(MyApplication.getInstance(), uiConversation.getId());
                 uiConversation.setUnReadCount(unReadCount);
             }
+            conversationAdapter.setData(displayUIConversationList);
             conversationAdapter.notifyDataSetChanged();
         }
     }

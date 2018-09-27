@@ -43,7 +43,6 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
             @Override
             public void onChanged() {
                 super.onChanged();
-                LogUtils.jasonDebug("uiConversationList===="+ConversationAdapter.this.uiConversationList.size());
                 if (adapterListener != null){
                     adapterListener.onDataChange();
                 }
@@ -53,8 +52,10 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
     }
 
     public void setData(List<UIConversation> uiConversationList){
+        LogUtils.jasonDebug("size=="+uiConversationList.size());
         synchronized (this){
-            this.uiConversationList = uiConversationList;
+            this.uiConversationList.clear();
+            this.uiConversationList.addAll(uiConversationList);
         }
 
     }
@@ -75,7 +76,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
         holder.timeText.setTextColor(uiConversation.getUnReadCount()>0 ? context.getResources().getColor(R.color.msg_time_color) :Color.parseColor("#b8b8b8"));
         holder.dndImg.setVisibility(uiConversation.getConversation().isDnd() ? View.VISIBLE : View.GONE);
         holder.mainLayout.setBackgroundResource(uiConversation.getConversation().isStick() ? R.drawable.selector_set_top_msg_list : R.drawable.selector_list);
-        boolean isConversationTypeGroup = uiConversation.getConversation().getType().equals(Conversation.CONVERSATION_TYPE_GROUP);
+        boolean isConversationTypeGroup = uiConversation.getConversation().getType().equals(Conversation.TYPE_GROUP);
         ImageDisplayUtils.getInstance().displayImageByTag(
                 holder.photoImg, uiConversation.getIcon(), isConversationTypeGroup?R.drawable.icon_channel_group_default:R.drawable.icon_person_default);
         setConversationContent(holder,uiConversation);
@@ -125,7 +126,6 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
 
     @Override
     public int getItemCount() {
-        LogUtils.jasonDebug("uiConversationList.size()="+uiConversationList.size());
         return uiConversationList.size();
     }
 
