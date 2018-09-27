@@ -21,6 +21,7 @@ import java.util.LinkedHashMap;
 import java.util.Set;
 
 import static com.iflytek.cloud.ErrorCode.ERROR_AUDIO_RECORD;
+import static com.iflytek.cloud.ErrorCode.MSP_ERROR_NO_DATA;
 
 
 /**
@@ -164,7 +165,7 @@ public class Voice2StringMessageUtils {
             @Override
             public void onError(SpeechError error) {
                 VoiceResult voiceResult = new VoiceResult();
-                if(error.getErrorCode() == ERROR_AUDIO_RECORD){
+                if(error.getErrorCode() == ERROR_AUDIO_RECORD || error.getErrorCode() == MSP_ERROR_NO_DATA){
                     voiceResult.setXunFeiPrepareError(MSG_XUNFEI_PREPARE_FAIL);
                 }
                 voiceResult.setMsgState(voiceState);

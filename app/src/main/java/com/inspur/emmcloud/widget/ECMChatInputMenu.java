@@ -278,6 +278,9 @@ public class ECMChatInputMenu extends LinearLayout {
             }
         }else{
             if(voiceResult.getXunFeiPrepareError() == Voice2StringMessageUtils.MSG_XUNFEI_PREPARE_FAIL){
+                if(audioDialogManager != null){
+                    audioDialogManager.dismissVoice2WordProgressDialog();
+                }
                 ToastUtils.show(MyApplication.getInstance(),getContext().getString(R.string.voice_audio_record_unavailiable));
                 stopVoiceInput();
                 return;
