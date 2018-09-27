@@ -13,7 +13,7 @@
     app:bl_strokeWidth="0.5px">
 
 <RelativeLayout
-    android:padding="10dp"
+    android:padding="8dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
     <ImageView
@@ -42,7 +42,7 @@
 
         <TextView
             android:id="@+id/tv_news_card_digest"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="6dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tv_news_card_title"
