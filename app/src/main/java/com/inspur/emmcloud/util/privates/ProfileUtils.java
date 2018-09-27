@@ -18,7 +18,6 @@ import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.interf.CommonCallBack;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.ui.IndexActivity;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -104,6 +103,7 @@ public class ProfileUtils {
 
     class WebService extends APIInterfaceInstance {
         @Override
+
         public void returnMyInfoSuccess(GetMyInfoResult getMyInfoResult) {
             LoadingDialog.dimissDlg(loadingDialog);
             List<Enterprise> enterpriseList = getMyInfoResult.getEnterpriseList();
@@ -124,9 +124,6 @@ public class ProfileUtils {
                     commonCallBack.execute();
                 }
                 boolean isChatClusterBeanUnchanged = (chatClusterBeanOld == null && chatClusterBeanNew == null) || ((chatClusterBeanOld != null) && (chatClusterBeanNew != null) && (chatClusterBeanOld.getServiceVersion().equals(chatClusterBeanNew.getServiceVersion())));
-                LogUtils.jasonDebug("isChatClusterBeanUnchanged="+isChatClusterBeanUnchanged);
-                LogUtils.jasonDebug("chatClusterBeanNew.getServiceVersion()="+chatClusterBeanNew.getServiceVersion());
-                LogUtils.jasonDebug("chatClusterBeanOld.getServiceVersion()="+chatClusterBeanOld.getServiceVersion());
                 if (!isChatClusterBeanUnchanged) {
                     WebSocketPush.getInstance().closeWebsocket();
                     Intent intentLog = new Intent(activity,

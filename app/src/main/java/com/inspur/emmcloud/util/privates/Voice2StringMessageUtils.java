@@ -97,7 +97,7 @@ public class Voice2StringMessageUtils {
      */
     public void setParam() {
 //        // 清空参数
-//        speechRecognizer.setParameter(SpeechConstant.PARAMS, null);
+        speechRecognizer.setParameter(SpeechConstant.PARAMS, null);
         // 设置听写引擎
         speechRecognizer.setParameter(SpeechConstant.ENGINE_TYPE, engineType);
         // 设置返回结果格式
