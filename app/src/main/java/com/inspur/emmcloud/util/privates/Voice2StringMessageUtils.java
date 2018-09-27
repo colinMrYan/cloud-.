@@ -15,6 +15,7 @@ import com.inspur.emmcloud.bean.system.VoiceResult;
 import com.inspur.emmcloud.interf.OnVoiceResultCallback;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -164,6 +165,7 @@ public class Voice2StringMessageUtils {
 
             @Override
             public void onError(SpeechError error) {
+                LogUtils.YfcDebug("错误："+error.getErrorCode()+error.getErrorDescription());
                 VoiceResult voiceResult = new VoiceResult();
                 if(error.getErrorCode() == ERROR_AUDIO_RECORD || error.getErrorCode() == MSP_ERROR_NO_DATA){
                     voiceResult.setXunFeiPrepareError(MSG_XUNFEI_PREPARE_FAIL);

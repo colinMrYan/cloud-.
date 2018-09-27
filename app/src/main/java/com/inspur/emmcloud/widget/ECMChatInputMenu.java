@@ -202,10 +202,12 @@ public class ECMChatInputMenu extends LinearLayout {
 
                         }
                     };
-                    audioDialogManager = new AudioDialogManager(getContext());
-                    audioDialogManager.showVoice2WordProgressDialog();
-                    //转写和转文件格式同时进行
-                    voice2StringMessageUtils.startVoiceListeningByVoiceFile(seconds,filePath);
+                    if(NetUtils.isNetworkConnected(MyApplication.getInstance(),false)){
+                        audioDialogManager = new AudioDialogManager(getContext());
+                        audioDialogManager.showVoice2WordProgressDialog();
+                        //转写和转文件格式同时进行
+                        voice2StringMessageUtils.startVoiceListeningByVoiceFile(seconds,filePath);
+                    }
                     ConvertAudioFileFormatUtils.getInstance().convertAudioFile2SpecifiedFormat(getContext(),filePath, AudioFormat.MP3,callback);
                 }else {
                     if (chatInputMenuListener != null) {
@@ -451,12 +453,14 @@ public class ECMChatInputMenu extends LinearLayout {
                             openMentionPage(false);
                             break;
                         case "voice_input":
-                            addMenuLayout.setVisibility(GONE);
-                            voiceInputLayout.setVisibility(View.VISIBLE);
-                            lastVolumeLevel=0;
-                            waterWaveProgress.setProgress(0);
-                            mediaPlayerUtils.playVoiceOn();
-                            voice2StringMessageUtils.startVoiceListening();
+                            if(NetUtils.isNetworkConnected(MyApplication.getInstance())){
+                                addMenuLayout.setVisibility(GONE);
+                                voiceInputLayout.setVisibility(View.VISIBLE);
+                                lastVolumeLevel=0;
+                                waterWaveProgress.setProgress(0);
+                                mediaPlayerUtils.playVoiceOn();
+                                voice2StringMessageUtils.startVoiceListening();
+                            }
                             break;
                         case "voice_call":
                             //语音通话
