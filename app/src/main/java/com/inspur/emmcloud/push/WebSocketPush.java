@@ -269,6 +269,7 @@ public class WebSocketPush {
      * 切换租户的时候直接断开Websocket
      */
     public void closeWebsocket() {
+        isWebsocketConnecting = false;
         endTimeCount();
         if (mSocket != null) {
             mSocket.disconnect();
@@ -418,6 +419,7 @@ public class WebSocketPush {
             public void call(Object... arg0) {
                 // TODO Auto-generated method stub
                 isWSStatusConnectedV1 = false;
+                isWebsocketConnecting = false;
                 sendWebSocketStatusBroadcast(Socket.EVENT_DISCONNECT);
                 LogUtils.debug(TAG, "断开连接");
                 LogUtils.debug(TAG, arg0[0].toString());
