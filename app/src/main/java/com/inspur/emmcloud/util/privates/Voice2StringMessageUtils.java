@@ -22,7 +22,6 @@ import java.util.LinkedHashMap;
 import java.util.Set;
 
 import static com.iflytek.cloud.ErrorCode.ERROR_AUDIO_RECORD;
-import static com.iflytek.cloud.ErrorCode.MSP_ERROR_NO_DATA;
 
 
 /**
@@ -104,6 +103,8 @@ public class Voice2StringMessageUtils {
         speechRecognizer.setParameter(SpeechConstant.ENGINE_TYPE, engineType);
         // 设置返回结果格式
         speechRecognizer.setParameter(SpeechConstant.RESULT_TYPE, "json");
+        //网络转写超时设置
+        speechRecognizer.setParameter(SpeechConstant.NET_TIMEOUT,"8000");
 
         String language = AppUtils.getCurrentAppLanguage(context);
         switch (language){
@@ -167,7 +168,7 @@ public class Voice2StringMessageUtils {
             public void onError(SpeechError error) {
                 LogUtils.YfcDebug("错误："+error.getErrorCode()+error.getErrorDescription());
                 VoiceResult voiceResult = new VoiceResult();
-                if(error.getErrorCode() == ERROR_AUDIO_RECORD || error.getErrorCode() == MSP_ERROR_NO_DATA){
+                if(error.getErrorCode() == ERROR_AUDIO_RECORD){
                     voiceResult.setXunFeiPrepareError(MSG_XUNFEI_PREPARE_FAIL);
                 }
                 voiceResult.setMsgState(voiceState);

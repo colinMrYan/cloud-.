@@ -241,7 +241,7 @@ public class AudioRecordButton extends Button {
                     voiceRecordFinish();
                     break;
                 case VOICE_ERROR_TOAST:
-                    recoveryState();
+                    voiceRecordFinish();
                     ToastUtils.show(MyApplication.getInstance(), getContext().getString(R.string.voice_audio_record_unavailiable));
                     break;
             }

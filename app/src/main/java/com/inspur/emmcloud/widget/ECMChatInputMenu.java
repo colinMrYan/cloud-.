@@ -202,13 +202,19 @@ public class ECMChatInputMenu extends LinearLayout {
 
                         }
                     };
-                    if(NetUtils.isNetworkConnected(MyApplication.getInstance(),false)){
+                    if(FileUtils.getFileSize(filePath) <= 0){
+                        if(audioDialogManager != null){
+                            audioDialogManager.dismissVoice2WordProgressDialog();
+                        }
+                        return;
+                    }
+                    if(NetUtils.isNetworkConnected(MyApplication.getInstance())){
                         audioDialogManager = new AudioDialogManager(getContext());
                         audioDialogManager.showVoice2WordProgressDialog();
                         //转写和转文件格式同时进行
                         voice2StringMessageUtils.startVoiceListeningByVoiceFile(seconds,filePath);
+                        ConvertAudioFileFormatUtils.getInstance().convertAudioFile2SpecifiedFormat(getContext(),filePath, AudioFormat.MP3,callback);
                     }
-                    ConvertAudioFileFormatUtils.getInstance().convertAudioFile2SpecifiedFormat(getContext(),filePath, AudioFormat.MP3,callback);
                 }else {
                     if (chatInputMenuListener != null) {
                         chatInputMenuListener.onSendVoiceRecordMsg("",seconds, filePath);

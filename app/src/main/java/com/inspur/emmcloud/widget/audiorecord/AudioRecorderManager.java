@@ -203,25 +203,24 @@ public class AudioRecorderManager {
             fos = new FileOutputStream(file);// 建立一个可存取字节的文件
             while (isRecording == true) {
                 readSize = audioRecord.read(audioData, 0, bufferSizeInBytes);
-                if(readSize <= 0 || AudioRecord.ERROR_INVALID_OPERATION == readSize ){
-                    isRecording = false;
-                    callBack.onWavAudioPrepareState(AudioRecordErrorCode.E_ERROR);
-                }else{
                     if (AudioRecord.ERROR_INVALID_OPERATION != readSize && fos != null) {
                         fos.write(audioData);
+                    }else{
+                        if(duration > 1){
+                            isRecording = false;
+                        }
+                        callBack.onWavAudioPrepareState(AudioRecordErrorCode.E_ERROR);
                     }
                     volume = getVolume(audioData, readSize);
                     duration = System.currentTimeMillis() - beginTime;
                     DecimalFormat decimalFormat = new DecimalFormat("##0.0");
                     String time = decimalFormat.format(duration / 1000f);
                     callBack.onDataChange(volume, Float.parseFloat(time));
-                }
             }
             if (fos != null) {
                 fos.close();// 关闭写入流
             }
         } catch (Exception e) {
-            callBack.onWavAudioPrepareState(AudioRecordErrorCode.E_ERROR);
             LogUtils.YfcDebug("发生异常：" + e.getMessage());
             e.printStackTrace();
         } finally {
