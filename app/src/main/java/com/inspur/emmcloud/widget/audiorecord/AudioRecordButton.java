@@ -2,8 +2,6 @@ package com.inspur.emmcloud.widget.audiorecord;
 
 
 import android.content.Context;
-import android.graphics.Rect;
-import android.media.tv.TvContract;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
@@ -34,6 +32,7 @@ public class AudioRecordButton extends Button {
     private static final int DISTANCE_Y_CANCEL = 50;
     private static final int VOICE_MESSAGE = 4;
     private static final int VOICE_DISMISS_DIALOG = 5;
+    private static final int VOICE_ERROR_TOAST = 6;
     private int mCurrentState = STATE_NORMAL;
     // 已经开始录音
     private boolean isRecording = false;
@@ -98,16 +97,9 @@ public class AudioRecordButton extends Button {
                                 case AudioRecordErrorCode.E_NOSDCARD:
                                     recoveryState();
                                     ToastUtils.show(MyApplication.getInstance(), MyApplication.getInstance().getString(R.string.error_no_sdcard));
-                                    if (audioRecorderManager != null) {
-                                        audioRecorderManager.stopRecord();
-                                    }
                                     break;
                                 case AudioRecordErrorCode.E_ERROR:
-                                    recoveryState();
-                                    ToastUtils.show(MyApplication.getInstance(), getContext().getString(R.string.voice_audio_record_unavailiable));
-                                    if (audioRecorderManager != null) {
-                                        audioRecorderManager.stopRecord();
-                                    }
+                                    handler.sendEmptyMessage(VOICE_ERROR_TOAST);
                                     break;
                                 default:
                                     recoveryState();
@@ -247,6 +239,10 @@ public class AudioRecordButton extends Button {
                     break;
                 case VOICE_DISMISS_DIALOG:
                     voiceRecordFinish();
+                    break;
+                case VOICE_ERROR_TOAST:
+                    voiceRecordFinish();
+                    ToastUtils.show(MyApplication.getInstance(), getContext().getString(R.string.voice_audio_record_unavailiable));
                     break;
             }
 
