@@ -15,6 +15,7 @@ import com.inspur.emmcloud.bean.system.VoiceResult;
 import com.inspur.emmcloud.interf.OnVoiceResultCallback;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -97,7 +98,7 @@ public class Voice2StringMessageUtils {
      */
     public void setParam() {
 //        // 清空参数
-//        speechRecognizer.setParameter(SpeechConstant.PARAMS, null);
+        speechRecognizer.setParameter(SpeechConstant.PARAMS, null);
         // 设置听写引擎
         speechRecognizer.setParameter(SpeechConstant.ENGINE_TYPE, engineType);
         // 设置返回结果格式

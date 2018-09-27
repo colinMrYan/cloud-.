@@ -33,6 +33,7 @@ import com.inspur.emmcloud.ui.chat.MembersActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.InputMethodUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.MediaPlayerUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
@@ -744,6 +745,7 @@ public class ECMChatInputMenu extends LinearLayout {
      */
     public void setVoiceImageViewLevel(int volume) {
         //回调函数30多毫秒执行一次
+        LogUtils.LbcDebug("30+毫秒回调函数  ：："+volume);
         int currentLevel = 0;
         if(0==volume) {
             currentLevel=0;
