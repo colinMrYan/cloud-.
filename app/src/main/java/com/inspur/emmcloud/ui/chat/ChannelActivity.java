@@ -113,7 +113,7 @@ public class ChannelActivity extends MediaPlayBaseActivity {
 
     @ViewInject(R.id.robot_photo_img)
     private ImageView robotPhotoImg;
-
+    private LinearLayoutManager linearLayoutManager;
     private LoadingDialog loadingDlg;
     private String robotUid = "BOT6004";
     private String cid;
@@ -346,7 +346,7 @@ public class ChannelActivity extends MediaPlayBaseActivity {
     private void initMsgListView() {
         final List<Message> cacheMessageList = MessageCacheUtil.getHistoryMessageList(MyApplication.getInstance(), cid, null, 15);
         uiMessageList = UIMessage.MessageList2UIMessageList(cacheMessageList);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager = new LinearLayoutManager(this);
         msgListView.setLayoutManager(linearLayoutManager);
         if (adapter == null) {
             adapter = new ChannelMessageAdapter(ChannelActivity.this, channel.getType(), chatInputMenu);
@@ -691,13 +691,20 @@ public class ChannelActivity extends MediaPlayBaseActivity {
                         uiMessageList.add(new UIMessage(receivedWSMessage));
                         adapter.setMessageList(uiMessageList);
                         adapter.notifyItemInserted(uiMessageList.size() - 1);
+                        msgListView.MoveToPosition(uiMessageList.size() - 1);
                     } else {
                         uiMessageList.remove(index);
                         uiMessageList.add(index, new UIMessage(receivedWSMessage));
-                        adapter.setMessageList(uiMessageList);
-                        adapter.notifyItemChanged(index);
+                        //如果是图片类型消息的话不再重新刷新消息体，防止图片重新加载
+                        if (receivedWSMessage.getType().equals(Message.MESSAGE_TYPE_MEDIA_IMAGE)){
+                            setMessageSendSuccess(index,receivedWSMessage);
+                            adapter.setMessageList(uiMessageList);
+                        }else {
+                            adapter.setMessageList(uiMessageList);
+                            adapter.notifyItemChanged(index);
+                        }
+
                     }
-                    msgListView.MoveToPosition(uiMessageList.size() - 1);
                 }
                 WSAPIService.getInstance().setChannelMessgeStateRead(cid);
             } else {
@@ -705,6 +712,26 @@ public class ChannelActivity extends MediaPlayBaseActivity {
             }
         }
 
+    }
+
+    /**
+     * 将消息显示状态置为发送成功
+     * @param index
+     */
+    private void setMessageSendSuccess(int index,Message message){
+        UIMessage uiMessage =adapter.getItemData(index);
+        uiMessage.setMessage(message);
+        uiMessage.setId(message.getId());
+        uiMessage.setSendStatus(1);
+        int firstItemPosition = linearLayoutManager.findFirstVisibleItemPosition();
+        if (index - firstItemPosition >=0){
+            View view = msgListView.getChildAt(index - firstItemPosition);
+            if (null != msgListView.getChildViewHolder(view)){
+                ChannelMessageAdapter.ViewHolder holder = (ChannelMessageAdapter.ViewHolder)msgListView.getChildViewHolder(view);
+                holder.sendStatusLayout.setVisibility(View.INVISIBLE);
+            }
+
+        }
     }
 
 
@@ -802,7 +829,6 @@ public class ChannelActivity extends MediaPlayBaseActivity {
                 break;
         }
     }
-
 
 
     /**

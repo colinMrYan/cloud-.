@@ -10,6 +10,7 @@ public class MainTabTitleResult {
     private String zhHans;
     private String zhHant;
     private String enUS;
+    public MainTabTitleResult(){};
     public MainTabTitleResult(String response){
         this.zhHans = JSONUtils.getString(response,"zh-Hans","");
         this.zhHant = JSONUtils.getString(response,"zh-Hant","");

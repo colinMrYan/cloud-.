@@ -2,8 +2,6 @@ package com.inspur.emmcloud.widget.audiorecord;
 
 
 import android.content.Context;
-import android.graphics.Rect;
-import android.media.tv.TvContract;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
@@ -34,6 +32,7 @@ public class AudioRecordButton extends Button {
     private static final int DISTANCE_Y_CANCEL = 50;
     private static final int VOICE_MESSAGE = 4;
     private static final int VOICE_DISMISS_DIALOG = 5;
+    private static final int VOICE_ERROR_TOAST = 6;
     private int mCurrentState = STATE_NORMAL;
     // 已经开始录音
     private boolean isRecording = false;
@@ -98,16 +97,9 @@ public class AudioRecordButton extends Button {
                                 case AudioRecordErrorCode.E_NOSDCARD:
                                     recoveryState();
                                     ToastUtils.show(MyApplication.getInstance(), MyApplication.getInstance().getString(R.string.error_no_sdcard));
-                                    if (audioRecorderManager != null) {
-                                        audioRecorderManager.stopRecord();
-                                    }
                                     break;
                                 case AudioRecordErrorCode.E_ERROR:
-                                    recoveryState();
-                                    ToastUtils.show(MyApplication.getInstance(), getContext().getString(R.string.voice_audio_record_unavailiable));
-                                    if (audioRecorderManager != null) {
-                                        audioRecorderManager.stopRecord();
-                                    }
+                                    handler.sendEmptyMessage(VOICE_ERROR_TOAST);
                                     break;
                                 default:
                                     recoveryState();
@@ -135,7 +127,6 @@ public class AudioRecordButton extends Button {
                         public void handleMessage(Message msg) {
                             super.handleMessage(msg);
                             if (msg.what == MP3Recorder.ERROR_TYPE) {
-                                recoveryState();
                                 mListener.onErrorRecordingVoice(MP3Recorder.ERROR_TYPE);
                                 resolveMp3Error();
                                 isDeviceError = true;
@@ -157,7 +148,7 @@ public class AudioRecordButton extends Button {
      */
     private void recoveryState() {
         changeState(STATE_NORMAL);
-        voiceRecordFinish();
+        voiceRecordUIFinish();
     }
 
     /**
@@ -235,18 +226,21 @@ public class AudioRecordButton extends Button {
                         mDialogManager.updateVoiceLevelAndDurationTime(volumeSize, durationTime);
                     } else if (durationTime >= 60.0) {
                         isRecording = false;
-                        voiceRecordFinish();
+                        voiceRecordUIFinish();
                         if (AppUtils.getIsVoiceWordOpen()) {
                             mListener.onFinished(60f, audioRecorderManager.getCurrentFilePath());
                         } else {
-                            reset();
-                            voiceRecordFinish();
                             mListener.onFinished(60f, mp3FilePath);
                         }
+                        reset();
                     }
                     break;
                 case VOICE_DISMISS_DIALOG:
-                    voiceRecordFinish();
+                    voiceRecordUIFinish();
+                    break;
+                case VOICE_ERROR_TOAST:
+                    voiceRecordUIFinish();
+                    ToastUtils.show(MyApplication.getInstance(), getContext().getString(R.string.voice_audio_record_unavailiable));
                     break;
             }
 
@@ -292,36 +286,27 @@ public class AudioRecordButton extends Button {
                 }
                 break;
             case MotionEvent.ACTION_UP:
+                voiceRecordToolFinish();
                 // 如果按的时间太短，还没准备好或者时间录制太短，就离开了，则显示这个dialog
-                if (!isRecording || durationTime < 0.8f) {
+                if ((!isRecording || durationTime < 0.8f)) {
                     mDialogManager.tooShort();
                     //延迟500毫秒
                     handler.sendEmptyMessageDelayed(VOICE_DISMISS_DIALOG, 500);
                 } else if (mCurrentState == STATE_RECORDING) {//正常录制结束
-                    voiceRecordFinish();
-                    if (AppUtils.getIsVoiceWordOpen()) {
-                        if (audioRecorderManager != null) {
-                            audioRecorderManager.stopRecord();
-                        }
-                        if (mListener != null) {
+                    voiceRecordUIFinish();
+                    if (mListener != null) {
+                        if (AppUtils.getIsVoiceWordOpen()) {
                             mListener.onFinished(durationTime, audioRecorderManager.getCurrentFilePath());
-                        }
-
-                    } else {
-                        if (!isDeviceError) {
-                            if (mp3Recorder != null) {
-                                mp3Recorder.stop();
-                            }
-                            if (mListener != null) {
-                                mListener.onFinished(durationTime, mp3FilePath);
-                            }
-
+                        } else if (!isDeviceError) {
+                            mListener.onFinished(durationTime, mp3FilePath);
                         }
                     }
+
                 } else if (mCurrentState == STATE_WANT_TO_CANCEL) {
-                    voiceRecordFinish();
-                }else {
-                    voiceRecordFinish();
+                    //保留此状态为了处理上滑取消录音状态
+                    voiceRecordUIFinish();
+                } else {
+                    voiceRecordUIFinish();
                 }
                 reset();// 恢复标志位
                 break;
@@ -333,10 +318,19 @@ public class AudioRecordButton extends Button {
     /**
      * 结束处理
      */
-    private void voiceRecordFinish() {
+    private void voiceRecordUIFinish() {
         if (mDialogManager != null) {
             mDialogManager.dismissRecordingDialog();
         }
+        if (audioRecorderManager != null) {
+            audioRecorderManager.stopRecord();
+        }
+    }
+
+    /**
+     * 停止录音工具的录音
+     */
+    private void voiceRecordToolFinish() {
         if (audioRecorderManager != null) {
             audioRecorderManager.stopRecord();
         }

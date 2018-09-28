@@ -22,6 +22,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.chat.InputTypeBean;
 import com.inspur.emmcloud.bean.chat.InsertModel;
@@ -35,6 +36,7 @@ import com.inspur.emmcloud.util.common.MediaPlayerUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.Voice2StringMessageUtils;
 import com.inspur.emmcloud.widget.waveprogress.WaterWaveProgress;
@@ -375,7 +377,10 @@ public class ECMChatInputMenuV0 extends LinearLayout {
 
             @Override
             public void onVoiceResultError(VoiceResult errorResult) {
-
+                if(errorResult.getXunFeiPrepareError() == Voice2StringMessageUtils.MSG_XUNFEI_PREPARE_FAIL){
+                    ToastUtils.show(MyApplication.getInstance(),getContext().getString(R.string.voice_audio_record_unavailiable));
+                    stopVoiceInput();
+                }
             }
         });
     }
