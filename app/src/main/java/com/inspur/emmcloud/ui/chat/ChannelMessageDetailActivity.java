@@ -353,7 +353,7 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
             String content = message.getMsgContentComment().getText();
             contentText.setMovementMethod(LinkMovementClickMethod.getInstance());
             SpannableString spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(MyApplication.getInstance(), content, message.getMsgContentTextPlain().getMentionsMap());
-            contentText.setText(spannableString.toString());
+            contentText.setText(spannableString);
             TransHtmlToTextUtils.stripUnderlines(contentText,
                     Color.parseColor("#0f7bca"));
             String time = TimeUtils.getDisplayTime(MyApplication.getInstance(),
