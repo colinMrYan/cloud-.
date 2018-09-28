@@ -62,6 +62,10 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         this.chatInputMenu = chatInputMenu;
     }
 
+    public UIMessage getItemData(int position){
+        return this.UIMessageList.get(position);
+    }
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.chat_msg_card_parent_view, viewGroup, false);
@@ -94,15 +98,15 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
     }
 
 
-    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private MyItemClickListener mListener;
         public RelativeLayout cardLayout;
         public TextView senderNameText;
         public ImageView senderPhotoImgLeft;
         public ImageView senderPhotoImgRight;
-        private RelativeLayout sendStatusLayout;
-        private ImageView sendFailImg;
-        private QMUILoadingView sendingLoadingView;
+        public RelativeLayout sendStatusLayout;
+        public ImageView sendFailImg;
+        public QMUILoadingView sendingLoadingView;
         public TextView sendTimeText;
         public RelativeLayout cardParentLayout;
 
@@ -155,7 +159,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
      * @param holder
      * @param msg
      */
-    private void showRefreshingImg(final ViewHolder holder, final UIMessage uiMessage) {
+    public void showRefreshingImg(final ViewHolder holder, final UIMessage uiMessage) {
         if (uiMessage.getSendStatus() == 0) {
             holder.sendStatusLayout.setVisibility(View.VISIBLE);
             holder.sendFailImg.setVisibility(View.GONE);

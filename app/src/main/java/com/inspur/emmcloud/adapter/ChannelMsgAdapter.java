@@ -62,6 +62,9 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
         this.msgList.clear();
         this.msgList.addAll(msgList);
     }
+    public Msg getItemData(int position){
+        return this.msgList.get(position);
+    }
 
     public void setChannelData(String channelType, ECMChatInputMenuV0 chatInputMenu) {
         this.channelType = channelType;
@@ -100,13 +103,13 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
     }
 
 
-    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private MyItemClickListener mListener;
         public RelativeLayout cardLayout;
         public TextView senderNameText;
         public ImageView senderPhotoImgLeft;
         public ImageView senderPhotoImgRight;
-        private RelativeLayout sendStatusLayout;
+        public RelativeLayout sendStatusLayout;
         private ImageView sendFailImg;
         private QMUILoadingView sendingLoadingView;
         public TextView sendTimeText;

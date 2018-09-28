@@ -25,6 +25,7 @@ import com.inspur.emmcloud.bean.contact.ContactClickMessage;
 import com.inspur.emmcloud.bean.system.ChangeTabBean;
 import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
 import com.inspur.emmcloud.bean.system.MainTabResult;
+import com.inspur.emmcloud.bean.system.MainTabTitleResult;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.config.Constant;
@@ -51,7 +52,6 @@ import com.inspur.imp.api.ImpFragment;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.json.JSONObject;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
@@ -222,7 +222,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
     /**
      * 显示消息tab上的小红点（未读消息提醒）
      *
-     * @param eventMessageUnReadCount
+     * @param eventMessage
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void setMessageUnreadCount(SimpleEventMessage eventMessage) {
@@ -317,6 +317,8 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
 
     /**
      * 当没有数据的时候返回内容
+     * 添加默认数据根据目前服务端传回数据添加
+     * 未添加的已经添加默认
      *
      * @return
      */
@@ -324,10 +326,10 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
         //无数据改为显示两个tab，数组变为2
         TabBean[] tabBeans = new TabBean[2];
         TabBean tabBeanApp = new TabBean(getString(R.string.application), R.drawable.selector_tab_app_btn + "",
-                MyAppFragment.class, new MainTabResult(new JSONObject()));
+                MyAppFragment.class, getApplicationMainTab());
         tabBeanApp.setTabId(Constant.APP_TAB_BAR_APPLICATION);
         TabBean tabBeanMine = new TabBean(getString(R.string.mine), R.drawable.selector_tab_more_btn + "",
-                MoreFragment.class, new MainTabResult(new JSONObject()));
+                MoreFragment.class, getMineTab());
         tabBeanMine.setTabId(Constant.APP_TAB_BAR_PROFILE);
         //无数据改为显示两个tab
         tabBeans[0] = tabBeanApp;
@@ -335,6 +337,43 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
         return tabBeans;
     }
 
+    /**
+     * 生成applicationMainTab
+     * @return
+     */
+    private MainTabResult getApplicationMainTab() {
+        MainTabResult applicationTabResult = new MainTabResult();
+        applicationTabResult.setIcon("application");
+        applicationTabResult.setName("application");
+        applicationTabResult.setUri(Constant.APP_TAB_BAR_APPLICATION);
+        applicationTabResult.setType("native");
+        applicationTabResult.setSelected(false);
+        MainTabTitleResult applicationTabTitleResult = new MainTabTitleResult();
+        applicationTabTitleResult.setZhHant("應用");
+        applicationTabTitleResult.setZhHans("应用");
+        applicationTabTitleResult.setEnUS("Apps");
+        applicationTabResult.setMainTabTitleResult(applicationTabTitleResult);
+        return applicationTabResult;
+    }
+
+    /**
+     * 生成mainTab
+     * @return
+     */
+    private MainTabResult getMineTab() {
+        MainTabResult mineTabResult = new MainTabResult();
+        mineTabResult.setIcon("me");
+        mineTabResult.setName("me");
+        mineTabResult.setUri(Constant.APP_TAB_BAR_PROFILE);
+        mineTabResult.setType("native");
+        mineTabResult.setSelected(false);
+        MainTabTitleResult mainTabTitleResult = new MainTabTitleResult();
+        mainTabTitleResult.setZhHant("我");
+        mainTabTitleResult.setZhHans("我");
+        mainTabTitleResult.setEnUS("Me");
+        mineTabResult.setMainTabTitleResult(mainTabTitleResult);
+        return mineTabResult;
+    }
 
     /**
      * 根据语言设置tab，扩展语言从这里扩展
@@ -423,9 +462,10 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if (tabId.equals(Constant.APP_TAB_BAR_RN_FIND)) {
+            //如果是通讯录tab逐级返回功能，发送到ContactSearchFragment  updateUI方法
+            if (tabId.equals(Constant.APP_TAB_BAR_CONTACT)) {
                 ContactClickMessage contactClickMessage = new ContactClickMessage();
-                contactClickMessage.setTabId(Constant.APP_TAB_BAR_RN_FIND);
+                contactClickMessage.setTabId(Constant.APP_TAB_BAR_CONTACT);
                 contactClickMessage.setViewId(-1);
                 EventBus.getDefault().post(contactClickMessage);
             } else if ((System.currentTimeMillis() - lastBackTime) > 2000) {
@@ -438,7 +478,6 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
             return true;
         }
         return super.onKeyDown(keyCode, event);
-
     }
 
     @Override
@@ -453,18 +492,39 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
 
     @Override
     public void onTabChanged(final String tabId) {
+        this.tabId = tabId;
         tipsView.setCanTouch(tabId.equals(Constant.APP_TAB_BAR_COMMUNACATE));
         if (!isSystemChangeTag) {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
                     //记录打开的tab页
-                    PVCollectModel pvCollectModel = new PVCollectModel(tabId, tabId);
+                    String mainTabName = getMainTabName(tabId);
+                    PVCollectModel pvCollectModel = new PVCollectModel(mainTabName, mainTabName);
                     PVCollectModelCacheUtils.saveCollectModel(IndexBaseActivity.this, pvCollectModel);
                 }
             }).start();
             isSystemChangeTag = true;
         }
+    }
+
+    /**
+     * 根据tabId获取mainTab的name
+     * @param tabId
+     * @return
+     */
+    private String getMainTabName(String tabId){
+        String functionId = "";
+        String appTabs = PreferencesByUserAndTanentUtils.getString(this, Constant.PREF_APP_TAB_BAR_INFO_CURRENT,"");
+        ArrayList<MainTabResult> tabList = new GetAppMainTabResult(appTabs).getMainTabPayLoad().getMainTabResultList();
+        for (int i = 0; i < tabList.size(); i++) {
+            MainTabResult mainTabResult = tabList.get(i);
+            if(mainTabResult.getUri().equals(tabId)){
+                functionId = mainTabResult.getName();
+                break;
+            }
+        }
+        return functionId;
     }
 
     /**
