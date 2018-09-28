@@ -113,7 +113,7 @@ public class ChannelActivity extends MediaPlayBaseActivity {
 
     @ViewInject(R.id.robot_photo_img)
     private ImageView robotPhotoImg;
-
+    private LinearLayoutManager linearLayoutManager;
     private LoadingDialog loadingDlg;
     private String robotUid = "BOT6004";
     private String cid;
@@ -144,6 +144,7 @@ public class ChannelActivity extends MediaPlayBaseActivity {
             @Override
             public void onSuccess() {
             }
+
             @Override
             public void onFailure(Exception error) {
             }
@@ -236,7 +237,7 @@ public class ChannelActivity extends MediaPlayBaseActivity {
             headerText.setVisibility(View.GONE);
             String uid = DirectChannelUtils.getDirctChannelOtherUid(MyApplication.getInstance(), channel.getTitle());
             String iconUrl = APIUri.getUserIconUrl(MyApplication.getInstance(), uid);
-            LogUtils.jasonDebug("iconUrl="+iconUrl);
+            LogUtils.jasonDebug("iconUrl=" + iconUrl);
             ImageDisplayUtils.getInstance().displayImage(robotPhotoImg, iconUrl, R.drawable.icon_person_default);
         } else {
             robotPhotoImg.setVisibility(View.GONE);
@@ -265,12 +266,12 @@ public class ChannelActivity extends MediaPlayBaseActivity {
             }
 
             @Override
-            public void onSendVoiceRecordMsg(String results,float seconds, String filePath) {
+            public void onSendVoiceRecordMsg(String results, float seconds, String filePath) {
                 int duration = (int) seconds;
                 if (duration == 0) {
                     duration = 1;
                 }
-                combinAndSendMessageWithFile(filePath, Message.MESSAGE_TYPE_MEDIA_VOICE, duration,results);
+                combinAndSendMessageWithFile(filePath, Message.MESSAGE_TYPE_MEDIA_VOICE, duration, results);
             }
 
             @Override
@@ -298,9 +299,9 @@ public class ChannelActivity extends MediaPlayBaseActivity {
                 setChatDrafts();
             }
         });
-        chatInputMenu.setInputLayout(channel.getType().equals("SERVICE")?"1":channel.getInputs());
+        chatInputMenu.setInputLayout(channel.getType().equals("SERVICE") ? "1" : channel.getInputs());
         String chatDrafts = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), MyAppConfig.getChannelDrafsPreKey(cid));
-        if (chatDrafts != null){
+        if (chatDrafts != null) {
             chatInputMenu.setChatDrafts(chatDrafts);
         }
     }
@@ -346,7 +347,7 @@ public class ChannelActivity extends MediaPlayBaseActivity {
     private void initMsgListView() {
         final List<Message> cacheMessageList = MessageCacheUtil.getHistoryMessageList(MyApplication.getInstance(), cid, null, 15);
         uiMessageList = UIMessage.MessageList2UIMessageList(cacheMessageList);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager = new LinearLayoutManager(this);
         msgListView.setLayoutManager(linearLayoutManager);
         if (adapter == null) {
             adapter = new ChannelMessageAdapter(ChannelActivity.this, channel.getType(), chatInputMenu);
@@ -574,13 +575,13 @@ public class ChannelActivity extends MediaPlayBaseActivity {
     }
 
     private void combinAndSendMessageWithFile(String filePath, String messageType, int duration) {
-        combinAndSendMessageWithFile(filePath,messageType,duration,"");
+        combinAndSendMessageWithFile(filePath, messageType, duration, "");
     }
 
-    private void combinAndSendMessageWithFile(String filePath, String messageType, int duration,String results) {
+    private void combinAndSendMessageWithFile(String filePath, String messageType, int duration, String results) {
         File file = new File(filePath);
         if (!file.exists()) {
-            if(messageType != Message.MESSAGE_TYPE_MEDIA_VOICE){
+            if (messageType != Message.MESSAGE_TYPE_MEDIA_VOICE) {
                 ToastUtils.show(MyApplication.getInstance(), R.string.file_not_exist);
             }
             return;
@@ -594,7 +595,7 @@ public class ChannelActivity extends MediaPlayBaseActivity {
                 fakeMessage = CommunicationUtils.combinLocalMediaImageMessage(cid, filePath);
                 break;
             case Message.MESSAGE_TYPE_MEDIA_VOICE:
-                fakeMessage = CommunicationUtils.combinLocalMediaVoiceMessage(cid, filePath, duration,results);
+                fakeMessage = CommunicationUtils.combinLocalMediaVoiceMessage(cid, filePath, duration, results);
                 break;
         }
         if (fakeMessage != null) {
@@ -684,13 +685,20 @@ public class ChannelActivity extends MediaPlayBaseActivity {
                         uiMessageList.add(new UIMessage(receivedWSMessage));
                         adapter.setMessageList(uiMessageList);
                         adapter.notifyItemInserted(uiMessageList.size() - 1);
+                        msgListView.MoveToPosition(uiMessageList.size() - 1);
                     } else {
                         uiMessageList.remove(index);
                         uiMessageList.add(index, new UIMessage(receivedWSMessage));
-                        adapter.setMessageList(uiMessageList);
-                        adapter.notifyItemChanged(index);
+                        //如果是图片类型消息的话不再重新刷新消息体，防止图片重新加载
+                        if (receivedWSMessage.getType().equals(Message.MESSAGE_TYPE_MEDIA_IMAGE)){
+                            setMessageSendSuccess(index,receivedWSMessage);
+                            adapter.setMessageList(uiMessageList);
+                        }else {
+                            adapter.setMessageList(uiMessageList);
+                            adapter.notifyItemChanged(index);
+                        }
+
                     }
-                    msgListView.MoveToPosition(uiMessageList.size() - 1);
                 }
                 WSAPIService.getInstance().setChannelMessgeStateRead(cid);
             } else {
@@ -698,6 +706,26 @@ public class ChannelActivity extends MediaPlayBaseActivity {
             }
         }
 
+    }
+
+    /**
+     * 将消息显示状态置为发送成功
+     * @param index
+     */
+    private void setMessageSendSuccess(int index,Message message){
+        UIMessage uiMessage =adapter.getItemData(index);
+        uiMessage.setMessage(message);
+        uiMessage.setId(message.getId());
+        uiMessage.setSendStatus(1);
+        int firstItemPosition = linearLayoutManager.findFirstVisibleItemPosition();
+        if (index - firstItemPosition >=0){
+            View view = msgListView.getChildAt(index - firstItemPosition);
+            if (null != msgListView.getChildViewHolder(view)){
+                ChannelMessageAdapter.ViewHolder holder = (ChannelMessageAdapter.ViewHolder)msgListView.getChildViewHolder(view);
+                holder.sendStatusLayout.setVisibility(View.INVISIBLE);
+            }
+
+        }
     }
 
 
@@ -766,15 +794,13 @@ public class ChannelActivity extends MediaPlayBaseActivity {
                 it.remove();
             }
         }
-        if (offlineMessageList.size()>0){
+        if (offlineMessageList.size() > 0) {
             int currentPostion = uiMessageList.size() - 1;
             List<UIMessage> offlineUIMessageList = UIMessage.MessageList2UIMessageList(offlineMessageList);
-            LogUtils.jasonDebug("size1="+uiMessageList.size());
             uiMessageList.addAll(offlineUIMessageList);
             adapter.setMessageList(uiMessageList);
-            LogUtils.jasonDebug("size1="+uiMessageList.size());
-            adapter.notifyItemRangeInserted(currentPostion+1, offlineUIMessageList.size());
-            msgListView.MoveToPosition(uiMessageList.size()-1);
+            adapter.notifyItemRangeInserted(currentPostion + 1, offlineUIMessageList.size());
+            msgListView.MoveToPosition(uiMessageList.size() - 1);
             WSAPIService.getInstance().setChannelMessgeStateRead(cid);
         }
     }
@@ -799,7 +825,6 @@ public class ChannelActivity extends MediaPlayBaseActivity {
     }
 
 
-
     /**
      * 关闭此页面
      */
@@ -815,14 +840,14 @@ public class ChannelActivity extends MediaPlayBaseActivity {
     /**
      * 设置当前频道草稿箱
      */
-    private void setChatDrafts(){
+    private void setChatDrafts() {
         String chatDraftsNew = chatInputMenu.getInputContent().trim();
-        String chatDraftsOld = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), MyAppConfig.getChannelDrafsPreKey(cid),"").trim();
-        if (!chatDraftsNew.equals(chatDraftsOld)){
-            if (!StringUtils.isBlank(chatDraftsNew)){
-                PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(),MyAppConfig.getChannelDrafsPreKey(cid),chatDraftsNew);
-            }else {
-                PreferencesByUserAndTanentUtils.clearDataByKey(MyApplication.getInstance(),MyAppConfig.getChannelDrafsPreKey(cid));
+        String chatDraftsOld = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), MyAppConfig.getChannelDrafsPreKey(cid), "").trim();
+        if (!chatDraftsNew.equals(chatDraftsOld)) {
+            if (!StringUtils.isBlank(chatDraftsNew)) {
+                PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), MyAppConfig.getChannelDrafsPreKey(cid), chatDraftsNew);
+            } else {
+                PreferencesByUserAndTanentUtils.clearDataByKey(MyApplication.getInstance(), MyAppConfig.getChannelDrafsPreKey(cid));
             }
             Intent mIntent = new Intent("message_notify");
             mIntent.putExtra("command", "refresh_adapter");
@@ -931,7 +956,7 @@ public class ChannelActivity extends MediaPlayBaseActivity {
             chatInputMenu.stopVoiceInput();
             return;
         }
-        if (InputMethodUtils.isSoftInputShow(ChannelActivity.this)){
+        if (InputMethodUtils.isSoftInputShow(ChannelActivity.this)) {
             InputMethodUtils.hide(ChannelActivity.this);
             return;
         }

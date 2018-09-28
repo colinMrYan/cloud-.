@@ -115,7 +115,7 @@ public class ChannelV0Activity extends BaseActivity {
 
     @ViewInject(R.id.robot_photo_img)
     private ImageView robotPhotoImg;
-
+    private LinearLayoutManager linearLayoutManager;
     private LoadingDialog loadingDlg;
     private String robotUid = "BOT6006";
     private String cid;
@@ -211,7 +211,7 @@ public class ChannelV0Activity extends BaseActivity {
                     String content = getIntent().getExtras().getString(Constant.SHARE_LINK);
                     String fakeId = System.currentTimeMillis() + "";
                     if (!StringUtils.isBlank(content)) {
-                        Msg fakeMsg = ConbineMsg.conbineCommonMsg( content, "res_link", fakeId);
+                        Msg fakeMsg = ConbineMsg.conbineCommonMsg(content, "res_link", fakeId);
                         sendMsg(content, "res_link", fakeId);
                         addLocalMessage(fakeMsg);
                     }
@@ -222,7 +222,6 @@ public class ChannelV0Activity extends BaseActivity {
 
         }
     }
-
 
 
     /**
@@ -330,7 +329,7 @@ public class ChannelV0Activity extends BaseActivity {
         });
         chatInputMenu.setInputLayout(isSpecialUser ? "1" : channel.getInputs());
         String chatDrafts = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), MyAppConfig.getChannelDrafsPreKey(cid));
-        if (chatDrafts != null){
+        if (chatDrafts != null) {
             chatInputMenu.setChatDrafts(chatDrafts);
         }
     }
@@ -376,7 +375,7 @@ public class ChannelV0Activity extends BaseActivity {
     private void initMsgListView() {
         msgList = MsgCacheUtil.getHistoryMsgList(getApplicationContext(),
                 cid, null, 15);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager = new LinearLayoutManager(this);
         msgListView.setLayoutManager(linearLayoutManager);
         if (adapter == null) {
             adapter = new ChannelMsgAdapter(ChannelV0Activity.this, apiService, channel.getType(), chatInputMenu);
@@ -384,7 +383,7 @@ public class ChannelV0Activity extends BaseActivity {
 
                 @Override
                 public void onMessageResend(Msg msg) {
-                    if (msg.getSendStatus() == 2){
+                    if (msg.getSendStatus() == 2) {
                         showResendMessageDlg(msg);
                     }
                 }
@@ -457,7 +456,7 @@ public class ChannelV0Activity extends BaseActivity {
                 adapter.setMsgList(msgList);
                 adapter.notifyDataSetChanged();
                 msgListView.MoveToPosition(msgList.size() - 1);
-            }else {
+            } else {
                 adapter.setMsgList(msgList);
                 adapter.notifyItemChanged(msgList.size() - 1);
             }
@@ -468,7 +467,7 @@ public class ChannelV0Activity extends BaseActivity {
                     break;
                 case "txt_rich":
                 case "res_link":
-                    sendMsg(msg.getBody(),msg.getType(),msg.getMid());
+                    sendMsg(msg.getBody(), msg.getType(), msg.getMid());
                     break;
                 default:
                     break;
@@ -479,9 +478,10 @@ public class ChannelV0Activity extends BaseActivity {
 
     /**
      * 打开消息
+     *
      * @param msg
      */
-    private void openMsg(Msg msg){
+    private void openMsg(Msg msg) {
         String msgType = msg.getType();
         Message message = null;
         if (Message.isMessage(msg)) {
@@ -618,8 +618,6 @@ public class ChannelV0Activity extends BaseActivity {
     }
 
 
-
-
     /**
      * 保存并显示把图片展示出来
      *
@@ -726,30 +724,32 @@ public class ChannelV0Activity extends BaseActivity {
      * @param realMsg
      */
     private void setMsgSendSuccess(String fakeMessageId, Msg realMsg) {
-        if (StringUtils.isBlank(fakeMessageId)) {
-            return;
-        }
         Msg fakeMsg = new Msg();
         fakeMsg.setMid(fakeMessageId);
-        int fakeMsgIndex = msgList.indexOf(fakeMsg);
+        int index = msgList.indexOf(fakeMsg);
         boolean isContainRealMsg = msgList.contains(realMsg);
-        if (fakeMsgIndex != -1) {
-            msgList.remove(fakeMsgIndex);
+        if (index != -1) {
+            msgList.remove(index);
             if (isContainRealMsg) {
                 adapter.setMsgList(msgList);
-                adapter.notifyItemRemoved(fakeMsgIndex);
+                adapter.notifyItemRemoved(index);
             } else {
-                msgList.add(fakeMsgIndex, realMsg);
-                adapter.setMsgList(msgList);
-                adapter.notifyItemChanged(fakeMsgIndex);
+                msgList.add(index, realMsg);
+                //如果是图片类型消息的话不再重新刷新消息体，防止图片重新加载
+                if (realMsg.getType().equals("res_image")){
+                    setMessageSendSuccess(index,realMsg);
+                    adapter.setMsgList(msgList);
+                }else {
+                    adapter.setMsgList(msgList);
+                    adapter.notifyItemChanged(index);
+                }
+
             }
         } else if (!isContainRealMsg) {
             msgList.add(realMsg);
             adapter.setMsgList(msgList);
             adapter.notifyItemInserted(msgList.size() - 1);
         }
-
-
     }
 
     /**
@@ -766,6 +766,28 @@ public class ChannelV0Activity extends BaseActivity {
             msgList.get(fakeMsgIndex).setSendStatus(2);
             adapter.setMsgList(msgList);
             adapter.notifyDataSetChanged();
+        }
+    }
+
+    /**
+     * 将消息显示状态置为发送成功
+     *
+     * @param index
+     */
+    private void setMessageSendSuccess(int index,Msg realMsg) {
+        Msg msg = adapter.getItemData(index);
+        msg.setBody(realMsg.getBody());
+        msg.setSendStatus(1);
+        msg.setMid(realMsg.getMid());
+        msg.setCid(realMsg.getCid());
+        int firstItemPosition = linearLayoutManager.findFirstVisibleItemPosition();
+        if (index - firstItemPosition >= 0) {
+            View view = msgListView.getChildAt(index - firstItemPosition);
+            if (null != msgListView.getChildViewHolder(view)) {
+                ChannelMsgAdapter.ViewHolder holder = (ChannelMsgAdapter.ViewHolder) msgListView.getChildViewHolder(view);
+                holder.sendStatusLayout.setVisibility(View.INVISIBLE);
+            }
+
         }
     }
 
@@ -803,14 +825,14 @@ public class ChannelV0Activity extends BaseActivity {
     /**
      * 设置当前频道草稿箱
      */
-    private void setChatDrafts(){
+    private void setChatDrafts() {
         String chatDraftsNew = chatInputMenu.getInputContent().trim();
-        String chatDraftsOld = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), MyAppConfig.getChannelDrafsPreKey(cid),"").trim();
-        if (!chatDraftsNew.equals(chatDraftsOld)){
-            if (!StringUtils.isBlank(chatDraftsNew)){
-                PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(),MyAppConfig.getChannelDrafsPreKey(cid),chatDraftsNew);
-            }else {
-                PreferencesByUserAndTanentUtils.clearDataByKey(MyApplication.getInstance(),MyAppConfig.getChannelDrafsPreKey(cid));
+        String chatDraftsOld = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), MyAppConfig.getChannelDrafsPreKey(cid), "").trim();
+        if (!chatDraftsNew.equals(chatDraftsOld)) {
+            if (!StringUtils.isBlank(chatDraftsNew)) {
+                PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), MyAppConfig.getChannelDrafsPreKey(cid), chatDraftsNew);
+            } else {
+                PreferencesByUserAndTanentUtils.clearDataByKey(MyApplication.getInstance(), MyAppConfig.getChannelDrafsPreKey(cid));
             }
             Intent mIntent = new Intent("message_notify");
             mIntent.putExtra("command", "refresh_adapter");
@@ -835,7 +857,7 @@ public class ChannelV0Activity extends BaseActivity {
             IntentUtils.startActivity(ChannelV0Activity.this,
                     RobotInfoActivity.class, bundle);
         } else {
-            String uid = DirectChannelUtils.getDirctChannelOtherUid(MyApplication.getInstance(),channel.getTitle());
+            String uid = DirectChannelUtils.getDirctChannelOtherUid(MyApplication.getInstance(), channel.getTitle());
             bundle.putString("uid", uid);
             IntentUtils.startActivity(ChannelV0Activity.this,
                     UserInfoActivity.class, bundle);
@@ -880,7 +902,7 @@ public class ChannelV0Activity extends BaseActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        Msg localMsg = ConbineMsg.conbineCommonMsg(richTextObj.toString(),"txt_rich", fakeMessageId);
+        Msg localMsg = ConbineMsg.conbineCommonMsg(richTextObj.toString(), "txt_rich", fakeMessageId);
         addLocalMessage(localMsg);
         sendMsg(richTextObj.toString(), "txt_rich", fakeMessageId);
     }
@@ -976,6 +998,7 @@ public class ChannelV0Activity extends BaseActivity {
 
     /**
      * 上传资源文件
+     *
      * @param fakeMsg
      * @param isResImgMsg
      */
