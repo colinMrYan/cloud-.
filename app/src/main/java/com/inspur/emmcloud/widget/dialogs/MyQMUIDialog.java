@@ -118,7 +118,7 @@ public class MyQMUIDialog extends Dialog {
                         QMUIResHelper.getAttrDimen(mContext, com.qmuiteam.qmui.R.attr.qmui_dialog_padding_horizontal),
                         QMUIResHelper.getAttrDimen(mContext, hasTitle() ? com.qmuiteam.qmui.R.attr.qmui_dialog_content_padding_top : com.qmuiteam.qmui.R.attr.qmui_dialog_content_padding_top_when_no_title),
                         QMUIResHelper.getAttrDimen(mContext, com.qmuiteam.qmui.R.attr.qmui_dialog_padding_horizontal),
-                        QMUIResHelper.getAttrDimen(mContext, com.qmuiteam.qmui.R.attr.qmui_dialog_content_padding_bottom)
+                        QMUIResHelper.getAttrDimen(mContext, com.qmuiteam.qmui.R.attr.qmui_dialog_content_padding_bottom_when_no_action)
                 );
                 parent.addView(mTextView);
             }
