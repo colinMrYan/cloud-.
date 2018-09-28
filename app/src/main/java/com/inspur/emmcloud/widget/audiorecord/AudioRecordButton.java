@@ -304,8 +304,6 @@ public class AudioRecordButton extends Button {
                             mListener.onFinished(durationTime, mp3FilePath);
                         }
                     }
-                } else if (mCurrentState == STATE_WANT_TO_CANCEL) {
-                    voiceRecordUIFinish();
                 } else {
                     voiceRecordUIFinish();
                 }
