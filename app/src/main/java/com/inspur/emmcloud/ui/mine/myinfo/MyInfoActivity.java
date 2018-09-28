@@ -100,6 +100,9 @@ public class MyInfoActivity extends BaseActivity {
         String photoUri = APIUri
                 .getChannelImgUrl(MyInfoActivity.this, getMyInfoResult.getID());
         ImageDisplayUtils.getInstance().displayImage(userHeadImg, photoUri, R.drawable.icon_photo_default);
+        tvUserName.setText(((!StringUtils.isBlank(getMyInfoResult.getName()))?getMyInfoResult.getName():"暂未设置"));
+        tvMobile.setText(((!StringUtils.isBlank(getMyInfoResult.getPhoneNumber()))?getMyInfoResult.getPhoneNumber():"暂未设置"));
+        userMailText.setText(((!StringUtils.isBlank(getMyInfoResult.getMail()))?getMyInfoResult.getMail():"暂未设置"));
         ((TextView) findViewById(R.id.myinfo_usercompanytext_text)).setText(MyApplication.getInstance().getCurrentEnterprise().getName());
         List<Enterprise> enterpriseList = getMyInfoResult.getEnterpriseList();
         findViewById(R.id.switch_enterprese_text).setVisibility((enterpriseList.size() > 1)?View.VISIBLE:View.GONE);
@@ -212,10 +215,6 @@ public class MyInfoActivity extends BaseActivity {
             }
         }
         if (userProfileInfoBean != null) {
-            if(!StringUtils.isBlank(userProfileInfoBean.getUserName())) {
-                findViewById(R.id.myinfo_username_layout).setVisibility(View.VISIBLE);
-                tvUserName.setText(userProfileInfoBean.getUserName());
-            }
 
             if(!(StringUtils.isBlank(userProfileInfoBean.getEmpNum()))) {
                 findViewById(R.id.rl_myinfo_worknum_main).setVisibility(View.VISIBLE);
@@ -223,16 +222,6 @@ public class MyInfoActivity extends BaseActivity {
                 tvEmpNum.setText(userProfileInfoBean.getEmpNum());
             }
 
-            if(!(StringUtils.isBlank(userProfileInfoBean.getUserMail()))) {
-                (findViewById(R.id.myinfo_usermail_layout)).setVisibility(View.VISIBLE);
-                (findViewById(R.id.v_usermail_topliner)).setVisibility(View.VISIBLE);
-                userMailText.setText(userProfileInfoBean.getUserMail());
-            }
-            if(!(StringUtils.isBlank(userProfileInfoBean.getUserPhone()))) {
-                findViewById(R.id.myinfo_userphone_layout).setVisibility(View.VISIBLE);
-                findViewById(R.id.v_userphone_topliner).setVisibility(View.VISIBLE);
-                tvMobile.setText(userProfileInfoBean.getUserPhone());
-            }
             if(!(StringUtils.isBlank(userProfileInfoBean.getTelePhone()))) {
                 (findViewById(R.id.rl_myinfo_telphone)).setVisibility(View.VISIBLE);
                 (findViewById(R.id.v_telphone_topliner)).setVisibility(View.VISIBLE);
