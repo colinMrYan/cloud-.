@@ -127,7 +127,6 @@ public class AudioRecordButton extends Button {
                         public void handleMessage(Message msg) {
                             super.handleMessage(msg);
                             if (msg.what == MP3Recorder.ERROR_TYPE) {
-                                recoveryState();
                                 mListener.onErrorRecordingVoice(MP3Recorder.ERROR_TYPE);
                                 resolveMp3Error();
                                 isDeviceError = true;
@@ -295,15 +294,17 @@ public class AudioRecordButton extends Button {
                     handler.sendEmptyMessageDelayed(VOICE_DISMISS_DIALOG, 500);
                 } else if (mCurrentState == STATE_RECORDING) {//正常录制结束
                     voiceRecordUIFinish();
-                    if (AppUtils.getIsVoiceWordOpen()) {
-                        if (mListener != null) {
+                    if (mListener != null) {
+                        if (AppUtils.getIsVoiceWordOpen()) {
                             mListener.onFinished(durationTime, audioRecorderManager.getCurrentFilePath());
-                        }
-                    } else {
-                        if (!isDeviceError && mListener != null) {
+                        } else if (!isDeviceError) {
                             mListener.onFinished(durationTime, mp3FilePath);
                         }
                     }
+
+                } else if (mCurrentState == STATE_WANT_TO_CANCEL) {
+                    //保留此状态为了处理上滑取消录音状态
+                    voiceRecordUIFinish();
                 } else {
                     voiceRecordUIFinish();
                 }
@@ -329,11 +330,11 @@ public class AudioRecordButton extends Button {
     /**
      * 停止录音工具的录音
      */
-    private void voiceRecordToolFinish(){
+    private void voiceRecordToolFinish() {
         if (audioRecorderManager != null) {
             audioRecorderManager.stopRecord();
         }
-        if(mp3Recorder != null){
+        if (mp3Recorder != null) {
             mp3Recorder.setPause(false);
             mp3Recorder.stop();
         }
