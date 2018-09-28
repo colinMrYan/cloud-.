@@ -32,7 +32,7 @@
         android:layout_height="wrap_content"
         android:paddingRight="6dp"
         android:textColor="#3f3f3f"
-        android:textSize="15sp"
+        android:textSize="13sp"
         android:visibility="gone" />
 
     <com.inspur.emmcloud.widget.bubble.BubbleLayout
@@ -65,11 +65,11 @@
                 android:id="@+id/tv_voice_card_word"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:maxWidth="185dp"
+                android:maxWidth="180dp"
                 android:minWidth="55dp"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
-                android:paddingRight="8dp"
+                android:paddingRight="5dp"
                 android:textSize="16sp"
                 android:gravity="center_vertical"
                 android:layout_toRightOf="@id/v_voice_anim_left"
