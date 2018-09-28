@@ -56,11 +56,11 @@ public class MyInfoActivity extends BaseActivity {
     private GetMyInfoResult getMyInfoResult;
     private boolean isUpdateUserPhoto = false; //标记是否更改了头像
 
-    private  TextView tvUserName;
-    private  TextView tvMobile;
-    private  TextView tvEmpNum;
-    private  TextView tvTelPhone;
-    private  TextView tvUserdepart;
+    private  TextView userNameText;
+    private  TextView mobileText;
+    private  TextView empNumText;
+    private  TextView telPhoneText;
+    private  TextView userdepartText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,11 +82,11 @@ public class MyInfoActivity extends BaseActivity {
         apiService = new MineAPIService(MyInfoActivity.this);
         apiService.setAPIInterface(new WebService());
 
-        tvEmpNum   = (TextView)findViewById(R.id.tv_myinfo_worknum_rewrite);
-        tvMobile   = (TextView)findViewById(R.id.myinfo_userphone_text);
-        tvTelPhone = (TextView)findViewById(R.id.tv_myinfo_telphone_rewrite);
-        tvUserName = (TextView)findViewById(R.id.myinfo_username_text);
-        tvUserdepart = (TextView)findViewById(R.id.myinfo_userdepart_text);
+        empNumText = (TextView)findViewById(R.id.tv_myinfo_worknum_rewrite);
+        mobileText = (TextView)findViewById(R.id.myinfo_userphone_text);
+        telPhoneText = (TextView)findViewById(R.id.tv_myinfo_telphone_rewrite);
+        userNameText = (TextView)findViewById(R.id.myinfo_username_text);
+        userdepartText = (TextView)findViewById(R.id.myinfo_userdepart_text);
     }
 
     /**
@@ -100,9 +100,9 @@ public class MyInfoActivity extends BaseActivity {
         String photoUri = APIUri
                 .getChannelImgUrl(MyInfoActivity.this, getMyInfoResult.getID());
         ImageDisplayUtils.getInstance().displayImage(userHeadImg, photoUri, R.drawable.icon_photo_default);
-        tvUserName.setText(((!StringUtils.isBlank(getMyInfoResult.getName()))?getMyInfoResult.getName():"暂未设置"));
-        tvMobile.setText(((!StringUtils.isBlank(getMyInfoResult.getPhoneNumber()))?getMyInfoResult.getPhoneNumber():"暂未设置"));
-        userMailText.setText(((!StringUtils.isBlank(getMyInfoResult.getMail()))?getMyInfoResult.getMail():"暂未设置"));
+        userNameText.setText(((!StringUtils.isBlank(getMyInfoResult.getName()))?getMyInfoResult.getName():getString(R.string.not_set)));
+        mobileText.setText(((!StringUtils.isBlank(getMyInfoResult.getPhoneNumber()))?getMyInfoResult.getPhoneNumber():getString(R.string.not_set)));
+        userMailText.setText(((!StringUtils.isBlank(getMyInfoResult.getMail()))?getMyInfoResult.getMail():getString(R.string.not_set)));
         ((TextView) findViewById(R.id.myinfo_usercompanytext_text)).setText(MyApplication.getInstance().getCurrentEnterprise().getName());
         List<Enterprise> enterpriseList = getMyInfoResult.getEnterpriseList();
         findViewById(R.id.switch_enterprese_text).setVisibility((enterpriseList.size() > 1)?View.VISIBLE:View.GONE);
@@ -219,13 +219,13 @@ public class MyInfoActivity extends BaseActivity {
             if(!(StringUtils.isBlank(userProfileInfoBean.getEmpNum()))) {
                 findViewById(R.id.rl_myinfo_worknum_main).setVisibility(View.VISIBLE);
                 findViewById(R.id.v_workernum_top_Liner).setVisibility(View.VISIBLE);
-                tvEmpNum.setText(userProfileInfoBean.getEmpNum());
+                empNumText.setText(userProfileInfoBean.getEmpNum());
             }
 
             if(!(StringUtils.isBlank(userProfileInfoBean.getTelePhone()))) {
                 (findViewById(R.id.rl_myinfo_telphone)).setVisibility(View.VISIBLE);
                 (findViewById(R.id.v_telphone_topliner)).setVisibility(View.VISIBLE);
-                tvMobile.setText(userProfileInfoBean.getTelePhone());
+                telPhoneText.setText(userProfileInfoBean.getTelePhone());
             }
 
 
