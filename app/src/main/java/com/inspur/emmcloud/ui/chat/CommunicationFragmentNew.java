@@ -196,7 +196,7 @@ public class CommunicationFragmentNew extends Fragment {
 
             @Override
             public boolean onItemLongClick(View view, int position) {
-                showConversationOperationDlg(displayUIConversationList.get(position).getConversation());
+                showConversationOperationDlg(displayUIConversationList.get(position));
                 return true;
             }
 
@@ -219,10 +219,11 @@ public class CommunicationFragmentNew extends Fragment {
      *
      * @param position
      */
-    private void showConversationOperationDlg(Conversation conversation) {
+    private void showConversationOperationDlg(UIConversation uiConversation) {
         // TODO Auto-generated method stub
-        final String[] items = new String[]{getString(conversation.isStick() ? R.string.chanel_cancel_top : R.string.channel_set_top), getString(R.string.channel_hide_chat),getString(R.string.cancel)};
+        final String[] items = new String[]{getString(uiConversation.getConversation().isStick() ? R.string.chat_remove_from_top : R.string.chat_stick_on_top), getString(R.string.chat_remove)};
         new MyQMUIDialog.MenuDialogBuilder(getActivity())
+                .setTitle(uiConversation.getTitle())
                 .addItems(items, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -887,6 +888,26 @@ public class CommunicationFragmentNew extends Fragment {
             }
         }
 
+    }
+
+    /**
+     * 设置频道是否置顶
+     * @param id
+     * @param isStick
+     */
+    private void setConversationFocus(String id,boolean isFocus){
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance())){
+            apiService.
+        }
+    }
+
+    /**
+     * 隐藏频道
+     * @param id
+     */
+    private void setConversationInvisible(String id){
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance())){
+        }
     }
 
 

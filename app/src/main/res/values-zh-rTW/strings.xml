@@ -173,6 +173,9 @@
     <string name="no_chat_content">暫無聊天內容</string>
     <string name="new_function">新功能</string>
     <string name="app_update_function">当前版本不支持此功能请立即升级到最新版本</string>
+    <string name="chat_stick_on_top">置頂</string>
+    <string name="chat_remove">移除</string>
+    <string name="chat_remove_from_top">取消置頂</string>
 
     <!-- 新用戶註冊 -->
     <string name="new_user">新用戶</string>

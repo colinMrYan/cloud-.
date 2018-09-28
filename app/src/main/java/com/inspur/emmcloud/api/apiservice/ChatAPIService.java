@@ -1325,4 +1325,46 @@ public class ChatAPIService {
             }
         });
     }
+
+    /**
+     * 设置会话是否置顶
+     * @param cid
+     * @param isStick
+     */
+    public void setConversationStick(final String id,final String isStick){
+        final String completeUrl = APIUri.getConversationSetStick(id);
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
+        params.addParameter("stick",isStick);
+        HttpUtils.request(context, CloudHttpMethod.PUT, params, new APICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        setConversationStick(id,isStick);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(oauthCallBack, requestTime);
+            }
+
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+                apiInterface.returnConversationListSuccess(new GetConversationListResult(new String(arg0)));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                apiInterface.returnConversationListFail(error, responseCode);
+            }
+        });
+    }
 }

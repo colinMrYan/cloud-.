@@ -173,6 +173,9 @@
     <string name="not_support_upload">Does not support file upload without suffix </string>
     <string name="new_function">New</string>
     <string name="app_update_function">This feature is not supported by the current version, please upgrade to the latest version</string>
+    <string name="chat_stick_on_top">Stick on Top</string>
+    <string name="chat_remove">Delete</string>
+    <string name="chat_remove_from_top">Remove from Top</string>
     <!-- 新添加部分 -->
 
 

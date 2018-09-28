@@ -123,7 +123,7 @@
     <string name="channel_group_name">群组名称</string>
     <string name="channel_group_image"> 群聊天图片</string>
     <string name="channel_group_file"> 群聊天文件</string>
-    <string name="channel_set_top"> 置顶聊天</string>
+    <string name="channel_set_top"> 置顶</string>
     <string name="message_without_interruption">消息免打扰</string>
     <string name="login_hint_text">用户名/邮箱/手机号</string>
     <string name="modify_group_name">更改群名称</string>
@@ -175,6 +175,9 @@
     <string name="no_chat_content">暂无聊天内容</string>
     <string name="new_function">新功能</string>
     <string name="app_update_function">当前版本不支持此功能请  立即升级  到最新版本</string>
+    <string name="chat_stick_on_top">置顶</string>
+    <string name="chat_remove">移除</string>
+    <string name="chat_remove_from_top">取消置顶</string>
 
     <!-- 新用户注册 -->
     <string name="new_user">新用户</string>

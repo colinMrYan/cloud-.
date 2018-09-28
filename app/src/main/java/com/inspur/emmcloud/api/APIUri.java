@@ -572,6 +572,14 @@ public class APIUri {
     public static String getConversationListUrl(){
         return   getECMChatConversationBaseUrl()+"/channel";
     }
+
+    /**
+     * 设置会话是否置顶
+     * @return
+     */
+    public static String getConversationSetStick(String id){
+        return getECMChatConversationBaseUrl()+"/channel/"+id+"/focus";
+    }
     /**************************************************应用和应用中心********************************************************************/
 
 
