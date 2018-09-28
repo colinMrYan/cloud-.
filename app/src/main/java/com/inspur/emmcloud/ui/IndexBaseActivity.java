@@ -499,7 +499,8 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
                 @Override
                 public void run() {
                     //记录打开的tab页
-                    PVCollectModel pvCollectModel = new PVCollectModel(getMainTabName(tabId), tabId);
+                    String mainTabName = getMainTabName(tabId);
+                    PVCollectModel pvCollectModel = new PVCollectModel(mainTabName, mainTabName);
                     PVCollectModelCacheUtils.saveCollectModel(IndexBaseActivity.this, pvCollectModel);
                 }
             }).start();
