@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
@@ -19,10 +18,11 @@ import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.util.common.LogUtils;
-import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
+import com.inspur.emmcloud.widget.ScrollViewWithListView;
 import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
@@ -35,7 +35,7 @@ import java.util.List;
 
 public class SwitchEnterpriseActivity extends BaseActivity {
     private List<Enterprise> enterpriseList;
-    private ListView enterpriseListView;
+    private ScrollViewWithListView enterpriseListView;
     private GetMyInfoResult getMyInfoResult;
 
     @Override
@@ -55,11 +55,10 @@ public class SwitchEnterpriseActivity extends BaseActivity {
     private void initView() {
         String selectLoginEnterpriseId= PreferencesByUsersUtils.getString(this, Constant.PREF_SELECT_LOGIN_ENTERPRISE_ID,"");
         if(!StringUtils.isBlank(selectLoginEnterpriseId)){
-            LogUtils.LbcDebug("EnterpriseId  clear_auto_select_enterprise_layout ");
             findViewById(R.id.clear_auto_select_enterprise_layout).setVisibility(View.VISIBLE);
         }
         ((TextView) findViewById(R.id.header_text)).setText(R.string.select_enterprise);
-        enterpriseListView = (ListView) findViewById(R.id.device_list);
+        enterpriseListView = (ScrollViewWithListView) findViewById(R.id.device_list);
         enterpriseListView.setAdapter(adapter);
         enterpriseListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
