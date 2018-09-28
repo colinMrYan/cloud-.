@@ -201,15 +201,17 @@ public class AudioRecorderManager {
                 file.delete();
             }
             fos = new FileOutputStream(file);// 建立一个可存取字节的文件
+            boolean isHasData = false;
             while (isRecording == true) {
                 readSize = audioRecord.read(audioData, 0, bufferSizeInBytes);
                     if (AudioRecord.ERROR_INVALID_OPERATION != readSize && fos != null) {
+                        isHasData = true;
                         fos.write(audioData);
                     }else{
-                        if(duration > 1){
+                        if(!isHasData){
                             isRecording = false;
+                            callBack.onWavAudioPrepareState(AudioRecordErrorCode.E_ERROR);
                         }
-                        callBack.onWavAudioPrepareState(AudioRecordErrorCode.E_ERROR);
                     }
                     volume = getVolume(audioData, readSize);
                     duration = System.currentTimeMillis() - beginTime;
@@ -220,6 +222,7 @@ public class AudioRecorderManager {
             if (fos != null) {
                 fos.close();// 关闭写入流
             }
+            isHasData = false;
         } catch (Exception e) {
             LogUtils.YfcDebug("发生异常：" + e.getMessage());
             e.printStackTrace();
