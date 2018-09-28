@@ -15,6 +15,7 @@ import com.inspur.emmcloud.bean.system.VoiceResult;
 import com.inspur.emmcloud.interf.OnVoiceResultCallback;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -102,6 +103,8 @@ public class Voice2StringMessageUtils {
         speechRecognizer.setParameter(SpeechConstant.ENGINE_TYPE, engineType);
         // 设置返回结果格式
         speechRecognizer.setParameter(SpeechConstant.RESULT_TYPE, "json");
+        //网络转写超时设置
+        speechRecognizer.setParameter(SpeechConstant.NET_TIMEOUT,"8000");
 
         String language = AppUtils.getCurrentAppLanguage(context);
         switch (language){
@@ -163,6 +166,7 @@ public class Voice2StringMessageUtils {
 
             @Override
             public void onError(SpeechError error) {
+                LogUtils.YfcDebug("错误："+error.getErrorCode()+error.getErrorDescription());
                 VoiceResult voiceResult = new VoiceResult();
                 if(error.getErrorCode() == ERROR_AUDIO_RECORD){
                     voiceResult.setXunFeiPrepareError(MSG_XUNFEI_PREPARE_FAIL);

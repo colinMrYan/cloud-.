@@ -203,11 +203,19 @@ public class ECMChatInputMenu extends LinearLayout {
 
                         }
                     };
-                    audioDialogManager = new AudioDialogManager(getContext());
-                    audioDialogManager.showVoice2WordProgressDialog();
-                    //转写和转文件格式同时进行
-                    voice2StringMessageUtils.startVoiceListeningByVoiceFile(seconds,filePath);
-                    ConvertAudioFileFormatUtils.getInstance().convertAudioFile2SpecifiedFormat(getContext(),filePath, AudioFormat.MP3,callback);
+                    if(FileUtils.getFileSize(filePath) <= 0){
+                        if(audioDialogManager != null){
+                            audioDialogManager.dismissVoice2WordProgressDialog();
+                        }
+                        return;
+                    }
+                    if(NetUtils.isNetworkConnected(MyApplication.getInstance())){
+                        audioDialogManager = new AudioDialogManager(getContext());
+                        audioDialogManager.showVoice2WordProgressDialog();
+                        //转写和转文件格式同时进行
+                        voice2StringMessageUtils.startVoiceListeningByVoiceFile(seconds,filePath);
+                        ConvertAudioFileFormatUtils.getInstance().convertAudioFile2SpecifiedFormat(getContext(),filePath, AudioFormat.MP3,callback);
+                    }
                 }else {
                     if (chatInputMenuListener != null) {
                         chatInputMenuListener.onSendVoiceRecordMsg("",seconds, filePath);
@@ -279,6 +287,9 @@ public class ECMChatInputMenu extends LinearLayout {
             }
         }else{
             if(voiceResult.getXunFeiPrepareError() == Voice2StringMessageUtils.MSG_XUNFEI_PREPARE_FAIL){
+                if(audioDialogManager != null){
+                    audioDialogManager.dismissVoice2WordProgressDialog();
+                }
                 ToastUtils.show(MyApplication.getInstance(),getContext().getString(R.string.voice_audio_record_unavailiable));
                 stopVoiceInput();
                 return;
@@ -449,12 +460,14 @@ public class ECMChatInputMenu extends LinearLayout {
                             openMentionPage(false);
                             break;
                         case "voice_input":
-                            addMenuLayout.setVisibility(GONE);
-                            voiceInputLayout.setVisibility(View.VISIBLE);
-                            lastVolumeLevel=0;
-                            waterWaveProgress.setProgress(0);
-                            mediaPlayerUtils.playVoiceOn();
-                            voice2StringMessageUtils.startVoiceListening();
+                            if(NetUtils.isNetworkConnected(MyApplication.getInstance())){
+                                addMenuLayout.setVisibility(GONE);
+                                voiceInputLayout.setVisibility(View.VISIBLE);
+                                lastVolumeLevel=0;
+                                waterWaveProgress.setProgress(0);
+                                mediaPlayerUtils.playVoiceOn();
+                                voice2StringMessageUtils.startVoiceListening();
+                            }
                             break;
                         case "voice_call":
                             //语音通话
