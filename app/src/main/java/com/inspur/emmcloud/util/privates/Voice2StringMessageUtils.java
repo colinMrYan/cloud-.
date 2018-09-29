@@ -31,7 +31,8 @@ import static com.iflytek.cloud.ErrorCode.ERROR_AUDIO_RECORD;
 public class Voice2StringMessageUtils {
     public static final int MSG_FROM_XUNFEI = 1;
     public static final int MSG_FROM_CUSTOM = 2;
-    public static final int MSG_XUNFEI_PREPARE_FAIL = 3;
+    public static final int MSG_XUNFEI_PERMISSION_ERROR = 3;
+    public static final int MSG_XUNFEI_ERROR = 4;
     // 语音听写对象
     private SpeechRecognizer speechRecognizer;
     // 用HashMap存储听写结果
@@ -168,8 +169,9 @@ public class Voice2StringMessageUtils {
             public void onError(SpeechError error) {
                 LogUtils.YfcDebug("错误："+error.getErrorCode()+error.getErrorDescription());
                 VoiceResult voiceResult = new VoiceResult();
+                voiceResult.setXunFeiError(MSG_XUNFEI_ERROR);
                 if(error.getErrorCode() == ERROR_AUDIO_RECORD){
-                    voiceResult.setXunFeiPrepareError(MSG_XUNFEI_PREPARE_FAIL);
+                    voiceResult.setXunFeiPermissionError(MSG_XUNFEI_PERMISSION_ERROR);
                 }
                 voiceResult.setMsgState(voiceState);
                 voiceResult.setResults("");

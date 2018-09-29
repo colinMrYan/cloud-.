@@ -225,6 +225,11 @@ public class NewsWebDetailActivity extends BaseActivity {
                 return false;
             }
 
+//            @Override
+//            public void doUpdateVisitedHistory(WebView view, String url, boolean isReload) {
+//                super.doUpdateVisitedHistory(view, url, isReload);
+//                view.clearHistory();
+//            }
         });
     }
 

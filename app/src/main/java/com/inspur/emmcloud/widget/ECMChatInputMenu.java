@@ -286,12 +286,14 @@ public class ECMChatInputMenu extends LinearLayout {
                 callBackVoiceMessage(fileName);
             }
         }else{
-            if(voiceResult.getXunFeiPrepareError() == Voice2StringMessageUtils.MSG_XUNFEI_PREPARE_FAIL){
+            if(voiceResult.getXunFeiError() == Voice2StringMessageUtils.MSG_XUNFEI_ERROR){
+                stopVoiceInput();
                 if(audioDialogManager != null){
                     audioDialogManager.dismissVoice2WordProgressDialog();
                 }
-                ToastUtils.show(MyApplication.getInstance(),getContext().getString(R.string.voice_audio_record_unavailiable));
-                stopVoiceInput();
+                if(voiceResult.getXunFeiPermissionError() == Voice2StringMessageUtils.MSG_XUNFEI_PERMISSION_ERROR){
+                    ToastUtils.show(MyApplication.getInstance(),getContext().getString(R.string.voice_audio_record_unavailiable));
+                }
                 return;
             }
             String results = voiceResult.getResults();
