@@ -1435,7 +1435,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
                 return;
             }
         } else if (type.equals(SearchModel.TYPE_STRUCT)) {
-            defaultIcon = R.drawable.icon_channel_group_default;
+            defaultIcon = R.drawable.ic_contact_struct;
         } else {
             defaultIcon = R.drawable.icon_person_default;
             if (!searchModel.getId().equals("null")) {
