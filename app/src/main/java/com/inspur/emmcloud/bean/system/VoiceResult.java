@@ -10,7 +10,8 @@ public class VoiceResult {
     private float seconds = 0;
     private String filePath = "";
     private int msgState = -1;
-    private int xunFeiPrepareError = -1;
+    private int xunFeiPermissionError = -1;
+    private int xunFeiError = -1;
 
     public VoiceResult(String results,float seconds,String filePath){
         this.results = results;
@@ -60,11 +61,19 @@ public class VoiceResult {
         this.msgState = msgState;
     }
 
-    public int getXunFeiPrepareError() {
-        return xunFeiPrepareError;
+    public int getXunFeiPermissionError() {
+        return xunFeiPermissionError;
     }
 
-    public void setXunFeiPrepareError(int xunFeiPrepareError) {
-        this.xunFeiPrepareError = xunFeiPrepareError;
+    public void setXunFeiPermissionError(int xunFeiPermissionError) {
+        this.xunFeiPermissionError = xunFeiPermissionError;
+    }
+
+    public int getXunFeiError() {
+        return xunFeiError;
+    }
+
+    public void setXunFeiError(int xunFeiError) {
+        this.xunFeiError = xunFeiError;
     }
 }
