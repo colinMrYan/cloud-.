@@ -238,19 +238,6 @@ public class AppUtils {
     }
 
     /**
-     * 判断是否低于2.0.2
-     * @param context
-     * @return
-     */
-    public static boolean isLower202Version(Context context){
-        String savedVersion = PreferencesUtils.getString(context,
-                "previousVersion", "");
-        String[] savedArray = savedVersion.split("\\.");
-        int savedVersionNum = Integer.parseInt(savedArray[0])*1000000+Integer.parseInt(savedArray[1])*1000+Integer.parseInt(savedArray[2]);
-        return savedVersionNum < 2000002;
-    }
-
-    /**
      * 从字符串中截取连续6位数字 用于从短信中获取动态密码
      *
      * @param str 短信内容
