@@ -20,7 +20,6 @@ import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.TransHtmlToTextUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
-import com.inspur.emmcloud.widget.LinkMovementClickMethod;
 import com.inspur.emmcloud.widget.TextViewWithSpan;
 import com.inspur.emmcloud.widget.bubble.ArrowDirection;
 import com.inspur.emmcloud.widget.bubble.BubbleLayout;
@@ -53,9 +52,12 @@ public class DisplayCommentTextPlainMsg {
                 .findViewById(R.id.comment_title_text);
         MsgContentComment msgContentComment = message.getMsgContentComment();
         String text = msgContentComment.getText();
-        commentContentText.setMovementMethod(LinkMovementClickMethod.getInstance());
+        commentContentText.setTextColor(context.getResources().getColor(
+                isMyMsg ? R.color.white : R.color.black));
+        commentTitleText.setTextColor(context.getResources().getColor(
+                isMyMsg ? R.color.white : R.color.black));
         SpannableString spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(context, text, message.getMsgContentTextPlain().getMentionsMap());
-        commentContentText.setText(spannableString.toString());
+        commentContentText.setText(spannableString);
         TransHtmlToTextUtils.stripUnderlines(
                 commentContentText,context.getResources().getColor(isMyMsg ? R.color.hightlight_in_blue_bg
                         : R.color.header_bg));
@@ -67,10 +69,6 @@ public class DisplayCommentTextPlainMsg {
             WSAPIService.getInstance().getMessageById(msgContentComment.getMessage());
         }
 
-        commentContentText.setTextColor(context.getResources().getColor(
-                isMyMsg ? R.color.white : R.color.black));
-        commentTitleText.setTextColor(context.getResources().getColor(
-                isMyMsg ? R.color.white : R.color.black));
         return cardContentView;
     }
 
