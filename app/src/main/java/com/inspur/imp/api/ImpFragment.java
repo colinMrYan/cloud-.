@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
 import android.webkit.ValueCallback;
@@ -80,6 +81,8 @@ public class ImpFragment extends Fragment {
     private static final String JAVASCRIPT_PREFIX = "javascript:";
     private Map<String, String> webViewHeaders;
     private TextView headerText;
+    private RelativeLayout functionLayout;
+    private LinearLayout webFunctionLayout;
     private LinearLayout loadFailLayout;
     private Button normalBtn, middleBtn, bigBtn, biggestBtn;
     private String appId = "";
@@ -97,6 +100,9 @@ public class ImpFragment extends Fragment {
     private List<DropItemTitle> dropItemTitleList = new ArrayList<>();
     private Adapter dropTitleAdapter;
     private ImpCallBackInterface impCallBackInterface;
+    private int functionLayoutWidth = -1;
+    private int webFunctionLayoutWidth = -1;
+    private int layoutCount = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -314,7 +320,9 @@ public class ImpFragment extends Fragment {
         if (getArguments().getString(Constant.WEB_FRAGMENT_APP_NAME) != null) {
             String title = getArguments().getString(Constant.WEB_FRAGMENT_APP_NAME);
             headerText = (TextView) rootView.findViewById(Res.getWidgetID("header_text"));
-            headerText.setMaxWidth(ResolutionUtils.getWidth(getActivity()) - DensityUtil.dip2px(MyApplication.getInstance(), 192));
+            functionLayout = (RelativeLayout) rootView.findViewById(Res.getWidgetID("function_layout"));
+            webFunctionLayout = (LinearLayout) rootView.findViewById(R.id.ll_web_function);
+            dynamicLayoutWidth();
             headerText.setOnClickListener(new ImpFragmentClickListener());
             webView.setProperty(headerText, loadFailLayout, frameLayout, impCallBackInterface);
             initWebViewGoBackOrClose();
@@ -323,6 +331,47 @@ public class ImpFragment extends Fragment {
         } else {
             webView.setProperty(null, loadFailLayout, frameLayout, impCallBackInterface);
         }
+    }
+
+    /**
+     * 动态监控布局
+     */
+    private void dynamicLayoutWidth() {
+        functionLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                functionLayoutWidth = functionLayout.getWidth();
+                dynamicChangeHeaderTextWidth();
+            }
+        });
+        webFunctionLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                webFunctionLayoutWidth = webFunctionLayout.getWidth();
+                dynamicChangeHeaderTextWidth();
+            }
+        });
+    }
+
+    /**
+     * 动态改变header宽度
+     */
+    private void dynamicChangeHeaderTextWidth() {
+        if(layoutCount == 0 && (functionLayoutWidth > -1 && webFunctionLayoutWidth > -1)){
+            layoutCount = layoutCount + 1;
+            headerText.setMaxWidth(ResolutionUtils.getWidth(getActivity()) - getMaxWidth()*2);
+        }
+    }
+
+    /**
+     * 取两个宽度的最大值
+     * @return
+     */
+    private int getMaxWidth() {
+        if (functionLayoutWidth > webFunctionLayoutWidth) {
+            return functionLayoutWidth;
+        }
+        return webFunctionLayoutWidth;
     }
 
     private void showDropTitlePop() {
