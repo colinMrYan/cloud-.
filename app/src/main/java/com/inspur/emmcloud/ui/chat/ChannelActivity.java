@@ -174,7 +174,6 @@ public class ChannelActivity extends MediaPlayBaseActivity {
                     getNewMsgOfChannel();
                 } else {
                     initViews();
-                    sendMsgFromShare();
                 }
             }
 

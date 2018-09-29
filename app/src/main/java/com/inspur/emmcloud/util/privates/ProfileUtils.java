@@ -52,12 +52,10 @@ public class ProfileUtils {
     }
 
     public void initProfile(boolean isShowLoadingDlg) {
-        if (ClientConfigUpdateUtils.getInstance().isItemNeedUpdate(ClientConfigItem.CLIENT_CONFIG_ROUTER)) {
+        if (isForceUpdateProfile() || ClientConfigUpdateUtils.getInstance().isItemNeedUpdate(ClientConfigItem.CLIENT_CONFIG_ROUTER)) {
             getUserProfile(isShowLoadingDlg);
-        } else {
-            if (commonCallBack != null) {
-                commonCallBack.execute();
-            }
+        } else if (commonCallBack != null) {
+            commonCallBack.execute();
         }
     }
 
@@ -71,34 +69,48 @@ public class ProfileUtils {
             LoginAPIService apiServices = new LoginAPIService(activity);
             apiServices.setAPIInterface(new WebService());
             apiServices.getMyInfo();
+        } else {
+            showPromptDialog();
         }
-//        else{
-//            showPromptDialog();
-//        }
     }
 
     /**
      * 弹出提示
      */
     private void showPromptDialog() {
-        final Dialog dialog = new MyDialog(activity, R.layout.dialog_profile_two_button);
-        dialog.setCancelable(false);
-        ((TextView) dialog.findViewById(R.id.show_text)).setText(R.string.net_work_fail);
-        dialog.findViewById(R.id.btn_re_login).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-                startLoginActivity();
-            }
-        });
-        dialog.findViewById(R.id.btn_retry).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-                getUserProfile(true);
-            }
-        });
-        dialog.show();
+        //当强制更新或者统一更新接口无法返回正确消息，同时路由又无法获取成功时暂时不弹出提示框
+        if (isForceUpdateProfile() || !StringUtils.isBlank(saveConfigVersion)) {
+            final Dialog dialog = new MyDialog(activity, R.layout.dialog_profile_two_button);
+            dialog.setCancelable(false);
+            ((TextView) dialog.findViewById(R.id.show_text)).setText(R.string.net_work_fail);
+            dialog.findViewById(R.id.btn_re_login).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                    MyApplication.getInstance().signout();
+                }
+            });
+            dialog.findViewById(R.id.btn_retry).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                    getUserProfile(true);
+                }
+            });
+            dialog.show();
+        }
+    }
+
+    /**
+     * 判断是否需要获取新的Profile
+     * 如果是登录状态，并且进行了升级则需要获取profile
+     *
+     * @return
+     */
+    private boolean isForceUpdateProfile() {
+        String accessToken = PreferencesUtils.getString(
+                activity, "accessToken", "");
+        return !StringUtils.isBlank(accessToken) && AppUtils.isAppHasUpgraded(activity);
     }
 
     class WebService extends APIInterfaceInstance {
@@ -120,6 +132,9 @@ public class ProfileUtils {
                 MyApplication.getInstance().initTanent();
                 ClusterBean chatClusterBeanNew = MutilClusterUtils.getClusterBean(MutilClusterUtils.ECM_CHAT);
                 ClientConfigUpdateUtils.getInstance().saveItemLocalVersion(ClientConfigItem.CLIENT_CONFIG_ROUTER, saveConfigVersion);
+                String appVersion = AppUtils.getVersion(activity);
+                PreferencesUtils.putString(activity, "previousVersion",
+                        appVersion);
                 if (commonCallBack != null) {
                     commonCallBack.execute();
                 }
@@ -139,17 +154,8 @@ public class ProfileUtils {
         public void returnMyInfoFail(String error, int errorCode) {
             LoadingDialog.dimissDlg(loadingDialog);
             //当统一更新接口无法返回正确消息，同时路由又无法获取成功时暂时不弹出提示框
-            if (!StringUtils.isBlank(saveConfigVersion)) {
-                showPromptDialog();
-            }
+            showPromptDialog();
         }
     }
 
-    /**
-     * 转到LoginActivity
-     */
-    private void startLoginActivity() {
-        MyApplication.getInstance().signout();
-        String appVersion = AppUtils.getVersion(activity);
-    }
 }

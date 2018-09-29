@@ -377,9 +377,9 @@ public class ECMChatInputMenuV0 extends LinearLayout {
 
             @Override
             public void onVoiceResultError(VoiceResult errorResult) {
-                if(errorResult.getXunFeiPrepareError() == Voice2StringMessageUtils.MSG_XUNFEI_PREPARE_FAIL){
+                stopVoiceInput();
+                if(errorResult.getXunFeiPermissionError() == Voice2StringMessageUtils.MSG_XUNFEI_PERMISSION_ERROR){
                     ToastUtils.show(MyApplication.getInstance(),getContext().getString(R.string.voice_audio_record_unavailiable));
-                    stopVoiceInput();
                 }
             }
         });

@@ -117,6 +117,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         removeAllSessionCookie();
         myActivityLifecycleCallbacks = new MyActivityLifecycleCallbacks();
         registerActivityLifecycleCallbacks(myActivityLifecycleCallbacks);
+        WebSocketPush.getInstance().startWebSocket();
     }
 
     public String getCloudId() {

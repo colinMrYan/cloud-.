@@ -11,10 +11,11 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.MyViewPagerAdapter;
+import com.inspur.emmcloud.interf.CommonCallBack;
 import com.inspur.emmcloud.ui.IndexActivity;
-import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
@@ -22,6 +23,7 @@ import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.LanguageUtils;
+import com.inspur.emmcloud.util.privates.ProfileUtils;
 
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
@@ -47,8 +49,6 @@ public class GuideActivity extends Activity {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);//没有标题
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
-        PreferencesUtils.putString(getApplicationContext(), "previousVersion",
-                AppUtils.getVersion(GuideActivity.this));
         x.view().inject(this);
         deleteReactNativeResource();
         initView();
@@ -109,8 +109,17 @@ public class GuideActivity extends Activity {
                                     "isFirst", false);
                             String accessToken = PreferencesUtils.getString(
                                     GuideActivity.this, "accessToken", "");
-                            IntentUtils.startActivity(GuideActivity.this,StringUtils.isBlank(accessToken)?
-                                    LoginActivity.class:IndexActivity.class, true);
+                            if(!StringUtils.isBlank(accessToken)){
+                                new ProfileUtils(GuideActivity.this, new CommonCallBack() {
+                                    @Override
+                                    public void execute() {
+                                        IntentUtils.startActivity(GuideActivity.this,
+                                                IndexActivity.class, true);
+                                    }
+                                }).initProfile();
+                            }else{
+                                MyApplication.getInstance().signout();
+                            }
                         }
                     }
                 });

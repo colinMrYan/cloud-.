@@ -118,6 +118,7 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
 
     private void initChatInputMenu() {
         chatInputMenu = (ECMChatInputMenu) findViewById(R.id.chat_input_menu);
+        chatInputMenu.setOtherLayoutView(swipeRefreshLayout, commentListView);
         cid = getIntent().getExtras().getString("cid");
         String channelType = ChannelCacheUtils.getChannelType(getApplicationContext(),
                 cid);
@@ -417,13 +418,17 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveWSMessageComment(EventMessage eventMessage) {
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_GET_MESSAGE_COMMENT)) {
-            String content = eventMessage.getContent();
-            GetMessageCommentResult getMessageCommentResult = new GetMessageCommentResult(content);
-            commentList = getMessageCommentResult.getCommentList();
-            if (commentList != null && commentList.size() > 0) {
-                commentAdapter = new CommentAdapter();
-                commentListView.setAdapter(commentAdapter);
-                commentAdapter.notifyDataSetChanged();
+            if(eventMessage.getStatus() == 200){
+                String content = eventMessage.getContent();
+                GetMessageCommentResult getMessageCommentResult = new GetMessageCommentResult(content);
+                commentList = getMessageCommentResult.getCommentList();
+                if (commentList != null && commentList.size() > 0) {
+                    commentAdapter = new CommentAdapter();
+                    commentListView.setAdapter(commentAdapter);
+                    commentAdapter.notifyDataSetChanged();
+                }
+            }else {
+                WebServiceMiddleUtils.hand(MyApplication.getInstance(), eventMessage.getContent(), eventMessage.getStatus());
             }
         }
     }
