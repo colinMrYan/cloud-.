@@ -161,7 +161,7 @@ public class ECMChatInputMenu extends LinearLayout {
                 if (isContentBlank){
                     chatInputMenuListener.onChatDraftsClear();
                 }
-                sendMsgBtn.setVisibility(isContentBlank ? (inputs.equals("1")) ? VISIBLE : GONE : VISIBLE);
+                sendMsgBtn.setVisibility(isContentBlank ? GONE : VISIBLE);
                 sendMsgBtn.setEnabled(!isContentBlank);
                 sendMsgBtn.setBackgroundResource(isContentBlank ? R.drawable.bg_chat_input_send_btn_disable : R.drawable.bg_chat_input_send_btn_enable);
                 addBtn.setVisibility(isContentBlank ? VISIBLE : GONE);
