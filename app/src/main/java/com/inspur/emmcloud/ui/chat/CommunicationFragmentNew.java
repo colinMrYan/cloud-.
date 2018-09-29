@@ -69,6 +69,7 @@ import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 import com.inspur.emmcloud.util.privates.cache.MessageMatheSetCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
+import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
 import com.inspur.imp.plugin.barcode.scan.CaptureActivity;
 
@@ -113,6 +114,7 @@ public class CommunicationFragmentNew extends Fragment {
     private boolean isGroupIconCreate = false;
     private PopupWindow popupWindow;
     private boolean isFirstConnectWebsockt = true;//判断是否第一次连上websockt
+    private LoadingDialog loadingDlg;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -141,6 +143,7 @@ public class CommunicationFragmentNew extends Fragment {
         noDataLayout = (RelativeLayout) rootView.findViewById(R.id.rl_no_chat);
         initPullRefreshLayout();
         initRecycleView();
+        loadingDlg = new LoadingDialog(getActivity());
     }
 
     /**
@@ -219,7 +222,7 @@ public class CommunicationFragmentNew extends Fragment {
      *
      * @param position
      */
-    private void showConversationOperationDlg(UIConversation uiConversation) {
+    private void showConversationOperationDlg(final UIConversation uiConversation) {
         // TODO Auto-generated method stub
         final String[] items = new String[]{getString(uiConversation.getConversation().isStick() ? R.string.chat_remove_from_top : R.string.chat_stick_on_top), getString(R.string.chat_remove)};
         new MyQMUIDialog.MenuDialogBuilder(getActivity())
@@ -227,20 +230,12 @@ public class CommunicationFragmentNew extends Fragment {
                 .addItems(items, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-//                        dialog.dismiss();
-//                        Channel channel = displayChannelList.get(position);
-//                        if (which == 0) {
-//                            ChannelOperationCacheUtils.setChannelTop(MyApplication.getInstance(),
-//                                    channel.getCid(), !isChannelSetTop);
-//                            sortChannelList();
-//                        } else {
-//                            ChannelOperationCacheUtils.setChannelHide(
-//                                    MyApplication.getInstance(), channel.getCid(), true);
-//                            // 当隐藏会话时，把该会话的所有消息置为已读
-//                            MessageCacheUtil.setChannelMessageRead(MyApplication.getInstance(), channel.getCid());
-//                            displayChannelList.remove(position);
-//                            displayData();
-//                        }
+                        dialog.dismiss();
+                        if (which == 0) {
+                            setConversationStick(uiConversation.getId(),!uiConversation.getConversation().isStick());
+                        } else {
+                            setConversationInvisible(uiConversation.getId());
+                        }
                     }
                 })
                 .show();
@@ -895,9 +890,10 @@ public class CommunicationFragmentNew extends Fragment {
      * @param id
      * @param isStick
      */
-    private void setConversationFocus(String id,boolean isFocus){
+    private void setConversationStick(String id,boolean isStick){
         if (NetUtils.isNetworkConnected(MyApplication.getInstance())){
-            apiService.
+            loadingDlg.show();
+            apiService.setConversationStick(id,isStick);
         }
     }
 
@@ -907,6 +903,7 @@ public class CommunicationFragmentNew extends Fragment {
      */
     private void setConversationInvisible(String id){
         if (NetUtils.isNetworkConnected(MyApplication.getInstance())){
+            loadingDlg.show();
         }
     }
 
@@ -929,6 +926,17 @@ public class CommunicationFragmentNew extends Fragment {
             }
         }
 
+        @Override
+        public void returnSetConversationStickSuccess(String id, boolean isStick) {
+            LoadingDialog.dimissDlg(loadingDlg);
+           ConversationCacheUtils.
+        }
+
+        @Override
+        public void returnSetConversationStickFail(String error, int errorCode) {
+            LoadingDialog.dimissDlg(loadingDlg);
+            WebServiceMiddleUtils.hand(MyApplication.getInstance(),error,errorCode);
+        }
     }
 
 

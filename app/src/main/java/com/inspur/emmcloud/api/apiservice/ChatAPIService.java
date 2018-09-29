@@ -1331,7 +1331,7 @@ public class ChatAPIService {
      * @param cid
      * @param isStick
      */
-    public void setConversationStick(final String id,final String isStick){
+    public void setConversationStick(final String id,final boolean isStick){
         final String completeUrl = APIUri.getConversationSetStick(id);
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
         params.addParameter("stick",isStick);
@@ -1357,13 +1357,13 @@ public class ChatAPIService {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
-                apiInterface.returnConversationListSuccess(new GetConversationListResult(new String(arg0)));
+                apiInterface.returnSetConversationStickSuccess(id,isStick);
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
                 // TODO Auto-generated method stub
-                apiInterface.returnConversationListFail(error, responseCode);
+                apiInterface.returnSetConversationStickFail(error, responseCode);
             }
         });
     }
