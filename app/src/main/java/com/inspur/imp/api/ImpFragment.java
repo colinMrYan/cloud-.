@@ -274,6 +274,7 @@ public class ImpFragment extends Fragment {
                 ImageDisplayUtils.getInstance().displayImage(imageViewFun1, mainTabMenuArrayList.get(0).getIco());
                 ImageDisplayUtils.getInstance().displayImage(imageViewFun2, mainTabMenuArrayList.get(1).getIco());
             }
+            dynamicLayoutWidth();
         }
     }
 
