@@ -36,9 +36,11 @@ import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppWebConfig;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ResolutionUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.privates.AppTabUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.MDM.MDM;
@@ -144,6 +146,9 @@ public class ImpFragment extends Fragment {
         frameLayout = (FrameLayout) rootView.findViewById(Res.getWidgetID("videoContainer"));
         loadFailLayout = (LinearLayout) rootView.findViewById(Res.getWidgetID("load_error_layout"));
         webView = (ImpWebView) rootView.findViewById(Res.getWidgetID("webview"));
+        headerText = (TextView) rootView.findViewById(Res.getWidgetID("header_text"));
+        functionLayout = (RelativeLayout) rootView.findViewById(Res.getWidgetID("function_layout"));
+        webFunctionLayout = (LinearLayout) rootView.findViewById(Res.getWidgetID("ll_web_function"));
         if (getActivity().getClass().getName().equals(IndexActivity.class.getName())) {
             rootView.findViewById(R.id.back_layout).setVisibility(View.GONE);
             rootView.findViewById(R.id.imp_close_btn).setVisibility(View.GONE);
@@ -159,7 +164,9 @@ public class ImpFragment extends Fragment {
             appId = getArguments().getString("appId");
         }
         initFragmentViews();
+        headerText.setText(AppTabUtils.getTabTitle(getActivity(), getClass().getSimpleName()));
     }
+
 
     /**
      * 初始化Fragment的WebView
@@ -318,9 +325,6 @@ public class ImpFragment extends Fragment {
         impCallBackInterface = getImpCallBackInterface();
         if (getArguments().getString(Constant.WEB_FRAGMENT_APP_NAME) != null) {
             String title = getArguments().getString(Constant.WEB_FRAGMENT_APP_NAME);
-            headerText = (TextView) rootView.findViewById(Res.getWidgetID("header_text"));
-            functionLayout = (RelativeLayout) rootView.findViewById(Res.getWidgetID("function_layout"));
-            webFunctionLayout = (LinearLayout) rootView.findViewById(R.id.ll_web_function);
             headerText.setOnClickListener(new ImpFragmentClickListener());
             webView.setProperty(headerText, loadFailLayout, frameLayout, impCallBackInterface);
             initWebViewGoBackOrClose();
@@ -464,6 +468,7 @@ public class ImpFragment extends Fragment {
 
             @Override
             public void onSetTitle(String title) {
+                LogUtils.YfcDebug("title:"+title);
                 setTitle(title);
             }
 
