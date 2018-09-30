@@ -258,7 +258,7 @@
     <string name="channel_group">Group</string>
     <string name="group_member">Members </string>
     <string name="group_name_cannot_null">Please type group name </string>
-    <string name="channel_unknown_text">Unknown message type</string>
+    <string name="channel_unknown_text">Your %1$s does not support this message. Please upgrade the latest version of %1$s.</string>
     <string name="comment_hallcomment_text">Comment:</string>
     <string name="channel_info">Channel Details</string>
     <string name="comment_text">Comment：</string>
