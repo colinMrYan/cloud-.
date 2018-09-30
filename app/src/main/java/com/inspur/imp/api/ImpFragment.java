@@ -274,7 +274,7 @@ public class ImpFragment extends Fragment {
                 ImageDisplayUtils.getInstance().displayImage(imageViewFun1, mainTabMenuArrayList.get(0).getIco());
                 ImageDisplayUtils.getInstance().displayImage(imageViewFun2, mainTabMenuArrayList.get(1).getIco());
             }
-            dynamicLayoutWidth();
+            setHeaderTextWidth();
         }
     }
 
@@ -321,7 +321,6 @@ public class ImpFragment extends Fragment {
             headerText = (TextView) rootView.findViewById(Res.getWidgetID("header_text"));
             functionLayout = (RelativeLayout) rootView.findViewById(Res.getWidgetID("function_layout"));
             webFunctionLayout = (LinearLayout) rootView.findViewById(R.id.ll_web_function);
-            dynamicLayoutWidth();
             headerText.setOnClickListener(new ImpFragmentClickListener());
             webView.setProperty(headerText, loadFailLayout, frameLayout, impCallBackInterface);
             initWebViewGoBackOrClose();
@@ -335,24 +334,15 @@ public class ImpFragment extends Fragment {
     /**
      * 动态监控布局变化
      */
-    private void dynamicLayoutWidth() {
+    private void setHeaderTextWidth() {
         webFunctionLayout.post(new Runnable() {
             @Override
             public void run() {
                 functionLayoutWidth = functionLayout.getWidth();
                 webFunctionLayoutWidth = webFunctionLayout.getWidth();
-                dynamicChangeHeaderTextWidth();
+                headerText.setMaxWidth(ResolutionUtils.getWidth(getActivity()) - getMaxWidth() * 2);
             }
         });
-    }
-
-    /**
-     * 动态改变header宽度
-     */
-    private void dynamicChangeHeaderTextWidth() {
-        if (functionLayoutWidth > -1 && webFunctionLayoutWidth > -1) {
-            headerText.setMaxWidth(ResolutionUtils.getWidth(getActivity()) - getMaxWidth() * 2);
-        }
     }
 
     /**
@@ -519,6 +509,7 @@ public class ImpFragment extends Fragment {
             if (getActivity().getClass().getName().equals(ImpActivity.class.getName())) {
                 (rootView.findViewById(Res.getWidgetID("imp_close_btn"))).setVisibility(webView.canGoBack() ? View.VISIBLE : View.GONE);
             }
+            setHeaderTextWidth();
         }
     }
 
