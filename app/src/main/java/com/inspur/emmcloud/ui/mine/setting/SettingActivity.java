@@ -77,7 +77,7 @@ public class SettingActivity extends BaseActivity {
         backgroundRunSwitch.setOpened(isAppSetRunBackground);
         backgroundRunSwitch.setOnStateChangedListener(onStateChangedListener);
         voice2WordSwitch.setOpened(PreferencesByUserAndTanentUtils.getInt(this, Constant.PREF_APP_OPEN_VOICE_WORD_SWITCH,
-                DisplayMediaVoiceMsg.IS_VOICE_WORD_CLOUSE) == DisplayMediaVoiceMsg.IS_VOICE_WORD_OPEN);
+                DisplayMediaVoiceMsg.IS_VOICE_WORD_OPEN) == DisplayMediaVoiceMsg.IS_VOICE_WORD_OPEN);
         voice2WordSwitch.setOnStateChangedListener(onStateChangedListener);
     }
 
