@@ -1774,4 +1774,14 @@ public class APIInterfaceInstance implements APIInterface {
     @Override
     public void returnConversationListFail(String error, int errorCode) {
     }
+
+    @Override
+    public void returnSetConversationStickSuccess(String id, boolean isStick) {
+
+    }
+
+    @Override
+    public void returnSetConversationStickFail(String error, int errorCode) {
+
+    }
 }

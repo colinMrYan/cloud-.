@@ -232,7 +232,7 @@ public class CommunicationFragmentNew extends Fragment {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                         if (which == 0) {
-                            setConversationStick(uiConversation.getId(),!uiConversation.getConversation().isStick());
+                            setConversationStick(uiConversation.getId(), !uiConversation.getConversation().isStick());
                         } else {
                             setConversationInvisible(uiConversation.getId());
                         }
@@ -887,22 +887,24 @@ public class CommunicationFragmentNew extends Fragment {
 
     /**
      * 设置频道是否置顶
+     *
      * @param id
      * @param isStick
      */
-    private void setConversationStick(String id,boolean isStick){
-        if (NetUtils.isNetworkConnected(MyApplication.getInstance())){
+    private void setConversationStick(String id, boolean isStick) {
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
             loadingDlg.show();
-            apiService.setConversationStick(id,isStick);
+            apiService.setConversationStick(id, isStick);
         }
     }
 
     /**
      * 隐藏频道
+     *
      * @param id
      */
-    private void setConversationInvisible(String id){
-        if (NetUtils.isNetworkConnected(MyApplication.getInstance())){
+    private void setConversationInvisible(String id) {
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
             loadingDlg.show();
         }
     }
@@ -929,13 +931,14 @@ public class CommunicationFragmentNew extends Fragment {
         @Override
         public void returnSetConversationStickSuccess(String id, boolean isStick) {
             LoadingDialog.dimissDlg(loadingDlg);
-           ConversationCacheUtils.
+            ConversationCacheUtils.setConversationStick(MyApplication.getInstance(),id,isStick);
+            sortConversationList();
         }
 
         @Override
         public void returnSetConversationStickFail(String error, int errorCode) {
             LoadingDialog.dimissDlg(loadingDlg);
-            WebServiceMiddleUtils.hand(MyApplication.getInstance(),error,errorCode);
+            WebServiceMiddleUtils.hand(MyApplication.getInstance(), error, errorCode);
         }
     }
 

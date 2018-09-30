@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.inspur.emmcloud.bean.chat.Conversation;
 
+import org.xutils.common.util.KeyValue;
 import org.xutils.db.sqlite.WhereBuilder;
 
 import java.util.ArrayList;
@@ -68,6 +69,21 @@ public class ConversationCacheUtils {
                 return;
             }
             DbCacheUtils.getDb(context).saveOrUpdate(conversation);
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 设置是否置顶
+     * @param context
+     * @param id
+     * @param isStick
+     */
+    public static void setConversationStick(Context context,String id,boolean isStick){
+        try {
+            DbCacheUtils.getDb(context).update(Conversation.class, WhereBuilder.b("id", "=", id),new KeyValue("stick",isStick));
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
