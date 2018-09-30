@@ -80,6 +80,8 @@ public class ImpFragment extends Fragment {
     private static final String JAVASCRIPT_PREFIX = "javascript:";
     private Map<String, String> webViewHeaders;
     private TextView headerText;
+    private RelativeLayout functionLayout;
+    private LinearLayout webFunctionLayout;
     private LinearLayout loadFailLayout;
     private Button normalBtn, middleBtn, bigBtn, biggestBtn;
     private String appId = "";
@@ -97,6 +99,8 @@ public class ImpFragment extends Fragment {
     private List<DropItemTitle> dropItemTitleList = new ArrayList<>();
     private Adapter dropTitleAdapter;
     private ImpCallBackInterface impCallBackInterface;
+    private int functionLayoutWidth = -1;
+    private int webFunctionLayoutWidth = -1;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -236,15 +240,15 @@ public class ImpFragment extends Fragment {
                     runJavaScript(JAVASCRIPT_PREFIX + mainTabMenuArrayList.get(1).getAction());
                     break;
                 case R.id.header_text:
-                    if (dropItemTitleList != null &&dropItemTitleList.size()>0){
-                        if (dropTitlePopupWindow != null && dropTitlePopupWindow.isShowing()){
+                    if (dropItemTitleList != null && dropItemTitleList.size() > 0) {
+                        if (dropTitlePopupWindow != null && dropTitlePopupWindow.isShowing()) {
                             dropTitlePopupWindow.dismiss();
-                        }else {
+                        } else {
                             showDropTitlePop();
                             setHeaderTitleTextDropImg();
                         }
                     }
-                        break;
+                    break;
                 default:
                     break;
             }
@@ -270,6 +274,7 @@ public class ImpFragment extends Fragment {
                 ImageDisplayUtils.getInstance().displayImage(imageViewFun1, mainTabMenuArrayList.get(0).getIco());
                 ImageDisplayUtils.getInstance().displayImage(imageViewFun2, mainTabMenuArrayList.get(1).getIco());
             }
+            setHeaderTextWidth();
         }
     }
 
@@ -314,7 +319,8 @@ public class ImpFragment extends Fragment {
         if (getArguments().getString(Constant.WEB_FRAGMENT_APP_NAME) != null) {
             String title = getArguments().getString(Constant.WEB_FRAGMENT_APP_NAME);
             headerText = (TextView) rootView.findViewById(Res.getWidgetID("header_text"));
-            headerText.setMaxWidth(ResolutionUtils.getWidth(getActivity()) - DensityUtil.dip2px(MyApplication.getInstance(), 192));
+            functionLayout = (RelativeLayout) rootView.findViewById(Res.getWidgetID("function_layout"));
+            webFunctionLayout = (LinearLayout) rootView.findViewById(R.id.ll_web_function);
             headerText.setOnClickListener(new ImpFragmentClickListener());
             webView.setProperty(headerText, loadFailLayout, frameLayout, impCallBackInterface);
             initWebViewGoBackOrClose();
@@ -325,9 +331,35 @@ public class ImpFragment extends Fragment {
         }
     }
 
+    /**
+     * 动态监控布局变化
+     */
+    private void setHeaderTextWidth() {
+        webFunctionLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                functionLayoutWidth = functionLayout.getWidth();
+                webFunctionLayoutWidth = webFunctionLayout.getWidth();
+                headerText.setMaxWidth(ResolutionUtils.getWidth(getActivity()) - getMaxWidth() * 2);
+            }
+        });
+    }
+
+    /**
+     * 取两个宽度的最大值
+     *
+     * @return
+     */
+    private int getMaxWidth() {
+        if (functionLayoutWidth > webFunctionLayoutWidth) {
+            return functionLayoutWidth;
+        }
+        return webFunctionLayoutWidth;
+    }
+
     private void showDropTitlePop() {
         // 一个自定义的布局，作为显示的内容
-        if (dropTitlePopupWindow == null){
+        if (dropTitlePopupWindow == null) {
             View contentView = LayoutInflater.from(ImpFragment.this.getContext())
                     .inflate(R.layout.plugin_pop_drop_title, null);
             // 设置按钮的点击事件
@@ -342,20 +374,20 @@ public class ImpFragment extends Fragment {
                     setHeaderTitleTextDropImg();
                 }
             });
-            MaxHightListView listView = (MaxHightListView)contentView.findViewById(R.id.list) ;
-            listView.setMaxHeight(DensityUtil.dip2px(MyApplication.getInstance(),240));
+            MaxHightListView listView = (MaxHightListView) contentView.findViewById(R.id.list);
+            listView.setMaxHeight(DensityUtil.dip2px(MyApplication.getInstance(), 240));
             dropTitleAdapter = new Adapter();
             listView.setAdapter(dropTitleAdapter);
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     DropItemTitle dropItemTitle = dropItemTitleList.get(position);
-                    if (!dropItemTitle.isSelected()){
+                    if (!dropItemTitle.isSelected()) {
                         dropItemTitle.setSelected(true);
                         runJavaScript(JAVASCRIPT_PREFIX + dropItemTitle.getAction());
                         setTitle(dropItemTitle.getText());
-                        for (int i =0;i<dropItemTitleList.size();i++){
-                            if (i != position){
+                        for (int i = 0; i < dropItemTitleList.size(); i++) {
+                            if (i != position) {
                                 dropItemTitleList.get(i).setSelected(false);
                             }
                         }
@@ -363,7 +395,7 @@ public class ImpFragment extends Fragment {
                     dropTitlePopupWindow.dismiss();
                 }
             });
-        }else {
+        } else {
             dropTitleAdapter.notifyDataSetChanged();
         }
         dropTitlePopupWindow.setBackgroundDrawable(getResources().getDrawable(
@@ -372,7 +404,7 @@ public class ImpFragment extends Fragment {
         dropTitlePopupWindow.showAsDropDown(headerLayout);
     }
 
-    private class Adapter extends BaseAdapter{
+    private class Adapter extends BaseAdapter {
 
         @Override
         public int getCount() {
@@ -391,14 +423,14 @@ public class ImpFragment extends Fragment {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            convertView = LayoutInflater.from(getActivity()).inflate(R.layout.plugin_pop_drop_list_item_view,null);
+            convertView = LayoutInflater.from(getActivity()).inflate(R.layout.plugin_pop_drop_list_item_view, null);
             DropItemTitle dropItemTitle = dropItemTitleList.get(position);
-            ImageView iconImg = (ImageView)convertView.findViewById(R.id.iv_icon);
-            TextView titleText = (TextView)convertView.findViewById(R.id.tv_title);
-            ImageView selectImg = (ImageView)convertView.findViewById(R.id.iv_select);
-            ImageDisplayUtils.getInstance().displayImage(iconImg,dropItemTitle.getIco(),R.drawable.icon_photo_default);
+            ImageView iconImg = (ImageView) convertView.findViewById(R.id.iv_icon);
+            TextView titleText = (TextView) convertView.findViewById(R.id.tv_title);
+            ImageView selectImg = (ImageView) convertView.findViewById(R.id.iv_select);
+            ImageDisplayUtils.getInstance().displayImage(iconImg, dropItemTitle.getIco(), R.drawable.icon_photo_default);
             titleText.setText(dropItemTitle.getText());
-            selectImg.setVisibility(dropItemTitle.isSelected()?View.VISIBLE:View.INVISIBLE);
+            selectImg.setVisibility(dropItemTitle.isSelected() ? View.VISIBLE : View.INVISIBLE);
             return convertView;
         }
     }
@@ -477,6 +509,7 @@ public class ImpFragment extends Fragment {
             if (getActivity().getClass().getName().equals(ImpActivity.class.getName())) {
                 (rootView.findViewById(Res.getWidgetID("imp_close_btn"))).setVisibility(webView.canGoBack() ? View.VISIBLE : View.GONE);
             }
+            setHeaderTextWidth();
         }
     }
 
@@ -731,7 +764,7 @@ public class ImpFragment extends Fragment {
                 mUploadMessage.onReceiveValue(uri);
                 mUploadMessage = null;
             }
-        }else {
+        } else {
             PluginMgr pluginMgr = webView.getPluginMgr();
             if (pluginMgr != null) {
                 String serviceName = "";
