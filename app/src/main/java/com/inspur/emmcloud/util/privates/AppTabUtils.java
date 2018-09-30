@@ -7,6 +7,7 @@ import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
 import com.inspur.emmcloud.bean.system.MainTabProperty;
 import com.inspur.emmcloud.bean.system.MainTabResult;
 import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.util.common.StringUtils;
 
 import java.util.ArrayList;
 
@@ -15,11 +16,11 @@ import java.util.ArrayList;
  */
 
 public class AppTabUtils {
-    public static String getTabTitle(Context context,String tabKey){
+    public static String setTabTitle(Context context,String tabKey,String tabCompont){
         String appTabs = PreferencesByUserAndTanentUtils.getString(context, Constant.PREF_APP_TAB_BAR_INFO_CURRENT,"");
         ArrayList<MainTabResult> tabList = new GetAppMainTabResult(appTabs).getMainTabPayLoad().getMainTabResultList();
-        String tabCompont = getCompont(tabKey);
-        MainTabResult tab = getTabByTabKey(tabList,tabCompont);
+        String tabCompontText = !StringUtils.isBlank(tabCompont)?tabCompont:getCompont(tabKey);
+        MainTabResult tab = getTabByTabKey(tabList,tabCompontText);
         if(tab == null){
             return "";
         }
@@ -35,6 +36,11 @@ public class AppTabUtils {
         }else{
             return tab.getMainTabTitleResult().getZhHans();
         }
+    }
+
+
+    public static String getTabTitle(Context context,String tabKey){
+        return setTabTitle(context,tabKey,"");
     }
 
     /**
@@ -66,7 +72,7 @@ public class AppTabUtils {
      * @param tabList
      * @return
      */
-    private static MainTabResult getTabByTabKey(ArrayList<MainTabResult> tabList, String tabCompont) {
+    public static MainTabResult getTabByTabKey(ArrayList<MainTabResult> tabList, String tabCompont) {
         for(int i = 0; i < tabList.size(); i++){
             if(tabList.get(i).getUri().equals(tabCompont)){
                 return tabList.get(i);

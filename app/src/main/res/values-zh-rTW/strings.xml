@@ -259,7 +259,7 @@
     <string name="channel_group">群組</string>
     <string name="group_member">群成員 </string>
     <string name="group_name_cannot_null">請輸入群組名稱 </string>
-    <string name="channel_unknown_text">未知的消息類型</string>
+    <string name="channel_unknown_text">您的%1$s暫不支持該消息，請【陞級】%1$s最新版本查看</string>
     <string name="comment_hallcomment_text">評論了:</string>
     <string name="channel_info">頻道詳情</string>
     <string name="comment_text">評論：</string>

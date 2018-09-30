@@ -26,7 +26,7 @@ public class ChatMsgContentUtils {
         }
         StringBuilder contentStringBuilder = new StringBuilder();
         contentStringBuilder.append(content);
-        Pattern mentionPattern = Pattern.compile("@\\d+\\s");
+        Pattern mentionPattern = Pattern.compile("@[a-z]*\\d+\\s");
         Matcher mentionMatcher = mentionPattern.matcher(contentStringBuilder);
         ArrayList<MentionsAndUrl> MentionProtocolList = new ArrayList<MentionsAndUrl>();
         while (mentionMatcher.find()) {
