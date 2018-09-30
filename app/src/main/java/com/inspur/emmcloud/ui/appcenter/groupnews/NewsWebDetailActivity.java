@@ -889,7 +889,7 @@ public class NewsWebDetailActivity extends BaseActivity {
                 }
                 apiService.sendMsg(cid, jsonObject.toString(), "res_link", System.currentTimeMillis() + "");
             } else {
-                Message message = CommunicationUtils.combinLocalExtendedLinksMessage(cid, groupNews.getPoster(), groupNews.getTitle(), groupNews.getSummary(), url);
+                Message message = CommunicationUtils.combinLocalExtendedLinksMessage(cid, APIUri.getPreviewUrl(groupNews.getPoster()), groupNews.getTitle(), groupNews.getSummary(), url);
                 fakeMessageId = message.getId();
                 WSAPIService.getInstance().sendChatExtendedLinksMsg(message);
             }
