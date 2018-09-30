@@ -25,20 +25,21 @@
 
     <ImageView
         android:id="@+id/app_unknow_function"
-        android:layout_width="140dp"
-        android:layout_height="139dp"
-        android:layout_marginTop="108dp"
+        android:layout_width="151dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="87dp"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/header_layout"
-        android:src="@drawable/icon_unknown_app"/>
+        android:src="@drawable/icon_updata_app_frag"/>
     <TextView
         android:id="@+id/app_unknow_text"
-        android:layout_width="188dp"
+        android:layout_width="284dp"
         android:layout_height="wrap_content"
         android:layout_below="@id/app_unknow_function"
         android:textSize="@dimen/content_title_textsize"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="44dp"
         android:layout_centerHorizontal="true"
+        android:gravity="center_horizontal"
         android:text="@string/app_update_function"/>
 
 </RelativeLayout>

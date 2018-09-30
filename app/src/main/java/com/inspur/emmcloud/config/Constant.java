@@ -77,6 +77,7 @@ public class Constant {
     public static final String APP_TAB_BAR_APPLICATION = "native://application";
     public static final String APP_TAB_BAR_PROFILE = "native://me";
     public static final String APP_TAB_BAR_CONTACT = "native://contact";
+    public static final String APP_TAB_BAR_NOSUPPORT = "native://nosupport"; //lbc
 
     public static final String SHARE_LINK = "shareLink";
     public static final String SHARE_FILE_URI_LIST = "fileShareUriList";
