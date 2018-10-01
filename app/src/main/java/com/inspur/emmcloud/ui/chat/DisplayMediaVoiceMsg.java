@@ -17,14 +17,13 @@ import com.inspur.emmcloud.api.APIDownloadCallBack;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.MsgContentMediaVoice;
-import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.MediaPlayerManagerUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.DownLoaderUtils;
-import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.widget.bubble.ArrowDirection;
 import com.inspur.emmcloud.widget.bubble.BubbleLayout;
 import com.qmuiteam.qmui.widget.QMUILoadingView;
@@ -58,7 +57,7 @@ public class DisplayMediaVoiceMsg {
         int duration = msgContentMediaVoice.getDuration();
         durationText.setText(duration + "''");
         //控制是否打开显示文字的功能，打开和不打开分两种UI控制逻辑
-        if(PreferencesByUserAndTanentUtils.getBoolean(context,Constant.PREF_APP_OPEN_VOICE_WORD_SWITCH)){
+        if(AppUtils.getIsVoiceWordOpen()){
             speechText.setVisibility(View.VISIBLE);
             speechText.setText(msgContentMediaVoice.getResult());
             speechText.setTextColor(isMyMsg? Color.parseColor("#FFFFFF"):Color.parseColor("#666666"));
