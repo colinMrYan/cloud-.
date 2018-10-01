@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +40,8 @@ public class NotSupportFragment extends Fragment {
 
         rootView = inflater.inflate(R.layout.fragment_unknown, null);
         unknownFuctionText = (TextView) rootView.findViewById(R.id.app_unknow_text);
-        setTabTitle();
+        String title = getTabTitle();
+        ((TextView) rootView.findViewById(R.id.header_text)).setText(title);
         //应用功能已改版，请升级到最新版本
         unknownFuctionText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,7 +50,7 @@ public class NotSupportFragment extends Fragment {
                 upgradeUtils.checkUpdate(true);
             }
         });
-        unknownFuctionText.setText(getResources().getText(R.string.tab_not_support_tips));
+        unknownFuctionText.setText(Html.fromHtml(getResources().getString(R.string.tab_not_support_tips,title)) );
 
     }
 
@@ -87,16 +89,16 @@ public class NotSupportFragment extends Fragment {
     /**
      * 设置标题，根据当前Fragment类名获取显示名称
      */
-    private void setTabTitle() {
-        String uri = "";
+    private String getTabTitle() {
+        String title = "";
         if (!StringUtils.isBlank(getArguments().getString("uri"))){
-            uri = getArguments().getString("uri");
+            String uri = getArguments().getString("uri");
             String appTabs = PreferencesByUserAndTanentUtils.getString(getActivity(), Constant.PREF_APP_TAB_BAR_INFO_CURRENT, "");
             if (!StringUtils.isBlank(appTabs)) {
-                String title   =  AppTabUtils.getTabTitle(getActivity(),NotSupportFragment.class.getSimpleName(),uri);
-                ((TextView) rootView.findViewById(R.id.header_text)).setText(title);
+                title  =  AppTabUtils.getTabTitle(getActivity(),NotSupportFragment.class.getSimpleName(),uri);
             }
         }
+        return title;
 
     }
 
