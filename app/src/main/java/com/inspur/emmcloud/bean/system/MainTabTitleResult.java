@@ -40,4 +40,21 @@ public class MainTabTitleResult {
     public void setEnUS(String enUS) {
         this.enUS = enUS;
     }
+
+    public String getTabTileByLanguage(String language){
+        String title = null;
+        switch (language.toLowerCase()) {
+            case "zh-hant":
+                title = getZhHant();
+                break;
+            case "en":
+            case "en-us":
+                title = getEnUS();
+                break;
+            default:
+                title = getZhHans();
+                break;
+        }
+        return title;
+    }
 }
