@@ -164,8 +164,8 @@ public class ImpFragment extends Fragment {
         }
         initFragmentViews();
         String uri = getArguments().getString("uri");
-        if(!StringUtils.isBlank(uri)){
-            headerText.setText(AppTabUtils.getTabTitle(getActivity(), getClass().getSimpleName(),uri));
+        if (!StringUtils.isBlank(uri)) {
+            headerText.setText(AppTabUtils.getTabTitle(getActivity(), getClass().getSimpleName(), uri));
         }
     }
 
@@ -498,12 +498,10 @@ public class ImpFragment extends Fragment {
     }
 
     private void setHeaderTitleTextDropImg() {
-        if (headerText != null) {
-            boolean isDropTitlePopShow = (dropTitlePopupWindow != null && dropTitlePopupWindow.isShowing());
-            Drawable drawable = ContextCompat.getDrawable(MyApplication.getInstance(), isDropTitlePopShow ? R.drawable.plugin_ic_header_title_drop_up : R.drawable.plugin_ic_header_title_drop_down);
-            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-            headerText.setCompoundDrawables(null, null, drawable, null);
-        }
+        boolean isDropTitlePopShow = (dropTitlePopupWindow != null && dropTitlePopupWindow.isShowing());
+        Drawable drawable = ContextCompat.getDrawable(MyApplication.getInstance(), isDropTitlePopShow ? R.drawable.plugin_ic_header_title_drop_up : R.drawable.plugin_ic_header_title_drop_down);
+        drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+        headerText.setCompoundDrawables(null, null, drawable, null);
     }
 
     /**
@@ -511,7 +509,7 @@ public class ImpFragment extends Fragment {
      * （不是GS应用，GS应用有重定向，不容易实现返回）
      */
     public void initWebViewGoBackOrClose() {
-        if (headerText != null && webView != null) {
+        if (webView != null) {
             if (getActivity().getClass().getName().equals(ImpActivity.class.getName())) {
                 (rootView.findViewById(Res.getWidgetID("imp_close_btn"))).setVisibility(webView.canGoBack() ? View.VISIBLE : View.GONE);
             }
@@ -520,7 +518,7 @@ public class ImpFragment extends Fragment {
     }
 
     public void setTitle(String title) {
-        if (headerText != null && !StringUtils.isBlank(title)) {
+        if (!StringUtils.isBlank(title)) {
             urlTilteMap.put(webView.getUrl(), title);
             headerText.setText(title);
         }
@@ -530,11 +528,9 @@ public class ImpFragment extends Fragment {
      * 解决有的机型Webview goback时候不会获取title的问题
      */
     private void setGoBackTitle() {
-        if (headerText != null) {
-            String title = urlTilteMap.get(webView.getUrl());
-            if (!StringUtils.isBlank(title)) {
-                headerText.setText(title);
-            }
+        String title = urlTilteMap.get(webView.getUrl());
+        if (!StringUtils.isBlank(title)) {
+            headerText.setText(title);
         }
     }
 
