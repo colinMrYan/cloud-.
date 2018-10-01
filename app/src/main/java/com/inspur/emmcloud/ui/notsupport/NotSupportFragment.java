@@ -5,8 +5,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
-import android.text.TextPaint;
-import android.text.style.ClickableSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,9 +30,6 @@ public class NotSupportFragment extends Fragment {
     private View rootView;
     private LayoutInflater inflater;
     private TextView unknownFuctionText;
-    private String currentFragmentheader;
-    private String secondPartContant="";
-    private String endPartContent="";
     @Override
     public void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
@@ -98,31 +93,11 @@ public class NotSupportFragment extends Fragment {
             uri = getArguments().getString("uri");
             String appTabs = PreferencesByUserAndTanentUtils.getString(getActivity(), Constant.PREF_APP_TAB_BAR_INFO_CURRENT, "");
             if (!StringUtils.isBlank(appTabs)) {
-                currentFragmentheader  =  AppTabUtils.setTabTitle(getActivity(),NotSupportFragment.class.getSimpleName(),uri);
-                ((TextView) rootView.findViewById(R.id.header_text)).setText(currentFragmentheader);
+                String title   =  AppTabUtils.getTabTitle(getActivity(),NotSupportFragment.class.getSimpleName(),uri);
+                ((TextView) rootView.findViewById(R.id.header_text)).setText(title);
             }
         }
 
-    }
-
-
-
-    class Clickable extends ClickableSpan implements View.OnClickListener {
-        private final View.OnClickListener mListener;
-
-        public Clickable(View.OnClickListener mListener) {
-            this.mListener = mListener;
-        }
-
-        @Override
-        public void onClick(View v) {
-            mListener.onClick(v);
-        }
-        @Override
-        public void updateDrawState(TextPaint ds) {
-            ds.setColor(ds.linkColor);
-            ds.setUnderlineText(false);    //去除超链接的下划线
-        }
     }
 
 }
