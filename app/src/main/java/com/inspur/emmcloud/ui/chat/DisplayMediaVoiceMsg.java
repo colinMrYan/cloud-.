@@ -36,8 +36,8 @@ import java.io.File;
  */
 
 public class DisplayMediaVoiceMsg {
-    public static final int IS_VOICE_WORD_OPEN = 1;
-    public static final int IS_VOICE_WORD_CLOUSE = 0;
+    public static final boolean IS_VOICE_WORD_OPEN = true;
+    public static final boolean IS_VOICE_WORD_CLOUSE = false;
     public static View getView(final Context context, final Message message) {
         final boolean isMyMsg = message.getFromUser().equals(MyApplication.getInstance().getUid());
         View cardContentView = LayoutInflater.from(context).inflate(R.layout.chat_msg_card_child_media_voice_view, null);
@@ -58,29 +58,23 @@ public class DisplayMediaVoiceMsg {
         int duration = msgContentMediaVoice.getDuration();
         durationText.setText(duration + "''");
         //控制是否打开显示文字的功能，打开和不打开分两种UI控制逻辑
-        switch (PreferencesByUserAndTanentUtils.getInt(context,Constant.PREF_APP_OPEN_VOICE_WORD_SWITCH,IS_VOICE_WORD_CLOUSE)){
-            case IS_VOICE_WORD_OPEN:
-                speechText.setVisibility(View.VISIBLE);
-                speechText.setText(msgContentMediaVoice.getResult());
-                speechText.setTextColor(isMyMsg? Color.parseColor("#FFFFFF"):Color.parseColor("#666666"));
-                break;
-            case IS_VOICE_WORD_CLOUSE:
-                speechText.setVisibility(View.INVISIBLE);
-                int widthDip = 90 + duration;
-                if (widthDip > 230) {
-                    widthDip = 230;
-                }
-                LinearLayout.LayoutParams voiceBubbleLayoutParams = new LinearLayout.LayoutParams(DensityUtil.dip2px(context, widthDip), LinearLayout.LayoutParams.WRAP_CONTENT);
-                voiceBubbleLayout.setLayoutParams(voiceBubbleLayoutParams);
-                RelativeLayout voiceLayout=(RelativeLayout)cardContentView.findViewById(R.id.rl_voice);
-                FrameLayout.LayoutParams voiceLayoutParams = (FrameLayout.LayoutParams)voiceLayout.getLayoutParams();
-                voiceLayoutParams.gravity= isMyMsg?Gravity.RIGHT:Gravity.LEFT;
-                voiceLayout.setLayoutParams(voiceLayoutParams);
-                break;
-            default:
-                break;
+        if(PreferencesByUserAndTanentUtils.getBoolean(context,Constant.PREF_APP_OPEN_VOICE_WORD_SWITCH)){
+            speechText.setVisibility(View.VISIBLE);
+            speechText.setText(msgContentMediaVoice.getResult());
+            speechText.setTextColor(isMyMsg? Color.parseColor("#FFFFFF"):Color.parseColor("#666666"));
+        }else{
+            speechText.setVisibility(View.INVISIBLE);
+            int widthDip = 90 + duration;
+            if (widthDip > 230) {
+                widthDip = 230;
+            }
+            LinearLayout.LayoutParams voiceBubbleLayoutParams = new LinearLayout.LayoutParams(DensityUtil.dip2px(context, widthDip), LinearLayout.LayoutParams.WRAP_CONTENT);
+            voiceBubbleLayout.setLayoutParams(voiceBubbleLayoutParams);
+            RelativeLayout voiceLayout=(RelativeLayout)cardContentView.findViewById(R.id.rl_voice);
+            FrameLayout.LayoutParams voiceLayoutParams = (FrameLayout.LayoutParams)voiceLayout.getLayoutParams();
+            voiceLayoutParams.gravity= isMyMsg?Gravity.RIGHT:Gravity.LEFT;
+            voiceLayout.setLayoutParams(voiceLayoutParams);
         }
-
 
         voiceAnimView.setBackgroundResource(isMyMsg ? R.drawable.ic_chat_msg_card_voice_right_level_3 : R.drawable.ic_chat_msg_card_voice_left_level_3);
         voiceBubbleLayout.setOnClickListener(new View.OnClickListener() {

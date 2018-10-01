@@ -130,7 +130,7 @@ public class NotSupportFragment extends Fragment {
             String appTabs = PreferencesByUserAndTanentUtils.getString(getActivity(), Constant.PREF_APP_TAB_BAR_INFO_CURRENT, "");
             if (!StringUtils.isBlank(appTabs)) {
 
-                currentFragmentheader  =  AppTabUtils.setTabTitle(getActivity(),NotSupportFragment.class.getSimpleName(),uri);
+                currentFragmentheader  =  AppTabUtils.getTabTitle(getActivity(),NotSupportFragment.class.getSimpleName(),uri);
                 ((TextView) rootView.findViewById(R.id.header_text)).setText(currentFragmentheader);
             }
         }

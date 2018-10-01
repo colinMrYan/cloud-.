@@ -16,7 +16,7 @@ import java.util.ArrayList;
  */
 
 public class AppTabUtils {
-    public static String setTabTitle(Context context,String tabKey,String tabCompont){
+    public static String getTabTitle(Context context, String tabKey, String tabCompont){
         String appTabs = PreferencesByUserAndTanentUtils.getString(context, Constant.PREF_APP_TAB_BAR_INFO_CURRENT,"");
         ArrayList<MainTabResult> tabList = new GetAppMainTabResult(appTabs).getMainTabPayLoad().getMainTabResultList();
         String tabCompontText = !StringUtils.isBlank(tabCompont)?tabCompont:getCompont(tabKey);
@@ -40,7 +40,7 @@ public class AppTabUtils {
 
 
     public static String getTabTitle(Context context,String tabKey){
-        return setTabTitle(context,tabKey,"");
+        return getTabTitle(context,tabKey,"");
     }
 
     /**
