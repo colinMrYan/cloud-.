@@ -36,7 +36,6 @@ import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppWebConfig;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ResolutionUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -471,7 +470,6 @@ public class ImpFragment extends Fragment {
 
             @Override
             public void onSetTitle(String title) {
-                LogUtils.YfcDebug("title:"+title);
                 setTitle(title);
             }
 
