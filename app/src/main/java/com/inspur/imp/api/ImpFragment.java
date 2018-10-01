@@ -164,7 +164,10 @@ public class ImpFragment extends Fragment {
             appId = getArguments().getString("appId");
         }
         initFragmentViews();
-        headerText.setText(AppTabUtils.getTabTitle(getActivity(), getClass().getSimpleName()));
+        String uri = getArguments().getString("uri");
+        if(!StringUtils.isBlank(uri)){
+            headerText.setText(AppTabUtils.getTabTitle(getActivity(), getClass().getSimpleName(),uri));
+        }
     }
 
 
