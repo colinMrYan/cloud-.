@@ -5,13 +5,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
-import android.text.Html;
-import android.text.SpannableString;
-import android.text.Spanned;
 import android.text.TextPaint;
-import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
-import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +17,6 @@ import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.AppTabUtils;
-import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.UpgradeUtils;
 
@@ -55,14 +49,11 @@ public class NotSupportFragment extends Fragment {
         unknownFuctionText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                UpgradeUtils upgradeUtils = new UpgradeUtils(getActivity(),handler,false);
-                upgradeUtils.checkUpdate(false);
+                UpgradeUtils upgradeUtils = new UpgradeUtils(getActivity(),handler,true);
+                upgradeUtils.checkUpdate(true);
             }
         });
-        getNoSupportContent(AppUtils.getCurrentAppLanguage(getContext()));
-      unknownFuctionText.setText(Html.fromHtml(currentFragmentheader+secondPartContant+"<font color='#0F7BCA'>"+endPartContent+"</font>"));
-
-        unknownFuctionText.setMovementMethod(LinkMovementMethod.getInstance());//必须设置否则无效
+        unknownFuctionText.setText(getResources().getText(R.string.tab_not_support_tips));
 
     }
 
@@ -97,28 +88,6 @@ public class NotSupportFragment extends Fragment {
         }
     };
 
-    /**
-     * 获取spanSgtring
-     * @return
-     */
-    private SpannableString getClickableSpan() {
-        View.OnClickListener l = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                UpgradeUtils upgradeUtils = new UpgradeUtils(getActivity(),handler,false);
-                upgradeUtils.checkUpdate(false);
-            }
-        };
-
-        SpannableString spanableInfo = new SpannableString(
-                "当前版本不支持此功能请  立即升级  到最新版本");
-        int start = 13;
-        int end = 17;
-        spanableInfo.setSpan(new Clickable(l), start, end,
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        spanableInfo.setSpan(new ForegroundColorSpan(0xff0F7BCA),start,end,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        return spanableInfo;
-    }
 
     /**
      * 设置标题，根据当前Fragment类名获取显示名称
@@ -129,7 +98,6 @@ public class NotSupportFragment extends Fragment {
             uri = getArguments().getString("uri");
             String appTabs = PreferencesByUserAndTanentUtils.getString(getActivity(), Constant.PREF_APP_TAB_BAR_INFO_CURRENT, "");
             if (!StringUtils.isBlank(appTabs)) {
-
                 currentFragmentheader  =  AppTabUtils.setTabTitle(getActivity(),NotSupportFragment.class.getSimpleName(),uri);
                 ((TextView) rootView.findViewById(R.id.header_text)).setText(currentFragmentheader);
             }
@@ -137,26 +105,6 @@ public class NotSupportFragment extends Fragment {
 
     }
 
-    /**
-     *
-     * */
-    private void getNoSupportContent(String environmentLanguage) {
-        switch (environmentLanguage.toLowerCase()) {
-            case "zh-hant":
-                secondPartContant = "已改版，請";
-                endPartContent    = "升級到最新版本";
-                break;
-            case "en":
-            case "en-us":
-                secondPartContant = "Revised, Please ";
-                endPartContent    = "upgrade to the latest version";
-                break;
-            default:
-                secondPartContant = "已改版, 请";
-                endPartContent    = "升级到最新版本";
-                break;
-        }
-    }
 
 
     class Clickable extends ClickableSpan implements View.OnClickListener {

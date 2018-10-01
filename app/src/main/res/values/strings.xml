@@ -59,6 +59,7 @@
     <string name="file_no_identifiable">不能识别的文件类型</string>
     <string name="login_code_login_text">验证码登录</string>
     <string name="invite_friends_text">把云+推荐给朋友</string>
+    <string name="tab_not_support_tips">已改版，请<font color='#0F7BCA'>升级到最新版本</font> </string>
 
     <!-- 公共部分 -->
     <string name="year">年</string>

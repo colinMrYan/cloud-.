@@ -56,6 +56,7 @@
     <string name="cancel_filter">Cancle filter</string>
     <string name="only_free">Only free</string>
     <string name="invite_friends_text">Recommend Cloud+ to friends</string>
+    <string name="tab_not_support_tips">Revised, Please<font color='#0F7BCA'>upgrade to the latest version</font> </string>
 
     <!-- 公共部分 -->
     <string name="year">Year</string>
