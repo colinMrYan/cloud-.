@@ -28,6 +28,7 @@ import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ClientConfigUpdateUtils;
 import com.inspur.emmcloud.util.privates.DataCleanManager;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
@@ -76,8 +77,7 @@ public class SettingActivity extends BaseActivity {
         boolean isAppSetRunBackground = PreferencesUtils.getBoolean(getApplicationContext(), Constant.PREF_APP_RUN_BACKGROUND, false);
         backgroundRunSwitch.setOpened(isAppSetRunBackground);
         backgroundRunSwitch.setOnStateChangedListener(onStateChangedListener);
-        voice2WordSwitch.setOpened(PreferencesByUserAndTanentUtils.getInt(this, Constant.PREF_APP_OPEN_VOICE_WORD_SWITCH,
-                DisplayMediaVoiceMsg.IS_VOICE_WORD_OPEN) == DisplayMediaVoiceMsg.IS_VOICE_WORD_OPEN);
+        voice2WordSwitch.setOpened(AppUtils.getIsVoiceWordOpen());
         voice2WordSwitch.setOnStateChangedListener(onStateChangedListener);
     }
 
@@ -119,7 +119,7 @@ public class SettingActivity extends BaseActivity {
                     setAppRunBackground(true);
                     break;
                 case R.id.switch_voice_word:
-                    PreferencesByUserAndTanentUtils.putInt(SettingActivity.this, Constant.PREF_APP_OPEN_VOICE_WORD_SWITCH, DisplayMediaVoiceMsg.IS_VOICE_WORD_OPEN);
+                    PreferencesByUserAndTanentUtils.putBoolean(SettingActivity.this, Constant.PREF_APP_OPEN_VOICE_WORD_SWITCH, DisplayMediaVoiceMsg.IS_VOICE_WORD_OPEN);
                     voice2WordSwitch.setOpened(true);
                     break;
                 case R.id.web_auto_rotate_switch:
@@ -140,7 +140,7 @@ public class SettingActivity extends BaseActivity {
                     setAppRunBackground(false);
                     break;
                 case R.id.switch_voice_word:
-                    PreferencesByUserAndTanentUtils.putInt(SettingActivity.this, Constant.PREF_APP_OPEN_VOICE_WORD_SWITCH, DisplayMediaVoiceMsg.IS_VOICE_WORD_CLOUSE);
+                    PreferencesByUserAndTanentUtils.putBoolean(SettingActivity.this, Constant.PREF_APP_OPEN_VOICE_WORD_SWITCH, DisplayMediaVoiceMsg.IS_VOICE_WORD_CLOUSE);
                     voice2WordSwitch.setOpened(false);
                     break;
                 case R.id.web_auto_rotate_switch:
