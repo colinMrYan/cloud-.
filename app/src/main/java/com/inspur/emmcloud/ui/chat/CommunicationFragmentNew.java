@@ -398,6 +398,7 @@ public class CommunicationFragmentNew extends Fragment {
             return;
         }
         isGroupIconCreate = true;
+        LogUtils.jasonDebug("createGroupIcon---------------------");
         ConversationGroupIconUtils.getInstance().create(conversationList);
     }
 
@@ -764,7 +765,6 @@ public class CommunicationFragmentNew extends Fragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiverRefreshConversationAdapter(SimpleEventMessage eventMessage) {
         if (eventMessage.getAction().equals(Constant.EVENTBUS_TAG_REFRESH_CONVERSATION_ADAPTER)){
-            LogUtils.jasonDebug("onReceiverRefreshConversationAdapter-----------------------");
             conversationAdapter.notifyDataSetChanged();
         }
     }

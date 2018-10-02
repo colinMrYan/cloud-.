@@ -17,6 +17,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.UIConversation;
 import com.inspur.emmcloud.config.MyAppConfig;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
@@ -75,6 +76,9 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
         holder.dndImg.setVisibility(uiConversation.getConversation().isDnd() ? View.VISIBLE : View.GONE);
         holder.mainLayout.setBackgroundResource(uiConversation.getConversation().isStick() ? R.drawable.selector_set_top_msg_list : R.drawable.selector_list);
         boolean isConversationTypeGroup = uiConversation.getConversation().getType().equals(Conversation.TYPE_GROUP);
+        if (uiConversation.getConversation().getType().equals(Conversation.TYPE_GROUP)){
+            LogUtils.jasonDebug("set---iconUrl====="+uiConversation.getIcon());
+        }
         ImageDisplayUtils.getInstance().displayImageByTag(
                 holder.photoImg, uiConversation.getIcon(), isConversationTypeGroup?R.drawable.icon_channel_group_default:R.drawable.icon_person_default);
         setConversationContent(holder,uiConversation);

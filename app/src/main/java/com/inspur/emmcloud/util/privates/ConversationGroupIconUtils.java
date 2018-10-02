@@ -73,7 +73,6 @@ public class ConversationGroupIconUtils {
 
         @Override
         protected void onPostExecute(Boolean isCreateGroupIcon) {
-            LogUtils.jasonDebug("isCreateGroupIcon=="+isCreateGroupIcon);
             if(isCreateGroupIcon){
                 EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_REFRESH_CONVERSATION_ADAPTER));
             }
@@ -81,10 +80,9 @@ public class ConversationGroupIconUtils {
 
         @Override
         protected Boolean doInBackground(Void... voids) {
-            if (conversationList == null||conversationList.size() == 0) {
+            if (conversationList == null) {
                 conversationList = ConversationCacheUtils.getConversationList(MyApplication.getInstance(), Conversation.TYPE_GROUP);
             }
-            LogUtils.jasonDebug("conversationList.size="+conversationList.size());
             if (conversationList.size() == 0) {
                 return false;
             }
@@ -111,11 +109,13 @@ public class ConversationGroupIconUtils {
                     }
                 }
                 Bitmap groupBitmap = createGroupIcon(bitmapList);
-                LogUtils.jasonDebug("id======================"+conversation.getId());
                 if (groupBitmap != null) {
-                    saveBitmap(conversation.getId(), groupBitmap);
+                    String iconUrl = saveBitmap(conversation.getId(), groupBitmap);
+                    if (iconUrl != null){
+                        //清空原来的缓存
+                        ImageDisplayUtils.getInstance().clearCache(iconUrl);
+                    }
                 }
-
             }
             return true;
         }
@@ -300,8 +300,7 @@ public class ConversationGroupIconUtils {
     /**
      * 保存方法
      */
-    private void saveBitmap(String cid, Bitmap bitmap) {
-        LogUtils.jasonDebug("save---------------------------");
+    private String saveBitmap(String cid, Bitmap bitmap) {
         File dir = new File(MyAppConfig.LOCAL_CACHE_PHOTO_PATH);
         if (!dir.exists()) {
             dir.mkdirs();
@@ -310,13 +309,13 @@ public class ConversationGroupIconUtils {
         if (file.exists()) {
             file.delete();
         }
-        LogUtils.jasonDebug("path=="+file.getAbsolutePath());
         FileOutputStream out = null;
         try {
             out = new FileOutputStream(file);
             bitmap.compress(Bitmap.CompressFormat.PNG, 50, out);
             out.flush();
             out.close();
+            return file.getAbsolutePath();
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -337,6 +336,6 @@ public class ConversationGroupIconUtils {
                 bitmap = null;
             }
         }
-
+        return null;
     }
 }

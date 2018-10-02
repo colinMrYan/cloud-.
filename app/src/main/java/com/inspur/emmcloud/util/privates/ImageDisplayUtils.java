@@ -14,6 +14,8 @@ import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.ImageSize;
 import com.nostra13.universalimageloader.core.imageaware.ImageViewAware;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+import com.nostra13.universalimageloader.utils.DiskCacheUtils;
+import com.nostra13.universalimageloader.utils.MemoryCacheUtils;
 
 
 public class ImageDisplayUtils implements ImagePickerLoader {
@@ -176,5 +178,10 @@ public class ImageDisplayUtils implements ImagePickerLoader {
     public void clearAllCache() {
         ImageLoader.getInstance().clearMemoryCache();
         ImageLoader.getInstance().clearDiscCache();
+    }
+
+    public void clearCache(String url){
+        DiskCacheUtils.removeFromCache(url,ImageLoader.getInstance().getDiskCache());
+        MemoryCacheUtils.removeFromCache(url, ImageLoader.getInstance().getMemoryCache());
     }
 }
