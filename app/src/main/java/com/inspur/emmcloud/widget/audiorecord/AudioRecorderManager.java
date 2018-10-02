@@ -214,7 +214,7 @@ public class AudioRecorderManager {
                         callBack.onWavAudioPrepareState(AudioRecordErrorCode.E_ERROR);
                     }
                 }
-                volume = getVolume(audioData, readSize);
+                volume = getVolumeLevel(audioData);
                 duration = System.currentTimeMillis() - beginTime;
                 DecimalFormat decimalFormat = new DecimalFormat("##0.0");
                 String time = decimalFormat.format(duration / 1000f);
@@ -239,30 +239,45 @@ public class AudioRecorderManager {
     }
 
     /**
-     * 获取音量
-     *
+     * 获取音量的等级非分贝分级算法
      * @param audioData
      * @return
      */
-    private int getVolume(byte[] audioData, int readSize) {
-        long quadraticSum = 0;
-        // 将 buffer 内容取出，进行平方和运算
-        for (int i = 0; i < audioData.length; i++) {
-            quadraticSum += audioData[i] * audioData[i];
+    private int getVolumeLevel(byte[] audioData) {
+        int voiceLevel = 0;
+        if (audioData != null &&  audioData.length > 0){
+            voiceLevel = calculateVolume(audioData);
         }
-        // 平方和除以数据总长度，得到音量大小。
-        double mean = quadraticSum / (double) readSize;
+        voiceLevel = voiceLevel / 3;
+        if (voiceLevel == 0) {
+            voiceLevel++;
+        } else if (voiceLevel > 6) {
+            voiceLevel = 6;
+        }
+        return voiceLevel;
+    }
 
-        int db = 0;// 分贝
-        if (mean > 1)
-            db = (int) (20 * Math.log10(mean));
-        db = db / 15;
-        if (db == 0) {
-            db++;
-        } else if (db > 6) {
-            db = 6;
+    /**
+     * 计算音量
+     * @param buffer
+     * @return
+     */
+    private int calculateVolume(byte[] buffer){
+        double sumVolume = 0.0;
+        double avgVolume = 0.0;
+        int volume = 0;
+        for(int i = 0; i < buffer.length; i+=2){
+            int v1 = buffer[i] & 0xFF;
+            int v2 = buffer[i + 1] & 0xFF;
+            int temp = v1 + (v2 << 8);// 小端
+            if (temp >= 0x8000) {
+                temp = 0xffff - temp;
+            }
+            sumVolume += Math.abs(temp);
         }
-        return db;
+        avgVolume = sumVolume / buffer.length / 2;
+        volume = (int)Math.log10(1 + avgVolume) * 10;
+        return volume;
     }
 
     // 这里得到可播放的音频文件

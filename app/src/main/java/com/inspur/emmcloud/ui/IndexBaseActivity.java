@@ -152,7 +152,8 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
                             break;
                     }
                     if (tabBean == null) {
-                        tabBean = new TabBean(getString(R.string.new_function), R.drawable.selector_tab_unknown_btn + "", NotSupportFragment.class, mainTabResult);
+                        String noSupportTabName = mainTabResult.getMainTabTitleResult().getTabTileByLanguage(environmentLanguage);
+                        tabBean = new TabBean(noSupportTabName, R.drawable.selector_tab_unknown_btn + "", NotSupportFragment.class, mainTabResult);
                     }
                     tabBean.setTabId(mainTabResultList.get(i).getUri());
                     tabBeans[i] = internationalMainLanguage(mainTabResultList.get(i), environmentLanguage, tabBean);
@@ -198,18 +199,18 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
                     return new View(IndexBaseActivity.this);
                 }
             });
+            Bundle bundle = new Bundle();
             if (tabBean.getMainTabResult().getType().equals(Constant.APP_TAB_TYPE_WEB)) {
-                Bundle bundle = new Bundle();
                 bundle.putString("uri", tabBean.getMainTabResult().getUri());
                 if (tabBean.getMainTabResult().getMainTabProperty().isHaveNavbar()) {
                     bundle.putString(Constant.WEB_FRAGMENT_APP_NAME, tabBean.getTabName());
                     bundle.putString(Constant.WEB_FRAGMENT_VERSION,PreferencesByUserAndTanentUtils.getString(IndexBaseActivity.this, Constant.PREF_APP_TAB_BAR_VERSION, ""));
                     bundle.putSerializable(Constant.WEB_FRAGMENT_MENU, (Serializable) tabBean.getMainTabResult().getMainTabProperty().getMainTabMenuList());
                 }
-                mTabHost.addTab(tab, tabBean.getClz(), bundle);
             } else {
-                mTabHost.addTab(tab, tabBean.getClz(), null);
+                bundle.putString("uri", tabBean.getMainTabResult().getUri());
             }
+            mTabHost.addTab(tab, tabBean.getClz(), bundle);
             mTabHost.getTabWidget().getChildAt(i).setOnTouchListener(this);
             mTabHost.getTabWidget().getChildAt(i).setTag(tabBean.getTabId());
         }
@@ -404,6 +405,8 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
         }
         return tabBean;
     }
+
+
 
     /**
      * 处理小红点的逻辑

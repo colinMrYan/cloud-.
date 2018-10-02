@@ -923,7 +923,7 @@ public class AppUtils {
      * @return
      */
     public static boolean getIsVoiceWordOpen(){
-        return PreferencesByUserAndTanentUtils.getInt(MyApplication.getInstance(), Constant.PREF_APP_OPEN_VOICE_WORD_SWITCH,0) == DisplayMediaVoiceMsg.IS_VOICE_WORD_OPEN;
+        return PreferencesByUserAndTanentUtils.getBoolean(MyApplication.getInstance(), Constant.PREF_APP_OPEN_VOICE_WORD_SWITCH,DisplayMediaVoiceMsg.IS_VOICE_WORD_OPEN) == DisplayMediaVoiceMsg.IS_VOICE_WORD_OPEN;
     }
 
     /**

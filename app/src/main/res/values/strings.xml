@@ -59,6 +59,8 @@
     <string name="file_no_identifiable">不能识别的文件类型</string>
     <string name="login_code_login_text">验证码登录</string>
     <string name="invite_friends_text">把云+推荐给朋友</string>
+    <string name="tab_not_support_tips">%1$s功能已改版，请<Data><![CDATA[<font color=\'#0F7BCA\'>升级到最新版本</font>]]></Data></string>
+
 
     <!-- 公共部分 -->
     <string name="year">年</string>
@@ -266,7 +268,7 @@
     <string name="channel_group">群组</string>
     <string name="group_member">群成员 </string>
     <string name="group_name_cannot_null">请输入群组名称 </string>
-    <string name="channel_unknown_text">未知的消息类型</string>
+    <string name="channel_unknown_text">您的%1$s暂不支持该消息，请【升级】%1$s最新版本查看</string>
     <string name="comment_hallcomment_text">评论了:</string>
     <string name="channel_info">频道详情</string>
     <string name="comment_text">评论：</string>

@@ -58,7 +58,6 @@ public class ChannelInfoActivity extends BaseActivity {
     private static final int QEQUEST_DEL_MEMBER = 3;
     private NoScrollGridView memberGrid;
     private LoadingDialog loadingDlg;
-    private ArrayList<String> memberList = new ArrayList<>();
     private ArrayList<String> uiMemberList = new ArrayList<>();
     private String cid;
     private ChannelGroup channelGroup;
@@ -91,8 +90,7 @@ public class ChannelInfoActivity extends BaseActivity {
         channelGroup = ChannelGroupCacheUtils
                 .getChannelGroupById(getApplicationContext(), cid);
         if (channelGroup != null) {
-            memberList = channelGroup.getMemberList();
-            filterMemberData();
+            filterMemberData(channelGroup.getMemberList());
             displayUI();
         }
         if (NetUtils.isNetworkConnected(getApplicationContext(),(channelGroup == null))) {
@@ -107,7 +105,7 @@ public class ChannelInfoActivity extends BaseActivity {
      */
     private void displayUI() {
         channelMemberNumText.setText(getString(R.string.all_group_member) + "（"
-                + memberList.size() + "）");
+                + uiMemberList.size() + "）");
         memberGrid = (NoScrollGridView) findViewById(R.id.member_grid);
         ((TextView) findViewById(R.id.channel_name_text)).setText(channelGroup.getChannelName());
         adapter = new Adapter();
@@ -149,7 +147,7 @@ public class ChannelInfoActivity extends BaseActivity {
             boolean isOwner = MyApplication.getInstance().getUid().equals(channelGroup.getOwner());
             Intent intent = new Intent();
             if ((position == adapter.getCount() - 1) && isOwner) {
-                intent.putExtra("memberUidList", memberList);
+                intent.putExtra("memberUidList", uiMemberList);
                 intent.setClass(getApplicationContext(),
                         ChannelMembersDelActivity.class);
                 startActivityForResult(intent, QEQUEST_DEL_MEMBER);
@@ -164,7 +162,7 @@ public class ChannelInfoActivity extends BaseActivity {
                 startActivityForResult(intent, QEQUEST_ADD_MEMBER);
 
             } else {
-                String uid = memberList.get(position);
+                String uid = uiMemberList.get(position);
                 if (!StringUtils.isBlank(uid) && uid.startsWith("BOT")) {
                     Bundle bundle = new Bundle();
                     bundle.putString("uid", uid);
@@ -172,7 +170,7 @@ public class ChannelInfoActivity extends BaseActivity {
                             RobotInfoActivity.class, bundle);
                     return;
                 }
-                intent.putExtra("uid", memberList.get(position));
+                intent.putExtra("uid", uiMemberList.get(position));
                 intent.setClass(getApplicationContext(), UserInfoActivity.class);
                 startActivity(intent);
             }
@@ -229,7 +227,7 @@ public class ChannelInfoActivity extends BaseActivity {
             case R.id.member_layout:
                 bundle.putString("title", getString(R.string.group_member));
                 bundle.putInt(MembersActivity.MEMBER_PAGE_STATE,MembersActivity.CHECK_STATE);
-                bundle.putStringArrayList("uidList",memberList);
+                bundle.putStringArrayList("uidList",uiMemberList);
                 IntentUtils.startActivity(ChannelInfoActivity.this,
                         MembersActivity.class, bundle);
                 break;
@@ -377,7 +375,7 @@ public class ChannelInfoActivity extends BaseActivity {
     /**
      * 过滤不存在的群成员算法
      */
-    private void filterMemberData() {
+    private void filterMemberData(List<String> memberList) {
         //查三十人，如果不满三十人则查实际人数保证查到的人都是存在的群成员
         List<ContactUser> contactUserList = ContactUserCacheUtils.getContactUserListByIdListOrderBy(memberList,9);
         ArrayList<String> contactUserIdList = new ArrayList<>();
@@ -387,6 +385,7 @@ public class ChannelInfoActivity extends BaseActivity {
         uiMemberList.clear();
         uiMemberList.addAll(contactUserIdList);
     }
+
 
     /**
      * 发送广播
@@ -438,6 +437,7 @@ public class ChannelInfoActivity extends BaseActivity {
         }
     }
 
+
     /**
      * 退出群聊
      */
@@ -448,7 +448,6 @@ public class ChannelInfoActivity extends BaseActivity {
         }
     }
 
-
     private class WebService extends APIInterfaceInstance {
 
         @Override
@@ -456,10 +455,9 @@ public class ChannelInfoActivity extends BaseActivity {
                 ChannelGroup channelGroup) {
             // TODO Auto-generated method stub
             LoadingDialog.dimissDlg(loadingDlg);
-            memberList = channelGroup.getMemberList();
             // 同步缓存
             ChannelGroupCacheUtils.saveChannelGroup(MyApplication.getInstance(),channelGroup);
-            filterMemberData();
+            filterMemberData(channelGroup.getMemberList());
             displayUI();
         }
 
@@ -514,10 +512,9 @@ public class ChannelInfoActivity extends BaseActivity {
             LoadingDialog.dimissDlg(loadingDlg);
             // 同步缓存
             ChannelGroupCacheUtils.saveChannelGroup(MyApplication.getInstance(),channelGroup);
-            memberList = channelGroup.getMemberList();
+            filterMemberData(channelGroup.getMemberList());
             channelMemberNumText.setText(getString(R.string.all_group_member) + "（"
-                    + memberList.size() + "）");
-            filterMemberData();
+                    + uiMemberList.size() + "）");
             displayUI();
             adapter.notifyDataSetChanged();
         }
