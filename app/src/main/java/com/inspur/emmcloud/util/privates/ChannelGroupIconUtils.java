@@ -145,7 +145,12 @@ public class ChannelGroupIconUtils {
                     Bitmap combineBitmap = createGroupFace(context, bitmapList);
 
                     if (combineBitmap != null) {
-                        saveBitmap(channel.getCid(), combineBitmap);
+                        String iconUrl = saveBitmap(channel.getCid(), combineBitmap);
+                        if (iconUrl != null){
+                            iconUrl = "file://"+iconUrl;
+                            ImageDisplayUtils.getInstance().clearCache(iconUrl);
+                        }
+
                     }
                 }
 
@@ -352,7 +357,7 @@ public class ChannelGroupIconUtils {
     /**
      * 保存方法
      */
-    public void saveBitmap(String cid, Bitmap bitmap) {
+    public String  saveBitmap(String cid, Bitmap bitmap) {
         File dir = new File(MyAppConfig.LOCAL_CACHE_PHOTO_PATH);
         if (!dir.exists()) {
             dir.mkdirs();
@@ -367,6 +372,7 @@ public class ChannelGroupIconUtils {
             bitmap.compress(Bitmap.CompressFormat.PNG, 50, out);
             out.flush();
             out.close();
+            return file.getAbsolutePath();
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -387,6 +393,7 @@ public class ChannelGroupIconUtils {
                 bitmap = null;
             }
         }
+        return null;
 
     }
 
