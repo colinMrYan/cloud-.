@@ -8,6 +8,7 @@ import org.xutils.db.annotation.Column;
 import org.xutils.db.annotation.Table;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * Created by chenmch on 2018/9/20.
@@ -149,7 +150,10 @@ public class Conversation implements Serializable{
     public String getMembers() {
         return members;
     }
-
+    public ArrayList<String> getMemberList() {
+        ArrayList<String> memberList = JSONUtils.JSONArray2List(members,new ArrayList<String>());
+        return memberList;
+    }
     public void setMembers(String members) {
         this.members = members;
     }

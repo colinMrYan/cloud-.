@@ -580,6 +580,14 @@ public class APIUri {
     public static String getConversationSetStick(String id){
         return getECMChatConversationBaseUrl()+"/channel/"+id+"/focus";
     }
+
+    /**
+     * 设置会话是否可见
+     * @return
+     */
+    public static String getConversationSetHide(String id){
+        return getECMChatConversationBaseUrl()+"/channel/"+id+"/visuality";
+    }
     /**************************************************应用和应用中心********************************************************************/
 
 

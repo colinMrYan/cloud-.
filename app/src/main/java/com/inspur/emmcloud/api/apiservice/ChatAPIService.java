@@ -1367,4 +1367,45 @@ public class ChatAPIService {
             }
         });
     }
+
+    /**
+     * 隐藏会话
+     * @param uiConversation
+     */
+    public void setConversationHide(final String id){
+        final String completeUrl = APIUri.getConversationSetHide(id);
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
+        params.addParameter("hide",true);
+        HttpUtils.request(context, CloudHttpMethod.PUT, params, new APICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        setConversationHide(id);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(oauthCallBack, requestTime);
+            }
+
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+                apiInterface.returnSetConversationHideSuccess(id);
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                apiInterface.returnSetConversationHideFail(error, responseCode);
+            }
+        });
+    }
 }

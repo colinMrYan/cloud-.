@@ -21,6 +21,8 @@ import com.inspur.emmcloud.bean.chat.Channel;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
 import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.bean.contact.SearchModel;
+import com.inspur.emmcloud.bean.system.SimpleEventMessage;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
@@ -42,6 +44,8 @@ import com.inspur.emmcloud.widget.SwitchView.OnStateChangedListener;
 import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -528,9 +532,7 @@ public class ChannelInfoActivity extends BaseActivity {
 
         @Override
         public void returnQuitChannelGroupSuccess() {
-            Intent mIntent = new Intent("message_notify");
-            mIntent.putExtra("command", "refresh_adapter");
-            LocalBroadcastManager.getInstance(MyApplication.getInstance()).sendBroadcast(mIntent);
+            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_REFRESH_CONVERSATION_ADAPTER));
             LoadingDialog.dimissDlg(loadingDlg);
             setResult(RESULT_OK);
             finish();

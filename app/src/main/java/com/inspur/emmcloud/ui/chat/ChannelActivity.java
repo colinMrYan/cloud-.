@@ -30,6 +30,7 @@ import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
 import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.bean.system.EventMessage;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
+import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.interf.ProgressCallback;
@@ -854,9 +855,7 @@ public class ChannelActivity extends MediaPlayBaseActivity {
             }else {
                 PreferencesByUserAndTanentUtils.clearDataByKey(MyApplication.getInstance(),MyAppConfig.getChannelDrafsPreKey(cid));
             }
-            Intent mIntent = new Intent("message_notify");
-            mIntent.putExtra("command", "refresh_adapter");
-            LocalBroadcastManager.getInstance(this).sendBroadcast(mIntent);
+            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_REFRESH_CONVERSATION_ADAPTER));
         }
     }
 

@@ -205,7 +205,7 @@ public class UIConversation implements Serializable{
             return true;
         if (other == null)
             return false;
-        if (!(other instanceof Conversation))
+        if (!(other instanceof UIConversation))
             return false;
 
         final UIConversation uiConversation = (UIConversation) other;

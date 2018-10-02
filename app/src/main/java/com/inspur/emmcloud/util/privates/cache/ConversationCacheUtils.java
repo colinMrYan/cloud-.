@@ -91,6 +91,21 @@ public class ConversationCacheUtils {
     }
 
     /**
+     * 隐藏会话
+     * @param context
+     * @param id
+     */
+    public static void setConversationHide(Context context,String id){
+        try {
+            DbCacheUtils.getDb(context).update(Conversation.class, WhereBuilder.b("id", "=", id),new KeyValue("hide",true));
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
      * 删除会话
      * @param context
      * @param id
@@ -186,6 +201,37 @@ public class ConversationCacheUtils {
         }
         return conversationList;
     }
+
+//    public static List<String> getConversationExistMemberUidList(Context context,String id,int limit){
+//        List<String> uidList = new ArrayList<>();
+//        try {
+//            Conversation conversation = getConversation(context,id);
+//            if (conversation != null){
+//                List<String> memberUidList = conversation.getMemberList();
+//
+//            }
+//
+//
+//
+//            if(channelGroup == null){
+//                return new ArrayList<>();
+//            }
+//            List<String> allMemberList = channelGroup.getMemberList();
+//            //遍历如果头像存在则加入
+//            for (int i = 0; i < allMemberList.size(); i++) {
+//                String url = APIUri.getChannelImgUrl(context, allMemberList.get(i));
+//                if(!StringUtils.isBlank(url)){
+//                    uidList.add(allMemberList.get(i));
+//                    if(uidList.size()>=limit){
+//                        break;
+//                    }
+//                }
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return uidList;
+//    }
 
 
 //    /**

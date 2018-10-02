@@ -48,6 +48,7 @@ import com.inspur.emmcloud.bean.chat.GetUploadPushInfoResult;
 import com.inspur.emmcloud.bean.chat.GetVoiceCommunicationResult;
 import com.inspur.emmcloud.bean.chat.GetWebSocketUrlResult;
 import com.inspur.emmcloud.bean.chat.Robot;
+import com.inspur.emmcloud.bean.chat.UIConversation;
 import com.inspur.emmcloud.bean.contact.GetContactOrgListUpateResult;
 import com.inspur.emmcloud.bean.contact.GetContactUserListUpateResult;
 import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
@@ -705,4 +706,7 @@ public interface APIInterface {
 
     void returnSetConversationStickSuccess(String id,boolean isStick);
     void returnSetConversationStickFail(String error,int errorCode);
+
+    void returnSetConversationHideSuccess(String id);
+    void returnSetConversationHideFail(String error,int errorCode);
 }

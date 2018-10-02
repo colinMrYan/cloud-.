@@ -17,6 +17,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
@@ -52,6 +53,7 @@ import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
@@ -59,6 +61,7 @@ import com.inspur.emmcloud.util.privates.AppTabUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils.OnCreateGroupChannelListener;
+import com.inspur.emmcloud.util.privates.ConversationGroupIconUtils;
 import com.inspur.emmcloud.util.privates.DownLoaderUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.ScanQrCodeUtils;
@@ -115,6 +118,8 @@ public class CommunicationFragmentNew extends Fragment {
     private PopupWindow popupWindow;
     private boolean isFirstConnectWebsockt = true;//判断是否第一次连上websockt
     private LoadingDialog loadingDlg;
+    private ImageView headerFunctionOptionImg;
+    private ImageView contactImg;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -135,10 +140,10 @@ public class CommunicationFragmentNew extends Fragment {
         apiService = new ChatAPIService(getActivity());
         apiService.setAPIInterface(new WebService());
         rootView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_communication, null);
-        (rootView.findViewById(R.id.more_function_list_img))
-                .setOnClickListener(onViewClickListener);
-        (rootView.findViewById(R.id.contact_img))
-                .setOnClickListener(onViewClickListener);
+        headerFunctionOptionImg = (ImageView) rootView.findViewById(R.id.more_function_list_img);
+        headerFunctionOptionImg.setOnClickListener(onViewClickListener);
+        contactImg = (ImageView) rootView.findViewById(R.id.contact_img);
+        contactImg.setOnClickListener(onViewClickListener);
         titleText = (TextView) rootView.findViewById(R.id.header_text);
         noDataLayout = (RelativeLayout) rootView.findViewById(R.id.rl_no_chat);
         initPullRefreshLayout();
@@ -234,7 +239,7 @@ public class CommunicationFragmentNew extends Fragment {
                         if (which == 0) {
                             setConversationStick(uiConversation.getId(), !uiConversation.getConversation().isStick());
                         } else {
-                            setConversationInvisible(uiConversation.getId());
+                            setConversationHide(uiConversation.getId());
                         }
                     }
                 })
@@ -255,10 +260,10 @@ public class CommunicationFragmentNew extends Fragment {
                     MainTabProperty mainTabProperty = mainTabResultList.get(i).getMainTabProperty();
                     if (mainTabProperty != null) {
                         if (!mainTabProperty.isCanCreate()) {
-                            rootView.findViewById(R.id.more_function_list_img).setVisibility(View.GONE);
+                            headerFunctionOptionImg.setVisibility(View.GONE);
                         }
                         if (!mainTabProperty.isCanContact()) {
-                            rootView.findViewById(R.id.contact_img).setVisibility(View.GONE);
+                            contactImg.setVisibility(View.GONE);
                         }
                     }
                     break;
@@ -386,15 +391,14 @@ public class CommunicationFragmentNew extends Fragment {
      * @param channelList
      */
     private void createGroupIcon(List<Conversation> conversationList) {
-        if (NetUtils.isNetworkConnected(MyApplication.getInstance(), false)) {
+        if (!NetUtils.isNetworkConnected(MyApplication.getInstance(), false)) {
             return;
         }
         if (!MyApplication.getInstance().getIsContactReady()) {
             return;
         }
         isGroupIconCreate = true;
-//        ChannelGroupIconUtils.getInstance().create(MyApplication.getInstance(), conversationList,
-//                handler);
+        ConversationGroupIconUtils.getInstance().create(conversationList);
     }
 
 
@@ -552,9 +556,6 @@ public class CommunicationFragmentNew extends Fragment {
                 case "websocket_status":
                     String socketStatus = intent.getExtras().getString("status");
                     showSocketStatusInTitle(socketStatus);
-                    break;
-                case "refresh_adapter":
-                    conversationAdapter.notifyDataSetChanged();
                     break;
                 case "removeChannelFromUI":
                     String deleteCid = intent.getExtras().getString("cid");
@@ -760,6 +761,14 @@ public class CommunicationFragmentNew extends Fragment {
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiverRefreshConversationAdapter(SimpleEventMessage eventMessage) {
+        if (eventMessage.getAction().equals(Constant.EVENTBUS_TAG_REFRESH_CONVERSATION_ADAPTER)){
+            LogUtils.jasonDebug("onReceiverRefreshConversationAdapter-----------------------");
+            conversationAdapter.notifyDataSetChanged();
+        }
+    }
+
 
     //接收到websocket发过来的消息
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -871,6 +880,9 @@ public class CommunicationFragmentNew extends Fragment {
         }
     }
 
+    /**
+     * 获取消息
+     */
     public void getMessage() {
         if (NetUtils.isNetworkConnected(MyApplication.getInstance()) && WebSocketPush.getInstance().isSocketConnect()) {
             String lastMessageId = MessageCacheUtil.getLastMessageId(MyApplication.getInstance());
@@ -903,9 +915,10 @@ public class CommunicationFragmentNew extends Fragment {
      *
      * @param id
      */
-    private void setConversationInvisible(String id) {
+    private void setConversationHide(String id) {
         if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
             loadingDlg.show();
+            apiService.setConversationHide(id);
         }
     }
 
@@ -931,12 +944,40 @@ public class CommunicationFragmentNew extends Fragment {
         @Override
         public void returnSetConversationStickSuccess(String id, boolean isStick) {
             LoadingDialog.dimissDlg(loadingDlg);
-            ConversationCacheUtils.setConversationStick(MyApplication.getInstance(),id,isStick);
+            ConversationCacheUtils.setConversationStick(MyApplication.getInstance(), id, isStick);
             sortConversationList();
         }
 
         @Override
         public void returnSetConversationStickFail(String error, int errorCode) {
+            LoadingDialog.dimissDlg(loadingDlg);
+            WebServiceMiddleUtils.hand(MyApplication.getInstance(), error, errorCode);
+        }
+
+        @Override
+        public void returnSetConversationHideSuccess(final String id) {
+            LoadingDialog.dimissDlg(loadingDlg);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    ConversationCacheUtils.setConversationHide(MyApplication.getInstance(), id);
+                    MessageCacheUtil.setChannelMessageRead(MyApplication.getInstance(), id);
+                }
+            }).start();
+            int index = displayUIConversationList.indexOf(new UIConversation(id));
+            if (index != -1) {
+                long unReadCount = displayUIConversationList.get(index).getUnReadCount();
+                displayUIConversationList.remove(index);
+                conversationAdapter.setData(displayUIConversationList);
+                conversationAdapter.notifyItemRemoved(index);
+                if (unReadCount>0){
+                    WSAPIService.getInstance().setChannelMessgeStateRead(id);
+                }
+            }
+        }
+
+        @Override
+        public void returnSetConversationHideFail(String error, int errorCode) {
             LoadingDialog.dimissDlg(loadingDlg);
             WebServiceMiddleUtils.hand(MyApplication.getInstance(), error, errorCode);
         }

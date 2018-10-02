@@ -1777,11 +1777,17 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnSetConversationStickSuccess(String id, boolean isStick) {
-
     }
 
     @Override
     public void returnSetConversationStickFail(String error, int errorCode) {
+    }
 
+    @Override
+    public void returnSetConversationHideSuccess(String id) {
+    }
+
+    @Override
+    public void returnSetConversationHideFail(String error, int errorCode) {
     }
 }
