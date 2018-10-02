@@ -114,7 +114,7 @@ public class ChannelAdapter extends BaseAdapter {
                     MyApplication.getInstance().getTanent() + channel.getCid() + "_100.png1");
             if (file.exists()) {
                 iconUrl = "file://" + file.getAbsolutePath();
-                ImageDisplayUtils.getInstance().displayImage(channelPhotoImg, iconUrl, defaultIcon);
+                ImageDisplayUtils.getInstance().displayImageByTag(channelPhotoImg, iconUrl, defaultIcon);
             }else {
                 channelPhotoImg.setImageResource(R.drawable.icon_channel_group_default);
             }
