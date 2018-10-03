@@ -54,6 +54,7 @@ import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
+import com.inspur.emmcloud.util.common.ImageUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
@@ -187,7 +188,7 @@ public class CommunicationV0Fragment extends Fragment {
     private void showMessageButtons() {
         String tabBarInfo = PreferencesByUserAndTanentUtils.getString(getActivity(), Constant.PREF_APP_TAB_BAR_INFO_CURRENT, "");
         //第一次登录时有tabBarInfo会为“”，会导致JSON waring
-        if(!StringUtils.isBlank(tabBarInfo)){
+        if (!StringUtils.isBlank(tabBarInfo)) {
             GetAppMainTabResult getAppMainTabResult = new GetAppMainTabResult(tabBarInfo);
             showCreateGroupOrFindContact(getAppMainTabResult);
         }
@@ -201,7 +202,7 @@ public class CommunicationV0Fragment extends Fragment {
     private void showCreateGroupOrFindContact(GetAppMainTabResult getAppMainTabResult) {
         ArrayList<MainTabResult> mainTabResultList = getAppMainTabResult.getMainTabPayLoad().getMainTabResultList();
         for (int i = 0; i < mainTabResultList.size(); i++) {
-            if(mainTabResultList.get(i).getUri().equals(Constant.APP_TAB_BAR_COMMUNACATE)){
+            if (mainTabResultList.get(i).getUri().equals(Constant.APP_TAB_BAR_COMMUNACATE)) {
                 MainTabProperty mainTabProperty = mainTabResultList.get(i).getMainTabProperty();
                 if (mainTabProperty != null) {
                     if (!mainTabProperty.isCanCreate()) {
@@ -437,9 +438,10 @@ public class CommunicationV0Fragment extends Fragment {
      */
     private void createGroupIcon(List<Channel> channelList) {
         if (MyApplication.getInstance().getIsContactReady() && NetUtils.isNetworkConnected(MyApplication.getInstance(), false)) {
-            isHaveCreatGroupIcon = true;
-            ChannelGroupIconUtils.getInstance().create(MyApplication.getInstance(), channelList,
-                    handler);
+            if (channelList != null && channelList.size() == 0){
+                return;
+            }
+            isHaveCreatGroupIcon = new ChannelGroupIconUtils().create(MyApplication.getInstance(), channelList,handler);
         }
     }
 
@@ -468,6 +470,11 @@ public class CommunicationV0Fragment extends Fragment {
                                     getActivity(), channel.getCid());
                             channel.setUnReadCount(unReadCount);
                             setChannelDisplayTitle(channel);
+                            if (channel.getType().equals("DIRECT")) {
+                                channel.setShowIcon(DirectChannelUtils.getDirectChannelIcon(MyApplication.getInstance(), channel.getTitle()));
+                            } else if (channel.getType().equals("SERVICE")) {
+                                channel.setShowIcon(DirectChannelUtils.getRobotIcon(MyApplication.getInstance(), channel.getTitle()));
+                            }
                         }
 
                         List<ChannelOperationInfo> hideChannelOpList = ChannelOperationCacheUtils
@@ -604,6 +611,7 @@ public class CommunicationV0Fragment extends Fragment {
 
     /**
      * 判定是
+     *
      * @param receivedMsg
      * @return
      */
@@ -611,13 +619,13 @@ public class CommunicationV0Fragment extends Fragment {
         String msgBody = receivedMsg.getBody();
         Pattern pattern = Pattern.compile("\\[[^\\]]+\\]\\([^\\)]+\\)");
         Matcher matcher = pattern.matcher(msgBody);
-        while (matcher.find()){
+        while (matcher.find()) {
             String pattenString = matcher.group();
             int indexBegin = pattenString.indexOf("(");
             int indexEnd = pattenString.indexOf(")");
-            pattenString = pattenString.substring(indexBegin+1,indexEnd);
+            pattenString = pattenString.substring(indexBegin + 1, indexEnd);
             CustomProtocol customProtocol = new CustomProtocol(pattenString);
-            if(customProtocol.getProtocol().equals("ecc-cmd") && customProtocol.getParamMap().get("cmd").equals("join")){
+            if (customProtocol.getProtocol().equals("ecc-cmd") && customProtocol.getParamMap().get("cmd").equals("join")) {
                 return customProtocol;
             }
         }
@@ -762,7 +770,7 @@ public class CommunicationV0Fragment extends Fragment {
                 unReadCount += displayChannelList.get(i).getUnReadCount();
             }
         }
-        EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SET_ALL_MESSAGE_UNREAD_COUNT,unReadCount));
+        EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SET_ALL_MESSAGE_UNREAD_COUNT, unReadCount));
     }
 
     static class ViewHolder {
@@ -848,28 +856,20 @@ public class CommunicationV0Fragment extends Fragment {
          */
         private void setChannelIcon(Channel channel, CircleTextImageView channelPhotoImg) {
             // TODO Auto-generated method stub
-            Integer defaultIcon = R.drawable.icon_channel_group_default; // 默认显示图标
-            String iconUrl = channel.getIcon();// Channel头像的uri
             if (channel.getType().equals("GROUP")) {
                 File file = new File(MyAppConfig.LOCAL_CACHE_PHOTO_PATH,
                         MyApplication.getInstance().getTanent() + channel.getCid() + "_100.png1");
+                channelPhotoImg.setTag("");
                 if (file.exists()) {
-                    iconUrl = "file://" + file.getAbsolutePath();
-                    ImageDisplayUtils.getInstance().displayImageNoCache(channelPhotoImg, iconUrl, defaultIcon);
+                    channelPhotoImg.setImageBitmap(ImageUtils.getBitmapByFile(file));
                 } else {
                     channelPhotoImg.setImageResource(R.drawable.icon_channel_group_default);
                 }
+            } else if (channel.getType().equals("DIRECT") || channel.getType().equals("SERVICE")) {
+                ImageDisplayUtils.getInstance().displayImageByTag(channelPhotoImg, channel.getShowIcon(), R.drawable.icon_person_default);
             } else {
-                if (channel.getType().equals("DIRECT")) {
-                    defaultIcon = R.drawable.icon_person_default;
-                    iconUrl = DirectChannelUtils.getDirectChannelIcon(
-                            getActivity(), channel.getTitle());
-                } else if (channel.getType().equals("SERVICE")) {
-                    defaultIcon = R.drawable.icon_person_default;
-                    iconUrl = DirectChannelUtils.getRobotIcon(getActivity(), channel.getTitle());
-                }
-                ImageDisplayUtils.getInstance().displayImageByTag(
-                        channelPhotoImg, iconUrl, defaultIcon);
+                channelPhotoImg.setTag("");
+                channelPhotoImg.setImageResource(R.drawable.icon_channel_group_default);
             }
 
 
@@ -886,15 +886,15 @@ public class CommunicationV0Fragment extends Fragment {
             long unReadCount = channel.getUnReadCount();
             holder.channelTimeText.setText(TimeUtils.getDisplayTime(
                     getActivity(), channel.getMsgLastUpdate()));
-            String chatDrafts = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), MyAppConfig.getChannelDrafsPreKey(channel.getCid()),null);
-            if (chatDrafts != null){
-                String content = "<font color='#FF0000'>"+MyApplication.getInstance().getString(R.string.message_type_drafts)+"</font>"+chatDrafts;
-                if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.N){
-                    holder.channelContentText.setText(Html.fromHtml(content,Html.FROM_HTML_MODE_LEGACY, null, null));
-                }else {
+            String chatDrafts = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), MyAppConfig.getChannelDrafsPreKey(channel.getCid()), null);
+            if (chatDrafts != null) {
+                String content = "<font color='#FF0000'>" + MyApplication.getInstance().getString(R.string.message_type_drafts) + "</font>" + chatDrafts;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    holder.channelContentText.setText(Html.fromHtml(content, Html.FROM_HTML_MODE_LEGACY, null, null));
+                } else {
                     holder.channelContentText.setText(Html.fromHtml(content));
                 }
-            }else {
+            } else {
                 holder.channelContentText.setText(channel
                         .getNewMsgContent());
                 TransHtmlToTextUtils.stripUnderlines(holder.channelContentText,
@@ -924,6 +924,7 @@ public class CommunicationV0Fragment extends Fragment {
         @Override
         protected void onPostExecute(List<Channel> addchannelList) {
             getChannelMsg();
+            LogUtils.jasonDebug("isHaveCreatGroupIcon=");
             if (!isHaveCreatGroupIcon) {
                 createGroupIcon(allchannelList);
             } else {
@@ -1023,7 +1024,7 @@ public class CommunicationV0Fragment extends Fragment {
                     break;
                 case "refresh_adapter":
                     LogUtils.jasonDebug("refresh_adapter============");
-                    if (adapter != null){
+                    if (adapter != null) {
                         adapter.notifyDataSetChanged();
                     }
                     break;
@@ -1074,7 +1075,7 @@ public class CommunicationV0Fragment extends Fragment {
      * @param channelList
      */
     private void firstEnterToSetAllChannelMsgRead(List<Channel> channelList) {
-        if (!DbCacheUtils.tableIsExist(null,"MessageReadCreationDate")) {
+        if (!DbCacheUtils.tableIsExist(null, "MessageReadCreationDate")) {
             List<MessageReadCreationDate> MessageReadCreationDateList = new ArrayList<>();
             for (Channel channel : channelList) {
                 MessageReadCreationDateList.add(new MessageReadCreationDate(channel.getCid(), System.currentTimeMillis()));

@@ -57,8 +57,12 @@ public class ImageDisplayUtils implements ImagePickerLoader {
      * @param defaultDrawableId
      */
     public void displayImageByTag(final ImageView imageView, String uri, final Integer defaultDrawableId) {
+        if (StringUtils.isBlank(uri)){
+            imageView.setImageResource(defaultDrawableId);
+            return;
+        }
         DisplayImageOptions options = getDefaultOptions(defaultDrawableId);
-        if (!StringUtils.isBlank(uri) && !uri.startsWith("http") && !uri.startsWith("file:") && !uri.startsWith("content:") && !uri.startsWith("assets:") && !uri.startsWith("drawable:")) {
+        if (!uri.startsWith("http") && !uri.startsWith("file:") && !uri.startsWith("content:") && !uri.startsWith("assets:") && !uri.startsWith("drawable:")) {
             uri = "file://" + uri;
         }
         final String finalUri = uri;
