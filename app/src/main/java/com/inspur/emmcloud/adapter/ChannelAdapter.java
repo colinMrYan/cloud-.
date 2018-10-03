@@ -16,7 +16,7 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.chat.Channel;
 import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.emmcloud.util.privates.DirectChannelUtils;
+import com.inspur.emmcloud.util.common.ImageUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
@@ -107,28 +107,20 @@ public class ChannelAdapter extends BaseAdapter {
      */
     private void setChannelIcon(Channel channel, CircleTextImageView channelPhotoImg) {
         // TODO Auto-generated method stub
-        Integer defaultIcon = R.drawable.icon_channel_group_default; // 默认显示图标
-        String iconUrl = channel.getIcon();// Channel头像的uri
         if (channel.getType().equals("GROUP")) {
             File file = new File(MyAppConfig.LOCAL_CACHE_PHOTO_PATH,
                     MyApplication.getInstance().getTanent() + channel.getCid() + "_100.png1");
+            channelPhotoImg.setTag("");
             if (file.exists()) {
-                iconUrl = "file://" + file.getAbsolutePath();
-                ImageDisplayUtils.getInstance().displayImageByTag(channelPhotoImg, iconUrl, defaultIcon);
+                channelPhotoImg.setImageBitmap(ImageUtils.getBitmapByFile(file));
             }else {
                 channelPhotoImg.setImageResource(R.drawable.icon_channel_group_default);
             }
-        } else {
-            if (channel.getType().equals("DIRECT")) {
-                defaultIcon = R.drawable.icon_person_default;
-                iconUrl = DirectChannelUtils.getDirectChannelIcon(
-                        context, channel.getTitle());
-            } else if (channel.getType().equals("SERVICE")) {
-                defaultIcon = R.drawable.icon_person_default;
-                iconUrl = DirectChannelUtils.getRobotIcon(context, channel.getTitle());
-            }
-            ImageDisplayUtils.getInstance().displayImageByTag(
-                    channelPhotoImg, iconUrl, defaultIcon);
+        } else if(channel.getType().equals("DIRECT") ||channel.getType().equals("SERVICE")){
+            ImageDisplayUtils.getInstance().displayImageByTag(channelPhotoImg, channel.getShowIcon(), R.drawable.icon_person_default);
+        }else {
+            channelPhotoImg.setTag("");
+            channelPhotoImg.setImageResource(R.drawable.icon_channel_group_default);
         }
 
     }

@@ -42,52 +42,39 @@ public class ChannelGroupIconUtils {
     private static final int RERESH_GROUP_ICON = 2;
     private static int PADDING = 2;
     private static int rangetWidth;
-    private List<Channel> channelTypeGroupList = new ArrayList<>();
     private Context context;
     private Handler handler;
-    private static ChannelGroupIconUtils mInstance;
-
-    public static ChannelGroupIconUtils getInstance() {
-        if (mInstance == null) {
-            synchronized (ChannelGroupIconUtils.class) {
-                if (mInstance == null) {
-                    mInstance = new ChannelGroupIconUtils();
-                }
-            }
-        }
-        return mInstance;
-    }
-
-    private ChannelGroupIconUtils() {
-    }
+    private List<Channel> channelTypeGroupList = new ArrayList<>();
 
 
-    public void create(Context context, List<Channel> channelList,
+    public boolean create(Context context, List<Channel> channelList,
                        Handler handler) {
         // TODO Auto-generated method stub
         if (!Environment.getExternalStorageState().equals(
                 Environment.MEDIA_MOUNTED) || !NetUtils.isNetworkConnected(context, false)) {
-            return;
+            return false;
         }
-
         if (channelList == null) {
             channelTypeGroupList = ChannelCacheUtils.getChannelList(context, "GROUP");
         } else {
             channelTypeGroupList.clear();
-            channelTypeGroupList.addAll(channelList);
+            for (Channel channel : channelList) {
+                if (channel.getType().equals("GROUP")) {
+                    channelTypeGroupList.add(channel);
+                }
+            }
+
         }
         if (channelTypeGroupList.size() == 0) {
-            return;
+            return false;
         }
         this.context = context;
         this.handler = handler;
-        List<ChannelGroup> currentChannelGroupList = new ArrayList<ChannelGroup>();
+        List<ChannelGroup> currentChannelGroupList = new ArrayList<>();
         for (int i = 0; i < channelTypeGroupList.size(); i++) {
             Channel channel = channelTypeGroupList.get(i);
-            if (channel.getType().equals("GROUP")){
-                ChannelGroup channelGroup = new ChannelGroup(channel);
-                currentChannelGroupList.add(channelGroup);
-            }
+            ChannelGroup channelGroup = new ChannelGroup(channel);
+            currentChannelGroupList.add(channelGroup);
         }
         List<ChannelGroup> cacheChannelGroupList = ChannelGroupCacheUtils
                 .getAllChannelGroupList(context);
@@ -97,7 +84,7 @@ public class ChannelGroupIconUtils {
         } else {
             new ChannelGroupIconCreateTask().execute();
         }
-
+        return true;
     }
 
     private void getChannelGroups(List<ChannelGroup> currentChannelGroupList) {
@@ -111,7 +98,7 @@ public class ChannelGroupIconUtils {
         apiService.getChannelGroupList(cidArray);
     }
 
-    class ChannelGroupIconCreateTask extends AsyncTask<Void,Integer,Boolean>{
+    class ChannelGroupIconCreateTask extends AsyncTask<Void, Integer, Boolean> {
         @Override
         protected Boolean doInBackground(Void... voids) {
             boolean isCreateNewGroupIcon = false;
@@ -126,10 +113,10 @@ public class ChannelGroupIconUtils {
                         .cacheInMemory(true)
                         .cacheOnDisk(true)
                         .build();
+                isCreateNewGroupIcon = (channelTypeGroupList.size() >0);
                 for (int i = 0; i < channelTypeGroupList.size(); i++) {
                     Channel channel = channelTypeGroupList.get(i);
-                    isCreateNewGroupIcon = true;
-                    List<String> memberUidList = ChannelGroupCacheUtils.getExistMemberUidList(context,channel.getCid(),4);
+                    List<String> memberUidList = ChannelGroupCacheUtils.getExistMemberUidList(context, channel.getCid(), 4);
                     List<Bitmap> bitmapList = new ArrayList<Bitmap>();
                     for (int j = 0; j < memberUidList.size(); j++) {
                         String pid = memberUidList.get(j);
@@ -143,20 +130,15 @@ public class ChannelGroupIconUtils {
                         bitmapList.add(bitmap);
                     }
                     Bitmap combineBitmap = createGroupFace(context, bitmapList);
-
                     if (combineBitmap != null) {
-                        String iconUrl = saveBitmap(channel.getCid(), combineBitmap);
-                        if (iconUrl != null){
-                            iconUrl = "file://"+iconUrl;
-                            ImageDisplayUtils.getInstance().clearCache(iconUrl);
-                        }
-
+                        saveBitmap(channel.getCid(), combineBitmap);
                     }
                 }
 
             }
             return isCreateNewGroupIcon;
         }
+
         @Override
         protected void onPostExecute(Boolean isCreateNewGroupIcon) {
             if (handler != null) {
@@ -173,7 +155,7 @@ public class ChannelGroupIconUtils {
         if (bitmapList == null || bitmapList.size() == 0) {
             return null;
         }
-        rangetWidth = dip2px(context, 50);
+        rangetWidth = dip2px(context, 40);
         PADDING = dip2px(context, 1);
         if (bitmapList.size() == 1) {
             return createOneBit(bitmapList, context);
@@ -357,7 +339,7 @@ public class ChannelGroupIconUtils {
     /**
      * 保存方法
      */
-    public String  saveBitmap(String cid, Bitmap bitmap) {
+    public String saveBitmap(String cid, Bitmap bitmap) {
         File dir = new File(MyAppConfig.LOCAL_CACHE_PHOTO_PATH);
         if (!dir.exists()) {
             dir.mkdirs();
@@ -380,7 +362,7 @@ public class ChannelGroupIconUtils {
                 file.delete();
             }
         } finally {
-            if (out != null){
+            if (out != null) {
                 try {
                     out.close();
                 } catch (IOException e) {
@@ -388,7 +370,7 @@ public class ChannelGroupIconUtils {
                     e.printStackTrace();
                 }
             }
-            if (!bitmap.isRecycled()){
+            if (!bitmap.isRecycled()) {
                 bitmap.recycle();
                 bitmap = null;
             }

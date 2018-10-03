@@ -61,6 +61,7 @@ public class Channel implements Serializable {
     private long unReadCount = 0;
     private String displayTitle = "";//session显示的名字
     private String newMsgContent = "";
+    private String showIcon = "";
 
     public Channel() {
 
@@ -184,6 +185,13 @@ public class Channel implements Serializable {
         return newMsgContent;
     }
 
+    public String getShowIcon() {
+        return showIcon;
+    }
+
+    public void setShowIcon(String showIcon) {
+        this.showIcon = showIcon;
+    }
 
     public void setNewMsgContent(Context context) {
         if (newMsgList.size() > 0) {
