@@ -233,7 +233,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
                 break;
             case Message.MESSAGE_TYPE_MEDIA_VOICE:
                 cardContentView = DisplayMediaVoiceMsg.getView(context,
-                        message);
+                        uiMessage);
                 break;
             default:
                 cardContentView = DisplayResUnknownMsg.getView(context, isMyMsg);
