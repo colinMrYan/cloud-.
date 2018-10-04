@@ -17,6 +17,7 @@ import com.inspur.emmcloud.api.APIDownloadCallBack;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.MsgContentMediaVoice;
+import com.inspur.emmcloud.bean.chat.UIMessage;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.FileUtils;
@@ -37,7 +38,8 @@ import java.io.File;
 public class DisplayMediaVoiceMsg {
     public static final boolean IS_VOICE_WORD_OPEN = true;
     public static final boolean IS_VOICE_WORD_CLOUSE = false;
-    public static View getView(final Context context, final Message message) {
+    public static View getView(final Context context, final UIMessage uiMessage) {
+        final Message message = uiMessage.getMessage();
         final boolean isMyMsg = message.getFromUser().equals(MyApplication.getInstance().getUid());
         View cardContentView = LayoutInflater.from(context).inflate(R.layout.chat_msg_card_child_media_voice_view, null);
         BubbleLayout voiceBubbleLayout = (BubbleLayout) cardContentView.findViewById(R.id.bl_voice);
@@ -79,7 +81,7 @@ public class DisplayMediaVoiceMsg {
         voiceBubbleLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (message.getSendStatus() != 1) {
+                if (uiMessage.getSendStatus() != 1) {
                     return;
                 }
                 if (downloadLoadingView.getVisibility() == View.VISIBLE) {
