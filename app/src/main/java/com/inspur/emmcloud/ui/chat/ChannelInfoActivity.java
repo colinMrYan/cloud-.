@@ -102,7 +102,7 @@ public class ChannelInfoActivity extends BaseActivity {
      */
     private void displayUI() {
         channelMemberNumText.setText(getString(R.string.all_group_member) + "（"
-                + uiMemberList.size() + "）");
+                + ContactUserCacheUtils.getContactUserListById(channelGroup.getMemberList()).size() + "）");
         memberGrid = (NoScrollGridView) findViewById(R.id.member_grid);
         ((TextView) findViewById(R.id.channel_name_text)).setText(channelGroup.getChannelName());
         adapter = new Adapter();
@@ -144,7 +144,7 @@ public class ChannelInfoActivity extends BaseActivity {
             boolean isOwner = MyApplication.getInstance().getUid().equals(channelGroup.getOwner());
             Intent intent = new Intent();
             if ((position == adapter.getCount() - 1) && isOwner) {
-                intent.putExtra("memberUidList", uiMemberList);
+                intent.putExtra("memberUidList", channelGroup.getMemberList());
                 intent.setClass(getApplicationContext(),
                         ChannelMembersDelActivity.class);
                 startActivityForResult(intent, DEL_MEMBER);
@@ -224,7 +224,7 @@ public class ChannelInfoActivity extends BaseActivity {
             case R.id.member_layout:
                 bundle.putString("title", getString(R.string.group_member));
                 bundle.putInt(MembersActivity.MEMBER_PAGE_STATE,MembersActivity.CHECK_STATE);
-                bundle.putStringArrayList("uidList",uiMemberList);
+                bundle.putStringArrayList("uidList",channelGroup.getMemberList());
                 IntentUtils.startActivity(ChannelInfoActivity.this,
                         MembersActivity.class, bundle);
                 break;
@@ -410,6 +410,7 @@ public class ChannelInfoActivity extends BaseActivity {
                 ChannelGroup channelGroup) {
             // TODO Auto-generated method stub
             LoadingDialog.dimissDlg(loadingDlg);
+            ChannelInfoActivity.this.channelGroup = channelGroup;
             // 同步缓存
             ChannelGroupCacheUtils.saveChannelGroup(MyApplication.getInstance(),channelGroup);
             filterMemberData(channelGroup.getMemberList());
@@ -465,11 +466,10 @@ public class ChannelInfoActivity extends BaseActivity {
         public void returnDelMembersSuccess(ChannelGroup channelGroup) {
             // TODO Auto-generated method stub
             LoadingDialog.dimissDlg(loadingDlg);
+            ChannelInfoActivity.this.channelGroup = channelGroup;
             // 同步缓存
             ChannelGroupCacheUtils.saveChannelGroup(MyApplication.getInstance(),channelGroup);
             filterMemberData(channelGroup.getMemberList());
-            channelMemberNumText.setText(getString(R.string.all_group_member) + "（"
-                    + uiMemberList.size() + "）");
             displayUI();
             adapter.notifyDataSetChanged();
         }
