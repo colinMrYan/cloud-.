@@ -64,6 +64,7 @@ import com.inspur.emmcloud.util.privates.ChannelGroupIconUtils;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils.OnCreateGroupChannelListener;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
+import com.inspur.emmcloud.util.privates.DirectChannelUtils;
 import com.inspur.emmcloud.util.privates.DownLoaderUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.ScanQrCodeUtils;
@@ -368,9 +369,10 @@ public class CommunicationFragment extends Fragment {
      */
     private void createGroupIcon(List<Channel> channelList) {
         if (MyApplication.getInstance().getIsContactReady() && NetUtils.isNetworkConnected(MyApplication.getInstance(), false)) {
-            isHaveCreatGroupIcon = true;
-            ChannelGroupIconUtils.getInstance().create(MyApplication.getInstance(), channelList,
-                    handler);
+            if (channelList != null && channelList.size() == 0){
+                return;
+            }
+            isHaveCreatGroupIcon = new ChannelGroupIconUtils().create(MyApplication.getInstance(), channelList,handler);
         }
     }
 
@@ -399,12 +401,17 @@ public class CommunicationFragment extends Fragment {
                             }
                             channel.setNewMessageList(MyApplication.getInstance(), newMessageList);
                             channel.setIsSetTop(false);
-                            long unReadCount=0L;
-                            if (newMessageList.size()>0){
-                                unReadCount = MessageCacheUtil.getChannelMessageUnreadCount(MyApplication.getInstance(),channel.getCid());
+                            long unReadCount = 0L;
+                            if (newMessageList.size() > 0) {
+                                unReadCount = MessageCacheUtil.getChannelMessageUnreadCount(MyApplication.getInstance(), channel.getCid());
                             }
                             channel.setUnReadCount(unReadCount);
                             channel.setDisplayTitle(CommunicationUtils.getChannelDisplayTitle(channel));
+                            if (channel.getType().equals("DIRECT")) {
+                                channel.setShowIcon(DirectChannelUtils.getDirectChannelIcon(MyApplication.getInstance(), channel.getTitle()));
+                            } else if (channel.getType().equals("SERVICE")) {
+                                channel.setShowIcon(DirectChannelUtils.getRobotIcon(MyApplication.getInstance(), channel.getTitle()));
+                            }
                         }
 
                         List<ChannelOperationInfo> hideChannelOpList = ChannelOperationCacheUtils
@@ -591,7 +598,7 @@ public class CommunicationFragment extends Fragment {
                             ChannelOperationCacheUtils.setChannelHide(
                                     MyApplication.getInstance(), channel.getCid(), true);
                             // 当隐藏会话时，把该会话的所有消息置为已读
-                            MessageCacheUtil.setChannelMessageRead(MyApplication.getInstance(),channel.getCid());
+                            MessageCacheUtil.setChannelMessageRead(MyApplication.getInstance(), channel.getCid());
                             displayChannelList.remove(position);
                             displayData();
                         }
@@ -608,7 +615,7 @@ public class CommunicationFragment extends Fragment {
         for (Channel channel : displayChannelList) {
             unReadCount += channel.getUnReadCount();
         }
-        EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SET_ALL_MESSAGE_UNREAD_COUNT,unReadCount));
+        EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SET_ALL_MESSAGE_UNREAD_COUNT, unReadCount));
     }
 
     class CacheChannelTask extends AsyncTask<GetChannelListResult, Void, List<Channel>> {
@@ -670,7 +677,7 @@ public class CommunicationFragment extends Fragment {
                     showSocketStatusInTitle(socketStatus);
                     break;
                 case "refresh_adapter":
-                    if (adapter != null){
+                    if (adapter != null) {
                         adapter.notifyDataSetChanged();
                     }
                     break;
@@ -861,8 +868,8 @@ public class CommunicationFragment extends Fragment {
         @Override
         public void run() {
             try {
-                if (messageList != null && messageList.size()>0){
-                    MessageCacheUtil.saveMessageList(MyApplication.getInstance(), messageList, null,false); // 获取的消息需要缓存
+                if (messageList != null && messageList.size() > 0) {
+                    MessageCacheUtil.saveMessageList(MyApplication.getInstance(), messageList, null, false); // 获取的消息需要缓存
                     if (channelMessageSetList != null && channelMessageSetList.size() > 0) {
                         for (ChannelMessageSet channelMessageSet : channelMessageSetList) {
                             MessageMatheSetCacheUtils.add(MyApplication.getInstance(), channelMessageSet.getCid(), channelMessageSet.getMatheSet());
@@ -889,7 +896,7 @@ public class CommunicationFragment extends Fragment {
                 Message receivedWSMessage = new Message(contentObj);
                 //验重处理
                 if (MessageCacheUtil.getMessageByMid(MyApplication.getInstance(), receivedWSMessage.getId()) == null) {
-                    if (MyApplication.getInstance().getCurrentChannelCid().equals(receivedWSMessage.getChannel()) ){
+                    if (MyApplication.getInstance().getCurrentChannelCid().equals(receivedWSMessage.getChannel())) {
                         receivedWSMessage.setRead(1);
                     }
                     if (receivedWSMessage.getType().equals(Message.MESSAGE_TYPE_MEDIA_VOICE)) {
@@ -922,16 +929,16 @@ public class CommunicationFragment extends Fragment {
                 String content = eventMessage.getContent();
                 GetOfflineMessageListResult getOfflineMessageListResult = new GetOfflineMessageListResult(content);
                 List<Message> offlineMessageList = getOfflineMessageListResult.getMessageList();
-                List<Message> currentChannelOfflineMessageList =new ArrayList<>();
+                List<Message> currentChannelOfflineMessageList = new ArrayList<>();
                 //将当前所处频道的消息存为已读
-                if (!StringUtils.isBlank(MyApplication.getInstance().getCurrentChannelCid())){
-                    for (Message message:offlineMessageList){
-                        if (message.getChannel().equals(MyApplication.getInstance().getCurrentChannelCid())){
+                if (!StringUtils.isBlank(MyApplication.getInstance().getCurrentChannelCid())) {
+                    for (Message message : offlineMessageList) {
+                        if (message.getChannel().equals(MyApplication.getInstance().getCurrentChannelCid())) {
                             message.setRead(1);
                             currentChannelOfflineMessageList.add(message);
                         }
                     }
-                    if (currentChannelOfflineMessageList.size()>0){
+                    if (currentChannelOfflineMessageList.size() > 0) {
                         //将离线消息发送到当前频道
                         EventBus.getDefault().post(offlineMessageList);
                     }
@@ -964,14 +971,14 @@ public class CommunicationFragment extends Fragment {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReceiveMessageStateRead(EventMessage eventMessage){
+    public void onReceiveMessageStateRead(EventMessage eventMessage) {
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_RECERIVER_MESSAGE_STATE_READ)) {
             String content = eventMessage.getContent();
             ChannelMessageReadStateResult channelMessageReadStateResult = new ChannelMessageReadStateResult(content);
             List<String> messageReadIdList = channelMessageReadStateResult.getMessageReadIdList();
-            MessageCacheUtil.setMessageStateRead(MyApplication.getInstance(),messageReadIdList);
-            for(Channel channel:displayChannelList){
-              long unReadCount = MessageCacheUtil.getChannelMessageUnreadCount(MyApplication.getInstance(),channel.getCid());
+            MessageCacheUtil.setMessageStateRead(MyApplication.getInstance(), messageReadIdList);
+            for (Channel channel : displayChannelList) {
+                long unReadCount = MessageCacheUtil.getChannelMessageUnreadCount(MyApplication.getInstance(), channel.getCid());
                 channel.setUnReadCount(unReadCount);
                 displayData();
             }

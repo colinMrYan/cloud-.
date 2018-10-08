@@ -774,7 +774,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
                 .denyCacheImageMultipleSizesInMemory()
                 .memoryCache(
                         new UsingFreqLimitedMemoryCache(3 * 1024 * 1024))
-                .diskCacheSize(50 * 1024 * 1024)
+                .diskCacheSize(100 * 1024 * 1024)
                 // You can pass your own memory cache implementation
                 .tasksProcessingOrder(QueueProcessingType.LIFO)
                 .diskCacheFileNameGenerator(new HashCodeFileNameGenerator());

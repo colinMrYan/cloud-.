@@ -111,6 +111,7 @@ public class IndexActivity extends IndexBaseActivity {
         new PushIdManagerUtils(this).registerPushId2Emm();
         ClientConfigUpdateUtils.getInstance().getAllConfigUpdate();
         getAllRobotInfo();
+        getAllChannelGroup();
         updateReactNative();  //从服务端获取显示tab
         getMyAppRecommendWidgets();
     }
@@ -260,7 +261,6 @@ public class IndexActivity extends IndexBaseActivity {
                             notifySyncAllBaseDataSuccess();
                             WebSocketPush.getInstance().startWebSocket();// 启动webSocket推送
                             getContactOrg();
-                            getAllChannelGroup();
                         }
                         break;
                     case RELOAD_WEB:
@@ -461,7 +461,6 @@ public class IndexActivity extends IndexBaseActivity {
             try {
                 List<ChannelGroup> channelGroupList = getSearchChannelGroupResult
                         .getSearchChannelGroupList();
-                ChannelGroupCacheUtils.clearChannelGroupList(getApplicationContext());
                 ChannelGroupCacheUtils.saveChannelGroupList(
                         getApplicationContext(), channelGroupList);
             } catch (Exception e) {

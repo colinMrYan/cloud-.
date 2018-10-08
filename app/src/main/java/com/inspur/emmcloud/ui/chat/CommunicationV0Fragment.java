@@ -53,6 +53,7 @@ import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
+import com.inspur.emmcloud.util.common.ImageUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -435,9 +436,10 @@ public class CommunicationV0Fragment extends Fragment {
      */
     private void createGroupIcon(List<Channel> channelList) {
         if (MyApplication.getInstance().getIsContactReady() && NetUtils.isNetworkConnected(MyApplication.getInstance(), false)) {
-            isHaveCreatGroupIcon = true;
-            ChannelGroupIconUtils.getInstance().create(MyApplication.getInstance(), channelList,
-                    handler);
+            if (channelList != null && channelList.size() == 0){
+                return;
+            }
+            isHaveCreatGroupIcon = new ChannelGroupIconUtils().create(MyApplication.getInstance(), channelList,handler);
         }
     }
 
@@ -466,6 +468,11 @@ public class CommunicationV0Fragment extends Fragment {
                                     getActivity(), channel.getCid());
                             channel.setUnReadCount(unReadCount);
                             setChannelDisplayTitle(channel);
+                            if (channel.getType().equals("DIRECT")) {
+                                channel.setShowIcon(DirectChannelUtils.getDirectChannelIcon(MyApplication.getInstance(), channel.getTitle()));
+                            } else if (channel.getType().equals("SERVICE")) {
+                                channel.setShowIcon(DirectChannelUtils.getRobotIcon(MyApplication.getInstance(), channel.getTitle()));
+                            }
                         }
 
                         List<ChannelOperationInfo> hideChannelOpList = ChannelOperationCacheUtils
@@ -846,28 +853,20 @@ public class CommunicationV0Fragment extends Fragment {
          */
         private void setChannelIcon(Channel channel, CircleTextImageView channelPhotoImg) {
             // TODO Auto-generated method stub
-            Integer defaultIcon = R.drawable.icon_channel_group_default; // 默认显示图标
-            String iconUrl = channel.getIcon();// Channel头像的uri
             if (channel.getType().equals("GROUP")) {
                 File file = new File(MyAppConfig.LOCAL_CACHE_PHOTO_PATH,
                         MyApplication.getInstance().getTanent() + channel.getCid() + "_100.png1");
+                channelPhotoImg.setTag("");
                 if (file.exists()) {
-                    iconUrl = "file://" + file.getAbsolutePath();
-                    ImageDisplayUtils.getInstance().displayImageNoCache(channelPhotoImg, iconUrl, defaultIcon);
+                    channelPhotoImg.setImageBitmap(ImageUtils.getBitmapByFile(file));
                 } else {
                     channelPhotoImg.setImageResource(R.drawable.icon_channel_group_default);
                 }
+            } else if (channel.getType().equals("DIRECT") || channel.getType().equals("SERVICE")) {
+                ImageDisplayUtils.getInstance().displayImageByTag(channelPhotoImg, channel.getShowIcon(), R.drawable.icon_person_default);
             } else {
-                if (channel.getType().equals("DIRECT")) {
-                    defaultIcon = R.drawable.icon_person_default;
-                    iconUrl = DirectChannelUtils.getDirectChannelIcon(
-                            getActivity(), channel.getTitle());
-                } else if (channel.getType().equals("SERVICE")) {
-                    defaultIcon = R.drawable.icon_person_default;
-                    iconUrl = DirectChannelUtils.getRobotIcon(getActivity(), channel.getTitle());
-                }
-                ImageDisplayUtils.getInstance().displayImageByTag(
-                        channelPhotoImg, iconUrl, defaultIcon);
+                channelPhotoImg.setTag("");
+                channelPhotoImg.setImageResource(R.drawable.icon_channel_group_default);
             }
 
 
