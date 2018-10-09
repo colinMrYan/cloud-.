@@ -195,6 +195,7 @@ dependencies {
     compile 'me.leolin:ShortcutBadger:1.1.19@aar'
     compile 'com.github.adrielcafe:AndroidAudioConverter:0.0.8'
     compile 'com.github.CarGuo:RecordWave:v1.1.8'
+    implementation 'com.github.Jay-Goo:Mp3Converter:v0.0.3'
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5.4'
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
     // React Naive Components
