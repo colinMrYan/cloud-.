@@ -9,6 +9,7 @@ package com.inspur.emmcloud.widget;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Environment;
 import android.os.Handler;
 import android.text.Editable;
 import android.util.AttributeSet;
@@ -39,7 +40,7 @@ import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.common.audioformat.ConvertAudioFileFormatUtils;
+import com.inspur.emmcloud.util.common.audioformat.AndroidMp3ConvertUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.Voice2StringMessageUtils;
 import com.inspur.emmcloud.widget.audiorecord.AudioDialogManager;
@@ -56,9 +57,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
-import cafe.adriel.androidaudioconverter.callback.IConvertCallback;
-import cafe.adriel.androidaudioconverter.model.AudioFormat;
 
 
 /**
@@ -186,23 +184,17 @@ public class ECMChatInputMenu extends LinearLayout {
             public void onFinished(final float seconds, final String filePath) {
                 // TODO Auto-generated method stub
                 if(AppUtils.getIsVoiceWordOpen()){
-                    IConvertCallback callback = new IConvertCallback() {
-                        @Override
-                        public void onSuccess(File file) {
-                            String fileName = FileUtils.getFileNameWithoutExtension(file.getName());
-                            mp3FilePathList.add(file.getAbsolutePath());
-                            if(voiceBooleanMap.get(fileName) == null || !voiceBooleanMap.get(fileName)){
-                                voiceBooleanMap.put(fileName,true);
-                            }else{
-                                callBackVoiceMessage(fileName);
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Exception e) {
-
-                        }
-                    };
+//                    IConvertCallback callback = new IConvertCallback() {
+//                        @Override
+//                        public void onSuccess(File file) {
+//
+//                        }
+//
+//                        @Override
+//                        public void onFailure(Exception e) {
+//
+//                        }
+//                    };
                     if(FileUtils.getFileSize(filePath) <= 0){
                         if(audioDialogManager != null){
                             audioDialogManager.dismissVoice2WordProgressDialog();
@@ -214,7 +206,27 @@ public class ECMChatInputMenu extends LinearLayout {
                         audioDialogManager.showVoice2WordProgressDialog();
                         //转写和转文件格式同时进行
                         voice2StringMessageUtils.startVoiceListeningByVoiceFile(seconds,filePath);
-                        ConvertAudioFileFormatUtils.getInstance().convertAudioFile2SpecifiedFormat(getContext(),filePath, AudioFormat.MP3,callback);
+//                        ConvertAudioFileFormatUtils.getInstance().convertAudioFile2SpecifiedFormat(getContext(),filePath, AudioFormat.MP3,callback);
+                        AndroidMp3ConvertUtils.with(getContext()).setCallBack(new AndroidMp3ConvertUtils.AndroidMp3ConvertCallback() {
+                            @Override
+                            public void onSuccess(File mp3File) {
+                                LogUtils.YfcDebug("转化成功"+mp3File.getAbsolutePath());
+//                                String fileName = FileUtils.getFileNameWithoutExtension(mp3File.getName());
+//                                mp3FilePathList.add(mp3File.getAbsolutePath());
+//                                if(voiceBooleanMap.get(fileName) == null || !voiceBooleanMap.get(fileName)){
+//                                    voiceBooleanMap.put(fileName,true);
+//                                }else{
+//                                    callBackVoiceMessage(fileName);
+//                                }
+                            }
+
+                            @Override
+                            public void onFailure(Exception e) {
+
+                            }
+                        }).setWavPathAndMp3Path(Environment
+                                .getExternalStorageDirectory() + "/IMP-Cloud/test/WavAudio.wav",Environment
+                                .getExternalStorageDirectory() + "/IMP-Cloud/test/newwav.mp3").startConvert();
                     }
                 }else {
                     if (chatInputMenuListener != null) {
