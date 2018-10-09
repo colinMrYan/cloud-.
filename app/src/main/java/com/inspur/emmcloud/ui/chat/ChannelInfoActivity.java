@@ -77,7 +77,7 @@ public class ChannelInfoActivity extends BaseActivity {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_channel_info);
-        channelMemberNumText = (TextView) findViewById(R.id.channel_member_text);
+        channelMemberNumText = (TextView) findViewById(R.id.tv_member);
         apiService = new ChatAPIService(ChannelInfoActivity.this);
         apiService.setAPIInterface(new WebService());
         cid = getIntent().getExtras().getString("cid");
@@ -110,13 +110,13 @@ public class ChannelInfoActivity extends BaseActivity {
     private void displayUI() {
         channelMemberNumText.setText(getString(R.string.all_group_member) + "（"
                 + ContactUserCacheUtils.getContactUserListById(channelGroup.getMemberList()).size() + "）");
-        memberGrid = (NoScrollGridView) findViewById(R.id.member_grid);
-        ((TextView) findViewById(R.id.channel_name_text)).setText(channelGroup.getChannelName());
+        memberGrid = (NoScrollGridView) findViewById(R.id.gv_member);
+        ((TextView) findViewById(R.id.tv_name)).setText(channelGroup.getChannelName());
         adapter = new Adapter();
         memberGrid.setAdapter(adapter);
         memberGrid.setOnItemClickListener(onItemClickListener);
-        setTopSwitch = (SwitchView) findViewById(R.id.settop_switch);
-        msgInterruptionSwitch = (SwitchView) findViewById(R.id.msg_interruption_switch);
+        setTopSwitch = (SwitchView) findViewById(R.id.sv_stick);
+        msgInterruptionSwitch = (SwitchView) findViewById(R.id.sv_dnd);
         msgInterruptionSwitch.setOpened(ChannelCacheUtils.isChannelNotDisturb(
                 ChannelInfoActivity.this, cid));
         msgInterruptionSwitch.setOnStateChangedListener(onStateChangedListener);
@@ -186,7 +186,7 @@ public class ChannelInfoActivity extends BaseActivity {
         @Override
         public void toggleToOn(View view) {
             // TODO Auto-generated method stub
-            if (view.getId() == R.id.msg_interruption_switch) {
+            if (view.getId() == R.id.sv_dnd) {
                 updateIsNoInterruption(true);
             } else {
                 setChannelTop(true);
@@ -196,7 +196,7 @@ public class ChannelInfoActivity extends BaseActivity {
         @Override
         public void toggleToOff(View view) {
             // TODO Auto-generated method stub
-            if (view.getId() == R.id.msg_interruption_switch) {
+            if (view.getId() == R.id.sv_dnd) {
                 updateIsNoInterruption(false);
             } else {
                 setChannelTop(false);
@@ -297,7 +297,7 @@ public class ChannelInfoActivity extends BaseActivity {
      */
     private void ModifyChannelGroupName(Intent data) {
         String name = data.getStringExtra("name");
-        ((TextView) findViewById(R.id.channel_name_text)).setText(name);
+        ((TextView) findViewById(R.id.tv_name)).setText(name);
         String pyFull = PinyinUtils.getPingYin(name);
         String pyShort = PinyinUtils.getPinYinHeadChar(name);
         channelGroup.setChannelName(name);

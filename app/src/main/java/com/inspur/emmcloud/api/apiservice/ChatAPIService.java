@@ -34,6 +34,7 @@ import com.inspur.emmcloud.bean.chat.GetVoiceCommunicationResult;
 import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.system.GetBoolenResult;
 import com.inspur.emmcloud.interf.OauthCallBack;
+import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
@@ -45,6 +46,7 @@ import org.xutils.http.RequestParams;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * com.inspur.emmcloud.api.apiservice.ChatAPIService create at 2016年11月8日
@@ -785,6 +787,92 @@ public class ChatAPIService {
             public void callbackFail(String error, int responseCode) {
                 // TODO Auto-generated method stub
                 apiInterface.returnDndFail(error, responseCode);
+            }
+        });
+    }
+
+    /**
+     * 添加群成员
+     * @param id
+     * @param uidList
+     */
+    public void addConversationGroupMember(final String id, final List<String> uidList){
+        final String url = APIUri.getModifyGroupMemberUrl(id);
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(url);
+        params.addParameter("members", JSONUtils.toJSONArray(uidList));
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, url) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        addConversationGroupMember(id, uidList);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+                apiInterface.returnAddConversationGroupMemberSuccess(uidList);
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                apiInterface.returnAddConversationGroupMemberFail(error, responseCode);
+            }
+        });
+    }
+
+    /**
+     * 删除群成员
+     * @param id
+     * @param uidList
+     */
+    public void delConversationGroupMember(final String id, final List<String> uidList){
+        final String url = APIUri.getModifyGroupMemberUrl(id);
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(url);
+        params.addParameter("members", JSONUtils.toJSONArray(uidList));
+        HttpUtils.request(context, CloudHttpMethod.DELETE, params, new APICallback(context, url) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        delConversationGroupMember(id, uidList);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+                apiInterface.returnDelConversationGroupMemberSuccess(uidList);
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                apiInterface.returnDelConversationGroupMemberFail(error, responseCode);
             }
         });
     }

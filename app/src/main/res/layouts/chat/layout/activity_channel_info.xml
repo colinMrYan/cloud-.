@@ -55,7 +55,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingBottom="30dp">
+            android:paddingBottom="20dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -64,7 +64,7 @@
                 android:orientation="vertical">
 
                 <com.inspur.emmcloud.widget.NoScrollGridView
-                    android:id="@+id/member_grid"
+                    android:id="@+id/gv_member"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:horizontalSpacing="18dp"
@@ -92,7 +92,7 @@
                     android:paddingRight="16dp">
 
                     <TextView
-                        android:id="@+id/channel_member_text"
+                        android:id="@+id/tv_member"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
@@ -133,7 +133,7 @@
                     android:textSize="16sp" />
 
                 <TextView
-                    android:id="@+id/channel_name_text"
+                    android:id="@+id/tv_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -251,7 +251,7 @@
                         android:textSize="16sp" />
 
                     <com.inspur.emmcloud.widget.SwitchView
-                        android:id="@+id/settop_switch"
+                        android:id="@+id/sv_stick"
                         android:layout_width="37dp"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
@@ -281,7 +281,7 @@
                         android:textSize="16sp" />
 
                     <com.inspur.emmcloud.widget.SwitchView
-                        android:id="@+id/msg_interruption_switch"
+                        android:id="@+id/sv_dnd"
                         android:layout_width="37dp"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
@@ -293,7 +293,7 @@
 
             <Button
                 android:id="@+id/btn_exit"
-                android:layout_marginTop="18dp"
+                android:layout_marginTop="14dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:minHeight="0dp"

@@ -16,7 +16,6 @@ import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.DensityUtil;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
@@ -52,7 +51,7 @@ public class ConversationGroupIconUtils {
     }
 
     private ConversationGroupIconUtils(){
-        rangetWidth = DensityUtil.dip2px(MyApplication.getInstance(), 50);
+        rangetWidth = DensityUtil.dip2px(MyApplication.getInstance(), 45);
         padding = DensityUtil.dip2px(MyApplication.getInstance(), 1);
     }
 
@@ -92,7 +91,6 @@ public class ConversationGroupIconUtils {
             }
             DisplayImageOptions options = ImageDisplayUtils.getInstance().getDefaultOptions(R.drawable.icon_person_default);
             for (Conversation conversation : conversationList) {
-                LogUtils.jasonDebug("id="+conversation.getId());
                 List<Bitmap> bitmapList = new ArrayList<>();
                 List<String> memberUidList = conversation.getMemberList();
                 for (String uid : memberUidList) {
@@ -110,11 +108,12 @@ public class ConversationGroupIconUtils {
                 }
                 Bitmap groupBitmap = createGroupIcon(bitmapList);
                 if (groupBitmap != null) {
-                    String iconUrl = saveBitmap(conversation.getId(), groupBitmap);
-                    if (iconUrl != null){
-                        //清空原来的缓存
-                        ImageDisplayUtils.getInstance().clearCache(iconUrl);
-                    }
+                    saveBitmap(conversation.getId(), groupBitmap);
+//                    String iconUrl = saveBitmap(conversation.getId(), groupBitmap);
+//                    if (iconUrl != null){
+//                        //清空原来的缓存
+//                        ImageDisplayUtils.getInstance().clearCache(iconUrl);
+//                    }
                 }
             }
             return true;
@@ -315,7 +314,7 @@ public class ConversationGroupIconUtils {
             bitmap.compress(Bitmap.CompressFormat.PNG, 50, out);
             out.flush();
             out.close();
-            return file.getAbsolutePath();
+            return "file://"+file.getAbsolutePath();
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

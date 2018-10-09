@@ -4,7 +4,6 @@ import android.text.SpannableString;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.richtext.markdown.MarkDown;
 import com.inspur.emmcloud.util.privates.ChatMsgContentUtils;
@@ -57,14 +56,14 @@ public class UIConversation implements Serializable{
 
     private void setUIConversationIcon() {
         switch (conversation.getType()) {
-            case Conversation.TYPE_GROUP:
-                icon = "file://" + MyAppConfig.LOCAL_CACHE_PHOTO_PATH + "/" + MyApplication.getInstance().getTanent() + conversation.getId() + "_100.png1";
-                break;
             case Conversation.TYPE_DIRECT:
                 icon = DirectChannelUtils.getDirectChannelIcon(MyApplication.getInstance(), conversation.getName());
                 break;
             case Conversation.TYPE_CAST:
                 icon = DirectChannelUtils.getRobotIcon(MyApplication.getInstance(), conversation.getName());
+                break;
+            default:
+                icon="drawable//"+R.drawable.icon_channel_group_default;
                 break;
         }
     }

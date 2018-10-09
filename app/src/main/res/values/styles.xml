@@ -14,7 +14,7 @@
         <item name="qmui_dialog_content_list_item_text_size">16sp</item>
         <item name="qmui_dialog_bg">@drawable/bg_my_qmui_dialog</item>
         <item name="qmui_dialog_content_padding_top_when_no_title">20dp</item>
-        <item name="qmui_dialog_margin_horizontal">55dp</item>
+        <item name="qmui_dialog_margin_horizontal">50dp</item>
         <item name="qmui_dialog_content_padding_bottom">20dp</item>
         <item name="qmui_dialog_content_list_item_height">44dp</item>
         <item name="qmui_dialog_content_padding_top">10dp</item>

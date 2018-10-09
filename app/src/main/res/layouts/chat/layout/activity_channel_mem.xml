@@ -55,7 +55,7 @@
 		    android:layout_marginBottom="10dp"
 		    >
 		    <GridView
-                android:id="@+id/member_grid"
+                android:id="@+id/gv_member"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:horizontalSpacing="25dp"

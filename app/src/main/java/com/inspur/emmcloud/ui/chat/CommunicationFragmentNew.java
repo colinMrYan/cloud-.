@@ -53,7 +53,6 @@ import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
@@ -195,7 +194,8 @@ public class CommunicationFragmentNew extends Fragment {
                 String type = conversation.getType();
                 if (type.equals(Conversation.TYPE_CAST) || type.equals(Conversation.TYPE_DIRECT) || type.equals(Conversation.TYPE_GROUP)) {
                     Bundle bundle = new Bundle();
-                    IntentUtils.startActivity(getActivity(), ChannelActivity.class, bundle);
+                    bundle.putSerializable(ConversationActivity.EXTRA_CONVERSATION,conversation);
+                    IntentUtils.startActivity(getActivity(), ConversationActivity.class, bundle);
                 } else {
                     ToastUtils.show(MyApplication.getInstance(), R.string.not_support_open_channel);
                 }
@@ -397,8 +397,10 @@ public class CommunicationFragmentNew extends Fragment {
         if (!MyApplication.getInstance().getIsContactReady()) {
             return;
         }
+        if (conversationList != null && conversationList.size() == 0){
+            return;
+        }
         isGroupIconCreate = true;
-        LogUtils.jasonDebug("createGroupIcon---------------------");
         ConversationGroupIconUtils.getInstance().create(conversationList);
     }
 
@@ -513,11 +515,16 @@ public class CommunicationFragmentNew extends Fragment {
         public void run() {
             List<Conversation> conversationList = getConversationListResult.getConversationList();
             List<Conversation> cacheConversationList = ConversationCacheUtils.getConversationList(MyApplication.getInstance());
-            ConversationCacheUtils.deleteAllConversation(MyApplication.getInstance());
             ConversationCacheUtils.saveConversationList(MyApplication.getInstance(), conversationList);
+            //服务端和本地数据取交集
+            List<Conversation> intersectionConversationList = new ArrayList<>();
+            intersectionConversationList.addAll(conversationList);
+            intersectionConversationList.retainAll(cacheConversationList);
+            cacheConversationList.removeAll(intersectionConversationList);
+            ConversationCacheUtils.deleteConversationList(MyApplication.getInstance(),cacheConversationList);
             if (handler != null) {
                 if (isGroupIconCreate) {
-                    conversationList.removeAll(cacheConversationList);
+                    conversationList.removeAll(intersectionConversationList);
                 }
                 android.os.Message message = handler.obtainMessage(CACHE_CONVERSATION_LIST_SUCCESS, conversationList);
                 message.sendToTarget();
@@ -774,7 +781,7 @@ public class CommunicationFragmentNew extends Fragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveWSMessage(EventMessage eventMessage) {
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE)) {
-            if (eventMessage.getStatus() == 200) {
+            if (eventMessage.getStatus() == EventMessage.RESULT_OK) {
                 String content = eventMessage.getContent();
                 JSONObject contentObj = JSONUtils.getJSONObject(content);
                 Message receivedWSMessage = new Message(contentObj);
@@ -808,7 +815,7 @@ public class CommunicationFragmentNew extends Fragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReiceveWSOfflineMessage(EventMessage eventMessage) {
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_GET_OFFLINE_WS_MESSAGE)) {
-            if (eventMessage.getStatus() == 200) {
+            if (eventMessage.getStatus() == EventMessage.RESULT_OK) {
                 String content = eventMessage.getContent();
                 GetOfflineMessageListResult getOfflineMessageListResult = new GetOfflineMessageListResult(content);
                 List<Message> offlineMessageList = getOfflineMessageListResult.getMessageList();
@@ -843,7 +850,7 @@ public class CommunicationFragmentNew extends Fragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveWSRecentMessage(EventMessage eventMessage) {
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_GET_CHANNEL_RECENT_MESSAGE)) {
-            if (eventMessage.getStatus() == 200) {
+            if (eventMessage.getStatus() == EventMessage.RESULT_OK) {
                 String content = eventMessage.getContent();
                 GetRecentMessageListResult getRecentMessageListResult = new GetRecentMessageListResult(content);
                 new CacheMessageListThread(getRecentMessageListResult.getMessageList(), getRecentMessageListResult.getChannelMessageSetList()).start();

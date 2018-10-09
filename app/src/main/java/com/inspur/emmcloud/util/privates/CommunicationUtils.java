@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.util.privates;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
@@ -53,6 +54,30 @@ public class CommunicationUtils {
             title = channel.getTitle();
         }
         return title;
+    }
+
+    /**
+     * 获取单聊对方的uid
+     *
+     * @param context
+     * @param title
+     * @return
+     */
+    public static String getDirctChannelOtherUid(Context context,String title) {
+        String otherUid = "";
+        try {
+            String[] uidArray = title.split("-");
+            String myUid = ((MyApplication) context.getApplicationContext()).getUid();
+            if (uidArray[0].equals(myUid)) {
+                otherUid = uidArray[1];
+            } else {
+                otherUid = uidArray[0];
+            }
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
+        return otherUid;
     }
 
     /* *

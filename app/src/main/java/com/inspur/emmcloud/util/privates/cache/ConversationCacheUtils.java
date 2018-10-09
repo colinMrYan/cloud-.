@@ -104,6 +104,21 @@ public class ConversationCacheUtils {
         }
     }
 
+    /**
+     * 设置会话名称
+     * @param context
+     * @param id
+     * @param name
+     */
+    public static void updateConversationName(Context context, String id, String name){
+        try {
+            DbCacheUtils.getDb(context).update(Conversation.class, WhereBuilder.b("id", "=", id),new KeyValue("name",name));
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
+    }
+
 
     /**
      * 删除会话
@@ -113,6 +128,23 @@ public class ConversationCacheUtils {
     public static void deleteConversation(Context context,String id){
         try {
             DbCacheUtils.getDb(context).delete(Conversation.class,WhereBuilder.b("id","=",id));
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 删除会话列表
+     * @param context
+     * @param conversationList
+     */
+    public static void deleteConversationList(Context context,List<Conversation> conversationList){
+        try {
+            if (conversationList == null || conversationList.size()==0){
+                return;
+            }
+            DbCacheUtils.getDb(context).delete(conversationList);
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();

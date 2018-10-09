@@ -1046,47 +1046,31 @@ public class APIInterfaceInstance implements APIInterface {
     @Override
     public void returnKnowledgeListFail(String error, int errorCode) {
         // TODO Auto-generated method stub
-
     }
 
     @Override
     public void returnIsAdminSuccess(GetIsAdmin getIsAdmin) {
         // TODO Auto-generated method stub
-
     }
 
     @Override
     public void returnIsAdminFail(String error, int errorCode) {
         // TODO Auto-generated method stub
-
     }
 
-    /* (non-Javadoc)
-     * @see com.inspur.emmcloud.api.APIInterface#returnMeettingsSuccess(com.inspur.emmcloud.bean.work.GetMeetingsResult, boolean)
-     */
+
     @Override
-    public void returnMeetingsSuccess(GetMeetingsResult getMeetingsResult,
-                                      int page) {
-        // TODO Auto-generated method stub
-
+    public void returnMeetingsSuccess(GetMeetingsResult getMeetingsResult, int page) {
     }
 
-    /* (non-Javadoc)
-     * @see com.inspur.emmcloud.api.APIInterface#returnLanguageSuccess(com.inspur.emmcloud.bean.mine.GetLanguageResult)
-     */
+
     @Override
     public void returnLanguageSuccess(GetLanguageResult getLanguageResult) {
-        // TODO Auto-generated method stub
-
     }
 
-    /* (non-Javadoc)
-     * @see com.inspur.emmcloud.api.APIInterface#returnLanguageFail(java.lang.String)
-     */
+
     @Override
     public void returnLanguageFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
-
     }
 
     /* (non-Javadoc)
@@ -1155,8 +1139,7 @@ public class APIInterfaceInstance implements APIInterface {
 
 
     @Override
-    public void returnUpdatePwdBySMSCodeSuccess(
-            GetUpdatePwdBySMSCodeBean getUpdatePwdBySMSCodeBean) {
+    public void returnUpdatePwdBySMSCodeSuccess(GetUpdatePwdBySMSCodeBean getUpdatePwdBySMSCodeBean) {
         // TODO Auto-generated method stub
 
     }
@@ -1200,25 +1183,21 @@ public class APIInterfaceInstance implements APIInterface {
     @Override
     public void returnAllAppsFail(String error, int errorCode) {
         // TODO Auto-generated method stub
-
     }
 
     @Override
     public void returnAllAppsFreshSuccess(GetAllAppResult getAllAppResult) {
         // TODO Auto-generated method stub
-
     }
 
     @Override
     public void returnAllAppsFreshFail(String error, int errorCode) {
         // TODO Auto-generated method stub
-
     }
 
     @Override
     public void returnAllAppsMoreSuccess(GetAllAppResult getAllAppResult) {
         // TODO Auto-generated method stub
-
     }
 
     @Override
@@ -1789,5 +1768,25 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnSetConversationHideFail(String error, int errorCode) {
+    }
+
+    @Override
+    public void returnAddConversationGroupMemberSuccess(List<String> uidList) {
+
+    }
+
+    @Override
+    public void returnAddConversationGroupMemberFail(String error, int errorCode) {
+
+    }
+
+    @Override
+    public void returnDelConversationGroupMemberSuccess(List<String> uidList) {
+
+    }
+
+    @Override
+    public void returnDelConversationGroupMemberFail(String error, int errorCode) {
+
     }
 }

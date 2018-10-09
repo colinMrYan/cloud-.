@@ -588,6 +588,15 @@ public class APIUri {
     public static String getConversationSetHide(String id){
         return getECMChatConversationBaseUrl()+"/channel/"+id+"/visuality";
     }
+
+    /**
+     * 修改群组成员
+     * @param id
+     * @return
+     */
+    public static String getModifyGroupMemberUrl(String id){
+        return  getECMChatConversationBaseUrl()+"/channel/group/"+id+"/member";
+    }
     /**************************************************应用和应用中心********************************************************************/
 
 

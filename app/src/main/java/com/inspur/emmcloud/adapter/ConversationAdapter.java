@@ -17,13 +17,14 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.UIConversation;
 import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.emmcloud.util.common.ImageUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.TransHtmlToTextUtils;
 import com.inspur.emmcloud.widget.CircleTextImageView;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -76,11 +77,18 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
         holder.dndImg.setVisibility(uiConversation.getConversation().isDnd() ? View.VISIBLE : View.GONE);
         holder.mainLayout.setBackgroundResource(uiConversation.getConversation().isStick() ? R.drawable.selector_set_top_msg_list : R.drawable.selector_list);
         boolean isConversationTypeGroup = uiConversation.getConversation().getType().equals(Conversation.TYPE_GROUP);
-        if (uiConversation.getConversation().getType().equals(Conversation.TYPE_GROUP)){
-            LogUtils.jasonDebug("set---iconUrl====="+uiConversation.getIcon());
+        if (isConversationTypeGroup){
+            File file = new File(MyAppConfig.LOCAL_CACHE_PHOTO_PATH + "/" + MyApplication.getInstance().getTanent() + uiConversation.getId() + "_100.png1");
+            holder.photoImg.setTag("");
+            if (file.exists()) {
+                holder.photoImg.setImageBitmap(ImageUtils.getBitmapByFile(file));
+            }else {
+                holder.photoImg.setImageResource(R.drawable.icon_channel_group_default);
+            }
+        }else {
+            ImageDisplayUtils.getInstance().displayImageByTag(holder.photoImg, uiConversation.getIcon(), isConversationTypeGroup?R.drawable.icon_channel_group_default:R.drawable.icon_person_default);
         }
-        ImageDisplayUtils.getInstance().displayImageByTag(
-                holder.photoImg, uiConversation.getIcon(), isConversationTypeGroup?R.drawable.icon_channel_group_default:R.drawable.icon_person_default);
+
         setConversationContent(holder,uiConversation);
         setConversationUnreadState(holder,uiConversation);
     }

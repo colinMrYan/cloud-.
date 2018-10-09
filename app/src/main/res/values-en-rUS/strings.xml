@@ -256,7 +256,7 @@
     <string name="chanel_cancel_top"> Unstick</string>
     <string name="creat_group">Create Group</string>
     <string name="creat_group_fail">Group creation failed</string>
-    <string name="all_group_member">All Members</string>
+    <string name="all_group_member">All Members(%1$d)</string>
     <string name="add_group_member">Add Member </string>
     <string name="channel_group">Group</string>
     <string name="group_member">Members </string>
