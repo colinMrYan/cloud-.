@@ -582,7 +582,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
             FlowLayout.LayoutParams params = new FlowLayout.LayoutParams(
                     ViewGroup.LayoutParams.WRAP_CONTENT, DensityUtil.dip2px(
                     getActivity().getApplicationContext(), ViewGroup.LayoutParams.WRAP_CONTENT));
-            params.topMargin = DensityUtil.dip2px(getActivity().getApplicationContext(), 3);
+            params.topMargin = DensityUtil.dip2px(getActivity().getApplicationContext(), 2);
             params.bottomMargin = params.topMargin;
             int piddingTop = DensityUtil.dip2px(getActivity().getApplicationContext(), 1);
             int piddingLeft = DensityUtil.dip2px(getActivity().getApplicationContext(), 5);
@@ -590,7 +590,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
             searchEdit.setLayoutParams(params);
             searchEdit.setSingleLine(true);
             searchEdit.setHint(getString(R.string.search));
-            searchEdit.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+            searchEdit.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
             searchEdit.setBackground(null);
             searchEdit.addTextChangedListener(myTextWatcher);
         }

@@ -108,8 +108,7 @@ public class ChannelInfoActivity extends BaseActivity {
      * 数据取出后显示ui
      */
     private void displayUI() {
-        channelMemberNumText.setText(getString(R.string.all_group_member) + "（"
-                + ContactUserCacheUtils.getContactUserListById(channelGroup.getMemberList()).size() + "）");
+        channelMemberNumText.setText(getString(R.string.all_group_member,ContactUserCacheUtils.getContactUserListById(channelGroup.getMemberList()).size()));
         memberGrid = (NoScrollGridView) findViewById(R.id.gv_member);
         ((TextView) findViewById(R.id.tv_name)).setText(channelGroup.getChannelName());
         adapter = new Adapter();
