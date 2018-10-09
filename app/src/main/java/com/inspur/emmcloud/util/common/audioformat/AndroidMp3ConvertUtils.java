@@ -3,7 +3,6 @@ package com.inspur.emmcloud.util.common.audioformat;
 import android.content.Context;
 import android.os.Handler;
 
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 
 import java.io.File;
@@ -16,11 +15,11 @@ import jaygoo.library.converter.Mp3Converter;
  */
 
 public class AndroidMp3ConvertUtils {
-    private static final int SIMPLE_RATE = 16000;
-    private static final int CHANNEL = 2;
-    private static final int MODE = 0;
-    private static final int OUT_BIT_RATE = 96;
-    private static final int QUALITY = 7;
+    private static final int SIMPLE_RATE = 8000;//采样率
+    private static final int CHANNEL = 1;//声道数
+    private static final int MODE = 0;//模式，默认0
+    private static final int OUT_BIT_RATE = 32;//输入比特率
+    private static final int QUALITY = 5;//音频质量0~9,0质量最好体积最大，9质量最差体积最小
     private Context context;
     private String wavPath = "", mp3Path = "";
     private long wavFileSize = 0;
@@ -31,6 +30,12 @@ public class AndroidMp3ConvertUtils {
         Mp3Converter.init(SIMPLE_RATE, CHANNEL, MODE, SIMPLE_RATE, OUT_BIT_RATE, QUALITY);
     }
 
+    /**
+     * 仿照AndroidAudioConverter转化类的构建方式
+     *
+     * @param context
+     * @return
+     */
     public static AndroidMp3ConvertUtils with(Context context) {
         return new AndroidMp3ConvertUtils(context);
     }
@@ -65,6 +70,8 @@ public class AndroidMp3ConvertUtils {
     public void startConvert() {
         //检查回调，wav和mp3路径
         if (callback == null || StringUtils.isBlank(wavPath) || StringUtils.isBlank(mp3Path)) {
+            Exception e = new Exception("check callback and path exception");
+            callback.onFailure(e);
             return;
         }
         try {
@@ -90,8 +97,7 @@ public class AndroidMp3ConvertUtils {
             float progress = (100f * bytes / wavFileSize);
             if (bytes == -1) {
                 progress = 100;
-                LogUtils.YfcDebug("转化完成");
-                callback.onSuccess(new File(mp3Path));
+                callback.onSuccess(mp3Path);
             }
             if (handler != null && progress != 100) {
                 handler.postDelayed(this, 20);
@@ -100,7 +106,7 @@ public class AndroidMp3ConvertUtils {
     };
 
     public interface AndroidMp3ConvertCallback {
-        void onSuccess(File mp3File);
+        void onSuccess(String mp3FilePath);
 
         void onFailure(Exception e);
     }
