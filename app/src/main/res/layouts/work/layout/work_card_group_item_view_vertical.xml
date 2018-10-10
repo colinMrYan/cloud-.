@@ -87,8 +87,8 @@
                     android:layout_below="@id/add_img"
                     android:layout_toRightOf="@id/add_img"
                     android:layout_width="match_parent"
-                    android:background="#dddddd"
-                    android:layout_height="0.5dp"></View>
+                    android:background="@color/color_list_divider"
+                    android:layout_height="0.5px"></View>
             </RelativeLayout>
             <com.inspur.emmcloud.widget.ScrollViewWithListView
                 android:id="@+id/list"

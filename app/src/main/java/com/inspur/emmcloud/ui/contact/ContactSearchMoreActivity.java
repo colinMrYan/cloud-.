@@ -143,7 +143,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
             FlowLayout.LayoutParams params = new FlowLayout.LayoutParams(
                     LayoutParams.WRAP_CONTENT, DensityUtil.dip2px(
                     getApplicationContext(), LayoutParams.WRAP_CONTENT));
-            params.topMargin = DensityUtil.dip2px(getApplicationContext(), 3);
+            params.topMargin = DensityUtil.dip2px(getApplicationContext(), 2);
             params.bottomMargin =  params.topMargin;
             int piddingTop = DensityUtil.dip2px(getApplicationContext(), 1);
             int piddingLeft = DensityUtil.dip2px(getApplicationContext(), 5);
@@ -208,7 +208,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
             FlowLayout.LayoutParams params = new FlowLayout.LayoutParams(
                     LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
             params.rightMargin = DensityUtil.dip2px(getApplicationContext(), 5);
-            params.topMargin = DensityUtil.dip2px(getApplicationContext(), 3);
+            params.topMargin = DensityUtil.dip2px(getApplicationContext(), 2);
             params.bottomMargin =  params.topMargin;
             searchResultText.setLayoutParams(params);
             int piddingTop = DensityUtil.dip2px(getApplicationContext(), 1);

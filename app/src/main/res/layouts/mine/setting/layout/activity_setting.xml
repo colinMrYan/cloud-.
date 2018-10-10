@@ -50,11 +50,6 @@
         android:orientation="vertical"
         android:paddingTop="10dp">
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@color/color_list_divider" />
-
         <RelativeLayout
             android:id="@+id/setting_gesture_layout"
             android:layout_width="match_parent"
@@ -68,8 +63,8 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="12dp"
-                android:paddingBottom="10dp"
-                android:paddingTop="10dp"
+                android:paddingBottom="11dp"
+                android:paddingTop="11dp"
                 android:text="@string/setting_safe_center"
                 android:textSize="@dimen/content_normal_textsize" />
 
@@ -84,20 +79,10 @@
                 android:src="@drawable/icon_arrow_right" />
         </RelativeLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@color/color_list_divider" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_marginTop="10dp"
-            android:background="@color/color_list_divider" />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:background="#ffffff"
             android:orientation="vertical">
 
@@ -114,8 +99,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:paddingBottom="10dp"
-                    android:paddingTop="10dp"
+                    android:paddingBottom="11dp"
+                    android:paddingTop="11dp"
                     android:text="@string/settings_language"
                     android:textSize="@dimen/content_normal_textsize" />
 
@@ -135,8 +120,8 @@
                     android:layout_gravity="center_vertical"
                     android:layout_toLeftOf="@+id/msg_languagechg_img"
                     android:gravity="right"
-                    android:paddingBottom="10dp"
-                    android:paddingTop="10dp"
+                    android:paddingBottom="11dp"
+                    android:paddingTop="11dp"
                     android:text="@string/follow_system"
                     android:textColor="@color/set_protected"
                     android:textSize="@dimen/content_normal_textsize" />
@@ -154,7 +139,7 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="0.5dp"
+                android:layout_height="0.5px"
                 android:background="@color/color_list_divider" />
 
             <RelativeLayout
@@ -170,8 +155,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:paddingBottom="10dp"
-                    android:paddingTop="10dp"
+                    android:paddingBottom="11dp"
+                    android:paddingTop="11dp"
                     android:text="@string/settings_clear_cache"
                     android:textSize="@dimen/content_normal_textsize" />
 
@@ -191,7 +176,7 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="0.5dp"
+            android:layout_height="0.5px"
             android:background="@color/color_list_divider" />
 
         <RelativeLayout
@@ -204,8 +189,8 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="12dp"
-                android:paddingBottom="10dp"
-                android:paddingTop="10dp"
+                android:paddingBottom="11dp"
+                android:paddingTop="11dp"
                 android:text="@string/web_app_auto_rotate"
                 android:textSize="@dimen/content_normal_textsize" />
 
@@ -219,7 +204,7 @@
         </RelativeLayout>
         <View
             android:layout_width="match_parent"
-            android:layout_height="0.5dp"
+            android:layout_height="0.5px"
             android:background="@color/color_list_divider" />
 
         <RelativeLayout
@@ -232,8 +217,8 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="12dp"
-                android:paddingBottom="10dp"
-                android:paddingTop="10dp"
+                android:paddingBottom="11dp"
+                android:paddingTop="11dp"
                 android:text="@string/run_background"
                 android:textSize="@dimen/content_normal_textsize" />
 
@@ -249,7 +234,7 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="0.5dp"
+            android:layout_height="0.5px"
             android:background="@color/color_list_divider" />
 
         <RelativeLayout
@@ -262,8 +247,8 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="12dp"
-                android:paddingBottom="10dp"
-                android:paddingTop="10dp"
+                android:paddingBottom="11dp"
+                android:paddingTop="11dp"
                 android:text="@string/voice_word_setting"
                 android:textSize="@dimen/content_normal_textsize" />
 
@@ -277,11 +262,6 @@
         </RelativeLayout>
 
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@color/color_list_divider" />
-
         <RelativeLayout
             android:id="@+id/signout_layout"
             android:layout_width="match_parent"
@@ -290,13 +270,6 @@
             android:background="@drawable/text_layout_selector"
             android:onClick="onClick">
 
-            <!-- 细线 -->
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:background="@color/color_list_divider" />
-
             <TextView
                 android:id="@+id/signout_text"
                 android:layout_width="wrap_content"
@@ -304,18 +277,13 @@
                 android:layout_centerInParent="true"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="12dp"
-                android:paddingBottom="10dp"
-                android:paddingTop="10dp"
+                android:paddingBottom="11dp"
+                android:paddingTop="11dp"
                 android:text="@string/quit_check"
                 android:textColor="@color/set_textColor"
                 android:textSize="@dimen/content_normal_textsize" />
         </RelativeLayout>
-        <!-- 细线 -->
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@color/color_list_divider" />
     </LinearLayout>
 
 </RelativeLayout>

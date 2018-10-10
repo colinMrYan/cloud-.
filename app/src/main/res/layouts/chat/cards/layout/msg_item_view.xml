@@ -112,6 +112,6 @@
         android:layout_alignParentBottom="true"
         android:layout_marginLeft="59dp"
         android:layout_marginTop="9dp"
-        android:background="#DCDCDC"/>
+        android:background="@color/color_list_divider"/>
 
 </RelativeLayout>
