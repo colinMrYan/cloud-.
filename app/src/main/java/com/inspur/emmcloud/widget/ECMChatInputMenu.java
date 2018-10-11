@@ -209,7 +209,7 @@ public class ECMChatInputMenu extends LinearLayout {
                             public void onFailure(Exception e) {
 
                             }
-                        }).setWavPathAndMp3Path(filePath.replace("wav","raw"),filePath.replace("wav","mp3")).startConvert();
+                        }).setWavPathAndMp3Path(filePath.replace(".wav",".raw"), filePath.replace(".wav",".mp3")).startConvert();
                     }
                 }else {
                     if (chatInputMenuListener != null) {

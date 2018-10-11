@@ -53,6 +53,8 @@ public class AndroidMp3ConvertUtils {
 
     /**
      * 设置wav和mp3文件路径
+     * wavFilePath为要转换的wav文件
+     * mp3FilePath为转换完成mp3文件存放位置
      *
      * @param wavFilePath
      * @param mp3FilePath
