@@ -361,6 +361,29 @@ public class WSAPIService {
         }
     }
 
+    public void getChannelNewMessage(String cid){
+        try {
+            String tracer = CommunicationUtils.getTracer();
+            JSONObject object = new JSONObject();
+            JSONObject actionObj = new JSONObject();
+            actionObj.put("method", "get");
+            actionObj.put("path", "/channel/" + cid+"/message");
+            JSONObject queryObj = new JSONObject();
+            queryObj.put("before","");
+            queryObj.put("limit",15);
+            actionObj.put("query",queryObj);
+            object.put("action", actionObj);
+            JSONObject headerObj = new JSONObject();
+            headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
+            headerObj.put("tracer", tracer);
+            object.put("headers", headerObj);
+            EventMessage eventMessage = new EventMessage(tracer,Constant.EVENTBUS_TAG_GET_NEW_MESSAGE,"","");
+            WebSocketPush.getInstance().sendEventMessage(eventMessage, object,tracer);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public void sendAppStatus(String state) {
         try {
