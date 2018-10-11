@@ -114,10 +114,7 @@ public class AndroidMp3ConvertUtils {
      * 检查传入raw，mp3文件名称是否正确
      */
     private boolean checkRawAndMp3PathCorrect() {
-        if(!rawPath.endsWith(".raw")){
-            return false;
-        }
-        if(!mp3Path.endsWith(".mp3")){
+        if(!rawPath.endsWith(".raw") || !mp3Path.endsWith(".mp3")){
             return false;
         }
         return true;

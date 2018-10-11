@@ -204,7 +204,7 @@ public class ChannelActivity extends MediaPlayBaseActivity {
                     msgListView.scrollToPosition(historyMsgList.size() - 1);
                     swipeRefreshLayout.setRefreshing(false);
                 } else {
-                    getNewsMsg();
+                    getHistoryMsg();
                 }
             }
         });
@@ -672,10 +672,10 @@ public class ChannelActivity extends MediaPlayBaseActivity {
                         uiMessageList.remove(index);
                         uiMessageList.add(index, new UIMessage(receivedWSMessage));
                         //如果是图片类型消息的话不再重新刷新消息体，防止图片重新加载
-                        if (receivedWSMessage.getType().equals(Message.MESSAGE_TYPE_MEDIA_IMAGE)){
-                            setMessageSendSuccess(index,receivedWSMessage);
+                        if (receivedWSMessage.getType().equals(Message.MESSAGE_TYPE_MEDIA_IMAGE)) {
+                            setMessageSendSuccess(index, receivedWSMessage);
                             adapter.setMessageList(uiMessageList);
-                        }else {
+                        } else {
                             adapter.setMessageList(uiMessageList);
                             adapter.notifyItemChanged(index);
                         }
@@ -692,18 +692,19 @@ public class ChannelActivity extends MediaPlayBaseActivity {
 
     /**
      * 将消息显示状态置为发送成功
+     *
      * @param index
      */
-    private void setMessageSendSuccess(int index,Message message){
-        UIMessage uiMessage =adapter.getItemData(index);
+    private void setMessageSendSuccess(int index, Message message) {
+        UIMessage uiMessage = adapter.getItemData(index);
         uiMessage.setMessage(message);
         uiMessage.setId(message.getId());
         uiMessage.setSendStatus(1);
         int firstItemPosition = linearLayoutManager.findFirstVisibleItemPosition();
-        if (index - firstItemPosition >=0){
+        if (index - firstItemPosition >= 0) {
             View view = msgListView.getChildAt(index - firstItemPosition);
-            if (null != msgListView.getChildViewHolder(view)){
-                ChannelMessageAdapter.ViewHolder holder = (ChannelMessageAdapter.ViewHolder)msgListView.getChildViewHolder(view);
+            if (null != msgListView.getChildViewHolder(view)) {
+                ChannelMessageAdapter.ViewHolder holder = (ChannelMessageAdapter.ViewHolder) msgListView.getChildViewHolder(view);
                 holder.sendStatusLayout.setVisibility(View.INVISIBLE);
             }
 
@@ -746,20 +747,38 @@ public class ChannelActivity extends MediaPlayBaseActivity {
                         targetMessageCreationDate = uiMessageList.get(0).getCreationDate();
                     }
                     MessageCacheUtil.saveMessageList(MyApplication.getInstance(), historyMessageList, targetMessageCreationDate);
-                    if (adapter != null) {
-                        List<UIMessage> historyUIMessageList = UIMessage.MessageList2UIMessageList(historyMessageList);
-                        uiMessageList.addAll(0, historyUIMessageList);
-                        adapter.setMessageList(uiMessageList);
-                        adapter.notifyItemRangeInserted(0, historyMessageList.size());
-                        msgListView.scrollToPosition(historyMessageList.size() - 1);
-                    }
+                    List<UIMessage> historyUIMessageList = UIMessage.MessageList2UIMessageList(historyMessageList);
+                    uiMessageList.addAll(0, historyUIMessageList);
+                    adapter.setMessageList(uiMessageList);
+                    adapter.notifyItemRangeInserted(0, historyMessageList.size());
+                    msgListView.scrollToPosition(historyMessageList.size() - 1);
                 }
             } else {
                 WebServiceMiddleUtils.hand(ChannelActivity.this, eventMessage.getContent(), eventMessage.getStatus());
             }
-            if (adapter == null) {
-                initViews();
+        }
+    }
+
+
+    //接收到websocket发过来的消息
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiveNewMessage(EventMessage eventMessage) {
+        if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_GET_NEW_MESSAGE)) {
+            LoadingDialog.dimissDlg(loadingDlg);
+            if (swipeRefreshLayout.isRefreshing()) {
+                swipeRefreshLayout.setRefreshing(false);
             }
+            if (eventMessage.getStatus() == 200) {
+                String content = eventMessage.getContent();
+                GetChannelMessagesResult getChannelMessagesResult = new GetChannelMessagesResult(content);
+                final List<Message> historyMessageList = getChannelMessagesResult.getMessageList();
+                if (historyMessageList.size() > 0) {
+                    MessageCacheUtil.saveMessageList(MyApplication.getInstance(), historyMessageList, null);
+                }
+            } else {
+                WebServiceMiddleUtils.hand(ChannelActivity.this, eventMessage.getContent(), eventMessage.getStatus());
+            }
+            initViews();
         }
     }
 
@@ -968,7 +987,7 @@ public class ChannelActivity extends MediaPlayBaseActivity {
     /**
      * 获取新消息
      */
-    private void getNewsMsg() {
+    private void getHistoryMsg() {
         swipeRefreshLayout.setRefreshing(false);
         if (NetUtils.isNetworkConnected(ChannelActivity.this)) {
             String newMessageId = uiMessageList.size() > 0 ? uiMessageList.get(0).getMessage().getId() : "";
@@ -984,7 +1003,7 @@ public class ChannelActivity extends MediaPlayBaseActivity {
      */
     private void getNewMsgOfChannel() {
         if (NetUtils.isNetworkConnected(this, false)) {
-            WSAPIService.getInstance().getHistoryMessage(cid, "");
+            WSAPIService.getInstance().getChannelNewMessage(cid);
         }
     }
 
