@@ -346,7 +346,6 @@ public class SchemeHandleActivity extends Activity {
      * 处理分享url
      */
     private void handleLinkShare(HashMap<String,String> shareLinkContentMap) {
-
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("url", shareLinkContentMap.get("url"));

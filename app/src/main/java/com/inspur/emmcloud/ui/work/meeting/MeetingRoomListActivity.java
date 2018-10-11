@@ -426,7 +426,6 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
 	 * @param minute
 	 * @param beginOrEnd
 	 */
-	///android.R.style.Theme_DeviceDefault_Light_Dialog
 	private void showTimeDialog(int hour, int minute, final int beginOrEnd) {
 		isHasModifyTime = true;
 		TimePickerDialog beginTimePickerDialog = new TimePickerDialog(
