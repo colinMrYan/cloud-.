@@ -207,9 +207,11 @@ public class ECMChatInputMenu extends LinearLayout {
 
                             @Override
                             public void onFailure(Exception e) {
-
+                                if(audioDialogManager != null){
+                                    audioDialogManager.dismissVoice2WordProgressDialog();
+                                }
                             }
-                        }).setWavPathAndMp3Path(filePath.replace(".wav",".raw"), filePath.replace(".wav",".mp3")).startConvert();
+                        }).setRawPathAndMp3Path(filePath.replace(".wav",".raw"), filePath.replace(".wav",".mp3")).startConvert();
                     }
                 }else {
                     if (chatInputMenuListener != null) {

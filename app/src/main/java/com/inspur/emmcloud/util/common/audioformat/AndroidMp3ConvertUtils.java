@@ -3,6 +3,7 @@ package com.inspur.emmcloud.util.common.audioformat;
 import android.content.Context;
 import android.os.Handler;
 
+import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 
 import java.io.File;
@@ -10,7 +11,7 @@ import java.io.File;
 import jaygoo.library.converter.Mp3Converter;
 
 /**
- * 用于录音格式从Wav向mp3转化
+ * 用于录音格式从raw向mp3转化
  * Created by yufuchang on 2018/10/9.
  */
 
@@ -21,8 +22,8 @@ public class AndroidMp3ConvertUtils {
     private static final int OUT_BIT_RATE = 32;//输入比特率
     private static final int QUALITY = 5;//音频质量0~9,0质量最好体积最大，9质量最差体积最小
     private Context context;
-    private String wavPath = "", mp3Path = "";
-    private long wavFileSize = 0;
+    private String rawPath = "", mp3Path = "";
+    private long rawFileSize = 0;
     private AndroidMp3ConvertCallback callback;
 
     private AndroidMp3ConvertUtils(Context context) {
@@ -52,36 +53,43 @@ public class AndroidMp3ConvertUtils {
     }
 
     /**
-     * 设置wav和mp3文件路径
-     * wavFilePath为要转换的wav文件
+     * 设置raw和mp3文件路径
+     * rawFilePath为要转换的raw文件
      * mp3FilePath为转换完成mp3文件存放位置
      *
-     * @param wavFilePath
+     * @param rawFilePath
      * @param mp3FilePath
      * @return
      */
-    public AndroidMp3ConvertUtils setWavPathAndMp3Path(String wavFilePath, String mp3FilePath) {
-        this.wavPath = wavFilePath;
+    public AndroidMp3ConvertUtils setRawPathAndMp3Path(String rawFilePath, String mp3FilePath) {
+        this.rawPath = rawFilePath;
         this.mp3Path = mp3FilePath;
         return this;
     }
 
     /**
-     * wav到mp3转码
+     * raw到mp3转码
      */
     public void startConvert() {
-        //检查回调，wav和mp3路径
-        if (callback == null || StringUtils.isBlank(wavPath) || StringUtils.isBlank(mp3Path)) {
-            Exception e = new Exception("check callback and path exception");
+        //检查回调，raw和mp3路径是否为空
+        if (callback == null || StringUtils.isBlank(rawPath) || StringUtils.isBlank(mp3Path)) {
+            Exception e = new Exception("callback or filepath null exception");
             callback.onFailure(e);
             return;
         }
+        //检查raw，mp3路径是否正确
+        if(!checkRawAndMp3PathCorrect()){
+            Exception e = new Exception("raw or mp3 filePath not correct exception");
+            callback.onFailure(e);
+            return;
+        }
+        keepMp3FilePathExist();
         try {
-            wavFileSize = new File(wavPath).length();
+            rawFileSize = new File(rawPath).length();
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    Mp3Converter.convertMp3(wavPath, mp3Path);
+                    Mp3Converter.convertMp3(rawPath, mp3Path);
                 }
             }).start();
             handler.postDelayed(runnable, 20);
@@ -91,12 +99,36 @@ public class AndroidMp3ConvertUtils {
         }
     }
 
+    /**
+     * 检查mp3存放文件夹是否存在，不存在需要创建
+     */
+    private void keepMp3FilePathExist() {
+        String mp3FileSavePath = FileUtils.getFolderName(mp3Path);
+        File dir = new File(mp3FileSavePath);
+        if(!dir.exists()){
+            dir.mkdir();
+        }
+    }
+
+    /**
+     * 检查传入raw，mp3文件名称是否正确
+     */
+    private boolean checkRawAndMp3PathCorrect() {
+        if(!rawPath.endsWith(".raw")){
+            return false;
+        }
+        if(!mp3Path.endsWith(".mp3")){
+            return false;
+        }
+        return true;
+    }
+
     Handler handler = new Handler();
     Runnable runnable = new Runnable() {
         @Override
         public void run() {
             long bytes = Mp3Converter.getConvertBytes();
-            float progress = (100f * bytes / wavFileSize);
+            float progress = (100f * bytes / rawFileSize);
             if (bytes == -1) {
                 progress = 100;
                 callback.onSuccess(mp3Path);
