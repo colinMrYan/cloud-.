@@ -74,7 +74,6 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
         init();
     }
 
-
     /**
      * 初始化
      */
@@ -105,6 +104,7 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
             initEnvironment();
         }
         showLastSplash();
+
     }
 
     /**

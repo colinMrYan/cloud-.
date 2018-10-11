@@ -16,6 +16,7 @@ public class BaseActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
+
         x.view().inject(this);
         String className = this.getClass().getCanonicalName();
         if ( !className.endsWith(".CaptureActivity") &&!className.endsWith(".MyCameraActivity") && !className.endsWith(".LoginActivity")
@@ -23,7 +24,9 @@ public class BaseActivity extends Activity {
                 && !className.endsWith(".IMGEditActivity") && !className.endsWith(".ImageGalleryActivity")){
             StateBarUtils.changeStateBarColor(this);
         }
+
     }
+
 
     //解决调用系统应用后会弹出手势解锁的问题
     @Override
