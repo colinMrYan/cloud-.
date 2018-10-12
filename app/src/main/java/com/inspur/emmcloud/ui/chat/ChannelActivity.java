@@ -154,10 +154,9 @@ public class ChannelActivity extends MediaPlayBaseActivity {
             public void getChannelInfoSuccess(Channel channel) {
                 ChannelActivity.this.channel = channel;
                 isSpecialUser = channel.getType().equals("SERVICE") && channel.getTitle().contains(robotUid);
+                initViews();
                 if (getIntent().hasExtra("get_new_msg") && NetUtils.isNetworkConnected(getApplicationContext(), false)) {//通过scheme打开的频道
                     getNewMsgOfChannel();
-                } else {
-                    initViews();
                 }
             }
 
@@ -778,14 +777,14 @@ public class ChannelActivity extends MediaPlayBaseActivity {
             } else {
                 WebServiceMiddleUtils.hand(ChannelActivity.this, eventMessage.getContent(), eventMessage.getStatus());
             }
-            initViews();
+            initMsgListView();
         }
     }
 
 
     //接收到离线消息
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReiceveWSOfflineMessage(List<Message> offlineMessageList) {
+    public void onReceiveWSOfflineMessage(List<Message> offlineMessageList) {
         Iterator<Message> it = offlineMessageList.iterator();
         //去重
         while (it.hasNext()) {
