@@ -31,6 +31,7 @@ import com.inspur.imp.plugin.ImpPlugin;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
@@ -103,6 +104,7 @@ public class StartAppService extends ImpPlugin {
         JSONObject intentParamsObj = JSONUtils.getJSONObject(paramsObject, "intentParam", null);
         String appUrl = JSONUtils.getString(paramsObject,"appUrl","");
         String appInstallTips = JSONUtils.getString(paramsObject,"appInstallTips","");
+        JSONArray jsonArray = JSONUtils.getJSONArray(paramsObject,"category",new JSONArray());
         try {
             if (intentParamsObj != null) {
                 Iterator<String> keys = intentParamsObj.keys();
@@ -131,6 +133,10 @@ public class StartAppService extends ImpPlugin {
             }
             if (!StringUtils.isBlank(action)) {
                 intent.setAction(action);
+            }
+            //添加category
+            for (int i = 0; i < jsonArray.length(); i++) {
+                intent.addCategory(jsonArray.getString(i));
             }
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.putExtras(bundle);
@@ -211,10 +217,12 @@ public class StartAppService extends ImpPlugin {
                     if (downloadingDialog != null && downloadingDialog.isShowing()) {
                         downloadingDialog.dismiss();
                     }
-                    ToastUtils.show(getActivity(), getActivity().getString(R.string.update_fail));
+                    ToastUtils.show(getActivity(), getActivity().getString(R.string.download_fail));
                     break;
                 case SHOW_PEOGRESS_LAODING_DLG:
-                    downloadingDialog.show();
+                    if (downloadingDialog != null && downloadingDialog.isShowing()) {
+                        downloadingDialog.show();
+                    }
                     break;
                 default:
                     break;
