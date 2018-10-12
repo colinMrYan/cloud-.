@@ -308,6 +308,17 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>
         <activity
+            android:name=".ui.appcenter.webex.WebexMyMeeting"
+            android:launchMode="singleTask"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.appcenter.webex.WebexMeetingDetail"
+            android:launchMode="singleTask"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait"></activity>
+
+        <activity
             android:name=".ui.ShareFilesActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
