@@ -35,6 +35,9 @@ public class GetRecentMessageListResult {
             for (int i = messageSize-parseSize; i < messageSize; i++) {
                 JSONObject obj = JSONUtils.getJSONObject(array,i,new JSONObject());
                 Message message = new Message(obj);
+                if (message.getChannel().startsWith("FIBER")){
+                    break;
+                }
                 if (messageSize -i <=unread){
                     message.setRead(0);
                 }else {
