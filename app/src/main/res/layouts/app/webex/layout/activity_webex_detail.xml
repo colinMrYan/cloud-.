@@ -52,6 +52,7 @@
         android:background="@color/content_bg"
         android:orientation="vertical">
         <RelativeLayout
+            android:layout_marginTop="20dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <ImageView
@@ -64,12 +65,12 @@
                 android:layout_height="45dp" />
             <com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton
                 android:id="@+id/bt_function"
-                android:layout_width=" dp"
+                android:layout_width="35dp"
                 android:layout_height="wrap_content"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:gravity="center"
@@ -77,9 +78,11 @@
                 android:textColor="#999999"
                 android:text="加入"
                 android:textSize="14sp"
-                app:qmui_borderColor="#0f7bca"
-                app:qmui_borderWidth="1dp"
-                app:qmui_radius="4dp" />
+                app:qmui_borderWidth="0dp"
+                app:qmui_backgroundColor="#D7D7D7"
+                app:qmui_isRadiusAdjustBounds="true"
+
+                 />
         </RelativeLayout>
     </RelativeLayout>
 
