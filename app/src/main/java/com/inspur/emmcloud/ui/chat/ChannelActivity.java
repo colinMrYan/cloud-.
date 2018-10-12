@@ -82,8 +82,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import cafe.adriel.androidaudioconverter.AndroidAudioConverter;
-import cafe.adriel.androidaudioconverter.callback.ILoadCallback;
 
 import static android.R.attr.path;
 
@@ -133,23 +131,8 @@ public class ChannelActivity extends MediaPlayBaseActivity {
         registeRefreshNameReceiver();
         registeSendActionMsgReceiver();
         recordUserClickChannel();
-        initAudioConverter();
     }
 
-    /**
-     * 加载语音转换库
-     */
-    private void initAudioConverter() {
-        AndroidAudioConverter.load(this, new ILoadCallback() {
-            @Override
-            public void onSuccess() {
-            }
-
-            @Override
-            public void onFailure(Exception error) {
-            }
-        });
-    }
 
     // Activity在SingleTask的启动模式下多次打开传递Intent无效，用此方法解决
     @Override
@@ -171,10 +154,9 @@ public class ChannelActivity extends MediaPlayBaseActivity {
             public void getChannelInfoSuccess(Channel channel) {
                 ChannelActivity.this.channel = channel;
                 isSpecialUser = channel.getType().equals("SERVICE") && channel.getTitle().contains(robotUid);
+                initViews();
                 if (getIntent().hasExtra("get_new_msg") && NetUtils.isNetworkConnected(getApplicationContext(), false)) {//通过scheme打开的频道
                     getNewMsgOfChannel();
-                } else {
-                    initViews();
                 }
             }
 
@@ -795,14 +777,14 @@ public class ChannelActivity extends MediaPlayBaseActivity {
             } else {
                 WebServiceMiddleUtils.hand(ChannelActivity.this, eventMessage.getContent(), eventMessage.getStatus());
             }
-            initViews();
+            initMsgListView();
         }
     }
 
 
     //接收到离线消息
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReiceveWSOfflineMessage(List<Message> offlineMessageList) {
+    public void onReceiveWSOfflineMessage(List<Message> offlineMessageList) {
         Iterator<Message> it = offlineMessageList.iterator();
         //去重
         while (it.hasNext()) {

@@ -27,6 +27,9 @@ public class GetOfflineMessageListResult {
             for (int i = 0; i < array.length(); i++) {
                 JSONObject obj = JSONUtils.getJSONObject(array,i,new JSONObject());
                 Message message = new Message(obj);
+                if (message.getChannel().startsWith("FIBER")){
+                    break;
+                }
                 if (message.getType().equals(Message.MESSAGE_TYPE_MEDIA_VOICE)){
                     mediaVoiceMessageList.add(message);
                 }
