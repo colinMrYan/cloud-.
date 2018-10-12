@@ -6,9 +6,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.bean.appcenter.webex.WebexMeeting;
+import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
+import com.inspur.emmcloud.util.common.PreferencesUtils;
+import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
+import com.inspur.emmcloud.util.privates.TimeUtils;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by chenmch on 2018/10/11.
@@ -16,19 +28,31 @@ import com.inspur.emmcloud.R;
 
 public class WebexMeetingAdapter extends BaseExpandableListAdapter {
     private Context context;
+    private Map<String, List<WebexMeeting>> webexMeetingMap = new HashMap<>();
+    private List<String> webexMeetingGroupList = new ArrayList<>();
+    private String myEmail;
 
     public WebexMeetingAdapter(Context context) {
         this.context = context;
     }
 
+    public void setData(List<String> webexMeetingGroupList,Map<String, List<WebexMeeting>> webexMeetingMap){
+        this.webexMeetingGroupList =webexMeetingGroupList;
+        this.webexMeetingMap = webexMeetingMap;
+        String myInfo = PreferencesUtils.getString(context, "myInfo", "");
+        GetMyInfoResult getMyInfoResult = new GetMyInfoResult(myInfo);
+        myEmail = getMyInfoResult.getMail();
+    }
+
     @Override
     public int getGroupCount() {
-        return 10;
+        return webexMeetingGroupList.size();
     }
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        return 3;
+        List<WebexMeeting> webexMeetingList = webexMeetingMap.get(webexMeetingGroupList.get(groupPosition));
+        return webexMeetingList.size();
     }
 
     @Override
@@ -59,13 +83,20 @@ public class WebexMeetingAdapter extends BaseExpandableListAdapter {
     @Override
     public View getGroupView(final int groupPosition, boolean isExpanded,
                              View convertView, ViewGroup parent) {
+        String YMDTime = webexMeetingGroupList.get(groupPosition);
+        List<WebexMeeting> webexMeetingList = webexMeetingMap.get(YMDTime);
+        Calendar calendar = webexMeetingList.get(0).getStartDateCalendar();
         ExpandableListView expandableListView = (ExpandableListView) parent;
         expandableListView.expandGroup(groupPosition);
         convertView = LayoutInflater.from(context).inflate(R.layout.item_view_webex_meeting_group, null);
         TextView weekText = (TextView) convertView.findViewById(R.id.tv_week);
         TextView dateText = (TextView) convertView.findViewById(R.id.tv_date);
-        weekText.setText("星期一");
-        dateText.setText("2018年10月12日");
+        if (TimeUtils.isCalendarToday(calendar)){
+            weekText.setText(R.string.today);
+        }else {
+            weekText.setText(TimeUtils.getWeekDay(context,calendar));
+        }
+        dateText.setText(YMDTime);
         return convertView;
     }
 
@@ -77,6 +108,7 @@ public class WebexMeetingAdapter extends BaseExpandableListAdapter {
         if (convertView == null) {
             convertView = LayoutInflater.from(context).inflate(R.layout.item_view_webex_meeting_child, null);
             holder = new ExpandViewHolder();
+            holder.photoImg = (ImageView)convertView.findViewById(R.id.iv_photo);
             holder.timeText = (TextView) convertView
                     .findViewById(R.id.tv_time);
             holder.titleText = (TextView) convertView
@@ -84,19 +116,31 @@ public class WebexMeetingAdapter extends BaseExpandableListAdapter {
             holder.ownerText = (TextView) convertView
                     .findViewById(R.id.tv_owner);
             holder.line = convertView.findViewById(R.id.v_line);
-
             convertView.setTag(holder);
         } else {
             holder = (ExpandViewHolder) convertView.getTag();
         }
-        holder.timeText.setText("15:00 - 15:30");
-        holder.titleText.setText("周例会");
-        holder.ownerText.setText("浪潮国际miaochw");
+        List<WebexMeeting> webexMeetingList = webexMeetingMap.get(webexMeetingGroupList.get(groupPosition));
+        WebexMeeting webexMeeting = webexMeetingList.get(childPosition);
+        Calendar startCalendar = webexMeeting.getStartDateCalendar();
+        String startDateString = TimeUtils.getTime(context,startCalendar.getTimeInMillis(),TimeUtils.FORMAT_HOUR_MINUTE);
+        String endDateString = TimeUtils.getTime(context,startCalendar.getTimeInMillis()+60000*webexMeeting.getDuration(),TimeUtils.FORMAT_HOUR_MINUTE);
+        holder.timeText.setText(startDateString+" - "+endDateString);
+        holder.titleText.setText(webexMeeting.getConfName());
+        String email = webexMeeting.getHostWebExID();
+        if (email.equals(myEmail)){
+            holder.ownerText.setText(R.string.mine);
+        }else {
+            holder.ownerText.setText(email);
+        }
         holder.line.setVisibility(isLastChild?View.INVISIBLE:View.VISIBLE);
+        String photoUrl = "https://emm.inspur.com/img/userhead/"+webexMeeting.getHostWebExID();
+        ImageDisplayUtils.getInstance().displayImage(holder.photoImg,photoUrl,R.drawable.icon_person_default);
         return convertView;
     }
 
     class ExpandViewHolder {
+        ImageView photoImg;
         TextView timeText;
         TextView titleText;
         TextView ownerText;

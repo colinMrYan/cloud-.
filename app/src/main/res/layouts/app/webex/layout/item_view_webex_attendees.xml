@@ -1,0 +1,43 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="15dp"
+    android:paddingRight="15dp"
+    android:background="@color/white"
+    tools:context=".MainActivity" >
+
+
+    <ImageView
+        android:id="@+id/iv_delete"
+        android:layout_alignParentRight="true"
+        android:scaleType="fitXY"
+        android:paddingTop="7dp"
+        android:paddingBottom="7dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="4dp"
+        android:src="@drawable/ic_webex_delete_attendees"
+        android:layout_centerVertical="true"
+        android:layout_width="40dp"
+        android:layout_height="40dp" />
+
+    <TextView
+        android:id="@+id/tv_attendees"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:maxLines="1"
+        android:background="@null"
+        android:ellipsize="end"
+        android:textColor="#333333"
+        android:paddingRight="15dp"
+        android:paddingTop="11dp"
+        android:paddingBottom="11dp"
+        android:textSize="17sp" />
+    <View
+        android:id="@+id/v_line"
+        android:background="@color/color_list_divider"
+        android:layout_below="@id/tv_attendees"
+        android:layout_width="match_parent"
+        android:layout_height="0.5px"></View>
+</RelativeLayout>

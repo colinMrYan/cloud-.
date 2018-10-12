@@ -45,7 +45,7 @@
     </RelativeLayout>
 
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/rl_header"
@@ -53,6 +53,7 @@
         android:orientation="vertical">
         <RelativeLayout
             android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <ImageView
@@ -63,9 +64,10 @@
                 android:layout_centerVertical="true"
                 android:layout_width="45dp"
                 android:layout_height="45dp" />
+
             <com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton
                 android:id="@+id/bt_function"
-                android:layout_width="35dp"
+                android:layout_width="65dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
@@ -81,9 +83,106 @@
                 app:qmui_borderWidth="0dp"
                 app:qmui_backgroundColor="#D7D7D7"
                 app:qmui_isRadiusAdjustBounds="true"
-
                  />
+            <TextView
+                android:id="@+id/tv_title"
+                android:maxLines="3"
+                android:ellipsize="end"
+                android:textSize="17sp"
+                android:layout_centerVertical="true"
+                android:text="11111111111111111"
+                android:layout_toRightOf="@id/iv_photo"
+                android:layout_toLeftOf="@id/bt_function"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
         </RelativeLayout>
-    </RelativeLayout>
+        <View
+            android:background="@color/color_list_divider"
+            android:layout_width="match_parent"
+            android:layout_height="0.5px"></View>
+        <TextView
+            android:text="主持人"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="20dp"
+            android:textSize="15sp"
+            android:textColor="#999999"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/tv_owner"
+            android:layout_marginLeft="20dp"
+            android:paddingTop="10dp"
+            android:textSize="15sp"
+            android:text="11111111111111111"
+            android:textColor="#333333"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+
+        <TextView
+            android:text="时间"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="20dp"
+            android:textSize="15sp"
+            android:textColor="#999999"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/tv_time"
+                android:layout_marginLeft="20dp"
+                android:paddingTop="10dp"
+                android:textSize="15sp"
+                android:textColor="#333333"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/tv_duration"
+                android:layout_toRightOf="@id/tv_time"
+                android:layout_marginLeft="10dp"
+                android:paddingTop="10dp"
+                android:textSize="15sp"
+                android:textColor="#999999"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
+
+        <TextView
+            android:text="会议号"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="20dp"
+            android:textSize="15sp"
+            android:textColor="#999999"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/tv_meeting_id"
+            android:layout_marginLeft="20dp"
+            android:paddingTop="10dp"
+            android:textSize="15sp"
+            android:text="11111111111111111"
+            android:textColor="#333333"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:text="会议密码"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="20dp"
+            android:textSize="15sp"
+            android:textColor="#999999"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/tv_meeting_password"
+            android:layout_marginLeft="20dp"
+            android:paddingTop="10dp"
+            android:textSize="15sp"
+            android:text="11111111111111111"
+            android:textColor="#333333"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
 
 </RelativeLayout>

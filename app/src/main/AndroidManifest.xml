@@ -303,17 +303,22 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".ui.appcenter.webex.WebexScheduleMeeting"
+            android:name=".ui.appcenter.webex.WebexScheduleMeetingActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".ui.appcenter.webex.WebexMyMeeting"
+            android:name=".ui.appcenter.webex.WebexMyMeetingActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".ui.appcenter.webex.WebexMeetingDetail"
+            android:name=".ui.appcenter.webex.WebexMeetingDetailActivity"
+            android:launchMode="singleTask"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.appcenter.webex.WebexAddAttendeesActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>

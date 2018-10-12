@@ -916,6 +916,18 @@ public class APIUri {
     public static String getVolumeFileGroupUrl(String volumeId){
         return getUrlBaseVolume() + "/" + volumeId + "/file/group/privilege";
     }
+    /**************************Webex********************************************/
+
+    /**
+     * 获取webex会议列表
+     * @return
+     */
+    public static String getWebexMeetingListUrl(){
+        return "http://172.31.2.36:88/api/mam/v6.0/webex";
+    }
+
+
+
 /************************************************************************工作****************************************************************************/
     /***************会议接口*****************************/
     /**
