@@ -243,7 +243,7 @@ public class WSAPIService {
             actionObj.put("path", "/message");
             if (lastMessageId != null){
                 JSONObject queryObj = new JSONObject();
-                queryObj.put("MessageId", lastMessageId);
+                queryObj.put("cursor", lastMessageId);
                 actionObj.put("query", queryObj);
             }
             object.put("action", actionObj);
