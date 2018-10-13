@@ -15,8 +15,10 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.WebexAPIService;
 import com.inspur.emmcloud.bean.appcenter.webex.GetWebexMeetingListResult;
 import com.inspur.emmcloud.bean.appcenter.webex.WebexMeeting;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.GroupUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
@@ -79,6 +81,8 @@ public class WebexMyMeetingActivity extends BaseActivity {
     }
 
     private void initView() {
+        String installUri = getIntent().getExtras().getString("installUri","https://m.webex.com/downloads/android/touchscreen/mc.apk");
+        PreferencesUtils.putString(MyApplication.getInstance(), Constant.PREF_WEBEX_DOWNLOAD_URL,installUri);
         loadingDlg = new LoadingDialog(this);
         swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.header_bg), getResources().getColor(R.color.header_bg));
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {

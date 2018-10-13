@@ -489,6 +489,8 @@
     <string name="remove_webex_meeting_warning_title">删除会议</string>
     <string name="remove_webex_meeting_warning_info">从您的设备上删除会议不会发送取消电子邮件。确定要删除该会议吗？</string>
     <string name="webex_password_length_error">密码长度不符合规则（6-10位）</string>
+    <string name="webex_install_tips">使用此功能需要先安装 webex 客户端，现在安装？</string>
+
 
     <!-- 我的页面部分 -->
     <string name="data_clear_success">清除成功</string>

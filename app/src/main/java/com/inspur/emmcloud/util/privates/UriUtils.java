@@ -25,6 +25,7 @@ public class UriUtils {
             case 1:
                 try {
                     Intent intent = Intent.parseUri(uri, Intent.URI_INTENT_SCHEME);
+                    intent.putExtra("installUri",app.getInstallUri());
                     intent.setComponent(null);
                     activity.startActivity(intent);
                 } catch (Exception e) {
