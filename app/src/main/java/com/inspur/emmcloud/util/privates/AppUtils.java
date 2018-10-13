@@ -46,6 +46,7 @@ import com.inspur.imp.plugin.camera.mycamera.MyCameraActivity;
 
 import java.io.File;
 import java.lang.reflect.Method;
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.UUID;
 import java.util.regex.Matcher;
@@ -967,6 +968,45 @@ public class AppUtils {
             LogUtils.YfcDebug("判断悬浮窗权限异常："+e.getMessage());
         }
         return false;
+    }
+
+    /**
+     * 安装apk
+     * @param context
+     * @param apkFilePath
+     */
+    public static void installApk(Context context,String apkFilePath,String apkFileName){
+        File apkFile = new File(apkFilePath, apkFileName);
+        if (!apkFile.exists()) {
+            ToastUtils.show(context, R.string.update_fail);
+            return;
+        }
+        // 通过Intent安装APK文件
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        // 更新后启动
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setDataAndType(Uri.parse("file://" + apkFile.toString()),
+                "application/vnd.android.package-archive");
+        if (context.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY) != null) {
+            context.startActivity(intent);
+        }
+    }
+
+    /**
+     * 获取kb或者mb格式的数字
+     * @param data
+     * @return
+     */
+    public static String getKBOrMBFormatString(long data){
+        double MBDATA = 1048576.0;
+        double KBDATA = 1024.0;
+        if (data < KBDATA) {
+            return data + "B";
+        } else if (data < MBDATA) {
+            return new DecimalFormat(("####0.00")).format(data / KBDATA) + "KB";
+        } else {
+            return new DecimalFormat(("####0.00")).format(data / MBDATA) + "MB";
+        }
     }
 
 }
