@@ -125,14 +125,17 @@
                     android:id="@+id/rl_add_attendees_input"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
                     android:layout_below="@id/rl"
                     android:onClick="onClick"
                     >
 
                     <ImageView
                         android:id="@+id/iv_add_attendees"
-                        android:layout_width="45dp"
-                        android:layout_height="45dp"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:layout_marginRight="10dp"
                         android:layout_centerVertical="true"
                         android:scaleType="fitXY"
                         android:src="@drawable/ic_webex_add_attendees" />

@@ -175,7 +175,7 @@ public class WebexScheduleMeetingActivity extends BaseActivity {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tv_start:
-                String confName = titleEdit.getText().toString();
+                String confName = titleEdit.getText().toString().trim();
                 if (StringUtils.isBlank(confName)) {
                     ToastUtils.show(MyApplication.getInstance(), R.string.enter_meeting_name);
                     return;
