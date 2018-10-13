@@ -8,6 +8,8 @@ import com.inspur.emmcloud.api.APIInterface;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.appcenter.webex.GetScheduleWebexMeetingSuccess;
 import com.inspur.emmcloud.bean.appcenter.webex.GetWebexMeetingListResult;
+import com.inspur.emmcloud.bean.appcenter.webex.GetWebexTKResult;
+import com.inspur.emmcloud.bean.appcenter.webex.WebexMeeting;
 import com.inspur.emmcloud.interf.OauthCallBack;
 import com.inspur.emmcloud.util.privates.OauthUtils;
 
@@ -39,6 +41,8 @@ public class WebexAPIService {
     public void getWebexMeetingList() {
         final String url = APIUri.getWebexMeetingListUrl();
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(url);
+        params.setConnectTimeout(25000);
+        params.setReadTimeout(25000);
         x.http().request(HttpMethod.GET, params, new APICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
@@ -74,6 +78,8 @@ public class WebexAPIService {
     public void scheduleWebexMeetingList(final JSONObject obj) {
         final String url = APIUri.getWebexMeetingListUrl();
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(url);
+        params.setConnectTimeout(25000);
+        params.setReadTimeout(25000);
         params.setBodyContent(obj.toString());
         params.setAsJsonContent(true);
         x.http().request(HttpMethod.POST, params, new APICallback(context, url) {
@@ -105,4 +111,112 @@ public class WebexAPIService {
         });
     }
 
+
+    /**
+     * 获取webex会议
+     */
+    public void getWebexMeeting(final String meetingID) {
+        final String url = APIUri.getWebexMeetingUrl(meetingID);
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(url);
+        params.setConnectTimeout(25000);
+        params.setReadTimeout(25000);
+        x.http().request(HttpMethod.GET, params, new APICallback(context, url) {
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnWebexMeetingSuccess(new WebexMeeting(new String(arg0)));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnWebexMeetingFail(error, responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthUtils.getInstance().refreshToken(
+                        new OauthCallBack() {
+                            @Override
+                            public void reExecute() {
+                                getWebexMeeting(meetingID);
+                            }
+
+                            @Override
+                            public void executeFailCallback() {
+                                callbackFail("", -1);
+                            }
+                        }, requestTime);
+            }
+        });
+    }
+
+    /**
+     * 获取webex会议
+     */
+    public void getWebexTK() {
+        final String url = APIUri.getWebexTK();
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(url);
+        params.setConnectTimeout(25000);
+        params.setReadTimeout(25000);
+        x.http().request(HttpMethod.GET, params, new APICallback(context, url) {
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnWebexTKSuccess(new GetWebexTKResult(new String(arg0)));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnWebexTKFail(error, responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthUtils.getInstance().refreshToken(
+                        new OauthCallBack() {
+                            @Override
+                            public void reExecute() {
+                                getWebexTK();
+                            }
+
+                            @Override
+                            public void executeFailCallback() {
+                                callbackFail("", -1);
+                            }
+                        }, requestTime);
+            }
+        });
+    }
+
+    public void removeMeeting(final String meetingID){
+        final String url = APIUri.getRemoveWebexMeetingUrl(meetingID);
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(url);
+        params.setConnectTimeout(25000);
+        params.setReadTimeout(25000);
+        x.http().request(HttpMethod.GET, params, new APICallback(context, url) {
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnRemoveWebexMeetingSuccess();
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnRemoveWebexMeetingFail(error, responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthUtils.getInstance().refreshToken(
+                        new OauthCallBack() {
+                            @Override
+                            public void reExecute() {
+                                removeMeeting(meetingID);
+                            }
+
+                            @Override
+                            public void executeFailCallback() {
+                                callbackFail("", -1);
+                            }
+                        }, requestTime);
+            }
+        });
+    }
 }

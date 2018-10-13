@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.bean.appcenter.webex;
 
+import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 
@@ -20,7 +21,8 @@ public class WebexMeeting implements Serializable{
     private String meetingID;
     private String confName;
     private String meetingPassword;
-    private String agenda;
+    private String hostUserName;
+    private String hostKey;
     private Calendar startDateCalendar;
     private int duration;
     private List<String> attendeesList;
@@ -28,11 +30,16 @@ public class WebexMeeting implements Serializable{
     public WebexMeeting(){
 
     }
+
+    public WebexMeeting(String response){
+        this(JSONUtils.getJSONObject(response));
+    }
     public WebexMeeting(JSONObject obj){
         meetingID = JSONUtils.getString(obj,"meetingID","");
         confName = JSONUtils.getString(obj,"confName","");
         meetingPassword = JSONUtils.getString(obj,"meetingPassword","");
-        agenda = JSONUtils.getString(obj,"agenda","");
+        hostUserName = JSONUtils.getString(obj,"hostUserName","");
+        hostKey = JSONUtils.getString(obj,"hostKey","");
         String startDate = JSONUtils.getString(obj,"startDate","");
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         startDateCalendar = TimeUtils.timeString2Calendar(startDate,simpleDateFormat);
@@ -66,12 +73,20 @@ public class WebexMeeting implements Serializable{
         this.meetingPassword = meetingPassword;
     }
 
-    public String getAgenda() {
-        return agenda;
+    public String getHostUserName() {
+        return hostUserName;
     }
 
-    public void setAgenda(String agenda) {
-        this.agenda = agenda;
+    public void setHostUserName(String hostUserName) {
+        this.hostUserName = hostUserName;
+    }
+
+    public String getHostKey() {
+        return hostKey;
+    }
+
+    public void setHostKey(String hostKey) {
+        this.hostKey = hostKey;
     }
 
     public Calendar getStartDateCalendar() {
@@ -127,5 +142,18 @@ public class WebexMeeting implements Serializable{
             e.printStackTrace();
         }
         return  object;
+    }
+
+    public boolean equals(Object other) { // 重写equals方法，后面最好重写hashCode方法
+
+        if (this == other) // 先检查是否其自反性，后比较other是否为空。这样效率高
+            return true;
+        if (other == null)
+            return false;
+        if (!(other instanceof Message))
+            return false;
+
+        final WebexMeeting otherWebexMeeting = (WebexMeeting) other;
+        return getMeetingID().equals(otherWebexMeeting.getMeetingID());
     }
 }

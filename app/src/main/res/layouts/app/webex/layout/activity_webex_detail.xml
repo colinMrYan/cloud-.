@@ -39,9 +39,22 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="会议信息"
+            android:text="@string/meeting_info"
             android:textColor="@color/header_text"
             android:textSize="@dimen/header_textsize" />
+        <ImageView
+            android:id="@+id/iv_delete"
+            android:layout_width="52dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:clickable="true"
+            android:onClick="onClick"
+            android:visibility="gone"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_webex_meeting_delete" />
     </RelativeLayout>
 
 
@@ -65,24 +78,20 @@
                 android:layout_width="45dp"
                 android:layout_height="45dp" />
 
-            <com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton
+            <Button
                 android:id="@+id/bt_function"
                 android:layout_width="65dp"
-                android:layout_height="wrap_content"
+                android:layout_height="27dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
-                android:paddingTop="4dp"
-                android:paddingBottom="4dp"
+                android:minHeight="0dp"
+                android:padding="0dp"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:gravity="center"
                 android:onClick="onClick"
                 android:textColor="#999999"
-                android:text="加入"
                 android:textSize="14sp"
-                app:qmui_borderWidth="0dp"
-                app:qmui_backgroundColor="#D7D7D7"
-                app:qmui_isRadiusAdjustBounds="true"
                  />
             <TextView
                 android:id="@+id/tv_title"
@@ -90,7 +99,6 @@
                 android:ellipsize="end"
                 android:textSize="17sp"
                 android:layout_centerVertical="true"
-                android:text="11111111111111111"
                 android:layout_toRightOf="@id/iv_photo"
                 android:layout_toLeftOf="@id/bt_function"
                 android:layout_width="match_parent"
@@ -101,7 +109,7 @@
             android:layout_width="match_parent"
             android:layout_height="0.5px"></View>
         <TextView
-            android:text="主持人"
+            android:text="@string/webex_host"
             android:layout_marginTop="20dp"
             android:layout_marginLeft="20dp"
             android:textSize="15sp"
@@ -113,14 +121,13 @@
             android:layout_marginLeft="20dp"
             android:paddingTop="10dp"
             android:textSize="15sp"
-            android:text="11111111111111111"
             android:textColor="#333333"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
 
         <TextView
-            android:text="时间"
+            android:text="@string/webex_when"
             android:layout_marginTop="20dp"
             android:layout_marginLeft="20dp"
             android:textSize="15sp"
@@ -150,7 +157,7 @@
         </RelativeLayout>
 
         <TextView
-            android:text="会议号"
+            android:text="@string/webex_meeting_number"
             android:layout_marginTop="20dp"
             android:layout_marginLeft="20dp"
             android:textSize="15sp"
@@ -162,12 +169,11 @@
             android:layout_marginLeft="20dp"
             android:paddingTop="10dp"
             android:textSize="15sp"
-            android:text="11111111111111111"
             android:textColor="#333333"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <TextView
-            android:text="会议密码"
+            android:text="@string/webex_meeting_password"
             android:layout_marginTop="20dp"
             android:layout_marginLeft="20dp"
             android:textSize="15sp"
@@ -179,10 +185,33 @@
             android:layout_marginLeft="20dp"
             android:paddingTop="10dp"
             android:textSize="15sp"
-            android:text="11111111111111111"
             android:textColor="#333333"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
+        <RelativeLayout
+            android:id="@+id/rl_host_key"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/tv_tip_host_key"
+                android:text="@string/webex_host_password"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="20dp"
+                android:textSize="15sp"
+                android:textColor="#999999"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/tv_host_key"
+                android:layout_marginLeft="20dp"
+                android:layout_below="@id/tv_tip_host_key"
+                android:paddingTop="10dp"
+                android:textSize="15sp"
+                android:textColor="#333333"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
     </LinearLayout>
 
 </RelativeLayout>

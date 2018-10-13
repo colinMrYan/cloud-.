@@ -16,7 +16,6 @@ import com.inspur.emmcloud.api.apiservice.WebexAPIService;
 import com.inspur.emmcloud.bean.appcenter.webex.GetWebexMeetingListResult;
 import com.inspur.emmcloud.bean.appcenter.webex.WebexMeeting;
 import com.inspur.emmcloud.util.common.GroupUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
@@ -26,6 +25,7 @@ import com.inspur.emmcloud.widget.MySwipeRefreshLayout;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -40,6 +40,7 @@ import java.util.Map;
 @ContentView(R.layout.activity_webex_my_meeting)
 public class WebexMyMeetingActivity extends BaseActivity {
     private static final int REQUEST_SCHEDULE_WEBEX_MEETING = 1;
+    private static final int REQUEST_REMOVE_WEBEX_MEETING = 1;
     @ViewInject(R.id.srl)
     private MySwipeRefreshLayout swipeRefreshLayout;
     @ViewInject(R.id.elv_meeting)
@@ -57,21 +58,24 @@ public class WebexMyMeetingActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initView();
-        getWxMeetingList();
+        getWxMeetingList(true);
 
     }
 
     private void initData() {
         webexMeetingMap = GroupUtils.group(webexMeetingList, new WebexMeetingGroup());
-        if (webexMeetingMap != null && webexMeetingMap.size() > 0) {
-            noMeetingLayout.setVisibility(View.GONE);
+        if (webexMeetingMap == null){
+            webexMeetingMap = new HashMap<>();
+        }
+        if (webexMeetingMap.size() > 0) {
             webexMeetingGroupList = new ArrayList<>(webexMeetingMap.keySet());
             Collections.sort(webexMeetingGroupList, new SortClass());
-            adapter.setData(webexMeetingGroupList, webexMeetingMap);
-            adapter.notifyDataSetChanged();
-        } else {
-            noMeetingLayout.setVisibility(View.VISIBLE);
+        }else {
+            webexMeetingGroupList.clear();
         }
+        adapter.setData(webexMeetingGroupList, webexMeetingMap);
+        adapter.notifyDataSetChanged();
+
     }
 
     private void initView() {
@@ -80,7 +84,7 @@ public class WebexMyMeetingActivity extends BaseActivity {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                getWxMeetingList();
+                getWxMeetingList(false);
             }
         });
         expandListView.setGroupIndicator(null);
@@ -94,7 +98,7 @@ public class WebexMyMeetingActivity extends BaseActivity {
                 WebexMeeting webexMeeting = webexMeetingMap.get(webexMeetingGroupList.get(groupPosition)).get(childPosition);
                 Intent intent = new Intent(WebexMyMeetingActivity.this, WebexMeetingDetailActivity.class);
                 intent.putExtra(WebexMeetingDetailActivity.EXTRA_WEBEXMEETING,webexMeeting);
-                startActivity(intent);
+                startActivityForResult(intent,REQUEST_REMOVE_WEBEX_MEETING);
                 return false;
             }
         });
@@ -122,7 +126,11 @@ public class WebexMyMeetingActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK){
             if (requestCode ==  REQUEST_SCHEDULE_WEBEX_MEETING){
-                getWxMeetingList();
+                getWxMeetingList(false);
+            }else if(requestCode == REQUEST_REMOVE_WEBEX_MEETING){
+                WebexMeeting webexMeeting = (WebexMeeting) data.getSerializableExtra(WebexMeetingDetailActivity.EXTRA_WEBEXMEETING);
+                webexMeetingList.remove(webexMeeting);
+                initData();
             }
         }
     }
@@ -134,8 +142,9 @@ public class WebexMyMeetingActivity extends BaseActivity {
         @Override
         public String groupBy(Object obj) {
             WebexMeeting webexMeeting = (WebexMeeting) obj;
-            String dateString = TimeUtils.timeLong2YMDString(MyApplication.getInstance(), webexMeeting.getStartDateCalendar().getTimeInMillis());
-            LogUtils.jasonDebug("dateString="+dateString);
+            SimpleDateFormat format = new SimpleDateFormat(
+                    getString(R.string.format_date_group_by));
+            String dateString = TimeUtils.calendar2FormatString(MyApplication.getInstance(), webexMeeting.getStartDateCalendar(),format);
             return dateString;
         }
 
@@ -148,8 +157,8 @@ public class WebexMyMeetingActivity extends BaseActivity {
         public int compare(Object arg0, Object arg1) {
             String dateA = (String) arg0;
             String dateB = (String) arg1;
-            dateA = dateA.replace("年", "").replace("月","").replace("日","");
-            dateB = dateB.replace("年", "").replace("月","").replace("日","");
+            dateA = dateA.replace("-", "");
+            dateB = dateB.replace("-", "");
             int fromA = Integer.parseInt(dateA);
             int fromB = Integer.parseInt(dateB);
             if (fromA > fromB) {
@@ -163,10 +172,12 @@ public class WebexMyMeetingActivity extends BaseActivity {
     }
 
 
-    public void getWxMeetingList() {
+    public void getWxMeetingList(boolean isShowDlg) {
         if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
-            loadingDlg.show();
+            loadingDlg.show(isShowDlg);
             apiService.getWebexMeetingList();
+        }else {
+            swipeRefreshLayout.setRefreshing(false);
         }
     }
 
@@ -182,6 +193,7 @@ public class WebexMyMeetingActivity extends BaseActivity {
 
         @Override
         public void returnWebexMeetingListFail(String error, int errorCode) {
+            swipeRefreshLayout.setRefreshing(false);
             LoadingDialog.dimissDlg(loadingDlg);
             WebServiceMiddleUtils.hand(MyApplication.getInstance(), error, errorCode);
         }

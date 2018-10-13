@@ -926,6 +926,39 @@ public class APIUri {
         return "http://172.31.2.36:88/api/mam/v6.0/webex";
     }
 
+    /**
+     * 获取webex头像地址
+     * @param email
+     * @return
+     */
+    public static String getWebexPhotoUrl(String email){
+        return "https://emm.inspur.com/img/userhead/"+email;
+    }
+
+    /**
+     * 获取webex会议
+     * @return
+     */
+    public static String getWebexMeetingUrl(String meetingID){
+        return "http://172.31.2.36:88/api/mam/v6.0/webex/SessionInfo/"+meetingID;
+    }
+
+    /**
+     * 删除webex会议
+     * @return
+     */
+    public static String getRemoveWebexMeetingUrl(String meetingID){
+        return "http://172.31.2.36:88/api/mam/v6.0/webex/remove/"+meetingID;
+    }
+
+    /**
+     * 获取webex会议TK
+     * @return
+     */
+    public static String getWebexTK(){
+        return "http://172.31.2.36:88/api/mam/v6.0/webex/gettk";
+    }
+
 
 
 /************************************************************************工作****************************************************************************/

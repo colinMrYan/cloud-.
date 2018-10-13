@@ -32,6 +32,8 @@ import com.inspur.emmcloud.widget.ClearEditText;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.MyDatePickerDialog;
 import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
+import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
+import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
@@ -63,10 +65,14 @@ public class WebexScheduleMeetingActivity extends BaseActivity {
     private ClearEditText passwordEdit;
     @ViewInject(R.id.iv_password_visible)
     private ImageView passwordVisibleImg;
-    private final String[] durationHourItems = new String[]{"0小时", "1小时", "2小时", "3小时", "4小时", "5小时", "6小时", "7小时", "8小时", "9小时", "10小时", "11小时", "12小时", "18小时", "24小时"};
-    private final Integer[] durationHourSumMin = new Integer[]{0, 60, 120, 180, 240, 300, 360, 420, 480, 540, 600, 660, 720, 1080, 1440};
-    private final String[] durationMinItems = new String[]{"0分钟", "10分钟", "15分钟", "20分钟", "30分钟", "40分钟", "45分钟", "50分钟"};
-    private final Integer[] durationMinSumMin = new Integer[]{0, 10, 15, 20, 30, 40, 45, 50};
+    //    private final String[] durationHourItems = new String[]{"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "18", "24"};
+//    private final Integer[] durationHourSumMin = new Integer[]{0, 60, 120, 180, 240, 300, 360, 420, 480, 540, 600, 660, 720, 1080, 1440};
+//    private final String[] durationMinItems = new String[]{"0", "10", "15", "20", "30", "40", "45", "50"};
+//    private final Integer[] durationMinSumMin = new Integer[]{0, 10, 15, 20, 30, 40, 45, 50};
+    private String[] durationHourItems = null;
+    private String[] durationMinItems = null;
+    private Integer[] durationHourSumMin = new Integer[]{0, 60, 120, 180, 240, 300, 360, 420, 480, 540, 600, 660, 720, 1080, 1440};
+    private Integer[] durationMinSumMin = new Integer[]{0, 10, 15, 20, 30, 40, 45, 50};
     private int durationHourChoiceIndex = 1;
     private int durationMinChoiceIndex = 0;
     private Calendar startCalendar;
@@ -78,6 +84,10 @@ public class WebexScheduleMeetingActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        String hourStr = getString(R.string.hour);
+        String minStr = getString(R.string.min);
+        durationHourItems = new String[]{"0"+hourStr, "1"+hourStr, "2"+hourStr, "3"+hourStr, "4"+hourStr, "5"+hourStr, "6"+hourStr, "7"+hourStr, "8"+hourStr, "9"+hourStr, "10"+hourStr, "11"+hourStr, "12"+hourStr, "18"+hourStr, "24"+hourStr};
+        durationMinItems = new String[]{"0"+minStr, "10"+minStr, "15"+minStr, "20"+minStr, "30"+minStr, "40"+minStr, "45"+minStr, "50"+minStr};
         startCalendar = TimeUtils.getNextHalfHourTime(Calendar.getInstance());
         startDateText.setText(TimeUtils.calendar2FormatString(MyApplication.getInstance(), startCalendar, TimeUtils.FORMAT_MONTH_DAY));
         startTimeText.setText(TimeUtils.calendar2FormatString(getApplicationContext(), startCalendar, TimeUtils.FORMAT_HOUR_MINUTE));
@@ -85,12 +95,12 @@ public class WebexScheduleMeetingActivity extends BaseActivity {
         durationMinText.setText(durationMinItems[durationMinChoiceIndex]);
         passwordEdit.setTransformationMethod(PasswordTransformationMethod.getInstance());
         String userName = PreferencesUtils.getString(MyApplication.getInstance(), "userRealName", "");
-        EditTextUtils.setText(titleEdit,getString(R.string.webex_meeting_title, userName));
+        EditTextUtils.setText(titleEdit, getString(R.string.webex_meeting_title, userName));
         apiService = new WebexAPIService(this);
         apiService.setAPIInterface(new Webservice());
         loadingDlg = new LoadingDialog(this);
         int code = (int) ((Math.random() * 9 + 1) * 100000);
-        EditTextUtils.setText(passwordEdit,code+"");
+        EditTextUtils.setText(passwordEdit, code + "");
     }
 
 
@@ -133,7 +143,7 @@ public class WebexScheduleMeetingActivity extends BaseActivity {
 
     private void showDurationHourChoiceDialog() {
         new MyQMUIDialog.CheckableSumDialogBuilder(WebexScheduleMeetingActivity.this)
-                .setTitle("会议持续时间")
+                .setTitle(getString(R.string.webex_meeting_duration))
                 .setCheckedIndex(durationHourChoiceIndex)
                 .addItems(durationHourItems, new DialogInterface.OnClickListener() {
                     @Override
@@ -148,7 +158,7 @@ public class WebexScheduleMeetingActivity extends BaseActivity {
 
     private void showDurationMinChoiceDialog() {
         new MyQMUIDialog.CheckableSumDialogBuilder(WebexScheduleMeetingActivity.this)
-                .setTitle("会议持续时间")
+                .setTitle(getString(R.string.webex_meeting_duration))
                 .setCheckedIndex(durationMinChoiceIndex)
                 .addItems(durationMinItems, new DialogInterface.OnClickListener() {
                     @Override
@@ -167,22 +177,29 @@ public class WebexScheduleMeetingActivity extends BaseActivity {
             case R.id.tv_start:
                 String confName = titleEdit.getText().toString();
                 if (StringUtils.isBlank(confName)) {
-                    ToastUtils.show(MyApplication.getInstance(), "请输入会议主题");
+                    ToastUtils.show(MyApplication.getInstance(), R.string.enter_meeting_name);
                     return;
                 }
                 String meetingPassword = passwordEdit.getText().toString();
                 if (StringUtils.isBlank(meetingPassword)) {
-                    ToastUtils.show(MyApplication.getInstance(), "请输入会议密码");
+                    ToastUtils.show(MyApplication.getInstance(), R.string.enter_meeting_password);
+                    return;
+                }
+                if (meetingPassword.length()<6 || meetingPassword.length()>10){
+                    ToastUtils.show(MyApplication.getInstance(), R.string.webex_password_length_error);
+                    return;
+                }
+                if (startCalendar.before(Calendar.getInstance())) {
+                    showStartDateErrorDlg();
                     return;
                 }
                 int duration = durationHourSumMin[durationHourChoiceIndex] + durationMinSumMin[durationMinChoiceIndex];
                 if (duration == 0) {
-                    ToastUtils.show(MyApplication.getInstance(), "请正确设置会议持续时间");
+                    ToastUtils.show(MyApplication.getInstance(), R.string.set_duration_correct);
                     return;
                 }
                 webexMeeting = new WebexMeeting();
                 webexMeeting.setConfName(confName);
-                webexMeeting.setAgenda("");
                 webexMeeting.setAttendeesList(attendeesList);
                 webexMeeting.setDuration(duration);
                 webexMeeting.setMeetingPassword(meetingPassword);
@@ -222,12 +239,26 @@ public class WebexScheduleMeetingActivity extends BaseActivity {
         }
     }
 
+    private void showStartDateErrorDlg() {
+        new MyQMUIDialog.MessageDialogBuilder(WebexScheduleMeetingActivity.this)
+                .setTitle(getString(R.string.start_time_error))
+                .setMessage(getString(R.string.start_time_error_info))
+                .addAction(getString(R.string.ok), new QMUIDialogAction.ActionListener() {
+                    @Override
+                    public void onClick(QMUIDialog dialog, int index) {
+                        dialog.dismiss();
+
+                    }
+                })
+                .show();
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (RESULT_OK == resultCode) {
             if (requestCode == REQUEST_ADD_ATTENDEES) {
                 attendeesList = data.getStringArrayListExtra(WebexAddAttendeesActivity.EXTRA_ATTENDEES_LIST);
-                inviteText.setText(attendeesList.size());
+                inviteText.setText(attendeesList.size() == 0 ? getString(R.string.none) : attendeesList.size() + "");
             }
         }
     }
@@ -250,7 +281,7 @@ public class WebexScheduleMeetingActivity extends BaseActivity {
         @Override
         public void returnScheduleWebexMeetingFail(String error, int errorCode) {
             LoadingDialog.dimissDlg(loadingDlg);
-            WebServiceMiddleUtils.hand(MyApplication.getInstance(),error,errorCode);
+            WebServiceMiddleUtils.hand(MyApplication.getInstance(), error, errorCode);
         }
     }
 }

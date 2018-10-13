@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="我的会议"
+            android:text="@string/my_meeting"
             android:textColor="@color/header_text"
             android:textSize="@dimen/header_textsize" />
         <ImageView
@@ -49,10 +49,10 @@
             android:layout_centerVertical="true"
             android:clickable="true"
             android:onClick="onClick"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
+            android:paddingLeft="13dp"
+            android:paddingRight="13dp"
             android:scaleType="centerInside"
-            android:src="@drawable/icon_add" />
+            android:src="@drawable/ic_webex_meeing_add" />
     </RelativeLayout>
 
 

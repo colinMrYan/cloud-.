@@ -1,6 +1,8 @@
 package com.inspur.emmcloud.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +11,9 @@ import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.appcenter.webex.WebexMeeting;
 import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
@@ -83,20 +87,24 @@ public class WebexMeetingAdapter extends BaseExpandableListAdapter {
     @Override
     public View getGroupView(final int groupPosition, boolean isExpanded,
                              View convertView, ViewGroup parent) {
-        String YMDTime = webexMeetingGroupList.get(groupPosition);
-        List<WebexMeeting> webexMeetingList = webexMeetingMap.get(YMDTime);
+        List<WebexMeeting> webexMeetingList =  webexMeetingMap.get(webexMeetingGroupList.get(groupPosition));
         Calendar calendar = webexMeetingList.get(0).getStartDateCalendar();
         ExpandableListView expandableListView = (ExpandableListView) parent;
         expandableListView.expandGroup(groupPosition);
         convertView = LayoutInflater.from(context).inflate(R.layout.item_view_webex_meeting_group, null);
         TextView weekText = (TextView) convertView.findViewById(R.id.tv_week);
         TextView dateText = (TextView) convertView.findViewById(R.id.tv_date);
+        int textColor = -1;
         if (TimeUtils.isCalendarToday(calendar)){
+            textColor = ContextCompat.getColor(context,R.color.header_bg);
             weekText.setText(R.string.today);
         }else {
+            textColor = Color.parseColor("#333333");
             weekText.setText(TimeUtils.getWeekDay(context,calendar));
         }
-        dateText.setText(YMDTime);
+        weekText.setTextColor(textColor);
+        dateText.setTextColor(textColor);
+        dateText.setText(TimeUtils.calendar2FormatString(MyApplication.getInstance(),calendar,TimeUtils.FORMAT_YEAR_MONTH_DAY));
         return convertView;
     }
 
@@ -131,10 +139,10 @@ public class WebexMeetingAdapter extends BaseExpandableListAdapter {
         if (email.equals(myEmail)){
             holder.ownerText.setText(R.string.mine);
         }else {
-            holder.ownerText.setText(email);
+            holder.ownerText.setText(webexMeeting.getHostUserName());
         }
         holder.line.setVisibility(isLastChild?View.INVISIBLE:View.VISIBLE);
-        String photoUrl = "https://emm.inspur.com/img/userhead/"+webexMeeting.getHostWebExID();
+        String photoUrl = APIUri.getWebexPhotoUrl(webexMeeting.getHostWebExID());
         ImageDisplayUtils.getInstance().displayImage(holder.photoImg,photoUrl,R.drawable.icon_person_default);
         return convertView;
     }

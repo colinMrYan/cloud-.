@@ -32,15 +32,17 @@ import com.inspur.emmcloud.bean.appcenter.volume.VolumeDetail;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.bean.appcenter.webex.GetScheduleWebexMeetingSuccess;
 import com.inspur.emmcloud.bean.appcenter.webex.GetWebexMeetingListResult;
+import com.inspur.emmcloud.bean.appcenter.webex.GetWebexTKResult;
+import com.inspur.emmcloud.bean.appcenter.webex.WebexMeeting;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
 import com.inspur.emmcloud.bean.chat.GetAllRobotsResult;
 import com.inspur.emmcloud.bean.chat.GetChannelListResult;
+import com.inspur.emmcloud.bean.chat.GetChannelMessagesResult;
 import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.bean.chat.GetFileUploadResult;
 import com.inspur.emmcloud.bean.chat.GetMsgCommentCountResult;
 import com.inspur.emmcloud.bean.chat.GetMsgCommentResult;
 import com.inspur.emmcloud.bean.chat.GetMsgResult;
-import com.inspur.emmcloud.bean.chat.GetChannelMessagesResult;
 import com.inspur.emmcloud.bean.chat.GetNewMsgsResult;
 import com.inspur.emmcloud.bean.chat.GetNewsImgResult;
 import com.inspur.emmcloud.bean.chat.GetNewsInstructionResult;
@@ -703,4 +705,13 @@ public interface APIInterface {
 
     void returnScheduleWebexMeetingSuccess(GetScheduleWebexMeetingSuccess getScheduleWebexMeetingSuccess);
     void returnScheduleWebexMeetingFail(String error,int errorCode);
+
+    void returnWebexMeetingSuccess(WebexMeeting webexMeeting);
+    void returnWebexMeetingFail(String error,int errorCode);
+
+    void returnWebexTKSuccess(GetWebexTKResult getWebexTKResult);
+    void returnWebexTKFail(String error,int errorCode);
+
+    void returnRemoveWebexMeetingSuccess();
+    void returnRemoveWebexMeetingFail(String error,int errorCode);
 }

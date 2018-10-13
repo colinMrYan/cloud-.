@@ -24,7 +24,7 @@
             android:onClick="onClick"
             android:paddingLeft="20dp"
             android:paddingRight="15dp"
-            android:text="完成"
+            android:text="@string/complete"
             android:textColor="@color/white"
             android:textSize="@dimen/header_textsize" />
 
@@ -52,66 +52,106 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="添加受邀者"
+            android:text="@string/add_invitee"
             android:textColor="@color/header_text"
             android:textSize="@dimen/header_textsize" />
     </RelativeLayout>
 
 
+    <ScrollView
+        android:id="@+id/sv_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/rl_header"
+        android:paddingBottom="10dp"
+        android:background="@color/content_bg">
 
-        <ScrollView
-            android:layout_below="@id/rl_header"
-            android:background="@color/content_bg"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <RelativeLayout
+            android:layout_height="wrap_content">
+
+            <com.inspur.emmcloud.widget.ScrollViewWithListView
+                android:id="@+id/lv_attendees"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <com.inspur.emmcloud.widget.ScrollViewWithListView
-                    android:id="@+id/lv_attendees"
-                    android:divider="@color/transparent"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                </com.inspur.emmcloud.widget.ScrollViewWithListView>
+                android:layout_height="wrap_content"
+                android:divider="@color/transparent"></com.inspur.emmcloud.widget.ScrollViewWithListView>
+
+            <RelativeLayout
+                android:id="@+id/rl_add_attendees"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/lv_attendees"
+                android:layout_marginTop="15dp"
+                android:background="@color/white"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp">
+
                 <RelativeLayout
-                    android:background="@color/white"
-                    android:layout_below="@id/lv_attendees"
-                    android:layout_marginTop="15dp"
-                    android:paddingLeft="15dp"
-                    android:paddingRight="15dp"
+                    android:id="@+id/rl"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
+
                     <ImageView
-                        android:id="@+id/iv_add_attendees"
-                        android:src="@drawable/ic_webex_add_attendees"
+                        android:id="@+id/iv_add_attendees_from_contact"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:onClick="onClick"
                         android:scaleType="fitXY"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp" />
+                        android:src="@drawable/ic_webex_add_attendees_for_contact" />
+
                     <EditText
                         android:id="@+id/et_add_attendees"
-                        android:background="@null"
-                        android:textSize="17sp"
-                        android:paddingTop="11dp"
-                        android:paddingBottom="11dp"
-                        android:hint="请输入受邀者的电子邮箱地址"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_toLeftOf="@id/iv_add_attendees"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:maxLines="1"
+                        android:layout_toLeftOf="@id/iv_add_attendees_from_contact"
+                        android:background="@null"
+                        android:hint="@string/input_invitee_emails"
+                        android:paddingBottom="11dp"
+                        android:paddingTop="11dp"
+                        android:textSize="17sp" />
+
                     <View
-                        android:background="@color/color_list_divider"
-                        android:layout_below="@id/et_add_attendees"
                         android:layout_width="match_parent"
-                        android:layout_height="0.5px"></View>
+                        android:layout_height="0.5px"
+                        android:layout_below="@id/et_add_attendees"
+                        android:background="@color/color_list_divider"></View>
                 </RelativeLayout>
 
+                <RelativeLayout
+                    android:id="@+id/rl_add_attendees_input"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/rl"
+                    android:onClick="onClick"
+                    >
+
+                    <ImageView
+                        android:id="@+id/iv_add_attendees"
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
+                        android:layout_centerVertical="true"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/ic_webex_add_attendees" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toRightOf="@id/iv_add_attendees"
+                        android:text="@string/add_invitee"
+                        android:textColor="#333333"
+                        android:textSize="16sp" />
+                </RelativeLayout>
             </RelativeLayout>
 
-        </ScrollView>
 
+        </RelativeLayout>
+
+    </ScrollView>
 
 
 </RelativeLayout>
