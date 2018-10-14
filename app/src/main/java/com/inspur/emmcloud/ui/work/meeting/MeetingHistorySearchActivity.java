@@ -261,7 +261,7 @@ public class MeetingHistorySearchActivity extends BaseActivity implements
             if (convertView == null) {
                 convertView = LayoutInflater.from(
                         MeetingHistorySearchActivity.this).inflate(
-                        R.layout.item_view_webex_meeting_group, null);
+                        R.layout.meeting_list_child_item, null);
                 holder = new ExpandViewHolder();
                 holder.meetingTopictext = (TextView) convertView
                         .findViewById(R.id.meeting_topic_text);
