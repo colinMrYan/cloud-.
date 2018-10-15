@@ -467,7 +467,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="native" />
+                <data android:scheme="inspur-ecc-native"/>
             </intent-filter>
 
         </activity>

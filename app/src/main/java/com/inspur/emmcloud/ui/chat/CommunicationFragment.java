@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -56,6 +55,7 @@ import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
@@ -107,6 +107,8 @@ public class CommunicationFragment extends Fragment {
     private static final int SORT_CHANNEL_COMPLETE = 3;
     private static final int SORT_CHANNEL_LIST = 4;
     private static final int SCAN_LOGIN_QRCODE_RESULT = 5;
+    private static final int CREAT_CHANNEL_GROUP_ICON = 6;
+    private static final int CACHE_CHANNEL_SUCCESS = 7;
     private View rootView;
     private ListView msgListView;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -118,7 +120,6 @@ public class CommunicationFragment extends Fragment {
     private TextView titleText;
     private boolean isHaveCreatGroupIcon = false;
     private PopupWindow popupWindow;
-    private CacheChannelTask cacheChannelTask;
     private boolean isFirstConnectWebsockt = true;//判断是否第一次连上websockt
 
     @Override
@@ -370,10 +371,11 @@ public class CommunicationFragment extends Fragment {
      */
     private void createGroupIcon(List<Channel> channelList) {
         if (MyApplication.getInstance().getIsContactReady() && NetUtils.isNetworkConnected(MyApplication.getInstance(), false)) {
-            if (channelList != null && channelList.size() == 0){
+            if (channelList != null && channelList.size() == 0) {
                 return;
             }
-            isHaveCreatGroupIcon = new ChannelGroupIconUtils().create(MyApplication.getInstance(), channelList,handler);
+            LogUtils.jasonDebug("111");
+            isHaveCreatGroupIcon = new ChannelGroupIconUtils().create(MyApplication.getInstance(), channelList, handler);
         }
     }
 
@@ -487,6 +489,16 @@ public class CommunicationFragment extends Fragment {
                         displayChannelList.clear();
                         displayChannelList.addAll(channelList);
                         displayData();// 展示数据
+                        break;
+                    case CREAT_CHANNEL_GROUP_ICON:
+                        List<Channel> createChannelIconChannelList = (List<Channel>) msg.obj;
+                        createGroupIcon(createChannelIconChannelList);
+                        break;
+                    case CACHE_CHANNEL_SUCCESS:
+                        sortChannelList();
+                        GetChannelListResult getChannelListResult = (GetChannelListResult) msg.obj;
+                        getMessage();
+                        getChannelInfoResult(getChannelListResult.getChannelList());
                         break;
                     case SORT_CHANNEL_LIST:
                         sortChannelList();
@@ -619,30 +631,41 @@ public class CommunicationFragment extends Fragment {
         EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SET_ALL_MESSAGE_UNREAD_COUNT, unReadCount));
     }
 
-    class CacheChannelTask extends AsyncTask<GetChannelListResult, Void, List<Channel>> {
-        private List<Channel> allChannelList = new ArrayList<>();
+    class CacheChannelThread extends Thread {
+        private GetChannelListResult getChannelListResult;
 
-        @Override
-        protected void onPostExecute(List<Channel> addchannelList) {
-            sortChannelList();
-            createGroupIcon(isHaveCreatGroupIcon ? addchannelList : allChannelList);
-            getChannelInfoResult(allChannelList);
+        private CacheChannelThread(GetChannelListResult getChannelListResult) {
+            this.getChannelListResult = getChannelListResult;
         }
 
         @Override
-        protected List<Channel> doInBackground(GetChannelListResult... params) {
-            List<Channel> allchannelList = params[0].getChannelList();
-            this.allChannelList = allchannelList;
-            List<Channel> cacheChannelList = ChannelCacheUtils
-                    .getCacheChannelList(getActivity());
-            List<Channel> addchannelList = new ArrayList<>();
-            addchannelList.addAll(allchannelList);
-            addchannelList.removeAll(cacheChannelList);
-            ChannelCacheUtils.clearChannel(getActivity());
-            ChannelCacheUtils.saveChannelList(getActivity(), allchannelList);
-            return addchannelList;
+        public void run() {
+            try {
+                List<Channel> allchannelList = getChannelListResult.getChannelList();
+                List<Channel> cacheChannelList = ChannelCacheUtils
+                        .getCacheChannelList(MyApplication.getInstance());
+                ChannelCacheUtils.saveChannelList(MyApplication.getInstance(), allchannelList);
+                List<Channel> intersectionConversationList = new ArrayList<>();
+                intersectionConversationList.addAll(allchannelList);
+                intersectionConversationList.retainAll(cacheChannelList);
+                cacheChannelList.removeAll(intersectionConversationList);
+                ChannelCacheUtils.deleteChannelList(MyApplication.getInstance(), cacheChannelList);
+                if (handler != null) {
+                    android.os.Message message = handler.obtainMessage(CACHE_CHANNEL_SUCCESS, getChannelListResult);
+                    message.sendToTarget();
+                    if (isHaveCreatGroupIcon) {
+                        allchannelList.removeAll(intersectionConversationList);
+                    }
+                    android.os.Message createChannelIconMessage = handler.obtainMessage(CREAT_CHANNEL_GROUP_ICON, allchannelList);
+                    createChannelIconMessage.sendToTarget();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
         }
     }
+
 
     /**
      * 接受创建群组头像的icon
@@ -659,6 +682,7 @@ public class CommunicationFragment extends Fragment {
                 case "creat_group_icon":
                     isHaveCreatGroupIcon = false;
                     createGroupIcon(null);
+                    LogUtils.jasonDebug("000");
                     break;
                 case "refresh_session_list":
                     getChannelList();
@@ -758,10 +782,6 @@ public class CommunicationFragment extends Fragment {
     public void onDestroy() {
         // TODO Auto-generated method stub
         super.onDestroy();
-        if (cacheChannelTask != null && !cacheChannelTask.isCancelled() && cacheChannelTask.getStatus() == AsyncTask.Status.RUNNING) {
-            cacheChannelTask.cancel(true);
-            cacheChannelTask = null;
-        }
         if (receiver != null) {
             LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(receiver);
             receiver = null;
@@ -878,7 +898,7 @@ public class CommunicationFragment extends Fragment {
                 String content = eventMessage.getContent();
                 JSONObject contentObj = JSONUtils.getJSONObject(content);
                 Message receivedWSMessage = new Message(contentObj);
-                if (receivedWSMessage.getChannel().startsWith("FIBER")){
+                if (receivedWSMessage.getChannel().startsWith("FIBER")) {
                     return;
                 }
                 //验重处理
@@ -895,6 +915,7 @@ public class CommunicationFragment extends Fragment {
                     }
                     Channel receiveMessageChannel = ChannelCacheUtils.getChannel(
                             getActivity(), receivedWSMessage.getChannel());
+
                     cacheReceiveMessage(receivedWSMessage);
                     if (receiveMessageChannel == null) {
                         getChannelList();
@@ -994,6 +1015,8 @@ public class CommunicationFragment extends Fragment {
                 //获取每个频道最近的15条消息
                 WSAPIService.getInstance().getChannelRecentMessage();
             }
+        }else {
+            swipeRefreshLayout.setRefreshing(false);
         }
 
     }
@@ -1029,8 +1052,7 @@ public class CommunicationFragment extends Fragment {
             // TODO Auto-generated method stub
             if (getActivity() != null) {
                 swipeRefreshLayout.setRefreshing(false);
-                cacheChannelTask = new CacheChannelTask();
-                cacheChannelTask.execute(getChannelListResult);
+                new CacheChannelThread(getChannelListResult).run();
             }
 
         }

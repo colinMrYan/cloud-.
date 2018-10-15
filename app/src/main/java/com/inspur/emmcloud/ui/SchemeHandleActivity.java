@@ -246,8 +246,8 @@ public class SchemeHandleActivity extends Activity {
                                     IntentUtils.startActivity(SchemeHandleActivity.this, VolumeHomePageActivity.class,true);
                                 }
                                 break;
-                            case "native":
-                                openNativeSchemeByHost(host,getIntent());
+                            case "inspur-ecc-nativie":
+                                openNativeSchemeByHost(host);
                                 break;
                             default:
                                 finish();
@@ -430,13 +430,13 @@ public class SchemeHandleActivity extends Activity {
 
     private void openNativeSchemeByHost(String host,Intent intent){
         switch (host){
-            case "ecc-calendar":
+            case "calendar":
                 IntentUtils.startActivity(SchemeHandleActivity.this, CalActivity.class,true);
                 break;
-            case "ecc-to-do":
+            case "to-do":
                 IntentUtils.startActivity(SchemeHandleActivity.this, MessionListActivity.class,true);
                 break;
-            case "ecc-meeting":
+            case "meeting":
                 IntentUtils.startActivity(SchemeHandleActivity.this, MeetingListActivity.class,true);
                 break;
             case "webex":
