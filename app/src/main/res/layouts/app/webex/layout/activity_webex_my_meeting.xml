@@ -83,7 +83,6 @@
     </RelativeLayout>
     <LinearLayout
         android:id="@+id/ll_no_meeting"
-        android:visibility="gone"
         android:gravity="center"
         android:layout_below="@id/header_layout"
         android:layout_width="match_parent"
@@ -97,18 +96,5 @@
             android:adjustViewBounds="true"
             android:src="@drawable/icon_no_meeting" />
 
-        <Button
-            android:id="@+id/bt_add_meeting"
-            android:layout_width="180dp"
-            android:layout_height="40dp"
-            android:layout_marginTop="50dp"
-            android:layout_centerHorizontal="true"
-            android:background="@drawable/btn_find_friends"
-            android:enabled="true"
-            android:onClick="onClick"
-            android:text="@string/meeting_add_meeting"
-            android:textColor="#107BCB"
-            android:textSize="18sp" >
-        </Button>
     </LinearLayout>
 </RelativeLayout>

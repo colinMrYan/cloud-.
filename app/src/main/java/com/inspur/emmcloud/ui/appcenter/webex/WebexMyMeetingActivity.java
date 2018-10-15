@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.ui.appcenter.webex;
 
 import android.content.Intent;
+import android.database.DataSetObserver;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -121,6 +122,17 @@ public class WebexMyMeetingActivity extends BaseActivity {
         expandListView.setVerticalScrollBarEnabled(false);
         expandListView.setHeaderDividersEnabled(false);
         adapter = new WebexMeetingAdapter(this);
+        adapter.registerDataSetObserver(new DataSetObserver() {
+            @Override
+            public void onChanged() {
+                super.onChanged();
+                if (webexMeetingList.size()>0){
+                    noMeetingLayout.setVisibility(View.GONE);
+                }else {
+                    noMeetingLayout.setVisibility(View.VISIBLE);
+                }
+            }
+        });
         expandListView.setAdapter(adapter);
         expandListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
@@ -257,7 +269,6 @@ public class WebexMyMeetingActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.iv_add_meeting:
-            case R.id.bt_add_meeting:
                 Intent intent = new Intent(this, WebexScheduleMeetingActivity.class);
                 startActivityForResult(intent,REQUEST_SCHEDULE_WEBEX_MEETING);
                 break;

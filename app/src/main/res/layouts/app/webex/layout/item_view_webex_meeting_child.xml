@@ -13,6 +13,7 @@
         android:layout_width="42dp"
         android:layout_height="42dp" />
     <LinearLayout
+        android:id="@+id/ll_content"
         android:layout_centerVertical="true"
         android:orientation="vertical"
         android:layout_toLeftOf="@+id/bt_function"
@@ -47,11 +48,7 @@
             android:paddingRight="15dp"
             android:paddingBottom="6dp"
             android:textSize="15sp" />
-        <View
-            android:id="@+id/v_line"
-            android:background="@color/color_list_divider"
-            android:layout_width="match_parent"
-            android:layout_height="0.5px"></View>
+
     </LinearLayout>
 
     <Button
@@ -71,4 +68,10 @@
         android:textColor="#ffffff"
         android:textSize="15sp"
         />
+    <View
+        android:id="@+id/v_line"
+        android:layout_below="@id/ll_content"
+        android:background="@color/color_list_divider"
+        android:layout_width="match_parent"
+        android:layout_height="0.5px"></View>
 </RelativeLayout>
