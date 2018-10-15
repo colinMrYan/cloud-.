@@ -46,6 +46,19 @@ public class ChannelCacheUtils {
         }
     }
 
+
+    public static void deleteChannelList(final  Context context,final List<Channel> channelList){
+        // TODO Auto-generated method stub
+        try {
+            if (channelList == null || channelList.size() == 0) {
+                return;
+            }
+            DbCacheUtils.getDb(context).delete(channelList);
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
+    }
     /**
      * 清除Channel表信息
      *
