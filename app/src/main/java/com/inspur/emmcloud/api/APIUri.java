@@ -8,7 +8,6 @@ import com.inspur.emmcloud.bean.chat.Robot;
 import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.ImageUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
@@ -924,7 +923,6 @@ public class APIUri {
      * @return
      */
     public static String getWebexMeetingListUrl(){
-        LogUtils.jasonDebug("url==="+getEMMBaseUrl()+"/api/mam/v6.0/webex");
         return getEMMBaseUrl()+"api/mam/v6.0/webex";
     }
 

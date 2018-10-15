@@ -184,7 +184,7 @@ public class WebexMeetingDetailActivity extends BaseActivity {
             intent.addCategory(Intent.CATEGORY_BROWSABLE);
             intent.setData(Uri.parse("wbx://meeting"));
             intent.putExtra("MK", webexMeeting.getMeetingID());
-            intent.putExtra("MPW", "123123");
+            intent.putExtra("MPW", webexMeeting.getMeetingPassword());
             startActivity(intent);
         } catch (Exception e) {
             e.printStackTrace();

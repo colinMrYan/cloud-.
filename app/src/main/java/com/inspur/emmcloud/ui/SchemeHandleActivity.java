@@ -41,6 +41,7 @@ import com.inspur.emmcloud.ui.work.task.MessionListActivity;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -440,6 +441,7 @@ public class SchemeHandleActivity extends Activity {
                 IntentUtils.startActivity(SchemeHandleActivity.this, MeetingListActivity.class,true);
                 break;
             case "webex":
+                LogUtils.jasonDebug("000000000000000000000000000000");
                 String installUri = intent.getExtras().getString("installUri","");
                 Bundle bundle = new Bundle();
                 bundle.putString("installUri",installUri);

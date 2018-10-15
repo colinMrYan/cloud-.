@@ -25,7 +25,6 @@ import com.inspur.emmcloud.bean.appcenter.webex.WebexMeeting;
 import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.GroupUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -141,11 +140,8 @@ public class WebexMyMeetingActivity extends BaseActivity {
                     webexMeetingOpen = webexMeeting;
                     boolean isMeetingEnd = webexMeeting.getStartDateCalendar().getTimeInMillis() + webexMeeting.getDuration() * 60000 <= System.currentTimeMillis();
                     if (!isMeetingEnd) {
-                        if (isOwner(webexMeeting)) {
-                            getWebexTK();
-                        } else {
-                            joinWebexMeeting(webexMeeting);
-                        }
+                        getWebexMeeting();
+
                     } else {
                         functionBtn.setEnabled(false);
                         functionBtn.setTextColor(Color.parseColor("#999999"));
@@ -209,7 +205,7 @@ public class WebexMyMeetingActivity extends BaseActivity {
             intent.addCategory(Intent.CATEGORY_BROWSABLE);
             intent.setData(Uri.parse("wbx://meeting"));
             intent.putExtra("MK", webexMeeting.getMeetingID());
-            intent.putExtra("MPW", "123123");
+            intent.putExtra("MPW", webexMeeting.getMeetingPassword());
             startActivity(intent);
         } catch (Exception e) {
             e.printStackTrace();
@@ -324,20 +320,46 @@ public class WebexMyMeetingActivity extends BaseActivity {
         if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
             loadingDlg.show(isShowDlg);
             apiService.getWebexMeetingList();
-        }else {
-            swipeRefreshLayout.setRefreshing(false);
+        }
+    }
+
+    private void getWebexMeeting() {
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
+            loadingDlg.show();
+            apiService.getWebexMeeting(webexMeetingOpen.getMeetingID());
         }
     }
 
     private void getWebexTK() {
         if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
-            loadingDlg.show();
             apiService.getWebexTK();
+        }else {
+            LoadingDialog.dimissDlg(loadingDlg);
         }
     }
 
 
     private class WebService extends APIInterfaceInstance {
+        @Override
+        public void returnWebexMeetingSuccess(WebexMeeting webexMeeting) {
+            webexMeetingOpen = webexMeeting;
+            if (isOwner(webexMeeting)) {
+                getWebexTK();
+            } else {
+                LoadingDialog.dimissDlg(loadingDlg);
+                joinWebexMeeting(webexMeetingOpen);
+            }
+
+        }
+
+        @Override
+        public void returnWebexMeetingFail(String error, int errorCode) {
+            LoadingDialog.dimissDlg(loadingDlg);
+            WebServiceMiddleUtils.hand(MyApplication.getInstance(), error, errorCode);
+        }
+
+
+
         @Override
         public void returnWebexMeetingListSuccess(GetWebexMeetingListResult getWebexMeetingListResult) {
             swipeRefreshLayout.setRefreshing(false);
