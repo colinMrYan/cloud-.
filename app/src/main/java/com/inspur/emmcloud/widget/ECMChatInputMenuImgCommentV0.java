@@ -39,10 +39,9 @@ import java.util.regex.Pattern;
 /**
  * com.inspur.emmcloud.widget.ECMChatInputMenu create at 2016年11月24日 上午10:25:52
  */
-public class ECMChatInputMenuImgComment extends LinearLayout {
+public class ECMChatInputMenuImgCommentV0 extends LinearLayout {
 
     private static final int MENTIONS_RESULT = 5;
-    private static final long MENTIONS_BASE_TIME = 1515513600000L;
     @ViewInject(R.id.input_edit)
     private ChatInputEdit inputEdit;
 
@@ -55,18 +54,19 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
     private boolean canMentions = false;
     private ChatInputMenuListener chatInputMenuListener;
     private String cid = "";
+    private boolean isMessageV0 = true;
 
-    public ECMChatInputMenuImgComment(Context context) {
+    public ECMChatInputMenuImgCommentV0(Context context) {
         this(context, null);
         // TODO Auto-generated constructor stub
     }
 
-    public ECMChatInputMenuImgComment(Context context, AttributeSet attrs) {
+    public ECMChatInputMenuImgCommentV0(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
         // TODO Auto-generated constructor stub
     }
 
-    public ECMChatInputMenuImgComment(Context context, AttributeSet attrs, int defStyle) {
+    public ECMChatInputMenuImgCommentV0(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         initView(context);
     }
@@ -172,7 +172,7 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
     public void addMentions(String uid, String name, boolean isInputKeyWord) {
         if (uid != null && name != null) {
             InsertModel insertModel;
-            insertModel = new InsertModel("@", (System.currentTimeMillis() - MENTIONS_BASE_TIME) + "", name, uid);
+            insertModel= new InsertModel("@", uid, name);
             inputEdit.insertSpecialStr(isInputKeyWord, insertModel);
         }
     }
@@ -183,10 +183,15 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
             case R.id.send_msg_btn:
                 if (NetUtils.isNetworkConnected(getContext())) {
                     List<String> urlList= null;
-                    String content = inputEdit.getRichContent(false);
+                    String content = inputEdit.getRichContent(isMessageV0);
                     Map<String,String> mentionsMap = null;
-                    mentionsMap = inputEdit.getMentionsMap();
+                    if (isMessageV0){
+                        urlList = getContentUrlList(inputEdit.getText().toString());
+                    }else {
+                        mentionsMap = inputEdit.getMentionsMap();
+                    }
                     chatInputMenuListener.onSendMsg(content, getContentMentionUidList(), urlList,mentionsMap);
+
                     inputEdit.setText("");
                 }
                 break;
@@ -230,7 +235,7 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
 
 
     public interface ChatInputMenuListener {
-        void onSendMsg(String content, List<String> mentionsUidList, List<String> urlList, Map<String,String> mentionsMap);
+        void onSendMsg(String content, List<String> mentionsUidList, List<String> urlList, Map<String, String> mentionsMap);
     }
 
 

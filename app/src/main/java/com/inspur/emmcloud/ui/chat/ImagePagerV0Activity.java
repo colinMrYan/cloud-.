@@ -29,7 +29,7 @@ import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelCacheUtils;
-import com.inspur.emmcloud.widget.ECMChatInputMenuImgComment;
+import com.inspur.emmcloud.widget.ECMChatInputMenuImgCommentV0;
 import com.inspur.emmcloud.widget.HackyViewPager;
 import com.inspur.emmcloud.widget.ImageDetailFragment;
 import com.inspur.emmcloud.widget.SoftKeyboardStateHelper;
@@ -60,7 +60,7 @@ public class ImagePagerV0Activity extends BaseFragmentActivity {
 	public static final String PHOTO_SELECT_W_TAG = "PHOTO_SELECT_W_TAG";
 	public static final String PHOTO_SELECT_H_TAG = "PHOTO_SELECT_H_TAG";
 
-	private ECMChatInputMenuImgComment ecmChatInputMenu;
+	private ECMChatInputMenuImgCommentV0 ecmChatInputMenu;
 	private HackyViewPager mPager;
 	private int pagerPosition;
 	private int pageStartPosition = 0;
@@ -163,7 +163,7 @@ public class ImagePagerV0Activity extends BaseFragmentActivity {
 	 * 显示评论输入框
 	 */
 	private void showCommentInputDlg() {
-		View view = getLayoutInflater().inflate(R.layout.dialog_chat_img_input, null);
+		View view = getLayoutInflater().inflate(R.layout.dialog_chat_img_input_v0, null);
 		commentInputDlg = new Dialog(this, R.style.transparentFrameWindowStyle);
 		commentInputDlg.setContentView(view, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
 				ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -195,7 +195,7 @@ public class ImagePagerV0Activity extends BaseFragmentActivity {
 	 * 初始化评论输入框
 	 */
 	private void initEcmChatInputMenu() {
-		ecmChatInputMenu = (ECMChatInputMenuImgComment) commentInputDlg.findViewById(R.id.chat_input_menu);
+		ecmChatInputMenu = (ECMChatInputMenuImgCommentV0) commentInputDlg.findViewById(R.id.chat_input_menu);
 		//ecmChatInputMenu.setWindowListener(false);
 		String channelType = ChannelCacheUtils.getChannelType(getApplicationContext(), cid);
 		if (channelType != null && channelType.equals("GROUP")) {
@@ -203,7 +203,7 @@ public class ImagePagerV0Activity extends BaseFragmentActivity {
 		}else {
 			ecmChatInputMenu.setCanMentions(false, cid);
 		}
-		ecmChatInputMenu.setChatInputMenuListener(new ECMChatInputMenuImgComment.ChatInputMenuListener() {
+		ecmChatInputMenu.setChatInputMenuListener(new ECMChatInputMenuImgCommentV0.ChatInputMenuListener() {
 
 			@Override
 			public void onSendMsg(String content, List<String> mentionsUidList,List<String> urlList,Map<String,String> map) {
