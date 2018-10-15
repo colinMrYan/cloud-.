@@ -246,8 +246,8 @@ public class SchemeHandleActivity extends Activity {
                                     IntentUtils.startActivity(SchemeHandleActivity.this, VolumeHomePageActivity.class,true);
                                 }
                                 break;
-                            case "inspur-ecc-nativie":
-                                openNativeSchemeByHost(host);
+                            case "inspur-ecc-native":
+                                openNativeSchemeByHost(host,getIntent());
                                 break;
                             default:
                                 finish();
