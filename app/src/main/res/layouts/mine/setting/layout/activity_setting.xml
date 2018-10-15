@@ -253,6 +253,7 @@
             android:background="@color/color_list_divider" />
 
         <RelativeLayout
+            android:id="@+id/rl_voice_word"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/text_layout_selector">
@@ -278,6 +279,7 @@
 
 
         <View
+            android:id="@+id/view_voice_word_line"
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
             android:background="@color/color_list_divider" />
