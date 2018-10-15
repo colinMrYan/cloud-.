@@ -21,6 +21,7 @@ import com.inspur.emmcloud.interf.CommonCallBack;
 import com.inspur.emmcloud.ui.appcenter.ReactNativeAppActivity;
 import com.inspur.emmcloud.ui.appcenter.groupnews.GroupNewsActivity;
 import com.inspur.emmcloud.ui.appcenter.volume.VolumeHomePageActivity;
+import com.inspur.emmcloud.ui.appcenter.webex.WebexMyMeetingActivity;
 import com.inspur.emmcloud.ui.chat.ChannelActivity;
 import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
@@ -40,6 +41,7 @@ import com.inspur.emmcloud.ui.work.task.MessionListActivity;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -245,8 +247,8 @@ public class SchemeHandleActivity extends Activity {
                                     IntentUtils.startActivity(SchemeHandleActivity.this, VolumeHomePageActivity.class,true);
                                 }
                                 break;
-                            case "inspur-ecc-nativie":
-                                openNativeSchemeByHost(host);
+                            case "inspur-ecc-native":
+                                openNativeSchemeByHost(host,getIntent());
                                 break;
                             default:
                                 finish();
@@ -427,7 +429,7 @@ public class SchemeHandleActivity extends Activity {
         }
     }
 
-    private void openNativeSchemeByHost(String host){
+    private void openNativeSchemeByHost(String host,Intent intent){
         switch (host){
             case "calendar":
                 IntentUtils.startActivity(SchemeHandleActivity.this, CalActivity.class,true);
@@ -437,6 +439,13 @@ public class SchemeHandleActivity extends Activity {
                 break;
             case "meeting":
                 IntentUtils.startActivity(SchemeHandleActivity.this, MeetingListActivity.class,true);
+                break;
+            case "webex":
+                LogUtils.jasonDebug("000000000000000000000000000000");
+                String installUri = intent.getExtras().getString("installUri","");
+                Bundle bundle = new Bundle();
+                bundle.putString("installUri",installUri);
+                IntentUtils.startActivity(SchemeHandleActivity.this, WebexMyMeetingActivity.class,bundle,true);
                 break;
         }
     }

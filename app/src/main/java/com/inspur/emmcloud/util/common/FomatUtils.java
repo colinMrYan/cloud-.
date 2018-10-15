@@ -27,4 +27,16 @@ public class FomatUtils {
 		}
 		return true;
 	}
+
+	public static  boolean isValiadEmail(String email){
+		Matcher matcher = Pattern.compile(
+				"^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$" ).matcher(
+				email );
+
+		while ( matcher.find() )
+		{
+			return true;
+		}
+		return false;
+	}
 }

@@ -454,6 +454,41 @@
     <string name="volume_upload_file_to_volume">上傳到網盤</string>
     <string name="volume_file_permission_manager">許可權管理</string>
 
+    <!--Webex 会议-->
+    <string name="webex_meeting_title">%1$s的會議</string>
+    <string name="select_invitees">選擇受邀者</string>
+    <string name="input_invitee_emails">輸入受邀者的電子郵箱地址</string>
+    <string name="input_correct_invitee_emails">請輸入正確的的電子郵箱地址</string>
+    <string name="not_add_repeated">不能重複添加</string>
+    <string name="add_invitee">添加受邀者</string>
+    <string name="hour">小時</string>
+    <string name="min">分鐘</string>
+    <string name="webex_start">開始</string>
+    <string name="join">加入</string>
+    <string name="meeting_info">會議資訊</string>
+    <string name="webex_host">主持人</string>
+    <string name="webex_when">時間</string>
+    <string name="webex_meeting_number">會議號</string>
+    <string name="webex_meeting_password">會議密碼</string>
+    <string name="webex_meeting_ended">會議已結束</string>
+    <string name="start_time_error">開始時間不正確</string>
+    <string name="start_time_error_info">您指定的會議開始時間在當前時間之前。請指定其他開始時間</string>
+    <string name="none">无</string>
+    <string name="enter_meeting_name">請輸入會議名稱</string>
+    <string name="enter_meeting_password">請輸入會議密碼</string>
+    <string name="set_duration_correct">請設定正確的會議持續時間</string>
+    <string name="webex_meeting_duration">會議持續時間</string>
+    <string name="duration_time">持續時間</string>
+    <string name="webex_attendees">受邀者</string>
+    <string name="schedule_meeting">安排會議</string>
+    <string name="my_meeting">我的會議</string>
+    <string name="remove_webex_meeting_warning_title">删除會議</string>
+    <string name="remove_webex_meeting_warning_info">從您的設備上删除會議不會發送取消電子郵件。確定要删除該會議嗎？</string>
+    <string name="webex_password_length_error">密碼長度不符合規則（6-10位）</string>
+    <string name="webex_install_tips">使用此功能需要先安裝webex用戶端，現在安裝？</string>
+    <string name="add_invitee_from_contact">從通訊錄添加</string>
+    <string name="webex_add_invitee_num">您可邀請%1$d/%2$d人</string>
+
     <!-- 我的頁面部分 -->
     <string name="data_clear_success">清除成功</string>
     <string name="not_set">未設置</string>

@@ -916,6 +916,51 @@ public class APIUri {
     public static String getVolumeFileGroupUrl(String volumeId){
         return getUrlBaseVolume() + "/" + volumeId + "/file/group/privilege";
     }
+    /**************************Webex********************************************/
+
+    /**
+     * 获取webex会议列表
+     * @return
+     */
+    public static String getWebexMeetingListUrl(){
+        return getEMMBaseUrl()+"api/mam/v6.0/webex";
+    }
+
+    /**
+     * 获取webex头像地址
+     * @param email
+     * @return
+     */
+    public static String getWebexPhotoUrl(String email){
+        return getEMMBaseUrl()+"img/userhead/"+email;
+    }
+
+    /**
+     * 获取webex会议
+     * @return
+     */
+    public static String getWebexMeetingUrl(String meetingID){
+        return getEMMBaseUrl()+"api/mam/v6.0/webex/SessionInfo/"+meetingID;
+    }
+
+    /**
+     * 删除webex会议
+     * @return
+     */
+    public static String getRemoveWebexMeetingUrl(String meetingID){
+        return getEMMBaseUrl()+"api/mam/v6.0/webex/remove/"+meetingID;
+    }
+
+    /**
+     * 获取webex会议TK
+     * @return
+     */
+    public static String getWebexTK(){
+        return getEMMBaseUrl()+"api/mam/v6.0/webex/gettk";
+    }
+
+
+
 /************************************************************************工作****************************************************************************/
     /***************会议接口*****************************/
     /**

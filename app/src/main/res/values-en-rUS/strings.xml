@@ -451,6 +451,41 @@
     <string name="volume_upload_file_to_volume">Upload file to volume</string>
     <string name="volume_file_permission_manager">Permission manager</string>
 
+    <!--Webex 会议-->
+    <string name="webex_meeting_title">Meeting held by %1$s</string>
+    <string name="select_invitees">Select invitees</string>
+    <string name="input_invitee_emails">Enter invitee emails</string>
+    <string name="input_correct_invitee_emails">Enter the correct emails</string>
+    <string name="not_add_repeated">Cannot be added repeatedly</string>
+    <string name="add_invitee">Add invitee</string>
+    <string name="hour">hr</string>
+    <string name="min">min</string>
+    <string name="webex_start">START</string>
+    <string name="join">JOIN</string>
+    <string name="meeting_info">Meeting Info</string>
+    <string name="webex_host">Host</string>
+    <string name="webex_when">When</string>
+    <string name="webex_meeting_number">Meeting number</string>
+    <string name="webex_meeting_password">Password</string>
+    <string name="webex_host_password">Host key</string>
+    <string name="webex_meeting_ended">The meeting has ended</string>
+    <string name="start_time_error">Invalid start time</string>
+    <string name="start_time_error_info">You hava specified a start time for the meeting that is before the current time. Please specify a different starting time</string>
+    <string name="none">None</string>
+    <string name="enter_meeting_name">Enter the meeting name </string>
+    <string name="enter_meeting_password">Enter the meeting password</string>
+    <string name="set_duration_correct">Please set the correct meeting duration</string>
+    <string name="webex_meeting_duration">Duration</string>
+    <string name="duration_time">Duration</string>
+    <string name="webex_attendees">Attendees</string>
+    <string name="schedule_meeting">Schedule Meeting</string>
+    <string name="my_meeting">My Meetings</string>
+    <string name="remove_webex_meeting_warning_title">Delete meeting</string>
+    <string name="remove_webex_meeting_warning_info">Cancellation email messages will not be sent if you delete meetings from your device.Are you sure you want to delete this meeting?</string>
+    <string name="webex_password_length_error">Password length is not valid (6-10)</string>
+    <string name="webex_install_tips">Using this function, you need to install the WebEx client first. Now install?</string>
+    <string name="add_invitee_from_contact">Add from address book</string>
+    <string name="webex_add_invitee_num">You can invite %1$d/%2$d people</string>
 
     <!-- 我的页面部分 -->
     <string name="data_clear_success">Clear success</string>

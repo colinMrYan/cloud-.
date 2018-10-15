@@ -154,7 +154,7 @@ public class StartAppService extends ImpPlugin {
      * @param appInstallTips
      */
     private void showInstallDialog(final String appUrl, String appInstallTips) {
-        new MyQMUIDialog.MessageDialogBuilder(getFragmentContext())
+        new MyQMUIDialog.MessageDialogBuilder(getActivity())
                 .setMessage(appInstallTips)
                 .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
                     @Override
@@ -211,7 +211,7 @@ public class StartAppService extends ImpPlugin {
                     if (downloadingDialog != null && downloadingDialog.isShowing()) {
                         downloadingDialog.dismiss();
                     }
-                    AppUtils.installApk(getActivity(),MyAppConfig.LOCAL_DOWNLOAD_PATH,"webex.apk");
+                    AppUtils.installApk(getActivity(),MyAppConfig.LOCAL_DOWNLOAD_PATH,"impInstall.apk");
                     break;
                 case DOWNLOAD_FAIL:
                     if (downloadingDialog != null && downloadingDialog.isShowing()) {
@@ -220,7 +220,7 @@ public class StartAppService extends ImpPlugin {
                     ToastUtils.show(getActivity(), getActivity().getString(R.string.download_fail));
                     break;
                 case SHOW_PEOGRESS_LAODING_DLG:
-                    if (downloadingDialog != null && downloadingDialog.isShowing()) {
+                    if (downloadingDialog != null && !downloadingDialog.isShowing()) {
                         downloadingDialog.show();
                     }
                     break;
@@ -238,7 +238,7 @@ public class StartAppService extends ImpPlugin {
         if (Environment.getExternalStorageState().equals(
                 Environment.MEDIA_MOUNTED)) {
             RequestParams params = new RequestParams(appUrl);
-            params.setSaveFilePath(MyAppConfig.LOCAL_DOWNLOAD_PATH + "webex.apk");
+            params.setSaveFilePath(MyAppConfig.LOCAL_DOWNLOAD_PATH + "impInstall.apk");
             cancelableDownloadRequest = x.http().get(params,
                     new Callback.ProgressCallback<File>() {
 
