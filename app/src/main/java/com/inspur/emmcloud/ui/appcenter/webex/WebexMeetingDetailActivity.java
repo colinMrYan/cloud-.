@@ -4,9 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.os.Handler;
-import android.os.Message;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -23,27 +21,23 @@ import com.inspur.emmcloud.bean.appcenter.webex.GetWebexTKResult;
 import com.inspur.emmcloud.bean.appcenter.webex.WebexMeeting;
 import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
 import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.privates.AppDownloadUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
+import com.inspur.emmcloud.widget.CircleTextImageView;
 import com.inspur.emmcloud.widget.LoadingDialog;
-import com.inspur.emmcloud.widget.dialogs.MyDialog;
 import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
-import org.xutils.common.Callback;
-import org.xutils.http.RequestParams;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
-import org.xutils.x;
 
-import java.io.File;
 import java.net.URLEncoder;
 import java.util.Calendar;
 
@@ -59,7 +53,7 @@ public class WebexMeetingDetailActivity extends BaseActivity {
     @ViewInject(R.id.bt_function)
     private Button functionBtn;
     @ViewInject(R.id.iv_photo)
-    private ImageView photoImg;
+    private CircleTextImageView photoImg;
     @ViewInject(R.id.tv_title)
     private TextView titleText;
     @ViewInject(R.id.tv_owner)
@@ -83,16 +77,7 @@ public class WebexMeetingDetailActivity extends BaseActivity {
     private boolean isOwner = false;
     private LoadingDialog loadingDialog;
     private WebexAPIService apiService;
-    private static final int SHOW_PEOGRESS_LAODING_DLG = 0;
-    private static final int DOWNLOAD = 3;
-    private static final int DOWNLOAD_FINISH = 4;
-    private static final int DOWNLOAD_FAIL = 5;
-    private long totalSize;
-    private long downloadSize;
-    private int progressSize;
-    private MyDialog downloadingDialog;
-    private TextView progressTv;
-    private Callback.Cancelable cancelableDownloadRequest;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,7 +87,10 @@ public class WebexMeetingDetailActivity extends BaseActivity {
         apiService = new WebexAPIService(this);
         apiService.setAPIInterface(new WebService());
         getWebexMeeting();
+
     }
+
+
 
     private void showWebexMeetingDetial() {
         titleText.setText(webexMeeting.getConfName());
@@ -116,7 +104,7 @@ public class WebexMeetingDetailActivity extends BaseActivity {
         int min = duration % 60;
         String hourtext = (hour == 0) ? "" : hour + getString(R.string.hour);
         String mintext = (min == 0) ? "" : min + getString(R.string.min);
-        durationText.setText("(" + hourtext + mintext + ")");
+        durationText.setText( hourtext + mintext );
         meetingPasswordText.setText(webexMeeting.getMeetingPassword());
         meetingIdText.setText(webexMeeting.getMeetingID());
         String photoUrl = APIUri.getWebexPhotoUrl(webexMeeting.getHostWebExID());
@@ -133,7 +121,7 @@ public class WebexMeetingDetailActivity extends BaseActivity {
         boolean isMeetingEnd = isMeetingEnd();
         functionBtn.setEnabled(!isMeetingEnd);
         functionBtn.setTextColor(isMeetingEnd ? Color.parseColor("#999999") : Color.parseColor("#ffffff"));
-        functionBtn.setBackgroundColor(isMeetingEnd ? Color.parseColor("#D7D7D7") : Color.parseColor("#0F7BCA"));
+        functionBtn.setBackground(isMeetingEnd ?ContextCompat.getDrawable(MyApplication.getInstance(),R.drawable.shape_webex_buttion_add_disable):ContextCompat.getDrawable(MyApplication.getInstance(),R.drawable.shape_webex_buttion_add_enable));
         functionBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -147,7 +135,7 @@ public class WebexMeetingDetailActivity extends BaseActivity {
                     } else {
                         functionBtn.setEnabled(false);
                         functionBtn.setTextColor(Color.parseColor("#999999"));
-                        functionBtn.setBackgroundColor(Color.parseColor("#D7D7D7"));
+                        functionBtn.setBackground(ContextCompat.getDrawable(MyApplication.getInstance(),R.drawable.shape_webex_buttion_add_disable));
                         ToastUtils.show(MyApplication.getInstance(), R.string.webex_meeting_ended);
                     }
                 } else {
@@ -181,136 +169,13 @@ public class WebexMeetingDetailActivity extends BaseActivity {
                     public void onClick(QMUIDialog dialog, int index) {
                         dialog.dismiss();
                         String downloadUrl = PreferencesUtils.getString(MyApplication.getInstance(), Constant.PREF_WEBEX_DOWNLOAD_URL,"");
-                        showDownloadDialog(downloadUrl);
+                        new AppDownloadUtils().showDownloadDialog(WebexMeetingDetailActivity.this,downloadUrl);
                     }
                 })
                 .show();
     }
 
-    /**
-     * 展示下载Dialog
-     *
-     * @param appUrl
-     */
-    private void showDownloadDialog(String appUrl) {
-        downloadingDialog = new MyDialog(WebexMeetingDetailActivity.this, R.layout.dialog_app_update_progress);
-        downloadingDialog.setCancelable(false);
-        progressTv = (TextView) downloadingDialog.findViewById(R.id.ratio_text);
-        Button cancelBtn = (Button) downloadingDialog.findViewById(R.id.cancel_bt);
-        cancelBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (cancelableDownloadRequest != null) {
-                    cancelableDownloadRequest.cancel();
-                }
-                if (downloadingDialog != null && downloadingDialog.isShowing()) {
-                    downloadingDialog.dismiss();
-                }
-            }
-        });
-        // 下载apk文件
-        downloadWeBexApk(appUrl);
-    }
 
-    Handler downloadWeBexHandler = new Handler() {
-
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case DOWNLOAD:
-                    if (progressTv != null) {
-                        progressTv.setText(progressSize + "%," + "  " + AppUtils.getKBOrMBFormatString(downloadSize) + "/"
-                                + AppUtils.getKBOrMBFormatString(totalSize));
-                    }
-                    break;
-                case DOWNLOAD_FINISH:
-                    if (downloadingDialog != null && downloadingDialog.isShowing()) {
-                        downloadingDialog.dismiss();
-                    }
-                    AppUtils.installApk(MyApplication.getInstance(), MyAppConfig.LOCAL_DOWNLOAD_PATH, "webex.apk");
-                    break;
-                case DOWNLOAD_FAIL:
-                    if (downloadingDialog != null && downloadingDialog.isShowing()) {
-                        downloadingDialog.dismiss();
-                    }
-                    ToastUtils.show(MyApplication.getInstance(), getString(R.string.download_fail));
-                    break;
-                case SHOW_PEOGRESS_LAODING_DLG:
-                    if (downloadingDialog != null && !downloadingDialog.isShowing()) {
-                        downloadingDialog.show();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-    };
-
-    /**
-     * 下载安装包
-     */
-    private void downloadWeBexApk(String appUrl) {
-        // 判断SD卡是否存在，并且是否具有读写权限
-        if (Environment.getExternalStorageState().equals(
-                Environment.MEDIA_MOUNTED)) {
-            RequestParams params = new RequestParams(appUrl);
-            params.setSaveFilePath(MyAppConfig.LOCAL_DOWNLOAD_PATH + "webex.apk");
-            cancelableDownloadRequest = x.http().get(params,
-                    new Callback.ProgressCallback<File>() {
-
-                        @Override
-                        public void onCancelled(CancelledException arg0) {
-                        }
-
-                        @Override
-                        public void onError(Throwable arg0, boolean arg1) {
-                            sendCallBackMessage(DOWNLOAD_FAIL);
-                        }
-
-                        @Override
-                        public void onFinished() {
-                        }
-
-                        @Override
-                        public void onSuccess(File arg0) {
-                            sendCallBackMessage(DOWNLOAD_FINISH);
-                        }
-
-                        @Override
-                        public void onLoading(long arg0, long arg1, boolean arg2) {
-                            totalSize = arg0;
-                            downloadSize = arg1;
-                            progressSize = (int) (((float) arg1 / arg0) * 100);
-                            // 更新进度
-                            if (downloadingDialog != null && downloadingDialog.isShowing()) {
-                                sendCallBackMessage(DOWNLOAD);
-                            }
-                        }
-
-                        @Override
-                        public void onStarted() {
-                            sendCallBackMessage(SHOW_PEOGRESS_LAODING_DLG);
-                        }
-
-                        @Override
-                        public void onWaiting() {
-                        }
-                    });
-        } else {
-            sendCallBackMessage(DOWNLOAD_FAIL);
-        }
-    }
-
-    /**
-     * 发送回调消息给主线程
-     *
-     * @param downloadState
-     */
-    private void sendCallBackMessage(int downloadState) {
-        if (downloadWeBexHandler != null) {
-            downloadWeBexHandler.sendEmptyMessage(downloadState);
-        }
-    }
 
 
     private void joinWebexMeeting() {

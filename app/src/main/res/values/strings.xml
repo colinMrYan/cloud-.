@@ -490,6 +490,8 @@
     <string name="remove_webex_meeting_warning_info">从您的设备上删除会议不会发送取消电子邮件。确定要删除该会议吗？</string>
     <string name="webex_password_length_error">密码长度不符合规则（6-10位）</string>
     <string name="webex_install_tips">使用此功能需要先安装 webex 客户端，现在安装？</string>
+    <string name="add_invitee_from_contact">从通讯录添加</string>
+    <string name="webex_add_invitee_num">您可邀请%1$d/%2$d人</string>
 
 
     <!-- 我的页面部分 -->

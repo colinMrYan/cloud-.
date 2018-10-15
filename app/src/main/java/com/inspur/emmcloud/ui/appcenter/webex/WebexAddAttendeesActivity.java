@@ -47,6 +47,8 @@ public class WebexAddAttendeesActivity extends BaseActivity {
     private RelativeLayout addAttendeesLayout;
     @ViewInject(R.id.sv_content)
     private ScrollView contentScrollView;
+    @ViewInject(R.id.tv_num)
+    private TextView numText;
     private ArrayList<String> attendeesList = new ArrayList<>();
     private Adapter adapter;
 
@@ -55,11 +57,13 @@ public class WebexAddAttendeesActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         attendeesList = getIntent().getStringArrayListExtra(EXTRA_ATTENDEES_LIST);
+        numText.setText(getString(R.string.webex_add_invitee_num,20-attendeesList.size(),20));
         adapter = new Adapter();
         adapter.registerDataSetObserver(new DataSetObserver() {
             @Override
             public void onChanged() {
                 addAttendeesLayout.setVisibility(attendeesList.size()==20?View.GONE:View.VISIBLE);
+                numText.setText(getString(R.string.webex_add_invitee_num,20-attendeesList.size(),20));
             }
         });
         attendeesListView.setAdapter(adapter);
@@ -77,14 +81,14 @@ public class WebexAddAttendeesActivity extends BaseActivity {
                 setResult(RESULT_OK,intent);
                 finish();
                 break;
-            case R.id.rl_add_attendees_input:
+            case R.id.bt_add_attendees:
                 String email = addAttendeesEdit.getText().toString();
                 if (addAttendees(email)){
                     addAttendeesEdit.setText("");
                 }
 
                 break;
-            case R.id.iv_add_attendees_from_contact:
+            case R.id.rl_add_attendees_from_contact:
                 Intent intentContact = new Intent();
                 intentContact.putExtra("select_content", 2);
                 intentContact.putExtra("isMulti_select", false);

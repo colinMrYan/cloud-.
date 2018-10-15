@@ -81,33 +81,39 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/lv_attendees"
-                android:layout_marginTop="15dp"
-                android:background="@color/white"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp">
+                android:layout_marginTop="10dp"
+               >
 
                 <RelativeLayout
                     android:id="@+id/rl"
+                    android:background="@color/white"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
-
-                    <ImageView
-                        android:id="@+id/iv_add_attendees_from_contact"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
+                    <com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton
+                        android:id="@+id/bt_add_attendees"
+                        android:layout_width="60dp"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
+                        android:gravity="center"
                         android:onClick="onClick"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/ic_webex_add_attendees_for_contact" />
-
+                        android:textColor="#ffffff"
+                        android:text="@string/add"
+                        app:qmui_isRadiusAdjustBounds="true"
+                        app:qmui_backgroundColor="#4A90E2"
+                        app:qmui_borderWidth="0dp"
+                         />
                     <EditText
                         android:id="@+id/et_add_attendees"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:maxLines="1"
-                        android:layout_toLeftOf="@id/iv_add_attendees_from_contact"
+                        android:layout_toLeftOf="@id/bt_add_attendees"
                         android:background="@null"
                         android:hint="@string/input_invitee_emails"
                         android:paddingBottom="11dp"
@@ -122,32 +128,52 @@
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:id="@+id/rl_add_attendees_input"
+                    android:id="@+id/rl_add_attendees_from_contact"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingTop="5dp"
-                    android:paddingBottom="5dp"
                     android:layout_below="@id/rl"
                     android:onClick="onClick"
                     >
 
-                    <ImageView
-                        android:id="@+id/iv_add_attendees"
-                        android:layout_width="36dp"
-                        android:layout_height="36dp"
-                        android:layout_marginRight="10dp"
-                        android:layout_centerVertical="true"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/ic_webex_add_attendees" />
+                    <RelativeLayout
+                        android:id="@+id/rl_add_attendees_bg"
+                        android:background="@color/white"
+                        android:paddingLeft="15dp"
+                        android:paddingRight="15dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <ImageView
+                            android:id="@+id/iv_add_attendees"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_centerVertical="true"
+                            android:scaleType="fitXY"
+                            android:src="@drawable/ic_webex_add_attendees" />
+
+                        <TextView
+                            android:id="@+id/tv_ttendees_from_contact"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:paddingTop="10dp"
+                            android:paddingBottom="10dp"
+                            android:layout_toRightOf="@id/iv_add_attendees"
+                            android:text="@string/add_invitee_from_contact"
+                            android:textColor="#333333"
+                            android:textSize="17sp" />
+                    </RelativeLayout>
 
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_toRightOf="@id/iv_add_attendees"
-                        android:text="@string/add_invitee"
-                        android:textColor="#333333"
-                        android:textSize="16sp" />
+                        android:id="@+id/tv_num"
+                        android:textSize="15sp"
+                        android:paddingTop="10dp"
+                        android:paddingLeft="15dp"
+                        android:paddingBottom="10dp"
+                        android:layout_below="@id/rl_add_attendees_bg"
+                        android:textColor="#666666"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
                 </RelativeLayout>
             </RelativeLayout>
 

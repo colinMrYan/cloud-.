@@ -24,9 +24,9 @@
             android:onClick="onClick"
             android:paddingLeft="20dp"
             android:paddingRight="15dp"
-            android:text="@string/webex_start"
+            android:text="@string/save"
             android:textColor="@color/white"
-            android:textSize="@dimen/header_textsize" />
+            android:textSize="17sp" />
 
         <RelativeLayout
             android:id="@+id/rl_back"
@@ -65,7 +65,6 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
             android:background="@color/white">
 
             <TextView
@@ -73,9 +72,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:paddingBottom="11dp"
+                android:paddingBottom="10dp"
                 android:paddingLeft="15dp"
-                android:paddingTop="11dp"
+                android:paddingTop="10dp"
                 android:text="@string/meeting_topic_title"
                 android:textColor="#203b4f"
                 android:textSize="17sp"
@@ -90,13 +89,13 @@
                 android:background="@null"
                 android:hint="@string/room_booking_topic"
                 android:maxLines="1"
-                android:paddingBottom="11dp"
+                android:paddingBottom="10dp"
                 android:paddingLeft="15dp"
                 android:paddingRight="20dp"
-                android:paddingTop="11dp"
+                android:paddingTop="10dp"
                 android:singleLine="true"
                 android:textColor="@color/text_black"
-                android:textSize="16sp" />
+                android:textSize="17sp" />
         </RelativeLayout>
         <View
             android:layout_width="match_parent"
@@ -106,6 +105,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingRight="5dp"
             android:background="@color/white">
 
             <TextView
@@ -113,9 +113,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:paddingBottom="11dp"
+                android:paddingBottom="10dp"
                 android:paddingLeft="15dp"
-                android:paddingTop="11dp"
+                android:paddingTop="10dp"
                 android:text="@string/password"
                 android:textColor="#203b4f"
                 android:textSize="17sp" />
@@ -145,17 +145,17 @@
                 android:background="@null"
                 android:hint="@string/enter_meeting_password"
                 android:maxLines="1"
-                android:paddingBottom="11dp"
-                android:paddingTop="11dp"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp"
                 android:singleLine="true"
                 android:textColor="@color/text_black"
-                android:textSize="16sp" />
+                android:textSize="17sp" />
 
         </RelativeLayout>
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="10dp"
             android:background="@color/white">
 
             <TextView
@@ -163,9 +163,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:paddingBottom="11dp"
+                android:paddingBottom="10dp"
                 android:paddingLeft="15dp"
-                android:paddingTop="11dp"
+                android:paddingTop="10dp"
                 android:text="@string/start_time"
                 android:textColor="#203b4f"
                 android:textSize="17sp" />
@@ -176,11 +176,11 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:onClick="onClick"
-                android:paddingBottom="11dp"
-                android:paddingRight="20dp"
-                android:paddingTop="11dp"
-                android:textColor="#ff24abe9"
-                android:textSize="16sp" />
+                android:paddingBottom="10dp"
+                android:paddingRight="30dp"
+                android:paddingTop="10dp"
+                android:textColor="#4a90e2"
+                android:textSize="17sp" />
 
             <TextView
                 android:id="@+id/tv_start_date"
@@ -190,12 +190,12 @@
                 android:layout_toRightOf="@id/tv_start_tips"
                 android:gravity="center"
                 android:onClick="onClick"
-                android:paddingBottom="11dp"
+                android:paddingBottom="10dp"
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp"
-                android:paddingTop="11dp"
-                android:textColor="#ff24abe9"
-                android:textSize="16sp" />
+                android:paddingTop="10dp"
+                android:textColor="#4a90e2"
+                android:textSize="17sp" />
         </RelativeLayout>
 
         <View
@@ -213,9 +213,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:paddingBottom="11dp"
+                android:paddingBottom="10dp"
                 android:paddingLeft="15dp"
-                android:paddingTop="11dp"
+                android:paddingTop="10dp"
                 android:text="@string/duration_time"
                 android:textColor="#203b4f"
                 android:textSize="17sp" />
@@ -225,11 +225,11 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:onClick="onClick"
-                android:paddingBottom="11dp"
-                android:paddingRight="20dp"
-                android:paddingTop="11dp"
-                android:textColor="#ff24abe9"
-                android:textSize="16sp" />
+                android:paddingBottom="10dp"
+                android:paddingRight="30dp"
+                android:paddingTop="10dp"
+                android:textColor="#4a90e2"
+                android:textSize="17sp" />
             <TextView
                 android:id="@+id/tv_duration_hour"
                 android:layout_width="wrap_content"
@@ -238,11 +238,11 @@
                 android:layout_toRightOf="@id/tv_duration_tips"
                 android:onClick="onClick"
                 android:gravity="center"
-                android:paddingBottom="11dp"
+                android:paddingBottom="10dp"
                 android:paddingRight="20dp"
-                android:paddingTop="11dp"
-                android:textColor="#ff24abe9"
-                android:textSize="16sp" />
+                android:paddingTop="10dp"
+                android:textColor="#4a90e2"
+                android:textSize="17sp" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -250,7 +250,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:onClick="onClick"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="10dp"
             android:background="@color/white">
 
             <TextView
@@ -258,9 +258,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:paddingBottom="11dp"
+                android:paddingBottom="10dp"
                 android:paddingLeft="15dp"
-                android:paddingTop="11dp"
+                android:paddingTop="10dp"
                 android:text="@string/webex_attendees"
                 android:textColor="#203b4f"
                 android:textSize="17sp" />
@@ -276,12 +276,12 @@
                 android:gravity="right"
                 android:hint="@string/none"
                 android:maxLines="1"
-                android:paddingBottom="11dp"
+                android:paddingBottom="10dp"
                 android:paddingLeft="15dp"
-                android:paddingTop="11dp"
+                android:paddingTop="10dp"
                 android:singleLine="true"
                 android:textColor="@color/text_black"
-                android:textSize="16sp" />
+                android:textSize="17sp" />
             <ImageView
                 android:id="@+id/iv_arrow_invite"
                 android:layout_width="15dp"

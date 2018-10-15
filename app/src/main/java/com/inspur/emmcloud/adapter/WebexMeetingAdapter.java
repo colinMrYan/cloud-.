@@ -1,14 +1,12 @@
 package com.inspur.emmcloud.adapter;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.Button;
 import android.widget.ExpandableListView;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
@@ -19,6 +17,7 @@ import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
+import com.inspur.emmcloud.widget.CircleTextImageView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -35,13 +34,14 @@ public class WebexMeetingAdapter extends BaseExpandableListAdapter {
     private Map<String, List<WebexMeeting>> webexMeetingMap = new HashMap<>();
     private List<String> webexMeetingGroupList = new ArrayList<>();
     private String myEmail;
+    private OnFunctionBtnClickListener onFunctionBtnClickListener;
 
     public WebexMeetingAdapter(Context context) {
         this.context = context;
     }
 
-    public void setData(List<String> webexMeetingGroupList,Map<String, List<WebexMeeting>> webexMeetingMap){
-        this.webexMeetingGroupList =webexMeetingGroupList;
+    public void setData(List<String> webexMeetingGroupList, Map<String, List<WebexMeeting>> webexMeetingMap) {
+        this.webexMeetingGroupList = webexMeetingGroupList;
         this.webexMeetingMap = webexMeetingMap;
         String myInfo = PreferencesUtils.getString(context, "myInfo", "");
         GetMyInfoResult getMyInfoResult = new GetMyInfoResult(myInfo);
@@ -87,25 +87,22 @@ public class WebexMeetingAdapter extends BaseExpandableListAdapter {
     @Override
     public View getGroupView(final int groupPosition, boolean isExpanded,
                              View convertView, ViewGroup parent) {
-        List<WebexMeeting> webexMeetingList =  webexMeetingMap.get(webexMeetingGroupList.get(groupPosition));
+        List<WebexMeeting> webexMeetingList = webexMeetingMap.get(webexMeetingGroupList.get(groupPosition));
         Calendar calendar = webexMeetingList.get(0).getStartDateCalendar();
         ExpandableListView expandableListView = (ExpandableListView) parent;
         expandableListView.expandGroup(groupPosition);
         convertView = LayoutInflater.from(context).inflate(R.layout.item_view_webex_meeting_group, null);
-        TextView weekText = (TextView) convertView.findViewById(R.id.tv_week);
+        TextView todayText = (TextView) convertView.findViewById(R.id.tv_today);
         TextView dateText = (TextView) convertView.findViewById(R.id.tv_date);
-        int textColor = -1;
-        if (TimeUtils.isCalendarToday(calendar)){
-            textColor = ContextCompat.getColor(context,R.color.header_bg);
-            weekText.setText(R.string.today);
-        }else {
-            textColor = Color.parseColor("#333333");
-            weekText.setText(TimeUtils.getWeekDay(context,calendar));
-        }
-        weekText.setTextColor(textColor);
-        dateText.setTextColor(textColor);
-        dateText.setText(TimeUtils.calendar2FormatString(MyApplication.getInstance(),calendar,TimeUtils.FORMAT_YEAR_MONTH_DAY));
+        String timeDate = TimeUtils.calendar2FormatString(MyApplication.getInstance(), calendar, TimeUtils.FORMAT_YEAR_MONTH_DAY);
+        String timeWeek = TimeUtils.getWeekDay(context, calendar);
+        todayText.setVisibility(TimeUtils.isCalendarToday(calendar) ? View.VISIBLE : View.INVISIBLE);
+        dateText.setText(timeDate + " " + timeWeek);
         return convertView;
+    }
+
+    public void setFounctionBtnClickListener(OnFunctionBtnClickListener onFunctionBtnClickListener) {
+        this.onFunctionBtnClickListener = onFunctionBtnClickListener;
     }
 
     @Override
@@ -116,7 +113,7 @@ public class WebexMeetingAdapter extends BaseExpandableListAdapter {
         if (convertView == null) {
             convertView = LayoutInflater.from(context).inflate(R.layout.item_view_webex_meeting_child, null);
             holder = new ExpandViewHolder();
-            holder.photoImg = (ImageView)convertView.findViewById(R.id.iv_photo);
+            holder.photoImg = (CircleTextImageView) convertView.findViewById(R.id.iv_photo);
             holder.timeText = (TextView) convertView
                     .findViewById(R.id.tv_time);
             holder.titleText = (TextView) convertView
@@ -124,6 +121,7 @@ public class WebexMeetingAdapter extends BaseExpandableListAdapter {
             holder.ownerText = (TextView) convertView
                     .findViewById(R.id.tv_owner);
             holder.line = convertView.findViewById(R.id.v_line);
+            holder.functionBtn = (Button) convertView.findViewById(R.id.bt_function);
             convertView.setTag(holder);
         } else {
             holder = (ExpandViewHolder) convertView.getTag();
@@ -131,34 +129,60 @@ public class WebexMeetingAdapter extends BaseExpandableListAdapter {
         List<WebexMeeting> webexMeetingList = webexMeetingMap.get(webexMeetingGroupList.get(groupPosition));
         WebexMeeting webexMeeting = webexMeetingList.get(childPosition);
         Calendar startCalendar = webexMeeting.getStartDateCalendar();
-        String startDateString = TimeUtils.getTime(context,startCalendar.getTimeInMillis(),TimeUtils.FORMAT_HOUR_MINUTE);
-        String endDateString = TimeUtils.getTime(context,startCalendar.getTimeInMillis()+60000*webexMeeting.getDuration(),TimeUtils.FORMAT_HOUR_MINUTE);
-        holder.timeText.setText(startDateString+" - "+endDateString);
+        String startDateString = TimeUtils.getTime(context, startCalendar.getTimeInMillis(), TimeUtils.FORMAT_HOUR_MINUTE);
+        String endDateString = TimeUtils.getTime(context, startCalendar.getTimeInMillis() + 60000 * webexMeeting.getDuration(), TimeUtils.FORMAT_HOUR_MINUTE);
+        holder.timeText.setText(startDateString + " - " + endDateString);
         holder.titleText.setText(webexMeeting.getConfName());
         String email = webexMeeting.getHostWebExID();
-        if (email.equals(myEmail)){
+        if (email.equals(myEmail)) {
             holder.ownerText.setText(R.string.mine);
-        }else {
+        } else {
             holder.ownerText.setText(webexMeeting.getHostUserName());
         }
-        holder.line.setVisibility(isLastChild?View.INVISIBLE:View.VISIBLE);
+        if (TimeUtils.isCalendarToday(startCalendar) && !isMeetingEnd(webexMeeting)) {
+            holder.functionBtn.setText(email.equals(myEmail)?context.getString(R.string.webex_start) : context.getString(R.string.join));
+            holder.functionBtn.setVisibility(View.VISIBLE);
+            holder.functionBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (onFunctionBtnClickListener != null) {
+                        onFunctionBtnClickListener.onFunctionClick((Button) v,groupPosition, childPosition);
+                    }
+                }
+            });
+        } else {
+            holder.functionBtn.setVisibility(View.GONE);
+        }
+        holder.line.setVisibility(isLastChild ? View.INVISIBLE : View.VISIBLE);
         String photoUrl = APIUri.getWebexPhotoUrl(webexMeeting.getHostWebExID());
-        ImageDisplayUtils.getInstance().displayImage(holder.photoImg,photoUrl,R.drawable.icon_person_default);
+        ImageDisplayUtils.getInstance().displayImage(holder.photoImg, photoUrl, R.drawable.icon_person_default);
         return convertView;
     }
 
+    private boolean isMeetingEnd(WebexMeeting webexMeeting) {
+        return webexMeeting.getStartDateCalendar().getTimeInMillis() + webexMeeting.getDuration() * 60000 <= System.currentTimeMillis();
+    }
+
+
     class ExpandViewHolder {
-        ImageView photoImg;
+        CircleTextImageView photoImg;
         TextView timeText;
         TextView titleText;
         TextView ownerText;
         View line;
+        Button functionBtn;
     }
 
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition) {
         return true;
     }
+
+    public interface OnFunctionBtnClickListener {
+        void onFunctionClick(Button button,int groupPosition, int childPosition);
+    }
+
+    ;
 
 }
 

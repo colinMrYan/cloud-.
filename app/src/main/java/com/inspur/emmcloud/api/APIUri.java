@@ -8,6 +8,7 @@ import com.inspur.emmcloud.bean.chat.Robot;
 import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.ImageUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
@@ -923,7 +924,8 @@ public class APIUri {
      * @return
      */
     public static String getWebexMeetingListUrl(){
-        return "http://172.31.2.36:88/api/mam/v6.0/webex";
+        LogUtils.jasonDebug("url==="+getEMMBaseUrl()+"/api/mam/v6.0/webex");
+        return getEMMBaseUrl()+"api/mam/v6.0/webex";
     }
 
     /**
@@ -932,7 +934,7 @@ public class APIUri {
      * @return
      */
     public static String getWebexPhotoUrl(String email){
-        return "https://emm.inspur.com/img/userhead/"+email;
+        return getEMMBaseUrl()+"img/userhead/"+email;
     }
 
     /**
@@ -940,7 +942,7 @@ public class APIUri {
      * @return
      */
     public static String getWebexMeetingUrl(String meetingID){
-        return "http://172.31.2.36:88/api/mam/v6.0/webex/SessionInfo/"+meetingID;
+        return getEMMBaseUrl()+"api/mam/v6.0/webex/SessionInfo/"+meetingID;
     }
 
     /**
@@ -948,7 +950,7 @@ public class APIUri {
      * @return
      */
     public static String getRemoveWebexMeetingUrl(String meetingID){
-        return "http://172.31.2.36:88/api/mam/v6.0/webex/remove/"+meetingID;
+        return getEMMBaseUrl()+"api/mam/v6.0/webex/remove/"+meetingID;
     }
 
     /**
@@ -956,7 +958,7 @@ public class APIUri {
      * @return
      */
     public static String getWebexTK(){
-        return "http://172.31.2.36:88/api/mam/v6.0/webex/gettk";
+        return getEMMBaseUrl()+"api/mam/v6.0/webex/gettk";
     }
 
 
