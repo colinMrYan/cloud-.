@@ -39,7 +39,6 @@ import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.InputMethodUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
@@ -81,7 +80,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
 
 import static android.R.attr.path;
 
@@ -218,7 +216,6 @@ public class ChannelActivity extends MediaPlayBaseActivity {
             headerText.setVisibility(View.GONE);
             String uid = DirectChannelUtils.getDirctChannelOtherUid(MyApplication.getInstance(), channel.getTitle());
             String iconUrl = APIUri.getUserIconUrl(MyApplication.getInstance(), uid);
-            LogUtils.jasonDebug("iconUrl=" + iconUrl);
             ImageDisplayUtils.getInstance().displayImage(robotPhotoImg, iconUrl, R.drawable.icon_person_default);
         } else {
             robotPhotoImg.setVisibility(View.GONE);
@@ -280,7 +277,7 @@ public class ChannelActivity extends MediaPlayBaseActivity {
                 setChatDrafts();
             }
         });
-        chatInputMenu.setInputLayout(channel.getType().equals("SERVICE") ? "1" : channel.getInputs());
+        chatInputMenu.setInputLayout(channel.getInputs());
         String chatDrafts = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), MyAppConfig.getChannelDrafsPreKey(cid));
         if (chatDrafts != null) {
             chatInputMenu.setChatDrafts(chatDrafts);

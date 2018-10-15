@@ -73,12 +73,16 @@ public class SettingActivity extends BaseActivity {
         setWebAutoRotateState();
         webAutoRotateSwitch.setOnStateChangedListener(onStateChangedListener);
         backgroundRunSwitch = (SwitchView) findViewById(R.id.background_run_switch);
-        voice2WordSwitch = (SwitchView) findViewById(R.id.switch_voice_word);
         boolean isAppSetRunBackground = PreferencesUtils.getBoolean(getApplicationContext(), Constant.PREF_APP_RUN_BACKGROUND, false);
         backgroundRunSwitch.setOpened(isAppSetRunBackground);
         backgroundRunSwitch.setOnStateChangedListener(onStateChangedListener);
-        voice2WordSwitch.setOpened(AppUtils.getIsVoiceWordOpen());
-        voice2WordSwitch.setOnStateChangedListener(onStateChangedListener);
+        if(MyApplication.getInstance().isV1xVersionChat()){
+            voice2WordSwitch = (SwitchView) findViewById(R.id.switch_voice_word);
+            findViewById(R.id.rl_voice_word).setVisibility(View.VISIBLE);
+            findViewById(R.id.v_voice_word_line).setVisibility(View.VISIBLE);
+            voice2WordSwitch.setOpened(AppUtils.getIsVoiceWordOpen());
+            voice2WordSwitch.setOnStateChangedListener(onStateChangedListener);
+        }
     }
 
     private void setWebAutoRotateState() {
