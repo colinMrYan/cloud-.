@@ -253,8 +253,10 @@
             android:background="@color/color_list_divider" />
 
         <RelativeLayout
+            android:id="@+id/rl_voice_word"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:background="@drawable/text_layout_selector">
 
             <TextView
@@ -278,8 +280,10 @@
 
 
         <View
+            android:id="@+id/v_voice_word_line"
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
+            android:visibility="gone"
             android:background="@color/color_list_divider" />
 
         <RelativeLayout
