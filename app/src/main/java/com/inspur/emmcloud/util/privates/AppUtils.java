@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
 import android.app.AppOpsManager;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -24,6 +26,7 @@ import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -1009,4 +1012,14 @@ public class AppUtils {
         }
     }
 
+    /**
+     * copy到剪切板
+     * @param context
+     * @param textView
+     */
+    public static void copyContentToPasteBoard(Context context, TextView textView) {
+        ClipboardManager cmb = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+        cmb.setPrimaryClip(ClipData.newPlainText(null, textView.getText().toString()));
+        ToastUtils.show(context, R.string.copyed_to_paste_board);
+    }
 }

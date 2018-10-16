@@ -69,7 +69,6 @@ import com.inspur.emmcloud.util.privates.DirectChannelUtils;
 import com.inspur.emmcloud.util.privates.DownLoaderUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.ScanQrCodeUtils;
-import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelOperationCacheUtils;
@@ -374,7 +373,6 @@ public class CommunicationFragment extends Fragment {
             if (channelList != null && channelList.size() == 0) {
                 return;
             }
-            LogUtils.jasonDebug("111");
             isHaveCreatGroupIcon = new ChannelGroupIconUtils().create(MyApplication.getInstance(), channelList, handler);
         }
     }
@@ -496,9 +494,9 @@ public class CommunicationFragment extends Fragment {
                         break;
                     case CACHE_CHANNEL_SUCCESS:
                         sortChannelList();
-                        GetChannelListResult getChannelListResult = (GetChannelListResult) msg.obj;
                         getMessage();
-                        getChannelInfoResult(getChannelListResult.getChannelList());
+                        List<String> serviceCidList = (List<String>) msg.obj;
+                        getServieChannelInputs(serviceCidList);
                         break;
                     case SORT_CHANNEL_LIST:
                         sortChannelList();
@@ -641,17 +639,28 @@ public class CommunicationFragment extends Fragment {
         @Override
         public void run() {
             try {
+                List<String> serviceCidList = new ArrayList<>();
                 List<Channel> allchannelList = getChannelListResult.getChannelList();
-                List<Channel> cacheChannelList = ChannelCacheUtils
-                        .getCacheChannelList(MyApplication.getInstance());
+                List<Channel> cacheChannelList = ChannelCacheUtils.getCacheChannelList(MyApplication.getInstance());
+                for (Channel channel:allchannelList){
+                    if (channel.getType().equals("SERVICE")){
+                        int position = cacheChannelList.indexOf(cacheChannelList);
+                        if (position != -1){
+                            channel.setInputs(cacheChannelList.get(position).getInputs());
+                        }
+                        serviceCidList.add(channel.getCid());
+                    }
+                }
                 ChannelCacheUtils.saveChannelList(MyApplication.getInstance(), allchannelList);
                 List<Channel> intersectionConversationList = new ArrayList<>();
                 intersectionConversationList.addAll(allchannelList);
                 intersectionConversationList.retainAll(cacheChannelList);
                 cacheChannelList.removeAll(intersectionConversationList);
                 ChannelCacheUtils.deleteChannelList(MyApplication.getInstance(), cacheChannelList);
+
+
                 if (handler != null) {
-                    android.os.Message message = handler.obtainMessage(CACHE_CHANNEL_SUCCESS, getChannelListResult);
+                    android.os.Message message = handler.obtainMessage(CACHE_CHANNEL_SUCCESS, serviceCidList);
                     message.sendToTarget();
                     if (isHaveCreatGroupIcon) {
                         allchannelList.removeAll(intersectionConversationList);
@@ -923,9 +932,10 @@ public class CommunicationFragment extends Fragment {
                         sortChannelList();
                     }
                 }
-            } else {
-                WebServiceMiddleUtils.hand(getActivity(), eventMessage.getContent(), eventMessage.getStatus());
             }
+//            else {
+//                WebServiceMiddleUtils.hand(getActivity(), eventMessage.getContent(), eventMessage.getStatus());
+//            }
 
         }
     }
@@ -972,9 +982,10 @@ public class CommunicationFragment extends Fragment {
                 String content = eventMessage.getContent();
                 GetRecentMessageListResult getRecentMessageListResult = new GetRecentMessageListResult(content);
                 new CacheMessageListThread(getRecentMessageListResult.getMessageList(), getRecentMessageListResult.getChannelMessageSetList()).start();
-            } else {
-                WebServiceMiddleUtils.hand(getActivity(), eventMessage.getContent(), eventMessage.getStatus());
             }
+//            else {
+//                WebServiceMiddleUtils.hand(getActivity(), eventMessage.getContent(), eventMessage.getStatus());
+//            }
         }
     }
 
@@ -1026,17 +1037,10 @@ public class CommunicationFragment extends Fragment {
      *
      * @param channelList
      */
-    public void getChannelInfoResult(List<Channel> channelList) {
+    public void getServieChannelInputs(List<String> serviceCidList) {
         if (NetUtils.isNetworkConnected(MyApplication.getInstance(), false)) {
-            ArrayList<String> cidList = new ArrayList<>();
-            for (int i = 0; i < channelList.size(); i++) {
-                Channel channel = channelList.get(i);
-                if (channel.getType().equals("SERVICE")) {
-                    cidList.add(channelList.get(i).getCid());
-                }
-            }
-            if (cidList.size() > 0) {
-                String[] cidArray = cidList.toArray(new String[cidList.size()]);
+            if (serviceCidList.size() > 0) {
+                String[] cidArray = serviceCidList.toArray(new String[serviceCidList.size()]);
                 apiService.getChannelGroupList(cidArray);
             }
 
@@ -1062,7 +1066,6 @@ public class CommunicationFragment extends Fragment {
             // TODO Auto-generated method stub
             if (getActivity() != null) {
                 swipeRefreshLayout.setRefreshing(false);
-                WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
                 getMessage();
             }
 
