@@ -322,6 +322,11 @@
             android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.appcenter.webex.WebexAddExternalAttendeesActivity"
+            android:launchMode="singleTask"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait"></activity>
 
         <activity
             android:name=".ui.ShareFilesActivity"

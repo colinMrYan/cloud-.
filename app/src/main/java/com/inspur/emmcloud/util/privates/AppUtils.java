@@ -51,6 +51,7 @@ import java.io.File;
 import java.lang.reflect.Method;
 import java.text.DecimalFormat;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -291,6 +292,24 @@ public class AppUtils {
         String uuid = getUUID(context);
         saveUUID(context, uuid);
         return uuid;
+    }
+
+    /**
+     * 获取随机数
+     * @param length
+     * @return
+     */
+    public static String getRandomStr(int length) {
+        String str = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        if (length <= 0) {
+            length = 1;
+        }
+        Random random = new Random();
+        StringBuilder res = new StringBuilder();
+        for (int i = 0; i < length; i++) {
+            res.append(str.charAt(random.nextInt(str.length())));
+        }
+        return res.toString();
     }
 
 

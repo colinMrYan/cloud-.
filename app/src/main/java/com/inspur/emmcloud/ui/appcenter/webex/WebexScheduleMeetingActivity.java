@@ -20,12 +20,14 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.WebexAPIService;
 import com.inspur.emmcloud.bean.appcenter.webex.GetScheduleWebexMeetingSuccess;
+import com.inspur.emmcloud.bean.appcenter.webex.WebexAttendees;
 import com.inspur.emmcloud.bean.appcenter.webex.WebexMeeting;
 import com.inspur.emmcloud.util.common.EditTextUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.ClearEditText;
@@ -38,8 +40,10 @@ import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -76,7 +80,7 @@ public class WebexScheduleMeetingActivity extends BaseActivity {
     private int durationHourChoiceIndex = 1;
     private int durationMinChoiceIndex = 0;
     private Calendar startCalendar;
-    private ArrayList<String> attendeesList = new ArrayList<>();
+    private List<WebexAttendees> webexAttendeesList = new ArrayList<>();
     private WebexMeeting webexMeeting;
     private WebexAPIService apiService;
     private LoadingDialog loadingDlg;
@@ -99,8 +103,8 @@ public class WebexScheduleMeetingActivity extends BaseActivity {
         apiService = new WebexAPIService(this);
         apiService.setAPIInterface(new Webservice());
         loadingDlg = new LoadingDialog(this);
-        int code = (int) ((Math.random() * 9 + 1) * 100000);
-        EditTextUtils.setText(passwordEdit, code + "");
+        String password = AppUtils.getRandomStr(6);
+        EditTextUtils.setText(passwordEdit, password );
     }
 
 
@@ -198,6 +202,10 @@ public class WebexScheduleMeetingActivity extends BaseActivity {
                     ToastUtils.show(MyApplication.getInstance(), R.string.set_duration_correct);
                     return;
                 }
+                List<String> attendeesList = new ArrayList<>();
+                for(WebexAttendees webexAttendees:webexAttendeesList){
+                    attendeesList.add(webexAttendees.getEmail());
+                }
                 webexMeeting = new WebexMeeting();
                 webexMeeting.setConfName(confName);
                 webexMeeting.setAttendeesList(attendeesList);
@@ -223,7 +231,7 @@ public class WebexScheduleMeetingActivity extends BaseActivity {
                 break;
             case R.id.rl_invite:
                 Intent intent = new Intent(WebexScheduleMeetingActivity.this, WebexAddAttendeesActivity.class);
-                intent.putStringArrayListExtra(WebexAddAttendeesActivity.EXTRA_ATTENDEES_LIST, attendeesList);
+                intent.putExtra(WebexAddAttendeesActivity.EXTRA_ATTENDEES_LIST, (Serializable)webexAttendeesList);
                 startActivityForResult(intent, REQUEST_ADD_ATTENDEES);
                 break;
             case R.id.iv_password_visible:
@@ -257,8 +265,8 @@ public class WebexScheduleMeetingActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (RESULT_OK == resultCode) {
             if (requestCode == REQUEST_ADD_ATTENDEES) {
-                attendeesList = data.getStringArrayListExtra(WebexAddAttendeesActivity.EXTRA_ATTENDEES_LIST);
-                inviteText.setText(attendeesList.size() == 0 ? getString(R.string.none) : attendeesList.size() + "");
+                webexAttendeesList = (List<WebexAttendees>)data.getSerializableExtra(WebexAddAttendeesActivity.EXTRA_ATTENDEES_LIST);
+                inviteText.setText(webexAttendeesList.size() == 0 ? getString(R.string.none) : webexAttendeesList.size() + "");
             }
         }
     }

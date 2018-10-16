@@ -41,8 +41,7 @@ public class WebexAPIService {
     public void getWebexMeetingList() {
         final String url = APIUri.getWebexMeetingListUrl();
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(url);
-        params.setConnectTimeout(25000);
-        params.setReadTimeout(25000);
+        params.setReadTimeout(30000);
         x.http().request(HttpMethod.GET, params, new APICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
@@ -78,8 +77,7 @@ public class WebexAPIService {
     public void scheduleWebexMeetingList(final JSONObject obj) {
         final String url = APIUri.getWebexMeetingListUrl();
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(url);
-        params.setConnectTimeout(25000);
-        params.setReadTimeout(25000);
+        params.setReadTimeout(30000);
         params.setBodyContent(obj.toString());
         params.setAsJsonContent(true);
         x.http().request(HttpMethod.POST, params, new APICallback(context, url) {
@@ -118,8 +116,7 @@ public class WebexAPIService {
     public void getWebexMeeting(final String meetingID) {
         final String url = APIUri.getWebexMeetingUrl(meetingID);
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(url);
-        params.setConnectTimeout(25000);
-        params.setReadTimeout(25000);
+        params.setReadTimeout(30000);
         x.http().request(HttpMethod.GET, params, new APICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
@@ -155,8 +152,7 @@ public class WebexAPIService {
     public void getWebexTK() {
         final String url = APIUri.getWebexTK();
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(url);
-        params.setConnectTimeout(25000);
-        params.setReadTimeout(25000);
+        params.setReadTimeout(30000);
         x.http().request(HttpMethod.GET, params, new APICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
@@ -189,8 +185,7 @@ public class WebexAPIService {
     public void removeMeeting(final String meetingID){
         final String url = APIUri.getRemoveWebexMeetingUrl(meetingID);
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(url);
-        params.setConnectTimeout(25000);
-        params.setReadTimeout(25000);
+        params.setReadTimeout(30000);
         x.http().request(HttpMethod.GET, params, new APICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
