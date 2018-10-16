@@ -86,6 +86,7 @@ public class WebexMeetingDetailActivity extends BaseActivity {
         webexMeeting = (WebexMeeting) getIntent().getSerializableExtra(EXTRA_WEBEXMEETING);
         apiService = new WebexAPIService(this);
         apiService.setAPIInterface(new WebService());
+        showWebexMeetingDetial();
         getWebexMeeting();
 
     }
@@ -145,7 +146,17 @@ public class WebexMeetingDetailActivity extends BaseActivity {
 
             }
         });
+        meetingIdText.setOnLongClickListener(new OnViewLongClickListener());
+        meetingPasswordText.setOnLongClickListener(new OnViewLongClickListener());
+        hostKeyText.setOnLongClickListener(new  OnViewLongClickListener());
+    }
 
+    private class OnViewLongClickListener implements View.OnLongClickListener{
+        @Override
+        public boolean onLongClick(View v) {
+            AppUtils.copyContentToPasteBoard(MyApplication.getInstance(),(TextView) v);
+            return false;
+        }
     }
 
     private boolean isMeetingEnd() {
@@ -224,7 +235,6 @@ public class WebexMeetingDetailActivity extends BaseActivity {
 
     private void showDeleteMeetingWarningDlg() {
         new MyQMUIDialog.MessageDialogBuilder(WebexMeetingDetailActivity.this)
-                .setTitle(getString(R.string.remove_webex_meeting_warning_title))
                 .setMessage(getString(R.string.remove_webex_meeting_warning_info))
                 .addAction(getString(R.string.cancel), new QMUIDialogAction.ActionListener() {
                     @Override

@@ -481,7 +481,7 @@
     <string name="schedule_meeting">Schedule Meeting</string>
     <string name="my_meeting">My Meetings</string>
     <string name="remove_webex_meeting_warning_title">Delete meeting</string>
-    <string name="remove_webex_meeting_warning_info">Cancellation email messages will not be sent if you delete meetings from your device.Are you sure you want to delete this meeting?</string>
+    <string name="remove_webex_meeting_warning_info">Are you sure you want to delete this meeting?</string>
     <string name="webex_password_length_error">Password length is not valid (6-10)</string>
     <string name="webex_install_tips">Using this function, you need to install the WebEx client first. Now install?</string>
     <string name="add_invitee_from_contact">Add from address book</string>

@@ -148,7 +148,7 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
 
             }
         });
-        chatInputMenu.setInputLayout("1");
+        chatInputMenu.setInputLayout("1",false);
     }
 
 

@@ -72,7 +72,7 @@ public class WebexScheduleMeetingActivity extends BaseActivity {
     private String[] durationHourItems = null;
     private String[] durationMinItems = null;
     private Integer[] durationHourSumMin = new Integer[]{0, 60, 120, 180, 240, 300, 360, 420, 480, 540, 600, 660, 720, 1080, 1440};
-    private Integer[] durationMinSumMin = new Integer[]{0, 10, 15, 20, 30, 40, 45, 50};
+    private Integer[] durationMinSumMin = new Integer[]{0, 10, 20, 30, 40, 50};
     private int durationHourChoiceIndex = 1;
     private int durationMinChoiceIndex = 0;
     private Calendar startCalendar;
@@ -87,7 +87,7 @@ public class WebexScheduleMeetingActivity extends BaseActivity {
         String hourStr = getString(R.string.hour);
         String minStr = getString(R.string.min);
         durationHourItems = new String[]{"0"+hourStr, "1"+hourStr, "2"+hourStr, "3"+hourStr, "4"+hourStr, "5"+hourStr, "6"+hourStr, "7"+hourStr, "8"+hourStr, "9"+hourStr, "10"+hourStr, "11"+hourStr, "12"+hourStr, "18"+hourStr, "24"+hourStr};
-        durationMinItems = new String[]{"0"+minStr, "10"+minStr, "15"+minStr, "20"+minStr, "30"+minStr, "40"+minStr, "45"+minStr, "50"+minStr};
+        durationMinItems = new String[]{"0"+minStr, "10"+minStr, "20"+minStr, "30"+minStr, "40"+minStr,"50"+minStr};
         startCalendar = TimeUtils.getNextHalfHourTime(Calendar.getInstance());
         startDateText.setText(TimeUtils.calendar2FormatString(MyApplication.getInstance(), startCalendar, TimeUtils.FORMAT_MONTH_DAY));
         startTimeText.setText(TimeUtils.calendar2FormatString(getApplicationContext(), startCalendar, TimeUtils.FORMAT_HOUR_MINUTE));

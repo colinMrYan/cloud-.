@@ -39,6 +39,7 @@ import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.InputMethodUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
@@ -277,7 +278,7 @@ public class ChannelActivity extends MediaPlayBaseActivity {
                 setChatDrafts();
             }
         });
-        chatInputMenu.setInputLayout(channel.getInputs());
+        chatInputMenu.setInputLayout(channel.getInputs(),channel.getType().equals("SERVICE"));
         String chatDrafts = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), MyAppConfig.getChannelDrafsPreKey(cid));
         if (chatDrafts != null) {
             chatInputMenu.setChatDrafts(chatDrafts);
