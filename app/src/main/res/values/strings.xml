@@ -464,6 +464,8 @@
     <string name="not_add_repeated">不能重复添加</string>
     <string name="hour">小时</string>
     <string name="min">分钟</string>
+    <string name="hours">小时</string>
+    <string name="mins">分钟</string>
     <string name="webex_start">开始</string>
     <string name="join">加入</string>
     <string name="meeting_info">会议信息</string>

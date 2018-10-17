@@ -90,8 +90,10 @@ public class WebexScheduleMeetingActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         String hourStr = getString(R.string.hour);
         String minStr = getString(R.string.min);
-        durationHourItems = new String[]{"0"+hourStr, "1"+hourStr, "2"+hourStr, "3"+hourStr, "4"+hourStr, "5"+hourStr, "6"+hourStr, "7"+hourStr, "8"+hourStr, "9"+hourStr, "10"+hourStr, "11"+hourStr, "12"+hourStr, "18"+hourStr, "24"+hourStr};
-        durationMinItems = new String[]{"0"+minStr, "10"+minStr, "20"+minStr, "30"+minStr, "40"+minStr,"50"+minStr};
+        String hoursStr = getString(R.string.hours);
+        String minsStr = getString(R.string.mins);
+        durationHourItems = new String[]{"0"+hourStr, "1"+hourStr, "2"+hoursStr, "3"+hoursStr, "4"+hoursStr, "5"+hoursStr, "6"+hoursStr, "7"+hoursStr, "8"+hoursStr, "9"+hoursStr, "10"+hoursStr, "11"+hoursStr, "12"+hoursStr, "18"+hoursStr, "24"+hoursStr};
+        durationMinItems = new String[]{"0"+minStr, "10"+minsStr, "20"+minsStr, "30"+minsStr, "40"+minsStr,"50"+minsStr};
         startCalendar = TimeUtils.getNextHalfHourTime(Calendar.getInstance());
         startDateText.setText(TimeUtils.calendar2FormatString(MyApplication.getInstance(), startCalendar, TimeUtils.FORMAT_MONTH_DAY));
         startTimeText.setText(TimeUtils.calendar2FormatString(getApplicationContext(), startCalendar, TimeUtils.FORMAT_HOUR_MINUTE));

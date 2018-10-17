@@ -134,9 +134,14 @@ public class WebexMeetingDetailActivity extends BaseActivity {
         int duration = webexMeeting.getDuration();
         int hour = duration / 60;
         int min = duration % 60;
-        String hourtext = (hour == 0) ? "" : hour + getString(R.string.hour);
-        String mintext = (min == 0) ? "" : min + getString(R.string.min);
-        durationText.setText(hourtext + mintext);
+        String timeHour ="";
+        if (hour == 1){
+            timeHour=hour + getString(R.string.hour)+" ";
+        }else if(hour>1){
+            timeHour=hour + getString(R.string.hours)+" ";
+        }
+        String timeMin = (min == 0) ? "" : min + getString(R.string.mins);
+        durationText.setText(timeHour + timeMin);
         meetingPasswordText.setText(webexMeeting.getMeetingPassword());
         meetingIdText.setText(formatMeetingID(webexMeeting.getMeetingID()));
         String photoUrl = APIUri.getWebexPhotoUrl(webexMeeting.getHostWebExID());

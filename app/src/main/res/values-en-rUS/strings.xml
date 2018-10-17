@@ -458,6 +458,8 @@
     <string name="not_add_repeated">Cannot be added repeatedly</string>
     <string name="hour">hr</string>
     <string name="min">min</string>
+    <string name="hours">hrs</string>
+    <string name="mins">mins</string>
     <string name="webex_start">START</string>
     <string name="join">JOIN</string>
     <string name="meeting_info">Meeting Info</string>
@@ -485,7 +487,7 @@
     <string name="webex_add_invitee_num">Joined: %1$d Member(s) / Up to %2$d Members</string>
     <string name="internal_attendees">Internal</string>
     <string name="external_attendees">External</string>
-    <string name="internal_share">Internal sharing</string>
+    <string name="internal_share">Internal</string>
     <string name="webex_time">Time：</string>
     <string name="webex_meeting_code">Meeting number：</string>
     <string name="webex_meeting_password_tip">Meeting password：</string>
