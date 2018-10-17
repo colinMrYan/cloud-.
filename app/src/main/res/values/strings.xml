@@ -488,7 +488,7 @@
     <string name="webex_password_length_error">密码长度不符合规则（6-10位）</string>
     <string name="webex_install_tips">使用此功能需要先安装 webex 客户端，现在安装？</string>
     <string name="add_invitee_from_contact">从通讯录添加</string>
-    <string name="webex_add_invitee_num">您可邀请%1$d/%2$d人</string>
+    <string name="webex_add_invitee_num">已邀请%1$d人/还可邀请%2$d人</string>
     <string name="internal_attendees">内部参会人</string>
     <string name="external_attendees">外部参会人</string>
     <string name="internal_share">内部分享</string>

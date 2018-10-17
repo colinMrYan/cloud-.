@@ -464,7 +464,7 @@
     <string name="webex_host">Host</string>
     <string name="webex_when">When</string>
     <string name="webex_meeting_number">Meeting number</string>
-    <string name="webex_meeting_password">Password</string>
+    <string name="webex_meeting_password">Meeting Password</string>
     <string name="webex_host_password">Host key</string>
     <string name="webex_meeting_ended">The meeting has ended</string>
     <string name="start_time_error">Invalid start time</string>
