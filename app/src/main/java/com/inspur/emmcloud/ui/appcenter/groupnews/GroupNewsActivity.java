@@ -19,6 +19,7 @@ import com.inspur.emmcloud.bean.appcenter.news.NewsTitle;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.privates.HonorImmersionStateBarUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.PagerSlidingTabStrip;
@@ -41,6 +42,7 @@ public class GroupNewsActivity extends BaseFragmentActivity implements
 		setContentView(R.layout.activity_group_news);
 		loadingDlg = new LoadingDialog(GroupNewsActivity.this);
 		getNewTitles();
+		HonorImmersionStateBarUtils.setImmersiveStateBar(this);
 	}
 
 	/**

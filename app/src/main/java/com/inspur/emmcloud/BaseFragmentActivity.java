@@ -2,8 +2,10 @@ package com.inspur.emmcloud;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
+import com.inspur.emmcloud.util.privates.HonorImmersionStateBarUtils;
 import com.inspur.emmcloud.util.privates.LanguageUtils;
 
 public class BaseFragmentActivity extends FragmentActivity {
@@ -19,5 +21,12 @@ public class BaseFragmentActivity extends FragmentActivity {
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(LanguageUtils.attachBaseContext(newBase));
     }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        HonorImmersionStateBarUtils.setImmersiveStateBar(this);
+    }
+
 
 }
