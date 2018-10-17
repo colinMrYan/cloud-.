@@ -490,6 +490,8 @@
     <string name="webex_time">Time：</string>
     <string name="webex_meeting_code">Code： </string>
     <string name="webex_meeting_password_tip">Password： </string>
+    <string name="add_external_attendees">Add external participants</string>
+    <string name="webex_no_meeting_tips"><Data><![CDATA[<font color=\'#999999\'>No meetings before</font>]]></Data>%1$s</string>
 
     <!-- 我的页面部分 -->
     <string name="data_clear_success">Clear success</string>

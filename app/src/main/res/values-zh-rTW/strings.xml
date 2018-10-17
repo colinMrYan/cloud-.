@@ -492,6 +492,8 @@
     <string name="webex_time">時間：</string>
     <string name="webex_meeting_code">會議號： </string>
     <string name="webex_meeting_password_tip">會議密碼： </string>
+    <string name="add_external_attendees">添加外部參會人</string>
+    <string name="webex_no_meeting_tips">%1$s<Data><![CDATA[<font color=\'#999999\'>前無會議</font>]]></Data></string>
 
     <!-- 我的頁面部分 -->
     <string name="data_clear_success">清除成功</string>

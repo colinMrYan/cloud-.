@@ -496,6 +496,8 @@
     <string name="webex_meeting_code">会议号： </string>
     <string name="webex_meeting_password_tip">会议密码： </string>
 
+    <string name="add_external_attendees">添加外部参会人</string>
+    <string name="webex_no_meeting_tips">%1$s<Data><![CDATA[<font color=\'#999999\'>前无会议</font>]]></Data></string>
 
     <!-- 我的页面部分 -->
     <string name="data_clear_success">清除成功</string>

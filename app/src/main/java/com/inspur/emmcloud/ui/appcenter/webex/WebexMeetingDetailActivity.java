@@ -76,7 +76,6 @@ import java.util.List;
 
 @ContentView(R.layout.activity_webex_detail)
 public class WebexMeetingDetailActivity extends BaseActivity {
-
     public static final String EXTRA_WEBEXMEETING = "WebexMeeting";
     private final String webexAppPackageName = "com.cisco.webex.meetings";
     private final int REQUEST_SELECT_CONTACT = 1;
