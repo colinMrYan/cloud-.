@@ -91,6 +91,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
     public static final String EXTRA_CONTAIN_ME = "isContainMe";
     public static final String EXTRA_HAS_SELECT = "hasSearchResult";
     public static final String EXTRA_EXCLUDE_SELECT = "excludeContactUidList";
+    public static final String EXTRA_LIMIT = "select_limit";
     private boolean isSearchSingle = false; // 判断是否搜索单一项
     private boolean isContainMe = false; // 搜索结果是否可以包含自己
     private boolean isMultiSelect = false;
@@ -142,6 +143,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
     private long lastSearchTime = 0L;
     private List<Contact> excludeContactList = new ArrayList<>();//不显示某些数据
     private long lastBackTime;
+    private int  selectLimit = 5000;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -173,6 +175,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
     private void clickView(int id) {
         Intent intent = new Intent(getActivity().getApplicationContext(),
                 ContactSearchMoreActivity.class);
+        intent.putExtra(EXTRA_LIMIT,selectLimit);
         switch (id) {
             case R.id.pop_second_group_more_text:
                 intent.putExtra("groupTextList",
@@ -267,6 +270,9 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
             searchContent = SEARCH_NOTHIING;
         } else {
             Intent intent = getActivity().getIntent();
+            if (intent.hasExtra(EXTRA_LIMIT)){
+                selectLimit = intent.getIntExtra(EXTRA_LIMIT,5000);
+            }
             title = intent.getExtras().getString(EXTRA_TITLE);
             isMultiSelect = intent.getExtras().getBoolean(EXTRA_MULTI_SELECT);
             searchContent = intent.getExtras().getInt(EXTRA_TYPE);
@@ -611,14 +617,19 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
                 return;
             }
             if (!selectMemList.contains(searchModel)) {
-                selectMemList.add(searchModel);
-                CommonContactCacheUtils.saveCommonContact(
-                        getActivity().getApplicationContext(), searchModel);
-                if (!isMultiSelect) {
-                    returnSearchResultData();
-                    return;
+                if (selectMemList.size() < selectLimit){
+                    selectMemList.add(searchModel);
+                    CommonContactCacheUtils.saveCommonContact(
+                            getActivity().getApplicationContext(), searchModel);
+                    if (!isMultiSelect) {
+                        returnSearchResultData();
+                        return;
+                    }
+                    notifyFlowLayoutDataChange();
+                }else {
+                    ToastUtils.show(MyApplication.getInstance(),R.string.contact_select_limit_warning);
                 }
-                notifyFlowLayoutDataChange();
+
             } else {
                 selectMemList.remove(searchModel);
                 notifyFlowLayoutDataChange();

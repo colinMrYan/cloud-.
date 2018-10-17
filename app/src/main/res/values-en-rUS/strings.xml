@@ -453,11 +453,9 @@
 
     <!--Webex 会议-->
     <string name="webex_meeting_title">Meeting held by %1$s</string>
-    <string name="select_invitees">Select invitees</string>
-    <string name="input_invitee_emails">Enter invitee emails</string>
+    <string name="input_invitee_emails">Enter participant emails</string>
     <string name="input_correct_invitee_emails">Enter the correct emails</string>
     <string name="not_add_repeated">Cannot be added repeatedly</string>
-    <string name="add_invitee">Add invitee</string>
     <string name="hour">hr</string>
     <string name="min">min</string>
     <string name="webex_start">START</string>
@@ -477,7 +475,6 @@
     <string name="set_duration_correct">Please set the correct meeting duration</string>
     <string name="webex_meeting_duration">Duration</string>
     <string name="duration_time">Duration</string>
-    <string name="webex_attendees">Attendees</string>
     <string name="schedule_meeting">Schedule Meeting</string>
     <string name="my_meeting">My Meetings</string>
     <string name="remove_webex_meeting_warning_title">Delete meeting</string>
@@ -486,6 +483,9 @@
     <string name="webex_install_tips">Using this function, you need to install the WebEx client first. Now install?</string>
     <string name="add_invitee_from_contact">Add from address book</string>
     <string name="webex_add_invitee_num">You can invite %1$d/%2$d people</string>
+    <string name="internal_attendees">Internal participants</string>
+    <string name="external_attendees">External participants</string>
+    <string name="add_external_attendees">xceeding the recommended limit of number of choices</string>
 
     <!-- 我的页面部分 -->
     <string name="data_clear_success">Clear success</string>
@@ -656,6 +656,7 @@
     <string name="cannot_view_info">Stuff not found</string>
     <string name="do_not_select_yourself">Please do not select yourself</string>
     <string name="contact_exception">Data exception cannot be opened</string>
+    <string name="contact_select_limit_warning">The maximum number of optional persons has been reached</string>
 
     <!-- 会议室部分 -->
     <string name="meeting_room_booking_detail">Details on the meeting room</string>

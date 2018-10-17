@@ -29,6 +29,7 @@ public class SearchModel implements Serializable {
     private String icon = "";
     @Column(name = "heat")
     private int heat = 0;
+    private String email = "";
 
     public SearchModel() {
 
@@ -51,6 +52,7 @@ public class SearchModel implements Serializable {
         type = contact.getType();
         name = contact.getName();
         id = contact.getId();
+        this.email = contact.getEmail();
     }
 
     public SearchModel(ContactUser contactUser) {
@@ -60,6 +62,7 @@ public class SearchModel implements Serializable {
         this.type = TYPE_USER;
         this.id = contactUser.getId();
         this.name = contactUser.getName();
+        this.email = contactUser.getEmail();
 
     }
 
@@ -124,6 +127,14 @@ public class SearchModel implements Serializable {
 
     public void setIcon(String icon) {
         this.icon = icon;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     /**

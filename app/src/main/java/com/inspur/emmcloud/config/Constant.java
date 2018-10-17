@@ -38,6 +38,7 @@ public class Constant {
     public static final String PREF_APP_LOAD_ALIAS = "app_load_alias";
     public static final String PREF_APP_OPEN_VOICE_WORD_SWITCH = "voice_2_word_switch";
     public static final String PREF_WEBEX_DOWNLOAD_URL = "webex_download_url";
+    public static final String PREF_WEBEX_FIRST_ENTER = "webex_first_enter";
 
     public static final String PREF_V_CONFIG_ALL = "v_config_all";
 
