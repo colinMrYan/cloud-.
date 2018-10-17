@@ -269,6 +269,7 @@ public class WebexMeetingDetailActivity extends BaseActivity {
                 ,"umeng",UMConfigure.DEVICE_TYPE_PHONE,"");
 //        QueuedWork.isUseThreadPool = false;
 //        UMShareAPI.get(this);
+        UMConfigure.setLogEnabled(false);
         PlatformConfig.setWeixin("wx4eb8727ea9c26495", "56a0426315f1d0985a1cc1e75e96130d");
         PlatformConfig.setQQZone("1105561850", "1kaw4r1c37SUupFL");
         final CustomShareListener mShareListener = new CustomShareListener(WebexMeetingDetailActivity.this);
@@ -377,7 +378,7 @@ public class WebexMeetingDetailActivity extends BaseActivity {
 
         @Override
         public void onResult(SHARE_MEDIA platform) {
-            ToastUtils.show(mActivity.get(), R.string.news_share_success);
+           // ToastUtils.show(mActivity.get(), R.string.news_share_success);
         }
 
         @Override
