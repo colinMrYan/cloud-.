@@ -273,7 +273,7 @@ public class WebexMeetingDetailActivity extends BaseActivity {
         PlatformConfig.setQQZone("1105561850", "1kaw4r1c37SUupFL");
         final CustomShareListener mShareListener = new CustomShareListener(WebexMeetingDetailActivity.this);
         new ShareAction(WebexMeetingDetailActivity.this)
-                .setDisplayList(SHARE_MEDIA.EMAIL,  SHARE_MEDIA.SMS)
+                .setDisplayList( SHARE_MEDIA.SMS)
                 .addButton("internal_share", "app_name", "ic_launcher", "ic_launcher")
                 .setShareboardclickCallback(new ShareBoardlistener() {
                     @Override
