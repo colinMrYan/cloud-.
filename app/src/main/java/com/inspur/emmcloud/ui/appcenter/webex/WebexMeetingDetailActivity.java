@@ -46,6 +46,7 @@ import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
+import com.umeng.commonsdk.UMConfigure;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.UMShareAPI;
@@ -261,15 +262,20 @@ public class WebexMeetingDetailActivity extends BaseActivity {
     }
 
     private void shareWebexMeeting() {
-        shareContent = webexMeeting.getConfName()+"\n"+getString(R.string.webex_time)+timeText.getText()+"\n"
-                +getString(R.string.webex_meeting_code)+webexMeeting.getMeetingID()+"\n"
+        shareContent = webexMeeting.getConfName()+"\n"+getString(R.string.webex_time)+timeText.getText().toString()+"\n"
+                +getString(R.string.webex_meeting_code)+meetingIdText.getText().toString()+"\n"
                 +getString(R.string.webex_meeting_password_tip)+webexMeeting.getMeetingPassword();
-        UMShareAPI.get(this);
+        UMConfigure.init(this,"59aa1f8f76661373290010d3"
+                ,"umeng",UMConfigure.DEVICE_TYPE_PHONE,"");
+//        QueuedWork.isUseThreadPool = false;
+//        UMShareAPI.get(this);
+        UMConfigure.setLogEnabled(false);
         PlatformConfig.setWeixin("wx4eb8727ea9c26495", "56a0426315f1d0985a1cc1e75e96130d");
+        PlatformConfig.setQQZone("1105561850", "1kaw4r1c37SUupFL");
         final CustomShareListener mShareListener = new CustomShareListener(WebexMeetingDetailActivity.this);
         new ShareAction(WebexMeetingDetailActivity.this)
-                .setDisplayList( SHARE_MEDIA.SMS)
-                .addButton("internal_share", "app_name", "ic_launcher", "ic_launcher")
+                .setDisplayList( SHARE_MEDIA.EMAIL,SHARE_MEDIA.SMS)
+                .addButton(getString(R.string.internal_share), "app_name", "ic_launcher", "ic_launcher")
                 .setShareboardclickCallback(new ShareBoardlistener() {
                     @Override
                     public void onclick(SnsPlatform snsPlatform, SHARE_MEDIA share_media) {
@@ -372,7 +378,7 @@ public class WebexMeetingDetailActivity extends BaseActivity {
 
         @Override
         public void onResult(SHARE_MEDIA platform) {
-            ToastUtils.show(mActivity.get(), R.string.news_share_success);
+           // ToastUtils.show(mActivity.get(), R.string.news_share_success);
         }
 
         @Override

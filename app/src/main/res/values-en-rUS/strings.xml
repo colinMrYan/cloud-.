@@ -482,13 +482,13 @@
     <string name="webex_password_length_error">Password length is not valid (6-10)</string>
     <string name="webex_install_tips">Using this function, you need to install the WebEx client first. Now install?</string>
     <string name="add_invitee_from_contact">Add from address book</string>
-    <string name="webex_add_invitee_num">Invited people %1$d /  %2$d people</string>
+    <string name="webex_add_invitee_num">You can invite %1$d/%2$d people</string>
     <string name="internal_attendees">Internal participants</string>
     <string name="external_attendees">External participants</string>
     <string name="internal_share">Internal sharing</string>
     <string name="webex_time">Time：</string>
     <string name="webex_meeting_code">Meeting number：</string>
-    <string name="webex_meeting_password_tip">Meeting Password：</string>
+    <string name="webex_meeting_password_tip">Password：</string>
     <string name="add_external_attendees">Add external participants</string>
     <string name="webex_no_meeting_tips"><Data><![CDATA[<font color=\'#999999\'>No meetings before</font>]]></Data>%1$s</string>
 
