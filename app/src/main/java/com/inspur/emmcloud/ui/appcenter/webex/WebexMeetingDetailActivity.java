@@ -483,6 +483,7 @@ public class WebexMeetingDetailActivity extends BaseActivity {
         @Override
         public void returnWebexMeetingFail(String error, int errorCode) {
             LoadingDialog.dimissDlg(loadingDialog);
+            WebServiceMiddleUtils.hand(MyApplication.getInstance(), error, errorCode);
             finish();
         }
 
