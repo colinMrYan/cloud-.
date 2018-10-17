@@ -485,7 +485,8 @@
     <string name="webex_add_invitee_num">You can invite %1$d/%2$d people</string>
     <string name="internal_attendees">Internal participants</string>
     <string name="external_attendees">External participants</string>
-    <string name="add_external_attendees">xceeding the recommended limit of number of choices</string>
+    <string name="add_external_attendees">Add external participants</string>
+    <string name="webex_no_meeting_tips"><Data><![CDATA[<font color=\'#999999\'>No meetings before</font>]]></Data>%1$s</string>
 
     <!-- 我的页面部分 -->
     <string name="data_clear_success">Clear success</string>

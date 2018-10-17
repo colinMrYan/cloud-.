@@ -9,11 +9,13 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.Html;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
@@ -47,6 +49,7 @@ import org.xutils.view.annotation.ViewInject;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -72,6 +75,8 @@ public class WebexMyMeetingActivity extends BaseActivity {
     private LinearLayout noMeetingLayout;
     @ViewInject(R.id.rl_mask)
     private RelativeLayout maskLayout;
+    @ViewInject(R.id.tv_no_meeting)
+    private TextView noMeetingText;
     private WebexMeetingAdapter adapter;
     private WebexAPIService apiService;
     private List<WebexMeeting> webexMeetingList = new ArrayList<>();
@@ -93,13 +98,13 @@ public class WebexMyMeetingActivity extends BaseActivity {
 
     private void initData() {
         webexMeetingMap = GroupUtils.group(webexMeetingList, new WebexMeetingGroup());
-        if (webexMeetingMap == null){
+        if (webexMeetingMap == null) {
             webexMeetingMap = new HashMap<>();
         }
         if (webexMeetingMap.size() > 0) {
             webexMeetingGroupList = new ArrayList<>(webexMeetingMap.keySet());
             Collections.sort(webexMeetingGroupList, new SortClass());
-        }else {
+        } else {
             webexMeetingGroupList.clear();
         }
         adapter.setData(webexMeetingGroupList, webexMeetingMap);
@@ -108,15 +113,15 @@ public class WebexMyMeetingActivity extends BaseActivity {
     }
 
     private void initView() {
-        boolean isFirstEnter = PreferencesUtils.getBoolean(MyApplication.getInstance(),Constant.PREF_WEBEX_FIRST_ENTER,true);
-        //maskLayout.setVisibility(isFirstEnter?View.VISIBLE:View.GONE);
-        maskLayout.setVisibility(View.VISIBLE);
+        boolean isFirstEnter = PreferencesUtils.getBoolean(MyApplication.getInstance(), Constant.PREF_WEBEX_FIRST_ENTER, true);
+        maskLayout.setVisibility(isFirstEnter ? View.VISIBLE : View.GONE);
         String installUri = getIntent().getStringExtra("installUri");
-        if (StringUtils.isBlank(installUri)){
+        if (StringUtils.isBlank(installUri)) {
             installUri = "https://m.webex.com/downloads/android/touchscreen/mc.apk";
         }
-        PreferencesUtils.putString(MyApplication.getInstance(), Constant.PREF_WEBEX_DOWNLOAD_URL,installUri);
+        PreferencesUtils.putString(MyApplication.getInstance(), Constant.PREF_WEBEX_DOWNLOAD_URL, installUri);
         loadingDlg = new LoadingDialog(this);
+        setNoMeetingTipsText();
         swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.header_bg), getResources().getColor(R.color.header_bg));
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -132,10 +137,11 @@ public class WebexMyMeetingActivity extends BaseActivity {
             @Override
             public void onChanged() {
                 super.onChanged();
-                if (webexMeetingList.size()>0){
+                if (webexMeetingList.size() > 0) {
                     noMeetingLayout.setVisibility(View.GONE);
-                }else {
+                } else {
                     noMeetingLayout.setVisibility(View.VISIBLE);
+                    setNoMeetingTipsText();
                 }
             }
         });
@@ -145,14 +151,14 @@ public class WebexMyMeetingActivity extends BaseActivity {
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
                 WebexMeeting webexMeeting = webexMeetingMap.get(webexMeetingGroupList.get(groupPosition)).get(childPosition);
                 Intent intent = new Intent(WebexMyMeetingActivity.this, WebexMeetingDetailActivity.class);
-                intent.putExtra(WebexMeetingDetailActivity.EXTRA_WEBEXMEETING,webexMeeting);
-                startActivityForResult(intent,REQUEST_REMOVE_WEBEX_MEETING);
+                intent.putExtra(WebexMeetingDetailActivity.EXTRA_WEBEXMEETING, webexMeeting);
+                startActivityForResult(intent, REQUEST_REMOVE_WEBEX_MEETING);
                 return false;
             }
         });
         adapter.setFounctionBtnClickListener(new WebexMeetingAdapter.OnFunctionBtnClickListener() {
             @Override
-            public void onFunctionClick(Button functionBtn,int groupPosition, int childPosition) {
+            public void onFunctionClick(Button functionBtn, int groupPosition, int childPosition) {
                 if (AppUtils.isAppInstalled(MyApplication.getInstance(), webexAppPackageName)) {
                     WebexMeeting webexMeeting = webexMeetingMap.get(webexMeetingGroupList.get(groupPosition)).get(childPosition);
                     webexMeetingOpen = webexMeeting;
@@ -163,7 +169,7 @@ public class WebexMyMeetingActivity extends BaseActivity {
                     } else {
                         functionBtn.setEnabled(false);
                         functionBtn.setTextColor(Color.parseColor("#999999"));
-                        functionBtn.setBackground(ContextCompat.getDrawable(MyApplication.getInstance(),R.drawable.shape_webex_buttion_add_disable));
+                        functionBtn.setBackground(ContextCompat.getDrawable(MyApplication.getInstance(), R.drawable.shape_webex_buttion_add_disable));
                         ToastUtils.show(MyApplication.getInstance(), R.string.webex_meeting_ended);
                     }
                 } else {
@@ -176,8 +182,15 @@ public class WebexMyMeetingActivity extends BaseActivity {
         handMessage();
     }
 
-    private void handMessage(){
-        handler = new Handler(){
+    private void setNoMeetingTipsText() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MONTH, 1);
+        String date = TimeUtils.Calendar2TimeString(calendar, TimeUtils.getFormat(MyApplication.getInstance(), TimeUtils.FORMAT_MONTH_DAY));
+        noMeetingText.setText(Html.fromHtml(getString(R.string.webex_no_meeting_tips, date)));
+    }
+
+    private void handMessage() {
+        handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
                 adapter.notifyDataSetChanged();
@@ -192,24 +205,25 @@ public class WebexMyMeetingActivity extends BaseActivity {
     }
 
 
-    private void showUserGuideMask(){}
+    private void showUserGuideMask() {
+    }
 
 
     @Override
     protected void onStart() {
         super.onStart();
-        if (timer == null ){
+        if (timer == null) {
             timer = new Timer();
             task = new TimerTask() {
                 @Override
                 public void run() {
-                    if (handler != null){
+                    if (handler != null) {
                         handler.sendEmptyMessage(1);
                     }
                 }
             };
         }
-        timer.schedule(task,10000,10000);
+        timer.schedule(task, 10000, 10000);
     }
 
     @Override
@@ -219,7 +233,7 @@ public class WebexMyMeetingActivity extends BaseActivity {
         timer = null;
     }
 
-    private boolean isOwner(WebexMeeting webexMeeting){
+    private boolean isOwner(WebexMeeting webexMeeting) {
         String myInfo = PreferencesUtils.getString(this, "myInfo", "");
         GetMyInfoResult getMyInfoResult = new GetMyInfoResult(myInfo);
         String myEmail = getMyInfoResult.getMail();
@@ -271,8 +285,8 @@ public class WebexMyMeetingActivity extends BaseActivity {
                     @Override
                     public void onClick(QMUIDialog dialog, int index) {
                         dialog.dismiss();
-                        String downloadUrl = PreferencesUtils.getString(MyApplication.getInstance(), Constant.PREF_WEBEX_DOWNLOAD_URL,"");
-                        new AppDownloadUtils().showDownloadDialog(WebexMyMeetingActivity.this,downloadUrl);
+                        String downloadUrl = PreferencesUtils.getString(MyApplication.getInstance(), Constant.PREF_WEBEX_DOWNLOAD_URL, "");
+                        new AppDownloadUtils().showDownloadDialog(WebexMyMeetingActivity.this, downloadUrl);
                     }
                 })
                 .show();
@@ -286,11 +300,11 @@ public class WebexMyMeetingActivity extends BaseActivity {
                 break;
             case R.id.iv_add_meeting:
                 Intent intent = new Intent(this, WebexScheduleMeetingActivity.class);
-                startActivityForResult(intent,REQUEST_SCHEDULE_WEBEX_MEETING);
+                startActivityForResult(intent, REQUEST_SCHEDULE_WEBEX_MEETING);
                 break;
             case R.id.iv_schedule_ok:
-               maskLayout.setVisibility(View.GONE);
-                PreferencesUtils.putBoolean(MyApplication.getInstance(),Constant.PREF_WEBEX_FIRST_ENTER,false);
+                maskLayout.setVisibility(View.GONE);
+                PreferencesUtils.putBoolean(MyApplication.getInstance(), Constant.PREF_WEBEX_FIRST_ENTER, false);
                 break;
 
         }
@@ -299,10 +313,10 @@ public class WebexMyMeetingActivity extends BaseActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK){
-            if (requestCode ==  REQUEST_SCHEDULE_WEBEX_MEETING){
+        if (resultCode == RESULT_OK) {
+            if (requestCode == REQUEST_SCHEDULE_WEBEX_MEETING) {
                 getWxMeetingList(false);
-            }else if(requestCode == REQUEST_REMOVE_WEBEX_MEETING){
+            } else if (requestCode == REQUEST_REMOVE_WEBEX_MEETING) {
                 WebexMeeting webexMeeting = (WebexMeeting) data.getSerializableExtra(WebexMeetingDetailActivity.EXTRA_WEBEXMEETING);
                 webexMeetingList.remove(webexMeeting);
                 initData();
@@ -319,7 +333,7 @@ public class WebexMyMeetingActivity extends BaseActivity {
             WebexMeeting webexMeeting = (WebexMeeting) obj;
             SimpleDateFormat format = new SimpleDateFormat(
                     getString(R.string.format_date_group_by));
-            String dateString = TimeUtils.calendar2FormatString(MyApplication.getInstance(), webexMeeting.getStartDateCalendar(),format);
+            String dateString = TimeUtils.calendar2FormatString(MyApplication.getInstance(), webexMeeting.getStartDateCalendar(), format);
             return dateString;
         }
 
@@ -349,7 +363,7 @@ public class WebexMyMeetingActivity extends BaseActivity {
 
     public void getWxMeetingList(boolean isShowRefresh) {
         if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
-            if (isShowRefresh){
+            if (isShowRefresh) {
                 swipeRefreshLayout.setRefreshing(true);
             }
             apiService.getWebexMeetingList();
@@ -366,7 +380,7 @@ public class WebexMyMeetingActivity extends BaseActivity {
     private void getWebexTK() {
         if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
             apiService.getWebexTK();
-        }else {
+        } else {
             LoadingDialog.dimissDlg(loadingDlg);
         }
     }
@@ -392,11 +406,10 @@ public class WebexMyMeetingActivity extends BaseActivity {
         }
 
 
-
         @Override
         public void returnWebexMeetingListSuccess(GetWebexMeetingListResult getWebexMeetingListResult) {
             swipeRefreshLayout.setRefreshing(false);
-            webexMeetingList = getWebexMeetingListResult.getWebexMeetingList();
+            webexMeetingList = new ArrayList<>();
             initData();
         }
 
