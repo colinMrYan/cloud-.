@@ -95,8 +95,8 @@ public class WebexScheduleMeetingActivity extends BaseActivity {
         durationHourItems = new String[]{"0"+hourStr, "1"+hourStr, "2"+hoursStr, "3"+hoursStr, "4"+hoursStr, "5"+hoursStr, "6"+hoursStr, "7"+hoursStr, "8"+hoursStr, "9"+hoursStr, "10"+hoursStr, "11"+hoursStr, "12"+hoursStr, "18"+hoursStr, "24"+hoursStr};
         durationMinItems = new String[]{"0"+minStr, "10"+minsStr, "20"+minsStr, "30"+minsStr, "40"+minsStr,"50"+minsStr};
         startCalendar = TimeUtils.getNextHalfHourTime(Calendar.getInstance());
-        startDateText.setText(TimeUtils.calendar2FormatString(MyApplication.getInstance(), startCalendar, TimeUtils.FORMAT_MONTH_DAY));
-        startTimeText.setText(TimeUtils.calendar2FormatString(getApplicationContext(), startCalendar, TimeUtils.FORMAT_HOUR_MINUTE));
+        startDateText.setText(TimeUtils.calendar2FormatString(this, startCalendar, TimeUtils.FORMAT_MONTH_DAY));
+        startTimeText.setText(TimeUtils.calendar2FormatString(this, startCalendar, TimeUtils.FORMAT_HOUR_MINUTE));
         durationHourText.setText(durationHourItems[durationHourChoiceIndex]);
         durationMinText.setText(durationMinItems[durationMinChoiceIndex]);
         passwordEdit.setTransformationMethod(PasswordTransformationMethod.getInstance());
@@ -141,7 +141,7 @@ public class WebexScheduleMeetingActivity extends BaseActivity {
                                   int minute) {
                 startCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
                 startCalendar.set(Calendar.MINUTE, minute);
-                startTimeText.setText(TimeUtils.calendar2FormatString(getApplicationContext(), startCalendar, TimeUtils.FORMAT_HOUR_MINUTE));
+                startTimeText.setText(TimeUtils.calendar2FormatString(WebexScheduleMeetingActivity.this, startCalendar, TimeUtils.FORMAT_HOUR_MINUTE));
             }
         }, startCalendar.get(Calendar.HOUR_OF_DAY), startCalendar.get(Calendar.MINUTE), true);
         beginTimePickerDialog.show();
