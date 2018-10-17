@@ -487,6 +487,11 @@
     <string name="webex_add_invitee_num">您可邀請%1$d/%2$d人</string>
     <string name="internal_attendees">內部參會人</string>
     <string name="external_attendees">外部參會人</string>
+    <string name="add_external_attendees">超过了建议选择人数限制</string>
+    <string name="internal_share">内部分享</string>
+    <string name="webex_time">時間：</string>
+    <string name="webex_meeting_code">會議號： </string>
+    <string name="webex_meeting_password_tip">會議密碼： </string>
     <string name="add_external_attendees">添加外部參會人</string>
     <string name="webex_no_meeting_tips">%1$s<Data><![CDATA[<font color=\'#999999\'>前無會議</font>]]></Data></string>
 
