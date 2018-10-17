@@ -461,6 +461,8 @@
     <string name="not_add_repeated">不能重複添加</string>
     <string name="hour">小時</string>
     <string name="min">分鐘</string>
+    <string name="hours">小時</string>
+    <string name="mins">分鐘</string>
     <string name="webex_start">開始</string>
     <string name="join">加入</string>
     <string name="meeting_info">會議資訊</string>
@@ -493,6 +495,7 @@
     <string name="webex_meeting_password_tip">會議密碼：</string>
     <string name="add_external_attendees">添加外部參會人</string>
     <string name="webex_no_meeting_tips">%1$s<Data><![CDATA[<font color=\'#999999\'>前無會議</font>]]></Data></string>
+    <string name="webex_participant">參會人員</string>
 
     <!-- 我的頁面部分 -->
     <string name="data_clear_success">清除成功</string>

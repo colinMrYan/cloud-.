@@ -24,7 +24,7 @@
             android:onClick="onClick"
             android:paddingLeft="20dp"
             android:paddingRight="15dp"
-            android:text="@string/save"
+            android:text="@string/finish"
             android:textColor="@color/white"
             android:textSize="17sp" />
 
@@ -261,7 +261,7 @@
                 android:paddingBottom="10dp"
                 android:paddingLeft="15dp"
                 android:paddingTop="10dp"
-                android:text="@string/meeting_members"
+                android:text="@string/webex_participant"
                 android:textColor="#203b4f"
                 android:textSize="17sp" />
 

@@ -9,7 +9,6 @@ import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
 
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.appcenter.webex.WebexMeeting;
@@ -94,7 +93,7 @@ public class WebexMeetingAdapter extends BaseExpandableListAdapter {
         convertView = LayoutInflater.from(context).inflate(R.layout.item_view_webex_meeting_group, null);
         TextView todayText = (TextView) convertView.findViewById(R.id.tv_today);
         TextView dateText = (TextView) convertView.findViewById(R.id.tv_date);
-        String timeDate = TimeUtils.calendar2FormatString(MyApplication.getInstance(), calendar, TimeUtils.FORMAT_YEAR_MONTH_DAY);
+        String timeDate = TimeUtils.calendar2FormatString(context, calendar, TimeUtils.FORMAT_YEAR_MONTH_DAY);
         String timeWeek = TimeUtils.getWeekDay(context, calendar);
         todayText.setVisibility(TimeUtils.isCalendarToday(calendar) ? View.VISIBLE : View.INVISIBLE);
         dateText.setText(timeDate + " " + timeWeek);

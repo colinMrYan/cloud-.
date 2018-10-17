@@ -453,18 +453,20 @@
 
     <!--Webex 会议-->
     <string name="webex_meeting_title">Meeting held by %1$s</string>
-    <string name="input_invitee_emails">Enter participant emails</string>
-    <string name="input_correct_invitee_emails">Enter the correct emails</string>
+    <string name="input_invitee_emails">Enter participant email</string>
+    <string name="input_correct_invitee_emails">Enter the correct email</string>
     <string name="not_add_repeated">Cannot be added repeatedly</string>
     <string name="hour">hr</string>
     <string name="min">min</string>
+    <string name="hours">hrs</string>
+    <string name="mins">mins</string>
     <string name="webex_start">START</string>
     <string name="join">JOIN</string>
     <string name="meeting_info">Meeting Info</string>
     <string name="webex_host">Host</string>
     <string name="webex_when">When</string>
     <string name="webex_meeting_number">Meeting number</string>
-    <string name="webex_meeting_password">Meeting Password</string>
+    <string name="webex_meeting_password">Meeting password</string>
     <string name="webex_host_password">Host key</string>
     <string name="webex_meeting_ended">The meeting has ended</string>
     <string name="start_time_error">Invalid start time</string>
@@ -482,15 +484,16 @@
     <string name="webex_password_length_error">Password length is not valid (6-10)</string>
     <string name="webex_install_tips">Using this function, you need to install the WebEx client first. Now install?</string>
     <string name="add_invitee_from_contact">Add from address book</string>
-    <string name="webex_add_invitee_num">You can invite %1$d/%2$d people</string>
-    <string name="internal_attendees">Internal participants</string>
-    <string name="external_attendees">External participants</string>
-    <string name="internal_share">Internal sharing</string>
+    <string name="webex_add_invitee_num">Joined: %1$d Member(s) / Up to %2$d Members</string>
+    <string name="internal_attendees">Internal</string>
+    <string name="external_attendees">External</string>
+    <string name="internal_share">Internal</string>
     <string name="webex_time">Time：</string>
     <string name="webex_meeting_code">Meeting number：</string>
-    <string name="webex_meeting_password_tip">Password：</string>
-    <string name="add_external_attendees">Add external participants</string>
+    <string name="webex_meeting_password_tip">Meeting password：</string>
+    <string name="add_external_attendees">Add</string>
     <string name="webex_no_meeting_tips"><Data><![CDATA[<font color=\'#999999\'>No meetings before</font>]]></Data>%1$s</string>
+    <string name="webex_participant">Participant</string>
 
     <!-- 我的页面部分 -->
     <string name="data_clear_success">Clear success</string>
@@ -672,7 +675,7 @@
     <string name="please_choosing_date">Select time</string>
     <string name="from">From</string>
     <string name="to">To</string>
-    <string name="start_time">Start time</string>
+    <string name="start_time">Start</string>
     <string name="end_time">End time</string>
     <string name="room_booking_notice_edit">Enter notes</string>
     <string name="room_booking_detail">Details of the meeting</string>
