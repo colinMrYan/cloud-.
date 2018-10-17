@@ -456,7 +456,7 @@
 
     <!--Webex 会议-->
     <string name="webex_meeting_title">%1$s的會議</string>
-    <string name="input_invitee_emails">輸入受邀者的電子郵箱地址</string>
+    <string name="input_invitee_emails">輸入參會人的電子郵箱地址</string>
     <string name="input_correct_invitee_emails">請輸入正確的的電子郵箱地址</string>
     <string name="not_add_repeated">不能重複添加</string>
     <string name="hour">小時</string>

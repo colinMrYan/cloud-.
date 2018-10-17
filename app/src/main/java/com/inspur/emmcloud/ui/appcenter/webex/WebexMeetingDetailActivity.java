@@ -32,6 +32,7 @@ import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.mine.setting.RecommendAppActivity;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
+import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.AppDownloadUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
@@ -137,7 +138,7 @@ public class WebexMeetingDetailActivity extends BaseActivity {
         String mintext = (min == 0) ? "" : min + getString(R.string.min);
         durationText.setText(hourtext + mintext);
         meetingPasswordText.setText(webexMeeting.getMeetingPassword());
-        meetingIdText.setText(webexMeeting.getMeetingID());
+        meetingIdText.setText(formatMeetingID(webexMeeting.getMeetingID()));
         String photoUrl = APIUri.getWebexPhotoUrl(webexMeeting.getHostWebExID());
         ImageDisplayUtils.getInstance().displayImage(photoImg, photoUrl, R.drawable.icon_person_default);
         String myInfo = PreferencesUtils.getString(this, "myInfo", "");
@@ -153,6 +154,21 @@ public class WebexMeetingDetailActivity extends BaseActivity {
         functionBtn.setEnabled(!isMeetingEnd);
         functionBtn.setTextColor(isMeetingEnd ? Color.parseColor("#999999") : Color.parseColor("#ffffff"));
         functionBtn.setBackground(isMeetingEnd ? ContextCompat.getDrawable(MyApplication.getInstance(), R.drawable.shape_webex_buttion_add_disable) : ContextCompat.getDrawable(MyApplication.getInstance(), R.drawable.shape_webex_buttion_add_enable));
+    }
+
+    private String formatMeetingID(String meetingID) {
+        if (StringUtils.isBlank(meetingID)){
+            return "";
+        }
+        char[] strs = meetingID.toCharArray();
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < strs.length; i++) {
+            sb.append(strs[i]);
+            if (i != 0 && (i + 1) % 3 == 0) {
+                sb.append(" ");
+            }
+        }
+        return sb.toString().trim();
     }
 
     private boolean isMeetingEnd() {
@@ -246,7 +262,7 @@ public class WebexMeetingDetailActivity extends BaseActivity {
     }
 
     private void shreWebexMeeting() {
-        shareContent = "会议主题： "+webexMeeting.getConfName()+"\n"+"会议号： "+webexMeeting.getMeetingID()+"\n"+"会议密码： "+webexMeeting.getMeetingPassword();
+        shareContent = webexMeeting.getConfName()+"\n"+"时间："+timeText.getText()+"\n"+"会议号： "+webexMeeting.getMeetingID()+"\n"+"会议密码： "+webexMeeting.getMeetingPassword();
         UMShareAPI.get(this);
         PlatformConfig.setWeixin("wx4eb8727ea9c26495", "56a0426315f1d0985a1cc1e75e96130d");
         final CustomShareListener mShareListener = new CustomShareListener(WebexMeetingDetailActivity.this);

@@ -453,7 +453,7 @@
 
     <!--Webex 会议-->
     <string name="webex_meeting_title">Meeting held by %1$s</string>
-    <string name="input_invitee_emails">Enter invitee emails</string>
+    <string name="input_invitee_emails">Enter participant emails</string>
     <string name="input_correct_invitee_emails">Enter the correct emails</string>
     <string name="not_add_repeated">Cannot be added repeatedly</string>
     <string name="hour">hr</string>

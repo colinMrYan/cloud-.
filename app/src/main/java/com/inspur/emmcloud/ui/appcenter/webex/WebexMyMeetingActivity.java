@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
@@ -69,6 +70,8 @@ public class WebexMyMeetingActivity extends BaseActivity {
     private ExpandableListView expandListView;
     @ViewInject(R.id.ll_no_meeting)
     private LinearLayout noMeetingLayout;
+    @ViewInject(R.id.rl_mask)
+    private RelativeLayout maskLayout;
     private WebexMeetingAdapter adapter;
     private WebexAPIService apiService;
     private List<WebexMeeting> webexMeetingList = new ArrayList<>();
@@ -105,6 +108,9 @@ public class WebexMyMeetingActivity extends BaseActivity {
     }
 
     private void initView() {
+        boolean isFirstEnter = PreferencesUtils.getBoolean(MyApplication.getInstance(),Constant.PREF_WEBEX_FIRST_ENTER,true);
+        //maskLayout.setVisibility(isFirstEnter?View.VISIBLE:View.GONE);
+        maskLayout.setVisibility(View.VISIBLE);
         String installUri = getIntent().getStringExtra("installUri");
         if (StringUtils.isBlank(installUri)){
             installUri = "https://m.webex.com/downloads/android/touchscreen/mc.apk";
@@ -178,6 +184,16 @@ public class WebexMyMeetingActivity extends BaseActivity {
             }
         };
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        showUserGuideMask();
+    }
+
+
+    private void showUserGuideMask(){}
+
 
     @Override
     protected void onStart() {
@@ -272,6 +288,10 @@ public class WebexMyMeetingActivity extends BaseActivity {
                 Intent intent = new Intent(this, WebexScheduleMeetingActivity.class);
                 startActivityForResult(intent,REQUEST_SCHEDULE_WEBEX_MEETING);
                 break;
+            case R.id.iv_schedule_ok:
+               maskLayout.setVisibility(View.GONE);
+                PreferencesUtils.putBoolean(MyApplication.getInstance(),Constant.PREF_WEBEX_FIRST_ENTER,false);
+                break;
 
         }
     }
@@ -327,9 +347,11 @@ public class WebexMyMeetingActivity extends BaseActivity {
     }
 
 
-    public void getWxMeetingList(boolean isShowDlg) {
+    public void getWxMeetingList(boolean isShowRefresh) {
         if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
-            loadingDlg.show(isShowDlg);
+            if (isShowRefresh){
+                swipeRefreshLayout.setRefreshing(true);
+            }
             apiService.getWebexMeetingList();
         }
     }
@@ -374,7 +396,6 @@ public class WebexMyMeetingActivity extends BaseActivity {
         @Override
         public void returnWebexMeetingListSuccess(GetWebexMeetingListResult getWebexMeetingListResult) {
             swipeRefreshLayout.setRefreshing(false);
-            LoadingDialog.dimissDlg(loadingDlg);
             webexMeetingList = getWebexMeetingListResult.getWebexMeetingList();
             initData();
         }
@@ -382,7 +403,6 @@ public class WebexMyMeetingActivity extends BaseActivity {
         @Override
         public void returnWebexMeetingListFail(String error, int errorCode) {
             swipeRefreshLayout.setRefreshing(false);
-            LoadingDialog.dimissDlg(loadingDlg);
             WebServiceMiddleUtils.hand(MyApplication.getInstance(), error, errorCode);
         }
 
