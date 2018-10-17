@@ -262,8 +262,8 @@ public class WebexMeetingDetailActivity extends BaseActivity {
     }
 
     private void shareWebexMeeting() {
-        shareContent = webexMeeting.getConfName()+"\n"+getString(R.string.webex_time)+timeText.getText()+"\n"
-                +getString(R.string.webex_meeting_code)+webexMeeting.getMeetingID()+"\n"
+        shareContent = webexMeeting.getConfName()+"\n"+getString(R.string.webex_time)+timeText.getText().toString()+"\n"
+                +getString(R.string.webex_meeting_code)+meetingIdText.getText().toString()+"\n"
                 +getString(R.string.webex_meeting_password_tip)+webexMeeting.getMeetingPassword();
         UMConfigure.init(this,"59aa1f8f76661373290010d3"
                 ,"umeng",UMConfigure.DEVICE_TYPE_PHONE,"");
@@ -273,8 +273,8 @@ public class WebexMeetingDetailActivity extends BaseActivity {
         PlatformConfig.setQQZone("1105561850", "1kaw4r1c37SUupFL");
         final CustomShareListener mShareListener = new CustomShareListener(WebexMeetingDetailActivity.this);
         new ShareAction(WebexMeetingDetailActivity.this)
-                .setDisplayList( SHARE_MEDIA.SMS)
-                .addButton("internal_share", "app_name", "ic_launcher", "ic_launcher")
+                .setDisplayList( SHARE_MEDIA.EMAIL,SHARE_MEDIA.SMS)
+                .addButton(getString(R.string.internal_share), "app_name", "ic_launcher", "ic_launcher")
                 .setShareboardclickCallback(new ShareBoardlistener() {
                     @Override
                     public void onclick(SnsPlatform snsPlatform, SHARE_MEDIA share_media) {
