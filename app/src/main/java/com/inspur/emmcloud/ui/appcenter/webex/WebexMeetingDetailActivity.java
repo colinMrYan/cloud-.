@@ -46,6 +46,7 @@ import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
+import com.umeng.commonsdk.UMConfigure;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.UMShareAPI;
@@ -264,8 +265,12 @@ public class WebexMeetingDetailActivity extends BaseActivity {
         shareContent = webexMeeting.getConfName()+"\n"+getString(R.string.webex_time)+timeText.getText()+"\n"
                 +getString(R.string.webex_meeting_code)+webexMeeting.getMeetingID()+"\n"
                 +getString(R.string.webex_meeting_password_tip)+webexMeeting.getMeetingPassword();
-        UMShareAPI.get(this);
+        UMConfigure.init(this,"59aa1f8f76661373290010d3"
+                ,"umeng",UMConfigure.DEVICE_TYPE_PHONE,"");
+//        QueuedWork.isUseThreadPool = false;
+//        UMShareAPI.get(this);
         PlatformConfig.setWeixin("wx4eb8727ea9c26495", "56a0426315f1d0985a1cc1e75e96130d");
+        PlatformConfig.setQQZone("1105561850", "1kaw4r1c37SUupFL");
         final CustomShareListener mShareListener = new CustomShareListener(WebexMeetingDetailActivity.this);
         new ShareAction(WebexMeetingDetailActivity.this)
                 .setDisplayList(SHARE_MEDIA.EMAIL,  SHARE_MEDIA.SMS)

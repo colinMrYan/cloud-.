@@ -409,7 +409,7 @@ public class WebexMyMeetingActivity extends BaseActivity {
         @Override
         public void returnWebexMeetingListSuccess(GetWebexMeetingListResult getWebexMeetingListResult) {
             swipeRefreshLayout.setRefreshing(false);
-            webexMeetingList = new ArrayList<>();
+           // webexMeetingList = getWebexMeetingListResult.getWebexMeetingList();
             initData();
         }
 
