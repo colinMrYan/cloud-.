@@ -268,7 +268,7 @@ public class WebexMeetingDetailActivity extends BaseActivity {
         PlatformConfig.setWeixin("wx4eb8727ea9c26495", "56a0426315f1d0985a1cc1e75e96130d");
         final CustomShareListener mShareListener = new CustomShareListener(WebexMeetingDetailActivity.this);
         new ShareAction(WebexMeetingDetailActivity.this)
-                .setDisplayList(SHARE_MEDIA.EMAIL,  SHARE_MEDIA.SMS)
+                .setDisplayList( SHARE_MEDIA.SMS)
                 .addButton("internal_share", "app_name", "ic_launcher", "ic_launcher")
                 .setShareboardclickCallback(new ShareBoardlistener() {
                     @Override
