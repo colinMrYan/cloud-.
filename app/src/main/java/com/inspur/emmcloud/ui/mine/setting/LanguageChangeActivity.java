@@ -22,6 +22,7 @@ import com.inspur.emmcloud.bean.mine.Language;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
+import com.inspur.emmcloud.util.privates.ClientConfigUpdateUtils;
 import com.inspur.emmcloud.util.privates.LanguageUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
@@ -146,6 +147,8 @@ public class LanguageChangeActivity extends BaseActivity {
                     @Override
                     public void onClick(QMUIDialog dialog, int index) {
                         dialog.dismiss();
+                        //清空我的应用统一更新版本信息防止切换语言不刷新列表
+                        ClientConfigUpdateUtils.getInstance().clearDbDataConfigWithMyApp();
                         Language language = commonLanguageList.get(position);
                         String languageName = "";
                         if (position == 0) {

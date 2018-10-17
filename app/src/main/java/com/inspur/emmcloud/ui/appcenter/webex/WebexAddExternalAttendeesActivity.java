@@ -14,7 +14,6 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.appcenter.webex.WebexAttendees;
 import com.inspur.emmcloud.util.common.FomatUtils;
@@ -57,12 +56,12 @@ public class WebexAddExternalAttendeesActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         webexAttendeesList = (List<WebexAttendees>)getIntent().getSerializableExtra(EXTRA_ATTENDEES_LIST);
         externalWebexAttendeesList = getExternalAttendeesList();
-        numText.setText(getString(R.string.webex_add_invitee_num,20-webexAttendeesList.size(),20));
+        numText.setText(getString(R.string.webex_add_invitee_num,webexAttendeesList.size(),20-webexAttendeesList.size()));
         adapter = new Adapter();
         adapter.registerDataSetObserver(new DataSetObserver() {
             @Override
             public void onChanged() {
-                numText.setText(getString(R.string.webex_add_invitee_num,20-webexAttendeesList.size(),20));
+                numText.setText(getString(R.string.webex_add_invitee_num,webexAttendeesList.size(),20-webexAttendeesList.size()));
             }
         });
         attendeesListView.setAdapter(adapter);
@@ -104,20 +103,20 @@ public class WebexAddExternalAttendeesActivity extends BaseActivity {
 
     private boolean addAttendees(String email){
         if (StringUtils.isBlank(email)) {
-            ToastUtils.show(MyApplication.getInstance(), R.string.input_invitee_emails);
+            ToastUtils.show(this, R.string.input_invitee_emails);
             return false;
         }
         if (webexAttendeesList.size() == 20){
-            ToastUtils.show(MyApplication.getInstance(), R.string.contact_select_limit_warning);
+            ToastUtils.show(this, R.string.contact_select_limit_warning);
             return false;
         }
         if (!FomatUtils.isValiadEmail(email)) {
-            ToastUtils.show(MyApplication.getInstance(), R.string.input_correct_invitee_emails);
+            ToastUtils.show(this, R.string.input_correct_invitee_emails);
             return false;
         }
 
         if (webexAttendeesList.contains(new WebexAttendees(email))) {
-            ToastUtils.show(MyApplication.getInstance(), R.string.not_add_repeated);
+            ToastUtils.show(this, R.string.not_add_repeated);
             return false;
         }
 

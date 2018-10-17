@@ -61,7 +61,6 @@
                 android:layout_width="45dp"
                 android:layout_height="match_parent"
                 android:layout_toRightOf="@id/iv_delete"
-                android:visibility="gone"
                 android:clickable="true"
                 android:onClick="onClick"
                 android:paddingLeft="8dp"

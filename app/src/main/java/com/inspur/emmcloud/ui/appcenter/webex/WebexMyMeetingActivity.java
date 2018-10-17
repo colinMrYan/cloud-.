@@ -170,7 +170,7 @@ public class WebexMyMeetingActivity extends BaseActivity {
                         functionBtn.setEnabled(false);
                         functionBtn.setTextColor(Color.parseColor("#999999"));
                         functionBtn.setBackground(ContextCompat.getDrawable(MyApplication.getInstance(), R.drawable.shape_webex_buttion_add_disable));
-                        ToastUtils.show(MyApplication.getInstance(), R.string.webex_meeting_ended);
+                        ToastUtils.show(WebexMyMeetingActivity.this, R.string.webex_meeting_ended);
                     }
                 } else {
                     showInstallDialog();
@@ -313,6 +313,7 @@ public class WebexMyMeetingActivity extends BaseActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_SCHEDULE_WEBEX_MEETING) {
                 getWxMeetingList(false);

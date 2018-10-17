@@ -59,12 +59,12 @@ public class WebexAddAttendeesActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         webexAttendeesList = (List<WebexAttendees>) getIntent().getSerializableExtra(EXTRA_ATTENDEES_LIST);
-        numText.setText(getString(R.string.webex_add_invitee_num, 20 - webexAttendeesList.size(), 20));
+        numText.setText(getString(R.string.webex_add_invitee_num,webexAttendeesList.size() , 20 - webexAttendeesList.size()));
         adapter = new Adapter();
         adapter.registerDataSetObserver(new DataSetObserver() {
             @Override
             public void onChanged() {
-                numText.setText(getString(R.string.webex_add_invitee_num, 20 - webexAttendeesList.size(), 20));
+                numText.setText(getString(R.string.webex_add_invitee_num,  webexAttendeesList.size(), 20 - webexAttendeesList.size()));
             }
         });
         attendeesListView.setAdapter(adapter);
@@ -102,6 +102,7 @@ public class WebexAddAttendeesActivity extends BaseActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_ADD_INTERNAL_ATTENDEES) {
                 if (data.getExtras().containsKey("selectMemList")) {

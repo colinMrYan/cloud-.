@@ -120,7 +120,7 @@ public class WebexScheduleMeetingActivity extends BaseActivity {
                     public void onDateSet(DatePicker view, int year,
                                           int monthOfYear, int dayOfMonth) {
                         startCalendar.set(year, monthOfYear, dayOfMonth);
-                        startDateText.setText(TimeUtils.calendar2FormatString(MyApplication.getInstance(), startCalendar, TimeUtils.FORMAT_MONTH_DAY));
+                        startDateText.setText(TimeUtils.calendar2FormatString(WebexScheduleMeetingActivity.this, startCalendar, TimeUtils.FORMAT_MONTH_DAY));
                     }
                 }, startCalendar.get(Calendar.YEAR), startCalendar.get(Calendar.MONTH), startCalendar.get(Calendar.DAY_OF_MONTH));
         datePickerDialog.show();
@@ -181,16 +181,16 @@ public class WebexScheduleMeetingActivity extends BaseActivity {
             case R.id.tv_start:
                 String confName = titleEdit.getText().toString().trim();
                 if (StringUtils.isBlank(confName)) {
-                    ToastUtils.show(MyApplication.getInstance(), R.string.enter_meeting_name);
+                    ToastUtils.show(WebexScheduleMeetingActivity.this, R.string.enter_meeting_name);
                     return;
                 }
                 String meetingPassword = passwordEdit.getText().toString();
                 if (StringUtils.isBlank(meetingPassword)) {
-                    ToastUtils.show(MyApplication.getInstance(), R.string.enter_meeting_password);
+                    ToastUtils.show(WebexScheduleMeetingActivity.this, R.string.enter_meeting_password);
                     return;
                 }
                 if (meetingPassword.length()<6 || meetingPassword.length()>10){
-                    ToastUtils.show(MyApplication.getInstance(), R.string.webex_password_length_error);
+                    ToastUtils.show(WebexScheduleMeetingActivity.this, R.string.webex_password_length_error);
                     return;
                 }
                 if (startCalendar.before(Calendar.getInstance())) {
@@ -199,7 +199,7 @@ public class WebexScheduleMeetingActivity extends BaseActivity {
                 }
                 int duration = durationHourSumMin[durationHourChoiceIndex] + durationMinSumMin[durationMinChoiceIndex];
                 if (duration == 0) {
-                    ToastUtils.show(MyApplication.getInstance(), R.string.set_duration_correct);
+                    ToastUtils.show(WebexScheduleMeetingActivity.this, R.string.set_duration_correct);
                     return;
                 }
                 List<String> attendeesList = new ArrayList<>();

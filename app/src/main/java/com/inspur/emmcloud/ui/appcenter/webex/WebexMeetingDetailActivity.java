@@ -126,9 +126,9 @@ public class WebexMeetingDetailActivity extends BaseActivity {
     private void showWebexMeetingDetial() {
         titleText.setText(webexMeeting.getConfName());
         Calendar startCalendar = webexMeeting.getStartDateCalendar();
-        String timeYDM = TimeUtils.Calendar2TimeString(startCalendar, TimeUtils.getFormat(MyApplication.getInstance(), TimeUtils.FORMAT_YEAR_MONTH_DAY));
-        String week = TimeUtils.getWeekDay(MyApplication.getInstance(), startCalendar);
-        String timeHrMin = TimeUtils.Calendar2TimeString(startCalendar, TimeUtils.getFormat(MyApplication.getInstance(), TimeUtils.FORMAT_HOUR_MINUTE));
+        String timeYDM = TimeUtils.Calendar2TimeString(startCalendar, TimeUtils.getFormat(this, TimeUtils.FORMAT_YEAR_MONTH_DAY));
+        String week = TimeUtils.getWeekDay(this, startCalendar);
+        String timeHrMin = TimeUtils.Calendar2TimeString(startCalendar, TimeUtils.getFormat(this, TimeUtils.FORMAT_HOUR_MINUTE));
         timeText.setText(timeYDM + " " + week + " " + timeHrMin);
         int duration = webexMeeting.getDuration();
         int hour = duration / 60;
@@ -245,7 +245,7 @@ public class WebexMeetingDetailActivity extends BaseActivity {
                         functionBtn.setEnabled(false);
                         functionBtn.setTextColor(Color.parseColor("#999999"));
                         functionBtn.setBackground(ContextCompat.getDrawable(MyApplication.getInstance(), R.drawable.shape_webex_buttion_add_disable));
-                        ToastUtils.show(MyApplication.getInstance(), R.string.webex_meeting_ended);
+                        ToastUtils.show(WebexMeetingDetailActivity.this, R.string.webex_meeting_ended);
                     }
                 } else {
                     showInstallDialog();
@@ -351,7 +351,7 @@ public class WebexMeetingDetailActivity extends BaseActivity {
 
                     @Override
                     public void createDirectChannelFail() {
-                        ToastUtils.show(MyApplication.getInstance(), R.string.news_share_fail);
+                        ToastUtils.show(WebexMeetingDetailActivity.this, R.string.news_share_fail);
                     }
                 });
     }
@@ -398,10 +398,10 @@ public class WebexMeetingDetailActivity extends BaseActivity {
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE)) {
             if (eventMessage.getStatus() == 200) {
                 if (fakeMessageId != null && String.valueOf(eventMessage.getExtra()).equals(fakeMessageId)) {
-                    ToastUtils.show(MyApplication.getInstance(), R.string.news_share_success);
+                    ToastUtils.show(WebexMeetingDetailActivity.this, R.string.news_share_success);
                 }
             } else {
-                ToastUtils.show(MyApplication.getInstance(), R.string.news_share_fail);
+                ToastUtils.show(WebexMeetingDetailActivity.this, R.string.news_share_fail);
             }
 
         }
@@ -506,13 +506,13 @@ public class WebexMeetingDetailActivity extends BaseActivity {
         @Override
         public void returnSendMsgSuccess(GetSendMsgResult getSendMsgResult, String fakeMessageId) {
             LoadingDialog.dimissDlg(loadingDialog);
-            ToastUtils.show(MyApplication.getInstance(), R.string.news_share_success);
+            ToastUtils.show(WebexMeetingDetailActivity.this, R.string.news_share_success);
         }
 
         @Override
         public void returnSendMsgFail(String error, String fakeMessageId, int errorCode) {
             LoadingDialog.dimissDlg(loadingDialog);
-            ToastUtils.show(MyApplication.getInstance(), R.string.news_share_fail);
+            ToastUtils.show(WebexMeetingDetailActivity.this, R.string.news_share_fail);
         }
     }
 }
