@@ -256,19 +256,21 @@ public class WebexMeetingDetailActivity extends BaseActivity {
                 showDeleteMeetingWarningDlg();
                 break;
             case R.id.iv_share:
-                shreWebexMeeting();
+                shareWebexMeeting();
                 break;
         }
     }
 
-    private void shreWebexMeeting() {
-        shareContent = webexMeeting.getConfName()+"\n"+"时间："+timeText.getText()+"\n"+"会议号： "+webexMeeting.getMeetingID()+"\n"+"会议密码： "+webexMeeting.getMeetingPassword();
+    private void shareWebexMeeting() {
+        shareContent = webexMeeting.getConfName()+"\n"+getString(R.string.webex_time)+timeText.getText()+"\n"
+                +getString(R.string.webex_meeting_code)+webexMeeting.getMeetingID()+"\n"
+                +getString(R.string.webex_meeting_password_tip)+webexMeeting.getMeetingPassword();
         UMShareAPI.get(this);
         PlatformConfig.setWeixin("wx4eb8727ea9c26495", "56a0426315f1d0985a1cc1e75e96130d");
         final CustomShareListener mShareListener = new CustomShareListener(WebexMeetingDetailActivity.this);
         new ShareAction(WebexMeetingDetailActivity.this)
-                .setDisplayList(SHARE_MEDIA.WEIXIN,  SHARE_MEDIA.SMS)
-                .addButton("app_name", "app_name", "ic_launcher", "ic_launcher")
+                .setDisplayList(SHARE_MEDIA.EMAIL,  SHARE_MEDIA.SMS)
+                .addButton("internal_share", "app_name", "ic_launcher", "ic_launcher")
                 .setShareboardclickCallback(new ShareBoardlistener() {
                     @Override
                     public void onclick(SnsPlatform snsPlatform, SHARE_MEDIA share_media) {
