@@ -9,11 +9,13 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.Html;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
@@ -47,6 +49,7 @@ import org.xutils.view.annotation.ViewInject;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -72,6 +75,8 @@ public class WebexMyMeetingActivity extends BaseActivity {
     private LinearLayout noMeetingLayout;
     @ViewInject(R.id.rl_mask)
     private RelativeLayout maskLayout;
+    @ViewInject(R.id.tv_no_meeting)
+    private TextView noMeetingText;
     private WebexMeetingAdapter adapter;
     private WebexAPIService apiService;
     private List<WebexMeeting> webexMeetingList = new ArrayList<>();
@@ -109,8 +114,7 @@ public class WebexMyMeetingActivity extends BaseActivity {
 
     private void initView() {
         boolean isFirstEnter = PreferencesUtils.getBoolean(MyApplication.getInstance(),Constant.PREF_WEBEX_FIRST_ENTER,true);
-        //maskLayout.setVisibility(isFirstEnter?View.VISIBLE:View.GONE);
-        maskLayout.setVisibility(View.VISIBLE);
+        maskLayout.setVisibility(isFirstEnter?View.VISIBLE:View.GONE);
         String installUri = getIntent().getStringExtra("installUri");
         if (StringUtils.isBlank(installUri)){
             installUri = "https://m.webex.com/downloads/android/touchscreen/mc.apk";
@@ -136,6 +140,10 @@ public class WebexMyMeetingActivity extends BaseActivity {
                     noMeetingLayout.setVisibility(View.GONE);
                 }else {
                     noMeetingLayout.setVisibility(View.VISIBLE);
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.add(Calendar.MONTH,1);
+                    String date = TimeUtils.Calendar2TimeString(calendar,TimeUtils.getFormat(MyApplication.getInstance(),TimeUtils.FORMAT_MONTH_DAY));
+                    noMeetingText.setText(Html.fromHtml(getString(R.string.webex_no_meeting_tips,date)));
                 }
             }
         });
@@ -396,7 +404,7 @@ public class WebexMyMeetingActivity extends BaseActivity {
         @Override
         public void returnWebexMeetingListSuccess(GetWebexMeetingListResult getWebexMeetingListResult) {
             swipeRefreshLayout.setRefreshing(false);
-            webexMeetingList = getWebexMeetingListResult.getWebexMeetingList();
+            webexMeetingList = new ArrayList<>();
             initData();
         }
 
