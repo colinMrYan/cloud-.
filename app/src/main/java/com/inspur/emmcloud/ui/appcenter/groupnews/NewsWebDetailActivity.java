@@ -861,7 +861,7 @@ public class NewsWebDetailActivity extends BaseActivity {
 
                     @Override
                     public void createDirectChannelFail() {
-                        showShareFailToast();
+                        //showShareFailToast();
                     }
                 });
     }

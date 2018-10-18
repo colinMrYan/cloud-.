@@ -365,7 +365,7 @@ public class WebexMeetingDetailActivity extends BaseActivity {
 
                     @Override
                     public void createDirectChannelFail() {
-                        ToastUtils.show(WebexMeetingDetailActivity.this, R.string.news_share_fail);
+                        //ToastUtils.show(WebexMeetingDetailActivity.this, R.string.news_share_fail);
                     }
                 });
     }
