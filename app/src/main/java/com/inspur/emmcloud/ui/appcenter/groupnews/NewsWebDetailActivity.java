@@ -954,6 +954,11 @@ public class NewsWebDetailActivity extends BaseActivity {
         EventBus.getDefault().unregister(this);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
 
     //接收到websocket发过来的消息
     @Subscribe(threadMode = ThreadMode.MAIN)
