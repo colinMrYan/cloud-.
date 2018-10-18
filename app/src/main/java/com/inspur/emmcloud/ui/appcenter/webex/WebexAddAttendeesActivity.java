@@ -93,7 +93,7 @@ public class WebexAddAttendeesActivity extends BaseActivity {
                 intent.putExtra(ContactSearchFragment.EXTRA_CONTAIN_ME, true);
                 intent.putExtra(ContactSearchFragment.EXTRA_TITLE, getString(R.string.meeting_invating_members));
                 intent.setClass(getApplicationContext(), ContactSearchActivity.class);
-                intent.putExtra(ContactSearchFragment.EXTRA_LIMIT,20-getAttendeesList(true).size());
+                intent.putExtra(ContactSearchFragment.EXTRA_LIMIT,20- getExternalAttendeeList().size());
                 intent.putExtra(ContactSearchFragment.EXTRA_HAS_SELECT, (Serializable) getInternalAttendeesSearchModelLsit());
                 startActivityForResult(intent, REQUEST_ADD_INTERNAL_ATTENDEES);
                 break;
@@ -114,7 +114,7 @@ public class WebexAddAttendeesActivity extends BaseActivity {
                             searchModel.setEmail(contactUser.getEmail());
                         }
                     }
-                    List<WebexAttendees> externalWebexAttendeesList = getAttendeesList(true);
+                    List<WebexAttendees> externalWebexAttendeesList = getExternalAttendeeList();
                     List<WebexAttendees> internalWebexAttendeesLsit = WebexAttendees.SearchModelList2WebexAttendeesList(selectMemList);
                     internalWebexAttendeesLsit.removeAll(externalWebexAttendeesList);
                     internalWebexAttendeesLsit.addAll(externalWebexAttendeesList);
@@ -141,11 +141,15 @@ public class WebexAddAttendeesActivity extends BaseActivity {
         }
     }
 
-    private List<WebexAttendees> getAttendeesList(boolean isExternal) {
+    private List<WebexAttendees> getExternalAttendeeList() {
         List<WebexAttendees> targetWebexAttendeesList = new ArrayList<>();
         for (WebexAttendees webexAttendees : webexAttendeesList) {
-            if ((webexAttendees.getSearchModel() == null) == isExternal) {
-                targetWebexAttendeesList.add(webexAttendees);
+            if (webexAttendees.getSearchModel() == null) {
+                ContactUser contactUser = ContactUserCacheUtils.getContactUserByEmail(webexAttendees.getEmail());
+                if (contactUser == null){
+                    targetWebexAttendeesList.add(webexAttendees);
+                }
+
             }
         }
         return targetWebexAttendeesList;
