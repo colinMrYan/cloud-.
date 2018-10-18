@@ -1070,7 +1070,7 @@
     <string name="share_not_support">暂不支持的分享类型</string>
     <string name="share_default_title">网页链接</string>
 
-    <string name="net_work_fail">获取配置信息失败</string>
+    <string name="net_work_fail">由于新版本增强了安全认证功能，需要您重新登录</string>
 
     <string name="card_package_manage">管理卡片</string>
     <string name="card_package_welcome">欢迎使用卡包</string>

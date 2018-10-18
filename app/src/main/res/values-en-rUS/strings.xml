@@ -1020,7 +1020,7 @@
     <string name="share_not_support">Unsupported sharing types</string>
     <string name="share_default_title">Web link</string>
 
-    <string name="net_work_fail">Failed to get configuration information</string>
+    <string name="net_work_fail">Since the new version enhances the security authentication feature, you need to log in</string>
 
     <string name="card_package_manage">Management card</string>
     <string name="card_package_welcome">Welcome to use the package</string>

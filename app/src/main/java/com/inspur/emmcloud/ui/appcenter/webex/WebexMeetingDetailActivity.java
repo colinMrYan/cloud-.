@@ -289,7 +289,7 @@ public class WebexMeetingDetailActivity extends BaseActivity {
                                 Intent intent = new Intent();
                                 intent.putExtra("select_content", 0);
                                 intent.putExtra("isMulti_select", false);
-                                intent.putExtra("isContainMe", true);
+                                intent.putExtra("isContainMe", false);
                                 intent.putExtra("title", getString(R.string.news_share));
                                 intent.setClass(WebexMeetingDetailActivity.this,
                                         ContactSearchActivity.class);
