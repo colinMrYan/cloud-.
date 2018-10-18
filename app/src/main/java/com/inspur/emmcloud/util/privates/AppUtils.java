@@ -1041,4 +1041,10 @@ public class AppUtils {
         cmb.setPrimaryClip(ClipData.newPlainText(null, textView.getText().toString()));
         ToastUtils.show(context, R.string.copyed_to_paste_board);
     }
+
+    public static void copyContentToPasteBoard(Context context,String content){
+        ClipboardManager cmb = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+        cmb.setPrimaryClip(ClipData.newPlainText(null, content));
+        ToastUtils.show(context, R.string.copyed_to_paste_board);
+    }
 }

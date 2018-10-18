@@ -132,136 +132,144 @@
                 android:background="@color/content_bg"
                 android:layout_width="match_parent"
                 android:layout_height="10dp"></View>
-            <TextView
-                android:text="@string/webex_host"
-                android:layout_marginLeft="20dp"
-                android:textSize="14sp"
-                android:paddingTop="10dp"
-                android:textColor="#999999"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-            <TextView
-                android:id="@+id/tv_owner"
-                android:layout_marginLeft="20dp"
-                android:paddingTop="7dp"
-                android:textSize="17sp"
-                android:textColor="#333333"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-            <View
-                android:background="@color/color_list_divider_tran"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:layout_width="match_parent"
-                android:layout_height="0.5px"></View>
 
-            <TextView
-                android:text="@string/webex_when"
-                android:layout_marginLeft="20dp"
-                android:textSize="15sp"
-                android:textColor="#999999"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-            <RelativeLayout
-                android:paddingTop="7dp"
+            <LinearLayout
+                android:id="@+id/ll_meeting_content"
+                android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <TextView
-                    android:id="@+id/tv_time"
+                    android:text="@string/webex_host"
                     android:layout_marginLeft="20dp"
-                    android:textSize="17sp"
-                    android:textColor="#333333"
-                    android:maxLines="1"
-                    android:ellipsize="end"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-                <TextView
-                    android:id="@+id/tv_duration"
-                    android:layout_marginLeft="20dp"
-                    android:paddingTop="7dp"
-                    android:layout_below="@id/tv_time"
-                    android:textSize="17sp"
-                    android:textColor="#4A90E2"
+                    android:textSize="14sp"
+                    android:paddingTop="10dp"
+                    android:textColor="#999999"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
-            </RelativeLayout>
-            <View
-                android:background="@color/color_list_divider_tran"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:layout_width="match_parent"
-                android:layout_height="0.5px"></View>
-
-            <TextView
-                android:text="@string/webex_meeting_number"
-                android:layout_marginLeft="20dp"
-                android:textSize="14sp"
-                android:textColor="#999999"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-            <TextView
-                android:id="@+id/tv_meeting_id"
-                android:layout_marginLeft="20dp"
-                android:paddingTop="7dp"
-                android:textSize="17sp"
-                android:textColor="#333333"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-            <View
-                android:background="@color/color_list_divider_tran"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:layout_width="match_parent"
-                android:layout_height="0.5px"></View>
-
-            <TextView
-                android:text="@string/webex_meeting_password"
-                android:layout_marginLeft="20dp"
-                android:textSize="14sp"
-                android:textColor="#999999"
-                android:textIsSelectable="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-            <TextView
-                android:id="@+id/tv_meeting_password"
-                android:layout_marginLeft="20dp"
-                android:paddingTop="7dp"
-                android:textSize="17sp"
-                android:textColor="#333333"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-            <RelativeLayout
-                android:id="@+id/rl_host_key"
-                android:visibility="gone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/tv_owner"
+                    android:layout_marginLeft="20dp"
+                    android:paddingTop="7dp"
+                    android:textSize="17sp"
+                    android:textColor="#333333"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
                 <View
                     android:background="@color/color_list_divider_tran"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"
-                    android:id="@+id/v_line"
                     android:layout_width="match_parent"
                     android:layout_height="0.5px"></View>
 
                 <TextView
-                    android:id="@+id/tv_tip_host_key"
-                    android:text="@string/webex_host_password"
-                    android:layout_below="@id/v_line"
+                    android:text="@string/webex_when"
+                    android:layout_marginLeft="20dp"
+                    android:textSize="15sp"
+                    android:textColor="#999999"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <RelativeLayout
+                    android:paddingTop="7dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:id="@+id/tv_time"
+                        android:layout_marginLeft="20dp"
+                        android:textSize="17sp"
+                        android:textColor="#333333"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:id="@+id/tv_duration"
+                        android:layout_marginLeft="20dp"
+                        android:paddingTop="7dp"
+                        android:layout_below="@id/tv_time"
+                        android:textSize="17sp"
+                        android:textColor="#4A90E2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </RelativeLayout>
+                <View
+                    android:background="@color/color_list_divider_tran"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5px"></View>
+
+                <TextView
+                    android:text="@string/webex_meeting_number"
                     android:layout_marginLeft="20dp"
                     android:textSize="14sp"
                     android:textColor="#999999"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
                 <TextView
-                    android:id="@+id/tv_host_key"
+                    android:id="@+id/tv_meeting_id"
                     android:layout_marginLeft="20dp"
-                    android:layout_below="@id/tv_tip_host_key"
                     android:paddingTop="7dp"
                     android:textSize="17sp"
                     android:textColor="#333333"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
-            </RelativeLayout>
+                <View
+                    android:background="@color/color_list_divider_tran"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5px"></View>
+
+                <TextView
+                    android:text="@string/webex_meeting_password"
+                    android:layout_marginLeft="20dp"
+                    android:textSize="14sp"
+                    android:textColor="#999999"
+                    android:textIsSelectable="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:id="@+id/tv_meeting_password"
+                    android:layout_marginLeft="20dp"
+                    android:paddingTop="7dp"
+                    android:textSize="17sp"
+                    android:textColor="#333333"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <RelativeLayout
+                    android:id="@+id/rl_host_key"
+                    android:visibility="gone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <View
+                        android:background="@color/color_list_divider_tran"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:id="@+id/v_line"
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5px"></View>
+
+                    <TextView
+                        android:id="@+id/tv_tip_host_key"
+                        android:text="@string/webex_host_password"
+                        android:layout_below="@id/v_line"
+                        android:layout_marginLeft="20dp"
+                        android:textSize="14sp"
+                        android:textColor="#999999"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:id="@+id/tv_host_key"
+                        android:layout_marginLeft="20dp"
+                        android:layout_below="@id/tv_tip_host_key"
+                        android:paddingTop="7dp"
+                        android:textSize="17sp"
+                        android:textColor="#333333"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </RelativeLayout>
+            </LinearLayout>
+
         </LinearLayout>
     </ScrollView>
 

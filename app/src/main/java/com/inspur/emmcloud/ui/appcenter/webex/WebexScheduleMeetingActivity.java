@@ -23,6 +23,7 @@ import com.inspur.emmcloud.bean.appcenter.webex.GetScheduleWebexMeetingSuccess;
 import com.inspur.emmcloud.bean.appcenter.webex.WebexAttendees;
 import com.inspur.emmcloud.bean.appcenter.webex.WebexMeeting;
 import com.inspur.emmcloud.util.common.EditTextUtils;
+import com.inspur.emmcloud.util.common.FomatUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -195,6 +196,12 @@ public class WebexScheduleMeetingActivity extends BaseActivity {
                     ToastUtils.show(WebexScheduleMeetingActivity.this, R.string.webex_password_length_error);
                     return;
                 }
+
+                if (!FomatUtils.isLetterOrDigits(meetingPassword)){
+                    ToastUtils.show(WebexScheduleMeetingActivity.this, R.string.webex_password_invalid);
+                    return;
+                }
+
                 if (startCalendar.before(Calendar.getInstance())) {
                     showStartDateErrorDlg();
                     return;
