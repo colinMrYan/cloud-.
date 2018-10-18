@@ -155,10 +155,10 @@ public class WebexMeetingDetailActivity extends BaseActivity {
         functionBtn.setText(isOwner ? getString(R.string.webex_start) : getString(R.string.join));
         hostKeyLayout.setVisibility(isOwner ? View.VISIBLE : View.GONE);
         hostKeyText.setText(webexMeeting.getHostKey());
-        boolean isMeetingEnd = isMeetingEnd();
-        functionBtn.setEnabled(!isMeetingEnd);
-        functionBtn.setTextColor(isMeetingEnd ? Color.parseColor("#999999") : Color.parseColor("#ffffff"));
-        functionBtn.setBackground(isMeetingEnd ? ContextCompat.getDrawable(MyApplication.getInstance(), R.drawable.shape_webex_buttion_add_disable) : ContextCompat.getDrawable(MyApplication.getInstance(), R.drawable.shape_webex_buttion_add_enable));
+        boolean isFunctionBtnEnable = !isMeetingEnd() && (isOwner || webexMeeting.isInProgress());
+        functionBtn.setEnabled(isFunctionBtnEnable);
+        functionBtn.setTextColor(isFunctionBtnEnable ? Color.parseColor("#ffffff") : Color.parseColor("#999999"));
+        functionBtn.setBackground(isFunctionBtnEnable ? ContextCompat.getDrawable(MyApplication.getInstance(), R.drawable.shape_webex_buttion_add_enable) : ContextCompat.getDrawable(MyApplication.getInstance(), R.drawable.shape_webex_buttion_add_disable));
     }
 
     private String formatMeetingID(String meetingID) {

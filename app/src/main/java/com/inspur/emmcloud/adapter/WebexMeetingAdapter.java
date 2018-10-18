@@ -133,12 +133,9 @@ public class WebexMeetingAdapter extends BaseExpandableListAdapter {
         holder.timeText.setText(startDateString + " - " + endDateString);
         holder.titleText.setText(webexMeeting.getConfName());
         String email = webexMeeting.getHostWebExID();
-        if (email.equals(myEmail)) {
-            holder.ownerText.setText(R.string.mine);
-        } else {
-            holder.ownerText.setText(webexMeeting.getHostUserName());
-        }
-        if (TimeUtils.isCalendarToday(startCalendar) && !isMeetingEnd(webexMeeting)) {
+        boolean isOwner = email.equals(myEmail);
+        holder.ownerText.setText(isOwner?context.getString(R.string.mine):webexMeeting.getHostUserName());
+        if (TimeUtils.isCalendarToday(startCalendar) && !isMeetingEnd(webexMeeting) && (isOwner || webexMeeting.isInProgress())) {
             holder.functionBtn.setText(email.equals(myEmail)?context.getString(R.string.webex_start) : context.getString(R.string.join));
             holder.functionBtn.setVisibility(View.VISIBLE);
             holder.functionBtn.setOnClickListener(new View.OnClickListener() {
