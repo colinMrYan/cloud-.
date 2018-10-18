@@ -497,6 +497,7 @@
     <string name="add_external_attendees">添加外部參會人</string>
     <string name="webex_no_meeting_tips">%1$s<Data><![CDATA[<font color=\'#999999\'>前無會議</font>]]></Data></string>
     <string name="webex_participant">參會人員</string>
+    <string name="webex_password_invalid">密碼只允許包含數位和字母</string>
 
     <!-- 我的頁面部分 -->
     <string name="data_clear_success">清除成功</string>

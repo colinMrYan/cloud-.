@@ -88,6 +88,7 @@
                 android:layout_toRightOf="@id/tv_title_tips"
                 android:background="@null"
                 android:hint="@string/room_booking_topic"
+                android:maxLength="30"
                 android:maxLines="1"
                 android:paddingBottom="10dp"
                 android:paddingLeft="15dp"

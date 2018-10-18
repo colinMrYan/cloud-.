@@ -307,9 +307,12 @@ public class WebexMeetingDetailActivity extends BaseActivity {
 
     }
 
-    @Event(value = {R.id.tv_meeting_id, R.id.tv_meeting_password}, type = View.OnLongClickListener.class)
+    @Event(value = {R.id.ll_meeting_content}, type = View.OnLongClickListener.class)
     private boolean onLongClick(View v) {
-        AppUtils.copyContentToPasteBoard(MyApplication.getInstance(), (TextView) v);
+        String content = webexMeeting.getConfName()+"\n"+getString(R.string.webex_time)+timeText.getText().toString()+"\n"
+                +getString(R.string.webex_meeting_code)+meetingIdText.getText().toString()+"\n"
+                +getString(R.string.webex_meeting_password_tip)+webexMeeting.getMeetingPassword();
+        AppUtils.copyContentToPasteBoard(MyApplication.getInstance(),content);
         return false;
     }
 
