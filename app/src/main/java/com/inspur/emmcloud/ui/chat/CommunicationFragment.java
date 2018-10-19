@@ -641,6 +641,32 @@ public class CommunicationFragment extends Fragment {
             try {
                 List<String> serviceCidList = new ArrayList<>();
                 List<Channel> allchannelList = getChannelListResult.getChannelList();
+                List<String> deleteCidList = new ArrayList<>();
+                List<String> keyList = new ArrayList<>();
+                keyList.add("企业协同云");
+                keyList.add("浪潮国际公共大厅");
+                keyList.add("云平台");
+                keyList.add("讨论小组");
+                keyList.add("平台");
+                keyList.add("内部交流");
+                keyList.add("浪潮集团");
+                keyList.add("11487");
+
+                  for (Channel channel :allchannelList){
+                    if (channel.getType() != "SERVICE" ){
+                        boolean isContain = false;
+                        for (String key:keyList){
+                            if (channel.getTitle().contains(key)){
+                                isContain = true;
+                                break;
+                            }
+                        }
+                        if (!isContain){
+                            deleteCidList.add(channel.getCid());
+                        }
+                    }
+                }
+LogUtils.jasonDebug("deleteCid="+deleteCidList.toString());
                 List<Channel> cacheChannelList = ChannelCacheUtils.getCacheChannelList(MyApplication.getInstance());
                 for (Channel channel:allchannelList){
                     if (channel.getType().equals("SERVICE")){

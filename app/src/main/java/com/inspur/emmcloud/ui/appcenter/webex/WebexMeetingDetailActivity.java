@@ -444,9 +444,9 @@ public class WebexMeetingDetailActivity extends BaseActivity {
                 }
                 apiService.sendMsg(cid, msgBodyObj.toString(), "txt_rich", System.currentTimeMillis() + "");
             } else {
-                Message message = CommunicationUtils.combinLocalTextPlainMessage(cid, content, new HashMap<String, String>());
+                Message message = CommunicationUtils.combinLocalTextPlainMessage( content,cid, new HashMap<String, String>());
                 fakeMessageId = message.getId();
-                WSAPIService.getInstance().sendChatExtendedLinksMsg(message);
+                WSAPIService.getInstance().sendChatTextPlainMsg(message);
             }
 
         }

@@ -120,34 +120,44 @@ public class UserInfoActivity extends BaseActivity {
             if (!StringUtils.isBlank(organize)) {
                 departmentLayout.setVisibility(View.VISIBLE);
                 departmentText.setText(organize);
+            }else {
+                departmentLayout.setVisibility(View.GONE);
             }
         }
 
         if (!StringUtils.isBlank(mail)) {
             mailLayout.setVisibility(View.VISIBLE);
             mailText.setText(mail);
+        }else {
+            mailLayout.setVisibility(View.GONE);
         }
 
         if (!StringUtils.isBlank(phoneNum)) {
             contactLayout.setVisibility(View.VISIBLE);
             phoneNumText.setText(phoneNum);
+        }else {
+            contactLayout.setVisibility(View.GONE);
         }
         //添加固话
         if (!StringUtils.isBlank(telStr)) {
             telLayout.setVisibility(View.VISIBLE);
             telText.setText(telStr);
+        }else {
+            telLayout.setVisibility(View.GONE);
         }
         nameText.setText(StringUtils.isBlank(name)?getString(R.string.not_set):name);
 
         if(!StringUtils.isBlank(officeStr)){
             dutyText.setVisibility(View.VISIBLE);
             dutyText.setText(officeStr);  //lbc
-
+        }else {
+            dutyText.setVisibility(View.GONE);
         }
-
         ImageDisplayUtils.getInstance().displayImage(photoImg, headUrl, R.drawable.icon_person_default);
         if (contactUser.getId().equals(MyApplication.getInstance().getUid())) {
             startChatImg.setVisibility(View.GONE);
+        }else {
+            startChatImg.setVisibility(View.VISIBLE);
         }
 
     }
