@@ -310,6 +310,11 @@ public class AudioRecordButton extends Button {
                 }
                 reset();// 恢复标志位
                 break;
+            case MotionEvent.ACTION_CANCEL:
+                voiceRecordToolFinish();
+                voiceRecordUIFinish();
+                reset();// 恢复标志位
+                break;
 
         }
         return super.onTouchEvent(event);
