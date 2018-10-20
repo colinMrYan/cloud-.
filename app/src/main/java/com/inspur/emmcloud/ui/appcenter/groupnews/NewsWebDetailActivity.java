@@ -41,6 +41,7 @@ import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.bean.chat.GetNewsInstructionResult;
 import com.inspur.emmcloud.bean.chat.GetSendMsgResult;
 import com.inspur.emmcloud.bean.chat.Message;
+import com.inspur.emmcloud.bean.mine.Language;
 import com.inspur.emmcloud.bean.system.EventMessage;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppWebConfig;
@@ -48,8 +49,8 @@ import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.HtmlRegexpUtil;
 import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
@@ -73,6 +74,9 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.lang.reflect.Method;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class NewsWebDetailActivity extends BaseActivity {
@@ -92,6 +96,7 @@ public class NewsWebDetailActivity extends BaseActivity {
     private Dialog intrcutionDialog;
     private String fakeMessageId;
     private WebSettings settings;
+    private Map<String, String> webViewHeaders;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +105,32 @@ public class NewsWebDetailActivity extends BaseActivity {
         initData();
         initViews();
         EventBus.getDefault().register(this);
+    }
+
+    /**
+     * 设置WebView的Header参数
+     */
+    private void loadUrlWithHeader(String url) {
+        if (webViewHeaders == null){
+            webViewHeaders = new HashMap<>();
+            // 根据规则添加token当URL主域名是Constant.INSPUR_HOST_URL或者Constant.INSPURONLINE_HOST_URL结尾时添加token
+            try {
+                URL urlHost = new URL(url);
+                String token = MyApplication.getInstance().getToken();
+                if (token != null && (urlHost.getHost().endsWith(Constant.INSPUR_HOST_URL)) || urlHost.getHost().endsWith(Constant.INSPURONLINE_HOST_URL)) {
+                    webViewHeaders.put("Authorization", token);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            webViewHeaders.put("X-ECC-Current-Enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
+            String languageJson = PreferencesUtils.getString(MyApplication.getInstance(), MyApplication.getInstance().getTanent() + "appLanguageObj");
+            if (languageJson != null) {
+                Language language = new Language(languageJson);
+                webViewHeaders.put("Accept-Language", language.getIana());
+            }
+        }
+        webView.loadUrl(url,webViewHeaders);
     }
 
     /**
@@ -174,7 +205,7 @@ public class NewsWebDetailActivity extends BaseActivity {
         }
         //修改model在第一次加载时直接带着model而不是加载两次
         String model = PreferencesByUserAndTanentUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", "");
-        webView.loadUrl(url+(StringUtils.isBlank(model) ? lightMode : model));
+        loadUrlWithHeader(url+(StringUtils.isBlank(model) ? lightMode : model));
         setHeaderModel(model);
     }
 
@@ -199,7 +230,6 @@ public class NewsWebDetailActivity extends BaseActivity {
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
-                LogUtils.jasonDebug("onPageFinished------");
                 initWebViewGoBackOrClose();
             }
 
@@ -218,7 +248,7 @@ public class NewsWebDetailActivity extends BaseActivity {
                     return true;
                 }
                 if(Build.VERSION.SDK_INT<26) {
-                    view.loadUrl(url+(StringUtils.isBlank(model) ? lightMode : model));
+                    loadUrlWithHeader(url+(StringUtils.isBlank(model) ? lightMode : model));
                     return true;
                 }
                 return false;
@@ -747,7 +777,7 @@ public class NewsWebDetailActivity extends BaseActivity {
      */
     private void setWebViewModel(String model) {
         setHeaderModel(model);
-        webView.loadUrl(url + model);
+        loadUrlWithHeader(url + model);
         PreferencesByUserAndTanentUtils.putString(NewsWebDetailActivity.this, "app_news_webview_model", model);
     }
 
