@@ -106,7 +106,7 @@ public class AndroidMp3ConvertUtils {
         String mp3FileSavePath = FileUtils.getFolderName(mp3Path);
         File dir = new File(mp3FileSavePath);
         if(!dir.exists()){
-            dir.mkdir();
+            dir.mkdirs();
         }
     }
 
@@ -128,6 +128,8 @@ public class AndroidMp3ConvertUtils {
             float progress = (100f * bytes / rawFileSize);
             if (bytes == -1) {
                 progress = 100;
+            }
+            if(progress == 100){
                 callback.onSuccess(mp3Path);
             }
             if (handler != null && progress != 100) {
