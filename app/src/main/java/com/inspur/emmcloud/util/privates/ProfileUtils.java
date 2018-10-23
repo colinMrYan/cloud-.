@@ -37,6 +37,7 @@ public class ProfileUtils {
     private CommonCallBack commonCallBack;
     private LoadingDialog loadingDialog;
     private String saveConfigVersion = "";
+    private int retry = 0;
 
     public ProfileUtils(Activity activity, CommonCallBack commonCallBack) {
         this.activity = activity;
@@ -79,22 +80,15 @@ public class ProfileUtils {
      */
     private void showPromptDialog() {
         //当强制更新或者统一更新接口无法返回正确消息，同时路由又无法获取成功时暂时不弹出提示框
-        if (isForceUpdateProfile() || !StringUtils.isBlank(saveConfigVersion)) {
-            final Dialog dialog = new MyDialog(activity, R.layout.dialog_profile_two_button);
+        if (!MyApplication.getInstance().isIndexActivityRunning() && (isForceUpdateProfile() || !StringUtils.isBlank(saveConfigVersion))) {
+            final Dialog dialog = new MyDialog(activity, R.layout.dialog_one_button);
             dialog.setCancelable(false);
             ((TextView) dialog.findViewById(R.id.show_text)).setText(R.string.net_work_fail);
-            dialog.findViewById(R.id.btn_re_login).setOnClickListener(new View.OnClickListener() {
+            dialog.findViewById(R.id.ok_btn).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     dialog.dismiss();
                     MyApplication.getInstance().signout();
-                }
-            });
-            dialog.findViewById(R.id.btn_retry).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dialog.dismiss();
-                    getUserProfile(true);
                 }
             });
             dialog.show();
@@ -152,9 +146,15 @@ public class ProfileUtils {
 
         @Override
         public void returnMyInfoFail(String error, int errorCode) {
-            LoadingDialog.dimissDlg(loadingDialog);
-            //当统一更新接口无法返回正确消息，同时路由又无法获取成功时暂时不弹出提示框
-            showPromptDialog();
+            if (retry == 0){
+                retry = retry+1;
+                getUserProfile(false);
+            }else {
+                LoadingDialog.dimissDlg(loadingDialog);
+                //当统一更新接口无法返回正确消息，同时路由又无法获取成功时暂时不弹出提示框
+                showPromptDialog();
+            }
+
         }
     }
 

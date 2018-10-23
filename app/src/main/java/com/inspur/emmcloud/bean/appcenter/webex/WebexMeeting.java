@@ -27,6 +27,7 @@ public class WebexMeeting implements Serializable{
     private int duration;
     private List<String> attendeesList;
     private String hostWebExID;
+    private boolean inProgress;
     public WebexMeeting(){
 
     }
@@ -47,6 +48,7 @@ public class WebexMeeting implements Serializable{
         attendeesList =  JSONUtils.getStringList(obj,"attendees",new ArrayList<String>());
         meetingID = JSONUtils.getString(obj,"meetingID","");
         hostWebExID = JSONUtils.getString(obj,"hostWebExID","");
+        inProgress = JSONUtils.getBoolean(obj,"inProgress",false);
     }
 
     public String getMeetingID() {
@@ -119,6 +121,14 @@ public class WebexMeeting implements Serializable{
 
     public void setAttendeesList(List<String> attendeesList) {
         this.attendeesList = attendeesList;
+    }
+
+    public boolean isInProgress() {
+        return inProgress;
+    }
+
+    public void setInProgress(boolean inProgress) {
+        this.inProgress = inProgress;
     }
 
     public JSONObject toJsonObject(){

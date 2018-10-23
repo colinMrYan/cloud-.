@@ -112,6 +112,10 @@ public class ClientConfigUpdateUtils extends APIInterfaceInstance {
        PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), ClientConfigItem.CLIENT_CONFIG_MY_APP.getValue(), "");
     }
 
+    public void clearDbDataConfigWithMyApp(){
+        PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), ClientConfigItem.CLIENT_CONFIG_MY_APP.getValue(), "");
+    }
+
 
     @Override
     public void returnAllConfigVersionSuccess(GetAllConfigVersionResult getAllConfigVersionResult) {

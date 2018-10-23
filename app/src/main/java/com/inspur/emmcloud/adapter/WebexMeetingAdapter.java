@@ -9,7 +9,6 @@ import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
 
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.appcenter.webex.WebexMeeting;
@@ -94,7 +93,7 @@ public class WebexMeetingAdapter extends BaseExpandableListAdapter {
         convertView = LayoutInflater.from(context).inflate(R.layout.item_view_webex_meeting_group, null);
         TextView todayText = (TextView) convertView.findViewById(R.id.tv_today);
         TextView dateText = (TextView) convertView.findViewById(R.id.tv_date);
-        String timeDate = TimeUtils.calendar2FormatString(MyApplication.getInstance(), calendar, TimeUtils.FORMAT_YEAR_MONTH_DAY);
+        String timeDate = TimeUtils.calendar2FormatString(context, calendar, TimeUtils.FORMAT_YEAR_MONTH_DAY);
         String timeWeek = TimeUtils.getWeekDay(context, calendar);
         todayText.setVisibility(TimeUtils.isCalendarToday(calendar) ? View.VISIBLE : View.INVISIBLE);
         dateText.setText(timeDate + " " + timeWeek);
@@ -134,12 +133,9 @@ public class WebexMeetingAdapter extends BaseExpandableListAdapter {
         holder.timeText.setText(startDateString + " - " + endDateString);
         holder.titleText.setText(webexMeeting.getConfName());
         String email = webexMeeting.getHostWebExID();
-        if (email.equals(myEmail)) {
-            holder.ownerText.setText(R.string.mine);
-        } else {
-            holder.ownerText.setText(webexMeeting.getHostUserName());
-        }
-        if (TimeUtils.isCalendarToday(startCalendar) && !isMeetingEnd(webexMeeting)) {
+        boolean isOwner = email.equals(myEmail);
+        holder.ownerText.setText(isOwner?context.getString(R.string.mine):webexMeeting.getHostUserName());
+        if (TimeUtils.isCalendarToday(startCalendar) && !isMeetingEnd(webexMeeting) && (isOwner || webexMeeting.isInProgress())) {
             holder.functionBtn.setText(email.equals(myEmail)?context.getString(R.string.webex_start) : context.getString(R.string.join));
             holder.functionBtn.setVisibility(View.VISIBLE);
             holder.functionBtn.setOnClickListener(new View.OnClickListener() {

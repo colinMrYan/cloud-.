@@ -24,7 +24,7 @@
             android:onClick="onClick"
             android:paddingLeft="20dp"
             android:paddingRight="15dp"
-            android:text="@string/save"
+            android:text="@string/finish"
             android:textColor="@color/white"
             android:textSize="17sp" />
 
@@ -88,6 +88,7 @@
                 android:layout_toRightOf="@id/tv_title_tips"
                 android:background="@null"
                 android:hint="@string/room_booking_topic"
+                android:maxLength="30"
                 android:maxLines="1"
                 android:paddingBottom="10dp"
                 android:paddingLeft="15dp"
@@ -261,7 +262,7 @@
                 android:paddingBottom="10dp"
                 android:paddingLeft="15dp"
                 android:paddingTop="10dp"
-                android:text="@string/webex_attendees"
+                android:text="@string/webex_participant"
                 android:textColor="#203b4f"
                 android:textSize="17sp" />
 

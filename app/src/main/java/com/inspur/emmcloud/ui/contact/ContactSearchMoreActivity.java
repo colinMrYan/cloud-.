@@ -64,6 +64,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
     private static final int SEARCH_RECENT = 3;
     private static final int SEARCH_NOTHIING = 4;
     private static final int REFRESH_CONTACT_DATA = 5;
+    public static final String EXTRA_LIMIT = "select_limit";
     private List<ChannelGroup> searchChannelGroupList = new ArrayList<ChannelGroup>(); // 群组搜索结果
     private List<Contact> searchContactList = new ArrayList<Contact>(); // 通讯录搜索结果
     private List<Channel> searchRecentList = new ArrayList<Channel>();// 常用联系人搜索结果
@@ -85,6 +86,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
     private GroupTitleAdapter groupTitleAdapter;
     private Handler handler;
     private List<Contact> excludeContactList = new ArrayList<>();//不显示某些数据
+    private int selectLimit = 5000;
 
 
     @Override
@@ -115,18 +117,22 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
                 // TODO Auto-generated method stub
-                SearchModel searchModel = null;
-                if (searchArea == SEARCH_CHANNELGROUP) {
-                    searchModel = new SearchModel(searchChannelGroupList
-                            .get(position));
-                } else if (searchArea == SEARCH_CONTACT) {
-                    searchModel = new SearchModel(searchContactList
-                            .get(position));
+                if (selectMemList.size() < selectLimit) {
+                    SearchModel searchModel = null;
+                    if (searchArea == SEARCH_CHANNELGROUP) {
+                        searchModel = new SearchModel(searchChannelGroupList
+                                .get(position));
+                    } else if (searchArea == SEARCH_CONTACT) {
+                        searchModel = new SearchModel(searchContactList
+                                .get(position));
+                    } else {
+                        searchModel = new SearchModel(searchRecentList
+                                .get(position));
+                    }
+                    changeMembers(searchModel);
                 } else {
-                    searchModel = new SearchModel(searchRecentList
-                            .get(position));
+                    ToastUtils.show(MyApplication.getInstance(), R.string.contact_select_limit_warning);
                 }
-                changeMembers(searchModel);
             }
         });
         groupTitleListView = (RecyclerView) findViewById(R.id.title_list);
@@ -144,7 +150,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
                     LayoutParams.WRAP_CONTENT, DensityUtil.dip2px(
                     getApplicationContext(), LayoutParams.WRAP_CONTENT));
             params.topMargin = DensityUtil.dip2px(getApplicationContext(), 3);
-            params.bottomMargin =  params.topMargin;
+            params.bottomMargin = params.topMargin;
             int piddingTop = DensityUtil.dip2px(getApplicationContext(), 1);
             int piddingLeft = DensityUtil.dip2px(getApplicationContext(), 5);
             searchEdit.setPadding(piddingLeft, piddingTop, piddingLeft, piddingTop);
@@ -160,6 +166,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
 
     private void getIntentData() {
         // TODO Auto-generated method stub
+        selectLimit = getIntent().getIntExtra(EXTRA_LIMIT, 5000);
         isMultiSelect = getIntent().getBooleanExtra("isMultiSelect", false);
         selectMemList = (List<SearchModel>) getIntent().getSerializableExtra(
                 "selectMemList");
@@ -190,7 +197,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
                 break;
         }
         notifyFlowLayoutDataChange(searchText);
-        if (getIntent().hasExtra("excludeContactList")){
+        if (getIntent().hasExtra("excludeContactList")) {
             excludeContactList = (List<Contact>) getIntent().getSerializableExtra("excludeContactList");
         }
     }
@@ -209,7 +216,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
                     LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
             params.rightMargin = DensityUtil.dip2px(getApplicationContext(), 5);
             params.topMargin = DensityUtil.dip2px(getApplicationContext(), 3);
-            params.bottomMargin =  params.topMargin;
+            params.bottomMargin = params.topMargin;
             searchResultText.setLayoutParams(params);
             int piddingTop = DensityUtil.dip2px(getApplicationContext(), 1);
             int piddingLeft = DensityUtil.dip2px(getApplicationContext(), 5);
@@ -290,7 +297,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
             intent.setClass(getApplicationContext(), UserInfoActivity.class);
             startActivity(intent);
         } else {
-            intent.setClass(getApplicationContext(), MyApplication.getInstance().isV0VersionChat()? ChannelV0Activity.class:ChannelActivity.class);
+            intent.setClass(getApplicationContext(), MyApplication.getInstance().isV0VersionChat() ? ChannelV0Activity.class : ChannelActivity.class);
             intent.putExtra("title", searchModel.getName());
             intent.putExtra("cid", searchModel.getId());
             intent.putExtra("channelType", searchModel.getType());
@@ -308,8 +315,8 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
                 returnSelectData();
                 break;
             case R.id.layout:
-                if (searchEdit != null){
-                    InputMethodUtils.display(ContactSearchMoreActivity.this,searchEdit);
+                if (searchEdit != null) {
+                    InputMethodUtils.display(ContactSearchMoreActivity.this, searchEdit);
                 }
                 break;
             default:
@@ -367,7 +374,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
                             public void run() {
                                 searchContactList = ContactUserCacheUtils.getSearchContact(searchText,
                                         excludeContactList, 25);
-                                if (handler !=null){
+                                if (handler != null) {
                                     handler.sendEmptyMessage(REFRESH_CONTACT_DATA);
                                 }
                             }
@@ -500,7 +507,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
         } else {
             defaultIcon = R.drawable.icon_person_default;
             if (!searchModel.getId().equals("null")) {
-                icon = APIUri.getChannelImgUrl(MyApplication.getInstance(),searchModel.getId());
+                icon = APIUri.getChannelImgUrl(MyApplication.getInstance(), searchModel.getId());
             }
         }
         ImageDisplayUtils.getInstance().displayImage(

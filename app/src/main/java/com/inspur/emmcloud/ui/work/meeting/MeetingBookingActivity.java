@@ -233,7 +233,7 @@ public class MeetingBookingActivity extends BaseActivity {
      */
     private void showTimePickerDlg(Calendar calendar, final int beginOrEnd) {
         TimePickerDialog beginTimePickerDialog = new TimePickerDialog(
-                MeetingBookingActivity.this,TimePickerDialog.THEME_HOLO_LIGHT, new OnTimeSetListener() {
+                MeetingBookingActivity.this, android.R.style.Theme_Material_Light_Dialog_Alert, new OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay,
                                   int minute) {
@@ -277,7 +277,7 @@ public class MeetingBookingActivity extends BaseActivity {
         Locale locale = getResources().getConfiguration().locale;
         Locale.setDefault(locale);
         MyDatePickerDialog datePickerDialog = new MyDatePickerDialog(
-                MeetingBookingActivity.this,DatePickerDialog.THEME_HOLO_LIGHT,
+                MeetingBookingActivity.this, android.R.style.Theme_Material_Light_Dialog_Alert ,
                 new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year,

@@ -20,12 +20,15 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.WebexAPIService;
 import com.inspur.emmcloud.bean.appcenter.webex.GetScheduleWebexMeetingSuccess;
+import com.inspur.emmcloud.bean.appcenter.webex.WebexAttendees;
 import com.inspur.emmcloud.bean.appcenter.webex.WebexMeeting;
 import com.inspur.emmcloud.util.common.EditTextUtils;
+import com.inspur.emmcloud.util.common.FomatUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.ClearEditText;
@@ -38,8 +41,10 @@ import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -76,7 +81,7 @@ public class WebexScheduleMeetingActivity extends BaseActivity {
     private int durationHourChoiceIndex = 1;
     private int durationMinChoiceIndex = 0;
     private Calendar startCalendar;
-    private ArrayList<String> attendeesList = new ArrayList<>();
+    private List<WebexAttendees> webexAttendeesList = new ArrayList<>();
     private WebexMeeting webexMeeting;
     private WebexAPIService apiService;
     private LoadingDialog loadingDlg;
@@ -86,11 +91,13 @@ public class WebexScheduleMeetingActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         String hourStr = getString(R.string.hour);
         String minStr = getString(R.string.min);
-        durationHourItems = new String[]{"0"+hourStr, "1"+hourStr, "2"+hourStr, "3"+hourStr, "4"+hourStr, "5"+hourStr, "6"+hourStr, "7"+hourStr, "8"+hourStr, "9"+hourStr, "10"+hourStr, "11"+hourStr, "12"+hourStr, "18"+hourStr, "24"+hourStr};
-        durationMinItems = new String[]{"0"+minStr, "10"+minStr, "20"+minStr, "30"+minStr, "40"+minStr,"50"+minStr};
+        String hoursStr = getString(R.string.hours);
+        String minsStr = getString(R.string.mins);
+        durationHourItems = new String[]{"0"+hourStr, "1"+hourStr, "2"+hoursStr, "3"+hoursStr, "4"+hoursStr, "5"+hoursStr, "6"+hoursStr, "7"+hoursStr, "8"+hoursStr, "9"+hoursStr, "10"+hoursStr, "11"+hoursStr, "12"+hoursStr, "18"+hoursStr, "24"+hoursStr};
+        durationMinItems = new String[]{"0"+minStr, "10"+minsStr, "20"+minsStr, "30"+minsStr, "40"+minsStr,"50"+minsStr};
         startCalendar = TimeUtils.getNextHalfHourTime(Calendar.getInstance());
-        startDateText.setText(TimeUtils.calendar2FormatString(MyApplication.getInstance(), startCalendar, TimeUtils.FORMAT_MONTH_DAY));
-        startTimeText.setText(TimeUtils.calendar2FormatString(getApplicationContext(), startCalendar, TimeUtils.FORMAT_HOUR_MINUTE));
+        startDateText.setText(TimeUtils.calendar2FormatString(this, startCalendar, TimeUtils.FORMAT_MONTH_DAY));
+        startTimeText.setText(TimeUtils.calendar2FormatString(this, startCalendar, TimeUtils.FORMAT_HOUR_MINUTE));
         durationHourText.setText(durationHourItems[durationHourChoiceIndex]);
         durationMinText.setText(durationMinItems[durationMinChoiceIndex]);
         passwordEdit.setTransformationMethod(PasswordTransformationMethod.getInstance());
@@ -99,8 +106,8 @@ public class WebexScheduleMeetingActivity extends BaseActivity {
         apiService = new WebexAPIService(this);
         apiService.setAPIInterface(new Webservice());
         loadingDlg = new LoadingDialog(this);
-        int code = (int) ((Math.random() * 9 + 1) * 100000);
-        EditTextUtils.setText(passwordEdit, code + "");
+        String password = AppUtils.getRandomStr(6);
+        EditTextUtils.setText(passwordEdit, password );
     }
 
 
@@ -116,7 +123,7 @@ public class WebexScheduleMeetingActivity extends BaseActivity {
                     public void onDateSet(DatePicker view, int year,
                                           int monthOfYear, int dayOfMonth) {
                         startCalendar.set(year, monthOfYear, dayOfMonth);
-                        startDateText.setText(TimeUtils.calendar2FormatString(MyApplication.getInstance(), startCalendar, TimeUtils.FORMAT_MONTH_DAY));
+                        startDateText.setText(TimeUtils.calendar2FormatString(WebexScheduleMeetingActivity.this, startCalendar, TimeUtils.FORMAT_MONTH_DAY));
                     }
                 }, startCalendar.get(Calendar.YEAR), startCalendar.get(Calendar.MONTH), startCalendar.get(Calendar.DAY_OF_MONTH));
         datePickerDialog.show();
@@ -135,7 +142,7 @@ public class WebexScheduleMeetingActivity extends BaseActivity {
                                   int minute) {
                 startCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
                 startCalendar.set(Calendar.MINUTE, minute);
-                startTimeText.setText(TimeUtils.calendar2FormatString(getApplicationContext(), startCalendar, TimeUtils.FORMAT_HOUR_MINUTE));
+                startTimeText.setText(TimeUtils.calendar2FormatString(WebexScheduleMeetingActivity.this, startCalendar, TimeUtils.FORMAT_HOUR_MINUTE));
             }
         }, startCalendar.get(Calendar.HOUR_OF_DAY), startCalendar.get(Calendar.MINUTE), true);
         beginTimePickerDialog.show();
@@ -177,26 +184,36 @@ public class WebexScheduleMeetingActivity extends BaseActivity {
             case R.id.tv_start:
                 String confName = titleEdit.getText().toString().trim();
                 if (StringUtils.isBlank(confName)) {
-                    ToastUtils.show(MyApplication.getInstance(), R.string.enter_meeting_name);
+                    ToastUtils.show(WebexScheduleMeetingActivity.this, R.string.enter_meeting_name);
                     return;
                 }
                 String meetingPassword = passwordEdit.getText().toString();
                 if (StringUtils.isBlank(meetingPassword)) {
-                    ToastUtils.show(MyApplication.getInstance(), R.string.enter_meeting_password);
+                    ToastUtils.show(WebexScheduleMeetingActivity.this, R.string.enter_meeting_password);
                     return;
                 }
                 if (meetingPassword.length()<6 || meetingPassword.length()>10){
-                    ToastUtils.show(MyApplication.getInstance(), R.string.webex_password_length_error);
+                    ToastUtils.show(WebexScheduleMeetingActivity.this, R.string.webex_password_length_error);
                     return;
                 }
+
+                if (!FomatUtils.isLetterOrDigits(meetingPassword)){
+                    ToastUtils.show(WebexScheduleMeetingActivity.this, R.string.webex_password_invalid);
+                    return;
+                }
+
                 if (startCalendar.before(Calendar.getInstance())) {
                     showStartDateErrorDlg();
                     return;
                 }
                 int duration = durationHourSumMin[durationHourChoiceIndex] + durationMinSumMin[durationMinChoiceIndex];
                 if (duration == 0) {
-                    ToastUtils.show(MyApplication.getInstance(), R.string.set_duration_correct);
+                    ToastUtils.show(WebexScheduleMeetingActivity.this, R.string.set_duration_correct);
                     return;
+                }
+                List<String> attendeesList = new ArrayList<>();
+                for(WebexAttendees webexAttendees:webexAttendeesList){
+                    attendeesList.add(webexAttendees.getEmail());
                 }
                 webexMeeting = new WebexMeeting();
                 webexMeeting.setConfName(confName);
@@ -223,7 +240,7 @@ public class WebexScheduleMeetingActivity extends BaseActivity {
                 break;
             case R.id.rl_invite:
                 Intent intent = new Intent(WebexScheduleMeetingActivity.this, WebexAddAttendeesActivity.class);
-                intent.putStringArrayListExtra(WebexAddAttendeesActivity.EXTRA_ATTENDEES_LIST, attendeesList);
+                intent.putExtra(WebexAddAttendeesActivity.EXTRA_ATTENDEES_LIST, (Serializable)webexAttendeesList);
                 startActivityForResult(intent, REQUEST_ADD_ATTENDEES);
                 break;
             case R.id.iv_password_visible:
@@ -257,8 +274,8 @@ public class WebexScheduleMeetingActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (RESULT_OK == resultCode) {
             if (requestCode == REQUEST_ADD_ATTENDEES) {
-                attendeesList = data.getStringArrayListExtra(WebexAddAttendeesActivity.EXTRA_ATTENDEES_LIST);
-                inviteText.setText(attendeesList.size() == 0 ? getString(R.string.none) : attendeesList.size() + "");
+                webexAttendeesList = (List<WebexAttendees>)data.getSerializableExtra(WebexAddAttendeesActivity.EXTRA_ATTENDEES_LIST);
+                inviteText.setText(webexAttendeesList.size() == 0 ? getString(R.string.none) : webexAttendeesList.size() + "");
             }
         }
     }

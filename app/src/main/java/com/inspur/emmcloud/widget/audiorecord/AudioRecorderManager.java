@@ -66,12 +66,14 @@ public class AudioRecorderManager {
      */
     public void startRecord() {
         try {
-            audioRecord.startRecording();
-            // 让录制状态为true
-            isRecording = true;
-            beginTime = System.currentTimeMillis();
-            // 开启音频文件写入线程
-            new Thread(new AudioRecordThread()).start();
+            if(audioRecord != null){
+                audioRecord.startRecording();
+                // 让录制状态为true
+                isRecording = true;
+                beginTime = System.currentTimeMillis();
+                // 开启音频文件写入线程
+                new Thread(new AudioRecordThread()).start();
+            }
         } catch (Exception e) {
             callBack.onWavAudioPrepareState(AudioRecordErrorCode.E_ERROR);
             e.printStackTrace();
@@ -204,6 +206,10 @@ public class AudioRecorderManager {
             fos = new FileOutputStream(file);// 建立一个可存取字节的文件
             boolean isHasData = false;
             while (isRecording == true) {
+                if(audioRecord == null){
+                    callBack.onWavAudioPrepareState(AudioRecordErrorCode.E_ERROR);
+                    return;
+                }
                 readSize = audioRecord.read(audioData, 0, bufferSizeInBytes);
                 if (AudioRecord.ERROR_INVALID_OPERATION != readSize && fos != null) {
                     isHasData = true;
@@ -399,7 +405,7 @@ public class AudioRecorderManager {
      * @return true | false
      */
     private boolean isSdcardExit() {
-        return Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED);
+        return Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED);
     }
 
     /**

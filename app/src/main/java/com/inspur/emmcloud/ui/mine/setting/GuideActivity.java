@@ -18,6 +18,7 @@ import com.inspur.emmcloud.interf.CommonCallBack;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
@@ -110,13 +111,15 @@ public class GuideActivity extends Activity {
                             String accessToken = PreferencesUtils.getString(
                                     GuideActivity.this, "accessToken", "");
                             if(!StringUtils.isBlank(accessToken)){
-                                new ProfileUtils(GuideActivity.this, new CommonCallBack() {
-                                    @Override
-                                    public void execute() {
-                                        IntentUtils.startActivity(GuideActivity.this,
-                                                IndexActivity.class, true);
-                                    }
-                                }).initProfile();
+                                if (AppUtils.isAppHasUpgraded(GuideActivity.this) && NetUtils.isNetworkConnected(GuideActivity.this)){
+                                    new ProfileUtils(GuideActivity.this, new CommonCallBack() {
+                                        @Override
+                                        public void execute() {
+                                            IntentUtils.startActivity(GuideActivity.this,
+                                                    IndexActivity.class, true);
+                                        }
+                                    }).initProfile();
+                                }
                             }else{
                                 MyApplication.getInstance().signout();
                             }
