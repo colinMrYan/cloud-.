@@ -1,10 +1,10 @@
 package com.inspur.emmcloud.widget.dialogs;
 
-import java.util.Calendar;
-
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.widget.TimePicker;
+
+import java.util.Calendar;
 
 public class MyTimePickerDialog extends TimePickerDialog{
 

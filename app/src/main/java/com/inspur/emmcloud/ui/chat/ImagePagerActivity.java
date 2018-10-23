@@ -163,6 +163,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
     private void showCommentInputDlg() {
         View view = getLayoutInflater().inflate(R.layout.dialog_chat_img_input, null);
         commentInputDlg = new Dialog(this, R.style.transparentFrameWindowStyle);
+        //commentInputDlg = new Dialog(this, ,android.R.style.Theme_Holo_Light_Dialog); lbc
         commentInputDlg.setContentView(view, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT));
         initEcmChatInputMenu();

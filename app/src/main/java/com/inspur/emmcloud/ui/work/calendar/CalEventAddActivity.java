@@ -425,7 +425,7 @@ public class CalEventAddActivity extends BaseActivity {
 		Locale locale = getResources().getConfiguration().locale;
 		 Locale.setDefault(locale); 
 		MyDatePickerDialog datePickerDialog = new MyDatePickerDialog(
-				CalEventAddActivity.this,
+				CalEventAddActivity.this,android.R.style.Theme_Material_Light_Dialog_Alert,
 				new DatePickerDialog.OnDateSetListener() {
 
 					@Override
@@ -450,6 +450,7 @@ public class CalEventAddActivity extends BaseActivity {
 					}
 				}, year, month, day);
 		datePickerDialog.show();
+		datePickerDialog.setHideYear();
 	}
 
 	private void showTimePickerDlg(final boolean isStartTime, Calendar calendar) {
@@ -457,7 +458,7 @@ public class CalEventAddActivity extends BaseActivity {
 		int minute = calendar.get(Calendar.MINUTE);
 		// TODO Auto-generated method stub
 		TimePickerDialog timePickerDialog = new TimePickerDialog(
-				CalEventAddActivity.this, new OnTimeSetListener() {
+				CalEventAddActivity.this,android.R.style.Theme_Material_Light_Dialog_Alert, new OnTimeSetListener() {
 
 					@Override
 					public void onTimeSet(TimePicker view, int hourOfDay,
@@ -486,7 +487,7 @@ public class CalEventAddActivity extends BaseActivity {
 	/**
 	 * 发送CalEvent变化通知
 	 * 
-	 * @param isAdd
+	 * @param
 	 */
 	public void sendBoradcastReceiver() {
 		Intent mIntent = new Intent(Constant.ACTION_CALENDAR);
