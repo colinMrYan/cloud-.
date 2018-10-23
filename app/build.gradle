@@ -41,8 +41,8 @@ android {
         applicationId "com.inspur.emmcloud"
         minSdkVersion 16
         targetSdkVersion 22
-        versionCode 60
-        versionName "2.5.0"
+        versionCode 61
+        versionName "2.6.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             abiFilters "armeabi-v7a", "x86"
@@ -95,6 +95,7 @@ android {
                     [
                             'src/main/res/layouts/app/groupnews',//新闻
                             'src/main/res/layouts/app/volume',//网盘
+                            'src/main/res/layouts/app/webex',//网盘
                             'src/main/res/layouts/app',//应用中心，应用详情，React应用等布局
                             'src/main/res/layouts/chat',//沟通
                             'src/main/res/layouts/chat/cards',//沟通卡片
@@ -193,8 +194,8 @@ dependencies {
     compile 'com.wei.android.lib:fingerprintidentify:1.2.1'
     //指纹识别库暂未启用
     compile 'me.leolin:ShortcutBadger:1.1.19@aar'
-    compile 'com.github.adrielcafe:AndroidAudioConverter:0.0.8'
     compile 'com.github.CarGuo:RecordWave:v1.1.8'
+    implementation 'com.github.Jay-Goo:Mp3Converter:v0.0.3'
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5.4'
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
     // React Naive Components
@@ -217,15 +218,16 @@ dependencies {
     compile files('libs/jcore-android-1.1.9.jar')
     compile files('libs/HMSSdkBase_2.5.3.302.jar')
     compile files('libs/HMSSdkPush_2.5.3.302.jar')
-    compile files('libs/SocialSDK_QQ_Simplify.jar')
-    compile files('libs/SocialSDK_WeChat_Simplify.jar')
-    compile files('libs/umeng_shareboard_widget.jar')
-    compile files('libs/umeng_social_api.jar')
-    compile files('libs/umeng_social_net.jar')
-    compile files('libs/umeng_social_shareboard.jar')
-    compile files('libs/umeng_social_shareview.jar')
-    compile files('libs/umeng_social_tool.jar')
-    compile files('libs/SocialSDK_sms.jar')
+    compile files('libs/umeng-common-1.5.4.jar')
+    compile files('libs/SecurityEnvSDK-release-1.1.0.jar')
+    compile files('libs/umeng-share-core-6.9.3.jar')
+    compile files('libs/umeng-share-email-6.9.3.jar')
+    compile files('libs/umeng-share-QQ-simplify-6.9.3.jar')
+    compile files('libs/umeng-share-sms-6.9.3.jar')
+    compile files('libs/umeng-share-wechat-simplify-6.9.3.jar')
+    compile files('libs/umeng-shareboard-widget-6.9.3.jar')
+    compile files('libs/umeng-sharetool-6.9.3.jar')
+    compile files('libs/utdid4all-1.1.5.3_proguard.jar')
     compile files('libs/Msc.jar')
     compile files('libs/Sunflower.jar')
     compile files('libs/agora-rtc-sdk.jar')

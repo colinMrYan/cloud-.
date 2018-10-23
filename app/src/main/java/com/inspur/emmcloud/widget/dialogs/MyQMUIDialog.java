@@ -356,6 +356,7 @@ public class MyQMUIDialog extends Dialog {
 
     private static class MenuBaseDialogBuilder<T extends QMUIDialogBuilder> extends QMUIDialogBuilder<T> {
         protected ArrayList<QMUIDialogMenuItemView> mMenuItemViews;
+        protected ScrollView scrollView;
         protected LinearLayout mMenuItemContainer;
         protected LinearLayout.LayoutParams mMenuItemLp;
 
@@ -395,11 +396,16 @@ public class MyQMUIDialog extends Dialog {
 
         @Override
         protected void onCreateContent(com.qmuiteam.qmui.widget.dialog.QMUIDialog dialog, ViewGroup parent) {
+            scrollView = new ScrollView(mContext);
+            ViewGroup.LayoutParams scrollLayoutParams = new ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT);
+            scrollView.setLayoutParams(scrollLayoutParams);
             mMenuItemContainer = new LinearLayout(mContext);
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT);
-            mMenuItemContainer.setPadding(
+            scrollView.setPadding(
                     0, QMUIResHelper.getAttrDimen(mContext, com.qmuiteam.qmui.R.attr.qmui_dialog_content_padding_top_when_list),
                     0, QMUIResHelper.getAttrDimen(mContext, mActions.size() > 0 ? com.qmuiteam.qmui.R.attr.qmui_dialog_content_padding_bottom : com.qmuiteam.qmui.R.attr.qmui_dialog_content_padding_bottom_when_no_action)
             );
@@ -418,7 +424,84 @@ public class MyQMUIDialog extends Dialog {
             for (QMUIDialogMenuItemView itemView : mMenuItemViews) {
                 mMenuItemContainer.addView(itemView, mMenuItemLp);
             }
-            parent.addView(mMenuItemContainer);
+            scrollView.addView(mMenuItemContainer);
+            parent.addView(scrollView);
+        }
+    }
+
+
+    private static class MenuSumBaseDialogBuilder<T extends QMUIDialogBuilder> extends QMUIDialogBuilder<T> {
+        protected ArrayList<QMUIDialogMenuItemView> mMenuItemViews;
+        protected ScrollView scrollView;
+        protected LinearLayout mMenuItemContainer;
+        protected LinearLayout.LayoutParams mMenuItemLp;
+
+        public MenuSumBaseDialogBuilder(Context context) {
+            super(context);
+            mMenuItemViews = new ArrayList<>();
+            mMenuItemLp = new LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    QMUIResHelper.getAttrDimen(mContext, com.qmuiteam.qmui.R.attr.qmui_dialog_content_list_item_height)
+            );
+            mMenuItemLp.gravity = Gravity.CENTER_VERTICAL;
+        }
+
+        public void clear() {
+            mMenuItemViews.clear();
+        }
+
+        @SuppressWarnings("unchecked")
+        public T addItem(QMUIDialogMenuItemView itemView, final OnClickListener listener) {
+            itemView.setMenuIndex(mMenuItemViews.size());
+            itemView.setListener(new QMUIDialogMenuItemView.MenuItemViewListener() {
+                @Override
+                public void onClick(int index) {
+                    onItemClick(index);
+                    if (listener != null) {
+                        listener.onClick(mDialog, index);
+                    }
+                }
+            });
+            mMenuItemViews.add(itemView);
+            return (T) this;
+        }
+
+        protected void onItemClick(int index) {
+
+        }
+
+        @Override
+        protected void onCreateContent(com.qmuiteam.qmui.widget.dialog.QMUIDialog dialog, ViewGroup parent) {
+            scrollView = new ScrollView(mContext);
+            ViewGroup.LayoutParams scrollLayoutParams = new ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT);
+            scrollView.setLayoutParams(scrollLayoutParams);
+            mMenuItemContainer = new LinearLayout(mContext);
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT);
+            scrollView.setPadding(
+                    0, QMUIResHelper.getAttrDimen(mContext, com.qmuiteam.qmui.R.attr.qmui_dialog_content_padding_top_when_list),
+                    0, QMUIResHelper.getAttrDimen(mContext, mActions.size() > 0 ? com.qmuiteam.qmui.R.attr.qmui_dialog_content_padding_bottom : com.qmuiteam.qmui.R.attr.qmui_dialog_content_padding_bottom_when_no_action)
+            );
+            mMenuItemContainer.setLayoutParams(layoutParams);
+            mMenuItemContainer.setOrientation(LinearLayout.VERTICAL);
+            if (mMenuItemViews.size() == 1) {
+                mMenuItemContainer.setPadding(0, 0, 0, 0
+                );
+                if (hasTitle()) {
+                    QMUIViewHelper.setPaddingTop(mMenuItemContainer, QMUIResHelper.getAttrDimen(mContext, com.qmuiteam.qmui.R.attr.qmui_dialog_content_padding_top_when_list));
+                }
+                if (mActions.size() > 0) {
+                    QMUIViewHelper.setPaddingBottom(mMenuItemContainer, QMUIResHelper.getAttrDimen(mContext, com.qmuiteam.qmui.R.attr.qmui_dialog_content_padding_bottom));
+                }
+            }
+            for (QMUIDialogMenuItemView itemView : mMenuItemViews) {
+                mMenuItemContainer.addView(itemView, mMenuItemLp);
+            }
+            scrollView.addView(mMenuItemContainer);
+            parent.addView(scrollView);
         }
     }
 
@@ -510,6 +593,77 @@ public class MyQMUIDialog extends Dialog {
             return this;
         }
     }
+
+
+
+    /**
+     * 单选类型的对话框 Builder
+     */
+    public static class CheckableSumDialogBuilder extends MenuSumBaseDialogBuilder<CheckableSumDialogBuilder> {
+
+        /**
+         * 当前被选中的菜单项的下标, 负数表示没选中任何项
+         */
+        private int mCheckedIndex = -1;
+
+        public CheckableSumDialogBuilder(Context context) {
+            super(context);
+        }
+
+        /**
+         * 获取当前选中的菜单项的下标
+         *
+         * @return 负数表示没选中任何项
+         */
+        public int getCheckedIndex() {
+            return mCheckedIndex;
+        }
+
+        /**
+         * 设置选中的菜单项的下班
+         */
+        public CheckableSumDialogBuilder setCheckedIndex(int checkedIndex) {
+            mCheckedIndex = checkedIndex;
+            return this;
+        }
+
+        @Override
+        protected void onCreateContent(com.qmuiteam.qmui.widget.dialog.QMUIDialog dialog, ViewGroup parent) {
+            super.onCreateContent(dialog, parent);
+            if (mCheckedIndex > -1 && mCheckedIndex < mMenuItemViews.size()) {
+                mMenuItemViews.get(mCheckedIndex).setChecked(true);
+            }
+        }
+
+        @Override
+        protected void onItemClick(int index) {
+            for (int i = 0; i < mMenuItemViews.size(); i++) {
+                QMUIDialogMenuItemView itemView = mMenuItemViews.get(i);
+                if (i == index) {
+                    itemView.setChecked(true);
+                    mCheckedIndex = index;
+                } else {
+                    itemView.setChecked(false);
+                }
+            }
+        }
+
+        /**
+         * 添加菜单项
+         *
+         * @param items    所有菜单项的文字
+         * @param listener 菜单项的点击事件,可以在点击事件里调用 {@link #setCheckedIndex(int)} 来设置选中某些菜单项
+         */
+        public CheckableSumDialogBuilder addItems(CharSequence[] items, OnClickListener listener) {
+            for (CharSequence item : items) {
+                addItem(new QMUIDialogMenuItemView.MarkItemView(mContext, item), listener);
+            }
+            return this;
+        }
+    }
+
+
+
 
     /**
      * 多选类型的对话框 Builder

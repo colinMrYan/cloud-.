@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
 import android.app.AppOpsManager;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -24,6 +26,7 @@ import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -46,7 +49,9 @@ import com.inspur.imp.plugin.camera.mycamera.MyCameraActivity;
 
 import java.io.File;
 import java.lang.reflect.Method;
+import java.text.DecimalFormat;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -287,6 +292,24 @@ public class AppUtils {
         String uuid = getUUID(context);
         saveUUID(context, uuid);
         return uuid;
+    }
+
+    /**
+     * 获取随机数
+     * @param length
+     * @return
+     */
+    public static String getRandomStr(int length) {
+        String str = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        if (length <= 0) {
+            length = 1;
+        }
+        Random random = new Random();
+        StringBuilder res = new StringBuilder();
+        for (int i = 0; i < length; i++) {
+            res.append(str.charAt(random.nextInt(str.length())));
+        }
+        return res.toString();
     }
 
 
@@ -969,4 +992,59 @@ public class AppUtils {
         return false;
     }
 
+    /**
+     * 安装apk
+     * @param context
+     * @param apkFilePath
+     */
+    public static void installApk(Context context,String apkFilePath,String apkFileName){
+        File apkFile = new File(apkFilePath, apkFileName);
+        if (!apkFile.exists()) {
+            ToastUtils.show(context, R.string.update_fail);
+            return;
+        }
+        // 通过Intent安装APK文件
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        // 更新后启动
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setDataAndType(Uri.parse("file://" + apkFile.toString()),
+                "application/vnd.android.package-archive");
+        if (context.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY) != null) {
+            context.startActivity(intent);
+        }
+    }
+
+    /**
+     * 获取kb或者mb格式的数字
+     * @param data
+     * @return
+     */
+    public static String getKBOrMBFormatString(long data){
+        double MBDATA = 1048576.0;
+        double KBDATA = 1024.0;
+        if (data < KBDATA) {
+            return data + "B";
+        } else if (data < MBDATA) {
+            return new DecimalFormat(("####0.00")).format(data / KBDATA) + "KB";
+        } else {
+            return new DecimalFormat(("####0.00")).format(data / MBDATA) + "MB";
+        }
+    }
+
+    /**
+     * copy到剪切板
+     * @param context
+     * @param textView
+     */
+    public static void copyContentToPasteBoard(Context context, TextView textView) {
+        ClipboardManager cmb = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+        cmb.setPrimaryClip(ClipData.newPlainText(null, textView.getText().toString()));
+        ToastUtils.show(context, R.string.copyed_to_paste_board);
+    }
+
+    public static void copyContentToPasteBoard(Context context,String content){
+        ClipboardManager cmb = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+        cmb.setPrimaryClip(ClipData.newPlainText(null, content));
+        ToastUtils.show(context, R.string.copyed_to_paste_board);
+    }
 }

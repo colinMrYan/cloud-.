@@ -83,9 +83,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import cafe.adriel.androidaudioconverter.AndroidAudioConverter;
-import cafe.adriel.androidaudioconverter.callback.ILoadCallback;
-
 import static android.R.attr.path;
 
 /**
@@ -132,22 +129,8 @@ public class ChannelActivity extends MediaPlayBaseActivity {
         init();
         registeRefreshNameReceiver();
         recordUserClickChannel();
-        initAudioConverter();
     }
 
-    /**
-     * 加载语音转换库
-     */
-    private void initAudioConverter() {
-        AndroidAudioConverter.load(this, new ILoadCallback() {
-            @Override
-            public void onSuccess() {
-            }
-            @Override
-            public void onFailure(Exception error) {
-            }
-        });
-    }
 
     // Activity在SingleTask的启动模式下多次打开传递Intent无效，用此方法解决
     @Override
@@ -169,10 +152,9 @@ public class ChannelActivity extends MediaPlayBaseActivity {
             public void getChannelInfoSuccess(Channel channel) {
                 ChannelActivity.this.channel = channel;
                 isSpecialUser = channel.getType().equals("SERVICE") && channel.getTitle().contains(robotUid);
+                initViews();
                 if (getIntent().hasExtra("get_new_msg") && NetUtils.isNetworkConnected(getApplicationContext(), false)) {//通过scheme打开的频道
                     getNewMsgOfChannel();
-                } else {
-                    initViews();
                 }
             }
 
@@ -219,7 +201,7 @@ public class ChannelActivity extends MediaPlayBaseActivity {
                     msgListView.scrollToPosition(historyMsgList.size() - 1);
                     swipeRefreshLayout.setRefreshing(false);
                 } else {
-                    getNewsMsg();
+                    getHistoryMsg();
                 }
             }
         });
@@ -234,7 +216,6 @@ public class ChannelActivity extends MediaPlayBaseActivity {
             headerText.setVisibility(View.GONE);
             String uid = DirectChannelUtils.getDirctChannelOtherUid(MyApplication.getInstance(), channel.getTitle());
             String iconUrl = APIUri.getUserIconUrl(MyApplication.getInstance(), uid);
-            LogUtils.jasonDebug("iconUrl="+iconUrl);
             ImageDisplayUtils.getInstance().displayImage(robotPhotoImg, iconUrl, R.drawable.icon_person_default);
         } else {
             robotPhotoImg.setVisibility(View.GONE);
@@ -263,12 +244,12 @@ public class ChannelActivity extends MediaPlayBaseActivity {
             }
 
             @Override
-            public void onSendVoiceRecordMsg(String results,float seconds, String filePath) {
+            public void onSendVoiceRecordMsg(String results, float seconds, String filePath) {
                 int duration = (int) seconds;
                 if (duration == 0) {
                     duration = 1;
                 }
-                combinAndSendMessageWithFile(filePath, Message.MESSAGE_TYPE_MEDIA_VOICE, duration,results);
+                combinAndSendMessageWithFile(filePath, Message.MESSAGE_TYPE_MEDIA_VOICE, duration, results);
             }
 
             @Override
@@ -296,9 +277,9 @@ public class ChannelActivity extends MediaPlayBaseActivity {
                 setChatDrafts();
             }
         });
-        chatInputMenu.setInputLayout(channel.getType().equals("SERVICE")?"1":channel.getInputs());
+        chatInputMenu.setInputLayout(channel.getInputs(),channel.getType().equals("SERVICE"));
         String chatDrafts = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), MyAppConfig.getChannelDrafsPreKey(cid));
-        if (chatDrafts != null){
+        if (chatDrafts != null) {
             chatInputMenu.setChatDrafts(chatDrafts);
         }
     }
@@ -327,7 +308,6 @@ public class ChannelActivity extends MediaPlayBaseActivity {
             String actionContent = (String) eventMessage.getMessageObj();
             sendMessageWithText(actionContent, true, null);
         }
-
     }
 
 
@@ -572,13 +552,13 @@ public class ChannelActivity extends MediaPlayBaseActivity {
     }
 
     private void combinAndSendMessageWithFile(String filePath, String messageType, int duration) {
-        combinAndSendMessageWithFile(filePath,messageType,duration,"");
+        combinAndSendMessageWithFile(filePath, messageType, duration, "");
     }
 
-    private void combinAndSendMessageWithFile(String filePath, String messageType, int duration,String results) {
+    private void combinAndSendMessageWithFile(String filePath, String messageType, int duration, String results) {
         File file = new File(filePath);
         if (!file.exists()) {
-            if(messageType != Message.MESSAGE_TYPE_MEDIA_VOICE){
+            if (messageType != Message.MESSAGE_TYPE_MEDIA_VOICE) {
                 ToastUtils.show(MyApplication.getInstance(), R.string.file_not_exist);
             }
             return;
@@ -592,7 +572,7 @@ public class ChannelActivity extends MediaPlayBaseActivity {
                 fakeMessage = CommunicationUtils.combinLocalMediaImageMessage(cid, filePath);
                 break;
             case Message.MESSAGE_TYPE_MEDIA_VOICE:
-                fakeMessage = CommunicationUtils.combinLocalMediaVoiceMessage(cid, filePath, duration,results);
+                fakeMessage = CommunicationUtils.combinLocalMediaVoiceMessage(cid, filePath, duration, results);
                 break;
         }
         if (fakeMessage != null) {
@@ -707,6 +687,7 @@ public class ChannelActivity extends MediaPlayBaseActivity {
 
     /**
      * 将消息显示状态置为发送成功
+     *
      * @param index
      */
     private void setMessageSendSuccess(int index,Message message){
@@ -761,27 +742,45 @@ public class ChannelActivity extends MediaPlayBaseActivity {
                         targetMessageCreationDate = uiMessageList.get(0).getCreationDate();
                     }
                     MessageCacheUtil.saveMessageList(MyApplication.getInstance(), historyMessageList, targetMessageCreationDate);
-                    if (adapter != null) {
-                        List<UIMessage> historyUIMessageList = UIMessage.MessageList2UIMessageList(historyMessageList);
-                        uiMessageList.addAll(0, historyUIMessageList);
-                        adapter.setMessageList(uiMessageList);
-                        adapter.notifyItemRangeInserted(0, historyMessageList.size());
-                        msgListView.scrollToPosition(historyMessageList.size() - 1);
-                    }
+                    List<UIMessage> historyUIMessageList = UIMessage.MessageList2UIMessageList(historyMessageList);
+                    uiMessageList.addAll(0, historyUIMessageList);
+                    adapter.setMessageList(uiMessageList);
+                    adapter.notifyItemRangeInserted(0, historyMessageList.size());
+                    msgListView.scrollToPosition(historyMessageList.size() - 1);
                 }
             } else {
                 WebServiceMiddleUtils.hand(ChannelActivity.this, eventMessage.getContent(), eventMessage.getStatus());
             }
-            if (adapter == null) {
-                initViews();
+        }
+    }
+
+
+    //接收到websocket发过来的消息
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiveNewMessage(EventMessage eventMessage) {
+        if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_GET_NEW_MESSAGE)) {
+            LoadingDialog.dimissDlg(loadingDlg);
+            if (swipeRefreshLayout.isRefreshing()) {
+                swipeRefreshLayout.setRefreshing(false);
             }
+            if (eventMessage.getStatus() == 200) {
+                String content = eventMessage.getContent();
+                GetChannelMessagesResult getChannelMessagesResult = new GetChannelMessagesResult(content);
+                final List<Message> historyMessageList = getChannelMessagesResult.getMessageList();
+                if (historyMessageList.size() > 0) {
+                    MessageCacheUtil.saveMessageList(MyApplication.getInstance(), historyMessageList, null);
+                }
+            } else {
+                WebServiceMiddleUtils.hand(ChannelActivity.this, eventMessage.getContent(), eventMessage.getStatus());
+            }
+            initMsgListView();
         }
     }
 
 
     //接收到离线消息
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReiceveWSOfflineMessage(List<Message> offlineMessageList) {
+    public void onReceiveWSOfflineMessage(List<Message> offlineMessageList) {
         Iterator<Message> it = offlineMessageList.iterator();
         //去重
         while (it.hasNext()) {
@@ -791,13 +790,13 @@ public class ChannelActivity extends MediaPlayBaseActivity {
                 it.remove();
             }
         }
-        if (offlineMessageList.size()>0){
+        if (offlineMessageList.size() > 0) {
             int currentPostion = uiMessageList.size() - 1;
             List<UIMessage> offlineUIMessageList = UIMessage.MessageList2UIMessageList(offlineMessageList);
             uiMessageList.addAll(offlineUIMessageList);
             adapter.setMessageList(uiMessageList);
-            adapter.notifyItemRangeInserted(currentPostion+1, offlineUIMessageList.size());
-            msgListView.MoveToPosition(uiMessageList.size()-1);
+            adapter.notifyItemRangeInserted(currentPostion + 1, offlineUIMessageList.size());
+            msgListView.MoveToPosition(uiMessageList.size() - 1);
             WSAPIService.getInstance().setChannelMessgeStateRead(cid);
         }
     }
@@ -952,7 +951,7 @@ public class ChannelActivity extends MediaPlayBaseActivity {
             chatInputMenu.stopVoiceInput();
             return;
         }
-        if (InputMethodUtils.isSoftInputShow(ChannelActivity.this)){
+        if (InputMethodUtils.isSoftInputShow(ChannelActivity.this)) {
             InputMethodUtils.hide(ChannelActivity.this);
             return;
         }
@@ -978,7 +977,7 @@ public class ChannelActivity extends MediaPlayBaseActivity {
     /**
      * 获取新消息
      */
-    private void getNewsMsg() {
+    private void getHistoryMsg() {
         swipeRefreshLayout.setRefreshing(false);
         if (NetUtils.isNetworkConnected(ChannelActivity.this)) {
             String newMessageId = uiMessageList.size() > 0 ? uiMessageList.get(0).getMessage().getId() : "";
@@ -994,7 +993,7 @@ public class ChannelActivity extends MediaPlayBaseActivity {
      */
     private void getNewMsgOfChannel() {
         if (NetUtils.isNetworkConnected(this, false)) {
-            WSAPIService.getInstance().getHistoryMessage(cid, "");
+            WSAPIService.getInstance().getChannelNewMessage(cid);
         }
     }
 

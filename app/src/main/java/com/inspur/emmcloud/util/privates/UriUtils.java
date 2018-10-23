@@ -10,6 +10,7 @@ import com.inspur.emmcloud.bean.appcenter.App;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.ui.appcenter.ReactNativeAppActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
@@ -19,12 +20,14 @@ import com.inspur.imp.api.ImpActivity;
 public class UriUtils {
 
     public static void openApp(final Activity activity, final App app, final String appCollectType) {
+        LogUtils.jasonDebug("openApp=================");
         String uri = app.getUri();
         switch (app.getAppType()) {
             case 0:
             case 1:
                 try {
                     Intent intent = Intent.parseUri(uri, Intent.URI_INTENT_SCHEME);
+                    intent.putExtra("installUri",app.getInstallUri());
                     intent.setComponent(null);
                     activity.startActivity(intent);
                 } catch (Exception e) {

@@ -27,4 +27,37 @@ public class FomatUtils {
 		}
 		return true;
 	}
+
+	public static  boolean isValiadEmail(String email){
+		Matcher matcher = Pattern.compile(
+				"^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$" ).matcher(
+				email );
+
+		while ( matcher.find() )
+		{
+			return true;
+		}
+		return false;
+	}
+
+
+	/**
+	 * 只含有字母和数字
+	 * @param string
+	 * @return
+	 */
+	public static boolean isLetterOrDigits(String string) {
+		boolean flag = false;
+		for (int i = 0; i < string.length(); i++) {
+			if (Character.isLowerCase(string.charAt(i))
+					|| Character.isUpperCase(string.charAt(i))
+					|| Character.isDigit(string.charAt(i))) {
+				flag = true;
+			} else {
+				flag = false;
+				return flag;
+			}
+		}
+		return flag;
+	}
 }

@@ -13,7 +13,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.system.EventMessage;
@@ -217,10 +216,10 @@ public class ImageDetailFragment extends Fragment {
 	public void onStart() {
 		super.onStart();
 		DisplayImageOptions options = new DisplayImageOptions.Builder()
-				.showImageForEmptyUri(R.drawable.plugin_camera_no_pictures)
+				.showImageForEmptyUri(R.drawable.icon_photo_default)
 
-				.showImageOnFail(R.drawable.plugin_camera_no_pictures)
-				.showImageOnLoading(R.drawable.plugin_camera_no_pictures)
+				.showImageOnFail(R.drawable.icon_photo_default)
+				.showImageOnLoading(R.drawable.icon_photo_default)
 				// 设置图片的解码类型
 				.bitmapConfig(Bitmap.Config.RGB_565)
 				.cacheInMemory(true)
@@ -260,8 +259,8 @@ public class ImageDetailFragment extends Fragment {
 									message = getString(R.string.download_fail);
 									break;
 							}
-							Toast.makeText(getActivity(), message,
-									Toast.LENGTH_SHORT).show();
+//							Toast.makeText(getActivity(), message,
+//									Toast.LENGTH_SHORT).show();
 							progressBar.setVisibility(View.GONE);
 						}
 					}

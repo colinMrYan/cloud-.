@@ -30,6 +30,10 @@ import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeResultWithPermissionRe
 import com.inspur.emmcloud.bean.appcenter.volume.Volume;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeDetail;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
+import com.inspur.emmcloud.bean.appcenter.webex.GetScheduleWebexMeetingSuccess;
+import com.inspur.emmcloud.bean.appcenter.webex.GetWebexMeetingListResult;
+import com.inspur.emmcloud.bean.appcenter.webex.GetWebexTKResult;
+import com.inspur.emmcloud.bean.appcenter.webex.WebexMeeting;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
 import com.inspur.emmcloud.bean.chat.GetAllRobotsResult;
 import com.inspur.emmcloud.bean.chat.GetChannelListResult;
@@ -1073,97 +1077,61 @@ public class APIInterfaceInstance implements APIInterface {
     public void returnLanguageFail(String error, int errorCode) {
     }
 
-    /* (non-Javadoc)
-     * @see com.inspur.emmcloud.api.APIInterface#returnMeettingRoomsSuccess(com.inspur.emmcloud.bean.work.GetMeetingRoomsResult, boolean)
-     */
     @Override
     public void returnMeetingRoomsSuccess(
             GetMeetingRoomsResult getMeetingRoomsResult, boolean isFilte) {
-        // TODO Auto-generated method stub
-
     }
 
-
-    /* (non-Javadoc)
-     * @see com.inspur.emmcloud.api.APIInterface#returnFindSearchFail(java.lang.String)
-     */
     @Override
     public void returnFindSearchFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
-
     }
 
-    /* (non-Javadoc)
-     * @see com.inspur.emmcloud.api.APIInterface#returnFindMixSearchFail(java.lang.String)
-     */
     @Override
     public void returnFindMixSearchFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
-
     }
-
-
-    /* (non-Javadoc)
-     * @see com.inspur.emmcloud.api.APIInterface#returnMeettingListSuccess(com.inspur.emmcloud.bean.work.GetMeetingListResult, int)
-     */
     @Override
     public void returnMeetingListSuccess(
             GetMeetingListResult getMeetingListResult, String date) {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
     public void returnAllRobotsSuccess(GetAllRobotsResult getAllRobotsResult) {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
     public void returnAllRobotsFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
     public void returnRobotByIdSuccess(Robot robot) {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
     public void returnRobotByIdFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
-
     }
 
 
     @Override
     public void returnUpdatePwdBySMSCodeSuccess(GetUpdatePwdBySMSCodeBean getUpdatePwdBySMSCodeBean) {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
     public void returnUpdatePwdBySMSCodeFail(String error, int errorCode) {
         // TODO Auto-generated method stub
-
     }
 
     @Override
     public void returnGetAppTabsSuccess(GetAppMainTabResult getAppTabsResult) {
         // TODO Auto-generated method stub
-
     }
 
     @Override
     public void returnGetAppTabsFail(String error, int errorCode) {
         // TODO Auto-generated method stub
-
     }
 
     @Override
-    public void returnUserAppsSuccess(GetAppGroupResult getAppGroupResult, String clientConfigMyAppVersion) {
+    public void returnUserAppsSuccess(GetAppGroupResult getAppGroupResult,String clientConfigMyAppVersion) {
         // TODO Auto-generated method stub
 
     }
@@ -1629,7 +1597,7 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnContactUserListSuccess(byte[] bytes, String saveConfigVersion) {
+    public void returnContactUserListSuccess(byte[] bytes,String saveConfigVersion) {
 
     }
 
@@ -1639,7 +1607,7 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnContactOrgListSuccess(byte[] bytes, String saveConfigVersion) {
+    public void returnContactOrgListSuccess(byte[] bytes,String saveConfigVersion) {
 
     }
 
@@ -1649,7 +1617,7 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnContactUserListUpdateSuccess(GetContactUserListUpateResult getContactUserListUpateResult, String saveConfigVersion) {
+    public void returnContactUserListUpdateSuccess(GetContactUserListUpateResult getContactUserListUpateResult,String saveConfigVersion) {
 
     }
 
@@ -1659,7 +1627,7 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnContactOrgListUpdateSuccess(GetContactOrgListUpateResult getContactOrgListUpateResult, String saveConfigVersion) {
+    public void returnContactOrgListUpdateSuccess(GetContactOrgListUpateResult getContactOrgListUpateResult,String saveConfigVersion) {
 
     }
 
@@ -1714,7 +1682,7 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnJoinVoiceCommunicationChannelFail(String error, int errorCode) {
+    public void returnJoinVoiceCommunicationChannelFail(String error,int errorCode) {
 
     }
 
@@ -1789,4 +1757,45 @@ public class APIInterfaceInstance implements APIInterface {
     public void returnDelConversationGroupMemberFail(String error, int errorCode) {
 
     }
+
+    @Override
+    public void returnWebexMeetingListSuccess(GetWebexMeetingListResult getWebexMeetingListResult) {
+    }
+
+    @Override
+    public void returnWebexMeetingListFail(String error, int errorCode) {
+    }
+
+    @Override
+    public void returnScheduleWebexMeetingSuccess(GetScheduleWebexMeetingSuccess getScheduleWebexMeetingSuccess) {
+    }
+
+    @Override
+    public void returnScheduleWebexMeetingFail(String error, int errorCode) {
+    }
+
+    @Override
+    public void returnWebexMeetingSuccess(WebexMeeting webexMeeting) {
+    }
+
+    @Override
+    public void returnWebexMeetingFail(String error, int errorCode) {
+    }
+
+    @Override
+    public void returnWebexTKSuccess(GetWebexTKResult getWebexTKResult) {
+    }
+
+    @Override
+    public void returnWebexTKFail(String error, int errorCode) {
+    }
+
+    @Override
+    public void returnRemoveWebexMeetingSuccess() {
+    }
+
+    @Override
+    public void returnRemoveWebexMeetingFail(String error, int errorCode) {
+    }
+
 }

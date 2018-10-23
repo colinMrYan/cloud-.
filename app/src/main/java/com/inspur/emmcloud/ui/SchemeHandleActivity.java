@@ -21,6 +21,7 @@ import com.inspur.emmcloud.interf.CommonCallBack;
 import com.inspur.emmcloud.ui.appcenter.ReactNativeAppActivity;
 import com.inspur.emmcloud.ui.appcenter.groupnews.GroupNewsActivity;
 import com.inspur.emmcloud.ui.appcenter.volume.VolumeHomePageActivity;
+import com.inspur.emmcloud.ui.appcenter.webex.WebexMyMeetingActivity;
 import com.inspur.emmcloud.ui.chat.ChannelActivity;
 import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
@@ -245,8 +246,8 @@ public class SchemeHandleActivity extends Activity {
                                     IntentUtils.startActivity(SchemeHandleActivity.this, VolumeHomePageActivity.class,true);
                                 }
                                 break;
-                            case "native":
-                                openNativeSchemeByHost(host);
+                            case "inspur-ecc-native":
+                                openNativeSchemeByHost(host,getIntent());
                                 break;
                             default:
                                 finish();
@@ -427,16 +428,22 @@ public class SchemeHandleActivity extends Activity {
         }
     }
 
-    private void openNativeSchemeByHost(String host){
+    private void openNativeSchemeByHost(String host,Intent intent){
         switch (host){
-            case "ecc-calendar":
+            case "calendar":
                 IntentUtils.startActivity(SchemeHandleActivity.this, CalActivity.class,true);
                 break;
-            case "ecc-to-do":
+            case "to-do":
                 IntentUtils.startActivity(SchemeHandleActivity.this, MessionListActivity.class,true);
                 break;
-            case "ecc-meeting":
+            case "meeting":
                 IntentUtils.startActivity(SchemeHandleActivity.this, MeetingListActivity.class,true);
+                break;
+            case "webex":
+                String installUri = intent.getExtras().getString("installUri","");
+                Bundle bundle = new Bundle();
+                bundle.putString("installUri",installUri);
+                IntentUtils.startActivity(SchemeHandleActivity.this, WebexMyMeetingActivity.class,bundle,true);
                 break;
         }
     }

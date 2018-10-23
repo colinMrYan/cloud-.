@@ -37,6 +37,8 @@ public class Constant {
     public static final String PREF_APP_TAB_BAR_INFO_CURRENT = "app_tab_bar_info_current";
     public static final String PREF_APP_LOAD_ALIAS = "app_load_alias";
     public static final String PREF_APP_OPEN_VOICE_WORD_SWITCH = "voice_2_word_switch";
+    public static final String PREF_WEBEX_DOWNLOAD_URL = "webex_download_url";
+    public static final String PREF_WEBEX_FIRST_ENTER = "webex_first_enter";
 
     public static final String PREF_V_CONFIG_ALL = "v_config_all";
 
@@ -57,6 +59,7 @@ public class Constant {
     public static final String EVENTBUS_TAG_GET_MESSAGE_BY_ID = "tag_get_message_by_id";
     public static final String EVENTBUS_TAG_GET_MESSAGE_COMMENT = "tag_get_message_comment";
     public static final String EVENTBUS_TAG_GET_HISTORY_MESSAGE = "tag_get_history_message";
+    public static final String EVENTBUS_TAG_GET_NEW_MESSAGE = "tag_get_new_message";
     public static final String EVENTBUS_TAG_GET_MESSAGE_COMMENT_COUNT = "tag_get_message_comment_count";
     public static final String EVENTBUS_TAG_ON_PHOTO_TAB = "tag_on_photo_tab";
     public static final String EVENTBUS_TAG_WEBSOCKET_STATUS_REMOVE = "tag_websocket_status_remove";

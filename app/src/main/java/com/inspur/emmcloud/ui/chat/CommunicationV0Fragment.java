@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -69,7 +68,6 @@ import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.ScanQrCodeUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.TransHtmlToTextUtils;
-import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelOperationCacheUtils;
@@ -114,7 +112,10 @@ public class CommunicationV0Fragment extends Fragment {
     private static final int CREAT_CHANNEL_GROUP = 1;
     private static final int RERESH_GROUP_ICON = 2;
     private static final int SORT_CHANNEL_COMPLETE = 3;
+    private static final int SORT_CHANNEL = 4;
     private static final int SCAN_LOGIN_QRCODE_RESULT = 5;
+    private static final int CREAT_CHANNEL_GROUP_ICON = 6;
+    private static final int CACHE_CHANNEL_SUCCESS= 7;
     private View rootView;
     private ListView msgListView;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -127,8 +128,6 @@ public class CommunicationV0Fragment extends Fragment {
     private TextView titleText;
     private boolean isHaveCreatGroupIcon = false;
     private PopupWindow popupWindow;
-    private CacheNewMsgTask cacheMsgAsyncTask;
-    private CacheChannelTask cacheChannelTask;
     private boolean isFirstConnectWebsockt = true;//判断是否第一次连上websockt
 
 
@@ -186,7 +185,7 @@ public class CommunicationV0Fragment extends Fragment {
     private void showMessageButtons() {
         String tabBarInfo = PreferencesByUserAndTanentUtils.getString(getActivity(), Constant.PREF_APP_TAB_BAR_INFO_CURRENT, "");
         //第一次登录时有tabBarInfo会为“”，会导致JSON waring
-        if(!StringUtils.isBlank(tabBarInfo)){
+        if (!StringUtils.isBlank(tabBarInfo)) {
             GetAppMainTabResult getAppMainTabResult = new GetAppMainTabResult(tabBarInfo);
             showCreateGroupOrFindContact(getAppMainTabResult);
         }
@@ -200,7 +199,7 @@ public class CommunicationV0Fragment extends Fragment {
     private void showCreateGroupOrFindContact(GetAppMainTabResult getAppMainTabResult) {
         ArrayList<MainTabResult> mainTabResultList = getAppMainTabResult.getMainTabPayLoad().getMainTabResultList();
         for (int i = 0; i < mainTabResultList.size(); i++) {
-            if(mainTabResultList.get(i).getUri().equals(Constant.APP_TAB_BAR_COMMUNACATE)){
+            if (mainTabResultList.get(i).getUri().equals(Constant.APP_TAB_BAR_COMMUNACATE)) {
                 MainTabProperty mainTabProperty = mainTabResultList.get(i).getMainTabProperty();
                 if (mainTabProperty != null) {
                     if (!mainTabProperty.isCanCreate()) {
@@ -590,6 +589,19 @@ public class CommunicationV0Fragment extends Fragment {
                             displayData();
                         }
                         break;
+                    case CREAT_CHANNEL_GROUP_ICON:
+                        List<Channel> createChannelIconChannelList = (List<Channel>) msg.obj;
+                        createGroupIcon(createChannelIconChannelList);
+                        break;
+                    case CACHE_CHANNEL_SUCCESS:
+                        sortChannelList();
+                        getChannelMsg();
+                        List<String> serviceCidList = (List<String>) msg.obj;
+                        getServieChannelInputs(serviceCidList);
+                        break;
+                    case SORT_CHANNEL:
+                        sortChannelList();
+                        break;
                     case SORT_CHANNEL_COMPLETE:
                         List<Channel> channelList = (List<Channel>) msg.obj;
                         displayChannelList.clear();
@@ -609,6 +621,7 @@ public class CommunicationV0Fragment extends Fragment {
 
     /**
      * 判定是
+     *
      * @param receivedMsg
      * @return
      */
@@ -616,13 +629,13 @@ public class CommunicationV0Fragment extends Fragment {
         String msgBody = receivedMsg.getBody();
         Pattern pattern = Pattern.compile("\\[[^\\]]+\\]\\([^\\)]+\\)");
         Matcher matcher = pattern.matcher(msgBody);
-        while (matcher.find()){
+        while (matcher.find()) {
             String pattenString = matcher.group();
             int indexBegin = pattenString.indexOf("(");
             int indexEnd = pattenString.indexOf(")");
-            pattenString = pattenString.substring(indexBegin+1,indexEnd);
+            pattenString = pattenString.substring(indexBegin + 1, indexEnd);
             CustomProtocol customProtocol = new CustomProtocol(pattenString);
-            if(customProtocol.getProtocol().equals("ecc-cmd") && customProtocol.getParamMap().get("cmd").equals("join")){
+            if (customProtocol.getProtocol().equals("ecc-cmd") && customProtocol.getParamMap().get("cmd").equals("join")) {
                 return customProtocol;
             }
         }
@@ -767,7 +780,7 @@ public class CommunicationV0Fragment extends Fragment {
                 unReadCount += displayChannelList.get(i).getUnReadCount();
             }
         }
-        EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SET_ALL_MESSAGE_UNREAD_COUNT,unReadCount));
+        EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SET_ALL_MESSAGE_UNREAD_COUNT, unReadCount));
     }
 
     static class ViewHolder {
@@ -883,15 +896,15 @@ public class CommunicationV0Fragment extends Fragment {
             long unReadCount = channel.getUnReadCount();
             holder.channelTimeText.setText(TimeUtils.getDisplayTime(
                     getActivity(), channel.getMsgLastUpdate()));
-            String chatDrafts = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), MyAppConfig.getChannelDrafsPreKey(channel.getCid()),null);
-            if (chatDrafts != null){
-                String content = "<font color='#FF0000'>"+MyApplication.getInstance().getString(R.string.message_type_drafts)+"</font>"+chatDrafts;
-                if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.N){
-                    holder.channelContentText.setText(Html.fromHtml(content,Html.FROM_HTML_MODE_LEGACY, null, null));
-                }else {
+            String chatDrafts = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), MyAppConfig.getChannelDrafsPreKey(channel.getCid()), null);
+            if (chatDrafts != null) {
+                String content = "<font color='#FF0000'>" + MyApplication.getInstance().getString(R.string.message_type_drafts) + "</font>" + chatDrafts;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    holder.channelContentText.setText(Html.fromHtml(content, Html.FROM_HTML_MODE_LEGACY, null, null));
+                } else {
                     holder.channelContentText.setText(Html.fromHtml(content));
                 }
-            }else {
+            } else {
                 holder.channelContentText.setText(channel
                         .getNewMsgContent());
                 TransHtmlToTextUtils.stripUnderlines(holder.channelContentText,
@@ -915,48 +928,91 @@ public class CommunicationV0Fragment extends Fragment {
         }
     }
 
-    class CacheChannelTask extends AsyncTask<GetChannelListResult, Void, List<Channel>> {
-        private List<Channel> allchannelList = new ArrayList<>();
+//    class CacheChannelTask extends AsyncTask<GetChannelListResult, Void, List<Channel>> {
+//        private List<Channel> allchannelList = new ArrayList<>();
+//
+//        @Override
+//        protected void onPostExecute(List<Channel> addchannelList) {
+//            getChannelMsg();
+//            LogUtils.jasonDebug("isHaveCreatGroupIcon=");
+//            if (!isHaveCreatGroupIcon) {
+//                createGroupIcon(allchannelList);
+//            } else {
+//                createGroupIcon(addchannelList);
+//            }
+//            getChannelInfoResult(allchannelList);
+//        }
+//
+//        @Override
+//        protected List<Channel> doInBackground(GetChannelListResult... params) {
+//            List<Channel> allchannelList = params[0].getChannelList();
+//            this.allchannelList = allchannelList;
+//            List<Channel> cacheChannelList = ChannelCacheUtils
+//                    .getCacheChannelList(getActivity());
+//            List<Channel> addchannelList = new ArrayList<>();
+//            addchannelList.addAll(allchannelList);
+//            addchannelList.removeAll(cacheChannelList);
+//            ChannelCacheUtils.clearChannel(getActivity());
+//            ChannelCacheUtils.saveChannelList(getActivity(), allchannelList);
+//            firstEnterToSetAllChannelMsgRead(allchannelList);
+//            return addchannelList;
+//        }
+//    }
 
-        @Override
-        protected void onPostExecute(List<Channel> addchannelList) {
-            getChannelMsg();
-            if (!isHaveCreatGroupIcon) {
-                createGroupIcon(allchannelList);
-            } else {
-                createGroupIcon(addchannelList);
-            }
-            getChannelInfoResult(allchannelList);
+    class CacheChannelThread extends Thread{
+        private GetChannelListResult getChannelListResult;
+        private CacheChannelThread(GetChannelListResult getChannelListResult){
+            this.getChannelListResult = getChannelListResult;
         }
 
         @Override
-        protected List<Channel> doInBackground(GetChannelListResult... params) {
-            List<Channel> allchannelList = params[0].getChannelList();
-            this.allchannelList = allchannelList;
-            List<Channel> cacheChannelList = ChannelCacheUtils
-                    .getCacheChannelList(getActivity());
-            List<Channel> addchannelList = new ArrayList<>();
-            addchannelList.addAll(allchannelList);
-            addchannelList.removeAll(cacheChannelList);
-            ChannelCacheUtils.clearChannel(getActivity());
-            ChannelCacheUtils.saveChannelList(getActivity(), allchannelList);
-            firstEnterToSetAllChannelMsgRead(allchannelList);
-            return addchannelList;
+        public void run() {
+            try {
+                List<String> serviceCidList = new ArrayList<>();
+                List<Channel> allchannelList = getChannelListResult.getChannelList();
+                List<Channel> cacheChannelList = ChannelCacheUtils.getCacheChannelList(MyApplication.getInstance());
+                for (Channel channel:allchannelList){
+                    if (channel.getType().equals("SERVICE")){
+                        int position = cacheChannelList.indexOf(cacheChannelList);
+                        if (position != -1){
+                            channel.setInputs(cacheChannelList.get(position).getInputs());
+                        }
+                        serviceCidList.add(channel.getCid());
+                    }
+                }
+                ChannelCacheUtils.saveChannelList(MyApplication.getInstance(), allchannelList);
+                List<Channel> intersectionConversationList = new ArrayList<>();
+                intersectionConversationList.addAll(allchannelList);
+                intersectionConversationList.retainAll(cacheChannelList);
+                cacheChannelList.removeAll(intersectionConversationList);
+                ChannelCacheUtils.deleteChannelList(MyApplication.getInstance(),cacheChannelList);
+                if (handler != null){
+                    android.os.Message message = handler.obtainMessage(CACHE_CHANNEL_SUCCESS, serviceCidList);
+                    message.sendToTarget();
+                    if (isHaveCreatGroupIcon){
+                        allchannelList.removeAll(intersectionConversationList);
+                    }
+                    android.os.Message createChannelIconMessage = handler.obtainMessage(CREAT_CHANNEL_GROUP_ICON, allchannelList);
+                    createChannelIconMessage.sendToTarget();
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
         }
     }
 
-    class CacheNewMsgTask extends AsyncTask<GetNewMsgsResult, Void, Void> {
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            sortChannelList();
+    class CacheMessageThread extends Thread{
+        private GetNewMsgsResult getNewMsgsResult;
+        public CacheMessageThread(GetNewMsgsResult getNewMsgsResult){
+            this.getNewMsgsResult = getNewMsgsResult;
         }
 
         @Override
-        protected Void doInBackground(GetNewMsgsResult... params) {
+        public void run() {
             try {
-                GetNewMsgsResult getNewMsgsResult = params[0];
                 if (getNewMsgsResult != null) {
-                    String myUid = ((MyApplication) getActivity().getApplicationContext()).getUid();
+                    String myUid = MyApplication.getInstance().getUid();
                     List<Channel> channelList = getCacheData();
                     for (int i = 0; i < channelList.size(); i++) {
                         String cid = channelList.get(i).getCid();
@@ -971,11 +1027,15 @@ public class CommunicationV0Fragment extends Fragment {
                             }
                         }
                     }
+                    if (handler != null) {
+                        android.os.Message message = handler.obtainMessage(SORT_CHANNEL);
+                        message.sendToTarget();
+                    }
                 }
-            } catch (Exception e) {
+            }catch (Exception e){
                 e.printStackTrace();
             }
-            return null;
+
         }
     }
 
@@ -1019,7 +1079,7 @@ public class CommunicationV0Fragment extends Fragment {
                     setChannelMsgRead(cid, messageCreationDate);
                     break;
                 case "refresh_adapter":
-                    if (adapter != null){
+                    if (adapter != null) {
                         adapter.notifyDataSetChanged();
                     }
                     break;
@@ -1086,7 +1146,7 @@ public class CommunicationV0Fragment extends Fragment {
      * @param channelList
      */
     private void firstEnterToSetAllChannelMsgRead(List<Channel> channelList) {
-        if (!DbCacheUtils.tableIsExist(null,"MessageReadCreationDate")) {
+        if (!DbCacheUtils.tableIsExist(null, "MessageReadCreationDate")) {
             List<MessageReadCreationDate> MessageReadCreationDateList = new ArrayList<>();
             for (Channel channel : channelList) {
                 MessageReadCreationDateList.add(new MessageReadCreationDate(channel.getCid(), System.currentTimeMillis()));
@@ -1172,14 +1232,7 @@ public class CommunicationV0Fragment extends Fragment {
         if (handler != null) {
             handler = null;
         }
-        if (cacheChannelTask != null && !cacheChannelTask.isCancelled() && cacheChannelTask.getStatus() == AsyncTask.Status.RUNNING) {
-            cacheChannelTask.cancel(true);
-            cacheChannelTask = null;
-        }
-        if (cacheMsgAsyncTask != null && !cacheMsgAsyncTask.isCancelled() && cacheMsgAsyncTask.getStatus() == AsyncTask.Status.RUNNING) {
-            cacheMsgAsyncTask.cancel(true);
-            cacheMsgAsyncTask = null;
-        }
+
         if (msgReceiver != null) {
             LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(msgReceiver);
             msgReceiver = null;
@@ -1277,6 +1330,8 @@ public class CommunicationV0Fragment extends Fragment {
     private void getChannelMsg() {
         if (NetUtils.isNetworkConnected(MyApplication.getInstance(), false)) {
             apiService.getNewMsgs();
+        }else{
+            swipeRefreshLayout.setRefreshing(false);
         }
     }
 
@@ -1286,17 +1341,10 @@ public class CommunicationV0Fragment extends Fragment {
      *
      * @param channelList
      */
-    public void getChannelInfoResult(List<Channel> channelList) {
+    public void getServieChannelInputs(List<String> serviceCidList) {
         if (NetUtils.isNetworkConnected(MyApplication.getInstance(), false)) {
-            ArrayList<String> cidList = new ArrayList<>();
-            for (int i = 0; i < channelList.size(); i++) {
-                Channel channel = channelList.get(i);
-                if (channel.getType().equals("SERVICE")) {
-                    cidList.add(channelList.get(i).getCid());
-                }
-            }
-            if (cidList.size() > 0) {
-                String[] cidArray = cidList.toArray(new String[cidList.size()]);
+            if (serviceCidList.size() > 0) {
+                String[] cidArray = serviceCidList.toArray(new String[serviceCidList.size()]);
                 apiService.getChannelGroupList(cidArray);
             }
 
@@ -1311,8 +1359,7 @@ public class CommunicationV0Fragment extends Fragment {
                 GetChannelListResult getChannelListResult) {
             // TODO Auto-generated method stub
             if (getActivity() != null) {
-                cacheChannelTask = new CacheChannelTask();
-                cacheChannelTask.execute(getChannelListResult);
+                new CacheChannelThread(getChannelListResult).run();
             }
 
         }
@@ -1322,7 +1369,6 @@ public class CommunicationV0Fragment extends Fragment {
             // TODO Auto-generated method stub
             if (getActivity() != null) {
                 swipeRefreshLayout.setRefreshing(false);
-                WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
                 sortChannelList();// 对Channel 进行排序
             }
 
@@ -1333,8 +1379,7 @@ public class CommunicationV0Fragment extends Fragment {
             // TODO Auto-generated method stub
             if (getActivity() != null) {
                 swipeRefreshLayout.setRefreshing(false);
-                cacheMsgAsyncTask = new CacheNewMsgTask();
-                cacheMsgAsyncTask.execute(getNewMsgsResult);
+               new CacheMessageThread(getNewMsgsResult).start();
 
             }
 
@@ -1358,7 +1403,6 @@ public class CommunicationV0Fragment extends Fragment {
             if (getActivity() != null) {
                 swipeRefreshLayout.setRefreshing(false);
                 sortChannelList();// 对Channel 进行排序
-                WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
             }
 
         }

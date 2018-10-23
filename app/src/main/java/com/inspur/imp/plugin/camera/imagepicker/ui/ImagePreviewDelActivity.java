@@ -52,7 +52,7 @@ public class ImagePreviewDelActivity extends ImagePreviewBaseActivity implements
 
     /** 是否删除此张图片 */
     private void showDeleteDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this,android.R.style.Theme_Holo_Light_Dialog);
         builder.setTitle("提示");
         builder.setMessage("要删除这张照片吗？");
         builder.setNegativeButton("取消", null);

@@ -459,6 +459,51 @@
     <string name="volume_upload_file_to_volume">上傳到網盤</string>
     <string name="volume_file_permission_manager">許可權管理</string>
 
+    <!--Webex 会议-->
+    <string name="webex_meeting_title">%1$s的會議</string>
+    <string name="input_invitee_emails_hint">添加參會人含後綴郵箱</string>
+    <string name="input_invitee_emails">請輸入參會人的電子郵箱地址</string>
+    <string name="input_correct_invitee_emails">請輸入正確的的電子郵箱地址</string>
+    <string name="not_add_repeated">不能重複添加</string>
+    <string name="hour">小時</string>
+    <string name="min">分鐘</string>
+    <string name="hours">小時</string>
+    <string name="mins">分鐘</string>
+    <string name="webex_start">開始</string>
+    <string name="join">加入</string>
+    <string name="meeting_info">會議資訊</string>
+    <string name="webex_host">主持人</string>
+    <string name="webex_when">時間</string>
+    <string name="webex_meeting_number">會議號</string>
+    <string name="webex_meeting_password">會議密碼</string>
+    <string name="webex_meeting_ended">會議已結束</string>
+    <string name="start_time_error">開始時間不正確</string>
+    <string name="start_time_error_info">您指定的會議開始時間在當前時間之前。請指定其他開始時間</string>
+    <string name="none">无</string>
+    <string name="enter_meeting_name">請輸入會議名稱</string>
+    <string name="enter_meeting_password">請輸入會議密碼</string>
+    <string name="set_duration_correct">請設定正確的會議持續時間</string>
+    <string name="webex_meeting_duration">會議持續時間</string>
+    <string name="duration_time">持續時間</string>
+    <string name="schedule_meeting">安排會議</string>
+    <string name="my_meeting">我的會議</string>
+    <string name="remove_webex_meeting_warning_title">删除會議</string>
+    <string name="remove_webex_meeting_warning_info">您確定要删除該會議嗎？</string>
+    <string name="webex_password_length_error">密碼長度不符合規則（6-10位）</string>
+    <string name="webex_install_tips">使用此功能需要先安裝webex用戶端，現在安裝？</string>
+    <string name="add_invitee_from_contact">從通訊錄添加</string>
+    <string name="webex_add_invitee_num">已邀請%1$d人/還可邀請%2$d人</string>
+    <string name="internal_attendees">內部參會人</string>
+    <string name="external_attendees">外部參會人</string>
+    <string name="internal_share">内部分享</string>
+    <string name="webex_time">時間：</string>
+    <string name="webex_meeting_code">會議號：</string>
+    <string name="webex_meeting_password_tip">會議密碼：</string>
+    <string name="add_external_attendees">添加外部參會人</string>
+    <string name="webex_no_meeting_tips">%1$s<Data><![CDATA[<font color=\'#999999\'>前無會議</font>]]></Data></string>
+    <string name="webex_participant">參會人員</string>
+    <string name="webex_password_invalid">密碼只允許包含數位和字母</string>
+
     <!-- 我的頁面部分 -->
     <string name="data_clear_success">清除成功</string>
     <string name="not_set">未設置</string>
@@ -630,6 +675,7 @@
     <string name="cannot_view_info">無法查看相關資訊</string>
     <string name="do_not_select_yourself">不能選擇自己 </string>
     <string name="contact_exception">數據异常，無法打開 </string>
+    <string name="contact_select_limit_warning">已達到最大可選人數</string>
 
     <!-- 會議室部分 -->
     <string name="meeting_room_booking_detail">會議室詳情</string>
@@ -981,7 +1027,7 @@
     <string name="share_not_support">暫不支持的分享類型</string>
     <string name="share_default_title">網頁連結</string>
 
-    <string name="net_work_fail">獲取配置資訊失敗</string>
+    <string name="net_work_fail">由於新版本增强了安全認證功能，需要您重新登入</string>
 
     <string name="card_package_manage">管理卡片</string>
     <string name="card_package_welcome">歡迎使用卡包</string>

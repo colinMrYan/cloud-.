@@ -42,6 +42,7 @@ import java.util.regex.Pattern;
 public class ECMChatInputMenuImgComment extends LinearLayout {
 
     private static final int MENTIONS_RESULT = 5;
+    private static final long MENTIONS_BASE_TIME = 1515513600000L;
     @ViewInject(R.id.input_edit)
     private ChatInputEdit inputEdit;
 
@@ -54,7 +55,6 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
     private boolean canMentions = false;
     private ChatInputMenuListener chatInputMenuListener;
     private String cid = "";
-    private boolean isMessageV0 = true;
 
     public ECMChatInputMenuImgComment(Context context) {
         this(context, null);
@@ -171,7 +171,9 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
      */
     public void addMentions(String uid, String name, boolean isInputKeyWord) {
         if (uid != null && name != null) {
-            inputEdit.insertSpecialStr(isInputKeyWord, new InsertModel("@", uid, name));
+            InsertModel insertModel;
+            insertModel = new InsertModel("@", (System.currentTimeMillis() - MENTIONS_BASE_TIME) + "", name, uid);
+            inputEdit.insertSpecialStr(isInputKeyWord, insertModel);
         }
     }
 
@@ -181,15 +183,10 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
             case R.id.send_msg_btn:
                 if (NetUtils.isNetworkConnected(getContext())) {
                     List<String> urlList= null;
-                    String content = inputEdit.getRichContent(isMessageV0);
+                    String content = inputEdit.getRichContent(false);
                     Map<String,String> mentionsMap = null;
-                    if (isMessageV0){
-                        urlList = getContentUrlList(inputEdit.getText().toString());
-                    }else {
-                        mentionsMap = inputEdit.getMentionsMap();
-                    }
+                    mentionsMap = inputEdit.getMentionsMap();
                     chatInputMenuListener.onSendMsg(content, getContentMentionUidList(), urlList,mentionsMap);
-
                     inputEdit.setText("");
                 }
                 break;

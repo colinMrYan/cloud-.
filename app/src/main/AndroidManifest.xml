@@ -129,8 +129,7 @@
             android:name=".MainActivity"
             android:exported="true"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar">
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
@@ -221,8 +220,7 @@
             android:name=".ui.mine.setting.FaceVerifyManagerActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"
-            android:theme="@style/QMUI.Compat.NoActionBar"></activity>
+            android:screenOrientation="portrait"></activity>
 
         <activity
             android:name=".ui.mine.setting.FaceVerifyActivity"
@@ -302,6 +300,31 @@
             android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.appcenter.webex.WebexScheduleMeetingActivity"
+            android:launchMode="singleTask"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.appcenter.webex.WebexMyMeetingActivity"
+            android:launchMode="singleTask"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.appcenter.webex.WebexMeetingDetailActivity"
+            android:launchMode="singleTask"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.appcenter.webex.WebexAddAttendeesActivity"
+            android:launchMode="singleTask"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.appcenter.webex.WebexAddExternalAttendeesActivity"
+            android:launchMode="singleTask"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait"></activity>
 
         <activity
             android:name=".ui.ShareFilesActivity"
@@ -315,17 +338,14 @@
             android:name=".ui.ShareLinkActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar">
-
+            android:screenOrientation="portrait">
         </activity>
 
         <activity
             android:name=".ui.SchemeHandleActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar">
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.SEND_MULTIPLE" />
 
@@ -447,7 +467,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="native" />
+                <data android:scheme="inspur-ecc-native"/>
             </intent-filter>
 
         </activity>
@@ -607,7 +627,6 @@
             android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Holo.Light.NoActionBar"
             android:windowSoftInputMode="adjustPan">
 
         </activity>
@@ -667,13 +686,11 @@
             android:name=".ui.chat.ImagePagerV0Activity"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".ui.chat.ImagePagerActivity"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"
             android:windowSoftInputMode="adjustPan" />
 
         <activity
@@ -722,9 +739,7 @@
             android:name=".ui.find.trip.TripDetailActivity"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Holo.Light.NoActionBar"
             android:windowSoftInputMode="adjustResize|stateHidden">
-
         </activity>
         <activity
             android:name=".ui.appcenter.groupnews.GroupNewsActivity"
@@ -810,7 +825,6 @@
             android:configChanges="locale|layoutDirection"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Holo.Light.NoActionBar"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".ui.work.calendar.CalFilterActivity"
@@ -840,8 +854,7 @@
         <activity
             android:name=".ui.appcenter.ShortCutFunctionActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar">
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -968,38 +981,32 @@
             android:name="com.inspur.imp.plugin.camera.imagepicker.ui.ImageGridActivity"
             android:configChanges="orientation|screenSize"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name="com.inspur.imp.plugin.camera.imagepicker.ui.ImagePreviewActivity"
             android:configChanges="orientation|screenSize"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name="com.inspur.imp.plugin.camera.imagepicker.ui.ImageCropActivity"
             android:configChanges="orientation|screenSize"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name="com.inspur.imp.plugin.camera.imagepicker.ui.ImagePreviewDelActivity"
             android:configChanges="orientation|screenSize"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name="com.inspur.imp.plugin.camera.editimage.EditImageActivity"
             android:configChanges="orientation|screenSize"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name="com.inspur.imp.plugin.camera.imageedit.IMGEditActivity"
             android:configChanges="orientation|screenSize"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
+            android:screenOrientation="portrait"></activity>
 
         <!-- ImagePicker -->
 
@@ -1014,8 +1021,7 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait"
             android:stateNotNeeded="true"
-            android:supportsRtl="true"
-            android:theme="@style/SplashTheme"></activity>
+            android:supportsRtl="true"></activity>
 
         <activity
             android:name="com.inspur.imp.plugin.camera.mycamera.MyCameraActivity"
@@ -1037,8 +1043,7 @@
 
         <activity
             android:name="com.inspur.imp.plugin.filetransfer.TextFileShowActivity"
-            android:resizeableActivity="true"
-            android:theme="@android:style/Theme.NoTitleBar"></activity>
+            android:resizeableActivity="true"></activity>
 
         <!-- MDM设备管理 -->
         <activity
@@ -1230,25 +1235,22 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
-            android:name="com.umeng.qq.tencent.AuthActivity"
+            android:name="com.tencent.tauth.AuthActivity"
             android:launchMode="singleTask"
-            android:noHistory="true"
-            android:resizeableActivity="true">
+            android:noHistory="true" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-
                 <data android:scheme="tencent1105561850" />
             </intent-filter>
         </activity>
         <activity
-            android:name="com.umeng.qq.tencent.AssistActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:resizeableActivity="true"
+            android:name="com.tencent.connect.common.AssistActivity"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+            android:resizeableActivity="true"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:configChanges="orientation|keyboardHidden|screenSize"/>
         <activity
             android:name="com.umeng.socialize.editorpage.ShareActivity"
             android:excludeFromRecents="true"

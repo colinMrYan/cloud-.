@@ -39,7 +39,7 @@ import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.common.audioformat.ConvertAudioFileFormatUtils;
+import com.inspur.emmcloud.util.common.audioformat.AndroidMp3ConvertUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.Voice2StringMessageUtils;
 import com.inspur.emmcloud.widget.audiorecord.AudioDialogManager;
@@ -50,15 +50,11 @@ import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
-import cafe.adriel.androidaudioconverter.callback.IConvertCallback;
-import cafe.adriel.androidaudioconverter.model.AudioFormat;
 
 
 /**
@@ -186,23 +182,6 @@ public class ECMChatInputMenu extends LinearLayout {
             public void onFinished(final float seconds, final String filePath) {
                 // TODO Auto-generated method stub
                 if(AppUtils.getIsVoiceWordOpen()){
-                    IConvertCallback callback = new IConvertCallback() {
-                        @Override
-                        public void onSuccess(File file) {
-                            String fileName = FileUtils.getFileNameWithoutExtension(file.getName());
-                            mp3FilePathList.add(file.getAbsolutePath());
-                            if(voiceBooleanMap.get(fileName) == null || !voiceBooleanMap.get(fileName)){
-                                voiceBooleanMap.put(fileName,true);
-                            }else{
-                                callBackVoiceMessage(fileName);
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Exception e) {
-
-                        }
-                    };
                     if(FileUtils.getFileSize(filePath) <= 0){
                         if(audioDialogManager != null){
                             audioDialogManager.dismissVoice2WordProgressDialog();
@@ -214,7 +193,25 @@ public class ECMChatInputMenu extends LinearLayout {
                         audioDialogManager.showVoice2WordProgressDialog();
                         //转写和转文件格式同时进行
                         voice2StringMessageUtils.startVoiceListeningByVoiceFile(seconds,filePath);
-                        ConvertAudioFileFormatUtils.getInstance().convertAudioFile2SpecifiedFormat(getContext(),filePath, AudioFormat.MP3,callback);
+                        AndroidMp3ConvertUtils.with(getContext()).setCallBack(new AndroidMp3ConvertUtils.AndroidMp3ConvertCallback() {
+                            @Override
+                            public void onSuccess(String mp3FilePath) {
+                                String fileName = FileUtils.getFileNameWithoutExtension(mp3FilePath);
+                                mp3FilePathList.add(mp3FilePath);
+                                if(voiceBooleanMap.get(fileName) == null || !voiceBooleanMap.get(fileName)){
+                                    voiceBooleanMap.put(fileName,true);
+                                }else{
+                                    callBackVoiceMessage(fileName);
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Exception e) {
+                                if(audioDialogManager != null){
+                                    audioDialogManager.dismissVoice2WordProgressDialog();
+                                }
+                            }
+                        }).setRawPathAndMp3Path(filePath.replace(".wav",".raw"), filePath.replace(".wav",".mp3")).startConvert();
                     }
                 }else {
                     if (chatInputMenuListener != null) {
@@ -359,7 +356,7 @@ public class ECMChatInputMenu extends LinearLayout {
      *
      * @param inputs
      */
-    public void setInputLayout(String inputs) {
+    public void setInputLayout(String inputs,boolean isChannelTypeService) {
         //每一位（bit）分别代表：（高位）video voice command file photo text （低位）
         inputTypeBeanList.clear();
         inputEdit.clearInsertModelList();
@@ -412,6 +409,9 @@ public class ECMChatInputMenu extends LinearLayout {
                         isInputVoiceEnable = controlValue.equals("1");
                         break;
                 }
+            }
+            if (isChannelTypeService){
+                isInputVoiceEnable = false;
             }
 
             if (isInputPhotoEnable) {
