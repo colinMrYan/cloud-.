@@ -97,10 +97,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:paddingBottom="11dp"
-                    android:paddingTop="11dp"
+                    android:paddingBottom="10dp"
+                    android:paddingTop="10dp"
                     android:text="@string/about_welcome_text"
-                    android:textSize="@dimen/content_normal_textsize" />
+                    android:textSize="16sp" />
 
                 <ImageView
                     android:id="@+id/newfun_img"
@@ -131,11 +131,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:paddingBottom="11dp"
+                    android:paddingBottom="10dp"
                     android:paddingLeft="12dp"
-                    android:paddingTop="11dp"
+                    android:paddingTop="10dp"
                     android:text="@string/about_protocol_text"
-                    android:textSize="@dimen/content_normal_textsize" />
+                    android:textSize="16sp" />
 
                 <ImageView
                     android:id="@+id/protocol_img"
@@ -166,10 +166,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:paddingBottom="11dp"
-                    android:paddingTop="11dp"
+                    android:paddingBottom="10dp"
+                    android:paddingTop="10dp"
                     android:text="@string/check_update_text"
-                    android:textSize="@dimen/content_normal_textsize" />
+                    android:textSize="16sp" />
 
                 <ImageView
                     android:layout_width="15dp"
@@ -199,11 +199,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:paddingBottom="11dp"
+                    android:paddingBottom="10dp"
                     android:paddingLeft="12dp"
-                    android:paddingTop="11dp"
+                    android:paddingTop="10dp"
                     android:text="@string/invite_friends_text"
-                    android:textSize="@dimen/content_normal_textsize" />
+                    android:textSize="16sp" />
 
                 <ImageView
                     android:layout_width="15dp"
