@@ -11,9 +11,6 @@ import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 
-import cafe.adriel.androidaudioconverter.AndroidAudioConverter;
-import cafe.adriel.androidaudioconverter.callback.ILoadCallback;
-
 /**
  * Created by chenmch on 2018/10/8.
  */
@@ -29,7 +26,6 @@ public class ConversationBaseActivity extends MediaPlayBaseActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         recordUserClickChannel();
-        initAudioConverter();
         loadingDlg = new LoadingDialog(this);
         if (getIntent().hasExtra(EXTRA_CONVERSATION)){
             conversation = (Conversation) getIntent().getExtras().getSerializable(EXTRA_CONVERSATION);
@@ -71,20 +67,6 @@ public class ConversationBaseActivity extends MediaPlayBaseActivity{
     protected void onResume() {
         super.onResume();
         MyApplication.getInstance().setCurrentChannelCid(cid);
-    }
-
-    /**
-     * 加载语音转换库
-     */
-    private void initAudioConverter() {
-        AndroidAudioConverter.load(this, new ILoadCallback() {
-            @Override
-            public void onSuccess() {
-            }
-            @Override
-            public void onFailure(Exception error) {
-            }
-        });
     }
 
     /**

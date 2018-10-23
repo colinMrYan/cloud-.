@@ -63,10 +63,10 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="12dp"
-                android:paddingBottom="11dp"
-                android:paddingTop="11dp"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp"
                 android:text="@string/setting_safe_center"
-                android:textSize="@dimen/content_normal_textsize" />
+                android:textSize="16sp" />
 
             <ImageView
                 android:id="@+id/about_img"
@@ -99,10 +99,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:paddingBottom="11dp"
-                    android:paddingTop="11dp"
+                    android:paddingBottom="10dp"
+                    android:paddingTop="10dp"
                     android:text="@string/settings_language"
-                    android:textSize="@dimen/content_normal_textsize" />
+                    android:textSize="16sp" />
 
                 <ImageView
                     android:id="@+id/msg_language_flag_img"
@@ -120,11 +120,11 @@
                     android:layout_gravity="center_vertical"
                     android:layout_toLeftOf="@+id/msg_languagechg_img"
                     android:gravity="right"
-                    android:paddingBottom="11dp"
-                    android:paddingTop="11dp"
+                    android:paddingBottom="10dp"
+                    android:paddingTop="10dp"
                     android:text="@string/follow_system"
                     android:textColor="@color/set_protected"
-                    android:textSize="@dimen/content_normal_textsize" />
+                    android:textSize="16sp" />
 
                 <ImageView
                     android:id="@+id/msg_languagechg_img"
@@ -155,10 +155,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:paddingBottom="11dp"
-                    android:paddingTop="11dp"
+                    android:paddingBottom="10dp"
+                    android:paddingTop="10dp"
                     android:text="@string/settings_clear_cache"
-                    android:textSize="@dimen/content_normal_textsize" />
+                    android:textSize="16sp" />
 
 
                 <ImageView
@@ -189,10 +189,10 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="12dp"
-                android:paddingBottom="11dp"
-                android:paddingTop="11dp"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp"
                 android:text="@string/web_app_auto_rotate"
-                android:textSize="@dimen/content_normal_textsize" />
+                android:textSize="16sp" />
 
             <com.inspur.emmcloud.widget.SwitchView
                 android:id="@+id/web_auto_rotate_switch"
@@ -217,10 +217,10 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="12dp"
-                android:paddingBottom="11dp"
-                android:paddingTop="11dp"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp"
                 android:text="@string/run_background"
-                android:textSize="@dimen/content_normal_textsize" />
+                android:textSize="16sp" />
 
             <com.inspur.emmcloud.widget.SwitchView
                 android:id="@+id/background_run_switch"
@@ -249,10 +249,10 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="12dp"
-                android:paddingBottom="11dp"
-                android:paddingTop="11dp"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp"
                 android:text="@string/voice_word_setting"
-                android:textSize="@dimen/content_normal_textsize" />
+                android:textSize="16sp" />
 
             <com.inspur.emmcloud.widget.SwitchView
                 android:id="@+id/switch_voice_word"
@@ -286,11 +286,11 @@
                 android:layout_centerInParent="true"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="12dp"
-                android:paddingBottom="11dp"
-                android:paddingTop="11dp"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp"
                 android:text="@string/quit_check"
                 android:textColor="@color/set_textColor"
-                android:textSize="@dimen/content_normal_textsize" />
+                android:textSize="16sp" />
         </RelativeLayout>
 
     </LinearLayout>

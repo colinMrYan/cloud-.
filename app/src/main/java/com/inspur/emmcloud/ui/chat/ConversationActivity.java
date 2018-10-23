@@ -225,7 +225,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 setChatDrafts();
             }
         });
-        chatInputMenu.setInputLayout(conversation.getInput());
+        chatInputMenu.setInputLayout(conversation.getInput(),false);
         String chatDrafts = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), MyAppConfig.getChannelDrafsPreKey(cid));
         if (chatDrafts != null) {
             chatInputMenu.setChatDrafts(chatDrafts);
