@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.ui.work.meeting;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
@@ -428,7 +429,7 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
 	private void showTimeDialog(int hour, int minute, final int beginOrEnd) {
 		isHasModifyTime = true;
 		TimePickerDialog beginTimePickerDialog = new TimePickerDialog(
-				MeetingRoomListActivity.this, TimePickerDialog.THEME_HOLO_LIGHT,new OnTimeSetListener() {
+				MeetingRoomListActivity.this, AlertDialog.THEME_HOLO_LIGHT,new OnTimeSetListener() {
 
 					@Override
 					public void onTimeSet(TimePicker view, int hourOfDay,

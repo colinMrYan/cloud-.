@@ -419,7 +419,7 @@ public class NewsWebDetailActivity extends BaseActivity {
      */
     private void showDialog() {
         View view = getLayoutInflater().inflate(R.layout.app_news_choose_dialog, null);
-        dialog = new Dialog(this, R.style.transparentFrameWindowStyle);
+          dialog = new Dialog(this, R.style.transparentFrameWindowStyle);
         dialog.setContentView(view, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT));
         initDialogViews();
