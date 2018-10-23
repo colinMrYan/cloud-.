@@ -37,7 +37,6 @@ public class CardPackageActivity extends BaseActivity  implements RxCardStackVie
     private LoadingDialog loadingDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         StateBarUtils.changeStateBarColor(this,R.color.content_bg);
         initViews();
