@@ -8,10 +8,10 @@ import android.view.Window;
 import android.view.WindowManager;
 
 /**
- * Created by libaochao on 2018/10/17.
+ * Created by libaochao on 2018/10/23.
  */
 
-public class HonorImmersionStateBarUtils {
+public class ImmersionStateBarUtils {
     /**
      * lbc
      * 设置沉浸式状态栏（华为手机不显示沉浸状态）
