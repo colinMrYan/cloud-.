@@ -104,7 +104,7 @@
             <RelativeLayout
                 android:id="@+id/work_topic_layout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:background="@drawable/text_layout_selector" >
 
                 <!-- 点击变色android:background="@drawable/text_layout_selector" -->
@@ -135,8 +135,6 @@
                         android:id="@+id/meeting_detail_content_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingTop="10dp"
-                        android:paddingBottom="10dp"
                         android:layout_below="@id/meetting_topic_text"
                         android:background="@null"
                         android:ellipsize="end"
@@ -150,9 +148,9 @@
                 <View
                     android:id="@+id/work_bottom_line"
                     android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
+                    android:layout_height="0.5px"
                     android:layout_alignParentBottom="true"
-                    android:background="#33000000" />
+                    android:background="@color/color_list_divider" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -207,12 +205,6 @@
                     android:layout_marginRight="5dp"
                     android:src="@drawable/icon_arrow_right" />
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:layout_alignParentBottom="true"
-                    android:background="#33000000"
-                    android:visibility="visible" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -272,9 +264,9 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
+                    android:layout_height="0.5px"
                     android:layout_alignParentBottom="true"
-                    android:background="#33000000" />
+                    android:background="@color/color_list_divider" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -333,9 +325,9 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
+                    android:layout_height="0.5px"
                     android:layout_alignParentBottom="true"
-                    android:background="#33000000" />
+                    android:background="@color/color_list_divider" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -447,11 +439,6 @@
                     android:layout_marginRight="5dp"
                     android:src="@drawable/icon_arrow_right" />
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:layout_alignParentBottom="true"
-                    android:background="#33000000" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -512,9 +499,9 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
+                    android:layout_height="0.5px"
                     android:layout_alignParentBottom="true"
-                    android:background="#33000000" />
+                    android:background="@color/color_list_divider" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -548,9 +535,9 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
+                    android:layout_height="0.5px"
                     android:layout_alignParentBottom="true"
-                    android:background="#33000000" />
+                    android:background="@color/color_list_divider" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -583,9 +570,9 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
+                    android:layout_height="0.5px"
                     android:layout_alignParentBottom="true"
-                    android:background="#33000000" />
+                    android:background="@color/color_list_divider" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -619,9 +606,9 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
+                    android:layout_height="0.5px"
                     android:layout_alignParentBottom="true"
-                    android:background="#33000000" />
+                    android:background="@color/color_list_divider" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -639,7 +626,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingLeft="15dp"
-                    android:paddingTop="10dp"
+                    android:paddingTop="11dp"
                     android:text="@string/remark"
                     android:textColor="#203b4f"
                     android:textSize="@dimen/content_title_textsize" />
@@ -665,11 +652,6 @@
                         android:textSize="@dimen/content_title_textsize" />
                 </LinearLayout>
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:layout_below="@id/meetting_notice_layout"
-                    android:background="#33000000" />
             </RelativeLayout>
         </RelativeLayout>
     </ScrollView>

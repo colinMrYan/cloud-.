@@ -44,6 +44,6 @@
 			android:layout_toRightOf="@id/count_down_text"
 			android:layout_below="@id/date_text"
 			android:layout_width="match_parent"
-			android:background="#dddddd"
-			android:layout_height="0.5dp"></View>
+			android:background="@color/color_list_divider"
+			android:layout_height="0.5px"></View>
 </RelativeLayout>

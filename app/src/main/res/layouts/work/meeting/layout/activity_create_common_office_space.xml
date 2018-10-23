@@ -78,7 +78,8 @@
             android:id="@+id/expandable_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:divider="#33000000"
+            android:divider="@color/color_list_divider"
+            android:dividerHeight="0.5px"
             android:listSelector="#00000000" />
 
         <include layout="@layout/pull_load_more" />

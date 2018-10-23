@@ -36,6 +36,7 @@ import com.inspur.emmcloud.bean.chat.Robot;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
 import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
+import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.broadcastreceiver.MsgReceiver;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
@@ -73,6 +74,9 @@ import com.inspur.imp.util.compressor.Compressor;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -102,6 +106,7 @@ public class ChannelV0Activity extends BaseActivity {
     private static final int CAMERA_RESULT = 3;
     private static final int MENTIONS_RESULT = 5;
     private static final int CHOOSE_FILE = 4;
+    private static final int REQUEST_QUIT_CHANNELGROUP = 6;
     @ViewInject(R.id.msg_list)
     private RecycleViewForSizeChange msgListView;
 
@@ -126,15 +131,14 @@ public class ChannelV0Activity extends BaseActivity {
     private MsgReceiver msgResvier;
     private ChatAPIService apiService;
     private boolean isSpecialUser = false; //小智机器人进行特殊处理
-    private BroadcastReceiver sendActionMsgReceiver;
     private BroadcastReceiver refreshNameReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
         init();
         registeRefreshNameReceiver();
-        registeSendActionMsgReceiver();
         recordUserClickChannel();
     }
 
@@ -351,23 +355,15 @@ public class ChannelV0Activity extends BaseActivity {
         LocalBroadcastManager.getInstance(this).registerReceiver(refreshNameReceiver, filter);
     }
 
-    private void registeSendActionMsgReceiver() {
-        if (sendActionMsgReceiver == null) {
-            sendActionMsgReceiver = new BroadcastReceiver() {
-                @Override
-                public void onReceive(Context context, Intent intent) {
-                    String content = intent.getStringExtra("content");
-                    if (!StringUtils.isBlank(content)) {
-                        sendTextMessage(content, null, null, true);
-                    }
-                }
-            };
-            IntentFilter filter = new IntentFilter();
-            filter.addAction("com.inspur.msg.send");
-            LocalBroadcastManager.getInstance(this).registerReceiver(sendActionMsgReceiver, filter);
+    //接收Action卡片的Action点击事件
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiveSendAcitionContentMessage(SimpleEventMessage eventMessage) {
+        if (eventMessage.getAction() == Constant.EVENTBUS_TAG_SEND_ACTION_CONTENT_MESSAGE){
+            String actionContent = (String) eventMessage.getMessageObj();
+            sendTextMessage(actionContent, null, null, true);
         }
-    }
 
+    }
 
     /**
      * 初始化消息列表UI
@@ -575,6 +571,8 @@ public class ChannelV0Activity extends BaseActivity {
                 String name = JSONUtils.getString(result, "name", null);
                 boolean isInputKeyWord = data.getBooleanExtra("isInputKeyWord", false);
                 chatInputMenu.addMentions(uid, name, isInputKeyWord);
+            }else if(requestCode == REQUEST_QUIT_CHANNELGROUP){
+                finish();
             }
         } else {
             // 图库选择图片返回
@@ -847,8 +845,9 @@ public class ChannelV0Activity extends BaseActivity {
         Bundle bundle = new Bundle();
         bundle.putString("cid", cid);
         if (channel.getType().equals("GROUP")) {
-            IntentUtils.startActivity(ChannelV0Activity.this,
-                    ChannelInfoActivity.class, bundle);
+            Intent intent = new Intent(this,ChannelInfoActivity.class);
+            intent.putExtras(bundle);
+            startActivityForResult(intent, REQUEST_QUIT_CHANNELGROUP);
         } else if (channel.getType().equals("SERVICE")) {
             String botUid = DirectChannelUtils.getRobotInfo(getApplicationContext(),
                     channel.getTitle()).getId();
@@ -985,10 +984,7 @@ public class ChannelV0Activity extends BaseActivity {
             LocalBroadcastManager.getInstance(this).unregisterReceiver(msgResvier);
             msgResvier = null;
         }
-        if (sendActionMsgReceiver != null) {
-            LocalBroadcastManager.getInstance(this).unregisterReceiver(sendActionMsgReceiver);
-            sendActionMsgReceiver = null;
-        }
+        EventBus.getDefault().unregister(this);
         if (refreshNameReceiver != null) {
             LocalBroadcastManager.getInstance(this).unregisterReceiver(refreshNameReceiver);
             refreshNameReceiver = null;
@@ -1045,6 +1041,14 @@ public class ChannelV0Activity extends BaseActivity {
             loadingDlg.show();
             apiService.getNewMsgs(cid, "", 15);
         }
+    }
+
+    /**
+     * 设置频道是否置顶
+     * @param isFoucus
+     */
+    public void setChannelFoucs(boolean isFoucus){
+
     }
 
 

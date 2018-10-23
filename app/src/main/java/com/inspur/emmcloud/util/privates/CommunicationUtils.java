@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.util.privates;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
@@ -7,6 +8,7 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.chat.Channel;
+import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.Email;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.MsgContentAttachmentCard;
@@ -54,6 +56,43 @@ public class CommunicationUtils {
         return title;
     }
 
+    /**
+     * 获取单聊对方的uid
+     *
+     * @param context
+     * @param title
+     * @return
+     */
+    public static String getDirctChannelOtherUid(Context context,String title) {
+        String otherUid = "";
+        try {
+            String[] uidArray = title.split("-");
+            String myUid = ((MyApplication) context.getApplicationContext()).getUid();
+            if (uidArray[0].equals(myUid)) {
+                otherUid = uidArray[1];
+            } else {
+                otherUid = uidArray[0];
+            }
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
+        return otherUid;
+    }
+
+    /* *
+    * 获取频道名称
+    * @param channel
+    * @return
+    */
+    public static String getConversationTitle(Conversation conversation) {
+        String title = conversation.getName();
+        if (conversation.getType().equals(Conversation.TYPE_DIRECT)){
+            title = DirectChannelUtils.getDirectChannelTitle(MyApplication.getInstance(),title);
+        }
+        return title;
+    }
+
 
     public static Message combinLocalTextPlainMessage(String text, String cid, Map<String, String> mentionsMap) {
         Message message = combinLocalMessageCommon();
@@ -84,7 +123,7 @@ public class CommunicationUtils {
         return message;
     }
 
-    public static Message combinLocalCommentTextPlainMessage(String cid, String commentedMid,String text,Map<String, String> mentionsMap) {
+    public static Message combinLocalCommentTextPlainMessage(String cid, String commentedMid, String text, Map<String, String> mentionsMap) {
         Message message = combinLocalMessageCommon();
         message.setChannel(cid);
         message.setId(getTracer());
@@ -101,7 +140,7 @@ public class CommunicationUtils {
 
     }
 
-    public static Message combinLocalExtendedLinksMessage(String cid,String poster,String title,String subTitle,String url){
+    public static Message combinLocalExtendedLinksMessage(String cid, String poster, String title, String subTitle, String url) {
         Message message = combinLocalMessageCommon();
         message.setChannel(cid);
         message.setId(getTracer());
@@ -145,7 +184,7 @@ public class CommunicationUtils {
     }
 
 
-    public static Message combinLocalMediaVoiceMessage(String cid, String localFilePath,int duration,String results) {
+    public static Message combinLocalMediaVoiceMessage(String cid, String localFilePath, int duration, String results) {
         Message message = combinLocalMessageCommon();
         message.setChannel(cid);
         message.setId(getTracer());
@@ -182,7 +221,7 @@ public class CommunicationUtils {
         msgContentAttachmentCard.setLastName("");
         String contactOrgName = "";
         ContactOrg contactOrg = ContactOrgCacheUtils.getContactOrg(contactUser.getParentId());
-        if (contactOrg != null){
+        if (contactOrg != null) {
             contactOrgName = contactOrg.getName();
         }
         msgContentAttachmentCard.setOrganization(contactOrgName);

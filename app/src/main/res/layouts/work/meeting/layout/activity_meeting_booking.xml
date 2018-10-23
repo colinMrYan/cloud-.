@@ -116,9 +116,9 @@
                 <View
                     android:id="@+id/work_bottom_line"
                     android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
+                    android:layout_height="0.5px"
                     android:layout_alignParentBottom="true"
-                    android:background="#33000000" />
+                    android:background="@color/color_list_divider" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -171,13 +171,6 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="5dp"
                     android:src="@drawable/icon_arrow_right" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:layout_alignParentBottom="true"
-                    android:background="#33000000"
-                    android:visibility="visible" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -273,9 +266,9 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
+                    android:layout_height="0.5px"
                     android:layout_alignParentBottom="true"
-                    android:background="#33000000" />
+                    android:background="@color/color_list_divider" />
 
                 <TextView
                     android:id="@+id/meeting_booking_time_content_text"
@@ -339,9 +332,9 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
+                    android:layout_height="0.5px"
                     android:layout_alignParentBottom="true"
-                    android:background="#33000000" />
+                    android:background="@color/color_list_divider" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -432,12 +425,6 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="5dp"
                     android:src="@drawable/icon_arrow_right" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:layout_alignParentBottom="true"
-                    android:background="#33000000" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -651,12 +638,6 @@
                         android:paddingTop="7dp"
                         android:textSize="@dimen/header_textsize" />
                 </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:layout_alignParentBottom="true"
-                    android:background="#33000000" />
             </RelativeLayout>
         </RelativeLayout>
     </ScrollView>

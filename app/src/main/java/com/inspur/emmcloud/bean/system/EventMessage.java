@@ -5,6 +5,7 @@ package com.inspur.emmcloud.bean.system;
  */
 
 public class EventMessage {
+    public static final int RESULT_OK = 200;
     private String id;
     private String tag="";
     private String content="";

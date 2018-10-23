@@ -30,7 +30,7 @@ import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.appcenter.MyAppFragment;
-import com.inspur.emmcloud.ui.chat.CommunicationFragment;
+import com.inspur.emmcloud.ui.chat.CommunicationFragmentNew;
 import com.inspur.emmcloud.ui.chat.CommunicationV0Fragment;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.ui.find.FindFragment;
@@ -126,7 +126,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
                                     if (MyApplication.getInstance().isV0VersionChat()) {
                                         tabBean = new TabBean(getString(R.string.communicate), R.drawable.selector_tab_message_btn + "", CommunicationV0Fragment.class, mainTabResult);
                                     } else {
-                                        tabBean = new TabBean(getString(R.string.communicate), R.drawable.selector_tab_message_btn + "", CommunicationFragment.class, mainTabResult);
+                                        tabBean = new TabBean(getString(R.string.communicate), R.drawable.selector_tab_message_btn + "", CommunicationFragmentNew.class, mainTabResult);
                                     }
                                     break;
                                 case Constant.APP_TAB_BAR_WORK:
@@ -230,14 +230,16 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void setMessageUnreadCount(SimpleEventMessage eventMessage) {
-        if (newMessageTipsText != null) {
-            int unreadCount = (Integer) eventMessage.getMessageObj();
-            if (unreadCount == 0) {
-                newMessageTipsLayout.setVisibility(View.GONE);
-            } else {
-                String shoWNum = (unreadCount > 99) ? "99+" : unreadCount + "";
-                newMessageTipsLayout.setVisibility(View.VISIBLE);
-                newMessageTipsText.setText(shoWNum);
+        if (eventMessage.getAction().equals(Constant.EVENTBUS_TAG_SET_ALL_MESSAGE_UNREAD_COUNT)){
+            if (newMessageTipsText != null) {
+                int unreadCount = (Integer) eventMessage.getMessageObj();
+                if (unreadCount == 0) {
+                    newMessageTipsLayout.setVisibility(View.GONE);
+                } else {
+                    String shoWNum = (unreadCount > 99) ? "99+" : unreadCount + "";
+                    newMessageTipsLayout.setVisibility(View.VISIBLE);
+                    newMessageTipsText.setText(shoWNum);
+                }
             }
         }
     }
@@ -306,13 +308,16 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
     /**
      * IndexActiveX首先打开MessageFragment,然后打开其他tab
      */
-    public void openTargetFragment() {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void openDefaultTab(SimpleEventMessage eventMessage) {
         try {
-            isCommunicationRunning = true;
-            int targetTabIndex = getTabIndex();
-            boolean isOpenNotify = getIntent().hasExtra("command") && getIntent().getStringExtra("command").equals("open_notification");
-            if (mTabHost != null && mTabHost.getCurrentTab() != targetTabIndex && !isOpenNotify) {
-                mTabHost.setCurrentTab(targetTabIndex);
+            if (eventMessage.getAction().equals(Constant.EVENTBUS_TAG_OPEN_DEFALT_TAB)){
+                isCommunicationRunning = true;
+                int targetTabIndex = getTabIndex();
+                boolean isOpenNotify = getIntent().hasExtra("command") && getIntent().getStringExtra("command").equals("open_notification");
+                if (mTabHost != null && mTabHost.getCurrentTab() != targetTabIndex && !isOpenNotify) {
+                    mTabHost.setCurrentTab(targetTabIndex);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

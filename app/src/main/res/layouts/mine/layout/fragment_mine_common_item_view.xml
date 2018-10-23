@@ -9,10 +9,10 @@
         android:layout_width="33dp"
         android:layout_height="33dp"
         android:layout_centerVertical="true"
-        android:layout_marginBottom="6dp"
+        android:layout_marginBottom="5dp"
         android:layout_marginLeft="12dp"
         android:layout_marginRight="10dp"
-        android:layout_marginTop="6dp"
+        android:layout_marginTop="5dp"
         android:padding="0.5dp" />
 
     <TextView
@@ -20,9 +20,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_toRightOf="@id/iv_icon"
         android:layout_toLeftOf="@+id/iv_arrow"
-        android:textSize="@dimen/content_normal_textsize" />
+        android:layout_toRightOf="@id/iv_icon"
+        android:textSize="16sp" />
 
     <ImageView
         android:id="@+id/iv_arrow"
@@ -32,4 +32,11 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="10dp"
         android:src="@drawable/icon_arrow_right" />
+
+    <View
+        android:id="@+id/line"
+        android:layout_width="match_parent"
+        android:layout_height="0.5px"
+        android:layout_below="@id/iv_icon"
+        android:background="@color/color_list_divider"/>
 </RelativeLayout>

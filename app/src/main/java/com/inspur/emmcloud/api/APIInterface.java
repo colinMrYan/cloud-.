@@ -38,6 +38,8 @@ import com.inspur.emmcloud.bean.chat.ChannelGroup;
 import com.inspur.emmcloud.bean.chat.GetAllRobotsResult;
 import com.inspur.emmcloud.bean.chat.GetChannelListResult;
 import com.inspur.emmcloud.bean.chat.GetChannelMessagesResult;
+import com.inspur.emmcloud.bean.chat.GetChannelMessagesResult;
+import com.inspur.emmcloud.bean.chat.GetConversationListResult;
 import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.bean.chat.GetFileUploadResult;
 import com.inspur.emmcloud.bean.chat.GetMsgCommentCountResult;
@@ -700,6 +702,23 @@ public interface APIInterface {
     void returnLeaveVoiceCommunicationChannelSuccess(GetBoolenResult getBoolenResult);
     void returnLeaveVoiceCommunicationChannelFail(String error,int errorCode);
 
+    void returnQuitChannelGroupSuccess();
+    void returnQuitChannelGroupSuccessFail(String error,int errorCode);
+
+    void returnConversationListSuccess(GetConversationListResult getConversationListResult);
+    void returnConversationListFail(String error,int errorCode);
+
+    void returnSetConversationStickSuccess(String id,boolean isStick);
+    void returnSetConversationStickFail(String error,int errorCode);
+
+    void returnSetConversationHideSuccess(String id);
+    void returnSetConversationHideFail(String error,int errorCode);
+
+    void returnAddConversationGroupMemberSuccess(List<String> uidList);
+    void returnAddConversationGroupMemberFail(String error,int errorCode);
+
+    void returnDelConversationGroupMemberSuccess(List<String> uidList);
+    void returnDelConversationGroupMemberFail(String error,int errorCode);
     void returnWebexMeetingListSuccess(GetWebexMeetingListResult getWebexMeetingListResult);
     void returnWebexMeetingListFail(String error,int errorCode);
 

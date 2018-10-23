@@ -31,7 +31,7 @@ public class ChannelMemActivity extends BaseActivity {
         ((TextView) findViewById(R.id.header_text)).setText(title);
         memberArray = getIntent().getStringArrayExtra("members");
         if (memberArray != null && memberArray.length > 0) {
-            GridView memberGrid = (GridView) findViewById(R.id.member_grid);
+            GridView memberGrid = (GridView) findViewById(R.id.gv_member);
             memberGrid.setAdapter(new Adapter());
             memberGrid.setOnItemClickListener(new OnItemClickListener() {
 

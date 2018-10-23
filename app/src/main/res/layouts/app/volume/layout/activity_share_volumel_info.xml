@@ -57,7 +57,7 @@
             android:orientation="vertical">
 
             <com.inspur.emmcloud.widget.NoScrollGridView
-                android:id="@+id/member_grid"
+                android:id="@+id/gv_member"
                 android:background="@android:color/white"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
