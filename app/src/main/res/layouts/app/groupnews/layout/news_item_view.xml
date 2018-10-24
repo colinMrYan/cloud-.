@@ -9,8 +9,8 @@
         android:paddingTop="12dp" >
         <ImageView
             android:id="@+id/news_leftImg_img"
-            android:layout_width="72dp"
-            android:layout_height="57dp"
+            android:layout_width="75dp"
+            android:layout_height="62dp"
             android:scaleType="centerInside"
             android:background="@drawable/shape_news_corner"
             android:layout_marginLeft="10dp"
@@ -19,7 +19,7 @@
         <RelativeLayout
             android:id="@+id/news_middleText_layout"
             android:layout_width="match_parent"
-            android:layout_height="62dp"
+            android:layout_height="64dp"
             android:layout_alignBottom="@id/news_leftImg_img"
             android:layout_toRightOf="@id/news_leftImg_img"
             android:paddingRight="10dp" >
@@ -32,7 +32,7 @@
                 android:paddingTop="1dp"
                 android:maxLines="2"
                 android:textColor="#203b4f"
-                android:textSize="17sp" />
+                android:textSize="16sp" />
             <TextView 
                 android:id="@+id/news_middlemid_text"
                 android:layout_width="match_parent"
@@ -40,7 +40,7 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:textColor="#9999"
-                android:textSize="14sp"
+                android:textSize="12sp"
                 android:layout_alignParentBottom="true" />
         </RelativeLayout>
     </RelativeLayout>
