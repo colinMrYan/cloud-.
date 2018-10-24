@@ -68,7 +68,7 @@
             android:paddingLeft="12dp"
             android:paddingTop="10dp"
             android:text="@string/safe_center_gesture"
-            android:textSize="@dimen/content_normal_textsize" />
+            android:textSize="16sp" />
         <TextView
             android:id="@+id/safe_center_gesture_open_text"
             android:layout_width="wrap_content"
@@ -110,7 +110,7 @@
             android:paddingLeft="12dp"
             android:paddingTop="10dp"
             android:text="@string/face_enter"
-            android:textSize="@dimen/content_normal_textsize" />
+            android:textSize="16sp" />
         <TextView
             android:id="@+id/safe_center_face_open_text"
             android:layout_width="wrap_content"
@@ -152,7 +152,7 @@
             android:paddingLeft="12dp"
             android:paddingTop="10dp"
             android:text="@string/settings_device_manager"
-            android:textSize="@dimen/content_normal_textsize" />
+            android:textSize="16sp" />
 
 
         <ImageView
@@ -190,7 +190,7 @@
             android:paddingLeft="12dp"
             android:paddingTop="10dp"
             android:text="@string/safe_center_finger_print"
-            android:textSize="@dimen/content_normal_textsize" />
+            android:textSize="16sp" />
 
         <com.inspur.emmcloud.widget.SwitchView
             android:id="@+id/safe_center_finger_switchview"

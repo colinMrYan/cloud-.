@@ -44,7 +44,7 @@ public class GroupInfoActivity extends BaseActivity {
     private LoadingDialog loadingDlg;
     private Group group;
 
-    @ViewInject(R.id.member_grid)
+    @ViewInject(R.id.gv_member)
     private NoScrollGridView memberGrid;
 
     @ViewInject(R.id.volume_member_text)

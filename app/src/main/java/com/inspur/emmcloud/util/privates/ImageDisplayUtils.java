@@ -78,6 +78,7 @@ public class ImageDisplayUtils implements ImagePickerLoader {
      */
     public void displayImageByTag(final ImageView imageView, String uri, final Integer defaultDrawableId) {
         if (StringUtils.isBlank(uri)){
+            imageView.setTag("");
             imageView.setImageResource(defaultDrawableId);
             return;
         }

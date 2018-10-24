@@ -125,7 +125,7 @@
     <string name="channel_group_name">群组名称</string>
     <string name="channel_group_image"> 群聊天图片</string>
     <string name="channel_group_file"> 群聊天文件</string>
-    <string name="channel_set_top"> 置顶聊天</string>
+    <string name="channel_set_top"> 置顶</string>
     <string name="message_without_interruption">消息免打扰</string>
     <string name="login_hint_text">用户名/邮箱/手机号</string>
     <string name="modify_group_name">更改群名称</string>
@@ -177,6 +177,9 @@
     <string name="no_chat_content">暂无聊天内容</string>
     <string name="new_function">新功能</string>
     <string name="app_update_function">当前版本不支持此功能请  立即升级  到最新版本</string>
+    <string name="chat_stick_on_top">置顶</string>
+    <string name="chat_remove">移除</string>
+    <string name="chat_remove_from_top">取消置顶</string>
 
     <!-- 新用户注册 -->
     <string name="new_user">新用户</string>
@@ -260,7 +263,7 @@
     <string name="chanel_cancel_top"> 取消置顶</string>
     <string name="creat_group">创建群组</string>
     <string name="creat_group_fail">群组创建失败</string>
-    <string name="all_group_member">全部群成员</string>
+    <string name="all_group_member">全部群成员(%1$d)</string>
     <string name="add_group_member">添加群成员 </string>
     <string name="channel_group">群组</string>
     <string name="group_member">群成员 </string>
@@ -292,6 +295,9 @@
     <string name="voice_call">语音通话</string>
     <string name="sure_to_resend_message">确认重新发送该消息?</string>
     <string name="message_type_drafts">[草稿]</string>
+    <string name="quit_group">退出群组</string>
+    <string name="quit_group_warning_text">确定要退出群组？</string>
+
 
     <!-- 会议卡片 -->
     <string name="meeting_has_confirmed">已确认</string>

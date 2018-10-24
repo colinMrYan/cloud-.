@@ -149,8 +149,8 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
             FlowLayout.LayoutParams params = new FlowLayout.LayoutParams(
                     LayoutParams.WRAP_CONTENT, DensityUtil.dip2px(
                     getApplicationContext(), LayoutParams.WRAP_CONTENT));
-            params.topMargin = DensityUtil.dip2px(getApplicationContext(), 3);
-            params.bottomMargin = params.topMargin;
+            params.topMargin = DensityUtil.dip2px(getApplicationContext(), 2);
+            params.bottomMargin =  params.topMargin;
             int piddingTop = DensityUtil.dip2px(getApplicationContext(), 1);
             int piddingLeft = DensityUtil.dip2px(getApplicationContext(), 5);
             searchEdit.setPadding(piddingLeft, piddingTop, piddingLeft, piddingTop);
@@ -197,7 +197,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
                 break;
         }
         notifyFlowLayoutDataChange(searchText);
-        if (getIntent().hasExtra("excludeContactList")) {
+        if (getIntent().hasExtra("excludeContactList")){
             excludeContactList = (List<Contact>) getIntent().getSerializableExtra("excludeContactList");
         }
     }
@@ -215,8 +215,8 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
             FlowLayout.LayoutParams params = new FlowLayout.LayoutParams(
                     LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
             params.rightMargin = DensityUtil.dip2px(getApplicationContext(), 5);
-            params.topMargin = DensityUtil.dip2px(getApplicationContext(), 3);
-            params.bottomMargin = params.topMargin;
+            params.topMargin = DensityUtil.dip2px(getApplicationContext(), 2);
+            params.bottomMargin =  params.topMargin;
             searchResultText.setLayoutParams(params);
             int piddingTop = DensityUtil.dip2px(getApplicationContext(), 1);
             int piddingLeft = DensityUtil.dip2px(getApplicationContext(), 5);
@@ -297,7 +297,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
             intent.setClass(getApplicationContext(), UserInfoActivity.class);
             startActivity(intent);
         } else {
-            intent.setClass(getApplicationContext(), MyApplication.getInstance().isV0VersionChat() ? ChannelV0Activity.class : ChannelActivity.class);
+            intent.setClass(getApplicationContext(), MyApplication.getInstance().isV0VersionChat()? ChannelV0Activity.class:ChannelActivity.class);
             intent.putExtra("title", searchModel.getName());
             intent.putExtra("cid", searchModel.getId());
             intent.putExtra("channelType", searchModel.getType());
@@ -315,8 +315,8 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
                 returnSelectData();
                 break;
             case R.id.layout:
-                if (searchEdit != null) {
-                    InputMethodUtils.display(ContactSearchMoreActivity.this, searchEdit);
+                if (searchEdit != null){
+                    InputMethodUtils.display(ContactSearchMoreActivity.this,searchEdit);
                 }
                 break;
             default:
@@ -374,7 +374,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
                             public void run() {
                                 searchContactList = ContactUserCacheUtils.getSearchContact(searchText,
                                         excludeContactList, 25);
-                                if (handler != null) {
+                                if (handler !=null){
                                     handler.sendEmptyMessage(REFRESH_CONTACT_DATA);
                                 }
                             }
@@ -507,7 +507,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
         } else {
             defaultIcon = R.drawable.icon_person_default;
             if (!searchModel.getId().equals("null")) {
-                icon = APIUri.getChannelImgUrl(MyApplication.getInstance(), searchModel.getId());
+                icon = APIUri.getChannelImgUrl(MyApplication.getInstance(),searchModel.getId());
             }
         }
         ImageDisplayUtils.getInstance().displayImage(

@@ -22,7 +22,6 @@ import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.chat.ChannelActivity;
 import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
-import com.inspur.emmcloud.ui.chat.ChannelVoiceCommunicationActivity;
 import com.inspur.emmcloud.ui.mine.card.CardPackageActivity;
 import com.inspur.emmcloud.ui.mine.feedback.FeedBackActivity;
 import com.inspur.emmcloud.ui.mine.myinfo.MyInfoActivity;
@@ -214,7 +213,7 @@ public class MoreFragment extends Fragment {
             ExpandableListView expandableListView = (ExpandableListView) parent;
             expandableListView.expandGroup(groupPosition);
             View view = new View(getActivity());
-            view.setLayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, DensityUtil.dip2px(MyApplication.getInstance(),10)));
+            view.setLayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, DensityUtil.dip2px(MyApplication.getInstance(),9)));
             return view;
         }
 
@@ -235,6 +234,8 @@ public class MoreFragment extends Fragment {
                 enterpriseText.setText(MyApplication.getInstance().getCurrentEnterprise().getName());
             }else {
                 convertView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_mine_common_item_view,null);
+                View lineView = convertView.findViewById(R.id.line);
+                lineView.setVisibility((childPosition == getChildrenCount(groupPosition)-1)?View.INVISIBLE:View.VISIBLE);
                 setViewByLayoutItem(convertView,layoutItem);
             }
             return convertView;

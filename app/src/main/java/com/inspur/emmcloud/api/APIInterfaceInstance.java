@@ -37,12 +37,13 @@ import com.inspur.emmcloud.bean.appcenter.webex.WebexMeeting;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
 import com.inspur.emmcloud.bean.chat.GetAllRobotsResult;
 import com.inspur.emmcloud.bean.chat.GetChannelListResult;
+import com.inspur.emmcloud.bean.chat.GetChannelMessagesResult;
+import com.inspur.emmcloud.bean.chat.GetConversationListResult;
 import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.bean.chat.GetFileUploadResult;
 import com.inspur.emmcloud.bean.chat.GetMsgCommentCountResult;
 import com.inspur.emmcloud.bean.chat.GetMsgCommentResult;
 import com.inspur.emmcloud.bean.chat.GetMsgResult;
-import com.inspur.emmcloud.bean.chat.GetChannelMessagesResult;
 import com.inspur.emmcloud.bean.chat.GetNewMsgsResult;
 import com.inspur.emmcloud.bean.chat.GetNewsImgResult;
 import com.inspur.emmcloud.bean.chat.GetNewsInstructionResult;
@@ -1049,137 +1050,84 @@ public class APIInterfaceInstance implements APIInterface {
     @Override
     public void returnKnowledgeListFail(String error, int errorCode) {
         // TODO Auto-generated method stub
-
     }
 
     @Override
     public void returnIsAdminSuccess(GetIsAdmin getIsAdmin) {
         // TODO Auto-generated method stub
-
     }
 
     @Override
     public void returnIsAdminFail(String error, int errorCode) {
         // TODO Auto-generated method stub
-
     }
 
-    /* (non-Javadoc)
-     * @see com.inspur.emmcloud.api.APIInterface#returnMeettingsSuccess(com.inspur.emmcloud.bean.work.GetMeetingsResult, boolean)
-     */
+
     @Override
-    public void returnMeetingsSuccess(GetMeetingsResult getMeetingsResult,
-                                      int page) {
-        // TODO Auto-generated method stub
-
+    public void returnMeetingsSuccess(GetMeetingsResult getMeetingsResult, int page) {
     }
 
-    /* (non-Javadoc)
-     * @see com.inspur.emmcloud.api.APIInterface#returnLanguageSuccess(com.inspur.emmcloud.bean.mine.GetLanguageResult)
-     */
+
     @Override
     public void returnLanguageSuccess(GetLanguageResult getLanguageResult) {
-        // TODO Auto-generated method stub
-
     }
 
-    /* (non-Javadoc)
-     * @see com.inspur.emmcloud.api.APIInterface#returnLanguageFail(java.lang.String)
-     */
+
     @Override
     public void returnLanguageFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
-
     }
 
-    /* (non-Javadoc)
-     * @see com.inspur.emmcloud.api.APIInterface#returnMeettingRoomsSuccess(com.inspur.emmcloud.bean.work.GetMeetingRoomsResult, boolean)
-     */
     @Override
     public void returnMeetingRoomsSuccess(
             GetMeetingRoomsResult getMeetingRoomsResult, boolean isFilte) {
-        // TODO Auto-generated method stub
-
     }
 
-
-    /* (non-Javadoc)
-     * @see com.inspur.emmcloud.api.APIInterface#returnFindSearchFail(java.lang.String)
-     */
     @Override
     public void returnFindSearchFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
-
     }
 
-    /* (non-Javadoc)
-     * @see com.inspur.emmcloud.api.APIInterface#returnFindMixSearchFail(java.lang.String)
-     */
     @Override
     public void returnFindMixSearchFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
-
     }
-
-
-    /* (non-Javadoc)
-     * @see com.inspur.emmcloud.api.APIInterface#returnMeettingListSuccess(com.inspur.emmcloud.bean.work.GetMeetingListResult, int)
-     */
     @Override
     public void returnMeetingListSuccess(
             GetMeetingListResult getMeetingListResult, String date) {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
     public void returnAllRobotsSuccess(GetAllRobotsResult getAllRobotsResult) {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
     public void returnAllRobotsFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
     public void returnRobotByIdSuccess(Robot robot) {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
     public void returnRobotByIdFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
-
     }
 
 
     @Override
-    public void returnUpdatePwdBySMSCodeSuccess(
-            GetUpdatePwdBySMSCodeBean getUpdatePwdBySMSCodeBean) {
-        // TODO Auto-generated method stub
-
+    public void returnUpdatePwdBySMSCodeSuccess(GetUpdatePwdBySMSCodeBean getUpdatePwdBySMSCodeBean) {
     }
 
     @Override
     public void returnUpdatePwdBySMSCodeFail(String error, int errorCode) {
         // TODO Auto-generated method stub
-
     }
 
     @Override
     public void returnGetAppTabsSuccess(GetAppMainTabResult getAppTabsResult) {
         // TODO Auto-generated method stub
-
     }
 
     @Override
     public void returnGetAppTabsFail(String error, int errorCode) {
         // TODO Auto-generated method stub
-
     }
 
     @Override
@@ -1203,25 +1151,21 @@ public class APIInterfaceInstance implements APIInterface {
     @Override
     public void returnAllAppsFail(String error, int errorCode) {
         // TODO Auto-generated method stub
-
     }
 
     @Override
     public void returnAllAppsFreshSuccess(GetAllAppResult getAllAppResult) {
         // TODO Auto-generated method stub
-
     }
 
     @Override
     public void returnAllAppsFreshFail(String error, int errorCode) {
         // TODO Auto-generated method stub
-
     }
 
     @Override
     public void returnAllAppsMoreSuccess(GetAllAppResult getAllAppResult) {
         // TODO Auto-generated method stub
-
     }
 
     @Override
@@ -1763,6 +1707,58 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
+    public void returnQuitChannelGroupSuccess() {
+    }
+
+    @Override
+    public void returnQuitChannelGroupSuccessFail(String error, int errorCode) {
+    }
+
+    @Override
+    public void returnConversationListSuccess(GetConversationListResult getConversationListResult) {
+    }
+
+    @Override
+    public void returnConversationListFail(String error, int errorCode) {
+    }
+
+    @Override
+    public void returnSetConversationStickSuccess(String id, boolean isStick) {
+    }
+
+    @Override
+    public void returnSetConversationStickFail(String error, int errorCode) {
+    }
+
+    @Override
+    public void returnSetConversationHideSuccess(String id) {
+    }
+
+    @Override
+    public void returnSetConversationHideFail(String error, int errorCode) {
+    }
+
+    @Override
+    public void returnAddConversationGroupMemberSuccess(List<String> uidList) {
+
+    }
+
+    @Override
+    public void returnAddConversationGroupMemberFail(String error, int errorCode) {
+
+    }
+
+    @Override
+    public void returnDelConversationGroupMemberSuccess(List<String> uidList) {
+
+    }
+
+    @Override
+    public void returnDelConversationGroupMemberFail(String error, int errorCode) {
+
+    }
+
+    @Override
     public void returnWebexMeetingListSuccess(GetWebexMeetingListResult getWebexMeetingListResult) {
     }
 
@@ -1801,4 +1797,5 @@ public class APIInterfaceInstance implements APIInterface {
     @Override
     public void returnRemoveWebexMeetingFail(String error, int errorCode) {
     }
+
 }

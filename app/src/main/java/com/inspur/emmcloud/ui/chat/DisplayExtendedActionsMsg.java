@@ -1,8 +1,6 @@
 package com.inspur.emmcloud.ui.chat;
 
 import android.content.Context;
-import android.content.Intent;
-import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -17,7 +15,8 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.bean.chat.Action;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.MsgContentExtendedActions;
-import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.emmcloud.bean.system.SimpleEventMessage;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
@@ -26,6 +25,8 @@ import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.NoScrollGridView;
 import com.inspur.emmcloud.widget.bubble.ArrowDirection;
 import com.inspur.emmcloud.widget.bubble.BubbleLayout;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
@@ -98,7 +99,7 @@ public class DisplayExtendedActionsMsg extends APIInterfaceInstance {
             singleActionLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    openAction(context, msgContentActions.getSingleAction());
+                    openAction(context, msgContentActions.getSingleAction().getTitle());
                 }
             });
         } else {
@@ -114,8 +115,7 @@ public class DisplayExtendedActionsMsg extends APIInterfaceInstance {
             actionGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Action action = actionList.get(position);
-                    openAction(context, action);
+                    openAction(context, actionList.get(position).getTitle());
                 }
             });
         }
@@ -125,13 +125,9 @@ public class DisplayExtendedActionsMsg extends APIInterfaceInstance {
     }
 
 
-    private void openAction(Context context, Action action) {
-        String actionTitle = action.getTitle();
-        if (!StringUtils.isBlank(actionTitle) && NetUtils.isNetworkConnected(context)){
-            LogUtils.jasonDebug("actionTitle="+actionTitle);
-            Intent intent = new Intent("com.inspur.msg.send");
-            intent.putExtra("content",actionTitle);
-            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+    private void openAction(Context context, String actionContent) {
+        if (!StringUtils.isBlank(actionContent) && NetUtils.isNetworkConnected(context)){
+            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SEND_ACTION_CONTENT_MESSAGE,actionContent));
         }
 
     }
