@@ -25,6 +25,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -103,6 +104,7 @@ public class ImpFragment extends Fragment {
     private ImpCallBackInterface impCallBackInterface;
     private int functionLayoutWidth = -1;
     private int webFunctionLayoutWidth = -1;
+    private ProgressBar progressbar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -147,6 +149,14 @@ public class ImpFragment extends Fragment {
         frameLayout = (FrameLayout) rootView.findViewById(Res.getWidgetID("videoContainer"));
         loadFailLayout = (LinearLayout) rootView.findViewById(Res.getWidgetID("load_error_layout"));
         webView = (ImpWebView) rootView.findViewById(Res.getWidgetID("webview"));
+        progressbar = new ProgressBar(getActivity(), null, android.R.attr.progressBarStyleHorizontal);
+        progressbar.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+                DensityUtil.dip2px(MyApplication.getInstance(), 3)));
+        //显示header加载进度条
+        Drawable drawable = getResources().getDrawable(
+                R.drawable.imp_progress_bar_states);
+        progressbar.setProgressDrawable(drawable);
+        webView.addView(progressbar);
         headerText = (TextView) rootView.findViewById(Res.getWidgetID("header_text"));
         functionLayout = (RelativeLayout) rootView.findViewById(Res.getWidgetID("function_layout"));
         webFunctionLayout = (LinearLayout) rootView.findViewById(Res.getWidgetID("ll_web_function"));
@@ -154,7 +164,7 @@ public class ImpFragment extends Fragment {
             rootView.findViewById(R.id.back_layout).setVisibility(View.GONE);
             rootView.findViewById(R.id.imp_close_btn).setVisibility(View.GONE);
         }
-        showLoadingDlg(getString(Res.getStringID("@string/loading_text")));
+//        showLoadingDlg(getString(Res.getStringID("@string/loading_text")));
         if (!StringUtils.isBlank(getArguments().getString("help_url"))) {
             String helpUrl = getArguments().getString("help_url");
             if (!StringUtils.isBlank(helpUrl)) {
@@ -495,9 +505,19 @@ public class ImpFragment extends Fragment {
                 ImpFragment.this.dropItemTitleList = dropItemTitleList;
                 setHeaderTitleTextDropImg();
             }
-        };
 
-    }
+            @Override
+            public void onProgressChanged(int newProgress) {
+                if (progressbar.getVisibility() == View.VISIBLE) {
+                    progressbar.setProgress(newProgress);
+                    if (newProgress == 100) {
+                        progressbar.setVisibility(View.GONE);
+                    }
+                }
+            }
+
+        };
+        }
 
     private void setHeaderTitleTextDropImg() {
         boolean isDropTitlePopShow = (dropTitlePopupWindow != null && dropTitlePopupWindow.isShowing());
