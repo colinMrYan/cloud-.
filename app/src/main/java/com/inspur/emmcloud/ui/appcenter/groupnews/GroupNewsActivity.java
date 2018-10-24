@@ -118,7 +118,7 @@ public class GroupNewsActivity extends BaseFragmentActivity implements
 		//获取PagerSlidingTabStrip，并初始化设置
 		PagerSlidingTabStrip pagerSlidingTabStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
 		pagerSlidingTabStrip.setDividerColor(getResources().getColor(R.color.content_border));
-		pagerSlidingTabStrip.setIndicatorColor(Color.parseColor("#0F7BCA"));
+		pagerSlidingTabStrip.setIndicatorColor(Color.parseColor("#00000000"));
 		pagerSlidingTabStrip.setTextSize(17);
 		pagerSlidingTabStrip.setTextColorStateList(R.color.news_viewpager_tab_text_color);
 		pagerSlidingTabStrip.setOnPageChangeListener(this);
