@@ -56,7 +56,7 @@ public class RobotInfoActivity extends BaseActivity implements OnStateChangedLis
 		functionIntroductionText = (TextView) findViewById(R.id.function_introduction_text);
 		id = getIntent().getStringExtra("uid");
 		cid = getIntent().getStringExtra("cid");
-		setTopSwitch = (SwitchView) findViewById(R.id.settop_switch);
+		setTopSwitch = (SwitchView) findViewById(R.id.sv_stick);
 		boolean isSetTop = ChannelOperationCacheUtils.isChannelSetTop(
 				this, cid);
 		setTopSwitch.setOpened(isSetTop);

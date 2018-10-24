@@ -110,7 +110,8 @@
             android:id="@+id/meeting_my_common_office_listview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:divider="#33000000"
+            android:dividerHeight="0.5px"
+                android:divider="@color/color_list_divider"
                 android:listSelector="#00000000"/>
 <!-- 
         <com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout

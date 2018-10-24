@@ -26,6 +26,11 @@ public class MatheSet {
         this.end = end;
     }
 
+    public MatheSet(Long start) {
+        this.start = start;
+        this.end = start;
+    }
+
     @Override
     public String toString() {
         return "{" + start + ":" + end + "}";

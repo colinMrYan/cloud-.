@@ -58,6 +58,7 @@ import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils.OnCreateDirectChannelListener;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
+import com.inspur.emmcloud.util.privates.ImmersionStateBarUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
@@ -105,6 +106,7 @@ public class NewsWebDetailActivity extends BaseActivity {
         initData();
         initViews();
         EventBus.getDefault().register(this);
+        ImmersionStateBarUtils.setImmersiveStateBar(this);
     }
 
     /**
@@ -419,7 +421,7 @@ public class NewsWebDetailActivity extends BaseActivity {
      */
     private void showDialog() {
         View view = getLayoutInflater().inflate(R.layout.app_news_choose_dialog, null);
-        dialog = new Dialog(this, R.style.transparentFrameWindowStyle);
+          dialog = new Dialog(this, R.style.transparentFrameWindowStyle);
         dialog.setContentView(view, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT));
         initDialogViews();

@@ -89,7 +89,20 @@ public class ChannelCacheUtils {
             // TODO: handle exception
             e.printStackTrace();
         }
+    }
 
+    /**
+     * 删除频道
+     * @param context
+     * @param cid
+     */
+    public static void deleteChannel(Context context,String cid){
+        try {
+            DbCacheUtils.getDb(context).delete(Channel.class,WhereBuilder.b("cid","=",cid));
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
     }
 
 
@@ -104,7 +117,10 @@ public class ChannelCacheUtils {
         String type = "";
         try {
             if (!StringUtils.isBlank(cid)) {
-                type = DbCacheUtils.getDb(context).findById(Channel.class, cid).getType();
+                Channel channel = DbCacheUtils.getDb(context).findById(Channel.class, cid);
+                if (channel != null){
+                    type = channel.getType();
+                }
             }
         } catch (Exception e) {
             // TODO: handle exception

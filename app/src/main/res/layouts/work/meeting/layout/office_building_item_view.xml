@@ -33,11 +33,4 @@
             android:src="@drawable/icon_mession_checkmark"
              />
 
-    <View
-        android:id="@+id/cal_bottom_line"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_below="@id/building_textView"
-        android:background="#33000000" />
-
 </RelativeLayout>

@@ -173,6 +173,9 @@
     <string name="not_support_upload">Does not support file upload without suffix </string>
     <string name="new_function">New</string>
     <string name="app_update_function">This feature is not supported by the current version, please upgrade to the latest version</string>
+    <string name="chat_stick_on_top">Stick on Top</string>
+    <string name="chat_remove">Delete</string>
+    <string name="chat_remove_from_top">Remove from Top</string>
     <!-- 新添加部分 -->
 
 
@@ -253,7 +256,7 @@
     <string name="chanel_cancel_top"> Unstick</string>
     <string name="creat_group">Create Group</string>
     <string name="creat_group_fail">Group creation failed</string>
-    <string name="all_group_member">All Members</string>
+    <string name="all_group_member">All Members(%1$d)</string>
     <string name="add_group_member">Add Member </string>
     <string name="channel_group">Group</string>
     <string name="group_member">Members </string>
@@ -286,6 +289,8 @@
     <string name="voice_call">Voice Call</string>
     <string name="sure_to_resend_message">Sure to resend this message?</string>
     <string name="message_type_drafts">[Drafts]</string>
+    <string name="quit_group">Quit Group</string>
+    <string name="quit_group_warning_text">Confirm to leave team?</string>
 
 
     <!-- 会议卡片 -->

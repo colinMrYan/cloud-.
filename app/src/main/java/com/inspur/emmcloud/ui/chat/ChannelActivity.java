@@ -30,6 +30,7 @@ import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
 import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.bean.system.EventMessage;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
+import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.interf.ProgressCallback;
@@ -91,11 +92,11 @@ import static android.R.attr.path;
 @ContentView(R.layout.activity_channel)
 public class ChannelActivity extends MediaPlayBaseActivity {
 
-    private static final int HAND_CALLBACK_MESSAGE = 1;
-    private static final int GELLARY_RESULT = 2;
-    private static final int CAMERA_RESULT = 3;
-    private static final int MENTIONS_RESULT = 5;
-    private static final int CHOOSE_FILE = 4;
+    private static final int REQUEST_QUIT_CHANNELGROUP = 1;
+    private static final int REQUEST_GELLARY = 2;
+    private static final int REQUEST_CAMERA = 3;
+    private static final int RQQUEST_CHOOSE_FILE = 4;
+    private static final int REQUEST_MENTIONS = 5;
     @ViewInject(R.id.msg_list)
     private RecycleViewForSizeChange msgListView;
 
@@ -118,7 +119,6 @@ public class ChannelActivity extends MediaPlayBaseActivity {
     private ChannelMessageAdapter adapter;
     private Handler handler;
     private boolean isSpecialUser = false; //小智机器人进行特殊处理
-    private BroadcastReceiver sendActionMsgReceiver;
     private BroadcastReceiver refreshNameReceiver;
 
     @Override
@@ -127,7 +127,6 @@ public class ChannelActivity extends MediaPlayBaseActivity {
         EventBus.getDefault().register(this);
         init();
         registeRefreshNameReceiver();
-        registeSendActionMsgReceiver();
         recordUserClickChannel();
     }
 
@@ -301,20 +300,12 @@ public class ChannelActivity extends MediaPlayBaseActivity {
         LocalBroadcastManager.getInstance(this).registerReceiver(refreshNameReceiver, filter);
     }
 
-    private void registeSendActionMsgReceiver() {
-        if (sendActionMsgReceiver == null) {
-            sendActionMsgReceiver = new BroadcastReceiver() {
-                @Override
-                public void onReceive(Context context, Intent intent) {
-                    String content = intent.getStringExtra("content");
-                    if (!StringUtils.isBlank(content)) {
-                        sendMessageWithText(content, true, null);
-                    }
-                }
-            };
-            IntentFilter filter = new IntentFilter();
-            filter.addAction("com.inspur.msg.send");
-            LocalBroadcastManager.getInstance(this).registerReceiver(sendActionMsgReceiver, filter);
+    //接收Action卡片的Action点击事件
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiveSendAcitionContentMessage(SimpleEventMessage eventMessage) {
+        if (eventMessage.getAction() == Constant.EVENTBUS_TAG_SEND_ACTION_CONTENT_MESSAGE){
+            String actionContent = (String) eventMessage.getMessageObj();
+            sendMessageWithText(actionContent, true, null);
         }
     }
 
@@ -495,42 +486,49 @@ public class ChannelActivity extends MediaPlayBaseActivity {
                                     final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
-            // 文件管理器返回
-            if (requestCode == CHOOSE_FILE
-                    && NetUtils.isNetworkConnected(MyApplication.getInstance())) {
-                String filePath = GetPathFromUri4kitkat.getPathByUri(MyApplication.getInstance(), data.getData());
-                File file = new File(filePath);
-                if (StringUtils.isBlank(FileUtils.getSuffix(file))) {
-                    ToastUtils.show(MyApplication.getInstance(),
-                            getString(R.string.not_support_upload));
-                } else {
-                    combinAndSendMessageWithFile(filePath, Message.MESSAGE_TYPE_FILE_REGULAR_FILE);
-                }
-                //拍照返回
-            } else if (requestCode == CAMERA_RESULT
-                    ) {
-                String imgPath = data.getExtras().getString(MyCameraActivity.OUT_FILE_PATH);
-                try {
-                    File file = new Compressor(ChannelActivity.this).setMaxHeight(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setMaxWidth(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setQuality(90).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
-                            .compressToFile(new File(imgPath));
-                    imgPath = file.getAbsolutePath();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                combinAndSendMessageWithFile(imgPath, Message.MESSAGE_TYPE_MEDIA_IMAGE);
-                //拍照后图片编辑返回
-            } else if (requestCode == MENTIONS_RESULT) {
-                // @返回
-                String result = data.getStringExtra("searchResult");
-                String uid = JSONUtils.getString(result, "uid", null);
-                String name = JSONUtils.getString(result, "name", null);
-                boolean isInputKeyWord = data.getBooleanExtra("isInputKeyWord", false);
-                chatInputMenu.addMentions(uid, name, isInputKeyWord);
+            switch (requestCode){
+                case RQQUEST_CHOOSE_FILE:
+                    if (NetUtils.isNetworkConnected(MyApplication.getInstance())){
+                        String filePath = GetPathFromUri4kitkat.getPathByUri(MyApplication.getInstance(), data.getData());
+                        File file = new File(filePath);
+                        if (StringUtils.isBlank(FileUtils.getSuffix(file))) {
+                            ToastUtils.show(MyApplication.getInstance(),
+                                    getString(R.string.not_support_upload));
+                        } else {
+                            combinAndSendMessageWithFile(filePath, Message.MESSAGE_TYPE_FILE_REGULAR_FILE);
+                        }
+                    }
+                    break;
+                case REQUEST_CAMERA:
+                    if (NetUtils.isNetworkConnected(MyApplication.getInstance())){
+                        String imgPath = data.getExtras().getString(MyCameraActivity.OUT_FILE_PATH);
+                        try {
+                            File file = new Compressor(ChannelActivity.this).setMaxHeight(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setMaxWidth(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setQuality(90).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
+                                    .compressToFile(new File(imgPath));
+                            imgPath = file.getAbsolutePath();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        combinAndSendMessageWithFile(imgPath, Message.MESSAGE_TYPE_MEDIA_IMAGE);
+                    }
+                    break;
+                case REQUEST_MENTIONS:
+                    // @返回
+                    String result = data.getStringExtra("searchResult");
+                    String uid = JSONUtils.getString(result, "uid", null);
+                    String name = JSONUtils.getString(result, "name", null);
+                    boolean isInputKeyWord = data.getBooleanExtra("isInputKeyWord", false);
+                    chatInputMenu.addMentions(uid, name, isInputKeyWord);
+                    break;
+                case REQUEST_QUIT_CHANNELGROUP:
+                    MyApplication.getInstance().setCurrentChannelCid("");
+                    finish();
+                    break;
             }
         } else {
             // 图库选择图片返回
             if (resultCode == ImagePicker.RESULT_CODE_ITEMS)
-                if (data != null && requestCode == GELLARY_RESULT) {
+                if (data != null && requestCode == REQUEST_GELLARY) {
                     ArrayList<ImageItem> imageItemList = (ArrayList<ImageItem>) data
                             .getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
                     for (int i = 0; i < imageItemList.size(); i++) {
@@ -668,10 +666,10 @@ public class ChannelActivity extends MediaPlayBaseActivity {
                         uiMessageList.remove(index);
                         uiMessageList.add(index, new UIMessage(receivedWSMessage));
                         //如果是图片类型消息的话不再重新刷新消息体，防止图片重新加载
-                        if (receivedWSMessage.getType().equals(Message.MESSAGE_TYPE_MEDIA_IMAGE)) {
-                            setMessageSendSuccess(index, receivedWSMessage);
+                        if (receivedWSMessage.getType().equals(Message.MESSAGE_TYPE_MEDIA_IMAGE)){
+                            setMessageSendSuccess(index,receivedWSMessage);
                             adapter.setMessageList(uiMessageList);
-                        } else {
+                        }else {
                             adapter.setMessageList(uiMessageList);
                             adapter.notifyItemChanged(index);
                         }
@@ -691,16 +689,16 @@ public class ChannelActivity extends MediaPlayBaseActivity {
      *
      * @param index
      */
-    private void setMessageSendSuccess(int index, Message message) {
-        UIMessage uiMessage = adapter.getItemData(index);
+    private void setMessageSendSuccess(int index,Message message){
+        UIMessage uiMessage =adapter.getItemData(index);
         uiMessage.setMessage(message);
         uiMessage.setId(message.getId());
         uiMessage.setSendStatus(1);
         int firstItemPosition = linearLayoutManager.findFirstVisibleItemPosition();
-        if (index - firstItemPosition >= 0) {
+        if (index - firstItemPosition >=0){
             View view = msgListView.getChildAt(index - firstItemPosition);
-            if (null != msgListView.getChildViewHolder(view)) {
-                ChannelMessageAdapter.ViewHolder holder = (ChannelMessageAdapter.ViewHolder) msgListView.getChildViewHolder(view);
+            if (null != msgListView.getChildViewHolder(view)){
+                ChannelMessageAdapter.ViewHolder holder = (ChannelMessageAdapter.ViewHolder)msgListView.getChildViewHolder(view);
                 holder.sendStatusLayout.setVisibility(View.INVISIBLE);
             }
 
@@ -838,18 +836,16 @@ public class ChannelActivity extends MediaPlayBaseActivity {
     /**
      * 设置当前频道草稿箱
      */
-    private void setChatDrafts() {
+    private void setChatDrafts(){
         String chatDraftsNew = chatInputMenu.getInputContent().trim();
-        String chatDraftsOld = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), MyAppConfig.getChannelDrafsPreKey(cid), "").trim();
-        if (!chatDraftsNew.equals(chatDraftsOld)) {
-            if (!StringUtils.isBlank(chatDraftsNew)) {
-                PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), MyAppConfig.getChannelDrafsPreKey(cid), chatDraftsNew);
-            } else {
-                PreferencesByUserAndTanentUtils.clearDataByKey(MyApplication.getInstance(), MyAppConfig.getChannelDrafsPreKey(cid));
+        String chatDraftsOld = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), MyAppConfig.getChannelDrafsPreKey(cid),"").trim();
+        if (!chatDraftsNew.equals(chatDraftsOld)){
+            if (!StringUtils.isBlank(chatDraftsNew)){
+                PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(),MyAppConfig.getChannelDrafsPreKey(cid),chatDraftsNew);
+            }else {
+                PreferencesByUserAndTanentUtils.clearDataByKey(MyApplication.getInstance(),MyAppConfig.getChannelDrafsPreKey(cid));
             }
-            Intent mIntent = new Intent("message_notify");
-            mIntent.putExtra("command", "refresh_adapter");
-            LocalBroadcastManager.getInstance(this).sendBroadcast(mIntent);
+            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_REFRESH_CONVERSATION_ADAPTER));
         }
     }
 
@@ -860,8 +856,9 @@ public class ChannelActivity extends MediaPlayBaseActivity {
         Bundle bundle = new Bundle();
         bundle.putString("cid", cid);
         if (channel.getType().equals("GROUP")) {
-            IntentUtils.startActivity(ChannelActivity.this,
-                    ChannelInfoActivity.class, bundle);
+            Intent intent = new Intent(this,ChannelInfoActivity.class);
+            intent.putExtras(bundle);
+            startActivityForResult(intent, REQUEST_QUIT_CHANNELGROUP);
         } else if (channel.getType().equals("SERVICE")) {
             String botUid = DirectChannelUtils.getRobotInfo(getApplicationContext(),
                     channel.getTitle()).getId();
@@ -966,10 +963,6 @@ public class ChannelActivity extends MediaPlayBaseActivity {
         super.onDestroy();
         if (handler != null) {
             handler = null;
-        }
-        if (sendActionMsgReceiver != null) {
-            LocalBroadcastManager.getInstance(this).unregisterReceiver(sendActionMsgReceiver);
-            sendActionMsgReceiver = null;
         }
         if (refreshNameReceiver != null) {
             LocalBroadcastManager.getInstance(this).unregisterReceiver(refreshNameReceiver);

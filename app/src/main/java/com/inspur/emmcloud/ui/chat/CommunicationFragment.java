@@ -50,7 +50,6 @@ import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.push.WebSocketPush;
-import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.util.common.IntentUtils;
@@ -257,7 +256,7 @@ public class CommunicationFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        ((IndexActivity) getActivity()).openTargetFragment();
+        EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_OPEN_DEFALT_TAB,null));
     }
 
     @Override
@@ -715,11 +714,28 @@ public class CommunicationFragment extends Fragment {
                         adapter.notifyDataSetChanged();
                     }
                     break;
+                case "removeChannelFromUI":
+                    String deleteCid = intent.getExtras().getString("cid");
+                    ChannelCacheUtils.deleteChannel(MyApplication.getInstance(),deleteCid);
+                    removeChannelFromUI(deleteCid);
+                    break;
                 default:
                     break;
             }
         }
 
+    }
+
+    /**
+     * 从ui中移除这个频道
+     * @param cid
+     */
+    private void removeChannelFromUI(String cid){
+        Channel removeChannel = new Channel(cid);
+        if (displayChannelList.contains(removeChannel)){
+            displayChannelList.remove(removeChannel);
+            adapter.notifyDataSetChanged();
+        }
     }
 
     private void showSocketStatusInTitle(String socketStatus) {

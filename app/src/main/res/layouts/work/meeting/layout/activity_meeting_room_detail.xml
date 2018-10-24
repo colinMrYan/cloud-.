@@ -120,9 +120,9 @@
             <View
                 android:id="@+id/meettingofroom_card_line"
                 android:layout_width="match_parent"
-                android:layout_height="0.5dp"
+                android:layout_height="0.5px"
                 android:layout_below="@id/meettingofroom_up_layout"
-                android:background="#33000000"
+                android:background="@color/color_list_divider"
                 android:visibility="gone" />
 
             <ImageView
@@ -195,9 +195,9 @@
         <View
             android:id="@+id/view1"
             android:layout_width="match_parent"
-            android:layout_height="0.5dp"
+            android:layout_height="0.5px"
             android:layout_below="@id/meettingsofroom_layout"
-            android:background="#33000000" />
+            android:background="@color/color_list_divider" />
 
         <RelativeLayout
             android:id="@+id/date_layout"
@@ -280,18 +280,11 @@
             </RelativeLayout>
         </RelativeLayout>
 
-        <View
-            android:id="@+id/view2"
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_below="@id/date_layout"
-            android:background="#33000000" />
-
         <android.support.v4.view.ViewPager
             android:id="@+id/viewpager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/view2"
+            android:layout_below="@id/date_layout"
             android:background="@color/content_bg"
             android:paddingTop="5dp" />
     </RelativeLayout>

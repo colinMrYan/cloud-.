@@ -50,11 +50,6 @@
         android:orientation="vertical"
         android:paddingTop="10dp">
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@color/color_list_divider" />
-
         <RelativeLayout
             android:id="@+id/setting_gesture_layout"
             android:layout_width="match_parent"
@@ -71,7 +66,7 @@
                 android:paddingBottom="10dp"
                 android:paddingTop="10dp"
                 android:text="@string/setting_safe_center"
-                android:textSize="@dimen/content_normal_textsize" />
+                android:textSize="16sp" />
 
             <ImageView
                 android:id="@+id/about_img"
@@ -84,20 +79,10 @@
                 android:src="@drawable/icon_arrow_right" />
         </RelativeLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@color/color_list_divider" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_marginTop="10dp"
-            android:background="@color/color_list_divider" />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:background="#ffffff"
             android:orientation="vertical">
 
@@ -117,7 +102,7 @@
                     android:paddingBottom="10dp"
                     android:paddingTop="10dp"
                     android:text="@string/settings_language"
-                    android:textSize="@dimen/content_normal_textsize" />
+                    android:textSize="16sp" />
 
                 <ImageView
                     android:id="@+id/msg_language_flag_img"
@@ -139,7 +124,7 @@
                     android:paddingTop="10dp"
                     android:text="@string/follow_system"
                     android:textColor="@color/set_protected"
-                    android:textSize="@dimen/content_normal_textsize" />
+                    android:textSize="16sp" />
 
                 <ImageView
                     android:id="@+id/msg_languagechg_img"
@@ -154,7 +139,7 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="0.5dp"
+                android:layout_height="0.5px"
                 android:background="@color/color_list_divider" />
 
             <RelativeLayout
@@ -173,7 +158,7 @@
                     android:paddingBottom="10dp"
                     android:paddingTop="10dp"
                     android:text="@string/settings_clear_cache"
-                    android:textSize="@dimen/content_normal_textsize" />
+                    android:textSize="16sp" />
 
 
                 <ImageView
@@ -191,7 +176,7 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="0.5dp"
+            android:layout_height="0.5px"
             android:background="@color/color_list_divider" />
 
         <RelativeLayout
@@ -207,7 +192,7 @@
                 android:paddingBottom="10dp"
                 android:paddingTop="10dp"
                 android:text="@string/web_app_auto_rotate"
-                android:textSize="@dimen/content_normal_textsize" />
+                android:textSize="16sp" />
 
             <com.inspur.emmcloud.widget.SwitchView
                 android:id="@+id/web_auto_rotate_switch"
@@ -219,7 +204,7 @@
         </RelativeLayout>
         <View
             android:layout_width="match_parent"
-            android:layout_height="0.5dp"
+            android:layout_height="0.5px"
             android:background="@color/color_list_divider" />
 
         <RelativeLayout
@@ -235,7 +220,7 @@
                 android:paddingBottom="10dp"
                 android:paddingTop="10dp"
                 android:text="@string/run_background"
-                android:textSize="@dimen/content_normal_textsize" />
+                android:textSize="16sp" />
 
             <com.inspur.emmcloud.widget.SwitchView
                 android:id="@+id/background_run_switch"
@@ -249,7 +234,7 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="0.5dp"
+            android:layout_height="0.5px"
             android:background="@color/color_list_divider" />
 
         <RelativeLayout
@@ -267,7 +252,7 @@
                 android:paddingBottom="10dp"
                 android:paddingTop="10dp"
                 android:text="@string/voice_word_setting"
-                android:textSize="@dimen/content_normal_textsize" />
+                android:textSize="16sp" />
 
             <com.inspur.emmcloud.widget.SwitchView
                 android:id="@+id/switch_voice_word"
@@ -282,7 +267,7 @@
         <View
             android:id="@+id/v_voice_word_line"
             android:layout_width="match_parent"
-            android:layout_height="0.5dp"
+            android:layout_height="0.5px"
             android:visibility="gone"
             android:background="@color/color_list_divider" />
 
@@ -293,13 +278,6 @@
             android:layout_marginTop="10dp"
             android:background="@drawable/text_layout_selector"
             android:onClick="onClick">
-
-            <!-- 细线 -->
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:background="@color/color_list_divider" />
 
             <TextView
                 android:id="@+id/signout_text"
@@ -312,14 +290,9 @@
                 android:paddingTop="10dp"
                 android:text="@string/quit_check"
                 android:textColor="@color/set_textColor"
-                android:textSize="@dimen/content_normal_textsize" />
+                android:textSize="16sp" />
         </RelativeLayout>
-        <!-- 细线 -->
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@color/color_list_divider" />
     </LinearLayout>
 
 </RelativeLayout>

@@ -354,6 +354,14 @@ public class APIUri {
         return channelUrl;
     }
 
+    /**
+     * 获取chat v1 channel base url
+     * @return
+     */
+    public static String getECMChatConversationBaseUrl(){
+        return getECMChatUrl()+"/api/v1";
+    }
+
 
 
 
@@ -546,6 +554,48 @@ public class APIUri {
      */
     public static String getUpdateChannelGroupNameUrl(String cid){
         return  getECMChatChannelUrl()+"/channel?cid="+cid;
+    }
+
+    /**
+     * 获取退出群聊url
+     * @param cid
+     * @return
+     */
+    public static String getQuitChannelGroupUrl(String cid){
+        return  getECMChatChannelUrl()+"/channel/group/"+cid+"/participation";
+    }
+
+    /**
+     * 获取会话列表
+     * @return
+     */
+    public static String getConversationListUrl(){
+        return   getECMChatConversationBaseUrl()+"/channel";
+    }
+
+    /**
+     * 设置会话是否置顶
+     * @return
+     */
+    public static String getConversationSetStick(String id){
+        return getECMChatConversationBaseUrl()+"/channel/"+id+"/focus";
+    }
+
+    /**
+     * 设置会话是否可见
+     * @return
+     */
+    public static String getConversationSetHide(String id){
+        return getECMChatConversationBaseUrl()+"/channel/"+id+"/visuality";
+    }
+
+    /**
+     * 修改群组成员
+     * @param id
+     * @return
+     */
+    public static String getModifyGroupMemberUrl(String id){
+        return  getECMChatConversationBaseUrl()+"/channel/group/"+id+"/member";
     }
     /**************************************************应用和应用中心********************************************************************/
 
