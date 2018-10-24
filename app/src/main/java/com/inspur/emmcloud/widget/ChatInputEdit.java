@@ -166,27 +166,6 @@ public class ChatInputEdit extends EditText {
                 return false;
             }
         });
-//        this.setCustomSelectionActionModeCallback(new ActionMode.Callback() {
-//            @Override
-//            public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
-//                return true;
-//            }
-//
-//            @Override
-//            public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
-//                return false;
-//            }
-//
-//            @Override
-//            public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
-//                return false;
-//            }
-//
-//            @Override
-//            public void onDestroyActionMode(ActionMode actionMode) {
-//
-//            }
-//        });
     }
 
     /**
