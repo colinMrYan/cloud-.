@@ -1048,7 +1048,7 @@
     <string name="corrected_word_input">[Correcting]</string>
     <string name="voice_word_voice">Voice</string>
     <string name="voice_word_word">Word</string>
-    <string name="voice_word_tran">Voice to text</string>
+    <string name="voice_word_tran">Sending text in speech</string>
     <string name="voice_word_setting">Automatic speech recognition</string>
     <string name="voice_audio_record_unavailiable">The current recording device is not available. Please check whether the recording permissions are enabled.</string>
 </resources>
