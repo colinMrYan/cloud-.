@@ -5,7 +5,6 @@ import com.inspur.emmcloud.bean.contact.Contact;
 import com.inspur.emmcloud.bean.contact.ContactOrg;
 import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 
@@ -95,23 +94,18 @@ public class ContactOrgCacheUtils {
         ContactOrg contactOrg = null;
         try {
             String contactOrgRootId = getContactOrgRootId();
-            LogUtils.jasonDebug(" getContactOrgRootId()="+ getContactOrgRootId());
             if (!StringUtils.isBlank(contactOrgRootId)) {
-                LogUtils.jasonDebug(" 00000");
                 contactOrg = DbCacheUtils.getDb().findById(ContactOrg.class, contactOrgRootId);
             } else {
-                LogUtils.jasonDebug(" 11111");
                 contactOrg = DbCacheUtils.getDb().selector(ContactOrg.class).where(
                         "parentId", "=", "root").findFirst();
             }
 
-            LogUtils.jasonDebug(" count="+DbCacheUtils.getDb().selector(ContactOrg.class).count());
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
         }
 
-        LogUtils.jasonDebug(" contactOr=null============="+(contactOrg== null));
         return contactOrg;
     }
 

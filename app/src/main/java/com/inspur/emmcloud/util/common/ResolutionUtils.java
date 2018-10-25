@@ -1,8 +1,14 @@
 package com.inspur.emmcloud.util.common;
 
 import android.app.Activity;
+import android.content.res.Resources;
 import android.util.DisplayMetrics;
 import android.view.Display;
+import android.view.KeyCharacterMap;
+import android.view.KeyEvent;
+import android.view.ViewConfiguration;
+
+import com.inspur.emmcloud.MyApplication;
 
 import java.lang.reflect.Method;
 
@@ -83,5 +89,22 @@ public class ResolutionUtils {
         return dpi;
     }
 
-
+	/**
+	 * 获取navigationbar 的高度
+	 * @return
+	 */
+	public static int getNavigationBarHeight() {
+		boolean hasMenuKey = ViewConfiguration.get(MyApplication.getInstance()).hasPermanentMenuKey();
+		boolean hasBackKey = KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_BACK);
+		//判断是否有虚拟按钮
+		if (!hasMenuKey) {
+			Resources resources = MyApplication.getInstance().getResources();
+			int resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android");
+			//获取NavigationBar的高度
+			int height = resources.getDimensionPixelSize(resourceId);
+			return height;
+		} else {
+			return 0;
+		}
+	}
 }

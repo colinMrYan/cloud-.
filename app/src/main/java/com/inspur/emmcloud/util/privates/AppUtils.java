@@ -403,6 +403,11 @@ public class AppUtils {
         return AppUtils.GetChangShang().toLowerCase().startsWith("huawei");
     }
 
+
+    public static boolean getIsXiaoMi(){
+        return AppUtils.GetChangShang().toLowerCase().startsWith("xiaomi");
+    }
+
     /**
      * 获取手机型号如华为下某型号（MHA-AL00）
      *

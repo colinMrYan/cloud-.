@@ -3,6 +3,8 @@ package com.inspur.emmcloud.util.common;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Rect;
+import android.os.Build;
+import android.provider.Settings;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
@@ -10,6 +12,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.util.privates.AppUtils;
 
 /**
  * 隐藏输入法弹出框
@@ -52,16 +55,25 @@ public class InputMethodUtils {
     }
 
     public static boolean isSoftInputShow(Activity activity) {
-        return InputMethodUtils.getSupportSoftInputHeight(activity) != 0;
+        return InputMethodUtils.getSupportSoftInputHeight(activity) > 0;
     }
 
     public static int getSupportSoftInputHeight(Activity activity) {
+
         Rect r = new Rect();
         activity.getWindow().getDecorView()
                 .getWindowVisibleDisplayFrame(r);
         DisplayMetrics displayMetrics = new DisplayMetrics();
         activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int screenHeight = displayMetrics.heightPixels;
+        //消息手机需要特殊处理：如果小米手机隐藏了NavigationBar，就在获取到的高度基础上加上NavigationBar的高度
+        if (AppUtils.getIsXiaoMi() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            boolean isHideNavigationBar = Settings.Global.getInt(activity.getContentResolver(), "force_fsg_nav_bar", 0) != 0;
+            if (isHideNavigationBar) {
+                int navigationBarHeight = ResolutionUtils.getNavigationBarHeight();
+                screenHeight = screenHeight + navigationBarHeight;
+            }
+        }
         int softInputHeight = screenHeight - r.bottom;
         if (softInputHeight < 0) {
             Log.w("EmotionInputDetector",
