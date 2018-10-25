@@ -1,7 +1,6 @@
 package com.inspur.emmcloud.adapter;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -71,9 +70,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
     public void onBindViewHolder(ViewHolder holder, int position) {
         UIConversation uiConversation = uiConversationList.get(position);
         holder.titleText.setText(uiConversation.getTitle());
-        holder.titleText.getPaint().setFakeBoldText(uiConversation.getUnReadCount()>0);
         holder.timeText.setText(TimeUtils.getDisplayTime(MyApplication.getInstance(), uiConversation.getLastUpdate()));
-        holder.timeText.setTextColor(uiConversation.getUnReadCount()>0 ? context.getResources().getColor(R.color.msg_time_color) :Color.parseColor("#b8b8b8"));
         holder.dndImg.setVisibility(uiConversation.getConversation().isDnd() ? View.VISIBLE : View.GONE);
         holder.mainLayout.setBackgroundResource(uiConversation.getConversation().isStick() ? R.drawable.selector_set_top_msg_list : R.drawable.selector_list);
         boolean isConversationTypeGroup = uiConversation.getConversation().getType().equals(Conversation.TYPE_GROUP);
@@ -111,9 +108,6 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
             holder.contentText.setText(uiConversation.getContent());
         }
         TransHtmlToTextUtils.stripUnderlines(holder.contentText,R.color.msg_content_color);
-        holder.contentText.setTextColor(uiConversation.getUnReadCount()>0 ? context.getResources().getColor(
-                R.color.black) : context.getResources().getColor(
-                R.color.msg_content_color));
     }
 
 

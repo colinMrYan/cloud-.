@@ -32,6 +32,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
+                android:textColor="#B2B2B2"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:textSize="12sp" />
@@ -108,7 +109,7 @@
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:layout_below="@id/msg_img"
-        android:layout_marginLeft="60dp"
+        android:layout_marginLeft="50dp"
         android:background="#DEDFE0" />
 
 </RelativeLayout>
