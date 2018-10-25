@@ -92,7 +92,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:text="@string/user_info_head"
-                    android:textSize="@dimen/content_normal_textsize" />
+                    android:textSize="16sp" />
 
                 <LinearLayout
                     android:id="@+id/myinfo_userheadlayout_layout"
@@ -124,9 +124,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/text_layout_selector"
-                android:paddingBottom="11dp"
+                android:paddingBottom="10dp"
                 android:paddingLeft="10dp"
-                android:paddingTop="11dp">
+                android:paddingTop="10dp">
 
                 <TextView
                     android:id="@+id/myinfo_usernametext_text"
@@ -135,7 +135,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:text="@string/user_info_name"
-                    android:textSize="@dimen/content_normal_textsize" />
+                    android:textSize="16sp" />
 
                 <LinearLayout
                     android:id="@+id/myinfo_usernamelayout_layout"
@@ -152,7 +152,7 @@
                         android:layout_height="wrap_content"
                         android:paddingRight="10dp"
                         android:textColor="@color/onekey_content_text"
-                        android:textSize="@dimen/content_normal_textsize" />
+                        android:textSize="16sp" />
 
                     <ImageView
                         android:id="@+id/myinfo_usernamearrow_img"
@@ -175,9 +175,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/text_layout_selector"
-                android:paddingBottom="11dp"
+                android:paddingBottom="10dp"
                 android:paddingLeft="12dp"
-                android:paddingTop="11dp"
+                android:paddingTop="10dp"
                 android:visibility="gone">
 
                 <TextView
@@ -187,7 +187,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:text="@string/worker_num"
-                    android:textSize="@dimen/content_normal_textsize" />
+                    android:textSize="16sp" />
 
                 <LinearLayout
                     android:id="@+id/ll_myinfo_worknum_sub"
@@ -204,7 +204,7 @@
                         android:layout_height="wrap_content"
                         android:paddingRight="10dp"
                         android:textColor="@color/onekey_content_text"
-                        android:textSize="@dimen/content_normal_textsize" />
+                        android:textSize="16sp" />
 
                     <ImageView
                         android:id="@+id/iv_myinfo_worknumarrow"
@@ -227,9 +227,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/text_layout_selector"
-                android:paddingBottom="11dp"
+                android:paddingBottom="10dp"
                 android:paddingLeft="12dp"
-                android:paddingTop="11dp"
+                android:paddingTop="10dp"
                 android:visibility="gone">
 
                 <TextView
@@ -239,7 +239,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:text="@string/depart"
-                    android:textSize="@dimen/content_normal_textsize" />
+                    android:textSize="16sp" />
 
                 <LinearLayout
                     android:id="@+id/myinfo_userdepartlayout_layout"
@@ -256,7 +256,7 @@
                         android:layout_height="wrap_content"
                         android:paddingRight="10dp"
                         android:textColor="@color/onekey_content_text"
-                        android:textSize="@dimen/content_normal_textsize" />
+                        android:textSize="16sp" />
 
                     <ImageView
                         android:id="@+id/myinfo_userdepartarrow_img"
@@ -278,9 +278,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/text_layout_selector"
-                android:paddingBottom="11dp"
+                android:paddingBottom="10dp"
                 android:paddingLeft="12dp"
-                android:paddingTop="11dp">
+                android:paddingTop="10dp">
 
                 <TextView
                     android:id="@+id/myinfo_usermailtext_text"
@@ -289,7 +289,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:text="@string/mail"
-                    android:textSize="@dimen/content_normal_textsize" />
+                    android:textSize="16sp" />
 
                 <LinearLayout
                     android:id="@+id/myinfo_usermaillayout_layout"
@@ -306,7 +306,7 @@
                         android:layout_height="wrap_content"
                         android:paddingRight="10dp"
                         android:textColor="@color/onekey_content_text"
-                        android:textSize="@dimen/content_normal_textsize" />
+                        android:textSize="16sp" />
 
                     <ImageView
                         android:id="@+id/myinfo_usermailarrow_img"
@@ -329,9 +329,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/text_layout_selector"
-                android:paddingBottom="11dp"
+                android:paddingBottom="10dp"
                 android:paddingLeft="12dp"
-                android:paddingTop="11dp"
+                android:paddingTop="10dp"
                 android:visibility="gone">
 
                 <TextView
@@ -341,7 +341,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:text="@string/telephone"
-                    android:textSize="@dimen/content_normal_textsize" />
+                    android:textSize="16sp" />
 
                 <LinearLayout
                     android:id="@+id/ll_myinfo_telphone_sub"
@@ -358,7 +358,7 @@
                         android:layout_height="wrap_content"
                         android:paddingRight="10dp"
                         android:textColor="@color/onekey_content_text"
-                        android:textSize="@dimen/content_normal_textsize" />
+                        android:textSize="16sp" />
 
                     <ImageView
                         android:id="@+id/iv_myinfo_telphonearrow"
@@ -380,9 +380,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/text_layout_selector"
-                android:paddingBottom="11dp"
+                android:paddingBottom="10dp"
                 android:paddingLeft="12dp"
-                android:paddingTop="11dp">
+                android:paddingTop="10dp">
 
                 <TextView
                     android:id="@+id/myinfo_userphonetext_text"
@@ -391,7 +391,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:text="@string/user_info_phone_number"
-                    android:textSize="@dimen/content_normal_textsize" />
+                    android:textSize="16sp" />
 
                 <LinearLayout
                     android:id="@+id/myinfo_userphonelayout_layout"
@@ -408,7 +408,7 @@
                         android:layout_height="wrap_content"
                         android:paddingRight="10dp"
                         android:textColor="@color/onekey_content_text"
-                        android:textSize="@dimen/content_normal_textsize" />
+                        android:textSize="16sp" />
 
                     <ImageView
                         android:id="@+id/myinfo_userphonearrow_img"
@@ -428,7 +428,7 @@
             android:id="@+id/myinfo_sexandt_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="11dp"
+            android:layout_marginTop="10dp"
             android:background="#ffffff"
             android:orientation="vertical"
             android:visibility="gone">
@@ -443,9 +443,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/text_layout_selector"
-                android:paddingBottom="11dp"
+                android:paddingBottom="10dp"
                 android:paddingLeft="12dp"
-                android:paddingTop="11dp">
+                android:paddingTop="10dp">
 
                 <TextView
                     android:id="@+id/myinfo_usersextext_text"
@@ -454,7 +454,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:text="@string/user_info_sex"
-                    android:textSize="@dimen/content_normal_textsize" />
+                    android:textSize="16sp" />
 
                 <LinearLayout
                     android:id="@+id/myinfo_usersexlayout_layout"
@@ -472,7 +472,7 @@
                         android:paddingRight="10dp"
                         android:text="@string/not_set"
                         android:textColor="@color/onekey_content_text"
-                        android:textSize="@dimen/content_normal_textsize" />
+                        android:textSize="16sp" />
 
                     <ImageView
                         android:id="@+id/myinfo_usersexarrow_img"
@@ -493,9 +493,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/text_layout_selector"
-                android:paddingBottom="11dp"
+                android:paddingBottom="10dp"
                 android:paddingLeft="12dp"
-                android:paddingTop="11dp">
+                android:paddingTop="10dp">
 
                 <TextView
                     android:id="@+id/myinfo_usercode_text"
@@ -504,7 +504,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:text="@string/user_qr_code"
-                    android:textSize="@dimen/content_normal_textsize" />
+                    android:textSize="16sp" />
 
                 <LinearLayout
                     android:id="@+id/myinfo_usercodelayout_layout"
@@ -536,8 +536,8 @@
             android:id="@+id/myinfo_usercompany_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="11dp"
-            android:layout_marginBottom="11dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:background="@drawable/text_layout_selector">
 
             <TextView
@@ -550,7 +550,7 @@
                 android:paddingLeft="12dp"
                 android:paddingTop="10dp"
                 android:text="@string/user_company_info"
-                android:textSize="@dimen/content_normal_textsize" />
+                android:textSize="16sp" />
 
             <LinearLayout
                 android:id="@+id/myinfo_usercompanylayout_layout"
@@ -572,7 +572,7 @@
                     android:singleLine="true"
                     android:text="@string/user_info_organ"
                     android:textColor="@color/onekey_content_text"
-                    android:textSize="@dimen/content_normal_textsize" />
+                    android:textSize="16sp" />
 
                 <ImageView
                     android:id="@+id/myinfo_usercompanyarrow_img"
@@ -598,11 +598,11 @@
                 android:layout_alignParentLeft="true"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:paddingBottom="11dp"
+                android:paddingBottom="10dp"
                 android:paddingLeft="12dp"
-                android:paddingTop="11dp"
+                android:paddingTop="10dp"
                 android:text="@string/modify_password"
-                android:textSize="@dimen/content_normal_textsize" />
+                android:textSize="16sp" />
 
             <ImageView
                 android:id="@+id/myinfo_modifypsdarrow_img"
@@ -636,11 +636,11 @@
                 android:layout_alignParentLeft="true"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:paddingBottom="11dp"
+                android:paddingBottom="10dp"
                 android:paddingLeft="12dp"
-                android:paddingTop="11dp"
+                android:paddingTop="10dp"
                 android:text="@string/modify_reset_password"
-                android:textSize="@dimen/content_normal_textsize" />
+                android:textSize="16sp" />
 
             <ImageView
                 style="@style/arrow_right"

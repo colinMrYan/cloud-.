@@ -7,6 +7,7 @@ import android.webkit.WebView;
 import android.widget.ProgressBar;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.util.common.DensityUtil;
 
 public class ProgressWebView extends WebView {
 
@@ -16,8 +17,8 @@ public class ProgressWebView extends WebView {
 		super(context, attrs);
 		progressbar = new ProgressBar(context, null,
 				android.R.attr.progressBarStyleHorizontal);
-		progressbar.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,
-				7, 0, 0));
+		progressbar.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
+				DensityUtil.dip2px(context,3), 0, 0));
 
 		Drawable drawable = context.getResources().getDrawable(
 				R.drawable.imp_progress_bar_states);
