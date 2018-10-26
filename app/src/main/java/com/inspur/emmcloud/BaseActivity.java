@@ -28,7 +28,6 @@ public class BaseActivity extends Activity {
        //禁止截屏
         this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
     }
-
     //解决调用系统应用后会弹出手势解锁的问题
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
