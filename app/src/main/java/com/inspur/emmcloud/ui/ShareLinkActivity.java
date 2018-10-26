@@ -34,6 +34,7 @@ public class ShareLinkActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         StateBarUtils.changeStateBarColor(this);
+        StateBarUtils.setImmersiveStateBar(this);
         shareLink = getIntent().getExtras().getString(Constant.SHARE_LINK);
         if(!StringUtils.isBlank(shareLink) ){
             shareLinkToFriends();

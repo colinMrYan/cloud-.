@@ -72,6 +72,7 @@ public class SchemeHandleActivity extends Activity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         StateBarUtils.changeStateBarColor(this);
+        StateBarUtils.setImmersiveStateBar(this);
         new ProfileUtils(SchemeHandleActivity.this, new CommonCallBack() {
             @Override
             public void execute() {

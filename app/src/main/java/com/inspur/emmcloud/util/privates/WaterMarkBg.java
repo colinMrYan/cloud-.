@@ -18,82 +18,88 @@ import java.util.List;
  */
 
 public class WaterMarkBg extends Drawable {
-    private Paint paint = new Paint();
-    private List<String> labels;
-    private Context context;
-    private int degress;//角度
-    private int fontSize;//字体大小 单位sp
-    private String paintColor ="#efefef";
-    private Boolean textBoldState =true;
-    private int     highSizes =5;
-    private int     widthSize =100;
+    private Paint mPaint = new Paint();
+    private List<String> mLabels;
+    private Context mContext;
+    private int mAngle;//角度
+    private int mFontSize;//字体大小 单位sp
+    private String mPaintColor ="#efefef";
+    private Boolean mTextBoldState =true;
+    private int mHighSizes =5;
+    private int  mWidthSize =100;
+    private int mLeftBadingDp =10;
+
 
     /**
      * 初始化构造
      * @param context 上下文
      * @param labels 水印文字列表 多行显示支持
-     * @param degress 水印角度
+     * @param Angle 水印角度
      * @param fontSize 水印文字大小
+     * @param leftBadingDp 左侧边距
      */
-    public WaterMarkBg(Context context, List<String> labels, int degress, int fontSize) {
-        this.labels = labels;
-        this.context = context;
-        this.degress = degress;
-        this.fontSize = fontSize;
+    public WaterMarkBg(Context context, List<String> labels, int Angle, int fontSize,int leftBadingDp) {
+        this.mLabels = labels;
+        this.mContext = context;
+        this.mAngle = Angle;
+        this.mFontSize = fontSize;
+        this.mLeftBadingDp = leftBadingDp;
     }
 
     /**
      * 初始化构造
      * @param context 上下文
      * @param labels 水印文字列表 多行显示支持
-     * @param degress 水印角度
+     * @param Angle 水印角度
+     * @param fontSize 水印文字大
+     * @param leftBadingDp 左侧边距
+     * @param PintColor 字体颜色
+     */
+    public WaterMarkBg(Context context, List<String> labels, int Angle, int fontSize,int leftBadingDp,String PintColor) {
+        this.mLabels = labels;
+        this.mContext = context;
+        this.mAngle = Angle;
+        this.mFontSize = fontSize;
+        this.mLeftBadingDp = leftBadingDp;
+        this.mPaintColor = PintColor;
+    }
+
+    /**
+     * 初始化构造
+     * @param context 上下文
+     * @param labels 水印文字列表 多行显示支持
+     * @param Angle 水印角度
      * @param fontSize 水印文字大小
      * @param PintColor 字体颜色
      */
-    public WaterMarkBg(Context context, List<String> labels, int degress, int fontSize,String PintColor) {
-        this.labels = labels;
-        this.context = context;
-        this.degress = degress;
-        this.fontSize = fontSize;
-        this.paintColor = PintColor;
+    public WaterMarkBg(Context context, List<String> labels, int Angle, int fontSize,String PintColor,boolean TextBoldState) {
+        this.mLabels = labels;
+        this.mContext = context;
+        this.mAngle = Angle;
+        this.mFontSize = fontSize;
+        this.mPaintColor = PintColor;
+        this.mTextBoldState =TextBoldState;
     }
 
     /**
      * 初始化构造
      * @param context 上下文
      * @param labels 水印文字列表 多行显示支持
-     * @param degress 水印角度
-     * @param fontSize 水印文字大小
-     * @param PintColor 字体颜色
-     */
-    public WaterMarkBg(Context context, List<String> labels, int degress, int fontSize,String PintColor,boolean TextBoldState) {
-        this.labels = labels;
-        this.context = context;
-        this.degress = degress;
-        this.fontSize = fontSize;
-        this.paintColor = PintColor;
-        this.textBoldState =TextBoldState;
-    }
-
-    /**
-     * 初始化构造
-     * @param context 上下文
-     * @param labels 水印文字列表 多行显示支持
-     * @param degress 水印角度
+     * @param Angle 水印角度
      * @param fontSize 水印文字大小
      * @param PintColor 字体颜色
      * @param TextBoldState  字体是否加粗默认是加粗
      * @param HighSizes  屏幕垂直方向分成份数
      * @param WidethSizes 屏幕水平分为几分 （设置无效）
      */
-    public WaterMarkBg(Context context, List<String> labels, int degress, int fontSize,String PintColor,boolean TextBoldState,int HighSizes,int WidethSizes) {
-        this.labels = labels;
-        this.context = context;
-        this.degress = degress;
-        this.fontSize = fontSize;
-        this.paintColor = PintColor;
-        this.textBoldState =TextBoldState;
-        this.highSizes = HighSizes;
+    public WaterMarkBg(Context context, List<String> labels, int Angle, int fontSize,String PintColor,boolean TextBoldState,int HighSizes,int WidethSizes) {
+        this.mLabels = labels;
+        this.mContext = context;
+        this.mAngle = Angle;
+        this.mFontSize = fontSize;
+        this.mPaintColor = PintColor;
+        this.mTextBoldState =TextBoldState;
+        this.mHighSizes = HighSizes;
     }
 
     @Override
@@ -101,23 +107,21 @@ public class WaterMarkBg extends Drawable {
 
         int width = getBounds().right;
         int height = getBounds().bottom;
-
         canvas.drawColor(Color.parseColor("#ffffff"));
-        paint.setColor(Color.parseColor(paintColor));
-        paint.setAntiAlias(true);
-        paint.setTextSize(sp2px(context,fontSize));
-        paint.setFakeBoldText(textBoldState);
-
+        mPaint.setColor(Color.parseColor(mPaintColor));
+        mPaint.setAntiAlias(true);
+        mPaint.setTextSize(sp2px(mContext, mFontSize));
+        mPaint.setFakeBoldText(mTextBoldState);
         canvas.save();
-        canvas.rotate(degress);
-        float textWidth = paint.measureText(labels.get(0));
+        canvas.rotate(mAngle);
+        float textWidth = mPaint.measureText(mLabels.get(0));
         int index = 0;
-        for (int positionY = height / highSizes; positionY <= height; positionY += height /highSizes+80) {
+        for (int positionY = height / mHighSizes+sp2px(mContext, mLeftBadingDp); positionY <= height; positionY += height /mHighSizes) {
             float fromX = -width + (index++ % 2) * textWidth;
-            for (float positionX = fromX; positionX < width; positionX += textWidth * 2) {
+            for (float positionX = fromX; positionX < width; positionX += (textWidth * 2)) {
                 int spacing  =0;//间距
-                for(String label:labels){
-                    canvas.drawText(label, positionX, positionY+spacing, paint);
+                for(String label:mLabels){
+                    canvas.drawText(label, positionX , positionY +spacing, mPaint);
                     spacing = spacing+50;
                 }
             }

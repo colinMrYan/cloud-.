@@ -16,8 +16,8 @@ import com.inspur.emmcloud.bean.contact.ContactProtoBuf;
 import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.bean.system.ClientConfigItem;
 import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.privates.ClientConfigUpdateUtils;
-import com.inspur.emmcloud.util.privates.ImmersionStateBarUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactOrgCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
@@ -56,7 +56,8 @@ public class ContactSearchBaseFragment extends Fragment {
                 getContactOrg();
             }
         }
-        ImmersionStateBarUtils.setImmersiveStateBar(getActivity());
+        StateBarUtils.setImmersiveStateBar(getActivity());
+        //lbc
     }
 
     private void handMessage() {

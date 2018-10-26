@@ -43,7 +43,6 @@ import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.ECMShortcutBadgeNumberManagerUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
-import com.inspur.emmcloud.util.privates.ImmersionStateBarUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.widget.MyFragmentTabHost;
@@ -87,7 +86,6 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
         x.view().inject(this);
         mTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
         initTabs();
-        ImmersionStateBarUtils.setImmersiveStateBar(this);
     }
 
 
@@ -503,6 +501,12 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
 
     @Override
     public void onTabChanged(final String tabId) {
+        if(Constant.APP_TAB_BAR_RN_FIND.toString().equals(tabId)) {
+
+        } else {
+            StateBarUtils.setImmersiveStateBar(this);
+        }
+
         this.tabId = tabId;
         tipsView.setCanTouch(tabId.equals(Constant.APP_TAB_BAR_COMMUNACATE));
         if (!isSystemChangeTag) {

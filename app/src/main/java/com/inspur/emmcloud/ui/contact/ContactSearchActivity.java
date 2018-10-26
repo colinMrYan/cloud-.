@@ -19,6 +19,7 @@ public class ContactSearchActivity extends BaseFragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         StateBarUtils.changeStateBarColor(this);
+        StateBarUtils.setImmersiveStateBar(this);
         setContentView(R.layout.activity_contact_search_hold);
         //必需继承FragmentActivity,嵌套fragment只需要这行代码
         fragment = new ContactSearchFragment();

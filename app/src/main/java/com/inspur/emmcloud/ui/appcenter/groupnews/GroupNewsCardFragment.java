@@ -84,7 +84,7 @@ public class GroupNewsCardFragment extends Fragment implements MySwipeRefreshLay
         String myInfo = PreferencesUtils.getString(getContext(), "myInfo", "");
         GetMyInfoResult  getMyInfoResult = new GetMyInfoResult(myInfo);
         labels.add(getMyInfoResult.getCode());
-        newsListView.setBackground(new WaterMarkBg(getContext(),labels,-25,30));
+        newsListView.setBackground(new WaterMarkBg(getContext(),labels,-30,30,30));
         getGroupNewsList(getArguments().getString("catagoryid"), 0, true);
         EventBus.getDefault().register(this);
     }
@@ -118,7 +118,6 @@ public class GroupNewsCardFragment extends Fragment implements MySwipeRefreshLay
             }
         }
     }
-
 
     class ListItemOnClickListener implements OnItemClickListener {
         @Override
