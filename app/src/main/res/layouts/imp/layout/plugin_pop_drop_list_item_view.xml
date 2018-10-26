@@ -14,7 +14,7 @@
         android:scaleType="fitXY" />
 
     <TextView
-        android:id="@+id/tv_title"
+        android:id="@+id/tv_name_tips"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_centerVertical="true"

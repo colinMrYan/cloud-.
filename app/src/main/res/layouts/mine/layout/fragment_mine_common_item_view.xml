@@ -16,7 +16,7 @@
         android:padding="0.5dp" />
 
     <TextView
-        android:id="@+id/tv_title"
+        android:id="@+id/tv_name_tips"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"

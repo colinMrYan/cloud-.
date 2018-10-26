@@ -194,7 +194,7 @@ public class CommunicationFragmentNew extends Fragment {
                 String type = conversation.getType();
                 if (type.equals(Conversation.TYPE_CAST) || type.equals(Conversation.TYPE_DIRECT) || type.equals(Conversation.TYPE_GROUP)) {
                     Bundle bundle = new Bundle();
-                    bundle.putSerializable(ConversationActivity.EXTRA_CONVERSATION,conversation);
+                    bundle.putSerializable(ConversationActivity.EXTRA_CONVERSATION, conversation);
                     IntentUtils.startActivity(getActivity(), ConversationActivity.class, bundle);
                 } else {
                     ToastUtils.show(MyApplication.getInstance(), R.string.not_support_open_channel);
@@ -397,7 +397,7 @@ public class CommunicationFragmentNew extends Fragment {
         if (!MyApplication.getInstance().getIsContactReady()) {
             return;
         }
-        if (conversationList != null && conversationList.size() == 0){
+        if (conversationList != null && conversationList.size() == 0) {
             return;
         }
         isGroupIconCreate = true;
@@ -521,7 +521,7 @@ public class CommunicationFragmentNew extends Fragment {
             intersectionConversationList.addAll(conversationList);
             intersectionConversationList.retainAll(cacheConversationList);
             cacheConversationList.removeAll(intersectionConversationList);
-            ConversationCacheUtils.deleteConversationList(MyApplication.getInstance(),cacheConversationList);
+            ConversationCacheUtils.deleteConversationList(MyApplication.getInstance(), cacheConversationList);
             if (handler != null) {
                 if (isGroupIconCreate) {
                     conversationList.removeAll(intersectionConversationList);
@@ -770,10 +770,39 @@ public class CommunicationFragmentNew extends Fragment {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReceiverRefreshConversationAdapter(SimpleEventMessage eventMessage) {
-        if (eventMessage.getAction().equals(Constant.EVENTBUS_TAG_REFRESH_CONVERSATION_ADAPTER)){
-            conversationAdapter.notifyDataSetChanged();
+    public void onReceiverSimpleEventMessage(SimpleEventMessage eventMessage) {
+        Conversation conversation = null;
+        int index = -1;
+        switch (eventMessage.getAction()) {
+            case Constant.EVENTBUS_TAG_REFRESH_CONVERSATION_ADAPTER:
+                conversationAdapter.notifyDataSetChanged();
+                break;
+            case Constant.EVENTBUS_TAG_UPDATE_CHANNEL_NAME:
+                conversation = (Conversation) eventMessage.getMessageObj();
+                index = displayUIConversationList.indexOf(new UIConversation(conversation.getId()));
+                if (index != -1) {
+                    displayUIConversationList.get(index).setTitle(conversation.getName());
+                    conversationAdapter.setData(displayUIConversationList);
+                    conversationAdapter.notifyItemChanged(index);
+                }
+                break;
+            case Constant.EVENTBUS_TAG_UPDATE_CHANNEL_FOCUS:
+                conversation = (Conversation) eventMessage.getMessageObj();
+                index = displayUIConversationList.indexOf(new UIConversation(conversation.getId()));
+                if (index != -1) {
+                   sortConversationList();
+                }
+                break;
+            case Constant.EVENTBUS_TAG_UPDATE_CHANNEL_DND:
+                conversation = (Conversation) eventMessage.getMessageObj();
+                index = displayUIConversationList.indexOf(new UIConversation(conversation.getId()));
+                if (index != -1) {
+                    conversationAdapter.setData(displayUIConversationList);
+                    conversationAdapter.notifyItemChanged(index);
+                }
+                break;
         }
+
     }
 
 
@@ -816,6 +845,8 @@ public class CommunicationFragmentNew extends Fragment {
     public void onReiceveWSOfflineMessage(EventMessage eventMessage) {
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_GET_OFFLINE_WS_MESSAGE)) {
             if (eventMessage.getStatus() == EventMessage.RESULT_OK) {
+                //清空离线消息最后一条消息标志位
+                PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(),Constant.PREF_GET_OFFLINE_LAST_MID,"");
                 String content = eventMessage.getContent();
                 GetOfflineMessageListResult getOfflineMessageListResult = new GetOfflineMessageListResult(content);
                 List<Message> offlineMessageList = getOfflineMessageListResult.getMessageList();
@@ -892,7 +923,12 @@ public class CommunicationFragmentNew extends Fragment {
      */
     public void getMessage() {
         if (NetUtils.isNetworkConnected(MyApplication.getInstance()) && WebSocketPush.getInstance().isSocketConnect()) {
-            String lastMessageId = MessageCacheUtil.getLastMessageId(MyApplication.getInstance());
+            //如果preferences中还存有离线消息最后一条消息id这个标志代表上一次离线消息没有获取成功，需要从这条消息开始重新获取
+            String lastMessageId = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(),Constant.PREF_GET_OFFLINE_LAST_MID,"");
+            if (StringUtils.isBlank(lastMessageId)){
+                lastMessageId = MessageCacheUtil.getLastMessageId(MyApplication.getInstance());
+                PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(),Constant.PREF_GET_OFFLINE_LAST_MID,lastMessageId);
+            }
             if (lastMessageId != null) {
                 //获取离线消息
                 WSAPIService.getInstance().getOfflineMessage(lastMessageId);
@@ -943,7 +979,6 @@ public class CommunicationFragmentNew extends Fragment {
         public void returnConversationListFail(String error, int errorCode) {
             if (getActivity() != null) {
                 swipeRefreshLayout.setRefreshing(false);
-                WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
                 getMessage();
             }
         }
@@ -977,7 +1012,7 @@ public class CommunicationFragmentNew extends Fragment {
                 displayUIConversationList.remove(index);
                 conversationAdapter.setData(displayUIConversationList);
                 conversationAdapter.notifyItemRemoved(index);
-                if (unReadCount>0){
+                if (unReadCount > 0) {
                     WSAPIService.getInstance().setChannelMessgeStateRead(id);
                 }
             }

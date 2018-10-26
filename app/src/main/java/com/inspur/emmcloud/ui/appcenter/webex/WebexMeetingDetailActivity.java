@@ -84,7 +84,7 @@ public class WebexMeetingDetailActivity extends BaseActivity {
     private Button functionBtn;
     @ViewInject(R.id.iv_photo)
     private CircleTextImageView photoImg;
-    @ViewInject(R.id.tv_title)
+    @ViewInject(R.id.tv_name_tips)
     private TextView titleText;
     @ViewInject(R.id.tv_owner)
     private TextView ownerText;

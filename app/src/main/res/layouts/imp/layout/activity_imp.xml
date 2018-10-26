@@ -174,44 +174,43 @@
     </LinearLayout>
 
     <RelativeLayout
-        android:id="@+id/loading_layout"
+        android:id="@+id/rl_loading"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/header_layout"
         android:visibility="gone"
         android:clickable="true"
-        android:background="#3e000000">
+        >
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:minWidth="120dp"
-            android:minHeight="56dp"
+            android:padding="15dp"
             android:layout_centerInParent="true"
-            android:padding="16dp"
-            android:layout_gravity="center"
-            android:background="@drawable/qmui_tip_dialog_bg"
+            android:background="@drawable/shape_dialog_react_loading"
             android:gravity="center"
             android:orientation="vertical">
 
-            <com.qmuiteam.qmui.widget.QMUILoadingView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:color="#ffffff"
-                app:qmui_loading_view_size="32dp"/>
-
+            <ProgressBar
+                android:id="@+id/pb_load"
+                style="@android:style/Widget.ProgressBar"
+                android:layout_width="21dp"
+                android:layout_height="21dp"
+                android:layout_centerHorizontal="true"
+                android:indeterminateDrawable="@drawable/react_native_ios_progress"
+                android:indeterminateDuration="1000" />
             <TextView
-                android:id="@+id/loading_text"
+                android:id="@+id/tv_loading"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/pb_load"
                 android:maxWidth="200dp"
-                android:layout_gravity="center"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="10dp"
                 android:ellipsize="end"
                 android:maxLines="2"
-                android:textColor="#ffffff"
+                android:textColor="#555555"
                 android:textSize="@dimen/content_small_textsize" />
-        </LinearLayout>
+        </RelativeLayout>
 
     </RelativeLayout>
 

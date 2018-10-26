@@ -997,6 +997,24 @@ public class CommunicationFragment extends Fragment {
             if (eventMessage.getStatus() == 200) {
                 String content = eventMessage.getContent();
                 GetRecentMessageListResult getRecentMessageListResult = new GetRecentMessageListResult(content);
+
+                List<Message> recentMessageList = getRecentMessageListResult.getMessageList();
+                List<Message> currentChannelRecentMessageList = new ArrayList<>();
+                //将当前所处频道的消息存为已读
+                if (!StringUtils.isBlank(MyApplication.getInstance().getCurrentChannelCid())) {
+                    for (Message message : recentMessageList) {
+                        if (message.getChannel().equals(MyApplication.getInstance().getCurrentChannelCid())) {
+                            message.setRead(1);
+                            currentChannelRecentMessageList.add(message);
+                        }
+                    }
+                    if (currentChannelRecentMessageList.size() > 0) {
+                        //将离线消息发送到当前频道
+                        EventBus.getDefault().post(recentMessageList);
+                    }
+                }
+
+
                 new CacheMessageListThread(getRecentMessageListResult.getMessageList(), getRecentMessageListResult.getChannelMessageSetList()).start();
             }
 //            else {

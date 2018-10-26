@@ -116,7 +116,7 @@ public class WebexMeetingAdapter extends BaseExpandableListAdapter {
             holder.timeText = (TextView) convertView
                     .findViewById(R.id.tv_time);
             holder.titleText = (TextView) convertView
-                    .findViewById(R.id.tv_title);
+                    .findViewById(R.id.tv_name_tips);
             holder.ownerText = (TextView) convertView
                     .findViewById(R.id.tv_owner);
             holder.line = convertView.findViewById(R.id.v_line);

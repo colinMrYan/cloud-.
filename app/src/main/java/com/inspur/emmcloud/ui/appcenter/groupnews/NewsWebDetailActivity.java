@@ -25,6 +25,7 @@ import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -63,7 +64,6 @@ import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
-import com.inspur.emmcloud.widget.ProgressWebView;
 import com.inspur.emmcloud.widget.SwitchView;
 import com.inspur.imp.api.iLog;
 import com.inspur.imp.plugin.PluginMgr;
@@ -85,7 +85,7 @@ public class NewsWebDetailActivity extends BaseActivity {
     private static final int SHARE_SEARCH_RUEST_CODE = 1;
     private static final String darkMode = "#dark_120";
     private static final String lightMode = "#light_120";
-    private ProgressWebView webView;
+    private WebView webView;
     private String url;
     private LoadingDialog loadingDlg;
     private Dialog dialog;
@@ -98,6 +98,7 @@ public class NewsWebDetailActivity extends BaseActivity {
     private String fakeMessageId;
     private WebSettings settings;
     private Map<String, String> webViewHeaders;
+    private RelativeLayout loadingLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,6 +140,7 @@ public class NewsWebDetailActivity extends BaseActivity {
      * 初始化Views
      */
     private void initViews() {
+        loadingLayout=(RelativeLayout)findViewById(R.id.rl_loading);
         loadingDlg = new LoadingDialog(NewsWebDetailActivity.this);
         ((TextView) findViewById(R.id.header_text)).setText(((GroupNews)getIntent().getSerializableExtra("groupNews")).getTitle());
         setWebView();
@@ -213,7 +215,7 @@ public class NewsWebDetailActivity extends BaseActivity {
 
     private void setWebView() {
         // 为0就是不给滚动条留空间，滚动条覆盖在网页上
-        webView = (ProgressWebView) findViewById(R.id.news_webdetail_webview);
+        webView = (WebView) findViewById(R.id.wv_news);
         webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
         //this.setInitialScale(100);
         webView.setInitialScale(0);
@@ -232,6 +234,9 @@ public class NewsWebDetailActivity extends BaseActivity {
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
+                if (loadingLayout != null){
+                    loadingLayout.setVisibility(View.GONE);
+                }
                 initWebViewGoBackOrClose();
             }
 
