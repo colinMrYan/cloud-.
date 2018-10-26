@@ -116,7 +116,6 @@ public class ImpFragment extends Fragment {
         initViews();
         version = getArguments().getString(Constant.WEB_FRAGMENT_VERSION, "");
         StateBarUtils.setImmersiveStateBar(getActivity());
-       // ImmersionStateBarUtils.setImmersiveStateBar(getActivity());
     }
 
     @Override

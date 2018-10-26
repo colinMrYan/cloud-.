@@ -57,7 +57,6 @@ public class ContactSearchBaseFragment extends Fragment {
             }
         }
         StateBarUtils.setImmersiveStateBar(getActivity());
-        //lbc
     }
 
     private void handMessage() {

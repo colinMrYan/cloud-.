@@ -24,7 +24,6 @@ import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.PagerSlidingTabStrip;
 
 import java.util.List;
-
 /**
  * 集团新闻
  * com.inspur.emmcloud.ui.GroupNewsActivity
@@ -35,7 +34,6 @@ public class GroupNewsActivity extends BaseFragmentActivity implements
 
 	private MyPagerAdapter pagerAdapter;
 	private LoadingDialog loadingDlg;
-
     @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

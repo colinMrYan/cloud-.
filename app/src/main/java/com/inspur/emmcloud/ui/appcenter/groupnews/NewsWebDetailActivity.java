@@ -105,7 +105,6 @@ public class NewsWebDetailActivity extends BaseActivity {
         initData();
         initViews();
         EventBus.getDefault().register(this);
-        //ImmersionStateBarUtils.setImmersiveStateBar(this);
     }
 
     /**

@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.WindowManager;
-
 import com.inspur.emmcloud.util.privates.LanguageUtils;
 
 public class BaseFragmentActivity extends FragmentActivity {
@@ -26,7 +25,6 @@ public class BaseFragmentActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
-        //ImmersionStateBarUtils.setImmersiveStateBar(this);
     }
 
 
