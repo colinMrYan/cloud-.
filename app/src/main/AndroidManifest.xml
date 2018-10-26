@@ -343,6 +343,7 @@
 
         <activity
             android:name=".ui.SchemeHandleActivity"
+            android:theme="@android:style/Theme.Translucent"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:screenOrientation="portrait">

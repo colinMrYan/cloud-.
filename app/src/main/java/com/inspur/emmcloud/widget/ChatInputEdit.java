@@ -166,27 +166,6 @@ public class ChatInputEdit extends EditText {
                 return false;
             }
         });
-        this.setCustomSelectionActionModeCallback(new ActionMode.Callback() {
-            @Override
-            public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
-                return false;
-            }
-
-            @Override
-            public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
-                return false;
-            }
-
-            @Override
-            public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
-                return false;
-            }
-
-            @Override
-            public void onDestroyActionMode(ActionMode actionMode) {
-
-            }
-        });
     }
 
     /**
@@ -203,9 +182,11 @@ public class ChatInputEdit extends EditText {
             MyBackgroundColorSpan span = mSpans[i];
             int spanStartPos = spannableStringBuilder.getSpanStart(span);
             int spanEndPos = spannableStringBuilder.getSpanEnd(span);
+            //重新设置选中位置
             if (selStart > spanStartPos && selStart <= spanEndPos) {
-                // 选中话题
-                setSelection(spanEndPos);
+                setSelection(spanStartPos,selEnd);
+            }else if(selEnd > spanStartPos && selEnd <= spanEndPos){
+                setSelection(selStart,spanEndPos);
             }
         }
     }

@@ -21,5 +21,6 @@ public interface ImpCallBackInterface {
     void onLoadingDlgShow(String content);
     void onStartActivityForResult(Intent intent,int requestCode);
     void onSetDropTitles(List<DropItemTitle> dropItemTitleList);
+    void onProgressChanged(int newProgress);
 
 }

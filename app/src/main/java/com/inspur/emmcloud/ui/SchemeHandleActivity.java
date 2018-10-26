@@ -71,8 +71,8 @@ public class SchemeHandleActivity extends Activity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        StateBarUtils.changeStateBarColor(this);
-        StateBarUtils.setImmersiveStateBar(this);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);//没有标题
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
         new ProfileUtils(SchemeHandleActivity.this, new CommonCallBack() {
             @Override
             public void execute() {

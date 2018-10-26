@@ -309,6 +309,10 @@ public class ImpWebChromeClient extends WebChromeClient {
 	@Override
 	public void onProgressChanged(WebView view, int newProgress) {
 		super.onProgressChanged(view, newProgress);
+		ImpCallBackInterface impCallBackInterface = mWebView.getImpCallBackInterface();
+		if(impCallBackInterface != null){
+			impCallBackInterface.onProgressChanged(newProgress);
+		}
 	}
 
 	@Override

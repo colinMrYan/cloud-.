@@ -785,7 +785,8 @@ public class ChannelActivity extends MediaPlayBaseActivity {
         while (it.hasNext()) {
             Message offlineMessage = it.next();
             UIMessage uiMessage = new UIMessage(offlineMessage.getId());
-            if (uiMessageList.contains(uiMessage)) {
+            //再一次排除非此频道消息显示在此频道
+            if (uiMessageList.contains(uiMessage) || uiMessage.getMessage().getChannel() != cid) {
                 it.remove();
             }
         }
@@ -970,6 +971,7 @@ public class ChannelActivity extends MediaPlayBaseActivity {
         chatInputMenu.releaseVoliceInput();
         EventBus.getDefault().unregister(this);
         DataCleanManager.cleanCustomCache(MyAppConfig.LOCAL_CACHE_VOICE_PATH);
+        MyApplication.getInstance().setCurrentChannelCid("");
     }
 
 

@@ -57,6 +57,7 @@ import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.interf.OnRecommendAppWidgetItemClickListener;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ShortCutUtils;
@@ -159,8 +160,6 @@ public class MyAppFragment extends Fragment {
         super.onResume();
         if (ClientConfigUpdateUtils.getInstance().isItemNeedUpdate(ClientConfigItem.CLIENT_CONFIG_MY_APP)){
             getMyApp();
-        }else if(!ClientConfigUpdateUtils.getInstance().isCheckClientConfigUpdate()){
-            ClientConfigUpdateUtils.getInstance().getAllConfigUpdate();
         }
         getAppBadgeNum();
         refreshRecommendAppWidgetView();
@@ -355,6 +354,7 @@ public class MyAppFragment extends Fragment {
     private void getMyApp() {
         if (NetUtils.isNetworkConnected(getActivity(), false)) {
             String saveConfigVersion = ClientConfigUpdateUtils.getInstance().getItemNewVersion(ClientConfigItem.CLIENT_CONFIG_MY_APP);
+            LogUtils.jasonDebug("saveConfigVersion=="+saveConfigVersion);
             apiService.getUserApps(saveConfigVersion);
         } else {
             swipeRefreshLayout.setRefreshing(false);
