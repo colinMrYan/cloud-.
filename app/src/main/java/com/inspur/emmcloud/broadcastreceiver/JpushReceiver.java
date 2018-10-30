@@ -44,7 +44,7 @@ public class JpushReceiver extends BroadcastReceiver {
                     .getString(JPushInterface.EXTRA_REGISTRATION_ID);
             LogUtils.debug(TAG, "[MyReceiver] 接收Registration Id : " + regId);
             PreferencesUtils.putString(context, Constant.PUSH_FLAG, "Jpush");
-            PreferencesUtils.putString(context, "JpushRegId", regId);
+            PreferencesUtils.putString(context, Constant.JPUSH_REG_ID, regId);
             new PushIdManagerUtils(context).registerPushId2Emm();
             new ClientIDUtils(context).upload();
             WebSocketPush.getInstance().startWebSocket();

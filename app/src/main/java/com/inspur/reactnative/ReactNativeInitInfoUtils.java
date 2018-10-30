@@ -78,8 +78,8 @@ public class ReactNativeInitInfoUtils {
      */
     public static String getPushId(Context context) {
         String hwToken = PreferencesUtils.getString(context, Constant.HUAWEI_PUSH_TOKEN, "");
-        return AppUtils.getIsHuaWei() ? (StringUtils.isBlank(hwToken) ? PreferencesUtils.getString(context, "JpushRegId", "")
-                : (hwToken + "@push.huawei.com")) : PreferencesUtils.getString(context, "JpushRegId", "");
+        return AppUtils.getIsHuaWei() ? (StringUtils.isBlank(hwToken) ? PreferencesUtils.getString(context, Constant.JPUSH_REG_ID, "")
+                : (hwToken + "@push.huawei.com")) : PreferencesUtils.getString(context, Constant.JPUSH_REG_ID, "");
     }
 
     /**

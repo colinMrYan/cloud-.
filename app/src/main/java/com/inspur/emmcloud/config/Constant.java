@@ -97,5 +97,6 @@ public class Constant {
 
     public static final String PUSH_FLAG = "pushFlag";
     public static final String HUAWEI_PUSH_TOKEN = "huawei_push_token";
+    public static final String JPUSH_REG_ID = "JpushRegId";
 
 }

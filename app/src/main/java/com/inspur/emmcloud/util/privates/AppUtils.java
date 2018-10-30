@@ -783,7 +783,7 @@ public class AppUtils {
                 pushId = hwtoken + "@push.huawei.com";
             }
         } else {
-            pushId = PreferencesUtils.getString(context, "JpushRegId", "");
+            pushId = PreferencesUtils.getString(context, Constant.JPUSH_REG_ID, "");
         }
         if (StringUtils.isBlank(pushId)){
             pushId = "UNKNOWN";
