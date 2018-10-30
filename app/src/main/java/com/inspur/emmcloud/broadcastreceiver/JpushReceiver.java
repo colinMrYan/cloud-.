@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.util.common.JSONUtils;
@@ -42,7 +43,7 @@ public class JpushReceiver extends BroadcastReceiver {
             String regId = bundle
                     .getString(JPushInterface.EXTRA_REGISTRATION_ID);
             LogUtils.debug(TAG, "[MyReceiver] 接收Registration Id : " + regId);
-            PreferencesUtils.putString(context, "pushFlag", "Jpush");
+            PreferencesUtils.putString(context, Constant.PUSH_FLAG, "Jpush");
             PreferencesUtils.putString(context, "JpushRegId", regId);
             new PushIdManagerUtils(context).registerPushId2Emm();
             new ClientIDUtils(context).upload();

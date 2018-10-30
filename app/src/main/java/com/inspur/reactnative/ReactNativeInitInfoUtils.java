@@ -5,9 +5,11 @@ import android.content.Context;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.bean.appcenter.AndroidBundleBean;
 import com.inspur.emmcloud.bean.mine.Language;
-import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.privates.AppUtils;
+
+import static com.inspur.emmcloud.config.Constant.PUSH_FLAG;
 
 /**
  * Created by yufuchang on 2017/7/11.
@@ -94,7 +96,7 @@ public class ReactNativeInitInfoUtils {
      * @return
      */
     private static boolean canConnectHuawei(Context context) {
-        String pushFlag = PreferencesUtils.getString(context, "pushFlag", "");
+        String pushFlag = PreferencesUtils.getString(context, PUSH_FLAG, "");
         return (StringUtils.isBlank(pushFlag) || pushFlag.equals("huawei"));
     }
 }

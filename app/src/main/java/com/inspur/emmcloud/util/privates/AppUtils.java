@@ -803,7 +803,7 @@ public class AppUtils {
         // 小米  com.xiaomi.xmpush
         // 魅族  com.meizu.api - push
         String pushProvider = "";
-        String pushFlag = PreferencesUtils.getString(context, "pushFlag", "");
+        String pushFlag = PreferencesUtils.getString(context, Constant.PUSH_FLAG, "");
         switch (pushFlag) {
             case "huawei":
                 pushProvider = "com.hicloud.push";
@@ -827,7 +827,7 @@ public class AppUtils {
      * @return
      */
     private static boolean canConnectHuawei(Context context) {
-        String pushFlag = PreferencesUtils.getString(context, "pushFlag", "");
+        String pushFlag = PreferencesUtils.getString(context, Constant.PUSH_FLAG, "");
         return StringUtils.isBlank(pushFlag) || pushFlag.equals("huawei");
     }
 

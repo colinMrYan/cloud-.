@@ -12,6 +12,7 @@ import com.huawei.hms.support.api.client.PendingResult;
 import com.huawei.hms.support.api.push.HuaweiPush;
 import com.huawei.hms.support.api.push.TokenResult;
 import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 
@@ -55,7 +56,7 @@ public class HuaWeiPushMangerUtils implements ConnectionCallbacks, OnConnectionF
 
     @Override
     public void onConnected() {
-        PreferencesUtils.putString(contextLocal, "pushFlag", "huawei");
+        PreferencesUtils.putString(contextLocal, Constant.PUSH_FLAG, "huawei");
         getToken();
         setPassByMsg(true);
     }
@@ -89,7 +90,7 @@ public class HuaWeiPushMangerUtils implements ConnectionCallbacks, OnConnectionF
             client.disconnect();
         }
         ((MyApplication) contextLocal.getApplicationContext()).startJPush();
-//        PreferencesUtils.putString(contextLocal, "pushFlag", "Jpush");
+//        PreferencesUtils.putString(contextLocal, Constant.PUSH_FLAG, "Jpush");
 //        //在填充标志的时候传一次JpushId
 //        new PushIdManagerUtils(contextLocal).registerPushId2Emm();
     }
