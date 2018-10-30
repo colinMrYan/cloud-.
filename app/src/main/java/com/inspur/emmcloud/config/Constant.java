@@ -95,10 +95,13 @@ public class Constant {
     public static final String INSPUR_HOST_URL = ".inspur.com";
     public static final String INSPURONLINE_HOST_URL = ".inspuronline.com";
 
+    //推送相关配置
     public static final String PUSH_FLAG = "pushFlag";
     public static final String HUAWEI_PUSH_TOKEN = "huawei_push_token";
     public static final String JPUSH_REG_ID = "JpushRegId";
     public static final String HUAWEI_FLAG = "huawei";
     public static final String JPUSH_FLAG = "Jpush";
+    public static final String XIAOMI_FLAG = "xiaomi";
+    public static final String MEIZU_FLAG = "meizu";
 
 }

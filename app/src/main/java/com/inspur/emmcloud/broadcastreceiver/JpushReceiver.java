@@ -61,7 +61,7 @@ public class JpushReceiver extends BroadcastReceiver {
             int notifactionId = bundle
                     .getInt(JPushInterface.EXTRA_NOTIFICATION_ID);
             LogUtils.debug(TAG, "[MyReceiver] 接收到推送下来的通知的ID: " + notifactionId);
-//            if(AppUtils.GetChangShang().toLowerCase().startsWith("xiaomi")){
+//            if(AppUtils.GetChangShang().toLowerCase().startsWith(Constant.XIAOMI_FLAG)){
 //                ECMShortcutBadgeNumberManagerUtils.setDesktopBadgeNumber(context,JSONUtils.getInt(bundle.getString(JPushInterface.EXTRA_MESSAGE),"badge",0),intent);
 //                return;
 //            }

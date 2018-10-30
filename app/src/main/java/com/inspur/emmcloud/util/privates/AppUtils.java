@@ -405,7 +405,7 @@ public class AppUtils {
 
 
     public static boolean getIsXiaoMi(){
-        return AppUtils.GetChangShang().toLowerCase().startsWith("xiaomi");
+        return AppUtils.GetChangShang().toLowerCase().startsWith(Constant.XIAOMI_FLAG);
     }
 
     /**
@@ -808,10 +808,10 @@ public class AppUtils {
             case Constant.HUAWEI_FLAG:
                 pushProvider = "com.hicloud.push";
                 break;
-            case "xiaomi":
+            case Constant.XIAOMI_FLAG:
                 pushProvider = "com.xiaomi.xmpush";
                 break;
-            case "meizu":
+            case Constant.MEIZU_FLAG:
                 pushProvider = "com.meizu.api-push";
                 break;
             default:
