@@ -229,7 +229,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
      */
     private boolean canConnectHuawei() {
         String pushFlag = PreferencesUtils.getString(this, Constant.PUSH_FLAG, "");
-        return (StringUtils.isBlank(pushFlag) || pushFlag.equals("huawei"));
+        return (StringUtils.isBlank(pushFlag) || pushFlag.equals(Constant.HUAWEI_FLAG));
     }
 
     /**

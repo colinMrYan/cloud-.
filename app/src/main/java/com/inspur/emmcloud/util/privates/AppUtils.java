@@ -400,7 +400,7 @@ public class AppUtils {
      * @return
      */
     public static boolean getIsHuaWei() {
-        return AppUtils.GetChangShang().toLowerCase().startsWith("huawei");
+        return AppUtils.GetChangShang().toLowerCase().startsWith(Constant.HUAWEI_FLAG);
     }
 
 
@@ -805,7 +805,7 @@ public class AppUtils {
         String pushProvider = "";
         String pushFlag = PreferencesUtils.getString(context, Constant.PUSH_FLAG, "");
         switch (pushFlag) {
-            case "huawei":
+            case Constant.HUAWEI_FLAG:
                 pushProvider = "com.hicloud.push";
                 break;
             case "xiaomi":
@@ -828,7 +828,7 @@ public class AppUtils {
      */
     private static boolean canConnectHuawei(Context context) {
         String pushFlag = PreferencesUtils.getString(context, Constant.PUSH_FLAG, "");
-        return StringUtils.isBlank(pushFlag) || pushFlag.equals("huawei");
+        return StringUtils.isBlank(pushFlag) || pushFlag.equals(Constant.HUAWEI_FLAG);
     }
 
 

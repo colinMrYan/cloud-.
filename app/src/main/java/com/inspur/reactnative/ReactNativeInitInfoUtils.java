@@ -88,7 +88,7 @@ public class ReactNativeInitInfoUtils {
      * @return
      */
     public static String getPushType(Context context) {
-        return (AppUtils.getIsHuaWei() && canConnectHuawei(context)) ? "huawei" : "jiguang";
+        return (AppUtils.getIsHuaWei() && canConnectHuawei(context)) ? Constant.HUAWEI_FLAG : "jiguang";
     }
 
     /**
@@ -98,6 +98,6 @@ public class ReactNativeInitInfoUtils {
      */
     private static boolean canConnectHuawei(Context context) {
         String pushFlag = PreferencesUtils.getString(context, PUSH_FLAG, "");
-        return (StringUtils.isBlank(pushFlag) || pushFlag.equals("huawei"));
+        return (StringUtils.isBlank(pushFlag) || pushFlag.equals(Constant.HUAWEI_FLAG));
     }
 }
