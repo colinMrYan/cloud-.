@@ -780,7 +780,7 @@ public class AppUtils {
             //需要对华为单独推送的时候解开这里
             String hwtoken = PreferencesUtils.getString(context, Constant.HUAWEI_PUSH_TOKEN, "");
             if (!StringUtils.isBlank(hwtoken)) {
-                pushId = hwtoken + "@push.huawei.com";
+                pushId = hwtoken + Constant.PUSH_HUAWEI_COM;
             }
         } else {
             pushId = PreferencesUtils.getString(context, Constant.JPUSH_REG_ID, "");
