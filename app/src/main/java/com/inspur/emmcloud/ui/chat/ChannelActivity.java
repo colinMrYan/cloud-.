@@ -922,12 +922,14 @@ public class ChannelActivity extends MediaPlayBaseActivity {
         UIMessage fakeUIMessage = new UIMessage(fakeMessageId);
         int fakeUIMessageIndex = uiMessageList.indexOf(fakeUIMessage);
         if (fakeUIMessageIndex != -1) {
+            Message message = uiMessageList.get(fakeUIMessageIndex).getMessage();
+            message.setSendStatus(2);
             uiMessageList.get(fakeUIMessageIndex).setSendStatus(2);
+            MessageCacheUtil.saveMessage(this,message);
             adapter.setMessageList(uiMessageList);
             adapter.notifyItemChanged(fakeUIMessageIndex);
         }
     }
-
 
     /**
      * 记录用户点击的频道，修改不是云+客服的时候才记录频道点击事件170629
