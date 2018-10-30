@@ -258,7 +258,7 @@
                        android:hint="@string/trip_date"
                         android:paddingBottom="10dp"
                         android:paddingTop="10dp"
-                        android:text="@string/start_time"
+                        android:text="@string/meeting_start_time"
                         android:textColor="#FF8F8E94"
                         android:textSize="@dimen/content_title_textsize" />
 

@@ -505,6 +505,9 @@
     <string name="webex_password_invalid">密碼只允許包含數位和字母</string>
 
     <!-- 我的頁面部分 -->
+    <string name="moments">动态</string>
+
+    <!-- 我的頁面部分 -->
     <string name="data_clear_success">清除成功</string>
     <string name="not_set">未設置</string>
     <string name="mine">我</string>
@@ -559,7 +562,7 @@
     <string name="my_setting_tips_quit">確定清除應用內所有緩存數據？清除后將退出應用</string>
     <string name="get_language_error">未獲取到可用的語言包，請聯繫管理員</string>
     <string name="app_customer">雲+客服</string>
-    <string name="settings_device_manager">設備查看與管理</string>
+    <string name="settings_device_manager">設備管理</string>
     <string name="device_unbind_sucess">設備解綁成功！</string>
     <string name="device_other_unbind_warning">解綁後，從%1$s上登錄，您需要重新註冊設備</string>
     <string name="device_current_unbind_warning">解綁後，您需要重新登入並注册設備</string>
@@ -679,22 +682,22 @@
 
     <!-- 會議室部分 -->
     <string name="meeting_room_booking_detail">會議室詳情</string>
-    <string name="room_booking_topic">請輸入會議主題</string>
-    <string name="room_booking_choosing_room">請選擇會議室</string>
-    <string name="room_booking_members_edit">請添加參會人員</string>
-    <string name="room_booking_log_edit">請添加會務人員</string>
-    <string name="please_choosing_date">請選擇日期</string>
-    <string name="from">從</string>
-    <string name="to">到</string>
-    <string name="start_time">開始時間</string>
-    <string name="end_time">結束時間</string>
-    <string name="room_booking_notice_edit">請填寫備註資訊</string>
-    <string name="room_booking_detail">會議詳情</string>
+    <string name="meeting_room_booking_topic">請輸入會議主題</string>
+    <string name="meeting_room_booking_choosing_room">請選擇會議室</string>
+    <string name="meeting_room_booking_members_edit">請添加參會人員</string>
+    <string name="meeting_room_booking_log_edit">請添加會務人員</string>
+    <string name="meeting_choosing_date">請選擇日期</string>
+    <string name="meeting_from">從</string>
+    <string name="meeting_to">到</string>
+    <string name="meeting_start_time">開始時間</string>
+    <string name="meeting_end_time">結束時間</string>
+    <string name="meeting_room_booking_notice_edit">請填寫備註資訊</string>
+    <string name="meeting_booking_detail">會議詳情</string>
     <string name="meeting_booking_no_time">時間段為空，請先選擇時間段</string>
     <string name="meeting_booking_success">會議室預定成功</string>
     <string name="meeting_update_success">會議室更新成功</string>
-    <string name="file_upload_tips">請選擇一個要上傳的檔</string>
-    <string name="viewpager_indicator">%1$d/%2$d</string>
+    <string name="meeting_file_upload_tips">請選擇一個要上傳的檔</string>
+    <string name="meeting_viewpager_indicator">%1$d/%2$d</string>
     <string name="meeting_booking_title">會議室預訂</string>
     <string name="meeting_choose_time">時間為空，請先選時間段</string>
     <string name="meeting_no_booking_time">沒有可預訂時間</string>
@@ -713,7 +716,7 @@
     <string name="meeting_log">會務</string>
     <string name="meeting_ageda">議程</string>
     <string name="meeting_summary">紀要</string>
-    <string name="place">地點</string>
+    <string name="meeting_place">地點</string>
     <string name="meeting_list_title">會議室列表</string>
     <string name="meeting">會議</string>
     <string name="meeting_history">歷史會議</string>
@@ -725,16 +728,15 @@
     <string name="meeting_add_meeting">添加會議</string>
     <string name="meeting_booking">預訂</string>
     <string name="meeting_memebers">參與成員</string>
-    <string name="noon">正午</string>
-    <string name="office_create_fail">創建常用工作地點失敗</string>
-    <string name="office_create_success">創建常用工作地點成功</string>
-    <string name="office_delete_position">您確定刪除常用辦公地點嗎</string>
-    <string name="office_head">我的辦公地點</string>
-    <string name="building_head">選擇建築</string>
-    <string name="click_to_book">點擊預訂</string>
-    <string name="free">空閒</string>
-    <string name="day_before">前一天</string>
-    <string name="day_after">後一天</string>
+    <string name="meeting_noon">正午</string>
+    <string name="meeting_office_create_success">創建常用工作地點成功</string>
+    <string name="meeting_office_delete_position">您確定刪除常用辦公地點嗎</string>
+    <string name="meeting_office_head">我的辦公地點</string>
+    <string name="meeting_building_head">選擇建築</string>
+    <string name="meeting_click_to_book">點擊預訂</string>
+    <string name="meeting_free">空閒</string>
+    <string name="meeting_day_before">前一天</string>
+    <string name="meeting_day_after">後一天</string>
     <string name="meeting_change">變更會議</string>
     <string name="meeting_cancel">取消會議</string>
     <string name="meeting_detail_save">保存修改</string>
@@ -746,9 +748,9 @@
     <string name="meeting_click_add_work_place">點擊添加辦公地點</string>
     <string name="meeting_common_place">常用地點</string>
     <string name="meeting_time">會議時間</string>
-    <string name="reset">重置</string>
-    <string name="more_than_max_day">超過最大可預訂天數  </string>
-    <string name="more_than_max_time">超過最長可預訂時間</string>
+    <string name="meeting_reset">重置</string>
+    <string name="meeting_more_than_max_day">超過最大可預訂天數  </string>
+    <string name="meeting_more_than_max_time">超過最長可預訂時間</string>
     <string name="meeting_search_to">至</string>
     <string name="meeting_date_default">--/--/--/--/--</string>
     <string name="meeting_room_booked">時間已被預訂，請重新選擇</string>
@@ -756,45 +758,47 @@
     <string name="meeting_room_time_late">開始時間不能早於當前時間</string>
 
     <!-- 会议预定错误提示 -->
-    <string name="user_profile_broken">部門資訊缺失</string>
-    <string name="time_earlier_than_permission">預定時間早於規定時間（現在）</string>
-    <string name="time_later_than_permission">預定時間晚於規定時間</string>
-    <string name="time_span_over_limit">預定時間跨越多天 </string>
-    <string name="duration_over_limit">預定會議室時長超過限制</string>
-    <string name="time_conflict">預定時間與已有記錄衝突</string>
-    <string name="invalid_booking_time">預定會議室時長小於限制</string>
-    <string name="room_not_exists">會議室不存在</string>
-    <string name="room_locked_by_admin">會議室被管理員鎖定，不可預定</string>
-    <string name="room_for_special_use">VIP會議室，非管理員不可預定</string>
-    <string name="book_history_not_exist">會議室預定記錄不存在 </string>
-    <string name="expired_booking_history_immutable">過期的會議室預定不可更改</string>
-    <string name="user_profile_missing">用戶資訊缺失 </string>
-    <string name="department_booking_times_over_run">用戶部門資訊缺失</string>
+    <string name="meeting_user_profile_broken">部門資訊缺失</string>
+    <string name="meeting_time_earlier_than_permission">預定時間早於規定時間（現在）</string>
+    <string name="meeting_time_later_than_permission">預定時間晚於規定時間</string>
+    <string name="meeting_time_span_over_limit">預定時間跨越多天 </string>
+    <string name="meeting_duration_over_limit">預定會議室時長超過限制</string>
+    <string name="meeting_time_conflict">預定時間與已有記錄衝突</string>
+    <string name="meeting_invalid_booking_time">預定會議室時長小於限制</string>
+    <string name="meeting_room_not_exists">會議室不存在</string>
+    <string name="meeting_room_locked_by_admin">會議室被管理員鎖定，不可預定</string>
+    <string name="meeting_room_for_special_use">VIP會議室，非管理員不可預定</string>
+    <string name="meeting_book_history_not_exist">會議室預定記錄不存在 </string>
+    <string name="meeting_expired_booking_history_immutable">過期的會議室預定不可更改</string>
+    <string name="meeting_user_profile_missing">用戶資訊缺失 </string>
+    <string name="meeting_department_booking_times_over_run">用戶部門資訊缺失</string>
 
     <!-- 日曆 -->
     <string name="calendar_detail">日曆詳情</string>
-    <string name="adjust">調整</string>
-    <string name="save">保存</string>
-    <string name="please_input_title">請輸入標題</string>
-    <string name="start_or_end_time_illegal">結束時間不能小於開始時間</string>
-    <string name="tilte_cannot_exceed_64">標題不能超過64個字元</string>
-    <string name="select_calendar">請選擇日曆</string>
-    <string name="add_success">添加成功</string>
-    <string name="never">永不</string>
-    <string name="every_year">每年</string>
+    <string name="calendar_adjust">調整</string>
+    <string name="calendar_please_input_title">請輸入標題</string>
+    <string name="calendar_start_or_end_time_illegal">結束時間不能小於開始時間</string>
+    <string name="calendar_tilte_cannot_exceed_64">標題不能超過64個字元</string>
+    <string name="calendar_select_calendar">請選擇日曆</string>
+    <string name="calendar_add_success">添加成功</string>
+    <string name="calendar_every_year">每年</string>
     <string name="monthly">每月</string>
     <string name="weekly">每週</string>
     <string name="every_day">每日</string>
-    <string name="when_event_occurs">事件發生時</string>
-    <string name="five_minite_ago">5分鐘前</string>
-    <string name="fifteen_minite_ago">15分鐘前</string>
-    <string name="thirty_minite_ago">30分鐘前</string>
-    <string name="one_hour_ago">1小時前</string>
-    <string name="two_hours_ago">2小時前</string>
-    <string name="one_day_ago">1天前</string>
-    <string name="two_days_ago">2天前</string>
-    <string name="a_week_ago">1周前</string>
-    <string name="add_calendar">添加行事曆</string>
+    <string name="calendar_when_event_occurs">事件發生時</string>
+    <string name="calendar_five_minite_ago">5分鐘前</string>
+    <string name="calendar_fifteen_minite_ago">15分鐘前</string>
+    <string name="calendar_thirty_minite_ago">30分鐘前</string>
+    <string name="calendar_one_hour_ago">1小時前</string>
+    <string name="calendar_two_hours_ago">2小時前</string>
+    <string name="calendar_one_day_ago">1天前</string>
+    <string name="calendar_two_days_ago">2天前</string>
+    <string name="calendar_a_week_ago">1周前</string>
+    <string name="calendar_add_calendar">添加行事曆</string>
+
+    <!-- 通用 -->
+    <string name="save">保存</string>
+    <string name="never">永不</string>
 
     <!-- 待辦任務部分 -->
     <string name="mession_detial_doing">進行中</string>
@@ -961,7 +965,7 @@
 
     <!--安全中心-->
     <string name="setting_safe_center">帳號、設備安全</string>
-    <string name="safe_center_gesture">手勢密碼鎖定</string>
+    <string name="safe_center_gesture">手勢密碼</string>
     <string name="safe_center_finger_print">指紋</string>
     <string name="switch_gesture_unlock">手勢解鎖</string>
     <string name="switch_gesture_reset_unlock">重置手勢解鎖</string>
@@ -973,7 +977,8 @@
     <string name="blink">請眨眨眼</string>
     <string name="face_verify_success">刷脸成功</string>
     <string name="face_verify_fail">抱歉，沒有認出你來</string>
-    <string name="face_enter">刷脸解鎖</string>
+    <string name="face_enter">人臉識別</string>
+    <string name="face_login">刷臉登錄</string>
     <string name="off_face_verify_relogin">關閉刷臉，重新登錄</string>
     <string name="face_verifying">驗證中</string>
 
@@ -994,7 +999,7 @@
     <string name="create_gesture_confirm_error">與上一次繪製不一致，請重新繪製</string>
     <string name="create_gesture_confirm_correct">設置成功</string>
     <string name="create_gesture_reset">重新設置</string>
-    <string name="create_gesture_code">創建手勢密碼</string>
+    <string name="create_gesture_code">手勢密碼</string>
     <string name="create_gesture_guid">您可以創建一個雲+解鎖圖案，這樣他人在借用您的手機時，將無法可打開雲+</string>
     <string name="safe_center_enable">已啟用</string>
     <string name="safe_center_unenable">未啟用</string>

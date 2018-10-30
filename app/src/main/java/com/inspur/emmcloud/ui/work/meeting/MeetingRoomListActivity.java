@@ -290,7 +290,7 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
 				long endTimeLong = endCalendar.getTimeInMillis();
 				if (beginCalendar.after(endCalendar)) {
 					ToastUtils.show(getApplicationContext(),
-							R.string.start_or_end_time_illegal);
+							R.string.calendar_start_or_end_time_illegal);
 					break;
 				}
 				filteImg.setImageResource(R.drawable.icon_after_filte);

@@ -157,7 +157,7 @@ public class MeetingBookingActivity extends BaseActivity {
                 String topic = topicEdit.getText().toString();
                 if (StringUtils.isBlank(topic)) {
                     ToastUtils.show(MeetingBookingActivity.this,
-                            getString(R.string.room_booking_topic));
+                            getString(R.string.meeting_room_booking_topic));
                     break;
                 }
                 String notice = noticeEdit.getText().toString();
@@ -166,12 +166,12 @@ public class MeetingBookingActivity extends BaseActivity {
                     break;
                 }
                 if (meetingBeginCalendar.after(meetingEndCalendar)) {
-                    ToastUtils.show(MeetingBookingActivity.this, R.string.start_or_end_time_illegal);
+                    ToastUtils.show(MeetingBookingActivity.this, R.string.calendar_start_or_end_time_illegal);
                     break;
                 }
                 if (StringUtils.isBlank(meetingRoomId)) {
                     ToastUtils.show(MeetingBookingActivity.this,
-                            getString(R.string.room_booking_choosing_room));
+                            getString(R.string.meeting_room_booking_choosing_room));
                     break;
                 }
                 if (selectMemList.size() == 0) {
@@ -191,12 +191,12 @@ public class MeetingBookingActivity extends BaseActivity {
                 }
                 int count = TimeUtils.getCountdownNum(meetingEndCalendar);
                 if (count >= maxAhead) {
-                    ToastUtils.show(MeetingBookingActivity.this, getString(R.string.more_than_max_day));
+                    ToastUtils.show(MeetingBookingActivity.this, getString(R.string.meeting_more_than_max_day));
                     break;
                 }
                 int countHour = TimeUtils.getCeil(meetingEndCalendar, meetingBeginCalendar);
                 if (countHour > maxDuration) {
-                    ToastUtils.show(MeetingBookingActivity.this, getString(R.string.more_than_max_time));
+                    ToastUtils.show(MeetingBookingActivity.this, getString(R.string.meeting_more_than_max_time));
                     break;
                 }
                 // 设置预订时间为整分钟

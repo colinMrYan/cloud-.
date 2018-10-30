@@ -10,8 +10,6 @@ import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -283,7 +281,7 @@ public class MeetingsRoomDetailActivity extends BaseActivity {
                 convertView = vi.inflate(
                         R.layout.meeting_no_schedule_item_view, null);
                 ((TextView) convertView.findViewById(R.id.time_text))
-                        .setText(timeSegment + " " + getString(R.string.free));
+                        .setText(timeSegment + " " + getString(R.string.meeting_free));
                 convertView.findViewById(R.id.meeting_layout)
                         .setOnClickListener(new OnClickListener() {
 
