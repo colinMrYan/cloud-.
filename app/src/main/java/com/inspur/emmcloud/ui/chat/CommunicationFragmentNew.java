@@ -797,6 +797,7 @@ public class CommunicationFragmentNew extends Fragment {
                 conversation = (Conversation) eventMessage.getMessageObj();
                 index = displayUIConversationList.indexOf(new UIConversation(conversation.getId()));
                 if (index != -1) {
+                    displayUIConversationList.get(index).getConversation().setDnd(conversation.isDnd());
                     conversationAdapter.setData(displayUIConversationList);
                     conversationAdapter.notifyItemChanged(index);
                 }
