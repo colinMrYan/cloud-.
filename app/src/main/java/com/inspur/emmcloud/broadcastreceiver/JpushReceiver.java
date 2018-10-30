@@ -42,6 +42,7 @@ public class JpushReceiver extends BroadcastReceiver {
             String regId = bundle
                     .getString(JPushInterface.EXTRA_REGISTRATION_ID);
             LogUtils.debug(TAG, "[MyReceiver] 接收Registration Id : " + regId);
+            PreferencesUtils.putString(context, "pushFlag", "Jpush");
             PreferencesUtils.putString(context, "JpushRegId", regId);
             new PushIdManagerUtils(context).registerPushId2Emm();
             new ClientIDUtils(context).upload();

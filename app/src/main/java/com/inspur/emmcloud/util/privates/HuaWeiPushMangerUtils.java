@@ -88,12 +88,11 @@ public class HuaWeiPushMangerUtils implements ConnectionCallbacks, OnConnectionF
             stopPush();
             client.disconnect();
         }
-        PreferencesUtils.putString(contextLocal, "pushFlag", "Jpush");
-        //在填充标志的时候传一次JpushId
-        new PushIdManagerUtils(contextLocal).registerPushId2Emm();
         ((MyApplication) contextLocal.getApplicationContext()).startJPush();
+//        PreferencesUtils.putString(contextLocal, "pushFlag", "Jpush");
+//        //在填充标志的时候传一次JpushId
+//        new PushIdManagerUtils(contextLocal).registerPushId2Emm();
     }
-
 
     /**
      * 设置是否接收透传消息

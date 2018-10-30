@@ -199,6 +199,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
 /****************************通知相关（极光和华为推送）******************************************/
     /**
      * 初始化推送，以后如需定制小米等厂家的推送服务可从这里定制
+     * 目前使用的位置有ActionReceiver，IndexActivity 截止到181030
      */
     public void startPush() {
         if (AppUtils.getIsHuaWei() && canConnectHuawei()) {
