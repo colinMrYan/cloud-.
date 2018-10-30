@@ -162,7 +162,7 @@ public class HuaWeiPushMangerUtils implements ConnectionCallbacks, OnConnectionF
             @Override
             public void run() {
                 try {
-                    String deltoken = PreferencesUtils.getString(contextLocal, "huawei_push_token", "");
+                    String deltoken = PreferencesUtils.getString(contextLocal, Constant.HUAWEI_PUSH_TOKEN, "");
                     if (!StringUtils.isEmpty(deltoken) && null != client) {
                         HuaweiPush.HuaweiPushApi.deleteToken(client, deltoken);
                         client.disconnect();

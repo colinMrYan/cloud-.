@@ -5,6 +5,7 @@ import android.content.Context;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.bean.appcenter.AndroidBundleBean;
 import com.inspur.emmcloud.bean.mine.Language;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
@@ -76,7 +77,7 @@ public class ReactNativeInitInfoUtils {
      * @return
      */
     public static String getPushId(Context context) {
-        String hwToken = PreferencesUtils.getString(context, "huawei_push_token", "");
+        String hwToken = PreferencesUtils.getString(context, Constant.HUAWEI_PUSH_TOKEN, "");
         return AppUtils.getIsHuaWei() ? (StringUtils.isBlank(hwToken) ? PreferencesUtils.getString(context, "JpushRegId", "")
                 : (hwToken + "@push.huawei.com")) : PreferencesUtils.getString(context, "JpushRegId", "");
     }

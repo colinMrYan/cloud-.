@@ -778,7 +778,7 @@ public class AppUtils {
         String pushId = "";
         if (AppUtils.getIsHuaWei() && canConnectHuawei(context)) {
             //需要对华为单独推送的时候解开这里
-            String hwtoken = PreferencesUtils.getString(context, "huawei_push_token", "");
+            String hwtoken = PreferencesUtils.getString(context, Constant.HUAWEI_PUSH_TOKEN, "");
             if (!StringUtils.isBlank(hwtoken)) {
                 pushId = hwtoken + "@push.huawei.com";
             }
