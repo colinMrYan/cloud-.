@@ -146,7 +146,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
 
             }
         };
-        PreferencesUtils.putString(this, Constant.PUSH_FLAG, "");
+        AppUtils.setPushFlag(this,"");
         isActive = false;
         isContactReady = PreferencesUtils.getBoolean(getInstance(),
                 "isContactReady", false);
@@ -228,7 +228,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
      * @return
      */
     private boolean canConnectHuawei() {
-        String pushFlag = PreferencesUtils.getString(this, Constant.PUSH_FLAG, "");
+        String pushFlag = AppUtils.getPushFlag(this);
         return (StringUtils.isBlank(pushFlag) || pushFlag.equals(Constant.HUAWEI_FLAG));
     }
 

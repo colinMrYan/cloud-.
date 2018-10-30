@@ -803,7 +803,7 @@ public class AppUtils {
         // 小米  com.xiaomi.xmpush
         // 魅族  com.meizu.api - push
         String pushProvider = "";
-        String pushFlag = PreferencesUtils.getString(context, Constant.PUSH_FLAG, "");
+        String pushFlag = AppUtils.getPushFlag(context);
         switch (pushFlag) {
             case Constant.HUAWEI_FLAG:
                 pushProvider = "com.hicloud.push";
@@ -822,12 +822,30 @@ public class AppUtils {
     }
 
     /**
+     * 获取PUSH_FLAG
+     * @param context
+     * @return
+     */
+    public static String getPushFlag(Context context){
+        return PreferencesUtils.getString(context, Constant.PUSH_FLAG, "");
+    }
+
+    /**
+     * 设置pushFlag
+     * @param context
+     * @param pushFlag
+     */
+    public static void setPushFlag(Context context,String pushFlag){
+        PreferencesUtils.putString(context, Constant.PUSH_FLAG, pushFlag);
+    }
+
+    /**
      * 判断是否可以连接华为推了送
      *
      * @return
      */
     private static boolean canConnectHuawei(Context context) {
-        String pushFlag = PreferencesUtils.getString(context, Constant.PUSH_FLAG, "");
+        String pushFlag = getPushFlag(context);
         return StringUtils.isBlank(pushFlag) || pushFlag.equals(Constant.HUAWEI_FLAG);
     }
 
