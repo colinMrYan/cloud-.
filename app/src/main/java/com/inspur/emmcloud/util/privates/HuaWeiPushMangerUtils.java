@@ -90,7 +90,7 @@ public class HuaWeiPushMangerUtils implements ConnectionCallbacks, OnConnectionF
             client.disconnect();
         }
         ((MyApplication) contextLocal.getApplicationContext()).startJPush();
-//        PreferencesUtils.putString(contextLocal, Constant.PUSH_FLAG, "Jpush");
+//        PreferencesUtils.putString(contextLocal, Constant.PUSH_FLAG, Constant.JPUSH_FLAG);
 //        //在填充标志的时候传一次JpushId
 //        new PushIdManagerUtils(contextLocal).registerPushId2Emm();
     }
