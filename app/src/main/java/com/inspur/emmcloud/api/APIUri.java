@@ -1481,7 +1481,7 @@ public class APIUri {
      * @return
      */
     public static String getRegisterPushTokenUrl(){
-        return "https://emm.inspuronline.com/api/sys/v6.0/config/registerPushToken ";
+        return "https://emm.inspuronline.com/api/sys/v6.0/config/registerDevice";
     }
 
     /**
@@ -1490,6 +1490,6 @@ public class APIUri {
      * @return
      */
     public static String getUnRegisterPushTokenUrl(){
-        return "https://emm.inspuronline.com/api/sys/v6.0/config/unRegisterPushToken";
+        return "https://emm.inspuronline.com/api/sys/v6.0/config/unRegisterDevice";
     }
 }

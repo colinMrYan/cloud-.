@@ -32,9 +32,11 @@ import com.inspur.emmcloud.service.BackgroundService;
 import com.inspur.emmcloud.service.CoreService;
 import com.inspur.emmcloud.service.LocationService;
 import com.inspur.emmcloud.service.PVCollectService;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.common.romadaptation.RomInfoUtils;
 import com.inspur.emmcloud.util.privates.AppConfigUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ClientConfigUpdateUtils;
@@ -80,6 +82,10 @@ public class IndexActivity extends IndexBaseActivity {
         getInitData();
         startService();
         EventBus.getDefault().register(this);
+        LogUtils.YfcDebug("获取romInfo："+RomInfoUtils.getRomInfo());
+        LogUtils.YfcDebug("获取romInfoType："+RomInfoUtils.getRomType());
+        LogUtils.YfcDebug("获取romInfoType："+RomInfoUtils.isEMUI());
+        LogUtils.YfcDebug("获取romInfoType："+RomInfoUtils.isMIUI());
     }
 
     /**

@@ -640,12 +640,24 @@ public class AppAPIService {
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(url);
         JSONObject object = new JSONObject();
         try {
-            object.put("os","Android");
-            object.put("osVersion",AppUtils.getReleaseVersion());
+//            object.put("os","Android");
+//            object.put("osVersion",AppUtils.getReleaseVersion());
+//            object.put("appId",context.getPackageName());
+//            object.put("appVersion",AppUtils.getVersion(context));
+//            object.put("appCoreVersion",AppUtils.getVersion(context));
+//            object.put("ClientConfigVersions",clientConfigVersionObj);
+
+            object.put("deviceId",AppUtils.getMyUUID(context));
             object.put("appId",context.getPackageName());
             object.put("appVersion",AppUtils.getVersion(context));
-            object.put("appCoreVersion",AppUtils.getVersion(context));
-            object.put("ClientConfigVersions",clientConfigVersionObj);
+            object.put("type",AppUtils.getPushProvider(context));
+            object.put("token",AppUtils.getPushId(context));
+            object.put("inspurId",MyApplication.getInstance().getUid());
+            object.put("tenantId",MyApplication.getInstance().getTanent());
+            object.put("deviceModel",AppUtils.GetChangShang()+"/"+AppUtils.GetModel());
+            object.put("deviceOS","Android");
+            object.put("deviceOSVersion",AppUtils.getReleaseVersion());
+            object.put("romInfo",AppUtils.getReleaseVersion());
         }catch (Exception e){
             e.printStackTrace();
         }
