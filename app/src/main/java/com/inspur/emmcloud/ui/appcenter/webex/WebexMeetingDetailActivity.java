@@ -5,9 +5,12 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -30,6 +33,7 @@ import com.inspur.emmcloud.bean.system.EventMessage;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.mine.setting.RecommendAppActivity;
+import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -65,6 +69,7 @@ import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
 
+import java.io.Serializable;
 import java.lang.ref.WeakReference;
 import java.net.URLEncoder;
 import java.util.Calendar;
@@ -100,8 +105,6 @@ public class WebexMeetingDetailActivity extends BaseActivity {
     private RelativeLayout hostKeyLayout;
     @ViewInject(R.id.tv_host_key)
     private TextView hostKeyText;
-    @ViewInject(R.id.iv_delete)
-    private ImageView deleteImg;
 
     private WebexMeeting webexMeeting;
     private boolean isOwner = false;
@@ -109,6 +112,7 @@ public class WebexMeetingDetailActivity extends BaseActivity {
     private WebexAPIService apiService;
     private String fakeMessageId;
     private String shareContent;
+    private PopupWindow optionMenuPop;
 
 
     @Override
@@ -150,7 +154,7 @@ public class WebexMeetingDetailActivity extends BaseActivity {
         GetMyInfoResult getMyInfoResult = new GetMyInfoResult(myInfo);
         String myEmail = getMyInfoResult.getMail();
         isOwner = webexMeeting.getHostWebExID().equals(myEmail);
-        deleteImg.setVisibility(isOwner ? View.VISIBLE : View.INVISIBLE);
+
         ownerText.setText(isOwner ? getString(R.string.mine) : webexMeeting.getHostUserName());
         functionBtn.setText(isOwner ? getString(R.string.webex_start) : getString(R.string.join));
         hostKeyLayout.setVisibility(isOwner ? View.VISIBLE : View.GONE);
@@ -257,13 +261,50 @@ public class WebexMeetingDetailActivity extends BaseActivity {
                     showInstallDialog();
                 }
                 break;
-            case R.id.iv_delete:
+            case R.id.rl_delete:
+                optionMenuPop.dismiss();
                 showDeleteMeetingWarningDlg();
                 break;
-            case R.id.iv_share:
+            case R.id.rl_share:
+                optionMenuPop.dismiss();
                 shareWebexMeeting();
                 break;
+            case R.id.option_img:
+                showOptionMenuPop(v);
+                break;
+            case R.id.rl_attendees:
+                optionMenuPop.dismiss();
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(WebexAttendeesActivity.EXTRA_ATTENDEES_LIST,(Serializable) webexMeeting.getWebexAttendeesList());
+                IntentUtils.startActivity(this,WebexAttendeesActivity.class,bundle);
+                break;
         }
+    }
+
+    private void showOptionMenuPop(View view){
+        View contentView = LayoutInflater.from(this).inflate(R.layout.pop_webex_meeting_detail_option, null);
+        optionMenuPop = new PopupWindow(contentView,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT, true);
+        contentView.findViewById(R.id.rl_delete).setVisibility(isOwner ? View.VISIBLE : View.INVISIBLE);
+        optionMenuPop.setTouchable(true);
+        optionMenuPop.setTouchInterceptor(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return false;
+            }
+        });
+        optionMenuPop.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                AppUtils.setWindowBackgroundAlpha(WebexMeetingDetailActivity.this, 1.0f);
+            }
+        });
+        optionMenuPop.setBackgroundDrawable(getResources().getDrawable(
+                R.drawable.pop_window_view_tran));
+        AppUtils.setWindowBackgroundAlpha(this, 0.8f);
+        // 设置好参数之后再show
+        optionMenuPop.showAsDropDown(view);
     }
 
     private void shareWebexMeeting() {
@@ -272,8 +313,6 @@ public class WebexMeetingDetailActivity extends BaseActivity {
                 +getString(R.string.webex_meeting_password_tip)+webexMeeting.getMeetingPassword();
         UMConfigure.init(this,"59aa1f8f76661373290010d3"
                 ,"umeng",UMConfigure.DEVICE_TYPE_PHONE,"");
-//        QueuedWork.isUseThreadPool = false;
-//        UMShareAPI.get(this);
         UMConfigure.setLogEnabled(false);
         PlatformConfig.setWeixin("wx4eb8727ea9c26495", "56a0426315f1d0985a1cc1e75e96130d");
         PlatformConfig.setQQZone("1105561850", "1kaw4r1c37SUupFL");

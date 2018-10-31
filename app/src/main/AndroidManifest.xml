@@ -311,6 +311,12 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>
         <activity
+            android:name=".ui.appcenter.webex.WebexAttendeesActivity"
+            android:launchMode="singleTask"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait"></activity>
+
+        <activity
             android:name=".ui.appcenter.webex.WebexMeetingDetailActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"

@@ -127,7 +127,6 @@ public class CommunicationFragmentNew extends Fragment {
         EventBus.getDefault().register(this);
         initView();
         sortConversationList();// 对Channel 进行排序
-        getMessage();
         registerMessageFragmentReceiver();
         getConversationList();
         setHeaderFunctionOptions(null);
@@ -148,6 +147,7 @@ public class CommunicationFragmentNew extends Fragment {
         initPullRefreshLayout();
         initRecycleView();
         loadingDlg = new LoadingDialog(getActivity());
+        showSocketStatusInTitle(WebSocketPush.getInstance().getWebsocketStatus());
     }
 
     /**
@@ -194,7 +194,7 @@ public class CommunicationFragmentNew extends Fragment {
                 String type = conversation.getType();
                 if (type.equals(Conversation.TYPE_CAST) || type.equals(Conversation.TYPE_DIRECT) || type.equals(Conversation.TYPE_GROUP)) {
                     Bundle bundle = new Bundle();
-                    bundle.putSerializable(ConversationActivity.EXTRA_CONVERSATION, conversation);
+                    bundle.putSerializable(ConversationActivity.EXTRA_CONVERSATION,conversation);
                     IntentUtils.startActivity(getActivity(), ConversationActivity.class, bundle);
                 } else {
                     ToastUtils.show(MyApplication.getInstance(), R.string.not_support_open_channel);
@@ -397,7 +397,7 @@ public class CommunicationFragmentNew extends Fragment {
         if (!MyApplication.getInstance().getIsContactReady()) {
             return;
         }
-        if (conversationList != null && conversationList.size() == 0) {
+        if (conversationList != null && conversationList.size() == 0){
             return;
         }
         isGroupIconCreate = true;
@@ -521,7 +521,7 @@ public class CommunicationFragmentNew extends Fragment {
             intersectionConversationList.addAll(conversationList);
             intersectionConversationList.retainAll(cacheConversationList);
             cacheConversationList.removeAll(intersectionConversationList);
-            ConversationCacheUtils.deleteConversationList(MyApplication.getInstance(), cacheConversationList);
+            ConversationCacheUtils.deleteConversationList(MyApplication.getInstance(),cacheConversationList);
             if (handler != null) {
                 if (isGroupIconCreate) {
                     conversationList.removeAll(intersectionConversationList);
@@ -803,7 +803,6 @@ public class CommunicationFragmentNew extends Fragment {
                 }
                 break;
         }
-
     }
 
 
@@ -862,7 +861,7 @@ public class CommunicationFragmentNew extends Fragment {
                     }
                     if (currentChannelOfflineMessageList.size() > 0) {
                         //将离线消息发送到当前频道
-                        EventBus.getDefault().post(offlineMessageList);
+                        EventBus.getDefault().post(currentChannelOfflineMessageList);
                     }
                 }
                 new CacheMessageListThread(offlineMessageList, getOfflineMessageListResult.getChannelMessageSetList()).start();
@@ -980,7 +979,6 @@ public class CommunicationFragmentNew extends Fragment {
         public void returnConversationListFail(String error, int errorCode) {
             if (getActivity() != null) {
                 swipeRefreshLayout.setRefreshing(false);
-                getMessage();
             }
         }
 
@@ -1013,7 +1011,7 @@ public class CommunicationFragmentNew extends Fragment {
                 displayUIConversationList.remove(index);
                 conversationAdapter.setData(displayUIConversationList);
                 conversationAdapter.notifyItemRemoved(index);
-                if (unReadCount > 0) {
+                if (unReadCount>0){
                     WSAPIService.getInstance().setChannelMessgeStateRead(id);
                 }
             }
