@@ -37,16 +37,4 @@ public class BaseActivity extends Activity {
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(LanguageUtils.attachBaseContext(newBase));
     }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-    }
 }
