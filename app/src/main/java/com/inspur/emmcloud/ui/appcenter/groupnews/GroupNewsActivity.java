@@ -92,16 +92,6 @@ public class GroupNewsActivity extends BaseFragmentActivity implements
 	}
 
 	@Override
-	protected void onStart() {
-		super.onStart();
-	}
-
-	@Override
-	protected void onPause() {
-		super.onPause();
-	}
-
-	@Override
 	public void onPageSelected(int arg0) {
 		pagerAdapter.getItem(arg0);
 		pagerAdapter.notifyDataSetChanged();

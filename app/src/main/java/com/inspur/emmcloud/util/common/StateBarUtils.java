@@ -11,8 +11,6 @@ import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 public class StateBarUtils {
 
-
-
     /**
      * 求改状态栏颜色为默认颜色浪潮蓝
      *

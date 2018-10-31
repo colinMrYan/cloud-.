@@ -116,6 +116,7 @@ public class GroupNewsCardFragment extends Fragment implements MySwipeRefreshLay
         }
     }
 
+
     class ListItemOnClickListener implements OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position,
