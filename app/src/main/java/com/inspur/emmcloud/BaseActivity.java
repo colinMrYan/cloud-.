@@ -22,7 +22,6 @@ public class BaseActivity extends Activity {
                 && !className.endsWith(".MainActivity") && !className.endsWith(".FaceVerifyActivity") && !className.endsWith(".ReactNativeAppActivity")  && !className.endsWith(".ScanQrCodeLoginGSActivity")
                 && !className.endsWith(".IMGEditActivity") && !className.endsWith(".ImageGalleryActivity")){
             StateBarUtils.changeStateBarColor(this);
-            StateBarUtils.setImmersiveStateBar(this);
         }
        //禁止截屏
         this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);

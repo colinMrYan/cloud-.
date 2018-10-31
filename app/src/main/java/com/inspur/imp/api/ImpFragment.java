@@ -115,7 +115,6 @@ public class ImpFragment extends Fragment {
         rootView = inflater.inflate(Res.getLayoutID("activity_imp"), null);
         initViews();
         version = getArguments().getString(Constant.WEB_FRAGMENT_VERSION, "");
-        StateBarUtils.setImmersiveStateBar(getActivity());
     }
 
     @Override

@@ -22,8 +22,8 @@ import com.inspur.emmcloud.bean.appcenter.news.NewsIntrcutionUpdateEvent;
 import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.privates.WaterMarkBg;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
+import com.inspur.emmcloud.util.privates.WaterMarkBgSingleLine;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.MySwipeRefreshLayout;
 
@@ -84,7 +84,8 @@ public class GroupNewsCardFragment extends Fragment implements MySwipeRefreshLay
         String myInfo = PreferencesUtils.getString(getContext(), "myInfo", "");
         GetMyInfoResult  getMyInfoResult = new GetMyInfoResult(myInfo);
         labels.add(getMyInfoResult.getCode());
-        newsListView.setBackground(new WaterMarkBg(getContext(),labels,-30,30,30));
+        WaterMarkBgSingleLine bgSingleLine =new WaterMarkBgSingleLine(getContext(),-20,30,"#dfE7E7E7",true,36,73,244,116,"libaochao");
+        newsListView.setBackground(bgSingleLine);
         getGroupNewsList(getArguments().getString("catagoryid"), 0, true);
         EventBus.getDefault().register(this);
     }

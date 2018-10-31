@@ -504,7 +504,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
         if(Constant.APP_TAB_BAR_RN_FIND.toString().equals(tabId)) {
 
         } else {
-            StateBarUtils.setImmersiveStateBar(this);
+
         }
 
         this.tabId = tabId;

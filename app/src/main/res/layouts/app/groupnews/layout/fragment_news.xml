@@ -17,6 +17,10 @@
             android:dividerHeight="0.5px"
             android:divider="@color/color_list_divider"
             android:listSelector="#00000000" />
+        <Button
+            android:layout_width="10dp"
+            android:layout_height="match_parent"
+            android:background="#efefef"/>
 
     </com.inspur.emmcloud.widget.MySwipeRefreshLayout>
 
