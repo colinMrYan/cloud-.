@@ -58,7 +58,6 @@ import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils.OnCreateDirectChannelListener;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
-import com.inspur.emmcloud.util.privates.ImmersionStateBarUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
@@ -106,7 +105,6 @@ public class NewsWebDetailActivity extends BaseActivity {
         initData();
         initViews();
         EventBus.getDefault().register(this);
-        ImmersionStateBarUtils.setImmersiveStateBar(this);
     }
 
     /**
