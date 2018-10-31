@@ -1,10 +1,12 @@
 package com.inspur.imp.plugin.camera.imagepicker.ui;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
@@ -54,6 +56,10 @@ public class ImageGridActivity extends ImageBaseActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_grid);
         // hideBars();
+            if(Build.VERSION.SDK_INT>= Build.VERSION_CODES.KITKAT) {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);//透明状态栏
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);//透明底部导航栏
+        }
         imagePicker = ImagePicker.getInstance();
         imagePicker.clear();
         imagePicker.addOnImageSelectedListener(this);
