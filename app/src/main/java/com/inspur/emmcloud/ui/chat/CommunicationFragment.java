@@ -127,7 +127,6 @@ public class CommunicationFragment extends Fragment {
         EventBus.getDefault().register(this);
         initView();
         sortChannelList();// 对Channel 进行排序
-        getMessage();
         registerMessageFragmentReceiver();
         getChannelList();
         updateHeaderFunctionBtn(null);
@@ -146,6 +145,7 @@ public class CommunicationFragment extends Fragment {
         titleText = (TextView) rootView.findViewById(R.id.header_text);
         initPullRefreshLayout();
         initListView();
+        showSocketStatusInTitle(WebSocketPush.getInstance().getWebsocketStatus());
     }
 
     /**
@@ -493,7 +493,6 @@ public class CommunicationFragment extends Fragment {
                         break;
                     case CACHE_CHANNEL_SUCCESS:
                         sortChannelList();
-                        getMessage();
                         List<String> serviceCidList = (List<String>) msg.obj;
                         getServieChannelInputs(serviceCidList);
                         break;
@@ -974,7 +973,7 @@ public class CommunicationFragment extends Fragment {
                     }
                     if (currentChannelOfflineMessageList.size() > 0) {
                         //将离线消息发送到当前频道
-                        EventBus.getDefault().post(offlineMessageList);
+                        EventBus.getDefault().post(currentChannelOfflineMessageList);
                     }
                 }
                 new CacheMessageListThread(offlineMessageList, getOfflineMessageListResult.getChannelMessageSetList()).start();
@@ -1033,7 +1032,7 @@ public class CommunicationFragment extends Fragment {
     }
 
     public void getMessage() {
-        if (NetUtils.isNetworkConnected(MyApplication.getInstance()) && WebSocketPush.getInstance().isSocketConnect()) {
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance(),false) && WebSocketPush.getInstance().isSocketConnect()) {
             String lastMessageId = MessageCacheUtil.getLastMessageId(MyApplication.getInstance());
             if (lastMessageId != null) {
                 //获取离线消息
@@ -1082,7 +1081,6 @@ public class CommunicationFragment extends Fragment {
             // TODO Auto-generated method stub
             if (getActivity() != null) {
                 swipeRefreshLayout.setRefreshing(false);
-                getMessage();
             }
 
         }

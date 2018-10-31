@@ -977,6 +977,14 @@ public class APIUri {
     }
 
     /**
+     * 预定会议
+     * @return
+     */
+    public static String getScheduleWebexMeetingUrl(){
+        return getEMMBaseUrl()+"api/mam/v6.0/webex/v2";
+    }
+
+    /**
      * 获取webex头像地址
      * @param email
      * @return

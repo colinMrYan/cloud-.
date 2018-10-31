@@ -211,13 +211,9 @@ public class WebexScheduleMeetingActivity extends BaseActivity {
                     ToastUtils.show(WebexScheduleMeetingActivity.this, R.string.set_duration_correct);
                     return;
                 }
-                List<String> attendeesList = new ArrayList<>();
-                for(WebexAttendees webexAttendees:webexAttendeesList){
-                    attendeesList.add(webexAttendees.getEmail());
-                }
                 webexMeeting = new WebexMeeting();
                 webexMeeting.setConfName(confName);
-                webexMeeting.setAttendeesList(attendeesList);
+                webexMeeting.setWebexAttendeesList(webexAttendeesList);
                 webexMeeting.setDuration(duration);
                 webexMeeting.setMeetingPassword(meetingPassword);
                 webexMeeting.setStartDateCalendar(startCalendar);

@@ -517,8 +517,8 @@ public class ConversationActivity extends ConversationBaseActivity {
                 break;
         }
         if (fakeMessage != null) {
-            sendMessageWithFile(fakeMessage);
             addLocalMessage(fakeMessage, 0);
+            sendMessageWithFile(fakeMessage);
         }
     }
 
