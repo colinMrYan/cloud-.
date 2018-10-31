@@ -79,8 +79,6 @@ public class GroupNewsCardFragment extends Fragment implements MySwipeRefreshLay
         newsListView.setOnItemClickListener(new ListItemOnClickListener());
         newsAdapter = new NewsListAdapter(getActivity(), groupnNewsList);
         newsListView.setAdapter(newsAdapter);
-        //lbc 设置水印
-        List<String> labels = new ArrayList<>();
         String myInfo = PreferencesUtils.getString(getContext(), "myInfo", "");
         GetMyInfoResult  getMyInfoResult = new GetMyInfoResult(myInfo);
         newsListView.setBackground(new WaterMarkBgSingleLine(getContext(),-20,30,"#dfE7E7E7",true,36,73,244,116,getMyInfoResult.getCode()));

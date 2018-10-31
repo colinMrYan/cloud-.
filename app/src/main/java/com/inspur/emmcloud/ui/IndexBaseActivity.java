@@ -501,12 +501,6 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
 
     @Override
     public void onTabChanged(final String tabId) {
-        if(Constant.APP_TAB_BAR_RN_FIND.toString().equals(tabId)) {
-
-        } else {
-
-        }
-
         this.tabId = tabId;
         tipsView.setCanTouch(tabId.equals(Constant.APP_TAB_BAR_COMMUNACATE));
         if (!isSystemChangeTag) {
