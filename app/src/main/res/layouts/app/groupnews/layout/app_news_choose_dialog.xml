@@ -32,7 +32,7 @@
                 android:onClick="onClick"
                 android:background="@drawable/app_news_dialog_day_button"
                 android:textSize="@dimen/content_title_textsize"
-                android:text="@string/new_instructions_text" />
+                android:text="@string/news_instructions_text" />
             <!--android:visibility="gone"-->
             <Button
                 android:id="@+id/app_news_share_btn"
