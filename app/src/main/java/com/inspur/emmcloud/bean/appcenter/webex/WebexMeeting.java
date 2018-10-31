@@ -25,7 +25,8 @@ public class WebexMeeting implements Serializable{
     private String hostKey;
     private Calendar startDateCalendar;
     private int duration;
-    private List<String> attendeesList;
+   // private List<String> attendeesList;
+    private List<WebexAttendees> webexAttendeesList = new ArrayList<>();
     private String hostWebExID;
     private boolean inProgress;
     public WebexMeeting(){
@@ -45,7 +46,11 @@ public class WebexMeeting implements Serializable{
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         startDateCalendar = TimeUtils.timeString2Calendar(startDate,simpleDateFormat);
         duration = JSONUtils.getInt(obj,"duration",0);
-        attendeesList =  JSONUtils.getStringList(obj,"attendees",new ArrayList<String>());
+        JSONArray array = JSONUtils.getJSONArray(obj,"attendees",new JSONArray());
+        for (int i=0;i<array.length();i++){
+            WebexAttendees webexAttendees = new WebexAttendees(JSONUtils.getJSONObject(array,i,new JSONObject()));
+            webexAttendeesList.add(webexAttendees);
+        }
         meetingID = JSONUtils.getString(obj,"meetingID","");
         hostWebExID = JSONUtils.getString(obj,"hostWebExID","");
         inProgress = JSONUtils.getBoolean(obj,"inProgress",false);
@@ -115,12 +120,12 @@ public class WebexMeeting implements Serializable{
         this.duration = duration;
     }
 
-    public List<String> getAttendeesList() {
-        return attendeesList;
+    public List<WebexAttendees> getWebexAttendeesList() {
+        return webexAttendeesList;
     }
 
-    public void setAttendeesList(List<String> attendeesList) {
-        this.attendeesList = attendeesList;
+    public void setWebexAttendeesList(List<WebexAttendees> webexAttendeesList) {
+        this.webexAttendeesList = webexAttendeesList;
     }
 
     public boolean isInProgress() {
@@ -144,8 +149,10 @@ public class WebexMeeting implements Serializable{
             object.put("startDate",time);
             object.put("agenda","");
             JSONArray array = new JSONArray();
-            for (String attendees:attendeesList){
-                array.put(attendees);
+            for (WebexAttendees webexAttendees:webexAttendeesList){
+                JSONObject attendeesObj = new JSONObject();
+                attendeesObj.put("email",webexAttendees.getEmail());
+                array.put(attendeesObj);
             }
             object.put("attendees",array);
         }catch (Exception e){
