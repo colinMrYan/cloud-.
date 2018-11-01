@@ -243,7 +243,7 @@ public class MoreFragment extends Fragment {
 
         private void setViewByLayoutItem(View convertView,String layoutItem){
             CircleTextImageView iconImg = (CircleTextImageView)convertView.findViewById(R.id.iv_icon);
-            TextView titleText = (TextView)convertView.findViewById(R.id.tv_title);
+            TextView titleText = (TextView)convertView.findViewById(R.id.tv_name_tips);
             switch (layoutItem){
                 case "my_setting_function":
                     iconImg.setImageResource(R.drawable.icon_set);

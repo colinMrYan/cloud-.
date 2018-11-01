@@ -41,8 +41,21 @@
             android:text="@string/meeting_info"
             android:textColor="@color/header_text"
             android:textSize="@dimen/header_textsize" />
+        <ImageView
+            android:id="@+id/option_img"
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:clickable="true"
+            android:onClick="onClick"
+            android:paddingLeft="12dp"
+            android:paddingRight="15dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_header_option" />
         <RelativeLayout
             android:layout_alignParentRight="true"
+            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="match_parent">
             <ImageView
@@ -117,7 +130,7 @@
                     android:textSize="15sp"
                     />
                 <TextView
-                    android:id="@+id/tv_title"
+                    android:id="@+id/tv_name_tips"
                     android:maxLines="3"
                     android:ellipsize="end"
                     android:textSize="17sp"

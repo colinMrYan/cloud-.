@@ -189,7 +189,7 @@ public class WebexAddAttendeesActivity extends BaseActivity {
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
             WebexAttendees webexAttendees = webexAttendeesList.get(position);
-            convertView = LayoutInflater.from(WebexAddAttendeesActivity.this).inflate(R.layout.item_view_webex_attendees, null);
+            convertView = LayoutInflater.from(WebexAddAttendeesActivity.this).inflate(R.layout.item_view_webex_add_attendees, null);
             TextView emailText = (TextView) convertView.findViewById(R.id.tv_attendees);
             ImageView deleteImg = (ImageView) convertView.findViewById(R.id.iv_delete);
             CircleTextImageView photoImg = (CircleTextImageView)convertView.findViewById(R.id.iv_photo);

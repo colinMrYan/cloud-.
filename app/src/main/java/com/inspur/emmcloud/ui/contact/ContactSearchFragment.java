@@ -1406,7 +1406,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
         public MyViewHolder(View view, MyItemClickListener listener) {
             super(view);
             this.view = view;
-            titleText = (TextView) view.findViewById(R.id.tv_title);
+            titleText = (TextView) view.findViewById(R.id.tv_name_tips);
             titleImg = (ImageView) view.findViewById(R.id.title_img);
             this.mListener = listener;
             view.setOnClickListener(this);

@@ -156,7 +156,7 @@ public class ChannelGroupIconUtils {
             return null;
         }
         rangetWidth = dip2px(context, 40);
-        PADDING = dip2px(context, 1);
+        PADDING = 1;
         if (bitmapList.size() == 1) {
             return createOneBit(bitmapList, context);
         } else if (bitmapList.size() == 2) {

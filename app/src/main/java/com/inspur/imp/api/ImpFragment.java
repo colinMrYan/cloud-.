@@ -25,7 +25,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -39,11 +38,11 @@ import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ResolutionUtils;
+import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppTabUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
-import com.inspur.emmcloud.util.privates.ImmersionStateBarUtils;
 import com.inspur.emmcloud.util.privates.MDM.MDM;
 import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
 import com.inspur.emmcloud.widget.MaxHightListView;
@@ -104,7 +103,6 @@ public class ImpFragment extends Fragment {
     private ImpCallBackInterface impCallBackInterface;
     private int functionLayoutWidth = -1;
     private int webFunctionLayoutWidth = -1;
-    private ProgressBar progressbar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -115,7 +113,6 @@ public class ImpFragment extends Fragment {
         rootView = inflater.inflate(Res.getLayoutID("activity_imp"), null);
         initViews();
         version = getArguments().getString(Constant.WEB_FRAGMENT_VERSION, "");
-        ImmersionStateBarUtils.setImmersiveStateBar(getActivity());
     }
 
     @Override
@@ -144,19 +141,11 @@ public class ImpFragment extends Fragment {
             setArguments(new Bundle());
         }
         headerLayout = (RelativeLayout) rootView.findViewById(Res.getWidgetID("header_layout"));
-        loadingLayout = (RelativeLayout) rootView.findViewById(Res.getWidgetID("loading_layout"));
-        loadingText = (TextView) rootView.findViewById(Res.getWidgetID("loading_text"));
+        loadingLayout = (RelativeLayout) rootView.findViewById(Res.getWidgetID("rl_loading"));
+        loadingText = (TextView) rootView.findViewById(Res.getWidgetID("tv_loading"));
         frameLayout = (FrameLayout) rootView.findViewById(Res.getWidgetID("videoContainer"));
         loadFailLayout = (LinearLayout) rootView.findViewById(Res.getWidgetID("load_error_layout"));
         webView = (ImpWebView) rootView.findViewById(Res.getWidgetID("webview"));
-        progressbar = new ProgressBar(getActivity(), null, android.R.attr.progressBarStyleHorizontal);
-        progressbar.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
-                DensityUtil.dip2px(MyApplication.getInstance(), 3)));
-        //显示header加载进度条
-        Drawable drawable = getResources().getDrawable(
-                R.drawable.imp_progress_bar_states);
-        progressbar.setProgressDrawable(drawable);
-        webView.addView(progressbar);
         headerText = (TextView) rootView.findViewById(Res.getWidgetID("header_text"));
         functionLayout = (RelativeLayout) rootView.findViewById(Res.getWidgetID("function_layout"));
         webFunctionLayout = (LinearLayout) rootView.findViewById(Res.getWidgetID("ll_web_function"));
@@ -164,7 +153,7 @@ public class ImpFragment extends Fragment {
             rootView.findViewById(R.id.back_layout).setVisibility(View.GONE);
             rootView.findViewById(R.id.imp_close_btn).setVisibility(View.GONE);
         }
-//        showLoadingDlg(getString(Res.getStringID("@string/loading_text")));
+        showLoadingDlg("");
         if (!StringUtils.isBlank(getArguments().getString("help_url"))) {
             String helpUrl = getArguments().getString("help_url");
             if (!StringUtils.isBlank(helpUrl)) {
@@ -444,7 +433,7 @@ public class ImpFragment extends Fragment {
             convertView = LayoutInflater.from(getActivity()).inflate(R.layout.plugin_pop_drop_list_item_view, null);
             DropItemTitle dropItemTitle = dropItemTitleList.get(position);
             ImageView iconImg = (ImageView) convertView.findViewById(R.id.iv_icon);
-            TextView titleText = (TextView) convertView.findViewById(R.id.tv_title);
+            TextView titleText = (TextView) convertView.findViewById(R.id.tv_name_tips);
             ImageView selectImg = (ImageView) convertView.findViewById(R.id.iv_select);
             ImageDisplayUtils.getInstance().displayImage(iconImg, dropItemTitle.getIco(), R.drawable.icon_photo_default);
             titleText.setText(dropItemTitle.getText());
@@ -508,12 +497,6 @@ public class ImpFragment extends Fragment {
 
             @Override
             public void onProgressChanged(int newProgress) {
-                if (progressbar.getVisibility() == View.VISIBLE) {
-                    progressbar.setProgress(newProgress);
-                    if (newProgress == 100) {
-                        progressbar.setVisibility(View.GONE);
-                    }
-                }
             }
 
         };

@@ -4,11 +4,11 @@ package com.inspur.emmcloud.widget.dialogs;
  * Created by yufuchang on 2017/4/13.
  */
 
-import android.app.ProgressDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.Gravity;
-import android.view.WindowManager;
+import android.view.WindowManager.LayoutParams;
 
 import com.inspur.emmcloud.R;
 
@@ -16,14 +16,11 @@ import com.inspur.emmcloud.R;
 /**
  * 加载提醒对话框
  */
-public class ECMCustomIOSDialog extends ProgressDialog {
-    public ECMCustomIOSDialog(Context context) {
-        super(context);
+public class ReactLoadingDlg extends Dialog {
+    public ReactLoadingDlg(Context context) {
+        super(context, R.style.dialog_progressbar);
     }
 
-    public ECMCustomIOSDialog(Context context, int theme) {
-        super(context, theme);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,13 +32,13 @@ public class ECMCustomIOSDialog extends ProgressDialog {
         //设置不可取消，点击其他区域不能取消，实际中可以抽出去封装供外包设置
         setCancelable(false);
         setCanceledOnTouchOutside(false);
-        setContentView(R.layout.dialog_custom_ios_layout);
-        WindowManager.LayoutParams params = getWindow().getAttributes();
-        params.width = WindowManager.LayoutParams.MATCH_PARENT;
-        params.height = WindowManager.LayoutParams.MATCH_PARENT;
-        params.gravity = Gravity.CENTER;
-        params.dimAmount = 0.7f;
-        getWindow().setAttributes(params);
+        setContentView(R.layout.dialog_react_loading);
+        // 设置window属性
+        LayoutParams lp = getWindow().getAttributes();
+        lp.gravity = Gravity.CENTER;
+        lp.dimAmount = 0f; // 去背景遮盖
+        lp.alpha = 1.0f;
+        getWindow().setAttributes(lp);
     }
 
     @Override

@@ -334,7 +334,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
      */
     public void setIsActive(boolean isActive) {
         this.isActive = isActive;
-        WebSocketPush.getInstance().sendAppStatus(isActive);
+        WebSocketPush.getInstance().sendAppStatus();
         clearNotification();
     }
 

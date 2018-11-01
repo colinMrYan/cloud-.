@@ -57,7 +57,6 @@ import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.interf.OnRecommendAppWidgetItemClickListener;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ShortCutUtils;
@@ -68,7 +67,6 @@ import com.inspur.emmcloud.util.privates.MyAppWidgetUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.UriUtils;
-import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.AppCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MyAppCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
@@ -354,7 +352,6 @@ public class MyAppFragment extends Fragment {
     private void getMyApp() {
         if (NetUtils.isNetworkConnected(getActivity(), false)) {
             String saveConfigVersion = ClientConfigUpdateUtils.getInstance().getItemNewVersion(ClientConfigItem.CLIENT_CONFIG_MY_APP);
-            LogUtils.jasonDebug("saveConfigVersion=="+saveConfigVersion);
             apiService.getUserApps(saveConfigVersion);
         } else {
             swipeRefreshLayout.setRefreshing(false);
@@ -1191,7 +1188,7 @@ public class MyAppFragment extends Fragment {
         @Override
         public void returnUserAppsFail(String error, int errorCode) {
             swipeRefreshLayout.setRefreshing(false);
-            WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
+  //          WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
         }
 
         @Override
