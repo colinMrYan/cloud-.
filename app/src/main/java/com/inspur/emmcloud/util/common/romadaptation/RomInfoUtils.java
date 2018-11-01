@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.util.common.romadaptation;
 
+import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 
 import java.io.BufferedReader;
@@ -34,6 +35,7 @@ public class RomInfoUtils {
      */
     public static String getRomNameInfo() {
         String romNameInfo = "";
+        String manufacturer = AppUtils.GetChangShang().toLowerCase();
         switch (AppUtils.GetChangShang().toLowerCase()) {
             case "huawei":
                 romNameInfo = EMUI;
@@ -54,7 +56,7 @@ public class RomInfoUtils {
                 romNameInfo = EXPERIENCE;
                 break;
             default:
-                romNameInfo = UNKNOW;
+                romNameInfo = StringUtils.isBlank(manufacturer)?UNKNOW:manufacturer;
                 break;
         }
         return romNameInfo;
