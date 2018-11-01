@@ -830,7 +830,7 @@ public class CommunicationFragmentNew extends Fragment {
                     }
                     if (currentChannelOfflineMessageList.size() > 0) {
                         //将离线消息发送到当前频道
-                        EventBus.getDefault().post(offlineMessageList);
+                        EventBus.getDefault().post(currentChannelOfflineMessageList);
                     }
                 }
                 new CacheMessageListThread(offlineMessageList, getOfflineMessageListResult.getChannelMessageSetList()).start();
