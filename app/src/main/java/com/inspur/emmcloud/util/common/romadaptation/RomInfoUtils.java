@@ -1,61 +1,69 @@
 package com.inspur.emmcloud.util.common.romadaptation;
 
-import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.privates.AppUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
 /**
- * 目前支持四种手机ROM的判断
- * 还没有完全对四种手机的各种版本做测试，现有手机测试是可以的
+ * 变更获取getRomNameInfo的实现改为通过厂商映射指定系统名称
  * Created by yufuchang on 2018/10/31.
  */
 
 public class RomInfoUtils {
-    private static final String MIUI = "miui";
-    private static final String EMUI = "emotionui";
-    private static final String FLYME = "flyme";
-    private static final String COLOROS = "coloros";
-    private static final String FUNTOUCH = "funtouch";
-    private static final String UNKNOW = "unknow";
-
-    private static final String RUNTIME_SYS_NAME_EMUI = "ro.build.version.emui";
-    private static final String RUNTIME_SYS_NAME_MIUI = "ro.miui.ui.version.name";
-    private static final String RUNTIME_SYS_NAME_OPPO = "ro.build.version.opporom";
-    private static final String RUNTIME_SYS_NAME_VIVO = "ro.vivo.os.name";
-    private static final String RUNTIME_SYS_NAME_DEFAULT = "ro.build.display.id";
+    private static final String MIUI = "miui";//小米
+    private static final String EMUI = "emotionui";//华为
+    private static final String FLYME = "flyme";//魅族
+    private static final String COLOROS = "coloros";//OPPO
+    private static final String FUNTOUCH = "funtouch";//VIVO
+    private static final String EXPERIENCE = "experience";//三星
+    private static final String UNKNOW = "unknow";//未知
 
     private static final String RUNTIME_SYS_VERSION_MIUI = "ro.miui.ui.version.name";
     private static final String RUNTIME_SYS_VERSION_EMUI = "ro.build.version.emui";
     private static final String RUNTIME_SYS_VERSION_OPPO = "ro.build.version.opporom";
     private static final String RUNTIME_SYS_VERSION_VIVO = "ro.vivo.os.build.display.id";
+    private static final String RUNTIME_SYS_VERSION_SAMSUNG = "ro.build.version.incremental";
     private static final String RUNTIME_SYS_VERSION_DEFAULT = "ro.comp.system_version";
 
     /**
      * 获取RomName的信息如emotionui
+     *
      * @return
      */
     public static String getRomNameInfo() {
         String romNameInfo = "";
-        if (!StringUtils.isBlank(getRomProperty(RUNTIME_SYS_NAME_MIUI))) {
-            romNameInfo = MIUI;
-        } else if (!StringUtils.isBlank(getRomProperty(RUNTIME_SYS_NAME_OPPO))) {
-            romNameInfo = COLOROS;
-        } else if (getRomProperty(RUNTIME_SYS_NAME_EMUI).toLowerCase().contains(EMUI)) {
-            romNameInfo = EMUI;
-        }else if(getRomProperty(RUNTIME_SYS_NAME_VIVO).toLowerCase().contains(FUNTOUCH)){
-            romNameInfo = FUNTOUCH;
-        } else if (getRomProperty(RUNTIME_SYS_NAME_DEFAULT).toLowerCase().contains(FLYME)) {
-            romNameInfo = FLYME;
-        } else {
-            romNameInfo = UNKNOW;
+        String manufacturer = AppUtils.GetChangShang().toLowerCase();
+        switch (manufacturer) {
+            case "huawei":
+                romNameInfo = EMUI;
+                break;
+            case "xiaomi":
+                romNameInfo = MIUI;
+                break;
+            case "meizu":
+                romNameInfo = FLYME;
+                break;
+            case "vivo":
+                romNameInfo = FUNTOUCH;
+                break;
+            case "oppo":
+                romNameInfo = COLOROS;
+                break;
+            case "samsung":
+                romNameInfo = EXPERIENCE;
+                break;
+            default:
+                romNameInfo = UNKNOW;
+                break;
         }
         return romNameInfo;
     }
 
     /**
      * 获取rom版本信息如EmotionUI_8.0.0
+     *
      * @return
      */
     public static String getRomVersionInfo() {
@@ -73,6 +81,9 @@ public class RomInfoUtils {
                 break;
             case FUNTOUCH:
                 romVersionInfo = getRomProperty(RUNTIME_SYS_VERSION_VIVO);
+                break;
+            case EXPERIENCE:
+                romVersionInfo = getRomProperty(RUNTIME_SYS_VERSION_SAMSUNG);
                 break;
             case FLYME:
             case UNKNOW:
