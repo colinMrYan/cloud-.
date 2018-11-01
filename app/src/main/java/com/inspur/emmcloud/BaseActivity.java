@@ -4,9 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-
+import android.view.WindowManager;
 import com.inspur.emmcloud.util.common.StateBarUtils;
-import com.inspur.emmcloud.util.privates.ImmersionStateBarUtils;
 import com.inspur.emmcloud.util.privates.LanguageUtils;
 
 import org.xutils.x;
@@ -24,9 +23,9 @@ public class BaseActivity extends Activity {
                 && !className.endsWith(".IMGEditActivity") && !className.endsWith(".ImageGalleryActivity")){
             StateBarUtils.changeStateBarColor(this);
         }
-        ImmersionStateBarUtils.setImmersiveStateBar(this);
+       //禁止截屏
+        this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
     }
-
     //解决调用系统应用后会弹出手势解锁的问题
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

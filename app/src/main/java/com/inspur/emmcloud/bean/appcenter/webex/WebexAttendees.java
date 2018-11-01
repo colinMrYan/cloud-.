@@ -1,6 +1,9 @@
 package com.inspur.emmcloud.bean.appcenter.webex;
 
 import com.inspur.emmcloud.bean.contact.SearchModel;
+import com.inspur.emmcloud.util.common.JSONUtils;
+
+import org.json.JSONObject;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -12,9 +15,16 @@ import java.util.List;
 
 public class WebexAttendees implements Serializable{
     private String email;
+    private int personType = 1;
+    private String type="";
     private SearchModel searchModel;
     public WebexAttendees(){
 
+    }
+    public WebexAttendees(JSONObject object){
+        type = JSONUtils.getString(object,"type","");
+        personType = JSONUtils.getInt(object,"personType",1);
+        email = JSONUtils.getString(object,"email","");
     }
     public WebexAttendees(String email){
         this.email = email;
@@ -33,6 +43,21 @@ public class WebexAttendees implements Serializable{
         return webexAttendeesList;
     }
 
+    public int getPersonType() {
+        return personType;
+    }
+
+    public void setPersonType(int personType) {
+        this.personType = personType;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 
     public String getEmail() {
         return email;

@@ -40,11 +40,11 @@ import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ResolutionUtils;
+import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppTabUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
-import com.inspur.emmcloud.util.privates.ImmersionStateBarUtils;
 import com.inspur.emmcloud.util.privates.MDM.MDM;
 import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
 import com.inspur.emmcloud.widget.MaxHightListView;
@@ -116,7 +116,6 @@ public class ImpFragment extends Fragment {
         rootView = inflater.inflate(Res.getLayoutID("activity_imp"), null);
         initViews();
         version = getArguments().getString(Constant.WEB_FRAGMENT_VERSION, "");
-        ImmersionStateBarUtils.setImmersiveStateBar(getActivity());
     }
 
     @Override
