@@ -13,22 +13,29 @@ import java.io.InputStreamReader;
  */
 
 public class RomInfoUtils {
-    public static final String MIUI = "miui";
-    public static final String EMUI = "emotionui";
-    public static final String FLYME = "flyme";
-    public static final String COLOROS = "coloros";
-    public static final String UNKNOW = "unknow";
+    private static final String MIUI = "miui";
+    private static final String EMUI = "emotionui";
+    private static final String FLYME = "flyme";
+    private static final String COLOROS = "coloros";
+    private static final String FUNTOUCH = "funtouch";
+    private static final String UNKNOW = "unknow";
 
-    public static final String RUNTIME_SYS_NAME_EMUI = "ro.build.version.emui";
-    public static final String RUNTIME_SYS_NAME_MIUI = "ro.miui.ui.version.name";
-    public static final String RUNTIME_SYS_NAME_OPPO = "ro.build.version.opporom";
-    public static final String RUNTIME_SYS_NAME_DEFAULT = "ro.build.display.id";
+    private static final String RUNTIME_SYS_NAME_EMUI = "ro.build.version.emui";
+    private static final String RUNTIME_SYS_NAME_MIUI = "ro.miui.ui.version.name";
+    private static final String RUNTIME_SYS_NAME_OPPO = "ro.build.version.opporom";
+    private static final String RUNTIME_SYS_NAME_VIVO = "ro.vivo.os.name";
+    private static final String RUNTIME_SYS_NAME_DEFAULT = "ro.build.display.id";
 
-    public static final String RUNTIME_SYS_VERSION_MIUI = "ro.miui.ui.version.name";
-    public static final String RUNTIME_SYS_VERSION_EMUI = "ro.build.version.emui";
-    public static final String RUNTIME_SYS_VERSION_OPPO = "ro.build.version.opporom";
-    public static final String RUNTIME_SYS_VERSION_DEFAULT = "ro.comp.system_version";
+    private static final String RUNTIME_SYS_VERSION_MIUI = "ro.miui.ui.version.name";
+    private static final String RUNTIME_SYS_VERSION_EMUI = "ro.build.version.emui";
+    private static final String RUNTIME_SYS_VERSION_OPPO = "ro.build.version.opporom";
+    private static final String RUNTIME_SYS_VERSION_VIVO = "ro.vivo.os.build.display.id";
+    private static final String RUNTIME_SYS_VERSION_DEFAULT = "ro.comp.system_version";
 
+    /**
+     * 获取RomName的信息如emotionui
+     * @return
+     */
     public static String getRomNameInfo() {
         String romNameInfo = "";
         if (!StringUtils.isBlank(getRomProperty(RUNTIME_SYS_NAME_MIUI))) {
@@ -37,6 +44,8 @@ public class RomInfoUtils {
             romNameInfo = COLOROS;
         } else if (getRomProperty(RUNTIME_SYS_NAME_EMUI).toLowerCase().contains(EMUI)) {
             romNameInfo = EMUI;
+        }else if(getRomProperty(RUNTIME_SYS_NAME_VIVO).toLowerCase().contains(FUNTOUCH)){
+            romNameInfo = FUNTOUCH;
         } else if (getRomProperty(RUNTIME_SYS_NAME_DEFAULT).toLowerCase().contains(FLYME)) {
             romNameInfo = FLYME;
         } else {
@@ -45,6 +54,10 @@ public class RomInfoUtils {
         return romNameInfo;
     }
 
+    /**
+     * 获取rom版本信息如EmotionUI_8.0.0
+     * @return
+     */
     public static String getRomVersionInfo() {
         String romNameInfo = getRomNameInfo();
         String romVersionInfo = "";
@@ -57,6 +70,9 @@ public class RomInfoUtils {
                 break;
             case COLOROS:
                 romVersionInfo = getRomProperty(RUNTIME_SYS_VERSION_OPPO);
+                break;
+            case FUNTOUCH:
+                romVersionInfo = getRomProperty(RUNTIME_SYS_VERSION_VIVO);
                 break;
             case FLYME:
             case UNKNOW:

@@ -27,6 +27,7 @@ import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.bean.system.SplashPageBean;
 import com.inspur.emmcloud.interf.OauthCallBack;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
+import com.inspur.emmcloud.util.common.romadaptation.RomInfoUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.OauthUtils;
 
@@ -640,24 +641,12 @@ public class AppAPIService {
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(url);
         JSONObject object = new JSONObject();
         try {
-//            object.put("os","Android");
-//            object.put("osVersion",AppUtils.getReleaseVersion());
-//            object.put("appId",context.getPackageName());
-//            object.put("appVersion",AppUtils.getVersion(context));
-//            object.put("appCoreVersion",AppUtils.getVersion(context));
-//            object.put("ClientConfigVersions",clientConfigVersionObj);
-
-            object.put("deviceId",AppUtils.getMyUUID(context));
+            object.put("os","Android");
+            object.put("osVersion",AppUtils.getReleaseVersion());
             object.put("appId",context.getPackageName());
             object.put("appVersion",AppUtils.getVersion(context));
-            object.put("type",AppUtils.getPushProvider(context));
-            object.put("token",AppUtils.getPushId(context));
-            object.put("inspurId",MyApplication.getInstance().getUid());
-            object.put("tenantId",MyApplication.getInstance().getTanent());
-            object.put("deviceModel",AppUtils.GetChangShang()+"/"+AppUtils.GetModel());
-            object.put("deviceOS","Android");
-            object.put("deviceOSVersion",AppUtils.getReleaseVersion());
-            object.put("romInfo",AppUtils.getReleaseVersion());
+            object.put("appCoreVersion",AppUtils.getVersion(context));
+            object.put("ClientConfigVersions",clientConfigVersionObj);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -702,12 +691,6 @@ public class AppAPIService {
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(url);
         JSONObject registerPushTokenJsonObject = new JSONObject();
         try{
-//            registerPushTokenJsonObject.put("deviceId",AppUtils.getMyUUID(context));
-//            registerPushTokenJsonObject.put("appId",context.getPackageName());
-//            registerPushTokenJsonObject.put("appVersion",AppUtils.getVersion(context));
-//            registerPushTokenJsonObject.put("type",AppUtils.getPushProvider(context));
-//            registerPushTokenJsonObject.put("token",AppUtils.getPushId(context));
-
             registerPushTokenJsonObject.put("deviceId",AppUtils.getMyUUID(context));
             registerPushTokenJsonObject.put("appId",context.getPackageName());
             registerPushTokenJsonObject.put("appVersion",AppUtils.getVersion(context));
@@ -718,7 +701,7 @@ public class AppAPIService {
             registerPushTokenJsonObject.put("deviceModel",AppUtils.GetChangShang()+"/"+AppUtils.GetModel());
             registerPushTokenJsonObject.put("deviceOS","Android");
             registerPushTokenJsonObject.put("deviceOSVersion",AppUtils.getReleaseVersion());
-            registerPushTokenJsonObject.put("romInfo",AppUtils.getReleaseVersion());
+            registerPushTokenJsonObject.put("romInfo", RomInfoUtils.getRomNameInfo()+"/"+RomInfoUtils.getRomVersionInfo());
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -766,6 +749,12 @@ public class AppAPIService {
             unregisterPushTokenJsonObject.put("appVersion",AppUtils.getVersion(context));
             unregisterPushTokenJsonObject.put("type",AppUtils.getPushProvider(context));
             unregisterPushTokenJsonObject.put("token",AppUtils.getPushId(context));
+            unregisterPushTokenJsonObject.put("inspurId",MyApplication.getInstance().getUid());
+            unregisterPushTokenJsonObject.put("tenantId",MyApplication.getInstance().getTanent());
+            unregisterPushTokenJsonObject.put("deviceModel",AppUtils.GetChangShang()+"/"+AppUtils.GetModel());
+            unregisterPushTokenJsonObject.put("deviceOS","Android");
+            unregisterPushTokenJsonObject.put("deviceOSVersion",AppUtils.getReleaseVersion());
+            unregisterPushTokenJsonObject.put("romInfo", RomInfoUtils.getRomNameInfo()+"/"+RomInfoUtils.getRomVersionInfo());
         }catch (Exception e){
             e.printStackTrace();
         }

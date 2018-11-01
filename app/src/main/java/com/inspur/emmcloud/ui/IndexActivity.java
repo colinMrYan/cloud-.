@@ -82,7 +82,6 @@ public class IndexActivity extends IndexBaseActivity {
         getInitData();
         startService();
         EventBus.getDefault().register(this);
-        LogUtils.YfcDebug("获取romInfo："+RomInfoUtils.getRomNameInfo());
     }
 
     /**
