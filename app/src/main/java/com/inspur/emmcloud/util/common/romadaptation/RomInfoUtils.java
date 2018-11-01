@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 /**
- * 变更获取getRomNameInfo的实现改为通过厂商映射指定系统名称
+ * 变更获取getRomNameInfo的实现改为通过厂商确定系统181101
  * Created by yufuchang on 2018/10/31.
  */
 
@@ -34,8 +34,7 @@ public class RomInfoUtils {
      */
     public static String getRomNameInfo() {
         String romNameInfo = "";
-        String manufacturer = AppUtils.GetChangShang().toLowerCase();
-        switch (manufacturer) {
+        switch (AppUtils.GetChangShang().toLowerCase()) {
             case "huawei":
                 romNameInfo = EMUI;
                 break;
@@ -67,9 +66,8 @@ public class RomInfoUtils {
      * @return
      */
     public static String getRomVersionInfo() {
-        String romNameInfo = getRomNameInfo();
         String romVersionInfo = "";
-        switch (romNameInfo) {
+        switch (getRomNameInfo()) {
             case MIUI:
                 romVersionInfo = getRomProperty(RUNTIME_SYS_VERSION_MIUI);
                 break;
