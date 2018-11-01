@@ -39,7 +39,7 @@ public class DisplayTxtMarkdownMsg {
                 R.layout.chat_msg_card_child_text_markdown_view, null);
         final boolean isMyMsg = msg.getFromUser().equals(MyApplication.getInstance().getUid());
         final TextView titleText = (TextView) cardContentView
-                .findViewById(R.id.tv_title);
+                .findViewById(R.id.tv_name_tips);
         final TextView contentText = (TextView) cardContentView
                 .findViewById(R.id.tv_content);
         BubbleLayout cardLayout = (BubbleLayout) cardContentView.findViewById(R.id.bl_card);

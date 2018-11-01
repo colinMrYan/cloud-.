@@ -562,7 +562,7 @@ public class APIUri {
      * @return
      */
     public static String getQuitChannelGroupUrl(String cid){
-        return  getECMChatChannelUrl()+"/channel/group/"+cid+"/participation";
+        return  getECMChatConversationBaseUrl()+"/channel/group/"+cid+"/participation";
     }
 
     /**
@@ -587,6 +587,14 @@ public class APIUri {
      */
     public static String getConversationSetHide(String id){
         return getECMChatConversationBaseUrl()+"/channel/"+id+"/visuality";
+    }
+
+    /**
+     * 设置会话是否消息免打扰
+     * @return
+     */
+    public static String getConversationSetDnd(String id){
+        return getECMChatConversationBaseUrl()+"/channel/"+id+"/dnd";
     }
 
     /**

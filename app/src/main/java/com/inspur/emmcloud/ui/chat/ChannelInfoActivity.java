@@ -209,12 +209,12 @@ public class ChannelInfoActivity extends BaseActivity {
             case R.id.back_layout:
                 finish();
                 break;
-            case R.id.channel_img:
+            case R.id.rl_chat_imgs:
                 bundle.putString("cid", cid);
                 IntentUtils.startActivity(ChannelInfoActivity.this,
                         GroupAlbumActivity.class, bundle);
                 break;
-            case R.id.channel_file:
+            case R.id.rl_chat_files:
                 bundle.putString("cid", cid);
                 IntentUtils.startActivity(ChannelInfoActivity.this,
                         GroupFileActivity.class, bundle);
@@ -227,14 +227,14 @@ public class ChannelInfoActivity extends BaseActivity {
                 intent.putExtra("name", channelGroup.getChannelName());
                 startActivityForResult(intent, REQUEST_UPDATE_CHANNEL_NAME);
                 break;
-            case R.id.member_layout:
+            case R.id.rl_member:
                 bundle.putString("title", getString(R.string.group_member));
                 bundle.putInt(MembersActivity.MEMBER_PAGE_STATE,MembersActivity.CHECK_STATE);
                 bundle.putStringArrayList("uidList",channelGroup.getMemberList());
                 IntentUtils.startActivity(ChannelInfoActivity.this,
                         MembersActivity.class, bundle);
                 break;
-            case R.id.btn_exit:
+            case R.id.bt_exit:
                 showQuitGroupWarningDlg();
                 break;
             default:

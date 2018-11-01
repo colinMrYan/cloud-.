@@ -15,10 +15,11 @@
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
             android:clickable="true"
-            android:paddingLeft="12dp"
-            android:paddingRight="15dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="14dp"
+            android:adjustViewBounds="true"
             android:scaleType="centerInside"
-            android:src="@drawable/selector_people_btn" />
+            android:src="@drawable/ic_contact" />
 
         <TextView
             android:id="@+id/header_text"

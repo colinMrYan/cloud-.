@@ -1,26 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/main_layout"
-                android:layout_width="match_parent"
-                android:layout_height="67dp"
-                android:background="@drawable/selector_list"
-                android:paddingLeft="11dp">
+    android:id="@+id/main_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/selector_list"
+    android:paddingLeft="10dp">
 
     <com.inspur.emmcloud.widget.CircleTextImageView
         android:id="@+id/msg_img"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_centerVertical="true"
-        android:layout_marginBottom="8dp"
-        android:layout_marginRight="12dp"
-        android:layout_marginTop="11dp"
-         />
+        android:layout_marginBottom="9dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="9dp" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_toRightOf="@id/msg_img"
-        android:paddingTop="4dp"
         android:orientation="vertical">
 
         <RelativeLayout
@@ -32,20 +31,23 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:textColor="#B2B2B2"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
-                android:textSize="14sp"/>
+                android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/tv_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
                 android:layout_toLeftOf="@id/time_text"
                 android:ellipsize="end"
                 android:paddingRight="20dp"
                 android:singleLine="true"
-                android:textColor="#222222"
-                android:textSize="17sp"/>
+                android:textColor="#000000"
+                android:textSize="17sp" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -60,35 +62,32 @@
                 android:layout_toLeftOf="@+id/right_layout"
                 android:ellipsize="end"
                 android:singleLine="true"
-                android:textColor="#000000"
-                android:textSize="15sp"/>
+                android:textColor="#999999"
+                android:textSize="14sp" />
 
             <RelativeLayout
                 android:id="@+id/right_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_marginLeft="25dp"
-                android:layout_marginRight="10dp">
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="8dp">
 
                 <ImageView
                     android:id="@+id/msg_dnd_img"
-                    android:layout_width="22dp"
-                    android:layout_height="wrap_content"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
                     android:layout_alignRight="@+id/msg_new_layout"
-                    android:layout_marginTop="4dp"
                     android:adjustViewBounds="true"
-                    android:paddingRight="5dp"
-                    android:src="@drawable/icon_nodisturbance"
-                    android:visibility="gone"/>
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_mute_notifactions"
+                    android:visibility="gone" />
 
                 <RelativeLayout
                     android:id="@+id/msg_new_layout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="4dp"
                     android:paddingLeft="10dp"
-                    android:paddingRight="5dp"
                     android:paddingTop="2dp">
 
                     <TextView
@@ -99,7 +98,7 @@
                         android:gravity="center"
                         android:includeFontPadding="false"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/content_moresmaller_textsize"/>
+                        android:textSize="@dimen/content_moresmaller_textsize" />
                 </RelativeLayout>
             </RelativeLayout>
         </RelativeLayout>
@@ -109,9 +108,8 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:layout_alignParentBottom="true"
-        android:layout_marginLeft="59dp"
-        android:layout_marginTop="9dp"
-        android:background="@color/color_list_divider"/>
+        android:layout_below="@id/msg_img"
+        android:layout_marginLeft="50dp"
+        android:background="#DEDFE0" />
 
 </RelativeLayout>
