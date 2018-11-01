@@ -22,7 +22,7 @@ public class ClientConfigUpdateUtils extends APIInterfaceInstance {
 
     public static ClientConfigUpdateUtils getInstance() {
         if (mInstance == null) {
-            synchronized (ImageDisplayUtils.class) {
+            synchronized (ClientConfigUpdateUtils.class) {
                 if (mInstance == null) {
                     mInstance = new ClientConfigUpdateUtils();
                 }
@@ -33,33 +33,33 @@ public class ClientConfigUpdateUtils extends APIInterfaceInstance {
 
     public void getAllConfigUpdate() {
         isCheckClientConfigUpdate= true;
-        if (!NetUtils.isNetworkConnected(MyApplication.getInstance(), false)) {
-            PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), Constant.PREF_V_CONFIG_ALL, "");
-            sendClientConfigUpdateInfo(new GetAllConfigVersionResult(""));
-            return;
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance(), false)) {
+            AppAPIService apiService = new AppAPIService(MyApplication.getInstance());
+            apiService.setAPIInterface(this);
+            String localLangVersion = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), ClientConfigItem.CLIENT_CONFIG_LANGUAGE.getValue(), "");
+            String localMainTabVersion = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), ClientConfigItem.CLIENT_CONFIG_MAINTAB.getValue(), "");
+            String localSplashVersion = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), ClientConfigItem.CLIENT_CONFIG_SPLASH.getValue(), "");
+            String localRouterVersion = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), ClientConfigItem.CLIENT_CONFIG_ROUTER.getValue(), "");
+            String localMyAppVersion = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), ClientConfigItem.CLIENT_CONFIG_MY_APP.getValue(), "");
+            String localContactUserVersion = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), ClientConfigItem.CLIENT_CONFIG_CONTACT_USER.getValue(), "");
+            String localContactOrgVersion = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), ClientConfigItem.CLIENT_CONFIG_CONTACT_ORG.getValue(), "");
+            JSONObject clientConfigVersionObj = new JSONObject();
+            try {
+                clientConfigVersionObj.put("lang", localLangVersion);
+                clientConfigVersionObj.put("maintab", localMainTabVersion);
+                clientConfigVersionObj.put("ad", localSplashVersion);
+                clientConfigVersionObj.put("router", localRouterVersion);
+                clientConfigVersionObj.put("app", localMyAppVersion);
+                clientConfigVersionObj.put("contact_user", localContactUserVersion);
+                clientConfigVersionObj.put("contact_org", localContactOrgVersion);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            apiService.getAllConfigVersion(clientConfigVersionObj);
+        }else {
+            getAllConfigVersionFail();
         }
-        AppAPIService apiService = new AppAPIService(MyApplication.getInstance());
-        apiService.setAPIInterface(this);
-        String localLangVersion = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), ClientConfigItem.CLIENT_CONFIG_LANGUAGE.getValue(), "");
-        String localMainTabVersion = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), ClientConfigItem.CLIENT_CONFIG_MAINTAB.getValue(), "");
-        String localSplashVersion = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), ClientConfigItem.CLIENT_CONFIG_SPLASH.getValue(), "");
-        String localRouterVersion = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), ClientConfigItem.CLIENT_CONFIG_ROUTER.getValue(), "");
-        String localMyAppVersion = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), ClientConfigItem.CLIENT_CONFIG_MY_APP.getValue(), "");
-        String localContactUserVersion = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), ClientConfigItem.CLIENT_CONFIG_CONTACT_USER.getValue(), "");
-        String localContactOrgVersion = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), ClientConfigItem.CLIENT_CONFIG_CONTACT_ORG.getValue(), "");
-        JSONObject clientConfigVersionObj = new JSONObject();
-        try {
-            clientConfigVersionObj.put("lang", localLangVersion);
-            clientConfigVersionObj.put("maintab", localMainTabVersion);
-            clientConfigVersionObj.put("ad", localSplashVersion);
-            clientConfigVersionObj.put("router", localRouterVersion);
-            clientConfigVersionObj.put("app", localMyAppVersion);
-            clientConfigVersionObj.put("contact_user", localContactUserVersion);
-            clientConfigVersionObj.put("contact_org", localContactOrgVersion);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        apiService.getAllConfigVersion(clientConfigVersionObj);
+
     }
 
     public boolean isCheckClientConfigUpdate(){
@@ -125,8 +125,22 @@ public class ClientConfigUpdateUtils extends APIInterfaceInstance {
 
     @Override
     public void returnAllConfigVersionFail(String error, int errorCode) {
-        PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), Constant.PREF_V_CONFIG_ALL, "");
-        sendClientConfigUpdateInfo(new GetAllConfigVersionResult(""));
+        getAllConfigVersionFail();
+    }
+
+    private void getAllConfigVersionFail(){
+        PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), ClientConfigItem.CLIENT_CONFIG_CONTACT_USER.getValue(), "");
+        PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), ClientConfigItem.CLIENT_CONFIG_CONTACT_ORG.getValue(), "");
+        PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), ClientConfigItem.CLIENT_CONFIG_MY_APP.getValue(), "");
+        PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), ClientConfigItem.CLIENT_CONFIG_MAINTAB.getValue(), "");
+        PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), ClientConfigItem.CLIENT_CONFIG_LANGUAGE.getValue(), "");
+        PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), ClientConfigItem.CLIENT_CONFIG_SPLASH.getValue(), "");
+        PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), ClientConfigItem.CLIENT_CONFIG_ROUTER.getValue(), "");
+        GetAllConfigVersionResult allConfigVersionResult =  getCacheAllConfigVersionResult();
+        if (allConfigVersionResult == null){
+            allConfigVersionResult = new GetAllConfigVersionResult("");
+        }
+        sendClientConfigUpdateInfo(allConfigVersionResult);
     }
 
 
