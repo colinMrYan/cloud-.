@@ -36,7 +36,7 @@ public class RomInfoUtils {
     public static String getRomNameInfo() {
         String romNameInfo = "";
         String manufacturer = AppUtils.GetChangShang().toLowerCase();
-        switch (AppUtils.GetChangShang().toLowerCase()) {
+        switch (manufacturer) {
             case "huawei":
                 romNameInfo = EMUI;
                 break;
