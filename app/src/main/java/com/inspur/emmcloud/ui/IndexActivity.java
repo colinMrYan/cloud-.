@@ -82,10 +82,7 @@ public class IndexActivity extends IndexBaseActivity {
         getInitData();
         startService();
         EventBus.getDefault().register(this);
-        LogUtils.YfcDebug("获取romInfo："+RomInfoUtils.getRomInfo());
-        LogUtils.YfcDebug("获取romInfoType："+RomInfoUtils.getRomType());
-        LogUtils.YfcDebug("获取romInfoType："+RomInfoUtils.isEMUI());
-        LogUtils.YfcDebug("获取romInfoType："+RomInfoUtils.isMIUI());
+        LogUtils.YfcDebug("获取romInfo："+RomInfoUtils.getRomNameInfo());
     }
 
     /**

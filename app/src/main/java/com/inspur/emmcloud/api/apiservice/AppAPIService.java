@@ -702,11 +702,23 @@ public class AppAPIService {
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(url);
         JSONObject registerPushTokenJsonObject = new JSONObject();
         try{
+//            registerPushTokenJsonObject.put("deviceId",AppUtils.getMyUUID(context));
+//            registerPushTokenJsonObject.put("appId",context.getPackageName());
+//            registerPushTokenJsonObject.put("appVersion",AppUtils.getVersion(context));
+//            registerPushTokenJsonObject.put("type",AppUtils.getPushProvider(context));
+//            registerPushTokenJsonObject.put("token",AppUtils.getPushId(context));
+
             registerPushTokenJsonObject.put("deviceId",AppUtils.getMyUUID(context));
             registerPushTokenJsonObject.put("appId",context.getPackageName());
             registerPushTokenJsonObject.put("appVersion",AppUtils.getVersion(context));
             registerPushTokenJsonObject.put("type",AppUtils.getPushProvider(context));
             registerPushTokenJsonObject.put("token",AppUtils.getPushId(context));
+            registerPushTokenJsonObject.put("inspurId",MyApplication.getInstance().getUid());
+            registerPushTokenJsonObject.put("tenantId",MyApplication.getInstance().getTanent());
+            registerPushTokenJsonObject.put("deviceModel",AppUtils.GetChangShang()+"/"+AppUtils.GetModel());
+            registerPushTokenJsonObject.put("deviceOS","Android");
+            registerPushTokenJsonObject.put("deviceOSVersion",AppUtils.getReleaseVersion());
+            registerPushTokenJsonObject.put("romInfo",AppUtils.getReleaseVersion());
         }catch (Exception e){
             e.printStackTrace();
         }
