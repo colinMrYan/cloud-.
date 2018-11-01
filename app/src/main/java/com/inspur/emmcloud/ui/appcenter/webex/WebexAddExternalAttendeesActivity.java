@@ -152,7 +152,7 @@ public class WebexAddExternalAttendeesActivity extends BaseActivity {
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
             WebexAttendees webexAttendees = externalWebexAttendeesList.get(position);
-            convertView = LayoutInflater.from(WebexAddExternalAttendeesActivity.this).inflate(R.layout.item_view_webex_attendees, null);
+            convertView = LayoutInflater.from(WebexAddExternalAttendeesActivity.this).inflate(R.layout.item_view_webex_add_attendees, null);
             TextView emailText = (TextView) convertView.findViewById(R.id.tv_attendees);
             ImageView deleteImg = (ImageView) convertView.findViewById(R.id.iv_delete);
             emailText.setText(webexAttendees.getEmail());

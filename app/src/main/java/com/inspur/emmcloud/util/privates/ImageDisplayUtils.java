@@ -1,17 +1,20 @@
 package com.inspur.emmcloud.util.privates;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.imp.plugin.camera.imagepicker.loader.ImagePickerLoader;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.ImageSize;
+import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.nostra13.universalimageloader.core.imageaware.ImageViewAware;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.nostra13.universalimageloader.utils.DiskCacheUtils;
@@ -33,6 +36,23 @@ public class ImageDisplayUtils implements ImagePickerLoader {
             }
         }
         return mInstance;
+    }
+
+
+    public  void displayRoundedImage(final ImageView imageView, String uri, Integer defaultDrawableId, Context context,float dp) {
+
+        if (!StringUtils.isBlank(uri) && !uri.startsWith("http") && !uri.startsWith("file:") && !uri.startsWith("content:") && !uri.startsWith("assets:") && !uri.startsWith("drawable:")) {
+            uri = "file://" + uri;
+        }
+        DisplayImageOptions  options = new DisplayImageOptions.Builder()
+                .showImageForEmptyUri(defaultDrawableId)
+                .showImageOnFail(defaultDrawableId)
+                .showImageOnLoading(defaultDrawableId)
+                .cacheInMemory(true)
+                .bitmapConfig(Bitmap.Config.ARGB_8888)   //设置图片的解码类型
+                .displayer(new RoundedBitmapDisplayer(DensityUtil.dip2px(context,dp)))
+                .build();
+        ImageLoader.getInstance().displayImage(uri, imageView, options);
     }
 
     public void displayImage(final ImageView imageView, String uri, Integer defaultDrawableId) {

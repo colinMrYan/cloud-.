@@ -27,7 +27,7 @@ public class FaceVerifyManagerActivity extends BaseActivity {
     @ViewInject(R.id.header_text)
     private TextView headerText;
 
-    @ViewInject(R.id.tv_title)
+    @ViewInject(R.id.tv_name_tips)
     private TextView switchText;
 
     @ViewInject(R.id.text)

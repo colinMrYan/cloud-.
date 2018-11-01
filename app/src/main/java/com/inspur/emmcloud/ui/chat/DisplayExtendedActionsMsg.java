@@ -73,7 +73,7 @@ public class DisplayExtendedActionsMsg extends APIInterfaceInstance {
         final MsgContentExtendedActions msgContentActions = msg.getMsgContentExtendedActions();
         RelativeLayout singleActionLayout = (RelativeLayout) convertView.findViewById(R.id.single_action_layout);
         NoScrollGridView actionGrid = (NoScrollGridView) convertView.findViewById(R.id.action_grid);
-        TextView titleText = (TextView) convertView.findViewById(R.id.tv_title);
+        TextView titleText = (TextView) convertView.findViewById(R.id.tv_name_tips);
         TextView descriptionText = (TextView) convertView.findViewById(R.id.description_text);
         Action singleAction = msgContentActions.getSingleAction();
         String poster = msgContentActions.getPoster();

@@ -19,8 +19,11 @@ import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.appcenter.news.GetGroupNewsDetailResult;
 import com.inspur.emmcloud.bean.appcenter.news.GroupNews;
 import com.inspur.emmcloud.bean.appcenter.news.NewsIntrcutionUpdateEvent;
+import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
 import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
+import com.inspur.emmcloud.util.privates.WaterMarkBgSingleLine;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.MySwipeRefreshLayout;
 
@@ -76,6 +79,9 @@ public class GroupNewsCardFragment extends Fragment implements MySwipeRefreshLay
         newsListView.setOnItemClickListener(new ListItemOnClickListener());
         newsAdapter = new NewsListAdapter(getActivity(), groupnNewsList);
         newsListView.setAdapter(newsAdapter);
+        String myInfo = PreferencesUtils.getString(getContext(), "myInfo", "");
+        GetMyInfoResult  getMyInfoResult = new GetMyInfoResult(myInfo);
+        newsListView.setBackground(new WaterMarkBgSingleLine(getContext(),getMyInfoResult.getCode()));
         getGroupNewsList(getArguments().getString("catagoryid"), 0, true);
         EventBus.getDefault().register(this);
     }

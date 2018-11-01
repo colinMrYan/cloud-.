@@ -127,7 +127,6 @@ public class CommunicationFragment extends Fragment {
         EventBus.getDefault().register(this);
         initView();
         sortChannelList();// 对Channel 进行排序
-        getMessage();
         registerMessageFragmentReceiver();
         getChannelList();
         updateHeaderFunctionBtn(null);
@@ -146,6 +145,7 @@ public class CommunicationFragment extends Fragment {
         titleText = (TextView) rootView.findViewById(R.id.header_text);
         initPullRefreshLayout();
         initListView();
+        showSocketStatusInTitle(WebSocketPush.getInstance().getWebsocketStatus());
     }
 
     /**
@@ -256,7 +256,7 @@ public class CommunicationFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_OPEN_DEFALT_TAB,null));
+        EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_OPEN_DEFALT_TAB, null));
     }
 
     @Override
@@ -493,7 +493,6 @@ public class CommunicationFragment extends Fragment {
                         break;
                     case CACHE_CHANNEL_SUCCESS:
                         sortChannelList();
-                        getMessage();
                         List<String> serviceCidList = (List<String>) msg.obj;
                         getServieChannelInputs(serviceCidList);
                         break;
@@ -641,10 +640,10 @@ public class CommunicationFragment extends Fragment {
                 List<String> serviceCidList = new ArrayList<>();
                 List<Channel> allchannelList = getChannelListResult.getChannelList();
                 List<Channel> cacheChannelList = ChannelCacheUtils.getCacheChannelList(MyApplication.getInstance());
-                for (Channel channel:allchannelList){
-                    if (channel.getType().equals("SERVICE")){
+                for (Channel channel : allchannelList) {
+                    if (channel.getType().equals("SERVICE")) {
                         int position = cacheChannelList.indexOf(cacheChannelList);
-                        if (position != -1){
+                        if (position != -1) {
                             channel.setInputs(cacheChannelList.get(position).getInputs());
                         }
                         serviceCidList.add(channel.getCid());
@@ -716,7 +715,7 @@ public class CommunicationFragment extends Fragment {
                     break;
                 case "removeChannelFromUI":
                     String deleteCid = intent.getExtras().getString("cid");
-                    ChannelCacheUtils.deleteChannel(MyApplication.getInstance(),deleteCid);
+                    ChannelCacheUtils.deleteChannel(MyApplication.getInstance(), deleteCid);
                     removeChannelFromUI(deleteCid);
                     break;
                 default:
@@ -728,11 +727,12 @@ public class CommunicationFragment extends Fragment {
 
     /**
      * 从ui中移除这个频道
+     *
      * @param cid
      */
-    private void removeChannelFromUI(String cid){
+    private void removeChannelFromUI(String cid) {
         Channel removeChannel = new Channel(cid);
-        if (displayChannelList.contains(removeChannel)){
+        if (displayChannelList.contains(removeChannel)) {
             displayChannelList.remove(removeChannel);
             adapter.notifyDataSetChanged();
         }
@@ -960,6 +960,8 @@ public class CommunicationFragment extends Fragment {
     public void onReiceveWSOfflineMessage(EventMessage eventMessage) {
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_GET_OFFLINE_WS_MESSAGE)) {
             if (eventMessage.getStatus() == 200) {
+                //清空离线消息最后一条消息标志位
+                PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), Constant.PREF_GET_OFFLINE_LAST_MID, "");
                 String content = eventMessage.getContent();
                 GetOfflineMessageListResult getOfflineMessageListResult = new GetOfflineMessageListResult(content);
                 List<Message> offlineMessageList = getOfflineMessageListResult.getMessageList();
@@ -974,7 +976,7 @@ public class CommunicationFragment extends Fragment {
                     }
                     if (currentChannelOfflineMessageList.size() > 0) {
                         //将离线消息发送到当前频道
-                        EventBus.getDefault().post(offlineMessageList);
+                        EventBus.getDefault().post(currentChannelOfflineMessageList);
                     }
                 }
                 new CacheMessageListThread(offlineMessageList, getOfflineMessageListResult.getChannelMessageSetList()).start();
@@ -997,6 +999,24 @@ public class CommunicationFragment extends Fragment {
             if (eventMessage.getStatus() == 200) {
                 String content = eventMessage.getContent();
                 GetRecentMessageListResult getRecentMessageListResult = new GetRecentMessageListResult(content);
+
+                List<Message> recentMessageList = getRecentMessageListResult.getMessageList();
+                List<Message> currentChannelRecentMessageList = new ArrayList<>();
+                //将当前所处频道的消息存为已读
+                if (!StringUtils.isBlank(MyApplication.getInstance().getCurrentChannelCid())) {
+                    for (Message message : recentMessageList) {
+                        if (message.getChannel().equals(MyApplication.getInstance().getCurrentChannelCid())) {
+                            message.setRead(1);
+                            currentChannelRecentMessageList.add(message);
+                        }
+                    }
+                    if (currentChannelRecentMessageList.size() > 0) {
+                        //将离线消息发送到当前频道
+                        EventBus.getDefault().post(recentMessageList);
+                    }
+                }
+
+
                 new CacheMessageListThread(getRecentMessageListResult.getMessageList(), getRecentMessageListResult.getChannelMessageSetList()).start();
             }
 //            else {
@@ -1033,8 +1053,12 @@ public class CommunicationFragment extends Fragment {
     }
 
     public void getMessage() {
-        if (NetUtils.isNetworkConnected(MyApplication.getInstance()) && WebSocketPush.getInstance().isSocketConnect()) {
-            String lastMessageId = MessageCacheUtil.getLastMessageId(MyApplication.getInstance());
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance(), false) && WebSocketPush.getInstance().isSocketConnect()) {
+            String lastMessageId = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_GET_OFFLINE_LAST_MID, "");
+            if (StringUtils.isBlank(lastMessageId)) {
+                lastMessageId = MessageCacheUtil.getLastMessageId(MyApplication.getInstance());
+                PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), Constant.PREF_GET_OFFLINE_LAST_MID, lastMessageId);
+            }
             if (lastMessageId != null) {
                 //获取离线消息
                 WSAPIService.getInstance().getOfflineMessage(lastMessageId);
@@ -1042,7 +1066,7 @@ public class CommunicationFragment extends Fragment {
                 //获取每个频道最近的15条消息
                 WSAPIService.getInstance().getChannelRecentMessage();
             }
-        }else {
+        } else {
             swipeRefreshLayout.setRefreshing(false);
         }
 
@@ -1082,7 +1106,6 @@ public class CommunicationFragment extends Fragment {
             // TODO Auto-generated method stub
             if (getActivity() != null) {
                 swipeRefreshLayout.setRefreshing(false);
-                getMessage();
             }
 
         }

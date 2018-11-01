@@ -95,7 +95,7 @@ public class AppCenterAdapter extends BaseAdapter {
             holder.iconImg = (ImageView) convertView
                     .findViewById(R.id.app_icon_img);
             holder.nameText = (TextView) convertView
-                    .findViewById(R.id.tv_title);
+                    .findViewById(R.id.tv_name_tips);
             holder.statusBtn = (Button) convertView
                     .findViewById(R.id.app_status_btn);
             convertView.setTag(holder);

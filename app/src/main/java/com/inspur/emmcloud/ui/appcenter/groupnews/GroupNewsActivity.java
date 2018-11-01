@@ -19,7 +19,6 @@ import com.inspur.emmcloud.bean.appcenter.news.NewsTitle;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.privates.ImmersionStateBarUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.PagerSlidingTabStrip;
@@ -35,14 +34,13 @@ public class GroupNewsActivity extends BaseFragmentActivity implements
 
 	private MyPagerAdapter pagerAdapter;
 	private LoadingDialog loadingDlg;
-	@Override
+    @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		StateBarUtils.changeStateBarColor(this);
 		setContentView(R.layout.activity_group_news);
 		loadingDlg = new LoadingDialog(GroupNewsActivity.this);
 		getNewTitles();
-		ImmersionStateBarUtils.setImmersiveStateBar(this);
 	}
 
 	/**
@@ -120,7 +118,7 @@ public class GroupNewsActivity extends BaseFragmentActivity implements
 		//获取PagerSlidingTabStrip，并初始化设置
 		PagerSlidingTabStrip pagerSlidingTabStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
 		pagerSlidingTabStrip.setDividerColor(getResources().getColor(R.color.content_border));
-		pagerSlidingTabStrip.setIndicatorColor(Color.parseColor("#0F7BCA"));
+		pagerSlidingTabStrip.setIndicatorColor(Color.parseColor("#00000000"));
 		pagerSlidingTabStrip.setTextSize(17);
 		pagerSlidingTabStrip.setTextColorStateList(R.color.news_viewpager_tab_text_color);
 		pagerSlidingTabStrip.setOnPageChangeListener(this);

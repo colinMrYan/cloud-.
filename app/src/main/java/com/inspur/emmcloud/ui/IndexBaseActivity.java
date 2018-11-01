@@ -30,7 +30,7 @@ import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.appcenter.MyAppFragment;
-import com.inspur.emmcloud.ui.chat.CommunicationFragment;
+import com.inspur.emmcloud.ui.chat.CommunicationFragmentNew;
 import com.inspur.emmcloud.ui.chat.CommunicationV0Fragment;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.ui.find.FindFragment;
@@ -43,7 +43,6 @@ import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.ECMShortcutBadgeNumberManagerUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
-import com.inspur.emmcloud.util.privates.ImmersionStateBarUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.widget.MyFragmentTabHost;
@@ -87,7 +86,6 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
         x.view().inject(this);
         mTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
         initTabs();
-        ImmersionStateBarUtils.setImmersiveStateBar(this);
     }
 
 
@@ -126,7 +124,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
                                     if (MyApplication.getInstance().isV0VersionChat()) {
                                         tabBean = new TabBean(getString(R.string.communicate), R.drawable.selector_tab_message_btn + "", CommunicationV0Fragment.class, mainTabResult);
                                     } else {
-                                        tabBean = new TabBean(getString(R.string.communicate), R.drawable.selector_tab_message_btn + "", CommunicationFragment.class, mainTabResult);
+                                        tabBean = new TabBean(getString(R.string.communicate), R.drawable.selector_tab_message_btn + "", CommunicationFragmentNew.class, mainTabResult);
                                     }
                                     break;
                                 case Constant.APP_TAB_BAR_WORK:

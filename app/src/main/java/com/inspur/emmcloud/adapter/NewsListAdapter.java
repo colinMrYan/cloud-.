@@ -57,20 +57,19 @@ public class NewsListAdapter extends BaseAdapter {
             convertView = inflater.inflate(R.layout.news_item_view, null);
             holder.imageView = (ImageView) convertView.findViewById(R.id.news_leftImg_img);
             holder.title = (TextView) convertView.findViewById(R.id.news_middleUp_text);
-            holder.content = (TextView) convertView.findViewById(R.id.news_middleDown_text);
             holder.textPoser = (TextView) convertView.findViewById(R.id.news_middlemid_text);
             convertView.setTag(holder);
         } else {
             holder = (NewsHolder) convertView.getTag();
         }
         String uri = handlePoster(position);
-        ImageDisplayUtils.getInstance().displayImage(holder.imageView, uri, R.drawable.ic_app_news_default_icon);
+        ImageDisplayUtils.getInstance().displayRoundedImage(holder.imageView,uri,R.drawable.ic_app_news_default_icon,context,5);
         holder.title.setTextColor(groupNewsList.get(position).isImportant()? Color.RED:0xff203b4f);
         holder.title.setText(groupNewsList.get(position).getTitle());
-        holder.content.setText(groupNewsList.get(position).getSummary());
         String postTime = groupNewsList.get(position).getCreationDate();
         postTime = TimeUtils.Calendar2TimeString(TimeUtils.timeLong2Calendar(Long.parseLong(postTime)), TimeUtils.getFormat(context, TimeUtils.FORMAT_DEFAULT_DATE));
-        holder.textPoser.setText(groupNewsList.get(position).getAuthor() + "  " + postTime);
+        String dataTime  =  postTime.substring(0,10);
+        holder.textPoser.setText(groupNewsList.get(position).getAuthor() + "  " + dataTime);
         return convertView;
     }
 
@@ -99,7 +98,6 @@ public class NewsListAdapter extends BaseAdapter {
     public static class NewsHolder {
         ImageView imageView;
         TextView title;
-        TextView content;
         TextView textPoser;
     }
 }

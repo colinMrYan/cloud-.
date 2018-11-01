@@ -517,8 +517,8 @@ public class ConversationActivity extends ConversationBaseActivity {
                 break;
         }
         if (fakeMessage != null) {
-            sendMessageWithFile(fakeMessage);
             addLocalMessage(fakeMessage, 0);
+            sendMessageWithFile(fakeMessage);
         }
     }
 
@@ -870,7 +870,8 @@ public class ConversationActivity extends ConversationBaseActivity {
         while (it.hasNext()) {
             Message offlineMessage = it.next();
             UIMessage uiMessage = new UIMessage(offlineMessage.getId());
-            if (uiMessageList.contains(uiMessage)) {
+            //再一次排除非此频道消息显示在此频道
+            if (uiMessageList.contains(uiMessage) || uiMessage.getMessage().getChannel() != cid) {
                 it.remove();
             }
         }

@@ -10,6 +10,7 @@ import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
+import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
 
 import org.json.JSONArray;
@@ -47,6 +48,7 @@ public class PVCollectService extends Service {
                     jsonObject.put("userContent", collectInfos);
                     jsonObject.put("userID", MyApplication.getInstance().getUid());
                     jsonObject.put("clientType","Android");
+                    jsonObject.put("appVersion",AppUtils.getVersion(this)) ;
                     if (MyApplication.getInstance().getCurrentEnterprise() != null) {
                         jsonObject.put("enterpriseID", MyApplication.getInstance().getCurrentEnterprise().getId());
                     } else {

@@ -14,16 +14,21 @@
         android:gravity="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+    <View
+        android:background="@color/color_list_divider"
+        android:layout_width="match_parent"
+        android:layout_height="0.6dp">
+    </View>
     <com.inspur.emmcloud.widget.MaxHightListView
         android:id="@+id/enterprise_list"
         android:listSelector="#00000000"
         android:scrollbars="vertical"
         android:focusable="true"
-        android:scrollbarFadeDuration="1500"
-        android:scrollbarStyle="outsideOverlay"
+        android:fadeScrollbars="false"
+        android:scrollbarStyle="insideInset"
         android:paddingRight="10dp"
         android:paddingLeft="10dp"
-        android:scrollbarThumbVertical="@color/grey_b2b2b2"
+        android:scrollbarThumbVertical="@drawable/scrollbar_vertical_thumb"
         android:scrollbarSize="4dp"
         android:dividerHeight="0dp"
         android:divider="#00000000"
@@ -33,12 +38,11 @@
     <View
         android:background="@color/color_list_divider"
         android:layout_width="match_parent"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
         android:layout_height="0.6dp">
     </View>
     <RelativeLayout
-        android:layout_marginBottom="5dp"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:orientation="horizontal"

@@ -528,19 +528,21 @@ public class ChannelActivity extends MediaPlayBaseActivity {
         } else {
             // 图库选择图片返回
             if (resultCode == ImagePicker.RESULT_CODE_ITEMS)
-                if (data != null && requestCode == REQUEST_GELLARY) {
-                    ArrayList<ImageItem> imageItemList = (ArrayList<ImageItem>) data
-                            .getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
-                    for (int i = 0; i < imageItemList.size(); i++) {
-                        String imgPath = imageItemList.get(i).path;
-                        try {
-                            File file = new Compressor(ChannelActivity.this).setMaxHeight(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setMaxWidth(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setQuality(90).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
-                                    .compressToFile(new File(imgPath));
-                            imgPath = file.getAbsolutePath();
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                if (NetUtils.isNetworkConnected(MyApplication.getInstance())){
+                    if (data != null && requestCode == REQUEST_GELLARY) {
+                        ArrayList<ImageItem> imageItemList = (ArrayList<ImageItem>) data
+                                .getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
+                        for (int i = 0; i < imageItemList.size(); i++) {
+                            String imgPath = imageItemList.get(i).path;
+                            try {
+                                File file = new Compressor(ChannelActivity.this).setMaxHeight(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setMaxWidth(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setQuality(90).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
+                                        .compressToFile(new File(imgPath));
+                                imgPath = file.getAbsolutePath();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            combinAndSendMessageWithFile(imgPath, Message.MESSAGE_TYPE_MEDIA_IMAGE);
                         }
-                        combinAndSendMessageWithFile(imgPath, Message.MESSAGE_TYPE_MEDIA_IMAGE);
                     }
                 }
         }
@@ -575,8 +577,8 @@ public class ChannelActivity extends MediaPlayBaseActivity {
                 break;
         }
         if (fakeMessage != null) {
-            sendMessageWithFile(fakeMessage);
             addLocalMessage(fakeMessage, 0);
+            sendMessageWithFile(fakeMessage);
         }
     }
 
@@ -727,10 +729,6 @@ public class ChannelActivity extends MediaPlayBaseActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveHistoryMessage(EventMessage eventMessage) {
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_GET_HISTORY_MESSAGE)) {
-            LoadingDialog.dimissDlg(loadingDlg);
-            if (swipeRefreshLayout.isRefreshing()) {
-                swipeRefreshLayout.setRefreshing(false);
-            }
             if (eventMessage.getStatus() == 200) {
                 String content = eventMessage.getContent();
                 GetChannelMessagesResult getChannelMessagesResult = new GetChannelMessagesResult(content);
@@ -747,8 +745,10 @@ public class ChannelActivity extends MediaPlayBaseActivity {
                     adapter.notifyItemRangeInserted(0, historyMessageList.size());
                     msgListView.scrollToPosition(historyMessageList.size() - 1);
                 }
-            } else {
-                WebServiceMiddleUtils.hand(ChannelActivity.this, eventMessage.getContent(), eventMessage.getStatus());
+            }
+            LoadingDialog.dimissDlg(loadingDlg);
+            if (swipeRefreshLayout.isRefreshing()) {
+                swipeRefreshLayout.setRefreshing(false);
             }
         }
     }
@@ -982,7 +982,7 @@ public class ChannelActivity extends MediaPlayBaseActivity {
      */
     private void getHistoryMsg() {
         swipeRefreshLayout.setRefreshing(false);
-        if (NetUtils.isNetworkConnected(ChannelActivity.this)) {
+        if (NetUtils.isNetworkConnected(ChannelActivity.this,false)) {
             String newMessageId = uiMessageList.size() > 0 ? uiMessageList.get(0).getMessage().getId() : "";
             WSAPIService.getInstance().getHistoryMessage(cid, newMessageId);
         } else {
