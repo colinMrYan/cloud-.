@@ -781,6 +781,12 @@ public class AppUtils {
             String hwtoken = PreferencesUtils.getString(context, Constant.HUAWEI_PUSH_TOKEN, "");
             if (!StringUtils.isBlank(hwtoken)) {
                 pushId = hwtoken + Constant.PUSH_HUAWEI_COM;
+            }else {
+                String jpushPushId = PreferencesUtils.getString(context, Constant.JPUSH_REG_ID, "");
+                if(!StringUtils.isBlank(jpushPushId)){
+                    AppUtils.setPushFlag(context,Constant.JPUSH_FLAG);
+                    pushId = jpushPushId;
+                }
             }
         } else {
             pushId = PreferencesUtils.getString(context, Constant.JPUSH_REG_ID, "");

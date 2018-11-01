@@ -8,6 +8,7 @@ import com.huawei.hms.support.api.push.PushReceiver;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
+import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ClientIDUtils;
 import com.inspur.emmcloud.util.privates.ECMTransparentUtils;
 import com.inspur.emmcloud.util.privates.PushIdManagerUtils;
@@ -25,6 +26,7 @@ public class HuaWeiPushReceiver extends PushReceiver {
      */
     @Override
     public void onToken(Context context, String token, Bundle extras) {
+        AppUtils.setPushFlag(context,Constant.HUAWEI_FLAG);
         PreferencesUtils.putString(context, Constant.HUAWEI_PUSH_TOKEN, token);
         new PushIdManagerUtils(context).registerPushId2Emm();
         new ClientIDUtils(context).upload();
