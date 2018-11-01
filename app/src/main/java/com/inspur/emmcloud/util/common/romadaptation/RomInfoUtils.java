@@ -83,10 +83,6 @@ public class RomInfoUtils {
             case EXPERIENCE:
                 romVersionInfo = getRomProperty(RUNTIME_SYS_VERSION_SAMSUNG);
                 break;
-            case FLYME:
-            case UNKNOW:
-                romVersionInfo = getRomProperty(RUNTIME_SYS_VERSION_DEFAULT);
-                break;
             default:
                 romVersionInfo = getRomProperty(RUNTIME_SYS_VERSION_DEFAULT);
                 break;
