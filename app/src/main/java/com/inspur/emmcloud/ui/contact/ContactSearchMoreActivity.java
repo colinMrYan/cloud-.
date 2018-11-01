@@ -581,7 +581,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
 
         public MyViewHolder(View view) {
             super(view);
-            titleText = (TextView) view.findViewById(R.id.tv_title);
+            titleText = (TextView) view.findViewById(R.id.tv_name_tips);
             titleImg = (ImageView) view.findViewById(R.id.title_img);
 
         }

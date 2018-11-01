@@ -39,6 +39,7 @@ public class Constant {
     public static final String PREF_APP_OPEN_VOICE_WORD_SWITCH = "voice_2_word_switch";
     public static final String PREF_WEBEX_DOWNLOAD_URL = "webex_download_url";
     public static final String PREF_WEBEX_FIRST_ENTER = "webex_first_enter";
+    public static final String PREF_GET_OFFLINE_LAST_MID = "get_offline_last_mid";
 
     public static final String PREF_V_CONFIG_ALL = "v_config_all";
 
@@ -69,6 +70,10 @@ public class Constant {
     public static final String EVENTBUS_TAG_OPEN_DEFALT_TAB = "tag_open_defalt_tab";
     public static final String EVENTBUS_TAG_REFRESH_CONVERSATION_ADAPTER = "tag_refresh_conversation_adapter";
     public static final String EVENTBUS_TAG_SEND_ACTION_CONTENT_MESSAGE = "tag_send_action_content_message";
+    public static final String EVENTBUS_TAG_UPDATE_CHANNEL_NAME = "tag_update_channel_name";
+    public static final String EVENTBUS_TAG_QUIT_CHANNEL_GROUP = "tag_quit_channel_group";
+    public static final String EVENTBUS_TAG_UPDATE_CHANNEL_FOCUS = "tag_update_channel_focus";
+    public static final String EVENTBUS_TAG_UPDATE_CHANNEL_DND = "tag_update_channel_dnd";
 
     public static final String SERVICE_VERSION_CHAT_V0 = "v0";
     public static final String SERVICE_VERSION_CHAT_V1 = "v1";

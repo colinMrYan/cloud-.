@@ -72,10 +72,10 @@ public class WebexAPIService {
     }
 
     /**
-     * 获取webex会议列表
+     * 预定会议
      */
     public void scheduleWebexMeetingList(final JSONObject obj) {
-        final String url = APIUri.getWebexMeetingListUrl();
+        final String url = APIUri.getScheduleWebexMeetingUrl();
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(url);
         params.setReadTimeout(30000);
         params.setBodyContent(obj.toString());

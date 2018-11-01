@@ -149,6 +149,8 @@ public class WebSocketPush {
             String url = APIUri.getWebsocketConnectUrl();
             String path = MyApplication.getInstance().isV0VersionChat() ? "/" + MyApplication.getInstance().getCurrentEnterprise().getCode() + "/socket/handshake" :
                     "/chat/socket/handshake";
+            LogUtils.jasonDebug("url="+url);
+            LogUtils.jasonDebug("path="+path);
             sendWebSocketStatusBroadcast("socket_connecting");
             IO.Options opts = new IO.Options();
             opts.reconnectionAttempts = 5; // 设置websocket重连次数
@@ -236,7 +238,8 @@ public class WebSocketPush {
 
     }
 
-    public void sendAppStatus(boolean isActive) {
+    public void sendAppStatus() {
+        boolean isActive = MyApplication.getInstance().getIsActive();
         if (isSocketConnect()) {
             if (MyApplication.getInstance().isV0VersionChat()) {
                 String appStatus = isActive ? "ACTIVED" : "FROZEN";
@@ -329,31 +332,30 @@ public class WebSocketPush {
             @Override
             public void call(Object... arg0) {
                 // TODO Auto-generated method stub
-                isWebsocketConnecting = false;
                 if (MyApplication.getInstance().isV0VersionChat()) {
                     LogUtils.debug(TAG, "连接成功");
                     sendWebSocketStatusBroadcast(Socket.EVENT_CONNECT);
                     // 当第一次连接成功后发送App目前的状态消息
-                    sendAppStatus(MyApplication.getInstance().getIsActive());
+                    sendAppStatus();
+                    isWebsocketConnecting = false;
                 }
             }
         });
-
 
         mSocket.on("status", new Emitter.Listener() {
 
             @Override
             public void call(Object... arg0) {
                 // TODO Auto-generated method stub
-                isWebsocketConnecting = false;
                 LogUtils.debug(TAG, "连接成功");
                 int code = JSONUtils.getInt(arg0[0].toString(), "code", 0);
                 if (code == 100) {
                     isWSStatusConnectedV1 = true;
                     sendWebSocketStatusBroadcast(Socket.EVENT_CONNECT);
                     // 当第一次连接成功后发送App目前的状态消息
-                    sendAppStatus(MyApplication.getInstance().getIsActive());
+                    sendAppStatus();
                 }
+                isWebsocketConnecting = false;
             }
         });
 
@@ -423,6 +425,15 @@ public class WebSocketPush {
                 sendWebSocketStatusBroadcast(Socket.EVENT_DISCONNECT);
                 LogUtils.debug(TAG, "断开连接");
                 LogUtils.debug(TAG, arg0[0].toString());
+
+                if (arg0[0] != null) {
+                    try {
+                        ((Exception) arg0[0]).printStackTrace();
+                        LogUtils.debug(TAG, "arg0[0]==" + arg0[0].toString());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         });
 
@@ -463,6 +474,20 @@ public class WebSocketPush {
             intent.putExtra("status", event);
             intent.putExtra("command", "websocket_status");
             LocalBroadcastManager.getInstance(MyApplication.getInstance()).sendBroadcast(intent);
+        }
+    }
+
+    /**
+     * 获取websocket目前的状态
+     * @return
+     */
+    public String getWebsocketStatus(){
+        if (isWebsocketConnecting){
+            return Socket.EVENT_CONNECTING;
+        }else if (isSocketConnect()){
+            return Socket.EVENT_CONNECT;
+        }else {
+            return Socket.EVENT_DISCONNECT;
         }
     }
 

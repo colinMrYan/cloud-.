@@ -119,6 +119,21 @@ public class ConversationCacheUtils {
         }
     }
 
+    /**
+     * 设置是否免打扰
+     * @param context
+     * @param id
+     * @param name
+     */
+    public static void updateConversationDnd(Context context, String id, boolean isDnd){
+        try {
+            DbCacheUtils.getDb(context).update(Conversation.class, WhereBuilder.b("id", "=", id),new KeyValue("dnd",isDnd));
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
+    }
+
 
     /**
      * 删除会话

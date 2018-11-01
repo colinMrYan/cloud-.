@@ -1,7 +1,6 @@
 package com.inspur.emmcloud.adapter;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Build;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -136,7 +135,6 @@ public class ChannelAdapter extends BaseAdapter {
         long unReadCount = channel.getUnReadCount();
         holder.channelTimeText.setText(TimeUtils.getDisplayTime(
                 context, channel.getMsgLastUpdate()));
-
         String chatDrafts = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), MyAppConfig.getChannelDrafsPreKey(channel.getCid()),null);
         if (chatDrafts != null){
             String content = "<font color='#FF0000'>"+context.getString(R.string.message_type_drafts)+"</font>"+chatDrafts;
@@ -153,13 +151,6 @@ public class ChannelAdapter extends BaseAdapter {
                 R.color.msg_content_color);
         boolean isHasUnReadMsg = (unReadCount != 0);
         holder.channelNotReadCountLayout.setVisibility(isHasUnReadMsg ? View.VISIBLE : View.INVISIBLE);
-        holder.channelTitleText.getPaint().setFakeBoldText(isHasUnReadMsg);
-        holder.channelContentText.setTextColor(isHasUnReadMsg ? context.getResources().getColor(
-                R.color.black) : context.getResources().getColor(
-                R.color.msg_content_color));
-        holder.channelTimeText.setTextColor(isHasUnReadMsg ? context.getResources().getColor(
-                R.color.msg_time_color) :
-                Color.parseColor("#b8b8b8"));
         if (isHasUnReadMsg) {
             holder.channelNotReadCountText.setText(unReadCount > 99 ? "99+" : "" + unReadCount);
         }
