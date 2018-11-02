@@ -5,9 +5,12 @@ import android.content.Context;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.bean.appcenter.AndroidBundleBean;
 import com.inspur.emmcloud.bean.mine.Language;
-import com.inspur.emmcloud.util.privates.AppUtils;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.privates.AppUtils;
+
+import static com.inspur.emmcloud.config.Constant.PUSH_FLAG;
 
 /**
  * Created by yufuchang on 2017/7/11.
@@ -74,9 +77,9 @@ public class ReactNativeInitInfoUtils {
      * @return
      */
     public static String getPushId(Context context) {
-        String hwToken = PreferencesUtils.getString(context, "huawei_push_token", "");
-        return AppUtils.getIsHuaWei() ? (StringUtils.isBlank(hwToken) ? PreferencesUtils.getString(context, "JpushRegId", "")
-                : (hwToken + "@push.huawei.com")) : PreferencesUtils.getString(context, "JpushRegId", "");
+        String hwToken = PreferencesUtils.getString(context, Constant.HUAWEI_PUSH_TOKEN, "");
+        return AppUtils.getIsHuaWei() ? (StringUtils.isBlank(hwToken) ? PreferencesUtils.getString(context, Constant.JPUSH_REG_ID, "")
+                : (hwToken + Constant.PUSH_HUAWEI_COM)) : PreferencesUtils.getString(context, Constant.JPUSH_REG_ID, "");
     }
 
     /**
@@ -85,7 +88,7 @@ public class ReactNativeInitInfoUtils {
      * @return
      */
     public static String getPushType(Context context) {
-        return (AppUtils.getIsHuaWei() && canConnectHuawei(context)) ? "huawei" : "jiguang";
+        return (AppUtils.getIsHuaWei() && canConnectHuawei(context)) ? Constant.HUAWEI_FLAG : "jiguang";
     }
 
     /**
@@ -94,7 +97,7 @@ public class ReactNativeInitInfoUtils {
      * @return
      */
     private static boolean canConnectHuawei(Context context) {
-        String pushFlag = PreferencesUtils.getString(context, "pushFlag", "");
-        return (StringUtils.isBlank(pushFlag) || pushFlag.equals("huawei"));
+        String pushFlag = PreferencesUtils.getString(context, PUSH_FLAG, "");
+        return (StringUtils.isBlank(pushFlag) || pushFlag.equals(Constant.HUAWEI_FLAG));
     }
 }
