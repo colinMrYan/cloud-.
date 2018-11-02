@@ -34,27 +34,22 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
     private  List<UIConversation> uiConversationList;
     private AdapterListener adapterListener;
     private Context context;
-    private RecyclerView.AdapterDataObserver adapterDataObserver;
 
     public ConversationAdapter(Context context,List<UIConversation> uiConversationList){
         this.uiConversationList = uiConversationList;
         this.context = context;
-        adapterDataObserver = new RecyclerView.AdapterDataObserver() {
-            @Override
-            public void onChanged() {
-                super.onChanged();
-                if (adapterListener != null){
-                    adapterListener.onDataChange();
-                }
-            }
-        };
-        registerAdapterDataObserver(adapterDataObserver);
+        if (adapterListener != null){
+            adapterListener.onDataChange();
+        }
     }
 
     public void setData(List<UIConversation> uiConversationList){
         synchronized (this){
             this.uiConversationList.clear();
             this.uiConversationList.addAll(uiConversationList);
+            if (adapterListener != null){
+                adapterListener.onDataChange();
+            }
         }
 
     }

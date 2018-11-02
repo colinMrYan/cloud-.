@@ -53,6 +53,7 @@ import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
@@ -214,6 +215,7 @@ public class CommunicationFragmentNew extends Fragment {
                 //设置消息tab页面的小红点（未读消息提醒）的显示
                 int unReadCount = 0;
                 for (UIConversation uiConversation : displayUIConversationList) {
+                    LogUtils.jasonDebug(uiConversation.getTitle()+"  "+uiConversation.getUnReadCount());
                     unReadCount += uiConversation.getUnReadCount();
                 }
                 EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SET_ALL_MESSAGE_UNREAD_COUNT, unReadCount));
@@ -652,6 +654,7 @@ public class CommunicationFragmentNew extends Fragment {
                 }
             }).start();
             uiConversation.setUnReadCount(0);
+            LogUtils.jasonDebug("set-------------"+uiConversation.getTitle()+"  "+uiConversation.getUnReadCount());
             conversationAdapter.setData(displayUIConversationList);
             conversationAdapter.notifyItemChanged(position);
         }
