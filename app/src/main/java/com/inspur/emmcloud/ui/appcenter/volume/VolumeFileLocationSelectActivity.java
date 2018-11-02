@@ -72,7 +72,7 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
     private void initViews() {
         apiService = new MyAppAPIService(this);
         apiService.setAPIInterface(new WebService());
-        locationSelectToText.setText(isFunctionCopy ? R.string.copy_to_current_directory : R.string.move_to_current_directory);
+        locationSelectToText.setText(isFunctionCopy ? R.string.clouddriver_copy2_current_directory : R.string.clouddriver_move2_current_directory);
         headerOperationLayout.setVisibility(View.GONE);
         locationSelectCancelText.setVisibility(View.VISIBLE);
         locationSelectBarLayout.setVisibility(View.VISIBLE);
@@ -97,7 +97,7 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
             }
         });
         pathText.setVisibility(View.VISIBLE);
-        pathText.setText(getString(R.string.current_directory_hint,currentDirAbsolutePath));
+        pathText.setText(getString(R.string.clouddriver_current_directory_hint,currentDirAbsolutePath));
         List<Uri> fileShareUriList = (List<Uri>)getIntent().getSerializableExtra(Constant.SHARE_FILE_URI_LIST);
         if(fileShareUriList != null){
             shareUriList.addAll(fileShareUriList);

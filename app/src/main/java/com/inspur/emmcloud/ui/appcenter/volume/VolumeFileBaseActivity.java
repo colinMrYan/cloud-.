@@ -145,7 +145,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
                 .addItem(getString(R.string.rename), isVolumeFileWriteable)
                 .addItem(getString(R.string.move_to), isVolumeFileWriteable)
                 .addItem(getString(R.string.copy))
-                .addItem(getString(R.string.volume_file_permission_manager),isVolumeFileWriteable)
+                .addItem(getString(R.string.clouddriver_file_permission_manager),isVolumeFileWriteable)
                // .addItem("分享", !isVolumeFileDirectory)
                 .setOnSheetItemClickListener(new ActionSheetDialog.ActionListSheetBuilder.OnSheetItemClickListener() {
                     @Override
@@ -201,7 +201,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
      */
     protected void showFileDelWranibgDlg(final VolumeFile volumeFile) {
         new MyQMUIDialog.MessageDialogBuilder(VolumeFileBaseActivity.this)
-                .setMessage(R.string.sure_delete_file)
+                .setMessage(R.string.clouddriver_sure_delete_file)
                 .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
                     @Override
                     public void onClick(QMUIDialog dialog, int index) {
@@ -228,10 +228,10 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
                 R.layout.dialog_my_app_approval_password_input, R.style.userhead_dialog_bg);
         createFolderDlg.setCancelable(false);
         final EditText inputEdit = (EditText) createFolderDlg.findViewById(R.id.edit);
-        inputEdit.setHint(getString(R.string.input_directory_name));
+        inputEdit.setHint(getString(R.string.clouddriver_input_directory_name));
         inputEdit.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MyAppConfig.VOLUME_MAX_FILE_NAME_LENGTH)});
         inputEdit.setInputType(InputType.TYPE_CLASS_TEXT);
-        ((TextView) createFolderDlg.findViewById(R.id.app_update_title)).setText(getString(R.string.create_forder));
+        ((TextView) createFolderDlg.findViewById(R.id.app_update_title)).setText(getString(R.string.clouddriver_create_folder));
         Button okBtn = (Button) createFolderDlg.findViewById(R.id.ok_btn);
         okBtn.setText(R.string.create);
         okBtn.setOnClickListener(new View.OnClickListener() {
@@ -239,17 +239,17 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
             public void onClick(View v) {
                 String forderName = inputEdit.getText().toString().trim();
                 if (StringUtils.isBlank(forderName)) {
-                    ToastUtils.show(getApplicationContext(), R.string.input_directory_name);
+                    ToastUtils.show(getApplicationContext(), R.string.clouddriver_input_directory_name);
                     return;
                 }
                 if (!FomatUtils.isValidFileName(forderName)) {
-                    ToastUtils.show(getApplicationContext(), R.string.directory_name_invaliad);
+                    ToastUtils.show(getApplicationContext(), R.string.clouddriver_directory_name_invaliad);
                     return;
                 }
 
                 for (int i = 0; i < volumeFileList.size(); i++) {
                     if (volumeFileList.get(i).getName().equals(forderName)) {
-                        ToastUtils.show(getApplicationContext(), R.string.exists_same_name);
+                        ToastUtils.show(getApplicationContext(), R.string.clouddriver_exists_same_name);
                         return;
                     }
                 }
@@ -291,11 +291,11 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
             public void onClick(View v) {
                 String newName = inputEdit.getText().toString().trim();
                 if (StringUtils.isBlank(newName)) {
-                    ToastUtils.show(getApplicationContext(), R.string.input_file_name);
+                    ToastUtils.show(getApplicationContext(), R.string.clouddriver_input_file_name);
                     return;
                 }
                 if (!FomatUtils.isValidFileName(newName)) {
-                    ToastUtils.show(getApplicationContext(), R.string.file_name_invaliad);
+                    ToastUtils.show(getApplicationContext(), R.string.clouddriver_file_name_invaliad);
                     return;
                 }
                 if (!fileNameNoEx.equals(newName)) {
@@ -303,7 +303,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
                     for (int i = 0; i < volumeFileList.size(); i++) {
                         VolumeFile volumeFile1 = volumeFileList.get(i);
                         if (volumeFile1 != volumeFile && volumeFile1.getName().equals(newName)) {
-                            ToastUtils.show(getApplicationContext(), R.string.exists_same_name);
+                            ToastUtils.show(getApplicationContext(), R.string.clouddriver_exists_same_name);
                             return;
                         }
                     }
@@ -416,7 +416,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
             Bundle bundle = new Bundle();
             bundle.putSerializable("volume", volume);
             bundle.putSerializable("volumeFileList", (Serializable) moveVolumeFileList);
-            bundle.putString("title", getString(R.string.select_move_position));
+            bundle.putString("title", getString(R.string.clouddriver_select_move_position));
             bundle.putString("operationFileDirAbsolutePath", currentDirAbsolutePath);
             bundle.putBoolean("isFunctionCopy", false);
             intent.putExtras(bundle);
@@ -435,7 +435,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
             Bundle bundle = new Bundle();
             bundle.putSerializable("volume", volume);
             bundle.putSerializable("volumeFileList", (Serializable) volumeFileList);
-            bundle.putString("title", getString(R.string.select_copy_position));
+            bundle.putString("title", getString(R.string.clouddriver_select_copy_position));
             bundle.putBoolean("isFunctionCopy", true);
             bundle.putString("operationFileDirAbsolutePath", currentDirAbsolutePath);
             intent.putExtras(bundle);

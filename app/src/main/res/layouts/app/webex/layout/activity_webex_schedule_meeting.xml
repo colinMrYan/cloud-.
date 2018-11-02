@@ -144,7 +144,7 @@
                 android:layout_toRightOf="@id/tv_password_tips"
                 android:layout_toLeftOf="@id/iv_password_visible"
                 android:background="@null"
-                android:hint="@string/enter_meeting_password"
+                android:hint="@string/webex_enter_meeting_password"
                 android:maxLines="1"
                 android:paddingBottom="10dp"
                 android:paddingTop="10dp"

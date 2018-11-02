@@ -148,12 +148,12 @@ public class LoginActivity extends BaseActivity {
                 password = passwordEdit.getText().toString();
                 if (StringUtils.isEmpty(userName)) {
                     ToastUtils.show(getApplicationContext(),
-                            getString(R.string.please_input_username));
+                            getString(R.string.login_please_input_username));
                     return;
                 }
                 if (StringUtils.isEmpty(password)) {
                     ToastUtils.show(getApplicationContext(),
-                            getString(R.string.please_input_password));
+                            getString(R.string.login_please_input_password));
                     return;
                 }
                 loginApp();

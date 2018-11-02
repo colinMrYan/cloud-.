@@ -54,7 +54,7 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:ellipsize="middle"
-            android:text="@string/group_news_detail"
+            android:text="@string/news_group_news_detail"
             android:textColor="@color/header_text"
             android:textSize="@dimen/header_textsize"
             android:singleLine="true" />

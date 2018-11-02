@@ -75,7 +75,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="7dp"
-            android:text="@string/divide_into_groups"
+            android:text="@string/calendar_divide_into_groups"
             android:textColor="#FF666666"
             android:textSize="@dimen/content_normal_textsize" />
 

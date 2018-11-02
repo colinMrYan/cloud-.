@@ -68,10 +68,10 @@ public class GroupInfoActivity extends BaseActivity {
         loadingDlg = new LoadingDialog(this);
         apiService = new MyAppAPIService(this);
         apiService.setAPIInterface(new WebService());
-        headerText.setText(R.string.volume_group_info);
+        headerText.setText(R.string.clouddriver_volume_group_info);
         group = (Group) getIntent().getSerializableExtra("group");
         volumeMemList = getIntent().getStringArrayListExtra("volumeMemList");
-        groupNameTitle.setText(R.string.volume_group_name);
+        groupNameTitle.setText(R.string.clouddriver_volume_group_name);
         showGroupDetail();
     }
 
@@ -84,7 +84,7 @@ public class GroupInfoActivity extends BaseActivity {
                 break;
             case R.id.volume_member_layout:
                 Bundle bundle = new Bundle();
-                bundle.putString("title", getString(R.string.volume_group_member));
+                bundle.putString("title", getString(R.string.clouddriver_volume_group_member));
                 bundle.putInt(MembersActivity.MEMBER_PAGE_STATE, MembersActivity.CHECK_STATE);
                 bundle.putStringArrayList("uidList", group.getMemberUidList());
                 IntentUtils.startActivity(GroupInfoActivity.this,
@@ -117,13 +117,13 @@ public class GroupInfoActivity extends BaseActivity {
                     intent.putExtra("isRemoveMyself",false);
                     intent.setClass(getApplicationContext(),
                             ChannelMembersDelActivity.class);
-                    intent.putExtra("title", getString(R.string.add_volume_group_member));
+                    intent.putExtra("title", getString(R.string.clouddriver_add_volume_group_member));
                     startActivityForResult(intent, ADD_MEMBER);
                 } else if (position == memberGrid.getCount() - 1) {
                     intent.putExtra("memberUidList", group.getMemberUidList());
                     intent.setClass(getApplicationContext(),
                             ChannelMembersDelActivity.class);
-                    intent.putExtra("title", getString(R.string.del_volume_group_member));
+                    intent.putExtra("title", getString(R.string.clouddriver_del_volume_group_member));
                     startActivityForResult(intent, DEL_MEMBER);
 
                 } else {
@@ -138,7 +138,7 @@ public class GroupInfoActivity extends BaseActivity {
     }
 
     private void updateGroupMemNum() {
-        groupMemberText.setText(getString(R.string.all_volume_group_member_size,group.getMemberUidList().size()));
+        groupMemberText.setText(getString(R.string.clouddriver_all_group_member_size,group.getMemberUidList().size()));
     }
 
 

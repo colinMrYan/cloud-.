@@ -186,7 +186,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
-                    android:text="@string/worker_num"
+                    android:text="@string/user_worker_num"
                     android:textSize="16sp" />
 
                 <LinearLayout
@@ -238,7 +238,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
-                    android:text="@string/depart"
+                    android:text="@string/user_depart"
                     android:textSize="16sp" />
 
                 <LinearLayout
@@ -340,7 +340,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
-                    android:text="@string/telephone"
+                    android:text="@string/user_telephone"
                     android:textSize="16sp" />
 
                 <LinearLayout
