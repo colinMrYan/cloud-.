@@ -11,7 +11,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.inspur.emmcloud.util.common.DensityUtil;
-import com.inspur.emmcloud.util.common.LogUtils;
 
 /**
  * Created by libaochao on 2018/10/31.
@@ -74,7 +73,6 @@ public class WaterMarkBgSingleLine extends Drawable {
                     canvas.rotate(mAngle,positionX,positionY);
                     canvas.drawText(mLabels,positionX, positionY, mPaint);
                     canvas.rotate(-1*mAngle,positionX,positionY);
-                LogUtils.LbcDebug("!!!!!!!!!!!!!!!!!!!!!");
             }
         }
         canvas.restore();
