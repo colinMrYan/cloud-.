@@ -17,6 +17,7 @@ import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.UIConversation;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.ImageUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
@@ -34,6 +35,9 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
     private  List<UIConversation> uiConversationList;
     private AdapterListener adapterListener;
     private Context context;
+    //HeaderView, FooterView
+    private View mHeaderView;
+    private View mFooterView;
 
     public ConversationAdapter(Context context,List<UIConversation> uiConversationList){
         this.uiConversationList = uiConversationList;
@@ -179,6 +183,25 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
             return false;
         }
     }
+
+
+    //HeaderView和FooterView的get和set函数
+    public View getHeaderView() {
+        return mHeaderView;
+    }
+    public void setHeaderView(View headerView) {
+        mHeaderView = headerView;
+        LogUtils.LbcDebug("getheaderView");
+        notifyItemInserted(0);
+    }
+    public View getFooterView() {
+        return mFooterView;
+    }
+    public void setFooterView(View footerView) {
+        mFooterView = footerView;
+        notifyItemInserted(getItemCount()-1);
+    }
+
 
     /**
      * 创建一个回调接口
