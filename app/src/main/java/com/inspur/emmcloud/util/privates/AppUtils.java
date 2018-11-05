@@ -16,6 +16,8 @@ import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Paint;
 import android.graphics.Paint.FontMetrics;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.TrafficStats;
 import android.net.Uri;
 import android.os.Binder;
@@ -1075,5 +1077,34 @@ public class AppUtils {
         ClipboardManager cmb = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
         cmb.setPrimaryClip(ClipData.newPlainText(null, content));
         ToastUtils.show(context, R.string.copyed_to_paste_board);
+    }
+
+    /**
+     * 检测是否连接网络，不关心是真正联通
+     * @param context
+     * @return
+     */
+    public static boolean isNetworkConnected(Context context) {
+        ConnectivityManager connMgr = (ConnectivityManager)
+                context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        return (networkInfo != null && networkInfo.isConnected());
+    }
+
+    /**
+     *
+     * @return
+     */
+    public static boolean isNetworkOnline() {
+        Runtime runtime = Runtime.getRuntime();
+        try {
+            Process ipProcess = runtime.exec("ping -c 3 www.baidu.com");
+            int exitValue = ipProcess.waitFor();
+            LogUtils.YfcDebug("网络可用性："+exitValue);
+            return (exitValue == 0);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return true;
     }
 }

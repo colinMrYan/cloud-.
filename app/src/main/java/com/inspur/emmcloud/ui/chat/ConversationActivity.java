@@ -37,6 +37,7 @@ import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
 import com.inspur.emmcloud.util.privates.DataCleanManager;
 import com.inspur.emmcloud.util.privates.DirectChannelUtils;
@@ -686,10 +687,24 @@ public class ConversationActivity extends ConversationBaseActivity {
         UIMessage UIMessage = new UIMessage(message);
         //本地添加的消息设置为正在发送状态
         UIMessage.setSendStatus(status);
+        handleUnSendMessage(message,status);
         uiMessageList.add(UIMessage);
         adapter.setMessageList(uiMessageList);
         adapter.notifyItemInserted(uiMessageList.size() - 1);
         msgListView.MoveToPosition(uiMessageList.size() - 1);
+    }
+
+    private void handleUnSendMessage(Message message, int status) {
+        //发送中，无网（没有联网，或者联网不通的情况）
+        if(status == Message.MESSAGE_SEND_ING && (NetUtils.isNetworkConnected(ConversationActivity.this) || !AppUtils.isNetworkOnline())){
+            message.setSendStatus(Message.MESSAGE_SEND_ING);
+            MessageCacheUtil.saveMessage(ConversationActivity.this,message);
+        }
+        //发送消息失败
+        if(status == Message.MESSAGE_SEND_FAIL){
+            message.setSendStatus(Message.MESSAGE_SEND_FAIL);
+            MessageCacheUtil.saveMessage(ConversationActivity.this,message);
+        }
     }
 
     /**
@@ -703,6 +718,7 @@ public class ConversationActivity extends ConversationBaseActivity {
         int index = uiMessageList.indexOf(fakeUIMessage);
         if (index != -1) {
             uiMessageList.get(index).setSendStatus(2);
+            handleUnSendMessage(uiMessageList.get(index).getMessage(),Message.MESSAGE_SEND_FAIL);
             MessageCacheUtil.saveMessage(ConversationActivity.this,uiMessageList.get(index).getMessage());
             adapter.setMessageList(uiMessageList);
             adapter.notifyItemChanged(index);

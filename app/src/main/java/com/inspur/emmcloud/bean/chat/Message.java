@@ -21,6 +21,9 @@ public class Message implements Serializable {
     public static final String MESSAGE_TYPE_EXTENDED_ACTIONS = "extended/actions";
     public static final String MESSAGE_TYPE_COMMENT_TEXT_PLAIN = "comment/text-plain";
     public static final String MESSAGE_TYPE_EXTENDED_LINKS = "extended/links";
+    public static final int MESSAGE_SEND_ING = 0;
+    public static final int MESSAGE_SEND_FAIL = 2;
+    public static final int MESSAGE_SEND_SUCCESS = 1;
     @Column(name = "id", isId = true)
     private String id;
     @Column(name = "message")
@@ -41,7 +44,7 @@ public class Message implements Serializable {
     private Long creationDate;
     @Column(name = "read")
     private int read = 0;  //0 未读，1 已读
-
+    @Column(name = "sendStatus")
     private int sendStatus = 1;//0 发送中  1发送成功  2发送失败
 
     public Message() {
