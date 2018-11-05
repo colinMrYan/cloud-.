@@ -45,7 +45,7 @@
     <string name="unknown_error">Unknown Error</string>
     <string name="no_search_term">No more results</string>
     <string name="more">More</string>
-    <string name="check_update_text">Checking new version</string>
+    <string name="check_update_text">Check new version</string>
     <string name="app_is_lastest_version">This is the lastest version</string>
     <string name="check_update_fail">Checking new version failed</string>
     <string name="upgrade">Now</string>
@@ -97,7 +97,7 @@
     <string name="close">Close</string>
     <string name="commoly_use_app">Commonly</string>
     <string name="function_not_implemented">During closed beta, it will not open</string>
-    <string name="app_init">init</string>
+    <string name="app_init">initializing</string>
     <string name="news_content_cant_empty">Content cannot be empty</string>
     <string name="help">Help</string>
     <string name="load_data_failed">Failed to load data</string>
@@ -491,7 +491,7 @@
     <string name="webex_meeting_password_tip">Meeting password：</string>
     <string name="webex_add_external_attendees">Add</string>
     <string name="webex_no_meeting_tips"><Data><![CDATA[<font color=\'#999999\'>No meetings before</font>]]></Data>%1$s</string>
-    <string name="webex_participant">Participant</string>
+    <string name="webex_participant">Participants</string>
     <string name="webex_password_invalid">Passwords only contain numbers and letters</string>
     <string name="duration_time">Duration</string>
     <string name="schedule_meeting">Schedule Meeting</string>
@@ -931,7 +931,7 @@
     <string name="download_fail">Download Failed</string>
     <string name="download_success">Download Success</string>
     <string name="file_downloading">In the download, please later...</string>
-    <string name="file_download_success">Has the file been downloaded, is it open?</string>
+    <string name="file_download_success">the file Has been downloaded, is it open?</string>
     <string name="has_downloaded">Downloaded</string>
     <string name="imp_content">Content</string>
     <string name="file_ok">Confirm</string>
@@ -941,7 +941,7 @@
     <string name="can_not_replay">The current state of play can not be reset</string>
     <string name="can_not_stop">The current state can not be stopped</string>
     <string name="turn_on_light">Turn on the light</string>
-    <string name="turn_off_light">Turn on the light</string>
+    <string name="turn_off_light">Turn off the light</string>
     <string name="imp_function_error">Function call error. Please check if Cloud + has been upgraded to the latest version.</string>
 
     <!-- 打点 -->
@@ -957,7 +957,7 @@
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="dummy_button">Dummy Button</string>
 
-    <string name="react_native_app_open_failed">Application open failure</string>
+    <string name="react_native_app_open_failed">Application opened unsuccessfully</string>
     <string name="react_native_app_update_failed">Update packet breakage </string>
 
     <!--闪屏页文字资源-->

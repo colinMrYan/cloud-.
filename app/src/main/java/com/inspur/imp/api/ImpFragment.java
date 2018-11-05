@@ -37,10 +37,8 @@ import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppWebConfig;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ResolutionUtils;
-import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppTabUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
@@ -228,50 +226,39 @@ public class ImpFragment extends Fragment {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.imp_change_font_size_btn:
-                    LogUtils.LbcDebug("impFragment  1");
                     showChangeFontSizeDialog();
                     break;
                 case R.id.app_imp_crm_font_normal_btn:
-                    LogUtils.LbcDebug("impFragment  app_imp_crm_font_normal_btn    2");
                     setNewsFontSize(MyAppWebConfig.NORMAL);
                     break;
                 case R.id.app_imp_crm_font_middle_btn:
-                    LogUtils.LbcDebug("impFragment  app_imp_crm_font_middle_btn    3");
                     setNewsFontSize(MyAppWebConfig.CRM_BIG);
                     break;
                 case R.id.app_imp_crm_font_big_btn:
-                    LogUtils.LbcDebug("impFragment  app_imp_crm_font_big_btn      4");
                     setNewsFontSize(MyAppWebConfig.CRM_BIGGER);
                     break;
                 case R.id.app_imp_crm_font_biggest_btn:
-                    LogUtils.LbcDebug("impFragment   app_imp_crm_font_biggest_btn  5");
                     setNewsFontSize(MyAppWebConfig.CRM_BIGGEST);
                     break;
                 case R.id.back_layout:
-                    LogUtils.LbcDebug("impFragment   back_layout                   6");
                     goBack();
                     break;
                 case R.id.imp_close_btn:
-                    LogUtils.LbcDebug("impFragment   imp_close_btn                 7");
                     finishActivity();
                     break;
                 case R.id.refresh_text:
-                    LogUtils.LbcDebug("impFragment   refresh_text                  8");
                     showLoadingDlg(getString(Res.getStringID("@string/loading_text")));
                     webView.reload();
                     webView.setVisibility(View.INVISIBLE);
                     loadFailLayout.setVisibility(View.GONE);
                     break;
                 case R.id.imp_cloud_function1_img:
-                    LogUtils.LbcDebug("impFragment   imp_cloud_function1_img       9");
                     runJavaScript(JAVASCRIPT_PREFIX + mainTabMenuArrayList.get(0).getAction());
                     break;
                 case R.id.imp_cloud_function2_img:
-                    LogUtils.LbcDebug("impFragment   imp_cloud_function2_img         10");
                     runJavaScript(JAVASCRIPT_PREFIX + mainTabMenuArrayList.get(1).getAction());
                     break;
                 case R.id.header_text:
-                    LogUtils.LbcDebug("impFragment   header_tex                      11");
                     if (dropItemTitleList != null && dropItemTitleList.size() > 0) {
                         if (dropTitlePopupWindow != null && dropTitlePopupWindow.isShowing()) {
                             dropTitlePopupWindow.dismiss();
