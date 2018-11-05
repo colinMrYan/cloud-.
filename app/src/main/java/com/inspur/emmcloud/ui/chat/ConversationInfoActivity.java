@@ -23,6 +23,7 @@ import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelOperationCacheUtils;
@@ -429,7 +430,8 @@ public class ConversationInfoActivity extends BaseActivity {
 
         @Override
         public void returnQuitChannelGroupSuccess() {
-            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_QUIT_CHANNEL_GROUP,conversation.getId()));
+            LogUtils.jasonDebug("0000000000000000000000");
+            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_QUIT_CHANNEL_GROUP,conversation));
             LoadingDialog.dimissDlg(loadingDlg);
             setResult(RESULT_OK);
             finish();
