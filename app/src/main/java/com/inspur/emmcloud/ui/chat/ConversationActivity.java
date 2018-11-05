@@ -45,7 +45,6 @@ import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.MessageRecourceUploadUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.UriUtils;
-import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 import com.inspur.emmcloud.widget.ECMChatInputMenu;
@@ -124,7 +123,7 @@ public class ConversationActivity extends ConversationBaseActivity {
     private void init() {
         if (getIntent().hasExtra("get_new_msg") && NetUtils.isNetworkConnected(MyApplication.getInstance())) {
             uiMessageList = new ArrayList<>();
-            getHistoryMessage();
+            getNewMessageOfChannel();
         } else {
             final List<Message> cacheMessageList = MessageCacheUtil.getHistoryMessageList(MyApplication.getInstance(), cid, null, 15);
             uiMessageList = UIMessage.MessageList2UIMessageList(cacheMessageList);
@@ -758,7 +757,7 @@ public class ConversationActivity extends ConversationBaseActivity {
             adapter.notifyItemRangeInserted(0, messageList.size());
             msgListView.scrollToPosition(messageList.size() - 1);
             swipeRefreshLayout.setRefreshing(false);
-        } else if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
+        } else if (NetUtils.isNetworkConnected(MyApplication.getInstance(),false)) {
             String newMessageId = uiMessageList.size() > 0 ? uiMessageList.get(0).getMessage().getId() : "";
             WSAPIService.getInstance().getHistoryMessage(cid, newMessageId);
         } else {
@@ -835,6 +834,31 @@ public class ConversationActivity extends ConversationBaseActivity {
 
     }
 
+
+    //接收到websocket发过来的消息
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiveNewMessage(EventMessage eventMessage) {
+        if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_GET_NEW_MESSAGE)) {
+            LoadingDialog.dimissDlg(loadingDlg);
+            if (swipeRefreshLayout.isRefreshing()) {
+                swipeRefreshLayout.setRefreshing(false);
+            }
+            if (eventMessage.getStatus() == 200) {
+                String content = eventMessage.getContent();
+                GetChannelMessagesResult getChannelMessagesResult = new GetChannelMessagesResult(content);
+                final List<Message> newMessageList = getChannelMessagesResult.getMessageList();
+                if (newMessageList.size() > 0) {
+                    MessageCacheUtil.saveMessageList(MyApplication.getInstance(), newMessageList, null);
+                }
+                WSAPIService.getInstance().setChannelMessgeStateRead(cid);
+            }
+            final List<Message> cacheMessageList = MessageCacheUtil.getHistoryMessageList(MyApplication.getInstance(), cid, null, 15);
+            uiMessageList = UIMessage.MessageList2UIMessageList(cacheMessageList);
+            adapter.notifyDataSetChanged();
+            msgListView.scrollToPosition(uiMessageList.size() - 1);
+        }
+    }
+
     //接收到websocket发过来的消息
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveHistoryMessage(EventMessage eventMessage) {
@@ -855,8 +879,6 @@ public class ConversationActivity extends ConversationBaseActivity {
                     adapter.notifyItemRangeInserted(0, messageList.size());
                     msgListView.scrollToPosition(messageList.size() - 1);
                 }
-            } else {
-                WebServiceMiddleUtils.hand(ConversationActivity.this, eventMessage.getContent(), eventMessage.getStatus());
             }
         }
     }
@@ -870,7 +892,8 @@ public class ConversationActivity extends ConversationBaseActivity {
         while (it.hasNext()) {
             Message offlineMessage = it.next();
             UIMessage uiMessage = new UIMessage(offlineMessage.getId());
-            if (uiMessageList.contains(uiMessage)) {
+            //再一次排除非此频道消息显示在此频道
+            if (uiMessageList.contains(uiMessage) || uiMessage.getMessage().getChannel() != cid) {
                 it.remove();
             }
         }
@@ -882,6 +905,16 @@ public class ConversationActivity extends ConversationBaseActivity {
             adapter.notifyItemRangeInserted(currentPostion + 1, offlineUIMessageList.size());
             msgListView.MoveToPosition(uiMessageList.size() - 1);
             WSAPIService.getInstance().setChannelMessgeStateRead(cid);
+        }
+    }
+
+
+    /**
+     * 获取此频道的最新消息
+     */
+    private void getNewMessageOfChannel() {
+        if (NetUtils.isNetworkConnected(this, false)) {
+            WSAPIService.getInstance().getChannelNewMessage(cid);
         }
     }
 

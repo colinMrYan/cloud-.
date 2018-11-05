@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.StringUtils;
 
 import org.json.JSONObject;
@@ -84,7 +85,7 @@ public class ECMShortcutBadgeNumberManagerUtils {
      * @param context
      */
     public static void setDesktopBadgeNumber(Context context,int count) {
-        if(!AppUtils.GetChangShang().toLowerCase().startsWith("xiaomi")){
+        if(!AppUtils.GetChangShang().toLowerCase().startsWith(Constant.XIAOMI_FLAG)){
             try {
                 ShortcutBadger.applyCount(context,count);
             }catch (Exception e){

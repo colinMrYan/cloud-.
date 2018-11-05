@@ -20,7 +20,9 @@
     <color name="text_black">#030303</color>
     <color name="app_status_btn_text_nor">#24abe9</color>
     <color name="app_status_btn_text_sel">#ffffff</color>
+    <color name="list_item_white_tran">#09ffffff</color>
     <color name="list_item_sel">#FFF3F3F7</color>
+    <color name="list_item_sel_tran">#bfF3F3F7</color>
     <color name="grid_item_sel">#EBEDED</color>
     <color name="login_btn_unable_bg">#95d0f8</color>
     <color name="background_tab_pressed">#6633B5E5</color>

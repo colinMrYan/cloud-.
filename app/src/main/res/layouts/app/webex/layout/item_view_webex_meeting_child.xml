@@ -30,7 +30,7 @@
             android:textColor="#999999"
             android:textSize="14sp" />
         <TextView
-            android:id="@+id/tv_title"
+            android:id="@+id/tv_name_tips"
             android:maxLines="1"
             android:ellipsize="end"
             android:paddingBottom="4dp"

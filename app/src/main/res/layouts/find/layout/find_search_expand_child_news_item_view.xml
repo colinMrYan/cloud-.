@@ -22,7 +22,7 @@
         android:layout_toRightOf="@id/news_img" >
 
         <TextView
-            android:id="@+id/tv_title"
+            android:id="@+id/tv_name_tips"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"

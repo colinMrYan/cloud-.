@@ -52,7 +52,6 @@ import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.MessageRecourceUploadUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.UriUtils;
-import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
@@ -769,8 +768,7 @@ public class ChannelActivity extends MediaPlayBaseActivity {
                 if (historyMessageList.size() > 0) {
                     MessageCacheUtil.saveMessageList(MyApplication.getInstance(), historyMessageList, null);
                 }
-            } else {
-                WebServiceMiddleUtils.hand(ChannelActivity.this, eventMessage.getContent(), eventMessage.getStatus());
+                WSAPIService.getInstance().setChannelMessgeStateRead(cid);
             }
             initMsgListView();
         }

@@ -1496,4 +1496,46 @@ public class ChatAPIService {
             }
         });
     }
+
+    /**
+     * 设置会话是否消息免打扰
+     * @param id
+     * @param isDnd
+     */
+    public void updateConversationDnd(final String id, final boolean isDnd){
+        final String completeUrl = APIUri.getConversationSetDnd(id);
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
+        params.addParameter("dnd ",isDnd);
+        HttpUtils.request(context, CloudHttpMethod.PUT, params, new APICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        updateConversationDnd(id,isDnd);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(oauthCallBack, requestTime);
+            }
+
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+                apiInterface.returnDndSuccess();
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                apiInterface.returnDndFail(error, responseCode);
+            }
+        });
+    }
 }

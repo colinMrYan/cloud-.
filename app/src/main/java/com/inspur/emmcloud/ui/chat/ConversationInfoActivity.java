@@ -2,10 +2,10 @@ package com.inspur.emmcloud.ui.chat;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
@@ -14,7 +14,6 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.ConversationMemberAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
-import com.inspur.emmcloud.bean.chat.Channel;
 import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.bean.contact.SearchModel;
@@ -24,9 +23,9 @@ import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
-import com.inspur.emmcloud.util.privates.cache.ChannelCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelOperationCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
@@ -64,12 +63,13 @@ public class ConversationInfoActivity extends BaseActivity {
     private SwitchView dndSwitch;
     @ViewInject(R.id.tv_name)
     private TextView nameText;
+    @ViewInject(R.id.bt_exit)
+    private Button exitBtn;
 
     private ChatAPIService apiService;
     private ConversationMemberAdapter adapter;
     private ArrayList<String> uiMemberUidList = new ArrayList<>();
     private LoadingDialog loadingDlg;
-    private boolean isNoInterruption = false;
     private Conversation conversation;
     private boolean isOwner;
     private int memberSize;
@@ -101,7 +101,7 @@ public class ConversationInfoActivity extends BaseActivity {
         dndSwitch.setOnStateChangedListener(onStateChangedListener);
         stickSwitch.setOpened(conversation.isStick());
         stickSwitch.setOnStateChangedListener(onStateChangedListener);
-
+        exitBtn.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -156,9 +156,9 @@ public class ConversationInfoActivity extends BaseActivity {
         public void toggleToOn(View view) {
             // TODO Auto-generated method stub
             if (view.getId() == R.id.sv_dnd) {
-                updateIsNoInterruption(true);
+                updateConversationDnd();
             } else {
-                setChannelTop(true);
+                setConversationStick();
             }
         }
 
@@ -166,9 +166,9 @@ public class ConversationInfoActivity extends BaseActivity {
         public void toggleToOff(View view) {
             // TODO Auto-generated method stub
             if (view.getId() == R.id.sv_dnd) {
-                updateIsNoInterruption(false);
+                updateConversationDnd();
             } else {
-                setChannelTop(false);
+                setConversationStick();
             }
         }
     };
@@ -179,12 +179,12 @@ public class ConversationInfoActivity extends BaseActivity {
             case R.id.back_layout:
                 finish();
                 break;
-            case R.id.channel_img:
+            case R.id.rl_chat_imgs:
                 bundle.putString("cid", conversation.getId());
                 IntentUtils.startActivity(ConversationInfoActivity.this,
                         GroupAlbumActivity.class, bundle);
                 break;
-            case R.id.channel_file:
+            case R.id.rl_chat_files:
                 bundle.putString("cid", conversation.getId());
                 IntentUtils.startActivity(ConversationInfoActivity.this,
                         GroupFileActivity.class, bundle);
@@ -197,14 +197,14 @@ public class ConversationInfoActivity extends BaseActivity {
                 intent.putExtra("name", conversation.getName());
                 startActivityForResult(intent, REQUEST_UPDATE_CHANNEL_NAME);
                 break;
-            case R.id.member_layout:
+            case R.id.rl_member:
                 bundle.putString("title", getString(R.string.group_member));
                 bundle.putInt(MembersActivity.MEMBER_PAGE_STATE,MembersActivity.CHECK_STATE);
                 bundle.putStringArrayList("uidList",conversation.getMemberList());
                 IntentUtils.startActivity(ConversationInfoActivity.this,
                         MembersActivity.class, bundle);
                 break;
-            case R.id.btn_exit:
+            case R.id.bt_exit:
                 showQuitGroupWarningDlg();
                 break;
             default:
@@ -269,6 +269,7 @@ public class ConversationInfoActivity extends BaseActivity {
         nameText.setText(name);
         conversation.setName(name);
         ConversationCacheUtils.updateConversationName(MyApplication.getInstance(),conversation.getId(),name);
+        EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_UPDATE_CHANNEL_NAME,conversation));
     }
 
 
@@ -288,30 +289,35 @@ public class ConversationInfoActivity extends BaseActivity {
 
 
     /**
-     * 发送广播
-     */
-    private void sendBroadCast() {
-        Intent mIntent = new Intent("message_notify");
-        mIntent.putExtra("command", "refresh_session_list");
-        LocalBroadcastManager.getInstance(this).sendBroadcast(mIntent);
-    }
-
-
-    /**
      * 更改是否频道消息免打扰
      *
      * @param isNoInterruption
      */
-    private void updateIsNoInterruption(boolean isNoInterruption) {
+    private void updateConversationDnd() {
         // TODO Auto-generated method stub
         if (NetUtils.isNetworkConnected(ConversationInfoActivity.this)) {
             loadingDlg.show();
-            this.isNoInterruption = isNoInterruption;
-            apiService.updateDnd(conversation.getId(), isNoInterruption);
+            apiService.updateConversationDnd(conversation.getId(), !conversation.isDnd());
         } else {
-            dndSwitch.setOpened(this.isNoInterruption);
+            dndSwitch.setOpened(conversation.isDnd());
         }
     }
+
+    /**
+     * 设置频道是否置顶
+     *
+     * @param id
+     * @param isStick
+     */
+    private void setConversationStick() {
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
+            loadingDlg.show();
+            apiService.setConversationStick(conversation.getId(), !conversation.isStick());
+        }else {
+            stickSwitch.setOpened(conversation.isStick());
+        }
+    }
+
 
     /**
      * 添加群组成员
@@ -354,21 +360,35 @@ public class ConversationInfoActivity extends BaseActivity {
         public void returnDndSuccess() {
             // TODO Auto-generated method stub
             LoadingDialog.dimissDlg(loadingDlg);
-            Channel channel = ChannelCacheUtils.getChannel(
-                    ConversationInfoActivity.this, conversation.getId());
-            channel.setDnd(isNoInterruption);
-            ChannelCacheUtils.saveChannel(ConversationInfoActivity.this, channel);
-            dndSwitch.setOpened(isNoInterruption);
-            sendBroadCast();
+            conversation.setDnd(!conversation.isDnd());
+            dndSwitch.setOpened(conversation.isDnd());
+            ConversationCacheUtils.saveConversation(MyApplication.getInstance(),conversation);
+            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_UPDATE_CHANNEL_DND,conversation));
+
         }
 
         @Override
         public void returnDndFail(String error, int errorCode) {
             // TODO Auto-generated method stub
             LoadingDialog.dimissDlg(loadingDlg);
-            isNoInterruption = !isNoInterruption;
-            dndSwitch.setOpened(isNoInterruption);
+            dndSwitch.setOpened(conversation.isDnd());
             WebServiceMiddleUtils.hand(ConversationInfoActivity.this, error, errorCode);
+        }
+
+        @Override
+        public void returnSetConversationStickSuccess(String id, boolean isStick) {
+            LoadingDialog.dimissDlg(loadingDlg);
+            conversation.setStick(isStick);
+            stickSwitch.setOpened(isStick);
+            ConversationCacheUtils.setConversationStick(MyApplication.getInstance(), id, isStick);
+            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_UPDATE_CHANNEL_FOCUS,conversation));
+        }
+
+        @Override
+        public void returnSetConversationStickFail(String error, int errorCode) {
+            LoadingDialog.dimissDlg(loadingDlg);
+            WebServiceMiddleUtils.hand(MyApplication.getInstance(), error, errorCode);
+            stickSwitch.setOpened(conversation.isStick());
         }
 
         @Override
@@ -410,7 +430,8 @@ public class ConversationInfoActivity extends BaseActivity {
 
         @Override
         public void returnQuitChannelGroupSuccess() {
-            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_REFRESH_CONVERSATION_ADAPTER));
+            LogUtils.jasonDebug("0000000000000000000000");
+            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_QUIT_CHANNEL_GROUP,conversation));
             LoadingDialog.dimissDlg(loadingDlg);
             setResult(RESULT_OK);
             finish();
@@ -421,6 +442,8 @@ public class ConversationInfoActivity extends BaseActivity {
             LoadingDialog.dimissDlg(loadingDlg);
             WebServiceMiddleUtils.hand(ConversationInfoActivity.this, error, errorCode);
         }
+
+
     }
 
 }

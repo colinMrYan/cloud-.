@@ -36,7 +36,7 @@ import com.inspur.emmcloud.util.privates.ClientIDUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.AppExceptionCacheUtils;
-import com.inspur.emmcloud.widget.LoadingDialog;
+import com.inspur.emmcloud.widget.dialogs.ReactLoadingDlg;
 import com.inspur.reactnative.AuthorizationManagerPackage;
 import com.inspur.reactnative.ReactNativeFlow;
 import com.inspur.reactnative.ReactNativeInitInfoUtils;
@@ -56,7 +56,7 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
     private ReactNativeAPIService reactNativeAPIService;
     private String reactNativeAppScheme = "";
     private String reactAppFilePath;
-    private LoadingDialog loadingDialog;
+    private ReactLoadingDlg loadingDialog;
     private String appModule;
     private String rnAppParams = "";
 //    private String installUri = "";
@@ -76,7 +76,7 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
         String token = ((MyApplication) getApplicationContext())
                 .getToken();
         checkToken(token);
-        loadingDialog = new LoadingDialog(this);
+        loadingDialog = new ReactLoadingDlg(this);
         reactNativeAPIService = new ReactNativeAPIService(ReactNativeAppActivity.this);
         reactNativeAPIService.setAPIInterface(new WebService());
     }

@@ -102,7 +102,7 @@ public class AppConfigUtils {
 
         @Override
         public void returnAppConfigFail(String error, int errorCode) {
-            WebServiceMiddleUtils.hand(context,error,errorCode);
+           // WebServiceMiddleUtils.hand(context,error,errorCode);
         }
     }
 }

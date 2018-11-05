@@ -130,7 +130,7 @@
                     android:textSize="15sp"
                     />
                 <TextView
-                    android:id="@+id/tv_title"
+                    android:id="@+id/tv_name_tips"
                     android:maxLines="3"
                     android:ellipsize="end"
                     android:textSize="17sp"
