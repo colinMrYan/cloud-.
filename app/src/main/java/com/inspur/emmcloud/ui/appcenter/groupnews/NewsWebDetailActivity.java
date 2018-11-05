@@ -213,7 +213,7 @@ public class NewsWebDetailActivity extends BaseActivity {
 
     private void setWebView() {
         // 为0就是不给滚动条留空间，滚动条覆盖在网页上
-        webView = (WebView) findViewById(R.id.wv_news);
+        webView = (WebView) findViewById(R.id.news_webdetail_webview);
         webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
         //this.setInitialScale(100);
         webView.setInitialScale(0);
