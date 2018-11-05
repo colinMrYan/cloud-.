@@ -55,13 +55,13 @@
             android:layout_toLeftOf="@id/news_share_img"
             android:layout_toRightOf="@id/news_close_btn"
             android:ellipsize="middle"
+            android:singleLine="true"
             android:text="@string/news_group_news_detail"
             android:textColor="@color/header_text"
-            android:textSize="@dimen/header_textsize"
-            android:singleLine="true" />
+            android:textSize="@dimen/header_textsize" />
 
 
-       <ImageView
+        <ImageView
             android:id="@+id/news_share_img"
             android:layout_width="48dp"
             android:layout_height="match_parent"
@@ -77,17 +77,44 @@
 
     </RelativeLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_below="@id/header_layout"
-        android:background="@color/content_bg"
-        android:orientation="vertical" >
-		<com.inspur.emmcloud.widget.ProgressWebView
-		    android:id="@+id/news_webdetail_webview"
-		    android:layout_width="match_parent"
-		    android:layout_height="match_parent"
-		    />
-    </LinearLayout>
+        android:background="@color/content_bg">
+
+        <WebView
+            android:id="@+id/wv_news"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <RelativeLayout
+            android:id="@+id/rl_loading"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clickable="true">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@drawable/shape_dialog_react_loading"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="15dp">
+
+                <ProgressBar
+                    android:id="@+id/pb_load"
+                    style="@android:style/Widget.ProgressBar"
+                    android:layout_width="21dp"
+                    android:layout_height="21dp"
+                    android:layout_centerHorizontal="true"
+                    android:indeterminateDrawable="@drawable/react_native_ios_progress"
+                    android:indeterminateDuration="1000" />
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+    </RelativeLayout>
 
 </RelativeLayout>
