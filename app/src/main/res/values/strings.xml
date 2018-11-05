@@ -186,7 +186,7 @@
     <string name="newuser_perfect_gender">男</string>
 
     <!-- 登录部分 -->
-    <string name="login_nvaliad_account_or_pwd">用户名或密码错误</string>
+    <string name="login_invaliad_account_or_pwd">用户名或密码错误</string>
     <string name="login_captchas_input_error">验证码错误</string>
     <string name="login_pw_modified"> 密码已修改</string>
     <string name="login_phonenum_has_beeb_resgistered">手机号已经注册，您可以选择直接登录，或者更换注册手机号</string>
