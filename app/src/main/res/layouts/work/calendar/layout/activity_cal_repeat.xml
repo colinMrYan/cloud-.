@@ -220,7 +220,7 @@
                 android:paddingBottom="10dp"
                 android:paddingLeft="17dp"
                 android:paddingTop="10dp"
-                android:text="@string/every_year"
+                android:text="@string/calendar_every_year"
                 android:textColor="#FF333333"
                 android:textSize="@dimen/content_title_textsize" />
         </RelativeLayout>

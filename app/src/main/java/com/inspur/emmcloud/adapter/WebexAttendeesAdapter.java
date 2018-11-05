@@ -50,7 +50,7 @@ public class WebexAttendeesAdapter extends BaseAdapter {
         TextView personTypeText = (TextView)convertView.findViewById(R.id.tv_persion_type);
         TextView typeText = (TextView)convertView.findViewById(R.id.tv_type);
         emailText.setText(webexAttendees.getEmail());
-        personTypeText.setText(webexAttendees.getPersonType() == 0?R.string.external_attendees:R.string.internal_attendees);
+        personTypeText.setText(webexAttendees.getPersonType() == 0?R.string.webex_external_attendees:R.string.webex_internal_attendees);
         typeText.setText(webexAttendees.getType());
         if (webexAttendees.getPersonType() == 1){
             CircleTextImageView photoImg = (CircleTextImageView)convertView.findViewById(R.id.iv_photo);

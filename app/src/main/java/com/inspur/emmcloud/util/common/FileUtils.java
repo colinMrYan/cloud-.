@@ -867,7 +867,7 @@ public class FileUtils {
             }
         }catch (Exception e){
             e.printStackTrace();
-            ToastUtils.show(context, R.string.file_open_file);
+            ToastUtils.show(context, R.string.clouddriver_file_open_fail);
         }
     }
 

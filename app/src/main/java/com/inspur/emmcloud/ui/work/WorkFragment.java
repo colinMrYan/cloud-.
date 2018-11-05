@@ -372,7 +372,7 @@ public class WorkFragment extends Fragment {
             });
 
             if (id.equals(TYPE_CALENDAR)) {
-                holder.workAddText.setText(R.string.add_calendar);
+                holder.workAddText.setText(R.string.calendar_add_calendar);
                 holder.groupIconImg.setImageResource(R.drawable.ic_work_calendar);
                 calendarChildAdapter = new ChildAdapter(TYPE_CALENDAR);
                 holder.GroupListView.setAdapter(calendarChildAdapter);

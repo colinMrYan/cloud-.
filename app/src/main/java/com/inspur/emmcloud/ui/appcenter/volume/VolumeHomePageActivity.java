@@ -83,8 +83,8 @@ public class VolumeHomePageActivity extends BaseActivity implements SwipeRefresh
         volumeRecentUseListView.setAdapter(volumeRecentUseAdapter);
         swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(getApplicationContext(), R.color.header_bg), ContextCompat.getColor(getApplicationContext(), R.color.header_bg));
         swipeRefreshLayout.setOnRefreshListener(this);
-        volumeHomePageDirectoryList.add(new VolumeHomePageDirectory(R.drawable.ic_volume_my_file, getString(R.string.volume_my_file), ""));
-        volumeHomePageDirectoryList.add(new VolumeHomePageDirectory(R.drawable.ic_volume_share_volume, getString(R.string.share_volume), ""));
+        volumeHomePageDirectoryList.add(new VolumeHomePageDirectory(R.drawable.ic_volume_my_file, getString(R.string.clouddriver_my_file), ""));
+        volumeHomePageDirectoryList.add(new VolumeHomePageDirectory(R.drawable.ic_volume_share_volume, getString(R.string.clouddriver_share_volume), ""));
         adapter = new Adapter();
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -92,7 +92,7 @@ public class VolumeHomePageActivity extends BaseActivity implements SwipeRefresh
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("volume", myVolume);
-                bundle.putString("title",getString(R.string.volume_my_file) );
+                bundle.putString("title",getString(R.string.clouddriver_my_file) );
                 List<Uri> uriList = null;
                 if(isShareState){
                     uriList = (List<Uri>) getIntent().getSerializableExtra(Constant.SHARE_FILE_URI_LIST);

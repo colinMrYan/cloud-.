@@ -117,7 +117,7 @@ public class MeetingHistorySearchActivity extends BaseActivity implements
         if (actionId == EditorInfo.IME_ACTION_SEARCH) {
             String searchContent = searchEdit.getText().toString();
             if (StringUtils.isBlank(searchContent)){
-                ToastUtils.show(getApplicationContext(),R.string.input_search_key);
+                ToastUtils.show(getApplicationContext(),R.string.app_input_search_key);
                 return true;
             }
             if (!searchContent.equals(keyword)) {

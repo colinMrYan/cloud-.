@@ -263,7 +263,7 @@ public class MeetingDetailActivity extends BaseActivity {
                 String topic = topicEdit.getText().toString();
                 if (StringUtils.isBlank(topic)) {
                     ToastUtils.show(MeetingDetailActivity.this,
-                            getString(R.string.room_booking_topic));
+                            getString(R.string.meeting_room_booking_topic));
                     break;
                 }
                 if (beginCalendar == null) {
@@ -283,12 +283,12 @@ public class MeetingDetailActivity extends BaseActivity {
                 }
                 if (beginCalendar.after(endCalendar)) {
                     ToastUtils.show(MeetingDetailActivity.this,
-                            getString(R.string.start_or_end_time_illegal));
+                            getString(R.string.calendar_start_or_end_time_illegal));
                     break;
                 }
                 if (StringUtils.isBlank(meetingRoomId)) {
                     ToastUtils.show(MeetingDetailActivity.this,
-                            getString(R.string.room_booking_choosing_room));
+                            getString(R.string.meeting_room_booking_choosing_room));
                     break;
                 }
                 if (selectMemList.size() == 0) {
@@ -318,7 +318,7 @@ public class MeetingDetailActivity extends BaseActivity {
                         beginCalendar);
                 if (countHour > maxDuration) {
                     ToastUtils.show(MeetingDetailActivity.this,
-                            getString(R.string.more_than_max_time));
+                            getString(R.string.meeting_more_than_max_time));
                     break;
                 }
                 long endLong = endCalendar.getTimeInMillis();
@@ -352,7 +352,7 @@ public class MeetingDetailActivity extends BaseActivity {
      */
     private void handleCancelEdit() {
         isChange = false;
-        headText.setText(getString(R.string.room_booking_detail));
+        headText.setText(getString(R.string.meeting_booking_detail));
         meetingChangeImg.setVisibility(View.VISIBLE);
         meetingChangeCancelText.setVisibility(View.GONE);
         meetingDetailConfirmBtn.setVisibility(View.GONE);

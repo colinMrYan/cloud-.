@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="@string/modify_user_info"
+            android:text="@string/user_modify_user_info"
             android:textColor="@color/header_text"
             android:textSize="@dimen/header_textsize" />
     </RelativeLayout>
@@ -62,7 +62,7 @@
             
             android:paddingLeft="7dp"
             android:paddingRight="7dp"
-            android:text="@string/modify_modify"
+            android:text="@string/user_modify_modify"
             android:textColor="@color/login_btn_nor"
             android:textSize="@dimen/content_normal_textsize" />
 
@@ -92,7 +92,7 @@
                 android:layout_marginRight="15dp"
                 android:layout_weight="27"
                 android:gravity="center"
-                android:text="@string/modify_user_info"
+                android:text="@string/user_modify_user_info"
                 android:textColor="#333333"
                 android:textSize="@dimen/content_normal_textsize" >
             </TextView>

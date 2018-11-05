@@ -231,7 +231,7 @@
                     android:layout_toRightOf="@id/before_day_img"
                     android:paddingBottom="10dp"
                     android:paddingTop="10dp"
-                    android:text="@string/day_before"
+                    android:text="@string/meeting_day_before"
                     android:textColor="#0F7BCA"
                     android:textSize="14sp" />
             </RelativeLayout>
@@ -265,7 +265,7 @@
                     android:layout_centerVertical="true"
                     android:paddingBottom="10dp"
                     android:paddingTop="10dp"
-                    android:text="@string/day_after"
+                    android:text="@string/meeting_day_after"
                     android:textColor="#0F7BCA"
                     android:textSize="14sp" />
 

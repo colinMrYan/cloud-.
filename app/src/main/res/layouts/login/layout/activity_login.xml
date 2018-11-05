@@ -224,7 +224,7 @@
                 android:onClick="onClick"
                 android:paddingBottom="15dp"
                 android:paddingTop="15dp"
-                android:text="@string/sms_login"
+                android:text="@string/login_sms"
                 android:textColor="#38a4f0"
                 android:textSize="@dimen/content_normal_textsize" />
         </RelativeLayout>

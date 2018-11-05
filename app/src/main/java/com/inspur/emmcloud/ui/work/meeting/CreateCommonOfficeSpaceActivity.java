@@ -224,7 +224,7 @@ public class CreateCommonOfficeSpaceActivity extends BaseActivity {
 				loadingDlg.dismiss();
 			}
 			ToastUtils.show(CreateCommonOfficeSpaceActivity.this,
-					getString(R.string.office_create_success));
+					getString(R.string.meeting_office_create_success));
 			setResult(RESULT_OK);
 			finish();
 		}

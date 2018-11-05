@@ -32,7 +32,7 @@
                 android:layout_marginLeft="15dp"
                 android:singleLine="true"
                 android:layout_toRightOf="@+id/sender_name_text"
-                android:text="@string/five_minite_ago"
+                android:text="@string/calendar_five_minite_ago"
                 android:textColor="@color/msg_sendtime_color"
                 android:textSize="@dimen/content_smaller_textsize" />
             
