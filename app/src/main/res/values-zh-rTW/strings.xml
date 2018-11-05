@@ -638,7 +638,7 @@
     <string name="user_info_phone_number">聯繫方式</string>
     <string name="user_no_storage">沒有存放裝置</string>
     <string name="user_employee_num">員工編號</string>
-    <string name="user_worker_num">>工號</string>
+    <string name="user_worker_num">工號</string>
 
     <!-- 集團新聞 部分 -->
     <string name="news_group_news">集團新聞</string>
