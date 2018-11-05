@@ -4,14 +4,15 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
-    <com.inspur.emmcloud.widget.RoundAngleImageView
+    <com.itheima.roundedimageview.RoundedImageView
         android:id="@+id/content_img"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
         android:scaleType="centerCrop"
-        app:roundHeight="4dp"
-        app:roundWidth="4dp"
+        app:riv_oval="false"
+        app:riv_border_color="#cccccc"
+        app:riv_corner_radius = "6dp"
+        app:riv_border_width="0.5px"
         />
     <TextView
         android:id="@+id/long_img_text"

@@ -8,12 +8,14 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ClientIDUtils;
 import com.inspur.emmcloud.util.privates.ECMTransparentUtils;
 import com.inspur.emmcloud.util.privates.PushIdManagerUtils;
@@ -42,7 +44,8 @@ public class JpushReceiver extends BroadcastReceiver {
             String regId = bundle
                     .getString(JPushInterface.EXTRA_REGISTRATION_ID);
             LogUtils.debug(TAG, "[MyReceiver] 接收Registration Id : " + regId);
-            PreferencesUtils.putString(context, "JpushRegId", regId);
+            AppUtils.setPushFlag(context,Constant.JPUSH_FLAG);
+            PreferencesUtils.putString(context, Constant.JPUSH_REG_ID, regId);
             new PushIdManagerUtils(context).registerPushId2Emm();
             new ClientIDUtils(context).upload();
             WebSocketPush.getInstance().startWebSocket();
@@ -59,7 +62,7 @@ public class JpushReceiver extends BroadcastReceiver {
             int notifactionId = bundle
                     .getInt(JPushInterface.EXTRA_NOTIFICATION_ID);
             LogUtils.debug(TAG, "[MyReceiver] 接收到推送下来的通知的ID: " + notifactionId);
-//            if(AppUtils.GetChangShang().toLowerCase().startsWith("xiaomi")){
+//            if(AppUtils.GetChangShang().toLowerCase().startsWith(Constant.XIAOMI_FLAG)){
 //                ECMShortcutBadgeNumberManagerUtils.setDesktopBadgeNumber(context,JSONUtils.getInt(bundle.getString(JPushInterface.EXTRA_MESSAGE),"badge",0),intent);
 //                return;
 //            }

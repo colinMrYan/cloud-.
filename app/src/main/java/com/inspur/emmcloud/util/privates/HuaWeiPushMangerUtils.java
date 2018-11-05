@@ -12,6 +12,7 @@ import com.huawei.hms.support.api.client.PendingResult;
 import com.huawei.hms.support.api.push.HuaweiPush;
 import com.huawei.hms.support.api.push.TokenResult;
 import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 
@@ -55,7 +56,7 @@ public class HuaWeiPushMangerUtils implements ConnectionCallbacks, OnConnectionF
 
     @Override
     public void onConnected() {
-        PreferencesUtils.putString(contextLocal, "pushFlag", "huawei");
+        AppUtils.setPushFlag(contextLocal,Constant.HUAWEI_FLAG);
         getToken();
         setPassByMsg(true);
     }
@@ -88,12 +89,11 @@ public class HuaWeiPushMangerUtils implements ConnectionCallbacks, OnConnectionF
             stopPush();
             client.disconnect();
         }
-        PreferencesUtils.putString(contextLocal, "pushFlag", "Jpush");
-        //在填充标志的时候传一次JpushId
-        new PushIdManagerUtils(contextLocal).registerPushId2Emm();
         ((MyApplication) contextLocal.getApplicationContext()).startJPush();
+//        PreferencesUtils.putString(contextLocal, Constant.PUSH_FLAG, Constant.JPUSH_FLAG);
+//        //在填充标志的时候传一次JpushId
+//        new PushIdManagerUtils(contextLocal).registerPushId2Emm();
     }
-
 
     /**
      * 设置是否接收透传消息
@@ -162,7 +162,7 @@ public class HuaWeiPushMangerUtils implements ConnectionCallbacks, OnConnectionF
             @Override
             public void run() {
                 try {
-                    String deltoken = PreferencesUtils.getString(contextLocal, "huawei_push_token", "");
+                    String deltoken = PreferencesUtils.getString(contextLocal, Constant.HUAWEI_PUSH_TOKEN, "");
                     if (!StringUtils.isEmpty(deltoken) && null != client) {
                         HuaweiPush.HuaweiPushApi.deleteToken(client, deltoken);
                         client.disconnect();

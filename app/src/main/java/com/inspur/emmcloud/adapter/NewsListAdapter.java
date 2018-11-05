@@ -6,15 +6,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.appcenter.news.GroupNews;
-import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
+import com.itheima.roundedimageview.RoundedImageView;
 
 import java.util.List;
 
@@ -55,7 +55,7 @@ public class NewsListAdapter extends BaseAdapter {
         NewsHolder holder = new NewsHolder();
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.news_item_view, null);
-            holder.imageView = (ImageView) convertView.findViewById(R.id.news_leftImg_img);
+            holder.imageView = (RoundedImageView) convertView.findViewById(R.id.news_leftImg_img);
             holder.title = (TextView) convertView.findViewById(R.id.news_middleUp_text);
             holder.textPoser = (TextView) convertView.findViewById(R.id.news_middlemid_text);
             convertView.setTag(holder);
@@ -63,13 +63,13 @@ public class NewsListAdapter extends BaseAdapter {
             holder = (NewsHolder) convertView.getTag();
         }
         String uri = handlePoster(position);
-        ImageDisplayUtils.getInstance().displayRoundedImage(holder.imageView,uri,R.drawable.ic_app_news_default_icon,context,5);
+        ImageDisplayUtils.getInstance().displayImage(holder.imageView,uri,R.drawable.ic_app_news_default_icon);
         holder.title.setTextColor(groupNewsList.get(position).isImportant()? Color.RED:0xff203b4f);
         holder.title.setText(groupNewsList.get(position).getTitle());
         String postTime = groupNewsList.get(position).getCreationDate();
         postTime = TimeUtils.Calendar2TimeString(TimeUtils.timeLong2Calendar(Long.parseLong(postTime)), TimeUtils.getFormat(context, TimeUtils.FORMAT_DEFAULT_DATE));
         String dataTime  =  postTime.substring(0,10);
-        holder.textPoser.setText(groupNewsList.get(position).getAuthor() + "  " + dataTime);
+        holder.textPoser.setText(groupNewsList.get(position).getAuthor() + "   " + dataTime);
         return convertView;
     }
 
@@ -96,7 +96,7 @@ public class NewsListAdapter extends BaseAdapter {
     }
 
     public static class NewsHolder {
-        ImageView imageView;
+        RoundedImageView imageView;
         TextView title;
         TextView textPoser;
     }
