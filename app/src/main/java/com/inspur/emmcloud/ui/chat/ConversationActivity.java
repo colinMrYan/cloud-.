@@ -704,6 +704,7 @@ public class ConversationActivity extends ConversationBaseActivity {
         int index = uiMessageList.indexOf(fakeUIMessage);
         if (index != -1) {
             uiMessageList.get(index).setSendStatus(2);
+            MessageCacheUtil.saveMessage(ConversationActivity.this,uiMessageList.get(index).getMessage());
             adapter.setMessageList(uiMessageList);
             adapter.notifyItemChanged(index);
         }
