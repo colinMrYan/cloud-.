@@ -2,11 +2,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="100dp">
     <TextView
         android:id="@+id/tv_net_state_mes"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:text="网络不给力，请检查网络设置。"
         android:drawableLeft="@drawable/ic_org_structure"/>
 </RelativeLayout>

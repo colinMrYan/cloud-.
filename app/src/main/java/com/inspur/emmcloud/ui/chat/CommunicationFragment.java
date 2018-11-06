@@ -150,7 +150,6 @@ public class CommunicationFragment extends Fragment {
         showSocketStatusInTitle(WebSocketPush.getInstance().getWebsocketStatus());
     }
 
-
     /**
      * 注册接收消息的广播
      */
@@ -221,27 +220,12 @@ public class CommunicationFragment extends Fragment {
             }
         });
         conversionRecycleView.setAdapter(conversationAdapter);
-         setHeaderView(conversionRecycleView);
-
     }
-
-
-    //设置头部
-    private void setHeaderView(RecyclerView view){
-        View header = LayoutInflater.from(getActivity()).inflate(R.layout.recycleview_header_item, view, false);
-        conversationAdapter.setHeaderView(header);
-    }
-    //设置底部
-    private void setFooterView(RecyclerView view){
-        View footer = LayoutInflater.from(getActivity()).inflate(R.layout.recycleview_header_item, view, false);
-        conversationAdapter.setFooterView(footer);
-    }
-
 
     /**
      * 弹出频道操作选择框
      *
-     * @param uiConversation
+     * @param position
      */
     private void showConversationOperationDlg(final UIConversation uiConversation) {
         // TODO Auto-generated method stub
@@ -404,7 +388,7 @@ public class CommunicationFragment extends Fragment {
     /**
      * 为群组创建头像
      *
-     * @param conversationList
+     * @param channelList
      */
     private void createGroupIcon(List<Conversation> conversationList) {
         if (!NetUtils.isNetworkConnected(MyApplication.getInstance(), false)) {
