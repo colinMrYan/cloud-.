@@ -55,7 +55,7 @@ public class FaceVerifyManagerActivity extends BaseActivity {
 
     private void init() {
         headerText.setText(R.string.face_enter);
-        switchText.setText(R.string.face_enter);
+        switchText.setText(R.string.face_login);
         experienceText.setText(getString(R.string.experience_face_verify));
         switchView.setOnStateChangedListener(new SwitchView.OnStateChangedListener() {
             @Override

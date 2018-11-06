@@ -52,7 +52,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="@string/add_external_attendees"
+            android:text="@string/webex_add_external_attendees"
             android:textColor="@color/header_text"
             android:textSize="@dimen/header_textsize" />
     </RelativeLayout>
@@ -116,7 +116,7 @@
                         android:layout_centerVertical="true"
                         android:layout_toLeftOf="@id/bt_add_attendees"
                         android:background="@null"
-                        android:hint="@string/input_invitee_emails_hint"
+                        android:hint="@string/webex_input_invitee_emails_hint"
                         android:maxLines="1"
                         android:paddingBottom="11dp"
                         android:paddingTop="11dp"

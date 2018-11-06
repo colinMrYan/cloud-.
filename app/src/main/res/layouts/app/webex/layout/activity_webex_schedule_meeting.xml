@@ -87,7 +87,7 @@
                 android:layout_centerVertical="true"
                 android:layout_toRightOf="@id/tv_title_tips"
                 android:background="@null"
-                android:hint="@string/room_booking_topic"
+                android:hint="@string/meeting_room_booking_topic"
                 android:maxLength="30"
                 android:maxLines="1"
                 android:paddingBottom="10dp"
@@ -144,7 +144,7 @@
                 android:layout_toRightOf="@id/tv_password_tips"
                 android:layout_toLeftOf="@id/iv_password_visible"
                 android:background="@null"
-                android:hint="@string/enter_meeting_password"
+                android:hint="@string/webex_enter_meeting_password"
                 android:maxLines="1"
                 android:paddingBottom="10dp"
                 android:paddingTop="10dp"
@@ -167,7 +167,7 @@
                 android:paddingBottom="10dp"
                 android:paddingLeft="15dp"
                 android:paddingTop="10dp"
-                android:text="@string/start_time"
+                android:text="@string/meeting_start_time"
                 android:textColor="#203b4f"
                 android:textSize="17sp" />
 

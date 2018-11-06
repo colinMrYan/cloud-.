@@ -145,11 +145,11 @@ public class CaptchasLoginActivity extends BaseActivity {
                 phoneNum = phoneNumEdit.getText().toString();
                 if (StringUtils.isBlank(phoneNum)) {
                     ToastUtils.show(getApplicationContext(),
-                            getString(R.string.please_input_phone_num));
+                            getString(R.string.login_please_input_phone_num));
                 }
                 if (!FomatUtils.isPhoneNum(phoneNum)) {
                     ToastUtils.show(getApplicationContext(),
-                            getString(R.string.phone_num_illegal_format));
+                            getString(R.string.login_phone_num_illegal_format));
                     return;
                 }
                 // time.cancel();
@@ -162,12 +162,12 @@ public class CaptchasLoginActivity extends BaseActivity {
                 phoneNum = phoneNumEdit.getText().toString();
                 if (StringUtils.isBlank(phoneNum)) {
                     ToastUtils.show(getApplicationContext(),
-                            getString(R.string.please_input_phone_num));
+                            getString(R.string.login_please_input_phone_num));
                     return;
                 }
                 if (!FomatUtils.isPhoneNum(phoneNum)) {
                     ToastUtils.show(getApplicationContext(),
-                            getString(R.string.phone_num_illegal_format));
+                            getString(R.string.login_phone_num_illegal_format));
                     return;
                 }
 
@@ -279,7 +279,7 @@ public class CaptchasLoginActivity extends BaseActivity {
             }
             phoneNumEdit.setEnabled(false);
             ToastUtils.show(getApplicationContext(),
-                    getString(R.string.captchas_getcode_success));
+                    getString(R.string.login_captchas_getcode_success));
             time.start();
         }
 
@@ -310,7 +310,7 @@ public class CaptchasLoginActivity extends BaseActivity {
     private void handleErrorCode(String error,int errorCode) {
         String code = JSONUtils.getString(error, "code", "");
         if (!StringUtils.isBlank(code) && code.equals("10901")) {
-            ToastUtils.show(getApplicationContext(), getApplicationContext().getString(R.string.cant_login_with_sms));
+            ToastUtils.show(getApplicationContext(), getApplicationContext().getString(R.string.login_cant_login_with_sms));
         } else {
             WebServiceMiddleUtils.hand(CaptchasLoginActivity.this, error,errorCode);
         }

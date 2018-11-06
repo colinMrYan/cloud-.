@@ -93,7 +93,7 @@
                 android:layout_centerVertical="true"
                 android:paddingBottom="8dp"
                 android:paddingTop="10dp"
-                android:text="@string/employee_num"
+                android:text="@string/user_employee_num"
                 android:textColor="#999999"
                 android:textSize="@dimen/content_normal_textsize" />
 
@@ -151,7 +151,7 @@
                         android:layout_centerVertical="true"
                         android:paddingBottom="8dp"
                         android:paddingTop="10dp"
-                        android:text="@string/depart"
+                        android:text="@string/user_depart"
                         android:textColor="#999999"
                         android:textSize="@dimen/content_normal_textsize" />
 
@@ -271,7 +271,7 @@
                         android:layout_centerVertical="true"
                         android:paddingBottom="8dp"
                         android:paddingTop="10dp"
-                        android:text="@string/telephone"
+                        android:text="@string/user_telephone"
                         android:textColor="#999999"
                         android:textSize="@dimen/content_normal_textsize" />
 

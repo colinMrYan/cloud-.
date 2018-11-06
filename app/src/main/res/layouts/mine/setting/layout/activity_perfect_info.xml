@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="@string/perfect_text"
+            android:text="@string/newuser_perfect_text"
             android:textColor="@color/header_text"
             android:textSize="@dimen/header_textsize" />
     </RelativeLayout>
@@ -98,7 +98,7 @@
                     android:layout_centerVertical="true"
                     android:paddingLeft="15dp"
                     android:paddingRight="15dp"
-                    android:text="@string/perfect_nickname_text"
+                    android:text="@string/newuser_perfect_nickname"
                     android:textColor="#999999"
                     android:textSize="@dimen/content_normal_textsize" />
 
@@ -228,7 +228,7 @@
                     android:layout_centerVertical="true"
                     android:paddingLeft="15dp"
                     android:paddingRight="15dp"
-                    android:text="@string/perfect_gender_text"
+                    android:text="@string/newuser_perfect_gender"
                     android:textColor="#999999"
                     android:textSize="@dimen/content_normal_textsize" />
 

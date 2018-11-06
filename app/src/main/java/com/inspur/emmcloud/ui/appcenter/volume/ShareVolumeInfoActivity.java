@@ -128,7 +128,7 @@ public class ShareVolumeInfoActivity extends BaseActivity {
                 break;
             case R.id.volume_member_layout:
                 Bundle bundle = new Bundle();
-                bundle.putString("title", getString(R.string.volume_member));
+                bundle.putString("title", getString(R.string.clouddriver_volume_member));
                 bundle.putInt(MembersActivity.MEMBER_PAGE_STATE,MembersActivity.CHECK_STATE);
                 bundle.putStringArrayList("uidList", volumeDetail.getMemberUidList());
                 IntentUtils.startActivity(ShareVolumeInfoActivity.this,
@@ -182,7 +182,7 @@ public class ShareVolumeInfoActivity extends BaseActivity {
                 if ((position == memberGrid.getCount() - 2) && isOwner) {
                     intent.putExtra("select_content", 2);
                     intent.putExtra("isMulti_select", true);
-                    intent.putExtra("title", getString(R.string.add_volume_member));
+                    intent.putExtra("title", getString(R.string.clouddriver_add_volume_member));
                     intent.putExtra("excludeContactUidList", volumeDetail.getMemberUidList());
                     intent.setClass(getApplicationContext(),
                             ContactSearchActivity.class);
@@ -191,7 +191,7 @@ public class ShareVolumeInfoActivity extends BaseActivity {
                     intent.putExtra("memberUidList", volumeDetail.getMemberUidList());
                     intent.setClass(getApplicationContext(),
                             ChannelMembersDelActivity.class);
-                    intent.putExtra("title", getString(R.string.del_volume_member));
+                    intent.putExtra("title", getString(R.string.clouddriver_del_member));
                     startActivityForResult(intent, DEL_MEMBER);
 
                 } else {
@@ -222,7 +222,7 @@ public class ShareVolumeInfoActivity extends BaseActivity {
     }
 
     private void updateVolumeMemNum() {
-        volumeMemberText.setText(getString(R.string.all_volume_member_size,volumeDetail.getMemberUidList().size()));
+        volumeMemberText.setText(getString(R.string.clouddriver_all_volume_member_size,volumeDetail.getMemberUidList().size()));
     }
 
     @Override

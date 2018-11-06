@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="@string/office_head"
+            android:text="@string/meeting_office_head"
             android:textColor="@color/header_text"
             android:textSize="@dimen/header_textsize" />
 

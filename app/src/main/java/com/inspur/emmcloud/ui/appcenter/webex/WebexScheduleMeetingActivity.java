@@ -184,12 +184,12 @@ public class WebexScheduleMeetingActivity extends BaseActivity {
             case R.id.tv_start:
                 String confName = titleEdit.getText().toString().trim();
                 if (StringUtils.isBlank(confName)) {
-                    ToastUtils.show(WebexScheduleMeetingActivity.this, R.string.enter_meeting_name);
+                    ToastUtils.show(WebexScheduleMeetingActivity.this, R.string.webex_enter_meeting_name);
                     return;
                 }
                 String meetingPassword = passwordEdit.getText().toString();
                 if (StringUtils.isBlank(meetingPassword)) {
-                    ToastUtils.show(WebexScheduleMeetingActivity.this, R.string.enter_meeting_password);
+                    ToastUtils.show(WebexScheduleMeetingActivity.this, R.string.webex_enter_meeting_password);
                     return;
                 }
                 if (meetingPassword.length()<6 || meetingPassword.length()>10){
@@ -208,7 +208,7 @@ public class WebexScheduleMeetingActivity extends BaseActivity {
                 }
                 int duration = durationHourSumMin[durationHourChoiceIndex] + durationMinSumMin[durationMinChoiceIndex];
                 if (duration == 0) {
-                    ToastUtils.show(WebexScheduleMeetingActivity.this, R.string.set_duration_correct);
+                    ToastUtils.show(WebexScheduleMeetingActivity.this, R.string.webex_set_duration_correct);
                     return;
                 }
                 webexMeeting = new WebexMeeting();
@@ -254,8 +254,8 @@ public class WebexScheduleMeetingActivity extends BaseActivity {
 
     private void showStartDateErrorDlg() {
         new MyQMUIDialog.MessageDialogBuilder(WebexScheduleMeetingActivity.this)
-                .setTitle(getString(R.string.start_time_error))
-                .setMessage(getString(R.string.start_time_error_info))
+                .setTitle(getString(R.string.webex_start_time_error))
+                .setMessage(getString(R.string.webex_start_time_error_info))
                 .addAction(getString(R.string.ok), new QMUIDialogAction.ActionListener() {
                     @Override
                     public void onClick(QMUIDialog dialog, int index) {

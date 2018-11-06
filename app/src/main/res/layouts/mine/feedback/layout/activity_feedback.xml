@@ -143,7 +143,7 @@
                         android:paddingLeft="12dp"
                         android:paddingRight="12dp"
                         android:paddingTop="10dp"
-                        android:text="@string/your_contact"
+                        android:text="@string/login_your_contact"
                         android:textColor="@color/text_black"
                         android:textSize="@dimen/content_normal_textsize" />
 

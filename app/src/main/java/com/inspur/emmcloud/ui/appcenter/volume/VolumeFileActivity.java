@@ -131,7 +131,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                         }
                     } else {
                         adapter.setVolumeFileSelect(position);
-                        batchOprationHeaderText.setText(getString(R.string.has_selected, adapter.getSelectVolumeFileList().size()));
+                        batchOprationHeaderText.setText(getString(R.string.clouddriver_has_selected, adapter.getSelectVolumeFileList().size()));
                         setBatchOprationLayoutByPrivilege();
                     }
                 }
@@ -240,7 +240,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                 setMutiSelect(false);
                 break;
             case R.id.batch_operation_select_all_text:
-                boolean isSelectAllStatus = getBatchOprationSelectAllText.getText().toString().equals(getString(R.string.select_all));
+                boolean isSelectAllStatus = getBatchOprationSelectAllText.getText().toString().equals(getString(R.string.clouddriver_select_all));
                 setselectAll(isSelectAllStatus);
                 setBatchOprationLayoutByPrivilege();
                 break;
@@ -256,8 +256,8 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
     private void showUploadFileDlg() {
         new ActionSheetDialog.ActionListSheetBuilder(VolumeFileActivity.this)
                 .addItem(getString(R.string.take_photo))
-                .addItem(getString(R.string.select_photo))
-                .addItem(getString(R.string.select_file))
+                .addItem(getString(R.string.clouddriver_select_photo))
+                .addItem(getString(R.string.clouddriver_select_file))
                 .setOnSheetItemClickListener(new ActionSheetDialog.ActionListSheetBuilder.OnSheetItemClickListener() {
                     @Override
                     public void onClick(ActionSheetDialog dialog, View itemView, int position) {
@@ -327,16 +327,16 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
         String sortTypeShowTxt;
         switch (sortType) {
             case SORT_BY_NAME_DOWN:
-                sortTypeShowTxt = getString(R.string.sort_by_name_dasc);
+                sortTypeShowTxt = getString(R.string.clouddriver_sort_by_name_dasc);
                 break;
             case SORT_BY_TIME_UP:
-                sortTypeShowTxt = getString(R.string.sort_by_time_asc);
+                sortTypeShowTxt = getString(R.string.clouddriver_sort_by_time_asc);
                 break;
             case SORT_BY_TIME_DOWN:
-                sortTypeShowTxt = getString(R.string.sort_by_time_dasc);
+                sortTypeShowTxt = getString(R.string.clouddriver_sort_by_time_dasc);
                 break;
             default:
-                sortTypeShowTxt = getString(R.string.sort_by_name_asc);
+                sortTypeShowTxt = getString(R.string.clouddriver_sort_by_name_asc);
                 break;
         }
         operationSortText.setText(sortTypeShowTxt);
@@ -472,8 +472,8 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
      * @param isMutiselect
      */
     private void setMutiSelect(boolean isMutiselect) {
-        getBatchOprationSelectAllText.setText(R.string.select_all);
-        batchOprationHeaderText.setText(getString(R.string.has_selected, 0));
+        getBatchOprationSelectAllText.setText(R.string.clouddriver_select_all);
+        batchOprationHeaderText.setText(getString(R.string.clouddriver_has_selected, 0));
         if (!isMutiselect) {
             batchOperationBarLayout.setVisibility(View.GONE);
         }
@@ -483,9 +483,9 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
     }
 
     private void setselectAll(boolean isSelectAll) {
-        getBatchOprationSelectAllText.setText(isSelectAll ? R.string.select_nothing : R.string.select_all);
+        getBatchOprationSelectAllText.setText(isSelectAll ? R.string.clouddriver_select_nothing : R.string.clouddriver_select_all);
         adapter.setSelectAll(isSelectAll);
-        batchOprationHeaderText.setText(getString(R.string.has_selected, adapter.getSelectVolumeFileList().size()));
+        batchOprationHeaderText.setText(getString(R.string.clouddriver_has_selected, adapter.getSelectVolumeFileList().size()));
     }
 
 
@@ -536,12 +536,12 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
      */
     private void uploadFile(String filePath) {
         if (filePath == null) {
-            ToastUtils.show(getApplicationContext(), R.string.file_selected_no_exist);
+            ToastUtils.show(getApplicationContext(), R.string.clouddriver_file_no_exist);
             return;
         }
         File file = new File(filePath);
         if (!file.exists()) {
-            ToastUtils.show(getApplicationContext(), R.string.file_selected_no_exist);
+            ToastUtils.show(getApplicationContext(), R.string.clouddriver_file_no_exist);
             return;
 
         }

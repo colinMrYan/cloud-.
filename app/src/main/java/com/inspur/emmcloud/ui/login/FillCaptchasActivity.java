@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
@@ -113,7 +112,7 @@ public class FillCaptchasActivity extends BaseActivity {
 
 		@Override
 		public void onFinish() {// 计时完毕时触发
-			getCaptchasBtn.setText(getString(R.string.reverification));
+			getCaptchasBtn.setText(getString(R.string.login_reverification));
 			getCaptchasBtn.setClickable(true);
 		}
 
@@ -196,7 +195,7 @@ public class FillCaptchasActivity extends BaseActivity {
 
 				}
 			};
-			EasyDialog.showDialog(FillCaptchasActivity.this, getString(R.string.prompt), getString(R.string.captchas_input_error),
+			EasyDialog.showDialog(FillCaptchasActivity.this, getString(R.string.prompt), getString(R.string.login_captchas_input_error),
 					getString(R.string.ok), listener, false);
 			WebServiceMiddleUtils.hand(FillCaptchasActivity.this, error,errorCode);
 		}

@@ -123,7 +123,7 @@ public class ProfileUtils {
             List<Enterprise> enterpriseList = getMyInfoResult.getEnterpriseList();
             Enterprise defaultEnterprise = getMyInfoResult.getDefaultEnterprise();
             if (enterpriseList.size() == 0 && defaultEnterprise == null) {
-                ToastUtils.show(MyApplication.getInstance(), R.string.user_not_bound_enterprise);
+                ToastUtils.show(MyApplication.getInstance(), R.string.login_user_not_bound_enterprise);
                 MyApplication.getInstance().signout();
             } else {
                 //存储上一个版本，不再有本地默认版本

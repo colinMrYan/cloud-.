@@ -438,7 +438,7 @@ public class MyCommonOfficeActivity extends BaseActivity implements
         public boolean onItemLongClick(AdapterView<?> parent, View view,
                                        final int position, long id) {
             new MyQMUIDialog.MessageDialogBuilder(MyCommonOfficeActivity.this)
-                    .setMessage(R.string.office_delete_position)
+                    .setMessage(R.string.meeting_office_delete_position)
                     .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
                         @Override
                         public void onClick(QMUIDialog dialog, int index) {

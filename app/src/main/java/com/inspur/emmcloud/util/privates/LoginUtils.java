@@ -275,7 +275,7 @@ public class LoginUtils extends APIInterfaceInstance {
     public void returnOauthSigninFail(String error, int errorCode) {
         // TODO Auto-generated method stub
         if (errorCode == 400) {
-            ToastUtils.show(activity, isSMSLogin ? R.string.code_verification_failure : R.string.invaliad_account_or_pwd);
+            ToastUtils.show(activity, isSMSLogin ? R.string.login_code_verification_failure : R.string.login_invaliad_account_or_pwd);
         } else {
             WebServiceMiddleUtils.hand(activity, error, errorCode);
         }
@@ -298,7 +298,7 @@ public class LoginUtils extends APIInterfaceInstance {
         List<Enterprise> enterpriseList = getMyInfoResult.getEnterpriseList();
         Enterprise defaultEnterprise = getMyInfoResult.getDefaultEnterprise();
         if (enterpriseList.size() == 0 && defaultEnterprise == null){
-            ToastUtils.show(activity,  R.string.user_not_bound_enterprise);
+            ToastUtils.show(activity,  R.string.login_user_not_bound_enterprise);
             MyApplication.getInstance().setAccessToken("");
             PreferencesUtils.putString(MyApplication.getInstance(), "accessToken", "");
             loginUtilsHandler.sendEmptyMessage(LOGIN_FAIL);

@@ -56,7 +56,7 @@
             android:layout_toRightOf="@id/news_close_btn"
             android:ellipsize="middle"
             android:singleLine="true"
-            android:text="@string/group_news_detail"
+            android:text="@string/news_group_news_detail"
             android:textColor="@color/header_text"
             android:textSize="@dimen/header_textsize" />
 

@@ -319,7 +319,7 @@ public class WebexMeetingDetailActivity extends BaseActivity {
         final CustomShareListener mShareListener = new CustomShareListener(WebexMeetingDetailActivity.this);
         new ShareAction(WebexMeetingDetailActivity.this)
                 .setDisplayList( SHARE_MEDIA.EMAIL,SHARE_MEDIA.SMS)
-                .addButton(getString(R.string.internal_share), "app_name", "ic_launcher", "ic_launcher")
+                .addButton(getString(R.string.webex_internal_share), "app_name", "ic_launcher", "ic_launcher")
                 .setShareboardclickCallback(new ShareBoardlistener() {
                     @Override
                     public void onclick(SnsPlatform snsPlatform, SHARE_MEDIA share_media) {
@@ -357,7 +357,7 @@ public class WebexMeetingDetailActivity extends BaseActivity {
 
     private void showDeleteMeetingWarningDlg() {
         new MyQMUIDialog.MessageDialogBuilder(WebexMeetingDetailActivity.this)
-                .setMessage(getString(R.string.remove_webex_meeting_warning_info))
+                .setMessage(getString(R.string.webex_remove_meeting_warning_info))
                 .addAction(getString(R.string.cancel), new QMUIDialogAction.ActionListener() {
                     @Override
                     public void onClick(QMUIDialog dialog, int index) {

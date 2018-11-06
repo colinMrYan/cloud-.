@@ -29,7 +29,7 @@
             android:layout_alignParentRight="true"
             android:gravity="center_vertical"
             android:paddingRight="13dp"
-            android:text="@string/click_to_book"
+            android:text="@string/meeting_click_to_book"
             android:textColor="@color/white"
             android:textSize="@dimen/content_title_textsize" />
     </RelativeLayout>

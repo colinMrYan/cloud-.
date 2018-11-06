@@ -106,7 +106,7 @@
                         android:paddingTop="10dp"
                         android:paddingBottom="10dp"
                         android:textColor="#333333"
-                        android:text="@string/internal_attendees"
+                        android:text="@string/webex_internal_attendees"
                         android:id="@+id/tv_add_internal_attendees"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
@@ -136,7 +136,7 @@
                         android:textColor="#333333"
                         android:paddingTop="10dp"
                         android:paddingBottom="10dp"
-                        android:text="@string/external_attendees"
+                        android:text="@string/webex_external_attendees"
                         android:id="@+id/tv_add_external_attendees"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />

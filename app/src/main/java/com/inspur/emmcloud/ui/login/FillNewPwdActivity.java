@@ -64,7 +64,7 @@ public class FillNewPwdActivity extends BaseActivity{
 				break;
 			}
 			if(StringUtils.isBlank(smsCode)){
-				ToastUtils.show(FillNewPwdActivity.this, getString(R.string.captchas_input_error));
+				ToastUtils.show(FillNewPwdActivity.this, getString(R.string.login_captchas_input_error));
 				break;
 			}
 			resetPwd(newPsd);

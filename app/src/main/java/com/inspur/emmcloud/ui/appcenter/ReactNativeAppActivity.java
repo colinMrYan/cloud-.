@@ -88,7 +88,7 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
      */
     private void checkToken(String token) {
         if (StringUtils.isBlank(token)) {
-            ToastUtils.show(ReactNativeAppActivity.this, ReactNativeAppActivity.this.getString(R.string.authorization_expired));
+            ToastUtils.show(ReactNativeAppActivity.this, ReactNativeAppActivity.this.getString(R.string.login_authorization_expired));
             ((MyApplication) getApplicationContext()).signout();
             return;
         }

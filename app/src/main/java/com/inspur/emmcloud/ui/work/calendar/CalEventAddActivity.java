@@ -142,7 +142,7 @@ public class CalEventAddActivity extends BaseActivity {
 			if (calEvent.getCalendar().getCommunity()) {
 				addText.setVisibility(View.GONE);
 			}
-			addText.setText(getString(R.string.adjust));
+			addText.setText(getString(R.string.calendar_adjust));
 			isAllDay = calEvent.getAllday();
 			allDaySwitch.setOpened(isAllDay);
 			startCalendar = calEvent.getLocalStartDate();
@@ -249,22 +249,22 @@ public class CalEventAddActivity extends BaseActivity {
 						TimeUtils.FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE);
 				if (StringUtils.isBlank(title)) {
 					ToastUtils.show(getApplicationContext(),
-							R.string.please_input_title);
+							R.string.calendar_please_input_title);
 					return;
 				}
 				if (endCalendar.before(startCalendar)) {
 					ToastUtils.show(getApplicationContext(),
-							R.string.start_or_end_time_illegal);
+							R.string.calendar_start_or_end_time_illegal);
 					return;
 				}
 				if (calendar == null) {
 					ToastUtils.show(getApplicationContext(),
-							R.string.select_calendar);
+							R.string.calendar_select_calendar);
 					return;
 				}
 				if (title.length() > 64) {
 					ToastUtils.show(getApplicationContext(),
-							R.string.tilte_cannot_exceed_64);
+							R.string.calendar_tilte_cannot_exceed_64);
 					return;
 				}
 				if (getIntent().hasExtra("calEvent")) {
@@ -536,7 +536,7 @@ public class CalEventAddActivity extends BaseActivity {
 			if (loadingDlg != null && loadingDlg.isShowing()) {
 				loadingDlg.dismiss();
 			}
-			ToastUtils.show(getApplicationContext(), R.string.add_success);
+			ToastUtils.show(getApplicationContext(), R.string.calendar_add_success);
 			addCalendarEvent.setId(getIDResult.getId());
 			sendBoradcastReceiver();
 			Intent intent = new Intent();
