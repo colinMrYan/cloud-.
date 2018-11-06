@@ -220,6 +220,8 @@ public class CommunicationFragment extends Fragment {
             }
         });
         conversionRecycleView.setAdapter(conversationAdapter);
+      conversationAdapter.addHeaderView(LayoutInflater.from(getContext()).inflate(R.layout.recycleview_header_item,null));
+
     }
 
     /**

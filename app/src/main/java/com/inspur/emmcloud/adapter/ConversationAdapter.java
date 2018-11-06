@@ -2,6 +2,7 @@ package com.inspur.emmcloud.adapter;
 
 import android.content.Context;
 import android.os.Build;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -37,6 +38,9 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
 
 
     /////////////////
+    private RecyclerView mRecyclerView;
+
+
     private View VIEW_FOOTER;
     private View VIEW_HEADER;
 
@@ -79,28 +83,137 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
         }
     }
 
-    @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        UIConversation uiConversation = uiConversationList.get(position);
-        holder.titleText.setText(uiConversation.getTitle());
-        holder.timeText.setText(TimeUtils.getDisplayTime(MyApplication.getInstance(), uiConversation.getLastUpdate()));
-        holder.dndImg.setVisibility(uiConversation.getConversation().isDnd() ? View.VISIBLE : View.GONE);
-        holder.mainLayout.setBackgroundResource(uiConversation.getConversation().isStick() ? R.drawable.selector_set_top_msg_list : R.drawable.selector_list);
-        boolean isConversationTypeGroup = uiConversation.getConversation().getType().equals(Conversation.TYPE_GROUP);
-        if (isConversationTypeGroup){
-            File file = new File(MyAppConfig.LOCAL_CACHE_PHOTO_PATH + "/" + MyApplication.getInstance().getTanent() + uiConversation.getId() + "_100.png1");
-            holder.photoImg.setTag("");
-            if (file.exists()) {
-                holder.photoImg.setImageBitmap(ImageUtils.getBitmapByFile(file));
-            }else {
-                holder.photoImg.setImageResource(R.drawable.icon_channel_group_default);
-            }
-        }else {
-            ImageDisplayUtils.getInstance().displayImageByTag(holder.photoImg, uiConversation.getIcon(), isConversationTypeGroup?R.drawable.icon_channel_group_default:R.drawable.icon_person_default);
+
+
+    private boolean haveHeaderView() {
+        return VIEW_HEADER != null;
+    }
+
+    public boolean haveFooterView() {
+        return VIEW_FOOTER != null;
+    }
+
+    private boolean isHeaderView(int position) {
+        return haveHeaderView() && position == 0;
+    }
+
+    private boolean isFooterView(int position) {
+        return haveFooterView() && position == getItemCount() - 1;
+    }
+
+    public void addHeaderView(View headerView) {
+        if (haveHeaderView()) {
+            throw new IllegalStateException("hearview has already exists!");
+        } else {
+            //避免出现宽度自适应
+            ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            headerView.setLayoutParams(params);
+            VIEW_HEADER = headerView;
+            ifGridLayoutManager();
+            notifyItemInserted(0);
         }
 
-        setConversationContent(holder,uiConversation);
-        setConversationUnreadState(holder,uiConversation);
+    }
+
+    public void addFooterView(View footerView) {
+        if (haveFooterView()) {
+            throw new IllegalStateException("footerView has already exists!");
+        } else {
+            ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            footerView.setLayoutParams(params);
+            VIEW_FOOTER = footerView;
+            ifGridLayoutManager();
+            notifyItemInserted(getItemCount() - 1);
+        }
+    }
+
+    private void ifGridLayoutManager() {
+        if (mRecyclerView == null) return;
+        final RecyclerView.LayoutManager layoutManager = mRecyclerView.getLayoutManager();
+        if (layoutManager instanceof GridLayoutManager) {
+            final GridLayoutManager.SpanSizeLookup originalSpanSizeLookup =
+                    ((GridLayoutManager) layoutManager).getSpanSizeLookup();
+            ((GridLayoutManager) layoutManager).setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+                @Override
+                public int getSpanSize(int position) {
+                    return (isHeaderView(position) || isFooterView(position)) ?
+                            ((GridLayoutManager) layoutManager).getSpanCount() :
+                            1;
+                }
+            });
+        }
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (isHeaderView(position)) {
+            return TYPE_HEADER;
+        } else if (isFooterView(position)) {
+            return TYPE_FOOTER;
+        } else {
+            return TYPE_NORMAL;
+        }
+    }
+
+    @Override
+    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+        try {
+            if (mRecyclerView == null && mRecyclerView != recyclerView) {
+                mRecyclerView = recyclerView;
+            }
+            ifGridLayoutManager();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        if (!isHeaderView(position)) {
+            if (haveHeaderView()) position--;
+            UIConversation uiConversation = uiConversationList.get(position);
+            holder.titleText.setText(uiConversation.getTitle());
+            holder.timeText.setText(TimeUtils.getDisplayTime(MyApplication.getInstance(), uiConversation.getLastUpdate()));
+            holder.dndImg.setVisibility(uiConversation.getConversation().isDnd() ? View.VISIBLE : View.GONE);
+            holder.mainLayout.setBackgroundResource(uiConversation.getConversation().isStick() ? R.drawable.selector_set_top_msg_list : R.drawable.selector_list);
+            boolean isConversationTypeGroup = uiConversation.getConversation().getType().equals(Conversation.TYPE_GROUP);
+            if (isConversationTypeGroup){
+                File file = new File(MyAppConfig.LOCAL_CACHE_PHOTO_PATH + "/" + MyApplication.getInstance().getTanent() + uiConversation.getId() + "_100.png1");
+                holder.photoImg.setTag("");
+                if (file.exists()) {
+                    holder.photoImg.setImageBitmap(ImageUtils.getBitmapByFile(file));
+                }else {
+                    holder.photoImg.setImageResource(R.drawable.icon_channel_group_default);
+                }
+            }else {
+                ImageDisplayUtils.getInstance().displayImageByTag(holder.photoImg, uiConversation.getIcon(), isConversationTypeGroup?R.drawable.icon_channel_group_default:R.drawable.icon_person_default);
+            }
+
+            setConversationContent(holder,uiConversation);
+            setConversationUnreadState(holder,uiConversation);
+
+        }
+
+//        UIConversation uiConversation = uiConversationList.get(position);
+//        holder.titleText.setText(uiConversation.getTitle());
+//        holder.timeText.setText(TimeUtils.getDisplayTime(MyApplication.getInstance(), uiConversation.getLastUpdate()));
+//        holder.dndImg.setVisibility(uiConversation.getConversation().isDnd() ? View.VISIBLE : View.GONE);
+//        holder.mainLayout.setBackgroundResource(uiConversation.getConversation().isStick() ? R.drawable.selector_set_top_msg_list : R.drawable.selector_list);
+//        boolean isConversationTypeGroup = uiConversation.getConversation().getType().equals(Conversation.TYPE_GROUP);
+//        if (isConversationTypeGroup){
+//            File file = new File(MyAppConfig.LOCAL_CACHE_PHOTO_PATH + "/" + MyApplication.getInstance().getTanent() + uiConversation.getId() + "_100.png1");
+//            holder.photoImg.setTag("");
+//            if (file.exists()) {
+//                holder.photoImg.setImageBitmap(ImageUtils.getBitmapByFile(file));
+//            }else {
+//                holder.photoImg.setImageResource(R.drawable.icon_channel_group_default);
+//            }
+//        }else {
+//            ImageDisplayUtils.getInstance().displayImageByTag(holder.photoImg, uiConversation.getIcon(), isConversationTypeGroup?R.drawable.icon_channel_group_default:R.drawable.icon_person_default);
+//        }
+//
+//        setConversationContent(holder,uiConversation);
+//        setConversationUnreadState(holder,uiConversation);
     }
 
     /**
@@ -143,7 +256,17 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
 
     @Override
     public int getItemCount() {
-        return uiConversationList.size();
+
+        int count = (uiConversationList == null ? 0 : uiConversationList.size());
+        if (VIEW_FOOTER != null) {
+            count++;
+        }
+
+        if (VIEW_HEADER != null) {
+            count++;
+        }
+        return count;
+        //return uiConversationList.size();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,View.OnLongClickListener{
