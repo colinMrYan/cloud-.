@@ -1,5 +1,6 @@
 package com.inspur.emmcloud;
 
+import android.bluetooth.BluetoothHeadset;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.hardware.Sensor;
@@ -43,6 +44,7 @@ public class MediaPlayBaseActivity extends BaseActivity implements SensorEventLi
         IntentFilter filter = new IntentFilter();
         filter.addAction(Intent.ACTION_HEADSET_PLUG);
         filter.addAction(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
+        filter.addAction(BluetoothHeadset.ACTION_CONNECTION_STATE_CHANGED);
         registerReceiver(receiver, filter);
     }
 
@@ -60,11 +62,6 @@ public class MediaPlayBaseActivity extends BaseActivity implements SensorEventLi
             } else {
                 playerManager.changeToEarpieceMode();
                 setScreenOff();
-            }
-        } else {
-            if(value == sensor.getMaximumRange()){
-                playerManager.changeToSpeakerMode();
-                setScreenOn();
             }
         }
     }
