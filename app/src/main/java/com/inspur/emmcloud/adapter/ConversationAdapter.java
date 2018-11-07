@@ -18,6 +18,7 @@ import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.UIConversation;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.ImageUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
@@ -85,7 +86,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
 
 
 
-    private boolean haveHeaderView() {
+    public boolean haveHeaderView() {
         return VIEW_HEADER != null;
     }
 
@@ -101,7 +102,16 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
         return haveFooterView() && position == getItemCount() - 1;
     }
 
-    public void addHeaderView(View headerView) {
+
+    public void setNetExceptionView(Boolean NetState){
+        if(false==NetState&&!haveHeaderView()){
+           addHeaderView(LayoutInflater.from(context).inflate(R.layout.recycleview_header_item,null));
+        }else if(true==NetState&&haveHeaderView()){
+            delectHeaderView();
+        }
+    }
+    //添加HeaderView
+    private void addHeaderView(View headerView) {
         if (haveHeaderView()) {
             throw new IllegalStateException("hearview has already exists!");
         } else {
@@ -112,7 +122,16 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
             ifGridLayoutManager();
             notifyItemInserted(0);
         }
+    }
 
+    //删除HeaderView
+    public void delectHeaderView() {
+        if(haveHeaderView()){
+            notifyItemRemoved(0);
+            VIEW_HEADER=null;
+        }
+
+       // notifyItemRangeChanged(0,1);
     }
 
     public void addFooterView(View footerView) {
@@ -307,15 +326,33 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
         @Override
         public void onClick(View v) {
             if (adapterListener != null){
-                adapterListener.onItemClick(v,getAdapterPosition());
+                if(haveHeaderView()) {
+                    if(0==getAdapterPosition()) {
+                    adapterListener.onNetExceptionWightClick();   //点击进入新的Activity
+                    }else {
+                        adapterListener.onItemClick(v,getAdapterPosition(),1);
+                    }
+                } else {
+                    adapterListener.onItemClick(v,getAdapterPosition(),0);
+                }
             }
-
         }
 
         @Override
         public boolean onLongClick(View v) {
             if (adapterListener != null){
-                return adapterListener.onItemLongClick(v,getAdapterPosition());
+                if(haveHeaderView()) {
+                    if(0==getAdapterPosition()) {
+                        LogUtils.LbcDebug("onLongClick");
+                        return true;
+                    } else {
+                        //网络异常状态
+                        return adapterListener.onItemLongClick(v,getAdapterPosition(),1);
+                    }
+                } else {
+                    return adapterListener.onItemLongClick(v,getAdapterPosition(),0);
+                }
+
             }
             return false;
         }
@@ -325,9 +362,10 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
      * 创建一个回调接口
      */
     public interface AdapterListener {
-        void onItemClick(View view, int position);
-        boolean onItemLongClick(View view, int position);
+        void onItemClick(View view, int position,int header);
+        boolean onItemLongClick(View view, int position,int header);
         void onDataChange();
+        void onNetExceptionWightClick();
     }
 
 }

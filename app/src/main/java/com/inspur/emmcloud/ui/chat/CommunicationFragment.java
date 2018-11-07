@@ -53,7 +53,10 @@ import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.common.PingNet;
+import com.inspur.emmcloud.util.common.PingNetEntity;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.AppTabUtils;
@@ -103,6 +106,9 @@ public class CommunicationFragment extends Fragment {
     private static final int SORT_CONVERSATION_LIST = 4;
     private static final int REQUEST_SCAN_LOGIN_QRCODE_RESULT = 5;
     private static final int CACHE_CONVERSATION_LIST_SUCCESS = 6;
+
+    private static final int PING_NET_STATE_HANDLER = 7;
+
     private View rootView;
     private RecyclerView conversionRecycleView;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -120,6 +126,11 @@ public class CommunicationFragment extends Fragment {
     private ImageView headerFunctionOptionImg;
     private ImageView contactImg;
 
+
+    private Thread  netStateThread;
+    private Boolean netState=true;
+    private PingNetEntity pingNetEntity;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
@@ -130,6 +141,56 @@ public class CommunicationFragment extends Fragment {
         registerMessageFragmentReceiver();
         getConversationList();
         setHeaderFunctionOptions(null);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        if(netStateThread==null){
+            netState=false;
+            netStateThread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        boolean LastState =true;
+                        while (!netState) {
+                            Thread.sleep(5000); //线程周期3s
+                            LogUtils.LbcDebug("Thread sleep 3s");
+                            //通过上升沿和下降沿反馈连接状态及数据
+                            PingNetEntity pingNetEntity=new PingNetEntity("www.baidu.com",3,5,new StringBuffer());
+                            pingNetEntity= PingNet.ping(pingNetEntity);
+                            LogUtils.LbcDebug("testPing"+pingNetEntity.getIp());
+                            LogUtils.LbcDebug("testPing"+"time="+pingNetEntity.getPingTime());
+                            LogUtils.LbcDebug("testPing"+pingNetEntity.isResult()+"");
+                            //conversationAdapter.setNetExceptionView(pingNetEntity.isResult());
+                            android.os.Message message = handler.obtainMessage(PING_NET_STATE_HANDLER,pingNetEntity.isResult());
+                            message.sendToTarget();
+                        }
+                    } catch (Exception e){
+                        LogUtils.LbcDebug("error");
+                    }
+                }
+            });
+            netStateThread.start();
+        }
+       // conversationAdapter.setNetExceptionView(true);
+        LogUtils.LbcDebug("onStart");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+       // conversationAdapter.setNetExceptionView(false);
+        netState =true;
+        netStateThread=null;
+        LogUtils.LbcDebug("onStop");
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        LogUtils.LbcDebug("onDestoyView");
     }
 
     private void initView() {
@@ -188,23 +249,25 @@ public class CommunicationFragment extends Fragment {
         conversationAdapter = new ConversationAdapter(MyApplication.getInstance(), displayUIConversationList);
         conversationAdapter.setAdapterListener(new ConversationAdapter.AdapterListener() {
             @Override
-            public void onItemClick(View view, int position) {
-                UIConversation uiConversation = displayUIConversationList.get(position);
-                Conversation conversation = uiConversation.getConversation();
-                String type = conversation.getType();
-                if (type.equals(Conversation.TYPE_CAST) || type.equals(Conversation.TYPE_DIRECT) || type.equals(Conversation.TYPE_GROUP)) {
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable(ConversationActivity.EXTRA_CONVERSATION, conversation);
-                    IntentUtils.startActivity(getActivity(), ConversationActivity.class, bundle);
-                } else {
-                    ToastUtils.show(MyApplication.getInstance(), R.string.not_support_open_channel);
-                }
-                setConversationRead(position, uiConversation);
+            public void onItemClick(View view, int position,int header) {
+                    UIConversation uiConversation = displayUIConversationList.get(position-header);
+                    Conversation conversation = uiConversation.getConversation();
+                    String type = conversation.getType();
+                    if (type.equals(Conversation.TYPE_CAST) || type.equals(Conversation.TYPE_DIRECT) || type.equals(Conversation.TYPE_GROUP)) {
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable(ConversationActivity.EXTRA_CONVERSATION, conversation);
+                        IntentUtils.startActivity(getActivity(), ConversationActivity.class, bundle);
+                    } else {
+                        ToastUtils.show(MyApplication.getInstance(), R.string.not_support_open_channel);
+                    }
+                    setConversationRead(position, uiConversation);
             }
 
             @Override
-            public boolean onItemLongClick(View view, int position) {
-                showConversationOperationDlg(displayUIConversationList.get(position));
+            public boolean onItemLongClick(View view, int position,int header) {
+                UIConversation LongClickUIConversation;
+                LongClickUIConversation = displayUIConversationList.get(position-header);
+                showConversationOperationDlg(LongClickUIConversation);
                 return true;
             }
 
@@ -218,16 +281,20 @@ public class CommunicationFragment extends Fragment {
                 }
                 EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SET_ALL_MESSAGE_UNREAD_COUNT, unReadCount));
             }
+
+            @Override
+            public void onNetExceptionWightClick() {
+                conversationAdapter.delectHeaderView();
+                LogUtils.LbcDebug("点击网络状态异常框");
+            }
         });
         conversionRecycleView.setAdapter(conversationAdapter);
-      conversationAdapter.addHeaderView(LayoutInflater.from(getContext()).inflate(R.layout.recycleview_header_item,null));
-
     }
 
     /**
      * 弹出频道操作选择框
      *
-     * @param position
+     * @param uiConversation
      */
     private void showConversationOperationDlg(final UIConversation uiConversation) {
         // TODO Auto-generated method stub
@@ -241,6 +308,7 @@ public class CommunicationFragment extends Fragment {
                         if (which == 0) {
                             setConversationStick(uiConversation.getId(), !uiConversation.getConversation().isStick());
                         } else {
+
                             setConversationHide(uiConversation.getId());
                         }
                     }
@@ -390,7 +458,7 @@ public class CommunicationFragment extends Fragment {
     /**
      * 为群组创建头像
      *
-     * @param channelList
+     * @param conversationList
      */
     private void createGroupIcon(List<Conversation> conversationList) {
         if (!NetUtils.isNetworkConnected(MyApplication.getInstance(), false)) {
@@ -491,6 +559,9 @@ public class CommunicationFragment extends Fragment {
                         sortConversationList();
                         List<Conversation> conversationList = (List<Conversation>) msg.obj;
                         createGroupIcon(conversationList);
+                        break;
+                    case PING_NET_STATE_HANDLER:
+                        conversationAdapter.setNetExceptionView((Boolean) msg.obj);
                         break;
                     default:
                         break;
@@ -994,6 +1065,7 @@ public class CommunicationFragment extends Fragment {
      */
     private void setConversationHide(String id) {
         if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
+            LogUtils.LbcDebug("setConversationHide"+id);
             loadingDlg.show();
             apiService.setConversationHide(id);
         }
@@ -1044,7 +1116,13 @@ public class CommunicationFragment extends Fragment {
                 long unReadCount = displayUIConversationList.get(index).getUnReadCount();
                 displayUIConversationList.remove(index);
                 conversationAdapter.setData(displayUIConversationList);
-                conversationAdapter.notifyItemRemoved(index);
+
+                if(conversationAdapter.haveHeaderView()) {
+                    conversationAdapter.notifyItemRemoved(index+1);
+                }else {
+                    conversationAdapter.notifyItemRemoved(index);
+                }
+
                 if (unReadCount > 0) {
                     WSAPIService.getInstance().setChannelMessgeStateRead(id);
                 }

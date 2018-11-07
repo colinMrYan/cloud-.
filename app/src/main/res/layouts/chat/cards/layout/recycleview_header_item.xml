@@ -2,10 +2,13 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="100dp">
+    android:layout_height="100dp"
+    android:background="#fdd9da">
     <TextView
         android:id="@+id/tv_net_state_mes"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="网络不给力，请检查网络设置。" />
+        android:layout_height="30dp"
+        android:text="网络不给力，请检查网络设置。"
+        android:textSize="14dp"
+        android:textColor="@color/black"/>
 </RelativeLayout>
