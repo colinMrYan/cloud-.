@@ -37,10 +37,8 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
     private AdapterListener adapterListener;
     private Context context;
 
-
     /////////////////
     private RecyclerView mRecyclerView;
-
 
     private View VIEW_FOOTER;
     private View VIEW_HEADER;
@@ -50,7 +48,6 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
     private int TYPE_HEADER = 1001;
     private int TYPE_FOOTER = 1002;
     ///////////////
-
 
     public ConversationAdapter(Context context,List<UIConversation> uiConversationList){
         this.uiConversationList = uiConversationList;
@@ -84,8 +81,6 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
         }
     }
 
-
-
     public boolean haveHeaderView() {
         return VIEW_HEADER != null;
     }
@@ -101,7 +96,6 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
     private boolean isFooterView(int position) {
         return haveFooterView() && position == getItemCount() - 1;
     }
-
 
     public void setNetExceptionView(Boolean NetState){
         if(false==NetState&&!haveHeaderView()){
@@ -121,6 +115,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
             VIEW_HEADER = headerView;
             ifGridLayoutManager();
             notifyItemInserted(0);
+            mRecyclerView.getLayoutManager().scrollToPosition(0);
         }
     }
 
@@ -130,8 +125,6 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
             notifyItemRemoved(0);
             VIEW_HEADER=null;
         }
-
-       // notifyItemRangeChanged(0,1);
     }
 
     public void addFooterView(View footerView) {
@@ -254,7 +247,6 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
         }
         TransHtmlToTextUtils.stripUnderlines(holder.contentText,R.color.msg_content_color);
     }
-
 
     /**
      * 设置会话已读未读状态

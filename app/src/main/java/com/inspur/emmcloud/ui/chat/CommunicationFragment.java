@@ -51,6 +51,7 @@ import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
+import com.inspur.emmcloud.ui.mine.setting.NetWorkStateDetailActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
@@ -163,8 +164,10 @@ public class CommunicationFragment extends Fragment {
                             LogUtils.LbcDebug("testPing"+pingNetEntity.getIp());
                             LogUtils.LbcDebug("testPing"+"time="+pingNetEntity.getPingTime());
                             LogUtils.LbcDebug("testPing"+pingNetEntity.isResult()+"");
-                            //conversationAdapter.setNetExceptionView(pingNetEntity.isResult());
                             android.os.Message message = handler.obtainMessage(PING_NET_STATE_HANDLER,pingNetEntity.isResult());
+                            StringBuffer netResult  =  pingNetEntity.getResultBuffer();
+                           String data = netResult.toString();
+                            LogUtils.LbcDebug("网络数据"+data);
                             message.sendToTarget();
                         }
                     } catch (Exception e){
@@ -284,7 +287,7 @@ public class CommunicationFragment extends Fragment {
 
             @Override
             public void onNetExceptionWightClick() {
-                conversationAdapter.delectHeaderView();
+                IntentUtils.startActivity(getActivity(), NetWorkStateDetailActivity.class);
                 LogUtils.LbcDebug("点击网络状态异常框");
             }
         });
