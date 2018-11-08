@@ -2,6 +2,7 @@ package com.inspur.emmcloud.util.privates.cache;
 
 import android.content.Context;
 
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.bean.contact.Contact;
 import com.inspur.emmcloud.bean.contact.SearchModel;
 
@@ -24,28 +25,31 @@ public class CommonContactCacheUtils {
      * @param searchModel
      */
     public static void saveCommonContact(final Context context, final SearchModel searchModel) {
-        Runnable runnable = new Runnable() {
+        if (!searchModel.getId().equals(MyApplication.getInstance().getUid())){
+            Runnable runnable = new Runnable() {
 
-            @Override
-            public void run() {
-                // TODO Auto-generated method stub
-                try {
-                    SearchModel originSearchModel = DbCacheUtils.getDb(context).findById(SearchModel.class, searchModel.getId());
-                    if (originSearchModel == null) {
-                        searchModel.setHeat(1);
-                    } else {
-                        int heat = originSearchModel.getHeat();
-                        heat = heat + 1;
-                        searchModel.setHeat(heat);
+                @Override
+                public void run() {
+                    // TODO Auto-generated method stub
+                    try {
+                        SearchModel originSearchModel = DbCacheUtils.getDb(context).findById(SearchModel.class, searchModel.getId());
+                        if (originSearchModel == null) {
+                            searchModel.setHeat(1);
+                        } else {
+                            int heat = originSearchModel.getHeat();
+                            heat = heat + 1;
+                            searchModel.setHeat(heat);
+                        }
+                        DbCacheUtils.getDb(context).saveOrUpdate(searchModel);
+                    } catch (Exception e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
                     }
-                    DbCacheUtils.getDb(context).saveOrUpdate(searchModel);
-                } catch (Exception e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
                 }
-            }
-        };
-        new Thread(runnable).start();
+            };
+            new Thread(runnable).start();
+        }
+
     }
 
     /**

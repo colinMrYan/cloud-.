@@ -417,6 +417,10 @@ public class ImagePagerActivity extends BaseFragmentActivity {
     public void onPhotoTab(EventMessage eventMessage) {
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_ON_PHOTO_TAB)) {
             setPhotoTap();
+        }else if(eventMessage.getTag().equals(Constant.EVENTBUS_TAG_ON_PHOTO_CLOSE)){
+            if (functionLayout.getVisibility() == View.VISIBLE) {
+                functionLayout.setVisibility(View.GONE);
+            }
         }
 
     }

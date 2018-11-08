@@ -19,6 +19,7 @@ import com.inspur.emmcloud.ui.appcenter.volume.VolumeHomePageActivity;
 import com.inspur.emmcloud.ui.chat.ChannelActivity;
 import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
+import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
@@ -175,10 +176,12 @@ public class ShareFilesActivity extends BaseActivity {
      */
     private void shareFilesToFriends() {
         Intent intent = new Intent();
-        intent.putExtra("select_content", 0);
-        intent.putExtra("isMulti_select", false);
-        intent.putExtra("isContainMe", true);
-        intent.putExtra("title", getString(R.string.news_share));
+        intent.putExtra(ContactSearchFragment.EXTRA_TYPE, 0);
+        intent.putExtra(ContactSearchFragment.EXTRA_MULTI_SELECT, false);
+        ArrayList<String> uidList = new ArrayList<>();
+        uidList.add(MyApplication.getInstance().getUid());
+        intent.putStringArrayListExtra(ContactSearchFragment.EXTRA_EXCLUDE_SELECT, uidList);
+        intent.putExtra(ContactSearchFragment.EXTRA_TITLE, getString(R.string.news_share));
         intent.setClass(getApplicationContext(),
                 ContactSearchActivity.class);
         startActivityForResult(intent, SHARE_IMAGE_OR_FILES);

@@ -121,7 +121,7 @@ public class ConversationActivity extends ConversationBaseActivity {
     }
 
     private void init() {
-        if (getIntent().hasExtra("get_new_msg") && NetUtils.isNetworkConnected(MyApplication.getInstance())) {
+        if (getIntent().hasExtra(EXTRA_NEED_GET_NEW_MESSAGE) && NetUtils.isNetworkConnected(MyApplication.getInstance())) {
             uiMessageList = new ArrayList<>();
             getNewMessageOfChannel();
         } else {
@@ -847,13 +847,14 @@ public class ConversationActivity extends ConversationBaseActivity {
                 String content = eventMessage.getContent();
                 GetChannelMessagesResult getChannelMessagesResult = new GetChannelMessagesResult(content);
                 final List<Message> newMessageList = getChannelMessagesResult.getMessageList();
-                if (newMessageList.size() > 0) {
+                if (newMessageList.size() > 0 ) {
                     MessageCacheUtil.saveMessageList(MyApplication.getInstance(), newMessageList, null);
                 }
                 WSAPIService.getInstance().setChannelMessgeStateRead(cid);
             }
             final List<Message> cacheMessageList = MessageCacheUtil.getHistoryMessageList(MyApplication.getInstance(), cid, null, 15);
             uiMessageList = UIMessage.MessageList2UIMessageList(cacheMessageList);
+            adapter.setMessageList(uiMessageList);
             adapter.notifyDataSetChanged();
             msgListView.scrollToPosition(uiMessageList.size() - 1);
         }
@@ -868,7 +869,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 String content = eventMessage.getContent();
                 GetChannelMessagesResult getChannelMessagesResult = new GetChannelMessagesResult(content);
                 final List<Message> messageList = getChannelMessagesResult.getMessageList();
-                if (messageList.size() > 0) {
+                if (messageList.size() > 0 && messageList.get(0).getChannel().equals(cid)) {
                     Long targetMessageCreationDate = null;
                     if (uiMessageList.size() > 0) {
                         targetMessageCreationDate = uiMessageList.get(0).getCreationDate();

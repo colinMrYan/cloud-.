@@ -142,6 +142,8 @@ public class ImageDetailFragment extends Fragment {
 	 * 关闭图片显示
 	 */
 	public void closeImg() {
+		EventMessage eventMessage = new EventMessage("",Constant.EVENTBUS_TAG_ON_PHOTO_CLOSE);
+		EventBus.getDefault().post(eventMessage);
 		InputMethodUtils.hide(getActivity());
 		if (isNeedTransformOut && locationW != 0) {
 			mImageView.transformOut();
