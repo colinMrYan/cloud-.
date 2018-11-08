@@ -1,5 +1,8 @@
 package com.inspur.emmcloud.broadcastreceiver;
 
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothHeadset;
+import android.bluetooth.BluetoothProfile;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -29,6 +32,14 @@ public class HeadsetReceiver extends BroadcastReceiver {
             case AudioManager.ACTION_AUDIO_BECOMING_NOISY:
                 MediaPlayerManagerUtils.getManager().pause();
                 MediaPlayerManagerUtils.getManager().changeToSpeakerMode();
+                break;
+            case  BluetoothHeadset.ACTION_CONNECTION_STATE_CHANGED:
+                BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
+                if(BluetoothProfile.STATE_DISCONNECTED == adapter.getProfileConnectionState(BluetoothProfile.HEADSET)) {
+                    MediaPlayerManagerUtils.getManager().changeToSpeakerMode();
+                }else {
+                    MediaPlayerManagerUtils.getManager().changeToHeadsetMode();
+                }
                 break;
             default:
                 break;
