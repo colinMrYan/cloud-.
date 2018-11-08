@@ -32,6 +32,7 @@ import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
 import com.inspur.emmcloud.bean.system.EventMessage;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
+import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.ui.mine.setting.RecommendAppActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
@@ -72,6 +73,7 @@ import org.xutils.view.annotation.ViewInject;
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -319,17 +321,20 @@ public class WebexMeetingDetailActivity extends BaseActivity {
         final CustomShareListener mShareListener = new CustomShareListener(WebexMeetingDetailActivity.this);
         new ShareAction(WebexMeetingDetailActivity.this)
                 .setDisplayList( SHARE_MEDIA.EMAIL,SHARE_MEDIA.SMS)
-                .addButton(getString(R.string.internal_share), "app_name", "ic_launcher", "ic_launcher")
+                .addButton(getString(R.string.webex_internal_share), "app_name", "ic_launcher", "ic_launcher")
                 .setShareboardclickCallback(new ShareBoardlistener() {
                     @Override
                     public void onclick(SnsPlatform snsPlatform, SHARE_MEDIA share_media) {
                         if (share_media == null) {
                             if (snsPlatform.mKeyword.equals("app_name")) {
                                 Intent intent = new Intent();
-                                intent.putExtra("select_content", 0);
-                                intent.putExtra("isMulti_select", false);
-                                intent.putExtra("isContainMe", false);
-                                intent.putExtra("title", getString(R.string.news_share));
+                                intent.putExtra(ContactSearchFragment.EXTRA_TYPE, 0);
+                                intent.putExtra(ContactSearchFragment.EXTRA_MULTI_SELECT, false);
+                                ArrayList<String> uidList = new ArrayList<>();
+                                uidList.add(MyApplication.getInstance().getUid());
+                                intent.putStringArrayListExtra(ContactSearchFragment.EXTRA_EXCLUDE_SELECT, uidList);
+                                intent.putExtra(ContactSearchFragment.EXTRA_CONTAIN_ME, false);
+                                intent.putExtra(ContactSearchFragment.EXTRA_TITLE, getString(R.string.news_share));
                                 intent.setClass(WebexMeetingDetailActivity.this,
                                         ContactSearchActivity.class);
                                 startActivityForResult(intent, REQUEST_SELECT_CONTACT);
@@ -357,7 +362,7 @@ public class WebexMeetingDetailActivity extends BaseActivity {
 
     private void showDeleteMeetingWarningDlg() {
         new MyQMUIDialog.MessageDialogBuilder(WebexMeetingDetailActivity.this)
-                .setMessage(getString(R.string.remove_webex_meeting_warning_info))
+                .setMessage(getString(R.string.webex_remove_meeting_warning_info))
                 .addAction(getString(R.string.cancel), new QMUIDialogAction.ActionListener() {
                     @Override
                     public void onClick(QMUIDialog dialog, int index) {
@@ -404,7 +409,7 @@ public class WebexMeetingDetailActivity extends BaseActivity {
 
                     @Override
                     public void createDirectChannelFail() {
-                        //ToastUtils.show(WebexMeetingDetailActivity.this, R.string.news_share_fail);
+                        ToastUtils.show(WebexMeetingDetailActivity.this, R.string.news_share_fail);
                     }
                 });
     }

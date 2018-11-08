@@ -188,7 +188,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
                 intent.putExtra("searchContent", searchContent);
                 intent.putExtra("isMultiSelect", isMultiSelect);
                 if (excludeContactList != null) {
-                    intent.putExtra("excludeContactList", (Serializable) excludeContactList);
+                    intent.putExtra(ContactSearchMoreActivity.EXTRA_EXCLUDE_CONTACT_LIST, (Serializable) excludeContactList);
                 }
                 startActivityForResult(intent, SEARCH_MORE);
                 break;
@@ -204,7 +204,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
                 intent.putExtra("searchContent", searchContent);
                 intent.putExtra("isMultiSelect", isMultiSelect);
                 if (excludeContactList != null) {
-                    intent.putExtra("excludeContactList", (Serializable) excludeContactList);
+                    intent.putExtra(ContactSearchMoreActivity.EXTRA_EXCLUDE_CONTACT_LIST, (Serializable) excludeContactList);
                 }
                 startActivityForResult(intent, SEARCH_MORE);
                 break;

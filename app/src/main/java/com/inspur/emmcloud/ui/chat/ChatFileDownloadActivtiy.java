@@ -76,7 +76,7 @@ public class ChatFileDownloadActivtiy extends BaseActivity {
         if (FileUtils.isFileExist(fileSavePath)) {
             downloadBtn.setText(R.string.open);
         } else {
-            downloadBtn.setText(getString(R.string.download_size, FileUtils.formatFileSize(msgContentFile.getSize())));
+            downloadBtn.setText(getString(R.string.clouddriver_download_size, FileUtils.formatFileSize(msgContentFile.getSize())));
             boolean isStartDownload = getIntent().getBooleanExtra("isStartDownload", false);
             if (isStartDownload) {
                 downloadFile();
@@ -132,7 +132,7 @@ public class ChatFileDownloadActivtiy extends BaseActivity {
                 progressBar.setProgress(progress);
                 String totleSize = FileUtil.formetFileSize(total);
                 String currentSize = FileUtil.formetFileSize(current);
-                progressText.setText(getString(R.string.downloading_status, currentSize, totleSize));
+                progressText.setText(getString(R.string.clouddriver_downloading_status, currentSize, totleSize));
 
             }
 

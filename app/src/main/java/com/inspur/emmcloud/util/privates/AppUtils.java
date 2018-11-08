@@ -591,7 +591,7 @@ public class AppUtils {
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         activity.startActivityForResult(
                 Intent.createChooser(intent,
-                        activity.getString(R.string.file_upload_tips)),
+                        activity.getString(R.string.meeting_file_upload_tips)),
                 requestCode);
     }
 

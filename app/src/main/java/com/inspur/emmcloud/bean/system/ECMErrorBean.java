@@ -7,7 +7,7 @@ import org.json.JSONObject;
  * 数据格式：</br>
  * {</br>
  *   &nbsp&nbsp"code": 41002,</br>
- *   &nbsp&nbsp"error": "USER_PROFILE_BROKEN",</br>
+ *   &nbsp&nbsp"error": "MEETING_USER_PROFILE_BROKEN",</br>
  *   &nbsp&nbsp"error_description": "DEPART_INFO_MISSING"</br>
  * }</br>
  * code：错误代码，唯一</br>

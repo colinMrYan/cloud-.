@@ -111,7 +111,7 @@ public class OauthUtils {
                     oauthCallBack.executeFailCallback();
                 }
             } else if (!(MyApplication.getInstance().getActivityLifecycleCallbacks().getCurrentActivity() instanceof LoginActivity)) {
-                ToastUtils.show(MyApplication.getInstance(), R.string.authorization_expired);
+                ToastUtils.show(MyApplication.getInstance(), R.string.login_authorization_expired);
                 MyApplication.getInstance().signout();
             }
             callBackList.clear();

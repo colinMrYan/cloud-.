@@ -389,7 +389,7 @@ public class MessionDetailActivity extends BaseActivity {
         intent.setType("*/*");
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         startActivityForResult(Intent.createChooser(intent,
-                getString(R.string.file_upload_tips)), UPLOAD_FILE);
+                getString(R.string.meeting_file_upload_tips)), UPLOAD_FILE);
     }
 
     @Override

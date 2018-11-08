@@ -1,13 +1,10 @@
 package com.inspur.emmcloud.ui.work.calendar;
 
-import android.R.integer;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ImageView;
 
 import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 
 public class CalRepeatActivity extends BaseActivity {
@@ -56,7 +53,7 @@ public class CalRepeatActivity extends BaseActivity {
 			findViewById(R.id.every_month_selected_img).setVisibility(View.VISIBLE);
 			break;
 		case 5:
-			repeatType =  getString(R.string.every_year);
+			repeatType =  getString(R.string.calendar_every_year);
 			findViewById(R.id.every_year_selected_img).setVisibility(View.VISIBLE);
 			break;
 

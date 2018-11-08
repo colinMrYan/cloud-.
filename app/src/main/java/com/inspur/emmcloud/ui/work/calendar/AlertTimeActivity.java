@@ -13,7 +13,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 
 /**
@@ -34,15 +33,15 @@ public class AlertTimeActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_alert_time);
 		final String[] alertTimeArray = {
-				getString(R.string.when_event_occurs),
-				getString(R.string.five_minite_ago),
-				getString(R.string.fifteen_minite_ago),
-				getString(R.string.thirty_minite_ago),
-				getString(R.string.one_hour_ago),
-				getString(R.string.two_hours_ago),
-				getString(R.string.one_day_ago),
-				getString(R.string.two_days_ago),
-				getString(R.string.a_week_ago) };
+				getString(R.string.calendar_when_event_occurs),
+				getString(R.string.calendar_five_minite_ago),
+				getString(R.string.calendar_fifteen_minite_ago),
+				getString(R.string.calendar_thirty_minite_ago),
+				getString(R.string.calendar_one_hour_ago),
+				getString(R.string.calendar_two_hours_ago),
+				getString(R.string.calendar_one_day_ago),
+				getString(R.string.calendar_two_days_ago),
+				getString(R.string.calendar_a_week_ago) };
 		alertTimeListView = (ListView) findViewById(R.id.alert_time_list);
 		noSelectImg = (ImageView) findViewById(R.id.no_alert_select_img);
 		if (getIntent().getExtras().containsKey("alertTime")) {

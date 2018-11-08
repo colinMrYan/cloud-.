@@ -20,46 +20,46 @@ public class ErrorCodeUtils {
 		String errorKey = "";
 		switch (errorCode) {
 		case 41001:
-			errorKey = "user_profile_missing";
+			errorKey = "meeting_user_profile_missing";
 			break;
 		case 41002:
-			errorKey = "user_profile_broken";
+			errorKey = "meeting_user_profile_broken";
 			break;
 		case 72001:
-			errorKey = "time_earlier_than_permission";
+			errorKey = "meeting_time_earlier_than_permission";
 			break;
 		case 72002:
-			errorKey = "time_later_than_permission";
+			errorKey = "meeting_time_later_than_permission";
 			break;
 		case 72003:
-			errorKey = "time_span_over_limit";
+			errorKey = "meeting_time_span_over_limit";
 			break;
 		case 72004:
-			errorKey = "duration_over_limit";
+			errorKey = "meeting_duration_over_limit";
 			break;
 		case 72005:
-			errorKey = "time_conflict";
+			errorKey = "meeting_time_conflict";
 			break;
 		case 72006:
-			errorKey = "invalid_booking_time";
+			errorKey = "meeting_invalid_booking_time";
 			break;
 		case 72101:
-			errorKey = "room_not_exists";
+			errorKey = "meeting_room_not_exists";
 			break;
 		case 72102:
-			errorKey = "room_locked_by_admin";
+			errorKey = "meeting_room_locked_by_admin";
 			break;
 		case 72103:
-			errorKey = "room_for_special_use";
+			errorKey = "meeting_room_for_special_use";
 			break;
 		case 72201:
-			errorKey = "book_history_not_exist";
+			errorKey = "meeting_book_history_not_exist";
 			break;
 		case 72202:
-			errorKey = "expired_booking_history_immutable";
+			errorKey = "meeting_expired_booking_history_immutable";
 			break;
 		case 72301:
-			errorKey = "department_booking_times_over_run";
+			errorKey = "meeting_department_booking_times_over_run";
 			break;
 		default:
 			errorKey = "net_request_failed";

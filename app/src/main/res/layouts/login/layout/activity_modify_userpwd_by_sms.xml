@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="@string/get_captchas"
+            android:text="@string/login_get_captchas"
             android:textColor="@color/header_text"
             android:textSize="@dimen/header_textsize" />
     </RelativeLayout>
@@ -82,7 +82,7 @@
                 android:layout_centerVertical="true"
                 android:layout_toRightOf="@id/phone_num_text"
                 android:background="@null"
-                android:hint="@string/please_input_phone_num"
+                android:hint="@string/login_please_input_phone_num"
                 android:maxLength="11"
                 android:numeric="integer"
                 android:paddingBottom="13dp"
@@ -116,8 +116,8 @@
                 android:paddingRight="7dp"
                 android:background="@color/white"
                 android:textColor="@color/login_btn_nor"
-                android:text="@string/get_captchas"
-                android:hint="@string/resend"
+                android:text="@string/login_get_captchas"
+                android:hint="@string/login_resend"
                 android:textSize="@dimen/content_normal_textsize"  />
 
             <View
@@ -158,7 +158,7 @@
                     android:layout_centerVertical="true"
                     android:layout_toRightOf="@id/captchas_text"
                     android:background="@null"
-                    android:hint="@string/please_input_captchas"
+                    android:hint="@string/login_please_input_captchas"
                     android:maxLength="11"
                     android:numeric="integer"
                     android:paddingBottom="13dp"

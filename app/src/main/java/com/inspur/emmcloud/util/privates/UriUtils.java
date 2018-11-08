@@ -31,7 +31,7 @@ public class UriUtils {
                 } catch (Exception e) {
                     e.printStackTrace();
                     ToastUtils.show(activity,
-                            R.string.not_support_app_type);
+                            R.string.app_not_support_app_type);
                 }
                 break;
             case 2:
@@ -70,7 +70,7 @@ public class UriUtils {
 
             default:
                 ToastUtils.show(activity,
-                        R.string.not_support_app_type);
+                        R.string.app_not_support_app_type);
                 break;
         }
         saveAPPPVCollect(activity, app,appCollectType);

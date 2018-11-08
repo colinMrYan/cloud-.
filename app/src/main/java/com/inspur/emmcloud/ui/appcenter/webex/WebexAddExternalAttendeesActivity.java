@@ -103,7 +103,7 @@ public class WebexAddExternalAttendeesActivity extends BaseActivity {
 
     private boolean addAttendees(String email){
         if (StringUtils.isBlank(email)) {
-            ToastUtils.show(this, R.string.input_invitee_emails);
+            ToastUtils.show(this, R.string.webex_input_invitee_emails);
             return false;
         }
         if (webexAttendeesList.size() == 20){
@@ -111,12 +111,12 @@ public class WebexAddExternalAttendeesActivity extends BaseActivity {
             return false;
         }
         if (!FomatUtils.isValiadEmail(email)) {
-            ToastUtils.show(this, R.string.input_correct_invitee_emails);
+            ToastUtils.show(this, R.string.webex_input_correct_invitee_emails);
             return false;
         }
 
         if (webexAttendeesList.contains(new WebexAttendees(email))) {
-            ToastUtils.show(this, R.string.not_add_repeated);
+            ToastUtils.show(this, R.string.webex_not_add_repeated);
             return false;
         }
 

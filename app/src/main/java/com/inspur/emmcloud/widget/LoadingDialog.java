@@ -36,7 +36,7 @@ public class LoadingDialog extends Dialog {
 		// 设置window属性
 		lp = getWindow().getAttributes();
 		lp.gravity = Gravity.CENTER;
-		lp.dimAmount = 0.5f; // 去背景遮盖
+		lp.dimAmount = 0.2f; // 去背景遮盖
 		lp.alpha = 1.0f;
 		getWindow().setAttributes(lp);
 

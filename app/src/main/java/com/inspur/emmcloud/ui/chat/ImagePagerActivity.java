@@ -241,7 +241,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 
             @Override
             public void onPageSelected(int position) {
-                CharSequence text = getString(R.string.viewpager_indicator, position + 1, mPager.getAdapter().getCount());
+                CharSequence text = getString(R.string.meeting_viewpager_indicator, position + 1, mPager.getAdapter().getCount());
                 indicator.setText(text);
                 pagerPosition = position;
                 if (getIntent().hasExtra(EXTRA_CURRENT_IMAGE_MSG)) {
@@ -417,6 +417,10 @@ public class ImagePagerActivity extends BaseFragmentActivity {
     public void onPhotoTab(EventMessage eventMessage) {
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_ON_PHOTO_TAB)) {
             setPhotoTap();
+        }else if(eventMessage.getTag().equals(Constant.EVENTBUS_TAG_ON_PHOTO_CLOSE)){
+            if (functionLayout.getVisibility() == View.VISIBLE) {
+                functionLayout.setVisibility(View.GONE);
+            }
         }
 
     }

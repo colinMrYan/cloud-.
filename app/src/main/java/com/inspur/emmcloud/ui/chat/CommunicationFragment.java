@@ -438,6 +438,7 @@ public class CommunicationFragment extends Fragment {
                                 continue;
                             }
                             if (uiConversation.getMessageList().size() == 0){
+                                //当会话内没有消息时，如果是单聊或者不是owner的群聊，则进行隐藏
                                 if (conversation.getType().equals(Conversation.TYPE_DIRECT) ||
                                         (conversation.getType().equals(CREAT_CHANNEL_GROUP) && conversation.getOwner().equals(MyApplication.getInstance().getUid()))){
                                     it.remove();
@@ -845,10 +846,14 @@ public class CommunicationFragment extends Fragment {
                         }
                     }
                     Conversation receiveMessageConversation = ConversationCacheUtils.getConversation(MyApplication.getInstance(), receivedWSMessage.getChannel());
+
                     cacheReceiveMessage(receivedWSMessage);
                     if (receiveMessageConversation == null) {
                         getConversationList();
                     } else {
+                        if (receiveMessageConversation.isHide()){
+                            ConversationCacheUtils.setConversationHide(MyApplication.getInstance(),receiveMessageConversation.getId(),false);
+                        }
                         sortConversationList();
                     }
                 }
@@ -1033,7 +1038,7 @@ public class CommunicationFragment extends Fragment {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    ConversationCacheUtils.setConversationHide(MyApplication.getInstance(), id);
+                    ConversationCacheUtils.setConversationHide(MyApplication.getInstance(), id,true);
                     MessageCacheUtil.setChannelMessageRead(MyApplication.getInstance(), id);
                 }
             }).start();

@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="@string/group_news"
+            android:text="@string/news_group_news"
             android:textColor="@color/header_text"
             android:textSize="@dimen/header_textsize" />
     </RelativeLayout>

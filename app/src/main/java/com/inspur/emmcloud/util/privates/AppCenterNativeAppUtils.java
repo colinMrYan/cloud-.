@@ -114,7 +114,7 @@ public class AppCenterNativeAppUtils {
 			public void onClick(View v) {
 				String password = inputEdit.getText().toString();
 				if (StringUtils.isBlank(password)) {
-					ToastUtils.show(context, R.string.please_input_password);
+					ToastUtils.show(context, R.string.login_please_input_password);
 				}else if(password.length()<6){
 					ToastUtils.show(context, R.string.modify_input_password);
 				}else{

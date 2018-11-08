@@ -732,7 +732,7 @@ public class ChannelActivity extends MediaPlayBaseActivity {
                 String content = eventMessage.getContent();
                 GetChannelMessagesResult getChannelMessagesResult = new GetChannelMessagesResult(content);
                 final List<Message> historyMessageList = getChannelMessagesResult.getMessageList();
-                if (historyMessageList.size() > 0) {
+                if (historyMessageList.size() > 0 &&  historyMessageList.get(0).getChannel().equals(cid)) {
                     Long targetMessageCreationDate = null;
                     if (uiMessageList.size() > 0) {
                         targetMessageCreationDate = uiMessageList.get(0).getCreationDate();

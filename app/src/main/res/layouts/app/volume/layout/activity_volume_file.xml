@@ -144,7 +144,7 @@
                 android:onClick="onClick"
                 android:paddingLeft="12dp"
                 android:paddingRight="12dp"
-                android:text="@string/select_all"
+                android:text="@string/clouddriver_select_all"
                 android:textColor="#ffffff"
                 android:textSize="15sp" />
         </RelativeLayout>
@@ -193,7 +193,7 @@
                     android:drawableRight="@drawable/ic_volume_menu_drop_down"
                     android:onClick="onClick"
                     android:padding="12dp"
-                    android:text="@string/sort_by_name_asc"
+                    android:text="@string/clouddriver_sort_by_name_asc"
                     android:textColor="#666666"
                     android:textSize="15sp" />
 
@@ -204,7 +204,7 @@
                     android:layout_centerHorizontal="true"
                     android:onClick="onClick"
                     android:padding="12dp"
-                    android:text="@string/multi_select"
+                    android:text="@string/clouddriver_multi_select"
                     android:textColor="#666666"
                     android:textSize="15sp" />
 
@@ -215,7 +215,7 @@
                     android:layout_alignParentRight="true"
                     android:onClick="onClick"
                     android:padding="12dp"
-                    android:text="@string/volume_file_filter"
+                    android:text="@string/clouddriver_volume_file_filter"
                     android:textColor="#666666"
                     android:textSize="15sp" />
 
@@ -360,7 +360,7 @@
                 android:layout_height="wrap_content"
                 android:onClick="onClick"
                 android:padding="12dp"
-                android:text="@string/create_forder"
+                android:text="@string/clouddriver_create_folder"
                 android:textColor="#444444"
                 android:textSize="15sp" />
 
@@ -371,7 +371,7 @@
                 android:layout_alignParentRight="true"
                 android:onClick="onClick"
                 android:padding="12dp"
-                android:text="@string/move_to_current_directory"
+                android:text="@string/clouddriver_move2_current_directory"
                 android:textColor="#444444"
                 android:textSize="15sp" />
 
@@ -383,7 +383,7 @@
                 android:layout_alignParentRight="true"
                 android:onClick="onClick"
                 android:padding="12dp"
-                android:text="@string/volume_upload_file"
+                android:text="@string/clouddriver_volume_upload_file"
                 android:textColor="#444444"
                 android:textSize="15sp" />
         </RelativeLayout>
