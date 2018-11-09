@@ -60,25 +60,11 @@
             android:visibility="gone" />
     </RelativeLayout>
 
-    <RelativeLayout
-        android:id="@+id/rl_context_data"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/header_layout"
-        android:onClick="onClick">
-
-        <TextView
-            android:id="@+id/tv_showData"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-    </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/rl_context_data"
-        android:visibility="gone">
+        android:layout_below="@id/header_layout">
         <WebView
             android:id="@+id/wv_show_login_detail"
             android:layout_width="match_parent"

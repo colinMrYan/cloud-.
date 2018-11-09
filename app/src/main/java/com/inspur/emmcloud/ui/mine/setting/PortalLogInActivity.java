@@ -5,11 +5,10 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 import android.webkit.WebView;
-import android.widget.TextView;
+import android.webkit.WebViewClient;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.util.common.LogUtils;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -25,9 +24,6 @@ import java.net.URL;
 public class PortalLogInActivity extends BaseActivity {
 
     private WebView webview;
-    public String acceptData;  //定义接受json数据信息的变量
-    public TextView tvShowData;
-
     public static final int SHOW_RESPONSE=1;
     /*TextView是在主线程定义，所以修改操作也必须在主线程中，而获取内容是在子线程，所以当子线程获取内容后需要给主线程发送信息，主线程再对TextView的文本内容进行修改*/
     private Handler handler=new Handler(){
@@ -35,9 +31,7 @@ public class PortalLogInActivity extends BaseActivity {
             switch (msg.what) {
                 case SHOW_RESPONSE://根据子线程编号判断是哪个子线程发来的信息
                     String content=(String) msg.obj;
-                   tvShowData=(TextView)findViewById(R.id.tv_showData);
-                   LogUtils.jasonDebug(content);
-                   tvShowData.setText(content);
+
                     break;
 
                 default:
@@ -55,16 +49,16 @@ public class PortalLogInActivity extends BaseActivity {
         //2、小助手检测 （需要链接小助手提示，或者无效，）
         //3、DNS检测    （DNS检测或者无效，或者DNS链接问题）
 
-//        webview = (WebView)findViewById(R.id.wv_show_login_detail);
-//        webview.getSettings().setJavaScriptEnabled(true);
-//        webview.loadUrl("http://www.baidu.com");
-//        webview.setWebViewClient(new WebViewClient(){
-//            @Override
-//            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-//                view.loadUrl(url);
-//                return super.shouldOverrideUrlLoading(view, url);
-//            }
-//        });
+        webview = (WebView)findViewById(R.id.wv_show_login_detail);
+        webview.getSettings().setJavaScriptEnabled(true);
+        webview.loadUrl("http://www.baidu.com");
+        webview.setWebViewClient(new WebViewClient(){
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                view.loadUrl(url);
+                return super.shouldOverrideUrlLoading(view, url);
+            }
+        });
         //处理返回结果的函数，系统提供的类方法  //handler处理返回数据， 此方法，我写在onCreate()函数外。
       //  SendGetRequest("http://baidu.com","");
 
@@ -122,9 +116,6 @@ public class PortalLogInActivity extends BaseActivity {
         switch (v.getId()){
             case R.id.rl_back_portal_login:
                 finish();
-                break;
-            case R.id.rl_context_data:
-                sendRequest();
                 break;
             default:
                 break;

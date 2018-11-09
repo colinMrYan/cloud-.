@@ -96,7 +96,7 @@
 
             <ImageView
                 android:id="@+id/iv_hard_checking"
-                android:background="@color/cal_green"
+                android:background="@drawable/ic_net_loading_state"
                 android:layout_width="15dp"
                 android:layout_height="15dp"
                 android:layout_alignParentRight="true"
@@ -133,7 +133,7 @@
                 android:paddingRight="40dp"/>
             <ImageView
                 android:id="@+id/iv_wifi_checking"
-                android:background="@color/cal_green"
+                android:background="@drawable/ic_net_loading_state"
                 android:layout_width="15dp"
                 android:layout_height="15dp"
                 android:layout_alignParentRight="true"
@@ -169,7 +169,7 @@
                 android:paddingRight="40dp"/>
             <ImageView
                 android:id="@+id/iv_dns_checking"
-                android:background="@color/cal_green"
+                android:background="@drawable/ic_net_loading_state"
                 android:layout_width="15dp"
                 android:layout_height="15dp"
                 android:layout_alignParentRight="true"

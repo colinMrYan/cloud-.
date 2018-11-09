@@ -197,8 +197,6 @@ public class NetUtils {
 		}
 	}
 
-
-
 	/**
 	 * @param pingNetEntity 检测网络实体类
 	 * @return 检测后的数据
@@ -280,7 +278,6 @@ public class NetUtils {
 		return time;
 	}
 
-
 	/**
 	 * 得到网络类型
 	 *
@@ -325,7 +322,6 @@ public class NetUtils {
 
 		return getNetworkClass(networkType);
 	}
-
 	/**
 	 * 判断移动网络的类型
 	 *
