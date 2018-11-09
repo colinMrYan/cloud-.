@@ -22,8 +22,9 @@ public class Message implements Serializable {
     public static final String MESSAGE_TYPE_COMMENT_TEXT_PLAIN = "comment/text-plain";
     public static final String MESSAGE_TYPE_EXTENDED_LINKS = "extended/links";
     public static final int MESSAGE_SEND_ING = 0;
-    public static final int MESSAGE_SEND_FAIL = 2;
     public static final int MESSAGE_SEND_SUCCESS = 1;
+    public static final int MESSAGE_SEND_FAIL = 2;
+    public static final int MESSAGE_SEND_EDIT = 3;
     @Column(name = "id", isId = true)
     private String id;
     @Column(name = "message")
@@ -45,7 +46,10 @@ public class Message implements Serializable {
     @Column(name = "read")
     private int read = 0;  //0 未读，1 已读
     @Column(name = "sendStatus")
-    private int sendStatus = 1;//0 发送中  1发送成功  2发送失败
+    private int sendStatus = 1;//0 发送中  1发送成功  2发送失败 字段扩展
+    @Column(name = "localPath")
+    private String localPath = "";
+    private String tmpId = "";
 
     public Message() {
 
@@ -217,9 +221,25 @@ public class Message implements Serializable {
         this.read = read;
     }
 
+    public String getLocalPath() {
+        return localPath;
+    }
+
+    public void setLocalPath(String localPath) {
+        this.localPath = localPath;
+    }
+
+    public String getTmpId() {
+        return tmpId;
+    }
+
+    public void setTmpId(String tmpId) {
+        this.tmpId = tmpId;
+    }
+
     /*
-                     * 重写equals方法修饰符必须是public,因为是重写的Object的方法. 2.参数类型必须是Object.
-                     */
+                             * 重写equals方法修饰符必须是public,因为是重写的Object的方法. 2.参数类型必须是Object.
+                             */
     public boolean equals(Object other) { // 重写equals方法，后面最好重写hashCode方法
 
         if (this == other) // 先检查是否其自反性，后比较other是否为空。这样效率高

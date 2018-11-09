@@ -2,6 +2,7 @@ package com.inspur.emmcloud.util.privates.cache;
 
 import android.content.Context;
 
+import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.MatheSet;
 import com.inspur.emmcloud.bean.chat.Message;
 
@@ -358,7 +359,6 @@ public class MessageCacheUtil {
     /**
      * 判断本地有没有缓存消息历史记录
      * @param context
-     * @param enterAppTime
      * @return
      */
     public static boolean isHistoryMessageCache(Context context){
@@ -387,6 +387,20 @@ public class MessageCacheUtil {
             e.printStackTrace();
         }
         return lastMessageId;
+    }
+
+    /**
+     * 删除本地假消息
+     * @param context
+     * @param tmpId
+     */
+    public static void deleteLocalFakeMessage(Context context,String tmpId){
+        try {
+            DbCacheUtils.getDb(context).delete(Conversation.class,WhereBuilder.b("id","=",tmpId));
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
     }
 
 }

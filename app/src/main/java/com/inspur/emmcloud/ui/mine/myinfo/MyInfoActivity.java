@@ -324,7 +324,7 @@ public class MyInfoActivity extends BaseActivity {
             List<Enterprise> enterpriseList = getMyInfoResult.getEnterpriseList();
             Enterprise defaultEnterprise = getMyInfoResult.getDefaultEnterprise();
             if (enterpriseList.size() == 0 && defaultEnterprise == null){
-                ToastUtils.show(MyApplication.getInstance(),  R.string.user_not_bound_enterprise);
+                ToastUtils.show(MyApplication.getInstance(),  R.string.login_user_not_bound_enterprise);
                 MyApplication.getInstance().signout();
             }else {
                 PreferencesUtils.putString(MyInfoActivity.this, "myInfo", getMyInfoResult.getResponse());

@@ -95,9 +95,11 @@ public class CommunicationUtils {
 
 
     public static Message combinLocalTextPlainMessage(String text, String cid, Map<String, String> mentionsMap) {
+        String tracer = getTracer();
         Message message = combinLocalMessageCommon();
         message.setChannel(cid);
-        message.setId(getTracer());
+        message.setId(tracer);
+        message.setTmpId(tracer);
         message.setType("text/plain");
         MsgContentTextPlain msgContentTextPlain = new MsgContentTextPlain();
         msgContentTextPlain.setText(text);
@@ -109,9 +111,11 @@ public class CommunicationUtils {
     }
 
     public static Message combinLocalRegularFileMessage(String cid, String localFilePath) {
+        String tracer = getTracer();
         Message message = combinLocalMessageCommon();
         message.setChannel(cid);
-        message.setId(getTracer());
+        message.setId(tracer);
+        message.setTmpId(tracer);
         message.setType("file/regular-file");
         File file = new File(localFilePath);
         MsgContentRegularFile msgContentRegularFile = new MsgContentRegularFile();
@@ -124,9 +128,11 @@ public class CommunicationUtils {
     }
 
     public static Message combinLocalCommentTextPlainMessage(String cid, String commentedMid, String text, Map<String, String> mentionsMap) {
+        String tracer = getTracer();
         Message message = combinLocalMessageCommon();
         message.setChannel(cid);
-        message.setId(getTracer());
+        message.setId(tracer);
+        message.setTmpId(tracer);
         message.setType("comment/text-plain");
         MsgContentComment msgContentComment = new MsgContentComment();
         msgContentComment.setText(text);
@@ -141,9 +147,11 @@ public class CommunicationUtils {
     }
 
     public static Message combinLocalExtendedLinksMessage(String cid, String poster, String title, String subTitle, String url) {
+        String tracer = getTracer();
         Message message = combinLocalMessageCommon();
         message.setChannel(cid);
-        message.setId(getTracer());
+        message.setId(tracer);
+        message.setTmpId(tracer);
         message.setType("extended/links");
         MsgContentExtendedLinks msgContentExtendedLinks = new MsgContentExtendedLinks();
         msgContentExtendedLinks.setPoster(poster);
@@ -155,9 +163,11 @@ public class CommunicationUtils {
     }
 
     public static Message combinLocalMediaImageMessage(String cid, String localFilePath) {
+        String tracer = getTracer();
         Message message = combinLocalMessageCommon();
         message.setChannel(cid);
-        message.setId(getTracer());
+        message.setId(tracer);
+        message.setTmpId(tracer);
         message.setType(Message.MESSAGE_TYPE_MEDIA_IMAGE);
         File file = new File(localFilePath);
         Bitmap bitmap = BitmapFactory.decodeFile(localFilePath);
@@ -185,9 +195,11 @@ public class CommunicationUtils {
 
 
     public static Message combinLocalMediaVoiceMessage(String cid, String localFilePath, int duration, String results) {
+        String tracer = getTracer();
         Message message = combinLocalMessageCommon();
         message.setChannel(cid);
-        message.setId(getTracer());
+        message.setId(tracer);
+        message.setTmpId(tracer);
         message.setType(Message.MESSAGE_TYPE_MEDIA_VOICE);
         MsgContentMediaVoice msgContentMediaVoice = new MsgContentMediaVoice();
         msgContentMediaVoice.setDuration(duration);
@@ -199,10 +211,12 @@ public class CommunicationUtils {
 
 
     public static Message combinLocalReplyAttachmentCardMessage(ContactUser contactUser, String cid, String fromUser) {
+        String currentTime = System.currentTimeMillis() + "";
         Message msgRobot = new Message();
         msgRobot.setChannel(cid);
         msgRobot.setMessage("1.0");
-        msgRobot.setId(System.currentTimeMillis() + "");
+        msgRobot.setId(currentTime);
+        msgRobot.setTmpId(currentTime);
         msgRobot.setCreationDate(System.currentTimeMillis());
         msgRobot.setType(Message.MESSAGE_TYPE_EXTENDED_CONTACT_CARD);
         JSONObject fromObj = new JSONObject();

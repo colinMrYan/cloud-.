@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.ChannelMessageAdapter;
@@ -34,6 +35,7 @@ import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.InputMethodUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
@@ -127,6 +129,7 @@ public class ConversationActivity extends ConversationBaseActivity {
             getNewMessageOfChannel();
         } else {
             final List<Message> cacheMessageList = MessageCacheUtil.getHistoryMessageList(MyApplication.getInstance(), cid, null, 15);
+            LogUtils.YfcDebug("消息记录中的最后一条数据："+JSON.toJSONString(MessageCacheUtil.getHistoryMessageList(MyApplication.getInstance(), cid, null, 1)));
             uiMessageList = UIMessage.MessageList2UIMessageList(cacheMessageList);
         }
         initViews();
@@ -430,7 +433,7 @@ public class ConversationActivity extends ConversationBaseActivity {
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case RQQUEST_CHOOSE_FILE:
-                    if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
+//                    if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
                         String filePath = GetPathFromUri4kitkat.getPathByUri(MyApplication.getInstance(), data.getData());
                         File file = new File(filePath);
                         if (StringUtils.isBlank(FileUtils.getSuffix(file))) {
@@ -439,20 +442,20 @@ public class ConversationActivity extends ConversationBaseActivity {
                         } else {
                             combinAndSendMessageWithFile(filePath, Message.MESSAGE_TYPE_FILE_REGULAR_FILE);
                         }
-                    }
+//                    }
                     break;
                 case REQUEST_CAMERA:
-                    if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
+//                    if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
                         String imgPath = data.getExtras().getString(MyCameraActivity.OUT_FILE_PATH);
                         try {
-                            File file = new Compressor(ConversationActivity.this).setMaxHeight(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setMaxWidth(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setQuality(90).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
+                            File fileCamera = new Compressor(ConversationActivity.this).setMaxHeight(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setMaxWidth(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setQuality(90).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
                                     .compressToFile(new File(imgPath));
-                            imgPath = file.getAbsolutePath();
+                            imgPath = fileCamera.getAbsolutePath();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
                         combinAndSendMessageWithFile(imgPath, Message.MESSAGE_TYPE_MEDIA_IMAGE);
-                    }
+//                    }
                     break;
                 case REQUEST_MENTIONS:
                     // @返回
@@ -662,6 +665,7 @@ public class ConversationActivity extends ConversationBaseActivity {
      */
     private void sendMessageWithText(String content, boolean isActionMsg, Map<String, String> mentionsMap) {
         Message localMessage = CommunicationUtils.combinLocalTextPlainMessage(content, cid, mentionsMap);
+        LogUtils.YfcDebug("发送时LocalMessage："+JSON.toJSONString(localMessage));
         //当在机器人频道时输入小于4个汉字时先进行通讯录查找，查找到返回通讯路卡片
         if (isSpecialUser && !isActionMsg && content.length() < 4 && StringUtils.isChinese(content)) {
             ContactUser contactUser = ContactUserCacheUtils.getContactUserByUserName(content);
@@ -719,7 +723,6 @@ public class ConversationActivity extends ConversationBaseActivity {
         if (index != -1) {
             uiMessageList.get(index).setSendStatus(2);
             handleUnSendMessage(uiMessageList.get(index).getMessage(),Message.MESSAGE_SEND_FAIL);
-            MessageCacheUtil.saveMessage(ConversationActivity.this,uiMessageList.get(index).getMessage());
             adapter.setMessageList(uiMessageList);
             adapter.notifyItemChanged(index);
         }
@@ -789,6 +792,8 @@ public class ConversationActivity extends ConversationBaseActivity {
     //接收到websocket发过来的消息
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveWSMessage(EventMessage eventMessage) {
+        LogUtils.YfcDebug("11111111111111111111111");
+        handleRealMessage(eventMessage);
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE)) {
             if (eventMessage.getStatus() == 200) {
                 String content = eventMessage.getContent();
@@ -834,9 +839,23 @@ public class ConversationActivity extends ConversationBaseActivity {
 
     }
 
+    private void handleRealMessage(EventMessage eventMessage) {
+        String content = eventMessage.getContent();
+        JSONObject contentobj = JSONUtils.getJSONObject(content);
+        Message receivedWSMessage = new Message(contentobj);
+        LogUtils.YfcDebug("返回消息:" + contentobj.toString());
+        MessageCacheUtil.deleteLocalFakeMessage(ConversationActivity.this,receivedWSMessage.getTmpId());
+    }
+
+    private void handleRealMessage(Message message) {
+        MessageCacheUtil.deleteLocalFakeMessage(ConversationActivity.this,message.getTmpId());
+    }
+
     //接收到websocket发过来的消息
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onGetMessageById(EventMessage eventMessage) {
+        LogUtils.YfcDebug("22222222222222222222222222");
+        handleRealMessage(eventMessage);
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_GET_MESSAGE_BY_ID)) {
             if (eventMessage.getStatus() == EventMessage.RESULT_OK) {
                 String content = eventMessage.getContent();
@@ -855,6 +874,8 @@ public class ConversationActivity extends ConversationBaseActivity {
     //接收到websocket发过来的消息
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveNewMessage(EventMessage eventMessage) {
+        LogUtils.YfcDebug("333333333333333333333333");
+        handleRealMessage(eventMessage);
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_GET_NEW_MESSAGE)) {
             LoadingDialog.dimissDlg(loadingDlg);
             if (swipeRefreshLayout.isRefreshing()) {
@@ -880,6 +901,8 @@ public class ConversationActivity extends ConversationBaseActivity {
     //接收到websocket发过来的消息
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveHistoryMessage(EventMessage eventMessage) {
+        LogUtils.YfcDebug("4444444444444444444444444");
+        handleRealMessage(eventMessage);
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_GET_HISTORY_MESSAGE)) {
             swipeRefreshLayout.setRefreshing(false);
             if (eventMessage.getStatus() == EventMessage.RESULT_OK) {
@@ -905,10 +928,12 @@ public class ConversationActivity extends ConversationBaseActivity {
     //接收到离线消息
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReiceveWSOfflineMessage(List<Message> offlineMessageList) {
+        LogUtils.YfcDebug("5555555555555555555555");
         Iterator<Message> it = offlineMessageList.iterator();
         //去重
         while (it.hasNext()) {
             Message offlineMessage = it.next();
+            handleRealMessage(offlineMessage);
             UIMessage uiMessage = new UIMessage(offlineMessage.getId());
             //再一次排除非此频道消息显示在此频道
             if (uiMessageList.contains(uiMessage) || uiMessage.getMessage().getChannel() != cid) {
