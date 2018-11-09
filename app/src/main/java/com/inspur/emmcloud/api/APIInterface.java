@@ -35,9 +35,9 @@ import com.inspur.emmcloud.bean.appcenter.webex.GetWebexMeetingListResult;
 import com.inspur.emmcloud.bean.appcenter.webex.GetWebexTKResult;
 import com.inspur.emmcloud.bean.appcenter.webex.WebexMeeting;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
+import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.GetAllRobotsResult;
 import com.inspur.emmcloud.bean.chat.GetChannelListResult;
-import com.inspur.emmcloud.bean.chat.GetChannelMessagesResult;
 import com.inspur.emmcloud.bean.chat.GetChannelMessagesResult;
 import com.inspur.emmcloud.bean.chat.GetConversationListResult;
 import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
@@ -733,4 +733,7 @@ public interface APIInterface {
 
     void returnRemoveWebexMeetingSuccess();
     void returnRemoveWebexMeetingFail(String error,int errorCode);
+
+    void returnConversationInfoSuccess(Conversation conversation);
+    void returnConversationInfoFail(String error,int errorCode);
 }

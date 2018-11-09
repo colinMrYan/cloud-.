@@ -106,7 +106,6 @@ public class ConversationActivity extends ConversationBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
-        init();
         registeRefreshNameReceiver();
     }
 
@@ -117,10 +116,11 @@ public class ConversationActivity extends ConversationBaseActivity {
         // TODO Auto-generated method stub
         super.onNewIntent(intent);
         setIntent(intent);
-        init();
+        initConversationInfo();
     }
 
-    private void init() {
+    @Override
+    protected void initChannelMessage() {
         if (getIntent().hasExtra(EXTRA_NEED_GET_NEW_MESSAGE) && NetUtils.isNetworkConnected(MyApplication.getInstance())) {
             uiMessageList = new ArrayList<>();
             getNewMessageOfChannel();

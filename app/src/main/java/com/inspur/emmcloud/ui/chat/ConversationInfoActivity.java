@@ -20,10 +20,10 @@ import com.inspur.emmcloud.bean.contact.SearchModel;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
+import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelOperationCacheUtils;
@@ -68,11 +68,12 @@ public class ConversationInfoActivity extends BaseActivity {
 
     private ChatAPIService apiService;
     private ConversationMemberAdapter adapter;
+    private ArrayList<String> memberUidList = new ArrayList<>();
     private ArrayList<String> uiMemberUidList = new ArrayList<>();
     private LoadingDialog loadingDlg;
     private Conversation conversation;
     private boolean isOwner;
-    private int memberSize;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,10 +91,11 @@ public class ConversationInfoActivity extends BaseActivity {
      */
     private void initView() {
         loadingDlg = new LoadingDialog(ConversationInfoActivity.this);
-        memberSize = ContactUserCacheUtils.getContactUserListById(conversation.getMemberList()).size();
+        memberUidList = conversation.getMemberList();
+        int memberSize = ContactUserCacheUtils.getContactUserListById(memberUidList).size();
         memberText.setText(getString(R.string.all_group_member,memberSize));
         nameText.setText(conversation.getName());
-        filterGroupMember(conversation.getMemberList());
+        filterGroupMember(memberUidList);
         adapter = new ConversationMemberAdapter(this,uiMemberUidList,isOwner);
         memberGrid.setAdapter(adapter);
         memberGrid.setOnItemClickListener(onItemClickListener);
@@ -127,16 +129,17 @@ public class ConversationInfoActivity extends BaseActivity {
             // TODO Auto-generated method stub
             Intent intent = new Intent();
             if ((position == adapter.getCount() - 1) && isOwner) {
-                intent.putExtra("memberUidList", conversation.getMemberList());
+                intent.putExtra("memberUidList", memberUidList);
                 intent.setClass(getApplicationContext(),
                         ChannelMembersDelActivity.class);
                 startActivityForResult(intent, QEQUEST_DEL_MEMBER);
 
             } else if (((position == adapter.getCount() - 2) &&isOwner)
                     || ((position == adapter.getCount() - 1) && !isOwner)) {
-                intent.putExtra("select_content", 2);
-                intent.putExtra("isMulti_select", true);
-                intent.putExtra("title", getString(R.string.add_group_member));
+                intent.putExtra(ContactSearchFragment.EXTRA_TYPE, 2);
+                intent.putExtra(ContactSearchFragment.EXTRA_EXCLUDE_SELECT, memberUidList);
+                intent.putExtra(ContactSearchFragment.EXTRA_MULTI_SELECT, true);
+                intent.putExtra(ContactSearchFragment.EXTRA_TITLE, getString(R.string.add_group_member));
                 intent.setClass(getApplicationContext(),
                         ContactSearchActivity.class);
                 startActivityForResult(intent, QEQUEST_ADD_MEMBER);
@@ -200,7 +203,7 @@ public class ConversationInfoActivity extends BaseActivity {
             case R.id.rl_member:
                 bundle.putString("title", getString(R.string.group_member));
                 bundle.putInt(MembersActivity.MEMBER_PAGE_STATE,MembersActivity.CHECK_STATE);
-                bundle.putStringArrayList("uidList",conversation.getMemberList());
+                bundle.putStringArrayList("uidList",memberUidList);
                 IntentUtils.startActivity(ConversationInfoActivity.this,
                         MembersActivity.class, bundle);
                 break;
@@ -241,16 +244,21 @@ public class ConversationInfoActivity extends BaseActivity {
                     break;
                 case QEQUEST_DEL_MEMBER:
                     ArrayList<String> delUidList = (ArrayList<String>) data.getSerializableExtra("selectMemList");
-                    delConversationGroupMember(delUidList);
+                    if (delUidList.size()>0){
+                        delConversationGroupMember(delUidList);
+                    }
                     break;
                 case QEQUEST_ADD_MEMBER:
                     ArrayList<String> addUidList = new ArrayList<>();
                     List<SearchModel> addMemberList = (List<SearchModel>) data
                             .getSerializableExtra("selectMemList");
-                    for (int i = 0; i < addMemberList.size(); i++) {
-                        addUidList.add(addMemberList.get(i).getId());
+                    if (addMemberList.size()>0){
+                        for (int i = 0; i < addMemberList.size(); i++) {
+                            addUidList.add(addMemberList.get(i).getId());
+                        }
+                        addConversationGroupMember(addUidList);
                     }
-                    addConversationGroupMember(addUidList);
+
                     break;
 
                 default:
@@ -362,7 +370,7 @@ public class ConversationInfoActivity extends BaseActivity {
             LoadingDialog.dimissDlg(loadingDlg);
             conversation.setDnd(!conversation.isDnd());
             dndSwitch.setOpened(conversation.isDnd());
-            ConversationCacheUtils.saveConversation(MyApplication.getInstance(),conversation);
+            ConversationCacheUtils.updateConversationDnd(MyApplication.getInstance(),conversation.getId(),conversation.isDnd());
             EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_UPDATE_CHANNEL_DND,conversation));
 
         }
@@ -394,10 +402,9 @@ public class ConversationInfoActivity extends BaseActivity {
         @Override
         public void returnAddConversationGroupMemberSuccess(List<String> uidList) {
             LoadingDialog.dimissDlg(loadingDlg);
-            List<String> allMemberUidList = conversation.getMemberList();
-            allMemberUidList.addAll(uidList);
-            memberSize = memberSize+uidList.size();
-            memberText.setText(getString(R.string.all_group_member,memberSize));
+            memberUidList.addAll(uidList);
+            ConversationCacheUtils.setConversationMember(MyApplication.getInstance(), conversation.getId(), memberUidList);
+            memberText.setText(getString(R.string.all_group_member,memberUidList.size()));
             if (adapter.getCount() < 10){
                 uiMemberUidList.addAll(uidList);
                 adapter.notifyDataSetChanged();
@@ -414,11 +421,10 @@ public class ConversationInfoActivity extends BaseActivity {
         @Override
         public void returnDelConversationGroupMemberSuccess(List<String> uidList) {
             LoadingDialog.dimissDlg(loadingDlg);
-            memberSize = memberSize-uidList.size();
-            memberText.setText(getString(R.string.all_group_member,memberSize));
-            List<String> allMemberUidList = conversation.getMemberList();
-            allMemberUidList.removeAll(uidList);
-            filterGroupMember(allMemberUidList);
+            memberUidList.removeAll(uidList);
+            ConversationCacheUtils.setConversationMember(MyApplication.getInstance(), conversation.getId(), memberUidList);
+            memberText.setText(getString(R.string.all_group_member,memberUidList.size()));
+            filterGroupMember(memberUidList);
             adapter.notifyDataSetChanged();
         }
 
@@ -430,7 +436,6 @@ public class ConversationInfoActivity extends BaseActivity {
 
         @Override
         public void returnQuitChannelGroupSuccess() {
-            LogUtils.jasonDebug("0000000000000000000000");
             EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_QUIT_CHANNEL_GROUP,conversation));
             LoadingDialog.dimissDlg(loadingDlg);
             setResult(RESULT_OK);

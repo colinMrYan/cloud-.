@@ -3,7 +3,9 @@ package com.inspur.emmcloud.util.privates.cache;
 import android.content.Context;
 
 import com.inspur.emmcloud.bean.chat.Conversation;
+import com.inspur.emmcloud.util.common.JSONUtils;
 
+import org.json.JSONArray;
 import org.xutils.common.util.KeyValue;
 import org.xutils.db.sqlite.WhereBuilder;
 
@@ -16,10 +18,6 @@ import java.util.List;
  * @author Administrator
  */
 public class ConversationCacheUtils {
-    private static final int SEARCH_ALL = 0;
-    private static final int SEARCH_CONTACT = 2;
-    private static final int SEARCH_CHANNELGROUP = 1;
-    private static final int SEARCH_NOTHIING = 4;
 
 
     /**
@@ -247,6 +245,19 @@ public class ConversationCacheUtils {
             conversationList = new ArrayList<>();
         }
         return conversationList;
+    }
+
+    public static void setConversationMember(Context context,String id,List<String> uidList){
+        if (uidList != null){
+            try {
+                JSONArray array = JSONUtils.toJSONArray(uidList);
+                DbCacheUtils.getDb(context).update(Conversation.class, WhereBuilder.b("id", "=", id),new KeyValue("members",array.toString()));
+            } catch (Exception e) {
+                // TODO: handle exception
+                e.printStackTrace();
+            }
+        }
+
     }
 
 //    public static List<String> getConversationExistMemberUidList(Context context,String id,int limit){
