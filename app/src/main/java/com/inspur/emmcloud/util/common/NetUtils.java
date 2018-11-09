@@ -6,8 +6,18 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.inspur.emmcloud.R;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.NetworkInterface;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.List;
 
 public class NetUtils {
 
@@ -17,6 +27,55 @@ public class NetUtils {
 	public static final String NETWORK_TYPE_WAP = "wap";
 	public static final String NETWORK_TYPE_UNKNOWN = "unknown";
 	public static final String NETWORK_TYPE_DISCONNECT = "disconnect";
+
+
+	/**
+	 * 没有连接网络
+	 */
+	private static final int NETWORK_NONE = -1;
+	/**
+	 * 移动网络
+	 */
+	private static final int NETWORK_MOBILE = 0;
+	/**
+	 * 无线网络
+	 */
+	private static final int NETWORK_WIFI = 1;
+	/**
+	 * 2G网络
+	 */
+	public static final int NETWORK_2G = 2;
+	/**
+	 * 3G网络
+	 */
+	public static final int NETWORK_3G = 3;
+	/**
+	 * 4G网络
+	 */
+	public static final int NETWORK_4G = 4;
+	/**
+	 * VPN连接
+	 * */
+	public static final int NETWORK_VPN= 5;
+
+	/**
+	 * 未知
+	 */
+	public static final int NETWORK_UNKNOW = -2;
+	/**
+	 * 定义电话管理器对象
+	 */
+	public static TelephonyManager mTelephonyManager;
+	/**
+	 * 定义连接管理器对象
+	 */
+	public static ConnectivityManager mConnectivityManager;
+	/**
+	 * 定义网络信息对象
+	 */
+	public static NetworkInfo mNetworkInfo;
+	private static final String TAG = "PingNet";
+
 
 	// 判断是否有网络连接
 		public static boolean isNetworkConnected(Context context) {
@@ -137,4 +196,226 @@ public class NetUtils {
 			return false;
 		}
 	}
+
+
+
+	/**
+	 * @param pingNetEntity 检测网络实体类
+	 * @return 检测后的数据
+	 */
+	public static PingNetEntity ping(PingNetEntity pingNetEntity) {
+		String line = null;
+		Process process = null;
+		BufferedReader successReader = null;
+		String command = "ping -c " + pingNetEntity.getPingCount() + " -w " + pingNetEntity.getPingWtime() + " " + pingNetEntity.getIp();
+//        String command = "ping -c " + pingCount + " " + host;
+		try {
+			process = Runtime.getRuntime().exec(command);
+			if (process == null) {
+				Log.e("lbc", "ping fail:process is null.");
+				append(pingNetEntity.getResultBuffer(), "ping fail:process is null.");
+				pingNetEntity.setPingTime(null);
+				pingNetEntity.setResult(false);
+				return pingNetEntity;
+			}
+			successReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+			while ((line = successReader.readLine()) != null) {
+				Log.d("lbc", line);
+				append(pingNetEntity.getResultBuffer(), line);
+				String time;
+				if ((time = getTime(line)) != null) {
+					pingNetEntity.setPingTime(time);
+				}
+			}
+			int status = process.waitFor();
+			if (status == 0) {
+				Log.d("lbc", "exec cmd success:" + command);
+				append(pingNetEntity.getResultBuffer(), "exec cmd success:" + command);
+				pingNetEntity.setResult(true);
+			} else {
+				Log.e(TAG, "exec cmd fail.");
+				append(pingNetEntity.getResultBuffer(), "exec cmd fail.");
+				pingNetEntity.setPingTime(null);
+				pingNetEntity.setResult(false);
+			}
+			Log.d("lbc", "exec finished.");
+			append(pingNetEntity.getResultBuffer(), "exec finished.");
+		} catch (IOException e) {
+			Log.e(TAG, String.valueOf(e));
+		} catch (InterruptedException e) {
+			Log.e(TAG, String.valueOf(e));
+		} finally {
+			Log.d("lbc", "ping exit.");
+			if (process != null) {
+				process.destroy();
+			}
+			if (successReader != null) {
+				try {
+					successReader.close();
+				} catch (IOException e) {
+					Log.e(TAG, String.valueOf(e));
+				}
+			}
+		}
+		Log.i(TAG, pingNetEntity.getResultBuffer().toString());
+		return pingNetEntity;
+	}
+
+	private static void append(StringBuffer stringBuffer, String text) {
+		if (stringBuffer != null) {
+			stringBuffer.append(text + "\n");
+		}
+	}
+
+	private static String getTime(String line) {
+		String[] lines = line.split("\n");
+		String time = null;
+		for (String l : lines) {
+			if (!l.contains("time="))
+				continue;
+			int index = l.indexOf("time=");
+			time = l.substring(index + "time=".length());
+			Log.i(TAG, time);
+		}
+		return time;
+	}
+
+
+	/**
+	 * 得到网络类型
+	 *
+	 * @param context
+	 * @return 网络类型
+	 */
+	public static List<Integer> getNetWrokState(Context context) {
+		// 得到连接管理器对象
+		List<Integer>  ResultData=new ArrayList<>();
+		mConnectivityManager = (ConnectivityManager) context
+				.getSystemService(Context.CONNECTIVITY_SERVICE);
+		mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
+
+		if (mNetworkInfo != null && mNetworkInfo.isConnected()) {
+
+			if (mNetworkInfo.getType() == (ConnectivityManager.TYPE_WIFI)) {
+				ResultData.add(NETWORK_WIFI);
+			} else if (mNetworkInfo.getType() == (ConnectivityManager.TYPE_MOBILE)) {
+				ResultData.add(getMobileNetType(context));
+			}
+		}
+		if(isVpnConnected()) {
+			ResultData.add(NETWORK_VPN);
+		}
+		if(ResultData.size()<=0){
+			ResultData.add(NETWORK_NONE);
+		}
+		return ResultData;
+	}
+
+	/**
+	 * 获取移动网络的类型
+	 *
+	 * @param context
+	 * @return 移动网络类型
+	 */
+	public static final int getMobileNetType(Context context) {
+
+		mTelephonyManager = (TelephonyManager) context
+				.getSystemService(Context.TELEPHONY_SERVICE);
+		int networkType = mTelephonyManager.getNetworkType();
+
+		return getNetworkClass(networkType);
+	}
+
+	/**
+	 * 判断移动网络的类型
+	 *
+	 * @param networkType
+	 * @return 移动网络类型
+	 */
+	private static final int getNetworkClass(int networkType) {
+		switch (networkType) {
+			case TelephonyManager.NETWORK_TYPE_GPRS:
+			case TelephonyManager.NETWORK_TYPE_EDGE:
+			case TelephonyManager.NETWORK_TYPE_CDMA:
+			case TelephonyManager.NETWORK_TYPE_1xRTT:
+			case TelephonyManager.NETWORK_TYPE_IDEN:
+				return NETWORK_2G;
+			case TelephonyManager.NETWORK_TYPE_UMTS:
+			case TelephonyManager.NETWORK_TYPE_EVDO_0:
+			case TelephonyManager.NETWORK_TYPE_EVDO_A:
+			case TelephonyManager.NETWORK_TYPE_HSDPA:
+			case TelephonyManager.NETWORK_TYPE_HSUPA:
+			case TelephonyManager.NETWORK_TYPE_HSPA:
+			case TelephonyManager.NETWORK_TYPE_EVDO_B:
+			case TelephonyManager.NETWORK_TYPE_EHRPD:
+			case TelephonyManager.NETWORK_TYPE_HSPAP:
+				return NETWORK_3G;
+			case TelephonyManager.NETWORK_TYPE_LTE:
+				return NETWORK_4G;
+			default:
+				return NETWORK_UNKNOW;
+		}
+	}
+	/**
+	 * 检测VPN
+	 */
+	public static boolean isVpnConnected() {
+		try {
+			Enumeration<NetworkInterface> niList = NetworkInterface.getNetworkInterfaces();
+			if(niList != null) {
+				for (NetworkInterface intf : Collections.list(niList)) {
+					if(!intf.isUp() || intf.getInterfaceAddresses().size() == 0) {
+						continue;
+					}
+					if ("tun0".equals(intf.getName()) || "ppp0".equals(intf.getName())){
+						return true;
+					}
+				}
+			}
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	/**
+	 * get connected str Name
+	 * */
+	public static List<String> getNetStateName(List<Integer> NetNames){
+	 List<String> ConnectedNetNames = new ArrayList<>();
+	     for (int i=0;i<NetNames.size();i++) {
+	        switch (NetNames.get(i)) {
+				case -2:
+					ConnectedNetNames.add("未知类型网络");
+					break;
+				case -1:
+					ConnectedNetNames.add("当前无网络");
+					break;
+				case 0:
+				    ConnectedNetNames.add("移动网络");
+				case  1:
+					ConnectedNetNames.add("无线网络");
+					break;
+				case  2:
+					ConnectedNetNames.add("2G网络");
+					break;
+				case  3:
+					ConnectedNetNames.add("3G网络");
+					break;
+				case  4:
+					ConnectedNetNames.add("4G网络");
+					break;
+				case  5:
+					ConnectedNetNames.add("VPN连接");
+					break;
+				default:
+					break;
+			}
+		 }
+	 return ConnectedNetNames;
+	}
+
+
+
+
+
 }

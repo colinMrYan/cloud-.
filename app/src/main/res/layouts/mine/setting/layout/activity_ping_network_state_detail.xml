@@ -101,6 +101,7 @@
                 android:layout_height="15dp"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="10dp"
+                android:scaleType="centerInside"
                 android:layout_centerVertical="true"/>
 
       </RelativeLayout>
@@ -137,6 +138,7 @@
                 android:layout_height="15dp"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="10dp"
+                android:scaleType="centerInside"
                 android:layout_centerVertical="true"/>
         </RelativeLayout>
 
@@ -172,6 +174,7 @@
                 android:layout_height="15dp"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="10dp"
+                android:scaleType="centerInside"
                 android:layout_centerVertical="true"/>
         </RelativeLayout>
 
