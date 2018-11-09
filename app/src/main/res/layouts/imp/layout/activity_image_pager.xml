@@ -71,8 +71,8 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:onClick="onClick"
-                    android:paddingLeft="19dp"
-                    android:paddingRight="65dp"
+                    android:layout_marginLeft="19dp"
+                    android:layout_marginRight="65dp"
                     android:visibility="gone">
 
 
