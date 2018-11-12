@@ -970,7 +970,7 @@ public class CommunicationFragment extends Fragment {
                 //获取离线消息
                 WSAPIService.getInstance().getOfflineMessage(lastMessageId);
             } else {
-                //获取每个频道最近的15条消息
+                //获取每个频道最近消息
                 WSAPIService.getInstance().getChannelRecentMessage();
             }
         }

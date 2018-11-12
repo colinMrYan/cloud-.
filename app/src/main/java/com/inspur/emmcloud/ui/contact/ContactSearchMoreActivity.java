@@ -40,7 +40,6 @@ import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.EditTextUtils;
 import com.inspur.emmcloud.util.common.InputMethodUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
@@ -376,12 +375,6 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
-                                LogUtils.jasonDebug("================================");
-                                for (Contact contact:excludeContactList){
-                                    LogUtils.jasonDebug(contact.getId());
-                                    LogUtils.jasonDebug(contact.getName());
-                                }
-                                LogUtils.jasonDebug("================================");
                                 searchContactList = ContactUserCacheUtils.getSearchContact(searchText,
                                         excludeContactList, 25);
                                 if (handler !=null){
