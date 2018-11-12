@@ -114,7 +114,7 @@ public class NewsWebDetailActivity extends BaseActivity {
      * 设置WebView的Header参数
      */
     private void loadUrlWithHeader(String url) {
-        if (webViewHeaders == null){
+        if (webViewHeaders == null) {
             webViewHeaders = new HashMap<>();
             // 根据规则添加token当URL主域名是Constant.INSPUR_HOST_URL或者Constant.INSPURONLINE_HOST_URL结尾时添加token
             try {
@@ -133,26 +133,27 @@ public class NewsWebDetailActivity extends BaseActivity {
                 webViewHeaders.put("Accept-Language", language.getIana());
             }
         }
-        webView.loadUrl(url,webViewHeaders);
+        webView.loadUrl(url, webViewHeaders);
     }
 
     /**
      * 初始化Views
      */
     private void initViews() {
-        loadingLayout=(RelativeLayout)findViewById(R.id.rl_loading);
+        loadingLayout = (RelativeLayout) findViewById(R.id.rl_loading);
         loadingDlg = new LoadingDialog(NewsWebDetailActivity.this);
-        ((TextView) findViewById(R.id.header_text)).setText(((GroupNews)getIntent().getSerializableExtra("groupNews")).getTitle());
+        ((TextView) findViewById(R.id.header_text)).setText(((GroupNews) getIntent().getSerializableExtra("groupNews")).getTitle());
         setWebView();
         setWebViewSettings();
         initWebViewGoBackOrClose();
     }
+
     /**
      * 初始化原生WebView的返回和关闭
      * 两处使用本方法的，专门封一个方法
      */
     public void initWebViewGoBackOrClose() {
-        if(webView != null){
+        if (webView != null) {
             (findViewById(R.id.news_close_btn)).setVisibility(webView.canGoBack() ? View.VISIBLE : View.GONE);
         }
     }
@@ -209,7 +210,7 @@ public class NewsWebDetailActivity extends BaseActivity {
         }
         //修改model在第一次加载时直接带着model而不是加载两次
         String model = PreferencesByUserAndTanentUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", "");
-        loadUrlWithHeader(url+(StringUtils.isBlank(model) ? lightMode : model));
+        loadUrlWithHeader(url + (StringUtils.isBlank(model) ? lightMode : model));
         setHeaderModel(model);
     }
 
@@ -230,11 +231,11 @@ public class NewsWebDetailActivity extends BaseActivity {
         webView.clearCache(true);
         webView.setDownloadListener(new FileDownloadListener());
         webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
-        webView.setWebViewClient(new WebViewClient(){
+        webView.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
-                if (loadingLayout != null){
+                if (loadingLayout != null) {
                     loadingLayout.setVisibility(View.GONE);
                 }
                 initWebViewGoBackOrClose();
@@ -254,8 +255,8 @@ public class NewsWebDetailActivity extends BaseActivity {
                     }
                     return true;
                 }
-                if(Build.VERSION.SDK_INT<26) {
-                    loadUrlWithHeader(url+(StringUtils.isBlank(model) ? lightMode : model));
+                if (Build.VERSION.SDK_INT < 26) {
+                    loadUrlWithHeader(url + (StringUtils.isBlank(model) ? lightMode : model));
                     return true;
                 }
                 return false;
@@ -294,7 +295,7 @@ public class NewsWebDetailActivity extends BaseActivity {
      */
     private void setBaseConfig() {
         // 代理字符串，如果字符串为空或者null系统默认字符串将被利用
-        String userAgent =  "Mozilla/5.0 (Linux; U; Android "
+        String userAgent = "Mozilla/5.0 (Linux; U; Android "
                 + Build.VERSION.RELEASE + "; en-us; " + Build.MODEL
                 + " Build/FRF91) AppleWebKit/533.1 "
                 + "(KHTML, like Gecko) Version/4.0 Chrome/51.0.2704.81 Mobile Safari/533.1" + "/emmcloud/" + AppUtils.getVersion(NewsWebDetailActivity.this);
@@ -315,7 +316,7 @@ public class NewsWebDetailActivity extends BaseActivity {
         settings.setBuiltInZoomControls(true);
         settings.setDisplayZoomControls(false);
         //解决在安卓5.0以上跨域链接无法访问的问题
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
         }
     }
@@ -406,6 +407,7 @@ public class NewsWebDetailActivity extends BaseActivity {
             }
         }
     }
+
     /**
      * 初始化数据
      */
@@ -426,7 +428,7 @@ public class NewsWebDetailActivity extends BaseActivity {
      */
     private void showDialog() {
         View view = getLayoutInflater().inflate(R.layout.app_news_choose_dialog, null);
-          dialog = new Dialog(this, R.style.transparentFrameWindowStyle);
+        dialog = new Dialog(this, R.style.transparentFrameWindowStyle);
         dialog.setContentView(view, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT));
         initDialogViews();
@@ -771,7 +773,7 @@ public class NewsWebDetailActivity extends BaseActivity {
     /**
      * 改变原生导航栏
      */
-    private void setHeaderModel(String model){
+    private void setHeaderModel(String model) {
         StateBarUtils.changeStateBarColor(NewsWebDetailActivity.this, model.equals(darkMode) ? R.color.app_news_night_color : R.color.header_bg);
         (findViewById(R.id.header_layout)).setBackgroundColor(model.equals(darkMode) ? ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_news_night_color)
                 : ContextCompat.getColor(NewsWebDetailActivity.this, R.color.header_bg));
@@ -867,18 +869,18 @@ public class NewsWebDetailActivity extends BaseActivity {
             String result = data.getStringExtra("searchResult");
             JSONObject jsonObject = JSONUtils.getJSONObject(result);
             if (jsonObject.has("people")) {
-                JSONArray peopleArray = JSONUtils.getJSONArray(jsonObject,"people",new JSONArray());
+                JSONArray peopleArray = JSONUtils.getJSONArray(jsonObject, "people", new JSONArray());
                 if (peopleArray.length() > 0) {
-                    JSONObject peopleObj = JSONUtils.getJSONObject(peopleArray,0,new JSONObject());
-                    String uid = JSONUtils.getString(peopleObj,"pid","");
+                    JSONObject peopleObj = JSONUtils.getJSONObject(peopleArray, 0, new JSONObject());
+                    String uid = JSONUtils.getString(peopleObj, "pid", "");
                     createDirectChannel(uid);
                 }
             }
-            if (jsonObject.has("channelGroup")){
-                JSONArray channelGroupArray = JSONUtils.getJSONArray(jsonObject,"channelGroup",new JSONArray());
+            if (jsonObject.has("channelGroup")) {
+                JSONArray channelGroupArray = JSONUtils.getJSONArray(jsonObject, "channelGroup", new JSONArray());
                 if (channelGroupArray.length() > 0) {
-                    JSONObject cidObj = JSONUtils.getJSONObject(channelGroupArray,0,new JSONObject());
-                    String cid = JSONUtils.getString(cidObj,"cid","");
+                    JSONObject cidObj = JSONUtils.getJSONObject(channelGroupArray, 0, new JSONObject());
+                    String cid = JSONUtils.getString(cidObj, "cid", "");
                     sendMsg(cid);
                 }
             }
@@ -958,7 +960,7 @@ public class NewsWebDetailActivity extends BaseActivity {
 
     protected void onPause() {
         super.onPause();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && webView != null ) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && webView != null) {
             webView.onPause(); // 暂停网页中正在播放的视频
         }
     }
@@ -966,11 +968,11 @@ public class NewsWebDetailActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        if (intrcutionDialog != null && intrcutionDialog.isShowing()){
+        if (intrcutionDialog != null && intrcutionDialog.isShowing()) {
             intrcutionDialog.dismiss();
             return;
         }
-        if (dialog != null && dialog.isShowing()){
+        if (dialog != null && dialog.isShowing()) {
             dialog.dismiss();
             return;
         }
@@ -980,15 +982,15 @@ public class NewsWebDetailActivity extends BaseActivity {
     /**
      * 关闭页面
      */
-    private void finishActivity(){
+    private void finishActivity() {
         finish();
         if (webView != null) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
                 webView.onPause(); // 暂停网页中正在播放的视频
             }
             webView.removeAllViews();
             webView.destroy();
-            webView= null;
+            webView = null;
         }
         EventBus.getDefault().unregister(this);
     }
@@ -1003,15 +1005,16 @@ public class NewsWebDetailActivity extends BaseActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveWSMessage(EventMessage eventMessage) {
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE)) {
-            if (eventMessage.getStatus() == 200) {
-                if (fakeMessageId != null && String.valueOf(eventMessage.getExtra()).equals(fakeMessageId)) {
+            if (fakeMessageId != null && String.valueOf(eventMessage.getExtra()).equals(fakeMessageId)) {
+                if (eventMessage.getStatus() == 200) {
                     Toast.makeText(NewsWebDetailActivity.this,
                             getString(R.string.news_share_success), Toast.LENGTH_SHORT)
                             .show();
+                } else {
+                    showShareFailToast();
                 }
-            } else {
-                showShareFailToast();
             }
+
 
         }
 
