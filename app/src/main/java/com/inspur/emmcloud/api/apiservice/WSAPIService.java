@@ -61,6 +61,7 @@ public class WSAPIService {
                 JSONObject mentionsObj = JSONUtils.map2Json(mentionsMap);
                 bodyObj.put("mentions", mentionsObj);
             }
+            bodyObj.put("tmpId",fakeMessage.getId());
             object.put("body", bodyObj);
             EventMessage eventMessage = new EventMessage(fakeMessage.getId(),Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE,"",fakeMessage.getId());
             WebSocketPush.getInstance().sendEventMessage(eventMessage, object, fakeMessage.getId());
@@ -90,6 +91,7 @@ public class WSAPIService {
                 JSONObject mentionsObj = JSONUtils.map2Json(mentionsMap);
                 bodyObj.put("mentions", mentionsObj);
             }
+            bodyObj.put("tmpId",fakeMessage.getTmpId());
             object.put("body", bodyObj);
             EventMessage eventMessage = new EventMessage(fakeMessage.getId(),Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE,"",fakeMessage.getId());
             WebSocketPush.getInstance().sendEventMessage(eventMessage, object,fakeMessage.getId());

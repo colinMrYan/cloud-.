@@ -13,11 +13,13 @@ import java.util.Map;
 
 public class MsgContentTextPlain {
     private String text;
+    private String tempId;
     private Map<String, String> mentionsMap = new HashMap<>();
 
     public MsgContentTextPlain(String Json) {
         JSONObject object = JSONUtils.getJSONObject(Json);
         text = JSONUtils.getString(object, "text", "");
+        tempId = JSONUtils.getString(object,"tempId","");
         JSONObject mentionObj = JSONUtils.getJSONObject(object, "mentions", null);
         if (mentionObj != null) {
             mentionsMap = JSONUtils.parseKeyAndValueToMap(mentionObj);

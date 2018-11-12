@@ -75,7 +75,7 @@ public class UIConversation implements Serializable{
             Message message = messageList.get(messageList.size() - 1);
             String fromUserName = "";
             String messageType = message.getType();
-            if (!type.equals(Conversation.TYPE_DIRECT) && !message.getFromUser().equals(MyApplication.getInstance().getUid())) {
+            if (type.equals(Conversation.TYPE_GROUP) && !message.getFromUser().equals(MyApplication.getInstance().getUid())) {
                 fromUserName = ContactUserCacheUtils.getUserName(message.getFromUser()) + "：";
             }
             switch (messageType) {
