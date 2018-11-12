@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:fitsSystemWindows="true">
@@ -39,7 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="网络认证"
+            android:text="@string/net_network_authentication"
             android:textColor="@color/header_text"
             android:textSize="@dimen/header_textsize" />
 
@@ -65,7 +66,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/header_layout">
+        <com.qmuiteam.qmui.widget.QMUILoadingView
+            android:id="@+id/qlv_wifi_portal_checkloading"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:scaleType="centerInside"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:color="#666666"
+            app:qmui_loading_view_size="40dp" />
         <WebView
+            android:visibility="gone"
             android:id="@+id/wv_show_login_detail"
             android:layout_width="match_parent"
             android:layout_height="match_parent">

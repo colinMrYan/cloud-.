@@ -147,7 +147,6 @@ public class CommunicationFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-
         if(netStateThread==null){
             netState=false;
             netStateThread = new Thread(new Runnable() {
@@ -161,9 +160,6 @@ public class CommunicationFragment extends Fragment {
                             //通过上升沿和下降沿反馈连接状态及数据
                             PingNetEntity pingNetEntity=new PingNetEntity("www.baidu.com",3,5,new StringBuffer());
                             pingNetEntity= PingNet.ping(pingNetEntity);
-                            LogUtils.LbcDebug("testPing"+pingNetEntity.getIp());
-                            LogUtils.LbcDebug("testPing"+"time="+pingNetEntity.getPingTime());
-                            LogUtils.LbcDebug("testPing"+pingNetEntity.isResult()+"");
                             android.os.Message message = handler.obtainMessage(PING_NET_STATE_HANDLER,pingNetEntity.isResult());
                             StringBuffer netResult  =  pingNetEntity.getResultBuffer();
                            String data = netResult.toString();

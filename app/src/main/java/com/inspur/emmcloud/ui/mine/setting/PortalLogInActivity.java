@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -9,6 +10,8 @@ import android.webkit.WebViewClient;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.util.common.LogUtils;
+import com.qmuiteam.qmui.widget.QMUILoadingView;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -24,6 +27,8 @@ import java.net.URL;
 public class PortalLogInActivity extends BaseActivity {
 
     private WebView webview;
+
+    private QMUILoadingView qmuiLoadingWebView;
     public static final int SHOW_RESPONSE=1;
     /*TextView是在主线程定义，所以修改操作也必须在主线程中，而获取内容是在子线程，所以当子线程获取内容后需要给主线程发送信息，主线程再对TextView的文本内容进行修改*/
     private Handler handler=new Handler(){
@@ -31,9 +36,7 @@ public class PortalLogInActivity extends BaseActivity {
             switch (msg.what) {
                 case SHOW_RESPONSE://根据子线程编号判断是哪个子线程发来的信息
                     String content=(String) msg.obj;
-
-                    break;
-
+                break;
                 default:
                     break;
             }
@@ -48,19 +51,34 @@ public class PortalLogInActivity extends BaseActivity {
         //1、网络检测,GPRS、Wifi、VPN(硬件连接检测) （涉及的状态有 连接GPRS 2 3 4/G,wifi或者VPN,提示对应的状态）或者提示无链接
         //2、小助手检测 （需要链接小助手提示，或者无效，）
         //3、DNS检测    （DNS检测或者无效，或者DNS链接问题）
-
+        String portUrl  =  getIntent().getExtras().getString("PortalUrl");
+        LogUtils.LbcDebug("PortalActivity portual:::::"+portUrl);
         webview = (WebView)findViewById(R.id.wv_show_login_detail);
+        qmuiLoadingWebView = (QMUILoadingView)findViewById(R.id.qlv_wifi_portal_checkloading);
         webview.getSettings().setJavaScriptEnabled(true);
-        webview.loadUrl("http://www.baidu.com");
-        webview.setWebViewClient(new WebViewClient(){
+        webview.loadUrl(portUrl);
+        webview.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 view.loadUrl(url);
                 return super.shouldOverrideUrlLoading(view, url);
             }
+            @Override
+            public void onPageFinished(WebView view, String url)
+            {
+                super.onPageFinished(view, url);
+                qmuiLoadingWebView.setVisibility(View.GONE);
+                webview.setVisibility(View.VISIBLE);
+
+            }
+            @Override
+            public void onPageStarted(WebView view, String url, Bitmap favicon)
+            {
+
+                super.onPageStarted(view, url, favicon);
+
+            }
         });
-        //处理返回结果的函数，系统提供的类方法  //handler处理返回数据， 此方法，我写在onCreate()函数外。
-      //  SendGetRequest("http://baidu.com","");
 
     }
 
