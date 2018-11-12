@@ -13,13 +13,13 @@ import java.util.Map;
 
 public class MsgContentTextPlain {
     private String text;
-    private String tempId;
+    private String tmpId;
     private Map<String, String> mentionsMap = new HashMap<>();
 
     public MsgContentTextPlain(String Json) {
         JSONObject object = JSONUtils.getJSONObject(Json);
         text = JSONUtils.getString(object, "text", "");
-        tempId = JSONUtils.getString(object,"tempId","");
+        tmpId = JSONUtils.getString(object,"tmpId","");
         JSONObject mentionObj = JSONUtils.getJSONObject(object, "mentions", null);
         if (mentionObj != null) {
             mentionsMap = JSONUtils.parseKeyAndValueToMap(mentionObj);
@@ -44,6 +44,14 @@ public class MsgContentTextPlain {
 
     public void setMentionsMap(Map<String, String> mentionsMap) {
         this.mentionsMap = mentionsMap;
+    }
+
+    public String getTmpId() {
+        return tmpId;
+    }
+
+    public void setTmpId(String tmpId) {
+        this.tmpId = tmpId;
     }
 
     public String toString() {

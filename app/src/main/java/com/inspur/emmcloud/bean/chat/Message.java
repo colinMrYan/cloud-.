@@ -82,6 +82,7 @@ public class Message implements Serializable {
         channel = JSONUtils.getString(obj, "channel", "");
         state = JSONUtils.getString(obj, "state", "");
         content = JSONUtils.getString(obj, "content", "");
+        tmpId = JSONUtils.getString(content,"tmpId","");
         String UTCTime = JSONUtils.getString(obj, "creationDate", "");
         creationDate = TimeUtils.UTCString2Long(UTCTime);
         boolean readState = JSONUtils.getBoolean(obj, "read", false);
@@ -92,40 +93,58 @@ public class Message implements Serializable {
     }
 
     public MsgContentExtendedActions getMsgContentExtendedActions() {
-        return new MsgContentExtendedActions(content);
+        MsgContentExtendedActions msgContentExtendedActions = new MsgContentExtendedActions(content);
+        tmpId = msgContentExtendedActions.getTmpId();
+        return msgContentExtendedActions;
     }
 
     public MsgContentAttachmentCard getMsgContentAttachmentCard() {
-        return new MsgContentAttachmentCard(content);
+        MsgContentAttachmentCard msgContentAttachmentCard = new MsgContentAttachmentCard(content);
+        tmpId = msgContentAttachmentCard.getTmpId();
+        return msgContentAttachmentCard;
     }
 
     public MsgContentComment getMsgContentComment() {
-        return new MsgContentComment(content);
+        MsgContentComment msgContentComment = new MsgContentComment(content);
+        tmpId = msgContentComment.getTmpId();
+        return msgContentComment;
     }
 
     public MsgContentRegularFile getMsgContentAttachmentFile() {
-        return new MsgContentRegularFile(content);
+        MsgContentRegularFile msgContentRegularFile = new MsgContentRegularFile(content);
+        tmpId = msgContentRegularFile.getTmpId();
+        return msgContentRegularFile;
     }
 
 
     public MsgContentMediaImage getMsgContentMediaImage() {
-        return new MsgContentMediaImage(content);
+        MsgContentMediaImage msgContentMediaImage = new MsgContentMediaImage(content);
+        tmpId = msgContentMediaImage.getTmpId();
+        return msgContentMediaImage;
     }
 
     public MsgContentExtendedLinks getMsgContentExtendedLinks() {
-        return new MsgContentExtendedLinks(content);
+        MsgContentExtendedLinks msgContentExtendedLinks = new MsgContentExtendedLinks(content);
+        tmpId = msgContentExtendedLinks.getTmpId();
+        return msgContentExtendedLinks;
     }
 
     public MsgContentTextMarkdown getMsgContentTextMarkdown() {
-        return new MsgContentTextMarkdown(content);
+        MsgContentTextMarkdown msgContentTextMarkdown = new MsgContentTextMarkdown(content);
+        tmpId = msgContentTextMarkdown.getTmpId();
+        return msgContentTextMarkdown;
     }
 
     public MsgContentMediaVoice getMsgContentMediaVoice() {
+        MsgContentMediaVoice msgContentMediaVoice = new MsgContentMediaVoice(content);
+        tmpId = msgContentMediaVoice.getTmpId();
         return new MsgContentMediaVoice(content);
     }
 
     public MsgContentTextPlain getMsgContentTextPlain() {
-        return new MsgContentTextPlain(content);
+        MsgContentTextPlain msgContentTextPlain = new MsgContentTextPlain(content);
+        tmpId = msgContentTextPlain.getTmpId();
+        return msgContentTextPlain;
     }
 
     public String getId() {

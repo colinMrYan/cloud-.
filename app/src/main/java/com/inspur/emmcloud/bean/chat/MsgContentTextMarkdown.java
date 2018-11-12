@@ -14,10 +14,12 @@ import java.util.Map;
 public class MsgContentTextMarkdown{
     private String title;
     private String text;
+    private String tmpId;
     private Map<String,String> mentionsMap = new HashMap<>();
     public MsgContentTextMarkdown(String content){
         JSONObject object = JSONUtils.getJSONObject(content);
         text = JSONUtils.getString(object,"text","");
+        tmpId = JSONUtils.getString(object,"tmpId","");
         JSONObject mentionObj = JSONUtils.getJSONObject(object,"mentions",null);
         if (mentionObj != null){
             mentionsMap = JSONUtils.parseKeyAndValueToMap(object);
@@ -47,5 +49,13 @@ public class MsgContentTextMarkdown{
 
     public void setMentionsMap(Map<String, String> mentionsMap) {
         this.mentionsMap = mentionsMap;
+    }
+
+    public String getTmpId() {
+        return tmpId;
+    }
+
+    public void setTmpId(String tmpId) {
+        this.tmpId = tmpId;
     }
 }

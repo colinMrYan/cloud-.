@@ -844,10 +844,12 @@ public class ConversationActivity extends ConversationBaseActivity {
         JSONObject contentobj = JSONUtils.getJSONObject(content);
         Message receivedWSMessage = new Message(contentobj);
         LogUtils.YfcDebug("返回消息:" + contentobj.toString());
+        LogUtils.YfcDebug("消息tempId："+receivedWSMessage.getTmpId());
         MessageCacheUtil.deleteLocalFakeMessage(ConversationActivity.this,receivedWSMessage.getTmpId());
     }
 
     private void handleRealMessage(Message message) {
+        LogUtils.YfcDebug("消息tempId1111："+message.getTmpId());
         MessageCacheUtil.deleteLocalFakeMessage(ConversationActivity.this,message.getTmpId());
     }
 
