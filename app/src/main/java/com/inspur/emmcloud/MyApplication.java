@@ -109,6 +109,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     private String clusterScheduleVersion = "";//仅标识Schedule
     private String clusterBot = "";
     private String currentChannelCid= "";
+    private boolean isEnterSystemUI= false;  //是否进入第三方系统界面，判断app前后台
 
     public void onCreate() {
         super.onCreate();
@@ -954,5 +955,14 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
 
     public void setCurrentChannelCid(String currentChannelCid) {
         this.currentChannelCid = currentChannelCid;
+    }
+
+    /*****************************是否进入第三方系统界面，判断app前后台***********************************************/
+    public boolean isEnterSystemUI() {
+        return isEnterSystemUI;
+    }
+
+    public void setEnterSystemUI(boolean enterSystemUI) {
+        isEnterSystemUI = enterSystemUI;
     }
 }

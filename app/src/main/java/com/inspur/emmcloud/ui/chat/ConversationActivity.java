@@ -34,6 +34,7 @@ import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.InputMethodUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
@@ -840,6 +841,7 @@ public class ConversationActivity extends ConversationBaseActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveNewMessage(EventMessage eventMessage) {
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_GET_NEW_MESSAGE) && eventMessage.getExtra().equals(cid)) {
+            LogUtils.jasonDebug("onReceiveNewMessage---------");
             if (eventMessage.getStatus() == 200) {
                 String content = eventMessage.getContent();
                 GetChannelMessagesResult getChannelMessagesResult = new GetChannelMessagesResult(content);
@@ -885,28 +887,33 @@ public class ConversationActivity extends ConversationBaseActivity {
     }
 
 
-    //接收到离线消息
+    //接收到从沟通页面传来的离线消息
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReiceveWSOfflineMessage(List<Message> offlineMessageList) {
-        Iterator<Message> it = offlineMessageList.iterator();
-        //去重
-        while (it.hasNext()) {
-            Message offlineMessage = it.next();
-            UIMessage uiMessage = new UIMessage(offlineMessage.getId());
-            //再一次排除非此频道消息显示在此频道
-            if (uiMessageList.contains(uiMessage) || uiMessage.getMessage().getChannel() != cid) {
-                it.remove();
-            }
-        }
-        if (offlineMessageList.size() > 0) {
-            int currentPostion = uiMessageList.size() - 1;
-            List<UIMessage> offlineUIMessageList = UIMessage.MessageList2UIMessageList(offlineMessageList);
-            uiMessageList.addAll(offlineUIMessageList);
-            adapter.setMessageList(uiMessageList);
-            adapter.notifyItemRangeInserted(currentPostion + 1, offlineUIMessageList.size());
-            msgListView.MoveToPosition(uiMessageList.size() - 1);
-            WSAPIService.getInstance().setChannelMessgeStateRead(cid);
-        }
+    public void onReiceveWSOfflineMessage(SimpleEventMessage eventMessage) {
+       if (eventMessage.getAction().equals(Constant.EVENTBUS_TAG_CURRENT_CHANNEL_OFFLINE_MESSAGE)){
+           List<Message> offlineMessageList = (List<Message>)eventMessage.getMessageObj();
+           Iterator<Message> it = offlineMessageList.iterator();
+           //去重
+           if (uiMessageList.size()>0){
+               while (it.hasNext()) {
+                   Message offlineMessage = it.next();
+                   UIMessage uiMessage = new UIMessage(offlineMessage.getId());
+                   if (uiMessageList.contains(uiMessage)) {
+                       it.remove();
+                   }
+               }
+           }
+           if (offlineMessageList.size() > 0) {
+               int currentPostion = uiMessageList.size() - 1;
+               List<UIMessage> offlineUIMessageList = UIMessage.MessageList2UIMessageList(offlineMessageList);
+               uiMessageList.addAll(offlineUIMessageList);
+               adapter.setMessageList(uiMessageList);
+               adapter.notifyItemRangeInserted(currentPostion + 1, offlineUIMessageList.size());
+               msgListView.MoveToPosition(uiMessageList.size() - 1);
+               WSAPIService.getInstance().setChannelMessgeStateRead(cid);
+           }
+       }
+
     }
 
 

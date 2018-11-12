@@ -31,7 +31,7 @@ public class BaseActivity extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        ((MyApplication) getApplicationContext()).setIsActive(true);
+        MyApplication.getInstance().setEnterSystemUI(false);
     }
 
     @Override
