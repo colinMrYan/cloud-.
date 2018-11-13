@@ -4,7 +4,6 @@ import android.text.SpannableStringBuilder;
 import android.util.Pair;
 import android.util.SparseArray;
 
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.zzhoujay.markdown.parser.Line;
 import com.zzhoujay.markdown.parser.LineQueue;
 import com.zzhoujay.markdown.parser.StyleBuilder;
@@ -44,8 +43,8 @@ public class TagHandlerImpl implements TagHandler {
     private static final Pattern patternEmItalic = Pattern.compile("[^*_]*(([*_])\\2\\2([^*_].*?)\\2\\2\\2)");
     private static final Pattern patternDelete = Pattern.compile("[^~]*((~{2,4})([^~].*?)\\2)");
     private static final Pattern patternCode = Pattern.compile("[^`]*((`+)([^`].*?)\\2)");
-
-    private static final Pattern patternLink = Pattern.compile(".*?(\\[\\s*(.*?)\\s*]\\(\\s*(\\S*?)(\\s+(['\"])(.*?)\\5)?\\s*?\\))");
+    //jason修改处  修改Url匹配正则表达式
+    private static final Pattern patternLink = Pattern.compile(".*?(\\[\\s*([^\\[]*)\\s*]\\(\\s*(\\S*?)(\\s+(['\"])([^\\)]*)\\5)?\\s*?\\))");
     private static final Pattern patternImage = Pattern.compile(".*?(!\\[\\s*(.*?)\\s*]\\(\\s*(\\S*?)(\\s+(['\"])(.*?)\\5)?\\s*?\\))");
     private static final Pattern patternLink2 = Pattern.compile(".*?(\\[\\s*(.*?)\\s*]\\s*\\[\\s*(.*?)\\s*])");
     private static final Pattern patternLinkId = Pattern.compile("^\\s*\\[\\s*(.*?)\\s*]:\\s*(\\S+?)(\\s+(['\"])(.*?)\\4)?\\s*$");
