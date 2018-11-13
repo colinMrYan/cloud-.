@@ -205,45 +205,48 @@ public class NetUtils {
 		String line = null;
 		Process process = null;
 		BufferedReader successReader = null;
-		String command = "ping -c " + pingNetEntity.getPingCount() + " -w " + pingNetEntity.getPingWtime() + " " + pingNetEntity.getIp();
+		String command = "ping -c " + pingNetEntity.getPingCount() + " -w " + 1 + " " + pingNetEntity.getIp();
+		LogUtils.LbcDebug("command "+command);
 //        String command = "ping -c " + pingCount + " " + host;
 		try {
+			long a = System.currentTimeMillis();
 			process = Runtime.getRuntime().exec(command);
+			long b = System.currentTimeMillis();
 			if (process == null) {
-				Log.e("lbc", "ping fail:process is null.");
 				append(pingNetEntity.getResultBuffer(), "ping fail:process is null.");
 				pingNetEntity.setPingTime(null);
 				pingNetEntity.setResult(false);
 				return pingNetEntity;
 			}
+			long c = System.currentTimeMillis();
 			successReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+			long d = System.currentTimeMillis();
 			while ((line = successReader.readLine()) != null) {
-				Log.d("lbc", line);
 				append(pingNetEntity.getResultBuffer(), line);
 				String time;
 				if ((time = getTime(line)) != null) {
 					pingNetEntity.setPingTime(time);
 				}
 			}
+			long e = System.currentTimeMillis();
 			int status = process.waitFor();
+			long f = System.currentTimeMillis();
 			if (status == 0) {
-				Log.d("lbc", "exec cmd success:" + command);
 				append(pingNetEntity.getResultBuffer(), "exec cmd success:" + command);
 				pingNetEntity.setResult(true);
 			} else {
-				Log.e(TAG, "exec cmd fail.");
 				append(pingNetEntity.getResultBuffer(), "exec cmd fail.");
 				pingNetEntity.setPingTime(null);
 				pingNetEntity.setResult(false);
 			}
-			Log.d("lbc", "exec finished.");
 			append(pingNetEntity.getResultBuffer(), "exec finished.");
+			long g = System.currentTimeMillis();
+			LogUtils.LbcDebug("b-a::"+(b-a)+"  c-b::"+(c-b)+"  d-c::"+(d-c)+"  e-d::"+(e-d)+"  f-e::"+(f-e)+"  g-f::"+(g-f));
 		} catch (IOException e) {
 			Log.e(TAG, String.valueOf(e));
 		} catch (InterruptedException e) {
 			Log.e(TAG, String.valueOf(e));
 		} finally {
-			Log.d("lbc", "ping exit.");
 			if (process != null) {
 				process.destroy();
 			}
@@ -255,7 +258,6 @@ public class NetUtils {
 				}
 			}
 		}
-		Log.i(TAG, pingNetEntity.getResultBuffer().toString());
 		return pingNetEntity;
 	}
 

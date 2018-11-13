@@ -146,48 +146,81 @@ public class CommunicationFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        if(netStateThread==null){
-            netState=false;
-            netStateThread = new Thread(new Runnable() {
+//        if(netStateThread==null){
+//            netState=false;
+//            netStateThread = new Thread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    try {
+//                        boolean LastState =true;
+//                        while (!netState) {
+//                            Thread.sleep(5000); //线程周期3s
+//                            LogUtils.LbcDebug("Thread sleep 3s");
+//                            PingNetEntity pingNetEntity=new PingNetEntity("www.baidu.com",3,5,new StringBuffer());
+//                            pingNetEntity=NetUtils.ping(pingNetEntity);
+//                            android.os.Message message = handler.obtainMessage(PING_NET_STATE_HANDLER,pingNetEntity.isResult());
+//                            StringBuffer netResult  =  pingNetEntity.getResultBuffer();
+//                           String data = netResult.toString();
+//                            LogUtils.LbcDebug("网络数据"+data);
+//                            message.sendToTarget();
+//                        }
+//                    } catch (Exception e){
+//                        LogUtils.LbcDebug("error");
+//                    }
+//                }
+//            });
+          //  netStateThread.start();
+//        }
+        new Thread(new Runnable() {
                 @Override
                 public void run() {
                     try {
-                        boolean LastState =true;
-                        while (!netState) {
-                            Thread.sleep(5000); //线程周期3s
-                            LogUtils.LbcDebug("Thread sleep 3s");
-                            PingNetEntity pingNetEntity=new PingNetEntity("www.baidu.com",3,5,new StringBuffer());
+                            PingNetEntity pingNetEntity=new PingNetEntity("www.baidu.com",1,1,new StringBuffer());
                             pingNetEntity=NetUtils.ping(pingNetEntity);
                             android.os.Message message = handler.obtainMessage(PING_NET_STATE_HANDLER,pingNetEntity.isResult());
                             StringBuffer netResult  =  pingNetEntity.getResultBuffer();
                            String data = netResult.toString();
                             LogUtils.LbcDebug("网络数据"+data);
                             message.sendToTarget();
-                        }
                     } catch (Exception e){
                         LogUtils.LbcDebug("error");
                     }
                 }
-            });
-            netStateThread.start();
-        }
-       // conversationAdapter.setNetExceptionView(true);
-        LogUtils.LbcDebug("onStart");
+            }).start();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-       // conversationAdapter.setNetExceptionView(false);
         netState =true;
         netStateThread=null;
-        LogUtils.LbcDebug("onStop");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    PingNetEntity pingNetEntity=new PingNetEntity("www.baidu.com",1,1,new StringBuffer());
+                    pingNetEntity=NetUtils.ping(pingNetEntity);
+                    android.os.Message message = handler.obtainMessage(PING_NET_STATE_HANDLER,pingNetEntity.isResult());
+                    StringBuffer netResult  =  pingNetEntity.getResultBuffer();
+                    String data = netResult.toString();
+                    LogUtils.LbcDebug("网络数据"+data);
+                    message.sendToTarget();
+                } catch (Exception e){
+                    LogUtils.LbcDebug("error");
+                }
+            }
+        }).start();
+
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        LogUtils.LbcDebug("onDestoyView");
     }
 
     private void initView() {
@@ -339,6 +372,28 @@ public class CommunicationFragment extends Fragment {
         }
     }
 
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void netWorkStateTip(String netState) {
+       if(netState.equals("event_tag_net_state_change")){
+
+           new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        LogUtils.LbcDebug("eventBus 3333333333333333333333333333");
+                            PingNetEntity pingNetEntity=new PingNetEntity("www.baidu.com",1,1,new StringBuffer());
+                            pingNetEntity=NetUtils.ping(pingNetEntity);
+                        LogUtils.LbcDebug("result"+pingNetEntity.isResult());
+                            android.os.Message message = handler.obtainMessage(PING_NET_STATE_HANDLER,pingNetEntity.isResult());
+                            message.sendToTarget();
+                    } catch (Exception e){
+                        LogUtils.LbcDebug("error");
+                    }
+                }
+            }).start();
+        }
+    }
     /**
      * 记录用户点击的频道
      */

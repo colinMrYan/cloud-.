@@ -12,6 +12,8 @@ import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 
+import org.greenrobot.eventbus.EventBus;
+
 /**
  * 
  * 监控网络的变化，并给出相应的提示
@@ -21,6 +23,9 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
 
 	private static final String TAG = "NetworkChangeReceiver";
 
+	public static final String EVENT_TAG__NET_STATE_OK = "event_tag_net_state_ok";
+	public static final String EVENT_TAG__NET_STATE_ERROR = "event_tag_net_state_error";
+	public static final String EVENT_TAG__NET_STATE_CHANGE = "event_tag_net_state_change";
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		// TODO Auto-generated method stub
@@ -33,6 +38,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
 			State wifi = conMan.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
 					.getState();
 			boolean isAppOnForeground = ((MyApplication)context.getApplicationContext()).getIsActive();
+			EventBus.getDefault().post(EVENT_TAG__NET_STATE_CHANGE);
 			if (mobile == State.CONNECTED || mobile == State.CONNECTING) {
 				if (isAppOnForeground) {
 					ToastUtils.show(context, R.string.Network_Mobile);
@@ -50,7 +56,5 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
 			// TODO: handle exception
 			LogUtils.debug(TAG, e.toString());
 		}
-
 	}
-
 }
