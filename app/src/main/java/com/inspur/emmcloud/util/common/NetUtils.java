@@ -205,7 +205,7 @@ public class NetUtils {
 		String line = null;
 		Process process = null;
 		BufferedReader successReader = null;
-		String command = "ping -c " + pingNetEntity.getPingCount() + " -w " + 1 + " " + pingNetEntity.getIp();
+		String command = "ping -c " + pingNetEntity.getPingCount() + " -w " + 1000 + " -W " + 1000+ " " + pingNetEntity.getIp();
 		LogUtils.LbcDebug("command "+command);
 //        String command = "ping -c " + pingCount + " " + host;
 		try {
