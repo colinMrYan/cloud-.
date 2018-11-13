@@ -959,10 +959,12 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
 
     /*****************************是否进入第三方系统界面，判断app前后台***********************************************/
     public boolean isEnterSystemUI() {
+        LogUtils.jasonDebug("getisEnterSystemUI====="+isEnterSystemUI);
         return isEnterSystemUI;
     }
 
     public void setEnterSystemUI(boolean enterSystemUI) {
         isEnterSystemUI = enterSystemUI;
+        LogUtils.jasonDebug("setisEnterSystemUI====="+isEnterSystemUI);
     }
 }
