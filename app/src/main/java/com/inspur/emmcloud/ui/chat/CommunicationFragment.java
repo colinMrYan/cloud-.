@@ -56,7 +56,6 @@ import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.PingNet;
 import com.inspur.emmcloud.util.common.PingNetEntity;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
@@ -157,9 +156,8 @@ public class CommunicationFragment extends Fragment {
                         while (!netState) {
                             Thread.sleep(5000); //线程周期3s
                             LogUtils.LbcDebug("Thread sleep 3s");
-                            //通过上升沿和下降沿反馈连接状态及数据
                             PingNetEntity pingNetEntity=new PingNetEntity("www.baidu.com",3,5,new StringBuffer());
-                            pingNetEntity= PingNet.ping(pingNetEntity);
+                            pingNetEntity=NetUtils.ping(pingNetEntity);
                             android.os.Message message = handler.obtainMessage(PING_NET_STATE_HANDLER,pingNetEntity.isResult());
                             StringBuffer netResult  =  pingNetEntity.getResultBuffer();
                            String data = netResult.toString();
