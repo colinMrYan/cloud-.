@@ -593,10 +593,10 @@ public class ChannelActivity extends MediaPlayBaseActivity {
             public void onSuccess(VolumeFile volumeFile) {
                 switch (fakeMessage.getType()) {
                     case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
-                        WSAPIService.getInstance().sendChatRegularFileMsg(cid, fakeMessage.getId(), volumeFile);
+                        WSAPIService.getInstance().sendChatRegularFileMsg(fakeMessage, volumeFile);
                         break;
                     case Message.MESSAGE_TYPE_MEDIA_IMAGE:
-                        WSAPIService.getInstance().sendChatMediaImageMsg(volumeFile, fakeMessage);
+                        WSAPIService.getInstance().sendChatMediaImageMsg(fakeMessage,volumeFile);
                         break;
                     case Message.MESSAGE_TYPE_MEDIA_VOICE:
                         WSAPIService.getInstance().sendChatMediaVoiceMsg(fakeMessage, volumeFile);

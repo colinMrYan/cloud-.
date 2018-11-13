@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+import com.alibaba.fastjson.JSON;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
@@ -22,6 +23,7 @@ import com.inspur.emmcloud.bean.chat.Phone;
 import com.inspur.emmcloud.bean.contact.ContactOrg;
 import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.util.common.FileUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactOrgCacheUtils;
 
 import org.json.JSONObject;
@@ -189,7 +191,9 @@ public class CommunicationUtils {
         msgContentMediaImage.setRawWidth(imgWidth);
         msgContentMediaImage.setRawSize(fileSize);
         msgContentMediaImage.setRawMedia(localFilePath);
+        msgContentMediaImage.setTmpId(tracer);
         message.setContent(msgContentMediaImage.toString());
+        LogUtils.YfcDebug("发送的Image消息："+ JSON.toJSONString(message));
         return message;
     }
 

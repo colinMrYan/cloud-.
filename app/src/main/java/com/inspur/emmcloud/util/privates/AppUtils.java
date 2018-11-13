@@ -1100,7 +1100,6 @@ public class AppUtils {
         try {
             Process ipProcess = runtime.exec("ping -c 3 www.baidu.com");
             int exitValue = ipProcess.waitFor();
-            LogUtils.YfcDebug("网络可用性："+exitValue);
             return (exitValue == 0);
         } catch (Exception e) {
             e.printStackTrace();

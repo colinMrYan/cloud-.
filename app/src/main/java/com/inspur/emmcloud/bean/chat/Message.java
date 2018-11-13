@@ -65,6 +65,7 @@ public class Message implements Serializable {
         type = JSONUtils.getString(dataObj, "type", "");
         state = JSONUtils.getString(dataObj, "state", "");
         content = JSONUtils.getString(dataObj, "content", "");
+        tmpId = JSONUtils.getString(content,"tmpId","");
         channel = msg.getCid();
         creationDate = msg.getTime();
     }

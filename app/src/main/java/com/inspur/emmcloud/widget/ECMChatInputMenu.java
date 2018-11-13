@@ -612,7 +612,7 @@ public class ECMChatInputMenu extends LinearLayout {
                 }
                 break;
             case R.id.send_msg_btn:
-                if (NetUtils.isNetworkConnected(getContext())) {
+//                if (NetUtils.isNetworkConnected(getContext())) {
                     List<String> urlList = null;
                     String content = inputEdit.getRichContent(false);
                     Map<String, String> mentionsMap = null;
@@ -622,7 +622,7 @@ public class ECMChatInputMenu extends LinearLayout {
                     }
                     inputEdit.clearInsertModelList();
                     inputEdit.setText("");
-                }
+//                }
                 break;
             case R.id.add_btn:
                 if (addMenuLayout.isShown()) {

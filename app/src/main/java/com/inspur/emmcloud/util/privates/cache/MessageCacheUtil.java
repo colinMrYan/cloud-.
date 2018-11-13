@@ -5,6 +5,7 @@ import android.content.Context;
 import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.MatheSet;
 import com.inspur.emmcloud.bean.chat.Message;
+import com.inspur.emmcloud.util.common.LogUtils;
 
 import org.xutils.db.sqlite.WhereBuilder;
 
@@ -396,8 +397,10 @@ public class MessageCacheUtil {
      */
     public static void deleteLocalFakeMessage(Context context,String tmpId){
         try {
-            DbCacheUtils.getDb(context).delete(Conversation.class,WhereBuilder.b("id","=",tmpId));
+            LogUtils.YfcDebug("删除消息id："+tmpId);
+            DbCacheUtils.getDb(context).delete(Message.class,WhereBuilder.b("id","=",tmpId));
         } catch (Exception e) {
+            LogUtils.YfcDebug("e:"+e.getMessage());
             // TODO: handle exception
             e.printStackTrace();
         }

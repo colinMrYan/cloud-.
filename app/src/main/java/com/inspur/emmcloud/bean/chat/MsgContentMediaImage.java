@@ -179,6 +179,7 @@ public class MsgContentMediaImage {
             rawObj.put("height",getRawHeight());
             rawObj.put("size",getRawSize());
             rawObj.put("media",getRawMedia());
+            rawObj.put("tmpId",getTmpId());
             obj.put("name", getName());
 //            obj.put("thumbnail", thumbnailObj);
 //            obj.put("preview", previewObj);

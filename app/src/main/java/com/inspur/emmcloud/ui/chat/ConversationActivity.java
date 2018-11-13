@@ -39,7 +39,6 @@ import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
 import com.inspur.emmcloud.util.privates.DataCleanManager;
 import com.inspur.emmcloud.util.privates.DirectChannelUtils;
@@ -129,7 +128,6 @@ public class ConversationActivity extends ConversationBaseActivity {
             getNewMessageOfChannel();
         } else {
             final List<Message> cacheMessageList = MessageCacheUtil.getHistoryMessageList(MyApplication.getInstance(), cid, null, 15);
-            LogUtils.YfcDebug("消息记录中的最后一条数据："+JSON.toJSONString(MessageCacheUtil.getHistoryMessageList(MyApplication.getInstance(), cid, null, 1)));
             uiMessageList = UIMessage.MessageList2UIMessageList(cacheMessageList);
         }
         initViews();
@@ -327,6 +325,7 @@ public class ConversationActivity extends ConversationBaseActivity {
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
             // TODO Auto-generated method stub
             Message message = uiMessage.getMessage();
+            message.setTmpId(message.getId());
             uiMessage.setSendStatus(0);
             int position = uiMessageList.indexOf(uiMessage);
             if (position != uiMessageList.size() - 1) {
@@ -514,6 +513,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 break;
             case Message.MESSAGE_TYPE_MEDIA_IMAGE:
                 fakeMessage = CommunicationUtils.combinLocalMediaImageMessage(cid, filePath);
+                LogUtils.YfcDebug("组装完成图片假消息："+JSON.toJSONString(fakeMessage));
                 break;
             case Message.MESSAGE_TYPE_MEDIA_VOICE:
                 fakeMessage = CommunicationUtils.combinLocalMediaVoiceMessage(cid, filePath, duration, results);
@@ -558,10 +558,10 @@ public class ConversationActivity extends ConversationBaseActivity {
             public void onSuccess(VolumeFile volumeFile) {
                 switch (fakeMessage.getType()) {
                     case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
-                        WSAPIService.getInstance().sendChatRegularFileMsg(cid, fakeMessage.getId(), volumeFile);
+                        WSAPIService.getInstance().sendChatRegularFileMsg(fakeMessage, volumeFile);
                         break;
                     case Message.MESSAGE_TYPE_MEDIA_IMAGE:
-                        WSAPIService.getInstance().sendChatMediaImageMsg(volumeFile, fakeMessage);
+                        WSAPIService.getInstance().sendChatMediaImageMsg( fakeMessage,volumeFile);
                         break;
                     case Message.MESSAGE_TYPE_MEDIA_VOICE:
                         WSAPIService.getInstance().sendChatMediaVoiceMsg(fakeMessage, volumeFile);
@@ -665,7 +665,6 @@ public class ConversationActivity extends ConversationBaseActivity {
      */
     private void sendMessageWithText(String content, boolean isActionMsg, Map<String, String> mentionsMap) {
         Message localMessage = CommunicationUtils.combinLocalTextPlainMessage(content, cid, mentionsMap);
-        LogUtils.YfcDebug("发送时LocalMessage："+JSON.toJSONString(localMessage));
         //当在机器人频道时输入小于4个汉字时先进行通讯录查找，查找到返回通讯路卡片
         if (isSpecialUser && !isActionMsg && content.length() < 4 && StringUtils.isChinese(content)) {
             ContactUser contactUser = ContactUserCacheUtils.getContactUserByUserName(content);
@@ -699,9 +698,9 @@ public class ConversationActivity extends ConversationBaseActivity {
     }
 
     private void handleUnSendMessage(Message message, int status) {
-        //发送中，无网（没有联网，或者联网不通的情况）
-        if(status == Message.MESSAGE_SEND_ING && (NetUtils.isNetworkConnected(ConversationActivity.this) || !AppUtils.isNetworkOnline())){
-            message.setSendStatus(Message.MESSAGE_SEND_ING);
+        //发送中，无网
+        if(status == Message.MESSAGE_SEND_ING && NetUtils.isNetworkConnected(ConversationActivity.this)){
+            message.setSendStatus(Message.MESSAGE_SEND_FAIL);
             MessageCacheUtil.saveMessage(ConversationActivity.this,message);
         }
         //发送消息失败
@@ -786,15 +785,12 @@ public class ConversationActivity extends ConversationBaseActivity {
 
     }
 
-
-
-
     //接收到websocket发过来的消息
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveWSMessage(EventMessage eventMessage) {
-        LogUtils.YfcDebug("11111111111111111111111");
-        handleRealMessage(eventMessage);
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE)) {
+            LogUtils.YfcDebug("接收到回来的消息："+ JSON.toJSONString(eventMessage));
+            handleRealMessage(eventMessage);
             if (eventMessage.getStatus() == 200) {
                 String content = eventMessage.getContent();
                 JSONObject contentobj = JSONUtils.getJSONObject(content);
@@ -843,22 +839,18 @@ public class ConversationActivity extends ConversationBaseActivity {
         String content = eventMessage.getContent();
         JSONObject contentobj = JSONUtils.getJSONObject(content);
         Message receivedWSMessage = new Message(contentobj);
-        LogUtils.YfcDebug("返回消息:" + contentobj.toString());
-        LogUtils.YfcDebug("消息tempId："+receivedWSMessage.getTmpId());
         MessageCacheUtil.deleteLocalFakeMessage(ConversationActivity.this,receivedWSMessage.getTmpId());
     }
 
     private void handleRealMessage(Message message) {
-        LogUtils.YfcDebug("消息tempId1111："+message.getTmpId());
         MessageCacheUtil.deleteLocalFakeMessage(ConversationActivity.this,message.getTmpId());
     }
 
     //接收到websocket发过来的消息
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onGetMessageById(EventMessage eventMessage) {
-        LogUtils.YfcDebug("22222222222222222222222222");
-        handleRealMessage(eventMessage);
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_GET_MESSAGE_BY_ID)) {
+            handleRealMessage(eventMessage);
             if (eventMessage.getStatus() == EventMessage.RESULT_OK) {
                 String content = eventMessage.getContent();
                 JSONObject contentobj = JSONUtils.getJSONObject(content);
@@ -867,18 +859,14 @@ public class ConversationActivity extends ConversationBaseActivity {
                 MessageCacheUtil.saveMessage(MyApplication.getInstance(), message);
                 adapter.notifyDataSetChanged();
             }
-
         }
-
     }
-
 
     //接收到websocket发过来的消息
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveNewMessage(EventMessage eventMessage) {
-        LogUtils.YfcDebug("333333333333333333333333");
-        handleRealMessage(eventMessage);
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_GET_NEW_MESSAGE)) {
+            handleRealMessage(eventMessage);
             LoadingDialog.dimissDlg(loadingDlg);
             if (swipeRefreshLayout.isRefreshing()) {
                 swipeRefreshLayout.setRefreshing(false);
@@ -903,9 +891,8 @@ public class ConversationActivity extends ConversationBaseActivity {
     //接收到websocket发过来的消息
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveHistoryMessage(EventMessage eventMessage) {
-        LogUtils.YfcDebug("4444444444444444444444444");
-        handleRealMessage(eventMessage);
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_GET_HISTORY_MESSAGE)) {
+            handleRealMessage(eventMessage);
             swipeRefreshLayout.setRefreshing(false);
             if (eventMessage.getStatus() == EventMessage.RESULT_OK) {
                 String content = eventMessage.getContent();
@@ -930,7 +917,6 @@ public class ConversationActivity extends ConversationBaseActivity {
     //接收到离线消息
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReiceveWSOfflineMessage(List<Message> offlineMessageList) {
-        LogUtils.YfcDebug("5555555555555555555555");
         Iterator<Message> it = offlineMessageList.iterator();
         //去重
         while (it.hasNext()) {
