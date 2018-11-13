@@ -76,11 +76,9 @@
             android:color="#666666"
             app:qmui_loading_view_size="40dp" />
         <WebView
-            android:visibility="gone"
             android:id="@+id/wv_show_login_detail"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
         </WebView>
     </RelativeLayout>
-
 </RelativeLayout>

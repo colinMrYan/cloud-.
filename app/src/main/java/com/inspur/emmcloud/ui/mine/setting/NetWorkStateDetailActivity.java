@@ -94,7 +94,7 @@ public class NetWorkStateDetailActivity extends BaseActivity {
         hardImageView = (ImageView)findViewById(R.id.iv_hard_checking);
         portalImageView= (ImageView)findViewById(R.id.iv_wifi_checking);
         dnsImageView   = (ImageView)findViewById(R.id.iv_dns_checking);
-        drawableError=getBaseContext().getResources().getDrawable(R.drawable.ic_net_checking_error);
+        drawableError=getBaseContext().getResources().getDrawable(R.drawable.app_delete);
         drawableSuccess=getBaseContext().getResources().getDrawable(R.drawable.icon_other_selected);
         qmulWifiLoadingView =(QMUILoadingView)findViewById(R.id.qlv_wifi_checkloading);
         qmulDnsLoadingView =(QMUILoadingView)findViewById(R.id.qlv_dns_checkloading);

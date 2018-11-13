@@ -19,7 +19,7 @@
         android:layout_height="30dp"
         android:paddingLeft="20dp"
         android:layout_marginTop="7dp"
-        android:text="网络不给力，请检查网络设置。"
+        android:text="@string/net_connected_error"
         android:textSize="14dp"
         android:layout_centerVertical="true"
         android:textColor="@color/black"/>
