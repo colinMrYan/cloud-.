@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.bean.chat.Channel;
 import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.Email;
@@ -126,6 +127,13 @@ public class CommunicationUtils {
         msgContentRegularFile.setMedia(localFilePath);
         message.setContent(msgContentRegularFile.toString());
         return message;
+    }
+
+    public Message addInfoRegularFileMessage(Message fakeMessage, VolumeFile volumeFile){
+        fakeMessage.getMsgContentAttachmentFile().setCategory(CommunicationUtils.getChatFileCategory(volumeFile.getName()));
+        fakeMessage.getMsgContentAttachmentFile().setMedia(volumeFile.getPath());
+        fakeMessage.getMsgContentAttachmentFile().setName(volumeFile.getName());
+        return fakeMessage;
     }
 
     public static Message combinLocalCommentTextPlainMessage(String cid, String commentedMid, String text, Map<String, String> mentionsMap) {

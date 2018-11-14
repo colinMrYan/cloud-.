@@ -561,6 +561,7 @@ public class ConversationActivity extends ConversationBaseActivity {
             public void onSuccess(VolumeFile volumeFile) {
                 switch (fakeMessage.getType()) {
                     case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
+//                        CommunicationUtils.combinLocalRegularFileMessage();
                         WSAPIService.getInstance().sendChatRegularFileMsg(fakeMessage, volumeFile);
                         break;
                     case Message.MESSAGE_TYPE_MEDIA_IMAGE:
