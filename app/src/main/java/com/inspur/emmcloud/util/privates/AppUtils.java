@@ -586,6 +586,7 @@ public class AppUtils {
      * 调用文件系统
      */
     public static void openFileSystem(Activity activity, int requestCode) {
+        MyApplication.getInstance().setEnterSystemUI(true);
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("*/*");
         intent.addCategory(Intent.CATEGORY_OPENABLE);
@@ -630,6 +631,7 @@ public class AppUtils {
         // 判断存储卡是否可以用，可用进行存储
         if (Environment.getExternalStorageState().equals(
                 Environment.MEDIA_MOUNTED)) {
+            MyApplication.getInstance().setEnterSystemUI(true);
             File appDir = new File(Environment.getExternalStorageDirectory(),
                     "DCIM");
             if (!appDir.exists()) {
@@ -652,6 +654,7 @@ public class AppUtils {
      * @param requestCode
      */
     public static void sendSMS(Activity activity,String phoneNum,int requestCode){
+        MyApplication.getInstance().setEnterSystemUI(true);
         Uri smsToUri = Uri.parse("smsto:" + phoneNum);
         Intent intent = new Intent(Intent.ACTION_SENDTO, smsToUri);
         activity.startActivityForResult(intent, requestCode);
@@ -665,6 +668,7 @@ public class AppUtils {
      * @param requestCode
      */
     public static void call(Activity activity,String phoneNum,int requestCode){
+        MyApplication.getInstance().setEnterSystemUI(true);
         Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:"
                 + phoneNum));
         activity.startActivityForResult(intent, requestCode);
@@ -677,6 +681,7 @@ public class AppUtils {
      * @param requestCode
      */
     public static void sendMail(Activity activity,String mail,int requestCode){
+        MyApplication.getInstance().setEnterSystemUI(true);
         Uri uri = Uri.parse("mailto:" + mail);
         Intent intent = new Intent(Intent.ACTION_SENDTO, uri);
         activity.startActivityForResult(Intent.createChooser(intent,

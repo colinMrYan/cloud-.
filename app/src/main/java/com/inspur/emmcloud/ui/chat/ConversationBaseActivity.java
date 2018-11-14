@@ -5,8 +5,12 @@ import android.os.Bundle;
 
 import com.inspur.emmcloud.MediaPlayBaseActivity;
 import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.api.APIInterfaceInstance;
+import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
+import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
@@ -25,8 +29,12 @@ public class ConversationBaseActivity extends MediaPlayBaseActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        recordUserClickChannel();
         loadingDlg = new LoadingDialog(this);
+        initConversationInfo();
+        recordUserClickChannel();
+    }
+
+    protected void initConversationInfo() {
         if (getIntent().hasExtra(EXTRA_CONVERSATION)){
             conversation = (Conversation) getIntent().getExtras().getSerializable(EXTRA_CONVERSATION);
             cid = conversation.getId();
@@ -34,27 +42,16 @@ public class ConversationBaseActivity extends MediaPlayBaseActivity{
             cid = getIntent().getExtras().getString(EXTRA_CID);
             conversation = ConversationCacheUtils.getConversation(MyApplication.getInstance(),cid);
         }
+        if (conversation == null){
+            getConversationInfo();
+        }else {
+            initChannelMessage();
+        }
+
     }
 
-    private void init() {
+    protected void initChannelMessage(){
 
-//        new ChannelInfoUtils().getChannelInfo(this, cid, loadingDlg, new ChannelInfoUtils.GetChannelInfoCallBack() {
-//            @Override
-//            public void getChannelInfoSuccess(Channel channel) {
-//                ConversationActivity.this.channel = channel;
-//                isSpecialUser = channel.getType().equals("SERVICE") && channel.getTitle().contains(robotUid);
-//                if (getIntent().hasExtra("get_new_msg") && NetUtils.isNetworkConnected(getApplicationContext(), false)) {//通过scheme打开的频道
-//                    getNewMsgOfChannel();
-//                } else {
-//                    initViews();
-//                }
-//            }
-//
-//            @Override
-//            public void getChannelInfoFail(String error, int errorCode) {
-//                finishActivity();
-//            }
-//        });
     }
 
     @Override
@@ -83,5 +80,35 @@ public class ConversationBaseActivity extends MediaPlayBaseActivity{
                 }
             }
         }).start();
+    }
+
+    private void getConversationInfo(){
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance())){
+            loadingDlg.show();
+            ChatAPIService apiService = new ChatAPIService(this);
+            apiService.setAPIInterface(new Webservice());
+            apiService.getConversationInfo(cid);
+        }else {
+            finish();
+        }
+
+    }
+
+
+    private class Webservice extends APIInterfaceInstance{
+        @Override
+        public void returnConversationInfoSuccess(Conversation conversation) {
+            LoadingDialog.dimissDlg(loadingDlg);
+            ConversationBaseActivity.this.conversation = conversation;
+            initChannelMessage();
+        }
+
+        @Override
+        public void returnConversationInfoFail(String error, int errorCode) {
+            LoadingDialog.dimissDlg(loadingDlg);
+            WebServiceMiddleUtils.hand(MyApplication.getInstance(),error,errorCode);
+            finish();
+        }
+
     }
 }

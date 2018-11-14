@@ -44,7 +44,7 @@ public class UIConversation implements Serializable{
         this.title = CommunicationUtils.getConversationTitle(conversation);
         messageList = MessageCacheUtil.getHistoryMessageList(MyApplication.getInstance(), id, null, 15);
         if (messageList.size() == 0) {
-            lastUpdate = conversation.getLastUpdate();
+            lastUpdate = conversation.getCreationDate();
         } else {
             lastUpdate = messageList.get(messageList.size() - 1).getCreationDate();
             unReadCount = MessageCacheUtil.getChannelMessageUnreadCount(MyApplication.getInstance(), id);
@@ -115,7 +115,7 @@ public class UIConversation implements Serializable{
             content = fromUserName + content;
         } else {
             if (type.equals(Conversation.TYPE_CAST)) {
-                content = MyApplication.getInstance().getString(R.string.welcome_to_attention) + " " + conversation.getName();
+                content = MyApplication.getInstance().getString(R.string.welcome_to_attention) + " " + title;
             } else if (type.equals(Conversation.TYPE_GROUP)) {
                 content = MyApplication.getInstance().getString(R.string.group_no_message);
             } else {

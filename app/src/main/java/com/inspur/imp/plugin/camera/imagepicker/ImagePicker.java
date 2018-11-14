@@ -6,13 +6,13 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.v4.content.LocalBroadcastManager;
 
 import com.inspur.imp.plugin.camera.imagepicker.bean.ImageFolder;
 import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
 import com.inspur.imp.plugin.camera.imagepicker.loader.ImagePickerLoader;
 import com.inspur.imp.plugin.camera.imagepicker.view.CropImageView;
+import com.inspur.imp.plugin.camera.mycamera.MyCameraActivity;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * 
  * 图片选择的入口类
  */
 public class ImagePicker {
@@ -95,13 +94,13 @@ public class ImagePicker {
     public boolean isCrop() {
         return crop;
     }
-    
-    public boolean getNeedUpload(){
-    	return isNeedUpload;
+
+    public boolean getNeedUpload() {
+        return isNeedUpload;
     }
-    
-    public void setNeedUpload(boolean isNeedUpload){
-    	this.isNeedUpload = isNeedUpload;
+
+    public void setNeedUpload(boolean isNeedUpload) {
+        this.isNeedUpload = isNeedUpload;
     }
 
     public void setCrop(boolean crop) {
@@ -241,27 +240,33 @@ public class ImagePicker {
         mCurrentImageFolderPosition = 0;
     }
 
-    /** 拍照的方法 */
+    /**
+     * 拍照的方法
+     */
     public void takePicture(Activity activity, int requestCode) {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        takePictureIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        if (takePictureIntent.resolveActivity(activity.getPackageManager()) != null) {
-            if (Utils.existSDCard())
-                takeImageFile = new File(Environment.getExternalStorageDirectory(), "/DCIM/camera/");
-            else takeImageFile = Environment.getDataDirectory();
-            takeImageFile = createFile(takeImageFile, "IMG_", ".jpg");
-            if (takeImageFile != null) {
-                // 默认情况下，即不需要指定intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-                // 照相机有自己默认的存储路径，拍摄的照片将返回一个缩略图。如果想访问原始图片，
-                // 可以通过dat extra能够得到原始图片位置。即，如果指定了目标uri，data就没有数据，
-                // 如果没有指定uri，则data就返回有数据！
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(takeImageFile));
-            }
+        Intent intent = new Intent();
+        intent.setClass(activity, MyCameraActivity.class);
+
+        if (Utils.existSDCard())
+            takeImageFile = new File(Environment.getExternalStorageDirectory(), "/DCIM/camera/");
+        else takeImageFile = Environment.getDataDirectory();
+        intent.putExtra(MyCameraActivity.EXTRA_PHOTO_DIRECTORY_PATH, takeImageFile.getAbsolutePath());
+        takeImageFile = createFile(takeImageFile, "IMG_", ".jpg");
+        if (takeImageFile != null) {
+            // 默认情况下，即不需要指定intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+            // 照相机有自己默认的存储路径，拍摄的照片将返回一个缩略图。如果想访问原始图片，
+            // 可以通过dat extra能够得到原始图片位置。即，如果指定了目标uri，data就没有数据，
+            // 如果没有指定uri，则data就返回有数据！
+            // takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(takeImageFile));
+            intent.putExtra(MyCameraActivity.EXTRA_PHOTO_NAME, takeImageFile.getName());
         }
-        activity.startActivityForResult(takePictureIntent, requestCode);
+
+        activity.startActivityForResult(intent, requestCode);
     }
 
-    /** 根据系统时间、前缀、后缀产生一个文件 */
+    /**
+     * 根据系统时间、前缀、后缀产生一个文件
+     */
     public static File createFile(File folder, String prefix, String suffix) {
         if (!folder.exists() || !folder.isDirectory()) folder.mkdirs();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.CHINA);
@@ -269,7 +274,9 @@ public class ImagePicker {
         return new File(folder, filename);
     }
 
-    /** 扫描图片 */
+    /**
+     * 扫描图片
+     */
     public static void galleryAddPic(Context context, File file) {
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
         Uri contentUri = Uri.fromFile(file);
@@ -277,14 +284,18 @@ public class ImagePicker {
         LocalBroadcastManager.getInstance(context).sendBroadcast(mediaScanIntent);
     }
 
-    /** 图片选中的监听 */
+    /**
+     * 图片选中的监听
+     */
     public interface OnImageSelectedListener {
         void onImageSelected(int position, ImageItem item, boolean isAdd);
+
         void onImageSelectedRelace(int position, ImageItem item);
     }
 
     public void addOnImageSelectedListener(OnImageSelectedListener l) {
-        if (mImageSelectedListeners == null) mImageSelectedListeners = new ArrayList<OnImageSelectedListener>();
+        if (mImageSelectedListeners == null)
+            mImageSelectedListeners = new ArrayList<OnImageSelectedListener>();
         mImageSelectedListeners.add(l);
     }
 
@@ -298,11 +309,11 @@ public class ImagePicker {
         else mSelectedImages.remove(item);
         notifyImageSelectedChanged(position, item, isAdd);
     }
-    
-    public void replaceSelectedImageItem(int position, ImageItem item){
-    	mSelectedImages.remove(position);
-    	mSelectedImages.add(position, item);
-    	notifyImageSelectedRelace(position, item);
+
+    public void replaceSelectedImageItem(int position, ImageItem item) {
+        mSelectedImages.remove(position);
+        mSelectedImages.add(position, item);
+        notifyImageSelectedRelace(position, item);
     }
 
     private void notifyImageSelectedChanged(int position, ImageItem item, boolean isAdd) {
@@ -311,7 +322,7 @@ public class ImagePicker {
             l.onImageSelected(position, item, isAdd);
         }
     }
-    
+
     private void notifyImageSelectedRelace(int position, ImageItem item) {
         if (mImageSelectedListeners == null) return;
         for (OnImageSelectedListener l : mImageSelectedListeners) {

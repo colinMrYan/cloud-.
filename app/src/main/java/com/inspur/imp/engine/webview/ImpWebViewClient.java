@@ -16,6 +16,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
 
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
@@ -207,6 +208,7 @@ public class ImpWebViewClient extends WebViewClient {
                 Intent intent = Intent.parseUri(url, Intent.URI_INTENT_SCHEME);
                 intent.setComponent(null);
                 myWebView.getContext().startActivity(intent);
+                MyApplication.getInstance().setEnterSystemUI(true);
             } catch (Exception e) {
                 e.printStackTrace();
             }

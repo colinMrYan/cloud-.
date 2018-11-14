@@ -479,7 +479,7 @@ public class IndexActivity extends IndexBaseActivity {
         @Override
         public void run() {
             RobotCacheUtils.clearRobotList(MyApplication.getInstance());
-            RobotCacheUtils.saveOrUpdateRobotList(MyApplication.getInstance(), getAllBotInfoResultl.getRobotList());
+            RobotCacheUtils.saveRobotList(MyApplication.getInstance(), getAllBotInfoResultl.getRobotList());
         }
     }
 

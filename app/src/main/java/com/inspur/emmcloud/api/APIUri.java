@@ -605,6 +605,24 @@ public class APIUri {
     public static String getModifyGroupMemberUrl(String id){
         return  getECMChatConversationBaseUrl()+"/channel/group/"+id+"/member";
     }
+
+    /**
+     * 获取会话信息
+     * @param id
+     * @return
+     */
+    public static String getConversationInfoUrl(String id){
+        return  getECMChatConversationBaseUrl()+"/channel/"+id;
+    }
+
+    /**
+     * 获取修改会话名称url
+     * @param id
+     * @return
+     */
+    public static String getUpdateConversationNameUrl(String id){
+        return  getECMChatConversationBaseUrl()+"/channel/"+id+"/name";
+    }
     /**************************************************应用和应用中心********************************************************************/
 
 

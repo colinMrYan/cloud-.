@@ -13,7 +13,7 @@ public class BaseFragmentActivity extends FragmentActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        ((MyApplication) getApplicationContext()).setIsActive(true);
+        MyApplication.getInstance().setEnterSystemUI(false);
     }
 
     @Override
@@ -24,7 +24,7 @@ public class BaseFragmentActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
+        //this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
     }
 
 

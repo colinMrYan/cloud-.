@@ -47,6 +47,7 @@ import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.DownLoaderUtils;
 import com.inspur.emmcloud.util.privates.GetPathFromUri4kitkat;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
@@ -324,7 +325,7 @@ public class MessionDetailActivity extends BaseActivity {
                 String userID = ((MyApplication) getApplication()).getUid();
                 if (ownerUid.contains(userID)) {
                     if (position == attachments.size()) {
-                        openFileSystem();
+                        AppUtils.openFileSystem(MessionDetailActivity.this,UPLOAD_FILE);
                     } else {
                         downLoadFile(view, position);
                     }
@@ -379,17 +380,6 @@ public class MessionDetailActivity extends BaseActivity {
                     }
                 })
                 .show();
-    }
-
-    /**
-     * 打开文件系统
-     */
-    protected void openFileSystem() {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("*/*");
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-        startActivityForResult(Intent.createChooser(intent,
-                getString(R.string.meeting_file_upload_tips)), UPLOAD_FILE);
     }
 
     @Override
