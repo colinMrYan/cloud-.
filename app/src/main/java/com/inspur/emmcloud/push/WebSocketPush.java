@@ -20,6 +20,7 @@ import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ClientIDUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
+import com.inspur.emmcloud.util.privates.cache.AppExceptionCacheUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -74,7 +75,7 @@ public class WebSocketPush {
                     while(it.hasNext()){
                         EventMessage eventMessage = it.next();
                         if(eventMessage.getStartQuestTime()+ MyAppConfig.WEBSOCKET_QEQUEST_TIMEOUT <= timeCount){
-                            setRequestEventMessageTimeout(eventMessage);
+                            setRequestEventMessageTimeout(eventMessage,"socket_send_timeout");
                             it.remove();
                         }
                     }
@@ -279,7 +280,7 @@ public class WebSocketPush {
             mSocket = null;
         }
         for (EventMessage eventMessage:requestEventMessageList){
-            setRequestEventMessageTimeout(eventMessage);
+            setRequestEventMessageTimeout(eventMessage,"socket_force_close");
         }
         requestEventMessageList.clear();
     }
@@ -321,7 +322,7 @@ public class WebSocketPush {
             public void call(Object... arg0) {
                 // TODO Auto-generated method stub
                 isWebsocketConnecting = true;
-                LogUtils.jasonDebug("正在连接");
+                LogUtils.debug(TAG, "正在连接");
             }
         });
         mSocket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
@@ -390,6 +391,9 @@ public class WebSocketPush {
                             eventMessage.setContent(body);
                             eventMessage.setStatus(wsPushContent.getStatus());
                             EventBus.getDefault().post(eventMessage);
+                            if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE )&& eventMessage.getStatus() != EventMessage.RESULT_OK){
+                                saveWSSendMessageException(2,body,wsPushContent.getStatus());
+                            }
                         }
                     } else {
                         switch (path){
@@ -446,16 +450,19 @@ public class WebSocketPush {
             sendContent(content);
         } else {
             LogUtils.jasonDebug("isSocketConnect=false");
-            setRequestEventMessageTimeout(eventMessage);
+            setRequestEventMessageTimeout(eventMessage,"socket_disconnect");
             startWebSocket();
         }
     }
 
-    private void setRequestEventMessageTimeout(EventMessage eventMessage){
+    private void setRequestEventMessageTimeout(EventMessage eventMessage,String timeoutType){
         if (eventMessage != null){
             eventMessage.setContent("time out");
             eventMessage.setStatus(-1);
             EventBus.getDefault().post(eventMessage);
+            if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE)){
+                saveWSSendMessageException(3,timeoutType,1001);
+            }
         }
     }
 
@@ -486,6 +493,16 @@ public class WebSocketPush {
         }else {
             return Socket.EVENT_DISCONNECT;
         }
+    }
+
+    private void saveWSSendMessageException(final int errorLevel,final String error,final int responseCode){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                AppExceptionCacheUtils.saveAppException(MyApplication.getInstance(),errorLevel,"ws_send_message",error,responseCode);
+            }
+        }).start();
+
     }
 
 }
