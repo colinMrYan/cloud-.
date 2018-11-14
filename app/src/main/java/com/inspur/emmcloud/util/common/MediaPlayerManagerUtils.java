@@ -1,5 +1,7 @@
 package com.inspur.emmcloud.util.common;
 
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothProfile;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -38,10 +40,10 @@ public class MediaPlayerManagerUtils {
 
     private boolean isPause = false;
     private String path;
-
-    private int currentMode = MODE_SPEAKER;
+    private int currentMode = MODE_HEADSET;
 
     private boolean isLooping = false;
+    private AudioManager.OnAudioFocusChangeListener mAudioFocusChangeListener = null;
 
     public static MediaPlayerManagerUtils getManager() {
         if (mediaPlayerManagerUtils == null) {
@@ -55,7 +57,42 @@ public class MediaPlayerManagerUtils {
     private MediaPlayerManagerUtils() {
         this.context = MyApplication.getInstance();
         initMediaPlayer();
-        initAudioManager();
+        //初始化音频管理器
+        audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+        mAudioFocusChangeListener = new AudioManager.OnAudioFocusChangeListener() {
+            @Override
+            public void onAudioFocusChange(int focusChange) {
+                LogUtils.jasonDebug("focusChange="+focusChange);
+                switch (focusChange) {
+                    case AudioManager.AUDIOFOCUS_GAIN:
+                    case AudioManager.AUDIOFOCUS_GAIN_TRANSIENT:
+                    case AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK:
+                        if (callback != null){
+                            callback.onPrepared();
+                        }
+                        if (!isPlaying()){
+                            mediaPlayer.start();
+                        }
+                        break;
+
+                    case AudioManager.AUDIOFOCUS_LOSS:
+                        //暂停操作
+                        if (isPlaying()){
+                            stop();
+                        }
+                        break;
+                    case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
+                        //暂停操作
+                        if (isPlaying()){
+                            pause();
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+        };
     }
 
     /**
@@ -74,19 +111,6 @@ public class MediaPlayerManagerUtils {
             }
         });
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-    }
-
-    /**
-     * 初始化音频管理器
-     */
-    private void initAudioManager() {
-        audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            audioManager.setMode(AudioManager.MODE_IN_COMMUNICATION);
-        } else {
-            audioManager.setMode(AudioManager.MODE_IN_CALL);
-        }
-        audioManager.setSpeakerphoneOn(true);//默认为扬声器播放
     }
 
     /**
@@ -131,6 +155,16 @@ public class MediaPlayerManagerUtils {
         this.path = path;
         this.callback = callback;
         try {
+            audioManager.requestAudioFocus(mAudioFocusChangeListener,AudioManager.STREAM_MUSIC,
+                    AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
+            BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
+            boolean isBluetoothConnected = !(BluetoothProfile.STATE_DISCONNECTED == adapter.getProfileConnectionState(BluetoothProfile.HEADSET));
+            //耳机模式下直接返回
+            if (isBluetoothConnected || MediaPlayerManagerUtils.getManager().getCurrentMode() == MediaPlayerManagerUtils.MODE_HEADSET){
+                changeToHeadsetMode();
+            }else {
+                changeToSpeakerMode();
+            }
             mediaPlayer.reset();
             mediaPlayer.setDataSource(context, Uri.parse(path));
             mediaPlayer.prepareAsync();
@@ -149,10 +183,12 @@ public class MediaPlayerManagerUtils {
                     if (callback != null){
                         callback.onComplete();
                     }
-                    resetPlayMode();
                     if(isLooping){
                         mediaPlayer.start();
                         mediaPlayer.setLooping(true);
+                    }else {
+                        resetPlayMode();
+                        audioManager.abandonAudioFocus(mAudioFocusChangeListener);
                     }
                 }
             });
@@ -209,6 +245,7 @@ public class MediaPlayerManagerUtils {
     }
 
     public void changeToEarpieceModeNoStop(){
+        LogUtils.jasonDebug("changeToEarpieceModeNoStop---------------------");
         currentMode = MODE_EARPIECE;
         audioManager.setSpeakerphoneOn(false);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB){
@@ -229,6 +266,7 @@ public class MediaPlayerManagerUtils {
      * 切换到耳机模式
      */
     public void changeToHeadsetMode() {
+        LogUtils.jasonDebug("changeToHeadsetMode---------------------");
         currentMode = MODE_HEADSET;
         audioManager.setSpeakerphoneOn(false);
     }
@@ -237,27 +275,18 @@ public class MediaPlayerManagerUtils {
      * 切换到外放模式
      */
     public void changeToSpeakerMode() {
-//        if (isPlaying()) {
-//            try {
-//                mediaPlayer.stop();
-//            } catch (IllegalStateException e) {
-//                e.printStackTrace();
-//            }
-//            currentMode = MODE_SPEAKER;
-//            audioManager.setSpeakerphoneOn(true);
-//            play(filePath, callback);
-//        }else {
-//            currentMode = MODE_SPEAKER;
-//            audioManager.setSpeakerphoneOn(true);
-//        }
+        LogUtils.jasonDebug("changeToSpeakerMode---------------------");
         currentMode = MODE_SPEAKER;
+        audioManager.setMode(AudioManager.MODE_NORMAL);
         audioManager.setSpeakerphoneOn(true);
     }
 
     public void resetPlayMode() {
         if (audioManager.isWiredHeadsetOn()) {
+            LogUtils.jasonDebug("0000000000000000000000000000");
             changeToHeadsetMode();
         } else {
+            LogUtils.jasonDebug("1111111111111111111111111111111111");
             changeToSpeakerMode();
         }
     }
@@ -298,6 +327,7 @@ public class MediaPlayerManagerUtils {
                 e.printStackTrace();
             }
         }
+        audioManager.abandonAudioFocus(mAudioFocusChangeListener);
     }
 
     /**

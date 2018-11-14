@@ -277,7 +277,7 @@ public class SmoothImageView extends ImageView {
             return;
         }
         ValueAnimator valueAnimator = new ValueAnimator();
-        valueAnimator.setDuration(300);
+        valueAnimator.setDuration(400);
         valueAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
         if (state == STATE_TRANSFORM_IN) {
             PropertyValuesHolder scaleHolder = PropertyValuesHolder.ofFloat("scale", mTransfrom.startScale, mTransfrom.endScale);

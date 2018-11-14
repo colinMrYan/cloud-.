@@ -15,7 +15,6 @@ import com.inspur.emmcloud.ui.SchemeHandleActivity;
 import com.inspur.emmcloud.ui.mine.setting.CreateGestureActivity;
 import com.inspur.emmcloud.ui.mine.setting.FaceVerifyActivity;
 import com.inspur.emmcloud.ui.mine.setting.GestureLoginActivity;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ClientIDUtils;
@@ -46,7 +45,6 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
                 showSafeVerificationPage();
             }
             MyApplication.getInstance().setIsActive(true);
-            LogUtils.jasonDebug("00000000000000---active");
             uploadMDMInfo(activity);
         }
         count++;
@@ -66,7 +64,6 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
         count--;
         if (count == 0) { // app 进入后台
             MyApplication.getInstance().setIsActive(false);
-            LogUtils.jasonDebug("00000000000000---active---false");
             startUploadPVCollectService(MyApplication.getInstance());
             startSyncCommonAppService(MyApplication.getInstance());
             new ClientIDUtils(MyApplication.getInstance()).upload();

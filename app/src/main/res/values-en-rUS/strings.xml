@@ -170,6 +170,7 @@
     <string name="begin_cannot_later_than_end">Start time cannot be later than end time</string>
     <string name="no_this_knowledge">No this knowledge</string>
     <string name="comment">Comment</string>
+    <string name="write_comment">Comment</string>
     <!-- 新添加部分 -->
 
 

@@ -171,6 +171,7 @@
     <string name="begin_cannot_later_than_end">開始時間不能晚於結束時間</string>
     <string name="no_this_knowledge">暫無這條知識</string>
     <string name="comment">評論</string>
+    <string name="write_comment">寫評論</string>
 
     <!-- 新用戶註冊 -->
     <string name="newuser">新用戶</string>

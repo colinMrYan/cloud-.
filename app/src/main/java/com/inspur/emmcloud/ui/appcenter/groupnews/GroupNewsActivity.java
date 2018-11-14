@@ -107,6 +107,7 @@ public class GroupNewsActivity extends BaseFragmentActivity implements
 			ToastUtils.show(GroupNewsActivity.this,R.string.news_no_news);
 			finish();
 		}
+		titleList = titleList.subList(0,2);
 		//pagerAdapter
 		pagerAdapter = new MyPagerAdapter(getSupportFragmentManager(),titleList);
 		//获取获取viewPager，并设置
@@ -117,6 +118,7 @@ public class GroupNewsActivity extends BaseFragmentActivity implements
 		viewPager.setAdapter(pagerAdapter);
 		//获取PagerSlidingTabStrip，并初始化设置
 		PagerSlidingTabStrip pagerSlidingTabStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
+		pagerSlidingTabStrip.setVisibility(View.VISIBLE);
 		pagerSlidingTabStrip.setDividerColor(getResources().getColor(R.color.content_border));
 		pagerSlidingTabStrip.setIndicatorColor(Color.parseColor("#00000000"));
 		pagerSlidingTabStrip.setTextSize(17);

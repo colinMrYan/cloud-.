@@ -295,7 +295,6 @@ public class WebSocketPush {
     }
 
     private void addListeners() {
-
         mSocket.on(Socket.EVENT_CONNECT_ERROR, new Emitter.Listener() {
 
             @Override

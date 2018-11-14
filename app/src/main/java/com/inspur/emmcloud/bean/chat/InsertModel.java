@@ -9,7 +9,7 @@ public class InsertModel {
     private String insertRule="";
     private String insertId="";
     private String insertContent="";
-    private String insertColor="#99CCFF";
+    private String insertColor="#0f7bca";
     private String insertContentId="";
 
     public InsertModel(String insertId){

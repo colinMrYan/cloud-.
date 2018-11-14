@@ -21,6 +21,7 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.WSAPIService;
+import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.GetMessageCommentCountResult;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.system.EventMessage;
@@ -29,7 +30,7 @@ import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
-import com.inspur.emmcloud.util.privates.cache.ChannelCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 import com.inspur.emmcloud.widget.ECMChatInputMenuImgComment;
 import com.inspur.emmcloud.widget.HackyViewPager;
 import com.inspur.emmcloud.widget.ImageDetailFragment;
@@ -195,9 +196,8 @@ public class ImagePagerActivity extends BaseFragmentActivity {
      */
     private void initEcmChatInputMenu() {
         ecmChatInputMenu = (ECMChatInputMenuImgComment) commentInputDlg.findViewById(R.id.chat_input_menu);
-        //ecmChatInputMenu.setWindowListener(false);
-        String channelType = ChannelCacheUtils.getChannelType(getApplicationContext(), cid);
-        if (channelType != null && channelType.equals("GROUP")) {
+        String conversationType = ConversationCacheUtils.getConversationType(getApplicationContext(), cid);
+        if (conversationType != null && conversationType.equals(Conversation.TYPE_GROUP)) {
             ecmChatInputMenu.setCanMentions(true, cid);
         } else {
             ecmChatInputMenu.setCanMentions(false, cid);
@@ -211,7 +211,12 @@ public class ImagePagerActivity extends BaseFragmentActivity {
                     commentInputDlg.dismiss();
                 }
                 ecmChatInputMenu.showSoftInput(false);
-                // TODO Auto-generated method stub
+            }
+
+            @Override
+            public void hideChatInputMenu() {
+                ecmChatInputMenu.setAddMenuLayoutShow(false);
+                commentInputDlg.dismiss();
             }
         });
         final SoftKeyboardStateHelper softKeyboardStateHelper = new SoftKeyboardStateHelper(findViewById(R.id.main_layout));
@@ -417,26 +422,11 @@ public class ImagePagerActivity extends BaseFragmentActivity {
     public void onPhotoTab(EventMessage eventMessage) {
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_ON_PHOTO_TAB)) {
             setPhotoTap();
+        }else if(eventMessage.getTag().equals(Constant.EVENTBUS_TAG_ON_PHOTO_CLOSE)){
+            if (functionLayout.getVisibility() == View.VISIBLE) {
+                functionLayout.setVisibility(View.GONE);
+            }
         }
 
     }
-
-
-//	private class WebService extends APIInterfaceInstance {
-//		@Override
-//		public void returnMsgCommentCountSuccess(GetMessageCommentCountResult getMsgCommentCountResult, String mid) {
-//			int count = getMsgCommentCountResult.getCount();
-//			commentCountMap.put(mid, count);
-//			String currentMid = imgTypeMessageList.get(pagerPosition).getMid();
-//			if (mid.equals(currentMid)) {
-//				commentCountText.setText(count + "");
-//			}
-//		}
-//
-//		@Override
-//		public void returnMsgCommentCountFail(String error,int errorCode) {
-//			super.returnMsgCommentCountFail(error,errorCode);
-//		}
-//	}
-
 }

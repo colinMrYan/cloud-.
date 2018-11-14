@@ -95,9 +95,9 @@ public class ConversationCacheUtils {
      * @param context
      * @param id
      */
-    public static void setConversationHide(Context context,String id){
+    public static void setConversationHide(Context context,String id,boolean isHide){
         try {
-            DbCacheUtils.getDb(context).update(Conversation.class, WhereBuilder.b("id", "=", id),new KeyValue("hide",true));
+            DbCacheUtils.getDb(context).update(Conversation.class, WhereBuilder.b("id", "=", id),new KeyValue("hide",isHide));
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();

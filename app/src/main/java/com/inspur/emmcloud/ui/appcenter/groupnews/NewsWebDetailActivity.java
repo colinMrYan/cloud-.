@@ -47,6 +47,7 @@ import com.inspur.emmcloud.bean.system.EventMessage;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppWebConfig;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
+import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.HtmlRegexpUtil;
 import com.inspur.emmcloud.util.common.JSONUtils;
@@ -75,6 +76,7 @@ import org.json.JSONObject;
 
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -845,10 +847,12 @@ public class NewsWebDetailActivity extends BaseActivity {
      */
     private void shareNewsToFrinds() {
         Intent intent = new Intent();
-        intent.putExtra("select_content", 0);
-        intent.putExtra("isMulti_select", false);
-        intent.putExtra("isContainMe", false);
-        intent.putExtra("title", getString(R.string.news_share));
+        intent.putExtra(ContactSearchFragment.EXTRA_TYPE, 0);
+        intent.putExtra(ContactSearchFragment.EXTRA_MULTI_SELECT, false);
+        ArrayList<String> uidList = new ArrayList<>();
+        uidList.add(MyApplication.getInstance().getUid());
+        intent.putStringArrayListExtra(ContactSearchFragment.EXTRA_EXCLUDE_SELECT, uidList);
+        intent.putExtra(ContactSearchFragment.EXTRA_TITLE, getString(R.string.news_share));
         intent.setClass(getApplicationContext(),
                 ContactSearchActivity.class);
         startActivityForResult(intent, SHARE_SEARCH_RUEST_CODE);

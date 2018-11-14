@@ -14,10 +14,7 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.style.ImageSpan;
 import android.util.AttributeSet;
-import android.view.ActionMode;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
@@ -177,9 +174,9 @@ public class ChatInputEdit extends EditText {
         if (insertModelList == null || insertModelList.size() == 0)
             return;
         SpannableStringBuilder spannableStringBuilder = (SpannableStringBuilder) getText();
-        MyBackgroundColorSpan[] mSpans = getText().getSpans(0, spannableStringBuilder.length(), MyBackgroundColorSpan.class);
+        MyForegroundColorSpan[] mSpans = getText().getSpans(0, spannableStringBuilder.length(), MyForegroundColorSpan.class);
         for (int i = 0; i < mSpans.length; i++) {
-            MyBackgroundColorSpan span = mSpans[i];
+            MyForegroundColorSpan span = mSpans[i];
             int spanStartPos = spannableStringBuilder.getSpanStart(span);
             int spanEndPos = spannableStringBuilder.getSpanEnd(span);
             //重新设置选中位置
@@ -200,9 +197,9 @@ public class ChatInputEdit extends EditText {
     private void removeInsertModelByDeleteContent(int selectionStart, int selectionEnd) {
         boolean isInsertModelListChanged = false;
         SpannableStringBuilder spannableStringBuilder = (SpannableStringBuilder) getText();
-        MyBackgroundColorSpan[] mSpans = getText().getSpans(0, spannableStringBuilder.length(), MyBackgroundColorSpan.class);
+        MyForegroundColorSpan[] mSpans = getText().getSpans(0, spannableStringBuilder.length(), MyForegroundColorSpan.class);
         for (int i = 0; i < mSpans.length; i++) {
-            MyBackgroundColorSpan span = mSpans[i];
+            MyForegroundColorSpan span = mSpans[i];
             int spanStartPos = spannableStringBuilder.getSpanStart(span);
             int spanEndPos = spannableStringBuilder.getSpanEnd(span);
             //光标起始和结束在同一位置
@@ -268,8 +265,8 @@ public class ChatInputEdit extends EditText {
         Editable editable = getText();//原先内容
         SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(editable);
         spannableStringBuilder.insert(index, insertContent);
-        MyBackgroundColorSpan backgroundColorSpan = new MyBackgroundColorSpan(Color.parseColor(insertColor), insertModel.getInsertId());
-        spannableStringBuilder.setSpan(backgroundColorSpan, index, index + insertContent.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        MyForegroundColorSpan foregroundColorSpan = new MyForegroundColorSpan(Color.parseColor(insertColor), insertModel.getInsertId());
+        spannableStringBuilder.setSpan(foregroundColorSpan, index, index + insertContent.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 //        Spanned htmlText = Html.fromHtml(String.format(String.format("<font color='%s'>" + insertContent + "</font>", insertColor)));
 //        spannableStringBuilder.insert(index, htmlText);
         spannableStringBuilder.insert(index + insertContent.length(), " ");
@@ -295,9 +292,9 @@ public class ChatInputEdit extends EditText {
 
     public String getRichContent(boolean isIdentifyUrl) {
         SpannableStringBuilder spannableStringBuilder = (SpannableStringBuilder) getText();
-        MyBackgroundColorSpan[] mSpans = getText().getSpans(0, spannableStringBuilder.length(), MyBackgroundColorSpan.class);
+        MyForegroundColorSpan[] mSpans = getText().getSpans(0, spannableStringBuilder.length(), MyForegroundColorSpan.class);
         for (int i = 0; i < mSpans.length; i++) {
-            MyBackgroundColorSpan span = mSpans[i];
+            MyForegroundColorSpan span = mSpans[i];
             int spanStartPos = spannableStringBuilder.getSpanStart(span);
             int spanEndPos = spannableStringBuilder.getSpanEnd(span);
             String keyword = spannableStringBuilder.subSequence(spanStartPos, spanEndPos).toString();

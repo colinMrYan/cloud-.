@@ -9,6 +9,7 @@ package com.inspur.emmcloud.widget;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,10 +47,10 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
     @ViewInject(R.id.input_edit)
     private ChatInputEdit inputEdit;
 
+    @ViewInject(R.id.bt_send)
+    private Button sendBtn;
 
-    @ViewInject(R.id.send_msg_btn)
-    private Button sendMsgBtn;
-    @ViewInject(R.id.add_menu_layout)
+    @ViewInject(R.id.rl_add_menu)
     private RelativeLayout addMenuLayout;
 
     private boolean canMentions = false;
@@ -86,8 +87,8 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 boolean isContentBlank = (s.length() == 0);
-                sendMsgBtn.setEnabled(!isContentBlank);
-                sendMsgBtn.setBackgroundResource(isContentBlank ? R.drawable.bg_chat_input_send_btn_disable : R.drawable.bg_chat_input_send_btn_enable);
+                sendBtn.setEnabled(!isContentBlank);
+                sendBtn.setTextColor(isContentBlank? Color.parseColor("#999999"): Color.parseColor("#000000"));
                 if (canMentions && count == 1) {
                     String inputWord = s.toString().substring(start, start + count);
                     if (inputWord.equals("@")) {
@@ -177,10 +178,10 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
         }
     }
 
-    @Event({R.id.send_msg_btn})
+    @Event({R.id.bt_send,R.id.bt_cancel})
     private void onClick(View view) {
         switch (view.getId()) {
-            case R.id.send_msg_btn:
+            case R.id.bt_send:
                 if (NetUtils.isNetworkConnected(getContext())) {
                     List<String> urlList= null;
                     String content = inputEdit.getRichContent(false);
@@ -188,6 +189,11 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
                     mentionsMap = inputEdit.getMentionsMap();
                     chatInputMenuListener.onSendMsg(content, getContentMentionUidList(), urlList,mentionsMap);
                     inputEdit.setText("");
+                }
+                break;
+            case R.id.bt_cancel:
+                if (chatInputMenuListener != null){
+                    chatInputMenuListener.hideChatInputMenu();
                 }
                 break;
             default:
@@ -231,6 +237,7 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
 
     public interface ChatInputMenuListener {
         void onSendMsg(String content, List<String> mentionsUidList, List<String> urlList, Map<String,String> mentionsMap);
+        void hideChatInputMenu();
     }
 
 

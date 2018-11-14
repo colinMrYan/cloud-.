@@ -14,6 +14,7 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.api.apiservice.LoginAPIService;
 import com.inspur.emmcloud.api.apiservice.MineAPIService;
 import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.bean.mine.Enterprise;
@@ -68,6 +69,7 @@ public class MyInfoActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_info);
         initView();
+        getUserProfile();
         getUserInfoConfig();
         showMyInfo();
 
@@ -260,6 +262,17 @@ public class MyInfoActivity extends BaseActivity {
     }
 
     /**
+     * 获取用户profile信息
+     */
+    private void getUserProfile() {
+        if (NetUtils.isNetworkConnected(MyInfoActivity.this, false)) {
+            LoginAPIService apiServices = new LoginAPIService(MyInfoActivity.this);
+            apiServices.setAPIInterface(new WebService());
+            apiServices.getMyInfo();
+        }
+    }
+
+    /**
      * 获取用户信息配置
      */
     private void getUserInfoConfig() {
@@ -302,6 +315,26 @@ public class MyInfoActivity extends BaseActivity {
         @Override
         public void returnUserProfileConfigFail(String error, int errorCode) {
             setUserInfoConfig(null);
+        }
+
+        @Override
+        public void returnMyInfoSuccess(GetMyInfoResult getMyInfoResult) {
+            // TODO Auto-generated method stub
+            MyInfoActivity.this.getMyInfoResult = getMyInfoResult;
+            List<Enterprise> enterpriseList = getMyInfoResult.getEnterpriseList();
+            Enterprise defaultEnterprise = getMyInfoResult.getDefaultEnterprise();
+            if (enterpriseList.size() == 0 && defaultEnterprise == null){
+                ToastUtils.show(MyApplication.getInstance(),  R.string.login_user_not_bound_enterprise);
+                MyApplication.getInstance().signout();
+            }else {
+                PreferencesUtils.putString(MyInfoActivity.this, "myInfo", getMyInfoResult.getResponse());
+                showMyInfo();
+            }
+        }
+
+        @Override
+        public void returnMyInfoFail(String error, int errorCode) {
+            // TODO Auto-generated method stub
         }
     }
 
