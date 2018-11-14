@@ -205,57 +205,62 @@ public class NetUtils {
 		String line = null;
 		Process process = null;
 		BufferedReader successReader = null;
-		String command = "ping -c " + pingNetEntity.getPingCount() + " -w " + 1000 + " -W " + 1000+ " " + pingNetEntity.getIp();
+		String command = "ping -c " + pingNetEntity.getPingCount() + " -w " + 1 + " " + pingNetEntity.getIp();
 		LogUtils.LbcDebug("command "+command);
-//        String command = "ping -c " + pingCount + " " + host;
-		try {
-			long a = System.currentTimeMillis();
-			process = Runtime.getRuntime().exec(command);
-			long b = System.currentTimeMillis();
-			if (process == null) {
-				append(pingNetEntity.getResultBuffer(), "ping fail:process is null.");
-				pingNetEntity.setPingTime(null);
-				pingNetEntity.setResult(false);
+		long taegrtTime = System.currentTimeMillis()+4500;
+		while (System.currentTimeMillis()<taegrtTime){
+			try {
+				long a = System.currentTimeMillis();
+				process = Runtime.getRuntime().exec(command);
+				long b = System.currentTimeMillis();
+				if (process == null) {
+					append(pingNetEntity.getResultBuffer(), "ping fail:process is null.");
+					pingNetEntity.setPingTime(null);
+					pingNetEntity.setResult(false);
+					return pingNetEntity;
+				}
+				long c = System.currentTimeMillis();
+				successReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+				long d = System.currentTimeMillis();
+				while ((line = successReader.readLine()) != null) {
+					append(pingNetEntity.getResultBuffer(), line);
+					String time;
+					if ((time = getTime(line)) != null) {
+						pingNetEntity.setPingTime(time);
+					}
+				}
+				long e = System.currentTimeMillis();
+				int status = process.waitFor();
+				long f = System.currentTimeMillis();
+				if (status == 0) {
+					append(pingNetEntity.getResultBuffer(), "exec cmd success:" + command);
+					pingNetEntity.setResult(true);
+				} else {
+					append(pingNetEntity.getResultBuffer(), "exec cmd fail.");
+					pingNetEntity.setPingTime(null);
+					pingNetEntity.setResult(false);
+				}
+				append(pingNetEntity.getResultBuffer(), "exec finished.");
+				long g = System.currentTimeMillis();
+				LogUtils.LbcDebug("b-a::"+(b-a)+"  c-b::"+(c-b)+"  d-c::"+(d-c)+"  e-d::"+(e-d)+"  f-e::"+(f-e)+"  g-f::"+(g-f));
+			} catch (IOException e) {
+				Log.e(TAG, String.valueOf(e));
+			} catch (InterruptedException e) {
+				Log.e(TAG, String.valueOf(e));
+			} finally {
+				if (process != null) {
+					process.destroy();
+				}
+				if (successReader != null) {
+					try {
+						successReader.close();
+					} catch (IOException e) {
+						Log.e(TAG, String.valueOf(e));
+					}
+				}
+			}
+			if(pingNetEntity.isResult()){
 				return pingNetEntity;
-			}
-			long c = System.currentTimeMillis();
-			successReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-			long d = System.currentTimeMillis();
-			while ((line = successReader.readLine()) != null) {
-				append(pingNetEntity.getResultBuffer(), line);
-				String time;
-				if ((time = getTime(line)) != null) {
-					pingNetEntity.setPingTime(time);
-				}
-			}
-			long e = System.currentTimeMillis();
-			int status = process.waitFor();
-			long f = System.currentTimeMillis();
-			if (status == 0) {
-				append(pingNetEntity.getResultBuffer(), "exec cmd success:" + command);
-				pingNetEntity.setResult(true);
-			} else {
-				append(pingNetEntity.getResultBuffer(), "exec cmd fail.");
-				pingNetEntity.setPingTime(null);
-				pingNetEntity.setResult(false);
-			}
-			append(pingNetEntity.getResultBuffer(), "exec finished.");
-			long g = System.currentTimeMillis();
-			LogUtils.LbcDebug("b-a::"+(b-a)+"  c-b::"+(c-b)+"  d-c::"+(d-c)+"  e-d::"+(e-d)+"  f-e::"+(f-e)+"  g-f::"+(g-f));
-		} catch (IOException e) {
-			Log.e(TAG, String.valueOf(e));
-		} catch (InterruptedException e) {
-			Log.e(TAG, String.valueOf(e));
-		} finally {
-			if (process != null) {
-				process.destroy();
-			}
-			if (successReader != null) {
-				try {
-					successReader.close();
-				} catch (IOException e) {
-					Log.e(TAG, String.valueOf(e));
-				}
 			}
 		}
 		return pingNetEntity;

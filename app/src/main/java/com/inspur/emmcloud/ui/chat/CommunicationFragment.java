@@ -127,10 +127,6 @@ public class CommunicationFragment extends Fragment {
     private ImageView contactImg;
 
 
-    private Thread  netStateThread;
-    private Boolean netState=true;
-    private PingNetEntity pingNetEntity;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
@@ -143,59 +139,9 @@ public class CommunicationFragment extends Fragment {
         setHeaderFunctionOptions(null);
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-//        if(netStateThread==null){
-//            netState=false;
-//            netStateThread = new Thread(new Runnable() {
-//                @Override
-//                public void run() {
-//                    try {
-//                        boolean LastState =true;
-//                        while (!netState) {
-//                            Thread.sleep(5000); //线程周期3s
-//                            LogUtils.LbcDebug("Thread sleep 3s");
-//                            PingNetEntity pingNetEntity=new PingNetEntity("www.baidu.com",3,5,new StringBuffer());
-//                            pingNetEntity=NetUtils.ping(pingNetEntity);
-//                            android.os.Message message = handler.obtainMessage(PING_NET_STATE_HANDLER,pingNetEntity.isResult());
-//                            StringBuffer netResult  =  pingNetEntity.getResultBuffer();
-//                           String data = netResult.toString();
-//                            LogUtils.LbcDebug("网络数据"+data);
-//                            message.sendToTarget();
-//                        }
-//                    } catch (Exception e){
-//                        LogUtils.LbcDebug("error");
-//                    }
-//                }
-//            });
-          //  netStateThread.start();
-//        }
-        new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                            PingNetEntity pingNetEntity=new PingNetEntity("www.baidu.com",1,1,new StringBuffer());
-                            pingNetEntity=NetUtils.ping(pingNetEntity);
-                            android.os.Message message = handler.obtainMessage(PING_NET_STATE_HANDLER,pingNetEntity.isResult());
-                            StringBuffer netResult  =  pingNetEntity.getResultBuffer();
-                           String data = netResult.toString();
-                            LogUtils.LbcDebug("网络数据"+data);
-                            message.sendToTarget();
-                    } catch (Exception e){
-                        LogUtils.LbcDebug("error");
-                    }
-                }
-            }).start();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        netState =true;
-        netStateThread=null;
-    }
-
+    /**
+     * 切换tab实现网络状态监测
+     * */
     @Override
     public void onResume() {
         super.onResume();
@@ -206,21 +152,12 @@ public class CommunicationFragment extends Fragment {
                     PingNetEntity pingNetEntity=new PingNetEntity("www.baidu.com",1,1,new StringBuffer());
                     pingNetEntity=NetUtils.ping(pingNetEntity);
                     android.os.Message message = handler.obtainMessage(PING_NET_STATE_HANDLER,pingNetEntity.isResult());
-                    StringBuffer netResult  =  pingNetEntity.getResultBuffer();
-                    String data = netResult.toString();
-                    LogUtils.LbcDebug("网络数据"+data);
                     message.sendToTarget();
                 } catch (Exception e){
-                    LogUtils.LbcDebug("error");
                 }
             }
         }).start();
 
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
     }
 
     private void initView() {
@@ -315,7 +252,6 @@ public class CommunicationFragment extends Fragment {
             @Override
             public void onNetExceptionWightClick() {
                 IntentUtils.startActivity(getActivity(), NetWorkStateDetailActivity.class);
-                LogUtils.LbcDebug("点击网络状态异常框");
             }
         });
         conversionRecycleView.setAdapter(conversationAdapter);
@@ -372,26 +308,34 @@ public class CommunicationFragment extends Fragment {
         }
     }
 
-
+    /**
+     * 沟通页网络异常提示框
+     * @param netState  通过Action获取操作类型
+     * */
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void netWorkStateTip(String netState) {
-       if(netState.equals("event_tag_net_state_change")){
-
-           new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        LogUtils.LbcDebug("eventBus 3333333333333333333333333333");
+    public void netWorkStateTip(SimpleEventMessage netState) {
+        if(netState.getAction().equals(Constant.EVENTBUS_TAG__NET_STATE_CHANGE)){
+            if(((String)netState.getMessageObj()).equals("event_tag_net_state_change")){
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
                             PingNetEntity pingNetEntity=new PingNetEntity("www.baidu.com",1,1,new StringBuffer());
                             pingNetEntity=NetUtils.ping(pingNetEntity);
-                        LogUtils.LbcDebug("result"+pingNetEntity.isResult());
                             android.os.Message message = handler.obtainMessage(PING_NET_STATE_HANDLER,pingNetEntity.isResult());
                             message.sendToTarget();
-                    } catch (Exception e){
-                        LogUtils.LbcDebug("error");
+                        } catch (Exception e){
+                        }
                     }
-                }
-            }).start();
+                }).start();
+
+            } else if(((String)netState.getMessageObj()).equals("event_tag_net_state_error")) {
+                android.os.Message message = handler.obtainMessage(PING_NET_STATE_HANDLER,false);
+                message.sendToTarget();
+            } else if (((String)netState.getMessageObj()).equals("event_tag_net_state_ok")) {
+                android.os.Message message = handler.obtainMessage(PING_NET_STATE_HANDLER,true);
+                message.sendToTarget();
+            }
         }
     }
     /**
@@ -1117,7 +1061,6 @@ public class CommunicationFragment extends Fragment {
      */
     private void setConversationHide(String id) {
         if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
-            LogUtils.LbcDebug("setConversationHide"+id);
             loadingDlg.show();
             apiService.setConversationHide(id);
         }
