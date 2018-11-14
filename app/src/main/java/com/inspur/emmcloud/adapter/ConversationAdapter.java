@@ -226,9 +226,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
 
     @Override
     public int getItemCount() {
-
         int count = (uiConversationList == null ? 0 : uiConversationList.size());
-
         if (VIEW_HEADER != null) {
             count++;
         }
