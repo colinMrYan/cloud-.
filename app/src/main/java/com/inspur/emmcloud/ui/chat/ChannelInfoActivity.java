@@ -76,7 +76,7 @@ public class ChannelInfoActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_channel_info);
+        setContentView(R.layout.activity_conversation_group_info);
         channelMemberNumText = (TextView) findViewById(R.id.tv_member);
         apiService = new ChatAPIService(ChannelInfoActivity.this);
         apiService.setAPIInterface(new WebService());

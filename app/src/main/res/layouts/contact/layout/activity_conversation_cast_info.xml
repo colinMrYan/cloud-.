@@ -3,24 +3,21 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="@color/content_bg"
-    android:fitsSystemWindows="true" >
+    android:fitsSystemWindows="true">
 
     <RelativeLayout
         android:id="@+id/header_layout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="@color/header_bg" >
+        android:background="@color/header_bg">
 
         <RelativeLayout
             android:id="@+id/back_layout"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:clickable="true"
+            android:layout_height="@dimen/header_height"
             android:onClick="onClick"
-            android:paddingBottom="10dp"
             android:paddingLeft="12dp"
-            android:paddingRight="12dp"
-            android:paddingTop="10dp" >
+            android:paddingRight="12dp">
 
             <ImageView
                 android:id="@+id/back_btn"
@@ -37,7 +34,7 @@
             android:id="@+id/img_photo"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:layout_below="@id/back_layout"
+            android:layout_marginTop="45dp"
             android:layout_centerHorizontal="true"
             android:onClick="onClick"
             android:src="@drawable/icon_photo_default" />
@@ -61,13 +58,13 @@
         android:layout_below="@id/header_layout"
         android:background="@color/white"
         android:orientation="vertical"
-        android:paddingLeft="20dp" >
+        android:paddingLeft="20dp">
 
         <LinearLayout
             android:id="@+id/department_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <TextView
                 android:layout_width="match_parent"
@@ -98,7 +95,7 @@
             android:id="@+id/mail_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <TextView
                 android:layout_width="match_parent"
@@ -120,36 +117,36 @@
                 android:textIsSelectable="true"
                 android:textSize="@dimen/content_title_textsize" />
         </LinearLayout>
+
         <View
             android:layout_width="fill_parent"
             android:layout_height="0.5dp"
             android:background="@color/color_list_divider" />
-         <RelativeLayout
-             android:id="@+id/support_top_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/white"
-                     android:paddingRight="16dp"
-                    >
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:paddingBottom="10dp"
-                        android:paddingTop="10dp"
-                        android:text="@string/channel_set_top"
-                        android:textColor="#FF333333"
-                        android:textSize="@dimen/content_title_textsize" />
+        <RelativeLayout
+            android:id="@+id/support_top_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:paddingRight="16dp">
 
-                    <com.inspur.emmcloud.widget.SwitchView
-                        android:id="@+id/sv_stick"
-                        android:layout_width="37dp"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true" >
-                    </com.inspur.emmcloud.widget.SwitchView>
-                </RelativeLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp"
+                android:text="@string/channel_set_top"
+                android:textColor="#FF333333"
+                android:textSize="@dimen/content_title_textsize" />
+
+            <com.inspur.emmcloud.widget.SwitchView
+                android:id="@+id/sv_stick"
+                android:layout_width="37dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"></com.inspur.emmcloud.widget.SwitchView>
+        </RelativeLayout>
     </LinearLayout>
 
 </RelativeLayout>

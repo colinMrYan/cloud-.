@@ -107,7 +107,6 @@ public class GroupNewsActivity extends BaseFragmentActivity implements
 			ToastUtils.show(GroupNewsActivity.this,R.string.news_no_news);
 			finish();
 		}
-		titleList = titleList.subList(0,2);
 		//pagerAdapter
 		pagerAdapter = new MyPagerAdapter(getSupportFragmentManager(),titleList);
 		//获取获取viewPager，并设置

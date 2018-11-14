@@ -40,7 +40,6 @@ import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.EditTextUtils;
 import com.inspur.emmcloud.util.common.InputMethodUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
@@ -65,7 +64,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
     private static final int SEARCH_RECENT = 3;
     private static final int SEARCH_NOTHIING = 4;
     private static final int REFRESH_CONTACT_DATA = 5;
-    public static final String EXTRA_EXCLUDE_CONTACT_LIST = "excludeContactList";
+    public static final String EXTRA_EXCLUDE_SELECT = "excludeContactUidList";
     public static final String EXTRA_LIMIT = "select_limit";
     private List<ChannelGroup> searchChannelGroupList = new ArrayList<ChannelGroup>(); // 群组搜索结果
     private List<Contact> searchContactList = new ArrayList<Contact>(); // 通讯录搜索结果
@@ -198,10 +197,12 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
             default:
                 break;
         }
-        notifyFlowLayoutDataChange(searchText);
-        if (getIntent().hasExtra(EXTRA_EXCLUDE_CONTACT_LIST)){
-            excludeContactList = (List<Contact>) getIntent().getSerializableExtra(EXTRA_EXCLUDE_CONTACT_LIST);
+        if (getIntent().hasExtra(EXTRA_EXCLUDE_SELECT)){
+            List<String> excludeContactUidList = (List<String>) getIntent().getExtras().getSerializable(EXTRA_EXCLUDE_SELECT);
+            excludeContactList = Contact.contactUserList2ContactList(ContactUserCacheUtils.getContactUserListById(excludeContactUidList));
         }
+        notifyFlowLayoutDataChange(searchText);
+
     }
 
     /**
@@ -376,7 +377,6 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
                             public void run() {
                                 searchContactList = ContactUserCacheUtils.getSearchContact(searchText,
                                         excludeContactList, 25);
-                                LogUtils.jasonDebug("size="+searchContactList.size());
                                 if (handler !=null){
                                     handler.sendEmptyMessage(REFRESH_CONTACT_DATA);
                                 }

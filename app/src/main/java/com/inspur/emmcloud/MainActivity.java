@@ -265,10 +265,16 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
             IntentUtils.startActivity(MainActivity.this,
                     GuideActivity.class, true);
         } else {
-            String accessToken = PreferencesUtils.getString(MainActivity.this,
-                    "accessToken", "");
-            IntentUtils.startActivity(MainActivity.this, (!StringUtils.isBlank(accessToken)) ?
-                    IndexActivity.class : LoginActivity.class, true);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    String accessToken = PreferencesUtils.getString(MainActivity.this,
+                            "accessToken", "");
+                    IntentUtils.startActivity(MainActivity.this, (!StringUtils.isBlank(accessToken)) ?
+                            IndexActivity.class : LoginActivity.class, true);
+                }
+            },50);
+
         }
     }
 

@@ -84,7 +84,6 @@ class ImageUtil {
             float scaleW = (float) reqWidth / scaledBitmap.getWidth();
             float scaleH = (float) reqHeight / scaledBitmap.getHeight();
             float scale = scaleW<scaleH?scaleW:scaleH;
-            LogUtils.jasonDebug("scale="+scale);
             //宽高等比例缩放
             matrix.postScale(scale,scale);
         }

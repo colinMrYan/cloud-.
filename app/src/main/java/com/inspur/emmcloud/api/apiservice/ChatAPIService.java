@@ -18,6 +18,7 @@ import com.inspur.emmcloud.api.CloudHttpMethod;
 import com.inspur.emmcloud.api.HttpUtils;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileUploadTokenResult;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
+import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.GetChannelListResult;
 import com.inspur.emmcloud.bean.chat.GetConversationListResult;
 import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
@@ -799,7 +800,8 @@ public class ChatAPIService {
     public void addConversationGroupMember(final String id, final List<String> uidList){
         final String url = APIUri.getModifyGroupMemberUrl(id);
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(url);
-        params.addParameter("members", JSONUtils.toJSONArray(uidList));
+        params.addParameter("members", uidList);
+        params.setAsJsonContent(true);
         HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, url) {
 
             @Override
@@ -843,6 +845,7 @@ public class ChatAPIService {
         final String url = APIUri.getModifyGroupMemberUrl(id);
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(url);
         params.addParameter("members", JSONUtils.toJSONArray(uidList));
+        params.setAsJsonContent(true);
         HttpUtils.request(context, CloudHttpMethod.DELETE, params, new APICallback(context, url) {
 
             @Override
@@ -1535,6 +1538,89 @@ public class ChatAPIService {
             public void callbackFail(String error, int responseCode) {
                 // TODO Auto-generated method stub
                 apiInterface.returnDndFail(error, responseCode);
+            }
+        });
+    }
+
+    /**
+     * 获取会话信息
+     * @param id
+     */
+    public void getConversationInfo(final String id){
+        final String completeUrl = APIUri.getConversationInfoUrl(id);
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        getConversationInfo(id);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(oauthCallBack, requestTime);
+            }
+
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+                JSONObject object = JSONUtils.getJSONObject(new String(arg0));
+                apiInterface.returnConversationInfoSuccess(new Conversation(object));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                apiInterface.returnConversationInfoFail(error, responseCode);
+            }
+        });
+    }
+
+    /**
+     * 修改会话名称
+     * @param id
+     * @param name
+     */
+    public void updateConversationName(final String id,final String name){
+        final String completeUrl = APIUri.getUpdateConversationNameUrl(id);
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
+        params.addQueryStringParameter("name",name);
+        HttpUtils.request(context, CloudHttpMethod.PUT, params, new APICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        updateConversationName(id,name);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(oauthCallBack, requestTime);
+            }
+
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+                apiInterface.returnUpdateConversationNameSuccess();
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                apiInterface.returnUpdateConversationNameFail(error, responseCode);
             }
         });
     }
