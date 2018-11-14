@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.alibaba.fastjson.JSON;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.ChannelMessageAdapter;
@@ -326,9 +325,33 @@ public class ConversationActivity extends ConversationBaseActivity {
             }
             switch (message.getType()) {
                 case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
+                    if(message.getMsgContentAttachmentFile().getMedia().equals(message.getLocalPath())){
+                        sendMessageWithFile(message);
+                    }else{
+                        VolumeFile volumeFile = new VolumeFile();
+                        volumeFile.setName(message.getMsgContentAttachmentFile().getName());
+                        volumeFile.setSize(message.getMsgContentAttachmentFile().getSize());
+                        volumeFile.setPath(message.getMsgContentAttachmentFile().getMedia());
+                        WSAPIService.getInstance().sendChatRegularFileMsg(message, volumeFile);
+                    }
+                    break;
                 case Message.MESSAGE_TYPE_MEDIA_IMAGE:
+                    if(message.getMsgContentMediaImage().getRawMedia().equals(message.getLocalPath())){
+                        sendMessageWithFile(message);
+                    }else{
+                        VolumeFile volumeFile = new VolumeFile();
+                        volumeFile.setName(message.getMsgContentMediaImage().getName());
+                        volumeFile.setPath(message.getMsgContentMediaImage().getRawMedia());
+                        WSAPIService.getInstance().sendChatRegularFileMsg(message, volumeFile);
+                    }
+                    break;
                 case Message.MESSAGE_TYPE_MEDIA_VOICE:
-                    handleReSendResourceMessage(message);
+                    if(message.getMsgContentMediaVoice().getMedia().equals(message.getLocalPath())){
+                        sendMessageWithFile(message);
+                    }else{
+                        VolumeFile volumeFile = new VolumeFile();
+                        volumeFile.setPath(message.getMsgContentMediaVoice().getMedia());
+                    }
                     break;
                 case Message.MESSAGE_TYPE_TEXT_PLAIN:
                     WSAPIService.getInstance().sendChatTextPlainMsg(message);
@@ -340,10 +363,6 @@ public class ConversationActivity extends ConversationBaseActivity {
                     break;
             }
         }
-    }
-
-    private void handleReSendResourceMessage(Message message) {
-        sendMessageWithFile(message);
     }
 
     /**
@@ -545,23 +564,24 @@ public class ConversationActivity extends ConversationBaseActivity {
         messageRecourceUploadUtils.setProgressCallback(new ProgressCallback() {
             @Override
             public void onSuccess(VolumeFile volumeFile) {
+                fakeMessage.setLocalPath(volumeFile.getPath());
                 switch (fakeMessage.getType()) {
                     case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
-//                        CommunicationUtils.combinLocalRegularFileMessage();
+                        Message fileMessage = CommunicationUtils.addInfo2RegularFileMessage(fakeMessage,volumeFile);
+                        MessageCacheUtil.saveMessage(ConversationActivity.this,fileMessage);
                         WSAPIService.getInstance().sendChatRegularFileMsg(fakeMessage, volumeFile);
                         break;
                     case Message.MESSAGE_TYPE_MEDIA_IMAGE:
+                        Message imgMessage = CommunicationUtils.addInfo2ImageMessage(fakeMessage,volumeFile);
+                        MessageCacheUtil.saveMessage(ConversationActivity.this,imgMessage);
                         WSAPIService.getInstance().sendChatMediaImageMsg( fakeMessage,volumeFile);
                         break;
                     case Message.MESSAGE_TYPE_MEDIA_VOICE:
+                        Message voiceMessage = CommunicationUtils.addInfo2VoiceMessage(fakeMessage,volumeFile);
+                        MessageCacheUtil.saveMessage(ConversationActivity.this,voiceMessage);
                         WSAPIService.getInstance().sendChatMediaVoiceMsg(fakeMessage, volumeFile);
                         break;
                 }
-                LogUtils.YfcDebug("修改资源文件路径之前："+JSON.toJSONString(fakeMessage));
-                //文件发送成功修改localPath，在重发消息时需要用这个字段判断
-                fakeMessage.setLocalPath(volumeFile.getPath());
-                LogUtils.YfcDebug("上传资源完成后修改localPath"+ JSON.toJSONString(fakeMessage));
-                MessageCacheUtil.saveMessage(ConversationActivity.this,fakeMessage);
             }
 
             @Override
@@ -576,7 +596,6 @@ public class ConversationActivity extends ConversationBaseActivity {
         });
         messageRecourceUploadUtils.uploadResFile(fakeMessage);
     }
-
 
     /**
      * 控件点击事件
@@ -699,7 +718,12 @@ public class ConversationActivity extends ConversationBaseActivity {
         //发送中，无网,发送消息失败
         if(status == Message.MESSAGE_SEND_FAIL || (status == Message.MESSAGE_SEND_ING && !NetUtils.isNetworkConnected(ConversationActivity.this))){
             message.setSendStatus(Message.MESSAGE_SEND_FAIL);
+            message.setRead(Message.MESSAGE_READ);
             MessageCacheUtil.saveMessage(ConversationActivity.this,message);
+            // 通知沟通页面更新列表状态
+            Intent intent = new Intent("message_notify");
+            intent.putExtra("command", "sort_session_list");
+            LocalBroadcastManager.getInstance(ConversationActivity.this).sendBroadcast(intent);
             return true;
         }
         return false;

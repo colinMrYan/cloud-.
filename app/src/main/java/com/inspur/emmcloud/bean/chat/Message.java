@@ -25,6 +25,8 @@ public class Message implements Serializable {
     public static final int MESSAGE_SEND_SUCCESS = 1;
     public static final int MESSAGE_SEND_FAIL = 2;
     public static final int MESSAGE_SEND_EDIT = 3;
+    public static final int MESSAGE_READ = 1;
+    public static final int MESSAGE_UNREAD = 0;
     @Column(name = "id", isId = true)
     private String id;
     @Column(name = "message")

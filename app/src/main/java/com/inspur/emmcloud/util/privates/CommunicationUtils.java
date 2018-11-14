@@ -113,6 +113,23 @@ public class CommunicationUtils {
         return message;
     }
 
+    public static Message combinLocalCommentTextPlainMessage(String cid, String commentedMid, String text, Map<String, String> mentionsMap) {
+        String tracer = getTracer();
+        Message message = combinLocalMessageCommon();
+        message.setChannel(cid);
+        message.setId(tracer);
+        message.setTmpId(tracer);
+        message.setType("comment/text-plain");
+        MsgContentComment msgContentComment = new MsgContentComment();
+        msgContentComment.setText(text);
+        msgContentComment.setMessage(commentedMid);
+        if (mentionsMap != null && mentionsMap.size() > 0) {
+            msgContentComment.setMentionsMap(mentionsMap);
+        }
+        message.setContent(msgContentComment.toString());
+        return message;
+    }
+
     public static Message combinLocalRegularFileMessage(String cid, String localFilePath) {
         String tracer = getTracer();
         Message message = combinLocalMessageCommon();
@@ -131,46 +148,39 @@ public class CommunicationUtils {
         return message;
     }
 
-    public Message addInfoRegularFileMessage(Message fakeMessage, VolumeFile volumeFile){
-        fakeMessage.getMsgContentAttachmentFile().setCategory(CommunicationUtils.getChatFileCategory(volumeFile.getName()));
+    /**
+     * 向本地缓存在数据库里的文件假消息添加信息
+     * @param fakeMessage
+     * @param volumeFile
+     * @return
+     */
+    public static Message addInfo2RegularFileMessage(Message fakeMessage, VolumeFile volumeFile){
         fakeMessage.getMsgContentAttachmentFile().setMedia(volumeFile.getPath());
         fakeMessage.getMsgContentAttachmentFile().setName(volumeFile.getName());
+        fakeMessage.getMsgContentAttachmentFile().setSize(volumeFile.getSize());
         return fakeMessage;
     }
 
-    public static Message combinLocalCommentTextPlainMessage(String cid, String commentedMid, String text, Map<String, String> mentionsMap) {
+
+    public static Message combinLocalMediaVoiceMessage(String cid, String localFilePath, int duration, String results) {
         String tracer = getTracer();
         Message message = combinLocalMessageCommon();
         message.setChannel(cid);
         message.setId(tracer);
         message.setTmpId(tracer);
-        message.setType("comment/text-plain");
-        MsgContentComment msgContentComment = new MsgContentComment();
-        msgContentComment.setText(text);
-        msgContentComment.setMessage(commentedMid);
-        if (mentionsMap != null && mentionsMap.size() > 0) {
-            msgContentComment.setMentionsMap(mentionsMap);
-        }
-        message.setContent(msgContentComment.toString());
+        message.setType(Message.MESSAGE_TYPE_MEDIA_VOICE);
+        message.setLocalPath(localFilePath);
+        MsgContentMediaVoice msgContentMediaVoice = new MsgContentMediaVoice();
+        msgContentMediaVoice.setDuration(duration);
+        msgContentMediaVoice.setMedia(localFilePath);
+        msgContentMediaVoice.setJsonResults(results);
+        message.setContent(msgContentMediaVoice.toString());
         return message;
-
-
     }
 
-    public static Message combinLocalExtendedLinksMessage(String cid, String poster, String title, String subTitle, String url) {
-        String tracer = getTracer();
-        Message message = combinLocalMessageCommon();
-        message.setChannel(cid);
-        message.setId(tracer);
-        message.setTmpId(tracer);
-        message.setType("extended/links");
-        MsgContentExtendedLinks msgContentExtendedLinks = new MsgContentExtendedLinks();
-        msgContentExtendedLinks.setPoster(poster);
-        msgContentExtendedLinks.setTitle(title);
-        msgContentExtendedLinks.setSubtitle(subTitle);
-        msgContentExtendedLinks.setUrl(url);
-        message.setContent(msgContentExtendedLinks.toString());
-        return message;
+    public static Message addInfo2VoiceMessage(Message fakeMessage, VolumeFile volumeFile){
+        fakeMessage.getMsgContentMediaVoice().setMedia(volumeFile.getPath());
+        return fakeMessage;
     }
 
     public static Message combinLocalMediaImageMessage(String cid, String localFilePath) {
@@ -206,20 +216,31 @@ public class CommunicationUtils {
         return message;
     }
 
+    /**
+     * 向本地缓存在数据库里的文件假消息添加信息
+     * @param fakeMessage
+     * @param volumeFile
+     * @return
+     */
+    public static Message addInfo2ImageMessage(Message fakeMessage, VolumeFile volumeFile){
+        fakeMessage.getMsgContentMediaImage().setName(volumeFile.getName());
+        fakeMessage.getMsgContentMediaImage().setRawMedia(volumeFile.getPath());
+        return fakeMessage;
+    }
 
-    public static Message combinLocalMediaVoiceMessage(String cid, String localFilePath, int duration, String results) {
+    public static Message combinLocalExtendedLinksMessage(String cid, String poster, String title, String subTitle, String url) {
         String tracer = getTracer();
         Message message = combinLocalMessageCommon();
         message.setChannel(cid);
         message.setId(tracer);
         message.setTmpId(tracer);
-        message.setType(Message.MESSAGE_TYPE_MEDIA_VOICE);
-        message.setLocalPath(localFilePath);
-        MsgContentMediaVoice msgContentMediaVoice = new MsgContentMediaVoice();
-        msgContentMediaVoice.setDuration(duration);
-        msgContentMediaVoice.setMedia(localFilePath);
-        msgContentMediaVoice.setJsonResults(results);
-        message.setContent(msgContentMediaVoice.toString());
+        message.setType("extended/links");
+        MsgContentExtendedLinks msgContentExtendedLinks = new MsgContentExtendedLinks();
+        msgContentExtendedLinks.setPoster(poster);
+        msgContentExtendedLinks.setTitle(title);
+        msgContentExtendedLinks.setSubtitle(subTitle);
+        msgContentExtendedLinks.setUrl(url);
+        message.setContent(msgContentExtendedLinks.toString());
         return message;
     }
 
