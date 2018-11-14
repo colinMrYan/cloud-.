@@ -52,7 +52,6 @@ public class PortalLogInActivity extends BaseActivity {
         });
     }
 
-
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.rl_back_portal_login:

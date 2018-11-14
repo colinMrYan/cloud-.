@@ -153,7 +153,6 @@ public class NetWorkStateDetailActivity extends BaseActivity {
                     httpURLConnection.setInstanceFollowRedirects(false);
                     httpURLConnection.setRequestMethod("POST");//设置HTTP请求所使用的方法，GET表示希望从服务器那里获取数据，而POST则表示希望提交数据给服务器
                     httpURLConnection.setReadTimeout(20000);//设置读取超时的毫秒数
-
                     List<String> BundleData=new ArrayList<>();
                     String httpStateNo =httpURLConnection.getHeaderField("X-Android-Response-Source");
                     BundleData.add(httpStateNo);

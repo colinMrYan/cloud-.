@@ -54,7 +54,6 @@ import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.ui.mine.setting.NetWorkStateDetailActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PingNetEntity;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -106,9 +105,7 @@ public class CommunicationFragment extends Fragment {
     private static final int SORT_CONVERSATION_LIST = 4;
     private static final int REQUEST_SCAN_LOGIN_QRCODE_RESULT = 5;
     private static final int CACHE_CONVERSATION_LIST_SUCCESS = 6;
-
     private static final int PING_NET_STATE_HANDLER = 7;
-
     private View rootView;
     private RecyclerView conversionRecycleView;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -125,7 +122,6 @@ public class CommunicationFragment extends Fragment {
     private LoadingDialog loadingDlg;
     private ImageView headerFunctionOptionImg;
     private ImageView contactImg;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -274,7 +270,6 @@ public class CommunicationFragment extends Fragment {
                         if (which == 0) {
                             setConversationStick(uiConversation.getId(), !uiConversation.getConversation().isStick());
                         } else {
-
                             setConversationHide(uiConversation.getId());
                         }
                     }

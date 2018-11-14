@@ -1464,7 +1464,6 @@ public class ChatAPIService {
         final String completeUrl = APIUri.getConversationSetHide(id);
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
         params.addParameter("hide",true);
-        LogUtils.LbcDebug("setConversationHide"+id);
         HttpUtils.request(context, CloudHttpMethod.PUT, params, new APICallback(context, completeUrl) {
 
             @Override
@@ -1487,14 +1486,12 @@ public class ChatAPIService {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
-                LogUtils.LbcDebug("returnSetConversationHideSuccess"+id);
                 apiInterface.returnSetConversationHideSuccess(id);
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
                 // TODO Auto-generated method stub
-                LogUtils.LbcDebug("callbackFail"+id);
                 apiInterface.returnSetConversationHideFail(error, responseCode);
             }
         });

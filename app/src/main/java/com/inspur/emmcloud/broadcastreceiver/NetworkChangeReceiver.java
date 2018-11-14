@@ -13,7 +13,6 @@ import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
-
 import org.greenrobot.eventbus.EventBus;
 
 /**
@@ -24,6 +23,7 @@ import org.greenrobot.eventbus.EventBus;
 public class NetworkChangeReceiver extends BroadcastReceiver {
 
 	private static final String TAG = "NetworkChangeReceiver";
+
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		// TODO Auto-generated method stub
@@ -32,6 +32,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
 		try {
 			State mobile = conMan.getNetworkInfo(
 					ConnectivityManager.TYPE_MOBILE).getState();
+
 			State wifi = conMan.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
 					.getState();
 			boolean isAppOnForeground = ((MyApplication)context.getApplicationContext()).getIsActive();
@@ -56,5 +57,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
 			// TODO: handle exception
 			LogUtils.debug(TAG, e.toString());
 		}
+
 	}
+
 }
