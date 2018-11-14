@@ -58,6 +58,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
                 adapterListener.onDataChange();
             }
         }
+
     }
 
     @Override
