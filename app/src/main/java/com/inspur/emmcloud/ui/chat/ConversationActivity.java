@@ -631,8 +631,8 @@ public class ConversationActivity extends ConversationBaseActivity {
         Bundle bundle = new Bundle();
         switch (conversation.getType()) {
             case Conversation.TYPE_GROUP:
-                bundle.putSerializable(EXTRA_CONVERSATION, conversation);
-                Intent intent = new Intent(this, ConversationInfoActivity.class);
+                bundle.putSerializable(ConversationGroupInfoActivity.EXTRA_CID, conversation.getId());
+                Intent intent = new Intent(this, ConversationGroupInfoActivity.class);
                 intent.putExtras(bundle);
                 startActivityForResult(intent, REQUEST_QUIT_CHANNELGROUP);
                 break;
@@ -643,12 +643,9 @@ public class ConversationActivity extends ConversationBaseActivity {
                         UserInfoActivity.class, bundle);
                 break;
             case Conversation.TYPE_CAST:
-//                String botUid = DirectChannelUtils.getRobotInfo(getApplicationContext(),
-//                        channel.getTitle()).getId();
-//                bundle.putString("uid", botUid);
-//                bundle.putString("type", channel.getType());
-//                IntentUtils.startActivity(ConversationActivity.this,
-//                        RobotInfoActivity.class, bundle);
+                bundle.putSerializable(ConversationCastInfoActivity.EXTRA_CID, conversation.getId());
+                IntentUtils.startActivity(ConversationActivity.this,
+                        ConversationCastInfoActivity.class, bundle);
                 break;
             default:
                 break;

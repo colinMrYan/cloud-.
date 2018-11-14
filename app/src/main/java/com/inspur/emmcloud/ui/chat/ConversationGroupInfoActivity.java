@@ -47,12 +47,13 @@ import java.util.List;
 /**
  * 群组类型会话详情
  */
-@ContentView(R.layout.activity_channel_info)
-public class ConversationInfoActivity extends BaseActivity {
+@ContentView(R.layout.activity_conversation_group_info)
+public class ConversationGroupInfoActivity extends BaseActivity {
 
     private static final int REQUEST_UPDATE_CHANNEL_NAME = 1;
     private static final int QEQUEST_ADD_MEMBER = 2;
     private static final int QEQUEST_DEL_MEMBER = 3;
+    public static final String EXTRA_CID= "cid";
     @ViewInject(R.id.gv_member)
     private NoScrollGridView memberGrid;
     @ViewInject(R.id.tv_member)
@@ -79,9 +80,10 @@ public class ConversationInfoActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        conversation = (Conversation) getIntent().getExtras().getSerializable(ConversationActivity.EXTRA_CONVERSATION);
+        String cid = getIntent().getExtras().getString(EXTRA_CID);
+        conversation = ConversationCacheUtils.getConversation(MyApplication.getInstance(),cid);
         isOwner = conversation.getOwner().equals(MyApplication.getInstance().getUid());
-        apiService = new ChatAPIService(ConversationInfoActivity.this);
+        apiService = new ChatAPIService(ConversationGroupInfoActivity.this);
         apiService.setAPIInterface(new WebService());
         initView();
     }
@@ -90,7 +92,7 @@ public class ConversationInfoActivity extends BaseActivity {
      * 数据取出后显示ui
      */
     private void initView() {
-        loadingDlg = new LoadingDialog(ConversationInfoActivity.this);
+        loadingDlg = new LoadingDialog(ConversationGroupInfoActivity.this);
         memberUidList = conversation.getMemberList();
         int memberSize = ContactUserCacheUtils.getContactUserListById(memberUidList).size();
         memberText.setText(getString(R.string.all_group_member,memberSize));
@@ -113,7 +115,7 @@ public class ConversationInfoActivity extends BaseActivity {
      */
     private void setChannelTop(boolean isSetIop) {
         stickSwitch.toggleSwitch(isSetIop);
-        ChannelOperationCacheUtils.setChannelTop(ConversationInfoActivity.this, conversation.getId(),
+        ChannelOperationCacheUtils.setChannelTop(ConversationGroupInfoActivity.this, conversation.getId(),
                 isSetIop);
         // 通知消息页面重新创建群组头像
         Intent intent = new Intent("message_notify");
@@ -147,7 +149,7 @@ public class ConversationInfoActivity extends BaseActivity {
                 String uid = uiMemberUidList.get(position);
                 Bundle bundle = new Bundle();
                 bundle.putString("uid", uid);
-                IntentUtils.startActivity(ConversationInfoActivity.this,uid.startsWith("BOT")?
+                IntentUtils.startActivity(ConversationGroupInfoActivity.this,uid.startsWith("BOT")?
                         RobotInfoActivity.class:UserInfoActivity.class, bundle);
             }
         }
@@ -184,17 +186,17 @@ public class ConversationInfoActivity extends BaseActivity {
                 break;
             case R.id.rl_chat_imgs:
                 bundle.putString("cid", conversation.getId());
-                IntentUtils.startActivity(ConversationInfoActivity.this,
+                IntentUtils.startActivity(ConversationGroupInfoActivity.this,
                         GroupAlbumActivity.class, bundle);
                 break;
             case R.id.rl_chat_files:
                 bundle.putString("cid", conversation.getId());
-                IntentUtils.startActivity(ConversationInfoActivity.this,
+                IntentUtils.startActivity(ConversationGroupInfoActivity.this,
                         GroupFileActivity.class, bundle);
                 break;
             case R.id.channel_name_layout:
                 Intent intent = new Intent();
-                intent.setClass(ConversationInfoActivity.this,
+                intent.setClass(ConversationGroupInfoActivity.this,
                         ModifyChannelGroupNameActivity.class);
                 intent.putExtra("cid", conversation.getId());
                 intent.putExtra("name", conversation.getName());
@@ -204,7 +206,7 @@ public class ConversationInfoActivity extends BaseActivity {
                 bundle.putString("title", getString(R.string.group_member));
                 bundle.putInt(MembersActivity.MEMBER_PAGE_STATE,MembersActivity.CHECK_STATE);
                 bundle.putStringArrayList("uidList",memberUidList);
-                IntentUtils.startActivity(ConversationInfoActivity.this,
+                IntentUtils.startActivity(ConversationGroupInfoActivity.this,
                         MembersActivity.class, bundle);
                 break;
             case R.id.bt_exit:
@@ -216,7 +218,7 @@ public class ConversationInfoActivity extends BaseActivity {
     }
 
     private void showQuitGroupWarningDlg(){
-        new MyQMUIDialog.MessageDialogBuilder(ConversationInfoActivity.this)
+        new MyQMUIDialog.MessageDialogBuilder(ConversationGroupInfoActivity.this)
                 .setMessage(getString(R.string.quit_group_warning_text))
                 .addAction(getString(R.string.cancel), new QMUIDialogAction.ActionListener() {
                     @Override
@@ -303,7 +305,7 @@ public class ConversationInfoActivity extends BaseActivity {
      */
     private void updateConversationDnd() {
         // TODO Auto-generated method stub
-        if (NetUtils.isNetworkConnected(ConversationInfoActivity.this)) {
+        if (NetUtils.isNetworkConnected(ConversationGroupInfoActivity.this)) {
             loadingDlg.show();
             apiService.updateConversationDnd(conversation.getId(), !conversation.isDnd());
         } else {
@@ -333,7 +335,7 @@ public class ConversationInfoActivity extends BaseActivity {
      * @param uidList
      */
     private void addConversationGroupMember(ArrayList<String> uidList) {
-        if (NetUtils.isNetworkConnected(ConversationInfoActivity.this)) {
+        if (NetUtils.isNetworkConnected(ConversationGroupInfoActivity.this)) {
             loadingDlg.show();
             apiService.addConversationGroupMember(conversation.getId(),uidList);
         }
@@ -345,7 +347,7 @@ public class ConversationInfoActivity extends BaseActivity {
      * @param uidList
      */
     public void delConversationGroupMember(ArrayList<String> uidList) {
-        if (NetUtils.isNetworkConnected(ConversationInfoActivity.this)) {
+        if (NetUtils.isNetworkConnected(ConversationGroupInfoActivity.this)) {
             loadingDlg.show();
             apiService.delConversationGroupMember(conversation.getId(),uidList);
         }
@@ -356,7 +358,7 @@ public class ConversationInfoActivity extends BaseActivity {
      * 退出群聊
      */
     public void quitChannelGroup(){
-        if (NetUtils.isNetworkConnected(ConversationInfoActivity.this)) {
+        if (NetUtils.isNetworkConnected(ConversationGroupInfoActivity.this)) {
             loadingDlg.show();
             apiService.quitChannelGroup(conversation.getId());
         }
@@ -380,7 +382,7 @@ public class ConversationInfoActivity extends BaseActivity {
             // TODO Auto-generated method stub
             LoadingDialog.dimissDlg(loadingDlg);
             dndSwitch.setOpened(conversation.isDnd());
-            WebServiceMiddleUtils.hand(ConversationInfoActivity.this, error, errorCode);
+            WebServiceMiddleUtils.hand(ConversationGroupInfoActivity.this, error, errorCode);
         }
 
         @Override
@@ -415,7 +417,7 @@ public class ConversationInfoActivity extends BaseActivity {
         @Override
         public void returnAddConversationGroupMemberFail(String error, int errorCode) {
             LoadingDialog.dimissDlg(loadingDlg);
-            WebServiceMiddleUtils.hand(ConversationInfoActivity.this, error, errorCode);
+            WebServiceMiddleUtils.hand(ConversationGroupInfoActivity.this, error, errorCode);
         }
 
         @Override
@@ -431,7 +433,7 @@ public class ConversationInfoActivity extends BaseActivity {
         @Override
         public void returnDelConversationGroupMemberFail(String error, int errorCode) {
             LoadingDialog.dimissDlg(loadingDlg);
-            WebServiceMiddleUtils.hand(ConversationInfoActivity.this, error, errorCode);
+            WebServiceMiddleUtils.hand(ConversationGroupInfoActivity.this, error, errorCode);
         }
 
         @Override
@@ -445,7 +447,7 @@ public class ConversationInfoActivity extends BaseActivity {
         @Override
         public void returnQuitChannelGroupSuccessFail(String error, int errorCode) {
             LoadingDialog.dimissDlg(loadingDlg);
-            WebServiceMiddleUtils.hand(ConversationInfoActivity.this, error, errorCode);
+            WebServiceMiddleUtils.hand(ConversationGroupInfoActivity.this, error, errorCode);
         }
 
 

@@ -89,6 +89,8 @@ public class CommunicationUtils {
         String title = conversation.getName();
         if (conversation.getType().equals(Conversation.TYPE_DIRECT)){
             title = DirectChannelUtils.getDirectChannelTitle(MyApplication.getInstance(),title);
+        }else if(conversation.getType().equals(Conversation.TYPE_CAST)){
+            title = DirectChannelUtils.getRobotInfo(MyApplication.getInstance(), title).getName();
         }
         return title;
     }

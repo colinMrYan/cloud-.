@@ -38,7 +38,7 @@ public class RobotInfoActivity extends BaseActivity implements OnStateChangedLis
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_robot_info);
+		setContentView(R.layout.activity_conversation_cast_info);
 		initViews();
 		getRobotInfo();
 	}

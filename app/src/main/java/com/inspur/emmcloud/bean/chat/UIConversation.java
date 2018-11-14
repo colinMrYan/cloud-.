@@ -115,7 +115,7 @@ public class UIConversation implements Serializable{
             content = fromUserName + content;
         } else {
             if (type.equals(Conversation.TYPE_CAST)) {
-                content = MyApplication.getInstance().getString(R.string.welcome_to_attention) + " " + conversation.getName();
+                content = MyApplication.getInstance().getString(R.string.welcome_to_attention) + " " + title;
             } else if (type.equals(Conversation.TYPE_GROUP)) {
                 content = MyApplication.getInstance().getString(R.string.group_no_message);
             } else {
