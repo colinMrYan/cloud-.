@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
-import com.alibaba.fastjson.JSON;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
@@ -23,7 +22,6 @@ import com.inspur.emmcloud.bean.chat.Phone;
 import com.inspur.emmcloud.bean.contact.ContactOrg;
 import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.util.common.FileUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactOrgCacheUtils;
 
 import org.json.JSONObject;
@@ -119,6 +117,7 @@ public class CommunicationUtils {
         message.setId(tracer);
         message.setTmpId(tracer);
         message.setType("file/regular-file");
+        message.setLocalPath(localFilePath);
         File file = new File(localFilePath);
         MsgContentRegularFile msgContentRegularFile = new MsgContentRegularFile();
         msgContentRegularFile.setCategory(CommunicationUtils.getChatFileCategory(file.getName()));
@@ -171,6 +170,7 @@ public class CommunicationUtils {
         message.setId(tracer);
         message.setTmpId(tracer);
         message.setType(Message.MESSAGE_TYPE_MEDIA_IMAGE);
+        message.setLocalPath(localFilePath);
         File file = new File(localFilePath);
         Bitmap bitmap = BitmapFactory.decodeFile(localFilePath);
         int imgHeight = bitmap.getHeight();
@@ -193,7 +193,6 @@ public class CommunicationUtils {
         msgContentMediaImage.setRawMedia(localFilePath);
         msgContentMediaImage.setTmpId(tracer);
         message.setContent(msgContentMediaImage.toString());
-        LogUtils.YfcDebug("发送的Image消息："+ JSON.toJSONString(message));
         return message;
     }
 
@@ -205,6 +204,7 @@ public class CommunicationUtils {
         message.setId(tracer);
         message.setTmpId(tracer);
         message.setType(Message.MESSAGE_TYPE_MEDIA_VOICE);
+        message.setLocalPath(localFilePath);
         MsgContentMediaVoice msgContentMediaVoice = new MsgContentMediaVoice();
         msgContentMediaVoice.setDuration(duration);
         msgContentMediaVoice.setMedia(localFilePath);

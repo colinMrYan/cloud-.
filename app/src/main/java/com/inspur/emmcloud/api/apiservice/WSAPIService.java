@@ -91,7 +91,7 @@ public class WSAPIService {
                 JSONObject mentionsObj = JSONUtils.map2Json(mentionsMap);
                 bodyObj.put("mentions", mentionsObj);
             }
-            bodyObj.put("tmpId",fakeMessage.getTmpId());
+            bodyObj.put("tmpId",fakeMessage.getId());
             object.put("body", bodyObj);
             EventMessage eventMessage = new EventMessage(fakeMessage.getId(),Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE,"",fakeMessage.getId());
             WebSocketPush.getInstance().sendEventMessage(eventMessage, object,fakeMessage.getId());
@@ -118,6 +118,7 @@ public class WSAPIService {
             bodyObj.put("name", volumeFile.getName());
             bodyObj.put("size", volumeFile.getSize());
             bodyObj.put("media", volumeFile.getPath());
+            bodyObj.put("tmpId",fakeMessage.getId());
             object.put("body", bodyObj);
             EventMessage eventMessage = new EventMessage(fakeMessage.getId(),Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE,"",fakeMessage.getId());
             WebSocketPush.getInstance().sendEventMessage(eventMessage, object,fakeMessage.getId());
@@ -155,6 +156,7 @@ public class WSAPIService {
                     break;
             }
             bodyObj.put("subtitles",subTitleObj);
+            bodyObj.put("tmpId",message.getId());
             object.put("body", bodyObj);
             EventMessage eventMessage = new EventMessage(message.getId(),Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE,"",message.getId());
             WebSocketPush.getInstance().sendEventMessage(eventMessage, object,message.getId());
@@ -181,6 +183,7 @@ public class WSAPIService {
             bodyObj.put("title", msgContentExtendedLinks.getTitle());
             bodyObj.put("subtitle", msgContentExtendedLinks.getSubtitle());
             bodyObj.put("url", msgContentExtendedLinks.getUrl());
+            bodyObj.put("tmpId",message.getId());
             JSONArray array = new JSONArray();
             for (RelatedLink relatedLink:msgContentExtendedLinks.getRelatedLinkList()){
                 array.put(relatedLink.toJSonObject());
@@ -228,6 +231,7 @@ public class WSAPIService {
             bodyObj.put("preview", previewObj);
             bodyObj.put("thumbnail", thumbnailObj);
             bodyObj.put("raw", rawObj);
+            bodyObj.put("tmpId",fakeMessage.getId());
             object.put("body", bodyObj);
             EventMessage eventMessage = new EventMessage(fakeMessage.getId(),Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE,"",fakeMessage.getId());
             WebSocketPush.getInstance().sendEventMessage( eventMessage, object,fakeMessage.getId());

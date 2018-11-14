@@ -13,7 +13,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.alibaba.fastjson.JSON;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.ChannelMessageAdapter;
@@ -35,7 +34,6 @@ import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.InputMethodUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
@@ -513,7 +511,6 @@ public class ConversationActivity extends ConversationBaseActivity {
                 break;
             case Message.MESSAGE_TYPE_MEDIA_IMAGE:
                 fakeMessage = CommunicationUtils.combinLocalMediaImageMessage(cid, filePath);
-                LogUtils.YfcDebug("组装完成图片假消息："+JSON.toJSONString(fakeMessage));
                 break;
             case Message.MESSAGE_TYPE_MEDIA_VOICE:
                 fakeMessage = CommunicationUtils.combinLocalMediaVoiceMessage(cid, filePath, duration, results);
@@ -567,6 +564,8 @@ public class ConversationActivity extends ConversationBaseActivity {
                         WSAPIService.getInstance().sendChatMediaVoiceMsg(fakeMessage, volumeFile);
                         break;
                 }
+                fakeMessage.setLocalPath(volumeFile.getPath());
+                MessageCacheUtil.saveMessage(ConversationActivity.this,fakeMessage);
             }
 
             @Override
@@ -688,26 +687,29 @@ public class ConversationActivity extends ConversationBaseActivity {
      */
     private void addLocalMessage(Message message, int status) {
         UIMessage UIMessage = new UIMessage(message);
+        boolean isSendFail = handleUnSendMessage(message,status);
         //本地添加的消息设置为正在发送状态
-        UIMessage.setSendStatus(status);
-        handleUnSendMessage(message,status);
+        UIMessage.setSendStatus(isSendFail?Message.MESSAGE_SEND_FAIL:status);
         uiMessageList.add(UIMessage);
         adapter.setMessageList(uiMessageList);
         adapter.notifyItemInserted(uiMessageList.size() - 1);
         msgListView.MoveToPosition(uiMessageList.size() - 1);
     }
 
-    private void handleUnSendMessage(Message message, int status) {
-        //发送中，无网
-        if(status == Message.MESSAGE_SEND_ING && NetUtils.isNetworkConnected(ConversationActivity.this)){
+    /**
+     * 处理未发送成功的消息，存储临时消息
+     * @param message
+     * @param status
+     * @return
+     */
+    private boolean handleUnSendMessage(Message message, int status) {
+        //发送中，无网,发送消息失败
+        if(status == Message.MESSAGE_SEND_FAIL || (status == Message.MESSAGE_SEND_ING && !NetUtils.isNetworkConnected(ConversationActivity.this))){
             message.setSendStatus(Message.MESSAGE_SEND_FAIL);
             MessageCacheUtil.saveMessage(ConversationActivity.this,message);
+            return true;
         }
-        //发送消息失败
-        if(status == Message.MESSAGE_SEND_FAIL){
-            message.setSendStatus(Message.MESSAGE_SEND_FAIL);
-            MessageCacheUtil.saveMessage(ConversationActivity.this,message);
-        }
+        return false;
     }
 
     /**
@@ -789,7 +791,6 @@ public class ConversationActivity extends ConversationBaseActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveWSMessage(EventMessage eventMessage) {
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE)) {
-            LogUtils.YfcDebug("接收到回来的消息："+ JSON.toJSONString(eventMessage));
             handleRealMessage(eventMessage);
             if (eventMessage.getStatus() == 200) {
                 String content = eventMessage.getContent();
@@ -839,10 +840,16 @@ public class ConversationActivity extends ConversationBaseActivity {
         String content = eventMessage.getContent();
         JSONObject contentobj = JSONUtils.getJSONObject(content);
         Message receivedWSMessage = new Message(contentobj);
+        //删除临时消息前把创建时间改为临时消息的创建时间，保证排序
+        Message message = MessageCacheUtil.getMessageByMid(ConversationActivity.this,receivedWSMessage.getTmpId());
+        receivedWSMessage.setCreationDate(message.getCreationDate());
         MessageCacheUtil.deleteLocalFakeMessage(ConversationActivity.this,receivedWSMessage.getTmpId());
     }
 
     private void handleRealMessage(Message message) {
+        //删除临时消息前把创建时间改为临时消息的创建时间，保证排序
+        Message messageTmp = MessageCacheUtil.getMessageByMid(ConversationActivity.this,message.getTmpId());
+        message.setCreationDate(messageTmp.getCreationDate());
         MessageCacheUtil.deleteLocalFakeMessage(ConversationActivity.this,message.getTmpId());
     }
 
