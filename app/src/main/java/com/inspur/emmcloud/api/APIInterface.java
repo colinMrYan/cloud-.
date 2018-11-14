@@ -736,4 +736,7 @@ public interface APIInterface {
 
     void returnConversationInfoSuccess(Conversation conversation);
     void returnConversationInfoFail(String error,int errorCode);
+
+    void returnUpdateConversationNameSuccess();
+    void returnUpdateConversationNameFail(String error,int errorCode);
 }

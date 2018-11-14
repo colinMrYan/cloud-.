@@ -38,6 +38,8 @@ import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 
@@ -50,7 +52,6 @@ import java.util.List;
 @ContentView(R.layout.activity_conversation_group_info)
 public class ConversationGroupInfoActivity extends BaseActivity {
 
-    private static final int REQUEST_UPDATE_CHANNEL_NAME = 1;
     private static final int QEQUEST_ADD_MEMBER = 2;
     private static final int QEQUEST_DEL_MEMBER = 3;
     public static final String EXTRA_CID= "cid";
@@ -80,6 +81,7 @@ public class ConversationGroupInfoActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
         String cid = getIntent().getExtras().getString(EXTRA_CID);
         conversation = ConversationCacheUtils.getConversation(MyApplication.getInstance(),cid);
         isOwner = conversation.getOwner().equals(MyApplication.getInstance().getUid());
@@ -195,12 +197,9 @@ public class ConversationGroupInfoActivity extends BaseActivity {
                         GroupFileActivity.class, bundle);
                 break;
             case R.id.channel_name_layout:
-                Intent intent = new Intent();
-                intent.setClass(ConversationGroupInfoActivity.this,
-                        ModifyChannelGroupNameActivity.class);
-                intent.putExtra("cid", conversation.getId());
-                intent.putExtra("name", conversation.getName());
-                startActivityForResult(intent, REQUEST_UPDATE_CHANNEL_NAME);
+                bundle.putString("cid", conversation.getId());
+                IntentUtils.startActivity(ConversationGroupInfoActivity.this,
+                        ConversationNameModifyActivity.class, bundle);
                 break;
             case R.id.rl_member:
                 bundle.putString("title", getString(R.string.group_member));
@@ -241,9 +240,6 @@ public class ConversationGroupInfoActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
-                case REQUEST_UPDATE_CHANNEL_NAME:
-                    updateConversationName(data);
-                    break;
                 case QEQUEST_DEL_MEMBER:
                     ArrayList<String> delUidList = (ArrayList<String>) data.getSerializableExtra("selectMemList");
                     if (delUidList.size()>0){
@@ -269,19 +265,6 @@ public class ConversationGroupInfoActivity extends BaseActivity {
         }
     }
 
-    /**
-     * 修改群名称
-     *
-     * @param data
-     */
-    private void updateConversationName(Intent data) {
-        String name = data.getStringExtra("name");
-        nameText.setText(name);
-        conversation.setName(name);
-        ConversationCacheUtils.updateConversationName(MyApplication.getInstance(),conversation.getId(),name);
-        EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_UPDATE_CHANNEL_NAME,conversation));
-    }
-
 
     /**
      * 过滤不存在的群成员算法
@@ -297,6 +280,24 @@ public class ConversationGroupInfoActivity extends BaseActivity {
         uiMemberUidList.addAll(contactUserIdList);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
+    /**
+     * 修改群组名称
+     * @param eventMessage
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReciverConversationNameUpdate(SimpleEventMessage eventMessage) {
+        if (eventMessage.getAction().equals(Constant.EVENTBUS_TAG_UPDATE_CHANNEL_NAME)){
+            String name = ((Conversation)eventMessage.getMessageObj()).getName();
+            nameText.setText(name);
+            conversation.setName(name);
+        }
+    }
 
     /**
      * 更改是否频道消息免打扰

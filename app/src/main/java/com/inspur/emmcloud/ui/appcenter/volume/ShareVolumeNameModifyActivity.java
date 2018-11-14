@@ -29,7 +29,7 @@ import org.xutils.view.annotation.ViewInject;
  * 修改共享网盘名称
  *
  */
-@ContentView(R.layout.activity_modify_channel_group_name)
+@ContentView(R.layout.activity_conversation_name_modify)
 public class ShareVolumeNameModifyActivity extends BaseActivity {
 
 	@ViewInject(R.id.edit)

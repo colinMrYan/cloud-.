@@ -1547,7 +1547,7 @@ public class ChatAPIService {
      * @param id
      */
     public void getConversationInfo(final String id){
-        final String completeUrl = APIUri.getConversationInfo(id);
+        final String completeUrl = APIUri.getConversationInfoUrl(id);
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
         HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
 
@@ -1579,6 +1579,48 @@ public class ChatAPIService {
             public void callbackFail(String error, int responseCode) {
                 // TODO Auto-generated method stub
                 apiInterface.returnConversationInfoFail(error, responseCode);
+            }
+        });
+    }
+
+    /**
+     * 修改会话名称
+     * @param id
+     * @param name
+     */
+    public void updateConversationName(final String id,final String name){
+        final String completeUrl = APIUri.getUpdateConversationNameUrl(id);
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
+        params.addQueryStringParameter("name",name);
+        HttpUtils.request(context, CloudHttpMethod.PUT, params, new APICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        updateConversationName(id,name);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(oauthCallBack, requestTime);
+            }
+
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+                apiInterface.returnUpdateConversationNameSuccess();
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                apiInterface.returnUpdateConversationNameFail(error, responseCode);
             }
         });
     }

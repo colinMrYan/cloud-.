@@ -611,8 +611,17 @@ public class APIUri {
      * @param id
      * @return
      */
-    public static String getConversationInfo(String id){
+    public static String getConversationInfoUrl(String id){
         return  getECMChatConversationBaseUrl()+"/channel/"+id;
+    }
+
+    /**
+     * 获取修改会话名称url
+     * @param id
+     * @return
+     */
+    public static String getUpdateConversationNameUrl(String id){
+        return  getECMChatConversationBaseUrl()+"/channel/"+id+"/name";
     }
     /**************************************************应用和应用中心********************************************************************/
 

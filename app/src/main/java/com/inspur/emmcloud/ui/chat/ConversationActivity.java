@@ -1,9 +1,7 @@
 package com.inspur.emmcloud.ui.chat;
 
 import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
@@ -107,7 +105,6 @@ public class ConversationActivity extends ConversationBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
-        registeRefreshNameReceiver();
     }
 
 
@@ -231,28 +228,19 @@ public class ConversationActivity extends ConversationBaseActivity {
     }
 
 
-    /**
-     * 注册更改频道名称广播
-     */
-    private void registeRefreshNameReceiver() {
-        refreshNameReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                String name = intent.getExtras().getString("name");
-                headerText.setText(name);
-            }
-        };
-        IntentFilter filter = new IntentFilter();
-        filter.addAction("update_channel_name");
-        LocalBroadcastManager.getInstance(this).registerReceiver(refreshNameReceiver, filter);
-    }
 
-    //接收Action卡片的Action点击事件
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReceiveSendAcitionContentMessage(SimpleEventMessage eventMessage) {
-        if (eventMessage.getAction() == Constant.EVENTBUS_TAG_SEND_ACTION_CONTENT_MESSAGE) {
-            String actionContent = (String) eventMessage.getMessageObj();
-            sendMessageWithText(actionContent, true, null);
+    public void onReceiveSimpleEventMessageMessage(SimpleEventMessage eventMessage) {
+        switch (eventMessage.getAction()){
+            case Constant.EVENTBUS_TAG_SEND_ACTION_CONTENT_MESSAGE:
+                String actionContent = (String) eventMessage.getMessageObj();
+                sendMessageWithText(actionContent, true, null);
+                break;
+            case Constant.EVENTBUS_TAG_UPDATE_CHANNEL_NAME:
+                String name = ((Conversation)eventMessage.getMessageObj()).getName();
+                conversation.setName(name);
+                headerText.setText(name);
+                break;
         }
 
     }

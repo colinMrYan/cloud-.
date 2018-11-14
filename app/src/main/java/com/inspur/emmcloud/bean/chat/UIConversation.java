@@ -44,7 +44,7 @@ public class UIConversation implements Serializable{
         this.title = CommunicationUtils.getConversationTitle(conversation);
         messageList = MessageCacheUtil.getHistoryMessageList(MyApplication.getInstance(), id, null, 15);
         if (messageList.size() == 0) {
-            lastUpdate = conversation.getLastUpdate();
+            lastUpdate = conversation.getCreationDate();
         } else {
             lastUpdate = messageList.get(messageList.size() - 1).getCreationDate();
             unReadCount = MessageCacheUtil.getChannelMessageUnreadCount(MyApplication.getInstance(), id);

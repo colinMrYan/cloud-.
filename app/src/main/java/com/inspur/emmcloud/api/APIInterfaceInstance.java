@@ -1806,4 +1806,12 @@ public class APIInterfaceInstance implements APIInterface {
     @Override
     public void returnConversationInfoFail(String error, int errorCode) {
     }
+
+    @Override
+    public void returnUpdateConversationNameSuccess() {
+    }
+
+    @Override
+    public void returnUpdateConversationNameFail(String error, int errorCode) {
+    }
 }
