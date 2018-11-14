@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.WindowManager;
 
 import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.privates.LanguageUtils;
@@ -25,7 +24,7 @@ public class BaseActivity extends Activity {
             StateBarUtils.changeStateBarColor(this);
         }
        //禁止截屏
-        this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
+        //this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
     }
     //解决调用系统应用后会弹出手势解锁的问题
     @Override
