@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.ChannelMessageAdapter;
@@ -34,6 +35,7 @@ import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.InputMethodUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
@@ -340,7 +342,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
                 case Message.MESSAGE_TYPE_MEDIA_IMAGE:
                 case Message.MESSAGE_TYPE_MEDIA_VOICE:
-                    sendMessageWithFile(message);
+                    handleReSendResourceMessage(message);
                     break;
                 case Message.MESSAGE_TYPE_TEXT_PLAIN:
                     WSAPIService.getInstance().sendChatTextPlainMsg(message);
@@ -352,6 +354,10 @@ public class ConversationActivity extends ConversationBaseActivity {
                     break;
             }
         }
+    }
+
+    private void handleReSendResourceMessage(Message message) {
+        sendMessageWithFile(message);
     }
 
     /**
@@ -564,7 +570,10 @@ public class ConversationActivity extends ConversationBaseActivity {
                         WSAPIService.getInstance().sendChatMediaVoiceMsg(fakeMessage, volumeFile);
                         break;
                 }
+                LogUtils.YfcDebug("修改资源文件路径之前："+JSON.toJSONString(fakeMessage));
+                //文件发送成功修改localPath，在重发消息时需要用这个字段判断
                 fakeMessage.setLocalPath(volumeFile.getPath());
+                LogUtils.YfcDebug("上传资源完成后修改localPath"+ JSON.toJSONString(fakeMessage));
                 MessageCacheUtil.saveMessage(ConversationActivity.this,fakeMessage);
             }
 
