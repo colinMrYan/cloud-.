@@ -60,6 +60,7 @@ import com.inspur.emmcloud.interf.OnRecommendAppWidgetItemClickListener;
 import com.inspur.emmcloud.ui.mine.setting.NetWorkStateDetailActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PingNetEntity;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
@@ -518,6 +519,14 @@ public class MyAppFragment extends Fragment {
         public View getView(final int listPosition, View convertView,
                             ViewGroup parent) {
             convertView = LayoutInflater.from(getActivity()).inflate(R.layout.app_drag_item, null);
+            if(listPosition==(getCount()-1)){
+                LogUtils.LbcDebug("最后一行");
+                View dividerView  =  (View)convertView.findViewById(R.id.v_applist_devid);
+                dividerView.setVisibility(View.GONE);
+            } else {
+                LogUtils.LbcDebug("fei最后一行");
+            }
+
             ((TextView) convertView.findViewById(R.id.app_title_text))
                     .setText(appAdapterList.get(listPosition).getCategoryName());
             DragGridView dragGridView = (DragGridView) convertView
