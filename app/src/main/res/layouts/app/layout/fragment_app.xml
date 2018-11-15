@@ -112,6 +112,7 @@
             android:layout_height="match_parent"
             android:divider="#efefef"
             android:dividerHeight="10dp"
+            android:headerDividersEnabled="false"
             android:gravity="center"
             android:horizontalSpacing="25dp"
             android:listSelector="@android:color/transparent"
