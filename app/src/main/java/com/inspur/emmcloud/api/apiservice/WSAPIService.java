@@ -354,7 +354,7 @@ public class WSAPIService {
             headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
             headerObj.put("tracer", tracer);
             object.put("headers", headerObj);
-            EventMessage eventMessage = new EventMessage(tracer,Constant.EVENTBUS_TAG_GET_HISTORY_MESSAGE,"","");
+            EventMessage eventMessage = new EventMessage(tracer,Constant.EVENTBUS_TAG_GET_HISTORY_MESSAGE,"",cid);
             WebSocketPush.getInstance().sendEventMessage(eventMessage, object,tracer);
         } catch (Exception e) {
             e.printStackTrace();
@@ -377,7 +377,7 @@ public class WSAPIService {
             headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
             headerObj.put("tracer", tracer);
             object.put("headers", headerObj);
-            EventMessage eventMessage = new EventMessage(tracer,Constant.EVENTBUS_TAG_GET_NEW_MESSAGE,"","");
+            EventMessage eventMessage = new EventMessage(tracer,Constant.EVENTBUS_TAG_GET_NEW_MESSAGE,"",cid);
             WebSocketPush.getInstance().sendEventMessage(eventMessage, object,tracer);
         } catch (Exception e) {
             e.printStackTrace();

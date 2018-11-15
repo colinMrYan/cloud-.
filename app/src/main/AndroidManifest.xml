@@ -507,11 +507,16 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|stateHidden"></activity>
         <activity
-            android:name=".ui.chat.ConversationInfoActivity"
+            android:name=".ui.chat.ConversationGroupInfoActivity"
             android:configChanges="locale|layoutDirection"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|stateHidden"></activity>
+        <activity
+            android:name=".ui.chat.ConversationCastInfoActivity"
+            android:launchMode="singleTask"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.chat.ChannelMemActivity"
             android:resizeableActivity="true"
@@ -609,6 +614,7 @@
             android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>
+
         <activity
             android:name=".ui.mine.myinfo.ModifyUserInfoActivity"
             android:resizeableActivity="true"
@@ -745,6 +751,10 @@
             android:windowSoftInputMode="adjustResize"></activity>
         <activity
             android:name=".ui.chat.ModifyChannelGroupNameActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.chat.ConversationNameModifyActivity"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity

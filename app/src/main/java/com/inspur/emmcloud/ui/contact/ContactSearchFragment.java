@@ -141,6 +141,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
     private Runnable searchRunnbale;
     private String searchText;
     private long lastSearchTime = 0L;
+    private List<String> excludeContactUidList = new ArrayList<>();
     private List<Contact> excludeContactList = new ArrayList<>();//不显示某些数据
     private long lastBackTime;
     private int  selectLimit = 5000;
@@ -187,8 +188,8 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
                 intent.putExtra("searchText", searchEdit.getText().toString());
                 intent.putExtra("searchContent", searchContent);
                 intent.putExtra("isMultiSelect", isMultiSelect);
-                if (excludeContactList != null) {
-                    intent.putExtra(ContactSearchMoreActivity.EXTRA_EXCLUDE_CONTACT_LIST, (Serializable) excludeContactList);
+                if (excludeContactUidList.size() >0) {
+                    intent.putExtra(ContactSearchMoreActivity.EXTRA_EXCLUDE_SELECT, (Serializable) excludeContactUidList);
                 }
                 startActivityForResult(intent, SEARCH_MORE);
                 break;
@@ -203,8 +204,8 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
                 intent.putExtra("searchText", searchEdit.getText().toString());
                 intent.putExtra("searchContent", searchContent);
                 intent.putExtra("isMultiSelect", isMultiSelect);
-                if (excludeContactList != null) {
-                    intent.putExtra(ContactSearchMoreActivity.EXTRA_EXCLUDE_CONTACT_LIST, (Serializable) excludeContactList);
+                if (excludeContactUidList.size() >0) {
+                    intent.putExtra(ContactSearchMoreActivity.EXTRA_EXCLUDE_SELECT, (Serializable) excludeContactUidList);
                 }
                 startActivityForResult(intent, SEARCH_MORE);
                 break;
@@ -286,8 +287,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
             }
 
             if (intent.hasExtra(EXTRA_EXCLUDE_SELECT)) {
-                List<String> excludeContactUidList = (List<String>) intent.getExtras()
-                        .getSerializable(EXTRA_EXCLUDE_SELECT);
+                excludeContactUidList = (List<String>) intent.getExtras().getSerializable(EXTRA_EXCLUDE_SELECT);
                 excludeContactList = Contact.contactUserList2ContactList(ContactUserCacheUtils.getContactUserListById(excludeContactUidList));
 
             }

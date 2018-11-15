@@ -18,8 +18,8 @@ import com.inspur.imp.plugin.camera.imagepicker.adapter.ImageFolderAdapter;
 import com.inspur.imp.plugin.camera.imagepicker.adapter.ImageGridAdapter;
 import com.inspur.imp.plugin.camera.imagepicker.bean.ImageFolder;
 import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
-import com.inspur.imp.plugin.camera.imagepicker.util.Utils;
 import com.inspur.imp.plugin.camera.imagepicker.view.FolderPopUpWindow;
+import com.inspur.imp.plugin.camera.mycamera.MyCameraActivity;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -68,7 +68,7 @@ public class ImageGridActivity extends ImageBaseActivity implements
         mImageFolderAdapter = new ImageFolderAdapter(this, null);
         onImageSelected(0, null, false);
         new ImageDataSource(this, null, this);
-        encodingType = getIntent().getIntExtra(EXTRA_ENCODING_TYPE,0);
+        encodingType = getIntent().getIntExtra(EXTRA_ENCODING_TYPE, 0);
     }
 
 
@@ -190,7 +190,7 @@ public class ImageGridActivity extends ImageBaseActivity implements
                 startActivityForResult(
                         new Intent(ImageGridActivity.this, IMGEditActivity.class)
                                 .putExtra(IMGEditActivity.EXTRA_IMAGE_PATH, imagePicker.getSelectedImages().get(0).path)
-                                .putExtra(IMGEditActivity.EXTRA_ENCODING_TYPE,encodingType),
+                                .putExtra(IMGEditActivity.EXTRA_ENCODING_TYPE, encodingType),
                         ImagePicker.REQUEST_CODE_EDIT
                 );
 
@@ -227,7 +227,30 @@ public class ImageGridActivity extends ImageBaseActivity implements
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (data != null) {
+        if (resultCode == RESULT_OK
+                && requestCode == ImagePicker.REQUEST_CODE_TAKE) {
+            ImageItem imageItem = new ImageItem();
+            imageItem.path = data.getExtras().getString(MyCameraActivity.OUT_FILE_PATH,"");
+            // 发送广播通知图片增加了
+            ImagePicker.galleryAddPic(this, imagePicker.getTakeImageFile());
+            imagePicker.clearSelectedImages();
+            imagePicker.addSelectedImageItem(0, imageItem, true);
+            if (imagePicker.isCrop()) {
+                Intent intent = new Intent(ImageGridActivity.this,
+                        ImageCropActivity.class);
+                startActivityForResult(intent,
+                        ImagePicker.REQUEST_CODE_CROP); // 单选需要裁剪，进入裁剪界面
+            } else {
+                Intent intent = new Intent();
+                intent.putExtra(ImagePicker.EXTRA_RESULT_ITEMS,
+                        imagePicker.getSelectedImages());
+                setResult(ImagePicker.RESULT_CODE_ITEMS, intent); // 单选不需要裁剪，返回数据
+                finish();
+            }
+        }
+
+
+         else if (data != null) {
             if (requestCode == ImagePicker.REQUEST_CODE_EDIT) {// 说明是从裁剪页面过来的数据，直接返回就可以
                 if (resultCode == RESULT_OK) {
                     String newPath = data.getStringExtra(
@@ -242,7 +265,7 @@ public class ImageGridActivity extends ImageBaseActivity implements
             } else {
                 if (resultCode == ImagePicker.RESULT_CODE_BACK) {
                     isOrigin = data.getBooleanExtra(
-                           ImagePreviewActivity.ISORIGIN, false);
+                            ImagePreviewActivity.ISORIGIN, false);
                 } else {
                     // 从拍照界面返回
                     // 点击 X , 没有选择照片
@@ -253,37 +276,6 @@ public class ImageGridActivity extends ImageBaseActivity implements
                         setResult(ImagePicker.RESULT_CODE_ITEMS, data);
                         finish();
                     }
-                }
-            }
-        } else {
-            // 如果是裁剪，因为裁剪指定了存储的Uri，所以返回的data一定为null
-            if (resultCode == RESULT_OK
-                    && requestCode == ImagePicker.REQUEST_CODE_TAKE) {
-
-                ImageItem imageItem = new ImageItem();
-                imageItem.path = imagePicker.getTakeImageFile()
-                        .getAbsolutePath();
-                try {
-                    Utils.rotateSamsungImg(imageItem.path);
-                } catch (Exception e) {
-                    // TODO: handle exception
-                    e.printStackTrace();
-                }
-                // 发送广播通知图片增加了
-                ImagePicker.galleryAddPic(this, imagePicker.getTakeImageFile());
-                imagePicker.clearSelectedImages();
-                imagePicker.addSelectedImageItem(0, imageItem, true);
-                if (imagePicker.isCrop()) {
-                    Intent intent = new Intent(ImageGridActivity.this,
-                            ImageCropActivity.class);
-                    startActivityForResult(intent,
-                            ImagePicker.REQUEST_CODE_CROP); // 单选需要裁剪，进入裁剪界面
-                } else {
-                    Intent intent = new Intent();
-                    intent.putExtra(ImagePicker.EXTRA_RESULT_ITEMS,
-                            imagePicker.getSelectedImages());
-                    setResult(ImagePicker.RESULT_CODE_ITEMS, intent); // 单选不需要裁剪，返回数据
-                    finish();
                 }
             }
         }

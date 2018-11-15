@@ -35,6 +35,7 @@ import com.inspur.emmcloud.bean.appcenter.webex.GetWebexMeetingListResult;
 import com.inspur.emmcloud.bean.appcenter.webex.GetWebexTKResult;
 import com.inspur.emmcloud.bean.appcenter.webex.WebexMeeting;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
+import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.GetAllRobotsResult;
 import com.inspur.emmcloud.bean.chat.GetChannelListResult;
 import com.inspur.emmcloud.bean.chat.GetChannelMessagesResult;
@@ -1798,4 +1799,19 @@ public class APIInterfaceInstance implements APIInterface {
     public void returnRemoveWebexMeetingFail(String error, int errorCode) {
     }
 
+    @Override
+    public void returnConversationInfoSuccess(Conversation conversation) {
+    }
+
+    @Override
+    public void returnConversationInfoFail(String error, int errorCode) {
+    }
+
+    @Override
+    public void returnUpdateConversationNameSuccess() {
+    }
+
+    @Override
+    public void returnUpdateConversationNameFail(String error, int errorCode) {
+    }
 }

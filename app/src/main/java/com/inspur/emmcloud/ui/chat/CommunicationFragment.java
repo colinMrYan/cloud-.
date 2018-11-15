@@ -948,7 +948,7 @@ public class CommunicationFragment extends Fragment {
                     }
                     if (currentChannelOfflineMessageList.size() > 0) {
                         //将离线消息发送到当前频道
-                        EventBus.getDefault().post(currentChannelOfflineMessageList);
+                        EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_CURRENT_CHANNEL_OFFLINE_MESSAGE,currentChannelOfflineMessageList));
                     }
                 }
                 new CacheMessageListThread(offlineMessageList, getOfflineMessageListResult.getChannelMessageSetList()).start();
@@ -1034,7 +1034,7 @@ public class CommunicationFragment extends Fragment {
                 //获取离线消息
                 WSAPIService.getInstance().getOfflineMessage(lastMessageId);
             } else {
-                //获取每个频道最近的15条消息
+                //获取每个频道最近消息
                 WSAPIService.getInstance().getChannelRecentMessage();
             }
         }

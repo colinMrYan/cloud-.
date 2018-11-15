@@ -18,13 +18,28 @@ public class RobotCacheUtils {
 	 * @param context
 	 * @param robotList
 	 */
-	public static void saveOrUpdateRobotList(Context context,
-			List<Robot> robotList) {
+	public static void saveRobotList(Context context,List<Robot> robotList) {
 		if (robotList == null || robotList.size() == 0) {
 			return;
 		}
 		try {
 			DbCacheUtils.getDb(context).saveOrUpdate(robotList);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * 保存机器人信息
+	 * @param context
+	 * @param robot
+	 */
+	public static void saveRobot(Context context,Robot robot){
+		if (robot == null) {
+			return;
+		}
+		try {
+			DbCacheUtils.getDb(context).saveOrUpdate(robot);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
