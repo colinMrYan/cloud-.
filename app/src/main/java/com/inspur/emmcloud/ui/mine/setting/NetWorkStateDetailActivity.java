@@ -87,10 +87,8 @@ public class NetWorkStateDetailActivity extends BaseActivity {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_network_state_detail);
-
         iniView();
         checkingNet();
-
     }
 
     /**
@@ -165,7 +163,7 @@ public class NetWorkStateDetailActivity extends BaseActivity {
     }
 
     /**
-     * Ping 网络
+     * portal checking
      * */
     private void sendRequest() {
 		/*需要新建子线程进行访问*/
