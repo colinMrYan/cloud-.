@@ -50,81 +50,235 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="157dp"
-            android:id="@+id/rl_checking_hard_state">
+            android:layout_height="wrap_content"
+            android:id="@+id/rl_checking_hard_state"
+            android:onClick="onClick">
             <RelativeLayout
                 android:id="@+id/rl_checking_hard_logs"
                 android:layout_width="87dp"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true">
+
                 <ImageView
                     android:id="@+id/iv_hard_device_log"
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentTop="true"
-                    android:layout_marginTop="34dp"
-                    android:layout_marginLeft="28dp"
-                    android:layout_width="25dp"
-                    android:layout_height="42dp" />
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="30dp"
+                    android:background="@drawable/ic_netchecking_hard_device"/>
+
                 <ImageView
                     android:id="@+id/iv_hard_state_log"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentTop="true"
+                    android:layout_marginLeft="48dp"
                     android:layout_marginTop="66dp"
-                    android:layout_marginLeft="48dp"/>
+                    android:visibility="gone"
+                    android:background="@drawable/ic_netchecking_ok"/>
+                <com.qmuiteam.qmui.widget.QMUILoadingView
+                    android:id="@+id/qv_checking_hard_loading"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginLeft="48dp"
+                    android:layout_marginTop="66dp"/>
             </RelativeLayout>
             <RelativeLayout
                 android:layout_toRightOf="@id/rl_checking_hard_logs"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content">
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="24dp"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentTop="true"
                     android:layout_marginTop="30dp"
+                    android:textColor="#0F7BCA"
+                    android:textSize="17dp"
                     android:text="@string/net_diagnosis_hard_link_title"></TextView>
                 <TextView
+                    android:id="@+id/tv_checking_hard_content"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentTop="true"
                     android:layout_marginRight="14dp"
                     android:layout_marginTop="64dp"
+                    android:textColor="#666666"
+                    android:textSize="15dp"
                     android:text="@string/net_diagnosis_hard_link_conent"></TextView>
                 <View
-                    android:layout_width="fill_parent"
+                    android:layout_width="match_parent"
                     android:layout_height="0.5px"
-                    android:layout_marginLeft="1dp"
-                    android:layout_alignParentBottom="true"
+                    android:layout_below="@id/tv_checking_hard_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="30dp"
                     android:background="@color/color_list_divider" />
             </RelativeLayout>
         </RelativeLayout>
 
-
-
         <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:id="@+id/rl_checking_portal_state"
-            android:layout_width="match_parent"
-            android:layout_height="157dp"
-            android:layout_below="@id/rl_checking_hard_state">
+            android:layout_below="@+id/rl_checking_hard_state"
+            android:onClick="onClick">
+
+            <RelativeLayout
+                android:id="@+id/rl_checking_portal_logs"
+                android:layout_width="87dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true">
+
+                <ImageView
+                    android:id="@+id/iv_portal_device_log"
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginLeft="18dp"
+                    android:layout_marginTop="30dp"
+                    android:background="@drawable/ic_netchecking_route"/>
+
+                <ImageView
+                    android:id="@+id/iv_portal_state_log"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginLeft="48dp"
+                    android:layout_marginTop="66dp"
+                    android:visibility="gone"
+                    android:background="@drawable/ic_netchecking_ok"/>
+                <com.qmuiteam.qmui.widget.QMUILoadingView
+                    android:id="@+id/qv_checking_portal_loading"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginLeft="48dp"
+                    android:layout_marginTop="66dp"/>
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_toRightOf="@id/rl_checking_portal_logs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="24dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginTop="30dp"
+                    android:textColor="#0F7BCA"
+                    android:textSize="17dp"
+                    android:text="@string/net_diagnosis_wifi_link_title"></TextView>
+                <TextView
+                    android:id="@+id/tv_checking_portal_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginRight="14dp"
+                    android:layout_marginTop="64dp"
+                    android:textColor="#666666"
+                    android:textSize="15dp"
+                    android:text="@string/net_diagnosis_wifi_link_conent"></TextView>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5px"
+                    android:layout_below="@id/tv_checking_portal_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="30dp"
+                    android:background="@color/color_list_divider" />
+            </RelativeLayout>
         </RelativeLayout>
-
-
 
         <RelativeLayout
-            android:id="@+id/rl_checking_dns_state"
-            android:layout_below="@id/rl_checking_portal_state"
             android:layout_width="match_parent"
-            android:layout_height="157dp">
+            android:layout_height="wrap_content"
+            android:id="@+id/rl_checking_dns_state"
+            android:layout_below="@+id/rl_checking_portal_state"
+            android:onClick="onClick">
+
+            <RelativeLayout
+                android:id="@+id/rl_checking_dns_logs"
+                android:layout_width="87dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true">
+
+                <ImageView
+                    android:id="@+id/iv_dns_device_log"
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginLeft="18dp"
+                    android:layout_marginTop="30dp"
+                    android:background="@drawable/ic_netchecking_dns_sever"/>
+
+                <ImageView
+                    android:id="@+id/iv_dns_state_log"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginLeft="48dp"
+                    android:layout_marginTop="66dp"
+                    android:visibility="gone"
+                    android:background="@drawable/ic_netchecking_ok"/>
+                <com.qmuiteam.qmui.widget.QMUILoadingView
+                    android:id="@+id/qv_checking_dns_loading"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginLeft="48dp"
+                    android:layout_marginTop="66dp" />
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_toRightOf="@id/rl_checking_dns_logs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="24dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginTop="30dp"
+                    android:textColor="#0F7BCA"
+                    android:textSize="17dp"
+                    android:text="@string/net_diagnosis_dns_link_title"></TextView>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tv_checking_dns_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginRight="14dp"
+                    android:layout_marginTop="64dp"
+                    android:textColor="#666666"
+                    android:textSize="15dp"
+                    android:text="@string/net_diagnosis_dns_link_conent"></TextView>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5px"
+                    android:layout_below="@id/tv_checking_dns_content"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginLeft="10dp"
+                    android:background="@color/color_list_divider" />
+            </RelativeLayout>
         </RelativeLayout>
-        
-        
+
     </RelativeLayout>
-
-
-
-    
-
-
 </RelativeLayout>
