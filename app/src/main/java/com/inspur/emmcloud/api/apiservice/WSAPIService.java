@@ -209,7 +209,6 @@ public class WSAPIService {
             object.put("headers", headerObj);
             JSONObject bodyObj = new JSONObject();
             bodyObj.put("type", "media/image");
-            bodyObj.put("name", volumeFile.getName());
             JSONObject thumbnailObj = new JSONObject();
             thumbnailObj.put("width", fakeMessage.getMsgContentMediaImage().getThumbnailWidth());
             thumbnailObj.put("height", fakeMessage.getMsgContentMediaImage().getThumbnailHeight());

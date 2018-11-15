@@ -32,7 +32,6 @@ import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.InputMethodUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
@@ -312,17 +311,17 @@ public class ConversationActivity extends ConversationBaseActivity {
             Message message = uiMessage.getMessage();
             message.setTmpId(message.getId());
             uiMessage.setSendStatus(0);
-            int position = uiMessageList.indexOf(uiMessage);
-            if (position != uiMessageList.size() - 1) {
-                uiMessageList.remove(position);
-                uiMessageList.add(uiMessage);
-                adapter.setMessageList(uiMessageList);
-                adapter.notifyDataSetChanged();
-                msgListView.MoveToPosition(uiMessageList.size() - 1);
-            } else {
+//            int position = uiMessageList.indexOf(uiMessage);
+//            if (position != uiMessageList.size() - 1) {
+//                uiMessageList.remove(position);
+//                uiMessageList.add(uiMessage);
+//                adapter.setMessageList(uiMessageList);
+//                adapter.notifyDataSetChanged();
+//                msgListView.MoveToPosition(uiMessageList.size() - 1);
+//            } else {
                 adapter.setMessageList(uiMessageList);
                 adapter.notifyItemChanged(uiMessageList.size() - 1);
-            }
+//            }
             switch (message.getType()) {
                 case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
                     if(message.getMsgContentAttachmentFile().getMedia().equals(message.getLocalPath())){
@@ -725,7 +724,6 @@ public class ConversationActivity extends ConversationBaseActivity {
             Intent intent = new Intent("message_notify");
             intent.putExtra("command", "sort_session_list");
             LocalBroadcastManager.getInstance(ConversationActivity.this).sendBroadcast(intent);
-            LogUtils.YfcDebug("记录为未发送成功消息的creationDate："+message.getCreationDate()+"消息id："+message.getId()+"消息内容："+message.getContent());
             return true;
         }
         return false;
@@ -807,7 +805,6 @@ public class ConversationActivity extends ConversationBaseActivity {
             adapter.notifyItemRangeInserted(0, messageList.size());
             msgListView.scrollToPosition(messageList.size() - 1);
         }
-
         swipeRefreshLayout.setRefreshing(false);
     }
 
@@ -817,11 +814,11 @@ public class ConversationActivity extends ConversationBaseActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveWSMessage(EventMessage eventMessage) {
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE)) {
-            handleRealMessage(eventMessage);
             if (eventMessage.getStatus() == 200) {
                 String content = eventMessage.getContent();
                 JSONObject contentObj = JSONUtils.getJSONObject(content);
                 Message receivedWSMessage = new Message(contentObj);
+                handleRealMessage(receivedWSMessage);
                 //判断消息是否是当前频道并验重处理
                 if (cid.equals(receivedWSMessage.getChannel()) && !uiMessageList.contains(new UIMessage(receivedWSMessage.getId()))) {
                     int size = uiMessageList.size();
@@ -869,7 +866,7 @@ public class ConversationActivity extends ConversationBaseActivity {
         //删除临时消息前把创建时间改为临时消息的创建时间，保证排序
         Message message = MessageCacheUtil.getMessageByMid(ConversationActivity.this,receivedWSMessage.getTmpId());
         receivedWSMessage.setCreationDate(message.getCreationDate());
-        LogUtils.YfcDebug("消息的id："+message.getId()+"设置的消息内容："+message.getContent()+"设置创建时间："+message.getCreationDate()+"服务端返回消息的时间："+receivedWSMessage.getCreationDate());
+        MessageCacheUtil.saveMessage(ConversationActivity.this,receivedWSMessage);
         MessageCacheUtil.deleteLocalFakeMessage(ConversationActivity.this,receivedWSMessage.getTmpId());
     }
 
@@ -877,6 +874,7 @@ public class ConversationActivity extends ConversationBaseActivity {
         //删除临时消息前把创建时间改为临时消息的创建时间，保证排序
         Message messageTmp = MessageCacheUtil.getMessageByMid(ConversationActivity.this,message.getTmpId());
         message.setCreationDate(messageTmp.getCreationDate());
+        MessageCacheUtil.saveMessage(ConversationActivity.this,message);
         MessageCacheUtil.deleteLocalFakeMessage(ConversationActivity.this,message.getTmpId());
     }
 
@@ -915,7 +913,6 @@ public class ConversationActivity extends ConversationBaseActivity {
                 adapter.notifyDataSetChanged();
                 msgListView.scrollToPosition(uiMessageList.size() - 1);
             }
-
         }
     }
 
