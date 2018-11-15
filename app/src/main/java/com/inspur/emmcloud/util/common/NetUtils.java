@@ -199,13 +199,12 @@ public class NetUtils {
 	 * @param pingNetEntity 检测网络实体类
 	 * @return 检测后的数据
 	 */
-	public static PingNetEntity ping(PingNetEntity pingNetEntity) {
+	public static PingNetEntity ping(PingNetEntity pingNetEntity,Long WhileTime) {
 		String line = null;
 		Process process = null;
 		BufferedReader successReader = null;
-		String command = "ping -c " + pingNetEntity.getPingCount() + " -w " + 1 + " " + pingNetEntity.getIp();
-		LogUtils.LbcDebug("command "+command);
-		long taegrtTime = System.currentTimeMillis()+4500;
+		String command = "ping -c " + pingNetEntity.getPingCount() + " -w " + pingNetEntity.getPingWtime() + " " + pingNetEntity.getIp();
+		long taegrtTime = System.currentTimeMillis()+WhileTime;
 		while (System.currentTimeMillis()<taegrtTime){
 			try {
 				process = Runtime.getRuntime().exec(command);

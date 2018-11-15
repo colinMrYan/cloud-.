@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PingNetEntity;
 import com.qmuiteam.qmui.widget.QMUILoadingView;
@@ -112,20 +113,16 @@ public class NetWorkStateDetailActivity extends BaseActivity {
                         } else {
                             portalImageView.setBackground(drawableError);
                         }
+                        portalImageView.setVisibility(View.VISIBLE);
                         qmulWifiLoadingView.setVisibility(View.GONE);
                         break;
                     case SHOW_DNSCONNCTSTATE:
-                        if(netHardConnectState){
                             if((boolean)msg.obj){
                                 dnsImageView.setBackground(drawableSuccess);
                             } else {
                                 dnsImageView.setBackground(drawableError);
                             }
                             dnsImageView.setVisibility(View.VISIBLE);
-                        } else {
-                            dnsImageView.setBackground(drawableError);
-                            qmulDnsLoadingView.setVisibility(View.GONE);
-                        }
                         qmulDnsLoadingView.setVisibility(View.GONE);
                         break;
                     default:
@@ -164,9 +161,14 @@ public class NetWorkStateDetailActivity extends BaseActivity {
     private void checkingPortalState(){
         if(1==NetStateintegerData.get(0)){
             sendRequest();
+        } else if((NetStateintegerData.get(0)>1)&&(NetStateintegerData.get(0)<5)) {
+            qmulWifiLoadingView.setVisibility(View.GONE);
+            portalImageView.setBackground(drawableSuccess);
+            portalImageView.setVisibility(View.VISIBLE);
         } else {
             qmulWifiLoadingView.setVisibility(View.GONE);
             portalImageView.setBackground(drawableError);
+            portalImageView.setVisibility(View.VISIBLE);
         }
     }
 
@@ -234,14 +236,14 @@ public class NetWorkStateDetailActivity extends BaseActivity {
             @Override
             public void run() {
                 try {
-                    PingNetEntity checkUrlEntity =new PingNetEntity("www.baidu.com",3,5,new StringBuffer());
-                    PingNetEntity checkUrlEntityResult= NetUtils.ping(checkUrlEntity);
-                    PingNetEntity checkIpEntity =new PingNetEntity("202.108.22.5",3,5,new StringBuffer());
-                    PingNetEntity checkIpEntityResult= NetUtils.ping(checkIpEntity);
-                    PingNetEntity pingUrlEntity =new PingNetEntity("www.aliyun.com",3,5,new StringBuffer());
-                    PingNetEntity pingUrlEntityResult= NetUtils.ping(pingUrlEntity);
-                    PingNetEntity pingIpEntity =new PingNetEntity("106.11.93.21",3,5,new StringBuffer());
-                    PingNetEntity pingIpEntityResult= NetUtils.ping(pingIpEntity);
+                    PingNetEntity checkUrlEntity =new PingNetEntity("www.baidu.com",3,1000,new StringBuffer());
+                    PingNetEntity checkUrlEntityResult= NetUtils.ping(checkUrlEntity, (long) 4500);
+                    PingNetEntity checkIpEntity =new PingNetEntity("202.108.22.5",3,1000,new StringBuffer());
+                    PingNetEntity checkIpEntityResult= NetUtils.ping(checkIpEntity, (long) 4500);
+                    PingNetEntity pingUrlEntity =new PingNetEntity("www.aliyun.com",3,1000,new StringBuffer());
+                    PingNetEntity pingUrlEntityResult= NetUtils.ping(pingUrlEntity, (long) 4500);
+                    PingNetEntity pingIpEntity =new PingNetEntity("106.11.93.21",3,1000,new StringBuffer());
+                    PingNetEntity pingIpEntityResult= NetUtils.ping(pingIpEntity, (long) 4500);
                     if((checkIpEntityResult.isResult()&&checkUrlEntityResult.isResult())||(pingIpEntityResult.isResult()&&pingUrlEntityResult.isResult())){
                         //结果数据显示
                         Message dnsState = new Message();

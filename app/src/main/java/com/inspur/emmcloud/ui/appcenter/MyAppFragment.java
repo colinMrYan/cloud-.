@@ -182,7 +182,7 @@ public class MyAppFragment extends Fragment {
             public void run() {
                 try {
                     PingNetEntity pingNetEntity=new PingNetEntity("www.baidu.com",1,1,new StringBuffer());
-                    pingNetEntity=NetUtils.ping(pingNetEntity);
+                    pingNetEntity=NetUtils.ping(pingNetEntity, (long) 4500);
                     android.os.Message message = handler.obtainMessage(PING_NET_STATE_HANDLER,pingNetEntity.isResult());
                     message.sendToTarget();
                 } catch (Exception e){

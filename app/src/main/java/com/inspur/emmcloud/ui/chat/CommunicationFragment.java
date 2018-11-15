@@ -154,7 +154,7 @@ public class CommunicationFragment extends Fragment {
             public void run() {
                 try {
                     PingNetEntity pingNetEntity=new PingNetEntity("www.baidu.com",1,1,new StringBuffer());
-                    pingNetEntity=NetUtils.ping(pingNetEntity);
+                    pingNetEntity=NetUtils.ping(pingNetEntity, (long) 4500);
                     android.os.Message message = handler.obtainMessage(PING_NET_STATE_HANDLER,pingNetEntity.isResult());
                     message.sendToTarget();
                 } catch (Exception e){
@@ -221,17 +221,21 @@ public class CommunicationFragment extends Fragment {
         conversationAdapter.setAdapterListener(new ConversationAdapter.AdapterListener() {
             @Override
             public void onItemClick(View view, int position,int header) {
-                    UIConversation uiConversation = displayUIConversationList.get(position-header);
-                    Conversation conversation = uiConversation.getConversation();
-                    String type = conversation.getType();
-                    if (type.equals(Conversation.TYPE_CAST) || type.equals(Conversation.TYPE_DIRECT) || type.equals(Conversation.TYPE_GROUP)) {
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable(ConversationActivity.EXTRA_CONVERSATION, conversation);
-                        IntentUtils.startActivity(getActivity(), ConversationActivity.class, bundle);
-                    } else {
-                        ToastUtils.show(MyApplication.getInstance(), R.string.not_support_open_channel);
+                    try {
+                        UIConversation uiConversation = displayUIConversationList.get(position-header);
+                        Conversation conversation = uiConversation.getConversation();
+                        String type = conversation.getType();
+                        if (type.equals(Conversation.TYPE_CAST) || type.equals(Conversation.TYPE_DIRECT) || type.equals(Conversation.TYPE_GROUP)) {
+                            Bundle bundle = new Bundle();
+                            bundle.putSerializable(ConversationActivity.EXTRA_CONVERSATION, conversation);
+                            IntentUtils.startActivity(getActivity(), ConversationActivity.class, bundle);
+                        } else {
+                            ToastUtils.show(MyApplication.getInstance(), R.string.not_support_open_channel);
+                        }
+                        setConversationRead(position, uiConversation);
+                    } catch (Exception e) {
+
                     }
-                    setConversationRead(position, uiConversation);
             }
 
             @Override
