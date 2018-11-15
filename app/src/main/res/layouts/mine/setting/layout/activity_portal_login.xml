@@ -66,15 +66,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/header_layout">
-        <com.qmuiteam.qmui.widget.QMUILoadingView
-            android:id="@+id/qlv_wifi_portal_checkloading"
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            android:scaleType="centerInside"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:color="#666666"
-            app:qmui_loading_view_size="40dp" />
         <WebView
             android:id="@+id/wv_show_login_detail"
             android:layout_width="match_parent"

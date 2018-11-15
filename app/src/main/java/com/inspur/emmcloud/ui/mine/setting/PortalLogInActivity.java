@@ -9,7 +9,6 @@ import android.webkit.WebViewClient;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.widget.LoadingDialog;
-import com.qmuiteam.qmui.widget.QMUILoadingView;
 
 
 /**
@@ -17,11 +16,7 @@ import com.qmuiteam.qmui.widget.QMUILoadingView;
  */
 
 public class PortalLogInActivity extends BaseActivity {
-
     private WebView webview;
-
-    private QMUILoadingView qmuiLoadingWebView;
-
     private LoadingDialog portalLoadingDialog  ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +27,6 @@ public class PortalLogInActivity extends BaseActivity {
         portalLoadingDialog.show();
         String portUrl  =  getIntent().getExtras().getString("PortalUrl");
         webview = (WebView)findViewById(R.id.wv_show_login_detail);
-        qmuiLoadingWebView = (QMUILoadingView)findViewById(R.id.qlv_wifi_portal_checkloading);
         webview.getSettings().setJavaScriptEnabled(true);
         webview.loadUrl(portUrl);
         webview.setWebViewClient(new WebViewClient() {
@@ -46,7 +40,6 @@ public class PortalLogInActivity extends BaseActivity {
             {
                 super.onPageFinished(view, url);
                 LoadingDialog.dimissDlg(portalLoadingDialog);
-
             }
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon)
