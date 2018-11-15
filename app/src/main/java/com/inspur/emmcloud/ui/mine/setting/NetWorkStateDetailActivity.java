@@ -42,45 +42,7 @@ public class NetWorkStateDetailActivity extends BaseActivity {
     QMUILoadingView qmulDnsLoadingView;
     public static final int SHOW_DNSCONNCTSTATE=2;
     public static final int SHOW_RESPONSE=1;
-    private Handler handler=new Handler() {
-        public void handleMessage(android.os.Message msg) {
-            switch (msg.what) {
-                case SHOW_RESPONSE:
-                    if(1==NetStateintegerData.get(0)) {
-                        List<String> bundleata =(List<String>)msg.obj;
-                        String httpResNum = bundleata.get(0);
-                        String content=bundleata.get(1);
-                        if((-1!=content.indexOf("&firsturl"))||(-1!=httpResNum.indexOf("NETWORK 302"))){
-                            PortalUrl = content.substring(0,content.indexOf("&firsturl"));
-                            portalImageView.setBackground(drawableError);
-                        }else {
-                            portalImageView.setBackground(drawableSuccess);
-                        }
-                        portalImageView.setVisibility(View.VISIBLE);
-                    } else {
-                        portalImageView.setBackground(drawableError);
-                    }
-                    qmulWifiLoadingView.setVisibility(View.GONE);
-                    break;
-                case SHOW_DNSCONNCTSTATE:
-                     if(netHardConnectState){
-                         if((boolean)msg.obj){
-                            dnsImageView.setBackground(drawableSuccess);
-                         } else {
-                             dnsImageView.setBackground(drawableError);
-                         }
-                         dnsImageView.setVisibility(View.VISIBLE);
-                     } else {
-                         dnsImageView.setBackground(drawableError);
-                         qmulDnsLoadingView.setVisibility(View.GONE);
-                     }
-                    qmulDnsLoadingView.setVisibility(View.GONE);
-                    break;
-                default:
-                    break;
-            }
-        };
-    };
+    private Handler handler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +65,7 @@ public class NetWorkStateDetailActivity extends BaseActivity {
         qmulHardLoadingView =(QMUILoadingView)findViewById(R.id.qv_checking_hard_loading);
         qmulWifiLoadingView =(QMUILoadingView)findViewById(R.id.qv_checking_portal_loading);
         qmulDnsLoadingView =(QMUILoadingView)findViewById(R.id.qv_checking_dns_loading);
+        HandMessage();
     }
 
     /**
@@ -125,6 +88,51 @@ public class NetWorkStateDetailActivity extends BaseActivity {
             portalImageView.setBackground(drawableError);
             dnsImageView.setBackground(drawableError);
         }
+    }
+
+    /**
+     * 处理不同Net链接状态的UI显示
+     * */
+    void HandMessage() {
+        handler=new Handler() {
+            public void handleMessage(android.os.Message msg) {
+                switch (msg.what) {
+                    case SHOW_RESPONSE:
+                        if(1==NetStateintegerData.get(0)) {
+                            List<String> bundleata =(List<String>)msg.obj;
+                            String httpResNum = bundleata.get(0);
+                            String content=bundleata.get(1);
+                            if((-1!=content.indexOf("&firsturl"))||(-1!=httpResNum.indexOf("NETWORK 302"))){
+                                PortalUrl = content.substring(0,content.indexOf("&firsturl"));
+                                portalImageView.setBackground(drawableError);
+                            }else {
+                                portalImageView.setBackground(drawableSuccess);
+                            }
+                            portalImageView.setVisibility(View.VISIBLE);
+                        } else {
+                            portalImageView.setBackground(drawableError);
+                        }
+                        qmulWifiLoadingView.setVisibility(View.GONE);
+                        break;
+                    case SHOW_DNSCONNCTSTATE:
+                        if(netHardConnectState){
+                            if((boolean)msg.obj){
+                                dnsImageView.setBackground(drawableSuccess);
+                            } else {
+                                dnsImageView.setBackground(drawableError);
+                            }
+                            dnsImageView.setVisibility(View.VISIBLE);
+                        } else {
+                            dnsImageView.setBackground(drawableError);
+                            qmulDnsLoadingView.setVisibility(View.GONE);
+                        }
+                        qmulDnsLoadingView.setVisibility(View.GONE);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        };
     }
 
     @Override

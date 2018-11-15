@@ -9,6 +9,7 @@ import android.database.DataSetObserver;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Vibrator;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
@@ -53,11 +54,14 @@ import com.inspur.emmcloud.bean.chat.TransparentBean;
 import com.inspur.emmcloud.bean.system.ClientConfigItem;
 import com.inspur.emmcloud.bean.system.GetAllConfigVersionResult;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
+import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.interf.OnRecommendAppWidgetItemClickListener;
+import com.inspur.emmcloud.ui.mine.setting.NetWorkStateDetailActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.common.PingNetEntity;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ShortCutUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -100,6 +104,7 @@ import java.util.Set;
 public class MyAppFragment extends Fragment {
 
     private static final String ACTION_NAME = "add_app";
+    private static final int PING_NET_STATE_HANDLER = 7;
     private long lastOnItemClickTime = 0;//防止多次点击
     private View rootView;
     private ListView appListView;
@@ -117,6 +122,10 @@ public class MyAppFragment extends Fragment {
     private RecommendAppWidgetListAdapter recommendAppWidgetListAdapter = null;
     private int appListSizeExceptCommonlyUse = 0;
     private DataSetObserver dataSetObserver;
+
+    private Handler handler;
+    private View    listHanlerView;
+    private boolean haveHeader=false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -161,12 +170,38 @@ public class MyAppFragment extends Fragment {
         }
         getAppBadgeNum();
         refreshRecommendAppWidgetView();
+        PingThreadStart();
+    }
+
+    /**
+     *Ping 网络状态
+     * */
+    private  void PingThreadStart() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    PingNetEntity pingNetEntity=new PingNetEntity("www.baidu.com",1,1,new StringBuffer());
+                    pingNetEntity=NetUtils.ping(pingNetEntity);
+                    android.os.Message message = handler.obtainMessage(PING_NET_STATE_HANDLER,pingNetEntity.isResult());
+                    message.sendToTarget();
+                } catch (Exception e){
+                }
+            }
+        }).start();
     }
 
     /**
      * 初始化Views
      */
     private void initViews() {
+        listHanlerView  = LayoutInflater.from(getContext()).inflate(R.layout.recycleview_header_item,null);
+        listHanlerView.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                IntentUtils.startActivity(getActivity(), NetWorkStateDetailActivity.class);
+            }
+        });
         apiService = new MyAppAPIService(getActivity());
         apiService.setAPIInterface(new WebService());
         //当Adapter的大小发生改变时调用此方法
@@ -209,8 +244,28 @@ public class MyAppFragment extends Fragment {
         PreferencesByUserAndTanentUtils.putInt(getActivity(), Constant.PREF_MY_APP_RECOMMEND_LASTUPDATE_HOUR, 0);
 //        shortCutAppList.add("mobile_checkin_hcm");
 //        shortCutAppList.add("inspur_news_esg");//目前，除在此处添加id还需要为每个需要生成快捷方式的应用配置图标
+        handMessage();
     }
 
+    /**
+     * 添加LIstView 的HeaderView
+     * */
+    private void AddHeaderView(){
+        if(!haveHeader){
+            appListView.addHeaderView(listHanlerView);
+            haveHeader=true;
+        }
+    }
+
+    /**
+     * 删除ListView 的HeaderView
+     * */
+    private void DelectHeaderView() {
+        if(haveHeader){
+            appListView.removeHeaderView(listHanlerView);
+            haveHeader=false;
+        }
+    }
     /**
      * 刷新推荐应用小部件
      * 每个小时都有可能有变化
@@ -343,6 +398,49 @@ public class MyAppFragment extends Fragment {
         if (isMyAppUpdate){
             getMyApp();
         }
+    }
+
+    /**
+     * app页网络异常提示框
+     * @param netState  通过Action获取操作类型
+     * */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void netWorkStateTip(SimpleEventMessage netState) {
+        if(netState.getAction().equals(Constant.EVENTBUS_TAG__NET_STATE_CHANGE)){
+            if(((String)netState.getMessageObj()).equals("event_tag_net_state_change")){
+                PingThreadStart();
+            } else if(((String)netState.getMessageObj()).equals("event_tag_net_state_error")) {
+                android.os.Message message = handler.obtainMessage(PING_NET_STATE_HANDLER,false);
+                message.sendToTarget();
+            } else if (((String)netState.getMessageObj()).equals("event_tag_net_state_ok")) {
+                android.os.Message message = handler.obtainMessage(PING_NET_STATE_HANDLER,true);
+                message.sendToTarget();
+            }
+        }
+    }
+
+    /**
+     * 处理弹出异常框UI
+     * */
+    private void handMessage() {
+        // TODO Auto-generated method stub
+        handler = new Handler() {
+            @Override
+            public void handleMessage(android.os.Message msg) {
+                // TODO Auto-generated method stub
+                switch (msg.what) {
+                    case PING_NET_STATE_HANDLER:
+                        if(!(Boolean)msg.obj) {
+                            AddHeaderView();
+                        } else {
+                            DelectHeaderView();
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+        };
     }
 
 

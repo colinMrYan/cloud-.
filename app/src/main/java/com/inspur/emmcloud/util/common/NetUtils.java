@@ -76,13 +76,11 @@ public class NetUtils {
 	public static NetworkInfo mNetworkInfo;
 	private static final String TAG = "PingNet";
 
-
 	// 判断是否有网络连接
-		public static boolean isNetworkConnected(Context context) {
+	public static boolean isNetworkConnected(Context context) {
 			return isNetworkConnected(context,true);
 		}
 
-	
 	// 判断是否有网络连接
 	public static boolean isNetworkConnected(Context context,Boolean isShowToast) {
 			ConnectivityManager mConnectivityManager = (ConnectivityManager) context
@@ -210,18 +208,14 @@ public class NetUtils {
 		long taegrtTime = System.currentTimeMillis()+4500;
 		while (System.currentTimeMillis()<taegrtTime){
 			try {
-				long a = System.currentTimeMillis();
 				process = Runtime.getRuntime().exec(command);
-				long b = System.currentTimeMillis();
 				if (process == null) {
 					append(pingNetEntity.getResultBuffer(), "ping fail:process is null.");
 					pingNetEntity.setPingTime(null);
 					pingNetEntity.setResult(false);
 					return pingNetEntity;
 				}
-				long c = System.currentTimeMillis();
 				successReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-				long d = System.currentTimeMillis();
 				while ((line = successReader.readLine()) != null) {
 					append(pingNetEntity.getResultBuffer(), line);
 					String time;
@@ -229,9 +223,7 @@ public class NetUtils {
 						pingNetEntity.setPingTime(time);
 					}
 				}
-				long e = System.currentTimeMillis();
 				int status = process.waitFor();
-				long f = System.currentTimeMillis();
 				if (status == 0) {
 					append(pingNetEntity.getResultBuffer(), "exec cmd success:" + command);
 					pingNetEntity.setResult(true);
@@ -241,8 +233,6 @@ public class NetUtils {
 					pingNetEntity.setResult(false);
 				}
 				append(pingNetEntity.getResultBuffer(), "exec finished.");
-				long g = System.currentTimeMillis();
-				LogUtils.LbcDebug("b-a::"+(b-a)+"  c-b::"+(c-b)+"  d-c::"+(d-c)+"  e-d::"+(e-d)+"  f-e::"+(f-e)+"  g-f::"+(g-f));
 			} catch (IOException e) {
 				Log.e(TAG, String.valueOf(e));
 			} catch (InterruptedException e) {
@@ -329,6 +319,7 @@ public class NetUtils {
 
 		return getNetworkClass(networkType);
 	}
+
 	/**
 	 * 判断移动网络的类型
 	 *
@@ -359,6 +350,7 @@ public class NetUtils {
 				return NETWORK_UNKNOW;
 		}
 	}
+
 	/**
 	 * 检测VPN
 	 */
@@ -380,6 +372,7 @@ public class NetUtils {
 		}
 		return false;
 	}
+
 	/**
 	 * get connected str Name
 	 * */

@@ -141,6 +141,14 @@ public class CommunicationFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+       PingThreadStart();
+
+    }
+
+    /**
+     *Ping 网络状态
+     * */
+    private  void PingThreadStart() {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -153,8 +161,8 @@ public class CommunicationFragment extends Fragment {
                 }
             }
         }).start();
-
     }
+
 
     private void initView() {
         // TODO Auto-generated method stub
@@ -311,19 +319,7 @@ public class CommunicationFragment extends Fragment {
     public void netWorkStateTip(SimpleEventMessage netState) {
         if(netState.getAction().equals(Constant.EVENTBUS_TAG__NET_STATE_CHANGE)){
             if(((String)netState.getMessageObj()).equals("event_tag_net_state_change")){
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            PingNetEntity pingNetEntity=new PingNetEntity("www.baidu.com",1,1,new StringBuffer());
-                            pingNetEntity=NetUtils.ping(pingNetEntity);
-                            android.os.Message message = handler.obtainMessage(PING_NET_STATE_HANDLER,pingNetEntity.isResult());
-                            message.sendToTarget();
-                        } catch (Exception e){
-                        }
-                    }
-                }).start();
-
+                PingThreadStart();
             } else if(((String)netState.getMessageObj()).equals("event_tag_net_state_error")) {
                 android.os.Message message = handler.obtainMessage(PING_NET_STATE_HANDLER,false);
                 message.sendToTarget();
