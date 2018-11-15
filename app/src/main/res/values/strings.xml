@@ -868,7 +868,7 @@
     <string name="no_work_content">暂无工作内容</string>
 
     <!--网络链接及网络诊断-->
-    <string name="net_connected_error">网络不给力，请点击检查网络设置。</string>
+    <string name="net_connected_error">无法连接服务器，请检查你的网络设置</string>
     <string name="net_diagnosis_title">网络诊断</string>
     <string name="net_diagnosis_hard_link_title">检测网络硬件链接</string>
     <string name="net_diagnosis_wifi_link_title">检测Wifi路由状态</string>
