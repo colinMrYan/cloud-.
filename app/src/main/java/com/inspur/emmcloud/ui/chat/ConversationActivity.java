@@ -564,6 +564,7 @@ public class ConversationActivity extends ConversationBaseActivity {
         messageRecourceUploadUtils.setProgressCallback(new ProgressCallback() {
             @Override
             public void onSuccess(VolumeFile volumeFile) {
+                //如果文件信息发送oss成功则记录oss返回文件路径，并根据不同类型文件记录相关信息，如果后续仅是socket未发送成功则
                 fakeMessage.setLocalPath(volumeFile.getPath());
                 switch (fakeMessage.getType()) {
                     case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
@@ -724,6 +725,7 @@ public class ConversationActivity extends ConversationBaseActivity {
             Intent intent = new Intent("message_notify");
             intent.putExtra("command", "sort_session_list");
             LocalBroadcastManager.getInstance(ConversationActivity.this).sendBroadcast(intent);
+            LogUtils.YfcDebug("记录为未发送成功消息的creationDate："+message.getCreationDate()+"消息id："+message.getId()+"消息内容："+message.getContent());
             return true;
         }
         return false;
@@ -867,6 +869,7 @@ public class ConversationActivity extends ConversationBaseActivity {
         //删除临时消息前把创建时间改为临时消息的创建时间，保证排序
         Message message = MessageCacheUtil.getMessageByMid(ConversationActivity.this,receivedWSMessage.getTmpId());
         receivedWSMessage.setCreationDate(message.getCreationDate());
+        LogUtils.YfcDebug("消息的id："+message.getId()+"设置的消息内容："+message.getContent()+"设置创建时间："+message.getCreationDate()+"服务端返回消息的时间："+receivedWSMessage.getCreationDate());
         MessageCacheUtil.deleteLocalFakeMessage(ConversationActivity.this,receivedWSMessage.getTmpId());
     }
 
@@ -898,7 +901,6 @@ public class ConversationActivity extends ConversationBaseActivity {
     public void onReceiveNewMessage(EventMessage eventMessage) {
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_GET_NEW_MESSAGE) && eventMessage.getExtra().equals(cid)) {
             handleRealMessage(eventMessage);
-            LogUtils.jasonDebug("onReceiveNewMessage---------");
             if (eventMessage.getStatus() == 200) {
                 String content = eventMessage.getContent();
                 GetChannelMessagesResult getChannelMessagesResult = new GetChannelMessagesResult(content);

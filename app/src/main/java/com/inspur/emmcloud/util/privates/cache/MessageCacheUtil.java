@@ -397,7 +397,6 @@ public class MessageCacheUtil {
      */
     public static void deleteLocalFakeMessage(Context context,String tmpId){
         try {
-            LogUtils.YfcDebug("删除消息id："+tmpId);
             DbCacheUtils.getDb(context).delete(Message.class,WhereBuilder.b("id","=",tmpId));
         } catch (Exception e) {
             LogUtils.YfcDebug("e:"+e.getMessage());
