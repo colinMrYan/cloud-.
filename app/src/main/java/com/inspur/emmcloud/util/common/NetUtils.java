@@ -202,11 +202,16 @@ public class NetUtils {
 	public static PingNetEntity ping(PingNetEntity pingNetEntity,Long WhileTime) {
 		String line = null;
 		Process process = null;
+		LogUtils.LbcDebug("1");
 		BufferedReader successReader = null;
+		LogUtils.LbcDebug("2");
 		String command = "ping -c " + pingNetEntity.getPingCount() + " -w " + pingNetEntity.getPingWtime() + " " + pingNetEntity.getIp();
-		long taegrtTime = System.currentTimeMillis()+WhileTime;
+		LogUtils.LbcDebug(command);
+		long taegrtTime = System.currentTimeMillis()+4500;
+		LogUtils.LbcDebug("4");
 		while (System.currentTimeMillis()<taegrtTime){
 			try {
+				LogUtils.LbcDebug("5");
 				process = Runtime.getRuntime().exec(command);
 				if (process == null) {
 					append(pingNetEntity.getResultBuffer(), "ping fail:process is null.");
@@ -216,6 +221,7 @@ public class NetUtils {
 				}
 				successReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 				while ((line = successReader.readLine()) != null) {
+					LogUtils.LbcDebug("6");
 					append(pingNetEntity.getResultBuffer(), line);
 					String time;
 					if ((time = getTime(line)) != null) {
@@ -223,6 +229,7 @@ public class NetUtils {
 					}
 				}
 				int status = process.waitFor();
+				LogUtils.LbcDebug("7");
 				if (status == 0) {
 					append(pingNetEntity.getResultBuffer(), "exec cmd success:" + command);
 					pingNetEntity.setResult(true);
@@ -231,12 +238,14 @@ public class NetUtils {
 					pingNetEntity.setPingTime(null);
 					pingNetEntity.setResult(false);
 				}
-				append(pingNetEntity.getResultBuffer(), "exec finished.");
 			} catch (IOException e) {
+				LogUtils.LbcDebug("8");
 				Log.e(TAG, String.valueOf(e));
 			} catch (InterruptedException e) {
+				LogUtils.LbcDebug("9");
 				Log.e(TAG, String.valueOf(e));
 			} finally {
+				LogUtils.LbcDebug("10");
 				if (process != null) {
 					process.destroy();
 				}

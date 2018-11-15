@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#fdd9da">
+    android:background="#FFDEDE">
     <ImageView
         android:id="@+id/iv_net_no_used"
-        android:layout_marginLeft="20dp"
+        android:layout_marginLeft="18dp"
         android:layout_marginTop="7dp"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="26dp"
+        android:layout_height="26dp"
         android:layout_centerVertical="true"
         android:scaleType="centerCrop"
-        android:background="@drawable/ic_net_not_connected"/>
+        android:background="@drawable/ic_netchecking_error_log"/>
     <TextView
         android:id="@+id/tv_net_state_mes"
         android:layout_width="wrap_content"
-        android:layout_height="30dp"
-        android:paddingLeft="20dp"
-        android:layout_marginTop="7dp"
+        android:layout_toRightOf="@id/iv_net_no_used"
+        android:layout_height="wrap_content"
+        android:paddingLeft="18dp"
         android:text="@string/net_connected_error"
-        android:textSize="14dp"
+        android:textSize="15dp"
         android:layout_centerVertical="true"
-        android:textColor="@color/black"/>
-</LinearLayout>
+        android:textColor="#665758 "/>
+</RelativeLayout>

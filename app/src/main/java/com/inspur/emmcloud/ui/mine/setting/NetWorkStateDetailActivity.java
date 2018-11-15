@@ -80,6 +80,7 @@ public class NetWorkStateDetailActivity extends BaseActivity {
             //检测小助手
             checkingPortalState();
             //检测DNS服务
+            LogUtils.LbcDebug("dddddddddddddddddddddddddddddd");
             DNSConnectState("","","","");
         }else {
             qmulDnsLoadingView.setVisibility(View.GONE);
@@ -117,6 +118,7 @@ public class NetWorkStateDetailActivity extends BaseActivity {
                         qmulWifiLoadingView.setVisibility(View.GONE);
                         break;
                     case SHOW_DNSCONNCTSTATE:
+                        LogUtils.LbcDebug("data111111111111111111111111111");
                             if((boolean)msg.obj){
                                 dnsImageView.setBackground(drawableSuccess);
                             } else {
@@ -236,14 +238,20 @@ public class NetWorkStateDetailActivity extends BaseActivity {
             @Override
             public void run() {
                 try {
-                    PingNetEntity checkUrlEntity =new PingNetEntity("www.baidu.com",3,1000,new StringBuffer());
-                    PingNetEntity checkUrlEntityResult= NetUtils.ping(checkUrlEntity, (long) 4500);
-                    PingNetEntity checkIpEntity =new PingNetEntity("202.108.22.5",3,1000,new StringBuffer());
-                    PingNetEntity checkIpEntityResult= NetUtils.ping(checkIpEntity, (long) 4500);
-                    PingNetEntity pingUrlEntity =new PingNetEntity("www.aliyun.com",3,1000,new StringBuffer());
-                    PingNetEntity pingUrlEntityResult= NetUtils.ping(pingUrlEntity, (long) 4500);
-                    PingNetEntity pingIpEntity =new PingNetEntity("106.11.93.21",3,1000,new StringBuffer());
-                    PingNetEntity pingIpEntityResult= NetUtils.ping(pingIpEntity, (long) 4500);
+                    LogUtils.LbcDebug("DNS Data1");
+                    PingNetEntity checkUrlEntity =new PingNetEntity("www.baidu.com",3,70,new StringBuffer());
+                    LogUtils.LbcDebug("DNS Data2");
+                    PingNetEntity checkUrlEntityResult= NetUtils.ping(checkUrlEntity, (long) 1500);
+                    LogUtils.LbcDebug("DNS Data3");
+                    PingNetEntity checkIpEntity =new PingNetEntity("202.108.22.5",3,70,new StringBuffer());
+                    LogUtils.LbcDebug("DNS Data4");
+                    PingNetEntity checkIpEntityResult= NetUtils.ping(checkIpEntity, (long) 1500);
+                    PingNetEntity pingUrlEntity =new PingNetEntity("www.aliyun.com",3,70,new StringBuffer());
+                    LogUtils.LbcDebug("DNS Data4");
+                    PingNetEntity pingUrlEntityResult= NetUtils.ping(pingUrlEntity, (long) 1500);
+                    PingNetEntity pingIpEntity =new PingNetEntity("106.11.93.21",3,70,new StringBuffer());
+                    PingNetEntity pingIpEntityResult= NetUtils.ping(pingIpEntity, (long) 1500);
+                    LogUtils.LbcDebug("DNS Data4");
                     if((checkIpEntityResult.isResult()&&checkUrlEntityResult.isResult())||(pingIpEntityResult.isResult()&&pingUrlEntityResult.isResult())){
                         //结果数据显示
                         Message dnsState = new Message();
@@ -257,6 +265,7 @@ public class NetWorkStateDetailActivity extends BaseActivity {
                         handler.sendMessage(dnsState);
                     }
                 }catch (Exception e) {
+                    LogUtils.LbcDebug("catch");
                     Message dnsState = new Message();
                     dnsState.what=SHOW_DNSCONNCTSTATE;
                     dnsState.obj=false;
