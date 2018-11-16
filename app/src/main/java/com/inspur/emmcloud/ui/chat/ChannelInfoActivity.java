@@ -72,6 +72,7 @@ public class ChannelInfoActivity extends BaseActivity {
     private TextView channelMemberNumText;
     private boolean isNoInterruption = false;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
