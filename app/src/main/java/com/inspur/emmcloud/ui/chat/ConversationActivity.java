@@ -7,8 +7,13 @@ import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
@@ -19,15 +24,20 @@ import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.GetChannelMessagesResult;
 import com.inspur.emmcloud.bean.chat.Message;
+import com.inspur.emmcloud.bean.chat.MsgContentMediaVoice;
 import com.inspur.emmcloud.bean.chat.UIMessage;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
 import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.bean.system.EventMessage;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
+import com.inspur.emmcloud.bean.system.VoiceResult;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
+import com.inspur.emmcloud.interf.OnVoiceResultCallback;
 import com.inspur.emmcloud.interf.ProgressCallback;
+import com.inspur.emmcloud.interf.ResultCallback;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
+import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.InputMethodUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
@@ -36,6 +46,7 @@ import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.privates.AudioFormatUtils;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
 import com.inspur.emmcloud.util.privates.DataCleanManager;
 import com.inspur.emmcloud.util.privates.DirectChannelUtils;
@@ -44,17 +55,20 @@ import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.MessageRecourceUploadUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.UriUtils;
+import com.inspur.emmcloud.util.privates.Voice2StringMessageUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 import com.inspur.emmcloud.widget.ECMChatInputMenu;
 import com.inspur.emmcloud.widget.ECMChatInputMenu.ChatInputMenuListener;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.RecycleViewForSizeChange;
+import com.inspur.emmcloud.widget.bubble.BubbleLayout;
 import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
 import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
 import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
 import com.inspur.imp.plugin.camera.mycamera.MyCameraActivity;
 import com.inspur.imp.util.compressor.Compressor;
+import com.qmuiteam.qmui.widget.QMUILoadingView;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
@@ -100,6 +114,7 @@ public class ConversationActivity extends ConversationBaseActivity {
     private Handler handler;
     private boolean isSpecialUser = false; //小智机器人进行特殊处理
     private BroadcastReceiver refreshNameReceiver;
+    private PopupWindow mediaVoiceReRecognizerPop;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -270,6 +285,18 @@ public class ConversationActivity extends ConversationBaseActivity {
                     showResendMessageDlg(uiMessage);
                 }
             }
+
+            @Override
+            public void onMediaVoiceReRecognize(UIMessage uiMessage, BubbleLayout bubbleLayout, QMUILoadingView downloadLoadingView) {
+                showMeidaVoiceReRecognizerPop(uiMessage,bubbleLayout,downloadLoadingView);
+            }
+
+            @Override
+            public void onAdapterDataSizeChange() {
+                if (mediaVoiceReRecognizerPop != null && mediaVoiceReRecognizerPop.isShowing()){
+                    mediaVoiceReRecognizerPop.dismiss();
+                }
+            }
         });
         adapter.setMessageList(uiMessageList);
         msgListView.setAdapter(adapter);
@@ -377,6 +404,109 @@ public class ConversationActivity extends ConversationBaseActivity {
                 break;
         }
     }
+
+
+    private void showMeidaVoiceReRecognizerPop(final UIMessage uiMessage,BubbleLayout anchor,final QMUILoadingView downloadLoadingView){
+        View contentView = LayoutInflater.from(this).inflate(R.layout.pop_voice_to_text_view, null);
+        contentView.measure(View.MeasureSpec.UNSPECIFIED,View.MeasureSpec.UNSPECIFIED);
+        mediaVoiceReRecognizerPop = new PopupWindow(contentView,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT, true);
+        mediaVoiceReRecognizerPop.setTouchable(true);
+        mediaVoiceReRecognizerPop.setOutsideTouchable(true);
+        mediaVoiceReRecognizerPop.setTouchInterceptor(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return false;
+            }
+        });
+        int[] location = new int[2];
+        anchor.getLocationOnScreen(location);
+        int popWidth = mediaVoiceReRecognizerPop.getContentView().getMeasuredWidth();
+        int popHeight = mediaVoiceReRecognizerPop.getContentView().getMeasuredHeight();
+        BubbleLayout voice2TextBubble = (BubbleLayout)contentView.findViewById(R.id.bl_voice_to_text);
+        voice2TextBubble.setArrowPosition(popWidth/2- DensityUtil.dip2px(MyApplication.getInstance(),9));
+        mediaVoiceReRecognizerPop.showAtLocation(anchor, Gravity.NO_GRAVITY,location[0]+anchor.getWidth()/2-popWidth/2, location[1]-popHeight-DensityUtil.dip2px(MyApplication.getInstance(),8));
+        voice2TextBubble.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mediaVoiceReRecognizerPop.dismiss();
+                String mp3FileSavePath = MyAppConfig.getCacheVoiceFilePath(uiMessage.getMessage().getChannel(), uiMessage.getMessage().getId());
+                //如果原文件不存在，不进行重新识别
+                if(!FileUtils.isFileExist(mp3FileSavePath)){
+                    return;
+                }
+                final String wavFileSavePath = MyAppConfig.getCacheVoiceWAVFilePath(uiMessage.getMessage().getChannel(), uiMessage.getMessage().getId());
+
+                LogUtils.jasonDebug("wavFileSavePath="+wavFileSavePath);
+                if(!FileUtils.isFileExist(wavFileSavePath)){
+
+                    AudioFormatUtils.Mp3ToWav(mp3FileSavePath, wavFileSavePath, new ResultCallback() {
+                        @Override
+                        public void onSuccess() {
+                            voiceToWord(wavFileSavePath,uiMessage,downloadLoadingView);
+                        }
+
+                        @Override
+                        public void onFail() {
+
+                        }
+                    });
+                }else {
+                    voiceToWord(wavFileSavePath,uiMessage,downloadLoadingView);
+                }
+
+            }
+        });
+    };
+
+    private  void voiceToWord(String filePath, final UIMessage uiMessage, final QMUILoadingView downloadLoadingView){
+        downloadLoadingView.setVisibility(View.VISIBLE);
+        Voice2StringMessageUtils voice2StringMessageUtils = new Voice2StringMessageUtils(this);
+        voice2StringMessageUtils.setOnVoiceResultCallback(new OnVoiceResultCallback() {
+            @Override
+            public void onVoiceStart() {
+            }
+
+            @Override
+            public void onVoiceResultSuccess(VoiceResult voiceResult, boolean isLast) {
+                LogUtils.jasonDebug("voiceResult="+voiceResult.getResults());
+                Message message = uiMessage.getMessage();
+                MsgContentMediaVoice originMsgContentMediaVoice = message.getMsgContentMediaVoice();
+                if (!voiceResult.getResults().equals(originMsgContentMediaVoice.getResult())){
+                    MsgContentMediaVoice msgContentMediaVoice = new MsgContentMediaVoice();
+                    msgContentMediaVoice.setDuration(originMsgContentMediaVoice.getDuration());
+                    msgContentMediaVoice.setMedia(originMsgContentMediaVoice.getMedia());
+                    msgContentMediaVoice.setJsonResults(voiceResult.getResults());
+                    message.setContent(msgContentMediaVoice.toString());
+                    int position = uiMessageList.indexOf(uiMessage);
+                    if (position != -1){
+                        adapter.notifyItemChanged(position);
+                    }
+                    MessageCacheUtil.saveMessage(MyApplication.getInstance(),message);
+                }
+
+
+            }
+
+            @Override
+            public void onVoiceFinish() {
+                downloadLoadingView.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onVoiceLevelChange(int volume) {
+
+            }
+
+            @Override
+            public void onVoiceResultError(VoiceResult errorResult) {
+                downloadLoadingView.setVisibility(View.GONE);
+            }
+        });
+        voice2StringMessageUtils.startVoiceListeningByVoiceFile(uiMessage.getMessage().getMsgContentMediaVoice().getDuration(),filePath);
+    }
+
 
     /**
      * 从外部分享过来

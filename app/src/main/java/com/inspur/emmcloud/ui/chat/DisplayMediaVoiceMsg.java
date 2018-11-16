@@ -5,26 +5,34 @@ import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.adapter.ChannelMessageAdapter;
 import com.inspur.emmcloud.api.APIDownloadCallBack;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.MsgContentMediaVoice;
 import com.inspur.emmcloud.bean.chat.UIMessage;
+import com.inspur.emmcloud.bean.system.VoiceResult;
 import com.inspur.emmcloud.config.MyAppConfig;
+import com.inspur.emmcloud.interf.OnVoiceResultCallback;
+import com.inspur.emmcloud.interf.ResultCallback;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.MediaPlayerManagerUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
+import com.inspur.emmcloud.util.privates.AudioFormatUtils;
 import com.inspur.emmcloud.util.privates.DownLoaderUtils;
+import com.inspur.emmcloud.util.privates.Voice2StringMessageUtils;
 import com.inspur.emmcloud.widget.bubble.ArrowDirection;
 import com.inspur.emmcloud.widget.bubble.BubbleLayout;
 import com.qmuiteam.qmui.widget.QMUILoadingView;
@@ -38,11 +46,11 @@ import java.io.File;
 public class DisplayMediaVoiceMsg {
     public static final boolean IS_VOICE_WORD_OPEN = true;
     public static final boolean IS_VOICE_WORD_CLOUSE = false;
-    public static View getView(final Context context, final UIMessage uiMessage) {
+    public static View getView(final Context context, final UIMessage uiMessage,final ChannelMessageAdapter.MyItemClickListener mItemClickListener) {
         final Message message = uiMessage.getMessage();
         final boolean isMyMsg = message.getFromUser().equals(MyApplication.getInstance().getUid());
         View cardContentView = LayoutInflater.from(context).inflate(R.layout.chat_msg_card_child_media_voice_view, null);
-        BubbleLayout voiceBubbleLayout = (BubbleLayout) cardContentView.findViewById(R.id.bl_voice);
+       final BubbleLayout voiceBubbleLayout = (BubbleLayout) cardContentView.findViewById(R.id.bl_voice);
         voiceBubbleLayout.setArrowDirection(isMyMsg? ArrowDirection.RIGHT:ArrowDirection.LEFT);
         voiceBubbleLayout.setBubbleColor(context.getResources().getColor(isMyMsg ? R.color.bg_my_card : R.color.white));
         voiceBubbleLayout.setStrokeWidth(isMyMsg ?0: 0.5f);
@@ -120,7 +128,92 @@ public class DisplayMediaVoiceMsg {
                 }
             }
         });
+        voiceBubbleLayout.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if (uiMessage.getSendStatus() == 1 && mItemClickListener != null) {
+                    mItemClickListener.onMediaVoiceReRecognize(uiMessage,voiceBubbleLayout,downloadLoadingView);
+                }
+                return false;
+            }
+        });
         return cardContentView;
+    }
+
+    private static void showVoice2TextPop(final BubbleLayout anchor, final Context context,final UIMessage uiMessage,final QMUILoadingView downloadLoadingView){
+        View contentView = LayoutInflater.from(context).inflate(R.layout.pop_voice_to_text_view, null);
+        contentView.measure(View.MeasureSpec.UNSPECIFIED,View.MeasureSpec.UNSPECIFIED);
+        final PopupWindow popupWindow = new PopupWindow(contentView,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT, true);
+        popupWindow.setTouchable(true);
+        popupWindow.setOutsideTouchable(true);
+        popupWindow.setTouchInterceptor(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return false;
+            }
+        });
+        int[] location = new int[2];
+        anchor.getLocationOnScreen(location);
+        int popWidth = popupWindow.getContentView().getMeasuredWidth();
+        int popHeight = popupWindow.getContentView().getMeasuredHeight();
+        BubbleLayout voice2TextBubble = (BubbleLayout)contentView.findViewById(R.id.bl_voice_to_text);
+        voice2TextBubble.setArrowPosition(popWidth/2-DensityUtil.dip2px(MyApplication.getInstance(),9));
+        popupWindow.showAtLocation(anchor,Gravity.NO_GRAVITY,location[0]+anchor.getWidth()/2-popWidth/2, location[1]-popHeight-DensityUtil.dip2px(MyApplication.getInstance(),8));
+        voice2TextBubble.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popupWindow.dismiss();
+                final String wavFileSavePath = MyAppConfig.getCacheVoiceWAVFilePath(uiMessage.getMessage().getChannel(), uiMessage.getMessage().getId());
+                if(!FileUtils.isFileExist(wavFileSavePath)){
+                    String mp3FileSavePath = MyAppConfig.getCacheVoiceFilePath(uiMessage.getMessage().getChannel(), uiMessage.getMessage().getId());
+                    AudioFormatUtils.Mp3ToWav(mp3FileSavePath, wavFileSavePath, new ResultCallback() {
+                        @Override
+                        public void onSuccess() {
+                            voiceToWord(context,wavFileSavePath,uiMessage,downloadLoadingView);
+                        }
+
+                        @Override
+                        public void onFail() {
+
+                        }
+                    });
+                }else {
+                    voiceToWord(context,wavFileSavePath,uiMessage,downloadLoadingView);
+                }
+
+            }
+        });
+    }
+
+    private static void voiceToWord(Context context,String filePath,UIMessage uiMessage,final QMUILoadingView downloadLoadingView){
+        downloadLoadingView.setVisibility(View.VISIBLE);
+        Voice2StringMessageUtils voice2StringMessageUtils = new Voice2StringMessageUtils(context);
+        voice2StringMessageUtils.setOnVoiceResultCallback(new OnVoiceResultCallback() {
+            @Override
+            public void onVoiceStart() {
+            }
+
+            @Override
+            public void onVoiceResultSuccess(VoiceResult voiceResult, boolean isLast) {
+            }
+
+            @Override
+            public void onVoiceFinish() {
+                downloadLoadingView.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onVoiceLevelChange(int volume) {
+
+            }
+
+            @Override
+            public void onVoiceResultError(VoiceResult errorResult) {
+            }
+        });
+        voice2StringMessageUtils.startVoiceListeningByVoiceFile(uiMessage.getMessage().getMsgContentMediaVoice().getDuration(),filePath);
     }
 
     /**
