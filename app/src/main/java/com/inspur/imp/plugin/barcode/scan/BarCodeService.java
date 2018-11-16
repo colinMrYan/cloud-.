@@ -12,7 +12,6 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
@@ -22,6 +21,7 @@ import com.google.zxing.qrcode.QRCodeWriter;
 import com.inspur.imp.api.ImpFragment;
 import com.inspur.imp.api.Res;
 import com.inspur.imp.plugin.ImpPlugin;
+import com.inspur.imp.plugin.barcode.decoder.PreviewDecodeActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -99,7 +99,7 @@ public class BarCodeService extends ImpPlugin {
 		}
 
 		if (getImpCallBackInterface() != null) {
-			Intent scanIntent = new Intent(getFragmentContext(), CaptureActivity.class);
+			Intent scanIntent = new Intent(getFragmentContext(), PreviewDecodeActivity.class);
 			getImpCallBackInterface().onStartActivityForResult(scanIntent, ImpFragment.BARCODE_SERVER__SCAN_REQUEST);
 		}
 	}

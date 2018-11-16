@@ -73,7 +73,7 @@ import com.inspur.emmcloud.util.privates.cache.MessageMatheSetCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
-import com.inspur.imp.plugin.barcode.scan.CaptureActivity;
+import com.inspur.imp.plugin.barcode.decoder.PreviewDecodeActivity;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -340,7 +340,7 @@ public class CommunicationFragment extends Fragment {
                     break;
                 case R.id.message_scan_layout:
                     Intent scanIntent = new Intent();
-                    scanIntent.setClass(getActivity(), CaptureActivity.class);
+                    scanIntent.setClass(getActivity(), PreviewDecodeActivity.class);
                     scanIntent.putExtra("from", "CommunicationFragment");
                     startActivityForResult(scanIntent, REQUEST_SCAN_LOGIN_QRCODE_RESULT);
                     popupWindow.dismiss();
