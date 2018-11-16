@@ -12,7 +12,6 @@ import android.widget.ImageView;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PingNetEntity;
 import com.qmuiteam.qmui.widget.QMUILoadingView;
@@ -78,7 +77,7 @@ public class NetWorkStateDetailActivity extends BaseActivity {
         //检测端口
         if(netHardConnectState){
             //检测小助手
-            checkingPortalState();
+            checkingPortalState("http://www.baidu.com");
             //检测DNS服务
             DNSConnectState("www.baidu.com","202.108.22.5","www.aliyun.com","106.11.93.21");
         }else {
@@ -158,9 +157,9 @@ public class NetWorkStateDetailActivity extends BaseActivity {
     /**
      * 检测小助手连接
      * */
-    private void checkingPortalState(){
+    private void checkingPortalState(final String StrUrl){
         if(1==NetStateintegerData.get(0)){
-            sendRequest();
+            sendRequest(StrUrl);
         } else if((NetStateintegerData.get(0)>1)&&(NetStateintegerData.get(0)<5)) {
             qmulWifiLoadingView.setVisibility(View.GONE);
             portalImageView.setBackground(drawableSuccess);
@@ -173,15 +172,16 @@ public class NetWorkStateDetailActivity extends BaseActivity {
     }
 
     /**
-     * portal checking
+     * portal checking "http://www.baidu.com"
+     * @param StrUrl   "http://www.baidu.com"
      * */
-    private void sendRequest() {
+    private void sendRequest(final  String  StrUrl) {
 		/*需要新建子线程进行访问*/
         new Thread(){
             public void run(){
                 HttpURLConnection httpURLConnection=null;
                 try {
-                    URL url=new URL("http://www.baidu.com");
+                    URL url=new URL(StrUrl);
                     httpURLConnection=(HttpURLConnection) url.openConnection();//获取到httpURLConnection的实例
                     httpURLConnection.setInstanceFollowRedirects(false);
                     httpURLConnection.setRequestMethod("POST");//设置HTTP请求所使用的方法，GET表示希望从服务器那里获取数据，而POST则表示希望提交数据给服务器
