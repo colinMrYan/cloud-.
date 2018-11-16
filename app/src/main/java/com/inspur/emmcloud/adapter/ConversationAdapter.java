@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.chat.Conversation;
+import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.UIConversation;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.ImageUtils;
@@ -80,9 +81,34 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
         }else {
             ImageDisplayUtils.getInstance().displayImageByTag(holder.photoImg, uiConversation.getIcon(), isConversationTypeGroup?R.drawable.icon_channel_group_default:R.drawable.icon_person_default);
         }
-
+        setConversationLastMessageSendStatus(holder,uiConversation);
         setConversationContent(holder,uiConversation);
         setConversationUnreadState(holder,uiConversation);
+    }
+
+    /**
+     * 设置频道中最后一条消息的消息状态
+     * @param holder
+     * @param uiConversation
+     */
+    private void setConversationLastMessageSendStatus(ViewHolder holder, UIConversation uiConversation) {
+        List<Message> messageList = uiConversation.getMessageList();
+        if(messageList != null && messageList.size() > 0){
+            switch (messageList.get(messageList.size() - 1).getSendStatus()){
+                case Message.MESSAGE_SEND_ING:
+                    holder.sendStatusImg.setVisibility(View.VISIBLE);
+                    holder.sendStatusImg.setImageResource(R.drawable.icon_message_sending);
+                    break;
+                case Message.MESSAGE_SEND_FAIL:
+                    holder.sendStatusImg.setVisibility(View.VISIBLE);
+                    holder.sendStatusImg.setImageResource(R.drawable.icon_message_send_fail);
+                    break;
+                default:
+                    holder.sendStatusImg.setVisibility(View.GONE);
+            }
+        }else{
+            holder.sendStatusImg.setVisibility(View.GONE);
+        }
     }
 
     /**
@@ -131,6 +157,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,View.OnLongClickListener{
         private RelativeLayout mainLayout;
         private CircleTextImageView photoImg;
+        private ImageView sendStatusImg;
         private TextView contentText;
         private TextView titleText;
         private TextView timeText;
@@ -159,6 +186,8 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
                     .findViewById(R.id.msg_new_text);
             dndImg = (ImageView) convertView
                     .findViewById(R.id.msg_dnd_img);
+            sendStatusImg = (ImageView) convertView
+                    .findViewById(R.id.img_sending_status);
         }
 
 

@@ -698,6 +698,11 @@ public class ConversationActivity extends ConversationBaseActivity {
      * @param status
      */
     private void addLocalMessage(Message message, int status) {
+        //存储发送中状态
+        if(status == Message.MESSAGE_SEND_ING){
+            MessageCacheUtil.saveMessage(ConversationActivity.this,message);
+            notifyCommucationFragmentMessageSendStatus();
+        }
         UIMessage UIMessage = new UIMessage(message);
         boolean isSendFail = handleUnSendMessage(message,status);
         //本地添加的消息设置为正在发送状态
@@ -720,13 +725,17 @@ public class ConversationActivity extends ConversationBaseActivity {
             message.setSendStatus(Message.MESSAGE_SEND_FAIL);
             message.setRead(Message.MESSAGE_READ);
             MessageCacheUtil.saveMessage(ConversationActivity.this,message);
-            // 通知沟通页面更新列表状态
-            Intent intent = new Intent("message_notify");
-            intent.putExtra("command", "sort_session_list");
-            LocalBroadcastManager.getInstance(ConversationActivity.this).sendBroadcast(intent);
+            notifyCommucationFragmentMessageSendStatus();
             return true;
         }
         return false;
+    }
+
+    private void notifyCommucationFragmentMessageSendStatus(){
+        // 通知沟通页面更新列表状态
+        Intent intent = new Intent("message_notify");
+        intent.putExtra("command", "sort_session_list");
+        LocalBroadcastManager.getInstance(ConversationActivity.this).sendBroadcast(intent);
     }
 
     /**
@@ -800,10 +809,18 @@ public class ConversationActivity extends ConversationBaseActivity {
         if (uiMessageList.size() > 0){
             List<Message> messageList = MessageCacheUtil.getHistoryMessageList(
                     MyApplication.getInstance(), cid, uiMessageList.get(0).getCreationDate(), 20);
+            List<Message> messageSendingList = new ArrayList<>();
+            for (int i = 0; i < messageList.size(); i++) {
+                if(messageList.get(i).getSendStatus() == Message.MESSAGE_SEND_ING && ((System.currentTimeMillis() - messageList.get(i).getCreationDate())>15*1000) ){
+                    messageList.get(i).setSendStatus(Message.MESSAGE_SEND_FAIL);
+                    messageSendingList.add(messageList.get(i));
+                }
+            }
             uiMessageList.addAll(0, UIMessage.MessageList2UIMessageList(messageList));
             adapter.setMessageList(uiMessageList);
             adapter.notifyItemRangeInserted(0, messageList.size());
             msgListView.scrollToPosition(messageList.size() - 1);
+            MessageCacheUtil.updateMessageSendStatus(ConversationActivity.this,messageSendingList);
         }
         swipeRefreshLayout.setRefreshing(false);
     }
@@ -865,17 +882,22 @@ public class ConversationActivity extends ConversationBaseActivity {
         Message receivedWSMessage = new Message(contentobj);
         //删除临时消息前把创建时间改为临时消息的创建时间，保证排序
         Message message = MessageCacheUtil.getMessageByMid(ConversationActivity.this,receivedWSMessage.getTmpId());
-        receivedWSMessage.setCreationDate(message.getCreationDate());
-        MessageCacheUtil.saveMessage(ConversationActivity.this,receivedWSMessage);
-        MessageCacheUtil.deleteLocalFakeMessage(ConversationActivity.this,receivedWSMessage.getTmpId());
+        //如果查到存在假消息则进行下面的操作
+        if(message != null){
+            receivedWSMessage.setCreationDate(message.getCreationDate());
+            MessageCacheUtil.saveMessage(ConversationActivity.this,receivedWSMessage);
+            MessageCacheUtil.deleteLocalFakeMessage(ConversationActivity.this,receivedWSMessage.getTmpId());
+        }
     }
 
     private void handleRealMessage(Message message) {
         //删除临时消息前把创建时间改为临时消息的创建时间，保证排序
         Message messageTmp = MessageCacheUtil.getMessageByMid(ConversationActivity.this,message.getTmpId());
-        message.setCreationDate(messageTmp.getCreationDate());
-        MessageCacheUtil.saveMessage(ConversationActivity.this,message);
-        MessageCacheUtil.deleteLocalFakeMessage(ConversationActivity.this,message.getTmpId());
+        if(messageTmp != null){
+            message.setCreationDate(messageTmp.getCreationDate());
+            MessageCacheUtil.saveMessage(ConversationActivity.this,message);
+            MessageCacheUtil.deleteLocalFakeMessage(ConversationActivity.this,message.getTmpId());
+        }
     }
 
     //接收到websocket发过来的消息

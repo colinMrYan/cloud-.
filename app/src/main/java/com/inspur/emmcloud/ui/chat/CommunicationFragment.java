@@ -388,7 +388,7 @@ public class CommunicationFragment extends Fragment {
     /**
      * 为群组创建头像
      *
-     * @param channelList
+     * @param conversationList
      */
     private void createGroupIcon(List<Conversation> conversationList) {
         if (!NetUtils.isNetworkConnected(MyApplication.getInstance(), false)) {

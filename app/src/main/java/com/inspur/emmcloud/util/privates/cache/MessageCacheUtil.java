@@ -2,10 +2,8 @@ package com.inspur.emmcloud.util.privates.cache;
 
 import android.content.Context;
 
-import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.MatheSet;
 import com.inspur.emmcloud.bean.chat.Message;
-import com.inspur.emmcloud.util.common.LogUtils;
 
 import org.xutils.db.sqlite.WhereBuilder;
 
@@ -30,6 +28,19 @@ public class MessageCacheUtil {
             DbCacheUtils.getDb(context).saveOrUpdate(message); // 存储消息
         } catch (Exception e) {
             // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 再次进入频道时修改频道内16秒以上还在发送中状态的消息
+     * @param context
+     * @param messageList
+     */
+    public static void updateMessageSendStatus(Context context,List<Message> messageList){
+        try {
+            DbCacheUtils.getDb(context).saveOrUpdate(messageList);
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -399,7 +410,6 @@ public class MessageCacheUtil {
         try {
             DbCacheUtils.getDb(context).delete(Message.class,WhereBuilder.b("id","=",tmpId));
         } catch (Exception e) {
-            LogUtils.YfcDebug("e:"+e.getMessage());
             // TODO: handle exception
             e.printStackTrace();
         }
