@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.api.apiservice;
 
+import com.alibaba.fastjson.JSON;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.bean.chat.Message;
@@ -11,6 +12,7 @@ import com.inspur.emmcloud.bean.system.EventMessage;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
@@ -190,6 +192,7 @@ public class WSAPIService {
             bodyObj.put("tmpId",message.getId());
             object.put("body", bodyObj);
             EventMessage eventMessage = new EventMessage(message.getId(),Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE,"",message.getId());
+            LogUtils.YfcDebug("发送语音消息："+ JSON.toJSONString(eventMessage));
             WebSocketPush.getInstance().sendEventMessage(eventMessage, object,message.getId());
         } catch (Exception e) {
             e.printStackTrace();

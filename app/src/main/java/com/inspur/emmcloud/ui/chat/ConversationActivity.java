@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.ChannelMessageAdapter;
@@ -32,16 +33,15 @@ import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.InputMethodUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
-import com.inspur.emmcloud.util.privates.DataCleanManager;
 import com.inspur.emmcloud.util.privates.DirectChannelUtils;
 import com.inspur.emmcloud.util.privates.GetPathFromUri4kitkat;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.MessageRecourceUploadUtils;
-import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.UriUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
@@ -220,9 +220,9 @@ public class ConversationActivity extends ConversationBaseActivity {
             }
         });
         chatInputMenu.setInputLayout(conversation.getInput(), false);
-        String chatDrafts = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), MyAppConfig.getChannelDrafsPreKey(cid));
-        if (chatDrafts != null) {
-            chatInputMenu.setChatDrafts(chatDrafts);
+        String draftMessageContent = MessageCacheUtil.getDraftByCid(ConversationActivity.this,cid);
+        if(draftMessageContent != null){
+            chatInputMenu.setChatDrafts(draftMessageContent);
         }
     }
 
@@ -311,7 +311,7 @@ public class ConversationActivity extends ConversationBaseActivity {
             Message message = uiMessage.getMessage();
             message.setTmpId(message.getId());
             uiMessage.setSendStatus(0);
-//            int position = uiMessageList.indexOf(uiMessage);
+            int position = uiMessageList.indexOf(uiMessage);
 //            if (position != uiMessageList.size() - 1) {
 //                uiMessageList.remove(position);
 //                uiMessageList.add(uiMessage);
@@ -320,8 +320,9 @@ public class ConversationActivity extends ConversationBaseActivity {
 //                msgListView.MoveToPosition(uiMessageList.size() - 1);
 //            } else {
                 adapter.setMessageList(uiMessageList);
-                adapter.notifyItemChanged(uiMessageList.size() - 1);
+//                adapter.notifyItemChanged(uiMessageList.size() - 1);
 //            }
+            adapter.notifyItemChanged(position);
             switch (message.getType()) {
                 case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
                     if(message.getMsgContentAttachmentFile().getMedia().equals(message.getLocalPath())){
@@ -346,10 +347,13 @@ public class ConversationActivity extends ConversationBaseActivity {
                     break;
                 case Message.MESSAGE_TYPE_MEDIA_VOICE:
                     if(message.getMsgContentMediaVoice().getMedia().equals(message.getLocalPath())){
+                        LogUtils.YfcDebug("1111111111"+ JSON.toJSONString(message));
                         sendMessageWithFile(message);
                     }else{
+                        LogUtils.YfcDebug("2222222222222");
                         VolumeFile volumeFile = new VolumeFile();
                         volumeFile.setPath(message.getMsgContentMediaVoice().getMedia());
+                        WSAPIService.getInstance().sendChatMediaVoiceMsg(message,volumeFile);
                     }
                     break;
                 case Message.MESSAGE_TYPE_TEXT_PLAIN:
@@ -563,6 +567,7 @@ public class ConversationActivity extends ConversationBaseActivity {
         messageRecourceUploadUtils.setProgressCallback(new ProgressCallback() {
             @Override
             public void onSuccess(VolumeFile volumeFile) {
+                LogUtils.YfcDebug("上传文件成功："+JSON.toJSONString(volumeFile));
                 //如果文件信息发送oss成功则记录oss返回文件路径，并根据不同类型文件记录相关信息，如果后续仅是socket未发送成功则
                 fakeMessage.setLocalPath(volumeFile.getPath());
                 switch (fakeMessage.getType()) {
@@ -591,6 +596,7 @@ public class ConversationActivity extends ConversationBaseActivity {
 
             @Override
             public void onFail() {
+                LogUtils.YfcDebug("上传文件失败");
                 setMessageSendFailStatus(fakeMessage.getId());
             }
         });
@@ -631,16 +637,17 @@ public class ConversationActivity extends ConversationBaseActivity {
      * 设置当前频道草稿箱
      */
     private void setChatDrafts() {
-        String chatDraftsNew = chatInputMenu.getInputContent().trim();
-        String chatDraftsOld = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), MyAppConfig.getChannelDrafsPreKey(cid), "").trim();
-        if (!chatDraftsNew.equals(chatDraftsOld)) {
-            if (!StringUtils.isBlank(chatDraftsNew)) {
-                PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), MyAppConfig.getChannelDrafsPreKey(cid), chatDraftsNew);
-            } else {
-                PreferencesByUserAndTanentUtils.clearDataByKey(MyApplication.getInstance(), MyAppConfig.getChannelDrafsPreKey(cid));
-            }
-            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_REFRESH_CONVERSATION_ADAPTER));
+        //草稿箱处理，退出时先删除旧草稿，然后查看当前输入框是否有内容，有内容则保存草稿无内容不处理
+        MessageCacheUtil.deleteDraftMessageByCid(ConversationActivity.this,cid);
+        String inputContent = chatInputMenu.getInputContent();
+        if(!StringUtils.isBlank(inputContent)){
+            Message draftMessage = CommunicationUtils.combinLocalTextPlainMessage(inputContent,cid);
+            draftMessage.setSendStatus(Message.MESSAGE_SEND_EDIT);
+            draftMessage.setRead(Message.MESSAGE_READ);
+            draftMessage.setCreationDate(System.currentTimeMillis());
+            MessageCacheUtil.saveMessage(ConversationActivity.this,draftMessage);
         }
+        notifyCommucationFragmentMessageSendStatus();
     }
 
     /**
@@ -786,7 +793,7 @@ public class ConversationActivity extends ConversationBaseActivity {
         }
         chatInputMenu.releaseVoliceInput();
         EventBus.getDefault().unregister(this);
-        DataCleanManager.cleanCustomCache(MyAppConfig.LOCAL_CACHE_VOICE_PATH);
+//        DataCleanManager.cleanCustomCache(MyAppConfig.LOCAL_CACHE_VOICE_PATH);
     }
 
 

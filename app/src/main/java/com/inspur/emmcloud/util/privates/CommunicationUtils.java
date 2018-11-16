@@ -113,6 +113,26 @@ public class CommunicationUtils {
         return message;
     }
 
+    /**
+     * 拼装草稿箱消息
+     * @param text
+     * @param cid
+     * @return
+     */
+    public static Message combinLocalTextPlainMessage(String text, String cid) {
+        String tracer = getTracer();
+        Message message = combinLocalMessageCommon();
+        message.setSendStatus(Message.MESSAGE_SEND_EDIT);
+        message.setChannel(cid);
+        message.setId(tracer);
+        message.setTmpId(tracer);
+        message.setType("text/plain");
+        MsgContentTextPlain msgContentTextPlain = new MsgContentTextPlain();
+        msgContentTextPlain.setText(text);
+        message.setContent(msgContentTextPlain.toString());
+        return message;
+    }
+
     public static Message combinLocalCommentTextPlainMessage(String cid, String commentedMid, String text, Map<String, String> mentionsMap) {
         String tracer = getTracer();
         Message message = combinLocalMessageCommon();

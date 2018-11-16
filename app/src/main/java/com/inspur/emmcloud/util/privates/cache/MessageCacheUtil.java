@@ -6,6 +6,7 @@ import com.inspur.emmcloud.bean.chat.MatheSet;
 import com.inspur.emmcloud.bean.chat.Message;
 
 import org.xutils.db.sqlite.WhereBuilder;
+import org.xutils.ex.DbException;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -115,7 +116,6 @@ public class MessageCacheUtil {
     /**
      * 将频道消息置为已读
      * @param context
-     * @param cid
      */
     public static void setAllMessageRead(Context context){
         try {
@@ -179,6 +179,43 @@ public class MessageCacheUtil {
      * @param num
      * @return
      */
+    public static List<Message> getConversationFragmentHistoryMessageList(Context context,
+                                                      String cid, Long targetMessageCreationDate, int num) {
+        List<Message> messageList = null;
+        try {
+
+            if (targetMessageCreationDate == null) {
+                messageList = DbCacheUtils.getDb(context).selector(Message.class)
+                        .where("channel", "=", cid).and("channel", "=", cid).orderBy("creationDate", true)
+                        .limit(num).findAll();
+            } else {
+                messageList = DbCacheUtils.getDb(context).selector(Message.class)
+                        .where("creationDate", "<", targetMessageCreationDate).and("channel", "=", cid)
+                        .orderBy("creationDate", true).limit(num).findAll();
+            }
+            if (messageList != null && messageList.size() > 1) {
+                Collections.reverse(messageList);
+            }
+
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        if (messageList == null) {
+            messageList = new ArrayList<>();
+        }
+        return messageList;
+    }
+
+    /**
+     * 获取历史消息列表
+     *
+     * @param context
+     * @param cid
+     * @param targetMessageCreationDate
+     * @param num
+     * @return
+     */
     public static List<Message> getHistoryMessageList(Context context,
                                                       String cid, Long targetMessageCreationDate, int num) {
         List<Message> messageList = null;
@@ -186,11 +223,11 @@ public class MessageCacheUtil {
 
             if (targetMessageCreationDate == null) {
                 messageList = DbCacheUtils.getDb(context).selector(Message.class)
-                        .where("channel", "=", cid).orderBy("creationDate", true)
+                        .where("channel", "=", cid).and("channel", "=", cid).and("sendStatus","!=",Message.MESSAGE_SEND_EDIT).orderBy("creationDate", true)
                         .limit(num).findAll();
             } else {
                 messageList = DbCacheUtils.getDb(context).selector(Message.class)
-                        .where("creationDate", "<", targetMessageCreationDate).and("channel", "=", cid)
+                        .where("creationDate", "<", targetMessageCreationDate).and("channel", "=", cid).and("sendStatus","!=",Message.MESSAGE_SEND_EDIT)
                         .orderBy("creationDate", true).limit(num).findAll();
             }
             if (messageList != null && messageList.size() > 1) {
@@ -232,7 +269,7 @@ public class MessageCacheUtil {
     /**
      * @param context
      * @param cid      所属频道
-     * @param targetId 目标消息id
+     * @param targetCreateDate 目标消息id
      * @param num      加载历史记录的条数
      * @return 本地是否有足够多的缓存的数据
      */
@@ -402,6 +439,24 @@ public class MessageCacheUtil {
     }
 
     /**
+     * 获取草稿箱文字
+     * @param context
+     * @param cid
+     * @return
+     */
+    public static String getDraftByCid(Context context,String cid){
+        try {
+            Message message = DbCacheUtils.getDb(context).selector(Message.class).where("channel","=",cid)
+                    .and("sendStatus","=",Message.MESSAGE_SEND_EDIT)
+                    .orderBy("creationDate", true).findFirst();
+            return message != null?message.getMsgContentTextPlain().getText():"";
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    /**
      * 删除本地假消息
      * @param context
      * @param tmpId
@@ -409,6 +464,20 @@ public class MessageCacheUtil {
     public static void deleteLocalFakeMessage(Context context,String tmpId){
         try {
             DbCacheUtils.getDb(context).delete(Message.class,WhereBuilder.b("id","=",tmpId));
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 删除草稿箱消息
+     * @param context
+     * @param cid
+     */
+    public static void deleteDraftMessageByCid(Context context,String cid){
+        try {
+            DbCacheUtils.getDb(context).delete(Message.class,WhereBuilder.b("channel","=",cid).and("sendStatus","=",3));
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();

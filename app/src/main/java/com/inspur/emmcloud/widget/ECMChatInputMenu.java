@@ -188,7 +188,8 @@ public class ECMChatInputMenu extends LinearLayout {
                         }
                         return;
                     }
-                    if(NetUtils.isNetworkConnected(MyApplication.getInstance())){
+                    //
+//                    if(NetUtils.isNetworkConnected(MyApplication.getInstance())){
                         audioDialogManager = new AudioDialogManager(getContext());
                         audioDialogManager.showVoice2WordProgressDialog();
                         //转写和转文件格式同时进行
@@ -212,7 +213,7 @@ public class ECMChatInputMenu extends LinearLayout {
                                 }
                             }
                         }).setRawPathAndMp3Path(filePath.replace(".wav",".raw"), filePath.replace(".wav",".mp3")).startConvert();
-                    }
+//                    }
                 }else {
                     if (chatInputMenuListener != null) {
                         chatInputMenuListener.onSendVoiceRecordMsg("",seconds, filePath);

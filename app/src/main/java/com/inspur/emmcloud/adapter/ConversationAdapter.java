@@ -18,10 +18,11 @@ import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.UIConversation;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.ImageUtils;
+import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
-import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.TransHtmlToTextUtils;
+import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 import com.inspur.emmcloud.widget.CircleTextImageView;
 
 import java.io.File;
@@ -117,8 +118,8 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
      * @param uiConversation
      */
     private void setConversationContent(ViewHolder holder, UIConversation uiConversation){
-        String chatDrafts = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), MyAppConfig.getChannelDrafsPreKey(uiConversation.getId()),null);
-        if (chatDrafts != null){
+        String chatDrafts = MessageCacheUtil.getDraftByCid(context,uiConversation.getId());
+        if (!StringUtils.isBlank(chatDrafts)){
             String content = "<font color='#FF0000'>"+context.getString(R.string.message_type_drafts)+"</font>"+chatDrafts;
             if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.N){
                 holder.contentText.setText(Html.fromHtml(content,Html.FROM_HTML_MODE_LEGACY, null, null));
