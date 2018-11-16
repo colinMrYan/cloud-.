@@ -80,8 +80,7 @@ public class NetWorkStateDetailActivity extends BaseActivity {
             //检测小助手
             checkingPortalState();
             //检测DNS服务
-            LogUtils.LbcDebug("dddddddddddddddddddddddddddddd");
-            DNSConnectState("","","","");
+            DNSConnectState("www.baidu.com","202.108.22.5","www.aliyun.com","106.11.93.21");
         }else {
             qmulDnsLoadingView.setVisibility(View.GONE);
             qmulWifiLoadingView.setVisibility(View.GONE);
@@ -118,7 +117,6 @@ public class NetWorkStateDetailActivity extends BaseActivity {
                         qmulWifiLoadingView.setVisibility(View.GONE);
                         break;
                     case SHOW_DNSCONNCTSTATE:
-                        LogUtils.LbcDebug("data111111111111111111111111111");
                             if((boolean)msg.obj){
                                 dnsImageView.setBackground(drawableSuccess);
                             } else {
@@ -228,30 +226,27 @@ public class NetWorkStateDetailActivity extends BaseActivity {
 
     /**
      * 检测DNS服务器状态
-     * @param CheckUrl
-     * @param CheckIp
-     * @param PingUrl
-     * @param PingIp */
-    private  void DNSConnectState(String CheckUrl,String CheckIp,String PingUrl,String PingIp) {
-
+     * @param CheckUrl "www.baidu.com"
+     * @param CheckIp   "202.108.22.5"
+     * @param PingUrl   "www.aliyun.com"
+     * @param PingIp    "106.11.93.21"*/
+    private  void DNSConnectState(final String CheckUrl, final String CheckIp, final String PingUrl, final String PingIp) {
+        final String checkUrl  = CheckUrl;
+        final String checkIp   = CheckIp;
+        final String pingUrl   = PingUrl;
+        final String pingIp    = PingIp;
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    LogUtils.LbcDebug("DNS Data1");
-                    PingNetEntity checkUrlEntity =new PingNetEntity("www.baidu.com",3,70,new StringBuffer());
-                    LogUtils.LbcDebug("DNS Data2");
-                    PingNetEntity checkUrlEntityResult= NetUtils.ping(checkUrlEntity, (long) 1500);
-                    LogUtils.LbcDebug("DNS Data3");
-                    PingNetEntity checkIpEntity =new PingNetEntity("202.108.22.5",3,70,new StringBuffer());
-                    LogUtils.LbcDebug("DNS Data4");
-                    PingNetEntity checkIpEntityResult= NetUtils.ping(checkIpEntity, (long) 1500);
-                    PingNetEntity pingUrlEntity =new PingNetEntity("www.aliyun.com",3,70,new StringBuffer());
-                    LogUtils.LbcDebug("DNS Data4");
-                    PingNetEntity pingUrlEntityResult= NetUtils.ping(pingUrlEntity, (long) 1500);
-                    PingNetEntity pingIpEntity =new PingNetEntity("106.11.93.21",3,70,new StringBuffer());
-                    PingNetEntity pingIpEntityResult= NetUtils.ping(pingIpEntity, (long) 1500);
-                    LogUtils.LbcDebug("DNS Data4");
+                    PingNetEntity checkUrlEntity =new PingNetEntity(checkUrl,1,1,new StringBuffer());
+                    PingNetEntity checkUrlEntityResult= NetUtils.ping(checkUrlEntity, (long) 1000);
+                    PingNetEntity checkIpEntity =new PingNetEntity(checkIp,1,1,new StringBuffer());
+                    PingNetEntity checkIpEntityResult= NetUtils.ping(checkIpEntity, (long) 1000);
+                    PingNetEntity pingUrlEntity =new PingNetEntity(pingUrl,1,1,new StringBuffer());
+                    PingNetEntity pingUrlEntityResult= NetUtils.ping(pingUrlEntity, (long) 1000);
+                    PingNetEntity pingIpEntity =new PingNetEntity(pingIp,1,1,new StringBuffer());
+                    PingNetEntity pingIpEntityResult= NetUtils.ping(pingIpEntity, (long) 1000);
                     if((checkIpEntityResult.isResult()&&checkUrlEntityResult.isResult())||(pingIpEntityResult.isResult()&&pingUrlEntityResult.isResult())){
                         //结果数据显示
                         Message dnsState = new Message();
@@ -265,7 +260,6 @@ public class NetWorkStateDetailActivity extends BaseActivity {
                         handler.sendMessage(dnsState);
                     }
                 }catch (Exception e) {
-                    LogUtils.LbcDebug("catch");
                     Message dnsState = new Message();
                     dnsState.what=SHOW_DNSCONNCTSTATE;
                     dnsState.obj=false;
