@@ -225,7 +225,7 @@ public class CommunicationFragment extends Fragment {
     /**
      * 弹出频道操作选择框
      *
-     * @param position
+     * @param uiConversation
      */
     private void showConversationOperationDlg(final UIConversation uiConversation) {
         // TODO Auto-generated method stub
@@ -846,7 +846,6 @@ public class CommunicationFragment extends Fragment {
                         }
                     }
                     Conversation receiveMessageConversation = ConversationCacheUtils.getConversation(MyApplication.getInstance(), receivedWSMessage.getChannel());
-
                     cacheReceiveMessage(receivedWSMessage);
                     if (receiveMessageConversation == null) {
                         getConversationList();
@@ -873,6 +872,7 @@ public class CommunicationFragment extends Fragment {
                 String content = eventMessage.getContent();
                 GetOfflineMessageListResult getOfflineMessageListResult = new GetOfflineMessageListResult(content);
                 List<Message> offlineMessageList = getOfflineMessageListResult.getMessageList();
+                MessageCacheUtil.handleRealMessage(getActivity(),offlineMessageList);
                 List<Message> currentChannelOfflineMessageList = new ArrayList<>();
                 //将当前所处频道的消息存为已读
                 if (!StringUtils.isBlank(MyApplication.getInstance().getCurrentChannelCid())) {

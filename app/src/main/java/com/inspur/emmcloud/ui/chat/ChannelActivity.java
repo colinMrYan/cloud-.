@@ -921,7 +921,7 @@ public class ChannelActivity extends MediaPlayBaseActivity {
         int fakeUIMessageIndex = uiMessageList.indexOf(fakeUIMessage);
         if (fakeUIMessageIndex != -1) {
             Message message = uiMessageList.get(fakeUIMessageIndex).getMessage();
-            message.setSendStatus(2);
+            message.setSendStatus(Message.MESSAGE_SEND_FAIL);
             uiMessageList.get(fakeUIMessageIndex).setSendStatus(2);
             MessageCacheUtil.saveMessage(this,message);
             adapter.setMessageList(uiMessageList);

@@ -4,12 +4,13 @@ import android.content.Context;
 
 import com.inspur.emmcloud.bean.chat.MatheSet;
 import com.inspur.emmcloud.bean.chat.Message;
+import com.inspur.emmcloud.ui.chat.ConversationActivity;
 
 import org.xutils.db.sqlite.WhereBuilder;
-import org.xutils.ex.DbException;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -450,7 +451,7 @@ public class MessageCacheUtil {
                     .and("sendStatus","=",Message.MESSAGE_SEND_EDIT)
                     .orderBy("creationDate", true).findFirst();
             return message != null?message.getMsgContentTextPlain().getText():"";
-        } catch (DbException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return "";
@@ -481,6 +482,37 @@ public class MessageCacheUtil {
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * 真实消息回来后，把消息时间修改为，本地假消息的时间以便排序
+     * 然后把本地假消息删掉
+     * @param context
+     * @param message
+     */
+    public static void handleRealMessage(Context context,Message message) {
+        //删除临时消息前把创建时间改为临时消息的创建时间，保证排序
+        Message messageTmp = MessageCacheUtil.getMessageByMid(context,message.getTmpId());
+        if(messageTmp != null){
+            message.setCreationDate(messageTmp.getCreationDate());
+            MessageCacheUtil.saveMessage(context,message);
+            MessageCacheUtil.deleteLocalFakeMessage(context,message.getTmpId());
+        }
+    }
+
+    /**
+     * 处理多条，作用跟上面方法相同
+     * @param context
+     * @param messageList
+     */
+    public static void handleRealMessage(Context context,List<Message> messageList){
+        if (messageList.size()>0){
+            Iterator<Message> messageIterator = messageList.iterator();
+            while (messageIterator.hasNext()) {
+                Message message = messageIterator.next();
+                handleRealMessage(context,message);
+            }
         }
     }
 

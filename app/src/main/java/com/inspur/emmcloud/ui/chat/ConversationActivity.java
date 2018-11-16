@@ -347,10 +347,8 @@ public class ConversationActivity extends ConversationBaseActivity {
                     break;
                 case Message.MESSAGE_TYPE_MEDIA_VOICE:
                     if(message.getMsgContentMediaVoice().getMedia().equals(message.getLocalPath())){
-                        LogUtils.YfcDebug("1111111111"+ JSON.toJSONString(message));
                         sendMessageWithFile(message);
                     }else{
-                        LogUtils.YfcDebug("2222222222222");
                         VolumeFile volumeFile = new VolumeFile();
                         volumeFile.setPath(message.getMsgContentMediaVoice().getMedia());
                         WSAPIService.getInstance().sendChatMediaVoiceMsg(message,volumeFile);
@@ -842,9 +840,9 @@ public class ConversationActivity extends ConversationBaseActivity {
                 String content = eventMessage.getContent();
                 JSONObject contentObj = JSONUtils.getJSONObject(content);
                 Message receivedWSMessage = new Message(contentObj);
-                handleRealMessage(receivedWSMessage);
                 //判断消息是否是当前频道并验重处理
                 if (cid.equals(receivedWSMessage.getChannel()) && !uiMessageList.contains(new UIMessage(receivedWSMessage.getId()))) {
+                    MessageCacheUtil.handleRealMessage(ConversationActivity.this,receivedWSMessage);
                     int size = uiMessageList.size();
                     int index = -1;
                     if (size > 0) {
@@ -854,7 +852,6 @@ public class ConversationActivity extends ConversationBaseActivity {
                                 break;
                             }
                         }
-
                     }
                     if (index == -1) {
                         uiMessageList.add(new UIMessage(receivedWSMessage));
@@ -883,40 +880,16 @@ public class ConversationActivity extends ConversationBaseActivity {
 
     }
 
-    private void handleRealMessage(EventMessage eventMessage) {
-        String content = eventMessage.getContent();
-        JSONObject contentobj = JSONUtils.getJSONObject(content);
-        Message receivedWSMessage = new Message(contentobj);
-        //删除临时消息前把创建时间改为临时消息的创建时间，保证排序
-        Message message = MessageCacheUtil.getMessageByMid(ConversationActivity.this,receivedWSMessage.getTmpId());
-        //如果查到存在假消息则进行下面的操作
-        if(message != null){
-            receivedWSMessage.setCreationDate(message.getCreationDate());
-            MessageCacheUtil.saveMessage(ConversationActivity.this,receivedWSMessage);
-            MessageCacheUtil.deleteLocalFakeMessage(ConversationActivity.this,receivedWSMessage.getTmpId());
-        }
-    }
-
-    private void handleRealMessage(Message message) {
-        //删除临时消息前把创建时间改为临时消息的创建时间，保证排序
-        Message messageTmp = MessageCacheUtil.getMessageByMid(ConversationActivity.this,message.getTmpId());
-        if(messageTmp != null){
-            message.setCreationDate(messageTmp.getCreationDate());
-            MessageCacheUtil.saveMessage(ConversationActivity.this,message);
-            MessageCacheUtil.deleteLocalFakeMessage(ConversationActivity.this,message.getTmpId());
-        }
-    }
-
     //接收到websocket发过来的消息
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onGetMessageById(EventMessage eventMessage) {
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_GET_MESSAGE_BY_ID)) {
-            handleRealMessage(eventMessage);
             if (eventMessage.getStatus() == EventMessage.RESULT_OK) {
                 String content = eventMessage.getContent();
                 JSONObject contentobj = JSONUtils.getJSONObject(content);
                 Message message = new Message(contentobj);
                 message.setRead(1);
+                MessageCacheUtil.handleRealMessage(ConversationActivity.this,message);
                 MessageCacheUtil.saveMessage(MyApplication.getInstance(), message);
                 adapter.notifyDataSetChanged();
             }
@@ -927,11 +900,11 @@ public class ConversationActivity extends ConversationBaseActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveNewMessage(EventMessage eventMessage) {
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_GET_NEW_MESSAGE) && eventMessage.getExtra().equals(cid)) {
-            handleRealMessage(eventMessage);
             if (eventMessage.getStatus() == 200) {
                 String content = eventMessage.getContent();
                 GetChannelMessagesResult getChannelMessagesResult = new GetChannelMessagesResult(content);
                 final List<Message> newMessageList = getChannelMessagesResult.getMessageList();
+                MessageCacheUtil.handleRealMessage(ConversationActivity.this,newMessageList);
                 if (newMessageList.size() > 0) {
                     MessageCacheUtil.saveMessageList(MyApplication.getInstance(), newMessageList, null);
                 }
@@ -949,11 +922,11 @@ public class ConversationActivity extends ConversationBaseActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveHistoryMessage(EventMessage eventMessage) {
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_GET_HISTORY_MESSAGE) && eventMessage.getExtra().equals(cid)) {
-            handleRealMessage(eventMessage);
             if (eventMessage.getStatus() == EventMessage.RESULT_OK) {
                 String content = eventMessage.getContent();
                 GetChannelMessagesResult getChannelMessagesResult = new GetChannelMessagesResult(content);
                 final List<Message> messageList = getChannelMessagesResult.getMessageList();
+                MessageCacheUtil.handleRealMessage(ConversationActivity.this,messageList);
                 if (messageList.size() > 0 && messageList.get(0).getChannel().equals(cid)) {
                     Long targetMessageCreationDate = null;
                     if (uiMessageList.size() > 0) {
@@ -983,7 +956,7 @@ public class ConversationActivity extends ConversationBaseActivity {
            if (uiMessageList.size()>0){
                while (it.hasNext()) {
                    Message offlineMessage = it.next();
-                   handleRealMessage(offlineMessage);
+                   MessageCacheUtil.handleRealMessage(ConversationActivity.this,offlineMessage);
                    UIMessage uiMessage = new UIMessage(offlineMessage.getId());
                    if (uiMessageList.contains(uiMessage)) {
                        it.remove();
@@ -1003,6 +976,25 @@ public class ConversationActivity extends ConversationBaseActivity {
 
     }
 
+//    private void handleRealMessage(Message message) {
+//        //删除临时消息前把创建时间改为临时消息的创建时间，保证排序
+//        Message messageTmp = MessageCacheUtil.getMessageByMid(ConversationActivity.this,message.getTmpId());
+//        if(messageTmp != null){
+//            message.setCreationDate(messageTmp.getCreationDate());
+//            MessageCacheUtil.saveMessage(ConversationActivity.this,message);
+//            MessageCacheUtil.deleteLocalFakeMessage(ConversationActivity.this,message.getTmpId());
+//        }
+//    }
+//
+//    private void handleRealMessage(List<Message> messageList){
+//        if (messageList.size()>0){
+//            Iterator<Message> messageIterator = messageList.iterator();
+//            while (messageIterator.hasNext()) {
+//                Message message = messageIterator.next();
+//                handleRealMessage(message);
+//            }
+//        }
+//    }
 
     /**
      * 获取此频道的最新消息
@@ -1012,5 +1004,4 @@ public class ConversationActivity extends ConversationBaseActivity {
             WSAPIService.getInstance().getChannelNewMessage(cid);
         }
     }
-
 }
