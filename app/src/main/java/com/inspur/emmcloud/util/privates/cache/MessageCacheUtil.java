@@ -4,7 +4,8 @@ import android.content.Context;
 
 import com.inspur.emmcloud.bean.chat.MatheSet;
 import com.inspur.emmcloud.bean.chat.Message;
-import com.inspur.emmcloud.ui.chat.ConversationActivity;
+import com.inspur.emmcloud.config.MyAppConfig;
+import com.inspur.emmcloud.util.common.FileUtils;
 
 import org.xutils.db.sqlite.WhereBuilder;
 
@@ -326,7 +327,7 @@ public class MessageCacheUtil {
      *
      * @param context
      * @param cid
-     * @param mid
+     * @param targetMessageReadCreationDate
      * @return
      */
     public static int getNewerMessageCount(Context context, String cid, long targetMessageReadCreationDate) {
@@ -485,24 +486,9 @@ public class MessageCacheUtil {
         }
     }
 
-    /**
-     * 真实消息回来后，把消息时间修改为，本地假消息的时间以便排序
-     * 然后把本地假消息删掉
-     * @param context
-     * @param message
-     */
-    public static void handleRealMessage(Context context,Message message) {
-        //删除临时消息前把创建时间改为临时消息的创建时间，保证排序
-        Message messageTmp = MessageCacheUtil.getMessageByMid(context,message.getTmpId());
-        if(messageTmp != null){
-            message.setCreationDate(messageTmp.getCreationDate());
-            MessageCacheUtil.saveMessage(context,message);
-            MessageCacheUtil.deleteLocalFakeMessage(context,message.getTmpId());
-        }
-    }
 
     /**
-     * 处理多条，作用跟上面方法相同
+     * 处理多条，作用跟下面方法相同
      * @param context
      * @param messageList
      */
@@ -516,4 +502,37 @@ public class MessageCacheUtil {
         }
     }
 
+    /**
+     * 真实消息回来后，把消息时间修改为，本地假消息的时间以便排序
+     * 然后把本地假消息删掉
+     * @param context
+     * @param message
+     */
+    public static void handleRealMessage(Context context,Message message) {
+        //删除临时消息前把创建时间改为临时消息的创建时间，保证排序
+        Message messageTmp = MessageCacheUtil.getMessageByMid(context,message.getTmpId());
+        if(messageTmp != null){
+            //如果发送的消息是音频消息，在发送成功后删除本地消息
+            if(messageTmp.getType().equals(Message.MESSAGE_TYPE_MEDIA_VOICE)){
+                deleteLocalVoiceFile(message);
+            }
+            message.setCreationDate(messageTmp.getCreationDate());
+            MessageCacheUtil.saveMessage(context,message);
+            MessageCacheUtil.deleteLocalFakeMessage(context,message.getTmpId());
+        }
+    }
+
+    /**
+     * 删除本地缓存中的文件
+     * @param message
+     */
+    private static void deleteLocalVoiceFile(Message message) {
+        String sendSuccessMp3FileName = FileUtils.getFileNameWithoutExtension(message.getMsgContentMediaVoice().getMedia());
+        ArrayList<String> localFilePathList = FileUtils.getAllFilePathByDirPath(MyAppConfig.LOCAL_CACHE_VOICE_PATH);
+        for (int i = 0; i < localFilePathList.size(); i++) {
+            if(sendSuccessMp3FileName.equals(FileUtils.getFileNameWithoutExtension(localFilePathList.get(i)))){
+                FileUtils.deleteFile(localFilePathList.get(i));
+            }
+        }
+    }
 }

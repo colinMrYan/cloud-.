@@ -594,7 +594,6 @@ public class ConversationActivity extends ConversationBaseActivity {
 
             @Override
             public void onFail() {
-                LogUtils.YfcDebug("上传文件失败");
                 setMessageSendFailStatus(fakeMessage.getId());
             }
         });
@@ -791,7 +790,6 @@ public class ConversationActivity extends ConversationBaseActivity {
         }
         chatInputMenu.releaseVoliceInput();
         EventBus.getDefault().unregister(this);
-//        DataCleanManager.cleanCustomCache(MyAppConfig.LOCAL_CACHE_VOICE_PATH);
     }
 
 
@@ -975,26 +973,6 @@ public class ConversationActivity extends ConversationBaseActivity {
        }
 
     }
-
-//    private void handleRealMessage(Message message) {
-//        //删除临时消息前把创建时间改为临时消息的创建时间，保证排序
-//        Message messageTmp = MessageCacheUtil.getMessageByMid(ConversationActivity.this,message.getTmpId());
-//        if(messageTmp != null){
-//            message.setCreationDate(messageTmp.getCreationDate());
-//            MessageCacheUtil.saveMessage(ConversationActivity.this,message);
-//            MessageCacheUtil.deleteLocalFakeMessage(ConversationActivity.this,message.getTmpId());
-//        }
-//    }
-//
-//    private void handleRealMessage(List<Message> messageList){
-//        if (messageList.size()>0){
-//            Iterator<Message> messageIterator = messageList.iterator();
-//            while (messageIterator.hasNext()) {
-//                Message message = messageIterator.next();
-//                handleRealMessage(message);
-//            }
-//        }
-//    }
 
     /**
      * 获取此频道的最新消息
