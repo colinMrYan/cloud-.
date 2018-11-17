@@ -628,8 +628,8 @@ public class ConversationActivity extends ConversationBaseActivity {
             draftMessage.setRead(Message.MESSAGE_READ);
             draftMessage.setCreationDate(System.currentTimeMillis());
             MessageCacheUtil.saveMessage(ConversationActivity.this,draftMessage);
-            notifyCommucationFragmentMessageSendStatus();
         }
+        notifyCommucationFragmentMessageSendStatus();
     }
 
     /**
