@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.alibaba.fastjson.JSON;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.ChannelMessageAdapter;
@@ -33,7 +32,6 @@ import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.InputMethodUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
@@ -312,16 +310,7 @@ public class ConversationActivity extends ConversationBaseActivity {
             message.setTmpId(message.getId());
             uiMessage.setSendStatus(0);
             int position = uiMessageList.indexOf(uiMessage);
-//            if (position != uiMessageList.size() - 1) {
-//                uiMessageList.remove(position);
-//                uiMessageList.add(uiMessage);
-//                adapter.setMessageList(uiMessageList);
-//                adapter.notifyDataSetChanged();
-//                msgListView.MoveToPosition(uiMessageList.size() - 1);
-//            } else {
-                adapter.setMessageList(uiMessageList);
-//                adapter.notifyItemChanged(uiMessageList.size() - 1);
-//            }
+            adapter.setMessageList(uiMessageList);
             adapter.notifyItemChanged(position);
             switch (message.getType()) {
                 case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
@@ -442,7 +431,6 @@ public class ConversationActivity extends ConversationBaseActivity {
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case RQQUEST_CHOOSE_FILE:
-//                    if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
                         String filePath = GetPathFromUri4kitkat.getPathByUri(MyApplication.getInstance(), data.getData());
                         File file = new File(filePath);
                         if (StringUtils.isBlank(FileUtils.getSuffix(file))) {
@@ -451,10 +439,8 @@ public class ConversationActivity extends ConversationBaseActivity {
                         } else {
                             combinAndSendMessageWithFile(filePath, Message.MESSAGE_TYPE_FILE_REGULAR_FILE);
                         }
-//                    }
                     break;
                 case REQUEST_CAMERA:
-//                    if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
                         String imgPath = data.getExtras().getString(MyCameraActivity.OUT_FILE_PATH);
                         try {
                             File fileCamera = new Compressor(ConversationActivity.this).setMaxHeight(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setMaxWidth(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setQuality(90).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
@@ -464,7 +450,6 @@ public class ConversationActivity extends ConversationBaseActivity {
                             e.printStackTrace();
                         }
                         combinAndSendMessageWithFile(imgPath, Message.MESSAGE_TYPE_MEDIA_IMAGE);
-//                    }
                     break;
                 case REQUEST_MENTIONS:
                     // @返回
@@ -565,7 +550,6 @@ public class ConversationActivity extends ConversationBaseActivity {
         messageRecourceUploadUtils.setProgressCallback(new ProgressCallback() {
             @Override
             public void onSuccess(VolumeFile volumeFile) {
-                LogUtils.YfcDebug("上传文件成功："+JSON.toJSONString(volumeFile));
                 //如果文件信息发送oss成功则记录oss返回文件路径，并根据不同类型文件记录相关信息，如果后续仅是socket未发送成功则
                 fakeMessage.setLocalPath(volumeFile.getPath());
                 switch (fakeMessage.getType()) {
@@ -599,6 +583,7 @@ public class ConversationActivity extends ConversationBaseActivity {
         });
         messageRecourceUploadUtils.uploadResFile(fakeMessage);
     }
+
 
     /**
      * 控件点击事件
@@ -643,8 +628,8 @@ public class ConversationActivity extends ConversationBaseActivity {
             draftMessage.setRead(Message.MESSAGE_READ);
             draftMessage.setCreationDate(System.currentTimeMillis());
             MessageCacheUtil.saveMessage(ConversationActivity.this,draftMessage);
+            notifyCommucationFragmentMessageSendStatus();
         }
-        notifyCommucationFragmentMessageSendStatus();
     }
 
     /**
@@ -850,6 +835,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                                 break;
                             }
                         }
+
                     }
                     if (index == -1) {
                         uiMessageList.add(new UIMessage(receivedWSMessage));
@@ -891,8 +877,11 @@ public class ConversationActivity extends ConversationBaseActivity {
                 MessageCacheUtil.saveMessage(MyApplication.getInstance(), message);
                 adapter.notifyDataSetChanged();
             }
+
         }
+
     }
+
 
     //接收到websocket发过来的消息
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -913,6 +902,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 adapter.notifyDataSetChanged();
                 msgListView.scrollToPosition(uiMessageList.size() - 1);
             }
+
         }
     }
 
@@ -974,6 +964,7 @@ public class ConversationActivity extends ConversationBaseActivity {
 
     }
 
+
     /**
      * 获取此频道的最新消息
      */
@@ -982,4 +973,5 @@ public class ConversationActivity extends ConversationBaseActivity {
             WSAPIService.getInstance().getChannelNewMessage(cid);
         }
     }
+
 }

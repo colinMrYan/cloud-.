@@ -100,37 +100,6 @@ public class WSAPIService {
         }
     }
 
-    public void sendChatExtendedLinksMsg(Message message) {
-        try {
-            JSONObject object = new JSONObject();
-            JSONObject actionObj = new JSONObject();
-            actionObj.put("method", "post");
-            actionObj.put("path", "/channel/" + message.getChannel() + "/message");
-            object.put("action", actionObj);
-            JSONObject headerObj = new JSONObject();
-            headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
-            headerObj.put("tracer", message.getId());
-            object.put("headers", headerObj);
-            JSONObject bodyObj = new JSONObject();
-            bodyObj.put("type", "extended/links");
-            MsgContentExtendedLinks msgContentExtendedLinks = message.getMsgContentExtendedLinks();
-            bodyObj.put("poster",msgContentExtendedLinks.getPoster() );
-            bodyObj.put("title", msgContentExtendedLinks.getTitle());
-            bodyObj.put("subtitle", msgContentExtendedLinks.getSubtitle());
-            bodyObj.put("url", msgContentExtendedLinks.getUrl());
-            bodyObj.put("tmpId",message.getId());
-            JSONArray array = new JSONArray();
-            for (RelatedLink relatedLink:msgContentExtendedLinks.getRelatedLinkList()){
-                array.put(relatedLink.toJSonObject());
-            }
-            bodyObj.put("relatedLinks", array);
-            object.put("body", bodyObj);
-            EventMessage eventMessage = new EventMessage(message.getId(),Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE,"",message.getId());
-            WebSocketPush.getInstance().sendEventMessage(eventMessage, object,message.getId());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     public void sendChatRegularFileMsg(Message fakeMessage, VolumeFile volumeFile) {
         try {
@@ -196,6 +165,38 @@ public class WSAPIService {
         }
     }
 
+    public void sendChatExtendedLinksMsg(Message message) {
+        try {
+            JSONObject object = new JSONObject();
+            JSONObject actionObj = new JSONObject();
+            actionObj.put("method", "post");
+            actionObj.put("path", "/channel/" + message.getChannel() + "/message");
+            object.put("action", actionObj);
+            JSONObject headerObj = new JSONObject();
+            headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
+            headerObj.put("tracer", message.getId());
+            object.put("headers", headerObj);
+            JSONObject bodyObj = new JSONObject();
+            bodyObj.put("type", "extended/links");
+            MsgContentExtendedLinks msgContentExtendedLinks = message.getMsgContentExtendedLinks();
+            bodyObj.put("poster",msgContentExtendedLinks.getPoster() );
+            bodyObj.put("title", msgContentExtendedLinks.getTitle());
+            bodyObj.put("subtitle", msgContentExtendedLinks.getSubtitle());
+            bodyObj.put("url", msgContentExtendedLinks.getUrl());
+            bodyObj.put("tmpId",message.getId());
+            JSONArray array = new JSONArray();
+            for (RelatedLink relatedLink:msgContentExtendedLinks.getRelatedLinkList()){
+                array.put(relatedLink.toJSonObject());
+            }
+            bodyObj.put("relatedLinks", array);
+            object.put("body", bodyObj);
+            EventMessage eventMessage = new EventMessage(message.getId(),Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE,"",message.getId());
+            WebSocketPush.getInstance().sendEventMessage(eventMessage, object,message.getId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void sendChatMediaImageMsg( Message fakeMessage,VolumeFile volumeFile) {
         try {
             JSONObject object = new JSONObject();
@@ -237,7 +238,6 @@ public class WSAPIService {
             e.printStackTrace();
         }
     }
-
 
     public void getOfflineMessage(String lastMessageId) {
         try {
