@@ -148,6 +148,8 @@ public class CommunicationUtils {
         }
         message.setContent(msgContentComment.toString());
         return message;
+
+
     }
 
     public static Message combinLocalRegularFileMessage(String cid, String localFilePath) {

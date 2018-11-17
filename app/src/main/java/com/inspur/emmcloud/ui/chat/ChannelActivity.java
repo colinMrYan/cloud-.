@@ -970,7 +970,7 @@ public class ChannelActivity extends MediaPlayBaseActivity {
         }
         chatInputMenu.releaseVoliceInput();
         EventBus.getDefault().unregister(this);
-        DataCleanManager.cleanCustomCache(MyAppConfig.LOCAL_CACHE_VOICE_PATH);
+//        DataCleanManager.cleanCustomCache(MyAppConfig.LOCAL_CACHE_VOICE_PATH);
         MyApplication.getInstance().setCurrentChannelCid("");
     }
 

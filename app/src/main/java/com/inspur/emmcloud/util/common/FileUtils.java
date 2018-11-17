@@ -1132,11 +1132,11 @@ public class FileUtils {
 
     /**
      * 获取指定文件夹下所有文件的文件路径
-     * @param path
+     * @param dirPath
      * @return
      */
-    public static ArrayList<String> getAllFilePathByDirPath(String path) {
-        File file=new File(path);
+    public static ArrayList<String> getAllFilePathByDirPath(String dirPath) {
+        File file=new File(dirPath);
         File[] files=file.listFiles();
         ArrayList<String> filePathList = new ArrayList<>();
         if(files != null){

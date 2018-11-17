@@ -804,12 +804,14 @@ public class ConversationActivity extends ConversationBaseActivity {
                     messageSendingList.add(messageList.get(i));
                 }
             }
+            //再次进入频道时修改16秒以上还在发送中状态的消息
+            MessageCacheUtil.updateMessageSendStatus(ConversationActivity.this,messageSendingList);
             uiMessageList.addAll(0, UIMessage.MessageList2UIMessageList(messageList));
             adapter.setMessageList(uiMessageList);
             adapter.notifyItemRangeInserted(0, messageList.size());
             msgListView.scrollToPosition(messageList.size() - 1);
-            MessageCacheUtil.updateMessageSendStatus(ConversationActivity.this,messageSendingList);
         }
+
         swipeRefreshLayout.setRefreshing(false);
     }
 

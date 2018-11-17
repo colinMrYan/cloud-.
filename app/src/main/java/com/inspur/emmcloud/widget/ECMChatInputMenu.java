@@ -188,8 +188,6 @@ public class ECMChatInputMenu extends LinearLayout {
                         }
                         return;
                     }
-                    //
-//                    if(NetUtils.isNetworkConnected(MyApplication.getInstance())){
                         audioDialogManager = new AudioDialogManager(getContext());
                         audioDialogManager.showVoice2WordProgressDialog();
                         //转写和转文件格式同时进行
@@ -213,7 +211,6 @@ public class ECMChatInputMenu extends LinearLayout {
                                 }
                             }
                         }).setRawPathAndMp3Path(filePath.replace(".wav",".raw"), filePath.replace(".wav",".mp3")).startConvert();
-//                    }
                 }else {
                     if (chatInputMenuListener != null) {
                         chatInputMenuListener.onSendVoiceRecordMsg("",seconds, filePath);
@@ -613,7 +610,6 @@ public class ECMChatInputMenu extends LinearLayout {
                 }
                 break;
             case R.id.send_msg_btn:
-//                if (NetUtils.isNetworkConnected(getContext())) {
                     List<String> urlList = null;
                     String content = inputEdit.getRichContent(false);
                     Map<String, String> mentionsMap = null;
@@ -623,7 +619,6 @@ public class ECMChatInputMenu extends LinearLayout {
                     }
                     inputEdit.clearInsertModelList();
                     inputEdit.setText("");
-//                }
                 break;
             case R.id.add_btn:
                 if (addMenuLayout.isShown()) {
