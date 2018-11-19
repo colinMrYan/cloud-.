@@ -30,6 +30,7 @@ import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.widget.ECMChatInputMenu;
+import com.inspur.emmcloud.widget.bubble.BubbleLayout;
 import com.qmuiteam.qmui.widget.QMUILoadingView;
 
 import java.util.ArrayList;
@@ -50,6 +51,23 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         this.context = context;
         this.channelType = channelType;
         this.chatInputMenu = chatInputMenu;
+        this.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onChanged() {
+                super.onChanged();
+                if (mItemClickListener != null){
+                    mItemClickListener.onAdapterDataSizeChange();
+                }
+            }
+
+            @Override
+            public void onItemRangeInserted(int positionStart, int itemCount) {
+                super.onItemRangeInserted(positionStart, itemCount);
+                if (mItemClickListener != null){
+                    mItemClickListener.onAdapterDataSizeChange();
+                }
+            }
+        });
     }
 
     public void setMessageList(List<UIMessage> UImessageList) {
@@ -231,8 +249,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
                 cardContentView = DisplayExtendedLinksMsg.getView(context,message);
                 break;
             case Message.MESSAGE_TYPE_MEDIA_VOICE:
-                cardContentView = DisplayMediaVoiceMsg.getView(context,
-                        uiMessage);
+                cardContentView = DisplayMediaVoiceMsg.getView(context,uiMessage,mItemClickListener);
                 break;
             default:
                 cardContentView = DisplayResUnknownMsg.getView(context, isMyMsg);
@@ -329,5 +346,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
     public interface MyItemClickListener {
         void onItemClick(View view, int position);
         void onMessageResend(UIMessage uiMessage);
+        void onMediaVoiceReRecognize(UIMessage uiMessage,BubbleLayout bubbleLayout,QMUILoadingView downloadLoadingView);
+        void onAdapterDataSizeChange();
     }
 }
