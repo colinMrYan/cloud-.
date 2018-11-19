@@ -334,7 +334,6 @@ public class ConversationActivity extends ConversationBaseActivity {
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
             // TODO Auto-generated method stub
             Message message = uiMessage.getMessage();
-            message.setTmpId(message.getId());
             uiMessage.setSendStatus(0);
             int position = uiMessageList.indexOf(uiMessage);
             adapter.setMessageList(uiMessageList);
@@ -685,18 +684,18 @@ public class ConversationActivity extends ConversationBaseActivity {
                 switch (fakeMessage.getType()) {
                     case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
                         Message fileMessage = CommunicationUtils.addInfo2RegularFileMessage(fakeMessage,volumeFile);
-                        MessageCacheUtil.saveMessage(ConversationActivity.this,fileMessage);
                         WSAPIService.getInstance().sendChatRegularFileMsg(fakeMessage, volumeFile);
+                        MessageCacheUtil.saveMessage(ConversationActivity.this,fileMessage);
                         break;
                     case Message.MESSAGE_TYPE_MEDIA_IMAGE:
                         Message imgMessage = CommunicationUtils.addInfo2ImageMessage(fakeMessage,volumeFile);
-                        MessageCacheUtil.saveMessage(ConversationActivity.this,imgMessage);
                         WSAPIService.getInstance().sendChatMediaImageMsg( fakeMessage,volumeFile);
+                        MessageCacheUtil.saveMessage(ConversationActivity.this,imgMessage);
                         break;
                     case Message.MESSAGE_TYPE_MEDIA_VOICE:
                         Message voiceMessage = CommunicationUtils.addInfo2VoiceMessage(fakeMessage,volumeFile);
-                        MessageCacheUtil.saveMessage(ConversationActivity.this,voiceMessage);
                         WSAPIService.getInstance().sendChatMediaVoiceMsg(fakeMessage, volumeFile);
+                        MessageCacheUtil.saveMessage(ConversationActivity.this,voiceMessage);
                         break;
                 }
             }
