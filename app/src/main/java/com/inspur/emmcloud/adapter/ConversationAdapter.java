@@ -58,7 +58,6 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
                 adapterListener.onDataChange();
             }
         }
-
     }
 
     @Override
@@ -162,6 +161,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         if (!isHeaderView(position)) {
+            LogUtils.LbcDebug("ViewHolder Test");
             if (haveHeaderView()) position--;
             UIConversation uiConversation = uiConversationList.get(position);
             holder.titleText.setText(uiConversation.getTitle());

@@ -145,6 +145,14 @@ public class CommunicationFragment extends Fragment {
 
     }
 
+    private  void notifyRealItemChanged() {
+        conversationAdapter.notifyItemChanged(1);
+    }
+
+    private  void notifyRealItemRemoved() {
+        conversationAdapter.notifyItemRemoved(1);
+    }
+
     /**
      *Ping 网络状态
      * */
@@ -155,7 +163,7 @@ public class CommunicationFragment extends Fragment {
                 try {
                     PingNetEntity pingNetEntity=new PingNetEntity("www.baidu.com",1,1,new StringBuffer());
                     pingNetEntity=NetUtils.ping(pingNetEntity, (long) 4500);
-                    android.os.Message message = handler.obtainMessage(PING_NET_STATE_HANDLER,pingNetEntity.isResult());
+                    android.os.Message message = handler.obtainMessage(PING_NET_STATE_HANDLER,false);
                     message.sendToTarget();
                 } catch (Exception e){
                 }

@@ -136,6 +136,9 @@ public class NetWorkStateDetailActivity extends BaseActivity {
         super.onStart();
     }
 
+
+
+
     /**
      * 检测硬件连接问题
      * */
