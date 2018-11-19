@@ -18,6 +18,7 @@ public class MsgContentMediaVoice {
     private String media;
     private String result;
     private JSONObject jsonObject;
+
     public MsgContentMediaVoice(String content) {
         JSONObject object = JSONUtils.getJSONObject(content);
         duration = JSONUtils.getInt(object,"duration",0);
