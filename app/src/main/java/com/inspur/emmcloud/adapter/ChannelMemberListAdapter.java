@@ -57,7 +57,7 @@ public class ChannelMemberListAdapter extends BaseAdapter implements SectionInde
      * 更新选中的list
      * @param selectedUserList
      */
-    public void updateSelectListViewData(List<PersonDto> selectedUserList){
+    public void updateSelectListViewData(List<PersonDto> selectedUserList) {
         this.selectedUserList = selectedUserList;
     }
 
