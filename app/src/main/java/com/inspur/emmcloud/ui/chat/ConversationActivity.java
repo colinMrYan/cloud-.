@@ -748,15 +748,16 @@ public class ConversationActivity extends ConversationBaseActivity {
      * 设置当前频道草稿箱
      */
     private void setChatDrafts() {
-        //草稿箱处理，退出时先删除旧草稿，然后查看当前输入框是否有内容，有内容则保存草稿无内容不处理
-        MessageCacheUtil.deleteDraftMessageByCid(ConversationActivity.this,cid);
+        String lastDraft = MessageCacheUtil.getDraftByCid(ConversationActivity.this,cid);
         String inputContent = chatInputMenu.getInputContent();
-        if(!StringUtils.isBlank(inputContent)){
+        if(!StringUtils.isBlank(inputContent)&& !lastDraft.equals(inputContent)){
             Message draftMessage = CommunicationUtils.combinLocalTextPlainMessage(inputContent,cid);
             draftMessage.setSendStatus(Message.MESSAGE_SEND_EDIT);
             draftMessage.setRead(Message.MESSAGE_READ);
             draftMessage.setCreationDate(System.currentTimeMillis());
             MessageCacheUtil.saveMessage(ConversationActivity.this,draftMessage);
+        }else if(StringUtils.isBlank(inputContent) && !StringUtils.isBlank(lastDraft)){
+            MessageCacheUtil.deleteDraftMessageByCid(ConversationActivity.this,cid);
         }
         notifyCommucationFragmentMessageSendStatus();
     }
