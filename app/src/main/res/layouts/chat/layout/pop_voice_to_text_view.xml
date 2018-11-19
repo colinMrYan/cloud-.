@@ -14,11 +14,11 @@
     app:bl_strokeWidth="0.5px">
 <TextView
     android:text="转文字"
-    android:paddingRight="20dp"
-    android:paddingLeft="20dp"
-    android:paddingTop="10dp"
+    android:paddingRight="18dp"
+    android:paddingLeft="18dp"
+    android:paddingTop="8dp"
     android:textColor="@color/white"
-    android:paddingBottom="10dp"
+    android:paddingBottom="8dp"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content" />
 </com.inspur.emmcloud.widget.bubble.BubbleLayout>

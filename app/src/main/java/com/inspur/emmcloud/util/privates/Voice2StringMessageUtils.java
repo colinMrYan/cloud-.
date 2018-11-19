@@ -51,6 +51,7 @@ public class Voice2StringMessageUtils {
     private float durationTime = 0;
     private String voiceFilePath = "";
     private int voiceState = -1;
+    private int audioSimpleRate = 16000;
 
     public Voice2StringMessageUtils(Context context) {
         this.context = context;
@@ -68,11 +69,15 @@ public class Voice2StringMessageUtils {
         voiceState = MSG_FROM_XUNFEI;
     }
 
+    public void setAudioSimpleRate(int audioSimpleRate) {
+        this.audioSimpleRate = audioSimpleRate;
+    }
+
     /**
      * 通过音频文件启动听写
      * 以后需要发送语音时可以单独录制一段语音存到sd卡当做文件发送
      */
-    public void startVoiceListeningByVoiceFile(float seconds,String voiceFilePath) {
+    public void startVoiceListeningByVoiceFile(float seconds, String voiceFilePath) {
         this.durationTime = seconds;
         this.voiceFilePath = voiceFilePath;
         // 使用SpeechRecognizer对象，可根据回调消息自定义界面；
@@ -84,7 +89,7 @@ public class Voice2StringMessageUtils {
         speechRecognizer.setParameter(SpeechConstant.ASR_PTT, "1");
         speechRecognizer.startListening(recognizerListener);
         byte[] audioData = FileUtils.readAudioFileFromSDcard(voiceFilePath);
-        if(audioData != null){
+        if (audioData != null) {
             speechRecognizer.writeAudio(audioData, 0, audioData.length);
         }
         speechRecognizer.stopListening();
@@ -105,10 +110,10 @@ public class Voice2StringMessageUtils {
         // 设置返回结果格式
         speechRecognizer.setParameter(SpeechConstant.RESULT_TYPE, "json");
         //网络转写超时设置
-        speechRecognizer.setParameter(SpeechConstant.NET_TIMEOUT,"8000");
+        speechRecognizer.setParameter(SpeechConstant.NET_TIMEOUT, "8000");
 
         String language = AppUtils.getCurrentAppLanguage(context);
-        switch (language){
+        switch (language) {
             case "zh-Hans":
                 // 设置语言
                 speechRecognizer.setParameter(SpeechConstant.LANGUAGE, "zh_cn");
@@ -134,7 +139,7 @@ public class Voice2StringMessageUtils {
         speechRecognizer.setParameter(SpeechConstant.ASR_PTT, "0");
         //根据IOS参数新加参数
         speechRecognizer.setParameter(SpeechConstant.KEY_SPEECH_TIMEOUT, "-1");
-        speechRecognizer.setParameter(SpeechConstant.SAMPLE_RATE, "16000");
+        speechRecognizer.setParameter(SpeechConstant.SAMPLE_RATE, audioSimpleRate+"");
         speechRecognizer.setParameter(SpeechConstant.DOMAIN, "iat");
         speechRecognizer.setParameter(SpeechConstant.PARAMS, "0");
 
@@ -167,10 +172,10 @@ public class Voice2StringMessageUtils {
 
             @Override
             public void onError(SpeechError error) {
-                LogUtils.YfcDebug("错误："+error.getErrorCode()+error.getErrorDescription());
+                LogUtils.YfcDebug("错误：" + error.getErrorCode() + error.getErrorDescription());
                 VoiceResult voiceResult = new VoiceResult();
                 voiceResult.setXunFeiError(MSG_XUNFEI_ERROR);
-                if(error.getErrorCode() == ERROR_AUDIO_RECORD){
+                if (error.getErrorCode() == ERROR_AUDIO_RECORD) {
                     voiceResult.setXunFeiPermissionError(MSG_XUNFEI_PERMISSION_ERROR);
                 }
                 voiceResult.setMsgState(voiceState);

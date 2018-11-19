@@ -1,13 +1,11 @@
-package com.inspur.emmcloud.util.privates;
+package com.inspur.emmcloud.util.privates.audioformat;
 
 
 import android.os.Handler;
 import android.os.Looper;
 
 import com.inspur.emmcloud.interf.ResultCallback;
-import com.inspur.emmcloud.util.common.LogUtils;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -26,34 +24,19 @@ import javazoom.spi.mpeg.sampled.file.MpegAudioFileReader;
  */
 
 public class AudioFormatUtils {
-    public static void Mp3ToWav(final String mp3filepath, final String pcmfilepath, final ResultCallback callback) {
+    public static void Mp3ToWav(final String mp3Filepath, final String wavFilepath, final ResultCallback callback) {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                ByteArrayInputStream bais = null;
-                AudioInputStream sourceAIS = null;
-                AudioInputStream mp3AIS = null;
-                AudioInputStream pcmAIS = null;
+                AudioInputStream in = null;
+                AudioInputStream out = null;
                 try {
-
-                    File mp3 = new File(mp3filepath);
-
-                    AudioFormat targetFormat = null;
-                    try {
-                        MpegAudioFileReader mp = new MpegAudioFileReader();
-                        AudioInputStream in = mp.getAudioInputStream(mp3);
-                        //targetFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 8000, 16, 1, 2, 16000, false);
-                        AudioFormat sourceFormat = in.getFormat();
-                        //AudioFormat mp3tFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, sourceFormat.getSampleRate(), 16, sourceFormat.getChannels(), sourceFormat.getChannels() * 2, sourceFormat.getSampleRate(), false);
-
-
-                        targetFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, sourceFormat.getSampleRate(), 16, 1, 2, sourceFormat.getSampleRate(), false);
-                        sourceAIS = AudioSystem.getAudioInputStream(targetFormat, in);
-                        AudioSystem.write(sourceAIS, AudioFileFormat.Type.WAVE, new File(pcmfilepath));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
+                    File mp3 = new File(mp3Filepath);
+                    MpegAudioFileReader mp = new MpegAudioFileReader();
+                    in = mp.getAudioInputStream(mp3);
+                    AudioFormat targetFormat = new AudioFormat(8000, 16, 1, true, false);
+                    out = AudioSystem.getAudioInputStream(targetFormat, in);
+                    AudioSystem.write(out, AudioFileFormat.Type.WAVE, new File(wavFilepath));
                     new Handler(Looper.getMainLooper()).post(new Runnable() {
                         @Override
                         public void run() {
@@ -73,17 +56,11 @@ public class AudioFormatUtils {
                     }
                 } finally {
                     try {
-                        if (bais != null) {
-                            bais.close();
+                        if (in != null) {
+                            in.close();
                         }
-                        if (sourceAIS != null) {
-                            sourceAIS.close();
-                        }
-                        if (mp3AIS != null) {
-                            mp3AIS.close();
-                        }
-                        if (pcmAIS != null) {
-                            pcmAIS.close();
+                        if (out != null) {
+                            out.close();
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -120,7 +97,6 @@ public class AudioFormatUtils {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        LogUtils.jasonDebug("size=" + buffer.length);
         return buffer;
     }
 
