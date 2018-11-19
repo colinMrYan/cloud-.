@@ -42,10 +42,10 @@ import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.InputMethodUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.privates.audioformat.AudioFormatUtils;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
 import com.inspur.emmcloud.util.privates.DirectChannelUtils;
 import com.inspur.emmcloud.util.privates.GetPathFromUri4kitkat;
@@ -53,6 +53,7 @@ import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.MessageRecourceUploadUtils;
 import com.inspur.emmcloud.util.privates.UriUtils;
 import com.inspur.emmcloud.util.privates.Voice2StringMessageUtils;
+import com.inspur.emmcloud.util.privates.audioformat.AudioFormatUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 import com.inspur.emmcloud.widget.ECMChatInputMenu;
@@ -452,7 +453,6 @@ public class ConversationActivity extends ConversationBaseActivity {
                 }
                 final String wavFileSavePath = MyAppConfig.getCacheVoiceWAVFilePath(uiMessage.getMessage().getChannel(), uiMessage.getMessage().getId());
 
-                LogUtils.jasonDebug("wavFileSavePath=" + wavFileSavePath);
                 if(!FileUtils.isFileExist(wavFileSavePath)){
 
                     AudioFormatUtils.Mp3ToWav(mp3FileSavePath, wavFileSavePath, new ResultCallback() {
@@ -472,8 +472,6 @@ public class ConversationActivity extends ConversationBaseActivity {
             }
         });
     }
-
-    ;
 
     private void voiceToWord(String filePath, final UIMessage uiMessage, final QMUILoadingView downloadLoadingView) {
         downloadLoadingView.setVisibility(View.VISIBLE);
@@ -931,7 +929,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                     MyApplication.getInstance(), cid, uiMessageList.get(0).getCreationDate(), 20);
             List<Message> messageSendingList = new ArrayList<>();
             for (int i = 0; i < messageList.size(); i++) {
-                if(messageList.get(i).getSendStatus() == Message.MESSAGE_SEND_ING && ((System.currentTimeMillis() - messageList.get(i).getCreationDate())>15*1000) ){
+                if(messageList.get(i).getSendStatus() == Message.MESSAGE_SEND_ING && ((System.currentTimeMillis() - messageList.get(i).getCreationDate())>16*1000) ){
                     messageList.get(i).setSendStatus(Message.MESSAGE_SEND_FAIL);
                     messageSendingList.add(messageList.get(i));
                 }

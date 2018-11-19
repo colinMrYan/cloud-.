@@ -42,7 +42,7 @@ public class UIConversation implements Serializable{
         this.conversation = conversation;
         this.id = conversation.getId();
         this.title = CommunicationUtils.getConversationTitle(conversation);
-        messageList = MessageCacheUtil.getConversationFragmentHistoryMessageList(MyApplication.getInstance(), id, null, 15);
+        messageList = MessageCacheUtil.getHistoryMessageListIncludeEditingMessage(MyApplication.getInstance(), id, null, 15);
         if (messageList.size() == 0) {
             lastUpdate = conversation.getCreationDate();
         } else {

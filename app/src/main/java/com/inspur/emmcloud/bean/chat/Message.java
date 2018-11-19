@@ -96,58 +96,40 @@ public class Message implements Serializable {
     }
 
     public MsgContentExtendedActions getMsgContentExtendedActions() {
-        MsgContentExtendedActions msgContentExtendedActions = new MsgContentExtendedActions(content);
-        tmpId = msgContentExtendedActions.getTmpId();
-        return msgContentExtendedActions;
+        return new MsgContentExtendedActions(content);
     }
 
     public MsgContentAttachmentCard getMsgContentAttachmentCard() {
-        MsgContentAttachmentCard msgContentAttachmentCard = new MsgContentAttachmentCard(content);
-        tmpId = msgContentAttachmentCard.getTmpId();
-        return msgContentAttachmentCard;
+        return new MsgContentAttachmentCard(content);
     }
 
     public MsgContentComment getMsgContentComment() {
-        MsgContentComment msgContentComment = new MsgContentComment(content);
-        tmpId = msgContentComment.getTmpId();
-        return msgContentComment;
+        return new MsgContentComment(content);
     }
 
     public MsgContentRegularFile getMsgContentAttachmentFile() {
-        MsgContentRegularFile msgContentRegularFile = new MsgContentRegularFile(content);
-        tmpId = msgContentRegularFile.getTmpId();
-        return msgContentRegularFile;
+        return new MsgContentRegularFile(content);
     }
 
 
     public MsgContentMediaImage getMsgContentMediaImage() {
-        MsgContentMediaImage msgContentMediaImage = new MsgContentMediaImage(content);
-        tmpId = msgContentMediaImage.getTmpId();
-        return msgContentMediaImage;
+        return new MsgContentMediaImage(content);
     }
 
     public MsgContentExtendedLinks getMsgContentExtendedLinks() {
-        MsgContentExtendedLinks msgContentExtendedLinks = new MsgContentExtendedLinks(content);
-        tmpId = msgContentExtendedLinks.getTmpId();
-        return msgContentExtendedLinks;
+        return new MsgContentExtendedLinks(content);
     }
 
     public MsgContentTextMarkdown getMsgContentTextMarkdown() {
-        MsgContentTextMarkdown msgContentTextMarkdown = new MsgContentTextMarkdown(content);
-        tmpId = msgContentTextMarkdown.getTmpId();
-        return msgContentTextMarkdown;
+        return new MsgContentTextMarkdown(content);
     }
 
     public MsgContentMediaVoice getMsgContentMediaVoice() {
-        MsgContentMediaVoice msgContentMediaVoice = new MsgContentMediaVoice(content);
-        tmpId = msgContentMediaVoice.getTmpId();
         return new MsgContentMediaVoice(content);
     }
 
     public MsgContentTextPlain getMsgContentTextPlain() {
-        MsgContentTextPlain msgContentTextPlain = new MsgContentTextPlain(content);
-        tmpId = msgContentTextPlain.getTmpId();
-        return msgContentTextPlain;
+        return new MsgContentTextPlain(content);
     }
 
     public String getId() {
@@ -260,8 +242,8 @@ public class Message implements Serializable {
     }
 
     /*
-                             * 重写equals方法修饰符必须是public,因为是重写的Object的方法. 2.参数类型必须是Object.
-                             */
+                     * 重写equals方法修饰符必须是public,因为是重写的Object的方法. 2.参数类型必须是Object.
+                     */
     public boolean equals(Object other) { // 重写equals方法，后面最好重写hashCode方法
 
         if (this == other) // 先检查是否其自反性，后比较other是否为空。这样效率高

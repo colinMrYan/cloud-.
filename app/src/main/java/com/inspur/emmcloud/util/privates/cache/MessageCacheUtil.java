@@ -181,8 +181,8 @@ public class MessageCacheUtil {
      * @param num
      * @return
      */
-    public static List<Message> getConversationFragmentHistoryMessageList(Context context,
-                                                      String cid, Long targetMessageCreationDate, int num) {
+    public static List<Message> getHistoryMessageListIncludeEditingMessage(Context context,
+                                                                           String cid, Long targetMessageCreationDate, int num) {
         List<Message> messageList = null;
         try {
 
