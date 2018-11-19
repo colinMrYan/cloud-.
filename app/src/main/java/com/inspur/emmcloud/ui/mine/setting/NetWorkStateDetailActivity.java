@@ -11,9 +11,9 @@ import android.widget.ImageView;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PingNetEntity;
+import com.inspur.emmcloud.util.privates.UriUtils;
 import com.qmuiteam.qmui.widget.QMUILoadingView;
 
 import java.net.HttpURLConnection;
@@ -218,7 +218,8 @@ public class NetWorkStateDetailActivity extends BaseActivity {
             case R.id.rl_checking_portal_state:
                 Bundle portalBundle = new Bundle();
                 portalBundle.putString("PortalUrl",PortalUrl);
-                IntentUtils.startActivity(this, PortalLogInActivity.class,portalBundle);
+                String activityName = getResources().getString(R.string.net_network_authentication);
+                UriUtils.openUrl(this,PortalUrl,"网络认证");
                 break;
             case R.id.rl_checking_dns_state:
                 break;
