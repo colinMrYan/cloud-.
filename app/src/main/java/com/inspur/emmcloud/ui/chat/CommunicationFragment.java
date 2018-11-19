@@ -55,7 +55,6 @@ import com.inspur.emmcloud.ui.mine.setting.NetWorkStateDetailActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.PingNetEntity;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.AppTabUtils;
@@ -141,8 +140,7 @@ public class CommunicationFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-       PingThreadStart();
-
+        NetUtils.PingThreadStart("www.baidu.com");
     }
 
     /**
@@ -166,25 +164,6 @@ public class CommunicationFragment extends Fragment {
             conversationAdapter.notifyItemRemoved(position);
         }
     }
-
-    /**
-     *Ping 网络状态
-     * */
-    private  void PingThreadStart() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    PingNetEntity pingNetEntity=new PingNetEntity("www.baidu.com",1,1,new StringBuffer());
-                    pingNetEntity=NetUtils.ping(pingNetEntity, (long) 4500);
-                    android.os.Message message = handler.obtainMessage(PING_NET_STATE_HANDLER,pingNetEntity.isResult());
-                    message.sendToTarget();
-                } catch (Exception e){
-                }
-            }
-        }).start();
-    }
-
 
     private void initView() {
         // TODO Auto-generated method stub
@@ -340,17 +319,20 @@ public class CommunicationFragment extends Fragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void netWorkStateTip(SimpleEventMessage netState) {
         if(netState.getAction().equals(Constant.EVENTBUS_TAG__NET_STATE_CHANGE)){
-            if(((String)netState.getMessageObj()).equals("event_tag_net_state_change")){
-                PingThreadStart();
-            } else if(((String)netState.getMessageObj()).equals("event_tag_net_state_error")) {
+            if(((String)netState.getMessageObj()).equals("net_wifi_state_ok")){
+                NetUtils.PingThreadStart("www.baidu.com");
+            } else if(((String)netState.getMessageObj()).equals("net_state_error")) {
                 android.os.Message message = handler.obtainMessage(PING_NET_STATE_HANDLER,false);
                 message.sendToTarget();
-            } else if (((String)netState.getMessageObj()).equals("event_tag_net_state_ok")) {
+            } else if (((String)netState.getMessageObj()).equals("net_gprs_state_ok")) {
                 android.os.Message message = handler.obtainMessage(PING_NET_STATE_HANDLER,true);
                 message.sendToTarget();
             }
+        } else if (netState.getAction().equals(Constant.EVENTBUS_TAG__NET_EXCEPTION_HINT)) {   //网络异常提示
+            conversationAdapter.setNetExceptionView((Boolean)netState.getMessageObj());
         }
     }
+
     /**
      * 记录用户点击的频道
      */
@@ -745,7 +727,7 @@ public class CommunicationFragment extends Fragment {
             }).start();
             uiConversation.setUnReadCount(0);
             conversationAdapter.setData(displayUIConversationList);
-            notifyRealItemChanged(position);
+            conversationAdapter.notifyRealItemChanged(position);
         }
     }
 
@@ -875,7 +857,7 @@ public class CommunicationFragment extends Fragment {
                 if (index != -1) {
                     displayUIConversationList.get(index).setTitle(conversation.getName());
                     conversationAdapter.setData(displayUIConversationList);
-                    notifyRealItemChanged(index);
+                    conversationAdapter.notifyRealItemChanged(index);
                 }
                 break;
             case Constant.EVENTBUS_TAG_UPDATE_CHANNEL_FOCUS:
@@ -891,7 +873,7 @@ public class CommunicationFragment extends Fragment {
                 if (index != -1) {
                     displayUIConversationList.get(index).getConversation().setDnd(conversation.isDnd());
                     conversationAdapter.setData(displayUIConversationList);
-                    notifyRealItemChanged(index);
+                    conversationAdapter.notifyRealItemChanged(index);
                 }
                 break;
             case Constant.EVENTBUS_TAG_QUIT_CHANNEL_GROUP:
@@ -900,7 +882,7 @@ public class CommunicationFragment extends Fragment {
                 if (index != -1) {
                     displayUIConversationList.remove(index);
                     conversationAdapter.setData(displayUIConversationList);
-                    notifyRealItemRemoved(index);
+                    conversationAdapter.notifyRealItemRemoved(index);
                 }
                 break;
         }
@@ -1129,7 +1111,7 @@ public class CommunicationFragment extends Fragment {
                 long unReadCount = displayUIConversationList.get(index).getUnReadCount();
                 displayUIConversationList.remove(index);
                 conversationAdapter.setData(displayUIConversationList);
-                 notifyRealItemRemoved(index);
+                 conversationAdapter.notifyRealItemRemoved(index);
                 if (unReadCount > 0) {
                     WSAPIService.getInstance().setChannelMessgeStateRead(id);
                 }

@@ -27,22 +27,21 @@ import java.util.List;
  */
 
 public class NetWorkStateDetailActivity extends BaseActivity {
+   public static final int SHOW_DNSCONNCTSTATE=2;
+   public static final int SHOW_PORTAL_CONNECT=1;
 
-    ImageView hardImageView;
-    ImageView portalImageView;
-    ImageView dnsImageView;
-
-    List<Integer> NetStateintegerData;
-    String   PortalUrl = "";
-    boolean  netHardConnectState =true;
-    Drawable drawableError;
-    Drawable drawableSuccess;
-    QMUILoadingView qmulHardLoadingView ;
-    QMUILoadingView qmulWifiLoadingView ;
-    QMUILoadingView qmulDnsLoadingView;
-    public static final int SHOW_DNSCONNCTSTATE=2;
-    public static final int SHOW_RESPONSE=1;
-    private Handler handler;
+   private ImageView hardImageView;
+   private ImageView portalImageView;
+   private ImageView dnsImageView;
+   private QMUILoadingView qmulHardLoadingView ;
+   private QMUILoadingView qmulWifiLoadingView ;
+   private QMUILoadingView qmulDnsLoadingView;
+   private Drawable drawableError;
+   private Drawable drawableSuccess;
+   private List<Integer> NetStateintegerData;
+   private String   PortalUrl = "";
+   private boolean  netHardConnectState =true;
+   private Handler handler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,12 +96,12 @@ public class NetWorkStateDetailActivity extends BaseActivity {
         handler=new Handler() {
             public void handleMessage(android.os.Message msg) {
                 switch (msg.what) {
-                    case SHOW_RESPONSE:
-                        if(1==NetStateintegerData.get(0)) {
+                    case SHOW_PORTAL_CONNECT:
+                        if(NetUtils.NETWORK_WIFI==NetStateintegerData.get(0)) {
                             List<String> bundleata =(List<String>)msg.obj;
                             String httpResNum = bundleata.get(0);
                             String content=bundleata.get(1);
-                            if((-1!=content.indexOf("&firsturl"))||(-1!=httpResNum.indexOf("NETWORK 302"))){
+                            if(-1!=httpResNum.indexOf("NETWORK 30")){
                                 PortalUrl = content.substring(0,content.indexOf("&firsturl"));
                                 portalImageView.setBackground(drawableError);
                             }else {
@@ -136,9 +135,6 @@ public class NetWorkStateDetailActivity extends BaseActivity {
         super.onStart();
     }
 
-
-
-
     /**
      * 检测硬件连接问题
      * */
@@ -161,9 +157,9 @@ public class NetWorkStateDetailActivity extends BaseActivity {
      * 检测小助手连接
      * */
     private void checkingPortalState(final String StrUrl){
-        if(1==NetStateintegerData.get(0)){
+        if(NetUtils.NETWORK_WIFI==NetStateintegerData.get(0)){
             sendRequest(StrUrl);
-        } else if((NetStateintegerData.get(0)>1)&&(NetStateintegerData.get(0)<5)) {
+        } else if((NetStateintegerData.get(0)>=NetUtils.NETWORK_2G)&&(NetStateintegerData.get(0)<=NetUtils.NETWORK_4G)) {
             qmulWifiLoadingView.setVisibility(View.GONE);
             portalImageView.setBackground(drawableSuccess);
             portalImageView.setVisibility(View.VISIBLE);
@@ -195,13 +191,15 @@ public class NetWorkStateDetailActivity extends BaseActivity {
                     String urlAndUrl =httpURLConnection.getHeaderField("Location");
                     BundleData.add(urlAndUrl);
                     Message msg=new Message();
-                    msg.what=SHOW_RESPONSE;//封装子线程编号
+                    msg.what=SHOW_PORTAL_CONNECT;//封装子线程编号
                     msg.obj = BundleData;
                     handler.sendMessage(msg);//发送信息
                 } catch (Exception e) {
                     e.printStackTrace();
                 }finally{
-                    httpURLConnection.disconnect();//将HTTP连接关闭掉
+                    if(httpURLConnection!=null){
+                        httpURLConnection.disconnect();//将HTTP连接关闭掉
+                    }
                 }
             }
         }.start();
@@ -216,8 +214,6 @@ public class NetWorkStateDetailActivity extends BaseActivity {
                 startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS));
                 break;
             case R.id.rl_checking_portal_state:
-                Bundle portalBundle = new Bundle();
-                portalBundle.putString("PortalUrl",PortalUrl);
                 String activityName = getResources().getString(R.string.net_network_authentication);
                 UriUtils.openUrl(this,PortalUrl,"网络认证");
                 break;

@@ -74,11 +74,9 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
         return VIEW_HEADER != null;
     }
 
-
     private boolean isHeaderView(int position) {
         return haveHeaderView() && position == 0;
     }
-
 
     /**
      * 网络异常提示
@@ -111,6 +109,28 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
         if(haveHeaderView()){
             notifyItemRemoved(0);
             VIEW_HEADER=null;
+        }
+    }
+
+    /**
+     * 更新单个列表数据
+     * */
+    public void notifyRealItemChanged(int position){
+        if(haveHeaderView()) {
+            this.notifyItemChanged(position+1);
+        } else {
+            this.notifyItemChanged(position);
+        }
+    }
+
+    /**
+     * 删除单个列表数据
+     * */
+    public void notifyRealItemRemoved(int position) {
+        if(haveHeaderView()){
+            this.notifyItemRemoved(position+1);
+        } else {
+            this.notifyItemRemoved(position);
         }
     }
 
@@ -195,7 +215,6 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
 
     public void setAdapterListener(AdapterListener adapterListener){
         this.adapterListener = adapterListener;
-
     }
 
     @Override

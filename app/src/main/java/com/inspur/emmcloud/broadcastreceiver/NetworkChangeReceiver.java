@@ -37,20 +37,19 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
 					.getState();
 			boolean isAppOnForeground = ((MyApplication)context.getApplicationContext()).getIsActive();
 			if (mobile == State.CONNECTED || mobile == State.CONNECTING) {
-				EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG__NET_STATE_CHANGE,"event_tag_net_state_ok"));
 				if (isAppOnForeground) {
+					EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG__NET_STATE_CHANGE,"net_gprs_state_ok"));
 					ToastUtils.show(context, R.string.Network_Mobile);
 				}
 				WebSocketPush.getInstance().startWebSocket();
 			} else if (wifi == State.CONNECTED || wifi == State.CONNECTING) {
-				EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG__NET_STATE_CHANGE,"event_tag_net_state_change"));
-
 				if (isAppOnForeground) {
+					EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG__NET_STATE_CHANGE,"net_wifi_state_ok"));
 					ToastUtils.show(context, R.string.Network_WIFI);
 				}
 				WebSocketPush.getInstance().startWebSocket();
 			} else if (isAppOnForeground) {
-				EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG__NET_STATE_CHANGE,"event_tag_net_state_error"));
+				EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG__NET_STATE_CHANGE,"net_state_error"));
 				ToastUtils.show(context, R.string.network_exception);
 			}
 		} catch (Exception e) {

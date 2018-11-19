@@ -9,6 +9,10 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.bean.system.SimpleEventMessage;
+import com.inspur.emmcloud.config.Constant;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -20,27 +24,29 @@ import java.util.Enumeration;
 import java.util.List;
 
 public class NetUtils {
-
 	public static final String NETWORK_TYPE_WIFI = "wifi";
 	public static final String NETWORK_TYPE_3G = "eg";
 	public static final String NETWORK_TYPE_2G = "2g";
 	public static final String NETWORK_TYPE_WAP = "wap";
 	public static final String NETWORK_TYPE_UNKNOWN = "unknown";
 	public static final String NETWORK_TYPE_DISCONNECT = "disconnect";
-
+	public static final String NETWORK_TYPE_VPN = "vpn";
+	public static final String NETWORK_TYPE_4G = "4g";
+	public static final String NETWORK_TYPE_MOBILE = "mobile";
+	private static final String TAG = "PingNet";
 
 	/**
 	 * 没有连接网络
 	 */
-	private static final int NETWORK_NONE = -1;
+	public static final int NETWORK_NONE = -1;
 	/**
 	 * 移动网络
 	 */
-	private static final int NETWORK_MOBILE = 0;
+	public static final int NETWORK_MOBILE = 0;
 	/**
 	 * 无线网络
 	 */
-	private static final int NETWORK_WIFI = 1;
+	public static final int NETWORK_WIFI = 1;
 	/**
 	 * 2G网络
 	 */
@@ -57,7 +63,6 @@ public class NetUtils {
 	 * VPN连接
 	 * */
 	public static final int NETWORK_VPN= 5;
-
 	/**
 	 * 未知
 	 */
@@ -74,7 +79,7 @@ public class NetUtils {
 	 * 定义网络信息对象
 	 */
 	public static NetworkInfo mNetworkInfo;
-	private static final String TAG = "PingNet";
+
 
 	// 判断是否有网络连接
 	public static boolean isNetworkConnected(Context context) {
@@ -286,9 +291,7 @@ public class NetUtils {
 		mConnectivityManager = (ConnectivityManager) context
 				.getSystemService(Context.CONNECTIVITY_SERVICE);
 		mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
-
 		if (mNetworkInfo != null && mNetworkInfo.isConnected()) {
-
 			if (mNetworkInfo.getType() == (ConnectivityManager.TYPE_WIFI)) {
 				ResultData.add(NETWORK_WIFI);
 			} else if (mNetworkInfo.getType() == (ConnectivityManager.TYPE_MOBILE)) {
@@ -380,27 +383,27 @@ public class NetUtils {
 	     for (int i=0;i<NetNames.size();i++) {
 	        switch (NetNames.get(i)) {
 				case -2:
-					ConnectedNetNames.add("未知类型网络");
+					ConnectedNetNames.add(NETWORK_TYPE_UNKNOWN);
 					break;
 				case -1:
-					ConnectedNetNames.add("当前无网络");
+					ConnectedNetNames.add(NETWORK_TYPE_DISCONNECT);
 					break;
 				case 0:
-				    ConnectedNetNames.add("移动网络");
+				    ConnectedNetNames.add(NETWORK_TYPE_MOBILE);
 				case  1:
-					ConnectedNetNames.add("无线网络");
+					ConnectedNetNames.add(NETWORK_TYPE_WIFI);
 					break;
 				case  2:
-					ConnectedNetNames.add("2G网络");
+					ConnectedNetNames.add(NETWORK_TYPE_2G);
 					break;
 				case  3:
-					ConnectedNetNames.add("3G网络");
+					ConnectedNetNames.add(NETWORK_TYPE_3G);
 					break;
 				case  4:
-					ConnectedNetNames.add("4G网络");
+					ConnectedNetNames.add(NETWORK_TYPE_4G);
 					break;
 				case  5:
-					ConnectedNetNames.add("VPN连接");
+					ConnectedNetNames.add(NETWORK_TYPE_VPN);
 					break;
 				default:
 					break;
@@ -409,8 +412,23 @@ public class NetUtils {
 	 return ConnectedNetNames;
 	}
 
-
-
+	/**
+	 *Ping 网络状态 "www.baidu.com"
+	 * */
+	public static void PingThreadStart(final  String  StrUrl) {
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					PingNetEntity pingNetEntity=new PingNetEntity(StrUrl,1,1,new StringBuffer());
+					pingNetEntity=NetUtils.ping(pingNetEntity, (long) 4500);
+					EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG__NET_EXCEPTION_HINT, pingNetEntity.isResult()));
+				} catch (Exception e){
+					e.printStackTrace();
+				}
+			}
+		}).start();
+	}
 
 
 }
