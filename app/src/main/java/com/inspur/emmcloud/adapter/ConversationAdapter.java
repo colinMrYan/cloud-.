@@ -2,7 +2,6 @@ package com.inspur.emmcloud.adapter;
 
 import android.content.Context;
 import android.os.Build;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -89,51 +88,29 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
         if(false==NetState&&!haveHeaderView()){
            addHeaderView(LayoutInflater.from(context).inflate(R.layout.recycleview_header_item,null));
         }else if(true==NetState&&haveHeaderView()){
-            delectHeaderView();
+            deleteHeaderView();
         }
     }
+
     /**
      * 添加异常headerView
      * @param headerView  要添加的View
      * */
     private void addHeaderView(View headerView) {
-        if (haveHeaderView()) {
-            throw new IllegalStateException("hearview has already exists!");
-        } else {
-            //避免出现宽度自适应
             ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             headerView.setLayoutParams(params);
             VIEW_HEADER = headerView;
-            ifGridLayoutManager();
             notifyItemInserted(0);
             mRecyclerView.getLayoutManager().scrollToPosition(0);
-        }
     }
 
     /**
      * 删除HeaderView
      * */
-    public void delectHeaderView() {
+    public void deleteHeaderView() {
         if(haveHeaderView()){
             notifyItemRemoved(0);
             VIEW_HEADER=null;
-        }
-    }
-
-    private void ifGridLayoutManager() {
-        if (mRecyclerView == null) return;
-        final RecyclerView.LayoutManager layoutManager = mRecyclerView.getLayoutManager();
-        if (layoutManager instanceof GridLayoutManager) {
-            final GridLayoutManager.SpanSizeLookup originalSpanSizeLookup =
-                    ((GridLayoutManager) layoutManager).getSpanSizeLookup();
-            ((GridLayoutManager) layoutManager).setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-                @Override
-                public int getSpanSize(int position) {
-                    return (isHeaderView(position)) ?
-                            ((GridLayoutManager) layoutManager).getSpanCount() :
-                            1;
-                }
-            });
         }
     }
 
@@ -152,7 +129,6 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
             if (mRecyclerView == null && mRecyclerView != recyclerView) {
                 mRecyclerView = recyclerView;
             }
-            ifGridLayoutManager();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -161,7 +137,6 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         if (!isHeaderView(position)) {
-            LogUtils.LbcDebug("ViewHolder Test");
             if (haveHeaderView()) position--;
             UIConversation uiConversation = uiConversationList.get(position);
             holder.titleText.setText(uiConversation.getTitle());
@@ -205,7 +180,6 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
         }
         TransHtmlToTextUtils.stripUnderlines(holder.contentText,R.color.msg_content_color);
     }
-
 
     /**
      * 设置会话已读未读状态
@@ -275,10 +249,10 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
                     if(0==getAdapterPosition()) {
                     adapterListener.onNetExceptionWightClick();   //点击进入新的Activity
                     }else {
-                        adapterListener.onItemClick(v,getAdapterPosition(),1);
+                        adapterListener.onItemClick(v,getAdapterPosition()-1);
                     }
                 } else {
-                    adapterListener.onItemClick(v,getAdapterPosition(),0);
+                    adapterListener.onItemClick(v,getAdapterPosition());
                 }
             }
         }
@@ -292,10 +266,10 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
                         return true;
                     } else {
                         //网络异常状态
-                        return adapterListener.onItemLongClick(v,getAdapterPosition(),1);
+                        return adapterListener.onItemLongClick(v,getAdapterPosition()-1);
                     }
                 } else {
-                    return adapterListener.onItemLongClick(v,getAdapterPosition(),0);
+                    return adapterListener.onItemLongClick(v,getAdapterPosition());
                 }
 
             }
@@ -307,8 +281,8 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
      * 创建一个回调接口
      */
     public interface AdapterListener {
-        void onItemClick(View view, int position,int header);
-        boolean onItemLongClick(View view, int position,int header);
+        void onItemClick(View view, int position);
+        boolean onItemLongClick(View view, int position);
         void onDataChange();
         void onNetExceptionWightClick();
     }
