@@ -22,7 +22,6 @@ import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.TransHtmlToTextUtils;
-import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 import com.inspur.emmcloud.widget.CircleTextImageView;
 
 import java.io.File;
@@ -118,7 +117,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
      * @param uiConversation
      */
     private void setConversationContent(ViewHolder holder, UIConversation uiConversation){
-        String chatDrafts = MessageCacheUtil.getDraftByCid(context,uiConversation.getId());
+        String chatDrafts = uiConversation.getConversation().getDraft();
         if (!StringUtils.isBlank(chatDrafts)){
             String content = "<font color='#FF0000'>"+context.getString(R.string.message_type_drafts)+"</font>"+chatDrafts;
             if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.N){
