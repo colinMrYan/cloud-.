@@ -17,6 +17,7 @@ public class MsgContentExtendedLinks {
     private String title;
     private String subtitle;
     private String url;
+    private String tmpId;
     private List<RelatedLink> relatedLinkList = new ArrayList<>();
 
     public MsgContentExtendedLinks(String content) {
@@ -24,6 +25,7 @@ public class MsgContentExtendedLinks {
         title = JSONUtils.getString(content, "title", "");
         subtitle = JSONUtils.getString(content, "subtitle", "");
         url = JSONUtils.getString(content, "url", "");
+        tmpId = JSONUtils.getString(content,"tmpId","");
         JSONArray array = JSONUtils.getJSONArray(content, "relatedLinks", new JSONArray());
         for (int i = 0; i < array.length(); i++) {
             RelatedLink relatedLink = new RelatedLink(JSONUtils.getJSONObject(array, i, new JSONObject()));
@@ -72,6 +74,14 @@ public class MsgContentExtendedLinks {
 
     public void setRelatedLinkList(List<RelatedLink> relatedLinkList) {
         this.relatedLinkList = relatedLinkList;
+    }
+
+    public String getTmpId() {
+        return tmpId;
+    }
+
+    public void setTmpId(String tmpId) {
+        this.tmpId = tmpId;
     }
 
     public String toString() {

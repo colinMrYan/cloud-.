@@ -1,7 +1,6 @@
 package com.inspur.emmcloud.api.apiservice;
 
 import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.MsgContentComment;
 import com.inspur.emmcloud.bean.chat.MsgContentExtendedLinks;
@@ -11,6 +10,7 @@ import com.inspur.emmcloud.bean.system.EventMessage;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
@@ -61,6 +61,7 @@ public class WSAPIService {
                 JSONObject mentionsObj = JSONUtils.map2Json(mentionsMap);
                 bodyObj.put("mentions", mentionsObj);
             }
+            bodyObj.put("tmpId",fakeMessage.getId());
             object.put("body", bodyObj);
             EventMessage eventMessage = new EventMessage(fakeMessage.getId(),Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE,"",fakeMessage.getId());
             WebSocketPush.getInstance().sendEventMessage(eventMessage, object, fakeMessage.getId());
@@ -90,6 +91,7 @@ public class WSAPIService {
                 JSONObject mentionsObj = JSONUtils.map2Json(mentionsMap);
                 bodyObj.put("mentions", mentionsObj);
             }
+            bodyObj.put("tmpId",fakeMessage.getId());
             object.put("body", bodyObj);
             EventMessage eventMessage = new EventMessage(fakeMessage.getId(),Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE,"",fakeMessage.getId());
             WebSocketPush.getInstance().sendEventMessage(eventMessage, object,fakeMessage.getId());
@@ -98,32 +100,34 @@ public class WSAPIService {
         }
     }
 
-    public void sendChatRegularFileMsg(String cid, String tracer, VolumeFile volumeFile) {
+
+    public void sendChatRegularFileMsg(Message fakeMessage) {
         try {
             JSONObject object = new JSONObject();
             JSONObject actionObj = new JSONObject();
             actionObj.put("method", "post");
-            actionObj.put("path", "/channel/" + cid + "/message");
+            actionObj.put("path", "/channel/" + fakeMessage.getChannel() + "/message");
             object.put("action", actionObj);
             JSONObject headerObj = new JSONObject();
             headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
-            headerObj.put("tracer", tracer);
+            headerObj.put("tracer", fakeMessage.getId());
             object.put("headers", headerObj);
             JSONObject bodyObj = new JSONObject();
             bodyObj.put("type", "file/regular-file");
-            bodyObj.put("category", CommunicationUtils.getChatFileCategory(volumeFile.getName()));
-            bodyObj.put("name", volumeFile.getName());
-            bodyObj.put("size", volumeFile.getSize());
-            bodyObj.put("media", volumeFile.getPath());
+            bodyObj.put("category", CommunicationUtils.getChatFileCategory(fakeMessage.getMsgContentAttachmentFile().getName()));
+            bodyObj.put("name", fakeMessage.getMsgContentAttachmentFile().getName());
+            bodyObj.put("size", fakeMessage.getMsgContentAttachmentFile().getSize());
+            bodyObj.put("media", fakeMessage.getMsgContentAttachmentFile().getMedia());
+            bodyObj.put("tmpId",fakeMessage.getId());
             object.put("body", bodyObj);
-            EventMessage eventMessage = new EventMessage(tracer,Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE,"",tracer);
-            WebSocketPush.getInstance().sendEventMessage(eventMessage, object,tracer);
+            EventMessage eventMessage = new EventMessage(fakeMessage.getId(),Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE,"",fakeMessage.getId());
+            WebSocketPush.getInstance().sendEventMessage(eventMessage, object,fakeMessage.getId());
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void sendChatMediaVoiceMsg(Message message, VolumeFile volumeFile) {
+    public void sendChatMediaVoiceMsg(Message message) {
         try {
             JSONObject object = new JSONObject();
             JSONObject actionObj = new JSONObject();
@@ -137,7 +141,7 @@ public class WSAPIService {
             JSONObject bodyObj = new JSONObject();
             bodyObj.put("type", Message.MESSAGE_TYPE_MEDIA_VOICE);
             bodyObj.put("duration", message.getMsgContentMediaVoice().getDuration());
-            bodyObj.put("media", volumeFile.getPath());
+            bodyObj.put("media", message.getMsgContentMediaVoice().getMedia());
             JSONObject subTitleObj = new JSONObject();
             String language = AppUtils.getCurrentAppLanguage(MyApplication.getInstance());
             switch (language){
@@ -152,6 +156,7 @@ public class WSAPIService {
                     break;
             }
             bodyObj.put("subtitles",subTitleObj);
+            bodyObj.put("tmpId",message.getId());
             object.put("body", bodyObj);
             EventMessage eventMessage = new EventMessage(message.getId(),Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE,"",message.getId());
             WebSocketPush.getInstance().sendEventMessage(eventMessage, object,message.getId());
@@ -178,6 +183,7 @@ public class WSAPIService {
             bodyObj.put("title", msgContentExtendedLinks.getTitle());
             bodyObj.put("subtitle", msgContentExtendedLinks.getSubtitle());
             bodyObj.put("url", msgContentExtendedLinks.getUrl());
+            bodyObj.put("tmpId",message.getId());
             JSONArray array = new JSONArray();
             for (RelatedLink relatedLink:msgContentExtendedLinks.getRelatedLinkList()){
                 array.put(relatedLink.toJSonObject());
@@ -191,8 +197,7 @@ public class WSAPIService {
         }
     }
 
-
-    public void sendChatMediaImageMsg(VolumeFile volumeFile, Message fakeMessage) {
+    public void sendChatMediaImageMsg( Message fakeMessage) {
         try {
             JSONObject object = new JSONObject();
             JSONObject actionObj = new JSONObject();
@@ -205,30 +210,30 @@ public class WSAPIService {
             object.put("headers", headerObj);
             JSONObject bodyObj = new JSONObject();
             bodyObj.put("type", "media/image");
-            bodyObj.put("name", volumeFile.getName());
             JSONObject thumbnailObj = new JSONObject();
             thumbnailObj.put("width", fakeMessage.getMsgContentMediaImage().getThumbnailWidth());
             thumbnailObj.put("height", fakeMessage.getMsgContentMediaImage().getThumbnailHeight());
             thumbnailObj.put("size", fakeMessage.getMsgContentMediaImage().getThumbnailSize());
-            thumbnailObj.put("media", volumeFile.getPath());
+            thumbnailObj.put("media", fakeMessage.getMsgContentMediaImage().getRawMedia());
             JSONObject previewObj = new JSONObject();
             previewObj.put("width", fakeMessage.getMsgContentMediaImage().getPreviewWidth());
             previewObj.put("height", fakeMessage.getMsgContentMediaImage().getPreviewHeight());
             previewObj.put("size", fakeMessage.getMsgContentMediaImage().getPreviewSize());
-            previewObj.put("media", volumeFile.getPath());
+            previewObj.put("media", fakeMessage.getMsgContentMediaImage().getRawMedia());
             JSONObject rawObj = new JSONObject();
             rawObj.put("width", fakeMessage.getMsgContentMediaImage().getRawWidth());
             rawObj.put("height", fakeMessage.getMsgContentMediaImage().getRawHeight());
             rawObj.put("size", fakeMessage.getMsgContentMediaImage().getRawSize());
-            rawObj.put("media", volumeFile.getPath());
-            bodyObj.put("name", volumeFile.getName());
+            rawObj.put("media", fakeMessage.getMsgContentMediaImage().getRawMedia());
+            bodyObj.put("name", fakeMessage.getMsgContentMediaImage().getName());
             bodyObj.put("preview", previewObj);
             bodyObj.put("thumbnail", thumbnailObj);
             bodyObj.put("raw", rawObj);
+            bodyObj.put("tmpId",fakeMessage.getId());
             object.put("body", bodyObj);
+            LogUtils.YfcDebug("发出的文件消息："+object);
             EventMessage eventMessage = new EventMessage(fakeMessage.getId(),Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE,"",fakeMessage.getId());
             WebSocketPush.getInstance().sendEventMessage( eventMessage, object,fakeMessage.getId());
-
         } catch (Exception e) {
             e.printStackTrace();
         }

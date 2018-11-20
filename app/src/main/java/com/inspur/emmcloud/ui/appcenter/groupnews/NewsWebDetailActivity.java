@@ -228,7 +228,7 @@ public class NewsWebDetailActivity extends BaseActivity {
         webView.setBackgroundColor(ContextCompat.getColor(NewsWebDetailActivity.this, (model.equals(darkMode)) ? R.color.app_news_night_color : R.color.white));
         //没有确定这里的影响，暂时不去掉
         webView.setLayerType(WebView.LAYER_TYPE_SOFTWARE, null);
-        webView.clearCache(true);
+//        webView.clearCache(true);
         webView.setDownloadListener(new FileDownloadListener());
         webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
         webView.setWebViewClient(new WebViewClient() {
