@@ -118,8 +118,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_below="@id/tv_checking_hard_content"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginLeft="0dp"
                     android:layout_marginTop="30dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="13dp"
                     android:background="@color/color_list_divider" />
             </RelativeLayout>
         </RelativeLayout>
@@ -196,8 +198,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_below="@id/tv_checking_portal_content"
-                    android:layout_marginLeft="10dp"
                     android:layout_marginTop="30dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="13dp"
                     android:background="@color/color_list_divider" />
             </RelativeLayout>
         </RelativeLayout>
@@ -275,7 +278,8 @@
                     android:layout_height="1dp"
                     android:layout_below="@id/tv_checking_dns_content"
                     android:layout_marginTop="30dp"
-                    android:layout_marginLeft="10dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="13dp"
                     android:background="@color/color_list_divider" />
             </RelativeLayout>
         </RelativeLayout>
