@@ -57,6 +57,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
                 adapterListener.onDataChange();
             }
         }
+
     }
 
     @Override
@@ -201,6 +202,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
         TransHtmlToTextUtils.stripUnderlines(holder.contentText,R.color.msg_content_color);
     }
 
+
     /**
      * 设置会话已读未读状态
      * @param holder
@@ -215,6 +217,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
 
     public void setAdapterListener(AdapterListener adapterListener){
         this.adapterListener = adapterListener;
+
     }
 
     @Override

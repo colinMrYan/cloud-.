@@ -104,7 +104,6 @@ public class CommunicationFragment extends Fragment {
     private static final int SORT_CONVERSATION_LIST = 4;
     private static final int REQUEST_SCAN_LOGIN_QRCODE_RESULT = 5;
     private static final int CACHE_CONVERSATION_LIST_SUCCESS = 6;
-    private static final int PING_NET_STATE_HANDLER = 7;
     private View rootView;
     private RecyclerView conversionRecycleView;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -141,28 +140,6 @@ public class CommunicationFragment extends Fragment {
     public void onResume() {
         super.onResume();
         NetUtils.PingThreadStart("www.baidu.com");
-    }
-
-    /**
-     *RecycleView 添加Header 中解决数据List 与UI List 区别
-     * */
-    private  void notifyRealItemChanged(int position) {
-        if(conversationAdapter.haveHeaderView()) {
-            conversationAdapter.notifyItemChanged(position+1);
-        } else {
-            conversationAdapter.notifyItemChanged(position);
-        }
-    }
-
-    /**
-     * RecycleView 添加Header 中解决数据List与UI List
-     * */
-    private  void notifyRealItemRemoved(int position) {
-        if(conversationAdapter.haveHeaderView()) {
-            conversationAdapter.notifyItemRemoved(position+1);
-        } else {
-            conversationAdapter.notifyItemRemoved(position);
-        }
     }
 
     private void initView() {
@@ -322,11 +299,9 @@ public class CommunicationFragment extends Fragment {
             if(((String)netState.getMessageObj()).equals("net_wifi_state_ok")){
                 NetUtils.PingThreadStart("www.baidu.com");
             } else if(((String)netState.getMessageObj()).equals("net_state_error")) {
-                android.os.Message message = handler.obtainMessage(PING_NET_STATE_HANDLER,false);
-                message.sendToTarget();
+                conversationAdapter.setNetExceptionView(false);
             } else if (((String)netState.getMessageObj()).equals("net_gprs_state_ok")) {
-                android.os.Message message = handler.obtainMessage(PING_NET_STATE_HANDLER,true);
-                message.sendToTarget();
+                conversationAdapter.setNetExceptionView(true);
             }
         } else if (netState.getAction().equals(Constant.EVENTBUS_TAG__NET_EXCEPTION_HINT)) {   //网络异常提示
             conversationAdapter.setNetExceptionView((Boolean)netState.getMessageObj());
@@ -551,9 +526,6 @@ public class CommunicationFragment extends Fragment {
                         sortConversationList();
                         List<Conversation> conversationList = (List<Conversation>) msg.obj;
                         createGroupIcon(conversationList);
-                        break;
-                    case PING_NET_STATE_HANDLER:
-                        conversationAdapter.setNetExceptionView((Boolean) msg.obj);
                         break;
                     default:
                         break;
