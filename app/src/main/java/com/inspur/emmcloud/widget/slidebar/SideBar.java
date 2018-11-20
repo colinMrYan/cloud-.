@@ -21,7 +21,7 @@ public class SideBar extends View {
 	// 26个字母
 //	public static String[] b = { "☆", "#", "Locale", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W",
 //			"X", "Y", "Z" };
-	public static String[] b = { "Locale", "A","B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W",
+	public static String[] b = { " ", "A","B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W",
 		"X", "Y", "Z" };
 	private int choose = -1;// 选中
 	private Paint paint = new Paint();
@@ -62,7 +62,7 @@ public class SideBar extends View {
 
 		for (int i = 0; i < b.length; i++) {
 			if (!isInEditMode()) {
-				paint.setColor(Color.parseColor("#838383"));
+				paint.setColor(Color.parseColor("#0F7BCA"));
 			}
 			paint.setAntiAlias(true);
 			paint.setTextSize(25);
@@ -109,7 +109,6 @@ public class SideBar extends View {
 						mTextDialog.setText(b[c]);
 						mTextDialog.setVisibility(View.VISIBLE);
 					}
-
 					choose = c;
 					invalidate();
 				}

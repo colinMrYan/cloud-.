@@ -102,7 +102,7 @@ public class ChannelMemberListAdapter extends BaseAdapter implements SectionInde
                 holder.sideBarLetterTv.setVisibility(View.VISIBLE);
                 holder.sideBarLetterTv.setText("☆".equals(dto.getSortLetters()) ? dto.getSortLetters()
                         + mActivity.getString(R.string.administrators_of_channel) : dto.getSortLetters());
-                holder.line.setVisibility(View.VISIBLE);
+                holder.line.setVisibility(View.GONE);
             } else {
                 holder.sideBarLetterTv.setVisibility(View.GONE);
                 holder.line.setVisibility(View.GONE);

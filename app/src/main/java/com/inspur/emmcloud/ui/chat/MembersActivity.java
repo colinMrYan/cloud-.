@@ -100,7 +100,6 @@ public class MembersActivity extends BaseActivity implements TextWatcher {
         loadingDlg.show();
         selectedMemberRecylerView = (RecyclerView) findViewById(R.id.recyclerview_voice_communication_select_members);
         okTv.setVisibility(state == SELECT_STATE?View.VISIBLE:View.GONE);
-        lettersSideBar.setTextView(dialogTv);
         allReadySelectUserList = new ArrayList<>();
         allReadySelectUserList.add(ContactUserCacheUtils.getContactUserByUid(MyApplication.getInstance().getUid()));
         allReadySelectPersonDtoList = tranContactUserList2PersonDtoList(allReadySelectUserList);
