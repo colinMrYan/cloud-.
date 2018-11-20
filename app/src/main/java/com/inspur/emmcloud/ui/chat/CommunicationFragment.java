@@ -884,7 +884,7 @@ public class CommunicationFragment extends Fragment {
                 String content = eventMessage.getContent();
                 GetOfflineMessageListResult getOfflineMessageListResult = new GetOfflineMessageListResult(content);
                 List<Message> offlineMessageList = getOfflineMessageListResult.getMessageList();
-                MessageCacheUtil.handleRealMessage(getActivity(),offlineMessageList);
+                MessageCacheUtil.handleRealMessage(getActivity(),offlineMessageList, null,"");
                 List<Message> currentChannelOfflineMessageList = new ArrayList<>();
                 //将当前所处频道的消息存为已读
                 if (!StringUtils.isBlank(MyApplication.getInstance().getCurrentChannelCid())) {

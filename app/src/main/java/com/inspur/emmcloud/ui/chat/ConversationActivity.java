@@ -916,11 +916,25 @@ public class ConversationActivity extends ConversationBaseActivity {
         if ((NetUtils.isNetworkConnected(MyApplication.getInstance(), false) &&
                 !(uiMessageList.size() > 0 && MessageCacheUtil.isDataInLocal(ConversationActivity.this, cid, uiMessageList
                         .get(0).getCreationDate(), 20)))) {
-            String newMessageId = uiMessageList.size() > 0 ? uiMessageList.get(0).getMessage().getId() : "";
-            WSAPIService.getInstance().getHistoryMessage(cid, newMessageId);
+            WSAPIService.getInstance().getHistoryMessage(cid, getNewMessageId());
         } else {
             getHistoryMessageFromLocal();
         }
+    }
+
+    /**
+     * 获取本地发送成功的消息id
+     * @return
+     */
+    private String getNewMessageId() {
+        if(uiMessageList.size()>0){
+            for (UIMessage uiMessage:uiMessageList) {
+                if(uiMessage.getMessage().getSendStatus() == Message.MESSAGE_SEND_SUCCESS){
+                    return uiMessage.getMessage().getId();
+                }
+            }
+        }
+        return "";
     }
 
     private void getHistoryMessageFromLocal() {
@@ -940,7 +954,6 @@ public class ConversationActivity extends ConversationBaseActivity {
             adapter.notifyItemRangeInserted(0, messageList.size());
             msgListView.scrollToPosition(messageList.size() - 1);
         }
-
         swipeRefreshLayout.setRefreshing(false);
     }
 
@@ -1015,8 +1028,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 JSONObject contentobj = JSONUtils.getJSONObject(content);
                 Message message = new Message(contentobj);
                 message.setRead(1);
-                MessageCacheUtil.handleRealMessage(ConversationActivity.this,message);
-                MessageCacheUtil.saveMessage(MyApplication.getInstance(), message);
+                MessageCacheUtil.handleRealMessage(MyApplication.getInstance(),message);
                 adapter.notifyDataSetChanged();
             }
 
@@ -1033,9 +1045,8 @@ public class ConversationActivity extends ConversationBaseActivity {
                 String content = eventMessage.getContent();
                 GetChannelMessagesResult getChannelMessagesResult = new GetChannelMessagesResult(content);
                 final List<Message> newMessageList = getChannelMessagesResult.getMessageList();
-                MessageCacheUtil.handleRealMessage(ConversationActivity.this,newMessageList);
                 if (newMessageList.size() > 0) {
-                    MessageCacheUtil.saveMessageList(MyApplication.getInstance(), newMessageList, null);
+                    MessageCacheUtil.handleRealMessage(MyApplication.getInstance(),newMessageList, null,cid);
                 }
                 WSAPIService.getInstance().setChannelMessgeStateRead(cid);
                 final List<Message> cacheMessageList = MessageCacheUtil.getHistoryMessageList(MyApplication.getInstance(), cid, null, 20);
@@ -1056,14 +1067,15 @@ public class ConversationActivity extends ConversationBaseActivity {
                 String content = eventMessage.getContent();
                 GetChannelMessagesResult getChannelMessagesResult = new GetChannelMessagesResult(content);
                 final List<Message> messageList = getChannelMessagesResult.getMessageList();
-                MessageCacheUtil.handleRealMessage(ConversationActivity.this,messageList);
                 if (messageList.size() > 0 && messageList.get(0).getChannel().equals(cid)) {
                     Long targetMessageCreationDate = null;
                     if (uiMessageList.size() > 0) {
                         targetMessageCreationDate = uiMessageList.get(0).getCreationDate();
                     }
-                    MessageCacheUtil.saveMessageList(MyApplication.getInstance(), messageList, targetMessageCreationDate);
-                    uiMessageList.addAll(0, UIMessage.MessageList2UIMessageList(messageList));
+                    MessageCacheUtil.handleRealMessage(MyApplication.getInstance(),messageList,targetMessageCreationDate,cid);
+                    uiMessageList.addAll(0, UIMessage.MessageList2UIMessageList
+                            (MessageCacheUtil.getHistoryMessageListByTime(MyApplication.getInstance(),cid,
+                                    messageList.get(0).getCreationDate(),messageList.get(messageList.size() - 1).getCreationDate())));
                     adapter.setMessageList(uiMessageList);
                     adapter.notifyItemRangeInserted(0, messageList.size());
                     msgListView.scrollToPosition(messageList.size() - 1);

@@ -6,12 +6,12 @@ import com.inspur.emmcloud.bean.chat.MatheSet;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.FileUtils;
+import com.inspur.emmcloud.util.common.StringUtils;
 
 import org.xutils.db.sqlite.WhereBuilder;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -195,6 +195,27 @@ public class MessageCacheUtil {
                         .where("creationDate", "<", targetMessageCreationDate).and("channel", "=", cid)
                         .orderBy("creationDate", true).limit(num).findAll();
             }
+            if (messageList != null && messageList.size() > 1) {
+                Collections.reverse(messageList);
+            }
+
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        if (messageList == null) {
+            messageList = new ArrayList<>();
+        }
+        return messageList;
+    }
+
+    public static List<Message> getHistoryMessageListByTime(Context context,String cid,Long startTime,Long endTime){
+        List<Message> messageList = null;
+        try {
+            messageList = DbCacheUtils.getDb(context).selector(Message.class)
+                    .where("channel", "=", cid)
+                    .and("channel", "=", cid).and("creationDate", "<=", endTime)
+                    .and("creationDate", ">=", startTime).orderBy("creationDate", true).findAll();
             if (messageList != null && messageList.size() > 1) {
                 Collections.reverse(messageList);
             }
@@ -407,20 +428,6 @@ public class MessageCacheUtil {
 
     }
 
-    /**
-     * 判断本地有没有缓存消息历史记录
-     * @param context
-     * @return
-     */
-    public static boolean isHistoryMessageCache(Context context){
-        try {
-            Long count = DbCacheUtils.getDb(context).selector(Message.class).count();
-            return count>0;
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        return false;
-    }
 
     /**
      * 获取最新消息的消息id
@@ -488,18 +495,53 @@ public class MessageCacheUtil {
 
 
     /**
-     * 处理多条，作用跟下面方法相同
+     * 处理多条，作用跟下面同名方法相同
      * @param context
      * @param messageList
+     * @param targetMessageCreationDate
      */
-    public static void handleRealMessage(Context context,List<Message> messageList){
+    public static void handleRealMessage(Context context, List<Message> messageList, Long targetMessageCreationDate,String cid){
         if (messageList.size()>0){
-            Iterator<Message> messageIterator = messageList.iterator();
-            while (messageIterator.hasNext()) {
-                Message message = messageIterator.next();
-                handleRealMessage(context,message);
+            List<Message> localFakeMessageList = getLocalFakeMessageList(context,cid);
+            for(int i = 0; i < messageList.size(); i++){
+                for (int j = 0; j < localFakeMessageList.size(); j++) {
+                    if(messageList.get(i).getTmpId().equals(localFakeMessageList.get(j).getTmpId())){
+                        messageList.get(i).setCreationDate(localFakeMessageList.get(j).getCreationDate());
+                    }
+                    if(messageList.get(i).getType().equals(Message.MESSAGE_TYPE_MEDIA_VOICE)){
+                        deleteLocalVoiceFile(messageList.get(i));
+                    }
+                }
             }
+            deleteFakeMessageList(context,messageList);
+            saveMessageList(context,messageList,targetMessageCreationDate);
         }
+    }
+
+    /**
+     * 获取本地未发送成功的消息
+     * @param context
+     * @return
+     */
+    private static List<Message> getLocalFakeMessageList(Context context,String cid) {
+        List<Message> messageList = new ArrayList<>();
+        try{
+            if(StringUtils.isBlank(cid)){
+                messageList =  DbCacheUtils.getDb(context).selector(Message.class)
+                        .where("channel", "=", cid).and("sendStatus","==",Message.MESSAGE_SEND_FAIL)
+                       .findAll();
+            }else{
+                messageList = DbCacheUtils.getDb(context).selector(Message.class)
+                        .where("sendStatus","==",Message.MESSAGE_SEND_FAIL)
+                        .findAll();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        if(messageList == null){
+            messageList = new ArrayList<>();
+        }
+        return messageList;
     }
 
     /**
@@ -519,6 +561,24 @@ public class MessageCacheUtil {
             message.setCreationDate(messageTmp.getCreationDate());
             MessageCacheUtil.saveMessage(context,message);
             MessageCacheUtil.deleteLocalFakeMessage(context,message.getTmpId());
+        }
+    }
+
+    /**
+     * 根据tempid修改消息
+     *
+     * @param context
+     * @param messageList
+     */
+    public static void deleteFakeMessageList(final Context context, final List<Message> messageList) {
+        List<String> stringList = new ArrayList<>();
+        for (Message message:messageList) {
+            stringList.add(message.getTmpId());
+        }
+        try {
+            DbCacheUtils.getDb(context).delete(Message.class,WhereBuilder.b("id","in",stringList));
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
