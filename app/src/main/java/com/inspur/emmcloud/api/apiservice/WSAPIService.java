@@ -1,6 +1,5 @@
 package com.inspur.emmcloud.api.apiservice;
 
-import com.alibaba.fastjson.JSON;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.MsgContentComment;
@@ -115,16 +114,10 @@ public class WSAPIService {
             object.put("headers", headerObj);
             JSONObject bodyObj = new JSONObject();
             bodyObj.put("type", "file/regular-file");
-//            bodyObj.put("category", CommunicationUtils.getChatFileCategory(volumeFile.getName()));
-//            bodyObj.put("name", volumeFile.getName());
-//            bodyObj.put("size", volumeFile.getSize());
-//            bodyObj.put("media", volumeFile.getPath());
-
             bodyObj.put("category", CommunicationUtils.getChatFileCategory(fakeMessage.getMsgContentAttachmentFile().getName()));
             bodyObj.put("name", fakeMessage.getMsgContentAttachmentFile().getName());
             bodyObj.put("size", fakeMessage.getMsgContentAttachmentFile().getSize());
             bodyObj.put("media", fakeMessage.getMsgContentAttachmentFile().getMedia());
-
             bodyObj.put("tmpId",fakeMessage.getId());
             object.put("body", bodyObj);
             EventMessage eventMessage = new EventMessage(fakeMessage.getId(),Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE,"",fakeMessage.getId());
@@ -238,12 +231,10 @@ public class WSAPIService {
             bodyObj.put("raw", rawObj);
             bodyObj.put("tmpId",fakeMessage.getId());
             object.put("body", bodyObj);
+            LogUtils.YfcDebug("发出的文件消息："+object);
             EventMessage eventMessage = new EventMessage(fakeMessage.getId(),Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE,"",fakeMessage.getId());
-            LogUtils.YfcDebug("发送消息："+ JSON.toJSONString(eventMessage));
-            LogUtils.YfcDebug("发送消息："+ object);
             WebSocketPush.getInstance().sendEventMessage( eventMessage, object,fakeMessage.getId());
         } catch (Exception e) {
-            LogUtils.YfcDebug("异常："+e.getMessage());
             e.printStackTrace();
         }
     }

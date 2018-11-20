@@ -25,7 +25,9 @@ import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.GetChannelMessagesResult;
 import com.inspur.emmcloud.bean.chat.Message;
+import com.inspur.emmcloud.bean.chat.MsgContentMediaImage;
 import com.inspur.emmcloud.bean.chat.MsgContentMediaVoice;
+import com.inspur.emmcloud.bean.chat.MsgContentRegularFile;
 import com.inspur.emmcloud.bean.chat.UIMessage;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
 import com.inspur.emmcloud.bean.contact.ContactUser;
@@ -134,7 +136,6 @@ public class ConversationActivity extends ConversationBaseActivity {
     @Override
     protected void initChannelMessage() {
         List<Message> cacheMessageList = MessageCacheUtil.getHistoryMessageList(MyApplication.getInstance(), cid, null, 20);
-        LogUtils.YfcDebug("获取到的最后一条历史消息："+JSON.toJSONString(cacheMessageList.get(cacheMessageList.size() - 1)));
         uiMessageList = UIMessage.MessageList2UIMessageList(cacheMessageList);
         if (getIntent().hasExtra(EXTRA_NEED_GET_NEW_MESSAGE) && NetUtils.isNetworkConnected(MyApplication.getInstance())) {
             getNewMessageOfChannel();
@@ -675,24 +676,38 @@ public class ConversationActivity extends ConversationBaseActivity {
         messageRecourceUploadUtils.setProgressCallback(new ProgressCallback() {
             @Override
             public void onSuccess(VolumeFile volumeFile) {
-                LogUtils.YfcDebug("上传阿里云成功："+ JSON.toJSONString(volumeFile));
-                //如果文件信息发送oss成功则记录oss返回文件路径，并根据不同类型文件记录相关信息，如果后续仅是socket未发送成功则
-                fakeMessage.setLocalPath(volumeFile.getPath());
                 switch (fakeMessage.getType()) {
                     case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
-                        Message fileMessage = CommunicationUtils.addInfo2RegularFileMessage(fakeMessage,volumeFile);
+                        MsgContentRegularFile msgContentRegularFile = new MsgContentRegularFile();
+                        msgContentRegularFile.setName(volumeFile.getName());
+                        msgContentRegularFile.setSize(volumeFile.getSize());
+                        msgContentRegularFile.setMedia(volumeFile.getPath());
+                        msgContentRegularFile.setTmpId(fakeMessage.getTmpId());
+                        fakeMessage.setContent(msgContentRegularFile.toString());
                         WSAPIService.getInstance().sendChatRegularFileMsg(fakeMessage);
-                        MessageCacheUtil.saveMessage(ConversationActivity.this,fileMessage);
+                        MessageCacheUtil.saveMessage(ConversationActivity.this,fakeMessage);
                         break;
                     case Message.MESSAGE_TYPE_MEDIA_IMAGE:
-                        Message imgMessage = CommunicationUtils.addInfo2ImageMessage(fakeMessage,volumeFile);
+                        MsgContentMediaImage msgContentMediaImage = new MsgContentMediaImage();
+                        msgContentMediaImage.setRawWidth(fakeMessage.getMsgContentMediaImage().getRawWidth());
+                        msgContentMediaImage.setRawHeight(fakeMessage.getMsgContentMediaImage().getRawHeight());
+                        msgContentMediaImage.setRawSize(volumeFile.getSize());
+                        msgContentMediaImage.setRawMedia(volumeFile.getPath());
+                        msgContentMediaImage.setName(volumeFile.getName());
+                        msgContentMediaImage.setTmpId(fakeMessage.getTmpId());
+                        fakeMessage.setContent(msgContentMediaImage.toString());
                         WSAPIService.getInstance().sendChatMediaImageMsg(fakeMessage);
-                        MessageCacheUtil.saveMessage(ConversationActivity.this,imgMessage);
+                        MessageCacheUtil.saveMessage(ConversationActivity.this,fakeMessage);
                         break;
                     case Message.MESSAGE_TYPE_MEDIA_VOICE:
-                        Message voiceMessage = CommunicationUtils.addInfo2VoiceMessage(fakeMessage,volumeFile);
+                        MsgContentMediaVoice msgContentMediaVoice = new MsgContentMediaVoice();
+                        msgContentMediaVoice.setMedia(volumeFile.getPath());
+                        msgContentMediaVoice.setDuration(fakeMessage.getMsgContentMediaVoice().getDuration());
+                        msgContentMediaVoice.setJsonResults(fakeMessage.getMsgContentMediaVoice().getResult());
+                        msgContentMediaVoice.setTmpId(fakeMessage.getTmpId());
+                        fakeMessage.setContent(msgContentMediaVoice.toString());
                         WSAPIService.getInstance().sendChatMediaVoiceMsg(fakeMessage);
-                        MessageCacheUtil.saveMessage(ConversationActivity.this,voiceMessage);
+                        MessageCacheUtil.saveMessage(ConversationActivity.this,fakeMessage);
                         break;
                 }
             }
@@ -975,7 +990,6 @@ public class ConversationActivity extends ConversationBaseActivity {
                 String content = eventMessage.getContent();
                 JSONObject contentObj = JSONUtils.getJSONObject(content);
                 Message receivedWSMessage = new Message(contentObj);
-                LogUtils.YfcDebug("获取到消息："+JSON.toJSONString(receivedWSMessage));
                 //判断消息是否是当前频道并验重处理
                 if (cid.equals(receivedWSMessage.getChannel()) && !uiMessageList.contains(new UIMessage(receivedWSMessage.getId()))) {
                     MessageCacheUtil.handleRealMessage(ConversationActivity.this,receivedWSMessage);

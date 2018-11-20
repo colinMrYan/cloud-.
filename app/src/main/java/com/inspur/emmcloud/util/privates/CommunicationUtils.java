@@ -7,7 +7,6 @@ import android.graphics.BitmapFactory;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
-import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.bean.chat.Channel;
 import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.Email;
@@ -170,18 +169,6 @@ public class CommunicationUtils {
         return message;
     }
 
-    /**
-     * 向本地缓存在数据库里的文件假消息添加信息
-     * @param fakeMessage
-     * @param volumeFile
-     * @return
-     */
-    public static Message addInfo2RegularFileMessage(Message fakeMessage, VolumeFile volumeFile){
-        fakeMessage.getMsgContentAttachmentFile().setMedia(volumeFile.getPath());
-        fakeMessage.getMsgContentAttachmentFile().setName(volumeFile.getName());
-        fakeMessage.getMsgContentAttachmentFile().setSize(volumeFile.getSize());
-        return fakeMessage;
-    }
 
 
     public static Message combinLocalMediaVoiceMessage(String cid, String localFilePath, int duration, String results) {
@@ -190,6 +177,7 @@ public class CommunicationUtils {
         message.setChannel(cid);
         message.setId(tracer);
         message.setTmpId(tracer);
+        message.setLocalPath(localFilePath);
         message.setType(Message.MESSAGE_TYPE_MEDIA_VOICE);
         message.setLocalPath(localFilePath);
         MsgContentMediaVoice msgContentMediaVoice = new MsgContentMediaVoice();
@@ -198,11 +186,6 @@ public class CommunicationUtils {
         msgContentMediaVoice.setJsonResults(results);
         message.setContent(msgContentMediaVoice.toString());
         return message;
-    }
-
-    public static Message addInfo2VoiceMessage(Message fakeMessage, VolumeFile volumeFile){
-        fakeMessage.getMsgContentMediaVoice().setMedia(volumeFile.getPath());
-        return fakeMessage;
     }
 
     public static Message combinLocalMediaImageMessage(String cid, String localFilePath) {
@@ -238,17 +221,6 @@ public class CommunicationUtils {
         return message;
     }
 
-    /**
-     * 向本地缓存在数据库里的文件假消息添加信息
-     * @param fakeMessage
-     * @param volumeFile
-     * @return
-     */
-    public static Message addInfo2ImageMessage(Message fakeMessage, VolumeFile volumeFile){
-        fakeMessage.getMsgContentMediaImage().setName(volumeFile.getName());
-        fakeMessage.getMsgContentMediaImage().setRawMedia(volumeFile.getPath());
-        return fakeMessage;
-    }
 
     public static Message combinLocalExtendedLinksMessage(String cid, String poster, String title, String subTitle, String url) {
         String tracer = getTracer();

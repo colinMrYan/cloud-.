@@ -15,7 +15,6 @@ import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.MsgContentMediaImage;
 import com.inspur.emmcloud.bean.chat.UIMessage;
 import com.inspur.emmcloud.util.common.DensityUtil;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 import com.itheima.roundedimageview.RoundedImageView;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -62,7 +61,6 @@ public class DisplayMediaImageMsg {
             }
 
         }
-        LogUtils.YfcDebug("图片卡片显示的URI："+imageUri);
         int w = msgContentMediaImage.getRawWidth();
         int h = msgContentMediaImage.getRawHeight();
         final boolean isHasSetImageViewSize = setImgViewSize(context, imageView, longImgText, w,h);
