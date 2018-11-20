@@ -352,9 +352,6 @@ public class ConversationActivity extends ConversationBaseActivity {
                     if(message.getMsgContentMediaImage().getRawMedia().equals(message.getLocalPath())){
                         sendMessageWithFile(message);
                     }else{
-                        VolumeFile volumeFile = new VolumeFile();
-                        volumeFile.setName(message.getMsgContentMediaImage().getName());
-                        volumeFile.setPath(message.getMsgContentMediaImage().getRawMedia());
                         WSAPIService.getInstance().sendChatMediaImageMsg(message);
                     }
                     break;
