@@ -65,7 +65,7 @@ public class SideBar extends View {
 				paint.setColor(Color.parseColor("#0F7BCA"));
 			}
 			paint.setAntiAlias(true);
-			paint.setTextSize(25);
+			paint.setTextSize(36);
 			// 选中的状态
 			if (i == choose) {
 				paint.setColor(getResources().getColor(R.color.yellow_light));
