@@ -109,6 +109,7 @@ public class SideBar extends View {
 						mTextDialog.setText(b[c]);
 						mTextDialog.setVisibility(View.VISIBLE);
 					}
+
 					choose = c;
 					invalidate();
 				}

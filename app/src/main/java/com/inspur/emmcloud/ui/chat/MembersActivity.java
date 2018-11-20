@@ -59,8 +59,6 @@ public class MembersActivity extends BaseActivity implements TextWatcher {
     private static final int TOTAL_MEMBERS_NUM = 9;//最多可选择的人数配置，修改这个配置应当同时修改toast提示里的配置数量
     @ViewInject(R.id.sidrbar_channel_member_select)
     private SideBar lettersSideBar;
-    @ViewInject(R.id.tv_channel_member_select_dialog)
-    private TextView dialogTv;
     @ViewInject(R.id.tv_ok)
     private TextView okTv;
     @ViewInject(R.id.lv_channel_member_select)
