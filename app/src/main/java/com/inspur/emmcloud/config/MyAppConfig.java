@@ -81,7 +81,13 @@ public class MyAppConfig {
         return Environment.getExternalStorageDirectory() + "/IMP-Cloud/"+MyApplication.getInstance().getUid()+"/"+MyApplication.getInstance().getTanent()+"/voice/"+cid+"/"+messageId+".amr";
     }
 
-
+    /**
+     * 获取聊天语音存储目录
+     * @return
+     */
+    public static String getCacheVoiceWAVFilePath(String cid,String messageId){
+        return Environment.getExternalStorageDirectory() + "/IMP-Cloud/"+MyApplication.getInstance().getUid()+"/"+MyApplication.getInstance().getTanent()+"/voice/"+cid+"/"+messageId+".wav";
+    }
     /**
      * 获取React上一版本缓存途径（用于Roback的版本）
      * @param context
