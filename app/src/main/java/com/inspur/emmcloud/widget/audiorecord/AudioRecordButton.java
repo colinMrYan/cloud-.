@@ -2,7 +2,6 @@ package com.inspur.emmcloud.widget.audiorecord;
 
 
 import android.content.Context;
-import android.media.*;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
@@ -14,13 +13,9 @@ import com.czt.mp3recorder.MP3Recorder;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.MediaPlayerManagerUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.privates.AppUtils;
 import com.shuyu.waveview.FileUtils;
-
-import java.io.File;
 
 public class AudioRecordButton extends Button {
 
@@ -227,8 +222,6 @@ public class AudioRecordButton extends Button {
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-
-            LogUtils.jasonDebug("handleMessage------------------");
             switch (msg.what) {
                 case VOICE_MESSAGE:
                     if (durationTime < 60.0) {

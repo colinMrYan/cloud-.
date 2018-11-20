@@ -1,7 +1,6 @@
 package com.inspur.emmcloud.util.privates.audioformat;
 
 
-
 import com.inspur.emmcloud.interf.ResultCallback;
 
 import java.io.ByteArrayOutputStream;
@@ -9,6 +8,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+
+import javazoom.jl.converter.Converter;
+import javazoom.jl.decoder.JavaLayerException;
 
 /**
  * Created by chenmch on 2018/11/15.
@@ -19,6 +21,15 @@ public class AudioFormatUtils {
         new Thread(new Runnable() {
             @Override
             public void run() {
+//
+//                Converter aConverter = new Converter();
+//                try {
+//                    aConverter.convert(mp3Filepath, wavFilepath);
+//                } catch (JavaLayerException e) {
+//                    e.printStackTrace();
+//                }
+
+
 //                AudioInputStream in = null;
 //                AudioInputStream out = null;
 //                try {
@@ -58,7 +69,6 @@ public class AudioFormatUtils {
 //                    }
 //
 //                }
-
 
 
             }
