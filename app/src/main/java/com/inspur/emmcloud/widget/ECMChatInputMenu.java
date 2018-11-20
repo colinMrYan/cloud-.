@@ -179,7 +179,7 @@ public class ECMChatInputMenu extends LinearLayout {
             }
 
             @Override
-            public void onFinished(final float seconds, final String filePath) {
+            public void onFinished(final float seconds, String filePath) {
                 // TODO Auto-generated method stub
                 if(AppUtils.getIsVoiceWordOpen()){
                     if(FileUtils.getFileSize(filePath) <= 0){
@@ -190,7 +190,6 @@ public class ECMChatInputMenu extends LinearLayout {
                     }
                         audioDialogManager = new AudioDialogManager(getContext());
                         audioDialogManager.showVoice2WordProgressDialog();
-                        LogUtils.jasonDebug("filePath===="+filePath);
                         //转写和转文件格式同时进行
                         voice2StringMessageUtils.startVoiceListeningByVoiceFile(seconds,filePath);
                         AndroidMp3ConvertUtils.with(getContext()).setCallBack(new AndroidMp3ConvertUtils.AndroidMp3ConvertCallback() {
@@ -213,9 +212,20 @@ public class ECMChatInputMenu extends LinearLayout {
                             }
                         }).setRawPathAndMp3Path(filePath.replace(".wav",".raw"), filePath.replace(".wav",".mp3")).startConvert();
                 }else {
-                    if (chatInputMenuListener != null) {
-                        chatInputMenuListener.onSendVoiceRecordMsg("",seconds, filePath);
-                    }
+                    AndroidMp3ConvertUtils.with(getContext()).setCallBack(new AndroidMp3ConvertUtils.AndroidMp3ConvertCallback() {
+                        @Override
+                        public void onSuccess(String mp3FilePath) {
+                            if (chatInputMenuListener != null) {
+                                chatInputMenuListener.onSendVoiceRecordMsg("",seconds, mp3FilePath);
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Exception e) {
+
+                        }
+                    }).setRawPathAndMp3Path(filePath.replace(".wav",".raw"), filePath.replace(".wav",".mp3")).startConvert();
+
                 }
             }
 
