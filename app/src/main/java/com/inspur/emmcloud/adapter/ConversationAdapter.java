@@ -19,6 +19,7 @@ import com.inspur.emmcloud.bean.chat.UIConversation;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.ImageUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.TransHtmlToTextUtils;
@@ -36,6 +37,11 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
     private AdapterListener adapterListener;
     private Context context;
 
+    private RecyclerView mRecyclerView;
+    private View VIEW_HEADER;
+    //Type
+    private int TYPE_NORMAL = 1000;
+    private int TYPE_HEADER = 1001;
     public ConversationAdapter(Context context,List<UIConversation> uiConversationList){
         this.uiConversationList = uiConversationList;
         this.context = context;
@@ -57,33 +63,124 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.msg_item_view, parent, false);
-        ViewHolder holder = new ViewHolder(view, adapterListener);
-        return holder;
+         if (viewType==TYPE_HEADER) {
+            return  new ViewHolder(VIEW_HEADER,adapterListener);
+        } else {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.msg_item_view, parent, false);
+            ViewHolder holder = new ViewHolder(view, adapterListener);
+            return holder;
+        }
+    }
+
+    public boolean haveHeaderView() {
+        return VIEW_HEADER != null;
+    }
+
+    private boolean isHeaderView(int position) {
+        return haveHeaderView() && position == 0;
+    }
+
+    /**
+     * 网络异常提示
+     * @param NetState  当前网络状态
+     * */
+    public void setNetExceptionView(Boolean NetState){
+        if(false==NetState&&!haveHeaderView()){
+           addHeaderView(LayoutInflater.from(context).inflate(R.layout.recycleview_header_item,null));
+        }else if(true==NetState&&haveHeaderView()){
+            deleteHeaderView();
+        }
+    }
+
+    /**
+     * 添加异常headerView
+     * @param headerView  要添加的View
+     * */
+    private void addHeaderView(View headerView) {
+            ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            headerView.setLayoutParams(params);
+            VIEW_HEADER = headerView;
+            notifyItemInserted(0);
+            mRecyclerView.getLayoutManager().scrollToPosition(0);
+    }
+
+    /**
+     * 删除HeaderView
+     * */
+    public void deleteHeaderView() {
+        if(haveHeaderView()){
+            notifyItemRemoved(0);
+            VIEW_HEADER=null;
+        }
+    }
+
+    /**
+     * 更新单个列表数据
+     * */
+    public void notifyRealItemChanged(int position){
+        if(haveHeaderView()) {
+            this.notifyItemChanged(position+1);
+        } else {
+            this.notifyItemChanged(position);
+        }
+    }
+
+    /**
+     * 删除单个列表数据
+     * */
+    public void notifyRealItemRemoved(int position) {
+        if(haveHeaderView()){
+            this.notifyItemRemoved(position+1);
+        } else {
+            this.notifyItemRemoved(position);
+        }
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (isHeaderView(position)) {
+            return TYPE_HEADER;
+        } else {
+            return TYPE_NORMAL;
+        }
+    }
+
+    @Override
+    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+        try {
+            if (mRecyclerView == null && mRecyclerView != recyclerView) {
+                mRecyclerView = recyclerView;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        UIConversation uiConversation = uiConversationList.get(position);
-        holder.titleText.setText(uiConversation.getTitle());
-        holder.timeText.setText(TimeUtils.getDisplayTime(MyApplication.getInstance(), uiConversation.getLastUpdate()));
-        holder.dndImg.setVisibility(uiConversation.getConversation().isDnd() ? View.VISIBLE : View.GONE);
-        holder.mainLayout.setBackgroundResource(uiConversation.getConversation().isStick() ? R.drawable.selector_set_top_msg_list : R.drawable.selector_list);
-        boolean isConversationTypeGroup = uiConversation.getConversation().getType().equals(Conversation.TYPE_GROUP);
-        if (isConversationTypeGroup){
-            File file = new File(MyAppConfig.LOCAL_CACHE_PHOTO_PATH + "/" + MyApplication.getInstance().getTanent() + uiConversation.getId() + "_100.png1");
-            holder.photoImg.setTag("");
-            if (file.exists()) {
-                holder.photoImg.setImageBitmap(ImageUtils.getBitmapByFile(file));
+        if (!isHeaderView(position)) {
+            if (haveHeaderView()) position--;
+            UIConversation uiConversation = uiConversationList.get(position);
+            holder.titleText.setText(uiConversation.getTitle());
+            holder.timeText.setText(TimeUtils.getDisplayTime(MyApplication.getInstance(), uiConversation.getLastUpdate()));
+            holder.dndImg.setVisibility(uiConversation.getConversation().isDnd() ? View.VISIBLE : View.GONE);
+            holder.mainLayout.setBackgroundResource(uiConversation.getConversation().isStick() ? R.drawable.selector_set_top_msg_list : R.drawable.selector_list);
+            boolean isConversationTypeGroup = uiConversation.getConversation().getType().equals(Conversation.TYPE_GROUP);
+            if (isConversationTypeGroup){
+                File file = new File(MyAppConfig.LOCAL_CACHE_PHOTO_PATH + "/" + MyApplication.getInstance().getTanent() + uiConversation.getId() + "_100.png1");
+                holder.photoImg.setTag("");
+                if (file.exists()) {
+                    holder.photoImg.setImageBitmap(ImageUtils.getBitmapByFile(file));
+                }else {
+                    holder.photoImg.setImageResource(R.drawable.icon_channel_group_default);
+                }
             }else {
-                holder.photoImg.setImageResource(R.drawable.icon_channel_group_default);
+                ImageDisplayUtils.getInstance().displayImageByTag(holder.photoImg, uiConversation.getIcon(), isConversationTypeGroup?R.drawable.icon_channel_group_default:R.drawable.icon_person_default);
             }
-        }else {
-            ImageDisplayUtils.getInstance().displayImageByTag(holder.photoImg, uiConversation.getIcon(), isConversationTypeGroup?R.drawable.icon_channel_group_default:R.drawable.icon_person_default);
+            setConversationLastMessageSendStatus(holder,uiConversation);
+            setConversationContent(holder,uiConversation);
+            setConversationUnreadState(holder,uiConversation);
         }
-        setConversationLastMessageSendStatus(holder,uiConversation);
-        setConversationContent(holder,uiConversation);
-        setConversationUnreadState(holder,uiConversation);
     }
 
     /**
@@ -151,7 +248,11 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
 
     @Override
     public int getItemCount() {
-        return uiConversationList.size();
+        int count = (uiConversationList == null ? 0 : uiConversationList.size());
+        if (VIEW_HEADER != null) {
+            count++;
+        }
+        return count;
     }
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,View.OnLongClickListener{
@@ -195,15 +296,33 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
         @Override
         public void onClick(View v) {
             if (adapterListener != null){
-                adapterListener.onItemClick(v,getAdapterPosition());
+                if(haveHeaderView()) {
+                    if(0==getAdapterPosition()) {
+                    adapterListener.onNetExceptionWightClick();   //点击进入新的Activity
+                    }else {
+                        adapterListener.onItemClick(v,getAdapterPosition()-1);
+                    }
+                } else {
+                    adapterListener.onItemClick(v,getAdapterPosition());
+                }
             }
-
         }
 
         @Override
         public boolean onLongClick(View v) {
             if (adapterListener != null){
-                return adapterListener.onItemLongClick(v,getAdapterPosition());
+                if(haveHeaderView()) {
+                    if(0==getAdapterPosition()) {
+                        LogUtils.LbcDebug("onLongClick");
+                        return true;
+                    } else {
+                        //网络异常状态
+                        return adapterListener.onItemLongClick(v,getAdapterPosition()-1);
+                    }
+                } else {
+                    return adapterListener.onItemLongClick(v,getAdapterPosition());
+                }
+
             }
             return false;
         }
@@ -216,6 +335,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
         void onItemClick(View view, int position);
         boolean onItemLongClick(View view, int position);
         void onDataChange();
+        void onNetExceptionWightClick();
     }
 
 }

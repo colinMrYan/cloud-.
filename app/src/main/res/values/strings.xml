@@ -867,6 +867,17 @@
     <string name="add_mession">添加任务</string>
     <string name="no_work_content">暂无工作内容</string>
 
+    <!--网络链接及网络诊断-->
+    <string name="net_connected_error">无法连接服务器，请检查你的网络设置</string>
+    <string name="net_diagnosis_title">网络诊断</string>
+    <string name="net_diagnosis_hard_link_title">检测网络硬件链接</string>
+    <string name="net_diagnosis_wifi_link_title">检测Wifi路由状态</string>
+    <string name="net_diagnosis_dns_link_title">检测DNS服务器状态</string>
+    <string name="net_diagnosis_hard_link_conent">当前检查项目包含：设置硬件是否存在故障，设置硬件链接状态是否通畅，设置是否有链接wifi,4G,LTE等</string>
+    <string name="net_diagnosis_wifi_link_conent">当前检查项目包含：链接到的wifi是否有经验需求,如果有需要先验证此wifi才可继续访问</string>
+    <string name="net_diagnosis_dns_link_conent">当前检查项目包含：DNS服务是否有故障</string>
+    <string name="net_network_authentication">网络认证</string>
+
     <!-- ListView自定义控件部分 -->
     <string name="xlistview_header_last_time">上次更新时间:</string>
     <string name="release_to_refresh">释放立即刷新</string>

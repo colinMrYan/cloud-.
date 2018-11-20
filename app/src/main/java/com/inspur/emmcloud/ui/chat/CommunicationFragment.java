@@ -51,6 +51,7 @@ import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
+import com.inspur.emmcloud.ui.mine.setting.NetWorkStateDetailActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
@@ -132,6 +133,15 @@ public class CommunicationFragment extends Fragment {
         setHeaderFunctionOptions(null);
     }
 
+    /**
+     * 切换tab实现网络状态监测
+     * */
+    @Override
+    public void onResume() {
+        super.onResume();
+        NetUtils.PingThreadStart("www.baidu.com");
+    }
+
     private void initView() {
         // TODO Auto-generated method stub
         handMessage();
@@ -189,22 +199,28 @@ public class CommunicationFragment extends Fragment {
         conversationAdapter.setAdapterListener(new ConversationAdapter.AdapterListener() {
             @Override
             public void onItemClick(View view, int position) {
-                UIConversation uiConversation = displayUIConversationList.get(position);
-                Conversation conversation = uiConversation.getConversation();
-                String type = conversation.getType();
-                if (type.equals(Conversation.TYPE_CAST) || type.equals(Conversation.TYPE_DIRECT) || type.equals(Conversation.TYPE_GROUP)) {
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable(ConversationActivity.EXTRA_CONVERSATION, conversation);
-                    IntentUtils.startActivity(getActivity(), ConversationActivity.class, bundle);
-                } else {
-                    ToastUtils.show(MyApplication.getInstance(), R.string.not_support_open_channel);
-                }
-                setConversationRead(position, uiConversation);
+                    try {
+                        UIConversation uiConversation = displayUIConversationList.get(position);
+                        Conversation conversation = uiConversation.getConversation();
+                        String type = conversation.getType();
+                        if (type.equals(Conversation.TYPE_CAST) || type.equals(Conversation.TYPE_DIRECT) || type.equals(Conversation.TYPE_GROUP)) {
+                            Bundle bundle = new Bundle();
+                            bundle.putSerializable(ConversationActivity.EXTRA_CONVERSATION, conversation);
+                            IntentUtils.startActivity(getActivity(), ConversationActivity.class, bundle);
+                        } else {
+                            ToastUtils.show(MyApplication.getInstance(), R.string.not_support_open_channel);
+                        }
+                        setConversationRead(position, uiConversation);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
             }
 
             @Override
             public boolean onItemLongClick(View view, int position) {
-                showConversationOperationDlg(displayUIConversationList.get(position));
+                UIConversation LongClickUIConversation;
+                LongClickUIConversation = displayUIConversationList.get(position);
+                showConversationOperationDlg(LongClickUIConversation);
                 return true;
             }
 
@@ -217,6 +233,11 @@ public class CommunicationFragment extends Fragment {
                     unReadCount += uiConversation.getUnReadCount();
                 }
                 EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SET_ALL_MESSAGE_UNREAD_COUNT, unReadCount));
+            }
+
+            @Override
+            public void onNetExceptionWightClick() {
+                IntentUtils.startActivity(getActivity(), NetWorkStateDetailActivity.class);
             }
         });
         conversionRecycleView.setAdapter(conversationAdapter);
@@ -269,6 +290,25 @@ public class CommunicationFragment extends Fragment {
                     break;
                 }
             }
+        }
+    }
+
+    /**
+     * 沟通页网络异常提示框
+     * @param netState  通过Action获取操作类型
+     * */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void netWorkStateTip(SimpleEventMessage netState) {
+        if(netState.getAction().equals(Constant.EVENTBUS_TAG__NET_STATE_CHANGE)){
+            if(((String)netState.getMessageObj()).equals("net_wifi_state_ok")){
+                NetUtils.PingThreadStart("www.baidu.com");
+            } else if(((String)netState.getMessageObj()).equals("net_state_error")) {
+                conversationAdapter.setNetExceptionView(false);
+            } else if (((String)netState.getMessageObj()).equals("net_gprs_state_ok")) {
+                conversationAdapter.setNetExceptionView(true);
+            }
+        } else if (netState.getAction().equals(Constant.EVENTBUS_TAG__NET_EXCEPTION_HINT)) {   //网络异常提示
+            conversationAdapter.setNetExceptionView((Boolean)netState.getMessageObj());
         }
     }
 
@@ -675,7 +715,7 @@ public class CommunicationFragment extends Fragment {
             }).start();
             uiConversation.setUnReadCount(0);
             conversationAdapter.setData(displayUIConversationList);
-            conversationAdapter.notifyItemChanged(position);
+            conversationAdapter.notifyRealItemChanged(position);
         }
     }
 
@@ -805,7 +845,7 @@ public class CommunicationFragment extends Fragment {
                 if (index != -1) {
                     displayUIConversationList.get(index).setTitle(conversation.getName());
                     conversationAdapter.setData(displayUIConversationList);
-                    conversationAdapter.notifyItemChanged(index);
+                    conversationAdapter.notifyRealItemChanged(index);
                 }
                 break;
             case Constant.EVENTBUS_TAG_UPDATE_CHANNEL_FOCUS:
@@ -821,7 +861,7 @@ public class CommunicationFragment extends Fragment {
                 if (index != -1) {
                     displayUIConversationList.get(index).getConversation().setDnd(conversation.isDnd());
                     conversationAdapter.setData(displayUIConversationList);
-                    conversationAdapter.notifyItemChanged(index);
+                    conversationAdapter.notifyRealItemChanged(index);
                 }
                 break;
             case Constant.EVENTBUS_TAG_QUIT_CHANNEL_GROUP:
@@ -830,7 +870,7 @@ public class CommunicationFragment extends Fragment {
                 if (index != -1) {
                     displayUIConversationList.remove(index);
                     conversationAdapter.setData(displayUIConversationList);
-                    conversationAdapter.notifyItemRemoved(index);
+                    conversationAdapter.notifyRealItemRemoved(index);
                 }
                 break;
         }
@@ -1059,7 +1099,7 @@ public class CommunicationFragment extends Fragment {
                 long unReadCount = displayUIConversationList.get(index).getUnReadCount();
                 displayUIConversationList.remove(index);
                 conversationAdapter.setData(displayUIConversationList);
-                conversationAdapter.notifyItemRemoved(index);
+                 conversationAdapter.notifyRealItemRemoved(index);
                 if (unReadCount > 0) {
                     WSAPIService.getInstance().setChannelMessgeStateRead(id);
                 }
