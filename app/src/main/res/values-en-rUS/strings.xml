@@ -274,8 +274,8 @@
     <string name="group_name_longth_valid">Group name, word overrun (no more than 40 characters)</string>
     <string name="message_create_group">Group Chat</string>
     <string name="business_card">Business Card</string>
-    <string name="no_channel_album">No channel picture </string>
-    <string name="no_channel_file">No channel file </string>
+    <string name="no_channel_album">No group picture </string>
+    <string name="no_channel_file">No group file </string>
     <string name="hold_to_talk">Hold to Talk</string>
     <string name="release_to_send">Release to Send</string>
     <string name="release_to_cancel">release to cancel</string>
