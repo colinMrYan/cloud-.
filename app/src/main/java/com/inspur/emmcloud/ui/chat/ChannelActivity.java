@@ -45,7 +45,6 @@ import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.ChannelInfoUtils;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
-import com.inspur.emmcloud.util.privates.DataCleanManager;
 import com.inspur.emmcloud.util.privates.DirectChannelUtils;
 import com.inspur.emmcloud.util.privates.GetPathFromUri4kitkat;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
@@ -605,13 +604,19 @@ public class ChannelActivity extends MediaPlayBaseActivity {
             public void onSuccess(VolumeFile volumeFile) {
                 switch (fakeMessage.getType()) {
                     case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
-                        WSAPIService.getInstance().sendChatRegularFileMsg(fakeMessage, volumeFile);
+                        fakeMessage.getMsgContentAttachmentFile().setMedia(volumeFile.getPath());
+                        fakeMessage.getMsgContentAttachmentFile().setSize(volumeFile.getSize());
+                        fakeMessage.getMsgContentAttachmentFile().setName(volumeFile.getName());
+                        WSAPIService.getInstance().sendChatRegularFileMsg(fakeMessage);
                         break;
                     case Message.MESSAGE_TYPE_MEDIA_IMAGE:
-                        WSAPIService.getInstance().sendChatMediaImageMsg(fakeMessage,volumeFile);
+                        fakeMessage.getMsgContentMediaImage().setRawMedia(volumeFile.getPath());
+                        fakeMessage.getMsgContentMediaImage().setName(volumeFile.getName());
+                        WSAPIService.getInstance().sendChatMediaImageMsg(fakeMessage);
                         break;
                     case Message.MESSAGE_TYPE_MEDIA_VOICE:
-                        WSAPIService.getInstance().sendChatMediaVoiceMsg(fakeMessage, volumeFile);
+                        fakeMessage.getMsgContentMediaVoice().setMedia(volumeFile.getPath());
+                        WSAPIService.getInstance().sendChatMediaVoiceMsg(fakeMessage);
                         break;
                 }
             }
