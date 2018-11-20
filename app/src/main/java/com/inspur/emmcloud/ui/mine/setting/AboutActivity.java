@@ -35,9 +35,11 @@ public class AboutActivity extends BaseActivity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_about);
+		String version = AppUtils.getVersion(this).replace("beta","b");
 		((TextView) findViewById(R.id.app_version_text))
 				.setText(AppUtils.getAppName(this)+"  "
-						+ AppUtils.getVersion(this));
+						+ version);
+
 		ImageView appIconImg = (ImageView)findViewById(R.id.about_app_icon_img);
 		ImageDisplayUtils.getInstance().displayImage(appIconImg,"drawable://"+AppUtils.getAppIconRes(MyApplication.getInstance()),R.drawable.ic_launcher);
 		findViewById(R.id.protocol_layout).setVisibility(AppUtils.isAppVersionStandard()?View.VISIBLE:View.GONE);

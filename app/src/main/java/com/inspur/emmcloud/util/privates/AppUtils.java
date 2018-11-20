@@ -28,6 +28,7 @@ import android.util.DisplayMetrics;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import com.github.zafarkhaja.semver.Version;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.mine.Language;
@@ -219,25 +220,17 @@ public class AppUtils {
      * @return
      */
     public static boolean isAppHasUpgraded(Context context) {
-        String savedVersion = PreferencesUtils.getString(context,
+        String previousVersionValue = PreferencesUtils.getString(context,
                 "previousVersion", "");
-        String currentVersion = getVersion(context);
-        if (!StringUtils.isBlank(savedVersion)) {
-            String[] savedArray = savedVersion.split("\\.");
-            String[] currentArray = currentVersion.split("\\.");
-            try {
-                String saveVersionCode = getNormalVersionCode(savedArray[2]);
-                savedArray[2] = saveVersionCode;
-                String currentVersionCode = getNormalVersionCode(currentArray[2]);
-                currentArray[2] = currentVersionCode;
-            } catch (Exception e) {
-                e.printStackTrace();
+        String currentVersionValue = getVersion(context);
+        try {
+            if (!StringUtils.isBlank(previousVersionValue)) {
+                Version previousVersion = Version.valueOf(previousVersionValue);
+                Version currentVersion = Version.valueOf(currentVersionValue);
+                return currentVersion.greaterThan(previousVersion);
             }
-            if (savedArray.length == 3 && currentArray.length == 3) {
-                int savedVersionNum = Integer.parseInt(savedArray[0]) * 1000000 + Integer.parseInt(savedArray[1]) * 1000 + Integer.parseInt(savedArray[2]);
-                int currentVersionNum = Integer.parseInt(currentArray[0]) * 1000000 + Integer.parseInt(currentArray[1]) * 1000 + Integer.parseInt(currentArray[2]);
-                return currentVersionNum > savedVersionNum;
-            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
         return false;
     }
