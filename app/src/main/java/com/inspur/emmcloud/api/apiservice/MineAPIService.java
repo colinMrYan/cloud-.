@@ -24,6 +24,7 @@ import com.inspur.emmcloud.bean.mine.GetUploadMyHeadResult;
 import com.inspur.emmcloud.bean.mine.UserProfileInfoBean;
 import com.inspur.emmcloud.bean.system.GetBoolenResult;
 import com.inspur.emmcloud.interf.OauthCallBack;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.OauthUtils;
@@ -245,11 +246,14 @@ public class MineAPIService {
         HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
             @Override
             public void callbackSuccess(byte[] arg0) {
+                String  myinfo = new String(arg0);
+                LogUtils.LbcDebug("getUserProfileConfigInfoSuccess:："+myinfo);
                 apiInterface.returnUserProfileConfigSuccess(new UserProfileInfoBean(new String(arg0)));
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
+                LogUtils.LbcDebug("getUserProfileConfigInfoError:");
                 apiInterface.returnUserProfileConfigFail(error, responseCode);
             }
 
