@@ -886,7 +886,7 @@ public class AppUtils {
      * @param context
      * @return
      */
-    public static String getAppVersionFlag(Context context){
+    public static String getManifestAppVersionFlag(Context context){
         return getManifestMetadata(context,"FLAG_APP_VERSION_TYPE");
     }
 

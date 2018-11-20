@@ -175,7 +175,6 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
      * 显示正在发送的标志
      *
      * @param holder
-     * @param msg
      */
     public void showRefreshingImg(final ViewHolder holder, final UIMessage uiMessage) {
         if (uiMessage.getSendStatus() == 0) {

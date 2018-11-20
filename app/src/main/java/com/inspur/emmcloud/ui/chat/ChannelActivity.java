@@ -45,7 +45,6 @@ import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.ChannelInfoUtils;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
-import com.inspur.emmcloud.util.privates.DataCleanManager;
 import com.inspur.emmcloud.util.privates.DirectChannelUtils;
 import com.inspur.emmcloud.util.privates.GetPathFromUri4kitkat;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
@@ -605,13 +604,19 @@ public class ChannelActivity extends MediaPlayBaseActivity {
             public void onSuccess(VolumeFile volumeFile) {
                 switch (fakeMessage.getType()) {
                     case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
-                        WSAPIService.getInstance().sendChatRegularFileMsg(cid, fakeMessage.getId(), volumeFile);
+                        fakeMessage.getMsgContentAttachmentFile().setMedia(volumeFile.getPath());
+                        fakeMessage.getMsgContentAttachmentFile().setSize(volumeFile.getSize());
+                        fakeMessage.getMsgContentAttachmentFile().setName(volumeFile.getName());
+                        WSAPIService.getInstance().sendChatRegularFileMsg(fakeMessage);
                         break;
                     case Message.MESSAGE_TYPE_MEDIA_IMAGE:
-                        WSAPIService.getInstance().sendChatMediaImageMsg(volumeFile, fakeMessage);
+                        fakeMessage.getMsgContentMediaImage().setRawMedia(volumeFile.getPath());
+                        fakeMessage.getMsgContentMediaImage().setName(volumeFile.getName());
+                        WSAPIService.getInstance().sendChatMediaImageMsg(fakeMessage);
                         break;
                     case Message.MESSAGE_TYPE_MEDIA_VOICE:
-                        WSAPIService.getInstance().sendChatMediaVoiceMsg(fakeMessage, volumeFile);
+                        fakeMessage.getMsgContentMediaVoice().setMedia(volumeFile.getPath());
+                        WSAPIService.getInstance().sendChatMediaVoiceMsg(fakeMessage);
                         break;
                 }
             }
@@ -932,12 +937,14 @@ public class ChannelActivity extends MediaPlayBaseActivity {
         UIMessage fakeUIMessage = new UIMessage(fakeMessageId);
         int fakeUIMessageIndex = uiMessageList.indexOf(fakeUIMessage);
         if (fakeUIMessageIndex != -1) {
+            Message message = uiMessageList.get(fakeUIMessageIndex).getMessage();
+            message.setSendStatus(Message.MESSAGE_SEND_FAIL);
             uiMessageList.get(fakeUIMessageIndex).setSendStatus(2);
+            MessageCacheUtil.saveMessage(this,message);
             adapter.setMessageList(uiMessageList);
             adapter.notifyItemChanged(fakeUIMessageIndex);
         }
     }
-
 
     /**
      * 记录用户点击的频道，修改不是云+客服的时候才记录频道点击事件170629
@@ -980,7 +987,7 @@ public class ChannelActivity extends MediaPlayBaseActivity {
         }
         chatInputMenu.releaseVoliceInput();
         EventBus.getDefault().unregister(this);
-        DataCleanManager.cleanCustomCache(MyAppConfig.LOCAL_CACHE_VOICE_PATH);
+//        DataCleanManager.cleanCustomCache(MyAppConfig.LOCAL_CACHE_VOICE_PATH);
         MyApplication.getInstance().setCurrentChannelCid("");
     }
 

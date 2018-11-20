@@ -75,7 +75,7 @@ public class AudioRecordButton extends Button {
                         android.media.AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
                 isRecording = true;
                 mDialogManager.showRecordingDialog();
-                if (AppUtils.getIsVoiceWordOpen()) {
+//                if (AppUtils.getIsVoiceWordOpen()) {
                     //录制wav的分支
                     audioRecorderManager = AudioRecorderManager.getInstance();
                     audioRecorderManager.setCallBack(new AudioRecorderManager.AudioDataCallBack() {
@@ -117,34 +117,34 @@ public class AudioRecordButton extends Button {
                     });
                     //按下开关，先调用准备Audio
                     audioRecorderManager.prepareWavAudioRecord();
-                } else {
-                    //录制mp3的分支
-                    isDeviceError = false;
-                    String mp3FileDir = getMp3FilePath();
-                    File fileDir = new File(mp3FileDir);
-                    if (!fileDir.exists()) {
-                        fileDir.mkdirs();
-                    }
-                    mp3FilePath = mp3FileDir + AppUtils.generalFileName() + ".mp3";
-                    File file = new File(mp3FilePath);
-                    mp3Recorder = new MP3Recorder(file);
-                    //处理异常
-                    mp3Recorder.setErrorHandler(new Handler() {
-                        @Override
-                        public void handleMessage(Message msg) {
-                            super.handleMessage(msg);
-                            if (msg.what == MP3Recorder.ERROR_TYPE) {
-                                mListener.onErrorRecordingVoice(MP3Recorder.ERROR_TYPE);
-                                resolveMp3Error();
-                                isDeviceError = true;
-                            }
-                        }
-                    });
-                    //设备正常则录音
-                    if (!isDeviceError) {
-                        recorderMp3Voice();
-                    }
-                }
+//                } else {
+//                    //录制mp3的分支
+//                    isDeviceError = false;
+//                    String mp3FileDir = getMp3FilePath();
+//                    File fileDir = new File(mp3FileDir);
+//                    if (!fileDir.exists()) {
+//                        fileDir.mkdirs();
+//                    }
+//                    mp3FilePath = mp3FileDir + AppUtils.generalFileName() + ".mp3";
+//                    File file = new File(mp3FilePath);
+//                    mp3Recorder = new MP3Recorder(file);
+//                    //处理异常
+//                    mp3Recorder.setErrorHandler(new Handler() {
+//                        @Override
+//                        public void handleMessage(Message msg) {
+//                            super.handleMessage(msg);
+//                            if (msg.what == MP3Recorder.ERROR_TYPE) {
+//                                mListener.onErrorRecordingVoice(MP3Recorder.ERROR_TYPE);
+//                                resolveMp3Error();
+//                                isDeviceError = true;
+//                            }
+//                        }
+//                    });
+//                    //设备正常则录音
+//                    if (!isDeviceError) {
+//                        recorderMp3Voice();
+//                    }
+//                }
                 return false;
             }
         });
@@ -236,11 +236,11 @@ public class AudioRecordButton extends Button {
                     } else if (durationTime >= 60.0) {
                         isRecording = false;
                         voiceRecordUIFinish();
-                        if (AppUtils.getIsVoiceWordOpen()) {
+//                        if (AppUtils.getIsVoiceWordOpen()) {
                             mListener.onFinished(60f, audioRecorderManager.getCurrentFilePath());
-                        } else {
-                            mListener.onFinished(60f, mp3FilePath);
-                        }
+//                        } else {
+//                            mListener.onFinished(60f, mp3FilePath);
+//                        }
                         reset();
                     }
                     break;
@@ -304,11 +304,11 @@ public class AudioRecordButton extends Button {
                 } else if (mCurrentState == STATE_RECORDING) {//正常录制结束
                     voiceRecordUIFinish();
                     if (mListener != null) {
-                        if (AppUtils.getIsVoiceWordOpen()) {
+//                        if (AppUtils.getIsVoiceWordOpen()) {
                             mListener.onFinished(durationTime, audioRecorderManager.getCurrentFilePath());
-                        } else if (!isDeviceError) {
-                            mListener.onFinished(durationTime, mp3FilePath);
-                        }
+//                        } else if (!isDeviceError) {
+//                            mListener.onFinished(durationTime, mp3FilePath);
+//                        }
                     }
 
                 } else if (mCurrentState == STATE_WANT_TO_CANCEL) {

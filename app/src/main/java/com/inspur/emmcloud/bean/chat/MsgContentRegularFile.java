@@ -13,12 +13,14 @@ public class MsgContentRegularFile {
     private String name;
     private long size;
     private String media;
+    private String tmpId;
     public MsgContentRegularFile(String content) {
         JSONObject object = JSONUtils.getJSONObject(content);
         category = JSONUtils.getString(object,"category","");
         name = JSONUtils.getString(object,"name","");
         media = JSONUtils.getString(object,"media","");
         size = JSONUtils.getLong(object,"size",0);
+        tmpId = JSONUtils.getString(object,"tmpId","");
     }
 
     public MsgContentRegularFile(){
@@ -51,6 +53,14 @@ public class MsgContentRegularFile {
 
     public String getMedia() {
         return media;
+    }
+
+    public String getTmpId() {
+        return tmpId;
+    }
+
+    public void setTmpId(String tmpId) {
+        this.tmpId = tmpId;
     }
 
     public void setMedia(String media) {

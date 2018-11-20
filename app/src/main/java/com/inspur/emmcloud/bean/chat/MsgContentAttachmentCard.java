@@ -19,6 +19,7 @@ public class MsgContentAttachmentCard {
     private String organization;
     private String title;
     private String uid;
+    private String tmpId;
     private List<Email> emailList = new ArrayList<>();
     private List<Phone> phoneList = new ArrayList<>();
 
@@ -34,6 +35,7 @@ public class MsgContentAttachmentCard {
         organization = JSONUtils.getString(object, "organization", "");
         title = JSONUtils.getString(object, "title", "");
         uid = JSONUtils.getString(object, "uid", "");
+        tmpId = JSONUtils.getString(object,"tmpId","");
         JSONArray emailArray = JSONUtils.getJSONArray(object, "email", new JSONArray());
         for (int i = 0; i < emailArray.length(); i++) {
             emailList.add(new Email(JSONUtils.getJSONObject(emailArray, i, new JSONObject())));
@@ -107,6 +109,14 @@ public class MsgContentAttachmentCard {
 
     public void setUid(String uid) {
         this.uid = uid;
+    }
+
+    public String getTmpId() {
+        return tmpId;
+    }
+
+    public void setTmpId(String tmpId) {
+        this.tmpId = tmpId;
     }
 
     public String toString() {

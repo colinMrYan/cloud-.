@@ -81,7 +81,7 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
     private void init() {
         String appFirstLoadAlis = PreferencesUtils.getString(MyApplication.getInstance(), Constant.PREF_APP_LOAD_ALIAS);
         if (appFirstLoadAlis == null) {
-            appFirstLoadAlis = AppUtils.getAppVersionFlag(this);
+            appFirstLoadAlis = AppUtils.getManifestAppVersionFlag(this);
             PreferencesUtils.putString(MyApplication.getInstance(), Constant.PREF_APP_LOAD_ALIAS, appFirstLoadAlis);
         }
         if (!appFirstLoadAlis.equals("Standard")) {

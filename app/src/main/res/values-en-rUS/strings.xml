@@ -256,7 +256,7 @@
     <string name="all_group_member">All Members(%1$d)</string>
     <string name="add_group_member">Add Member </string>
     <string name="channel_group">Group</string>
-    <string name="group_member">Members </string>
+    <string name="group_member">Members List</string>
     <string name="group_name_cannot_null">Please type group name </string>
     <string name="channel_unknown_text">Your %1$s does not support this message. Please upgrade the latest version of %1$s.</string>
     <string name="comment_hallcomment_text">Comment:</string>
@@ -274,8 +274,8 @@
     <string name="group_name_longth_valid">Group name, word overrun (no more than 40 characters)</string>
     <string name="message_create_group">Group Chat</string>
     <string name="business_card">Business Card</string>
-    <string name="no_channel_album">No channel picture </string>
-    <string name="no_channel_file">No channel file </string>
+    <string name="no_channel_album">No group picture </string>
+    <string name="no_channel_file">No group file </string>
     <string name="hold_to_talk">Hold to Talk</string>
     <string name="release_to_send">Release to Send</string>
     <string name="release_to_cancel">release to cancel</string>
@@ -292,6 +292,7 @@
     <string name="chat_remove">Delete</string>
     <string name="chat_remove_from_top">Remove from Top</string>
     <string name="no_chat_content">No chat content</string>
+    <string name="msg_key_search_member">Please enter key words</string>
 
     <!-- 会议卡片 -->
     <string name="meeting_has_confirmed">Confirmed</string>
@@ -860,6 +861,18 @@
     <string name="mession_manage_tag">Tag</string>
     <string name="add_mession">Add task</string>
     <string name="no_work_content">No job content</string>
+
+
+    <!--网络链接及网络诊断-->
+    <string name="net_connected_error">The network is not available. Please check the network settings.</string>
+    <string name="net_diagnosis_title">Network Diagnosis</string>
+    <string name="net_diagnosis_hard_link_title">Detect network hardware</string>
+    <string name="net_diagnosis_wifi_link_title">Detect Wifi routing status</string>
+    <string name="net_diagnosis_dns_link_title">Detect DNS server status</string>
+    <string name="net_diagnosis_hard_link_conent">The current test item contains: Setting of hardware fault,Setting of Hardware connection status,Setting of wifi,4G,LTE state and so on.</string>
+    <string name="net_diagnosis_wifi_link_conent">The current test item contains: Whether there is an empirical requirement for the linked wifi, if there is a need to verify the wifi before it can be accessed</string>
+    <string name="net_diagnosis_dns_link_conent">The current test item contains: Is the DNS service faulty?</string>
+    <string name="net_network_authentication">Network Certification</string>
 
     <!-- ListView自定义控件部分 -->
     <string name="xlistview_header_last_time">Last Update Time:</string>
