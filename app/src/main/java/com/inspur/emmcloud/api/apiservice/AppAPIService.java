@@ -25,6 +25,7 @@ import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
 import com.inspur.emmcloud.bean.system.GetUpgradeResult;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.bean.system.SplashPageBean;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.interf.OauthCallBack;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.romadaptation.RomInfoUtils;
@@ -71,8 +72,8 @@ public class AppAPIService {
             if (AppUtils.isAppVersionStandard()){
                 params.addParameter("clientType", "android");
             }else {
-                String appVersionFlag = AppUtils.getAppVersionFlag(context);
-                params.addParameter("clientType", "android_"+appVersionFlag);
+                String appFirstLoadAlis = PreferencesUtils.getString(MyApplication.getInstance(), Constant.PREF_APP_LOAD_ALIAS);
+                params.addParameter("clientType", "android_"+appFirstLoadAlis);
             }
 
         }
