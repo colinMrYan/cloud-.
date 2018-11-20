@@ -7,9 +7,9 @@ import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.Log;
 import android.webkit.MimeTypeMap;
 
 import com.inspur.emmcloud.R;
@@ -1128,5 +1128,22 @@ public class FileUtils {
             e.printStackTrace();
         }
         return null;
+    }
+
+    /**
+     * 获取指定文件夹下所有文件的文件路径
+     * @param dirPath
+     * @return
+     */
+    public static ArrayList<String> getAllFilePathByDirPath(String dirPath) {
+        File file=new File(dirPath);
+        File[] files=file.listFiles();
+        ArrayList<String> filePathList = new ArrayList<>();
+        if(files != null){
+            for(int i =0;i<files.length;i++){
+                filePathList.add(files[i].getAbsolutePath());
+            }
+        }
+        return filePathList;
     }
 }

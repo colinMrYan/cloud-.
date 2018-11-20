@@ -466,17 +466,19 @@ public class CommunicationFragment extends Fragment {
                             if (conversation.isHide()) {
                                 if (uiConversation.getUnReadCount() != 0) {
                                     conversation.setHide(false);
+                                    conversation.setDraft(getDraftWords(conversation));
                                     ConversationCacheUtils.saveConversation(MyApplication.getInstance(), conversation);
                                 } else {
                                     it.remove();
                                     continue;
                                 }
-
                             } else if (conversation.isStick()) {
+                                uiConversation.getConversation().setDraft(getDraftWords(conversation));
                                 stickUIConversationList.add(uiConversation);
                                 it.remove();
                                 continue;
                             }
+                            uiConversation.getConversation().setDraft(getDraftWords(conversation));
                             if (uiConversation.getMessageList().size() == 0){
                                 //当会话内没有消息时，如果是单聊或者不是owner的群聊，则进行隐藏
                                 if (conversation.getType().equals(Conversation.TYPE_DIRECT) ||
@@ -501,6 +503,16 @@ public class CommunicationFragment extends Fragment {
             }
         };
         sortConversationThread.start();
+    }
+
+    /**
+     * 根据频道获取草稿
+     * @param conversation
+     * @return
+     */
+    private String getDraftWords(Conversation conversation) {
+        String draft = MessageCacheUtil.getDraftByCid(getActivity(),conversation.getId());
+        return StringUtils.isBlank(draft)?"":draft;
     }
 
 
@@ -886,7 +898,6 @@ public class CommunicationFragment extends Fragment {
                         }
                     }
                     Conversation receiveMessageConversation = ConversationCacheUtils.getConversation(MyApplication.getInstance(), receivedWSMessage.getChannel());
-
                     cacheReceiveMessage(receivedWSMessage);
                     if (receiveMessageConversation == null) {
                         getConversationList();
@@ -913,6 +924,7 @@ public class CommunicationFragment extends Fragment {
                 String content = eventMessage.getContent();
                 GetOfflineMessageListResult getOfflineMessageListResult = new GetOfflineMessageListResult(content);
                 List<Message> offlineMessageList = getOfflineMessageListResult.getMessageList();
+                MessageCacheUtil.handleRealMessage(getActivity(),offlineMessageList, null,"");
                 List<Message> currentChannelOfflineMessageList = new ArrayList<>();
                 //将当前所处频道的消息存为已读
                 if (!StringUtils.isBlank(MyApplication.getInstance().getCurrentChannelCid())) {

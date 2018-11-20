@@ -38,7 +38,7 @@ public class DbCacheUtils {
                 .setDbName("emm.db")
                 // 不设置dbDir时, 默认存储在app的私有目录.
                 .setDbDir(new File(dbCachePath))
-                .setDbVersion(14)
+                .setDbVersion(15)
                 .setAllowTransaction(true)
                 .setDbOpenListener(new DbManager.DbOpenListener() {
                     @Override
@@ -107,6 +107,9 @@ public class DbCacheUtils {
                                 ContactUserCacheUtils.setLastQueryTime(0);
                                 db.execNonQuery("DROP TABLE IF EXISTS Message");
                                 db.execNonQuery("DROP TABLE IF EXISTS MessageMatheSet");
+                            }
+                            if(oldVersion<15){
+                                db.execNonQuery("DROP TABLE IF EXISTS Message");
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
