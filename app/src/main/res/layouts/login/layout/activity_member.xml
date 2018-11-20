@@ -72,36 +72,36 @@
             android:id="@+id/search_layout"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:background="#C9C9CE"
-            android:paddingBottom="5dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:paddingTop="5dp" >
+            android:background="#ffff">
+            <ImageView
+                android:id="@+id/iv_search_memebers"
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:background="@drawable/ic_search_members"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="16dp"/>
 
             <com.inspur.emmcloud.widget.CustomEditText
                 android:id="@+id/ev_channel_member_search_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:background="@drawable/bg_search_input"
-                android:drawableLeft="@drawable/ic_search"
-                android:drawablePadding="5dp"
+                android:background="#ffff"
+                android:layout_toRightOf="@id/iv_search_memebers"
                 android:drawableRight="@drawable/ic_edit_text_delbtn"
-                android:paddingRight="5dp"
                 android:freezesText="true"
                 android:gravity="center_vertical"
-                android:hint="@string/search"
+                android:hint="@string/msg_key_search_member"
                 android:imeOptions="actionSearch"
+                android:paddingBottom="10dp"
+                android:paddingLeft="5dp"
+                android:paddingTop="10dp"
+                android:paddingRight="5dp"
                 android:singleLine="true"
                 android:textColor="@color/black"
-                android:textColorHint="@color/login_form_hint"
-                android:textSize="14sp" />
+                android:textColorHint="#CDCDCD "
+                android:textSize="16sp" />
         </RelativeLayout>
-
-        <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="1px"
-            android:background="@drawable/bg_cut_line" />
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -112,8 +112,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:cacheColorHint="@color/transparent"
-                android:divider="@drawable/bg_cut_line"
-                android:dividerHeight="1px"
                 android:fadingEdge="none"
                 android:listSelector="@color/transparent"
                 android:scrollbars="none" >
