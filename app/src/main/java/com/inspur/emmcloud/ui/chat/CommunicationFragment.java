@@ -199,6 +199,7 @@ public class CommunicationFragment extends Fragment {
         conversationAdapter.setAdapterListener(new ConversationAdapter.AdapterListener() {
             @Override
             public void onItemClick(View view, int position) {
+                    try {
                         UIConversation uiConversation = displayUIConversationList.get(position);
                         Conversation conversation = uiConversation.getConversation();
                         String type = conversation.getType();
@@ -210,6 +211,9 @@ public class CommunicationFragment extends Fragment {
                             ToastUtils.show(MyApplication.getInstance(), R.string.not_support_open_channel);
                         }
                         setConversationRead(position, uiConversation);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
             }
 
             @Override
