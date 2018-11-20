@@ -86,6 +86,7 @@ public class NetUtils {
 			return isNetworkConnected(context,true);
 		}
 
+
 	// 判断是否有网络连接
 	public static boolean isNetworkConnected(Context context,Boolean isShowToast) {
 			ConnectivityManager mConnectivityManager = (ConnectivityManager) context
@@ -429,6 +430,4 @@ public class NetUtils {
 			}
 		}).start();
 	}
-
-
 }
