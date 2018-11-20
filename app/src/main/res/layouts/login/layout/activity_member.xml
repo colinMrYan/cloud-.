@@ -73,6 +73,13 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:background="#ffff">
+            <ImageView
+                android:id="@+id/iv_search_memebers"
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:background="@drawable/ic_search_members"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="16dp"/>
 
             <com.inspur.emmcloud.widget.CustomEditText
                 android:id="@+id/ev_channel_member_search_input"
@@ -80,15 +87,15 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:background="#ffff"
-                android:drawableLeft="@drawable/ic_search"
+                android:layout_toRightOf="@id/iv_search_memebers"
                 android:drawableRight="@drawable/ic_edit_text_delbtn"
                 android:freezesText="true"
                 android:gravity="center_vertical"
                 android:hint="@string/msg_key_search_member"
                 android:imeOptions="actionSearch"
-                android:paddingBottom="8dp"
-                android:paddingLeft="7dp"
-                android:paddingTop="8dp"
+                android:paddingBottom="10dp"
+                android:paddingLeft="5dp"
+                android:paddingTop="10dp"
                 android:paddingRight="5dp"
                 android:singleLine="true"
                 android:textColor="@color/black"
