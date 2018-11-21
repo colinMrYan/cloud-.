@@ -22,7 +22,7 @@
     <string name="send">發送</string>
     <string name="picture">圖片</string>
     <string name="album">相冊</string>
-    <string name="take_photo">拍照</string>
+    <string name="take_photo">拍攝</string>
     <string name="file">文件</string>
     <string name="next_step">下一步</string>
     <string name="pull_down_load_history">下拉載入歷史消息</string>
@@ -364,7 +364,7 @@
     <string name="app_must_be_app_cannot_edit">當前應用皆為必裝，不可編輯</string>
     <string name="app_center">應用中心</string>
     <string name="detail">詳情</string>
-    <string name="search">搜索</string>
+    <string name="search">請輸入關鍵字</string>
     <string name="app_commonly_use">常用應用</string>
     <string name="app_center_more_apps">更多應用</string>
     <string name="app_input_mail_password">請輸入公司郵箱密碼</string>
@@ -565,7 +565,7 @@
     <string name="my_setting_tips_quit">確定清除應用內所有緩存數據？清除后將退出應用</string>
     <string name="get_language_error">未獲取到可用的語言包，請聯繫管理員</string>
     <string name="app_customer">雲+客服</string>
-    <string name="settings_device_manager">設備管理</string>
+    <string name="settings_device_manager">設備查看與管理</string>
     <string name="device_unbind_sucess">設備解綁成功！</string>
     <string name="device_other_unbind_warning">解綁後，從%1$s上登錄，您需要重新註冊設備</string>
     <string name="device_current_unbind_warning">解綁後，您需要重新登入並注册設備</string>

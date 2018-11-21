@@ -155,7 +155,6 @@ android {
 
 
 dependencies {
-    provided files('C:/Program Files (x86)/Java/jdk1.8.0_111/jre/lib/rt.jar')
     compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
