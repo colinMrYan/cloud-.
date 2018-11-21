@@ -9,27 +9,16 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import javazoom.jl.converter.Converter;
-import javazoom.jl.decoder.JavaLayerException;
-
 /**
  * Created by chenmch on 2018/11/15.
  */
 
 public class AudioFormatUtils {
     public static void Mp3ToWav(final String mp3Filepath, final String wavFilepath, final ResultCallback callback) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
 //
-//                Converter aConverter = new Converter();
-//                try {
-//                    aConverter.convert(mp3Filepath, wavFilepath);
-//                } catch (JavaLayerException e) {
-//                    e.printStackTrace();
-//                }
-
-
 //                AudioInputStream in = null;
 //                AudioInputStream out = null;
 //                try {
@@ -69,10 +58,10 @@ public class AudioFormatUtils {
 //                    }
 //
 //                }
-
-
-            }
-        }).start();
+//
+//
+//            }
+//        }).start();
 
     }
 

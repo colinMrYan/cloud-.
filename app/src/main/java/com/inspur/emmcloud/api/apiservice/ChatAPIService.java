@@ -1508,7 +1508,7 @@ public class ChatAPIService {
     public void updateConversationDnd(final String id, final boolean isDnd){
         final String completeUrl = APIUri.getConversationSetDnd(id);
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
-        params.addParameter("dnd ",isDnd);
+        params.addParameter("dnd",isDnd);
         HttpUtils.request(context, CloudHttpMethod.PUT, params, new APICallback(context, completeUrl) {
 
             @Override
