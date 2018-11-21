@@ -885,10 +885,11 @@ public class CommunicationFragment extends Fragment {
                 String content = eventMessage.getContent();
                 JSONObject contentObj = JSONUtils.getJSONObject(content);
                 Message receivedWSMessage = new Message(contentObj);
+                MessageCacheUtil.handleRealMessage(MyApplication.getInstance(),receivedWSMessage);
                 //验重处理
                 if (MessageCacheUtil.getMessageByMid(MyApplication.getInstance(), receivedWSMessage.getId()) == null) {
                     if (MyApplication.getInstance().getCurrentChannelCid().equals(receivedWSMessage.getChannel())) {
-                        receivedWSMessage.setRead(1);
+                        receivedWSMessage.setRead(Message.MESSAGE_READ);
                     }
                     if (receivedWSMessage.getType().equals(Message.MESSAGE_TYPE_MEDIA_VOICE)) {
                         String fileSavePath = MyAppConfig.getCacheVoiceFilePath(receivedWSMessage.getChannel(), receivedWSMessage.getId());
@@ -930,7 +931,7 @@ public class CommunicationFragment extends Fragment {
                 if (!StringUtils.isBlank(MyApplication.getInstance().getCurrentChannelCid())) {
                     for (Message message : offlineMessageList) {
                         if (message.getChannel().equals(MyApplication.getInstance().getCurrentChannelCid())) {
-                            message.setRead(1);
+                            message.setRead(Message.MESSAGE_READ);
                             currentChannelOfflineMessageList.add(message);
                         }
                     }
@@ -959,14 +960,14 @@ public class CommunicationFragment extends Fragment {
             if (eventMessage.getStatus() == EventMessage.RESULT_OK) {
                 String content = eventMessage.getContent();
                 GetRecentMessageListResult getRecentMessageListResult = new GetRecentMessageListResult(content);
-
                 List<Message> recentMessageList = getRecentMessageListResult.getMessageList();
+                MessageCacheUtil.handleRealMessage(MyApplication.getInstance(),recentMessageList,null,"");
                 List<Message> currentChannelRecentMessageList = new ArrayList<>();
                 //将当前所处频道的消息存为已读
                 if (!StringUtils.isBlank(MyApplication.getInstance().getCurrentChannelCid())) {
                     for (Message message : recentMessageList) {
                         if (message.getChannel().equals(MyApplication.getInstance().getCurrentChannelCid())) {
-                            message.setRead(1);
+                            message.setRead(Message.MESSAGE_READ);
                             currentChannelRecentMessageList.add(message);
                         }
                     }
