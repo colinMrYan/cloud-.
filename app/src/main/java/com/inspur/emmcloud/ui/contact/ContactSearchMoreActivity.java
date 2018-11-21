@@ -157,7 +157,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
             searchEdit.setPadding(piddingLeft, piddingTop, piddingLeft, piddingTop);
             searchEdit.setLayoutParams(params);
             searchEdit.setSingleLine(true);
-            searchEdit.setHint(getString(R.string.search));
+            searchEdit.setHint(getString(R.string.msg_key_search_member));
             searchEdit.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
             searchEdit.setBackground(null);
             searchEdit.addTextChangedListener(myTextWatcher);

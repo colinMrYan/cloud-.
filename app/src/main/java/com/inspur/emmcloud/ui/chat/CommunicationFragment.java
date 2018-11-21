@@ -1012,16 +1012,18 @@ public class CommunicationFragment extends Fragment {
      */
     public void getMessage() {
         if (NetUtils.isNetworkConnected(MyApplication.getInstance()) && WebSocketPush.getInstance().isSocketConnect()) {
-            //如果preferences中还存有离线消息最后一条消息id这个标志代表上一次离线消息没有获取成功，需要从这条消息开始重新获取
-            String lastMessageId = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_GET_OFFLINE_LAST_MID, "");
-            if (StringUtils.isBlank(lastMessageId)) {
-                lastMessageId = MessageCacheUtil.getLastMessageId(MyApplication.getInstance());
-                PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), Constant.PREF_GET_OFFLINE_LAST_MID, lastMessageId);
-            }
+            String lastMessageId = MessageCacheUtil.getLastMessageId(MyApplication.getInstance());
             if (lastMessageId != null) {
+                //如果preferences中还存有离线消息最后一条消息id这个标志代表上一次离线消息没有获取成功，需要从这条消息开始重新获取
+                String getOfflineLastMessageId = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_GET_OFFLINE_LAST_MID, "");
+                if (StringUtils.isBlank(getOfflineLastMessageId)) {
+                    getOfflineLastMessageId = lastMessageId;
+                    PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), Constant.PREF_GET_OFFLINE_LAST_MID, lastMessageId);
+                }
                 //获取离线消息
-                WSAPIService.getInstance().getOfflineMessage(lastMessageId);
+                WSAPIService.getInstance().getOfflineMessage(getOfflineLastMessageId);
             } else {
+                PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), Constant.PREF_GET_OFFLINE_LAST_MID, "");
                 //获取每个频道最近消息
                 WSAPIService.getInstance().getChannelRecentMessage();
             }

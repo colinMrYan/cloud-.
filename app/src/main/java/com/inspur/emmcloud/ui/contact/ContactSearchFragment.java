@@ -662,18 +662,16 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
             TextView searchResultText = new TextView(getActivity());
             FlowLayout.LayoutParams params = new FlowLayout.LayoutParams(
                     ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.rightMargin = DensityUtil.dip2px(getActivity().getApplicationContext(), 5);
-            params.topMargin = DensityUtil.dip2px(getActivity().getApplicationContext(), 2);
+            params.leftMargin = DensityUtil.dip2px(MyApplication.getInstance(), 5);
+            params.topMargin = DensityUtil.dip2px(MyApplication.getInstance(), 2);
             params.bottomMargin = params.topMargin;
             searchResultText.setLayoutParams(params);
             int piddingTop = DensityUtil.dip2px(getActivity().getApplicationContext(), 1);
             int piddingLeft = DensityUtil.dip2px(getActivity().getApplicationContext(), 5);
             searchResultText.setPadding(piddingLeft, piddingTop, piddingLeft, piddingTop);
             searchResultText.setGravity(Gravity.CENTER);
-            searchResultText.setBackgroundResource(R.drawable.bg_corner_search_member);
             searchResultText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-            searchResultText.setTextColor(getResources()
-                    .getColor(R.color.white));
+            searchResultText.setTextColor(Color.parseColor("#0F7BCA"));
             searchResultText.setText(selectMemList.get(i).getName());
             searchResultText.setOnClickListener(new View.OnClickListener() {
 
@@ -702,12 +700,12 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
                     getActivity().getApplicationContext(), ViewGroup.LayoutParams.WRAP_CONTENT));
             params.topMargin = DensityUtil.dip2px(getActivity().getApplicationContext(), 2);
             params.bottomMargin = params.topMargin;
-            int piddingTop = DensityUtil.dip2px(getActivity().getApplicationContext(), 1);
-            int piddingLeft = DensityUtil.dip2px(getActivity().getApplicationContext(), 5);
+            int piddingTop = DensityUtil.dip2px(MyApplication.getInstance(), 1);
+            int piddingLeft = DensityUtil.dip2px(MyApplication.getInstance(), 5);
             searchEdit.setPadding(piddingLeft, piddingTop, piddingLeft, piddingTop);
             searchEdit.setLayoutParams(params);
             searchEdit.setSingleLine(true);
-            searchEdit.setHint(getString(R.string.search));
+            searchEdit.setHint(getString(R.string.msg_key_search_member));
             searchEdit.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
             searchEdit.setBackground(null);
             searchEdit.addTextChangedListener(myTextWatcher);
@@ -1448,7 +1446,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
                 return;
             }
         } else if (type.equals(SearchModel.TYPE_STRUCT)) {
-            defaultIcon = R.drawable.ic_contact_struct;
+            defaultIcon = R.drawable.ic_contact_sub_struct;
         } else {
             defaultIcon = R.drawable.icon_person_default;
             if (!searchModel.getId().equals("null")) {
