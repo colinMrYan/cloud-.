@@ -71,7 +71,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="15sp"
-            android:text="群组名称"
+            android:text="@string/channel_group_members_name"
             android:layout_marginLeft="15dp"
             android:textColor="#999999"/>
         <com.inspur.emmcloud.widget.ClearEditText

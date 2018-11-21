@@ -22,7 +22,8 @@
     <string name="send">發送</string>
     <string name="picture">圖片</string>
     <string name="album">相冊</string>
-    <string name="take_photo">拍攝</string>
+    <string name="take_photo">拍照</string>
+    <string name="mention">提及</string>
     <string name="file">文件</string>
     <string name="next_step">下一步</string>
     <string name="pull_down_load_history">下拉載入歷史消息</string>
@@ -118,10 +119,11 @@
     <string name="all_day">全天</string>
     <string name="delete_group_member"> 刪除群成員</string>
     <string name="tax_ticket_info"> 增值稅專用發票開票資訊</string>
-    <string name="channel_group_info">群信息</string>
-    <string name="channel_group_name">群組名稱</string>
-    <string name="channel_group_image"> 群聊天圖片</string>
-    <string name="channel_group_file"> 群聊天文件</string>
+    <string name="channel_group_info">群详情</string>
+    <string name="channel_group_name">群名稱</string>
+    <string name="channel_group_image">群圖片</string>
+    <string name="channel_group_file">群文件</string>
+    <string name="channel_group_members_name">群名稱</string>
     <string name="channel_set_top"> 置頂聊天</string>
     <string name="message_without_interruption">消息免打擾</string>
     <string name="login_hint_text">用戶名/郵箱/手機號</string>
@@ -266,7 +268,7 @@
     <string name="administrators_of_channel">(管理員)</string>
     <string name="long_img">長圖</string>
     <string name="friend_list">好友列表</string>
-    <string name="join_discuss">加入討論吧</string>
+    <string name="join_discuss">討論一下吧</string>
     <string name="add_new_comment">添加新評論</string>
     <string name="socket_connecting">連接中</string>
     <string name="socket_close">已斷開</string>
@@ -636,7 +638,7 @@
     <string name="user_modify_modify">修改</string>
     <string name="user_info_my_info">個人資訊</string>
     <string name="user_info_organ">浪潮國際</string>
-    <string name="user_info_phone_number">聯繫方式</string>
+    <string name="user_info_phone_number">手機</string>
     <string name="user_no_storage">沒有存放裝置</string>
     <string name="user_employee_num">員工編號</string>
     <string name="user_worker_num">工號</string>

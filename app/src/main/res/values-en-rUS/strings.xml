@@ -23,6 +23,7 @@
     <string name="picture">Picture</string>
     <string name="album">Album</string>
     <string name="take_photo">Camera</string>
+    <string name="mention">Mention</string>
     <string name="file">Files</string>
     <string name="next_step">Next</string>
     <string name="pull_down_load_history">Drop load history message</string>
@@ -33,7 +34,7 @@
     <string name="add">Add</string>
     <string name="update">Update</string>
     <string name="download">Download</string>
-    <string name="confirm_modify_language">Confirm to modify language</string>
+    <string name="confirm_modify_language">switch to this language</string>
     <string name="file_type_not_recognize">Unrecognizable File type</string>
     <string name="return_app">Return Application</string>
     <string name="modify_success">Successfully Modified</string>
@@ -45,7 +46,7 @@
     <string name="unknown_error">Unknown Error</string>
     <string name="no_search_term">No more results</string>
     <string name="more">More</string>
-    <string name="check_update_text">Check new version</string>
+    <string name="check_update_text">Check New Version</string>
     <string name="app_is_lastest_version">This is the lastest version</string>
     <string name="check_update_fail">Checking new version failed</string>
     <string name="upgrade">Now</string>
@@ -119,8 +120,9 @@
     <string name="tax_ticket_info"> VAT Invoice Information</string>
     <string name="channel_group_info">Group Information</string>
     <string name="channel_group_name">Group Name</string>
-    <string name="channel_group_image"> Channel Image</string>
-    <string name="channel_group_file"> Channel File</string>
+    <string name="channel_group_image">Group Images</string>
+    <string name="channel_group_file">Group Files</string>
+    <string name="channel_group_members_name">Group Name</string>
     <string name="channel_set_top"> Top Chat</string>
     <string name="message_without_interruption">Do Not Disturb</string>
     <string name="login_hint_text">Name/E-mail/Phone</string>
@@ -214,7 +216,7 @@
     <string name="login_captchas_getcode_success">Code has been sent successfully</string>
     <string name="login_cost_report">Expense Report</string>
     <string name="login_your_contact">Your contact</string>
-    <string name="login_group_album">Group Photos</string>
+    <string name="login_group_album">Group Images</string>
     <string name="login_group_file">Group Files</string>
     <string name="login_authorization_expired">Authorization Expired</string>
     <string name="login_cant_login_with_sms">Your account is not allowed to log on with SMS</string>
@@ -274,8 +276,8 @@
     <string name="group_name_longth_valid">Group name, word overrun (no more than 40 characters)</string>
     <string name="message_create_group">Group Chat</string>
     <string name="business_card">Business Card</string>
-    <string name="no_channel_album">No group picture </string>
-    <string name="no_channel_file">No group file </string>
+    <string name="no_channel_album">No group pictures</string>
+    <string name="no_channel_file">No group files</string>
     <string name="hold_to_talk">Hold to Talk</string>
     <string name="release_to_send">Release to Send</string>
     <string name="release_to_cancel">release to cancel</string>
@@ -284,7 +286,7 @@
     <string name="play_fail">Unable to play</string>
     <string name="record_count_down_text">%1$d seconds left</string>
     <string name="voice_call">Voice Call</string>
-    <string name="sure_to_resend_message">Sure to resend this message?</string>
+    <string name="sure_to_resend_message">resend the message?</string>
     <string name="message_type_drafts">[Drafts]</string>
     <string name="quit_group">Quit Group</string>
     <string name="quit_group_warning_text">Confirm to leave team?</string>
@@ -633,7 +635,7 @@
     <string name="user_modify_modify">Modify</string>
     <string name="user_info_my_info">Profile</string>
     <string name="user_info_organ">Inspur</string>
-    <string name="user_info_phone_number">Phone Number</string>
+    <string name="user_info_phone_number">Phone</string>
     <string name="user_no_storage">No Storage</string>
     <string name="user_employee_num">NO.</string>
     <string name="user_worker_num">NO.</string>
@@ -712,7 +714,7 @@
     <string name="meetting_members_num">16</string>
     <string name="meeting_end">The end</string>
     <string name="meeting_topic_title">Topic</string>
-    <string name="meeting_members">Attendees</string>
+    <string name="meeting_members">Participants</string>
     <string name="meeting_log">Conference</string>
     <string name="meeting_ageda">The agenda</string>
     <string name="meeting_summary">Summary</string>

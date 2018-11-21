@@ -24,7 +24,8 @@
     <string name="send">发送</string>
     <string name="picture">图片</string>
     <string name="album">相册</string>
-    <string name="take_photo">拍摄</string>
+    <string name="take_photo">拍照</string>
+    <string name="mention">提及</string>
     <string name="file">文件</string>
     <string name="next_step">下一步</string>
     <string name="pull_down_load_history">下拉加载历史消息</string>
@@ -57,7 +58,7 @@
     <string name="cancel_filter">取消过滤</string>
     <string name="only_free">仅显示空闲</string>
     <string name="file_no_identifiable">不能识别的文件类型</string>
-    <string name="login_code_login_text">验证码登录</string>
+    <string name="login_code_login_text">短信登录</string>
     <string name="invite_friends_text">把云+推荐给朋友</string>
     <string name="tab_not_support_tips">%1$s功能已改版，请<Data><![CDATA[<font color=\'#0F7BCA\'>升级到最新版本</font>]]></Data></string>
 
@@ -121,10 +122,11 @@
     <string name="all_day">全天</string>
     <string name="delete_group_member"> 删除群成员</string>
     <string name="tax_ticket_info"> 增值税专用发票开票信息</string>
-    <string name="channel_group_info">群信息</string>
-    <string name="channel_group_name">群组名称</string>
-    <string name="channel_group_image"> 群聊天图片</string>
-    <string name="channel_group_file"> 群聊天文件</string>
+    <string name="channel_group_info">群详情</string>
+    <string name="channel_group_name">群名称</string>
+    <string name="channel_group_image"> 群图片</string>
+    <string name="channel_group_file"> 群文件</string>
+    <string name="channel_group_members_name"> 群名称</string>
     <string name="channel_set_top"> 置顶聊天</string>
     <string name="message_without_interruption">消息免打扰</string>
     <string name="login_hint_text">用户名/邮箱/手机号</string>
@@ -194,7 +196,7 @@
     <string name="login_direct">直接登录</string>
     <string name="login_change_phone_num">更换号码</string>
     <string name="login_captchas_login">验证码登录 </string>
-    <string name="login_get_captchas">获取验证码 </string>
+    <string name="login_get_captchas">通过短信修改密码</string>
     <string name="login_send_captchas">发送验证码 </string>
     <string name="login_set_pwd">设置密码 </string>
     <string name="login_resend">重新发送（  ） </string>
@@ -269,7 +271,7 @@
     <string name="administrators_of_channel">(管理员)</string>
     <string name="long_img">长图</string>
     <string name="friend_list">好友列表</string>
-    <string name="join_discuss">加入讨论吧</string>
+    <string name="join_discuss">讨论一下吧</string>
     <string name="add_new_comment">添加新评论</string>
     <string name="socket_connecting">连接中</string>
     <string name="socket_close">已断开</string>
@@ -636,7 +638,7 @@
     <string name="user_modify_modify">修改</string>
     <string name="user_info_my_info">个人信息</string>
     <string name="user_info_organ">浪潮国际</string>
-    <string name="user_info_phone_number">联系方式</string>
+    <string name="user_info_phone_number">手机</string>
     <string name="user_telephone">办公电话</string>
     <string name="user_no_storage">没有存储设备</string>
     <string name="user_employee_num">员工编号</string>
