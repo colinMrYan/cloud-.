@@ -42,7 +42,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 22
         versionCode 61
-        versionName "2.6.0"
+        versionName "2.7.0-alpha.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             abiFilters "armeabi-v7a", "x86"
@@ -62,7 +62,7 @@ android {
     configurations.all {
         // React Native依赖的findbugs版本更高
         resolutionStrategy.force 'com.google.code.findbugs:jsr305:3.0.0',
-                'com.squareup.okhttp3:okhttp:3.6.0','junit:junit:4.12'
+                'com.squareup.okhttp3:okhttp:3.6.0', 'com.android.support:support-annotations:23.4.0', 'junit:junit:4.12'
     }
     lintOptions {
         lintConfig file("lint.xml")
@@ -155,7 +155,7 @@ android {
 
 
 dependencies {
-    provided files('C:/Program Files (x86)/Java/jdk1.8.0_111/jre/lib/rt.jar')
+    //compile files('C:/Program Files (x86)/Java/jdk1.8.0_111/jre/lib/rt.jar')
     compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
@@ -240,6 +240,7 @@ dependencies {
     compile 'com.google.protobuf:protobuf-java:3.5.1'
     compile 'com.wang.avi:library:2.1.3'
     compile 'com.github.open-android:RoundedImageView:v1.0.0'
+    compile 'com.github.zafarkhaja:java-semver:0.7.2' //版本号包
 }
 repositories { flatDir { dirs 'aars' } }
 

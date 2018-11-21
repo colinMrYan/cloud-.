@@ -15,10 +15,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.MediaPlayerManagerUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.privates.AppUtils;
 import com.shuyu.waveview.FileUtils;
-
-import java.io.File;
 
 public class AudioRecordButton extends Button {
 
@@ -52,6 +49,7 @@ public class AudioRecordButton extends Button {
     private long mp3BeginTime;
     private boolean isDeviceError = false;
     private float lastCallBackDurationTime = 0;
+    private android.media.AudioManager audioManager;
 
     /**
      * 先实现两个参数的构造方法，布局会默认引用这个构造方法， 用一个 构造参数的构造方法来引用这个方法 * @param context
@@ -62,10 +60,14 @@ public class AudioRecordButton extends Button {
 
     public AudioRecordButton(Context context, AttributeSet attrs) {
         super(context, attrs);
+
+        audioManager = (android.media.AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         mDialogManager = new AudioDialogManager(getContext());
         setOnLongClickListener(new OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
+                audioManager.requestAudioFocus(null, android.media.AudioManager.STREAM_MUSIC,
+                        android.media.AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
                 isRecording = true;
                 mDialogManager.showRecordingDialog();
 //                if (AppUtils.getIsVoiceWordOpen()) {
@@ -330,6 +332,7 @@ public class AudioRecordButton extends Button {
         if (audioRecorderManager != null) {
             audioRecorderManager.stopRecord();
         }
+        audioManager.abandonAudioFocus(null);
     }
 
     /**
