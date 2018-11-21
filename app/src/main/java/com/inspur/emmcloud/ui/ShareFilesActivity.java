@@ -16,8 +16,8 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.appcenter.volume.VolumeHomePageActivity;
-import com.inspur.emmcloud.ui.chat.ChannelActivity;
 import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
+import com.inspur.emmcloud.ui.chat.ConversationActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.util.common.DensityUtil;
@@ -229,7 +229,7 @@ public class ShareFilesActivity extends BaseActivity {
             bundle.putString("share_type",isImageUriList(uriList)?"image":"file");
             bundle.putSerializable("share_paths", (Serializable) uriList);
             IntentUtils.startActivity(ShareFilesActivity.this, MyApplication.getInstance().isV0VersionChat()?
-                    ChannelV0Activity.class: ChannelActivity.class,bundle,true);
+                    ChannelV0Activity.class: ConversationActivity.class,bundle,true);
     }
 
     /**
