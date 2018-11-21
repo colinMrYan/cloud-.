@@ -273,7 +273,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 UIMessage uiMessage = uiMessageList.get(position);
                 int messageSendStatus = uiMessage.getSendStatus();
                 //当消息处于发送中状态时无法点击
-                if (messageSendStatus == 1) {
+                if (messageSendStatus == Message.MESSAGE_SEND_SUCCESS) {
                     openMessage(uiMessage.getMessage());
                 }
             }
@@ -376,7 +376,7 @@ public class ConversationActivity extends ConversationBaseActivity {
 
     /**
      * 打开消息
-     *
+     * 未发送成功的不可调用此方法，不会根据消息id获取评论
      * @param message
      */
     private void openMessage(Message message) {
@@ -830,6 +830,7 @@ public class ConversationActivity extends ConversationBaseActivity {
             MessageCacheUtil.saveMessage(ConversationActivity.this,message);
             notifyCommucationFragmentMessageSendStatus();
         }
+        message.setRead(Message.MESSAGE_READ);
         UIMessage UIMessage = new UIMessage(message);
         boolean isSendFail = handleUnSendMessage(message,status);
         //本地添加的消息设置为正在发送状态
@@ -924,25 +925,16 @@ public class ConversationActivity extends ConversationBaseActivity {
         if ((NetUtils.isNetworkConnected(MyApplication.getInstance(), false) &&
                 !(uiMessageList.size() > 0 && MessageCacheUtil.isDataInLocal(ConversationActivity.this, cid, uiMessageList
                         .get(0).getCreationDate(), 20)))) {
-            WSAPIService.getInstance().getHistoryMessage(cid, getNewMessageId());
+            String messageId = "";
+            for (UIMessage uiMessage:uiMessageList) {
+                if(uiMessage.getMessage().getSendStatus() == Message.MESSAGE_SEND_SUCCESS){
+                    messageId =  uiMessage.getMessage().getId();
+                }
+            }
+            WSAPIService.getInstance().getHistoryMessage(cid, messageId);
         } else {
             getHistoryMessageFromLocal();
         }
-    }
-
-    /**
-     * 获取本地发送成功的消息id
-     * @return
-     */
-    private String getNewMessageId() {
-        if(uiMessageList.size()>0){
-            for (UIMessage uiMessage:uiMessageList) {
-                if(uiMessage.getMessage().getSendStatus() == Message.MESSAGE_SEND_SUCCESS){
-                    return uiMessage.getMessage().getId();
-                }
-            }
-        }
-        return "";
     }
 
     private void getHistoryMessageFromLocal() {
