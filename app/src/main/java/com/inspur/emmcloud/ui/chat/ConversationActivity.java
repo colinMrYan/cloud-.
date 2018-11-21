@@ -876,7 +876,7 @@ public class ConversationActivity extends ConversationBaseActivity {
         UIMessage fakeUIMessage = new UIMessage(fakeMessageId);
         int index = uiMessageList.indexOf(fakeUIMessage);
         if (index != -1) {
-            uiMessageList.get(index).setSendStatus(2);
+            uiMessageList.get(index).setSendStatus(Message.MESSAGE_SEND_FAIL);
             handleUnSendMessage(uiMessageList.get(index).getMessage(),Message.MESSAGE_SEND_FAIL);
             adapter.setMessageList(uiMessageList);
             adapter.notifyItemChanged(index);
@@ -925,16 +925,25 @@ public class ConversationActivity extends ConversationBaseActivity {
         if ((NetUtils.isNetworkConnected(MyApplication.getInstance(), false) &&
                 !(uiMessageList.size() > 0 && MessageCacheUtil.isDataInLocal(ConversationActivity.this, cid, uiMessageList
                         .get(0).getCreationDate(), 20)))) {
-            String messageId = "";
-            for (UIMessage uiMessage:uiMessageList) {
-                if(uiMessage.getMessage().getSendStatus() == Message.MESSAGE_SEND_SUCCESS){
-                    messageId =  uiMessage.getMessage().getId();
-                }
-            }
-            WSAPIService.getInstance().getHistoryMessage(cid, messageId);
+            WSAPIService.getInstance().getHistoryMessage(cid, getNewMessageId());
         } else {
             getHistoryMessageFromLocal();
         }
+    }
+
+    /**
+     * 获取本地发送成功的消息id
+     * @return
+     */
+    private String getNewMessageId() {
+        if(uiMessageList.size()>0){
+            for (UIMessage uiMessage:uiMessageList) {
+                if(uiMessage.getMessage().getSendStatus() == Message.MESSAGE_SEND_SUCCESS){
+                    return uiMessage.getMessage().getId();
+                }
+            }
+        }
+        return "";
     }
 
     private void getHistoryMessageFromLocal() {
@@ -1027,7 +1036,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 String content = eventMessage.getContent();
                 JSONObject contentobj = JSONUtils.getJSONObject(content);
                 Message message = new Message(contentobj);
-                message.setRead(1);
+                message.setRead(Message.MESSAGE_READ);
                 MessageCacheUtil.handleRealMessage(MyApplication.getInstance(),message);
                 adapter.notifyDataSetChanged();
             }
@@ -1093,12 +1102,12 @@ public class ConversationActivity extends ConversationBaseActivity {
     public void onReiceveWSOfflineMessage(SimpleEventMessage eventMessage) {
         if (eventMessage.getAction().equals(Constant.EVENTBUS_TAG_CURRENT_CHANNEL_OFFLINE_MESSAGE)) {
             List<Message> offlineMessageList = (List<Message>) eventMessage.getMessageObj();
+            MessageCacheUtil.handleRealMessage(MyApplication.getInstance(),offlineMessageList,null,cid);
             Iterator<Message> it = offlineMessageList.iterator();
             //去重
             if (uiMessageList.size() > 0) {
                 while (it.hasNext()) {
                     Message offlineMessage = it.next();
-                    MessageCacheUtil.handleRealMessage(ConversationActivity.this,offlineMessage);
                     UIMessage uiMessage = new UIMessage(offlineMessage.getId());
                     if (uiMessageList.contains(uiMessage)) {
                         it.remove();
