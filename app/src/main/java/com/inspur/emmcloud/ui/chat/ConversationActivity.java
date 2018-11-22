@@ -287,7 +287,7 @@ public class ConversationActivity extends ConversationBaseActivity {
 
             @Override
             public void onMediaVoiceReRecognize(UIMessage uiMessage, BubbleLayout bubbleLayout, QMUILoadingView downloadLoadingView) {
-                showMeidaVoiceReRecognizerPop(uiMessage, bubbleLayout, downloadLoadingView);
+               // showMeidaVoiceReRecognizerPop(uiMessage, bubbleLayout, downloadLoadingView);
             }
 
             @Override

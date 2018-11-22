@@ -23,6 +23,7 @@ import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
+import com.github.zafarkhaja.semver.Version;
 import com.horcrux.svg.SvgPackage;
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechUtility;
@@ -293,12 +294,20 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
      */
     public RequestParams getHttpRequestParams(String url) {
         RequestParams params = new RequestParams(url);
+        String versionValue = AppUtils.getVersion(getInstance());
+        try {
+            Version version = Version.valueOf(versionValue);
+            versionValue = version.getNormalVersion();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
         params.addHeader(
                 "User-Agent",
                 "Android/" + AppUtils.getReleaseVersion() + "("
                         + AppUtils.GetChangShang() + " " + AppUtils.GetModel()
                         + ") " + "CloudPlus_Phone/"
-                        + AppUtils.getVersion(getInstance()));
+                        + versionValue);
         params.addHeader("X-Device-ID",
                 AppUtils.getMyUUID(getInstance()));
         params.addHeader("Accept", "application/json");
