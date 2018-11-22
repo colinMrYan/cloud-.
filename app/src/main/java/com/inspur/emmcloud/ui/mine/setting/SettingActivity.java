@@ -8,13 +8,18 @@ import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
+import com.inspur.emmcloud.api.apiservice.MineAPIService;
 import com.inspur.emmcloud.api.apiservice.WSAPIService;
+import com.inspur.emmcloud.bean.login.GetDeviceCheckResult;
+import com.inspur.emmcloud.bean.mine.GetExperienceUpgradeFlagResult;
 import com.inspur.emmcloud.bean.mine.Language;
 import com.inspur.emmcloud.bean.system.AppConfig;
 import com.inspur.emmcloud.bean.system.EventMessage;
@@ -25,6 +30,7 @@ import com.inspur.emmcloud.service.CoreService;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.chat.DisplayMediaVoiceMsg;
 import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
@@ -35,6 +41,7 @@ import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.PushIdManagerUtils;
 import com.inspur.emmcloud.util.privates.TabAndAppExistUtils;
+import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.AppConfigCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MyAppCacheUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
@@ -51,10 +58,13 @@ public class SettingActivity extends BaseActivity {
 
     private static final int DATA_CLEAR_SUCCESS = 0;
     private Handler handler;
-    private LoadingDialog loadingDlg;
     private SwitchView webAutoRotateSwitch;
     private SwitchView backgroundRunSwitch;
     private SwitchView voice2WordSwitch;
+    private RelativeLayout experienceUpgradeLayout;
+    private SwitchView experienceUpgradeSwitch;
+    private MineAPIService apiService;
+    private LoadingDialog loadingDlg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +79,8 @@ public class SettingActivity extends BaseActivity {
 
     private void initView() {
         loadingDlg = new LoadingDialog(this);
+        apiService = new MineAPIService(this);
+        apiService.setAPIInterface(new WebService());
         webAutoRotateSwitch = (SwitchView) findViewById(R.id.web_auto_rotate_switch);
         setWebAutoRotateState();
         webAutoRotateSwitch.setOnStateChangedListener(onStateChangedListener);
@@ -76,6 +88,8 @@ public class SettingActivity extends BaseActivity {
         boolean isAppSetRunBackground = PreferencesUtils.getBoolean(getApplicationContext(), Constant.PREF_APP_RUN_BACKGROUND, false);
         backgroundRunSwitch.setOpened(isAppSetRunBackground);
         backgroundRunSwitch.setOnStateChangedListener(onStateChangedListener);
+        experienceUpgradeLayout = (RelativeLayout)findViewById(R.id.rl_experience_upgrade);
+        experienceUpgradeSwitch = (SwitchView)findViewById(R.id.sw_experience_upgrade);
         if(MyApplication.getInstance().isV1xVersionChat()){
             voice2WordSwitch = (SwitchView) findViewById(R.id.switch_voice_word);
             findViewById(R.id.rl_voice_word).setVisibility(View.VISIBLE);
@@ -83,6 +97,15 @@ public class SettingActivity extends BaseActivity {
             voice2WordSwitch.setOpened(AppUtils.getIsVoiceWordOpen());
             voice2WordSwitch.setOnStateChangedListener(onStateChangedListener);
         }
+        if (AppUtils.isAppVersionStandard()){
+            getUserExperienceUpgradeFlag();
+            experienceUpgradeLayout.setVisibility(View.VISIBLE);
+            boolean isExperienceUpgradeFlag = PreferencesByUserAndTanentUtils.getBoolean(MyApplication.getInstance(),Constant.PREF_EXPERIENCE_UPGRATE,false);
+            LogUtils.jasonDebug("isExperienceUpgradeFlag=="+isExperienceUpgradeFlag);
+            experienceUpgradeSwitch.setOpened(isExperienceUpgradeFlag);
+            experienceUpgradeSwitch.setOnStateChangedListener(onStateChangedListener);
+        }
+
     }
 
     private void setWebAutoRotateState() {
@@ -132,6 +155,9 @@ public class SettingActivity extends BaseActivity {
                     setWebAutoRotateState();
                     saveWebAutoRotateConfig(true);
                     break;
+                case R.id.sw_experience_upgrade:
+                    updateUserExperienceUpgradeFlag();
+                    break;
                 default:
                     break;
             }
@@ -152,6 +178,9 @@ public class SettingActivity extends BaseActivity {
                     AppConfigCacheUtils.saveAppConfig(MyApplication.getInstance(), appConfig);
                     setWebAutoRotateState();
                     saveWebAutoRotateConfig(false);
+                    break;
+                case R.id.sw_experience_upgrade:
+                    updateUserExperienceUpgradeFlag();
                     break;
                 default:
                     break;
@@ -370,4 +399,59 @@ public class SettingActivity extends BaseActivity {
         }
     }
 
+    private void getUserExperienceUpgradeFlag(){
+       if (NetUtils.isNetworkConnected(MyApplication.getInstance(),false)){
+           apiService.getUserExperienceUpgradeFlag();
+       }
+
+    }
+
+    private void updateUserExperienceUpgradeFlag(){
+        boolean isExperienceUpgradeFlag = PreferencesByUserAndTanentUtils.getBoolean(MyApplication.getInstance(),Constant.PREF_EXPERIENCE_UPGRATE,false);
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance())){
+            loadingDlg.show();
+            apiService.updateUserExperienceUpgradeFlag(isExperienceUpgradeFlag?0:1);
+        }else {
+            experienceUpgradeSwitch.setOpened(isExperienceUpgradeFlag);
+        }
+
+    }
+
+    private class WebService extends APIInterfaceInstance{
+        @Override
+        public void returnExperienceUpgradeFlagSuccess(GetExperienceUpgradeFlagResult getExperienceUpgradeFlagResult) {
+            boolean isExperienceUpgradeFlag = (getExperienceUpgradeFlagResult.getStatus() == 1);
+            PreferencesByUserAndTanentUtils.putBoolean(MyApplication.getInstance(),Constant.PREF_EXPERIENCE_UPGRATE,isExperienceUpgradeFlag);
+            if (experienceUpgradeSwitch.isOpened() != isExperienceUpgradeFlag){
+                experienceUpgradeSwitch.setOpened(isExperienceUpgradeFlag);
+            }
+
+        }
+
+        @Override
+        public void returnExperienceUpgradeFlagFail(String error, int errorCode) {
+
+        }
+
+        @Override
+        public void returnDeviceCheckSuccess(GetDeviceCheckResult getDeviceCheckResult) {
+            super.returnDeviceCheckSuccess(getDeviceCheckResult);
+        }
+
+        @Override
+        public void returnUpdateExperienceUpgradeFlagSuccess() {
+            LoadingDialog.dimissDlg(loadingDlg);
+            boolean isExperienceUpgradeFlag = PreferencesByUserAndTanentUtils.getBoolean(MyApplication.getInstance(),Constant.PREF_EXPERIENCE_UPGRATE,false);
+            PreferencesByUserAndTanentUtils.putBoolean(MyApplication.getInstance(),Constant.PREF_EXPERIENCE_UPGRATE,!isExperienceUpgradeFlag);
+            experienceUpgradeSwitch.setOpened(!isExperienceUpgradeFlag);
+        }
+
+        @Override
+        public void returnUpdateExperienceUpgradeFlagFail(String error, int errorCode) {
+            LoadingDialog.dimissDlg(loadingDlg);
+            WebServiceMiddleUtils.hand(MyApplication.getInstance(),error,errorCode);
+            boolean isExperienceUpgradeFlag = PreferencesByUserAndTanentUtils.getBoolean(MyApplication.getInstance(),Constant.PREF_EXPERIENCE_UPGRATE,false);
+            experienceUpgradeSwitch.setOpened(isExperienceUpgradeFlag);
+        }
+    }
 }

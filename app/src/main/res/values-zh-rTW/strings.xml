@@ -590,6 +590,7 @@
     <string name="web_app_auto_rotate">Web應用支持旋轉</string>
     <string name="run_background">後臺運行</string>
     <string name="signout_fail">註銷登錄失敗，請確保網絡連接正常</string>
+    <string name="setting_join_experience_plan">Join the upgrade experience plan</string>
 
     <string name="contact">通訊錄</string>
     <string name="web">web</string>
@@ -674,7 +675,7 @@
     <string name="address_servicenum_text">服務號</string>
     <string name="org_struct_text">組織/架構  </string>
     <string name="please_select_app_of_mail">請選擇郵件類應用</string>
-    <string name="recently_used">最近常用</string>
+    <string name="recently_used">常用連絡人</string>
     <string name="all">全部</string>
     <string name="seach_blank">搜索...                   </string>
     <string name="origanization_struct">公司/團隊 組織架構</string>

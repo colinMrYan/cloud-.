@@ -548,6 +548,23 @@ public class APIUri {
     }
 
     /**
+     * 获取创建聊天url
+     * @return
+     */
+    public static String getCreateDirectConversationUrl(){
+        return getECMChatConversationBaseUrl() + "/channel/direct";
+    }
+
+    /**
+     * 获取创建聊天url
+     * @return
+     */
+    public static String getCreateGroupConversationUrl(){
+        return getECMChatConversationBaseUrl() + "/channel/group";
+    }
+
+
+    /**
      * 获取更新群组名称url
      * @param cid
      * @return
@@ -1466,6 +1483,18 @@ public class APIUri {
      */
     public static String getCardPackageUrl(){
         return MyApplication.getInstance().getClusterEmm()+"api/buildinapp/v6.0/CardPackage";
+    }
+
+    /**
+     * 获取是否打开体验升级
+     * @return
+     */
+    public static String getUserExperienceUpgradeFlagUrl(){
+        return MyApplication.getInstance().getClusterEmm()+"api/sys/v3.0/upgrade/checkExperiencePlan";
+    }
+
+    public static String getUpdateUserExperienceUpgradeFlagUrl(int flag){
+        return MyApplication.getInstance().getClusterEmm()+"api/sys/v3.0/upgrade/joinExperiencePlan?flag="+flag;
     }
 
     /**

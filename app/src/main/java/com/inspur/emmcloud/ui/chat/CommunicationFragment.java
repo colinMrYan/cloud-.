@@ -60,14 +60,12 @@ import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.AppTabUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
-import com.inspur.emmcloud.util.privates.ChatCreateUtils.OnCreateGroupChannelListener;
 import com.inspur.emmcloud.util.privates.ConversationGroupIconUtils;
 import com.inspur.emmcloud.util.privates.DownLoaderUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.ScanQrCodeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelCacheUtils;
-import com.inspur.emmcloud.util.privates.cache.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 import com.inspur.emmcloud.util.privates.cache.MessageMatheSetCacheUtils;
@@ -373,7 +371,7 @@ public class CommunicationFragment extends Fragment {
                     contactIntent.putExtra(ContactSearchFragment.EXTRA_TYPE, 2);
                     contactIntent.putExtra(ContactSearchFragment.EXTRA_MULTI_SELECT, true);
                     contactIntent.putExtra(ContactSearchFragment.EXTRA_TITLE,
-                            getActivity().getString(R.string.creat_group));
+                            getActivity().getString(R.string.message_create_group));
                     contactIntent.setClass(getActivity(), ContactSearchActivity.class);
                     startActivityForResult(contactIntent, CREAT_CHANNEL_GROUP);
                     popupWindow.dismiss();
@@ -777,20 +775,15 @@ public class CommunicationFragment extends Fragment {
     private void creatGroupChannel(JSONArray peopleArray) {
         // TODO Auto-generated method stub
         new ChatCreateUtils().createGroupChannel(getActivity(), peopleArray,
-                new OnCreateGroupChannelListener() {
+                new ChatCreateUtils.OnCreateGroupChannelListener() {
 
                     @Override
                     public void createGroupChannelSuccess(
                             ChannelGroup channelGroup) {
                         // TODO Auto-generated method stub
                         Bundle bundle = new Bundle();
-                        bundle.putString("cid", channelGroup.getCid());
-                        bundle.putString("channelType", channelGroup.getType());
-                        bundle.putString("title", channelGroup.getChannelName());
-                        IntentUtils.startActivity(getActivity(),
-                                ChannelActivity.class, bundle);
-                        ChannelGroupCacheUtils.saveChannelGroup(getActivity(),
-                                channelGroup);
+                        bundle.putString(ConversationActivity.EXTRA_CID, channelGroup.getCid());
+                        IntentUtils.startActivity(getActivity(),ConversationActivity.class, bundle);
                         getConversationList();
                     }
 

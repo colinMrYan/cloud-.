@@ -592,6 +592,8 @@
     <string name="turn_off_success">关闭成功</string>
     <string name="run_background">后台运行</string>
     <string name="signout_fail">注销失败，请确保网络连接正常</string>
+    <string name="setting_join_experience_plan">加入升级体验计划</string>
+
 
     <string name="contact">通讯录</string>
     <string name="web">web</string>
@@ -675,7 +677,7 @@
     <string name="address_servicenum_text">服务号</string>
     <string name="org_struct_text">组织/架构  </string>
     <string name="please_select_app_of_mail">请选择邮件类应用</string>
-    <string name="recently_used">最近常用</string>
+    <string name="recently_used">常用联系人</string>
     <string name="all">全部</string>
     <string name="seach_blank">搜索...                   </string>
     <string name="origanization_struct">公司/团队 组织架构</string>

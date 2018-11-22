@@ -153,7 +153,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
             params.topMargin = DensityUtil.dip2px(getApplicationContext(), 2);
             params.bottomMargin =  params.topMargin;
             int piddingTop = DensityUtil.dip2px(getApplicationContext(), 1);
-            int piddingLeft = DensityUtil.dip2px(getApplicationContext(), 5);
+            int piddingLeft = DensityUtil.dip2px(getApplicationContext(), 10);
             searchEdit.setPadding(piddingLeft, piddingTop, piddingLeft, piddingTop);
             searchEdit.setLayoutParams(params);
             searchEdit.setSingleLine(true);
@@ -162,6 +162,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
             searchEdit.setBackground(null);
             searchEdit.addTextChangedListener(myTextWatcher);
         }
+        searchEdit.setHint((selectMemList.size() == 0) ? getString(R.string.msg_key_search_member) : "");
         flowLayout.addView(searchEdit);
     }
 
@@ -216,19 +217,17 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
             final SearchModel searchModel = selectMemList.get(i);
             TextView searchResultText = new TextView(this);
             FlowLayout.LayoutParams params = new FlowLayout.LayoutParams(
-                    LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-            params.rightMargin = DensityUtil.dip2px(getApplicationContext(), 5);
-            params.topMargin = DensityUtil.dip2px(getApplicationContext(), 2);
-            params.bottomMargin =  params.topMargin;
+                    ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.leftMargin = DensityUtil.dip2px(MyApplication.getInstance(), 5);
+            params.topMargin = DensityUtil.dip2px(MyApplication.getInstance(), 2);
+            params.bottomMargin = params.topMargin;
             searchResultText.setLayoutParams(params);
-            int piddingTop = DensityUtil.dip2px(getApplicationContext(), 1);
-            int piddingLeft = DensityUtil.dip2px(getApplicationContext(), 5);
+            int piddingTop = DensityUtil.dip2px(MyApplication.getInstance(), 1);
+            int piddingLeft = DensityUtil.dip2px(MyApplication.getInstance(), 5);
             searchResultText.setPadding(piddingLeft, piddingTop, piddingLeft, piddingTop);
             searchResultText.setGravity(Gravity.CENTER);
-            searchResultText.setBackgroundResource(R.drawable.bg_corner_search_member);
             searchResultText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-            searchResultText.setTextColor(getResources()
-                    .getColor(R.color.white));
+            searchResultText.setTextColor(Color.parseColor("#0F7BCA"));
             searchResultText.setText(selectMemList.get(i).getName());
             searchResultText.setOnClickListener(new OnClickListener() {
 
@@ -238,7 +237,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
                     changeMembers(searchModel);
                 }
             });
-            int paddingLeft = DensityUtil.dip2px(getApplicationContext(), 5);
+            int paddingLeft = DensityUtil.dip2px(getApplicationContext(), 10);
             int paddingTop = DensityUtil.dip2px(getApplicationContext(), 1);
             searchResultText.setPadding(paddingLeft, paddingTop, paddingLeft,
                     paddingTop);
@@ -476,10 +475,8 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
             viewHolder.nameText.setText(searchModel.getCompleteName());
             if (selectMemList.contains(searchModel)) {
                 viewHolder.selectedImg.setVisibility(View.VISIBLE);
-                viewHolder.nameText.setTextColor(Color.parseColor("#0f7bca"));
             } else {
                 viewHolder.selectedImg.setVisibility(View.INVISIBLE);
-                viewHolder.nameText.setTextColor(Color.parseColor("#030303"));
             }
             return convertView;
         }
@@ -547,21 +544,18 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
             arg0.titleText.setText(groupTextList.get(arg1).getName());
 
             if (count > 1) {
-                arg0.titleText.setBackgroundColor(Color.parseColor("#d8d8d8"));
                 if (arg1 != count - 1) {
-                    arg0.titleImg
-                            .setImageResource(R.drawable.icon_group_title_mid_img);
-                    arg0.titleText.setTextColor(Color.parseColor("#EFEFF4"));
+                    arg0.titleImg.setVisibility(View.VISIBLE);
+                    arg0.titleText
+                            .setTextColor(Color.parseColor("#018DD4"));
                 } else {
-                    arg0.titleImg
-                            .setImageResource(R.drawable.icon_group_title_end_img);
-                    arg0.titleText.setTextColor(Color.parseColor("#ffffff"));
+                    arg0.titleImg.setVisibility(View.GONE);
+                    arg0.titleText
+                            .setTextColor(Color.parseColor("#666666"));
                 }
             } else {
-                arg0.titleText
-                        .setBackgroundColor(Color.parseColor("#00000000"));
-                arg0.titleText.setTextColor(Color.parseColor("#8f8e94"));
-                arg0.titleImg.setImageDrawable(null);
+                arg0.titleText.setTextColor(Color.parseColor("#666666"));
+                arg0.titleImg.setVisibility(View.GONE);
             }
         }
 

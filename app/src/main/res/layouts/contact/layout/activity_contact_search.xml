@@ -68,13 +68,13 @@
 
             <RelativeLayout
                 android:id="@+id/layout"
-                android:layout_gravity="center_vertical"
-                android:paddingLeft="10dp"
-                android:paddingTop="3dp"
-                android:paddingBottom="3dp"
-                android:paddingRight="10dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:paddingBottom="3dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="10dp"
+                android:paddingTop="3dp">
 
                 <com.inspur.emmcloud.widget.FlowLayout
                     android:id="@+id/flowlayout"
@@ -83,6 +83,7 @@
                     android:gravity="center_vertical" />
             </RelativeLayout>
         </com.inspur.emmcloud.widget.MaxHightScrollView>
+
         <View
             android:id="@+id/space_edit"
             android:layout_width="match_parent"
@@ -94,8 +95,7 @@
             android:id="@+id/origin_all_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/space_edit"
-            >
+            android:layout_below="@id/space_edit">
 
             <LinearLayout
                 android:id="@+id/open_group_layout"
@@ -108,20 +108,19 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="39dp"
-                    android:background="#efeff4">
+                    android:layout_height="40dp">
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/open_title_list"
+                        android:paddingLeft="10dp"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-                    </android.support.v7.widget.RecyclerView>
+                        android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
                 </RelativeLayout>
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
-                    android:background="#e3e3e3" />
+                    android:background="#E3E3E3" />
 
                 <ListView
                     android:id="@+id/open_first_group_list"
@@ -142,27 +141,29 @@
                     android:id="@+id/orgin_first_group_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/white"
                     android:layout_marginBottom="10dp"
+                    android:background="@color/white"
                     android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/title_all_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingTop="10dp"
-                        android:paddingBottom="10dp"
                         android:background="@color/white"
                         android:gravity="center_vertical"
+                        android:paddingBottom="10dp"
                         android:paddingLeft="15dp"
                         android:paddingRight="10dp"
+                        android:paddingTop="10dp"
                         android:text="@string/all"
                         android:textColor="#666666"
                         android:textSize="16sp" />
+
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="0.5dp"
                         android:background="#e3e3e3" />
+
                     <RelativeLayout
                         android:id="@+id/struct_layout"
                         android:layout_width="match_parent"
@@ -228,6 +229,7 @@
                             android:textColor="#030303"
                             android:textSize="@dimen/content_title_textsize" />
                     </RelativeLayout>
+
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="0.5dp"
@@ -238,9 +240,9 @@
                 <LinearLayout
                     android:id="@+id/orgin_second_group_layout"
                     android:layout_width="match_parent"
-                    android:background="@color/white"
                     android:layout_height="0dp"
                     android:layout_weight="1.0"
+                    android:background="@color/white"
                     android:orientation="vertical">
 
                     <TextView
@@ -248,16 +250,18 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="#ffffff"
-                        android:paddingTop="10dp"
-                        android:paddingBottom="10dp"
                         android:gravity="center_vertical"
+                        android:paddingBottom="10dp"
                         android:paddingLeft="15dp"
+                        android:paddingTop="10dp"
                         android:textColor="#666666"
                         android:textSize="@dimen/content_title_textsize" />
+
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="0.5dp"
                         android:background="#e3e3e3" />
+
                     <ListView
                         android:id="@+id/second_group_list"
                         android:layout_width="match_parent"
@@ -273,7 +277,7 @@
             android:id="@+id/pop_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/search_edit_layout"
+            android:layout_below="@id/space_edit"
             android:scrollbars="none"
             android:visibility="gone">
 
@@ -286,19 +290,21 @@
                     android:id="@+id/pop_third_group_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
                     android:background="@color/white"
                     android:orientation="vertical">
 
                     <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="39dp"
-                        android:background="#efeff4">
+                        android:layout_height="40dp"
+                        android:background="#ffffff">
 
                         <android.support.v7.widget.RecyclerView
                             android:id="@+id/pop_third_title_list"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_toLeftOf="@+id/pop_third_group_more_text"></android.support.v7.widget.RecyclerView>
+                            android:layout_toLeftOf="@+id/pop_third_group_more_text"
+                            android:paddingLeft="7dp"></android.support.v7.widget.RecyclerView>
 
                         <TextView
                             android:id="@+id/pop_third_group_more_text"
@@ -315,7 +321,10 @@
                             android:textSize="16sp"
                             android:visibility="gone" />
                     </RelativeLayout>
-
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:background="#e3e3e3" />
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
@@ -348,14 +357,15 @@
 
                     <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="39dp"
-                        android:background="#efeff4">
+                        android:layout_height="40dp"
+                        android:background="#ffffff">
 
                         <android.support.v7.widget.RecyclerView
                             android:id="@+id/pop_second_title_list"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_toLeftOf="@+id/pop_second_group_more_text"></android.support.v7.widget.RecyclerView>
+                            android:layout_toLeftOf="@+id/pop_second_group_more_text"
+                            android:paddingLeft="7dp"></android.support.v7.widget.RecyclerView>
 
                         <TextView
                             android:id="@+id/pop_second_group_more_text"
@@ -372,7 +382,10 @@
                             android:textSize="16sp"
                             android:visibility="gone" />
                     </RelativeLayout>
-
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:background="#e3e3e3" />
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
