@@ -672,7 +672,7 @@
     <string name="address_servicenum_text">Service number</string>
     <string name="org_struct_text">Organization/Architecture  </string>
     <string name="please_select_app_of_mail">Please select the application of the type of mail</string>
-    <string name="recently_used">Frequently Used</string>
+    <string name="recently_used">Frequent</string>
     <string name="all">All</string>
     <string name="seach_blank">Search...                   </string>
     <string name="origanization_struct">Company/Organization</string>
