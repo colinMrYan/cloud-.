@@ -1000,6 +1000,14 @@ public class ConversationActivity extends ConversationBaseActivity {
                         }
 
                     }
+                    Long creationDate = 0L;
+                    Message message = MessageCacheUtil.getMessageByMid(MyApplication.getInstance(),receivedWSMessage.getId());
+                    if(message != null){
+                        creationDate = message.getCreationDate();
+                    }else {
+                        creationDate = MessageCacheUtil.getMessageByMid(MyApplication.getInstance(),receivedWSMessage.getTmpId()).getCreationDate();
+                    }
+                    receivedWSMessage.setCreationDate(creationDate);
                     if (index == -1) {
                         uiMessageList.add(new UIMessage(receivedWSMessage));
                         adapter.setMessageList(uiMessageList);

@@ -6,7 +6,6 @@ import com.inspur.emmcloud.bean.chat.MatheSet;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.FileUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 
 import org.xutils.db.sqlite.WhereBuilder;
@@ -446,7 +445,6 @@ public class MessageCacheUtil {
             if (message != null){
                 lastMessageId = message.getId();
             }
-            LogUtils.YfcDebug("消息id:"+lastMessageId);
         }catch (Exception e){
             e.printStackTrace();
         }
