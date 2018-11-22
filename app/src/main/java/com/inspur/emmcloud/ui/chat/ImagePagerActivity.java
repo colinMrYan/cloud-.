@@ -145,6 +145,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
                 bundle.putString("mid", imgTypeMessageList.get(pagerPosition).getId());
                 bundle.putString("cid", imgTypeMessageList.get(pagerPosition).getChannel());
                 bundle.putString("from", "imagePager");
+                //能看到的消息应在上一层控制都是发送成功的消息
                 Intent intent = new Intent(ImagePagerActivity.this, ChannelMessageDetailActivity.class);
                 intent.putExtras(bundle);
                 startActivityForResult(intent, CHECK_IMG_COMMENT);

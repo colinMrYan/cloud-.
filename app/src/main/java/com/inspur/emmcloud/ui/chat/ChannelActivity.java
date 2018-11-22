@@ -326,7 +326,7 @@ public class ChannelActivity extends MediaPlayBaseActivity {
                     UIMessage uiMessage = uiMessageList.get(position);
                     int messageSendStatus = uiMessage.getSendStatus();
                     //当消息处于发送中状态时无法点击
-                    if (messageSendStatus == 1) {
+                    if (messageSendStatus == Message.MESSAGE_SEND_SUCCESS) {
                         openMessage(uiMessage.getMessage());
                     }
                 }
@@ -424,7 +424,7 @@ public class ChannelActivity extends MediaPlayBaseActivity {
 
     /**
      * 打开消息
-     *
+     * 未发送成功的不可调用此方法，不会根据消息id获取评论
      * @param message
      */
     private void openMessage(Message message) {

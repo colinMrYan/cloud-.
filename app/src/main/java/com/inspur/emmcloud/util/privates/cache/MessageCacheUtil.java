@@ -129,7 +129,7 @@ public class MessageCacheUtil {
     }
 
     /**
-     * 获取频道未读消息条数
+     * 获取频道未读消息条数，
      * @param context
      * @param cid
      * @return
@@ -138,13 +138,16 @@ public class MessageCacheUtil {
         long unreadCount = 0;
         try {
             Long lastReadMessageCreationDate = 0L;
-            Message lastReadMessage =  DbCacheUtils.getDb(context).selector(Message.class).where("read","=",1).and("channel", "=", cid).orderBy("creationDate", true).findFirst();
+            Message lastReadMessage =  DbCacheUtils.getDb(context).selector(Message.class).where("read","=",1)
+                    .and("channel", "=", cid).orderBy("creationDate", true).findFirst();
             if (lastReadMessage != null){
                 lastReadMessageCreationDate = lastReadMessage.getCreationDate();
 
 
             }
-            unreadCount = DbCacheUtils.getDb(context).selector(Message.class).where("creationDate",">",lastReadMessageCreationDate).and("channel", "=", cid).count();
+            unreadCount = DbCacheUtils.getDb(context).selector(Message.class).
+                    where("creationDate",">",lastReadMessageCreationDate)
+                    .and("channel", "=", cid).count();
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -176,7 +179,7 @@ public class MessageCacheUtil {
 
     /**
      * 获取历史消息列表
-     *
+     * 给UiConversation用，沟通列表需要显示所有四种状态的消息
      * @param context
      * @param cid
      * @param targetMessageCreationDate
@@ -187,7 +190,6 @@ public class MessageCacheUtil {
                                                                            String cid, Long targetMessageCreationDate, int num) {
         List<Message> messageList = null;
         try {
-
             if (targetMessageCreationDate == null) {
                 messageList = DbCacheUtils.getDb(context).selector(Message.class)
                         .where("channel", "=", cid).and("channel", "=", cid).orderBy("creationDate", true)
@@ -233,7 +235,7 @@ public class MessageCacheUtil {
     }
 
     /**
-     * 获取历史消息列表
+     * 获取历史消息列表，给ConversationActivity用，包含发送成功，发送失败，发送中三种状态，不包含编辑状态
      *
      * @param context
      * @param cid
@@ -280,9 +282,10 @@ public class MessageCacheUtil {
     public static Message getNewMessge(Context context, String cid) {
         Message message = null;
         try {
-
             message = DbCacheUtils.getDb(context).selector(Message.class)
-                    .where("channel", "=", cid).orderBy("creationDate", true).findFirst();
+                    .where("channel", "=", cid)
+                    .and("sendStatus","=",Message.MESSAGE_SEND_SUCCESS)
+                    .orderBy("creationDate", true).findFirst();
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -313,9 +316,8 @@ public class MessageCacheUtil {
                     (Message.class)
                     .where("creationDate", "between",
                             new String[]{mathSetStart + "", targetCreateDate + ""})
+                    .and("sendStatus","!=",Message.MESSAGE_SEND_EDIT)
                     .and("creationDate", "!=", targetCreateDate).and("channel", "=", cid).count();
-
-
             if (continuousCount >= num) {
                 return true;
             }
@@ -346,28 +348,6 @@ public class MessageCacheUtil {
     }
 
     /**
-     * 获取频道内比目标消息更新的消息的条数
-     *
-     * @param context
-     * @param cid
-     * @param targetMessageReadCreationDate
-     * @return
-     */
-    public static int getNewerMessageCount(Context context, String cid, long targetMessageReadCreationDate) {
-        int count = 0;
-        try {
-
-            count = (int) DbCacheUtils.getDb(context).selector(Message.class)
-                    .where("creationDate", ">", targetMessageReadCreationDate).and("channel", "=", cid).count();
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        return count;
-
-    }
-
-    /**
      * 获取特定频道图片类型的消息
      *
      * @param context
@@ -381,8 +361,7 @@ public class MessageCacheUtil {
     }
 
     /**
-     * 获取特定频道图片类型的消息
-     *
+     * 获取特定频道图片类型的消息，在获取时应当只获取发送成功的消息
      * @param context
      * @param cid
      * @param desc
@@ -394,7 +373,11 @@ public class MessageCacheUtil {
             imgTypeMessageList = DbCacheUtils.getDb(context).selector
                     (Message.class)
                     .where("channel", "=", cid)
-                    .and(WhereBuilder.b("type", "=", "image").or("type", "=", "res_image").or("type", "=", "media/image")).orderBy("creationDate", desc).findAll();
+                    .and(WhereBuilder.b("type", "=", "image")
+                            .or("type", "=", "res_image")
+                            .or("type", "=", "media/image"))
+                    .and("sendStatus","=",Message.MESSAGE_SEND_SUCCESS)
+                    .orderBy("creationDate", desc).findAll();
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -406,8 +389,7 @@ public class MessageCacheUtil {
     }
 
     /**
-     * 获取特定频道图片类型的消息
-     *
+     * 获取特定频道图片类型的消息，在获取时应当只获取发送成功的消息
      * @param context
      * @param cid
      * @return
@@ -417,7 +399,9 @@ public class MessageCacheUtil {
         try {
 
             fileTypeMessageList = DbCacheUtils.getDb(context).selector(Message.class)
-                    .where("channel", "=", cid).and(WhereBuilder.b("type", "=", "res_file").or("type", "=", "file/regular-file"))
+                    .where("channel", "=", cid).and(WhereBuilder.b("type", "=", "res_file")
+                            .or("type", "=", "file/regular-file"))
+                    .and("sendStatus","=",Message.MESSAGE_SEND_SUCCESS)
                     .orderBy("creationDate", true).findAll();
         } catch (Exception e) {
             // TODO Auto-generated catch block
@@ -430,16 +414,36 @@ public class MessageCacheUtil {
 
     }
 
+    /**
+     * 获取最新消息的消息id
+     * @param context
+     * @return
+     */
+    public static String getLastSuccessMessageIdByCid(Context context, String cid){
+        String lastMessageId = null;
+        try {
+            Message message = DbCacheUtils.getDb(context).selector(Message.class).where("channel", "=", cid)
+                    .orderBy("creationDate", true)
+                    .and("sendStatus","=",Message.MESSAGE_SEND_SUCCESS).findFirst();
+            if (message != null){
+                lastMessageId = message.getId();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return lastMessageId;
+    }
 
     /**
      * 获取最新消息的消息id
      * @param context
      * @return
      */
-    public static String getLastMessageId(Context context){
+    public static String getLastSuccessMessageId(Context context){
         String lastMessageId = null;
         try {
-            Message message = DbCacheUtils.getDb(context).selector(Message.class).orderBy("creationDate", true).findFirst();
+            Message message = DbCacheUtils.getDb(context).selector(Message.class).where("sendStatus","=",Message.MESSAGE_SEND_SUCCESS)
+                    .orderBy("creationDate", true).findFirst();
             if (message != null){
                 lastMessageId = message.getId();
             }
@@ -504,7 +508,11 @@ public class MessageCacheUtil {
      */
     public static void handleRealMessage(Context context, List<Message> messageList, Long targetMessageCreationDate,String cid){
         if (messageList.size()>0){
-            List<Message> localFakeMessageList = getLocalFakeMessageList(context,cid);
+            List<String> messageTmpIdList = new ArrayList<>();
+            for (Message message:messageList) {
+                messageTmpIdList.add(message.getTmpId());
+            }
+            List<Message> localFakeMessageList = getLocalFakeMessageList(context,cid,messageTmpIdList);
             for(int i = 0; i < messageList.size(); i++){
                 for (int j = 0; j < localFakeMessageList.size(); j++) {
                     if(messageList.get(i).getTmpId().equals(localFakeMessageList.get(j).getTmpId())){
@@ -525,16 +533,18 @@ public class MessageCacheUtil {
      * @param context
      * @return
      */
-    private static List<Message> getLocalFakeMessageList(Context context,String cid) {
+    private static List<Message> getLocalFakeMessageList(Context context,String cid,List<String> messgeTmpIdList) {
         List<Message> messageList = new ArrayList<>();
         try{
             if(StringUtils.isBlank(cid)){
                 messageList =  DbCacheUtils.getDb(context).selector(Message.class)
                         .where("channel", "=", cid).and("sendStatus","==",Message.MESSAGE_SEND_FAIL)
+                        .or("sendStatus","=",Message.MESSAGE_SEND_ING).and("id","in",messgeTmpIdList)
                        .findAll();
             }else{
                 messageList = DbCacheUtils.getDb(context).selector(Message.class)
                         .where("sendStatus","==",Message.MESSAGE_SEND_FAIL)
+                        .or("sendStatus","=",Message.MESSAGE_SEND_ING).and("id","in",messgeTmpIdList)
                         .findAll();
             }
         }catch (Exception e){
@@ -561,9 +571,9 @@ public class MessageCacheUtil {
                 deleteLocalVoiceFile(message);
             }
             message.setCreationDate(messageTmp.getCreationDate());
-            MessageCacheUtil.saveMessage(context,message);
             MessageCacheUtil.deleteLocalFakeMessage(context,message.getTmpId());
         }
+        MessageCacheUtil.saveMessage(context,message);
     }
 
     /**

@@ -273,7 +273,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 UIMessage uiMessage = uiMessageList.get(position);
                 int messageSendStatus = uiMessage.getSendStatus();
                 //当消息处于发送中状态时无法点击
-                if (messageSendStatus == 1) {
+                if (messageSendStatus == Message.MESSAGE_SEND_SUCCESS) {
                     openMessage(uiMessage.getMessage());
                 }
             }
@@ -376,7 +376,7 @@ public class ConversationActivity extends ConversationBaseActivity {
 
     /**
      * 打开消息
-     *
+     * 未发送成功的不可调用此方法，不会根据消息id获取评论
      * @param message
      */
     private void openMessage(Message message) {
@@ -830,6 +830,7 @@ public class ConversationActivity extends ConversationBaseActivity {
             MessageCacheUtil.saveMessage(ConversationActivity.this,message);
             notifyCommucationFragmentMessageSendStatus();
         }
+        message.setRead(Message.MESSAGE_READ);
         UIMessage UIMessage = new UIMessage(message);
         boolean isSendFail = handleUnSendMessage(message,status);
         //本地添加的消息设置为正在发送状态
@@ -875,7 +876,7 @@ public class ConversationActivity extends ConversationBaseActivity {
         UIMessage fakeUIMessage = new UIMessage(fakeMessageId);
         int index = uiMessageList.indexOf(fakeUIMessage);
         if (index != -1) {
-            uiMessageList.get(index).setSendStatus(2);
+            uiMessageList.get(index).setSendStatus(Message.MESSAGE_SEND_FAIL);
             handleUnSendMessage(uiMessageList.get(index).getMessage(),Message.MESSAGE_SEND_FAIL);
             adapter.setMessageList(uiMessageList);
             adapter.notifyItemChanged(index);
@@ -988,7 +989,6 @@ public class ConversationActivity extends ConversationBaseActivity {
                 Message receivedWSMessage = new Message(contentObj);
                 //判断消息是否是当前频道并验重处理
                 if (cid.equals(receivedWSMessage.getChannel()) && !uiMessageList.contains(new UIMessage(receivedWSMessage.getId()))) {
-                    MessageCacheUtil.handleRealMessage(ConversationActivity.this,receivedWSMessage);
                     int size = uiMessageList.size();
                     int index = -1;
                     if (size > 0) {
@@ -1000,6 +1000,14 @@ public class ConversationActivity extends ConversationBaseActivity {
                         }
 
                     }
+                    Long creationDate = 0L;
+                    Message message = MessageCacheUtil.getMessageByMid(MyApplication.getInstance(),receivedWSMessage.getId());
+                    if(message != null){
+                        creationDate = message.getCreationDate();
+                    }else {
+                        creationDate = MessageCacheUtil.getMessageByMid(MyApplication.getInstance(),receivedWSMessage.getTmpId()).getCreationDate();
+                    }
+                    receivedWSMessage.setCreationDate(creationDate);
                     if (index == -1) {
                         uiMessageList.add(new UIMessage(receivedWSMessage));
                         adapter.setMessageList(uiMessageList);
@@ -1035,7 +1043,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 String content = eventMessage.getContent();
                 JSONObject contentobj = JSONUtils.getJSONObject(content);
                 Message message = new Message(contentobj);
-                message.setRead(1);
+                message.setRead(Message.MESSAGE_READ);
                 MessageCacheUtil.handleRealMessage(MyApplication.getInstance(),message);
                 adapter.notifyDataSetChanged();
             }
@@ -1101,12 +1109,12 @@ public class ConversationActivity extends ConversationBaseActivity {
     public void onReiceveWSOfflineMessage(SimpleEventMessage eventMessage) {
         if (eventMessage.getAction().equals(Constant.EVENTBUS_TAG_CURRENT_CHANNEL_OFFLINE_MESSAGE)) {
             List<Message> offlineMessageList = (List<Message>) eventMessage.getMessageObj();
+            MessageCacheUtil.handleRealMessage(MyApplication.getInstance(),offlineMessageList,null,cid);
             Iterator<Message> it = offlineMessageList.iterator();
             //去重
             if (uiMessageList.size() > 0) {
                 while (it.hasNext()) {
                     Message offlineMessage = it.next();
-                    MessageCacheUtil.handleRealMessage(ConversationActivity.this,offlineMessage);
                     UIMessage uiMessage = new UIMessage(offlineMessage.getId());
                     if (uiMessageList.contains(uiMessage)) {
                         it.remove();
