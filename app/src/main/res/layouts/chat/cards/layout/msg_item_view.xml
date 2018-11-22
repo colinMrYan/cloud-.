@@ -58,6 +58,7 @@
                 android:id="@+id/img_sending_status"
                 android:layout_width="12dp"
                 android:layout_height="12dp"
+                android:visibility="gone"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="3dp"
                 />

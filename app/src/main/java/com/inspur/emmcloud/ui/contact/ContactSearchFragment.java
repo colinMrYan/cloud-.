@@ -26,6 +26,7 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
+import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.bean.contact.Contact;
 import com.inspur.emmcloud.bean.contact.ContactClickMessage;
@@ -35,8 +36,8 @@ import com.inspur.emmcloud.bean.contact.SearchModel;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.ui.IndexActivity;
-import com.inspur.emmcloud.ui.chat.ChannelActivity;
 import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
+import com.inspur.emmcloud.ui.chat.ConversationActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.InputMethodUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
@@ -641,7 +642,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
             intent.setClass(getActivity().getApplicationContext(), UserInfoActivity.class);
             startActivity(intent);
         } else {
-            intent.setClass(getActivity().getApplicationContext(), MyApplication.getInstance().isV0VersionChat() ? ChannelV0Activity.class : ChannelActivity.class);
+            intent.setClass(getActivity().getApplicationContext(), MyApplication.getInstance().isV0VersionChat() ? ChannelV0Activity.class : ConversationActivity.class);
             intent.putExtra("title", searchModel.getName());
             intent.putExtra("cid", searchModel.getId());
             intent.putExtra("channelType", searchModel.getType());
@@ -1504,7 +1505,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
             bundle.putString("channelType", searchModel.getType());
             IntentUtils.startActivity(getActivity(),
                     MyApplication.getInstance().isV0VersionChat() ?
-                            ChannelV0Activity.class : ChannelActivity.class, bundle);
+                            ChannelV0Activity.class : Conversation.class, bundle);
 
         }
     }
@@ -1535,7 +1536,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
                                             .getName(getActivity().getApplicationContext()));
                             IntentUtils.startActivity(
                                     getActivity(), MyApplication.getInstance().isV0VersionChat() ?
-                                            ChannelV0Activity.class : ChannelActivity.class, bundle);
+                                            ChannelV0Activity.class : Conversation.class, bundle);
                         }
 
                         @Override

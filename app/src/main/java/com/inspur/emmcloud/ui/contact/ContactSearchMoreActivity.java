@@ -31,11 +31,11 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.chat.Channel;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
+import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.contact.Contact;
 import com.inspur.emmcloud.bean.contact.FirstGroupTextModel;
 import com.inspur.emmcloud.bean.contact.SearchModel;
 import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.emmcloud.ui.chat.ChannelActivity;
 import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.EditTextUtils;
@@ -299,7 +299,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
             intent.setClass(getApplicationContext(), UserInfoActivity.class);
             startActivity(intent);
         } else {
-            intent.setClass(getApplicationContext(), MyApplication.getInstance().isV0VersionChat()? ChannelV0Activity.class:ChannelActivity.class);
+            intent.setClass(getApplicationContext(), MyApplication.getInstance().isV0VersionChat()? ChannelV0Activity.class:Conversation.class);
             intent.putExtra("title", searchModel.getName());
             intent.putExtra("cid", searchModel.getId());
             intent.putExtra("channelType", searchModel.getType());

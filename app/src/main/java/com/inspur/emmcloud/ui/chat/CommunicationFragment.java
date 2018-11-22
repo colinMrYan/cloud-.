@@ -60,14 +60,12 @@ import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.AppTabUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
-import com.inspur.emmcloud.util.privates.ChatCreateUtils.OnCreateGroupChannelListener;
 import com.inspur.emmcloud.util.privates.ConversationGroupIconUtils;
 import com.inspur.emmcloud.util.privates.DownLoaderUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.ScanQrCodeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelCacheUtils;
-import com.inspur.emmcloud.util.privates.cache.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 import com.inspur.emmcloud.util.privates.cache.MessageMatheSetCacheUtils;
@@ -195,7 +193,7 @@ public class CommunicationFragment extends Fragment {
         conversionRecycleView = (RecyclerView) rootView.findViewById(R.id.rcv_conversation);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         conversionRecycleView.setLayoutManager(linearLayoutManager);
-        conversationAdapter = new ConversationAdapter(MyApplication.getInstance(), displayUIConversationList);
+        conversationAdapter = new ConversationAdapter(getActivity(), displayUIConversationList);
         conversationAdapter.setAdapterListener(new ConversationAdapter.AdapterListener() {
             @Override
             public void onItemClick(View view, int position) {
