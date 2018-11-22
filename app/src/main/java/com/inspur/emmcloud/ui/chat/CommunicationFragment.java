@@ -887,8 +887,9 @@ public class CommunicationFragment extends Fragment {
                 Message receivedWSMessage = new Message(contentObj);
                 //验重处理
                 if (MessageCacheUtil.getMessageByMid(MyApplication.getInstance(), receivedWSMessage.getId()) == null) {
+                    MessageCacheUtil.handleRealMessage(MyApplication.getInstance(),receivedWSMessage);
                     if (MyApplication.getInstance().getCurrentChannelCid().equals(receivedWSMessage.getChannel())) {
-                        receivedWSMessage.setRead(1);
+                        receivedWSMessage.setRead(Message.MESSAGE_READ);
                     }
                     if (receivedWSMessage.getType().equals(Message.MESSAGE_TYPE_MEDIA_VOICE)) {
                         String fileSavePath = MyAppConfig.getCacheVoiceFilePath(receivedWSMessage.getChannel(), receivedWSMessage.getId());
@@ -930,7 +931,7 @@ public class CommunicationFragment extends Fragment {
                 if (!StringUtils.isBlank(MyApplication.getInstance().getCurrentChannelCid())) {
                     for (Message message : offlineMessageList) {
                         if (message.getChannel().equals(MyApplication.getInstance().getCurrentChannelCid())) {
-                            message.setRead(1);
+                            message.setRead(Message.MESSAGE_READ);
                             currentChannelOfflineMessageList.add(message);
                         }
                     }
@@ -959,20 +960,20 @@ public class CommunicationFragment extends Fragment {
             if (eventMessage.getStatus() == EventMessage.RESULT_OK) {
                 String content = eventMessage.getContent();
                 GetRecentMessageListResult getRecentMessageListResult = new GetRecentMessageListResult(content);
-
                 List<Message> recentMessageList = getRecentMessageListResult.getMessageList();
+                MessageCacheUtil.handleRealMessage(MyApplication.getInstance(),recentMessageList,null,"");
                 List<Message> currentChannelRecentMessageList = new ArrayList<>();
                 //将当前所处频道的消息存为已读
                 if (!StringUtils.isBlank(MyApplication.getInstance().getCurrentChannelCid())) {
                     for (Message message : recentMessageList) {
                         if (message.getChannel().equals(MyApplication.getInstance().getCurrentChannelCid())) {
-                            message.setRead(1);
+                            message.setRead(Message.MESSAGE_READ);
                             currentChannelRecentMessageList.add(message);
                         }
                     }
                     if (currentChannelRecentMessageList.size() > 0) {
                         //将离线消息发送到当前频道
-                        EventBus.getDefault().post(recentMessageList);
+                        EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_CURRENT_CHANNEL_OFFLINE_MESSAGE,recentMessageList));
                     }
                 }
                 new CacheMessageListThread(getRecentMessageListResult.getMessageList(), getRecentMessageListResult.getChannelMessageSetList()).start();
@@ -1015,7 +1016,7 @@ public class CommunicationFragment extends Fragment {
             //如果preferences中还存有离线消息最后一条消息id这个标志代表上一次离线消息没有获取成功，需要从这条消息开始重新获取
             String lastMessageId = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_GET_OFFLINE_LAST_MID, "");
             if (StringUtils.isBlank(lastMessageId)) {
-                lastMessageId = MessageCacheUtil.getLastMessageId(MyApplication.getInstance());
+                lastMessageId = MessageCacheUtil.getLastSuccessMessageId(MyApplication.getInstance());
                 PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), Constant.PREF_GET_OFFLINE_LAST_MID, lastMessageId);
             }
             if (lastMessageId != null) {
