@@ -378,7 +378,7 @@ public class WorkFragment extends Fragment {
                 holder.GroupListView.setAdapter(calendarChildAdapter);
                 holder.groupTitleText.setText(R.string.work_calendar_text);
             } else if (id.equals(TYPE_MEETING)) {
-                holder.workAddText.setText(R.string.meeting);
+                holder.workAddText.setText(R.string.meeting_add);
                 holder.groupIconImg.setImageResource(R.drawable.ic_work_meeting);
                 meetingChildAdapter = new ChildAdapter(TYPE_MEETING);
                 holder.GroupListView.setAdapter(meetingChildAdapter);

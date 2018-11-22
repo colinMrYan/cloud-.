@@ -127,10 +127,10 @@
     <string name="channel_group_image"> 群图片</string>
     <string name="channel_group_file"> 群文件</string>
     <string name="channel_group_members_name"> 群名称</string>
-    <string name="channel_set_top"> 置顶聊天</string>
+    <string name="channel_set_top"> 置顶</string>
     <string name="message_without_interruption">消息免打扰</string>
     <string name="login_hint_text">用户名/邮箱/手机号</string>
-    <string name="modify_group_name">修改群名称</string>
+    <string name="modify_group_name">群名片</string>
     <string name="choose_common_office">添加常用办公地点</string>
     <string name="please_click_choosing_time">请点击选择时间</string>
     <string name="meeting_room">会议室</string>
@@ -705,7 +705,7 @@
     <string name="meeting_update_success">会议室更新成功</string>
     <string name="meeting_file_upload_tips">请选择一个要上传的文件</string>
     <string name="meeting_viewpager_indicator">%1$d/%2$d</string>
-    <string name="meeting_booking_title">会议室预订</string>
+    <string name="meeting_booking_title">预订会议</string>
     <string name="meeting_choose_time">时间为空，请先选时间段</string>
     <string name="meeting_no_booking_time">没有可预订时间</string>
     <string name="meeting_invating_members">邀请参会人员</string>
@@ -726,6 +726,7 @@
     <string name="meeting_place">地点</string>
     <string name="meeting_list_title">会议室列表</string>
     <string name="meeting">会议</string>
+    <string name="meeting_add">预定会议</string>
     <string name="meeting_history">历史会议</string>
     <string name="meeting_history_search">历史会议搜索</string>
     <string name="meeting_list_cancel_success">会议取消成功</string>

@@ -81,10 +81,7 @@ public class DisplayCommentTextPlainMsg {
                 + " "
                 + commentMsgSenderName
                 + " "
-                + context.getString(R.string.published_in)
-                + " "
-                + commentedMessageTime
-                + " ";
+                ;
         String commentedMessageType = commentedMessage.getType();
         if (commentedMessageType.equals("file/regular-file")){
             commentTitle = commentTitle
