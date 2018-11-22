@@ -42,7 +42,7 @@ public class Constant {
     public static final String PREF_GET_OFFLINE_LAST_MID = "get_offline_last_mid";
 
     public static final String PREF_V_CONFIG_ALL = "v_config_all";
-
+    public static final String PREF_EXPERIENCE_UPGRATE = "experience_upgrade";
 
     public static final String ACTION_MEETING = "com.inspur.meeting";
     public static final String ACTION_TASK = "com.inspur.task";

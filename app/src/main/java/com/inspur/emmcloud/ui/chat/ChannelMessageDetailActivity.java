@@ -247,7 +247,7 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
                 openUserInfo(message.getFromUser());
             }
         });
-        String msgSendTime = TimeUtils.getDisplayTime(MyApplication.getInstance(),
+        String msgSendTime = TimeUtils.getDisplayTime(ChannelMessageDetailActivity.this,
                 message.getCreationDate());
         msgSendTimeText.setText(msgSendTime);
         senderNameText.setText(ContactUserCacheUtils.getUserName(message.getFromUser()));
@@ -357,7 +357,7 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
             contentText.setText(spannableString);
             TransHtmlToTextUtils.stripUnderlines(contentText,
                     Color.parseColor("#0f7bca"));
-            String time = TimeUtils.getDisplayTime(MyApplication.getInstance(),
+            String time = TimeUtils.getDisplayTime(ChannelMessageDetailActivity.this,
                     message.getCreationDate());
             sendTimeText.setText(time);
             String photoUrl = APIUri.getChannelImgUrl(MyApplication.getInstance(), message.getFromUser());

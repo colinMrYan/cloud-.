@@ -61,53 +61,58 @@
 
         <com.inspur.emmcloud.widget.MaxHightScrollView
             android:id="@+id/search_edit_layout"
-            android:minHeight="45dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
-           >
+            android:minHeight="45dp">
 
             <RelativeLayout
                 android:id="@+id/layout"
-                android:layout_gravity="center_vertical"
-                android:paddingLeft="7dp"
-                android:paddingTop="3dp"
-                android:paddingBottom="3dp"
-                android:paddingRight="7dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-            <com.inspur.emmcloud.widget.FlowLayout
-                android:id="@+id/flowlayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical" />
+                android:layout_gravity="center_vertical"
+                android:paddingBottom="3dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="10dp"
+                android:paddingTop="3dp">
+
+                <com.inspur.emmcloud.widget.FlowLayout
+                    android:id="@+id/flowlayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical" />
             </RelativeLayout>
         </com.inspur.emmcloud.widget.MaxHightScrollView>
 
+        <View
+            android:id="@+id/space_edit"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_below="@id/search_edit_layout"
+            android:background="#e3e3e3" />
 
         <RelativeLayout
             android:id="@+id/origin_all_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/search_edit_layout"
-            android:background="@color/white">
+            android:layout_below="@id/space_edit">
 
             <LinearLayout
                 android:id="@+id/open_group_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@color/white"
                 android:orientation="vertical"
                 android:visibility="gone">
 
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="39dp"
-                    android:background="#efeff4">
+                    android:layout_height="40dp">
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/open_title_list"
+                        android:paddingLeft="10dp"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
                 </RelativeLayout>
@@ -115,7 +120,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
-                    android:background="@color/color_list_divider" />
+                    android:background="#E3E3E3" />
 
                 <ListView
                     android:id="@+id/open_first_group_list"
@@ -136,19 +141,28 @@
                     android:id="@+id/orgin_first_group_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:background="@color/white"
                     android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/title_all_text"
                         android:layout_width="match_parent"
-                        android:layout_height="39dp"
-                        android:background="#efeff4"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
                         android:gravity="center_vertical"
-                        android:paddingLeft="10dp"
+                        android:paddingBottom="10dp"
+                        android:paddingLeft="15dp"
                         android:paddingRight="10dp"
+                        android:paddingTop="10dp"
                         android:text="@string/all"
-                        android:textColor="#8f8e94"
-                        android:textSize="@dimen/content_title_textsize" />
+                        android:textColor="#666666"
+                        android:textSize="16sp" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:background="#e3e3e3" />
 
                     <RelativeLayout
                         android:id="@+id/struct_layout"
@@ -158,14 +172,14 @@
 
                         <com.inspur.emmcloud.widget.CircleTextImageView
                             android:id="@+id/struct_img"
-                            android:layout_width="37dp"
-                            android:layout_height="37dp"
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
                             android:layout_centerVertical="true"
-                            android:layout_marginBottom="5dp"
-                            android:layout_marginLeft="10dp"
+                            android:layout_marginBottom="4dp"
+                            android:layout_marginLeft="15dp"
                             android:layout_marginRight="10dp"
-                            android:layout_marginTop="5dp"
-                            android:src="@drawable/icon_company" />
+                            android:layout_marginTop="4dp"
+                            android:src="@drawable/ic_contact_struct" />
 
                         <TextView
                             android:id="@+id/text_title"
@@ -175,8 +189,8 @@
                             android:layout_toRightOf="@id/struct_img"
                             android:gravity="center_vertical"
                             android:text="@string/origanization_struct"
-                            android:textColor="#030303"
-                            android:textSize="@dimen/content_title_textsize" />
+                            android:textColor="#333333"
+                            android:textSize="16sp" />
 
 
                     </RelativeLayout>
@@ -187,22 +201,23 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@color/white">
+
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="0.5dp"
-                            android:layout_marginLeft="57dp"
-                            android:background="@color/color_list_divider_tran" />
+                            android:layout_marginLeft="55dp"
+                            android:background="#e3e3e3" />
 
                         <com.inspur.emmcloud.widget.CircleTextImageView
                             android:id="@+id/channel_group_img"
-                            android:layout_width="37dp"
-                            android:layout_height="37dp"
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
                             android:layout_centerVertical="true"
                             android:layout_marginBottom="4dp"
-                            android:layout_marginLeft="10dp"
+                            android:layout_marginLeft="15dp"
                             android:layout_marginRight="10dp"
-                            android:layout_marginTop="5dp"
-                            android:src="@drawable/icon_group" />
+                            android:layout_marginTop="4dp"
+                            android:src="@drawable/ic_contact_group" />
 
                         <TextView
                             android:layout_width="match_parent"
@@ -214,6 +229,12 @@
                             android:textColor="#030303"
                             android:textSize="@dimen/content_title_textsize" />
                     </RelativeLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:layout_marginLeft="55dp"
+                        android:background="#e3e3e3" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -221,17 +242,25 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1.0"
+                    android:background="@color/white"
                     android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/second_title_text"
                         android:layout_width="match_parent"
-                        android:layout_height="39dp"
-                        android:background="#efeff4"
+                        android:layout_height="wrap_content"
+                        android:background="#ffffff"
                         android:gravity="center_vertical"
-                        android:paddingLeft="10dp"
-                        android:textColor="#8f8e94"
+                        android:paddingBottom="10dp"
+                        android:paddingLeft="15dp"
+                        android:paddingTop="10dp"
+                        android:textColor="#666666"
                         android:textSize="@dimen/content_title_textsize" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:background="#e3e3e3" />
 
                     <ListView
                         android:id="@+id/second_group_list"
@@ -248,8 +277,7 @@
             android:id="@+id/pop_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/search_edit_layout"
-            android:background="#f4f4f4"
+            android:layout_below="@id/space_edit"
             android:scrollbars="none"
             android:visibility="gone">
 
@@ -262,17 +290,21 @@
                     android:id="@+id/pop_third_group_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:background="@color/white"
                     android:orientation="vertical">
+
                     <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="39dp"
-                        android:background="#efeff4">
+                        android:layout_height="40dp"
+                        android:background="#ffffff">
 
                         <android.support.v7.widget.RecyclerView
                             android:id="@+id/pop_third_title_list"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_toLeftOf="@+id/pop_third_group_more_text"></android.support.v7.widget.RecyclerView>
+                            android:layout_toLeftOf="@+id/pop_third_group_more_text"
+                            android:paddingLeft="7dp"></android.support.v7.widget.RecyclerView>
 
                         <TextView
                             android:id="@+id/pop_third_group_more_text"
@@ -289,7 +321,10 @@
                             android:textSize="16sp"
                             android:visibility="gone" />
                     </RelativeLayout>
-
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:background="#e3e3e3" />
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
@@ -317,18 +352,20 @@
                     android:id="@+id/pop_second_group_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="@color/white"
                     android:orientation="vertical">
 
                     <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="39dp"
-                        android:background="#efeff4">
+                        android:layout_height="40dp"
+                        android:background="#ffffff">
 
                         <android.support.v7.widget.RecyclerView
                             android:id="@+id/pop_second_title_list"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_toLeftOf="@+id/pop_second_group_more_text"></android.support.v7.widget.RecyclerView>
+                            android:layout_toLeftOf="@+id/pop_second_group_more_text"
+                            android:paddingLeft="7dp"></android.support.v7.widget.RecyclerView>
 
                         <TextView
                             android:id="@+id/pop_second_group_more_text"
@@ -345,7 +382,10 @@
                             android:textSize="16sp"
                             android:visibility="gone" />
                     </RelativeLayout>
-
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:background="#e3e3e3" />
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">

@@ -1624,4 +1624,103 @@ public class ChatAPIService {
             }
         });
     }
+
+
+    /**
+     * 创建点聊
+     *
+     * @param uid
+     */
+    public void createDirectConversation(final String uid) {
+        final String completeUrl = APIUri.getCreateDirectConversationUrl();
+        RequestParams params = ((MyApplication) context.getApplicationContext())
+                .getHttpRequestParams(completeUrl);
+        params.addParameter("mate", uid);
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        createDirectConversation(uid);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+                apiInterface.returnCreateDirectConversationSuccess(new Conversation(new String(arg0)));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                apiInterface.returnCreateDirectConversationFail(error, responseCode);
+
+            }
+        });
+    }
+
+
+    /**
+     * 创建群组
+     *
+     * @param name
+     * @param members
+     */
+    public void createGroupConversation(final String name, final JSONArray members) {
+        final String completeUrl = APIUri.getCreateGroupConversationUrl();
+        RequestParams params = ((MyApplication) context.getApplicationContext())
+                .getHttpRequestParams(completeUrl);
+        try {
+            params.addParameter("name", name);
+            params.addParameter("members", members);
+            params.setAsJsonContent(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        createGroupConversation(name, members);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+                apiInterface.returnCreateGroupConversationSuccess(new Conversation(new String(arg0)));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                apiInterface.returnCreateGroupConversationFail(error, responseCode);
+            }
+        });
+
+    }
+
 }

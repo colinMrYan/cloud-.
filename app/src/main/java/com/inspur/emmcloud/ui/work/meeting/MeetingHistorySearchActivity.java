@@ -241,7 +241,7 @@ public class MeetingHistorySearchActivity extends BaseActivity implements
             String week = TimeUtils.getWeekDay(getApplicationContext(),
                     fromCalendar);
             String date = TimeUtils.calendar2FormatString(
-                    getApplicationContext(), fromCalendar,
+                    MeetingHistorySearchActivity.this, fromCalendar,
                     TimeUtils.FORMAT_YEAR_MONTH_DAY);
             holder.dateText.setText(date);
             holder.weekText.setText(week);
@@ -417,7 +417,7 @@ public class MeetingHistorySearchActivity extends BaseActivity implements
             String from = meeting.getFrom();
             Calendar calendarForm = TimeUtils.timeString2Calendar(from);
             String dateFromTime = TimeUtils.calendar2FormatString(
-                    getApplicationContext(), calendarForm, format);
+                    MeetingHistorySearchActivity.this, calendarForm, format);
             return dateFromTime;
         }
 

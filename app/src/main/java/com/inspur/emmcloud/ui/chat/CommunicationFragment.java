@@ -60,14 +60,12 @@ import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.AppTabUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
-import com.inspur.emmcloud.util.privates.ChatCreateUtils.OnCreateGroupChannelListener;
 import com.inspur.emmcloud.util.privates.ConversationGroupIconUtils;
 import com.inspur.emmcloud.util.privates.DownLoaderUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.ScanQrCodeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelCacheUtils;
-import com.inspur.emmcloud.util.privates.cache.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 import com.inspur.emmcloud.util.privates.cache.MessageMatheSetCacheUtils;
@@ -195,7 +193,7 @@ public class CommunicationFragment extends Fragment {
         conversionRecycleView = (RecyclerView) rootView.findViewById(R.id.rcv_conversation);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         conversionRecycleView.setLayoutManager(linearLayoutManager);
-        conversationAdapter = new ConversationAdapter(MyApplication.getInstance(), displayUIConversationList);
+        conversationAdapter = new ConversationAdapter(getActivity(), displayUIConversationList);
         conversationAdapter.setAdapterListener(new ConversationAdapter.AdapterListener() {
             @Override
             public void onItemClick(View view, int position) {
@@ -373,7 +371,7 @@ public class CommunicationFragment extends Fragment {
                     contactIntent.putExtra(ContactSearchFragment.EXTRA_TYPE, 2);
                     contactIntent.putExtra(ContactSearchFragment.EXTRA_MULTI_SELECT, true);
                     contactIntent.putExtra(ContactSearchFragment.EXTRA_TITLE,
-                            getActivity().getString(R.string.creat_group));
+                            getActivity().getString(R.string.message_create_group));
                     contactIntent.setClass(getActivity(), ContactSearchActivity.class);
                     startActivityForResult(contactIntent, CREAT_CHANNEL_GROUP);
                     popupWindow.dismiss();
@@ -777,20 +775,15 @@ public class CommunicationFragment extends Fragment {
     private void creatGroupChannel(JSONArray peopleArray) {
         // TODO Auto-generated method stub
         new ChatCreateUtils().createGroupChannel(getActivity(), peopleArray,
-                new OnCreateGroupChannelListener() {
+                new ChatCreateUtils.OnCreateGroupChannelListener() {
 
                     @Override
                     public void createGroupChannelSuccess(
                             ChannelGroup channelGroup) {
                         // TODO Auto-generated method stub
                         Bundle bundle = new Bundle();
-                        bundle.putString("cid", channelGroup.getCid());
-                        bundle.putString("channelType", channelGroup.getType());
-                        bundle.putString("title", channelGroup.getChannelName());
-                        IntentUtils.startActivity(getActivity(),
-                                ChannelActivity.class, bundle);
-                        ChannelGroupCacheUtils.saveChannelGroup(getActivity(),
-                                channelGroup);
+                        bundle.putString(ConversationActivity.EXTRA_CID, channelGroup.getCid());
+                        IntentUtils.startActivity(getActivity(),ConversationActivity.class, bundle);
                         getConversationList();
                     }
 
@@ -1013,16 +1006,18 @@ public class CommunicationFragment extends Fragment {
      */
     public void getMessage() {
         if (NetUtils.isNetworkConnected(MyApplication.getInstance()) && WebSocketPush.getInstance().isSocketConnect()) {
-            //如果preferences中还存有离线消息最后一条消息id这个标志代表上一次离线消息没有获取成功，需要从这条消息开始重新获取
-            String lastMessageId = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_GET_OFFLINE_LAST_MID, "");
-            if (StringUtils.isBlank(lastMessageId)) {
-                lastMessageId = MessageCacheUtil.getLastSuccessMessageId(MyApplication.getInstance());
-                PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), Constant.PREF_GET_OFFLINE_LAST_MID, lastMessageId);
-            }
+            String lastMessageId = MessageCacheUtil.getLastSuccessMessageId(MyApplication.getInstance());
             if (lastMessageId != null) {
+                //如果preferences中还存有离线消息最后一条消息id这个标志代表上一次离线消息没有获取成功，需要从这条消息开始重新获取
+                String getOfflineLastMessageId = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_GET_OFFLINE_LAST_MID, "");
+                if (StringUtils.isBlank(getOfflineLastMessageId)) {
+                    getOfflineLastMessageId = lastMessageId;
+                    PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), Constant.PREF_GET_OFFLINE_LAST_MID, lastMessageId);
+                }
                 //获取离线消息
-                WSAPIService.getInstance().getOfflineMessage(lastMessageId);
+                WSAPIService.getInstance().getOfflineMessage(getOfflineLastMessageId);
             } else {
+                PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), Constant.PREF_GET_OFFLINE_LAST_MID, "");
                 //获取每个频道最近消息
                 WSAPIService.getInstance().getChannelRecentMessage();
             }

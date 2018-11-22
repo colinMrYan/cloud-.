@@ -142,6 +142,8 @@ public class MessageCacheUtil {
                     .and("channel", "=", cid).orderBy("creationDate", true).findFirst();
             if (lastReadMessage != null){
                 lastReadMessageCreationDate = lastReadMessage.getCreationDate();
+
+
             }
             unreadCount = DbCacheUtils.getDb(context).selector(Message.class).
                     where("creationDate",">",lastReadMessageCreationDate)

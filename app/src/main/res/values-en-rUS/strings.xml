@@ -79,14 +79,14 @@
     <string name="begin">Begin</string>
     <string name="end">End</string>
     <string name="yesterday">Yesterday</string>
-    <string name="format_default">yyyy-MM-dd HH:mm:ss</string>
+    <string name="format_default">MM/dd/yy HH:mm:ss</string>
     <string name="format_date_group_by">yyyy-MM-dd</string>
-    <string name="format_year_month_day">yyyy-MM-dd</string>
+    <string name="format_year_month_day">MM/dd/yy</string>
     <string name="format_hour_minute">HH:mm</string>
     <string name="format_utc">yyyy-MM-dd\'T\'HH:mm:ss\'.\'SSS\'Z\'</string>
-    <string name="format_month_day">MM-dd</string>
-    <string name="format_task_month_day">MM.dd</string>
-    <string name="format_year_month_day_hour_minute">yyyy-MM-dd HH:mm</string>
+    <string name="format_month_day">MMM dd</string>
+    <string name="format_task_month_day">MMM dd</string>
+    <string name="format_year_month_day_hour_minute">MM/dd/yy HH:mm</string>
     <string name="format_year_month">yyyy-MM</string>
     <string name="time_null">null</string>
     <string name="cutdown_now">now</string>
@@ -494,7 +494,7 @@
     <string name="webex_meeting_code">Meeting number：</string>
     <string name="webex_meeting_password_tip">Meeting password：</string>
     <string name="webex_add_external_attendees">Add</string>
-    <string name="webex_no_meeting_tips"><Data><![CDATA[<font color=\'#999999\'>No meetings before</font>]]></Data>%1$s</string>
+    <string name="webex_no_meeting_tips"><Data><![CDATA[<font color=\'#999999\'>No meetings before </font>]]></Data>%1$s</string>
     <string name="webex_participant">Participants</string>
     <string name="webex_password_invalid">Passwords only contain numbers and letters</string>
     <string name="duration_time">Duration</string>
@@ -590,6 +590,7 @@
     <string name="web_app_auto_rotate">Web App Rotation</string>
     <string name="run_background">AppStarting</string>
     <string name="signout_fail">Signout failure,please make sure the network connection is normal</string>
+    <string name="setting_join_experience_plan">Join the upgrade experience plan</string>
 
     <string name="contact">Contact</string>
     <string name="web">web</string>
