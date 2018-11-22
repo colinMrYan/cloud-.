@@ -6,6 +6,7 @@ import com.inspur.emmcloud.bean.chat.MatheSet;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.FileUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 
 import org.xutils.db.sqlite.WhereBuilder;
@@ -440,11 +441,12 @@ public class MessageCacheUtil {
     public static String getLastSuccessMessageId(Context context){
         String lastMessageId = null;
         try {
-            Message message = DbCacheUtils.getDb(context).selector(Message.class).orderBy("creationDate", true)
-                    .and("sendStatus","=",Message.MESSAGE_SEND_SUCCESS).findFirst();
+            Message message = DbCacheUtils.getDb(context).selector(Message.class).where("sendStatus","=",Message.MESSAGE_SEND_SUCCESS)
+                    .orderBy("creationDate", true).findFirst();
             if (message != null){
                 lastMessageId = message.getId();
             }
+            LogUtils.YfcDebug("消息id:"+lastMessageId);
         }catch (Exception e){
             e.printStackTrace();
         }

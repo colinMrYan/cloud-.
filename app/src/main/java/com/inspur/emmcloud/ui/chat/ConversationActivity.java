@@ -989,7 +989,6 @@ public class ConversationActivity extends ConversationBaseActivity {
                 Message receivedWSMessage = new Message(contentObj);
                 //判断消息是否是当前频道并验重处理
                 if (cid.equals(receivedWSMessage.getChannel()) && !uiMessageList.contains(new UIMessage(receivedWSMessage.getId()))) {
-                    MessageCacheUtil.handleRealMessage(ConversationActivity.this,receivedWSMessage);
                     int size = uiMessageList.size();
                     int index = -1;
                     if (size > 0) {
