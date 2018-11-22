@@ -238,7 +238,8 @@ public class LanguageChangeActivity extends BaseActivity {
             String languageName = PreferencesUtils.getString(
                     getApplicationContext(), MyApplication.getInstance().getTanent() + "language", "");
             if (position == 0) {
-                holder.flagImg.setVisibility(View.INVISIBLE);
+                holder.flagImg.setVisibility(View.VISIBLE);
+                holder.flagImg.setImageResource(R.drawable.ic_follow_system_log);
                 holder.tvName.setText(getString(R.string.follow_system));
                 if (languageName.equals("followSys")) {
                     holder.imageView.setVisibility(View.VISIBLE);
