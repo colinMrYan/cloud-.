@@ -109,7 +109,7 @@ public class DbCacheUtils {
                                 db.execNonQuery("DROP TABLE IF EXISTS MessageMatheSet");
                             }
                             if(oldVersion<15){
-                                db.execNonQuery("DROP TABLE IF EXISTS Message");
+                                db.execNonQuery("alter table Message add (sendStatus int, localPath String)");
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
