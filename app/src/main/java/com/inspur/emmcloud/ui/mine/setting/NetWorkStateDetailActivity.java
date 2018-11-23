@@ -10,7 +10,6 @@ import android.widget.ImageView;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PingNetEntity;
 import com.inspur.emmcloud.util.privates.UriUtils;
@@ -29,7 +28,7 @@ import java.util.List;
 public class NetWorkStateDetailActivity extends BaseActivity {
    public static final int SHOW_DNSCONNCTSTATE=2;
    public static final int SHOW_PORTAL_CONNECT=1;
-   public static final String checkingUrls = "www.baidu.com;www.inspur.com;www.aliyun.com";
+   public static final String checkingUrls = "www.baidu.com;www.inspur.com;www.aliyun.com";  //添加Url时请以；隔开
 
    private ImageView hardImageView;
    private ImageView portalImageView;
@@ -259,7 +258,6 @@ public class NetWorkStateDetailActivity extends BaseActivity {
                 try {
                     List<Boolean> resultState=new ArrayList<>();
                     for (int i=0;i<subUrls.length;i++) {
-                        LogUtils.LbcDebug("URL"+subUrls[i]);
                         PingNetEntity checkUrlEntity =new PingNetEntity(subUrls[i],1,1,new StringBuffer());
                         PingNetEntity checkResult= NetUtils.ping(checkUrlEntity, (long) 1000);
                         if((checkResult.isResult())){
