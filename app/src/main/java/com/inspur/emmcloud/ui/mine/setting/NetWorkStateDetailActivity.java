@@ -29,7 +29,6 @@ public class NetWorkStateDetailActivity extends BaseActivity {
    public static final int SHOW_DNSCONNCTSTATE=2;
    public static final int SHOW_PORTAL_CONNECT=1;
    public static final String checkingUrls = "www.baidu.com;www.inspur.com;www.aliyun.com";  //添加Url时请以；隔开
-
    private ImageView hardImageView;
    private ImageView portalImageView;
    private QMUILoadingView qmulHardLoadingView ;
