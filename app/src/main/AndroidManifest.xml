@@ -597,7 +597,7 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".ui.mine.setting.PortalLogInActivity"
+            android:name=".ui.mine.setting.NetHardConnectCheckActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>

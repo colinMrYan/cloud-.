@@ -140,36 +140,39 @@
         android:layout_height="match_parent"
         android:layout_below="@id/header_layout"
         android:background="@color/content_bg"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:visibility="gone">
+        android:visibility="gone"
+        android:onClick="onClick"
+        android:orientation="vertical">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="30dp"
+            android:layout_width="113dp"
+            android:layout_height="133dp"
+            android:layout_marginTop="133dp"
+            android:layout_gravity="center_horizontal"
             android:src="@drawable/imp_load_fail" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="15dp"
+            android:layout_marginTop="20dp"
             android:text="@string/web_load_fail"
-            android:textColor="#929292"
+            android:textColor="#666666"
+            android:layout_gravity="center_horizontal"
             android:textSize="16sp" />
 
         <TextView
             android:id="@+id/refresh_text"
             android:layout_width="wrap_content"
             android:layout_height="34dp"
-            android:layout_marginBottom="100dp"
-            android:background="@drawable/imp_bg_webview_reload_btn"
+            android:layout_marginTop="40dp"
+            android:background="@drawable/bg_net_error_tip"
+            android:layout_gravity="center_horizontal"
             android:gravity="center"
-            android:onClick="onClick"
             android:paddingLeft="25dp"
             android:paddingRight="25dp"
+            android:onClick="onClick"
             android:text="@string/web_reload"
-            android:textColor="#3299FE"
+            android:textColor="#666666"
             android:textSize="15sp" />
     </LinearLayout>
 
