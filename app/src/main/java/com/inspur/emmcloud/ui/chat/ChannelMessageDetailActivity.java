@@ -181,7 +181,7 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
         disPlayCommonInfo();
         View msgDisplayView = null;
         if (!message.getType().equals("media/image")) {
-            msgDisplayView = DisplayRegularFileMsg.getView(MyApplication.getInstance(), message,1,true);
+            msgDisplayView = DisplayRegularFileMsg.getView(ChannelMessageDetailActivity.this, message,1,true);
         } else {
             msgDisplayView = inflater.inflate(R.layout.msg_common_detail, null);
             msgContentImg = (ImageView) msgDisplayView
