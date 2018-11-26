@@ -169,9 +169,13 @@ public class WebSocketPush {
                     query.put("device.id", uuid);
                     query.put("device.name", deviceName);
                     query.put("device.push", pushId);
+                    query.put("messageVer","0");
+                    query.put("channelVer","0");
                 } else {
                     String clientId = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_CLIENTID, "");
                     query.put("client", clientId);
+                    query.put("messageVer","1");
+                    query.put("channelVer","1");
                 }
                 query.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
                 opts.path = path;
