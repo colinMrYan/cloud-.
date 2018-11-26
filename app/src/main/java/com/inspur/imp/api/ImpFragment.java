@@ -10,6 +10,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -94,7 +96,7 @@ public class ImpFragment extends Fragment {
     private String helpUrl = "";
     private HashMap<String, String> urlTilteMap = new HashMap<>();
     private View rootView;
-    private ArrayList<MainTabMenu> mainTabMenuArrayList;
+    private List<MainTabMenu> optionMenuList;
     private String version;
     private ImpFragmentClickListener listener;
     private PopupWindow dropTitlePopupWindow;
@@ -177,7 +179,9 @@ public class ImpFragment extends Fragment {
      */
     private void initFragmentViews() {
         String url = getArguments().getString("uri");
-        initHeaderFunction();
+        optionMenuList = (ArrayList<MainTabMenu>) getArguments().getSerializable(Constant.WEB_FRAGMENT_MENU);
+        setWebViewFunctionVisiable();
+        initHeaderOptionMenu();
         initListeners();
         initWebViewHeaderLayout();
         setWebViewHeader(url);
@@ -196,7 +200,7 @@ public class ImpFragment extends Fragment {
             }
         });
         webView.loadUrl(url, webViewHeaders);
-        setWebViewFunctionVisiable();
+
     }
 
     /**
@@ -208,8 +212,6 @@ public class ImpFragment extends Fragment {
         rootView.findViewById(R.id.back_layout).setOnClickListener(listener);
         rootView.findViewById(R.id.imp_close_btn).setOnClickListener(listener);
         rootView.findViewById(R.id.refresh_text).setOnClickListener(listener);
-        rootView.findViewById(R.id.imp_cloud_function1_img).setOnClickListener(listener);
-        rootView.findViewById(R.id.imp_cloud_function2_img).setOnClickListener(listener);
     }
 
     class ImpFragmentClickListener implements View.OnClickListener {
@@ -244,12 +246,6 @@ public class ImpFragment extends Fragment {
                     webView.setVisibility(View.INVISIBLE);
                     loadFailLayout.setVisibility(View.GONE);
                     break;
-                case R.id.imp_cloud_function1_img:
-                    runJavaScript(JAVASCRIPT_PREFIX + mainTabMenuArrayList.get(0).getAction());
-                    break;
-                case R.id.imp_cloud_function2_img:
-                    runJavaScript(JAVASCRIPT_PREFIX + mainTabMenuArrayList.get(1).getAction());
-                    break;
                 case R.id.header_text:
                     if (dropItemTitleList != null && dropItemTitleList.size() > 0) {
                         if (dropTitlePopupWindow != null && dropTitlePopupWindow.isShowing()) {
@@ -270,20 +266,60 @@ public class ImpFragment extends Fragment {
      * 配置圈子标题栏上的功能
      * 最多两个功能，超过两个取前两个
      */
-    private void initHeaderFunction() {
-        mainTabMenuArrayList = (ArrayList<MainTabMenu>) getArguments().getSerializable(Constant.WEB_FRAGMENT_MENU);
-        if (mainTabMenuArrayList != null) {
-            if (mainTabMenuArrayList.size() == 1) {
-                ImageView imageViewFun1 = (ImageView) rootView.findViewById(R.id.imp_cloud_function1_img);
-                imageViewFun1.setVisibility(View.VISIBLE);
-                ImageDisplayUtils.getInstance().displayImage(imageViewFun1, mainTabMenuArrayList.get(0).getIco());
-            } else if (mainTabMenuArrayList.size() == 2) {
-                ImageView imageViewFun1 = (ImageView) rootView.findViewById(R.id.imp_cloud_function1_img);
-                ImageView imageViewFun2 = (ImageView) rootView.findViewById(R.id.imp_cloud_function2_img);
-                imageViewFun1.setVisibility(View.VISIBLE);
-                imageViewFun2.setVisibility(View.VISIBLE);
-                ImageDisplayUtils.getInstance().displayImage(imageViewFun1, mainTabMenuArrayList.get(0).getIco());
-                ImageDisplayUtils.getInstance().displayImage(imageViewFun2, mainTabMenuArrayList.get(1).getIco());
+    private void initHeaderOptionMenu() {
+        if (optionMenuList != null && optionMenuList.size() != 0) {
+            webFunctionLayout.removeAllViews();
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.MATCH_PARENT);
+            if (optionMenuList.size()<3){
+                for (final MainTabMenu mainTabMenu: optionMenuList){
+                    View.OnClickListener onClickListener = new View.OnClickListener(){
+                        @Override
+                        public void onClick(View v) {
+                            runJavaScript(JAVASCRIPT_PREFIX + mainTabMenu.getAction());
+                        }
+                    };
+                    String text = mainTabMenu.getText();
+                    if (!StringUtils.isBlank(text)){
+                        TextView textView = new TextView(getContext());
+                        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP,16);
+                        int paddingLeft = DensityUtil.dip2px(getContext(),14);
+                        textView.setMinWidth(DensityUtil.dip2px(MyApplication.getInstance(),48));
+                        textView.setPadding(paddingLeft,0,paddingLeft,0);
+                        textView.setText(mainTabMenu.getText());
+                        textView.setOnClickListener(onClickListener);
+                        textView.setLayoutParams(params);
+                        textView.setTextColor(getContext().getResources().getColor(R.color.white));
+                        textView.setGravity(Gravity.CENTER_VERTICAL);
+                        webFunctionLayout.addView(textView);
+                    }else {
+                        ImageView imageView = new ImageView(getContext());
+                        imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+                        imageView.setAdjustViewBounds(true);
+                        int paddingLeft = DensityUtil.dip2px(getContext(),13);
+                        int paddingTop = DensityUtil.dip2px(getContext(),17);
+                        imageView.setPadding(paddingLeft,paddingTop,paddingLeft,paddingTop);
+                        imageView.setOnClickListener(onClickListener);
+                        imageView.setLayoutParams(params);
+                        ImageDisplayUtils.getInstance().displayImage(imageView, mainTabMenu.getIco());
+                        webFunctionLayout.addView(imageView);
+                    }
+                }
+            }else {
+                final ImageView imageView = new ImageView(getContext());
+                imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+                imageView.setAdjustViewBounds(true);
+                int paddingLeft = DensityUtil.dip2px(getContext(),13);
+                int paddingTop = DensityUtil.dip2px(getContext(),17);
+                imageView.setPadding(paddingLeft,paddingTop,paddingLeft,paddingTop);
+                imageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showOptionMenu(imageView);
+                    }
+                });
+                imageView.setLayoutParams(params);
+                ImageDisplayUtils.getInstance().displayImage(imageView, "drawable://"+R.drawable.ic_header_option);
+                webFunctionLayout.addView(imageView);
             }
             setHeaderTextWidth();
         }
@@ -298,6 +334,10 @@ public class ImpFragment extends Fragment {
         webView.loadUrl(script);
     }
 
+
+    private void showOptionMenu(ImageView anchor){
+
+    }
 
     /**
      * 在WebClient获取header
@@ -500,6 +540,11 @@ public class ImpFragment extends Fragment {
             public void onProgressChanged(int newProgress) {
             }
 
+            @Override
+            public void onSetOptionMenu(List<MainTabMenu> optionMenuList) {
+                ImpFragment.this.optionMenuList = optionMenuList;
+                initHeaderOptionMenu();
+            }
         };
         }
 

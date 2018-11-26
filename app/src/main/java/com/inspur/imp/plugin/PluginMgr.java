@@ -3,6 +3,7 @@ package com.inspur.imp.plugin;
 import android.content.Context;
 import android.util.Log;
 
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.imp.api.ImpCallBackInterface;
 import com.inspur.imp.api.iLog;
 import com.inspur.imp.engine.webview.ImpWebView;
@@ -69,6 +70,7 @@ public class PluginMgr {
                 try {
                     jo = new JSONObject(params);
                 } catch (JSONException e) {
+                    LogUtils.jasonDebug("e=="+e.toString());
                     iLog.e(TAG, "组装Json对象出现异常!");
                 }
             }
