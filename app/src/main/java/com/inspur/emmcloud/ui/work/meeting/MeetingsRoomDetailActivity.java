@@ -139,7 +139,7 @@ public class MeetingsRoomDetailActivity extends BaseActivity {
             afterDayLayout.setVisibility(View.VISIBLE);
         }
         thisDayText.setText(TimeUtils.getFormatStringFromTargetTime(
-                getApplicationContext(), currentCalendar, viewPagerIndex));
+                MeetingsRoomDetailActivity.this, currentCalendar, viewPagerIndex));
     }
 
     /**
@@ -271,7 +271,7 @@ public class MeetingsRoomDetailActivity extends BaseActivity {
             final MeetingSchedule meetingSchedule = meetingScheduleList
                     .get(position);
             SimpleDateFormat format = TimeUtils.getFormat(
-                    getApplicationContext(), TimeUtils.FORMAT_HOUR_MINUTE);
+                    MeetingsRoomDetailActivity.this, TimeUtils.FORMAT_HOUR_MINUTE);
             long beginTimeLong = meetingSchedule.getFrom();
             long endTimeLong = meetingSchedule.getTo();
             String beginTimeString = TimeUtils.getTime(beginTimeLong, format);

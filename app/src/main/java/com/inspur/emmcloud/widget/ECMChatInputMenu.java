@@ -179,7 +179,7 @@ public class ECMChatInputMenu extends LinearLayout {
             }
 
             @Override
-            public void onFinished(final float seconds, final String filePath) {
+            public void onFinished(final float seconds, String filePath) {
                 // TODO Auto-generated method stub
                 if(AppUtils.getIsVoiceWordOpen()){
                     if(FileUtils.getFileSize(filePath) <= 0){
@@ -188,10 +188,8 @@ public class ECMChatInputMenu extends LinearLayout {
                         }
                         return;
                     }
-                    if(NetUtils.isNetworkConnected(MyApplication.getInstance())){
                         audioDialogManager = new AudioDialogManager(getContext());
                         audioDialogManager.showVoice2WordProgressDialog();
-                        LogUtils.jasonDebug("filePath===="+filePath);
                         //转写和转文件格式同时进行
                         voice2StringMessageUtils.startVoiceListeningByVoiceFile(seconds,filePath);
                         AndroidMp3ConvertUtils.with(getContext()).setCallBack(new AndroidMp3ConvertUtils.AndroidMp3ConvertCallback() {
@@ -213,11 +211,21 @@ public class ECMChatInputMenu extends LinearLayout {
                                 }
                             }
                         }).setRawPathAndMp3Path(filePath.replace(".wav",".raw"), filePath.replace(".wav",".mp3")).startConvert();
-                    }
                 }else {
-                    if (chatInputMenuListener != null) {
-                        chatInputMenuListener.onSendVoiceRecordMsg("",seconds, filePath);
-                    }
+                    AndroidMp3ConvertUtils.with(getContext()).setCallBack(new AndroidMp3ConvertUtils.AndroidMp3ConvertCallback() {
+                        @Override
+                        public void onSuccess(String mp3FilePath) {
+                            if (chatInputMenuListener != null) {
+                                chatInputMenuListener.onSendVoiceRecordMsg("",seconds, mp3FilePath);
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Exception e) {
+
+                        }
+                    }).setRawPathAndMp3Path(filePath.replace(".wav",".raw"), filePath.replace(".wav",".mp3")).startConvert();
+
                 }
             }
 
@@ -371,7 +379,7 @@ public class ECMChatInputMenu extends LinearLayout {
                     R.drawable.ic_chat_input_add_mention,R.drawable.ic_chat_input_add_voice_call};
             String[] functionNameArray = {getContext().getString(R.string.album),
                     getContext().getString(R.string.take_photo),
-                    getContext().getString(R.string.file), getContext().getString(R.string.voice_input), "@",getContext().getString(R.string.voice_call)};
+                    getContext().getString(R.string.file), getContext().getString(R.string.voice_input), getContext().getString(R.string.mention),getContext().getString(R.string.voice_call)};
             String[] functionActionArray = {"gallery", "camera", "file", "voice_input", "mention","voice_call"};
             String inputControl = "-1";
             if (!StringUtils.isBlank(inputs)) {
@@ -613,7 +621,6 @@ public class ECMChatInputMenu extends LinearLayout {
                 }
                 break;
             case R.id.send_msg_btn:
-                if (NetUtils.isNetworkConnected(getContext())) {
                     List<String> urlList = null;
                     String content = inputEdit.getRichContent(false);
                     Map<String, String> mentionsMap = null;
@@ -623,7 +630,6 @@ public class ECMChatInputMenu extends LinearLayout {
                     }
                     inputEdit.clearInsertModelList();
                     inputEdit.setText("");
-                }
                 break;
             case R.id.add_btn:
                 if (addMenuLayout.isShown()) {

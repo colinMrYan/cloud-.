@@ -175,7 +175,6 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
      * 显示正在发送的标志
      *
      * @param holder
-     * @param msg
      */
     public void showRefreshingImg(final ViewHolder holder, final UIMessage uiMessage) {
         if (uiMessage.getSendStatus() == 0) {
@@ -278,7 +277,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         long duration = UIMessage.getCreationDate() - lastMessageCreationDate;
         if (duration >= 180000) {
             holder.sendTimeText.setVisibility(View.VISIBLE);
-            String messageSendTime = TimeUtils.getChannelMsgDisplayTime(MyApplication.getInstance(), UIMessage.getCreationDate());
+            String messageSendTime = TimeUtils.getChannelMsgDisplayTime(context, UIMessage.getCreationDate());
             holder.sendTimeText.setText(messageSendTime);
         } else {
             holder.sendTimeText.setVisibility(View.GONE);

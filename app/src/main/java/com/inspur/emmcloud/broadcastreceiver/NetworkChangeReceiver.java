@@ -8,9 +8,12 @@ import android.net.NetworkInfo.State;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.bean.system.SimpleEventMessage;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
+import org.greenrobot.eventbus.EventBus;
 
 /**
  * 
@@ -35,15 +38,18 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
 			boolean isAppOnForeground = ((MyApplication)context.getApplicationContext()).getIsActive();
 			if (mobile == State.CONNECTED || mobile == State.CONNECTING) {
 				if (isAppOnForeground) {
+					EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG__NET_STATE_CHANGE,"net_gprs_state_ok"));
 					ToastUtils.show(context, R.string.Network_Mobile);
 				}
 				WebSocketPush.getInstance().startWebSocket();
 			} else if (wifi == State.CONNECTED || wifi == State.CONNECTING) {
 				if (isAppOnForeground) {
+					EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG__NET_STATE_CHANGE,"net_wifi_state_ok"));
 					ToastUtils.show(context, R.string.Network_WIFI);
 				}
 				WebSocketPush.getInstance().startWebSocket();
 			} else if (isAppOnForeground) {
+				EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG__NET_STATE_CHANGE,"net_state_error"));
 				ToastUtils.show(context, R.string.network_exception);
 			}
 		} catch (Exception e) {

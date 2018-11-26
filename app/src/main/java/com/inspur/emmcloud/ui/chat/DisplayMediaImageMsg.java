@@ -35,8 +35,6 @@ public class DisplayMediaImageMsg {
      * 展示图片资源卡片
      *
      * @param context
-     * @param convertView
-     * @param msg
      */
     public static View getView(final Activity context,
                                         final UIMessage uiMessage) {

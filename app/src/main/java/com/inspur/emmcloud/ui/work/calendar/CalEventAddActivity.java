@@ -189,10 +189,10 @@ public class CalEventAddActivity extends BaseActivity {
 				endCalendar.add(Calendar.HOUR_OF_DAY, 1);
 			}
 		}
-		String startDateStr = TimeUtils.calendar2FormatString(getApplicationContext(), startCalendar, TimeUtils.FORMAT_YEAR_MONTH_DAY);
-		String startTimeStr = TimeUtils.calendar2FormatString(getApplicationContext(), startCalendar, TimeUtils.FORMAT_HOUR_MINUTE);
-        String endDateStr = TimeUtils.calendar2FormatString(getApplicationContext(), endCalendar, TimeUtils.FORMAT_YEAR_MONTH_DAY);
-        String endTimeStr = TimeUtils.calendar2FormatString(getApplicationContext(), endCalendar, TimeUtils.FORMAT_HOUR_MINUTE);
+		String startDateStr = TimeUtils.calendar2FormatString(CalEventAddActivity.this, startCalendar, TimeUtils.FORMAT_YEAR_MONTH_DAY);
+		String startTimeStr = TimeUtils.calendar2FormatString(CalEventAddActivity.this, startCalendar, TimeUtils.FORMAT_HOUR_MINUTE);
+        String endDateStr = TimeUtils.calendar2FormatString(CalEventAddActivity.this, endCalendar, TimeUtils.FORMAT_YEAR_MONTH_DAY);
+        String endTimeStr = TimeUtils.calendar2FormatString(CalEventAddActivity.this, endCalendar, TimeUtils.FORMAT_HOUR_MINUTE);
 
         startDateText.setText(startDateStr);
 		startTimeText.setText(startTimeStr);
@@ -241,11 +241,11 @@ public class CalEventAddActivity extends BaseActivity {
 				}
 				startDateStr = startDateText.getText() + " "
 						+ startTimeText.getText();
-				startCalendar = TimeUtils.timeString2Calendar(getApplicationContext(),startDateStr,
+				startCalendar = TimeUtils.timeString2Calendar(CalEventAddActivity.this,startDateStr,
 						TimeUtils.FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE);
 				endDateStr = endDateText.getText() + " "
 						+ endTimeText.getText();
-				endCalendar = TimeUtils.timeString2Calendar(getApplicationContext(),endDateStr,
+				endCalendar = TimeUtils.timeString2Calendar(CalEventAddActivity.this,endDateStr,
 						TimeUtils.FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE);
 				if (StringUtils.isBlank(title)) {
 					ToastUtils.show(getApplicationContext(),
@@ -291,7 +291,7 @@ public class CalEventAddActivity extends BaseActivity {
 				startDateStr = startDateText.getText() + " "
 						+ startTimeText.getText();
 				Log.d("jason", "startDateStr="+startDateStr);
-				startCalendar = TimeUtils.timeString2Calendar(getApplicationContext(),startDateStr,
+				startCalendar = TimeUtils.timeString2Calendar(CalEventAddActivity.this,startDateStr,
 						TimeUtils.FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE);
 				showDatePickerDlg(true, startCalendar);
 			}
@@ -302,7 +302,7 @@ public class CalEventAddActivity extends BaseActivity {
 			if (isEditStatus == true) {
 				startDateStr = startDateText.getText() + " "
 						+ startTimeText.getText();
-				startCalendar = TimeUtils.timeString2Calendar(getApplicationContext(),startDateStr,
+				startCalendar = TimeUtils.timeString2Calendar(CalEventAddActivity.this,startDateStr,
 						TimeUtils.FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE);
                 showTimePickerDlg(true, startCalendar);
 			}
@@ -314,7 +314,7 @@ public class CalEventAddActivity extends BaseActivity {
 				endDateStr = endDateText.getText() + " "
 						+ endTimeText.getText();
 				
-				endCalendar = TimeUtils.timeString2Calendar(getApplicationContext(),endDateStr,
+				endCalendar = TimeUtils.timeString2Calendar(CalEventAddActivity.this,endDateStr,
 						TimeUtils.FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE);
                 showDatePickerDlg(false, endCalendar);
 			}
@@ -324,7 +324,7 @@ public class CalEventAddActivity extends BaseActivity {
 			if (isEditStatus == true) {
 				endDateStr = endDateText.getText() + " "
 						+ endTimeText.getText();
-				endCalendar = TimeUtils.timeString2Calendar(getApplicationContext(),endDateStr,
+				endCalendar = TimeUtils.timeString2Calendar(CalEventAddActivity.this,endDateStr,
 						TimeUtils.FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE);
 				showTimePickerDlg(false, endCalendar);
 			}
@@ -434,7 +434,7 @@ public class CalEventAddActivity extends BaseActivity {
 						// TODO Auto-generated method stub
 						Calendar calendar = Calendar.getInstance();
 						calendar.set(year, monthOfYear, dayOfMonth);
-						String tripDateString = TimeUtils.calendar2FormatString(getApplicationContext(), calendar, TimeUtils.FORMAT_YEAR_MONTH_DAY);
+						String tripDateString = TimeUtils.calendar2FormatString(CalEventAddActivity.this, calendar, TimeUtils.FORMAT_YEAR_MONTH_DAY);
 						if (isStartDate) {
 							startDateText.setText(tripDateString);
 							if (isAllDay) {

@@ -19,6 +19,7 @@ import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ClientIDUtils;
+import com.inspur.emmcloud.util.privates.OauthUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.cache.AppExceptionCacheUtils;
 
@@ -357,6 +358,10 @@ public class WebSocketPush {
                     sendWebSocketStatusBroadcast(Socket.EVENT_CONNECT);
                     // 当第一次连接成功后发送App目前的状态消息
                     sendAppStatus();
+                }else if(code == 401){
+                    closeWebsocket();
+                    sendWebSocketStatusBroadcast(Socket.EVENT_CONNECT_ERROR);
+                    OauthUtils.getInstance().refreshToken(null, System.currentTimeMillis());
                 }
                 isWebsocketConnecting = false;
             }

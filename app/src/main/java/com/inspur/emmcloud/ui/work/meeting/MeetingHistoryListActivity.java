@@ -165,7 +165,7 @@ public class MeetingHistoryListActivity extends BaseActivity implements
             Calendar fromCalendar = TimeUtils.timeString2Calendar(from);
             String week = TimeUtils.getWeekDay(getApplicationContext(), fromCalendar);
             String date = TimeUtils.calendar2FormatString(
-                    getApplicationContext(), fromCalendar,
+                    MeetingHistoryListActivity.this, fromCalendar,
                     TimeUtils.FORMAT_YEAR_MONTH_DAY);
             holder.dateText.setText(date);
             holder.weekText.setText(week);
@@ -341,7 +341,7 @@ public class MeetingHistoryListActivity extends BaseActivity implements
             String from = meeting.getFrom();
             Calendar calendarForm = TimeUtils.timeString2Calendar(from);
             String dateFromTime = TimeUtils.calendar2FormatString(
-                    getApplicationContext(), calendarForm, format);
+                    MeetingHistoryListActivity.this, calendarForm, format);
             return dateFromTime;
         }
 

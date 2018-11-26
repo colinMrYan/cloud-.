@@ -20,6 +20,7 @@ public class UIMessage implements Serializable {
         this.message = message;
         this.id = message.getId();
         this.creationDate = message.getCreationDate();
+        this.sendStatus = message.getSendStatus();
         senderName = ContactUserCacheUtils.getUserName(message.getFromUser());
         senderPhotoUrl = APIUri.getUserIconUrl(MyApplication.getInstance(), message.getFromUser());
     }

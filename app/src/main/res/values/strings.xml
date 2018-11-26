@@ -25,6 +25,7 @@
     <string name="picture">图片</string>
     <string name="album">相册</string>
     <string name="take_photo">拍照</string>
+    <string name="mention">提及</string>
     <string name="file">文件</string>
     <string name="next_step">下一步</string>
     <string name="pull_down_load_history">下拉加载历史消息</string>
@@ -57,7 +58,7 @@
     <string name="cancel_filter">取消过滤</string>
     <string name="only_free">仅显示空闲</string>
     <string name="file_no_identifiable">不能识别的文件类型</string>
-    <string name="login_code_login_text">验证码登录</string>
+    <string name="login_code_login_text">短信登录</string>
     <string name="invite_friends_text">把云+推荐给朋友</string>
     <string name="tab_not_support_tips">%1$s功能已改版，请<Data><![CDATA[<font color=\'#0F7BCA\'>升级到最新版本</font>]]></Data></string>
 
@@ -121,14 +122,15 @@
     <string name="all_day">全天</string>
     <string name="delete_group_member"> 删除群成员</string>
     <string name="tax_ticket_info"> 增值税专用发票开票信息</string>
-    <string name="channel_group_info">群信息</string>
-    <string name="channel_group_name">群组名称</string>
-    <string name="channel_group_image"> 群聊天图片</string>
-    <string name="channel_group_file"> 群聊天文件</string>
-    <string name="channel_set_top"> 置顶聊天</string>
+    <string name="channel_group_info">群详情</string>
+    <string name="channel_group_name">群名称</string>
+    <string name="channel_group_image"> 群图片</string>
+    <string name="channel_group_file"> 群文件</string>
+    <string name="channel_group_members_name"> 群名称</string>
+    <string name="channel_set_top"> 置顶</string>
     <string name="message_without_interruption">消息免打扰</string>
     <string name="login_hint_text">用户名/邮箱/手机号</string>
-    <string name="modify_group_name">更改群名称</string>
+    <string name="modify_group_name">群名片</string>
     <string name="choose_common_office">添加常用办公地点</string>
     <string name="please_click_choosing_time">请点击选择时间</string>
     <string name="meeting_room">会议室</string>
@@ -194,7 +196,7 @@
     <string name="login_direct">直接登录</string>
     <string name="login_change_phone_num">更换号码</string>
     <string name="login_captchas_login">验证码登录 </string>
-    <string name="login_get_captchas">获取验证码 </string>
+    <string name="login_get_captchas">通过短信修改密码</string>
     <string name="login_send_captchas">发送验证码 </string>
     <string name="login_set_pwd">设置密码 </string>
     <string name="login_resend">重新发送（  ） </string>
@@ -260,7 +262,7 @@
     <string name="all_group_member">全部群成员(%1$d)</string>
     <string name="add_group_member">添加群成员 </string>
     <string name="channel_group">群组</string>
-    <string name="group_member">群成员 </string>
+    <string name="group_member">群成员列表 </string>
     <string name="group_name_cannot_null">请输入群组名称 </string>
     <string name="channel_unknown_text">您的%1$s暂不支持该消息，请【升级】%1$s最新版本查看</string>
     <string name="comment_hallcomment_text">评论了:</string>
@@ -269,7 +271,7 @@
     <string name="administrators_of_channel">(管理员)</string>
     <string name="long_img">长图</string>
     <string name="friend_list">好友列表</string>
-    <string name="join_discuss">加入讨论吧</string>
+    <string name="join_discuss">讨论一下吧</string>
     <string name="add_new_comment">添加新评论</string>
     <string name="socket_connecting">连接中</string>
     <string name="socket_close">已断开</string>
@@ -277,8 +279,8 @@
     <string name="group_name_longth_valid">群名称字数超限（不超过40个字符）</string>
     <string name="message_create_group">发起群聊</string>
     <string name="business_card">个人名片</string>
-    <string name="no_channel_album">当前没有频道图片</string>
-    <string name="no_channel_file">当前没有频道文件</string>
+    <string name="no_channel_album">当前没有群图片</string>
+    <string name="no_channel_file">当前没有群文件</string>
     <string name="hold_to_talk">按住 说话</string>
     <string name="release_to_send">松开 结束</string>
     <string name="release_to_cancel">松开手指，取消发送</string>
@@ -295,6 +297,7 @@
     <string name="chat_remove">移除</string>
     <string name="chat_remove_from_top">取消置顶</string>
     <string name="no_chat_content">暂无聊天内容</string>
+    <string name="msg_key_search_member">请输入关键字</string>
 
     <!-- 会议卡片 -->
     <string name="meeting_has_confirmed">已确认</string>
@@ -365,7 +368,7 @@
     <string name="app_must_be_app_cannot_edit">当前应用皆为必装，不可编辑</string>
     <string name="app_center">应用中心</string>
     <string name="detail">详情</string>
-    <string name="search">搜索</string>
+    <string name="search">请输入关键字</string>
     <string name="app_commonly_use">常用应用</string>
     <string name="app_center_more_apps">更多应用</string>
     <string name="app_input_mail_password">请输入公司邮箱密码</string>
@@ -566,7 +569,7 @@
     <string name="my_setting_tips_quit">确定清除应用内所有缓存数据？清除后将退出应用</string>
     <string name="get_language_error">未获取到可用的语言包，请联系管理员</string>
     <string name="app_customer">云+客服</string>
-    <string name="settings_device_manager">设备管理</string>
+    <string name="settings_device_manager">设备查看与管理</string>
     <string name="device_unbind_sucess">设备解绑成功！</string>
     <string name="device_other_unbind_warning">解绑后，从%1$s上登录，您需要重新注册设备</string>
     <string name="device_current_unbind_warning">解绑后，您需要重新登录并注册设备</string>
@@ -591,6 +594,8 @@
     <string name="turn_off_success">关闭成功</string>
     <string name="run_background">后台运行</string>
     <string name="signout_fail">注销失败，请确保网络连接正常</string>
+    <string name="setting_join_experience_plan">加入升级体验计划</string>
+
 
     <string name="contact">通讯录</string>
     <string name="web">web</string>
@@ -635,7 +640,7 @@
     <string name="user_modify_modify">修改</string>
     <string name="user_info_my_info">个人信息</string>
     <string name="user_info_organ">浪潮国际</string>
-    <string name="user_info_phone_number">联系方式</string>
+    <string name="user_info_phone_number">手机</string>
     <string name="user_telephone">办公电话</string>
     <string name="user_no_storage">没有存储设备</string>
     <string name="user_employee_num">员工编号</string>
@@ -674,7 +679,7 @@
     <string name="address_servicenum_text">服务号</string>
     <string name="org_struct_text">组织/架构  </string>
     <string name="please_select_app_of_mail">请选择邮件类应用</string>
-    <string name="recently_used">最近常用</string>
+    <string name="recently_used">常用联系人</string>
     <string name="all">全部</string>
     <string name="seach_blank">搜索...                   </string>
     <string name="origanization_struct">公司/团队 组织架构</string>
@@ -702,7 +707,7 @@
     <string name="meeting_update_success">会议室更新成功</string>
     <string name="meeting_file_upload_tips">请选择一个要上传的文件</string>
     <string name="meeting_viewpager_indicator">%1$d/%2$d</string>
-    <string name="meeting_booking_title">会议室预订</string>
+    <string name="meeting_booking_title">预订会议</string>
     <string name="meeting_choose_time">时间为空，请先选时间段</string>
     <string name="meeting_no_booking_time">没有可预订时间</string>
     <string name="meeting_invating_members">邀请参会人员</string>
@@ -723,6 +728,7 @@
     <string name="meeting_place">地点</string>
     <string name="meeting_list_title">会议室列表</string>
     <string name="meeting">会议</string>
+    <string name="meeting_add">预定会议</string>
     <string name="meeting_history">历史会议</string>
     <string name="meeting_history_search">历史会议搜索</string>
     <string name="meeting_list_cancel_success">会议取消成功</string>
@@ -866,6 +872,17 @@
     <string name="mession_manage_tag">管理标签</string>
     <string name="add_mession">添加任务</string>
     <string name="no_work_content">暂无工作内容</string>
+
+    <!--网络链接及网络诊断-->
+    <string name="net_connected_error">无法连接服务器，请检查你的网络设置</string>
+    <string name="net_diagnosis_title">网络诊断</string>
+    <string name="net_diagnosis_hard_link_title">检测网络硬件链接</string>
+    <string name="net_diagnosis_wifi_link_title">检测Wifi路由状态</string>
+    <string name="net_diagnosis_dns_link_title">检测DNS服务器状态</string>
+    <string name="net_diagnosis_hard_link_conent">当前检查项目包含：设置硬件是否存在故障，设置硬件链接状态是否通畅，设置是否有链接wifi,4G,LTE等</string>
+    <string name="net_diagnosis_wifi_link_conent">当前检查项目包含：链接到的wifi是否有经验需求,如果有需要先验证此wifi才可继续访问</string>
+    <string name="net_diagnosis_dns_link_conent">当前检查项目包含：DNS服务是否有故障</string>
+    <string name="net_network_authentication">网络认证</string>
 
     <!-- ListView自定义控件部分 -->
     <string name="xlistview_header_last_time">上次更新时间:</string>

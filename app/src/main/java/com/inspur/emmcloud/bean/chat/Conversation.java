@@ -48,6 +48,8 @@ public class Conversation implements Serializable{
     @Column(name = "hide")
     private boolean hide;
 
+    private String draft = "";
+
     public Conversation(){
 
     }
@@ -190,6 +192,13 @@ public class Conversation implements Serializable{
         this.hide = hide;
     }
 
+    public String getDraft() {
+        return draft;
+    }
+
+    public void setDraft(String draft) {
+        this.draft = draft;
+    }
 
     public boolean equals(Object other) { // 重写equals方法，后面最好重写hashCode方法
 

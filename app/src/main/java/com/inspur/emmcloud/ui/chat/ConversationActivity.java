@@ -24,7 +24,9 @@ import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.GetChannelMessagesResult;
 import com.inspur.emmcloud.bean.chat.Message;
+import com.inspur.emmcloud.bean.chat.MsgContentMediaImage;
 import com.inspur.emmcloud.bean.chat.MsgContentMediaVoice;
+import com.inspur.emmcloud.bean.chat.MsgContentRegularFile;
 import com.inspur.emmcloud.bean.chat.UIMessage;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
 import com.inspur.emmcloud.bean.contact.ContactUser;
@@ -46,16 +48,14 @@ import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.privates.audioformat.AudioFormatUtils;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
-import com.inspur.emmcloud.util.privates.DataCleanManager;
 import com.inspur.emmcloud.util.privates.DirectChannelUtils;
 import com.inspur.emmcloud.util.privates.GetPathFromUri4kitkat;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.MessageRecourceUploadUtils;
-import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.UriUtils;
 import com.inspur.emmcloud.util.privates.Voice2StringMessageUtils;
+import com.inspur.emmcloud.util.privates.audioformat.AudioFormatUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 import com.inspur.emmcloud.widget.ECMChatInputMenu;
@@ -236,9 +236,9 @@ public class ConversationActivity extends ConversationBaseActivity {
             }
         });
         chatInputMenu.setInputLayout(conversation.getInput(), false);
-        String chatDrafts = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), MyAppConfig.getChannelDrafsPreKey(cid));
-        if (chatDrafts != null) {
-            chatInputMenu.setChatDrafts(chatDrafts);
+        String draftMessageContent = MessageCacheUtil.getDraftByCid(ConversationActivity.this,cid);
+        if(draftMessageContent != null){
+            chatInputMenu.setChatDrafts(draftMessageContent);
         }
     }
 
@@ -273,7 +273,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 UIMessage uiMessage = uiMessageList.get(position);
                 int messageSendStatus = uiMessage.getSendStatus();
                 //当消息处于发送中状态时无法点击
-                if (messageSendStatus == 1) {
+                if (messageSendStatus == Message.MESSAGE_SEND_SUCCESS) {
                     openMessage(uiMessage.getMessage());
                 }
             }
@@ -287,7 +287,7 @@ public class ConversationActivity extends ConversationBaseActivity {
 
             @Override
             public void onMediaVoiceReRecognize(UIMessage uiMessage, BubbleLayout bubbleLayout, QMUILoadingView downloadLoadingView) {
-                showMeidaVoiceReRecognizerPop(uiMessage, bubbleLayout, downloadLoadingView);
+               // showMeidaVoiceReRecognizerPop(uiMessage, bubbleLayout, downloadLoadingView);
             }
 
             @Override
@@ -338,21 +338,29 @@ public class ConversationActivity extends ConversationBaseActivity {
             Message message = uiMessage.getMessage();
             uiMessage.setSendStatus(0);
             int position = uiMessageList.indexOf(uiMessage);
-            if (position != uiMessageList.size() - 1) {
-                uiMessageList.remove(position);
-                uiMessageList.add(uiMessage);
-                adapter.setMessageList(uiMessageList);
-                adapter.notifyDataSetChanged();
-                msgListView.MoveToPosition(uiMessageList.size() - 1);
-            } else {
-                adapter.setMessageList(uiMessageList);
-                adapter.notifyItemChanged(uiMessageList.size() - 1);
-            }
+            adapter.setMessageList(uiMessageList);
+            adapter.notifyItemChanged(position);
             switch (message.getType()) {
                 case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
+                    if(message.getMsgContentAttachmentFile().getMedia().equals(message.getLocalPath())){
+                        sendMessageWithFile(message);
+                    }else{
+                        WSAPIService.getInstance().sendChatRegularFileMsg(message);
+                    }
+                    break;
                 case Message.MESSAGE_TYPE_MEDIA_IMAGE:
+                    if(message.getMsgContentMediaImage().getRawMedia().equals(message.getLocalPath())){
+                        sendMessageWithFile(message);
+                    }else{
+                        WSAPIService.getInstance().sendChatMediaImageMsg(message);
+                    }
+                    break;
                 case Message.MESSAGE_TYPE_MEDIA_VOICE:
-                    sendMessageWithFile(message);
+                    if(message.getMsgContentMediaVoice().getMedia().equals(message.getLocalPath())){
+                        sendMessageWithFile(message);
+                    }else{
+                        WSAPIService.getInstance().sendChatMediaVoiceMsg(message);
+                    }
                     break;
                 case Message.MESSAGE_TYPE_TEXT_PLAIN:
                     WSAPIService.getInstance().sendChatTextPlainMsg(message);
@@ -368,7 +376,7 @@ public class ConversationActivity extends ConversationBaseActivity {
 
     /**
      * 打开消息
-     *
+     * 未发送成功的不可调用此方法，不会根据消息id获取评论
      * @param message
      */
     private void openMessage(Message message) {
@@ -437,7 +445,6 @@ public class ConversationActivity extends ConversationBaseActivity {
                 }
                 final String wavFileSavePath = MyAppConfig.getCacheVoiceWAVFilePath(uiMessage.getMessage().getChannel(), uiMessage.getMessage().getId());
 
-                LogUtils.jasonDebug("wavFileSavePath=" + wavFileSavePath);
                 if(!FileUtils.isFileExist(wavFileSavePath)){
 
                     AudioFormatUtils.Mp3ToWav(mp3FileSavePath, wavFileSavePath, new ResultCallback() {
@@ -457,8 +464,6 @@ public class ConversationActivity extends ConversationBaseActivity {
             }
         });
     }
-
-    ;
 
     private void voiceToWord(String filePath, final UIMessage uiMessage, final QMUILoadingView downloadLoadingView) {
         downloadLoadingView.setVisibility(View.VISIBLE);
@@ -548,7 +553,6 @@ public class ConversationActivity extends ConversationBaseActivity {
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case RQQUEST_CHOOSE_FILE:
-                    if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
                         String filePath = GetPathFromUri4kitkat.getPathByUri(MyApplication.getInstance(), data.getData());
                         File file = new File(filePath);
                         if (StringUtils.isBlank(FileUtils.getSuffix(file))) {
@@ -557,20 +561,17 @@ public class ConversationActivity extends ConversationBaseActivity {
                         } else {
                             combinAndSendMessageWithFile(filePath, Message.MESSAGE_TYPE_FILE_REGULAR_FILE);
                         }
-                    }
                     break;
                 case REQUEST_CAMERA:
-                    if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
                         String imgPath = data.getExtras().getString(MyCameraActivity.OUT_FILE_PATH);
                         try {
-                            File file = new Compressor(ConversationActivity.this).setMaxHeight(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setMaxWidth(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setQuality(90).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
+                            File fileCamera = new Compressor(ConversationActivity.this).setMaxHeight(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setMaxWidth(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setQuality(90).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
                                     .compressToFile(new File(imgPath));
-                            imgPath = file.getAbsolutePath();
+                            imgPath = fileCamera.getAbsolutePath();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
                         combinAndSendMessageWithFile(imgPath, Message.MESSAGE_TYPE_MEDIA_IMAGE);
-                    }
                     break;
                 case REQUEST_MENTIONS:
                     // @返回
@@ -673,13 +674,36 @@ public class ConversationActivity extends ConversationBaseActivity {
             public void onSuccess(VolumeFile volumeFile) {
                 switch (fakeMessage.getType()) {
                     case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
-                        WSAPIService.getInstance().sendChatRegularFileMsg(cid, fakeMessage.getId(), volumeFile);
+                        MsgContentRegularFile msgContentRegularFile = new MsgContentRegularFile();
+                        msgContentRegularFile.setName(volumeFile.getName());
+                        msgContentRegularFile.setSize(volumeFile.getSize());
+                        msgContentRegularFile.setMedia(volumeFile.getPath());
+                        msgContentRegularFile.setTmpId(fakeMessage.getTmpId());
+                        fakeMessage.setContent(msgContentRegularFile.toString());
+                        WSAPIService.getInstance().sendChatRegularFileMsg(fakeMessage);
+                        MessageCacheUtil.saveMessage(ConversationActivity.this,fakeMessage);
                         break;
                     case Message.MESSAGE_TYPE_MEDIA_IMAGE:
-                        WSAPIService.getInstance().sendChatMediaImageMsg(volumeFile, fakeMessage);
+                        MsgContentMediaImage msgContentMediaImage = new MsgContentMediaImage();
+                        msgContentMediaImage.setRawWidth(fakeMessage.getMsgContentMediaImage().getRawWidth());
+                        msgContentMediaImage.setRawHeight(fakeMessage.getMsgContentMediaImage().getRawHeight());
+                        msgContentMediaImage.setRawSize(volumeFile.getSize());
+                        msgContentMediaImage.setRawMedia(volumeFile.getPath());
+                        msgContentMediaImage.setName(volumeFile.getName());
+                        msgContentMediaImage.setTmpId(fakeMessage.getTmpId());
+                        fakeMessage.setContent(msgContentMediaImage.toString());
+                        WSAPIService.getInstance().sendChatMediaImageMsg(fakeMessage);
+                        MessageCacheUtil.saveMessage(ConversationActivity.this,fakeMessage);
                         break;
                     case Message.MESSAGE_TYPE_MEDIA_VOICE:
-                        WSAPIService.getInstance().sendChatMediaVoiceMsg(fakeMessage, volumeFile);
+                        MsgContentMediaVoice msgContentMediaVoice = new MsgContentMediaVoice();
+                        msgContentMediaVoice.setMedia(volumeFile.getPath());
+                        msgContentMediaVoice.setDuration(fakeMessage.getMsgContentMediaVoice().getDuration());
+                        msgContentMediaVoice.setJsonResults(fakeMessage.getMsgContentMediaVoice().getResult());
+                        msgContentMediaVoice.setTmpId(fakeMessage.getTmpId());
+                        fakeMessage.setContent(msgContentMediaVoice.toString());
+                        WSAPIService.getInstance().sendChatMediaVoiceMsg(fakeMessage);
+                        MessageCacheUtil.saveMessage(ConversationActivity.this,fakeMessage);
                         break;
                 }
             }
@@ -732,16 +756,18 @@ public class ConversationActivity extends ConversationBaseActivity {
      * 设置当前频道草稿箱
      */
     private void setChatDrafts() {
-        String chatDraftsNew = chatInputMenu.getInputContent().trim();
-        String chatDraftsOld = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), MyAppConfig.getChannelDrafsPreKey(cid), "").trim();
-        if (!chatDraftsNew.equals(chatDraftsOld)) {
-            if (!StringUtils.isBlank(chatDraftsNew)) {
-                PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), MyAppConfig.getChannelDrafsPreKey(cid), chatDraftsNew);
-            } else {
-                PreferencesByUserAndTanentUtils.clearDataByKey(MyApplication.getInstance(), MyAppConfig.getChannelDrafsPreKey(cid));
-            }
-            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_REFRESH_CONVERSATION_ADAPTER));
+        String lastDraft = MessageCacheUtil.getDraftByCid(ConversationActivity.this,cid);
+        String inputContent = chatInputMenu.getInputContent();
+        if(!StringUtils.isBlank(inputContent)&& !lastDraft.equals(inputContent)){
+            Message draftMessage = CommunicationUtils.combinLocalTextPlainMessage(inputContent,cid);
+            draftMessage.setSendStatus(Message.MESSAGE_SEND_EDIT);
+            draftMessage.setRead(Message.MESSAGE_READ);
+            draftMessage.setCreationDate(System.currentTimeMillis());
+            MessageCacheUtil.saveMessage(ConversationActivity.this,draftMessage);
+        }else if(StringUtils.isBlank(inputContent) && !StringUtils.isBlank(lastDraft)){
+            MessageCacheUtil.deleteDraftMessageByCid(ConversationActivity.this,cid);
         }
+        notifyCommucationFragmentMessageSendStatus();
     }
 
     /**
@@ -799,13 +825,45 @@ public class ConversationActivity extends ConversationBaseActivity {
      * @param status
      */
     private void addLocalMessage(Message message, int status) {
+        //存储发送中状态
+        if(status == Message.MESSAGE_SEND_ING){
+            MessageCacheUtil.saveMessage(ConversationActivity.this,message);
+            notifyCommucationFragmentMessageSendStatus();
+        }
+        message.setRead(Message.MESSAGE_READ);
         UIMessage UIMessage = new UIMessage(message);
+        boolean isSendFail = handleUnSendMessage(message,status);
         //本地添加的消息设置为正在发送状态
-        UIMessage.setSendStatus(status);
+        UIMessage.setSendStatus(isSendFail?Message.MESSAGE_SEND_FAIL:status);
         uiMessageList.add(UIMessage);
         adapter.setMessageList(uiMessageList);
         adapter.notifyItemInserted(uiMessageList.size() - 1);
         msgListView.MoveToPosition(uiMessageList.size() - 1);
+    }
+
+    /**
+     * 处理未发送成功的消息，存储临时消息
+     * @param message
+     * @param status
+     * @return
+     */
+    private boolean handleUnSendMessage(Message message, int status) {
+        //发送中，无网,发送消息失败
+        if(status == Message.MESSAGE_SEND_FAIL || (status == Message.MESSAGE_SEND_ING && !NetUtils.isNetworkConnected(ConversationActivity.this))){
+            message.setSendStatus(Message.MESSAGE_SEND_FAIL);
+            message.setRead(Message.MESSAGE_READ);
+            MessageCacheUtil.saveMessage(ConversationActivity.this,message);
+            notifyCommucationFragmentMessageSendStatus();
+            return true;
+        }
+        return false;
+    }
+
+    private void notifyCommucationFragmentMessageSendStatus(){
+        // 通知沟通页面更新列表状态
+        Intent intent = new Intent("message_notify");
+        intent.putExtra("command", "sort_session_list");
+        LocalBroadcastManager.getInstance(ConversationActivity.this).sendBroadcast(intent);
     }
 
     /**
@@ -818,7 +876,8 @@ public class ConversationActivity extends ConversationBaseActivity {
         UIMessage fakeUIMessage = new UIMessage(fakeMessageId);
         int index = uiMessageList.indexOf(fakeUIMessage);
         if (index != -1) {
-            uiMessageList.get(index).setSendStatus(2);
+            uiMessageList.get(index).setSendStatus(Message.MESSAGE_SEND_FAIL);
+            handleUnSendMessage(uiMessageList.get(index).getMessage(),Message.MESSAGE_SEND_FAIL);
             adapter.setMessageList(uiMessageList);
             adapter.notifyItemChanged(index);
         }
@@ -855,7 +914,6 @@ public class ConversationActivity extends ConversationBaseActivity {
         }
         chatInputMenu.releaseVoliceInput();
         EventBus.getDefault().unregister(this);
-        DataCleanManager.cleanCustomCache(MyAppConfig.LOCAL_CACHE_VOICE_PATH);
     }
 
 
@@ -867,26 +925,59 @@ public class ConversationActivity extends ConversationBaseActivity {
         if ((NetUtils.isNetworkConnected(MyApplication.getInstance(), false) &&
                 !(uiMessageList.size() > 0 && MessageCacheUtil.isDataInLocal(ConversationActivity.this, cid, uiMessageList
                         .get(0).getCreationDate(), 20)))) {
-            String newMessageId = uiMessageList.size() > 0 ? uiMessageList.get(0).getMessage().getId() : "";
-            WSAPIService.getInstance().getHistoryMessage(cid, newMessageId);
+            WSAPIService.getInstance().getHistoryMessage(cid, getNewMessageId());
         } else {
             getHistoryMessageFromLocal();
         }
+    }
+
+    /**
+     * 获取本地发送成功的消息id
+     * @return
+     */
+    private String getNewMessageId() {
+        if(uiMessageList.size()>0){
+            for (UIMessage uiMessage:uiMessageList) {
+                if(uiMessage.getMessage().getSendStatus() == Message.MESSAGE_SEND_SUCCESS){
+                    return uiMessage.getMessage().getId();
+                }
+            }
+        }
+        return "";
     }
 
     private void getHistoryMessageFromLocal() {
         if (uiMessageList.size() > 0) {
             List<Message> messageList = MessageCacheUtil.getHistoryMessageList(
                     MyApplication.getInstance(), cid, uiMessageList.get(0).getCreationDate(), 20);
+            List<Message> messageSendingList = new ArrayList<>();
+            for (int i = 0; i < messageList.size(); i++) {
+                if(messageList.get(i).getSendStatus() == Message.MESSAGE_SEND_ING && ((System.currentTimeMillis() - messageList.get(i).getCreationDate())>16*1000) ){
+                    messageList.get(i).setSendStatus(Message.MESSAGE_SEND_FAIL);
+                    messageSendingList.add(messageList.get(i));
+                }
+            }
+            persistenceMessageSendStatus(messageSendingList);
             uiMessageList.addAll(0, UIMessage.MessageList2UIMessageList(messageList));
             adapter.setMessageList(uiMessageList);
             adapter.notifyItemRangeInserted(0, messageList.size());
             msgListView.scrollToPosition(messageList.size() - 1);
         }
-
         swipeRefreshLayout.setRefreshing(false);
     }
 
+    /**
+     * 持久化16秒以上消息的消息状态
+     * @param messageSendingList
+     */
+    private void persistenceMessageSendStatus(final List<Message> messageSendingList) {
+        new Thread(){
+            @Override
+            public void run() {
+                MessageCacheUtil.updateMessageSendStatus(ConversationActivity.this,messageSendingList);
+            }
+        }.start();
+    }
 
     //接收到websocket发过来的消息
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -909,6 +1000,14 @@ public class ConversationActivity extends ConversationBaseActivity {
                         }
 
                     }
+                    Long creationDate = 0L;
+                    Message message = MessageCacheUtil.getMessageByMid(MyApplication.getInstance(),receivedWSMessage.getId());
+                    if(message != null){
+                        creationDate = message.getCreationDate();
+                    }else {
+                        creationDate = MessageCacheUtil.getMessageByMid(MyApplication.getInstance(),receivedWSMessage.getTmpId()).getCreationDate();
+                    }
+                    receivedWSMessage.setCreationDate(creationDate);
                     if (index == -1) {
                         uiMessageList.add(new UIMessage(receivedWSMessage));
                         adapter.setMessageList(uiMessageList);
@@ -944,8 +1043,8 @@ public class ConversationActivity extends ConversationBaseActivity {
                 String content = eventMessage.getContent();
                 JSONObject contentobj = JSONUtils.getJSONObject(content);
                 Message message = new Message(contentobj);
-                message.setRead(1);
-                MessageCacheUtil.saveMessage(MyApplication.getInstance(), message);
+                message.setRead(Message.MESSAGE_READ);
+                MessageCacheUtil.handleRealMessage(MyApplication.getInstance(),message);
                 adapter.notifyDataSetChanged();
             }
 
@@ -963,7 +1062,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 GetChannelMessagesResult getChannelMessagesResult = new GetChannelMessagesResult(content);
                 final List<Message> newMessageList = getChannelMessagesResult.getMessageList();
                 if (newMessageList.size() > 0) {
-                    MessageCacheUtil.saveMessageList(MyApplication.getInstance(), newMessageList, null);
+                    MessageCacheUtil.handleRealMessage(MyApplication.getInstance(),newMessageList, null,cid);
                 }
                 WSAPIService.getInstance().setChannelMessgeStateRead(cid);
                 final List<Message> cacheMessageList = MessageCacheUtil.getHistoryMessageList(MyApplication.getInstance(), cid, null, 20);
@@ -989,8 +1088,10 @@ public class ConversationActivity extends ConversationBaseActivity {
                     if (uiMessageList.size() > 0) {
                         targetMessageCreationDate = uiMessageList.get(0).getCreationDate();
                     }
-                    MessageCacheUtil.saveMessageList(MyApplication.getInstance(), messageList, targetMessageCreationDate);
-                    uiMessageList.addAll(0, UIMessage.MessageList2UIMessageList(messageList));
+                    MessageCacheUtil.handleRealMessage(MyApplication.getInstance(),messageList,targetMessageCreationDate,cid);
+                    uiMessageList.addAll(0, UIMessage.MessageList2UIMessageList
+                            (MessageCacheUtil.getHistoryMessageListByTime(MyApplication.getInstance(),cid,
+                                    messageList.get(0).getCreationDate(),messageList.get(messageList.size() - 1).getCreationDate())));
                     adapter.setMessageList(uiMessageList);
                     adapter.notifyItemRangeInserted(0, messageList.size());
                     msgListView.scrollToPosition(messageList.size() - 1);
@@ -1008,6 +1109,7 @@ public class ConversationActivity extends ConversationBaseActivity {
     public void onReiceveWSOfflineMessage(SimpleEventMessage eventMessage) {
         if (eventMessage.getAction().equals(Constant.EVENTBUS_TAG_CURRENT_CHANNEL_OFFLINE_MESSAGE)) {
             List<Message> offlineMessageList = (List<Message>) eventMessage.getMessageObj();
+            MessageCacheUtil.handleRealMessage(MyApplication.getInstance(),offlineMessageList,null,cid);
             Iterator<Message> it = offlineMessageList.iterator();
             //去重
             if (uiMessageList.size() > 0) {
