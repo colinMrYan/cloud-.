@@ -280,7 +280,7 @@ public class ConversationActivity extends ConversationBaseActivity {
 
             @Override
             public void onMessageResend(UIMessage uiMessage) {
-                if (uiMessage.getSendStatus() == 2) {
+                if (uiMessage.getSendStatus() == Message.MESSAGE_SEND_FAIL) {
                     showResendMessageDlg(uiMessage);
                 }
             }
@@ -336,7 +336,7 @@ public class ConversationActivity extends ConversationBaseActivity {
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
             // TODO Auto-generated method stub
             Message message = uiMessage.getMessage();
-            uiMessage.setSendStatus(0);
+            uiMessage.setSendStatus(Message.MESSAGE_SEND_ING);
             int position = uiMessageList.indexOf(uiMessage);
             adapter.setMessageList(uiMessageList);
             adapter.notifyItemChanged(position);
@@ -361,6 +361,9 @@ public class ConversationActivity extends ConversationBaseActivity {
                     }else{
                         WSAPIService.getInstance().sendChatMediaVoiceMsg(message);
                     }
+                    break;
+                case Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN:
+                    WSAPIService.getInstance().sendChatCommentTextPlainMsg(message);
                     break;
                 case Message.MESSAGE_TYPE_TEXT_PLAIN:
                     WSAPIService.getInstance().sendChatTextPlainMsg(message);
@@ -759,7 +762,7 @@ public class ConversationActivity extends ConversationBaseActivity {
         String lastDraft = MessageCacheUtil.getDraftByCid(ConversationActivity.this,cid);
         String inputContent = chatInputMenu.getInputContent();
         if(!StringUtils.isBlank(inputContent)&& !lastDraft.equals(inputContent)){
-            Message draftMessage = CommunicationUtils.combinLocalTextPlainMessage(inputContent,cid);
+            Message draftMessage = CommunicationUtils.combinLocalTextPlainMessage(inputContent.equals("@")?(" "+inputContent):inputContent,cid);
             draftMessage.setSendStatus(Message.MESSAGE_SEND_EDIT);
             draftMessage.setRead(Message.MESSAGE_READ);
             draftMessage.setCreationDate(System.currentTimeMillis());
