@@ -878,7 +878,7 @@
     <string name="net_diagnosis_title">网络诊断</string>
     <string name="net_diagnosis_hard_link_title">检测网络硬件链接</string>
     <string name="net_diagnosis_wifi_link_title">检测Wi-Fi路由器状态</string>
-    <string name="net_diagnosis_dns_link_title">检测网络服务与高级域名</string>
+    <string name="net_diagnosis_dns_link_title">检测网络连通性</string>
     <string name="net_diagnosis_hard_link_conent">当前检查项目包含：硬件链接是否通畅，是否有链接Wi-Fi、4G、LTE等</string>
     <string name="net_diagnosis_hard_to_fix">去修复</string>
     <string name="net_diagnosis_wifi_link_conent">当前检查项目包含：链接到的Wi-Fi是否有验证需求,如果有需要先验证此Wi-Fi才可继续访问</string>

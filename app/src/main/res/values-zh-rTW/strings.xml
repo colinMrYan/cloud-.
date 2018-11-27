@@ -872,7 +872,7 @@
     <string name="net_diagnosis_title">網絡診斷</string>
     <string name="net_diagnosis_hard_link_title">檢測網絡硬件鏈接</string>
     <string name="net_diagnosis_wifi_link_title">檢測Wi-Fi路由器狀態</string>
-    <string name="net_diagnosis_dns_link_title">檢測網絡服務與高級域名</string>
+    <string name="net_diagnosis_dns_link_title">檢測網絡連通性</string>
     <string name="net_diagnosis_hard_link_conent">當前檢查項目包含：硬件鏈接是否通暢，是否有鏈接Wi-Fi、4G、LTE等</string>
     <string name="net_diagnosis_hard_to_fix">去修復</string>
     <string name="net_diagnosis_wifi_link_conent">當前檢查項目包含：鏈接到的Wi-Fi是否有驗证需求,如果有需要先驗證此Wi-Fi才可繼續訪問</string>

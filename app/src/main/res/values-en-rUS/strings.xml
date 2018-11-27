@@ -294,7 +294,7 @@
     <string name="chat_remove">Delete</string>
     <string name="chat_remove_from_top">Remove from Top</string>
     <string name="no_chat_content">No chat content</string>
-    <string name="msg_key_search_member">Enter Keywords</string>
+    <string name="msg_key_search_member"> Please input the key words</string>
 
     <!-- 会议卡片 -->
     <string name="meeting_has_confirmed">Confirmed</string>
@@ -359,7 +359,7 @@
     <string name="adding"> Adding</string>
     <string name="add_app"> Add App</string>
     <string name="app_search_null"> Not get a search result</string>
-    <string name="app_input_search_key">Enter keywords</string>
+    <string name="app_input_search_key"> Please input the key words</string>
     <string name="app_must_be_app_cannot_edit">All applications are necessary and non-editable</string>
     <string name="app_center">APP Center</string>
     <string name="app_commonly_use">Common Application</string>
@@ -673,7 +673,7 @@
     <string name="address_servicenum_text">Service number</string>
     <string name="org_struct_text">Organization/Architecture  </string>
     <string name="please_select_app_of_mail">Please select the application of the type of mail</string>
-    <string name="recently_used">Frequent</string>
+    <string name="recently_used">Frequent Contacts</string>
     <string name="all">All</string>
     <string name="seach_blank">Search...                   </string>
     <string name="origanization_struct">Company/Organization</string>
@@ -872,7 +872,7 @@
     <string name="net_diagnosis_title">Network Diagnoses</string>
     <string name="net_diagnosis_hard_link_title">Detect network hardware</string>
     <string name="net_diagnosis_wifi_link_title">Detect router</string>
-    <string name="net_diagnosis_dns_link_title">Detect domain </string>
+    <string name="net_diagnosis_dns_link_title">Detect network connectivity</string>
     <string name="net_diagnosis_hard_link_conent">Contained Items:Connection status of Wi-Fi,4G,LTE and so on.</string>
     <string name="net_diagnosis_hard_to_fix">Repair</string>
     <string name="net_diagnosis_wifi_link_conent">Contained Items:Does Connected Wi-Fi have verification requirement? if yes,Please verify Wi-Fi first, then continue to visit.</string>
