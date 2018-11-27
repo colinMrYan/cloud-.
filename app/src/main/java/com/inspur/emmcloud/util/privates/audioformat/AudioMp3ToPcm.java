@@ -51,7 +51,7 @@ public class AudioMp3ToPcm {
      * 设置输入输出文件位置
      * @param srcPath 源文件路径
      * @param dstPath 目标文件路径
-     * @param sampleRate  要求采样率(仅支持16k)
+     * @param sampleRate  要求采样率(仅支持16k, )
      */
     public void setIOPath(String srcPath, String dstPath,int sampleRate) {
         this.srcPath=srcPath;
@@ -61,7 +61,7 @@ public class AudioMp3ToPcm {
     }
 
     /**
-     * 设置输入输出文件位置
+     * 设置输入输出文件位置(采样率默认为8K)
      * @param srcPath
      * @param dstPath
      */
