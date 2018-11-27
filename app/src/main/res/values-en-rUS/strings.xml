@@ -5,7 +5,7 @@
     <string name="reclick_to_desktop">Clicking again will exit the application</string>
     <string name="Network_Mobile">Connected to Cellular</string>
     <string name="Network_WIFI">Connected to WIFI</string>
-    <string name="ok">Sure</string>
+    <string name="ok">Done</string>
     <string name="cancel">Cancel</string>
     <string name="resolution_valiad">Your device resolution is less than 800*480, unable to run this program</string>
     <string name="retry">Retry</string>
@@ -22,8 +22,9 @@
     <string name="send">Send</string>
     <string name="picture">Picture</string>
     <string name="album">Album</string>
-    <string name="take_photo">Take Photo</string>
-    <string name="file">File</string>
+    <string name="take_photo">Camera</string>
+    <string name="mention">Mention</string>
+    <string name="file">Files</string>
     <string name="next_step">Next</string>
     <string name="pull_down_load_history">Drop load history message</string>
     <string name="if_confirm_signout">Are you sure you want to log out?</string>
@@ -33,7 +34,7 @@
     <string name="add">Add</string>
     <string name="update">Update</string>
     <string name="download">Download</string>
-    <string name="confirm_modify_language">Confirm to modify language</string>
+    <string name="confirm_modify_language">Change to This Language?</string>
     <string name="file_type_not_recognize">Unrecognizable File type</string>
     <string name="return_app">Return Application</string>
     <string name="modify_success">Successfully Modified</string>
@@ -45,7 +46,7 @@
     <string name="unknown_error">Unknown Error</string>
     <string name="no_search_term">No more results</string>
     <string name="more">More</string>
-    <string name="check_update_text">Check new version</string>
+    <string name="check_update_text">Check New Version</string>
     <string name="app_is_lastest_version">This is the lastest version</string>
     <string name="check_update_fail">Checking new version failed</string>
     <string name="upgrade">Now</string>
@@ -55,7 +56,7 @@
     <string name="more_work_place">More work places...</string>
     <string name="cancel_filter">Cancle filter</string>
     <string name="only_free">Only free</string>
-    <string name="invite_friends_text">Recommend Cloud+ to friends</string>
+    <string name="invite_friends_text">Recommend Cloud+ to Friends</string>
     <string name="tab_not_support_tips">%1$s function has been revised , Please<Data><![CDATA[<font color=\'#0F7BCA\'>upgrade</font>]]></Data></string>
 
     <!-- 公共部分 -->
@@ -78,14 +79,14 @@
     <string name="begin">Begin</string>
     <string name="end">End</string>
     <string name="yesterday">Yesterday</string>
-    <string name="format_default">yyyy-MM-dd HH:mm:ss</string>
+    <string name="format_default">MM/dd/yy HH:mm:ss</string>
     <string name="format_date_group_by">yyyy-MM-dd</string>
-    <string name="format_year_month_day">yyyy-MM-dd</string>
+    <string name="format_year_month_day">MM/dd/yy</string>
     <string name="format_hour_minute">HH:mm</string>
     <string name="format_utc">yyyy-MM-dd\'T\'HH:mm:ss\'.\'SSS\'Z\'</string>
-    <string name="format_month_day">MM-dd</string>
-    <string name="format_task_month_day">MM.dd</string>
-    <string name="format_year_month_day_hour_minute">yyyy-MM-dd HH:mm</string>
+    <string name="format_month_day">MMM dd</string>
+    <string name="format_task_month_day">MMM dd</string>
+    <string name="format_year_month_day_hour_minute">MM/dd/yy HH:mm</string>
     <string name="format_year_month">yyyy-MM</string>
     <string name="time_null">null</string>
     <string name="cutdown_now">now</string>
@@ -119,12 +120,13 @@
     <string name="tax_ticket_info"> VAT Invoice Information</string>
     <string name="channel_group_info">Group Information</string>
     <string name="channel_group_name">Group Name</string>
-    <string name="channel_group_image"> Channel Image</string>
-    <string name="channel_group_file"> Channel File</string>
-    <string name="channel_set_top"> Top Chat</string>
-    <string name="message_without_interruption">Do Not Disturb</string>
+    <string name="channel_group_image">Images</string>
+    <string name="channel_group_file">Files</string>
+    <string name="channel_group_members_name">Group Name</string>
+    <string name="channel_set_top">Sticky on Top</string>
+    <string name="message_without_interruption">Mute Notifications</string>
     <string name="login_hint_text">Name/E-mail/Phone</string>
-    <string name="modify_group_name">Change Name</string>
+    <string name="modify_group_name">Group Contact Card</string>
     <string name="choose_common_office">Add common office address</string>
     <string name="please_click_choosing_time">Please click and choose time</string>
     <string name="meeting_room">Meeting Room</string>
@@ -214,7 +216,7 @@
     <string name="login_captchas_getcode_success">Code has been sent successfully</string>
     <string name="login_cost_report">Expense Report</string>
     <string name="login_your_contact">Your contact</string>
-    <string name="login_group_album">Group Photos</string>
+    <string name="login_group_album">Group Images</string>
     <string name="login_group_file">Group Files</string>
     <string name="login_authorization_expired">Authorization Expired</string>
     <string name="login_cant_login_with_sms">Your account is not allowed to log on with SMS</string>
@@ -225,7 +227,7 @@
 
     <!-- 消息部分 -->
     <string name="msgcontent_cannot_null">Please type message content</string>
-    <string name="comment_type">   \'s picture</string>
+    <string name="comment_type">   \'s image</string>
     <string name="comment_filetype">   \'s file</string>
     <string name="comment_news_type">   \'s link</string>
     <string name="comment_other_type">   \'s message</string>
@@ -233,7 +235,7 @@
     <string name="all_channel_mem">All Channel Members</string>
     <string name="message_text">Message：</string>
     <string name="channel">Channel</string>
-    <string name="communicate">Chat</string>
+    <string name="communicate">Messages</string>
     <string name="group_info">Inspur Infomation</string>
     <string name="send_a_picture">[Image]</string>
     <string name="send_a_comment">[Comment]</string>
@@ -274,8 +276,8 @@
     <string name="group_name_longth_valid">Group name, word overrun (no more than 40 characters)</string>
     <string name="message_create_group">Group Chat</string>
     <string name="business_card">Business Card</string>
-    <string name="no_channel_album">No group picture </string>
-    <string name="no_channel_file">No group file </string>
+    <string name="no_channel_album">No group pictures</string>
+    <string name="no_channel_file">No group files</string>
     <string name="hold_to_talk">Hold to Talk</string>
     <string name="release_to_send">Release to Send</string>
     <string name="release_to_cancel">release to cancel</string>
@@ -284,7 +286,7 @@
     <string name="play_fail">Unable to play</string>
     <string name="record_count_down_text">%1$d seconds left</string>
     <string name="voice_call">Voice Call</string>
-    <string name="sure_to_resend_message">Sure to resend this message?</string>
+    <string name="sure_to_resend_message">resend the message?</string>
     <string name="message_type_drafts">[Drafts]</string>
     <string name="quit_group">Quit Group</string>
     <string name="quit_group_warning_text">Confirm to leave team?</string>
@@ -292,7 +294,7 @@
     <string name="chat_remove">Delete</string>
     <string name="chat_remove_from_top">Remove from Top</string>
     <string name="no_chat_content">No chat content</string>
-    <string name="msg_key_search_member">Please enter key words</string>
+    <string name="msg_key_search_member">Enter Keywords</string>
 
     <!-- 会议卡片 -->
     <string name="meeting_has_confirmed">Confirmed</string>
@@ -319,8 +321,8 @@
     <string name="work_notask_text">No todo</string>
     <string name="work_nocal_text">No agenda</string>
     <string name="work_meeting_text">Meeting</string>
-    <string name="work_calendar_text">Enterprise calendar</string>
-    <string name="work_task_text">My mission</string>
+    <string name="work_calendar_text">Enterprise Calendar</string>
+    <string name="work_task_text">Todo</string>
     <string name="work_info_text">Info bar</string>
     <string name="time">Time</string>
 
@@ -375,7 +377,7 @@
     <string name="app_new_function">New</string>
     <string name="no_app">No app currently added</string>
     <string name="detail">Details</string>
-    <string name="search">Search</string>
+    <string name="search">Enter Keywords</string>
     <string name="delete">Delete</string>
 
     <!--云盘 Cloud Driver-->
@@ -492,7 +494,7 @@
     <string name="webex_meeting_code">Meeting number：</string>
     <string name="webex_meeting_password_tip">Meeting password：</string>
     <string name="webex_add_external_attendees">Add</string>
-    <string name="webex_no_meeting_tips"><Data><![CDATA[<font color=\'#999999\'>No meetings before</font>]]></Data>%1$s</string>
+    <string name="webex_no_meeting_tips"><Data><![CDATA[<font color=\'#999999\'>No meetings before </font>]]></Data>%1$s</string>
     <string name="webex_participant">Participants</string>
     <string name="webex_password_invalid">Passwords only contain numbers and letters</string>
     <string name="duration_time">Duration</string>
@@ -516,7 +518,7 @@
     <string name="gallery">Choose from Gallery</string>
     <string name="quit_check">Log Out</string>
     <string name="check_security">Check Security</string>
-    <string name="follow_system">Follow system</string>
+    <string name="follow_system">Follow System</string>
     <string name="more_message">Message notice</string>
     <string name="more_allApps">All Apps</string>
     <string name="more_feedback">Feedback</string>
@@ -549,28 +551,28 @@
     <string name="settings_clean_imgae_attachment">Clear images and attachments</string>
     <string name="settings_clean_web">Clear web cache</string>
     <string name="settings_clean_all">Clear all application cache</string>
-    <string name="settings_language">Languages</string>
+    <string name="settings_language">Language</string>
     <string name="settings_message_alert">Notice</string>
     <string name="settings_open_msg">On</string>
     <string name="settings_conbine_weibo">Binding microblogging</string>
     <string name="settings_conbined">Bound</string>
-    <string name="language_set_text">SelectLanguage</string>
+    <string name="language_set_text">Language</string>
     <string name="language_simple">简体中文</string>
     <string name="language_traditionalTW">繁體中文</string>
     <string name="language_traditionalHK">繁體中文（香港）</string>
     <string name="language_english">English</string>
-    <string name="wallet">Card Pack</string>
+    <string name="wallet">Cards</string>
     <string name="my_setting_tips_quit">Sure to clear all cache? App will close after clear</string>
     <string name="get_language_error">Not available to the language package, please contact the administrator</string>
     <string name="app_customer">Cloud+ Customer</string>
-    <string name="settings_device_manager">Device management</string>
+    <string name="settings_device_manager">Device Management</string>
     <string name="device_unbind_sucess">Device unbound successfully!</string>
     <string name="device_other_unbind_warning">After unbinding, log on from %1$s, you need to re register the device</string>
     <string name="device_current_unbind_warning">After unbinding, you need to log in again and register your device</string>
     <string name="last_use_time">Last use time</string>
-    <string name="bind_device">Bind device</string>
+    <string name="bind_device">Current Binding Devices</string>
     <string name="current_device">Current device</string>
-    <string name="history_device">History device(s)</string>
+    <string name="history_device">Using Devices History</string>
     <string name="device_history_use">Historical use</string>
     <string name="device_bind_time_title">Binding time: </string>
     <string name="device_bind_time">Binding time</string>
@@ -585,9 +587,10 @@
     <string name="turn_off_success">Turn off successfully</string>
     <string name="switch_enterprise">Switch</string>
     <string name="current_enterprise">Current enterprise</string>
-    <string name="web_app_auto_rotate">Web App support rotation</string>
+    <string name="web_app_auto_rotate">Web App Rotation</string>
     <string name="run_background">AppStarting</string>
     <string name="signout_fail">Signout failure,please make sure the network connection is normal</string>
+    <string name="setting_join_experience_plan">Join the upgrade experience plan</string>
 
     <string name="contact">Contact</string>
     <string name="web">web</string>
@@ -633,7 +636,7 @@
     <string name="user_modify_modify">Modify</string>
     <string name="user_info_my_info">Profile</string>
     <string name="user_info_organ">Inspur</string>
-    <string name="user_info_phone_number">Phone Number</string>
+    <string name="user_info_phone_number">Phone</string>
     <string name="user_no_storage">No Storage</string>
     <string name="user_employee_num">NO.</string>
     <string name="user_worker_num">NO.</string>
@@ -670,7 +673,7 @@
     <string name="address_servicenum_text">Service number</string>
     <string name="org_struct_text">Organization/Architecture  </string>
     <string name="please_select_app_of_mail">Please select the application of the type of mail</string>
-    <string name="recently_used">Frequently Used</string>
+    <string name="recently_used">Frequent</string>
     <string name="all">All</string>
     <string name="seach_blank">Search...                   </string>
     <string name="origanization_struct">Company/Organization</string>
@@ -688,8 +691,8 @@
     <string name="meeting_choosing_date">Select time</string>
     <string name="meeting_from">From</string>
     <string name="meeting_to">To</string>
-    <string name="meeting_start_time">Start</string>
-    <string name="meeting_end_time">End time</string>
+    <string name="meeting_start_time">Start Time</string>
+    <string name="meeting_end_time">End Time</string>
     <string name="meeting_room_booking_notice_edit">Enter notes</string>
     <string name="meeting_booking_detail">Details of the meeting</string>
     <string name="meeting_booking_no_time">Time is empty, please select period</string>
@@ -697,7 +700,7 @@
     <string name="meeting_update_success">Conference room update successfully</string>
     <string name="meeting_file_upload_tips">Select local file</string>
     <string name="meeting_viewpager_indicator">%1$d/%2$d</string>
-    <string name="meeting_booking_title">Meeting room reservation</string>
+    <string name="meeting_booking_title">Add Meetings</string>
     <string name="meeting_choose_time">Time is empty, please choose the time period</string>
     <string name="meeting_no_booking_time">No reservation time</string>
     <string name="meeting_invating_members">Invited participants</string>
@@ -712,13 +715,14 @@
     <string name="meetting_members_num">16</string>
     <string name="meeting_end">The end</string>
     <string name="meeting_topic_title">Topic</string>
-    <string name="meeting_members">Attendees</string>
+    <string name="meeting_members">Participants</string>
     <string name="meeting_log">Conference</string>
     <string name="meeting_ageda">The agenda</string>
     <string name="meeting_summary">Summary</string>
-    <string name="meeting_place">Place</string>
+    <string name="meeting_place">Room</string>
     <string name="meeting_list_title">List of meeting rooms</string>
-    <string name="meeting">Meeting</string>
+    <string name="meeting">Meetings</string>
+    <string name="meeting_add">Add Meetings</string>
     <string name="meeting_history">History Meeting</string>
     <string name="meeting_history_search">Search History Meeting</string>
     <string name="meeting_list_cancel_success">cancelled the Meeting successfully</string>
@@ -794,7 +798,7 @@
     <string name="calendar_one_day_ago">One day before</string>
     <string name="calendar_two_days_ago">Two day before</string>
     <string name="calendar_a_week_ago">1 week ago</string>
-    <string name="calendar_add_calendar">Add calendar</string>
+    <string name="calendar_add_calendar">Add Calendars</string>
     <string name="calendar_divide_into_groups">Grouping</string>
 
     <!-- 通用 -->
@@ -859,7 +863,7 @@
     <string name="mession_color_tag">Color</string>
     <string name="mession_delete_the_tag">Delete Tag</string>
     <string name="mession_manage_tag">Tag</string>
-    <string name="add_mession">Add task</string>
+    <string name="add_mession">Add Tasks</string>
     <string name="no_work_content">No job content</string>
 
 
@@ -870,7 +874,7 @@
     <string name="net_diagnosis_wifi_link_title">Detect Wifi routing status</string>
     <string name="net_diagnosis_dns_link_title">Detect DNS server status</string>
     <string name="net_diagnosis_hard_link_conent">The current test item contains: Setting of hardware fault,Setting of Hardware connection status,Setting of wifi,4G,LTE state and so on.</string>
-    <string name="net_diagnosis_wifi_link_conent">The current test item contains: Whether there is an empirical requirement for the linked wifi, if there is a need to verify the wifi before it can be accessed</string>
+    <string name="net_diagnosis_wifi_link_conent">The current test item contains: Whether there is an empirical requirement to link the wifi, if there is a need to verify the wifi before it can be accessed.</string>
     <string name="net_diagnosis_dns_link_conent">The current test item contains: Is the DNS service faulty?</string>
     <string name="net_network_authentication">Network Certification</string>
 
@@ -957,6 +961,9 @@
     <string name="turn_on_light">Turn on the light</string>
     <string name="turn_off_light">Turn off the light</string>
     <string name="imp_function_error">Function call error. Please check if Cloud + has been upgraded to the latest version.</string>
+    <string name="file_select_limit_warning">The maximum number of optional files has been reached</string>
+    <string name="select_file">Choose files</string>
+    <string name="internal_shared_storage">Internal shared storage</string>
 
     <!-- 打点 -->
     <string name="msg_default_format">Format</string>
@@ -978,8 +985,8 @@
     <string name="splash_skip">Enter immediately</string>
 
     <!--安全中心-->
-    <string name="setting_safe_center">Account and device security</string>
-    <string name="safe_center_gesture">Gesture password</string>
+    <string name="setting_safe_center">Account,Device Security</string>
+    <string name="safe_center_gesture">Gesture Password</string>
     <string name="safe_center_finger_print">Fingerprint</string>
     <string name="switch_gesture_unlock">Pattern Unlock</string>
     <string name="switch_gesture_reset_unlock">Reset gesture unlock</string>
@@ -991,7 +998,7 @@
     <string name="blink">Blink</string>
     <string name="face_verify_success">Success</string>
     <string name="face_verify_fail">Sorry,we couldn’t identify you</string>
-    <string name="face_enter">Face recognition</string>
+    <string name="face_enter">Face Recognition</string>
     <string name="face_login">Face Login</string>
     <string name="off_face_verify_relogin">Turn Off it and relogin </string>
     <string name="face_verifying">Verifying</string>
@@ -1016,7 +1023,7 @@
     <string name="create_gesture_code">Pattern</string>
     <string name="create_gesture_guid">You can create a cloud +  unlock pattern so that others can\'t open the cloud + when they borrow your cell phone</string>
     <string name="safe_center_enable">Enabled</string>
-    <string name="safe_center_unenable">Not enabled</string>
+    <string name="safe_center_unenable">Not Set</string>
 
 
     <string name="qr_code_analysis_fail">Qr code parsing failed</string>
@@ -1076,6 +1083,6 @@
     <string name="voice_word_voice">Voice</string>
     <string name="voice_word_word">Word</string>
     <string name="voice_word_tran">Sending text in speech</string>
-    <string name="voice_word_setting">Automatic voice recognition</string>
+    <string name="voice_word_setting">Automatic Voice Recognition</string>
     <string name="voice_audio_record_unavailiable">The current recording device is not available. Please check whether the recording permissions are enabled.</string>
 </resources>

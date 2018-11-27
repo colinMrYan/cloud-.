@@ -68,6 +68,7 @@ import com.inspur.emmcloud.bean.login.LoginDesktopCloudPlusBean;
 import com.inspur.emmcloud.bean.mine.GetBindingDeviceResult;
 import com.inspur.emmcloud.bean.mine.GetCardPackageResult;
 import com.inspur.emmcloud.bean.mine.GetDeviceLogResult;
+import com.inspur.emmcloud.bean.mine.GetExperienceUpgradeFlagResult;
 import com.inspur.emmcloud.bean.mine.GetFaceSettingResult;
 import com.inspur.emmcloud.bean.mine.GetLanguageResult;
 import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
@@ -739,4 +740,16 @@ public interface APIInterface {
 
     void returnUpdateConversationNameSuccess();
     void returnUpdateConversationNameFail(String error,int errorCode);
+
+    void returnExperienceUpgradeFlagSuccess(GetExperienceUpgradeFlagResult getExperienceUpgradeFlagResult);
+    void returnExperienceUpgradeFlagFail(String error,int errorCode);
+
+    void returnUpdateExperienceUpgradeFlagSuccess();
+    void returnUpdateExperienceUpgradeFlagFail(String error,int errorCode);
+
+    void returnCreateDirectConversationSuccess(Conversation conversation);
+    void returnCreateDirectConversationFail(String error,int errorCode);
+
+    void returnCreateGroupConversationSuccess(Conversation conversation);
+    void returnCreateGroupConversationFail(String error,int errorCode);
 }

@@ -23,6 +23,7 @@
     <string name="picture">圖片</string>
     <string name="album">相冊</string>
     <string name="take_photo">拍照</string>
+    <string name="mention">提及</string>
     <string name="file">文件</string>
     <string name="next_step">下一步</string>
     <string name="pull_down_load_history">下拉載入歷史消息</string>
@@ -118,14 +119,15 @@
     <string name="all_day">全天</string>
     <string name="delete_group_member"> 刪除群成員</string>
     <string name="tax_ticket_info"> 增值稅專用發票開票資訊</string>
-    <string name="channel_group_info">群信息</string>
-    <string name="channel_group_name">群組名稱</string>
-    <string name="channel_group_image"> 群聊天圖片</string>
-    <string name="channel_group_file"> 群聊天文件</string>
-    <string name="channel_set_top"> 置頂聊天</string>
+    <string name="channel_group_info">群详情</string>
+    <string name="channel_group_name">群名稱</string>
+    <string name="channel_group_image">群圖片</string>
+    <string name="channel_group_file">群文件</string>
+    <string name="channel_group_members_name">群名稱</string>
+    <string name="channel_set_top"> 置頂</string>
     <string name="message_without_interruption">消息免打擾</string>
     <string name="login_hint_text">用戶名/郵箱/手機號</string>
-    <string name="modify_group_name">修改群名稱</string>
+    <string name="modify_group_name">群名片</string>
     <string name="choose_common_office">添加常用辦公地點</string>
     <string name="please_click_choosing_time">請點擊選擇時間</string>
     <string name="meeting_room">會議室</string>
@@ -266,7 +268,7 @@
     <string name="administrators_of_channel">(管理員)</string>
     <string name="long_img">長圖</string>
     <string name="friend_list">好友列表</string>
-    <string name="join_discuss">加入討論吧</string>
+    <string name="join_discuss">討論一下吧</string>
     <string name="add_new_comment">添加新評論</string>
     <string name="socket_connecting">連接中</string>
     <string name="socket_close">已斷開</string>
@@ -364,7 +366,7 @@
     <string name="app_must_be_app_cannot_edit">當前應用皆為必裝，不可編輯</string>
     <string name="app_center">應用中心</string>
     <string name="detail">詳情</string>
-    <string name="search">搜索</string>
+    <string name="search">請輸入關鍵字</string>
     <string name="app_commonly_use">常用應用</string>
     <string name="app_center_more_apps">更多應用</string>
     <string name="app_input_mail_password">請輸入公司郵箱密碼</string>
@@ -565,7 +567,7 @@
     <string name="my_setting_tips_quit">確定清除應用內所有緩存數據？清除后將退出應用</string>
     <string name="get_language_error">未獲取到可用的語言包，請聯繫管理員</string>
     <string name="app_customer">雲+客服</string>
-    <string name="settings_device_manager">設備管理</string>
+    <string name="settings_device_manager">設備查看與管理</string>
     <string name="device_unbind_sucess">設備解綁成功！</string>
     <string name="device_other_unbind_warning">解綁後，從%1$s上登錄，您需要重新註冊設備</string>
     <string name="device_current_unbind_warning">解綁後，您需要重新登入並注册設備</string>
@@ -590,6 +592,7 @@
     <string name="web_app_auto_rotate">Web應用支持旋轉</string>
     <string name="run_background">後臺運行</string>
     <string name="signout_fail">註銷登錄失敗，請確保網絡連接正常</string>
+    <string name="setting_join_experience_plan">加入升級體驗計劃</string>
 
     <string name="contact">通訊錄</string>
     <string name="web">web</string>
@@ -636,7 +639,7 @@
     <string name="user_modify_modify">修改</string>
     <string name="user_info_my_info">個人資訊</string>
     <string name="user_info_organ">浪潮國際</string>
-    <string name="user_info_phone_number">聯繫方式</string>
+    <string name="user_info_phone_number">手機</string>
     <string name="user_no_storage">沒有存放裝置</string>
     <string name="user_employee_num">員工編號</string>
     <string name="user_worker_num">工號</string>
@@ -674,7 +677,7 @@
     <string name="address_servicenum_text">服務號</string>
     <string name="org_struct_text">組織/架構  </string>
     <string name="please_select_app_of_mail">請選擇郵件類應用</string>
-    <string name="recently_used">最近常用</string>
+    <string name="recently_used">常用連絡人</string>
     <string name="all">全部</string>
     <string name="seach_blank">搜索...                   </string>
     <string name="origanization_struct">公司/團隊 組織架構</string>
@@ -701,7 +704,7 @@
     <string name="meeting_update_success">會議室更新成功</string>
     <string name="meeting_file_upload_tips">請選擇一個要上傳的檔</string>
     <string name="meeting_viewpager_indicator">%1$d/%2$d</string>
-    <string name="meeting_booking_title">會議室預訂</string>
+    <string name="meeting_booking_title">預訂會議</string>
     <string name="meeting_choose_time">時間為空，請先選時間段</string>
     <string name="meeting_no_booking_time">沒有可預訂時間</string>
     <string name="meeting_invating_members">邀請參會人員</string>
@@ -722,6 +725,7 @@
     <string name="meeting_place">地點</string>
     <string name="meeting_list_title">會議室列表</string>
     <string name="meeting">會議</string>
+    <string name="meeting_add">預定會議</string>
     <string name="meeting_history">歷史會議</string>
     <string name="meeting_history_search">歷史會議搜索</string>
     <string name="meeting_list_cancel_success">會議取消成功</string>
@@ -957,6 +961,9 @@
     <string name="turn_on_light">開燈</string>
     <string name="turn_off_light">關燈</string>
     <string name="imp_function_error">功能調用錯誤，請檢查應用是否已升級到最新版本</string>
+    <string name="file_select_limit_warning">超過了建議選擇檔案數限制</string>
+    <string name="select_file">選擇檔案</string>
+    <string name="internal_shared_storage">內部儲存設備</string>
 
 
     <!-- 打點 -->

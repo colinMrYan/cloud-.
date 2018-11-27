@@ -18,6 +18,7 @@ import com.inspur.emmcloud.bean.login.GetMDMStateResult;
 import com.inspur.emmcloud.bean.mine.GetBindingDeviceResult;
 import com.inspur.emmcloud.bean.mine.GetCardPackageResult;
 import com.inspur.emmcloud.bean.mine.GetDeviceLogResult;
+import com.inspur.emmcloud.bean.mine.GetExperienceUpgradeFlagResult;
 import com.inspur.emmcloud.bean.mine.GetFaceSettingResult;
 import com.inspur.emmcloud.bean.mine.GetLanguageResult;
 import com.inspur.emmcloud.bean.mine.GetUploadMyHeadResult;
@@ -554,6 +555,84 @@ public class MineAPIService {
             @Override
             public void callbackFail(String error, int responseCode) {
                 apiInterface.returnCardPackageListFail(error,responseCode);
+            }
+
+        });
+    }
+
+    /**
+     * 获取是否加入用户体验计划
+     */
+    public void getUserExperienceUpgradeFlag(){
+        final String completeUrl = APIUri.getUserExperienceUpgradeFlagUrl();
+        RequestParams params =
+                ((MyApplication) context.getApplicationContext()).getHttpRequestParams(completeUrl);
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        getCardPackageList();
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnExperienceUpgradeFlagSuccess(new GetExperienceUpgradeFlagResult(new String(arg0)));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnExperienceUpgradeFlagFail(error,responseCode);
+            }
+
+        });
+    }
+
+    /**
+     * 获取是否加入用户体验计划
+     */
+    public void updateUserExperienceUpgradeFlag(int flag){
+        final String completeUrl = APIUri.getUpdateUserExperienceUpgradeFlagUrl(flag);
+        RequestParams params =
+                ((MyApplication) context.getApplicationContext()).getHttpRequestParams(completeUrl);
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        getCardPackageList();
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnUpdateExperienceUpgradeFlagSuccess();
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnUpdateExperienceUpgradeFlagFail(error,responseCode);
             }
 
         });

@@ -29,7 +29,7 @@
     <string name="email_input_illegal">The format of the entered mailbox is incorrect</string>
      <string name="device_registe">Device registration</string>
      <string name="phone_num">Mobile number</string>
-     <string name="mail">Mail</string>
+     <string name="mail">Email</string>
        <string name="register">Register</string>
       <string name="remark">Remarks</string>
 	<string name="uuid">Equipment unique identification</string>

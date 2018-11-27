@@ -112,9 +112,9 @@ public class MeetingBookingActivity extends BaseActivity {
         meetingEndCalendar = TimeUtils.getNextHalfHourTime(meetingEndCalendar);
         meetingEndCalendar.add(Calendar.HOUR_OF_DAY, 2);
         meetingBeginDateText.setText(TimeUtils.calendar2FormatString(
-                getApplicationContext(), meetingBeginCalendar, TimeUtils.FORMAT_MONTH_DAY));
+                MeetingBookingActivity.this, meetingBeginCalendar, TimeUtils.FORMAT_MONTH_DAY));
         meetingBeginTimeText.setText(TimeUtils
-                .calendar2FormatString(getApplicationContext(), meetingBeginCalendar,
+                .calendar2FormatString(MeetingBookingActivity.this, meetingBeginCalendar,
                         TimeUtils.FORMAT_HOUR_MINUTE));
         meetingEndDateText.setText(TimeUtils.calendar2FormatString(
                 MeetingBookingActivity.this, meetingEndCalendar, TimeUtils.FORMAT_MONTH_DAY));
