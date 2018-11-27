@@ -136,7 +136,6 @@ public class ImpWebView extends WebView {
 		if(android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
 			CookieManager.getInstance().setAcceptThirdPartyCookies(this,true);
 		}
-		setLayerType(WebView.LAYER_TYPE_NONE,null);
 
 	}
 

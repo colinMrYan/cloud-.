@@ -3,14 +3,12 @@ package com.inspur.imp.engine.webview;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.http.SslError;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
-import android.webkit.SslErrorHandler;
 import android.webkit.ValueCallback;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
@@ -23,7 +21,6 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.appcenter.AppRedirectResult;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.imp.api.ImpCallBackInterface;
@@ -189,11 +186,6 @@ public class ImpWebViewClient extends WebViewClient {
         }
     }
 
-    @Override
-    public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
-        handler.proceed();
-    }
-
     @TargetApi(android.os.Build.VERSION_CODES.LOLLIPOP)
     @Override
     public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
@@ -203,30 +195,25 @@ public class ImpWebViewClient extends WebViewClient {
     @SuppressWarnings("deprecation")
     @Override
     public boolean shouldOverrideUrlLoading(WebView view, String url) {
-        LogUtils.YfcDebug("跳转地址："+url);
         if (runnable != null) {
             mHandler.removeCallbacks(runnable);
             runnable = null;
         }
         if (url.contains(APIUri.getWebLoginUrl()) || url.contains("https://id.inspur.com/")) {
-            LogUtils.YfcDebug("11111111111111111");
             handleReDirectURL(url, view);
             return true;
         }
         if (!url.startsWith("http") && !url.startsWith("ftp")) {
             try {
-                LogUtils.YfcDebug("22222222222222");
                 Intent intent = Intent.parseUri(url, Intent.URI_INTENT_SCHEME);
                 intent.setComponent(null);
                 myWebView.getContext().startActivity(intent);
                 MyApplication.getInstance().setEnterSystemUI(true);
             } catch (Exception e) {
-                LogUtils.YfcDebug("333333333333333");
                 e.printStackTrace();
             }
             return true;
         }
-        LogUtils.YfcDebug("跳转地址："+url);
         view.loadUrl(url, getWebViewHeaders());
         return super.shouldOverrideUrlLoading(view, url);
     }
@@ -271,7 +258,6 @@ public class ImpWebViewClient extends WebViewClient {
         @Override
         public void returnGetAppAuthCodeResultSuccess(AppRedirectResult appRedirectResult) {
             if (NetUtils.isNetworkConnected(webView.getContext())) {
-                LogUtils.YfcDebug("单点认证成功加载地址："+appRedirectResult.getRedirect_uri());
                 webView.loadUrl(appRedirectResult.getRedirect_uri(), getWebViewHeaders());
             }
             super.returnGetAppAuthCodeResultSuccess(appRedirectResult);
