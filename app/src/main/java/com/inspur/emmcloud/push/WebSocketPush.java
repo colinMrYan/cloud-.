@@ -19,6 +19,7 @@ import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ClientIDUtils;
+import com.inspur.emmcloud.util.privates.OauthUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.cache.AppExceptionCacheUtils;
 
@@ -168,9 +169,13 @@ public class WebSocketPush {
                     query.put("device.id", uuid);
                     query.put("device.name", deviceName);
                     query.put("device.push", pushId);
+                    query.put("messageVer","0");
+                    query.put("channelVer","0");
                 } else {
                     String clientId = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_CLIENTID, "");
                     query.put("client", clientId);
+                    query.put("messageVer","1");
+                    query.put("channelVer","1");
                 }
                 query.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
                 opts.path = path;
@@ -357,6 +362,10 @@ public class WebSocketPush {
                     sendWebSocketStatusBroadcast(Socket.EVENT_CONNECT);
                     // 当第一次连接成功后发送App目前的状态消息
                     sendAppStatus();
+                }else if(code == 401){
+                    closeWebsocket();
+                    sendWebSocketStatusBroadcast(Socket.EVENT_CONNECT_ERROR);
+                    OauthUtils.getInstance().refreshToken(null, System.currentTimeMillis());
                 }
                 isWebsocketConnecting = false;
             }

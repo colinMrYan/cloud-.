@@ -20,8 +20,8 @@ import com.inspur.emmcloud.bean.system.MainTabProperty;
 import com.inspur.emmcloud.bean.system.MineLayoutItemGroup;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.ui.chat.ChannelActivity;
 import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
+import com.inspur.emmcloud.ui.chat.ConversationActivity;
 import com.inspur.emmcloud.ui.mine.card.CardPackageActivity;
 import com.inspur.emmcloud.ui.mine.feedback.FeedBackActivity;
 import com.inspur.emmcloud.ui.mine.myinfo.MyInfoActivity;
@@ -150,7 +150,7 @@ public class MoreFragment extends Fragment {
                             //为区分来自云+客服添加一个from值，在ChannelActivity里使用
                             bundle.putString("from", "customer");
                             IntentUtils.startActivity(getActivity(), MyApplication.getInstance().isV0VersionChat()?
-                                    ChannelV0Activity.class:ChannelActivity.class, bundle);
+                                    ChannelV0Activity.class:ConversationActivity.class, bundle);
                         }
                         recordUserClick("customservice");
                         break;

@@ -16,8 +16,8 @@ import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.bean.contact.ContactOrg;
 import com.inspur.emmcloud.bean.contact.ContactUser;
-import com.inspur.emmcloud.ui.chat.ChannelActivity;
 import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
+import com.inspur.emmcloud.ui.chat.ConversationActivity;
 import com.inspur.emmcloud.ui.chat.ImagePagerV0Activity;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
@@ -251,7 +251,7 @@ public class UserInfoActivity extends BaseActivity {
                         LogUtils.jasonDebug("title=" + getCreateSingleChannelResult
                                 .getName(getApplicationContext()));
                         IntentUtils.startActivity(UserInfoActivity.this,MyApplication.getInstance().isV0VersionChat()?
-                                ChannelV0Activity.class:ChannelActivity.class, bundle);
+                                ChannelV0Activity.class:ConversationActivity.class, bundle);
                     }
 
                     @Override

@@ -54,6 +54,7 @@ import com.inspur.imp.plugin.PluginMgr;
 import com.inspur.imp.plugin.barcode.scan.BarCodeService;
 import com.inspur.imp.plugin.camera.CameraService;
 import com.inspur.imp.plugin.file.FileService;
+import com.inspur.imp.plugin.filetransfer.FileTransferService;
 import com.inspur.imp.plugin.photo.PhotoService;
 import com.inspur.imp.plugin.staff.SelectStaffService;
 import com.inspur.imp.plugin.window.DropItemTitle;
@@ -79,6 +80,7 @@ public class ImpFragment extends Fragment {
     public static final int FILE_SERVICE_REQUEST = 6;
     public static final int DO_NOTHING_REQUEST = 7;
     public static final int BARCODE_SERVER__SCAN_REQUEST = 8;
+    public static final int SELECT_FILE_SERVICE_REQUEST = 9;
     public static final int FILE_CHOOSER_RESULT_CODE = 5173;
     private static final String JAVASCRIPT_PREFIX = "javascript:";
     private Map<String, String> webViewHeaders;
@@ -797,6 +799,10 @@ public class ImpFragment extends Fragment {
                         break;
                     case BARCODE_SERVER__SCAN_REQUEST:
                         serviceName = BarCodeService.class.getCanonicalName().trim();
+                        break;
+                    case SELECT_FILE_SERVICE_REQUEST:
+                        serviceName = FileTransferService.class.getCanonicalName().trim();
+                        break;
                     default:
                         break;
                 }

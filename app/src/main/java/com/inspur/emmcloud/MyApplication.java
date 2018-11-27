@@ -45,6 +45,7 @@ import com.inspur.emmcloud.util.privates.CalEventNotificationUtils;
 import com.inspur.emmcloud.util.privates.CrashHandler;
 import com.inspur.emmcloud.util.privates.ECMShortcutBadgeNumberManagerUtils;
 import com.inspur.emmcloud.util.privates.HuaWeiPushMangerUtils;
+import com.inspur.emmcloud.util.privates.LanguageUtils;
 import com.inspur.emmcloud.util.privates.MutilClusterUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
 import com.inspur.emmcloud.util.privates.cache.DbCacheUtils;
@@ -692,6 +693,11 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         setAppLanguageAndFontScale();
     }
 
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LanguageUtils.attachBaseContext(newBase));
+    }
+
     /**
      * 设置App的语言
      */
@@ -736,6 +742,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
                 }
 
             }
+            PreferencesUtils.putString(getInstance(),Constant.PREF_LAST_LANGUAGE,languageJson);
             // 将iso字符串分割成系统的设置语言
             String[] array = new Language(languageJson).getIso().split("-");
             String country = "";

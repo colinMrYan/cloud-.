@@ -1089,6 +1089,11 @@
             android:name="com.inspur.imp.plugin.filetransfer.TextFileShowActivity"
             android:resizeableActivity="true"></activity>
 
+        <activity
+            android:name="com.inspur.imp.plugin.filetransfer.filemanager.FileManagerActivity"
+            android:resizeableActivity="true"></activity>
+
+
         <!-- MDM设备管理 -->
         <activity
             android:name="com.inspur.emmcloud.ui.mdm.DeviceRegisterFailDetailActivity"

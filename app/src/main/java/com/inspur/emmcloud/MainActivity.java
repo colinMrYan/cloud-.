@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.view.View;
 import android.view.Window;
@@ -243,6 +244,13 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
                 if (timer != null) {
                     timer.cancel();
                 }
+                //线程转为主线程
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        startApp();
+                    }
+                });
                 startApp();
             }
         };
@@ -273,7 +281,7 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
                     IntentUtils.startActivity(MainActivity.this, (!StringUtils.isBlank(accessToken)) ?
                             IndexActivity.class : LoginActivity.class, true);
                 }
-            },50);
+            }, 50);
 
         }
     }

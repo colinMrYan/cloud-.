@@ -20,7 +20,6 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.mine.Language;
 import com.inspur.emmcloud.ui.IndexActivity;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.privates.ClientConfigUpdateUtils;
 import com.inspur.emmcloud.util.privates.LanguageUtils;
@@ -161,8 +160,6 @@ public class LanguageChangeActivity extends BaseActivity {
                         PreferencesUtils.putString(getApplicationContext(),
                                 MyApplication.getInstance().getTanent() + "appLanguageObj",
                                 language.toString());
-                        LogUtils.jasonDebug("language="+languageName);
-                        LogUtils.jasonDebug("appLanguageObj="+language.toString());
                         ((MyApplication) getApplicationContext())
                                 .setAppLanguageAndFontScale();
                         Intent intentLog = new Intent(LanguageChangeActivity.this,

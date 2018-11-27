@@ -6,6 +6,7 @@ import android.os.Bundle;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.chat.ChannelActivity;
@@ -123,7 +124,7 @@ public class ShareLinkActivity extends BaseActivity {
         bundle.putString("share_type","link");
         bundle.putSerializable(Constant.SHARE_LINK, conbineGroupNewsContent());
         IntentUtils.startActivity(ShareLinkActivity.this, MyApplication.getInstance().isV0VersionChat()?
-                ChannelV0Activity.class: ChannelActivity.class,bundle,true);
+                ChannelV0Activity.class: Conversation.class,bundle,true);
     }
 
     /**
