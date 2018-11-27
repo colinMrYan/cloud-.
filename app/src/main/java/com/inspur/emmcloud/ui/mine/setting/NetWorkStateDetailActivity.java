@@ -161,7 +161,7 @@ public class NetWorkStateDetailActivity extends BaseActivity {
      * */
     private boolean checkingHardState() {
         NetStateintegerData=NetUtils.getNetWrokState(this);
-        if(-1==NetStateintegerData.get(0)){
+        if(-1==NetStateintegerData.get(0)) {
             hardImageView.setBackground(drawableError);
             qmulHardLoadingView.setVisibility(View.GONE);
             hardImageView.setVisibility(View.VISIBLE);
@@ -177,8 +177,8 @@ public class NetWorkStateDetailActivity extends BaseActivity {
     /**
      * 检测小助手连接
      * */
-    private void checkingPortalState(final String StrUrl){
-        if(NetUtils.NETWORK_WIFI==NetStateintegerData.get(0)){
+    private void checkingPortalState(final String StrUrl) {
+        if(NetUtils.NETWORK_WIFI==NetStateintegerData.get(0)) {
             sendRequest(StrUrl);
         } else if((NetStateintegerData.get(0)>=NetUtils.NETWORK_2G)&&(NetStateintegerData.get(0)<=NetUtils.NETWORK_4G)) {
             qmulWifiLoadingView.setVisibility(View.GONE);
@@ -198,7 +198,7 @@ public class NetWorkStateDetailActivity extends BaseActivity {
     private void sendRequest(final  String  StrUrl) {
 		/*需要新建子线程进行访问*/
         new Thread(){
-            public void run(){
+            public void run() {
                 HttpURLConnection httpURLConnection=null;
                 try {
                     URL url=new URL(StrUrl);
