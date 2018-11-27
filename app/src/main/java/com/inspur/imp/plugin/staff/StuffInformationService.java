@@ -19,7 +19,7 @@ public class StuffInformationService  extends ImpPlugin{
         successCb = JSONUtils.getString(paramsObject, "success", "");
         failCb = JSONUtils.getString(paramsObject, "fail", "");
         if(action.equals("view")){
-            viewContact(JSONUtils.getString(JSONUtils.getJSONObject(paramsObject, "options", new JSONObject()), "id", ""));
+            viewContact(JSONUtils.getString(JSONUtils.getJSONObject(paramsObject, "options", new JSONObject()), "inspurId", ""));
         }else{
             this.jsCallback(failCb, "");
             showCallIMPMethodErrorDlg();
