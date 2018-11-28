@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PingNetEntity;
 import com.inspur.emmcloud.util.privates.UriUtils;
@@ -29,6 +30,7 @@ public class NetWorkStateDetailActivity extends BaseActivity {
    public static final int SHOW_DNSCONNCTSTATE=2;
    public static final int SHOW_PORTAL_CONNECT=1;
    public static final String checkingUrls = "www.baidu.com;www.inspur.com;www.aliyun.com";  //添加Url时请以；隔开
+   private  String PortalCheckingUrls  = "http://www.inspuronline.com/#/auth/0\\(arc4random() % 100000)";
    private ImageView hardImageView;
    private ImageView portalImageView;
    private QMUILoadingView qmulHardLoadingView ;
@@ -59,7 +61,7 @@ public class NetWorkStateDetailActivity extends BaseActivity {
         portalImageView= (ImageView)findViewById(R.id.iv_portal_state_log);
         drawableError=getBaseContext().getResources().getDrawable(R.drawable.ic_netchecking_error);
         drawableSuccess=getBaseContext().getResources().getDrawable(R.drawable.ic_netchecking_ok);
-        drawableDomainError = getBaseContext().getResources().getDrawable(R.drawable.ic_checking_domain);
+        drawableDomainError = getBaseContext().getResources().getDrawable(R.drawable.ic_checking_domain_error);
         drawableDomainSuccess = getBaseContext().getResources().getDrawable(R.drawable.ic_checking_domain_success);
         qmulHardLoadingView =(QMUILoadingView)findViewById(R.id.qv_checking_hard_loading);
         qmulWifiLoadingView =(QMUILoadingView)findViewById(R.id.qv_checking_portal_loading);
@@ -67,7 +69,7 @@ public class NetWorkStateDetailActivity extends BaseActivity {
     }
 
     /**
-     * 网络状态检查
+     * 网络状态检查 包含 硬件、小助手(portal)、网络连通性
      * */
     void checkingNet(){
         //检测网络通断
@@ -75,7 +77,7 @@ public class NetWorkStateDetailActivity extends BaseActivity {
         //检测端口
         if(netHardConnectState){
             //检测小助手
-            checkingPortalState("http://www.inspuronline.com/");
+            checkingPortalState(PortalCheckingUrls);
             //检测DNS服务
             DNSConnectState(checkingUrls);
         }else {
@@ -103,22 +105,8 @@ public class NetWorkStateDetailActivity extends BaseActivity {
             public void handleMessage(android.os.Message msg) {
                 switch (msg.what) {
                     case SHOW_PORTAL_CONNECT:
-                        if(NetUtils.NETWORK_WIFI==NetStateintegerData.get(0)) {
-                            List<String> bundleata =(List<String>)msg.obj;
-                            String httpResNum = bundleata.get(0);
-                            String content=bundleata.get(1);
-                            if(-1!=httpResNum.indexOf("NETWORK 30")){
-                                PortalUrl = content.substring(0,content.indexOf("&firsturl"));
-                                portalImageView.setBackground(drawableError);
-                            }else {
-                                portalImageView.setBackground(drawableSuccess);
-                            }
-                            portalImageView.setVisibility(View.VISIBLE);
-                        } else {
-                            portalImageView.setBackground(drawableError);
-                        }
-                        portalImageView.setVisibility(View.VISIBLE);
-                        qmulWifiLoadingView.setVisibility(View.GONE);
+                        List<String> bundleata =(List<String>)msg.obj;
+                        PortalConnectStateToUI(portalConnectionState(bundleata));
                         break;
                     case SHOW_DNSCONNCTSTATE:
                          List<Boolean>  resultData = (List<Boolean>)msg.obj;
@@ -156,8 +144,10 @@ public class NetWorkStateDetailActivity extends BaseActivity {
         super.onStart();
     }
 
+
     /**
      * 检测硬件连接问题
+     * @return  反馈为硬件连接状态
      * */
     private boolean checkingHardState() {
         NetStateintegerData=NetUtils.getNetWrokState(this);
@@ -176,6 +166,7 @@ public class NetWorkStateDetailActivity extends BaseActivity {
 
     /**
      * 检测小助手连接
+     * @param StrUrl 测试小助手url(设定为百度)
      * */
     private void checkingPortalState(final String StrUrl) {
         if(NetUtils.NETWORK_WIFI==NetStateintegerData.get(0)) {
@@ -192,8 +183,9 @@ public class NetWorkStateDetailActivity extends BaseActivity {
     }
 
     /**
-     * portal checking "http://www.baidu.com"
-     * @param StrUrl   "http://www.baidu.com"
+     * portal checking  "http://www.inspuronline.com/#/auth/0\(arc4random() % 100000)"
+     * 检测小助手不仅要ping状态还有读取返回内容，故以百度为目标网址（有小助手会有网络劫持现象 即反馈302）
+     * @param StrUrl
      * */
     private void sendRequest(final  String  StrUrl) {
 		/*需要新建子线程进行访问*/
@@ -212,10 +204,17 @@ public class NetWorkStateDetailActivity extends BaseActivity {
                     String urlAndUrl =httpURLConnection.getHeaderField("Location");
                     BundleData.add(urlAndUrl);
                     Message msg=new Message();
-                    msg.what=SHOW_PORTAL_CONNECT;//封装子线程编号
+                    msg.what=SHOW_PORTAL_CONNECT;
                     msg.obj = BundleData;
-                    handler.sendMessage(msg);//发送信息
+                    handler.sendMessage(msg);
                 } catch (Exception e) {
+                    List<String> BundleData=new ArrayList<>();
+                    BundleData.add("");
+                    BundleData.add("");
+                    Message msg=new Message();
+                    msg.what=SHOW_PORTAL_CONNECT;
+                    msg.obj = BundleData;
+                    handler.sendMessage(msg);
                     e.printStackTrace();
                 }finally{
                     if(httpURLConnection!=null){
@@ -236,7 +235,9 @@ public class NetWorkStateDetailActivity extends BaseActivity {
                 break;
             case R.id.rl_checking_portal_state:
                 String activityName = getResources().getString(R.string.net_network_authentication);
-                UriUtils.openUrl(this,PortalUrl,activityName);
+                if(PortalUrl!=null&&PortalUrl!=""){
+                    UriUtils.openUrl(this,PortalUrl,activityName);
+                }
                 break;
             case R.id.rl_checking_dns_state:
                 break;
@@ -247,6 +248,7 @@ public class NetWorkStateDetailActivity extends BaseActivity {
 
     /**
      * 检测DNS服务器状态
+     * @param Urls  检测联通性的测试网址（以“;”隔开）
      * */
     private  void DNSConnectState(final String Urls) {
 
@@ -275,6 +277,39 @@ public class NetWorkStateDetailActivity extends BaseActivity {
                 }
             }
         }).start();
+    }
 
+    /**
+     * 连接wifi状态下的小助手检测反馈
+     * @param bundleata  包含反馈数据 网络连接状态、反馈Url(小助手会有劫持)
+     * */
+    private  boolean  portalConnectionState(List<String> bundleata) {
+        String httpNetStateNum = bundleata.get(0);
+        LogUtils.LbcDebug("httpNetStateNum:"+httpNetStateNum);
+        String returnUrl=bundleata.get(1);
+        LogUtils.LbcDebug("returnUrl:"+returnUrl);
+        PortalUrl="";
+        if((null!=httpNetStateNum)&&(""!=httpNetStateNum)){
+            if(-1!=httpNetStateNum.indexOf("NETWORK 30")) {
+                PortalUrl = returnUrl.substring(0,returnUrl.indexOf("&firsturl"));
+                return false;
+            }else {
+                return true;}
+        } else {
+            return  false;}
+    }
+
+    /**
+     * 连接wifi下小助手状态反馈至UI
+     * @param portalState  小助手连接状态
+     * */
+    private void PortalConnectStateToUI(boolean portalState) {
+        if(portalState) {
+            portalImageView.setBackground(drawableSuccess);
+        } else {
+            portalImageView.setBackground(drawableError);
+        }
+        portalImageView.setVisibility(View.VISIBLE);
+        qmulWifiLoadingView.setVisibility(View.GONE);
     }
 }
