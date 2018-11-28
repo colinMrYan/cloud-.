@@ -10,7 +10,6 @@ import android.widget.ImageView;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PingNetEntity;
 import com.inspur.emmcloud.util.privates.UriUtils;
@@ -29,8 +28,8 @@ import java.util.List;
 public class NetWorkStateDetailActivity extends BaseActivity {
    public static final int SHOW_DNSCONNCTSTATE=2;
    public static final int SHOW_PORTAL_CONNECT=1;
-   public static final String checkingUrls = "www.baidu.com;www.inspur.com;www.aliyun.com";  //添加Url时请以；隔开
-   private  String PortalCheckingUrls  = "http://www.inspuronline.com/#/auth/0\\(arc4random() % 100000)";
+   public static final String checkingUrls = "www.baidu.com;www.inspur.com;www.aliyun.com";  //添加Url时请以";"隔开
+   private String PortalCheckingUrls  = "http://www.inspuronline.com/#/auth/0\\(arc4random() % 100000)";
    private ImageView hardImageView;
    private ImageView portalImageView;
    private QMUILoadingView qmulHardLoadingView ;
@@ -79,21 +78,15 @@ public class NetWorkStateDetailActivity extends BaseActivity {
             //检测小助手
             checkingPortalState(PortalCheckingUrls);
             //检测DNS服务
-            DNSConnectState(checkingUrls);
+            checkingDNSConnectState(checkingUrls);
         }else {
             qmulWifiLoadingView.setVisibility(View.GONE);
             portalImageView.setVisibility(View.VISIBLE);
             portalImageView.setBackground(drawableError);
-            findViewById(R.id.iv_ping_baidu_state).setVisibility(View.VISIBLE);
-            findViewById(R.id.qv_ping_baidu_loading).setVisibility(View.GONE);
             findViewById(R.id.iv_ping_baidu_state).setBackground(drawableDomainError);
-            findViewById(R.id.iv_ping_inspur_state).setVisibility(View.VISIBLE);
-            findViewById(R.id.qv_ping_inspur_loading).setVisibility(View.GONE);
             findViewById(R.id.iv_ping_inspur_state).setBackground(drawableDomainError);
-            findViewById(R.id.iv_ping_ali_state).setVisibility(View.VISIBLE);
-            findViewById(R.id.qv_ping_ali_loading).setVisibility(View.GONE);
             findViewById(R.id.iv_ping_ali_state).setBackground(drawableDomainError);
-            findViewById(R.id.rl_checking_portal_state).setClickable(false);
+            setShowDnsconnctstateUI();
         }
     }
 
@@ -115,22 +108,17 @@ public class NetWorkStateDetailActivity extends BaseActivity {
                          }else {
                              findViewById(R.id.iv_ping_baidu_state).setBackground(drawableDomainError);
                          }
-                        findViewById(R.id.iv_ping_baidu_state).setVisibility(View.VISIBLE);
-                        findViewById(R.id.qv_ping_baidu_loading).setVisibility(View.GONE);
                          if (resultData.get(1)) {
                              findViewById(R.id.iv_ping_inspur_state).setBackground(drawableDomainSuccess);
                          } else {
                              findViewById(R.id.iv_ping_inspur_state).setBackground(drawableDomainError);
                          }
-                        findViewById(R.id.iv_ping_inspur_state).setVisibility(View.VISIBLE);
-                        findViewById(R.id.qv_ping_inspur_loading).setVisibility(View.GONE);
                          if(resultData.get(2)) {
                              findViewById(R.id.iv_ping_ali_state).setBackground(drawableDomainSuccess);
                          } else {
                              findViewById(R.id.iv_ping_ali_state).setBackground(drawableDomainError);
                          }
-                        findViewById(R.id.iv_ping_ali_state).setVisibility(View.VISIBLE);
-                        findViewById(R.id.qv_ping_ali_loading).setVisibility(View.GONE);
+                        setShowDnsconnctstateUI();
                         break;
                     default:
                         break;
@@ -143,7 +131,6 @@ public class NetWorkStateDetailActivity extends BaseActivity {
     protected void onStart() {
         super.onStart();
     }
-
 
     /**
      * 检测硬件连接问题
@@ -183,12 +170,88 @@ public class NetWorkStateDetailActivity extends BaseActivity {
     }
 
     /**
+     * 连接wifi状态下的小助手检测反馈
+     * @param bundleata  包含反馈数据 网络连接状态、反馈Url(小助手会有劫持)
+     * */
+    private  boolean  portalConnectionState(List<String> bundleata) {
+        String httpNetStateNum = bundleata.get(0);
+        String returnUrl=bundleata.get(1);
+        PortalUrl="";
+        if((null!=httpNetStateNum)&&(""!=httpNetStateNum)){
+            if(-1!=httpNetStateNum.indexOf("NETWORK 30")) {
+                PortalUrl = returnUrl.substring(0,returnUrl.indexOf("&firsturl"));
+                return false;
+            }else {
+                return true;}
+        } else {
+            return  false;}
+    }
+
+    /**
+     * 连接wifi下小助手状态反馈至UI
+     * @param portalState  小助手连接状态
+     * */
+    private void PortalConnectStateToUI(boolean portalState) {
+        if(portalState) {
+            portalImageView.setBackground(drawableSuccess);
+        } else {
+            portalImageView.setBackground(drawableError);
+        }
+        portalImageView.setVisibility(View.VISIBLE);
+        qmulWifiLoadingView.setVisibility(View.GONE);
+    }
+
+    /**
+     * 检测DNS服务器状态
+     * @param Urls  检测联通性的测试网址（以“;”隔开）
+     * */
+    private  void checkingDNSConnectState(final String Urls) {
+
+        final String[] subUrls = Urls.split(";");
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    List<Boolean> resultState=new ArrayList<>();
+                    for (int i=0;i<subUrls.length;i++) {
+                        PingNetEntity checkUrlEntity =new PingNetEntity(subUrls[i],1,1,new StringBuffer());
+                        PingNetEntity checkResult= NetUtils.ping(checkUrlEntity, (long) 1000);
+                        if((checkResult.isResult())){
+                            //结果数据显示
+                            resultState.add(true);
+                        }else{
+                            resultState.add(false);
+                        }
+                    }
+                    Message dnsState = new Message();
+                    dnsState.what=SHOW_DNSCONNCTSTATE;
+                    dnsState.obj=resultState;
+                    handler.sendMessage(dnsState);
+                }catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
+    /**
+     * 加载ViewGONE，改为状态view VISIABLE
+     * */
+    private void setShowDnsconnctstateUI(){
+        findViewById(R.id.iv_ping_baidu_state).setVisibility(View.VISIBLE);
+        findViewById(R.id.qv_ping_baidu_loading).setVisibility(View.GONE);
+        findViewById(R.id.iv_ping_inspur_state).setVisibility(View.VISIBLE);
+        findViewById(R.id.qv_ping_inspur_loading).setVisibility(View.GONE);
+        findViewById(R.id.iv_ping_ali_state).setVisibility(View.VISIBLE);
+        findViewById(R.id.qv_ping_ali_loading).setVisibility(View.GONE);
+    }
+
+    /**
      * portal checking  "http://www.inspuronline.com/#/auth/0\(arc4random() % 100000)"
      * 检测小助手不仅要ping状态还有读取返回内容，故以百度为目标网址（有小助手会有网络劫持现象 即反馈302）
      * @param StrUrl
      * */
     private void sendRequest(final  String  StrUrl) {
-		/*需要新建子线程进行访问*/
         new Thread(){
             public void run() {
                 HttpURLConnection httpURLConnection=null;
@@ -246,70 +309,4 @@ public class NetWorkStateDetailActivity extends BaseActivity {
         }
     }
 
-    /**
-     * 检测DNS服务器状态
-     * @param Urls  检测联通性的测试网址（以“;”隔开）
-     * */
-    private  void DNSConnectState(final String Urls) {
-
-        final String[] subUrls = Urls.split(";");
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    List<Boolean> resultState=new ArrayList<>();
-                    for (int i=0;i<subUrls.length;i++) {
-                        PingNetEntity checkUrlEntity =new PingNetEntity(subUrls[i],1,1,new StringBuffer());
-                        PingNetEntity checkResult= NetUtils.ping(checkUrlEntity, (long) 1000);
-                        if((checkResult.isResult())){
-                            //结果数据显示
-                            resultState.add(true);
-                        }else{
-                            resultState.add(false);
-                        }
-                    }
-                    Message dnsState = new Message();
-                    dnsState.what=SHOW_DNSCONNCTSTATE;
-                    dnsState.obj=resultState;
-                    handler.sendMessage(dnsState);
-                }catch (Exception e) {
-                   e.printStackTrace();
-                }
-            }
-        }).start();
-    }
-
-    /**
-     * 连接wifi状态下的小助手检测反馈
-     * @param bundleata  包含反馈数据 网络连接状态、反馈Url(小助手会有劫持)
-     * */
-    private  boolean  portalConnectionState(List<String> bundleata) {
-        String httpNetStateNum = bundleata.get(0);
-        LogUtils.LbcDebug("httpNetStateNum:"+httpNetStateNum);
-        String returnUrl=bundleata.get(1);
-        LogUtils.LbcDebug("returnUrl:"+returnUrl);
-        PortalUrl="";
-        if((null!=httpNetStateNum)&&(""!=httpNetStateNum)){
-            if(-1!=httpNetStateNum.indexOf("NETWORK 30")) {
-                PortalUrl = returnUrl.substring(0,returnUrl.indexOf("&firsturl"));
-                return false;
-            }else {
-                return true;}
-        } else {
-            return  false;}
-    }
-
-    /**
-     * 连接wifi下小助手状态反馈至UI
-     * @param portalState  小助手连接状态
-     * */
-    private void PortalConnectStateToUI(boolean portalState) {
-        if(portalState) {
-            portalImageView.setBackground(drawableSuccess);
-        } else {
-            portalImageView.setBackground(drawableError);
-        }
-        portalImageView.setVisibility(View.VISIBLE);
-        qmulWifiLoadingView.setVisibility(View.GONE);
-    }
 }
