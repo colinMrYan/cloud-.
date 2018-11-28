@@ -1064,9 +1064,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 String content = eventMessage.getContent();
                 GetChannelMessagesResult getChannelMessagesResult = new GetChannelMessagesResult(content);
                 final List<Message> newMessageList = getChannelMessagesResult.getMessageList();
-                if (newMessageList.size() > 0) {
-                    MessageCacheUtil.handleRealMessage(MyApplication.getInstance(),newMessageList, null,cid);
-                }
+                new CacheMessageListThread(newMessageList,null).start();
                 WSAPIService.getInstance().setChannelMessgeStateRead(cid);
                 final List<Message> cacheMessageList = MessageCacheUtil.getHistoryMessageList(MyApplication.getInstance(), cid, null, 20);
                 uiMessageList = UIMessage.MessageList2UIMessageList(cacheMessageList);
@@ -1091,7 +1089,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                     if (uiMessageList.size() > 0) {
                         targetMessageCreationDate = uiMessageList.get(0).getCreationDate();
                     }
-                    MessageCacheUtil.handleRealMessage(MyApplication.getInstance(),messageList,targetMessageCreationDate,cid);
+                    new CacheMessageListThread(messageList,targetMessageCreationDate).start();
                     uiMessageList.addAll(0, UIMessage.MessageList2UIMessageList
                             (MessageCacheUtil.getHistoryMessageListByTime(MyApplication.getInstance(),cid,
                                     messageList.get(0).getCreationDate(),messageList.get(messageList.size() - 1).getCreationDate())));
@@ -1112,7 +1110,7 @@ public class ConversationActivity extends ConversationBaseActivity {
     public void onReiceveWSOfflineMessage(SimpleEventMessage eventMessage) {
         if (eventMessage.getAction().equals(Constant.EVENTBUS_TAG_CURRENT_CHANNEL_OFFLINE_MESSAGE)) {
             List<Message> offlineMessageList = (List<Message>) eventMessage.getMessageObj();
-            MessageCacheUtil.handleRealMessage(MyApplication.getInstance(),offlineMessageList,null,cid);
+            new CacheMessageListThread(offlineMessageList,null).start();
             Iterator<Message> it = offlineMessageList.iterator();
             //去重
             if (uiMessageList.size() > 0) {
@@ -1144,6 +1142,23 @@ public class ConversationActivity extends ConversationBaseActivity {
     private void getNewMessageOfChannel() {
         if (NetUtils.isNetworkConnected(this, false)) {
             WSAPIService.getInstance().getChannelNewMessage(cid);
+        }
+    }
+
+    class CacheMessageListThread extends Thread {
+        private List<Message> messageList;
+        private Long targetTime;
+
+        public CacheMessageListThread(List<Message> messageList, Long targetTime) {
+            this.messageList = messageList;
+            this.targetTime = targetTime;
+        }
+
+        @Override
+        public void run() {
+            if(messageList != null && messageList.size() > 0){
+                MessageCacheUtil.handleRealMessage(MyApplication.getInstance(),messageList,targetTime,cid);
+            }
         }
     }
 

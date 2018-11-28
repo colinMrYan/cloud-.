@@ -807,6 +807,7 @@ public class CommunicationFragment extends Fragment {
         @Override
         public void run() {
             try {
+                MessageCacheUtil.handleRealMessage(getActivity(),messageList, null,"");
                 if (messageList != null && messageList.size() > 0) {
                     MessageCacheUtil.saveMessageList(MyApplication.getInstance(), messageList, null, false); // 获取的消息需要缓存
                     if (channelMessageSetList != null && channelMessageSetList.size() > 0) {
@@ -918,7 +919,6 @@ public class CommunicationFragment extends Fragment {
                 String content = eventMessage.getContent();
                 GetOfflineMessageListResult getOfflineMessageListResult = new GetOfflineMessageListResult(content);
                 List<Message> offlineMessageList = getOfflineMessageListResult.getMessageList();
-                MessageCacheUtil.handleRealMessage(getActivity(),offlineMessageList, null,"");
                 List<Message> currentChannelOfflineMessageList = new ArrayList<>();
                 //将当前所处频道的消息存为已读
                 if (!StringUtils.isBlank(MyApplication.getInstance().getCurrentChannelCid())) {
