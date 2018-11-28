@@ -437,7 +437,7 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
                 String content = eventMessage.getContent();
                 GetMessageCommentResult getMessageCommentResult = new GetMessageCommentResult(content);
                 commentList = getMessageCommentResult.getCommentList();
-                MessageCacheUtil.handleRealMessage(ChannelMessageDetailActivity.this,commentList,null,cid);
+                MessageCacheUtil.handleRealMessage(ChannelMessageDetailActivity.this,commentList,null,cid,false);
                 if (commentList != null && commentList.size() > 0) {
                     commentAdapter = new CommentAdapter();
                     commentListView.setAdapter(commentAdapter);
