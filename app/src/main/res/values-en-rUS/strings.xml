@@ -118,7 +118,7 @@
     <string name="all_day">All Day</string>
     <string name="delete_group_member"> Delete Members</string>
     <string name="tax_ticket_info"> VAT Invoice Information</string>
-    <string name="channel_group_info">Group Information</string>
+    <string name="channel_group_info">Group Details</string>
     <string name="channel_group_name">Group Name</string>
     <string name="channel_group_image">Images</string>
     <string name="channel_group_file">Files</string>
@@ -216,8 +216,8 @@
     <string name="login_captchas_getcode_success">Code has been sent successfully</string>
     <string name="login_cost_report">Expense Report</string>
     <string name="login_your_contact">Your contact</string>
-    <string name="login_group_album">Group Images</string>
-    <string name="login_group_file">Group Files</string>
+    <string name="login_group_album">Images</string>
+    <string name="login_group_file">Files</string>
     <string name="login_authorization_expired">Authorization Expired</string>
     <string name="login_cant_login_with_sms">Your account is not allowed to log on with SMS</string>
     <string name="login_user_not_bound_enterprise">The current user is not bound to the enterprise, please contact the administrator!</string>
@@ -274,10 +274,10 @@
     <string name="socket_close">Disconnect</string>
     <string name="chat_file_download_success">File has been downloaded successfully, click again to open</string>
     <string name="group_name_longth_valid">Group name, word overrun (no more than 40 characters)</string>
-    <string name="message_create_group">Group Chat</string>
+    <string name="message_create_group">New Chat</string>
     <string name="business_card">Business Card</string>
-    <string name="no_channel_album">No group pictures</string>
-    <string name="no_channel_file">No group files</string>
+    <string name="no_channel_album">No content</string>
+    <string name="no_channel_file">No content</string>
     <string name="hold_to_talk">Hold to Talk</string>
     <string name="release_to_send">Release to Send</string>
     <string name="release_to_cancel">release to cancel</string>
@@ -294,7 +294,7 @@
     <string name="chat_remove">Delete</string>
     <string name="chat_remove_from_top">Remove from Top</string>
     <string name="no_chat_content">No chat content</string>
-    <string name="msg_key_search_member"> Please input the key words</string>
+    <string name="msg_key_search_member"> Please enter key words</string>
 
     <!-- 会议卡片 -->
     <string name="meeting_has_confirmed">Confirmed</string>
@@ -640,6 +640,7 @@
     <string name="user_no_storage">No Storage</string>
     <string name="user_employee_num">NO.</string>
     <string name="user_worker_num">NO.</string>
+    <string name="user_new_chat">Messages</string>
 
     <!-- 集团新闻 部分 -->
     <string name="news_group_news">Group News</string>

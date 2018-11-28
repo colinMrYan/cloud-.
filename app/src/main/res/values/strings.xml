@@ -279,8 +279,8 @@
     <string name="group_name_longth_valid">群名称字数超限（不超过40个字符）</string>
     <string name="message_create_group">发起群聊</string>
     <string name="business_card">个人名片</string>
-    <string name="no_channel_album">当前没有群图片</string>
-    <string name="no_channel_file">当前没有群文件</string>
+    <string name="no_channel_album">无内容</string>
+    <string name="no_channel_file">无内容</string>
     <string name="hold_to_talk">按住 说话</string>
     <string name="release_to_send">松开 结束</string>
     <string name="release_to_cancel">松开手指，取消发送</string>
@@ -645,6 +645,7 @@
     <string name="user_no_storage">没有存储设备</string>
     <string name="user_employee_num">员工编号</string>
     <string name="user_worker_num">工号</string>
+    <string name="user_new_chat">发消息</string>
 
     <!-- 集团新闻 部分 -->
     <string name="news_group_news">集团新闻</string>
@@ -679,7 +680,7 @@
     <string name="address_servicenum_text">服务号</string>
     <string name="org_struct_text">组织/架构  </string>
     <string name="please_select_app_of_mail">请选择邮件类应用</string>
-    <string name="recently_used">常用联系人</string>
+    <string name="recently_used">最近常用</string>
     <string name="all">全部</string>
     <string name="seach_blank">搜索...                   </string>
     <string name="origanization_struct">公司/团队 组织架构</string>

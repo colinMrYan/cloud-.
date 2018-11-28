@@ -276,8 +276,8 @@
     <string name="group_name_longth_valid">群名稱字數超限（不超過40個字元）</string>
     <string name="message_create_group">發起群聊</string>
     <string name="business_card">個人名片</string>
-    <string name="no_channel_album">當前沒有群圖片</string>
-    <string name="no_channel_file">當前沒有群文件</string>
+    <string name="no_channel_album">無內容</string>
+    <string name="no_channel_file">無內容</string>
     <string name="hold_to_talk">按住 說話</string>
     <string name="release_to_send">鬆開 結束</string>
     <string name="release_to_cancel">鬆開手指，取消發送</string>
@@ -643,6 +643,7 @@
     <string name="user_no_storage">沒有存放裝置</string>
     <string name="user_employee_num">員工編號</string>
     <string name="user_worker_num">工號</string>
+    <string name="user_new_chat">發消息</string>
 
     <!-- 集團新聞 部分 -->
     <string name="news_group_news">集團新聞</string>
