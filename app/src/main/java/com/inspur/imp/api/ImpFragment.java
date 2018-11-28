@@ -585,7 +585,7 @@ public class ImpFragment extends Fragment {
         try {
             URL urlHost = new URL(url);
             String token = MyApplication.getInstance().getToken();
-            if (token != null && (urlHost.getHost().endsWith(Constant.INSPUR_HOST_URL)) || urlHost.getHost().endsWith(Constant.INSPURONLINE_HOST_URL) || url.contains("/app/mdm/v3.0/loadForRegister")) {
+            if (token != null && (urlHost.getHost().endsWith(Constant.INSPUR_HOST_URL)) || urlHost.getHost().endsWith(Constant.INSPURONLINE_HOST_URL) || urlHost.getPath().endsWith("/app/mdm/v3.0/loadForRegister")) {
                 webViewHeaders.put("Authorization", token);
             }
         } catch (Exception e) {
