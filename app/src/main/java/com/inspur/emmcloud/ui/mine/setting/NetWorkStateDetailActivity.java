@@ -215,7 +215,7 @@ public class NetWorkStateDetailActivity extends BaseActivity {
                     List<Boolean> resultState=new ArrayList<>();
                     for (int i=0;i<subUrls.length;i++) {
                         PingNetEntity checkUrlEntity =new PingNetEntity(subUrls[i],1,1,new StringBuffer());
-                        PingNetEntity checkResult= NetUtils.ping(checkUrlEntity, (long) 1000);
+                        PingNetEntity checkResult= NetUtils.ping(checkUrlEntity, (long) 4500);
                         if((checkResult.isResult())){
                             //结果数据显示
                             resultState.add(true);

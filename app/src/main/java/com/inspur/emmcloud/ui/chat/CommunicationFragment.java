@@ -137,7 +137,7 @@ public class CommunicationFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        NetUtils.PingThreadStart("www.baidu.com");
+        NetUtils.PingThreadStart("www.baidu.com",5);
     }
 
     private void initView() {
@@ -299,7 +299,7 @@ public class CommunicationFragment extends Fragment {
     public void netWorkStateTip(SimpleEventMessage netState) {
         if(netState.getAction().equals(Constant.EVENTBUS_TAG__NET_STATE_CHANGE)){
             if(((String)netState.getMessageObj()).equals("net_wifi_state_ok")){
-                NetUtils.PingThreadStart("www.baidu.com");
+                NetUtils.PingThreadStart("www.baidu.com",5);
             } else if(((String)netState.getMessageObj()).equals("net_state_error")) {
                 conversationAdapter.setNetExceptionView(false);
             } else if (((String)netState.getMessageObj()).equals("net_gprs_state_ok")) {

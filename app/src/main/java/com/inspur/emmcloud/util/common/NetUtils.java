@@ -416,12 +416,12 @@ public class NetUtils {
 	/**
 	 *Ping 网络状态 "www.baidu.com"
 	 * */
-	public static void PingThreadStart(final  String  StrUrl) {
+	public static void PingThreadStart(final  String  StrUrl,final int WaiteTime) {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
 				try {
-					PingNetEntity pingNetEntity=new PingNetEntity(StrUrl,1,1,new StringBuffer());
+					PingNetEntity pingNetEntity=new PingNetEntity(StrUrl,1,WaiteTime,new StringBuffer());
 					pingNetEntity=NetUtils.ping(pingNetEntity, (long) 4500);
 					EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG__NET_EXCEPTION_HINT, pingNetEntity.isResult()));
 				} catch (Exception e){
