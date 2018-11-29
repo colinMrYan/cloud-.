@@ -307,10 +307,11 @@ public class ImpFragment extends Fragment {
 
     /**
      * 在WebClient获取header
-     *
+     * 为了防止第一层不符合规则，第二层符合添加token规则时不再检查url的问题，需要回传url重新检查增加每次检查是否需要加token
      * @return
      */
-    public Map<String, String> getWebViewHeaders() {
+    public Map<String, String> getWebViewHeaders(String url) {
+        addAuthorizationToken(url);
         return webViewHeaders;
     }
 
@@ -467,8 +468,8 @@ public class ImpFragment extends Fragment {
             }
 
             @Override
-            public Map<String, String> onGetWebViewHeaders() {
-                return getWebViewHeaders();
+            public Map<String, String> onGetWebViewHeaders(String url) {
+                return getWebViewHeaders(url);
             }
 
             @Override
@@ -591,7 +592,7 @@ public class ImpFragment extends Fragment {
         try {
             URL urlHost = new URL(url);
             String token = MyApplication.getInstance().getToken();
-            if (token != null && (urlHost.getHost().endsWith(Constant.INSPUR_HOST_URL)) || urlHost.getHost().endsWith(Constant.INSPURONLINE_HOST_URL)) {
+            if (token != null && (urlHost.getHost().endsWith(Constant.INSPUR_HOST_URL)) || urlHost.getHost().endsWith(Constant.INSPURONLINE_HOST_URL) || urlHost.getPath().endsWith("/app/mdm/v3.0/loadForRegister")) {
                 webViewHeaders.put("Authorization", token);
             }
         } catch (Exception e) {

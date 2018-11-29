@@ -214,7 +214,7 @@ public class ImpWebViewClient extends WebViewClient {
             }
             return true;
         }
-        view.loadUrl(url, getWebViewHeaders());
+        view.loadUrl(url, getWebViewHeaders(url));
         return super.shouldOverrideUrlLoading(view, url);
     }
 
@@ -223,8 +223,8 @@ public class ImpWebViewClient extends WebViewClient {
      *
      * @return
      */
-    private Map<String, String> getWebViewHeaders() {
-        return myWebView == null ? new HashMap<String, String>() : ((impCallBackInterface != null)? impCallBackInterface.onGetWebViewHeaders():new HashMap<String, String>());
+    private Map<String, String> getWebViewHeaders(String url) {
+        return myWebView == null ? new HashMap<String, String>() : ((impCallBackInterface != null)? impCallBackInterface.onGetWebViewHeaders(url):new HashMap<String, String>());
     }
 
     /**
@@ -258,7 +258,8 @@ public class ImpWebViewClient extends WebViewClient {
         @Override
         public void returnGetAppAuthCodeResultSuccess(AppRedirectResult appRedirectResult) {
             if (NetUtils.isNetworkConnected(webView.getContext())) {
-                webView.loadUrl(appRedirectResult.getRedirect_uri(), getWebViewHeaders());
+                String redirectUri = appRedirectResult.getRedirect_uri();
+                webView.loadUrl(redirectUri, getWebViewHeaders(redirectUri));
             }
             super.returnGetAppAuthCodeResultSuccess(appRedirectResult);
         }
