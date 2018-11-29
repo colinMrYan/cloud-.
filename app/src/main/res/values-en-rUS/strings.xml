@@ -289,7 +289,9 @@
     <string name="sure_to_resend_message">resend the message?</string>
     <string name="message_type_drafts">[Drafts]</string>
     <string name="quit_group">Quit Group</string>
+    <string name="dismiss_group">Dismiss Group</string>
     <string name="quit_group_warning_text">Confirm to leave team?</string>
+    <string name="dismiss_group_warning_text">After Dismiss Group,all the chat history and files will be deleted</string>
     <string name="chat_stick_on_top">Stick on Top</string>
     <string name="chat_remove">Delete</string>
     <string name="chat_remove_from_top">Remove from Top</string>

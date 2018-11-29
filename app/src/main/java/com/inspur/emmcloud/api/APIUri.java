@@ -583,6 +583,15 @@ public class APIUri {
     }
 
     /**
+     * 获取删除频道url
+     * @param cid
+     * @return
+     */
+    public static String getDeleteChannelUrl(String cid){
+        return  getECMChatConversationBaseUrl()+"/channel/"+cid;
+    }
+
+    /**
      * 获取会话列表
      * @return
      */
