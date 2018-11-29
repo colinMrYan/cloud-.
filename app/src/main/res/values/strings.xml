@@ -279,8 +279,8 @@
     <string name="group_name_longth_valid">群名称字数超限（不超过40个字符）</string>
     <string name="message_create_group">发起群聊</string>
     <string name="business_card">个人名片</string>
-    <string name="no_channel_album">当前没有群图片</string>
-    <string name="no_channel_file">当前没有群文件</string>
+    <string name="no_channel_album">无内容</string>
+    <string name="no_channel_file">无内容</string>
     <string name="hold_to_talk">按住 说话</string>
     <string name="release_to_send">松开 结束</string>
     <string name="release_to_cancel">松开手指，取消发送</string>
@@ -645,6 +645,7 @@
     <string name="user_no_storage">没有存储设备</string>
     <string name="user_employee_num">员工编号</string>
     <string name="user_worker_num">工号</string>
+    <string name="user_new_chat">发消息</string>
 
     <!-- 集团新闻 部分 -->
     <string name="news_group_news">集团新闻</string>
@@ -679,7 +680,7 @@
     <string name="address_servicenum_text">服务号</string>
     <string name="org_struct_text">组织/架构  </string>
     <string name="please_select_app_of_mail">请选择邮件类应用</string>
-    <string name="recently_used">常用联系人</string>
+    <string name="recently_used">最近常用</string>
     <string name="all">全部</string>
     <string name="seach_blank">搜索...                   </string>
     <string name="origanization_struct">公司/团队 组织架构</string>
@@ -874,15 +875,20 @@
     <string name="no_work_content">暂无工作内容</string>
 
     <!--网络链接及网络诊断-->
-    <string name="net_connected_error">无法连接服务器，请检查你的网络设置</string>
+    <string name="net_connected_error">网络不给力，请检查网络设置</string>
     <string name="net_diagnosis_title">网络诊断</string>
     <string name="net_diagnosis_hard_link_title">检测网络硬件链接</string>
-    <string name="net_diagnosis_wifi_link_title">检测Wifi路由状态</string>
-    <string name="net_diagnosis_dns_link_title">检测DNS服务器状态</string>
-    <string name="net_diagnosis_hard_link_conent">当前检查项目包含：设置硬件是否存在故障，设置硬件链接状态是否通畅，设置是否有链接wifi,4G,LTE等</string>
-    <string name="net_diagnosis_wifi_link_conent">当前检查项目包含：链接到的wifi是否有经验需求,如果有需要先验证此wifi才可继续访问</string>
-    <string name="net_diagnosis_dns_link_conent">当前检查项目包含：DNS服务是否有故障</string>
+    <string name="net_diagnosis_wifi_link_title">检测Wi-Fi路由器状态</string>
+    <string name="net_diagnosis_dns_link_title">检测网络连通性</string>
+    <string name="net_diagnosis_hard_link_conent">当前检查项目包含：硬件链接是否通畅，是否有链接Wi-Fi、4G、LTE等</string>
+    <string name="net_diagnosis_hard_to_fix">去修复</string>
+    <string name="net_diagnosis_wifi_link_conent">当前检查项目包含：链接到的Wi-Fi是否有验证需求,如果有需要先验证此Wi-Fi才可继续访问</string>
     <string name="net_network_authentication">网络认证</string>
+    <string name="net_diagnosis_hard_detail_title">硬件链接诊断</string>
+    <string name="net_diagnosis_hard_detail_content">建议按照以下方法检查网络硬件链接</string>
+    <string name="net_diagnosis_hard_detail_content_frist">1、打开手机“设置”并把“Wi-Fi”开关保持开启状态。</string>
+    <string name="net_diagnosis_hard_detail_content_second">2、打开手机“设置”-"通用"-“蜂窝移动网络”，并把“蜂窝移动数据”开关保持开启状态。</string>
+    <string name="net_diagnosis_hard_detail_setting">去设置</string>
 
     <!-- ListView自定义控件部分 -->
     <string name="xlistview_header_last_time">上次更新时间:</string>

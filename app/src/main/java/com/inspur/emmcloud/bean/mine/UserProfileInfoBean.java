@@ -22,8 +22,8 @@ public class UserProfileInfoBean {
     private int showUserMail = 1;
     private int showUserPhone = 1;
     private int showEpInfo = 1;
-    private int showModifyPsd = 1;
-    private int showResetPsd = 1;
+    private int showModifyPsd = 0;
+    private int showResetPsd = 0;
 
     private  int showEmpNum =0;      // 初始值不显示
     private  int showTelePhone   =0; // 初始值不显示  为0
@@ -67,8 +67,8 @@ public class UserProfileInfoBean {
                    this.showUserMail = JSONUtils.getInt(jsonObjectSubDisplatyStr,"showUserMail",1);
                    this.showUserPhone = JSONUtils.getInt(jsonObjectSubDisplatyStr,"showUserPhone",1);
                    this.showEpInfo = JSONUtils.getInt(jsonObjectSubDisplatyStr,"showEpInfo",1);
-                   this.showModifyPsd = JSONUtils.getInt(jsonObjectSubDisplatyStr,"showModifyPsd",1);
-                   this.showResetPsd = JSONUtils.getInt(jsonObjectSubDisplatyStr,"showResetPsd",1);
+                   this.showModifyPsd = JSONUtils.getInt(jsonObjectSubDisplatyStr,"showModifyPsd",0);
+                   this.showResetPsd = JSONUtils.getInt(jsonObjectSubDisplatyStr,"showResetPsd",0);
            }
         } catch (JSONException e) {
             e.printStackTrace();

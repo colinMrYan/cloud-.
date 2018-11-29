@@ -1,16 +1,15 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.Settings;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PingNetEntity;
 import com.inspur.emmcloud.util.privates.UriUtils;
@@ -29,15 +28,16 @@ import java.util.List;
 public class NetWorkStateDetailActivity extends BaseActivity {
    public static final int SHOW_DNSCONNCTSTATE=2;
    public static final int SHOW_PORTAL_CONNECT=1;
-
+   public static final String checkingUrls = "www.baidu.com;www.inspur.com;www.aliyun.com";  //添加Url时请以";"隔开
+   private String PortalCheckingUrls  = "http://www.inspuronline.com/#/auth/0\\(arc4random() % 100000)";
    private ImageView hardImageView;
    private ImageView portalImageView;
-   private ImageView dnsImageView;
    private QMUILoadingView qmulHardLoadingView ;
    private QMUILoadingView qmulWifiLoadingView ;
-   private QMUILoadingView qmulDnsLoadingView;
    private Drawable drawableError;
    private Drawable drawableSuccess;
+   private Drawable drawableDomainError;
+   private Drawable drawableDomainSuccess;
    private List<Integer> NetStateintegerData;
    private String   PortalUrl = "";
    private boolean  netHardConnectState =true;
@@ -58,17 +58,17 @@ public class NetWorkStateDetailActivity extends BaseActivity {
     void iniView(){
         hardImageView = (ImageView)findViewById(R.id.iv_hard_state_log);
         portalImageView= (ImageView)findViewById(R.id.iv_portal_state_log);
-        dnsImageView   = (ImageView)findViewById(R.id.iv_dns_state_log);
         drawableError=getBaseContext().getResources().getDrawable(R.drawable.ic_netchecking_error);
         drawableSuccess=getBaseContext().getResources().getDrawable(R.drawable.ic_netchecking_ok);
+        drawableDomainError = getBaseContext().getResources().getDrawable(R.drawable.ic_checking_domain_error);
+        drawableDomainSuccess = getBaseContext().getResources().getDrawable(R.drawable.ic_checking_domain_success);
         qmulHardLoadingView =(QMUILoadingView)findViewById(R.id.qv_checking_hard_loading);
         qmulWifiLoadingView =(QMUILoadingView)findViewById(R.id.qv_checking_portal_loading);
-        qmulDnsLoadingView =(QMUILoadingView)findViewById(R.id.qv_checking_dns_loading);
         HandMessage();
     }
 
     /**
-     * 网络状态检查
+     * 网络状态检查 包含 硬件、小助手(portal)、网络连通性
      * */
     void checkingNet(){
         //检测网络通断
@@ -76,16 +76,17 @@ public class NetWorkStateDetailActivity extends BaseActivity {
         //检测端口
         if(netHardConnectState){
             //检测小助手
-            checkingPortalState("http://www.baidu.com");
+            checkingPortalState(PortalCheckingUrls);
             //检测DNS服务
-            DNSConnectState("www.baidu.com","202.108.22.5","www.aliyun.com","106.11.93.21");
+            checkingDNSConnectState(checkingUrls);
         }else {
-            qmulDnsLoadingView.setVisibility(View.GONE);
             qmulWifiLoadingView.setVisibility(View.GONE);
             portalImageView.setVisibility(View.VISIBLE);
-            dnsImageView.setVisibility(View.VISIBLE);
             portalImageView.setBackground(drawableError);
-            dnsImageView.setBackground(drawableError);
+            findViewById(R.id.iv_ping_baidu_state).setBackground(drawableDomainError);
+            findViewById(R.id.iv_ping_inspur_state).setBackground(drawableDomainError);
+            findViewById(R.id.iv_ping_ali_state).setBackground(drawableDomainError);
+            setShowDnsconnctstateUI();
         }
     }
 
@@ -97,31 +98,27 @@ public class NetWorkStateDetailActivity extends BaseActivity {
             public void handleMessage(android.os.Message msg) {
                 switch (msg.what) {
                     case SHOW_PORTAL_CONNECT:
-                        if(NetUtils.NETWORK_WIFI==NetStateintegerData.get(0)) {
-                            List<String> bundleata =(List<String>)msg.obj;
-                            String httpResNum = bundleata.get(0);
-                            String content=bundleata.get(1);
-                            if(-1!=httpResNum.indexOf("NETWORK 30")){
-                                PortalUrl = content.substring(0,content.indexOf("&firsturl"));
-                                portalImageView.setBackground(drawableError);
-                            }else {
-                                portalImageView.setBackground(drawableSuccess);
-                            }
-                            portalImageView.setVisibility(View.VISIBLE);
-                        } else {
-                            portalImageView.setBackground(drawableError);
-                        }
-                        portalImageView.setVisibility(View.VISIBLE);
-                        qmulWifiLoadingView.setVisibility(View.GONE);
+                        List<String> bundleata =(List<String>)msg.obj;
+                        PortalConnectStateToUI(portalConnectionState(bundleata));
                         break;
                     case SHOW_DNSCONNCTSTATE:
-                            if((boolean)msg.obj){
-                                dnsImageView.setBackground(drawableSuccess);
-                            } else {
-                                dnsImageView.setBackground(drawableError);
-                            }
-                            dnsImageView.setVisibility(View.VISIBLE);
-                        qmulDnsLoadingView.setVisibility(View.GONE);
+                         List<Boolean>  resultData = (List<Boolean>)msg.obj;
+                         if(resultData.get(0)) {
+                             findViewById(R.id.iv_ping_baidu_state).setBackground(drawableDomainSuccess);
+                         }else {
+                             findViewById(R.id.iv_ping_baidu_state).setBackground(drawableDomainError);
+                         }
+                         if (resultData.get(1)) {
+                             findViewById(R.id.iv_ping_inspur_state).setBackground(drawableDomainSuccess);
+                         } else {
+                             findViewById(R.id.iv_ping_inspur_state).setBackground(drawableDomainError);
+                         }
+                         if(resultData.get(2)) {
+                             findViewById(R.id.iv_ping_ali_state).setBackground(drawableDomainSuccess);
+                         } else {
+                             findViewById(R.id.iv_ping_ali_state).setBackground(drawableDomainError);
+                         }
+                        setShowDnsconnctstateUI();
                         break;
                     default:
                         break;
@@ -137,10 +134,11 @@ public class NetWorkStateDetailActivity extends BaseActivity {
 
     /**
      * 检测硬件连接问题
+     * @return  反馈为硬件连接状态
      * */
     private boolean checkingHardState() {
         NetStateintegerData=NetUtils.getNetWrokState(this);
-        if(-1==NetStateintegerData.get(0)){
+        if(-1==NetStateintegerData.get(0)) {
             hardImageView.setBackground(drawableError);
             qmulHardLoadingView.setVisibility(View.GONE);
             hardImageView.setVisibility(View.VISIBLE);
@@ -155,9 +153,10 @@ public class NetWorkStateDetailActivity extends BaseActivity {
 
     /**
      * 检测小助手连接
+     * @param StrUrl 测试小助手url(设定为百度)
      * */
-    private void checkingPortalState(final String StrUrl){
-        if(NetUtils.NETWORK_WIFI==NetStateintegerData.get(0)){
+    private void checkingPortalState(final String StrUrl) {
+        if(NetUtils.NETWORK_WIFI==NetStateintegerData.get(0)) {
             sendRequest(StrUrl);
         } else if((NetStateintegerData.get(0)>=NetUtils.NETWORK_2G)&&(NetStateintegerData.get(0)<=NetUtils.NETWORK_4G)) {
             qmulWifiLoadingView.setVisibility(View.GONE);
@@ -171,13 +170,90 @@ public class NetWorkStateDetailActivity extends BaseActivity {
     }
 
     /**
-     * portal checking "http://www.baidu.com"
-     * @param StrUrl   "http://www.baidu.com"
+     * 连接wifi状态下的小助手检测反馈
+     * @param bundleata  包含反馈数据 网络连接状态、反馈Url(小助手会有劫持)
+     * */
+    private  boolean  portalConnectionState(List<String> bundleata) {
+        String httpNetStateNum = bundleata.get(0);
+        String returnUrl=bundleata.get(1);
+        PortalUrl="";
+        if((null!=httpNetStateNum)&&(""!=httpNetStateNum)){
+            if(-1!=httpNetStateNum.indexOf("NETWORK 30")) {
+                PortalUrl = returnUrl.substring(0,returnUrl.indexOf("&firsturl"));
+                return false;
+            }else {
+                return true;}
+        } else {
+            return  false;}
+    }
+
+    /**
+     * 连接wifi下小助手状态反馈至UI
+     * @param portalState  小助手连接状态
+     * */
+    private void PortalConnectStateToUI(boolean portalState) {
+        if(portalState) {
+            portalImageView.setBackground(drawableSuccess);
+        } else {
+            portalImageView.setBackground(drawableError);
+        }
+        portalImageView.setVisibility(View.VISIBLE);
+        qmulWifiLoadingView.setVisibility(View.GONE);
+    }
+
+    /**
+     * 检测DNS服务器状态
+     * @param Urls  检测联通性的测试网址（以“;”隔开）
+     * */
+    private  void checkingDNSConnectState(final String Urls) {
+
+        final String[] subUrls = Urls.split(";");
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    List<Boolean> resultState=new ArrayList<>();
+                    for (int i=0;i<subUrls.length;i++) {
+                        PingNetEntity checkUrlEntity =new PingNetEntity(subUrls[i],1,1,new StringBuffer());
+                        PingNetEntity checkResult= NetUtils.ping(checkUrlEntity, (long) 1000);
+                        if((checkResult.isResult())){
+                            //结果数据显示
+                            resultState.add(true);
+                        }else{
+                            resultState.add(false);
+                        }
+                    }
+                    Message dnsState = new Message();
+                    dnsState.what=SHOW_DNSCONNCTSTATE;
+                    dnsState.obj=resultState;
+                    handler.sendMessage(dnsState);
+                }catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
+    /**
+     * 加载ViewGONE，改为状态view VISIABLE
+     * */
+    private void setShowDnsconnctstateUI(){
+        findViewById(R.id.iv_ping_baidu_state).setVisibility(View.VISIBLE);
+        findViewById(R.id.qv_ping_baidu_loading).setVisibility(View.GONE);
+        findViewById(R.id.iv_ping_inspur_state).setVisibility(View.VISIBLE);
+        findViewById(R.id.qv_ping_inspur_loading).setVisibility(View.GONE);
+        findViewById(R.id.iv_ping_ali_state).setVisibility(View.VISIBLE);
+        findViewById(R.id.qv_ping_ali_loading).setVisibility(View.GONE);
+    }
+
+    /**
+     * portal checking  "http://www.inspuronline.com/#/auth/0\(arc4random() % 100000)"
+     * 检测小助手不仅要ping状态还有读取返回内容，故以百度为目标网址（有小助手会有网络劫持现象 即反馈302）
+     * @param StrUrl
      * */
     private void sendRequest(final  String  StrUrl) {
-		/*需要新建子线程进行访问*/
         new Thread(){
-            public void run(){
+            public void run() {
                 HttpURLConnection httpURLConnection=null;
                 try {
                     URL url=new URL(StrUrl);
@@ -191,10 +267,17 @@ public class NetWorkStateDetailActivity extends BaseActivity {
                     String urlAndUrl =httpURLConnection.getHeaderField("Location");
                     BundleData.add(urlAndUrl);
                     Message msg=new Message();
-                    msg.what=SHOW_PORTAL_CONNECT;//封装子线程编号
+                    msg.what=SHOW_PORTAL_CONNECT;
                     msg.obj = BundleData;
-                    handler.sendMessage(msg);//发送信息
+                    handler.sendMessage(msg);
                 } catch (Exception e) {
+                    List<String> BundleData=new ArrayList<>();
+                    BundleData.add("");
+                    BundleData.add("");
+                    Message msg=new Message();
+                    msg.what=SHOW_PORTAL_CONNECT;
+                    msg.obj = BundleData;
+                    handler.sendMessage(msg);
                     e.printStackTrace();
                 }finally{
                     if(httpURLConnection!=null){
@@ -210,12 +293,14 @@ public class NetWorkStateDetailActivity extends BaseActivity {
             case R.id.rl_back_net_detail:
                 finish();
                 break;
-            case R.id.rl_checking_hard_state:
-                startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS));
+            case R.id.rl_net_error_fix:
+                IntentUtils.startActivity(this,NetHardConnectCheckActivity.class);
                 break;
             case R.id.rl_checking_portal_state:
                 String activityName = getResources().getString(R.string.net_network_authentication);
-                UriUtils.openUrl(this,PortalUrl,"网络认证");
+                if(PortalUrl!=null&&PortalUrl!=""){
+                    UriUtils.openUrl(this,PortalUrl,activityName);
+                }
                 break;
             case R.id.rl_checking_dns_state:
                 break;
@@ -224,49 +309,4 @@ public class NetWorkStateDetailActivity extends BaseActivity {
         }
     }
 
-    /**
-     * 检测DNS服务器状态
-     * @param CheckUrl "www.baidu.com"
-     * @param CheckIp   "202.108.22.5"
-     * @param PingUrl   "www.aliyun.com"
-     * @param PingIp    "106.11.93.21"*/
-    private  void DNSConnectState(final String CheckUrl, final String CheckIp, final String PingUrl, final String PingIp) {
-        final String checkUrl  = CheckUrl;
-        final String checkIp   = CheckIp;
-        final String pingUrl   = PingUrl;
-        final String pingIp    = PingIp;
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    PingNetEntity checkUrlEntity =new PingNetEntity(checkUrl,1,1,new StringBuffer());
-                    PingNetEntity checkUrlEntityResult= NetUtils.ping(checkUrlEntity, (long) 1000);
-                    PingNetEntity checkIpEntity =new PingNetEntity(checkIp,1,1,new StringBuffer());
-                    PingNetEntity checkIpEntityResult= NetUtils.ping(checkIpEntity, (long) 1000);
-                    PingNetEntity pingUrlEntity =new PingNetEntity(pingUrl,1,1,new StringBuffer());
-                    PingNetEntity pingUrlEntityResult= NetUtils.ping(pingUrlEntity, (long) 1000);
-                    PingNetEntity pingIpEntity =new PingNetEntity(pingIp,1,1,new StringBuffer());
-                    PingNetEntity pingIpEntityResult= NetUtils.ping(pingIpEntity, (long) 1000);
-                    if((checkIpEntityResult.isResult()&&checkUrlEntityResult.isResult())||(pingIpEntityResult.isResult()&&pingUrlEntityResult.isResult())){
-                        //结果数据显示
-                        Message dnsState = new Message();
-                        dnsState.what=SHOW_DNSCONNCTSTATE;
-                        dnsState.obj=true;
-                        handler.sendMessage(dnsState);
-                    }else{
-                        Message dnsState = new Message();
-                        dnsState.what=SHOW_DNSCONNCTSTATE;
-                        dnsState.obj=false;
-                        handler.sendMessage(dnsState);
-                    }
-                }catch (Exception e) {
-                    Message dnsState = new Message();
-                    dnsState.what=SHOW_DNSCONNCTSTATE;
-                    dnsState.obj=false;
-                    handler.sendMessage(dnsState);
-                }
-            }
-        }).start();
-
-    }
 }
