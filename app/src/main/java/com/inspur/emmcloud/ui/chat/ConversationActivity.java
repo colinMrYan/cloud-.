@@ -94,6 +94,9 @@ public class ConversationActivity extends ConversationBaseActivity {
     private static final int REQUEST_CAMERA = 3;
     private static final int RQQUEST_CHOOSE_FILE = 4;
     private static final int REQUEST_MENTIONS = 5;
+    private static final int REFRESH_HISTORY_MESSAGE = 6;
+    private static final int REFRESH_NEW_MESSAGE = 7;
+    private static final int REFRESH_OFFLINE_MESSAGE = 8;
     @ViewInject(R.id.msg_list)
     private RecycleViewForSizeChange msgListView;
 
@@ -120,6 +123,61 @@ public class ConversationActivity extends ConversationBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
+        handleMessage();
+    }
+
+    private void handleMessage() {
+        handler = new Handler(){
+            @Override
+            public void handleMessage(android.os.Message msg) {
+                switch (msg.what){
+                    case REFRESH_HISTORY_MESSAGE:
+                        List<Message> historyMessageList = MessageCacheUtil.getHistoryMessageList(MyApplication.getInstance(), cid, uiMessageList.get(0).getMessage().getCreationDate(), 20);
+                        if(uiMessageList != null && uiMessageList.size() > 0){
+                            uiMessageList.addAll(0, UIMessage.MessageList2UIMessageList
+                                    (MessageCacheUtil.getHistoryMessageList(MyApplication.getInstance(), cid, uiMessageList.get(0).getMessage().getCreationDate(), 20)));
+                            adapter.setMessageList(uiMessageList);
+                            adapter.notifyItemRangeInserted(0, historyMessageList.size());
+                            msgListView.scrollToPosition(historyMessageList.size() - 1);
+                        }
+                        swipeRefreshLayout.setRefreshing(false);
+                        break;
+                    case REFRESH_NEW_MESSAGE:
+                        final List<Message> cacheMessageList = MessageCacheUtil.getHistoryMessageList(MyApplication.getInstance(), cid, null, 20);
+                        uiMessageList = UIMessage.MessageList2UIMessageList(cacheMessageList);
+                        adapter.setMessageList(uiMessageList);
+                        adapter.notifyDataSetChanged();
+                        msgListView.scrollToPosition(uiMessageList.size() - 1);
+                        WSAPIService.getInstance().setChannelMessgeStateRead(cid);
+                        break;
+                    case REFRESH_OFFLINE_MESSAGE:
+                        List<Message> offlineMessageList = (List<Message>) msg.obj;
+                        Iterator<Message> it = offlineMessageList.iterator();
+                        //去重
+                        if (uiMessageList.size() > 0) {
+                            while (it.hasNext()) {
+                                Message offlineMessage = it.next();
+                                UIMessage uiMessage = new UIMessage(offlineMessage.getId());
+                                if (uiMessageList.contains(uiMessage)) {
+                                    it.remove();
+                                }
+                            }
+                        }
+                        if (offlineMessageList.size() > 0) {
+                            int currentPostion = uiMessageList.size() - 1;
+                            List<UIMessage> offlineUIMessageList = UIMessage.MessageList2UIMessageList(offlineMessageList);
+                            uiMessageList.addAll(offlineUIMessageList);
+                            adapter.setMessageList(uiMessageList);
+                            adapter.notifyItemRangeInserted(currentPostion + 1, offlineUIMessageList.size());
+                            msgListView.MoveToPosition(uiMessageList.size() - 1);
+                            WSAPIService.getInstance().setChannelMessgeStateRead(cid);
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+        };
     }
 
 
@@ -280,7 +338,7 @@ public class ConversationActivity extends ConversationBaseActivity {
 
             @Override
             public void onMessageResend(UIMessage uiMessage) {
-                if (uiMessage.getSendStatus() == 2) {
+                if (uiMessage.getSendStatus() == Message.MESSAGE_SEND_FAIL) {
                     showResendMessageDlg(uiMessage);
                 }
             }
@@ -336,7 +394,7 @@ public class ConversationActivity extends ConversationBaseActivity {
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
             // TODO Auto-generated method stub
             Message message = uiMessage.getMessage();
-            uiMessage.setSendStatus(0);
+            uiMessage.setSendStatus(Message.MESSAGE_SEND_ING);
             int position = uiMessageList.indexOf(uiMessage);
             adapter.setMessageList(uiMessageList);
             adapter.notifyItemChanged(position);
@@ -361,6 +419,9 @@ public class ConversationActivity extends ConversationBaseActivity {
                     }else{
                         WSAPIService.getInstance().sendChatMediaVoiceMsg(message);
                     }
+                    break;
+                case Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN:
+                    WSAPIService.getInstance().sendChatCommentTextPlainMsg(message);
                     break;
                 case Message.MESSAGE_TYPE_TEXT_PLAIN:
                     WSAPIService.getInstance().sendChatTextPlainMsg(message);
@@ -759,7 +820,7 @@ public class ConversationActivity extends ConversationBaseActivity {
         String lastDraft = MessageCacheUtil.getDraftByCid(ConversationActivity.this,cid);
         String inputContent = chatInputMenu.getInputContent();
         if(!StringUtils.isBlank(inputContent)&& !lastDraft.equals(inputContent)){
-            Message draftMessage = CommunicationUtils.combinLocalTextPlainMessage(inputContent,cid);
+            Message draftMessage = CommunicationUtils.combinLocalTextPlainMessage(inputContent.equals("@")?(" "+inputContent):inputContent,cid);
             draftMessage.setSendStatus(Message.MESSAGE_SEND_EDIT);
             draftMessage.setRead(Message.MESSAGE_READ);
             draftMessage.setCreationDate(System.currentTimeMillis());
@@ -849,7 +910,7 @@ public class ConversationActivity extends ConversationBaseActivity {
      */
     private boolean handleUnSendMessage(Message message, int status) {
         //发送中，无网,发送消息失败
-        if(status == Message.MESSAGE_SEND_FAIL || (status == Message.MESSAGE_SEND_ING && !NetUtils.isNetworkConnected(ConversationActivity.this))){
+        if(status == Message.MESSAGE_SEND_FAIL || (status == Message.MESSAGE_SEND_ING && !NetUtils.isNetworkConnected(ConversationActivity.this,false))){
             message.setSendStatus(Message.MESSAGE_SEND_FAIL);
             message.setRead(Message.MESSAGE_READ);
             MessageCacheUtil.saveMessage(ConversationActivity.this,message);
@@ -1035,7 +1096,7 @@ public class ConversationActivity extends ConversationBaseActivity {
 
     }
 
-    //接收到websocket发过来的消息
+    //接收到websocket发过来的消息，根据评论获取被评论的消息时触发此方法
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onGetMessageById(EventMessage eventMessage) {
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_GET_MESSAGE_BY_ID)) {
@@ -1053,29 +1114,20 @@ public class ConversationActivity extends ConversationBaseActivity {
     }
 
 
-    //接收到websocket发过来的消息
+    //接收到websocket发过来的消息，推送消息触发此方法
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReceiveNewMessage(EventMessage eventMessage) {
+    public void onReceivePushMessage(EventMessage eventMessage) {
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_GET_NEW_MESSAGE) && eventMessage.getExtra().equals(cid)) {
             if (eventMessage.getStatus() == 200) {
                 String content = eventMessage.getContent();
                 GetChannelMessagesResult getChannelMessagesResult = new GetChannelMessagesResult(content);
                 final List<Message> newMessageList = getChannelMessagesResult.getMessageList();
-                if (newMessageList.size() > 0) {
-                    MessageCacheUtil.handleRealMessage(MyApplication.getInstance(),newMessageList, null,cid);
-                }
-                WSAPIService.getInstance().setChannelMessgeStateRead(cid);
-                final List<Message> cacheMessageList = MessageCacheUtil.getHistoryMessageList(MyApplication.getInstance(), cid, null, 20);
-                uiMessageList = UIMessage.MessageList2UIMessageList(cacheMessageList);
-                adapter.setMessageList(uiMessageList);
-                adapter.notifyDataSetChanged();
-                msgListView.scrollToPosition(uiMessageList.size() - 1);
+                new CacheMessageListThread(newMessageList,null,REFRESH_NEW_MESSAGE).start();
             }
-
         }
     }
 
-    //接收到websocket发过来的消息
+    //接收到websocket发过来的消息，下拉获取消息触发此方法
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveHistoryMessage(EventMessage eventMessage) {
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_GET_HISTORY_MESSAGE) && eventMessage.getExtra().equals(cid)) {
@@ -1088,15 +1140,10 @@ public class ConversationActivity extends ConversationBaseActivity {
                     if (uiMessageList.size() > 0) {
                         targetMessageCreationDate = uiMessageList.get(0).getCreationDate();
                     }
-                    MessageCacheUtil.handleRealMessage(MyApplication.getInstance(),messageList,targetMessageCreationDate,cid);
-                    uiMessageList.addAll(0, UIMessage.MessageList2UIMessageList
-                            (MessageCacheUtil.getHistoryMessageListByTime(MyApplication.getInstance(),cid,
-                                    messageList.get(0).getCreationDate(),messageList.get(messageList.size() - 1).getCreationDate())));
-                    adapter.setMessageList(uiMessageList);
-                    adapter.notifyItemRangeInserted(0, messageList.size());
-                    msgListView.scrollToPosition(messageList.size() - 1);
+                    new CacheMessageListThread(messageList,targetMessageCreationDate,REFRESH_HISTORY_MESSAGE).start();
+                }else{
+                    swipeRefreshLayout.setRefreshing(false);
                 }
-                swipeRefreshLayout.setRefreshing(false);
             } else {
                 getHistoryMessageFromLocal();
             }
@@ -1104,36 +1151,14 @@ public class ConversationActivity extends ConversationBaseActivity {
     }
 
 
-    //接收到从沟通页面传来的离线消息
+    //接收到从沟通页面传来的离线消息，如断网联网时会触发此方法
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReiceveWSOfflineMessage(SimpleEventMessage eventMessage) {
         if (eventMessage.getAction().equals(Constant.EVENTBUS_TAG_CURRENT_CHANNEL_OFFLINE_MESSAGE)) {
             List<Message> offlineMessageList = (List<Message>) eventMessage.getMessageObj();
-            MessageCacheUtil.handleRealMessage(MyApplication.getInstance(),offlineMessageList,null,cid);
-            Iterator<Message> it = offlineMessageList.iterator();
-            //去重
-            if (uiMessageList.size() > 0) {
-                while (it.hasNext()) {
-                    Message offlineMessage = it.next();
-                    UIMessage uiMessage = new UIMessage(offlineMessage.getId());
-                    if (uiMessageList.contains(uiMessage)) {
-                        it.remove();
-                    }
-                }
-            }
-            if (offlineMessageList.size() > 0) {
-                int currentPostion = uiMessageList.size() - 1;
-                List<UIMessage> offlineUIMessageList = UIMessage.MessageList2UIMessageList(offlineMessageList);
-                uiMessageList.addAll(offlineUIMessageList);
-                adapter.setMessageList(uiMessageList);
-                adapter.notifyItemRangeInserted(currentPostion + 1, offlineUIMessageList.size());
-                msgListView.MoveToPosition(uiMessageList.size() - 1);
-                WSAPIService.getInstance().setChannelMessgeStateRead(cid);
-            }
+            new CacheMessageListThread(offlineMessageList,null,REFRESH_OFFLINE_MESSAGE).start();
         }
-
     }
-
 
     /**
      * 获取此频道的最新消息
@@ -1141,6 +1166,29 @@ public class ConversationActivity extends ConversationBaseActivity {
     private void getNewMessageOfChannel() {
         if (NetUtils.isNetworkConnected(this, false)) {
             WSAPIService.getInstance().getChannelNewMessage(cid);
+        }
+    }
+
+    class CacheMessageListThread extends Thread {
+        private List<Message> messageList;
+        private Long targetTime;
+        private int refreshType;
+
+        public CacheMessageListThread(List<Message> messageList, Long targetTime,int refreshType) {
+            this.messageList = messageList;
+            this.targetTime = targetTime;
+            this.refreshType = refreshType;
+        }
+
+        @Override
+        public void run() {
+            if(messageList != null && messageList.size() > 0){
+                MessageCacheUtil.handleRealMessage(MyApplication.getInstance(),messageList,targetTime,cid,false);
+            }
+            if (handler != null) {
+                android.os.Message message = handler.obtainMessage(refreshType, messageList);
+                message.sendToTarget();
+            }
         }
     }
 

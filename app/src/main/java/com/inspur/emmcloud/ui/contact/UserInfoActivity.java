@@ -63,7 +63,7 @@ public class UserInfoActivity extends BaseActivity {
     private TextView dutyText;
 
     @ViewInject(R.id.start_chat_img)
-    private ImageView startChatImg;
+    private TextView startChatImg;
 
     private ContactUser contactUser;
     private final static int MY_PERMISSIONS_PHONECALL = 0;

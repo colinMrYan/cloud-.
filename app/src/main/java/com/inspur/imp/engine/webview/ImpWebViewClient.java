@@ -22,7 +22,6 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.appcenter.AppRedirectResult;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.imp.api.ImpCallBackInterface;
@@ -45,7 +44,7 @@ public class ImpWebViewClient extends WebViewClient {
     private Runnable runnable = null;
     private ImpCallBackInterface impCallBackInterface;
 
-    public ImpWebViewClient(LinearLayout loadFailLayout, ImpCallBackInterface impCallBackInterface) {
+    public ImpWebViewClient(LinearLayout loadFailLayout,ImpCallBackInterface impCallBackInterface) {
         this.loadFailLayout = loadFailLayout;
         this.impCallBackInterface = impCallBackInterface;
         handMessage();
@@ -137,7 +136,7 @@ public class ImpWebViewClient extends WebViewClient {
             mHandler.removeCallbacks(runnable);
             runnable = null;
         }
-        if (impCallBackInterface != null) {
+        if(impCallBackInterface != null){
             impCallBackInterface.onLoadingDlgDimiss();
         }
         loadFailLayout.setVisibility(View.VISIBLE);
@@ -163,7 +162,6 @@ public class ImpWebViewClient extends WebViewClient {
     @TargetApi(android.os.Build.VERSION_CODES.LOLLIPOP)
     @Override
     public boolean shouldOverrideUrlLoading(WebView view, final WebResourceRequest request) {
-        LogUtils.jasonDebug("shouldOverrideUrlLoading---------------------"+request.getUrl().toString());
         if (runnable != null) {
             mHandler.removeCallbacks(runnable);
             runnable = null;
@@ -200,7 +198,7 @@ public class ImpWebViewClient extends WebViewClient {
 
                 @Override
                 public Map<String, String> getRequestHeaders() {
-                    return getWebViewHeaders();
+                    return getWebViewHeaders(request.getUrl().toString());
                 }
             };
             return super.shouldOverrideUrlLoading(view, newRequest);
@@ -254,8 +252,8 @@ public class ImpWebViewClient extends WebViewClient {
      *
      * @return
      */
-    private Map<String, String> getWebViewHeaders() {
-        return myWebView == null ? new HashMap<String, String>() : ((impCallBackInterface != null) ? impCallBackInterface.onGetWebViewHeaders() : new HashMap<String, String>());
+    private Map<String, String> getWebViewHeaders(String url) {
+        return myWebView == null ? new HashMap<String, String>() : ((impCallBackInterface != null)? impCallBackInterface.onGetWebViewHeaders(url):new HashMap<String, String>());
     }
 
     /**
@@ -289,7 +287,8 @@ public class ImpWebViewClient extends WebViewClient {
         @Override
         public void returnGetAppAuthCodeResultSuccess(AppRedirectResult appRedirectResult) {
             if (NetUtils.isNetworkConnected(webView.getContext())) {
-                webView.loadUrl(appRedirectResult.getRedirect_uri(), getWebViewHeaders());
+                String redirectUri = appRedirectResult.getRedirect_uri();
+                webView.loadUrl(redirectUri, getWebViewHeaders(redirectUri));
             }
             super.returnGetAppAuthCodeResultSuccess(appRedirectResult);
         }

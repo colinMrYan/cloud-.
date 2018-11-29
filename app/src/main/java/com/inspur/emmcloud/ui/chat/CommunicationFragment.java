@@ -558,7 +558,7 @@ public class CommunicationFragment extends Fragment {
     private void cacheReceiveMessage(Message receivedWSMessage) {
         // TODO Auto-generated method stub
         Message channelNewMessage = MessageCacheUtil.getNewMessge(MyApplication.getInstance(), receivedWSMessage.getChannel());
-        MessageCacheUtil.saveMessage(MyApplication.getInstance(), receivedWSMessage);
+//        MessageCacheUtil.saveMessage(MyApplication.getInstance(), receivedWSMessage);
         Long ChannelMessageMatheSetStart = (channelNewMessage == null) ? receivedWSMessage.getCreationDate() : channelNewMessage.getCreationDate();
         MessageMatheSetCacheUtils.add(MyApplication.getInstance(),
                 receivedWSMessage.getChannel(), new MatheSet(ChannelMessageMatheSetStart, receivedWSMessage.getCreationDate()));
@@ -808,7 +808,7 @@ public class CommunicationFragment extends Fragment {
         public void run() {
             try {
                 if (messageList != null && messageList.size() > 0) {
-                    MessageCacheUtil.saveMessageList(MyApplication.getInstance(), messageList, null, false); // 获取的消息需要缓存
+                    MessageCacheUtil.handleRealMessage(getActivity(),messageList, null,"",false);// 获取的消息需要缓存
                     if (channelMessageSetList != null && channelMessageSetList.size() > 0) {
                         for (ChannelMessageSet channelMessageSet : channelMessageSetList) {
                             MessageMatheSetCacheUtils.add(MyApplication.getInstance(), channelMessageSet.getCid(), channelMessageSet.getMatheSet());
@@ -870,7 +870,7 @@ public class CommunicationFragment extends Fragment {
     }
 
 
-    //接收到websocket发过来的消息
+    //接收到websocket发过来的消息，在channel里正常收发消息触发此方法
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveWSMessage(EventMessage eventMessage) {
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE)) {
@@ -884,6 +884,7 @@ public class CommunicationFragment extends Fragment {
                     if (MyApplication.getInstance().getCurrentChannelCid().equals(receivedWSMessage.getChannel())) {
                         receivedWSMessage.setRead(Message.MESSAGE_READ);
                     }
+                    //如果是音频消息，需要检查本地是否有音频文件，没有则下载
                     if (receivedWSMessage.getType().equals(Message.MESSAGE_TYPE_MEDIA_VOICE)) {
                         String fileSavePath = MyAppConfig.getCacheVoiceFilePath(receivedWSMessage.getChannel(), receivedWSMessage.getId());
                         if (!new File(fileSavePath).exists()) {
@@ -903,12 +904,14 @@ public class CommunicationFragment extends Fragment {
                     }
                 }
             } else {
-                WebServiceMiddleUtils.hand(getActivity(), eventMessage.getContent(), eventMessage.getStatus());
+                //去掉提示
+//                WebServiceMiddleUtils.hand(getActivity(), eventMessage.getContent(), eventMessage.getStatus());
             }
 
         }
     }
 
+    //socket断开重连时（如断网联网）会触发此方法
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReiceveWSOfflineMessage(EventMessage eventMessage) {
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_GET_OFFLINE_WS_MESSAGE)) {
@@ -918,7 +921,6 @@ public class CommunicationFragment extends Fragment {
                 String content = eventMessage.getContent();
                 GetOfflineMessageListResult getOfflineMessageListResult = new GetOfflineMessageListResult(content);
                 List<Message> offlineMessageList = getOfflineMessageListResult.getMessageList();
-                MessageCacheUtil.handleRealMessage(getActivity(),offlineMessageList, null,"");
                 List<Message> currentChannelOfflineMessageList = new ArrayList<>();
                 //将当前所处频道的消息存为已读
                 if (!StringUtils.isBlank(MyApplication.getInstance().getCurrentChannelCid())) {
@@ -947,6 +949,7 @@ public class CommunicationFragment extends Fragment {
         }
     }
 
+    //本地无消息时触发此方法（如应用首次安装或者在沟通页面下拉刷新）
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveWSRecentMessage(EventMessage eventMessage) {
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_GET_CHANNEL_RECENT_MESSAGE)) {
@@ -954,7 +957,6 @@ public class CommunicationFragment extends Fragment {
                 String content = eventMessage.getContent();
                 GetRecentMessageListResult getRecentMessageListResult = new GetRecentMessageListResult(content);
                 List<Message> recentMessageList = getRecentMessageListResult.getMessageList();
-                MessageCacheUtil.handleRealMessage(MyApplication.getInstance(),recentMessageList,null,"");
                 List<Message> currentChannelRecentMessageList = new ArrayList<>();
                 //将当前所处频道的消息存为已读
                 if (!StringUtils.isBlank(MyApplication.getInstance().getCurrentChannelCid())) {

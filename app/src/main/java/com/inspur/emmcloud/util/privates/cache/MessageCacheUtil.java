@@ -74,7 +74,7 @@ public class MessageCacheUtil {
             if (messageList == null || messageList.size() == 0) {
                 return;
             }
-            //去重操作，防止服务端重复消息覆盖本地消息导致已读未读状态错乱
+            //去重操作，防止服务端重复消息覆盖本地消息导致已读未读状态错乱，并防止已经改过时间的消息被服务端覆盖时间
             if (!isUpdate){
                 List<String> messageIdList = new ArrayList<>();
                 for (Message message:messageList){
@@ -96,7 +96,6 @@ public class MessageCacheUtil {
             MessageMatheSetCacheUtils.add(context, messageList.get(0).getChannel(),
                     matheSet);
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
@@ -506,7 +505,7 @@ public class MessageCacheUtil {
      * @param messageList
      * @param targetMessageCreationDate
      */
-    public static void handleRealMessage(Context context, List<Message> messageList, Long targetMessageCreationDate,String cid){
+    public static void handleRealMessage(Context context, List<Message> messageList, Long targetMessageCreationDate,String cid,boolean isUpdate){
         if (messageList.size()>0){
             List<String> messageTmpIdList = new ArrayList<>();
             for (Message message:messageList) {
@@ -524,7 +523,7 @@ public class MessageCacheUtil {
                 }
             }
             deleteFakeMessageList(context,messageList);
-            saveMessageList(context,messageList,targetMessageCreationDate);
+            saveMessageList(context,messageList,targetMessageCreationDate,isUpdate);
         }
     }
 

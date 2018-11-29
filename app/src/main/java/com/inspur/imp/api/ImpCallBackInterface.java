@@ -15,7 +15,7 @@ import java.util.Map;
 public interface ImpCallBackInterface {
     void onLoadingDlgDimiss();
     void onShowImpDialog();
-    Map<String, String> onGetWebViewHeaders();
+    Map<String, String> onGetWebViewHeaders(String url);
     void onInitWebViewGoBackOrClose();
     void onSetTitle(String title);
     void onFinishActivity();

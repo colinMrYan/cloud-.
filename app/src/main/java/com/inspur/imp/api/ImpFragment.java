@@ -34,8 +34,9 @@ import com.inspur.emmcloud.bean.system.MainTabMenu;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppWebConfig;
 import com.inspur.emmcloud.ui.IndexActivity;
+import com.inspur.emmcloud.ui.mine.setting.NetWorkStateDetailActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
-import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppTabUtils;
@@ -79,6 +80,7 @@ public class ImpFragment extends ImpBaseFragment {
     public static final int BARCODE_SERVER__SCAN_REQUEST = 8;
     public static final int SELECT_FILE_SERVICE_REQUEST = 9;
     public static final int FILE_CHOOSER_RESULT_CODE = 5173;
+    private static final String JAVASCRIPT_PREFIX = "javascript:";
     private Map<String, String> webViewHeaders;
     private LinearLayout loadFailLayout;
     private Button normalBtn, middleBtn, bigBtn, biggestBtn;
@@ -233,6 +235,9 @@ public class ImpFragment extends ImpBaseFragment {
                     finishActivity();
                     break;
                 case R.id.refresh_text:
+                    IntentUtils.startActivity(getActivity(), NetWorkStateDetailActivity.class);
+                    break;
+                case R.id.load_error_layout:
                     showLoadingDlg(getString(Res.getStringID("@string/loading_text")));
                     webView.reload();
                     webView.setVisibility(View.INVISIBLE);
@@ -264,13 +269,13 @@ public class ImpFragment extends ImpBaseFragment {
     }
 
 
-
     /**
      * 在WebClient获取header
-     *
+     * 为了防止第一层不符合规则，第二层符合添加token规则时不再检查url的问题，需要回传url重新检查增加每次检查是否需要加token
      * @return
      */
-    public Map<String, String> getWebViewHeaders() {
+    public Map<String, String> getWebViewHeaders(String url) {
+        addAuthorizationToken(url);
         return webViewHeaders;
     }
 
@@ -402,8 +407,8 @@ public class ImpFragment extends ImpBaseFragment {
             }
 
             @Override
-            public Map<String, String> onGetWebViewHeaders() {
-                return getWebViewHeaders();
+            public Map<String, String> onGetWebViewHeaders(String url) {
+                return getWebViewHeaders(url);
             }
 
             @Override
@@ -490,7 +495,6 @@ public class ImpFragment extends ImpBaseFragment {
      * 返回
      */
     public boolean goBack() {
-        LogUtils.jasonDebug("webView.canGoBack()="+webView.canGoBack());
         if (webView.canGoBack()) {
             webView.goBack();// 返回上一页面
             setGoBackTitle();
@@ -531,7 +535,7 @@ public class ImpFragment extends ImpBaseFragment {
         try {
             URL urlHost = new URL(url);
             String token = MyApplication.getInstance().getToken();
-            if (token != null && (urlHost.getHost().endsWith(Constant.INSPUR_HOST_URL)) || urlHost.getHost().endsWith(Constant.INSPURONLINE_HOST_URL)) {
+            if (token != null && (urlHost.getHost().endsWith(Constant.INSPUR_HOST_URL)) || urlHost.getHost().endsWith(Constant.INSPURONLINE_HOST_URL) || urlHost.getPath().endsWith("/app/mdm/v3.0/loadForRegister")) {
                 webViewHeaders.put("Authorization", token);
             }
         } catch (Exception e) {
@@ -669,9 +673,7 @@ public class ImpFragment extends ImpBaseFragment {
             webView.destroy();
             webView = null;
         }
-
         impCallBackInterface = null;
-
         //清除掉图片缓存
 //        DataCleanManager.cleanCustomCache(MyAppConfig.LOCAL_IMG_CREATE_PATH);
         super.onDestroy();

@@ -118,7 +118,7 @@
     <string name="all_day">All Day</string>
     <string name="delete_group_member"> Delete Members</string>
     <string name="tax_ticket_info"> VAT Invoice Information</string>
-    <string name="channel_group_info">Group Information</string>
+    <string name="channel_group_info">Group Details</string>
     <string name="channel_group_name">Group Name</string>
     <string name="channel_group_image">Images</string>
     <string name="channel_group_file">Files</string>
@@ -216,8 +216,8 @@
     <string name="login_captchas_getcode_success">Code has been sent successfully</string>
     <string name="login_cost_report">Expense Report</string>
     <string name="login_your_contact">Your contact</string>
-    <string name="login_group_album">Group Images</string>
-    <string name="login_group_file">Group Files</string>
+    <string name="login_group_album">Images</string>
+    <string name="login_group_file">Files</string>
     <string name="login_authorization_expired">Authorization Expired</string>
     <string name="login_cant_login_with_sms">Your account is not allowed to log on with SMS</string>
     <string name="login_user_not_bound_enterprise">The current user is not bound to the enterprise, please contact the administrator!</string>
@@ -274,10 +274,10 @@
     <string name="socket_close">Disconnect</string>
     <string name="chat_file_download_success">File has been downloaded successfully, click again to open</string>
     <string name="group_name_longth_valid">Group name, word overrun (no more than 40 characters)</string>
-    <string name="message_create_group">Group Chat</string>
+    <string name="message_create_group">New Chat</string>
     <string name="business_card">Business Card</string>
-    <string name="no_channel_album">No group pictures</string>
-    <string name="no_channel_file">No group files</string>
+    <string name="no_channel_album">No content</string>
+    <string name="no_channel_file">No content</string>
     <string name="hold_to_talk">Hold to Talk</string>
     <string name="release_to_send">Release to Send</string>
     <string name="release_to_cancel">release to cancel</string>
@@ -294,7 +294,7 @@
     <string name="chat_remove">Delete</string>
     <string name="chat_remove_from_top">Remove from Top</string>
     <string name="no_chat_content">No chat content</string>
-    <string name="msg_key_search_member">Enter Keywords</string>
+    <string name="msg_key_search_member"> Please enter key words</string>
 
     <!-- 会议卡片 -->
     <string name="meeting_has_confirmed">Confirmed</string>
@@ -359,7 +359,7 @@
     <string name="adding"> Adding</string>
     <string name="add_app"> Add App</string>
     <string name="app_search_null"> Not get a search result</string>
-    <string name="app_input_search_key">Enter keywords</string>
+    <string name="app_input_search_key"> Please input the key words</string>
     <string name="app_must_be_app_cannot_edit">All applications are necessary and non-editable</string>
     <string name="app_center">APP Center</string>
     <string name="app_commonly_use">Common Application</string>
@@ -640,6 +640,7 @@
     <string name="user_no_storage">No Storage</string>
     <string name="user_employee_num">NO.</string>
     <string name="user_worker_num">NO.</string>
+    <string name="user_new_chat">Messages</string>
 
     <!-- 集团新闻 部分 -->
     <string name="news_group_news">Group News</string>
@@ -673,7 +674,7 @@
     <string name="address_servicenum_text">Service number</string>
     <string name="org_struct_text">Organization/Architecture  </string>
     <string name="please_select_app_of_mail">Please select the application of the type of mail</string>
-    <string name="recently_used">Frequent</string>
+    <string name="recently_used">Frequent Contacts</string>
     <string name="all">All</string>
     <string name="seach_blank">Search...                   </string>
     <string name="origanization_struct">Company/Organization</string>
@@ -868,15 +869,20 @@
 
 
     <!--网络链接及网络诊断-->
-    <string name="net_connected_error">The network is not available. Please check the network settings.</string>
-    <string name="net_diagnosis_title">Network Diagnosis</string>
+    <string name="net_connected_error">No internet available,please check</string>
+    <string name="net_diagnosis_title">Network Diagnoses</string>
     <string name="net_diagnosis_hard_link_title">Detect network hardware</string>
-    <string name="net_diagnosis_wifi_link_title">Detect Wifi routing status</string>
-    <string name="net_diagnosis_dns_link_title">Detect DNS server status</string>
-    <string name="net_diagnosis_hard_link_conent">The current test item contains: Setting of hardware fault,Setting of Hardware connection status,Setting of wifi,4G,LTE state and so on.</string>
-    <string name="net_diagnosis_wifi_link_conent">The current test item contains: Whether there is an empirical requirement to link the wifi, if there is a need to verify the wifi before it can be accessed.</string>
-    <string name="net_diagnosis_dns_link_conent">The current test item contains: Is the DNS service faulty?</string>
+    <string name="net_diagnosis_wifi_link_title">Detect router</string>
+    <string name="net_diagnosis_dns_link_title">Detect network connectivity</string>
+    <string name="net_diagnosis_hard_link_conent">Contained Items:Connection status of Wi-Fi,4G,LTE and so on.</string>
+    <string name="net_diagnosis_hard_to_fix">Repair</string>
+    <string name="net_diagnosis_wifi_link_conent">Contained Items:Does Connected Wi-Fi have verification requirement? if yes,Please verify Wi-Fi first, then continue to visit.</string>
     <string name="net_network_authentication">Network Certification</string>
+    <string name="net_diagnosis_hard_detail_title">Hardware Link Diagnoses</string>
+    <string name="net_diagnosis_hard_detail_content">Recommend to do as follows</string>
+    <string name="net_diagnosis_hard_detail_content_frist">1.Turn on the phone \"Settings\" and turn on the \"Wi-Fi\".</string>
+    <string name="net_diagnosis_hard_detail_content_second">2.Open the phone \"Settings\" and turn on the \"Cellular data\".</string>
+    <string name="net_diagnosis_hard_detail_setting">Go To Set</string>
 
     <!-- ListView自定义控件部分 -->
     <string name="xlistview_header_last_time">Last Update Time:</string>
