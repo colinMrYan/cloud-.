@@ -67,7 +67,13 @@ public class ImageDisplayUtils implements ImagePickerLoader {
         if (!StringUtils.isBlank(uri) && !uri.startsWith("http") && !uri.startsWith("file:") && !uri.startsWith("content:") && !uri.startsWith("assets:") && !uri.startsWith("drawable:")) {
             uri = "file://" + uri;
         }
-        ImageLoader.getInstance().displayImage(uri, imageView);
+        DisplayImageOptions options = new DisplayImageOptions.Builder()
+                // 设置图片的解码类型
+                .bitmapConfig(Bitmap.Config.RGB_565)
+                .cacheInMemory(true)
+                .cacheOnDisk(true)
+                .build();
+        ImageLoader.getInstance().displayImage(uri, imageView,options);
     }
 
     /**

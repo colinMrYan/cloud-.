@@ -30,7 +30,6 @@ import com.inspur.emmcloud.service.CoreService;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.chat.DisplayMediaVoiceMsg;
 import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
@@ -101,7 +100,6 @@ public class SettingActivity extends BaseActivity {
             getUserExperienceUpgradeFlag();
             experienceUpgradeLayout.setVisibility(View.VISIBLE);
             boolean isExperienceUpgradeFlag = PreferencesByUserAndTanentUtils.getBoolean(MyApplication.getInstance(),Constant.PREF_EXPERIENCE_UPGRATE,false);
-            LogUtils.jasonDebug("isExperienceUpgradeFlag=="+isExperienceUpgradeFlag);
             experienceUpgradeSwitch.setOpened(isExperienceUpgradeFlag);
             experienceUpgradeSwitch.setOnStateChangedListener(onStateChangedListener);
         }

@@ -7,6 +7,6 @@
     <!-- android:radius 弧形的半径 -->
     <corners android:radius="2dp" />
     <stroke
-        android:width="0.5dp"
+        android:width="1dp"
         android:color="@color/header_bg" />
 </shape>
