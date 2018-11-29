@@ -30,7 +30,6 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.api.apiservice.WSAPIService;
-import com.inspur.emmcloud.bean.chat.ChannelGroup;
 import com.inspur.emmcloud.bean.chat.ChannelMessageReadStateResult;
 import com.inspur.emmcloud.bean.chat.ChannelMessageSet;
 import com.inspur.emmcloud.bean.chat.Conversation;
@@ -46,6 +45,7 @@ import com.inspur.emmcloud.bean.system.MainTabProperty;
 import com.inspur.emmcloud.bean.system.MainTabResult;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
+import com.inspur.emmcloud.broadcastreceiver.NetworkChangeReceiver;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.push.WebSocketPush;
@@ -59,7 +59,7 @@ import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.AppTabUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
-import com.inspur.emmcloud.util.privates.ChatCreateUtils;
+import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 import com.inspur.emmcloud.util.privates.ConversationGroupIconUtils;
 import com.inspur.emmcloud.util.privates.DownLoaderUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
@@ -133,11 +133,11 @@ public class CommunicationFragment extends Fragment {
 
     /**
      * 切换tab实现网络状态监测
-     * */
+     */
     @Override
     public void onResume() {
         super.onResume();
-        NetUtils.PingThreadStart("www.baidu.com");
+        NetUtils.PingThreadStart("www.baidu.com",5);
     }
 
     private void initView() {
@@ -298,11 +298,11 @@ public class CommunicationFragment extends Fragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void netWorkStateTip(SimpleEventMessage netState) {
         if(netState.getAction().equals(Constant.EVENTBUS_TAG__NET_STATE_CHANGE)){
-            if(((String)netState.getMessageObj()).equals("net_wifi_state_ok")){
-                NetUtils.PingThreadStart("www.baidu.com");
-            } else if(((String)netState.getMessageObj()).equals("net_state_error")) {
+            if(((String)netState.getMessageObj()).equals(NetworkChangeReceiver.NET_WIFI_STATE_OK)){
+                NetUtils.PingThreadStart("www.baidu.com",5);
+            } else if(((String)netState.getMessageObj()).equals(NetworkChangeReceiver.NET_STATE_ERROR)) {
                 conversationAdapter.setNetExceptionView(false);
-            } else if (((String)netState.getMessageObj()).equals("net_gprs_state_ok")) {
+            } else if (((String)netState.getMessageObj()).equals(NetworkChangeReceiver.NET_GPRS_STATE_OK)) {
                 conversationAdapter.setNetExceptionView(true);
             }
         } else if (netState.getAction().equals(Constant.EVENTBUS_TAG__NET_EXCEPTION_HINT)) {   //网络异常提示
@@ -505,6 +505,7 @@ public class CommunicationFragment extends Fragment {
 
     /**
      * 根据频道获取草稿
+     *
      * @param conversation
      * @return
      */
@@ -774,22 +775,18 @@ public class CommunicationFragment extends Fragment {
      */
     private void creatGroupChannel(JSONArray peopleArray) {
         // TODO Auto-generated method stub
-        new ChatCreateUtils().createGroupChannel(getActivity(), peopleArray,
-                new ChatCreateUtils.OnCreateGroupChannelListener() {
+        new ConversationCreateUtils().createGroupConversation(getActivity(), peopleArray,
+                new ConversationCreateUtils.OnCreateGroupConversationListener() {
 
                     @Override
-                    public void createGroupChannelSuccess(
-                            ChannelGroup channelGroup) {
-                        // TODO Auto-generated method stub
+                    public void createGroupConversationSuccess(Conversation conversation) {
                         Bundle bundle = new Bundle();
-                        bundle.putString(ConversationActivity.EXTRA_CID, channelGroup.getCid());
-                        IntentUtils.startActivity(getActivity(),ConversationActivity.class, bundle);
-                        getConversationList();
+                        bundle.putSerializable(ConversationActivity.EXTRA_CONVERSATION, conversation);
+                        IntentUtils.startActivity(getActivity(), ConversationActivity.class, bundle);
                     }
 
                     @Override
-                    public void createGroupChannelFail() {
-                        // TODO Auto-generated method stub
+                    public void createGroupConversationFail() {
 
                     }
                 });

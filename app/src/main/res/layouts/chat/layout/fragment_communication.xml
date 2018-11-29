@@ -15,11 +15,12 @@
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
             android:clickable="true"
+            android:paddingTop="17dp"
+            android:paddingBottom="16dp"
+            android:paddingRight="13dp"
             android:paddingLeft="16dp"
-            android:paddingRight="14dp"
-            android:adjustViewBounds="true"
-            android:scaleType="centerInside"
-            android:src="@drawable/ic_members_contact" />
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_message_header_contact" />
 
         <TextView
             android:id="@+id/header_text"
@@ -38,11 +39,12 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:clickable="true"
+            android:paddingTop="17dp"
+            android:paddingBottom="17dp"
+            android:paddingRight="14dp"
             android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:scaleType="centerInside"
+            android:scaleType="fitXY"
             android:src="@drawable/icon_add" />
-        <!--android:src="@drawable/selector_people_btn"-->
     </RelativeLayout>
 
 

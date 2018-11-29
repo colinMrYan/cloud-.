@@ -3,7 +3,9 @@ package com.inspur.emmcloud.util.privates.cache;
 import android.content.Context;
 
 import com.inspur.emmcloud.bean.chat.Conversation;
+import com.inspur.emmcloud.bean.contact.SearchModel;
 import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.StringUtils;
 
 import org.json.JSONArray;
 import org.xutils.common.util.KeyValue;
@@ -27,7 +29,7 @@ public class ConversationCacheUtils {
      * @param conversationList
      */
     public static void saveConversationList(final Context context,
-                                       final List<Conversation> conversationList) {
+                                            final List<Conversation> conversationList) {
 
         // TODO Auto-generated method stub
         try {
@@ -75,13 +77,14 @@ public class ConversationCacheUtils {
 
     /**
      * 设置是否置顶
+     *
      * @param context
      * @param id
      * @param isStick
      */
-    public static void setConversationStick(Context context,String id,boolean isStick){
+    public static void setConversationStick(Context context, String id, boolean isStick) {
         try {
-            DbCacheUtils.getDb(context).update(Conversation.class, WhereBuilder.b("id", "=", id),new KeyValue("stick",isStick));
+            DbCacheUtils.getDb(context).update(Conversation.class, WhereBuilder.b("id", "=", id), new KeyValue("stick", isStick));
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
@@ -90,12 +93,13 @@ public class ConversationCacheUtils {
 
     /**
      * 隐藏会话
+     *
      * @param context
      * @param id
      */
-    public static void setConversationHide(Context context,String id,boolean isHide){
+    public static void setConversationHide(Context context, String id, boolean isHide) {
         try {
-            DbCacheUtils.getDb(context).update(Conversation.class, WhereBuilder.b("id", "=", id),new KeyValue("hide",isHide));
+            DbCacheUtils.getDb(context).update(Conversation.class, WhereBuilder.b("id", "=", id), new KeyValue("hide", isHide));
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
@@ -104,13 +108,14 @@ public class ConversationCacheUtils {
 
     /**
      * 设置会话名称
+     *
      * @param context
      * @param id
      * @param name
      */
-    public static void updateConversationName(Context context, String id, String name){
+    public static void updateConversationName(Context context, String id, String name) {
         try {
-            DbCacheUtils.getDb(context).update(Conversation.class, WhereBuilder.b("id", "=", id),new KeyValue("name",name));
+            DbCacheUtils.getDb(context).update(Conversation.class, WhereBuilder.b("id", "=", id), new KeyValue("name", name));
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
@@ -119,13 +124,14 @@ public class ConversationCacheUtils {
 
     /**
      * 设置是否免打扰
+     *
      * @param context
      * @param id
      * @param name
      */
-    public static void updateConversationDnd(Context context, String id, boolean isDnd){
+    public static void updateConversationDnd(Context context, String id, boolean isDnd) {
         try {
-            DbCacheUtils.getDb(context).update(Conversation.class, WhereBuilder.b("id", "=", id),new KeyValue("dnd",isDnd));
+            DbCacheUtils.getDb(context).update(Conversation.class, WhereBuilder.b("id", "=", id), new KeyValue("dnd", isDnd));
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
@@ -135,12 +141,13 @@ public class ConversationCacheUtils {
 
     /**
      * 删除会话
+     *
      * @param context
      * @param id
      */
-    public static void deleteConversation(Context context,String id){
+    public static void deleteConversation(Context context, String id) {
         try {
-            DbCacheUtils.getDb(context).delete(Conversation.class,WhereBuilder.b("id","=",id));
+            DbCacheUtils.getDb(context).delete(Conversation.class, WhereBuilder.b("id", "=", id));
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
@@ -149,12 +156,13 @@ public class ConversationCacheUtils {
 
     /**
      * 删除会话列表
+     *
      * @param context
      * @param conversationList
      */
-    public static void deleteConversationList(Context context,List<Conversation> conversationList){
+    public static void deleteConversationList(Context context, List<Conversation> conversationList) {
         try {
-            if (conversationList == null || conversationList.size()==0){
+            if (conversationList == null || conversationList.size() == 0) {
                 return;
             }
             DbCacheUtils.getDb(context).delete(conversationList);
@@ -175,8 +183,8 @@ public class ConversationCacheUtils {
     public static String getConversationType(Context context, String id) {
         String type = "";
         try {
-            Conversation conversation = DbCacheUtils.getDb(context).findById(Conversation.class,id);
-            if (conversation != null){
+            Conversation conversation = DbCacheUtils.getDb(context).findById(Conversation.class, id);
+            if (conversation != null) {
                 type = conversation.getType();
             }
         } catch (Exception e) {
@@ -189,6 +197,7 @@ public class ConversationCacheUtils {
 
     /**
      * 获取所有会话列表
+     *
      * @param context
      * @return
      */
@@ -247,16 +256,44 @@ public class ConversationCacheUtils {
         return conversationList;
     }
 
-    public static void setConversationMember(Context context,String id,List<String> uidList){
-        if (uidList != null){
+    public static void setConversationMember(Context context, String id, List<String> uidList) {
+        if (uidList != null) {
             try {
                 JSONArray array = JSONUtils.toJSONArray(uidList);
-                DbCacheUtils.getDb(context).update(Conversation.class, WhereBuilder.b("id", "=", id),new KeyValue("members",array.toString()));
+                DbCacheUtils.getDb(context).update(Conversation.class, WhereBuilder.b("id", "=", id), new KeyValue("members", array.toString()));
             } catch (Exception e) {
                 // TODO: handle exception
                 e.printStackTrace();
             }
         }
+
+    }
+
+    public static List<SearchModel> getSearchConversationSearchModelList(Context context,
+                                                                         String searchText) {
+        List<Conversation> conversationList = null;
+        if (!StringUtils.isBlank(searchText)) {
+
+            try {
+                String searchStr = "";
+                for (int i = 0; i < searchText.length(); i++) {
+                    if (i < searchText.length() - 1) {
+                        searchStr += "%" + searchText.charAt(i);
+                    } else {
+                        searchStr += "%" + searchText.charAt(i) + "%";
+                    }
+                }
+                conversationList = DbCacheUtils.getDb(context).selector(Conversation.class)
+                        .where("name", "like", searchStr).findAll();
+            } catch (Exception e) {
+                // TODO: handle exception
+                e.printStackTrace();
+            }
+        }
+        if (conversationList == null) {
+            conversationList = new ArrayList<>();
+        }
+        return SearchModel.conversationList2SearchModelList(conversationList);
 
     }
 
