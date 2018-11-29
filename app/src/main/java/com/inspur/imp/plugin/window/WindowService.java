@@ -2,7 +2,6 @@ package com.inspur.imp.plugin.window;
 
 import com.inspur.emmcloud.bean.system.MainTabMenu;
 import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.privates.UriUtils;
 import com.inspur.imp.plugin.ImpPlugin;
 
@@ -47,7 +46,6 @@ public class WindowService extends ImpPlugin {
     }
 
     private void showMenus(JSONObject paramsObject){
-        LogUtils.jasonDebug("paramsObject="+paramsObject.toString());
         List<MainTabMenu> optionMenuList = new ArrayList<>();
         JSONArray array = JSONUtils.getJSONArray(paramsObject,"menus",new JSONArray());
         for (int i=0;i<array.length();i++){
