@@ -35,7 +35,9 @@ import com.inspur.emmcloud.bean.system.MainTabMenu;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppWebConfig;
 import com.inspur.emmcloud.ui.IndexActivity;
+import com.inspur.emmcloud.ui.mine.setting.NetWorkStateDetailActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
+import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ResolutionUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -210,6 +212,7 @@ public class ImpFragment extends Fragment {
         rootView.findViewById(R.id.refresh_text).setOnClickListener(listener);
         rootView.findViewById(R.id.imp_cloud_function1_img).setOnClickListener(listener);
         rootView.findViewById(R.id.imp_cloud_function2_img).setOnClickListener(listener);
+        rootView.findViewById(R.id.load_error_layout).setOnClickListener(listener);
     }
 
     class ImpFragmentClickListener implements View.OnClickListener {
@@ -239,6 +242,9 @@ public class ImpFragment extends Fragment {
                     finishActivity();
                     break;
                 case R.id.refresh_text:
+                    IntentUtils.startActivity(getActivity(), NetWorkStateDetailActivity.class);
+                    break;
+                case R.id.load_error_layout:
                     showLoadingDlg(getString(Res.getStringID("@string/loading_text")));
                     webView.reload();
                     webView.setVisibility(View.INVISIBLE);
