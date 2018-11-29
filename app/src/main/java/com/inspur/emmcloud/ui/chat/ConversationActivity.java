@@ -134,7 +134,6 @@ public class ConversationActivity extends ConversationBaseActivity {
                 switch (msg.what){
                     case REFRESH_HISTORY_MESSAGE:
                         List<UIMessage> historyUIMessageList = (List<UIMessage>) msg.obj;
-                        LogUtils.YfcDebug("走历史消息，消息长度："+historyUIMessageList.size());
                         if(uiMessageList != null && uiMessageList.size() > 0){
                             uiMessageList.addAll(0, historyUIMessageList);
                             adapter.setMessageList(uiMessageList);
@@ -145,7 +144,6 @@ public class ConversationActivity extends ConversationBaseActivity {
                         break;
                     case REFRESH_PUSH_MESSAGE:
                         uiMessageList = (List<UIMessage>) msg.obj;
-                        LogUtils.YfcDebug("走推送消息，消息长度："+uiMessageList.size());
                         adapter.setMessageList(uiMessageList);
                         adapter.notifyDataSetChanged();
                         msgListView.scrollToPosition(uiMessageList.size() - 1);
@@ -153,7 +151,6 @@ public class ConversationActivity extends ConversationBaseActivity {
                         break;
                     case REFRESH_OFFLINE_MESSAGE:
                         List<Message> offlineMessageList = (List<Message>) msg.obj;
-                        LogUtils.YfcDebug("走离线消息，消息长度："+offlineMessageList.size());
                         Iterator<Message> it = offlineMessageList.iterator();
                         //去重
                         if (uiMessageList.size() > 0) {
