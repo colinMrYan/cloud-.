@@ -18,7 +18,7 @@ public class MainTabMenu implements Serializable{
     public MainTabMenu(JSONObject jsonObject){
         this.ico = JSONUtils.getString(jsonObject,"ico","");
         this.action = JSONUtils.getString(jsonObject,"action","");
-        if (jsonObject.has("callback ")){
+        if (jsonObject.has("callback")){
             this.action = JSONUtils.getString(jsonObject,"callback","");
         }
         this.text = JSONUtils.getString(jsonObject,"text","");

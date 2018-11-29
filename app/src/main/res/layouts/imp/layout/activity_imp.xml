@@ -71,20 +71,23 @@
             android:textSize="@dimen/header_textsize" />
         <ImageView
             android:id="@+id/imp_change_font_size_btn"
-            android:layout_width="48dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:clickable="true"
             android:onClick="onClick"
-            android:paddingLeft="12dp"
-            android:paddingRight="15dp"
-            android:scaleType="centerInside"
+            android:paddingLeft="13dp"
+            android:paddingRight="13dp"
+            android:paddingTop="17dp"
+            android:paddingBottom="17dp"
+            android:adjustViewBounds="true"
+            android:scaleType="fitXY"
             android:src="@drawable/ic_header_option"
             android:visibility="gone" />
         <LinearLayout
             android:id="@+id/ll_web_function"
-            android:layout_width="48dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:clickable="true"
             android:background="@color/header_bg"

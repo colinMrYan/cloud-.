@@ -8,10 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -38,8 +35,8 @@ import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppWebConfig;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.common.ResolutionUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppTabUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
@@ -69,7 +66,7 @@ import java.util.Map;
  * Created by yufuchang on 2018/7/9.
  */
 
-public class ImpFragment extends Fragment {
+public class ImpFragment extends ImpBaseFragment {
     private ImpWebView webView;
     // 浏览文件resultCode
     public static final int CAMERA_SERVICE_CAMERA_REQUEST = 1;
@@ -82,11 +79,7 @@ public class ImpFragment extends Fragment {
     public static final int BARCODE_SERVER__SCAN_REQUEST = 8;
     public static final int SELECT_FILE_SERVICE_REQUEST = 9;
     public static final int FILE_CHOOSER_RESULT_CODE = 5173;
-    private static final String JAVASCRIPT_PREFIX = "javascript:";
     private Map<String, String> webViewHeaders;
-    private TextView headerText;
-    private RelativeLayout functionLayout;
-    private LinearLayout webFunctionLayout;
     private LinearLayout loadFailLayout;
     private Button normalBtn, middleBtn, bigBtn, biggestBtn;
     private String appId = "";
@@ -96,7 +89,7 @@ public class ImpFragment extends Fragment {
     private String helpUrl = "";
     private HashMap<String, String> urlTilteMap = new HashMap<>();
     private View rootView;
-    private List<MainTabMenu> optionMenuList;
+
     private String version;
     private ImpFragmentClickListener listener;
     private PopupWindow dropTitlePopupWindow;
@@ -104,8 +97,7 @@ public class ImpFragment extends Fragment {
     private List<DropItemTitle> dropItemTitleList = new ArrayList<>();
     private Adapter dropTitleAdapter;
     private ImpCallBackInterface impCallBackInterface;
-    private int functionLayoutWidth = -1;
-    private int webFunctionLayoutWidth = -1;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -263,81 +255,15 @@ public class ImpFragment extends Fragment {
     }
 
     /**
-     * 配置圈子标题栏上的功能
-     * 最多两个功能，超过两个取前两个
-     */
-    private void initHeaderOptionMenu() {
-        if (optionMenuList != null && optionMenuList.size() != 0) {
-            webFunctionLayout.removeAllViews();
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.MATCH_PARENT);
-            if (optionMenuList.size()<3){
-                for (final MainTabMenu mainTabMenu: optionMenuList){
-                    View.OnClickListener onClickListener = new View.OnClickListener(){
-                        @Override
-                        public void onClick(View v) {
-                            runJavaScript(JAVASCRIPT_PREFIX + mainTabMenu.getAction());
-                        }
-                    };
-                    String text = mainTabMenu.getText();
-                    if (!StringUtils.isBlank(text)){
-                        TextView textView = new TextView(getContext());
-                        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP,16);
-                        int paddingLeft = DensityUtil.dip2px(getContext(),14);
-                        textView.setMinWidth(DensityUtil.dip2px(MyApplication.getInstance(),48));
-                        textView.setPadding(paddingLeft,0,paddingLeft,0);
-                        textView.setText(mainTabMenu.getText());
-                        textView.setOnClickListener(onClickListener);
-                        textView.setLayoutParams(params);
-                        textView.setTextColor(getContext().getResources().getColor(R.color.white));
-                        textView.setGravity(Gravity.CENTER_VERTICAL);
-                        webFunctionLayout.addView(textView);
-                    }else {
-                        ImageView imageView = new ImageView(getContext());
-                        imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-                        imageView.setAdjustViewBounds(true);
-                        int paddingLeft = DensityUtil.dip2px(getContext(),13);
-                        int paddingTop = DensityUtil.dip2px(getContext(),17);
-                        imageView.setPadding(paddingLeft,paddingTop,paddingLeft,paddingTop);
-                        imageView.setOnClickListener(onClickListener);
-                        imageView.setLayoutParams(params);
-                        ImageDisplayUtils.getInstance().displayImage(imageView, mainTabMenu.getIco());
-                        webFunctionLayout.addView(imageView);
-                    }
-                }
-            }else {
-                final ImageView imageView = new ImageView(getContext());
-                imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-                imageView.setAdjustViewBounds(true);
-                int paddingLeft = DensityUtil.dip2px(getContext(),13);
-                int paddingTop = DensityUtil.dip2px(getContext(),17);
-                imageView.setPadding(paddingLeft,paddingTop,paddingLeft,paddingTop);
-                imageView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        showOptionMenu(imageView);
-                    }
-                });
-                imageView.setLayoutParams(params);
-                ImageDisplayUtils.getInstance().displayImage(imageView, "drawable://"+R.drawable.ic_header_option);
-                webFunctionLayout.addView(imageView);
-            }
-            setHeaderTextWidth();
-        }
-    }
-
-    /**
      * 执行JS脚本
      *
      * @param script
      */
-    private void runJavaScript(String script) {
+    protected void runJavaScript(String script) {
         webView.loadUrl(script);
     }
 
 
-    private void showOptionMenu(ImageView anchor){
-
-    }
 
     /**
      * 在WebClient获取header
@@ -379,31 +305,6 @@ public class ImpFragment extends Fragment {
         }
     }
 
-    /**
-     * 动态监控布局变化
-     */
-    private void setHeaderTextWidth() {
-        webFunctionLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                functionLayoutWidth = functionLayout.getWidth();
-                webFunctionLayoutWidth = webFunctionLayout.getWidth();
-                headerText.setMaxWidth(ResolutionUtils.getWidth(getActivity()) - getMaxWidth() * 2);
-            }
-        });
-    }
-
-    /**
-     * 取两个宽度的最大值
-     *
-     * @return
-     */
-    private int getMaxWidth() {
-        if (functionLayoutWidth > webFunctionLayoutWidth) {
-            return functionLayoutWidth;
-        }
-        return webFunctionLayoutWidth;
-    }
 
     private void showDropTitlePop() {
         // 一个自定义的布局，作为显示的内容
@@ -546,7 +447,7 @@ public class ImpFragment extends Fragment {
                 initHeaderOptionMenu();
             }
         };
-        }
+    }
 
     private void setHeaderTitleTextDropImg() {
         boolean isDropTitlePopShow = (dropTitlePopupWindow != null && dropTitlePopupWindow.isShowing());
@@ -589,14 +490,14 @@ public class ImpFragment extends Fragment {
      * 返回
      */
     public boolean goBack() {
+        LogUtils.jasonDebug("webView.canGoBack()="+webView.canGoBack());
         if (webView.canGoBack()) {
             webView.goBack();// 返回上一页面
             setGoBackTitle();
-            return true;
         } else {
             finishActivity();
         }
-        return false;
+        return true;
     }
 
     public void finishActivity() {
@@ -768,7 +669,9 @@ public class ImpFragment extends Fragment {
             webView.destroy();
             webView = null;
         }
+
         impCallBackInterface = null;
+
         //清除掉图片缓存
 //        DataCleanManager.cleanCustomCache(MyAppConfig.LOCAL_IMG_CREATE_PATH);
         super.onDestroy();

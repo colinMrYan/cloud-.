@@ -253,7 +253,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     /**
      * 清除所有的SessionCookie
      */
-    private void removeAllSessionCookie() {
+    public void removeAllSessionCookie() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
             CookieManager.getInstance().removeSessionCookies(null);
             CookieManager.getInstance().flush();

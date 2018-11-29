@@ -3,6 +3,7 @@ package com.inspur.imp.engine.webview;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
@@ -21,6 +22,7 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.appcenter.AppRedirectResult;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.imp.api.ImpCallBackInterface;
@@ -37,16 +39,13 @@ import java.util.Map;
  * @author 浪潮移动应用平台(IMP)产品组
  */
 public class ImpWebViewClient extends WebViewClient {
-    private String urlparam = "";
-    private final String F_UEX_SCRIPT_SELF_FINISH = "javascript:if(window.startWebSocket){window.startWebSocket();}";
     private ImpWebView myWebView;
-    private String errolUrl = "file:///android_asset/error/error.html";
     private LinearLayout loadFailLayout;
     private Handler mHandler = null;
     private Runnable runnable = null;
     private ImpCallBackInterface impCallBackInterface;
 
-    public ImpWebViewClient(LinearLayout loadFailLayout,ImpCallBackInterface impCallBackInterface) {
+    public ImpWebViewClient(LinearLayout loadFailLayout, ImpCallBackInterface impCallBackInterface) {
         this.loadFailLayout = loadFailLayout;
         this.impCallBackInterface = impCallBackInterface;
         handMessage();
@@ -78,32 +77,12 @@ public class ImpWebViewClient extends WebViewClient {
         };
     }
 
-//	private Handler mHandler = new Handler() {
-//
-//		@Override
-//		public void handleMessage(Message msg) {
-//			super.handleMessage(msg);
-//			switch (msg.what) {
-//				case 1:
-//					// 页面加载超时加载错误页面
-//					if (myWebView.getProgress() < 100) {
-//						myWebView.stopLoading();
-//						onReceivedError(myWebView, -6,
-//								"The connection to the server was unsuccessful.",
-//								errolUrl);
-//					}
-//			}
-//		}
-//
-//	};
-
     /*
      * 开始加载网页的操作
      */
     @Override
     public void onPageStarted(WebView view, String url, Bitmap favicon) {
         super.onPageStarted(view, url, favicon);
-        urlparam = url;
         myWebView = (ImpWebView) view;
         if (runnable != null && url.startsWith("http://baoxiao.inspur.com")) {
             mHandler.postDelayed(runnable, 2000);
@@ -119,7 +98,7 @@ public class ImpWebViewClient extends WebViewClient {
             mHandler.removeCallbacks(runnable);
             runnable = null;
         }
-        if(impCallBackInterface != null){
+        if (impCallBackInterface != null) {
             impCallBackInterface.onInitWebViewGoBackOrClose();
         }
         ImpWebView webview = (ImpWebView) view;
@@ -128,22 +107,16 @@ public class ImpWebViewClient extends WebViewClient {
         }
         webview.setVisibility(View.VISIBLE);
         //为了获取网页的html内容
-        String  script = "javascript:window.getContent.onGetHtmlContent("
+        String script = "javascript:window.getContent.onGetHtmlContent("
                 + "document.getElementsByTagName('html')[0].innerHTML" + ");";
-        if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.KITKAT){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             view.evaluateJavascript(script, new ValueCallback<String>() {
                 @Override
                 public void onReceiveValue(String value) {
                 }
             });
-            view.evaluateJavascript(F_UEX_SCRIPT_SELF_FINISH, new ValueCallback<String>() {
-                @Override
-                public void onReceiveValue(String value) {
-                }
-            });
-        }else {
+        } else {
             view.loadUrl(script);
-            webview.loadUrl(F_UEX_SCRIPT_SELF_FINISH);
         }
         String c = CookieManager.getInstance().getCookie(url);
         PreferencesUtils.putString(view.getContext(), "web_cookie", c);
@@ -164,7 +137,7 @@ public class ImpWebViewClient extends WebViewClient {
             mHandler.removeCallbacks(runnable);
             runnable = null;
         }
-        if(impCallBackInterface != null){
+        if (impCallBackInterface != null) {
             impCallBackInterface.onLoadingDlgDimiss();
         }
         loadFailLayout.setVisibility(View.VISIBLE);
@@ -179,28 +152,87 @@ public class ImpWebViewClient extends WebViewClient {
                 mHandler.removeCallbacks(runnable);
                 runnable = null;
             }
-            if(impCallBackInterface != null){
+            if (impCallBackInterface != null) {
                 impCallBackInterface.onLoadingDlgDimiss();
             }
             loadFailLayout.setVisibility(View.VISIBLE);
         }
     }
 
+
     @TargetApi(android.os.Build.VERSION_CODES.LOLLIPOP)
     @Override
-    public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-        return shouldOverrideUrlLoading(view, request.getUrl().toString());
+    public boolean shouldOverrideUrlLoading(WebView view, final WebResourceRequest request) {
+        LogUtils.jasonDebug("shouldOverrideUrlLoading---------------------"+request.getUrl().toString());
+        if (runnable != null) {
+            mHandler.removeCallbacks(runnable);
+            runnable = null;
+        }
+        if (!filterUrl(request.getUrl().toString())){
+            WebResourceRequest newRequest = new WebResourceRequest() {
+                @Override
+                public Uri getUrl() {
+                    return request.getUrl();
+                }
+
+                @Override
+                public boolean isForMainFrame() {
+                    return request.isForMainFrame();
+                }
+
+                @Override
+                public boolean isRedirect() {
+                    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+                        return request.isRedirect();
+                    }
+                    return false;
+                }
+
+                @Override
+                public boolean hasGesture() {
+                    return request.hasGesture();
+                }
+
+                @Override
+                public String getMethod() {
+                    return request.getMethod();
+                }
+
+                @Override
+                public Map<String, String> getRequestHeaders() {
+                    return getWebViewHeaders();
+                }
+            };
+            return super.shouldOverrideUrlLoading(view, newRequest);
+        }
+        return true;
+
+
     }
 
     @SuppressWarnings("deprecation")
     @Override
     public boolean shouldOverrideUrlLoading(WebView view, String url) {
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+            return false;
+        }
         if (runnable != null) {
             mHandler.removeCallbacks(runnable);
             runnable = null;
         }
-        if (url.contains(APIUri.getWebLoginUrl()) || url.contains("https://id.inspur.com/")) {
-            handleReDirectURL(url, view);
+        if (!filterUrl(url)){
+            view.loadUrl(url, getWebViewHeaders());
+        }
+        return  true;
+    }
+
+    /**
+     * 过滤url
+     * @return 是否被过滤掉
+     */
+    private boolean filterUrl(String url){
+        if (url.startsWith(APIUri.getWebLoginUrl()) || url.startsWith("https://id.inspur.com/oauth2.0/authorize")) {
+            handleReDirectURL(url, myWebView);
             return true;
         }
         if (!url.startsWith("http") && !url.startsWith("ftp")) {
@@ -214,8 +246,7 @@ public class ImpWebViewClient extends WebViewClient {
             }
             return true;
         }
-        view.loadUrl(url, getWebViewHeaders());
-        return super.shouldOverrideUrlLoading(view, url);
+        return false;
     }
 
     /**
@@ -224,7 +255,7 @@ public class ImpWebViewClient extends WebViewClient {
      * @return
      */
     private Map<String, String> getWebViewHeaders() {
-        return myWebView == null ? new HashMap<String, String>() : ((impCallBackInterface != null)? impCallBackInterface.onGetWebViewHeaders():new HashMap<String, String>());
+        return myWebView == null ? new HashMap<String, String>() : ((impCallBackInterface != null) ? impCallBackInterface.onGetWebViewHeaders() : new HashMap<String, String>());
     }
 
     /**
