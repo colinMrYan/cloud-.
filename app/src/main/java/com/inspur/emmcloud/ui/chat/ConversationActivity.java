@@ -44,6 +44,7 @@ import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.InputMethodUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
@@ -54,7 +55,7 @@ import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.MessageRecourceUploadUtils;
 import com.inspur.emmcloud.util.privates.UriUtils;
 import com.inspur.emmcloud.util.privates.Voice2StringMessageUtils;
-import com.inspur.emmcloud.util.privates.audioformat.AudioFormatUtils;
+import com.inspur.emmcloud.util.privates.audioformat.AudioMp3ToPcm;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 import com.inspur.emmcloud.widget.ECMChatInputMenu;
@@ -503,14 +504,13 @@ public class ConversationActivity extends ConversationBaseActivity {
                 if (!FileUtils.isFileExist(mp3FileSavePath)) {
                     return;
                 }
-                final String wavFileSavePath = MyAppConfig.getCacheVoiceWAVFilePath(uiMessage.getMessage().getChannel(), uiMessage.getMessage().getId());
+                final String pcmFileSavePath = MyAppConfig.getCacheVoicePCMFilePath(uiMessage.getMessage().getChannel(), uiMessage.getMessage().getId());
 
-                if(!FileUtils.isFileExist(wavFileSavePath)){
-
-                    AudioFormatUtils.Mp3ToWav(mp3FileSavePath, wavFileSavePath, new ResultCallback() {
+                if(!FileUtils.isFileExist(pcmFileSavePath)){
+                    new AudioMp3ToPcm().startMp3ToPCM(mp3FileSavePath,pcmFileSavePath,new ResultCallback() {
                         @Override
                         public void onSuccess() {
-                            voiceToWord(wavFileSavePath,uiMessage,downloadLoadingView);
+                            voiceToWord(pcmFileSavePath,uiMessage,downloadLoadingView);
                         }
 
                         @Override
@@ -519,7 +519,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                         }
                     });
                 }else {
-                    voiceToWord(wavFileSavePath,uiMessage,downloadLoadingView);
+                    voiceToWord(pcmFileSavePath,uiMessage,downloadLoadingView);
                 }
             }
         });
@@ -528,7 +528,6 @@ public class ConversationActivity extends ConversationBaseActivity {
     private void voiceToWord(String filePath, final UIMessage uiMessage, final QMUILoadingView downloadLoadingView) {
         downloadLoadingView.setVisibility(View.VISIBLE);
         Voice2StringMessageUtils voice2StringMessageUtils = new Voice2StringMessageUtils(this);
-        //由于java api影响，mp3只能转化成8K采样率的wav文件
         voice2StringMessageUtils.setAudioSimpleRate(8000);
         voice2StringMessageUtils.setOnVoiceResultCallback(new OnVoiceResultCallback() {
             @Override
@@ -537,6 +536,7 @@ public class ConversationActivity extends ConversationBaseActivity {
 
             @Override
             public void onVoiceResultSuccess(VoiceResult voiceResult, boolean isLast) {
+                LogUtils.jasonDebug("voiceResult="+voiceResult.getResults());
                 Message message = uiMessage.getMessage();
                 MsgContentMediaVoice originMsgContentMediaVoice = message.getMsgContentMediaVoice();
                 if (!voiceResult.getResults().equals(originMsgContentMediaVoice.getResult())) {
@@ -567,6 +567,7 @@ public class ConversationActivity extends ConversationBaseActivity {
 
             @Override
             public void onVoiceResultError(VoiceResult errorResult) {
+                LogUtils.jasonDebug("onVoiceResultError---------");
                 downloadLoadingView.setVisibility(View.GONE);
             }
         });
