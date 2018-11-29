@@ -565,14 +565,14 @@ public class MessageCacheUtil {
     }
 
     /**
-     * 更新本地假消息，把id改成真消息的id，creationDate保持假消息的时间即可
+     * 更新本地假消息，把id改成真消息的id，并把发送状态改为发送成功，creationDate保持假消息的时间即可
      * @param context
      * @param message  真消息
      */
     private static void updateLocalFakeMessage(Context context, Message message) {
         try {
             DbCacheUtils.getDb(context).update(Message.class, WhereBuilder.b("id", "=", message.getTmpId())
-                    ,new KeyValue("id",message.getId()));
+                    ,new KeyValue("id",message.getId()),new KeyValue("sendStatus",Message.MESSAGE_SEND_SUCCESS));
         } catch (Exception e) {
             e.printStackTrace();
         }
