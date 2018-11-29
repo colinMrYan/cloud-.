@@ -7,6 +7,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
+import com.inspur.emmcloud.interf.ResultCallback;
+
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -37,21 +39,17 @@ public class AudioMp3ToPcm {
     private FileOutputStream fos;
     private BufferedOutputStream bos;
     private ArrayList<byte[]> chunkPCMDataContainer;
-    private OnCompleteListener onCompleteListener;
+    private ResultCallback resultCallback;
     private long fileTotalSize;
     private long decodeSize;
     private int  currentSimpleRate=0;
     private int  orderSampleRate=0;
     private boolean codeOver = false;
 
-    public static AudioMp3ToPcm newInstance() {
-        return new AudioMp3ToPcm();
-    }
-
     /**
      *返回pcm数据流
      * */
-    public ArrayList<byte[]>  returnPcmList() {
+    private ArrayList<byte[]>  returnPcmList() {
         return chunkPCMDataContainer;
     }
 
@@ -61,12 +59,20 @@ public class AudioMp3ToPcm {
      * @param dstPath 目标文件路径
      * @param sampleRate  要求采样率(仅支持16k, )
      */
-    public void setIOPath(String srcPath, String dstPath,OnCompleteListener onCompleteListener,int sampleRate) {
+    public void startMp3ToPCm(String srcPath, String dstPath,ResultCallback onCompleteListener,int sampleRate) {
         this.srcPath=srcPath;
         this.dstPath=dstPath;
         this.orderSampleRate =sampleRate;
-        this.onCompleteListener=onCompleteListener;
-        prepare();
+        this.resultCallback=onCompleteListener;
+        File file = new File(srcPath);
+        fileTotalSize=file.length();
+        chunkPCMDataContainer= new ArrayList<>();
+        Boolean isIniDecodeSuccess  =initMediaDecode();//解码器
+        if(isIniDecodeSuccess) {
+            startAsync();
+        } else {
+            callbackError();
+        }
     }
 
     /**
@@ -74,32 +80,26 @@ public class AudioMp3ToPcm {
      * @param srcPath
      * @param dstPath
      */
-    public void setIOPath(String srcPath, String dstPath,OnCompleteListener onCompleteListener) {
+    public void startMp3Topcm(String srcPath, String dstPath,ResultCallback onCompleteListener) {
         this.srcPath=srcPath;
         this.dstPath=dstPath;
-        this.onCompleteListener=onCompleteListener;
-        prepare();
-    }
-
-    /**
-     * 此类已经过封装
-     * 调用prepare方法 会初始化Decode 、输入输出流 等一些列操作
-     */
-    private void prepare() {
-        try {
+        this.resultCallback=onCompleteListener;
             File file = new File(srcPath);
             fileTotalSize=file.length();
             chunkPCMDataContainer= new ArrayList<>();
-            initMediaDecode();//解码器
-        } catch (Exception e ) {
-            e.printStackTrace();
-        }
+            Boolean iniDecodeState  =initMediaDecode();//解码器
+           if(iniDecodeState) {
+               startAsync();
+           } else {
+               callbackError();
+           }
     }
+
 
     /**
      * 初始化解码器
      */
-    private void initMediaDecode() {
+    private boolean initMediaDecode() {
         try {
             mediaExtractor=new MediaExtractor();//此类可分离视频文件的音轨和视频轨道
             mediaExtractor.setDataSource(srcPath);
@@ -116,14 +116,16 @@ public class AudioMp3ToPcm {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
         if (mediaDecode == null) {
-            return;
+            return false;
         }
         mediaDecode.start();
         decodeInputBuffers=mediaDecode.getInputBuffers();//MediaCodec在此ByteBuffer[]中获取输入数据
         decodeOutputBuffers=mediaDecode.getOutputBuffers();//MediaCodec将解码后的数据放到此ByteBuffer[]中 我们可以直接在这里面得到PCM数据
         decodeBufferInfo=new MediaCodec.BufferInfo();//用于描述解码得到的byte[]数据的相关信息
+         return  true;
     }
 
     /**
@@ -131,7 +133,7 @@ public class AudioMp3ToPcm {
      * 音频数据{@link #srcPath}先解码成PCM  PCM数据在编码成想要得到的{@link}音频格式
      * mp3->PCM->aac
      */
-    public void startAsync() {
+    private void startAsync() {
         new Thread(new DecodeRunnable()).start();
     }
 
@@ -226,8 +228,8 @@ public class AudioMp3ToPcm {
             mediaExtractor.release();
             mediaExtractor=null;
         }
-        if (onCompleteListener != null) {
-            onCompleteListener=null;
+        if (resultCallback != null) {
+            resultCallback=null;
         }
     }
 
@@ -242,9 +244,9 @@ public class AudioMp3ToPcm {
             }
             try {
                 saveFile(returnPcmList(),dstPath,currentSimpleRate);
-                ReturnSuccess(dstPath);
+                callbackSuccess();
             } catch (Exception e ){
-                ReturnError(e);
+                callbackError();
             }
         }
     }
@@ -255,8 +257,7 @@ public class AudioMp3ToPcm {
      * @param fileName
      * @param pcdata
      * */
-    private void saveFile(ArrayList<byte[]> pcdata , String fileName,int CurrentSimpleRate) {
-        try {
+    private void saveFile(ArrayList<byte[]> pcdata , String fileName,int CurrentSimpleRate)throws Exception {
             File file = new File(fileName);
             if (file.exists()) {
                 file.delete();
@@ -271,28 +272,17 @@ public class AudioMp3ToPcm {
                 }
             }
             outStream.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * 转码完成回调接口
-     */
-    public interface OnCompleteListener{
-       void returnSuccess(String path);
-        void returnError(Exception Error);
     }
 
     /**
      * 错误返回
      * */
-    private  void  ReturnError(final Exception Error) {
-        if (onCompleteListener != null) {
+    private  void  callbackError() {
+        if (resultCallback != null) {
             new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
                 public void run() {
-                    onCompleteListener.returnError(Error);
+                    resultCallback.onFail();
                     release();
                 }
             });
@@ -302,12 +292,12 @@ public class AudioMp3ToPcm {
     /**
      * 成功返回
      * */
-    private  void  ReturnSuccess(final String path) {
-        if (onCompleteListener != null) {
+    private  void  callbackSuccess() {
+        if (resultCallback != null) {
             new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
                 public void run() {
-                    onCompleteListener.returnSuccess(path);
+                    resultCallback.onSuccess();
                     release();
                 }
             });
