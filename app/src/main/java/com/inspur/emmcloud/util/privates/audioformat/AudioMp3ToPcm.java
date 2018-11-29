@@ -7,6 +7,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
+import com.inspur.emmcloud.interf.ResultCallback;
+
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -37,7 +39,7 @@ public class AudioMp3ToPcm {
     private FileOutputStream fos;
     private BufferedOutputStream bos;
     private ArrayList<byte[]> chunkPCMDataContainer;
-    private OnCompleteListener onCompleteListener;
+    private ResultCallback resultCallback;
     private long fileTotalSize;
     private long decodeSize;
     private int  currentSimpleRate=0;
@@ -57,19 +59,19 @@ public class AudioMp3ToPcm {
      * @param dstPath 目标文件路径
      * @param sampleRate  要求采样率(仅支持16k, )
      */
-    public void startMp3ToPCm(String srcPath, String dstPath,OnCompleteListener onCompleteListener,int sampleRate) {
+    public void startMp3ToPCm(String srcPath, String dstPath,ResultCallback onCompleteListener,int sampleRate) {
         this.srcPath=srcPath;
         this.dstPath=dstPath;
         this.orderSampleRate =sampleRate;
-        this.onCompleteListener=onCompleteListener;
+        this.resultCallback=onCompleteListener;
         File file = new File(srcPath);
         fileTotalSize=file.length();
         chunkPCMDataContainer= new ArrayList<>();
-        Boolean iniDecodeState  =initMediaDecode();//解码器
-        if(iniDecodeState) {
+        Boolean isIniDecodeSuccess  =initMediaDecode();//解码器
+        if(isIniDecodeSuccess) {
             startAsync();
         } else {
-            ReturnError("iniDecodeState Error");
+            returnError();
         }
     }
 
@@ -78,10 +80,10 @@ public class AudioMp3ToPcm {
      * @param srcPath
      * @param dstPath
      */
-    public void startMp3Topcm(String srcPath, String dstPath,OnCompleteListener onCompleteListener) {
+    public void startMp3Topcm(String srcPath, String dstPath,ResultCallback onCompleteListener) {
         this.srcPath=srcPath;
         this.dstPath=dstPath;
-        this.onCompleteListener=onCompleteListener;
+        this.resultCallback=onCompleteListener;
             File file = new File(srcPath);
             fileTotalSize=file.length();
             chunkPCMDataContainer= new ArrayList<>();
@@ -89,7 +91,7 @@ public class AudioMp3ToPcm {
            if(iniDecodeState) {
                startAsync();
            } else {
-               ReturnError("iniDecodeState Error");
+               returnError();
            }
     }
 
@@ -226,8 +228,8 @@ public class AudioMp3ToPcm {
             mediaExtractor.release();
             mediaExtractor=null;
         }
-        if (onCompleteListener != null) {
-            onCompleteListener=null;
+        if (resultCallback != null) {
+            resultCallback=null;
         }
     }
 
@@ -242,9 +244,9 @@ public class AudioMp3ToPcm {
             }
             try {
                 saveFile(returnPcmList(),dstPath,currentSimpleRate);
-                ReturnSuccess(dstPath);
+                returnSuccess();
             } catch (Exception e ){
-                ReturnError(e.getMessage());
+                returnError();
             }
         }
     }
@@ -255,7 +257,7 @@ public class AudioMp3ToPcm {
      * @param fileName
      * @param pcdata
      * */
-    private void saveFile(ArrayList<byte[]> pcdata , String fileName,int CurrentSimpleRate) {
+    private void saveFile(ArrayList<byte[]> pcdata , String fileName,int CurrentSimpleRate)throws Exception {
         try {
             File file = new File(fileName);
             if (file.exists()) {
@@ -277,22 +279,14 @@ public class AudioMp3ToPcm {
     }
 
     /**
-     * 转码完成回调接口
-     */
-    public interface OnCompleteListener{
-       void returnSuccess(String path);
-        void returnError(String Error);
-    }
-
-    /**
      * 错误返回
      * */
-    private  void  ReturnError(final String Error) {
-        if (onCompleteListener != null) {
+    private  void  returnError() {
+        if (resultCallback != null) {
             new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
                 public void run() {
-                    onCompleteListener.returnError(Error);
+                    resultCallback.onFail();
                     release();
                 }
             });
@@ -302,12 +296,12 @@ public class AudioMp3ToPcm {
     /**
      * 成功返回
      * */
-    private  void  ReturnSuccess(final String path) {
-        if (onCompleteListener != null) {
+    private  void  returnSuccess() {
+        if (resultCallback != null) {
             new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
                 public void run() {
-                    onCompleteListener.returnSuccess(path);
+                    resultCallback.onSuccess();
                     release();
                 }
             });
