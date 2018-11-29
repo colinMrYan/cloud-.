@@ -16,7 +16,6 @@ import com.inspur.emmcloud.bean.chat.Channel;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
 import com.inspur.emmcloud.bean.chat.Msg;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
-import com.inspur.emmcloud.util.common.LogUtils;
 
 import org.xutils.DbManager;
 import org.xutils.x;
@@ -110,8 +109,8 @@ public class DbCacheUtils {
                                 db.execNonQuery("DROP TABLE IF EXISTS MessageMatheSet");
                             }
                             if(oldVersion<15){
-                                db.execNonQuery("ALTER TABLE Message ADD COLUMN sendStatus INTEGER");
-                                db.execNonQuery("ALTER TABLE Message ADD COLUMN localPath TEXT");
+                                db.execNonQuery("ALTER TABLE Message ADD COLUMN sendStatus INTEGER DEFAULT 1");
+                                db.execNonQuery("ALTER TABLE Message ADD COLUMN localPath TEXT DEFAULT ''");
                             }
                         } catch (Exception e) {
                             e.printStackTrace();

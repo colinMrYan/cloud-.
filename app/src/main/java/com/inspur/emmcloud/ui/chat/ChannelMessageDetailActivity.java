@@ -328,11 +328,9 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
      */
     private void handleUnSendMessage(Message message, int status) {
         //发送中，无网,发送消息失败
-        if(status == Message.MESSAGE_SEND_FAIL || (status == Message.MESSAGE_SEND_ING && !NetUtils.isNetworkConnected(ChannelMessageDetailActivity.this))){
-            message.setSendStatus(Message.MESSAGE_SEND_FAIL);
-            message.setRead(Message.MESSAGE_READ);
-            MessageCacheUtil.saveMessage(ChannelMessageDetailActivity.this,message);
-        }
+        message.setSendStatus(status);
+        message.setRead(Message.MESSAGE_READ);
+        MessageCacheUtil.saveMessage(ChannelMessageDetailActivity.this,message);
     }
 
 

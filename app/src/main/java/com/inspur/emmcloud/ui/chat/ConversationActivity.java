@@ -94,8 +94,9 @@ public class ConversationActivity extends ConversationBaseActivity {
     private static final int REQUEST_CAMERA = 3;
     private static final int RQQUEST_CHOOSE_FILE = 4;
     private static final int REQUEST_MENTIONS = 5;
+
     private static final int REFRESH_HISTORY_MESSAGE = 6;
-    private static final int REFRESH_NEW_MESSAGE = 7;
+    private static final int REFRESH_PUSH_MESSAGE = 7;
     private static final int REFRESH_OFFLINE_MESSAGE = 8;
     @ViewInject(R.id.msg_list)
     private RecycleViewForSizeChange msgListView;
@@ -132,19 +133,17 @@ public class ConversationActivity extends ConversationBaseActivity {
             public void handleMessage(android.os.Message msg) {
                 switch (msg.what){
                     case REFRESH_HISTORY_MESSAGE:
-                        List<Message> historyMessageList = MessageCacheUtil.getHistoryMessageList(MyApplication.getInstance(), cid, uiMessageList.get(0).getMessage().getCreationDate(), 20);
+                        List<UIMessage> historyUIMessageList = (List<UIMessage>) msg.obj;
                         if(uiMessageList != null && uiMessageList.size() > 0){
-                            uiMessageList.addAll(0, UIMessage.MessageList2UIMessageList
-                                    (MessageCacheUtil.getHistoryMessageList(MyApplication.getInstance(), cid, uiMessageList.get(0).getMessage().getCreationDate(), 20)));
+                            uiMessageList.addAll(0, historyUIMessageList);
                             adapter.setMessageList(uiMessageList);
-                            adapter.notifyItemRangeInserted(0, historyMessageList.size());
-                            msgListView.scrollToPosition(historyMessageList.size() - 1);
+                            adapter.notifyItemRangeInserted(0, historyUIMessageList.size());
+                            msgListView.scrollToPosition(historyUIMessageList.size() - 1);
                         }
                         swipeRefreshLayout.setRefreshing(false);
                         break;
-                    case REFRESH_NEW_MESSAGE:
-                        final List<Message> cacheMessageList = MessageCacheUtil.getHistoryMessageList(MyApplication.getInstance(), cid, null, 20);
-                        uiMessageList = UIMessage.MessageList2UIMessageList(cacheMessageList);
+                    case REFRESH_PUSH_MESSAGE:
+                        uiMessageList = (List<UIMessage>) msg.obj;
                         adapter.setMessageList(uiMessageList);
                         adapter.notifyDataSetChanged();
                         msgListView.scrollToPosition(uiMessageList.size() - 1);
@@ -892,9 +891,9 @@ public class ConversationActivity extends ConversationBaseActivity {
         }
         message.setRead(Message.MESSAGE_READ);
         UIMessage UIMessage = new UIMessage(message);
-        boolean isSendFail = handleUnSendMessage(message,status);
+        handleUnSendMessage(message,status);
         //本地添加的消息设置为正在发送状态
-        UIMessage.setSendStatus(isSendFail?Message.MESSAGE_SEND_FAIL:status);
+        UIMessage.setSendStatus(status);
         uiMessageList.add(UIMessage);
         adapter.setMessageList(uiMessageList);
         adapter.notifyItemInserted(uiMessageList.size() - 1);
@@ -907,16 +906,12 @@ public class ConversationActivity extends ConversationBaseActivity {
      * @param status
      * @return
      */
-    private boolean handleUnSendMessage(Message message, int status) {
+    private void handleUnSendMessage(Message message, int status) {
         //发送中，无网,发送消息失败
-        if(status == Message.MESSAGE_SEND_FAIL || (status == Message.MESSAGE_SEND_ING && !NetUtils.isNetworkConnected(ConversationActivity.this,false))){
-            message.setSendStatus(Message.MESSAGE_SEND_FAIL);
-            message.setRead(Message.MESSAGE_READ);
-            MessageCacheUtil.saveMessage(ConversationActivity.this,message);
-            notifyCommucationFragmentMessageSendStatus();
-            return true;
-        }
-        return false;
+        message.setSendStatus(status);
+        message.setRead(Message.MESSAGE_READ);
+        MessageCacheUtil.saveMessage(ConversationActivity.this,message);
+        notifyCommucationFragmentMessageSendStatus();
     }
 
     private void notifyCommucationFragmentMessageSendStatus(){
@@ -1117,11 +1112,11 @@ public class ConversationActivity extends ConversationBaseActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceivePushMessage(EventMessage eventMessage) {
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_GET_NEW_MESSAGE) && eventMessage.getExtra().equals(cid)) {
-            if (eventMessage.getStatus() == 200) {
+            if (eventMessage.getStatus() == EventMessage.RESULT_OK) {
                 String content = eventMessage.getContent();
                 GetChannelMessagesResult getChannelMessagesResult = new GetChannelMessagesResult(content);
                 final List<Message> newMessageList = getChannelMessagesResult.getMessageList();
-                new CacheMessageListThread(newMessageList,null,REFRESH_NEW_MESSAGE).start();
+                new CacheMessageListThread(newMessageList,null, REFRESH_PUSH_MESSAGE).start();
             }
         }
     }
@@ -1152,7 +1147,7 @@ public class ConversationActivity extends ConversationBaseActivity {
 
     //接收到从沟通页面传来的离线消息，如断网联网时会触发此方法
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReiceveWSOfflineMessage(SimpleEventMessage eventMessage) {
+    public void onReceiveWSOfflineMessage(SimpleEventMessage eventMessage) {
         if (eventMessage.getAction().equals(Constant.EVENTBUS_TAG_CURRENT_CHANNEL_OFFLINE_MESSAGE)) {
             List<Message> offlineMessageList = (List<Message>) eventMessage.getMessageObj();
             new CacheMessageListThread(offlineMessageList,null,REFRESH_OFFLINE_MESSAGE).start();
@@ -1185,7 +1180,22 @@ public class ConversationActivity extends ConversationBaseActivity {
                 MessageCacheUtil.handleRealMessage(MyApplication.getInstance(),messageList,targetTime,cid,false);
             }
             if (handler != null) {
-                android.os.Message message = handler.obtainMessage(refreshType, messageList);
+                android.os.Message message = null;
+                switch (refreshType){
+                case REFRESH_HISTORY_MESSAGE:
+                    List<Message> historyMessageList = MessageCacheUtil.getHistoryMessageList(MyApplication.getInstance(), cid, uiMessageList.get(0).getMessage().getCreationDate(), 20);
+                    List<UIMessage> historyUIMessageList = UIMessage.MessageList2UIMessageList(historyMessageList);
+                    message = handler.obtainMessage(refreshType, historyUIMessageList);
+                    break;
+                case REFRESH_PUSH_MESSAGE:
+                    List<Message> cacheMessageList = MessageCacheUtil.getHistoryMessageList(MyApplication.getInstance(), cid, null, 20);
+                    List<UIMessage> newUIMessageList = UIMessage.MessageList2UIMessageList(cacheMessageList);
+                    message = handler.obtainMessage(refreshType, newUIMessageList);
+                    break;
+                case REFRESH_OFFLINE_MESSAGE:
+                    message = handler.obtainMessage(refreshType, messageList);
+                    break;
+                }
                 message.sendToTarget();
             }
         }
