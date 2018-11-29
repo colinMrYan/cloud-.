@@ -893,9 +893,9 @@ public class ConversationActivity extends ConversationBaseActivity {
         }
         message.setRead(Message.MESSAGE_READ);
         UIMessage UIMessage = new UIMessage(message);
-        boolean isSendFail = handleUnSendMessage(message,status);
+        handleUnSendMessage(message,status);
         //本地添加的消息设置为正在发送状态
-        UIMessage.setSendStatus(isSendFail?Message.MESSAGE_SEND_FAIL:status);
+        UIMessage.setSendStatus(status);
         uiMessageList.add(UIMessage);
         adapter.setMessageList(uiMessageList);
         adapter.notifyItemInserted(uiMessageList.size() - 1);
@@ -908,16 +908,12 @@ public class ConversationActivity extends ConversationBaseActivity {
      * @param status
      * @return
      */
-    private boolean handleUnSendMessage(Message message, int status) {
+    private void handleUnSendMessage(Message message, int status) {
         //发送中，无网,发送消息失败
-        if(status == Message.MESSAGE_SEND_FAIL || (status == Message.MESSAGE_SEND_ING && !NetUtils.isNetworkConnected(ConversationActivity.this,false))){
-            message.setSendStatus(Message.MESSAGE_SEND_FAIL);
-            message.setRead(Message.MESSAGE_READ);
-            MessageCacheUtil.saveMessage(ConversationActivity.this,message);
-            notifyCommucationFragmentMessageSendStatus();
-            return true;
-        }
-        return false;
+        message.setSendStatus(status);
+        message.setRead(Message.MESSAGE_READ);
+        MessageCacheUtil.saveMessage(ConversationActivity.this,message);
+        notifyCommucationFragmentMessageSendStatus();
     }
 
     private void notifyCommucationFragmentMessageSendStatus(){
