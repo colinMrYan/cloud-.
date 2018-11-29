@@ -37,10 +37,10 @@ public class ConbineMsg {
         imgHeight = bitmapImg.getHeight();
         imgWidth = bitmapImg.getWidth();
         bitmapImg.recycle();
-        if (imgHeight > MyAppConfig.UPLOAD_ORIGIN_IMG_MAX_SIZE || imgWidth > MyAppConfig.UPLOAD_ORIGIN_IMG_MAX_SIZE) {
+        if (imgHeight > MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE || imgWidth > MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE) {
             String fileName = System.currentTimeMillis() + ".jpg";
             try {
-                new Compressor(MyApplication.getInstance()).setMaxWidth(MyAppConfig.UPLOAD_ORIGIN_IMG_MAX_SIZE).setMaxHeight(MyAppConfig.UPLOAD_ORIGIN_IMG_MAX_SIZE).setQuality(90).setDestinationDirectoryPath(MyAppConfig.LOCAL_CACHE_PATH).compressToFile(new File(filePath), fileName);
+                new Compressor(MyApplication.getInstance()).setMaxWidth(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setMaxHeight(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setQuality(90).setDestinationDirectoryPath(MyAppConfig.LOCAL_CACHE_PATH).compressToFile(new File(filePath), fileName);
                 filePath = MyAppConfig.LOCAL_CACHE_PATH + fileName;
             } catch (Exception e) {
                 e.printStackTrace();
