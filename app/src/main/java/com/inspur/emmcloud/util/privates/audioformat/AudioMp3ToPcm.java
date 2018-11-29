@@ -140,7 +140,7 @@ public class AudioMp3ToPcm {
      * @param pcmChunk PCM数据块
      */
     private void putPCMData(byte[] pcmChunk) {
-        synchronized (AudioMp3ToPcm.class) {//记得加锁
+        synchronized (this) {//记得加锁
             chunkPCMDataContainer.add(pcmChunk);
         }
     }
