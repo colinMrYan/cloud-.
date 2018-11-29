@@ -71,7 +71,7 @@ public class AudioMp3ToPcm {
         if(isIniDecodeSuccess) {
             startAsync();
         } else {
-            returnError();
+            callbackError();
         }
     }
 
@@ -91,7 +91,7 @@ public class AudioMp3ToPcm {
            if(iniDecodeState) {
                startAsync();
            } else {
-               returnError();
+               callbackError();
            }
     }
 
@@ -244,9 +244,9 @@ public class AudioMp3ToPcm {
             }
             try {
                 saveFile(returnPcmList(),dstPath,currentSimpleRate);
-                returnSuccess();
+                callbackSuccess();
             } catch (Exception e ){
-                returnError();
+                callbackError();
             }
         }
     }
@@ -258,7 +258,6 @@ public class AudioMp3ToPcm {
      * @param pcdata
      * */
     private void saveFile(ArrayList<byte[]> pcdata , String fileName,int CurrentSimpleRate)throws Exception {
-        try {
             File file = new File(fileName);
             if (file.exists()) {
                 file.delete();
@@ -273,15 +272,12 @@ public class AudioMp3ToPcm {
                 }
             }
             outStream.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     /**
      * 错误返回
      * */
-    private  void  returnError() {
+    private  void  callbackError() {
         if (resultCallback != null) {
             new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
@@ -296,7 +292,7 @@ public class AudioMp3ToPcm {
     /**
      * 成功返回
      * */
-    private  void  returnSuccess() {
+    private  void  callbackSuccess() {
         if (resultCallback != null) {
             new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
