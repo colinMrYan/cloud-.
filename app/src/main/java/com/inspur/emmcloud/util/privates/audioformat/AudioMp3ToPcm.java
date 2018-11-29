@@ -44,14 +44,10 @@ public class AudioMp3ToPcm {
     private int  orderSampleRate=0;
     private boolean codeOver = false;
 
-    public static AudioMp3ToPcm newInstance() {
-        return new AudioMp3ToPcm();
-    }
-
     /**
      *返回pcm数据流
      * */
-    public ArrayList<byte[]>  returnPcmList() {
+    private ArrayList<byte[]>  returnPcmList() {
         return chunkPCMDataContainer;
     }
 
@@ -61,12 +57,13 @@ public class AudioMp3ToPcm {
      * @param dstPath 目标文件路径
      * @param sampleRate  要求采样率(仅支持16k, )
      */
-    public void setIOPath(String srcPath, String dstPath,OnCompleteListener onCompleteListener,int sampleRate) {
+    public void startMp3ToPCm(String srcPath, String dstPath,OnCompleteListener onCompleteListener,int sampleRate) {
         this.srcPath=srcPath;
         this.dstPath=dstPath;
         this.orderSampleRate =sampleRate;
         this.onCompleteListener=onCompleteListener;
         prepare();
+        startAsync();
     }
 
     /**
@@ -74,11 +71,12 @@ public class AudioMp3ToPcm {
      * @param srcPath
      * @param dstPath
      */
-    public void setIOPath(String srcPath, String dstPath,OnCompleteListener onCompleteListener) {
+    public void startMp3Topcm(String srcPath, String dstPath,OnCompleteListener onCompleteListener) {
         this.srcPath=srcPath;
         this.dstPath=dstPath;
         this.onCompleteListener=onCompleteListener;
         prepare();
+        startAsync();
     }
 
     /**
@@ -131,7 +129,7 @@ public class AudioMp3ToPcm {
      * 音频数据{@link #srcPath}先解码成PCM  PCM数据在编码成想要得到的{@link}音频格式
      * mp3->PCM->aac
      */
-    public void startAsync() {
+    private void startAsync() {
         new Thread(new DecodeRunnable()).start();
     }
 
