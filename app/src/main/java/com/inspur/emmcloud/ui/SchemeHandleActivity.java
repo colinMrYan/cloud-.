@@ -447,6 +447,9 @@ public class SchemeHandleActivity extends Activity {
                 bundle.putString("installUri",installUri);
                 IntentUtils.startActivity(SchemeHandleActivity.this, WebexMyMeetingActivity.class,bundle,true);
                 break;
+            default:
+                finish();
+                break;
         }
     }
 
