@@ -62,8 +62,15 @@ public class AudioMp3ToPcm {
         this.dstPath=dstPath;
         this.orderSampleRate =sampleRate;
         this.onCompleteListener=onCompleteListener;
-        prepare();
-        startAsync();
+        File file = new File(srcPath);
+        fileTotalSize=file.length();
+        chunkPCMDataContainer= new ArrayList<>();
+        Boolean iniDecodeState  =initMediaDecode();//解码器
+        if(iniDecodeState) {
+            startAsync();
+        } else {
+            ReturnError("iniDecodeState Error");
+        }
     }
 
     /**
@@ -75,29 +82,22 @@ public class AudioMp3ToPcm {
         this.srcPath=srcPath;
         this.dstPath=dstPath;
         this.onCompleteListener=onCompleteListener;
-        prepare();
-        startAsync();
-    }
-
-    /**
-     * 此类已经过封装
-     * 调用prepare方法 会初始化Decode 、输入输出流 等一些列操作
-     */
-    private void prepare() {
-        try {
             File file = new File(srcPath);
             fileTotalSize=file.length();
             chunkPCMDataContainer= new ArrayList<>();
-            initMediaDecode();//解码器
-        } catch (Exception e ) {
-            e.printStackTrace();
-        }
+            Boolean iniDecodeState  =initMediaDecode();//解码器
+           if(iniDecodeState) {
+               startAsync();
+           } else {
+               ReturnError("iniDecodeState Error");
+           }
     }
+
 
     /**
      * 初始化解码器
      */
-    private void initMediaDecode() {
+    private boolean initMediaDecode() {
         try {
             mediaExtractor=new MediaExtractor();//此类可分离视频文件的音轨和视频轨道
             mediaExtractor.setDataSource(srcPath);
@@ -114,14 +114,16 @@ public class AudioMp3ToPcm {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
         if (mediaDecode == null) {
-            return;
+            return false;
         }
         mediaDecode.start();
         decodeInputBuffers=mediaDecode.getInputBuffers();//MediaCodec在此ByteBuffer[]中获取输入数据
         decodeOutputBuffers=mediaDecode.getOutputBuffers();//MediaCodec将解码后的数据放到此ByteBuffer[]中 我们可以直接在这里面得到PCM数据
         decodeBufferInfo=new MediaCodec.BufferInfo();//用于描述解码得到的byte[]数据的相关信息
+         return  true;
     }
 
     /**
@@ -242,7 +244,7 @@ public class AudioMp3ToPcm {
                 saveFile(returnPcmList(),dstPath,currentSimpleRate);
                 ReturnSuccess(dstPath);
             } catch (Exception e ){
-                ReturnError(e);
+                ReturnError(e.getMessage());
             }
         }
     }
@@ -279,13 +281,13 @@ public class AudioMp3ToPcm {
      */
     public interface OnCompleteListener{
        void returnSuccess(String path);
-        void returnError(Exception Error);
+        void returnError(String Error);
     }
 
     /**
      * 错误返回
      * */
-    private  void  ReturnError(final Exception Error) {
+    private  void  ReturnError(final String Error) {
         if (onCompleteListener != null) {
             new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
