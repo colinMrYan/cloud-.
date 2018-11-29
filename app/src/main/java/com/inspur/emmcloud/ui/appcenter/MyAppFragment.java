@@ -54,6 +54,7 @@ import com.inspur.emmcloud.bean.system.ClientConfigItem;
 import com.inspur.emmcloud.bean.system.GetAllConfigVersionResult;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
+import com.inspur.emmcloud.broadcastreceiver.NetworkChangeReceiver;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.interf.OnRecommendAppWidgetItemClickListener;
 import com.inspur.emmcloud.ui.mine.setting.NetWorkStateDetailActivity;
@@ -384,11 +385,11 @@ public class MyAppFragment extends Fragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void netWorkStateHint(SimpleEventMessage netState) {
         if(netState.getAction().equals(Constant.EVENTBUS_TAG__NET_STATE_CHANGE)){
-            if(((String)netState.getMessageObj()).equals("net_wifi_state_ok")){
+            if(((String)netState.getMessageObj()).equals(NetworkChangeReceiver.NET_WIFI_STATE_OK)){
                 NetUtils.PingThreadStart("www.baidu.com",5);
-            } else if(((String)netState.getMessageObj()).equals("net_state_error")) {
+            } else if(((String)netState.getMessageObj()).equals(NetworkChangeReceiver.NET_STATE_ERROR)) {
                 AddHeaderView();
-            } else if (((String)netState.getMessageObj()).equals("net_gprs_state_ok")) {
+            } else if (((String)netState.getMessageObj()).equals(NetworkChangeReceiver.NET_GPRS_STATE_OK)) {
                 DeleteHeaderView();
             }
         } else if (netState.getAction().equals(Constant.EVENTBUS_TAG__NET_EXCEPTION_HINT)) {   //网络异常提示

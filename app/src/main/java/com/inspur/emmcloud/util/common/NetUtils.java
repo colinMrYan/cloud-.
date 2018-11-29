@@ -118,6 +118,14 @@ public class NetUtils {
 		return networkInfo == null ? -1 : networkInfo.getType();
 	}
 
+	public static NetworkInfo.State getNetworkMobileState(Context context) {
+		ConnectivityManager connectivityManager = (ConnectivityManager) context
+				.getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo.State mobile = connectivityManager.getNetworkInfo(
+				ConnectivityManager.TYPE_MOBILE).getState();
+			return mobile;
+	}
+
 	/**
 	 * Get network type name
 	 * 
