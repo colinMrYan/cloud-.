@@ -44,6 +44,10 @@ public class AudioMp3ToPcm {
     private int  orderSampleRate=0;
     private boolean codeOver = false;
 
+    public static AudioMp3ToPcm newInstance() {
+        return new AudioMp3ToPcm();
+    }
+
     /**
      *返回pcm数据流
      * */
@@ -136,7 +140,7 @@ public class AudioMp3ToPcm {
      * @param pcmChunk PCM数据块
      */
     private void putPCMData(byte[] pcmChunk) {
-        synchronized (this) {//记得加锁
+        synchronized (AudioMp3ToPcm.class) {//记得加锁
             chunkPCMDataContainer.add(pcmChunk);
         }
     }
