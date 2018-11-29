@@ -51,6 +51,13 @@ public class NetWorkStateDetailActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_network_state_detail);
         iniView();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        PortalUrl = "";
+        setShowDnsconnctstateUI(true);
         checkingNet();
     }
 
@@ -88,7 +95,7 @@ public class NetWorkStateDetailActivity extends BaseActivity {
             findViewById(R.id.iv_ping_baidu_state).setBackground(drawableDomainError);
             findViewById(R.id.iv_ping_inspur_state).setBackground(drawableDomainError);
             findViewById(R.id.iv_ping_ali_state).setBackground(drawableDomainError);
-            setShowDnsconnctstateUI();
+            setShowDnsconnctstateUI(false);
         }
     }
 
@@ -108,7 +115,7 @@ public class NetWorkStateDetailActivity extends BaseActivity {
                         findViewById(R.id.iv_ping_baidu_state).setBackground(resultData.get(0)?drawableDomainSuccess:drawableDomainError);
                         findViewById(R.id.iv_ping_inspur_state).setBackground(resultData.get(1)?drawableDomainSuccess:drawableDomainError);
                         findViewById(R.id.iv_ping_ali_state).setBackground(resultData.get(2)?drawableDomainSuccess:drawableDomainError);
-                        setShowDnsconnctstateUI();
+                        setShowDnsconnctstateUI(false);
                         break;
                     default:
                         break;
@@ -168,7 +175,7 @@ public class NetWorkStateDetailActivity extends BaseActivity {
         String returnUrl=bundleata.get(1);
         PortalUrl="";
         if(!StringUtils.isBlank(httpNetStateNum)){
-            if(-1!=httpNetStateNum.indexOf("NETWORK 30")) {
+            if(-1!=httpNetStateNum.indexOf("NETWORK 30")&&-1!=returnUrl.indexOf("&firsturl")) {
                 PortalUrl = returnUrl.substring(0,returnUrl.indexOf("&firsturl"));
                 return false;
             }else {
@@ -218,14 +225,20 @@ public class NetWorkStateDetailActivity extends BaseActivity {
 
     /**
      * 加载ViewGONE，改为状态view VISIABLE
+     * @param iniState true 初始化时loading显示状态imageview消失，false 相反
      * */
-    private void setShowDnsconnctstateUI(){
-        findViewById(R.id.iv_ping_baidu_state).setVisibility(View.VISIBLE);
-        findViewById(R.id.qv_ping_baidu_loading).setVisibility(View.GONE);
-        findViewById(R.id.iv_ping_inspur_state).setVisibility(View.VISIBLE);
-        findViewById(R.id.qv_ping_inspur_loading).setVisibility(View.GONE);
-        findViewById(R.id.iv_ping_ali_state).setVisibility(View.VISIBLE);
-        findViewById(R.id.qv_ping_ali_loading).setVisibility(View.GONE);
+    private void setShowDnsconnctstateUI(Boolean iniState){
+        hardImageView.setVisibility(iniState?View.GONE:View.VISIBLE);
+        qmulHardLoadingView.setVisibility(iniState?View.VISIBLE:View.GONE);
+        portalImageView.setVisibility(iniState?View.GONE:View.VISIBLE);
+        qmulWifiLoadingView.setVisibility(iniState?View.VISIBLE:View.GONE);
+
+        findViewById(R.id.iv_ping_baidu_state).setVisibility(iniState?View.GONE:View.VISIBLE);
+        findViewById(R.id.qv_ping_baidu_loading).setVisibility(iniState?View.VISIBLE:View.GONE);
+        findViewById(R.id.iv_ping_inspur_state).setVisibility(iniState?View.GONE:View.VISIBLE);
+        findViewById(R.id.qv_ping_inspur_loading).setVisibility(iniState?View.VISIBLE:View.GONE);
+        findViewById(R.id.iv_ping_ali_state).setVisibility(iniState?View.GONE:View.VISIBLE);
+        findViewById(R.id.qv_ping_ali_loading).setVisibility(iniState?View.VISIBLE:View.GONE);
     }
 
     /**
