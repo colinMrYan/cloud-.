@@ -44,7 +44,7 @@ public class ImpWebViewClient extends WebViewClient {
     private Runnable runnable = null;
     private ImpCallBackInterface impCallBackInterface;
 
-    public ImpWebViewClient(LinearLayout loadFailLayout,ImpCallBackInterface impCallBackInterface) {
+    public ImpWebViewClient(LinearLayout loadFailLayout, ImpCallBackInterface impCallBackInterface) {
         this.loadFailLayout = loadFailLayout;
         this.impCallBackInterface = impCallBackInterface;
         handMessage();
@@ -136,7 +136,7 @@ public class ImpWebViewClient extends WebViewClient {
             mHandler.removeCallbacks(runnable);
             runnable = null;
         }
-        if(impCallBackInterface != null){
+        if (impCallBackInterface != null) {
             impCallBackInterface.onLoadingDlgDimiss();
         }
         loadFailLayout.setVisibility(View.VISIBLE);
@@ -166,7 +166,7 @@ public class ImpWebViewClient extends WebViewClient {
             mHandler.removeCallbacks(runnable);
             runnable = null;
         }
-        if (!filterUrl(request.getUrl().toString())){
+        if (!filterUrl(request.getUrl().toString())) {
             WebResourceRequest newRequest = new WebResourceRequest() {
                 @Override
                 public Uri getUrl() {
@@ -218,17 +218,18 @@ public class ImpWebViewClient extends WebViewClient {
             mHandler.removeCallbacks(runnable);
             runnable = null;
         }
-        if (!filterUrl(url)){
-            view.loadUrl(url, getWebViewHeaders());
+        if (!filterUrl(url)) {
+            view.loadUrl(url, getWebViewHeaders(url));
         }
-        return  true;
+        return true;
     }
 
     /**
      * 过滤url
+     *
      * @return 是否被过滤掉
      */
-    private boolean filterUrl(String url){
+    private boolean filterUrl(String url) {
         if (url.startsWith(APIUri.getWebLoginUrl()) || url.startsWith("https://id.inspur.com/oauth2.0/authorize")) {
             handleReDirectURL(url, myWebView);
             return true;
@@ -253,7 +254,7 @@ public class ImpWebViewClient extends WebViewClient {
      * @return
      */
     private Map<String, String> getWebViewHeaders(String url) {
-        return myWebView == null ? new HashMap<String, String>() : ((impCallBackInterface != null)? impCallBackInterface.onGetWebViewHeaders(url):new HashMap<String, String>());
+        return myWebView == null ? new HashMap<String, String>() : ((impCallBackInterface != null) ? impCallBackInterface.onGetWebViewHeaders(url) : new HashMap<String, String>());
     }
 
     /**
