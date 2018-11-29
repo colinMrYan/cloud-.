@@ -8,6 +8,7 @@ import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 
+import org.xutils.common.util.KeyValue;
 import org.xutils.db.sqlite.WhereBuilder;
 
 import java.util.ArrayList;
@@ -74,7 +75,7 @@ public class MessageCacheUtil {
             if (messageList == null || messageList.size() == 0) {
                 return;
             }
-            //去重操作，防止服务端重复消息覆盖本地消息导致已读未读状态错乱
+            //去重操作，防止服务端重复消息覆盖本地消息导致已读未读状态错乱，并防止已经改过时间的消息被服务端覆盖时间
             if (!isUpdate){
                 List<String> messageIdList = new ArrayList<>();
                 for (Message message:messageList){
@@ -96,7 +97,6 @@ public class MessageCacheUtil {
             MessageMatheSetCacheUtils.add(context, messageList.get(0).getChannel(),
                     matheSet);
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
@@ -192,7 +192,7 @@ public class MessageCacheUtil {
         try {
             if (targetMessageCreationDate == null) {
                 messageList = DbCacheUtils.getDb(context).selector(Message.class)
-                        .where("channel", "=", cid).and("channel", "=", cid).orderBy("creationDate", true)
+                        .where("channel", "=", cid).orderBy("creationDate", true)
                         .limit(num).findAll();
             } else {
                 messageList = DbCacheUtils.getDb(context).selector(Message.class)
@@ -218,8 +218,9 @@ public class MessageCacheUtil {
         try {
             messageList = DbCacheUtils.getDb(context).selector(Message.class)
                     .where("channel", "=", cid)
-                    .and("channel", "=", cid).and("creationDate", "<=", endTime)
-                    .and("creationDate", ">=", startTime).orderBy("creationDate", true).findAll();
+                    .and("creationDate", "<=", endTime)
+                    .and("creationDate", ">=", startTime)
+                    .orderBy("creationDate", true).findAll();
             if (messageList != null && messageList.size() > 1) {
                 Collections.reverse(messageList);
             }
@@ -250,7 +251,7 @@ public class MessageCacheUtil {
 
             if (targetMessageCreationDate == null) {
                 messageList = DbCacheUtils.getDb(context).selector(Message.class)
-                        .where("channel", "=", cid).and("channel", "=", cid).and("sendStatus","!=",Message.MESSAGE_SEND_EDIT).orderBy("creationDate", true)
+                        .where("channel", "=", cid).and("sendStatus","!=",Message.MESSAGE_SEND_EDIT).orderBy("creationDate", true)
                         .limit(num).findAll();
             } else {
                 messageList = DbCacheUtils.getDb(context).selector(Message.class)
@@ -471,19 +472,6 @@ public class MessageCacheUtil {
         return "";
     }
 
-    /**
-     * 删除本地假消息
-     * @param context
-     * @param tmpId
-     */
-    public static void deleteLocalFakeMessage(Context context,String tmpId){
-        try {
-            DbCacheUtils.getDb(context).delete(Message.class,WhereBuilder.b("id","=",tmpId));
-        } catch (Exception e) {
-            // TODO: handle exception
-            e.printStackTrace();
-        }
-    }
 
     /**
      * 删除草稿箱消息
@@ -506,7 +494,7 @@ public class MessageCacheUtil {
      * @param messageList
      * @param targetMessageCreationDate
      */
-    public static void handleRealMessage(Context context, List<Message> messageList, Long targetMessageCreationDate,String cid){
+    public static void handleRealMessage(Context context, List<Message> messageList, Long targetMessageCreationDate,String cid,boolean isUpdate){
         if (messageList.size()>0){
             List<String> messageTmpIdList = new ArrayList<>();
             for (Message message:messageList) {
@@ -523,8 +511,8 @@ public class MessageCacheUtil {
                     }
                 }
             }
-            deleteFakeMessageList(context,messageList);
-            saveMessageList(context,messageList,targetMessageCreationDate);
+            deleteFakeMessageList(context,localFakeMessageList);
+            saveMessageList(context,messageList,targetMessageCreationDate,isUpdate);
         }
     }
 
@@ -538,13 +526,14 @@ public class MessageCacheUtil {
         try{
             if(StringUtils.isBlank(cid)){
                 messageList =  DbCacheUtils.getDb(context).selector(Message.class)
-                        .where("channel", "=", cid).and("sendStatus","==",Message.MESSAGE_SEND_FAIL)
-                        .or("sendStatus","=",Message.MESSAGE_SEND_ING).and("id","in",messgeTmpIdList)
+                        .where("channel", "=", cid)
+                        .and(WhereBuilder.b("sendStatus","=",Message.MESSAGE_SEND_FAIL).or("sendStatus","=",Message.MESSAGE_SEND_ING))
+                        .and("id","in",messgeTmpIdList)
                        .findAll();
             }else{
                 messageList = DbCacheUtils.getDb(context).selector(Message.class)
-                        .where("sendStatus","==",Message.MESSAGE_SEND_FAIL)
-                        .or("sendStatus","=",Message.MESSAGE_SEND_ING).and("id","in",messgeTmpIdList)
+                        .where(WhereBuilder.b("sendStatus","=",Message.MESSAGE_SEND_FAIL).or("sendStatus","=",Message.MESSAGE_SEND_ING))
+                        .and("id","in",messgeTmpIdList)
                         .findAll();
             }
         }catch (Exception e){
@@ -557,8 +546,7 @@ public class MessageCacheUtil {
     }
 
     /**
-     * 真实消息回来后，把消息时间修改为，本地假消息的时间以便排序
-     * 然后把本地假消息删掉
+     * 真实消息回来后，如果是重发消息需要更新本地消息的id，如果是直接过来的消息需要存储消息
      * @param context
      * @param message
      */
@@ -570,10 +558,24 @@ public class MessageCacheUtil {
             if(messageTmp.getType().equals(Message.MESSAGE_TYPE_MEDIA_VOICE)){
                 deleteLocalVoiceFile(message);
             }
-            message.setCreationDate(messageTmp.getCreationDate());
-            MessageCacheUtil.deleteLocalFakeMessage(context,message.getTmpId());
+            updateLocalFakeMessage(context,message);
+        }else{
+            MessageCacheUtil.saveMessage(context,message);
         }
-        MessageCacheUtil.saveMessage(context,message);
+    }
+
+    /**
+     * 更新本地假消息，把id改成真消息的id，并把发送状态改为发送成功，creationDate保持假消息的时间即可
+     * @param context
+     * @param message  真消息
+     */
+    private static void updateLocalFakeMessage(Context context, Message message) {
+        try {
+            DbCacheUtils.getDb(context).update(Message.class, WhereBuilder.b("id", "=", message.getTmpId())
+                    ,new KeyValue("id",message.getId()),new KeyValue("sendStatus",Message.MESSAGE_SEND_SUCCESS));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**

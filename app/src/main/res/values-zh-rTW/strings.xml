@@ -276,8 +276,8 @@
     <string name="group_name_longth_valid">群名稱字數超限（不超過40個字元）</string>
     <string name="message_create_group">發起群聊</string>
     <string name="business_card">個人名片</string>
-    <string name="no_channel_album">當前沒有群圖片</string>
-    <string name="no_channel_file">當前沒有群文件</string>
+    <string name="no_channel_album">無內容</string>
+    <string name="no_channel_file">無內容</string>
     <string name="hold_to_talk">按住 說話</string>
     <string name="release_to_send">鬆開 結束</string>
     <string name="release_to_cancel">鬆開手指，取消發送</string>
@@ -643,6 +643,7 @@
     <string name="user_no_storage">沒有存放裝置</string>
     <string name="user_employee_num">員工編號</string>
     <string name="user_worker_num">工號</string>
+    <string name="user_new_chat">發消息</string>
 
     <!-- 集團新聞 部分 -->
     <string name="news_group_news">集團新聞</string>
@@ -868,15 +869,20 @@
     <string name="no_work_content">暫無工作內容</string>
 
     <!--网络链接及网络诊断-->
-    <string name="net_connected_error">網絡不給力，請點擊檢查網絡設置。</string>
+    <string name="net_connected_error">網絡不給力，請檢查網絡設置</string>
     <string name="net_diagnosis_title">網絡診斷</string>
     <string name="net_diagnosis_hard_link_title">檢測網絡硬件鏈接</string>
-    <string name="net_diagnosis_wifi_link_title">檢測Wifi路由狀態</string>
-    <string name="net_diagnosis_dns_link_title">檢測DNS服務器狀態</string>
-    <string name="net_diagnosis_hard_link_conent">當前檢查項目包含：設置硬件是否存在故障，設置硬件鏈接狀態是否通暢，設置是否有鏈接wifi,4G,LTE等</string>
-    <string name="net_diagnosis_wifi_link_conent">當前檢查項目包含：鏈接到的wifi是否有經驗需求,如果有需要先驗證此wifi才可繼續訪問</string>
-    <string name="net_diagnosis_dns_link_conent">當前檢查項目包含：DNS服務是否有故障</string>
+    <string name="net_diagnosis_wifi_link_title">檢測Wi-Fi路由器狀態</string>
+    <string name="net_diagnosis_dns_link_title">檢測網絡連通性</string>
+    <string name="net_diagnosis_hard_link_conent">當前檢查項目包含：硬件鏈接是否通暢，是否有鏈接Wi-Fi、4G、LTE等</string>
+    <string name="net_diagnosis_hard_to_fix">去修復</string>
+    <string name="net_diagnosis_wifi_link_conent">當前檢查項目包含：鏈接到的Wi-Fi是否有驗证需求,如果有需要先驗證此Wi-Fi才可繼續訪問</string>
     <string name="net_network_authentication">網絡認證</string>
+    <string name="net_diagnosis_hard_detail_title">硬件鏈接診斷</string>
+    <string name="net_diagnosis_hard_detail_content">建議按照以下方法檢查網絡硬件鏈接</string>
+    <string name="net_diagnosis_hard_detail_content_frist">1、打開手機“設置”並把“Wi-Fi”開關保持開啟狀態。</string>
+    <string name="net_diagnosis_hard_detail_content_second">2、打開手機“設置”-"通用"-“蜂窩移動網絡”，並把“蜂窩移動數據”開關保持開啟狀態。</string>
+    <string name="net_diagnosis_hard_detail_setting">去設置</string>
 
     <!-- ListView自訂控制項部分 -->
     <string name="xlistview_header_last_time">上次更新時間:</string>
@@ -961,6 +967,9 @@
     <string name="turn_on_light">開燈</string>
     <string name="turn_off_light">關燈</string>
     <string name="imp_function_error">功能調用錯誤，請檢查應用是否已升級到最新版本</string>
+    <string name="file_select_limit_warning">超過了建議選擇檔案數限制</string>
+    <string name="select_file">選擇檔案</string>
+    <string name="internal_shared_storage">內部儲存設備</string>
 
 
     <!-- 打點 -->
@@ -1081,4 +1090,5 @@
     <string name="voice_word_tran">正在語音轉文字</string>
     <string name="voice_word_setting">語音自動識別</string>
     <string name="voice_audio_record_unavailiable">當前錄音設備不可用，請檢查錄音許可權是否開啟</string>
+    <string name="voice_to_word">轉文字</string>
 </resources>

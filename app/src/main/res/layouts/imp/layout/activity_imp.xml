@@ -61,65 +61,40 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_centerInParent="true"
-            android:paddingRight="5dp"
-            android:paddingLeft="5dp"
             android:drawablePadding="5dp"
             android:ellipsize="middle"
             android:gravity="center_vertical"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
             android:singleLine="true"
             android:textColor="@color/header_text"
             android:textSize="@dimen/header_textsize" />
-    <LinearLayout
-        android:id="@+id/ll_web_function"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_alignParentRight="true"
-        android:orientation="horizontal">
-        <ImageView
-            android:id="@+id/imp_cloud_function1_img"
-            android:layout_width="48dp"
-            android:layout_height="56dp"
-            android:layout_gravity="center_vertical"
-            android:clickable="true"
-            android:onClick="onClick"
-            android:paddingLeft="14dp"
-            android:paddingRight="14dp"
-            android:paddingTop="18dp"
-            android:paddingBottom="18dp"
-            android:scaleType="fitXY"
-            android:visibility="gone"
-            />
-
-        <ImageView
-            android:id="@+id/imp_cloud_function2_img"
-            android:layout_width="48dp"
-            android:layout_height="56dp"
-            android:layout_gravity="center_vertical"
-            android:clickable="true"
-            android:onClick="onClick"
-            android:paddingLeft="14dp"
-            android:paddingRight="12dp"
-            android:paddingTop="16dp"
-            android:paddingBottom="16dp"
-            android:scaleType="fitXY"
-            android:visibility="gone"
-            />
-    </LinearLayout>
-
-
         <ImageView
             android:id="@+id/imp_change_font_size_btn"
-            android:layout_width="48dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:clickable="true"
             android:onClick="onClick"
-            android:paddingLeft="12dp"
-            android:paddingRight="15dp"
-            android:scaleType="centerInside"
+            android:paddingLeft="13dp"
+            android:paddingRight="13dp"
+            android:paddingTop="17dp"
+            android:paddingBottom="17dp"
+            android:adjustViewBounds="true"
+            android:scaleType="fitXY"
             android:src="@drawable/ic_header_option"
             android:visibility="gone" />
+        <LinearLayout
+            android:id="@+id/ll_web_function"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:background="@color/header_bg"
+            android:layout_alignParentRight="true"
+            android:orientation="horizontal"></LinearLayout>
+
+
     </RelativeLayout>
 
     <com.inspur.imp.engine.webview.ImpWebView
@@ -140,36 +115,39 @@
         android:layout_height="match_parent"
         android:layout_below="@id/header_layout"
         android:background="@color/content_bg"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:visibility="gone">
+        android:visibility="gone"
+        android:onClick="onClick"
+        android:orientation="vertical">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="30dp"
+            android:layout_width="113dp"
+            android:layout_height="133dp"
+            android:layout_marginTop="133dp"
+            android:layout_gravity="center_horizontal"
             android:src="@drawable/imp_load_fail" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="15dp"
+            android:layout_marginTop="20dp"
             android:text="@string/web_load_fail"
-            android:textColor="#929292"
+            android:textColor="#666666"
+            android:layout_gravity="center_horizontal"
             android:textSize="16sp" />
 
         <TextView
             android:id="@+id/refresh_text"
             android:layout_width="wrap_content"
             android:layout_height="34dp"
-            android:layout_marginBottom="100dp"
-            android:background="@drawable/imp_bg_webview_reload_btn"
+            android:layout_marginTop="40dp"
+            android:background="@drawable/bg_net_error_tip"
+            android:layout_gravity="center_horizontal"
             android:gravity="center"
-            android:onClick="onClick"
             android:paddingLeft="25dp"
             android:paddingRight="25dp"
+            android:onClick="onClick"
             android:text="@string/web_reload"
-            android:textColor="#3299FE"
+            android:textColor="#666666"
             android:textSize="15sp" />
     </LinearLayout>
 
@@ -178,18 +156,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/header_layout"
-        android:visibility="gone"
         android:clickable="true"
-        >
+        android:visibility="gone">
 
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="15dp"
             android:layout_centerInParent="true"
             android:background="@drawable/shape_dialog_react_loading"
             android:gravity="center"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="15dp">
 
             <ProgressBar
                 android:id="@+id/pb_load"
@@ -199,15 +176,16 @@
                 android:layout_centerHorizontal="true"
                 android:indeterminateDrawable="@drawable/react_native_ios_progress"
                 android:indeterminateDuration="1000" />
+
             <TextView
                 android:id="@+id/tv_loading"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/pb_load"
-                android:maxWidth="200dp"
                 android:layout_marginTop="10dp"
                 android:ellipsize="end"
                 android:maxLines="2"
+                android:maxWidth="200dp"
                 android:textColor="#555555"
                 android:textSize="@dimen/content_small_textsize" />
         </RelativeLayout>

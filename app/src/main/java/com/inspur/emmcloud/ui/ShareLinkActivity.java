@@ -9,7 +9,6 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.ui.chat.ChannelActivity;
 import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
@@ -19,6 +18,7 @@ import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
+import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -100,19 +100,35 @@ public class ShareLinkActivity extends BaseActivity {
      * @param uid
      */
     private void createDirectChannel(String uid) {
-        new ChatCreateUtils().createDirectChannel(ShareLinkActivity.this, uid,
-                new ChatCreateUtils.OnCreateDirectChannelListener() {
-                    @Override
-                    public void createDirectChannelSuccess(GetCreateSingleChannelResult getCreateSingleChannelResult) {
-                        startChannelActivity(getCreateSingleChannelResult.getCid());
-                    }
+        if (MyApplication.getInstance().isV1xVersionChat()) {
+            new ConversationCreateUtils().createDirectConversation(ShareLinkActivity.this, uid,
+                    new ConversationCreateUtils.OnCreateDirectConversationListener() {
+                        @Override
+                        public void createDirectConversationSuccess(Conversation conversation) {
+                            startChannelActivity(conversation.getId());
+                        }
 
-                    @Override
-                    public void createDirectChannelFail() {
-                        //ToastUtils.show(ShareLinkActivity.this,getString(R.string.news_share_fail));
-                        finish();
-                    }
-                });
+                        @Override
+                        public void createDirectConversationFail() {
+
+                        }
+                    });
+        } else {
+            new ChatCreateUtils().createDirectChannel(ShareLinkActivity.this, uid,
+                    new ChatCreateUtils.OnCreateDirectChannelListener() {
+                        @Override
+                        public void createDirectChannelSuccess(GetCreateSingleChannelResult getCreateSingleChannelResult) {
+                            startChannelActivity(getCreateSingleChannelResult.getCid());
+                        }
+
+                        @Override
+                        public void createDirectChannelFail() {
+                            //ToastUtils.show(ShareLinkActivity.this,getString(R.string.news_share_fail));
+                            finish();
+                        }
+                    });
+        }
+
     }
 
     /**

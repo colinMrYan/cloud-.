@@ -597,7 +597,7 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".ui.mine.setting.PortalLogInActivity"
+            android:name=".ui.mine.setting.NetHardConnectCheckActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>
@@ -1088,6 +1088,11 @@
         <activity
             android:name="com.inspur.imp.plugin.filetransfer.TextFileShowActivity"
             android:resizeableActivity="true"></activity>
+
+        <activity
+            android:name="com.inspur.imp.plugin.filetransfer.filemanager.FileManagerActivity"
+            android:resizeableActivity="true"></activity>
+
 
         <!-- MDM设备管理 -->
         <activity

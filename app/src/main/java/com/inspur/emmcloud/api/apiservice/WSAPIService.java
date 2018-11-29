@@ -405,8 +405,6 @@ public class WSAPIService {
                 object.put("headers", headerObj);
                 JSONObject bodyObject = new JSONObject();
                 bodyObject.put("state",state);
-                bodyObject.put("channelVer",1);
-                bodyObject.put("messageVer",1);
                 object.put("body", bodyObject);
                 if (state.equals("REMOVED")){
                     EventMessage eventMessage = new EventMessage(tracer,Constant.EVENTBUS_TAG_WEBSOCKET_STATUS_REMOVE,"","");

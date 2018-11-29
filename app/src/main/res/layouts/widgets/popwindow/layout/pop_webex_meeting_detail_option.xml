@@ -27,14 +27,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="onClick"
-            android:paddingBottom="10dp"
-            android:paddingLeft="11dp"
-            android:paddingTop="10dp">
+            android:paddingBottom="12dp"
+            android:paddingLeft="15dp"
+            android:paddingTop="12dp">
 
             <ImageView
                 android:id="@+id/iv_attendees"
-                android:layout_width="18dp"
-                android:layout_height="18dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:layout_centerVertical="true"
                 android:src="@drawable/ic_webex_meeting_attendees" />
 
@@ -50,7 +50,7 @@
                 android:paddingRight="30dp"
                 android:text="@string/webex_participant"
                 android:textColor="#ffffff"
-                android:textSize="@dimen/content_normal_textsize" />
+                android:textSize="16sp" />
         </RelativeLayout>
 
         <View
@@ -60,8 +60,8 @@
             android:layout_alignRight="@id/rl_attendees"
             android:layout_below="@id/rl_attendees"
             android:layout_centerHorizontal="true"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
             android:background="#3895D9" />
 
         <RelativeLayout
@@ -73,14 +73,14 @@
             android:layout_alignRight="@id/rl_attendees"
             android:layout_below="@id/rl_attendees"
             android:orientation="horizontal"
-            android:paddingBottom="9dp"
-            android:paddingLeft="11dp"
-            android:paddingTop="9dp">
+            android:paddingBottom="12dp"
+            android:paddingLeft="15dp"
+            android:paddingTop="12dp">
 
             <ImageView
                 android:id="@+id/iv_share"
-                android:layout_width="18dp"
-                android:layout_height="18dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:layout_centerVertical="true"
                 android:scaleType="fitXY"
                 android:src="@drawable/ic_webex_meeting_share" />
@@ -90,14 +90,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="15dp"
+                android:layout_marginLeft="12dp"
                 android:layout_toRightOf="@id/iv_share"
                 android:background="@color/transparent"
                 android:clickable="false"
                 android:paddingRight="6dp"
                 android:text="@string/share"
                 android:textColor="#ffffff"
-                android:textSize="@dimen/content_normal_textsize" />
+                android:textSize="16sp" />
         </RelativeLayout>
 
 
@@ -110,8 +110,8 @@
             android:layout_alignRight="@id/rl_attendees"
             android:layout_below="@id/rl_share"
             android:orientation="horizontal"
-            android:paddingBottom="11dp"
-            android:paddingLeft="11dp">
+            android:paddingBottom="12dp"
+            android:paddingLeft="15dp">
 
             <View
                 android:id="@+id/v_line_delete"
@@ -119,15 +119,14 @@
                 android:layout_height="0.5dp"
                 android:layout_below="@id/message_create_group_layout"
                 android:layout_centerHorizontal="true"
-                android:layout_marginBottom="11dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
+                android:layout_marginBottom="12dp"
+                android:layout_marginRight="15dp"
                 android:background="#3895D9" />
 
             <ImageView
                 android:id="@+id/iv_delete"
-                android:layout_width="18dp"
-                android:layout_height="18dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:layout_below="@id/v_line_delete"
                 android:layout_centerVertical="true"
                 android:scaleType="fitXY"
@@ -146,7 +145,7 @@
                 android:paddingRight="6dp"
                 android:text="@string/delete"
                 android:textColor="#ffffff"
-                android:textSize="@dimen/content_normal_textsize" />
+                android:textSize="16sp" />
         </RelativeLayout>
     </RelativeLayout>
 

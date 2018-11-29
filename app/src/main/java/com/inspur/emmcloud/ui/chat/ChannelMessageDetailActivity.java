@@ -300,8 +300,9 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
      */
     private void sendComment(String text, Map<String, String> mentionsMap) {
 
-        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
+//        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
             Message message = CommunicationUtils.combinLocalCommentTextPlainMessage(cid, mid, text, mentionsMap);
+            handleUnSendMessage(message,Message.MESSAGE_SEND_ING);
             commentList.add(message);
             if (commentAdapter == null) {
                 commentAdapter = new CommentAdapter();
@@ -317,7 +318,19 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
             });
             InputMethodUtils.hide(ChannelMessageDetailActivity.this);
             WSAPIService.getInstance().sendChatCommentTextPlainMsg(message);
-        }
+//        }
+    }
+
+    /**
+     * 处理未发送成功的消息，存储临时消息
+     * @param message
+     * @param status
+     */
+    private void handleUnSendMessage(Message message, int status) {
+        //发送中，无网,发送消息失败
+        message.setSendStatus(status);
+        message.setRead(Message.MESSAGE_READ);
+        MessageCacheUtil.saveMessage(ChannelMessageDetailActivity.this,message);
     }
 
 
@@ -422,6 +435,7 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
                 String content = eventMessage.getContent();
                 GetMessageCommentResult getMessageCommentResult = new GetMessageCommentResult(content);
                 commentList = getMessageCommentResult.getCommentList();
+                MessageCacheUtil.handleRealMessage(ChannelMessageDetailActivity.this,commentList,null,cid,false);
                 if (commentList != null && commentList.size() > 0) {
                     commentAdapter = new CommentAdapter();
                     commentListView.setAdapter(commentAdapter);
@@ -441,6 +455,7 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
                 String content = eventMessage.getContent();
                 JSONObject contentobj = JSONUtils.getJSONObject(content);
                 Message message = new Message(contentobj);
+                MessageCacheUtil.handleRealMessage(ChannelMessageDetailActivity.this,message);
                 if (message.getId().equals(mid)) {
                     handMsgData();
                 }

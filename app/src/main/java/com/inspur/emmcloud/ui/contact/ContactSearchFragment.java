@@ -25,7 +25,6 @@ import android.widget.TextView;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
-import com.inspur.emmcloud.bean.chat.ChannelGroup;
 import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.bean.contact.Contact;
@@ -47,11 +46,13 @@ import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.AppTabUtils;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
+import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.CommonContactCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactOrgCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 import com.inspur.emmcloud.widget.CircleTextImageView;
 import com.inspur.emmcloud.widget.FlowLayout;
 import com.inspur.emmcloud.widget.MaxHightScrollView;
@@ -109,11 +110,11 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
     private ListView secondGroupListView;// 第二组数据
     private MaxHightScrollView searchEditLayout;
 
-    private List<SearchModel> commonContactList = new ArrayList<SearchModel>();
-    private List<Contact> openGroupContactList = new ArrayList<Contact>();
-    private List<ChannelGroup> openGroupChannelList = new ArrayList<ChannelGroup>();
-    private List<SearchModel> selectMemList = new ArrayList<SearchModel>();
-    private List<FirstGroupTextModel> openGroupTextList = new ArrayList<FirstGroupTextModel>();
+    private List<SearchModel> commonContactList = new ArrayList<>();
+    private List<Contact> openGroupContactList = new ArrayList<>();
+    private List<SearchModel> openGroupChannelList = new ArrayList<>();
+    private List<SearchModel> selectMemList = new ArrayList<>();
+    private List<FirstGroupTextModel> openGroupTextList = new ArrayList<>();
     private MyTextWatcher myTextWatcher;
     private GroupTitleAdapter groupTitleAdapter;
     private OpenGroupListAdapter openGroupAdapter;
@@ -121,7 +122,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
     private int orginCurrentArea = 0; // orgin页面目前的搜索模式
     private int searchArea = 0; // 搜索范围
     private String title;
-    private List<ChannelGroup> searchChannelGroupList = new ArrayList<ChannelGroup>(); // 群组搜索结果
+    private List<SearchModel> searchChannelGroupList = new ArrayList<>(); // 群组搜索结果
     private List<Contact> searchContactList = new ArrayList<Contact>(); // 通讯录搜索结果
     // popupWindow中的控件与数据
     private LinearLayout popSecondGrouplayou;
@@ -491,9 +492,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
                             openContact(contact);
                         }
                     } else if (orginCurrentArea == SEARCH_CHANNELGROUP) {
-                        ChannelGroup channelGroup = openGroupChannelList
-                                .get(position);
-                        changeMembers(new SearchModel(channelGroup));
+                        changeMembers(openGroupChannelList.get(position));
                     }
                 }
             });
@@ -572,8 +571,14 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
      */
     private void showAllChannelGroup() {
         // TODO Auto-generated method stub
-        openGroupChannelList = ChannelGroupCacheUtils
-                .getAllChannelGroupList(getActivity().getApplicationContext());
+        if (MyApplication.getInstance().isV0VersionChat()) {
+            openGroupChannelList = SearchModel.channelGroupList2SearchModelList(ChannelGroupCacheUtils
+                    .getAllChannelGroupList(MyApplication.getInstance()));
+        } else {
+            openGroupChannelList = SearchModel.conversationList2SearchModelList(ConversationCacheUtils
+                    .getConversationList(MyApplication.getInstance(), Conversation.TYPE_GROUP));
+        }
+
         openGroupTextList.add(new FirstGroupTextModel(getString(R.string.all),
                 ""));
         openGroupTextList.add(new FirstGroupTextModel(
@@ -725,15 +730,24 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
                     public void run() {
                         switch (searchArea) {
                             case SEARCH_ALL:
-                                searchChannelGroupList = ChannelGroupCacheUtils
-                                        .getSearchChannelGroupList(MyApplication.getInstance(),
-                                                searchText);
+                                if (MyApplication.getInstance().isV0VersionChat()) {
+                                    searchChannelGroupList = ChannelGroupCacheUtils
+                                            .getSearchChannelGroupSearchModelList(MyApplication.getInstance(),
+                                                    searchText);
+                                } else {
+                                    searchChannelGroupList = ConversationCacheUtils.getSearchConversationSearchModelList(MyApplication.getInstance(), searchText);
+                                }
+
                                 searchContactList = ContactUserCacheUtils.getSearchContact(searchText, excludeContactList, 4);
                                 break;
                             case SEARCH_CHANNELGROUP:
-                                searchChannelGroupList = ChannelGroupCacheUtils
-                                        .getSearchChannelGroupList(MyApplication.getInstance(),
-                                                searchText);
+                                if (MyApplication.getInstance().isV0VersionChat()) {
+                                    searchChannelGroupList = ChannelGroupCacheUtils
+                                            .getSearchChannelGroupSearchModelList(MyApplication.getInstance(),
+                                                    searchText);
+                                } else {
+                                    searchChannelGroupList = ConversationCacheUtils.getSearchConversationSearchModelList(MyApplication.getInstance(), searchText);
+                                }
                                 break;
                             case SEARCH_CONTACT:
                                 searchContactList = ContactUserCacheUtils.getSearchContact(searchText, excludeContactList, 4);
@@ -887,9 +901,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
                                             int position, long id) {
 
                         // TODO Auto-generated method stub
-                        ChannelGroup channelGroup = searchChannelGroupList
-                                .get(position);
-                        changeMembers(new SearchModel(channelGroup));
+                        changeMembers(searchChannelGroupList.get(position));
 
                     }
                 });
@@ -1121,9 +1133,8 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
 
             } else {
                 viewHolder.rightArrowImg.setVisibility(View.INVISIBLE);
-                ChannelGroup channelGroup = openGroupChannelList.get(position);
-                searchModel = new SearchModel(channelGroup);
-                viewHolder.nameText.setText(channelGroup.getChannelName());
+                searchModel = openGroupChannelList.get(position);
+                viewHolder.nameText.setText(searchModel.getName());
 
             }
             if (searchModel != null) {
@@ -1262,9 +1273,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
             convertView.setBackgroundColor(Color.parseColor("#F4F4F4"));
             SearchModel searchModel = null;
             if (groupPosition == 2) {
-                ChannelGroup channelGroup = searchChannelGroupList
-                        .get(position);
-                searchModel = new SearchModel(channelGroup);
+                searchModel = searchChannelGroupList.get(position);
             } else {
                 Contact contact = searchContactList.get(position);
                 searchModel = new SearchModel(contact);
@@ -1518,33 +1527,49 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
     private void creatDirectChannel(String id) {
         // TODO Auto-generated method stub
         if (NetUtils.isNetworkConnected(getActivity().getApplicationContext())) {
-            new ChatCreateUtils().createDirectChannel(
-                    getActivity(), id,
-                    new ChatCreateUtils.OnCreateDirectChannelListener() {
+            if (MyApplication.getInstance().isV1xVersionChat()) {
+                new ConversationCreateUtils().createDirectConversation(getActivity(), id,
+                        new ConversationCreateUtils.OnCreateDirectConversationListener() {
+                            @Override
+                            public void createDirectConversationSuccess(Conversation conversation) {
+                                Bundle bundle = new Bundle();
+                                bundle.putSerializable(ConversationActivity.EXTRA_CONVERSATION, conversation);
+                                IntentUtils.startActivity(getActivity(), ConversationActivity.class, bundle);
+                            }
 
-                        @Override
-                        public void createDirectChannelSuccess(
-                                GetCreateSingleChannelResult getCreateSingleChannelResult) {
-                            // TODO Auto-generated method stub
-                            Bundle bundle = new Bundle();
-                            bundle.putString("cid",
-                                    getCreateSingleChannelResult.getCid());
-                            bundle.putString("channelType",
-                                    getCreateSingleChannelResult.getType());
-                            bundle.putString("title",
-                                    getCreateSingleChannelResult
-                                            .getName(getActivity().getApplicationContext()));
-                            IntentUtils.startActivity(
-                                    getActivity(), MyApplication.getInstance().isV0VersionChat() ?
-                                            ChannelV0Activity.class : Conversation.class, bundle);
-                        }
+                            @Override
+                            public void createDirectConversationFail() {
 
-                        @Override
-                        public void createDirectChannelFail() {
-                            // TODO Auto-generated method stub
+                            }
+                        });
+            } else {
+                new ChatCreateUtils().createDirectChannel(
+                        getActivity(), id,
+                        new ChatCreateUtils.OnCreateDirectChannelListener() {
 
-                        }
-                    });
+                            @Override
+                            public void createDirectChannelSuccess(
+                                    GetCreateSingleChannelResult getCreateSingleChannelResult) {
+                                // TODO Auto-generated method stub
+                                Bundle bundle = new Bundle();
+                                bundle.putString("cid",
+                                        getCreateSingleChannelResult.getCid());
+                                bundle.putString("channelType",
+                                        getCreateSingleChannelResult.getType());
+                                bundle.putString("title",
+                                        getCreateSingleChannelResult
+                                                .getName(getActivity().getApplicationContext()));
+                                IntentUtils.startActivity(
+                                        getActivity(), ChannelV0Activity.class, bundle);
+                            }
+
+                            @Override
+                            public void createDirectChannelFail() {
+                                // TODO Auto-generated method stub
+
+                            }
+                        });
+            }
         }
     }
 
