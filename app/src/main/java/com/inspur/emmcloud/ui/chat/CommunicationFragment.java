@@ -783,7 +783,10 @@ public class CommunicationFragment extends Fragment {
                         Bundle bundle = new Bundle();
                         bundle.putSerializable(ConversationActivity.EXTRA_CONVERSATION, conversation);
                         IntentUtils.startActivity(getActivity(), ConversationActivity.class, bundle);
-                        getConversationList();
+                        sortConversationList();
+                        List<Conversation> conversationList = new ArrayList<>();
+                        conversationList.add(conversation);
+                        createGroupIcon(conversationList);
                     }
 
                     @Override

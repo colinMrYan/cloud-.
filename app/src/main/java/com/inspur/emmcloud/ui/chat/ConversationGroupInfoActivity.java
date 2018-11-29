@@ -459,6 +459,7 @@ public class ConversationGroupInfoActivity extends BaseActivity {
 
         @Override
         public void returnQuitChannelGroupSuccess() {
+            ConversationCacheUtils.deleteConversation(MyApplication.getInstance(),conversation.getId());
             EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_QUIT_CHANNEL_GROUP,conversation));
             LoadingDialog.dimissDlg(loadingDlg);
             setResult(RESULT_OK);
@@ -473,6 +474,7 @@ public class ConversationGroupInfoActivity extends BaseActivity {
 
         @Override
         public void returnDeleteConversationSuccess(String cid) {
+            ConversationCacheUtils.deleteConversation(MyApplication.getInstance(),conversation.getId());
             EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_QUIT_CHANNEL_GROUP,conversation));
             LoadingDialog.dimissDlg(loadingDlg);
             setResult(RESULT_OK);
