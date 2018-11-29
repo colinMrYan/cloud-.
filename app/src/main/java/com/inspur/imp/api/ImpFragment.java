@@ -169,11 +169,10 @@ public class ImpFragment extends ImpBaseFragment {
      * 初始化Fragment的WebView
      */
     private void initFragmentViews() {
+        String url = getArguments().getString(Constant.APP_WEB_URI);
         optionMenuList = (ArrayList<MainTabMenu>) getArguments().getSerializable(Constant.WEB_FRAGMENT_MENU);
         setWebViewFunctionVisiable();
         initHeaderOptionMenu();
-        String url = getArguments().getString(Constant.APP_WEB_URI);
-        initHeaderFunction();
         initListeners();
         initWebViewHeaderLayout();
         setWebViewHeader(url);
