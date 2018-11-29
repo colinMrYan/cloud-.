@@ -41,7 +41,6 @@ import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ResolutionUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.privates.AppTabUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.MDM.MDM;
@@ -167,10 +166,8 @@ public class ImpFragment extends Fragment {
             appId = getArguments().getString("appId");
         }
         initFragmentViews();
-        String uri = getArguments().getString("uri");
-        if (!StringUtils.isBlank(uri)) {
-            headerText.setText(AppTabUtils.getTabTitle(getActivity(), getClass().getSimpleName(), uri));
-        }
+        String appName = getArguments().getString(Constant.WEB_FRAGMENT_APP_NAME);
+        headerText.setText(StringUtils.isBlank(appName)?"":appName);
     }
 
 
@@ -178,7 +175,7 @@ public class ImpFragment extends Fragment {
      * 初始化Fragment的WebView
      */
     private void initFragmentViews() {
-        String url = getArguments().getString("uri");
+        String url = getArguments().getString(Constant.APP_WEB_URI);
         initHeaderFunction();
         initListeners();
         initWebViewHeaderLayout();
@@ -651,7 +648,7 @@ public class ImpFragment extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent();
                 intent.setClass(getActivity(), ImpActivity.class);
-                intent.putExtra("uri", helpUrl);
+                intent.putExtra(Constant.APP_WEB_URI, helpUrl);
                 intent.putExtra(Constant.WEB_FRAGMENT_APP_NAME, "");
                 startActivity(intent);
                 dialog.dismiss();
