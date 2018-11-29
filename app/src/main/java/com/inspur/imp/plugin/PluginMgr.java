@@ -147,6 +147,8 @@ public class PluginMgr {
                 serviceName = "com.inspur.imp.plugin.window.WindowService";
             }else if(serviceName.endsWith("DeviceService")){
                 serviceName = "com.inspur.imp.plugin.device.DeviceService";
+            }else if(serviceName.endsWith("StuffInformationService")){
+                serviceName = "com.inspur.imp.plugin.staff.StuffInformationService";
             }
         }
         return serviceName;
