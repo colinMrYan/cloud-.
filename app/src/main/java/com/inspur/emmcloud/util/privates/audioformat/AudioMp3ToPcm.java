@@ -44,10 +44,6 @@ public class AudioMp3ToPcm {
     private int  orderSampleRate=0;
     private boolean codeOver = false;
 
-    public static AudioMp3ToPcm newInstance() {
-        return new AudioMp3ToPcm();
-    }
-
     /**
      *返回pcm数据流
      * */
