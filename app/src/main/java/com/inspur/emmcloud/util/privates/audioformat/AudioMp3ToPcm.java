@@ -3,6 +3,8 @@ package com.inspur.emmcloud.util.privates.audioformat;
 import android.media.MediaCodec;
 import android.media.MediaExtractor;
 import android.media.MediaFormat;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import java.io.BufferedOutputStream;
@@ -59,10 +61,11 @@ public class AudioMp3ToPcm {
      * @param dstPath 目标文件路径
      * @param sampleRate  要求采样率(仅支持16k, )
      */
-    public void setIOPath(String srcPath, String dstPath,int sampleRate) {
+    public void setIOPath(String srcPath, String dstPath,OnCompleteListener onCompleteListener,int sampleRate) {
         this.srcPath=srcPath;
         this.dstPath=dstPath;
         this.orderSampleRate =sampleRate;
+        this.onCompleteListener=onCompleteListener;
         prepare();
     }
 
@@ -71,9 +74,10 @@ public class AudioMp3ToPcm {
      * @param srcPath
      * @param dstPath
      */
-    public void setIOPath(String srcPath, String dstPath) {
+    public void setIOPath(String srcPath, String dstPath,OnCompleteListener onCompleteListener) {
         this.srcPath=srcPath;
         this.dstPath=dstPath;
+        this.onCompleteListener=onCompleteListener;
         prepare();
     }
 
@@ -82,18 +86,14 @@ public class AudioMp3ToPcm {
      * 调用prepare方法 会初始化Decode 、输入输出流 等一些列操作
      */
     private void prepare() {
-        if (srcPath == null) {
-            throw new IllegalArgumentException("srcPath can't be null");
+        try {
+            File file = new File(srcPath);
+            fileTotalSize=file.length();
+            chunkPCMDataContainer= new ArrayList<>();
+            initMediaDecode();//解码器
+        } catch (Exception e ) {
+            e.printStackTrace();
         }
-
-        if (dstPath == null) {
-            throw new IllegalArgumentException("dstPath can't be null");
-        }
-
-        File file = new File(srcPath);
-        fileTotalSize=file.length();
-        chunkPCMDataContainer= new ArrayList<>();
-        initMediaDecode();//解码器
     }
 
     /**
@@ -114,12 +114,10 @@ public class AudioMp3ToPcm {
                     break;
                 }
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
-
         if (mediaDecode == null) {
-            Log.e("lbc", "create mediaDecode failed");
             return;
         }
         mediaDecode.start();
@@ -192,13 +190,13 @@ public class AudioMp3ToPcm {
             if (bos != null) {
                 bos.flush();
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }finally {
             if (bos != null) {
                 try {
                     bos.close();
-                } catch (IOException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }finally {
                     bos=null;
@@ -244,16 +242,9 @@ public class AudioMp3ToPcm {
             }
             try {
                 saveFile(returnPcmList(),dstPath,currentSimpleRate);
-                if (onCompleteListener != null) {
-                    onCompleteListener.returnSuccess(dstPath);
-                    release();
-                }
+                ReturnSuccess(dstPath);
             } catch (Exception e ){
-                if (onCompleteListener != null) {
-                    onCompleteListener.returnError(e.getMessage());
-                    release();
-                }
-
+                ReturnError(e);
             }
         }
     }
@@ -279,7 +270,6 @@ public class AudioMp3ToPcm {
                     outStream.write(pcdata.get(i));
                 }
             }
-            // 最后关闭文件输出流
             outStream.close();
         } catch (Exception e) {
             e.printStackTrace();
@@ -291,15 +281,38 @@ public class AudioMp3ToPcm {
      */
     public interface OnCompleteListener{
        void returnSuccess(String path);
-        void returnError(String Error);
+        void returnError(Exception Error);
     }
 
     /**
-     * 设置解码完成监听器
-     * @param onCompleteListener 转码完成监听设置
-     */
-    public void setOnCompleteListener(OnCompleteListener onCompleteListener) {
-        this.onCompleteListener=onCompleteListener;
+     * 错误返回
+     * */
+    private  void  ReturnError(final Exception Error) {
+        if (onCompleteListener != null) {
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    onCompleteListener.returnError(Error);
+                    release();
+                }
+            });
+        }
+    }
+
+    /**
+     * 成功返回
+     * */
+    private  void  ReturnSuccess(final String path) {
+        if (onCompleteListener != null) {
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    onCompleteListener.returnSuccess(path);
+                    release();
+                }
+            });
+        }
+
     }
 
     /**
