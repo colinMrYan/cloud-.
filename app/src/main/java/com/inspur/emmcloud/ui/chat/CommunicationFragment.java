@@ -783,6 +783,7 @@ public class CommunicationFragment extends Fragment {
                         Bundle bundle = new Bundle();
                         bundle.putSerializable(ConversationActivity.EXTRA_CONVERSATION, conversation);
                         IntentUtils.startActivity(getActivity(), ConversationActivity.class, bundle);
+                        getConversationList();
                     }
 
                     @Override

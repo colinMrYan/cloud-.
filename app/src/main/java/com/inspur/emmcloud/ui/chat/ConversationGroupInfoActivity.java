@@ -26,7 +26,6 @@ import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
-import com.inspur.emmcloud.util.privates.cache.ChannelOperationCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
@@ -108,22 +107,9 @@ public class ConversationGroupInfoActivity extends BaseActivity {
         stickSwitch.setOpened(conversation.isStick());
         stickSwitch.setOnStateChangedListener(onStateChangedListener);
         exitBtn.setVisibility(View.VISIBLE);
+        exitBtn.setText(conversation.getOwner().equals(MyApplication.getInstance().getUid())?getString(R.string.dismiss_group):getString(R.string.quit_group));
     }
 
-    /**
-     * 是否将频道置顶
-     *
-     * @param isSetIop
-     */
-    private void setChannelTop(boolean isSetIop) {
-        stickSwitch.toggleSwitch(isSetIop);
-        ChannelOperationCacheUtils.setChannelTop(ConversationGroupInfoActivity.this, conversation.getId(),
-                isSetIop);
-        // 通知消息页面重新创建群组头像
-        Intent intent = new Intent("message_notify");
-        intent.putExtra("command", "sort_session_list");
-        sendBroadcast(intent);
-    }
 
     private OnItemClickListener onItemClickListener = new OnItemClickListener() {
 
@@ -209,7 +195,12 @@ public class ConversationGroupInfoActivity extends BaseActivity {
                         MembersActivity.class, bundle);
                 break;
             case R.id.bt_exit:
-                showQuitGroupWarningDlg();
+                if (conversation.getOwner().equals(MyApplication.getInstance().getUid())){
+                    showDimissGroupWarningDlg();
+                }else {
+                    showQuitGroupWarningDlg();
+                }
+
                 break;
             default:
                 break;
@@ -230,6 +221,25 @@ public class ConversationGroupInfoActivity extends BaseActivity {
                     public void onClick(QMUIDialog dialog, int index) {
                         dialog.dismiss();
                         quitChannelGroup();
+                    }
+                })
+                .show();
+    }
+
+    private void showDimissGroupWarningDlg(){
+        new MyQMUIDialog.MessageDialogBuilder(ConversationGroupInfoActivity.this)
+                .setMessage(getString(R.string.dismiss_group_warning_text))
+                .addAction(getString(R.string.cancel), new QMUIDialogAction.ActionListener() {
+                    @Override
+                    public void onClick(QMUIDialog dialog, int index) {
+                        dialog.dismiss();
+                    }
+                })
+                .addAction(getString(R.string.ok), new QMUIDialogAction.ActionListener() {
+                    @Override
+                    public void onClick(QMUIDialog dialog, int index) {
+                        dialog.dismiss();
+                        deleteConversation();
                     }
                 })
                 .show();
@@ -365,6 +375,16 @@ public class ConversationGroupInfoActivity extends BaseActivity {
         }
     }
 
+    /**
+     * 解散群聊
+     */
+    public void deleteConversation(){
+        if (NetUtils.isNetworkConnected(ConversationGroupInfoActivity.this)) {
+            loadingDlg.show();
+            apiService.deleteConversation(conversation.getId());
+        }
+    }
+
     private class WebService extends APIInterfaceInstance {
 
         @Override
@@ -451,7 +471,19 @@ public class ConversationGroupInfoActivity extends BaseActivity {
             WebServiceMiddleUtils.hand(ConversationGroupInfoActivity.this, error, errorCode);
         }
 
+        @Override
+        public void returnDeleteConversationSuccess(String cid) {
+            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_QUIT_CHANNEL_GROUP,conversation));
+            LoadingDialog.dimissDlg(loadingDlg);
+            setResult(RESULT_OK);
+            finish();
+        }
 
+        @Override
+        public void returnDeleteConversationFail(String error, int errorCode) {
+            LoadingDialog.dimissDlg(loadingDlg);
+            WebServiceMiddleUtils.hand(ConversationGroupInfoActivity.this, error, errorCode);
+        }
     }
 
 }

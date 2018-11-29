@@ -752,4 +752,7 @@ public interface APIInterface {
 
     void returnCreateGroupConversationSuccess(Conversation conversation);
     void returnCreateGroupConversationFail(String error,int errorCode);
+
+    void returnDeleteConversationSuccess(String cid);
+    void returnDeleteConversationFail(String error,int errorCode);
 }

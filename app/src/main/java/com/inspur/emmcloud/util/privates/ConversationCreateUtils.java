@@ -65,6 +65,7 @@ public class ConversationCreateUtils {
         loadingDlg.show();
         ChatAPIService apiService = new ChatAPIService(context);
         apiService.setAPIInterface(new WebService());
+        uidArray.put(MyApplication.getInstance().getUid());
         apiService.createGroupConversation(groupName, uidArray);
     }
 
