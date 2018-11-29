@@ -44,7 +44,6 @@ import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.InputMethodUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
@@ -345,7 +344,7 @@ public class ConversationActivity extends ConversationBaseActivity {
 
             @Override
             public void onMediaVoiceReRecognize(UIMessage uiMessage, BubbleLayout bubbleLayout, QMUILoadingView downloadLoadingView) {
-               // showMeidaVoiceReRecognizerPop(uiMessage, bubbleLayout, downloadLoadingView);
+                showMeidaVoiceReRecognizerPop(uiMessage, bubbleLayout, downloadLoadingView);
             }
 
             @Override
@@ -538,7 +537,6 @@ public class ConversationActivity extends ConversationBaseActivity {
 
             @Override
             public void onVoiceResultSuccess(VoiceResult voiceResult, boolean isLast) {
-                LogUtils.jasonDebug("voiceResult=" + voiceResult.getResults());
                 Message message = uiMessage.getMessage();
                 MsgContentMediaVoice originMsgContentMediaVoice = message.getMsgContentMediaVoice();
                 if (!voiceResult.getResults().equals(originMsgContentMediaVoice.getResult())) {

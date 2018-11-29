@@ -24,6 +24,7 @@ import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.api.apiservice.WebexAPIService;
 import com.inspur.emmcloud.bean.appcenter.webex.GetWebexTKResult;
 import com.inspur.emmcloud.bean.appcenter.webex.WebexMeeting;
+import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.bean.chat.GetSendMsgResult;
 import com.inspur.emmcloud.bean.chat.Message;
@@ -43,6 +44,7 @@ import com.inspur.emmcloud.util.privates.AppDownloadUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
+import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
@@ -140,11 +142,11 @@ public class WebexMeetingDetailActivity extends BaseActivity {
         int duration = webexMeeting.getDuration();
         int hour = duration / 60;
         int min = duration % 60;
-        String timeHour ="";
-        if (hour == 1){
-            timeHour=hour + getString(R.string.hour)+" ";
-        }else if(hour>1){
-            timeHour=hour + getString(R.string.hours)+" ";
+        String timeHour = "";
+        if (hour == 1) {
+            timeHour = hour + getString(R.string.hour) + " ";
+        } else if (hour > 1) {
+            timeHour = hour + getString(R.string.hours) + " ";
         }
         String timeMin = (min == 0) ? "" : min + getString(R.string.mins);
         durationText.setText(timeHour + timeMin);
@@ -168,7 +170,7 @@ public class WebexMeetingDetailActivity extends BaseActivity {
     }
 
     private String formatMeetingID(String meetingID) {
-        if (StringUtils.isBlank(meetingID)){
+        if (StringUtils.isBlank(meetingID)) {
             return "";
         }
         char[] strs = meetingID.toCharArray();
@@ -277,13 +279,13 @@ public class WebexMeetingDetailActivity extends BaseActivity {
             case R.id.rl_attendees:
                 optionMenuPop.dismiss();
                 Bundle bundle = new Bundle();
-                bundle.putSerializable(WebexAttendeesActivity.EXTRA_ATTENDEES_LIST,(Serializable) webexMeeting.getWebexAttendeesList());
-                IntentUtils.startActivity(this,WebexAttendeesActivity.class,bundle);
+                bundle.putSerializable(WebexAttendeesActivity.EXTRA_ATTENDEES_LIST, (Serializable) webexMeeting.getWebexAttendeesList());
+                IntentUtils.startActivity(this, WebexAttendeesActivity.class, bundle);
                 break;
         }
     }
 
-    private void showOptionMenuPop(View view){
+    private void showOptionMenuPop(View view) {
         View contentView = LayoutInflater.from(this).inflate(R.layout.pop_webex_meeting_detail_option, null);
         optionMenuPop = new PopupWindow(contentView,
                 LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -310,17 +312,17 @@ public class WebexMeetingDetailActivity extends BaseActivity {
     }
 
     private void shareWebexMeeting() {
-        shareContent = webexMeeting.getConfName()+"\n"+getString(R.string.webex_time)+timeText.getText().toString()+"\n"
-                +getString(R.string.webex_meeting_code)+meetingIdText.getText().toString()+"\n"
-                +getString(R.string.webex_meeting_password_tip)+webexMeeting.getMeetingPassword();
-        UMConfigure.init(this,"59aa1f8f76661373290010d3"
-                ,"umeng",UMConfigure.DEVICE_TYPE_PHONE,"");
+        shareContent = webexMeeting.getConfName() + "\n" + getString(R.string.webex_time) + timeText.getText().toString() + "\n"
+                + getString(R.string.webex_meeting_code) + meetingIdText.getText().toString() + "\n"
+                + getString(R.string.webex_meeting_password_tip) + webexMeeting.getMeetingPassword();
+        UMConfigure.init(this, "59aa1f8f76661373290010d3"
+                , "umeng", UMConfigure.DEVICE_TYPE_PHONE, "");
         UMConfigure.setLogEnabled(false);
         PlatformConfig.setWeixin("wx4eb8727ea9c26495", "56a0426315f1d0985a1cc1e75e96130d");
         PlatformConfig.setQQZone("1105561850", "1kaw4r1c37SUupFL");
         final CustomShareListener mShareListener = new CustomShareListener(WebexMeetingDetailActivity.this);
         new ShareAction(WebexMeetingDetailActivity.this)
-                .setDisplayList( SHARE_MEDIA.EMAIL,SHARE_MEDIA.SMS)
+                .setDisplayList(SHARE_MEDIA.EMAIL, SHARE_MEDIA.SMS)
                 .addButton(getString(R.string.webex_internal_share), "app_name", "ic_launcher", "ic_launcher")
                 .setShareboardclickCallback(new ShareBoardlistener() {
                     @Override
@@ -353,10 +355,10 @@ public class WebexMeetingDetailActivity extends BaseActivity {
 
     @Event(value = {R.id.ll_meeting_content}, type = View.OnLongClickListener.class)
     private boolean onLongClick(View v) {
-        String content = webexMeeting.getConfName()+"\n"+getString(R.string.webex_time)+timeText.getText().toString()+"\n"
-                +getString(R.string.webex_meeting_code)+meetingIdText.getText().toString()+"\n"
-                +getString(R.string.webex_meeting_password_tip)+webexMeeting.getMeetingPassword();
-        AppUtils.copyContentToPasteBoard(MyApplication.getInstance(),content);
+        String content = webexMeeting.getConfName() + "\n" + getString(R.string.webex_time) + timeText.getText().toString() + "\n"
+                + getString(R.string.webex_meeting_code) + meetingIdText.getText().toString() + "\n"
+                + getString(R.string.webex_meeting_password_tip) + webexMeeting.getMeetingPassword();
+        AppUtils.copyContentToPasteBoard(MyApplication.getInstance(), content);
         return false;
     }
 
@@ -400,18 +402,35 @@ public class WebexMeetingDetailActivity extends BaseActivity {
      * @param uid
      */
     private void createDirectChannel(String uid, final String content) {
-        new ChatCreateUtils().createDirectChannel(WebexMeetingDetailActivity.this, uid,
-                new ChatCreateUtils.OnCreateDirectChannelListener() {
-                    @Override
-                    public void createDirectChannelSuccess(GetCreateSingleChannelResult getCreateSingleChannelResult) {
-                        sendShareMessage(getCreateSingleChannelResult.getCid(), content);
-                    }
+        if (MyApplication.getInstance().isV1xVersionChat()) {
+            new ConversationCreateUtils().createDirectConversation(WebexMeetingDetailActivity.this, uid,
+                    new ConversationCreateUtils.OnCreateDirectConversationListener() {
+                        @Override
+                        public void createDirectConversationSuccess(Conversation conversation) {
+                            sendShareMessage(conversation.getId(), content);
+                        }
 
-                    @Override
-                    public void createDirectChannelFail() {
-                        ToastUtils.show(WebexMeetingDetailActivity.this, R.string.news_share_fail);
-                    }
-                });
+                        @Override
+                        public void createDirectConversationFail() {
+
+                        }
+                    });
+        } else {
+            new ChatCreateUtils().createDirectChannel(WebexMeetingDetailActivity.this, uid,
+                    new ChatCreateUtils.OnCreateDirectChannelListener() {
+                        @Override
+                        public void createDirectChannelSuccess(GetCreateSingleChannelResult getCreateSingleChannelResult) {
+                            sendShareMessage(getCreateSingleChannelResult.getCid(), content);
+                        }
+
+                        @Override
+                        public void createDirectChannelFail() {
+                            ToastUtils.show(WebexMeetingDetailActivity.this, R.string.news_share_fail);
+                        }
+                    });
+        }
+
+
     }
 
 
@@ -430,7 +449,7 @@ public class WebexMeetingDetailActivity extends BaseActivity {
 
         @Override
         public void onResult(SHARE_MEDIA platform) {
-           // ToastUtils.show(mActivity.get(), R.string.news_share_success);
+            // ToastUtils.show(mActivity.get(), R.string.news_share_success);
         }
 
         @Override
@@ -454,7 +473,7 @@ public class WebexMeetingDetailActivity extends BaseActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveWSMessage(EventMessage eventMessage) {
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE)) {
-            if (fakeMessageId != null && String.valueOf(eventMessage.getExtra()).equals(fakeMessageId)){
+            if (fakeMessageId != null && String.valueOf(eventMessage.getExtra()).equals(fakeMessageId)) {
                 if (eventMessage.getStatus() == 200) {
                     ToastUtils.show(WebexMeetingDetailActivity.this, R.string.news_share_success);
                 } else {
@@ -487,7 +506,7 @@ public class WebexMeetingDetailActivity extends BaseActivity {
                 }
                 apiService.sendMsg(cid, msgBodyObj.toString(), "txt_rich", System.currentTimeMillis() + "");
             } else {
-                Message message = CommunicationUtils.combinLocalTextPlainMessage( content,cid, new HashMap<String, String>());
+                Message message = CommunicationUtils.combinLocalTextPlainMessage(content, cid, new HashMap<String, String>());
                 fakeMessageId = message.getId();
                 WSAPIService.getInstance().sendChatTextPlainMsg(message);
             }
