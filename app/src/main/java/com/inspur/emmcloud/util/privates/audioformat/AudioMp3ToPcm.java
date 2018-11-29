@@ -59,7 +59,7 @@ public class AudioMp3ToPcm {
      * @param dstPath 目标文件路径
      * @param sampleRate  要求采样率(仅支持16k, )
      */
-    public void startMp3ToPCm(String srcPath, String dstPath,ResultCallback onCompleteListener,int sampleRate) {
+    public void startMp3ToPCM(String srcPath, String dstPath,ResultCallback onCompleteListener,int sampleRate) {
         this.srcPath=srcPath;
         this.dstPath=dstPath;
         this.orderSampleRate =sampleRate;
@@ -80,7 +80,7 @@ public class AudioMp3ToPcm {
      * @param srcPath
      * @param dstPath
      */
-    public void startMp3Topcm(String srcPath, String dstPath,ResultCallback onCompleteListener) {
+    public void startMp3ToPCM(String srcPath, String dstPath,ResultCallback onCompleteListener) {
         this.srcPath=srcPath;
         this.dstPath=dstPath;
         this.resultCallback=onCompleteListener;

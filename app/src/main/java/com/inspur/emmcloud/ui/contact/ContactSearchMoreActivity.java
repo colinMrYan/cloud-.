@@ -30,7 +30,6 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.chat.Channel;
-import com.inspur.emmcloud.bean.chat.ChannelGroup;
 import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.contact.Contact;
 import com.inspur.emmcloud.bean.contact.FirstGroupTextModel;
@@ -47,6 +46,7 @@ import com.inspur.emmcloud.util.privates.cache.ChannelCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.CommonContactCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 import com.inspur.emmcloud.widget.CircleTextImageView;
 import com.inspur.emmcloud.widget.FlowLayout;
 import com.inspur.emmcloud.widget.MaxHightScrollView;
@@ -66,11 +66,11 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
     private static final int REFRESH_CONTACT_DATA = 5;
     public static final String EXTRA_EXCLUDE_SELECT = "excludeContactUidList";
     public static final String EXTRA_LIMIT = "select_limit";
-    private List<ChannelGroup> searchChannelGroupList = new ArrayList<ChannelGroup>(); // 群组搜索结果
-    private List<Contact> searchContactList = new ArrayList<Contact>(); // 通讯录搜索结果
-    private List<Channel> searchRecentList = new ArrayList<Channel>();// 常用联系人搜索结果
-    private List<SearchModel> selectMemList = new ArrayList<SearchModel>();
-    private List<FirstGroupTextModel> groupTextList = new ArrayList<FirstGroupTextModel>();
+    private List<SearchModel> searchChannelGroupList = new ArrayList<>(); // 群组搜索结果
+    private List<Contact> searchContactList = new ArrayList<>(); // 通讯录搜索结果
+    private List<Channel> searchRecentList = new ArrayList<>();// 常用联系人搜索结果
+    private List<SearchModel> selectMemList = new ArrayList<>();
+    private List<FirstGroupTextModel> groupTextList = new ArrayList<>();
     private int searchArea;
     private int searchContent;
     private boolean isMultiSelect = false;
@@ -121,8 +121,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
                 if (selectMemList.size() < selectLimit) {
                     SearchModel searchModel = null;
                     if (searchArea == SEARCH_CHANNELGROUP) {
-                        searchModel = new SearchModel(searchChannelGroupList
-                                .get(position));
+                        searchModel = searchChannelGroupList.get(position);
                     } else if (searchArea == SEARCH_CONTACT) {
                         searchModel = new SearchModel(searchContactList
                                 .get(position));
@@ -364,9 +363,14 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
                         adapter.notifyDataSetChanged();
                         break;
                     case SEARCH_CHANNELGROUP:
-                        searchChannelGroupList = ChannelGroupCacheUtils
-                                .getSearchChannelGroupList(getApplicationContext(),
-                                        searchText);
+                        if (MyApplication.getInstance().isV0VersionChat()) {
+                            searchChannelGroupList = ChannelGroupCacheUtils
+                                    .getSearchChannelGroupSearchModelList(MyApplication.getInstance(),
+                                            searchText);
+                        } else {
+                            searchChannelGroupList = ConversationCacheUtils.getSearchConversationSearchModelList(MyApplication.getInstance(), searchText);
+                        }
+
                         adapter.notifyDataSetChanged();
                         break;
 
@@ -462,10 +466,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
                 Channel channel = searchRecentList.get(position);
                 searchModel = new SearchModel(channel);
             } else if (searchArea == SEARCH_CHANNELGROUP) {
-                ChannelGroup channelGroup = searchChannelGroupList
-                        .get(position);
-                searchModel = new SearchModel(channelGroup);
-
+                searchModel = searchChannelGroupList.get(position);
             } else {
                 Contact contact = searchContactList.get(position);
                 searchModel = new SearchModel(contact);

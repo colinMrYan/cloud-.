@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
+import com.inspur.emmcloud.bean.contact.SearchModel;
 import com.inspur.emmcloud.util.common.StringUtils;
 
 import org.xutils.common.util.KeyValue;
@@ -112,8 +113,8 @@ public class ChannelGroupCacheUtils {
      * @param searchText
      * @return
      */
-    public static List<ChannelGroup> getSearchChannelGroupList(Context context,
-                                                               String searchText) {
+    public static List<SearchModel> getSearchChannelGroupSearchModelList(Context context,
+                                                                         String searchText) {
         List<ChannelGroup> searchChannelGroupList = null;
         if (!StringUtils.isBlank(searchText)) {
 
@@ -138,9 +139,11 @@ public class ChannelGroupCacheUtils {
         if (searchChannelGroupList == null) {
             searchChannelGroupList = new ArrayList<ChannelGroup>();
         }
-        return searchChannelGroupList;
+        return SearchModel.channelGroupList2SearchModelList(searchChannelGroupList);
 
     }
+
+
 
     /**
      * 群头像获取群里人员id在通讯录里存在的人，保证群头像完整

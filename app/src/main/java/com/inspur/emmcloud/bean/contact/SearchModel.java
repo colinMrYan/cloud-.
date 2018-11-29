@@ -5,6 +5,7 @@ import android.content.Context;
 import com.facebook.react.bridge.ReadableMap;
 import com.inspur.emmcloud.bean.chat.Channel;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
+import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactOrgCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
@@ -13,6 +14,8 @@ import org.xutils.db.annotation.Column;
 import org.xutils.db.annotation.Table;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @Table(name = "SearchModel")
 public class SearchModel implements Serializable {
@@ -43,6 +46,36 @@ public class SearchModel implements Serializable {
         this.name = channelGroup.getChannelName();
         this.type = TYPE_GROUP;
         this.icon = channelGroup.getIcon();
+    }
+
+    public SearchModel(Conversation conversation){
+        if (conversation == null) {
+            return;
+        }
+        this.id = conversation.getId();
+        this.name = conversation.getName();
+        this.type = TYPE_GROUP;
+        this.icon = conversation.getAvatar();
+    }
+
+    public static List<SearchModel> channelGroupList2SearchModelList(List<ChannelGroup> channelGroupList){
+        List<SearchModel> searchModelList = new ArrayList<>();
+        if (channelGroupList != null){
+            for (ChannelGroup channelGroup:channelGroupList){
+                searchModelList.add(new SearchModel(channelGroup));
+            }
+        }
+        return searchModelList;
+    }
+
+    public static List<SearchModel> conversationList2SearchModelList(List<Conversation> conversationList){
+        List<SearchModel> searchModelList = new ArrayList<>();
+        if (conversationList != null){
+            for (Conversation conversation:conversationList){
+                searchModelList.add(new SearchModel(conversation));
+            }
+        }
+        return searchModelList;
     }
 
     public SearchModel(Contact contact) {

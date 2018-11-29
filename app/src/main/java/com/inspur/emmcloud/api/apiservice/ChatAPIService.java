@@ -1658,7 +1658,8 @@ public class ChatAPIService {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
-                apiInterface.returnCreateDirectConversationSuccess(new Conversation(new String(arg0)));
+                JSONObject object = JSONUtils.getJSONObject(new String(arg0));
+                apiInterface.returnCreateDirectConversationSuccess(new Conversation(object));
             }
 
             @Override

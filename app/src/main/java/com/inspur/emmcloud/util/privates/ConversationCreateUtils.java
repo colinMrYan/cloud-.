@@ -9,11 +9,13 @@ package com.inspur.emmcloud.util.privates;
 import android.app.Activity;
 import android.content.Context;
 
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
+import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 
 import org.json.JSONArray;
@@ -64,8 +66,6 @@ public class ConversationCreateUtils {
         ChatAPIService apiService = new ChatAPIService(context);
         apiService.setAPIInterface(new WebService());
         apiService.createGroupConversation(groupName, uidArray);
-        LogUtils.jasonDebug("uidArray="+uidArray.toString());
-
     }
 
     /**
@@ -112,6 +112,7 @@ public class ConversationCreateUtils {
 
         @Override
         public void returnCreateDirectConversationSuccess(Conversation conversation) {
+            ConversationCacheUtils.saveConversation(MyApplication.getInstance(),conversation);
             LoadingDialog.dimissDlg(loadingDlg);
             if (onCreateDirectConversationListener != null) {
                 onCreateDirectConversationListener.createDirectConversationSuccess(conversation);
@@ -129,6 +130,7 @@ public class ConversationCreateUtils {
 
         @Override
         public void returnCreateGroupConversationSuccess(Conversation conversation) {
+            ConversationCacheUtils.saveConversation(MyApplication.getInstance(),conversation);
             LoadingDialog.dimissDlg(loadingDlg);
             if (onCreateGroupConversationListener != null) {
                 onCreateGroupConversationListener.createGroupConversationSuccess(conversation);
