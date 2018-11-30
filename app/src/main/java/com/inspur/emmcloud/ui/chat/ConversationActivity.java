@@ -48,6 +48,7 @@ import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
 import com.inspur.emmcloud.util.privates.DirectChannelUtils;
 import com.inspur.emmcloud.util.privates.GetPathFromUri4kitkat;
@@ -393,6 +394,10 @@ public class ConversationActivity extends ConversationBaseActivity {
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
             // TODO Auto-generated method stub
             Message message = uiMessage.getMessage();
+            if(!FileUtils.isFileExist(message.getLocalPath())){
+                ToastUtils.show(ConversationActivity.this,"");
+                return;
+            }
             uiMessage.setSendStatus(Message.MESSAGE_SEND_ING);
             int position = uiMessageList.indexOf(uiMessage);
             adapter.setMessageList(uiMessageList);
@@ -413,11 +418,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                     }
                     break;
                 case Message.MESSAGE_TYPE_MEDIA_VOICE:
-                    if(message.getMsgContentMediaVoice().getMedia().equals(message.getLocalPath())){
-                        sendMessageWithFile(message);
-                    }else{
-                        WSAPIService.getInstance().sendChatMediaVoiceMsg(message);
-                    }
+                    resendVoiceMessage(uiMessage);
                     break;
                 case Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN:
                     WSAPIService.getInstance().sendChatCommentTextPlainMsg(message);
@@ -431,6 +432,77 @@ public class ConversationActivity extends ConversationBaseActivity {
                 default:
                     break;
             }
+        }
+    }
+
+    /**
+     * 重发音频消息
+     * @param uiMessage
+     */
+    private void resendVoiceMessage(final UIMessage uiMessage) {
+        if(AppUtils.getIsVoiceWordOpen() && StringUtils.isBlank(uiMessage.getMessage().getMsgContentMediaVoice().getResult())){
+            String localMp3Path = uiMessage.getMessage().getLocalPath();
+            final String dstPcmPath = uiMessage.getMessage().getLocalPath().replace(".mp3",".pcm");
+            new AudioMp3ToPcm().startMp3ToPCM(localMp3Path, dstPcmPath, new ResultCallback() {
+                @Override
+                public void onSuccess() {
+                    Voice2StringMessageUtils voice2StringMessageUtils = new Voice2StringMessageUtils(ConversationActivity.this);
+                    voice2StringMessageUtils.setAudioSimpleRate(8000);
+                    voice2StringMessageUtils.setOnVoiceResultCallback(new OnVoiceResultCallback() {
+                        @Override
+                        public void onVoiceStart() {
+
+                        }
+
+                        @Override
+                        public void onVoiceResultSuccess(VoiceResult results, boolean isLast) {
+                            MsgContentMediaVoice msgContentMediaVoice = new MsgContentMediaVoice();
+                            msgContentMediaVoice.setDuration(uiMessage.getMessage().getMsgContentMediaVoice().getDuration());
+                            msgContentMediaVoice.setMedia(uiMessage.getMessage().getMsgContentMediaVoice().getMedia());
+                            msgContentMediaVoice.setJsonResults(results.getResults());
+                            Message message = uiMessage.getMessage();
+                            message.setContent(msgContentMediaVoice.toString());
+                            int position = uiMessageList.indexOf(uiMessage);
+                            if (position != -1) {
+                                adapter.notifyItemChanged(position);
+                            }
+                            sendVoiceMessage(uiMessage.getMessage());
+                            MessageCacheUtil.saveMessage(MyApplication.getInstance(), message);
+                        }
+
+                        @Override
+                        public void onVoiceFinish() {
+
+                        }
+
+                        @Override
+                        public void onVoiceLevelChange(int volume) {
+
+                        }
+
+                        @Override
+                        public void onVoiceResultError(VoiceResult errorResult) {
+                            LogUtils.YfcDebug("讯飞转写出错："+errorResult.getXunFeiError());
+                        }
+                    });
+                    voice2StringMessageUtils.startVoiceListeningByVoiceFile(uiMessage.getMessage().getMsgContentMediaVoice().getDuration(),dstPcmPath);
+                }
+
+                @Override
+                public void onFail() {
+
+                }
+            });
+        }else{
+            sendVoiceMessage(uiMessage.getMessage());
+        }
+    }
+
+    private void sendVoiceMessage(Message message) {
+        if(message.getMsgContentMediaVoice().getMedia().equals(message.getLocalPath())){
+            sendMessageWithFile(message);
+        }else{
+            WSAPIService.getInstance().sendChatMediaVoiceMsg(message);
         }
     }
 
@@ -566,7 +638,6 @@ public class ConversationActivity extends ConversationBaseActivity {
 
             @Override
             public void onVoiceResultError(VoiceResult errorResult) {
-                LogUtils.jasonDebug("onVoiceResultError---------");
                 downloadLoadingView.setVisibility(View.GONE);
             }
         });
