@@ -4,21 +4,26 @@ import android.graphics.drawable.Drawable;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
+import android.os.Looper;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.bean.system.SimpleEventMessage;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PingNetEntity;
 import com.inspur.emmcloud.util.privates.UriUtils;
 import com.qmuiteam.qmui.widget.QMUILoadingView;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,8 +32,6 @@ import java.util.List;
  */
 
 public class NetWorkStateDetailActivity extends BaseActivity {
-   public static final int SHOW_DNSCONNCTSTATE=2;
-   public static final int SHOW_PORTAL_CONNECT=1;
    public static  String []  subUrls  = {"www.baidu.com","www.inspur.com","www.aliyun.com"};
     private String PortalCheckingUrls  = "http://www.inspuronline.com/#/auth/0\\(arc4random() % 100000)";
    private ImageView hardImageView;
@@ -50,6 +53,7 @@ public class NetWorkStateDetailActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_network_state_detail);
         iniView();
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -72,7 +76,6 @@ public class NetWorkStateDetailActivity extends BaseActivity {
         drawableDomainSuccess = getBaseContext().getResources().getDrawable(R.drawable.ic_checking_domain_success);
         qmulHardLoadingView =(QMUILoadingView)findViewById(R.id.qv_checking_hard_loading);
         qmulWifiLoadingView =(QMUILoadingView)findViewById(R.id.qv_checking_portal_loading);
-        HandMessage();
     }
 
     /**
@@ -98,38 +101,6 @@ public class NetWorkStateDetailActivity extends BaseActivity {
         }
     }
 
-    /**
-     * 处理不同Net链接状态的UI显示
-     * */
-    void HandMessage() {
-        handler=new Handler() {
-            public void handleMessage(android.os.Message msg) {
-                switch (msg.what) {
-                    case SHOW_PORTAL_CONNECT:
-                        if((boolean)msg.obj) {
-                            qmulWifiLoadingView.setVisibility(View.GONE);
-                            portalImageView.setBackground(drawableSuccess);
-                            portalImageView.setVisibility(View.VISIBLE);
-                        } else {
-                                qmulWifiLoadingView.setVisibility(View.GONE);
-                                portalImageView.setBackground(drawableError);
-                                portalImageView.setVisibility(View.VISIBLE);
-                            }
-                        break;
-                    case SHOW_DNSCONNCTSTATE:
-                         List<Boolean>  resultData = (List<Boolean>)msg.obj;
-                        findViewById(R.id.iv_ping_baidu_state).setBackground(resultData.get(0)?drawableDomainSuccess:drawableDomainError);
-                        findViewById(R.id.iv_ping_inspur_state).setBackground(resultData.get(1)?drawableDomainSuccess:drawableDomainError);
-                        findViewById(R.id.iv_ping_ali_state).setBackground(resultData.get(2)?drawableDomainSuccess:drawableDomainError);
-                        setShowDnsconnctstateUI(false);
-                        break;
-                    default:
-                        break;
-                }
-            }
-        };
-    }
-
     @Override
     protected void onStart() {
         super.onStart();
@@ -145,11 +116,15 @@ public class NetWorkStateDetailActivity extends BaseActivity {
             hardImageView.setBackground(drawableError);
             qmulHardLoadingView.setVisibility(View.GONE);
             hardImageView.setVisibility(View.VISIBLE);
+            findViewById(R.id.rl_to_fix).setVisibility(View.VISIBLE);
+            findViewById(R.id.rl_net_error_fix).setClickable(true);
             return false;
         }else {
             hardImageView.setBackground(drawableSuccess);
             qmulHardLoadingView.setVisibility(View.GONE);
             hardImageView.setVisibility(View.VISIBLE);
+            findViewById(R.id.rl_to_fix).setVisibility(View.GONE);
+            findViewById(R.id.rl_net_error_fix).setClickable(false);
             return true;
         }
     }
@@ -166,25 +141,9 @@ public class NetWorkStateDetailActivity extends BaseActivity {
      * 检测DNS服务器状态
      * */
     private  void checkingDNSConnectState() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    List<Boolean> resultState=new ArrayList<>();
                     for (int i=0;i<subUrls.length;i++) {
-                        PingNetEntity checkUrlEntity =new PingNetEntity(subUrls[i],1,5,new StringBuffer());
-                        PingNetEntity checkResult= NetUtils.ping(checkUrlEntity, (long) 4500);
-                        resultState.add(checkResult.isResult());
+                        NetUtils.PingThreadStart(subUrls[i],5,Constant.EVENTBUS_TAG__NET_PING_CONNECTION,subUrls[i]);
                     }
-                    Message dnsState = new Message();
-                    dnsState.what=SHOW_DNSCONNCTSTATE;
-                    dnsState.obj=resultState;
-                    handler.sendMessage(dnsState);
-                }catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
     }
 
     /**
@@ -235,17 +194,16 @@ public class NetWorkStateDetailActivity extends BaseActivity {
                             resultData =false;
                         }
                     }
-                    Message msg=new Message();
-                    msg.what=SHOW_PORTAL_CONNECT;
-                    msg.obj = resultData;
-                    handler.sendMessage(msg);
                 } catch (Exception e) {
-                    Message msg=new Message();
-                    msg.what=SHOW_PORTAL_CONNECT;
-                    msg.obj = false;
-                    handler.sendMessage(msg);
                     e.printStackTrace();
                 }finally{
+                    final boolean finalResultData = resultData;
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG__NET_PORTAL_HTTP_POST, finalResultData));
+                        }
+                    });
                     if(httpURLConnection!=null){
                         httpURLConnection.disconnect();//将HTTP连接关闭掉
                     }
@@ -275,4 +233,48 @@ public class NetWorkStateDetailActivity extends BaseActivity {
         }
     }
 
+    /**
+     * 沟通页网络异常提示框
+     * @param netState  通过Action获取操作类型
+     * */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void dealCheckingPingUrls(SimpleEventMessage netState) {
+        if(netState.getAction().equals(Constant.EVENTBUS_TAG__NET_PING_CONNECTION)){
+            List<Object> idAndData  = (List<Object>)netState.getMessageObj();
+            if (((String)idAndData.get(0)).equals(subUrls[0])){
+                findViewById(R.id.iv_ping_baidu_state).setBackground((boolean)idAndData.get(1)?drawableDomainSuccess:drawableDomainError);
+                findViewById(R.id.iv_ping_baidu_state).setVisibility(View.VISIBLE);
+                findViewById(R.id.qv_ping_baidu_loading).setVisibility(View.GONE);
+            }
+            if (((String)idAndData.get(0)).equals(subUrls[1])){
+                findViewById(R.id.iv_ping_inspur_state).setBackground((boolean)idAndData.get(1)?drawableDomainSuccess:drawableDomainError);
+                findViewById(R.id.iv_ping_inspur_state).setVisibility(View.VISIBLE);
+                findViewById(R.id.qv_ping_inspur_loading).setVisibility(View.GONE);
+            }
+            if (((String)idAndData.get(0)).equals(subUrls[2])){
+                findViewById(R.id.iv_ping_ali_state).setBackground((boolean)idAndData.get(1)?drawableDomainSuccess:drawableDomainError);
+                findViewById(R.id.iv_ping_ali_state).setVisibility(View.VISIBLE);
+                findViewById(R.id.qv_ping_ali_loading).setVisibility(View.GONE);
+            }
+        }  else if(netState.getAction().equals(Constant.EVENTBUS_TAG__NET_PORTAL_HTTP_POST)) {
+            if((boolean)netState.getMessageObj()) {
+                qmulWifiLoadingView.setVisibility(View.GONE);
+                portalImageView.setBackground(drawableSuccess);
+                portalImageView.setVisibility(View.VISIBLE);
+            } else {
+                qmulWifiLoadingView.setVisibility(View.GONE);
+                portalImageView.setBackground(drawableError);
+                portalImageView.setVisibility(View.VISIBLE);
+            }
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(null!=handler) {
+            handler=null;
+        }
+        EventBus.getDefault().unregister(this);
+    }
 }
