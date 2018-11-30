@@ -584,7 +584,7 @@ public class ConversationActivity extends ConversationBaseActivity {
             downloadLoadingView.setVisibility(View.VISIBLE);
         }
         Voice2StringMessageUtils voice2StringMessageUtils = new Voice2StringMessageUtils(this);
-        if(FileUtils.getFileExtension(filePath).equals("mp3")){
+        if(FileUtils.getFileExtension(filePath).equals("pcm")){
             voice2StringMessageUtils.setAudioSimpleRate(8000);
         }
         voice2StringMessageUtils.setOnVoiceResultCallback(new OnVoiceResultCallback() {
