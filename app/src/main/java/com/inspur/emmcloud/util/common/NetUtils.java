@@ -126,6 +126,14 @@ public class NetUtils {
 			return mobile;
 	}
 
+	public static NetworkInfo.State getNetworkWifiState(Context context) {
+		ConnectivityManager connectivityManager = (ConnectivityManager) context
+				.getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo.State mobile = connectivityManager.getNetworkInfo(
+				ConnectivityManager.TYPE_WIFI).getState();
+		return mobile;
+	}
+
 	/**
 	 * Get network type name
 	 * 
@@ -220,7 +228,6 @@ public class NetUtils {
 		String command = "ping -c " + pingNetEntity.getPingCount() + " -w " + pingNetEntity.getPingWtime() + " " + pingNetEntity.getIp();
 		LogUtils.LbcDebug(command);
 		long taegrtTime = System.currentTimeMillis()+WhileTime;
-		while (System.currentTimeMillis()<taegrtTime){
 			try {
 				process = Runtime.getRuntime().exec(command);
 				if (process == null) {
@@ -265,7 +272,7 @@ public class NetUtils {
 			if(pingNetEntity.isResult()){
 				return pingNetEntity;
 			}
-		}
+
 		return pingNetEntity;
 	}
 

@@ -13,7 +13,6 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PingNetEntity;
-import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.UriUtils;
 import com.qmuiteam.qmui.widget.QMUILoadingView;
 
@@ -107,8 +106,15 @@ public class NetWorkStateDetailActivity extends BaseActivity {
             public void handleMessage(android.os.Message msg) {
                 switch (msg.what) {
                     case SHOW_PORTAL_CONNECT:
-                        List<String> bundleata =(List<String>)msg.obj;
-                        PortalConnectStateToUI(portalConnectionState(bundleata));
+                        if((boolean)msg.obj) {
+                            qmulWifiLoadingView.setVisibility(View.GONE);
+                            portalImageView.setBackground(drawableSuccess);
+                            portalImageView.setVisibility(View.VISIBLE);
+                        } else {
+                                qmulWifiLoadingView.setVisibility(View.GONE);
+                                portalImageView.setBackground(drawableError);
+                                portalImageView.setVisibility(View.VISIBLE);
+                            }
                         break;
                     case SHOW_DNSCONNCTSTATE:
                          List<Boolean>  resultData = (List<Boolean>)msg.obj;
@@ -153,49 +159,7 @@ public class NetWorkStateDetailActivity extends BaseActivity {
      * @param StrUrl 测试小助手url(设定为百度)
      * */
     private void checkingPortalState(final String StrUrl) {
-        if(NetUtils.NETWORK_WIFI==NetStateintegerData.get(0)) {
-            sendRequest(StrUrl);
-        } else if(NetworkInfo.State.CONNECTED==NetUtils.getNetworkMobileState(getBaseContext())) {
-            qmulWifiLoadingView.setVisibility(View.GONE);
-            portalImageView.setBackground(drawableSuccess);
-            portalImageView.setVisibility(View.VISIBLE);
-        } else {
-            qmulWifiLoadingView.setVisibility(View.GONE);
-            portalImageView.setBackground(drawableError);
-            portalImageView.setVisibility(View.VISIBLE);
-        }
-    }
-
-    /**
-     * 连接wifi状态下的小助手检测反馈
-     * @param bundleata  包含反馈数据 网络连接状态、反馈Url(小助手会有劫持)
-     * */
-    private  boolean  portalConnectionState(List<String> bundleata) {
-        String httpNetStateNum = bundleata.get(0);
-        String returnUrl=bundleata.get(1);
-        PortalUrl="";
-        if(!StringUtils.isBlank(httpNetStateNum)){
-            if(-1!=httpNetStateNum.indexOf("NETWORK 30")&&-1!=returnUrl.indexOf("&firsturl")) {
-                PortalUrl = returnUrl.substring(0,returnUrl.indexOf("&firsturl"));
-                return false;
-            }else {
-                return true;}
-        }
-        return  false;
-    }
-
-    /**
-     * 连接wifi下小助手状态反馈至UI
-     * @param portalState  小助手连接状态
-     * */
-    private void PortalConnectStateToUI(boolean portalState) {
-        if(portalState) {
-            portalImageView.setBackground(drawableSuccess);
-        } else {
-            portalImageView.setBackground(drawableError);
-        }
-        portalImageView.setVisibility(View.VISIBLE);
-        qmulWifiLoadingView.setVisibility(View.GONE);
+                sendRequest(StrUrl);
     }
 
     /**
@@ -208,7 +172,7 @@ public class NetWorkStateDetailActivity extends BaseActivity {
                 try {
                     List<Boolean> resultState=new ArrayList<>();
                     for (int i=0;i<subUrls.length;i++) {
-                        PingNetEntity checkUrlEntity =new PingNetEntity(subUrls[i],1,4,new StringBuffer());
+                        PingNetEntity checkUrlEntity =new PingNetEntity(subUrls[i],1,5,new StringBuffer());
                         PingNetEntity checkResult= NetUtils.ping(checkUrlEntity, (long) 4500);
                         resultState.add(checkResult.isResult());
                     }
@@ -247,31 +211,38 @@ public class NetWorkStateDetailActivity extends BaseActivity {
      * @param StrUrl
      * */
     private void sendRequest(final  String  StrUrl) {
+        final NetworkInfo.State wifiConnection  =  NetUtils.getNetworkWifiState(getBaseContext());
         new Thread(){
             public void run() {
                 HttpURLConnection httpURLConnection=null;
+                boolean resultData = false;
                 try {
-                    URL url=new URL(StrUrl);
-                    httpURLConnection=(HttpURLConnection) url.openConnection();//获取到httpURLConnection的实例
-                    httpURLConnection.setInstanceFollowRedirects(false);
-                    httpURLConnection.setRequestMethod("POST");//设置HTTP请求所使用的方法，GET表示希望从服务器那里获取数据，而POST则表示希望提交数据给服务器
-                    httpURLConnection.setReadTimeout(10000);//设置读取超时的毫秒数
-                    List<String> BundleData=new ArrayList<>();
-                    String httpStateNo =httpURLConnection.getHeaderField("X-Android-Response-Source");
-                    BundleData.add(httpStateNo);
-                    String urlAndUrl =httpURLConnection.getHeaderField("Location");
-                    BundleData.add(urlAndUrl);
+                    PingNetEntity prePingPortal = new PingNetEntity(subUrls[0],1,5,new StringBuffer());
+                    PingNetEntity pingPortalState  = NetUtils.ping(prePingPortal,(long)2000);
+                    if(pingPortalState.isResult()) {
+                        resultData = true ;
+                    } else {
+                        if (wifiConnection ==NetworkInfo.State.CONNECTED) {
+                            URL url=new URL(StrUrl);
+                            httpURLConnection=(HttpURLConnection) url.openConnection();//获取到httpURLConnection的实例
+                            httpURLConnection.setInstanceFollowRedirects(false);
+                            httpURLConnection.setRequestMethod("POST");//设置HTTP请求所使用的方法，GET表示希望从服务器那里获取数据，而POST则表示希望提交数据给服务器
+                            httpURLConnection.setReadTimeout(10000);//设置读取超时的毫秒数
+                            int responcode = httpURLConnection.getResponseCode();
+                            if(responcode>300&&responcode<310){
+                               PortalUrl= httpURLConnection.getURL().toString();//路径复制
+                            }
+                            resultData =false;
+                        }
+                    }
                     Message msg=new Message();
                     msg.what=SHOW_PORTAL_CONNECT;
-                    msg.obj = BundleData;
+                    msg.obj = resultData;
                     handler.sendMessage(msg);
                 } catch (Exception e) {
-                    List<String> BundleData=new ArrayList<>();
-                    BundleData.add("");
-                    BundleData.add("");
                     Message msg=new Message();
                     msg.what=SHOW_PORTAL_CONNECT;
-                    msg.obj = BundleData;
+                    msg.obj = false;
                     handler.sendMessage(msg);
                     e.printStackTrace();
                 }finally{
