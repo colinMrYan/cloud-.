@@ -4,13 +4,14 @@ package com.inspur.emmcloud.util.common;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Handler;
+import android.os.Looper;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
-import com.inspur.emmcloud.config.Constant;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -126,6 +127,14 @@ public class NetUtils {
 			return mobile;
 	}
 
+	public static NetworkInfo.State getNetworkWifiState(Context context) {
+		ConnectivityManager connectivityManager = (ConnectivityManager) context
+				.getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo.State mobile = connectivityManager.getNetworkInfo(
+				ConnectivityManager.TYPE_WIFI).getState();
+		return mobile;
+	}
+
 	/**
 	 * Get network type name
 	 * 
@@ -220,7 +229,6 @@ public class NetUtils {
 		String command = "ping -c " + pingNetEntity.getPingCount() + " -w " + pingNetEntity.getPingWtime() + " " + pingNetEntity.getIp();
 		LogUtils.LbcDebug(command);
 		long taegrtTime = System.currentTimeMillis()+WhileTime;
-		while (System.currentTimeMillis()<taegrtTime){
 			try {
 				process = Runtime.getRuntime().exec(command);
 				if (process == null) {
@@ -265,7 +273,7 @@ public class NetUtils {
 			if(pingNetEntity.isResult()){
 				return pingNetEntity;
 			}
-		}
+
 		return pingNetEntity;
 	}
 
@@ -422,16 +430,48 @@ public class NetUtils {
 	}
 
 	/**
-	 *Ping 网络状态 "www.baidu.com"
+	 *Ping 网络状态 "www.baidu.com" /Constant.EVENTBUS_TAG__NET_EXCEPTION_HINT
 	 * */
-	public static void PingThreadStart(final  String  StrUrl,final int WaiteTime) {
+	public static void PingThreadStart(final  String  StrUrl,final int WaiteTime,final String eventBusAction) {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
 				try {
 					PingNetEntity pingNetEntity=new PingNetEntity(StrUrl,1,WaiteTime,new StringBuffer());
 					pingNetEntity=NetUtils.ping(pingNetEntity, (long) 4500);
-					EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG__NET_EXCEPTION_HINT, pingNetEntity.isResult()));
+					final PingNetEntity finalPingNetEntity = pingNetEntity;
+					new Handler(Looper.getMainLooper()).post(new Runnable() {
+						@Override
+						public void run() {
+							EventBus.getDefault().post(new SimpleEventMessage(eventBusAction,  finalPingNetEntity.isResult()));
+						}
+					});
+				} catch (Exception e){
+					e.printStackTrace();
+				}
+			}
+		}).start();
+	}
+
+	/**
+	 *Ping 网络状态 "www.baidu.com" /Constant.EVENTBUS_TAG__NET_EXCEPTION_HINT
+	 * */
+	public static void PingThreadStart(final  String  StrUrl, final int WaiteTime, final String eventBusAction, final String id) {
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					PingNetEntity pingNetEntity=new PingNetEntity(StrUrl,1,WaiteTime,new StringBuffer());
+					pingNetEntity=NetUtils.ping(pingNetEntity, (long) 4500);
+					final List<Object> pingIdAndData = new ArrayList<>();
+					pingIdAndData.add(id);
+					pingIdAndData.add(pingNetEntity.isResult());
+					new Handler(Looper.getMainLooper()).post(new Runnable() {
+                            @Override
+                            public void run() {
+								EventBus.getDefault().post(new SimpleEventMessage(eventBusAction, pingIdAndData));
+                            }
+                        });
 				} catch (Exception e){
 					e.printStackTrace();
 				}
