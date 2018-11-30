@@ -183,13 +183,13 @@ public class NetWorkStateDetailActivity extends BaseActivity {
                     } else {
                         if (wifiConnection ==NetworkInfo.State.CONNECTED) {
                             URL url=new URL(StrUrl);
-                            httpURLConnection=(HttpURLConnection) url.openConnection();//获取到httpURLConnection的实例
+                            httpURLConnection=(HttpURLConnection) url.openConnection();
                             httpURLConnection.setInstanceFollowRedirects(false);
-                            httpURLConnection.setRequestMethod("POST");//设置HTTP请求所使用的方法，GET表示希望从服务器那里获取数据，而POST则表示希望提交数据给服务器
-                            httpURLConnection.setReadTimeout(10000);//设置读取超时的毫秒数
+                            httpURLConnection.setRequestMethod("POST");
+                            httpURLConnection.setReadTimeout(10000);
                             int responcode = httpURLConnection.getResponseCode();
                             if(responcode>300&&responcode<310){
-                               PortalUrl= httpURLConnection.getURL().toString();//路径复制
+                               PortalUrl= httpURLConnection.getURL().toString();
                             }
                             resultData =false;
                         }
