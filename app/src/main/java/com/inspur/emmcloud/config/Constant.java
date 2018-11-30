@@ -40,7 +40,7 @@ public class Constant {
     public static final String PREF_WEBEX_DOWNLOAD_URL = "webex_download_url";
     public static final String PREF_WEBEX_FIRST_ENTER = "webex_first_enter";
     public static final String PREF_GET_OFFLINE_LAST_MID = "get_offline_last_mid";
-    public static final String PREF_LAST_LANGUAGE = "get_offline_last_mid";
+    public static final String PREF_LAST_LANGUAGE = "last_language";
 
     public static final String PREF_V_CONFIG_ALL = "v_config_all";
     public static final String PREF_EXPERIENCE_UPGRATE = "experience_upgrade";
