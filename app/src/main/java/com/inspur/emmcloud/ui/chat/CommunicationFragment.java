@@ -706,6 +706,7 @@ public class CommunicationFragment extends Fragment {
      */
     private void setConversationRead(int position, final UIConversation uiConversation) {
         if (uiConversation.getUnReadCount() > 0) {
+            WSAPIService.getInstance().setChannelMessgeStateRead(uiConversation.getId());
             new Thread(new Runnable() {
                 @Override
                 public void run() {
