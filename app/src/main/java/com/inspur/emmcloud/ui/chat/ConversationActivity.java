@@ -192,6 +192,14 @@ public class ConversationActivity extends ConversationBaseActivity {
     @Override
     protected void initChannelMessage() {
         List<Message> cacheMessageList = MessageCacheUtil.getHistoryMessageList(MyApplication.getInstance(), cid, null, 20);
+        List<Message> messageSendingList = new ArrayList<>();
+        for (int i = 0; i < cacheMessageList.size(); i++) {
+            if(cacheMessageList.get(i).getSendStatus() == Message.MESSAGE_SEND_ING && ((System.currentTimeMillis() - cacheMessageList.get(i).getCreationDate())>16*1000) ){
+                cacheMessageList.get(i).setSendStatus(Message.MESSAGE_SEND_FAIL);
+                messageSendingList.add(cacheMessageList.get(i));
+            }
+        }
+        persistenceMessageSendStatus(messageSendingList);
         uiMessageList = UIMessage.MessageList2UIMessageList(cacheMessageList);
         if (getIntent().hasExtra(EXTRA_NEED_GET_NEW_MESSAGE) && NetUtils.isNetworkConnected(MyApplication.getInstance())) {
             getNewMessageOfChannel();
@@ -312,6 +320,13 @@ public class ConversationActivity extends ConversationBaseActivity {
                 conversation.setName(name);
                 headerText.setText(name);
                 break;
+            case Constant.EVENTBUS_TAG_COMMENT_MESSAGE:
+                Message message = (Message) eventMessage.getMessageObj();
+                uiMessageList.add(new UIMessage(message));
+                adapter.setMessageList(uiMessageList);
+                adapter.notifyItemInserted(uiMessageList.size() - 1);
+                msgListView.MoveToPosition(uiMessageList.size() - 1);
+                break;
         }
 
     }
@@ -393,7 +408,9 @@ public class ConversationActivity extends ConversationBaseActivity {
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
             // TODO Auto-generated method stub
             Message message = uiMessage.getMessage();
-            if(!FileUtils.isFileExist(message.getLocalPath())){
+            String messageType = message.getType();
+            if(!FileUtils.isFileExist(message.getLocalPath()) && (messageType.equals(Message.MESSAGE_TYPE_FILE_REGULAR_FILE)
+            || messageType.equals(Message.MESSAGE_TYPE_MEDIA_IMAGE) || messageType.equals(Message.MESSAGE_TYPE_MEDIA_VOICE))){
                 ToastUtils.show(ConversationActivity.this,getString(R.string.resend_file_failed));
                 return;
             }
@@ -401,7 +418,7 @@ public class ConversationActivity extends ConversationBaseActivity {
             int position = uiMessageList.indexOf(uiMessage);
             adapter.setMessageList(uiMessageList);
             adapter.notifyItemChanged(position);
-            switch (message.getType()) {
+            switch (messageType) {
                 case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
                     if(message.getMsgContentAttachmentFile().getMedia().equals(message.getLocalPath())){
                         sendMessageWithFile(message);
@@ -1051,14 +1068,6 @@ public class ConversationActivity extends ConversationBaseActivity {
         if (uiMessageList.size() > 0) {
             List<Message> messageList = MessageCacheUtil.getHistoryMessageList(
                     MyApplication.getInstance(), cid, uiMessageList.get(0).getCreationDate(), 20);
-            List<Message> messageSendingList = new ArrayList<>();
-            for (int i = 0; i < messageList.size(); i++) {
-                if(messageList.get(i).getSendStatus() == Message.MESSAGE_SEND_ING && ((System.currentTimeMillis() - messageList.get(i).getCreationDate())>16*1000) ){
-                    messageList.get(i).setSendStatus(Message.MESSAGE_SEND_FAIL);
-                    messageSendingList.add(messageList.get(i));
-                }
-            }
-            persistenceMessageSendStatus(messageSendingList);
             uiMessageList.addAll(0, UIMessage.MessageList2UIMessageList(messageList));
             adapter.setMessageList(uiMessageList);
             adapter.notifyItemRangeInserted(0, messageList.size());
