@@ -395,7 +395,7 @@ public class ConversationActivity extends ConversationBaseActivity {
             // TODO Auto-generated method stub
             Message message = uiMessage.getMessage();
             if(!FileUtils.isFileExist(message.getLocalPath())){
-                ToastUtils.show(ConversationActivity.this,"");
+                ToastUtils.show(ConversationActivity.this,getString(R.string.resend_file_failed));
                 return;
             }
             uiMessage.setSendStatus(Message.MESSAGE_SEND_ING);
