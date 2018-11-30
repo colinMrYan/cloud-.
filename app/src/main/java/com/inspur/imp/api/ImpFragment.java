@@ -203,6 +203,7 @@ public class ImpFragment extends ImpBaseFragment {
         rootView.findViewById(R.id.back_layout).setOnClickListener(listener);
         rootView.findViewById(R.id.imp_close_btn).setOnClickListener(listener);
         rootView.findViewById(R.id.refresh_text).setOnClickListener(listener);
+        rootView.findViewById(R.id.load_error_layout).setOnClickListener(listener);
     }
 
     class ImpFragmentClickListener implements View.OnClickListener {
