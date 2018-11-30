@@ -44,7 +44,6 @@ import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.InputMethodUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
@@ -442,57 +441,24 @@ public class ConversationActivity extends ConversationBaseActivity {
     private void resendVoiceMessage(final UIMessage uiMessage) {
         if(AppUtils.getIsVoiceWordOpen() && StringUtils.isBlank(uiMessage.getMessage().getMsgContentMediaVoice().getResult())){
             String localMp3Path = uiMessage.getMessage().getLocalPath();
-            final String dstPcmPath = uiMessage.getMessage().getLocalPath().replace(".mp3",".pcm");
-            new AudioMp3ToPcm().startMp3ToPCM(localMp3Path, dstPcmPath, new ResultCallback() {
-                @Override
-                public void onSuccess() {
-                    Voice2StringMessageUtils voice2StringMessageUtils = new Voice2StringMessageUtils(ConversationActivity.this);
-                    voice2StringMessageUtils.setAudioSimpleRate(8000);
-                    voice2StringMessageUtils.setOnVoiceResultCallback(new OnVoiceResultCallback() {
-                        @Override
-                        public void onVoiceStart() {
+            String localWavPath = localMp3Path.replace(".mp3",".wav");
+            if(FileUtils.isFileExist(localWavPath)){
+                voiceToWord(localWavPath,uiMessage,null);
+            }else{
+                final String dstPcmPath = localMp3Path.replace(".mp3",".pcm");
+                new AudioMp3ToPcm().startMp3ToPCM(localMp3Path, dstPcmPath, new ResultCallback() {
+                    @Override
+                    public void onSuccess() {
+                        voiceToWord(dstPcmPath,uiMessage,null);
+                    }
 
-                        }
+                    @Override
+                    public void onFail() {
+                        sendVoiceMessage(uiMessage.getMessage());
+                    }
+                });
+            }
 
-                        @Override
-                        public void onVoiceResultSuccess(VoiceResult results, boolean isLast) {
-                            MsgContentMediaVoice msgContentMediaVoice = new MsgContentMediaVoice();
-                            msgContentMediaVoice.setDuration(uiMessage.getMessage().getMsgContentMediaVoice().getDuration());
-                            msgContentMediaVoice.setMedia(uiMessage.getMessage().getMsgContentMediaVoice().getMedia());
-                            msgContentMediaVoice.setJsonResults(results.getResults());
-                            Message message = uiMessage.getMessage();
-                            message.setContent(msgContentMediaVoice.toString());
-                            int position = uiMessageList.indexOf(uiMessage);
-                            if (position != -1) {
-                                adapter.notifyItemChanged(position);
-                            }
-                            sendVoiceMessage(uiMessage.getMessage());
-                            MessageCacheUtil.saveMessage(MyApplication.getInstance(), message);
-                        }
-
-                        @Override
-                        public void onVoiceFinish() {
-
-                        }
-
-                        @Override
-                        public void onVoiceLevelChange(int volume) {
-
-                        }
-
-                        @Override
-                        public void onVoiceResultError(VoiceResult errorResult) {
-                            LogUtils.YfcDebug("讯飞转写出错："+errorResult.getXunFeiError());
-                        }
-                    });
-                    voice2StringMessageUtils.startVoiceListeningByVoiceFile(uiMessage.getMessage().getMsgContentMediaVoice().getDuration(),dstPcmPath);
-                }
-
-                @Override
-                public void onFail() {
-
-                }
-            });
         }else{
             sendVoiceMessage(uiMessage.getMessage());
         }
@@ -597,9 +563,13 @@ public class ConversationActivity extends ConversationBaseActivity {
     }
 
     private void voiceToWord(String filePath, final UIMessage uiMessage, final QMUILoadingView downloadLoadingView) {
-        downloadLoadingView.setVisibility(View.VISIBLE);
+        if(downloadLoadingView != null){
+            downloadLoadingView.setVisibility(View.VISIBLE);
+        }
         Voice2StringMessageUtils voice2StringMessageUtils = new Voice2StringMessageUtils(this);
-        voice2StringMessageUtils.setAudioSimpleRate(8000);
+        if(FileUtils.getFileExtension(filePath).equals("mp3")){
+            voice2StringMessageUtils.setAudioSimpleRate(8000);
+        }
         voice2StringMessageUtils.setOnVoiceResultCallback(new OnVoiceResultCallback() {
             @Override
             public void onVoiceStart() {
@@ -607,7 +577,6 @@ public class ConversationActivity extends ConversationBaseActivity {
 
             @Override
             public void onVoiceResultSuccess(VoiceResult voiceResult, boolean isLast) {
-                LogUtils.jasonDebug("voiceResult="+voiceResult.getResults());
                 Message message = uiMessage.getMessage();
                 MsgContentMediaVoice originMsgContentMediaVoice = message.getMsgContentMediaVoice();
                 if (!voiceResult.getResults().equals(originMsgContentMediaVoice.getResult())) {
@@ -616,19 +585,23 @@ public class ConversationActivity extends ConversationBaseActivity {
                     msgContentMediaVoice.setMedia(originMsgContentMediaVoice.getMedia());
                     msgContentMediaVoice.setJsonResults(voiceResult.getResults());
                     message.setContent(msgContentMediaVoice.toString());
-                    int position = uiMessageList.indexOf(uiMessage);
-                    if (position != -1) {
-                        adapter.notifyItemChanged(position);
+                    if(downloadLoadingView == null){
+                        sendVoiceMessage(message);
+                    }else {
+                        int position = uiMessageList.indexOf(uiMessage);
+                        if (position != -1) {
+                            adapter.notifyItemChanged(position);
+                        }
                     }
                     MessageCacheUtil.saveMessage(MyApplication.getInstance(), message);
                 }
-
-
             }
 
             @Override
             public void onVoiceFinish() {
-                downloadLoadingView.setVisibility(View.GONE);
+                if(downloadLoadingView != null){
+                    downloadLoadingView.setVisibility(View.GONE);
+                }
             }
 
             @Override
@@ -638,7 +611,9 @@ public class ConversationActivity extends ConversationBaseActivity {
 
             @Override
             public void onVoiceResultError(VoiceResult errorResult) {
-                downloadLoadingView.setVisibility(View.GONE);
+                if(downloadLoadingView != null){
+                    downloadLoadingView.setVisibility(View.GONE);
+                }
             }
         });
         voice2StringMessageUtils.startVoiceListeningByVoiceFile(uiMessage.getMessage().getMsgContentMediaVoice().getDuration(), filePath);
