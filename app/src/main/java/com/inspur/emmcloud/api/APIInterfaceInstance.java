@@ -1826,32 +1826,34 @@ public class APIInterfaceInstance implements APIInterface {
     }
     @Override
     public void returnUpdateExperienceUpgradeFlagSuccess() {
-
     }
 
     @Override
     public void returnUpdateExperienceUpgradeFlagFail(String error, int errorCode) {
-
     }
 
     @Override
     public void returnCreateDirectConversationSuccess(Conversation conversation) {
-
     }
 
     @Override
     public void returnCreateDirectConversationFail(String error, int errorCode) {
-
     }
 
     @Override
     public void returnCreateGroupConversationSuccess(Conversation conversation) {
-
     }
 
     @Override
     public void returnCreateGroupConversationFail(String error, int errorCode) {
+    }
 
+    @Override
+    public void returnDeleteConversationSuccess(String cid) {
+    }
+
+    @Override
+    public void returnDeleteConversationFail(String error, int errorCode) {
     }
 
     @Override

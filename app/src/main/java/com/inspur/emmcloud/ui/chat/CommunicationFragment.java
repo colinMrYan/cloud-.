@@ -137,7 +137,7 @@ public class CommunicationFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        NetUtils.PingThreadStart("www.baidu.com",5);
+        NetUtils.PingThreadStart("www.baidu.com",5,Constant.EVENTBUS_TAG__NET_EXCEPTION_HINT);
     }
 
     private void initView() {
@@ -299,7 +299,7 @@ public class CommunicationFragment extends Fragment {
     public void netWorkStateTip(SimpleEventMessage netState) {
         if(netState.getAction().equals(Constant.EVENTBUS_TAG__NET_STATE_CHANGE)){
             if(((String)netState.getMessageObj()).equals(NetworkChangeReceiver.NET_WIFI_STATE_OK)){
-                NetUtils.PingThreadStart("www.baidu.com",5);
+                NetUtils.PingThreadStart("www.baidu.com",5,Constant.EVENTBUS_TAG__NET_EXCEPTION_HINT);
             } else if(((String)netState.getMessageObj()).equals(NetworkChangeReceiver.NET_STATE_ERROR)) {
                 conversationAdapter.setNetExceptionView(false);
             } else if (((String)netState.getMessageObj()).equals(NetworkChangeReceiver.NET_GPRS_STATE_OK)) {
@@ -706,6 +706,7 @@ public class CommunicationFragment extends Fragment {
      */
     private void setConversationRead(int position, final UIConversation uiConversation) {
         if (uiConversation.getUnReadCount() > 0) {
+            WSAPIService.getInstance().setChannelMessgeStateRead(uiConversation.getId());
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -783,6 +784,10 @@ public class CommunicationFragment extends Fragment {
                         Bundle bundle = new Bundle();
                         bundle.putSerializable(ConversationActivity.EXTRA_CONVERSATION, conversation);
                         IntentUtils.startActivity(getActivity(), ConversationActivity.class, bundle);
+                        sortConversationList();
+                        List<Conversation> conversationList = new ArrayList<>();
+                        conversationList.add(conversation);
+                        createGroupIcon(conversationList);
                     }
 
                     @Override

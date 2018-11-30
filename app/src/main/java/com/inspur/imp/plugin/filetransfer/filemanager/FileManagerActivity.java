@@ -178,10 +178,10 @@ public class FileManagerActivity extends BaseActivity {
     private void setOKTextStatus(){
         if (selectFileBeanList.size() == 0){
             okText.setClickable(false);
-            okText.setText(R.string.save);
+            okText.setText(R.string.complete);
         }else {
             okText.setClickable(true);
-            okText.setText(getString(R.string.save)+"("+selectFileBeanList.size()+")");
+            okText.setText(getString(R.string.complete)+"("+selectFileBeanList.size()+")");
         }
     }
 

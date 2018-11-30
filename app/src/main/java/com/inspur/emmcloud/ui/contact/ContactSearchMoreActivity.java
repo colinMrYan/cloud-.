@@ -30,12 +30,14 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.chat.Channel;
-import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.contact.Contact;
 import com.inspur.emmcloud.bean.contact.FirstGroupTextModel;
 import com.inspur.emmcloud.bean.contact.SearchModel;
+import com.inspur.emmcloud.bean.system.SimpleEventMessage;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
+import com.inspur.emmcloud.ui.chat.ConversationActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.EditTextUtils;
 import com.inspur.emmcloud.util.common.InputMethodUtils;
@@ -51,6 +53,10 @@ import com.inspur.emmcloud.widget.CircleTextImageView;
 import com.inspur.emmcloud.widget.FlowLayout;
 import com.inspur.emmcloud.widget.MaxHightScrollView;
 import com.inspur.emmcloud.widget.MySwipeRefreshLayout;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
 import java.io.Serializable;
@@ -98,6 +104,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
         handMessage();
         initView();
         getIntentData();
+        EventBus.getDefault().register(this);
     }
 
     private void initView() {
@@ -298,7 +305,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
             intent.setClass(getApplicationContext(), UserInfoActivity.class);
             startActivity(intent);
         } else {
-            intent.setClass(getApplicationContext(), MyApplication.getInstance().isV0VersionChat()? ChannelV0Activity.class:Conversation.class);
+            intent.setClass(getApplicationContext(), MyApplication.getInstance().isV0VersionChat()? ChannelV0Activity.class:ConversationActivity.class);
             intent.putExtra("title", searchModel.getName());
             intent.putExtra("cid", searchModel.getId());
             intent.putExtra("channelType", searchModel.getType());
@@ -610,12 +617,30 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
     }
 
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiverSimpleEventMessage(SimpleEventMessage eventMessage) {
+        switch (eventMessage.getAction()) {
+            case Constant.EVENTBUS_TAG_QUIT_CHANNEL_GROUP:
+            case Constant.EVENTBUS_TAG_UPDATE_CHANNEL_NAME:
+                if (searchChannelGroupList.size() > 0) {
+                    searchChannelGroupList = ConversationCacheUtils.getSearchConversationSearchModelList(MyApplication.getInstance(), searchText);
+                    if (adapter != null){
+                        adapter.notifyDataSetChanged();
+                    }
+                }
+
+                break;
+        }
+    }
+
+
     @Override
     protected void onDestroy() {
         if (handler != null) {
             handler = null;
         }
         super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 
 }

@@ -166,7 +166,7 @@ public class MyAppFragment extends Fragment {
         }
         getAppBadgeNum();
         refreshRecommendAppWidgetView();
-        NetUtils.PingThreadStart("www.baidu.com",5);
+        NetUtils.PingThreadStart("www.baidu.com",5,Constant.EVENTBUS_TAG__NET_EXCEPTION_HINT);
     }
 
     /**
@@ -386,7 +386,7 @@ public class MyAppFragment extends Fragment {
     public void netWorkStateHint(SimpleEventMessage netState) {
         if(netState.getAction().equals(Constant.EVENTBUS_TAG__NET_STATE_CHANGE)){
             if(((String)netState.getMessageObj()).equals(NetworkChangeReceiver.NET_WIFI_STATE_OK)){
-                NetUtils.PingThreadStart("www.baidu.com",5);
+                NetUtils.PingThreadStart("www.baidu.com",5,Constant.EVENTBUS_TAG__NET_EXCEPTION_HINT);
             } else if(((String)netState.getMessageObj()).equals(NetworkChangeReceiver.NET_STATE_ERROR)) {
                 AddHeaderView();
             } else if (((String)netState.getMessageObj()).equals(NetworkChangeReceiver.NET_GPRS_STATE_OK)) {

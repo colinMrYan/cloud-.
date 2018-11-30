@@ -1379,6 +1379,44 @@ public class ChatAPIService {
     }
 
     /**
+     * 删除群聊
+     *
+     * @param cid
+     */
+    public void deleteConversation(final String cid) {
+        String compelteUrl = APIUri.getDeleteChannelUrl(cid);
+        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(compelteUrl);
+        HttpUtils.request(context, CloudHttpMethod.DELETE, params, new APICallback(context, compelteUrl) {
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnDeleteConversationSuccess(cid);
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnDeleteConversationFail(error, responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        deleteConversation(cid);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+        });
+    }
+
+    /**
      * 获取频道列表
      */
     public void getConversationList() {
@@ -1712,7 +1750,8 @@ public class ChatAPIService {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
-                apiInterface.returnCreateGroupConversationSuccess(new Conversation(new String(arg0)));
+                JSONObject object = JSONUtils.getJSONObject(new String(arg0));
+                apiInterface.returnCreateGroupConversationSuccess(new Conversation(object));
             }
 
             @Override

@@ -120,26 +120,32 @@
                             android:scaleType="centerCrop"
                             android:background="@drawable/ic_netchecking_ok"/>
                     </RelativeLayout>
+                     <RelativeLayout
+                         android:id="@+id/rl_to_fix"
+                         android:visibility="gone"
+                         android:layout_toRightOf="@id/rl_hard_loading_img"
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content">
+                         <TextView
+                             android:id="@+id/tv_fix"
+                             android:layout_width="wrap_content"
+                             android:layout_height="wrap_content"
+                             android:layout_marginTop="11dp"
+                             android:layout_marginLeft="4dp"
+                             android:textSize="15sp"
+                             android:textColor="#FFF54949"
+                             android:text="@string/net_diagnosis_hard_to_fix"/>
+                         <ImageView
+                             android:layout_width="5dp"
+                             android:layout_height="10dp"
+                             android:layout_marginTop="16dp"
+                             android:layout_marginLeft="4dp"
+                             android:layout_toRightOf="@id/tv_fix"
+                             android:scaleType="fitCenter"
+                             android:background="@drawable/ic_fix_right_arrow"
+                             />
+                     </RelativeLayout>
 
-                    <TextView
-                        android:id="@+id/tv_fix"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="11dp"
-                        android:layout_marginLeft="4dp"
-                        android:layout_toRightOf="@id/rl_hard_loading_img"
-                        android:textSize="15sp"
-                        android:textColor="#FFF54949"
-                        android:text="@string/net_diagnosis_hard_to_fix"/>
-                    <ImageView
-                        android:layout_width="5dp"
-                        android:layout_height="10dp"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginLeft="4dp"
-                        android:layout_toRightOf="@id/tv_fix"
-                        android:scaleType="fitCenter"
-                        android:background="@drawable/ic_fix_right_arrow"
-                        />
                 </RelativeLayout>
                 <View
                     android:layout_width="match_parent"
