@@ -32,6 +32,7 @@ import com.inspur.emmcloud.bean.contact.ContactClickMessage;
 import com.inspur.emmcloud.bean.contact.ContactOrg;
 import com.inspur.emmcloud.bean.contact.FirstGroupTextModel;
 import com.inspur.emmcloud.bean.contact.SearchModel;
+import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.ui.IndexActivity;
@@ -261,6 +262,30 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
                     MyApplication.getInstance().exit();
                 }
             }
+        }
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiverSimpleEventMessage(SimpleEventMessage eventMessage) {
+        switch (eventMessage.getAction()) {
+            case Constant.EVENTBUS_TAG_QUIT_CHANNEL_GROUP:
+            case Constant.EVENTBUS_TAG_UPDATE_CHANNEL_NAME:
+                if (openGroupChannelList.size() > 0) {
+                    openGroupChannelList = SearchModel.conversationList2SearchModelList(ConversationCacheUtils
+                            .getConversationList(MyApplication.getInstance(), Conversation.TYPE_GROUP));
+                    if (openGroupAdapter != null){
+                        openGroupAdapter.notifyDataSetChanged();
+                    }
+                }
+                if (searchChannelGroupList.size() > 0) {
+                    searchChannelGroupList = ConversationCacheUtils.getSearchConversationSearchModelList(MyApplication.getInstance(), searchText);
+                    if (popSecondGroupAdapter != null){
+                        popSecondGroupAdapter.notifyDataSetChanged();
+                    }
+                }
+
+                break;
         }
     }
 
@@ -1514,7 +1539,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
             bundle.putString("channelType", searchModel.getType());
             IntentUtils.startActivity(getActivity(),
                     MyApplication.getInstance().isV0VersionChat() ?
-                            ChannelV0Activity.class : Conversation.class, bundle);
+                            ChannelV0Activity.class : ConversationActivity.class, bundle);
 
         }
     }

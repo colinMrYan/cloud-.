@@ -25,6 +25,9 @@ public class CommonContactCacheUtils {
      * @param searchModel
      */
     public static void saveCommonContact(final Context context, final SearchModel searchModel) {
+        if (!searchModel.getType().equals(SearchModel.TYPE_USER)){
+            return;
+        }
         if (!searchModel.getId().equals(MyApplication.getInstance().getUid())){
             Runnable runnable = new Runnable() {
 
@@ -65,12 +68,12 @@ public class CommonContactCacheUtils {
             switch (selectContent) {
                 case SEARCH_ALL:
                 case SEARCH_NOTHIING:
-                    commonContactList = DbCacheUtils.getDb(context).selector(SearchModel.class).orderBy("heat", true).limit(num).findAll();
+                    commonContactList = DbCacheUtils.getDb(context).selector(SearchModel.class).where("type", "=", "USER").orderBy("heat", true).limit(num).findAll();
                     break;
-                case SEARCH_CHANNELGROUP:
-                    commonContactList = DbCacheUtils.getDb(context).selector
-                        (SearchModel.class).where("type", "=", "GROUP").orderBy("heat", true).limit(num).findAll();
-                    break;
+//                case SEARCH_CHANNELGROUP:
+//                    commonContactList = DbCacheUtils.getDb(context).selector
+//                        (SearchModel.class).where("type", "=", "GROUP").orderBy("heat", true).limit(num).findAll();
+//                    break;
                 case SEARCH_CONTACT:
                     String noInSql = "()";
                     noInSql = getNoInSql(noInSql, excludeContactList);

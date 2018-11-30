@@ -79,6 +79,8 @@ public class Constant {
     public static final String EVENTBUS_TAG_CURRENT_CHANNEL_OFFLINE_MESSAGE = "tag_current_channel_offline_message";
     public static final String EVENTBUS_TAG__NET_STATE_CHANGE = "tag_net_state_change";
     public static final String EVENTBUS_TAG__NET_EXCEPTION_HINT = "tag_net_exception_hint";
+    public static final String EVENTBUS_TAG__NET_PING_CONNECTION = "tag_net_ping_connection";
+    public static final String EVENTBUS_TAG__NET_PORTAL_HTTP_POST = "tag_net_portal_http_post";
     public static final String EVENTBUS_TAG_COMMENT_MESSAGE = "tag_comment_message";
 
     public static final String SERVICE_VERSION_CHAT_V0 = "v0";

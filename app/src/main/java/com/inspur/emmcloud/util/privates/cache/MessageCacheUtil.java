@@ -108,7 +108,7 @@ public class MessageCacheUtil {
      */
     public static void setChannelMessageRead(Context context, String cid){
         try {
-           DbCacheUtils.getDb(context).execNonQuery("update Message set read = 1 where channel = "+cid);
+           DbCacheUtils.getDb(context).execNonQuery("update Message set read = 1 where channel = '"+cid+"'");
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -121,7 +121,7 @@ public class MessageCacheUtil {
      */
     public static void setAllMessageRead(Context context){
         try {
-            DbCacheUtils.getDb(context).execNonQuery("update Message set read = 1 ");
+            DbCacheUtils.getDb(context).execNonQuery("update Message set read = 1");
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -170,7 +170,8 @@ public class MessageCacheUtil {
                 sqlWhereIn = sqlWhereIn.substring(0, sqlWhereIn.length() - 1);
             }
             sqlWhereIn = sqlWhereIn + ")";
-            DbCacheUtils.getDb(context).execNonQuery("update Message set read = 1 where id in "+sqlWhereIn);
+            DbCacheUtils.getDb(context).execNonQuery("update Message set read = 1 where id in '"+sqlWhereIn+"'");
+            //DbCacheUtils.getDb(context).update(Message.class,WhereBuilder.b("id","in",sqlWhereIn),new KeyValue("read","1"));
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

@@ -10,6 +10,7 @@ import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
+import com.inspur.emmcloud.ui.chat.ConversationActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
@@ -140,7 +141,7 @@ public class ShareLinkActivity extends BaseActivity {
         bundle.putString("share_type","link");
         bundle.putSerializable(Constant.SHARE_LINK, conbineGroupNewsContent());
         IntentUtils.startActivity(ShareLinkActivity.this, MyApplication.getInstance().isV0VersionChat()?
-                ChannelV0Activity.class: Conversation.class,bundle,true);
+                ChannelV0Activity.class: ConversationActivity.class,bundle,true);
     }
 
     /**
