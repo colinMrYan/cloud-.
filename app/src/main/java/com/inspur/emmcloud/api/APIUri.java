@@ -1555,4 +1555,12 @@ public class APIUri {
     public static String getUnRegisterPushTokenUrl(){
         return "https://emm.inspuronline.com/api/sys/v6.0/config/unRegisterDevice";
     }
+
+    /**
+     * 未读消息url
+     * @return
+     */
+    public static String getUnReadBadgeCountUrl(){
+        return getECMChatUrl()+"/rest/v1/unread-count";
+    }
 }

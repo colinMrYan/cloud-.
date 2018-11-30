@@ -25,6 +25,7 @@ import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
 import com.inspur.emmcloud.bean.system.GetUpgradeResult;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.bean.system.SplashPageBean;
+import com.inspur.emmcloud.bean.system.badge.BadgeBodyModel;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.interf.OauthCallBack;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
@@ -776,6 +777,42 @@ public class AppAPIService {
                     @Override
                     public void reExecute() {
                         unregisterPushToken();
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+        });
+    }
+
+    /**
+     * 获取badge数量
+     */
+    public void getUnReadBadgeCount(){
+        final String url = APIUri.getUnReadBadgeCountUrl();
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(url);
+        HttpUtils.request(context,CloudHttpMethod.GET,params,new APICallback(context, url) {
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnUnReadBadgeCountSuccess(new BadgeBodyModel(new String(arg0)));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnUnReadBadgeCountFail(error,responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        getUnReadBadgeCount();
                     }
 
                     @Override
