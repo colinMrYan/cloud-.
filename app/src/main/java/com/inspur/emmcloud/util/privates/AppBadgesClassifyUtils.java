@@ -4,8 +4,6 @@ import com.inspur.emmcloud.bean.system.badge.BadgeBodyModel;
 import com.inspur.emmcloud.bean.system.badge.BadgeBodyModuleModel;
 import com.inspur.emmcloud.bean.system.badge.GetWebSocketBadgeResult;
 
-import java.util.Map;
-
 /**
  * Created by yufuchang on 2018/12/1.
  */
