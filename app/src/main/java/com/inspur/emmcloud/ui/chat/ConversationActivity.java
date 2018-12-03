@@ -44,10 +44,10 @@ import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.InputMethodUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
 import com.inspur.emmcloud.util.privates.DirectChannelUtils;
 import com.inspur.emmcloud.util.privates.GetPathFromUri4kitkat;
@@ -192,6 +192,14 @@ public class ConversationActivity extends ConversationBaseActivity {
     @Override
     protected void initChannelMessage() {
         List<Message> cacheMessageList = MessageCacheUtil.getHistoryMessageList(MyApplication.getInstance(), cid, null, 20);
+        List<Message> messageSendingList = new ArrayList<>();
+        for (int i = 0; i < cacheMessageList.size(); i++) {
+            if(cacheMessageList.get(i).getSendStatus() == Message.MESSAGE_SEND_ING && ((System.currentTimeMillis() - cacheMessageList.get(i).getCreationDate())>16*1000) ){
+                cacheMessageList.get(i).setSendStatus(Message.MESSAGE_SEND_FAIL);
+                messageSendingList.add(cacheMessageList.get(i));
+            }
+        }
+        persistenceMessageSendStatus(messageSendingList);
         uiMessageList = UIMessage.MessageList2UIMessageList(cacheMessageList);
         if (getIntent().hasExtra(EXTRA_NEED_GET_NEW_MESSAGE) && NetUtils.isNetworkConnected(MyApplication.getInstance())) {
             getNewMessageOfChannel();
@@ -312,6 +320,13 @@ public class ConversationActivity extends ConversationBaseActivity {
                 conversation.setName(name);
                 headerText.setText(name);
                 break;
+            case Constant.EVENTBUS_TAG_COMMENT_MESSAGE:
+                Message message = (Message) eventMessage.getMessageObj();
+                uiMessageList.add(new UIMessage(message));
+                adapter.setMessageList(uiMessageList);
+                adapter.notifyItemInserted(uiMessageList.size() - 1);
+                msgListView.MoveToPosition(uiMessageList.size() - 1);
+                break;
         }
 
     }
@@ -393,11 +408,17 @@ public class ConversationActivity extends ConversationBaseActivity {
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
             // TODO Auto-generated method stub
             Message message = uiMessage.getMessage();
+            String messageType = message.getType();
+            if(!FileUtils.isFileExist(message.getLocalPath()) && (messageType.equals(Message.MESSAGE_TYPE_FILE_REGULAR_FILE)
+            || messageType.equals(Message.MESSAGE_TYPE_MEDIA_IMAGE) || messageType.equals(Message.MESSAGE_TYPE_MEDIA_VOICE))){
+                ToastUtils.show(ConversationActivity.this,getString(R.string.resend_file_failed));
+                return;
+            }
             uiMessage.setSendStatus(Message.MESSAGE_SEND_ING);
             int position = uiMessageList.indexOf(uiMessage);
             adapter.setMessageList(uiMessageList);
             adapter.notifyItemChanged(position);
-            switch (message.getType()) {
+            switch (messageType) {
                 case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
                     if(message.getMsgContentAttachmentFile().getMedia().equals(message.getLocalPath())){
                         sendMessageWithFile(message);
@@ -413,11 +434,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                     }
                     break;
                 case Message.MESSAGE_TYPE_MEDIA_VOICE:
-                    if(message.getMsgContentMediaVoice().getMedia().equals(message.getLocalPath())){
-                        sendMessageWithFile(message);
-                    }else{
-                        WSAPIService.getInstance().sendChatMediaVoiceMsg(message);
-                    }
+                    resendVoiceMessage(uiMessage);
                     break;
                 case Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN:
                     WSAPIService.getInstance().sendChatCommentTextPlainMsg(message);
@@ -431,6 +448,44 @@ public class ConversationActivity extends ConversationBaseActivity {
                 default:
                     break;
             }
+        }
+    }
+
+    /**
+     * 重发音频消息
+     * @param uiMessage
+     */
+    private void resendVoiceMessage(final UIMessage uiMessage) {
+        if(AppUtils.getIsVoiceWordOpen() && StringUtils.isBlank(uiMessage.getMessage().getMsgContentMediaVoice().getResult())){
+            String localMp3Path = uiMessage.getMessage().getLocalPath();
+            String localWavPath = localMp3Path.replace(".mp3",".wav");
+            if(FileUtils.isFileExist(localWavPath)){
+                voiceToWord(localWavPath,uiMessage,null);
+            }else{
+                final String dstPcmPath = localMp3Path.replace(".mp3",".pcm");
+                new AudioMp3ToPcm().startMp3ToPCM(localMp3Path, dstPcmPath, new ResultCallback() {
+                    @Override
+                    public void onSuccess() {
+                        voiceToWord(dstPcmPath,uiMessage,null);
+                    }
+
+                    @Override
+                    public void onFail() {
+                        sendVoiceMessage(uiMessage.getMessage());
+                    }
+                });
+            }
+
+        }else{
+            sendVoiceMessage(uiMessage.getMessage());
+        }
+    }
+
+    private void sendVoiceMessage(Message message) {
+        if(message.getMsgContentMediaVoice().getMedia().equals(message.getLocalPath())){
+            sendMessageWithFile(message);
+        }else{
+            WSAPIService.getInstance().sendChatMediaVoiceMsg(message);
         }
     }
 
@@ -525,9 +580,13 @@ public class ConversationActivity extends ConversationBaseActivity {
     }
 
     private void voiceToWord(String filePath, final UIMessage uiMessage, final QMUILoadingView downloadLoadingView) {
-        downloadLoadingView.setVisibility(View.VISIBLE);
+        if(downloadLoadingView != null){
+            downloadLoadingView.setVisibility(View.VISIBLE);
+        }
         Voice2StringMessageUtils voice2StringMessageUtils = new Voice2StringMessageUtils(this);
-        voice2StringMessageUtils.setAudioSimpleRate(8000);
+        if(FileUtils.getFileExtension(filePath).equals("pcm")){
+            voice2StringMessageUtils.setAudioSimpleRate(8000);
+        }
         voice2StringMessageUtils.setOnVoiceResultCallback(new OnVoiceResultCallback() {
             @Override
             public void onVoiceStart() {
@@ -535,7 +594,6 @@ public class ConversationActivity extends ConversationBaseActivity {
 
             @Override
             public void onVoiceResultSuccess(VoiceResult voiceResult, boolean isLast) {
-                LogUtils.jasonDebug("voiceResult="+voiceResult.getResults());
                 Message message = uiMessage.getMessage();
                 MsgContentMediaVoice originMsgContentMediaVoice = message.getMsgContentMediaVoice();
                 if (!voiceResult.getResults().equals(originMsgContentMediaVoice.getResult())) {
@@ -544,19 +602,23 @@ public class ConversationActivity extends ConversationBaseActivity {
                     msgContentMediaVoice.setMedia(originMsgContentMediaVoice.getMedia());
                     msgContentMediaVoice.setJsonResults(voiceResult.getResults());
                     message.setContent(msgContentMediaVoice.toString());
-                    int position = uiMessageList.indexOf(uiMessage);
-                    if (position != -1) {
-                        adapter.notifyItemChanged(position);
+                    if(downloadLoadingView == null){
+                        sendVoiceMessage(message);
+                    }else {
+                        int position = uiMessageList.indexOf(uiMessage);
+                        if (position != -1) {
+                            adapter.notifyItemChanged(position);
+                        }
                     }
                     MessageCacheUtil.saveMessage(MyApplication.getInstance(), message);
                 }
-
-
             }
 
             @Override
             public void onVoiceFinish() {
-                downloadLoadingView.setVisibility(View.GONE);
+                if(downloadLoadingView != null){
+                    downloadLoadingView.setVisibility(View.GONE);
+                }
             }
 
             @Override
@@ -566,8 +628,9 @@ public class ConversationActivity extends ConversationBaseActivity {
 
             @Override
             public void onVoiceResultError(VoiceResult errorResult) {
-                LogUtils.jasonDebug("onVoiceResultError---------");
-                downloadLoadingView.setVisibility(View.GONE);
+                if(downloadLoadingView != null){
+                    downloadLoadingView.setVisibility(View.GONE);
+                }
             }
         });
         voice2StringMessageUtils.startVoiceListeningByVoiceFile(uiMessage.getMessage().getMsgContentMediaVoice().getDuration(), filePath);
@@ -1005,14 +1068,6 @@ public class ConversationActivity extends ConversationBaseActivity {
         if (uiMessageList.size() > 0) {
             List<Message> messageList = MessageCacheUtil.getHistoryMessageList(
                     MyApplication.getInstance(), cid, uiMessageList.get(0).getCreationDate(), 20);
-            List<Message> messageSendingList = new ArrayList<>();
-            for (int i = 0; i < messageList.size(); i++) {
-                if(messageList.get(i).getSendStatus() == Message.MESSAGE_SEND_ING && ((System.currentTimeMillis() - messageList.get(i).getCreationDate())>16*1000) ){
-                    messageList.get(i).setSendStatus(Message.MESSAGE_SEND_FAIL);
-                    messageSendingList.add(messageList.get(i));
-                }
-            }
-            persistenceMessageSendStatus(messageSendingList);
             uiMessageList.addAll(0, UIMessage.MessageList2UIMessageList(messageList));
             adapter.setMessageList(uiMessageList);
             adapter.notifyItemRangeInserted(0, messageList.size());

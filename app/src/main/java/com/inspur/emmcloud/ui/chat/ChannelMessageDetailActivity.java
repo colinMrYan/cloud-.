@@ -25,6 +25,7 @@ import com.inspur.emmcloud.bean.chat.GetMessageCommentResult;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.MsgContentMediaImage;
 import com.inspur.emmcloud.bean.system.EventMessage;
+import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
@@ -38,7 +39,6 @@ import com.inspur.emmcloud.util.privates.CommunicationUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.TransHtmlToTextUtils;
-import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
@@ -331,6 +331,8 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
         message.setSendStatus(status);
         message.setRead(Message.MESSAGE_READ);
         MessageCacheUtil.saveMessage(ChannelMessageDetailActivity.this,message);
+        SimpleEventMessage simpleEventMessage = new SimpleEventMessage(Constant.EVENTBUS_TAG_COMMENT_MESSAGE,message);
+        EventBus.getDefault().post(simpleEventMessage);
     }
 
 
@@ -435,14 +437,13 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
                 String content = eventMessage.getContent();
                 GetMessageCommentResult getMessageCommentResult = new GetMessageCommentResult(content);
                 commentList = getMessageCommentResult.getCommentList();
-                MessageCacheUtil.handleRealMessage(ChannelMessageDetailActivity.this,commentList,null,cid,false);
                 if (commentList != null && commentList.size() > 0) {
                     commentAdapter = new CommentAdapter();
                     commentListView.setAdapter(commentAdapter);
                     commentAdapter.notifyDataSetChanged();
                 }
             }else {
-                WebServiceMiddleUtils.hand(MyApplication.getInstance(), eventMessage.getContent(), eventMessage.getStatus());
+//                WebServiceMiddleUtils.hand(MyApplication.getInstance(), eventMessage.getContent(), eventMessage.getStatus());
             }
         }
     }
@@ -455,12 +456,11 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
                 String content = eventMessage.getContent();
                 JSONObject contentobj = JSONUtils.getJSONObject(content);
                 Message message = new Message(contentobj);
-                MessageCacheUtil.handleRealMessage(ChannelMessageDetailActivity.this,message);
                 if (message.getId().equals(mid)) {
                     handMsgData();
                 }
             }else {
-                WebServiceMiddleUtils.hand(MyApplication.getInstance(), eventMessage.getContent(), eventMessage.getStatus());
+//                WebServiceMiddleUtils.hand(MyApplication.getInstance(), eventMessage.getContent(), eventMessage.getStatus());
             }
 
         }

@@ -1094,4 +1094,6 @@
     <string name="voice_word_setting">Automatic Voice Recognition</string>
     <string name="voice_audio_record_unavailiable">The current recording device is not available. Please check whether the recording permissions are enabled.</string>
     <string name="voice_to_word">Voice to Text</string>
+
+    <string name="resend_file_failed">The message resent failed because the resource file could not be found</string>
 </resources>

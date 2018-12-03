@@ -40,7 +40,7 @@ public class Constant {
     public static final String PREF_WEBEX_DOWNLOAD_URL = "webex_download_url";
     public static final String PREF_WEBEX_FIRST_ENTER = "webex_first_enter";
     public static final String PREF_GET_OFFLINE_LAST_MID = "get_offline_last_mid";
-    public static final String PREF_LAST_LANGUAGE = "get_offline_last_mid";
+    public static final String PREF_LAST_LANGUAGE = "last_language";
 
     public static final String PREF_V_CONFIG_ALL = "v_config_all";
     public static final String PREF_EXPERIENCE_UPGRATE = "experience_upgrade";
@@ -81,6 +81,7 @@ public class Constant {
     public static final String EVENTBUS_TAG__NET_EXCEPTION_HINT = "tag_net_exception_hint";
     public static final String EVENTBUS_TAG__NET_PING_CONNECTION = "tag_net_ping_connection";
     public static final String EVENTBUS_TAG__NET_PORTAL_HTTP_POST = "tag_net_portal_http_post";
+    public static final String EVENTBUS_TAG_COMMENT_MESSAGE = "tag_comment_message";
 
     public static final String SERVICE_VERSION_CHAT_V0 = "v0";
     public static final String SERVICE_VERSION_CHAT_V1 = "v1";
