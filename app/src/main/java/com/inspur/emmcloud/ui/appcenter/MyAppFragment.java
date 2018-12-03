@@ -157,7 +157,6 @@ public class MyAppFragment extends Fragment {
         }
     }
 
-
     @Override
     public void onResume() {
         super.onResume();
