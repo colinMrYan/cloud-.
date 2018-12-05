@@ -34,6 +34,7 @@ public class NetUtils {
 	public static final String NETWORK_TYPE_VPN = "vpn";
 	public static final String NETWORK_TYPE_4G = "4g";
 	public static final String NETWORK_TYPE_MOBILE = "mobile";
+	public static final  String[] pingUrls={"www.baidu.com","www.aliyun.com"};
 	private static final String TAG = "PingNet";
 
 	/**
@@ -432,14 +433,22 @@ public class NetUtils {
 	/**
 	 *Ping 网络状态 "www.baidu.com" /Constant.EVENTBUS_TAG__NET_EXCEPTION_HINT
 	 * */
-	public static void PingThreadStart(final  String  StrUrl,final int WaiteTime,final String eventBusAction) {
+	public static void PingThreadStart(final  String[]  StrUrl,final int WaiteTime,final String eventBusAction) {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
 				try {
-					PingNetEntity pingNetEntity=new PingNetEntity(StrUrl,1,WaiteTime,new StringBuffer());
+					final PingNetEntity finalPingNetEntity;
+					PingNetEntity pingNetEntity=new PingNetEntity(StrUrl[0],1,WaiteTime,new StringBuffer());
 					pingNetEntity=NetUtils.ping(pingNetEntity, (long) 4500);
-					final PingNetEntity finalPingNetEntity = pingNetEntity;
+					if(!pingNetEntity.isResult()) {
+						PingNetEntity pingSecondNetEntity=new PingNetEntity(StrUrl[1],1,WaiteTime,new StringBuffer());
+						pingSecondNetEntity=NetUtils.ping(pingSecondNetEntity, (long) 4500);
+						finalPingNetEntity = pingSecondNetEntity;
+					} else {
+						finalPingNetEntity = pingNetEntity;
+					}
+
 					new Handler(Looper.getMainLooper()).post(new Runnable() {
 						@Override
 						public void run() {

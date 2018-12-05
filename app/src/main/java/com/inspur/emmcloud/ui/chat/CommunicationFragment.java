@@ -137,7 +137,7 @@ public class CommunicationFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        NetUtils.PingThreadStart("www.baidu.com",5,Constant.EVENTBUS_TAG__NET_EXCEPTION_HINT);
+        NetUtils.PingThreadStart(NetUtils.pingUrls,5,Constant.EVENTBUS_TAG__NET_EXCEPTION_HINT);
     }
 
     private void initView() {
@@ -304,7 +304,7 @@ public class CommunicationFragment extends Fragment {
     public void netWorkStateTip(SimpleEventMessage netState) {
         if(netState.getAction().equals(Constant.EVENTBUS_TAG__NET_STATE_CHANGE)){
             if(((String)netState.getMessageObj()).equals(NetworkChangeReceiver.NET_WIFI_STATE_OK)){
-                NetUtils.PingThreadStart("www.baidu.com",5,Constant.EVENTBUS_TAG__NET_EXCEPTION_HINT);
+                NetUtils.PingThreadStart(NetUtils.pingUrls,5,Constant.EVENTBUS_TAG__NET_EXCEPTION_HINT);
             } else if(((String)netState.getMessageObj()).equals(NetworkChangeReceiver.NET_STATE_ERROR)) {
                 conversationAdapter.setNetExceptionView(false);
             } else if (((String)netState.getMessageObj()).equals(NetworkChangeReceiver.NET_GPRS_STATE_OK)) {
