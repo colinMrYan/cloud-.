@@ -13,9 +13,9 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.funcode.decoder.trial.FunDecode;
-import com.funcode.decoder.trial.FunDecodeHandler;
-import com.funcode.decoder.trial.FunDecodeSurfaceView;
+import com.funcode.decoder.inspuremmcloud.FunDecode;
+import com.funcode.decoder.inspuremmcloud.FunDecodeHandler;
+import com.funcode.decoder.inspuremmcloud.FunDecodeSurfaceView;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.imp.api.Res;

@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.funcode.decoder.trial.FunDecode
+        <com.funcode.decoder.inspuremmcloud.FunDecode
             android:id="@+id/fd"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
