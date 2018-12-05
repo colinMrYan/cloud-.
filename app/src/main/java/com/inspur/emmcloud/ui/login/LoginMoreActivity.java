@@ -16,7 +16,7 @@ import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
 import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
-import com.inspur.imp.plugin.barcode.scan.CaptureActivity;
+import com.inspur.imp.plugin.barcode.decoder.PreviewDecodeActivity;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
@@ -57,7 +57,7 @@ public class LoginMoreActivity extends BaseActivity {
                 break;
             case R.id.login_more_scan_layout:
                 Intent intent = new Intent();
-                intent.setClass(LoginMoreActivity.this, CaptureActivity.class);
+                intent.setClass(LoginMoreActivity.this, PreviewDecodeActivity.class);
                 intent.putExtra("from", "loginMore");
                 startActivityForResult(intent, SCAN_LOGIN_ENTERPRISE_INFO);
                 break;

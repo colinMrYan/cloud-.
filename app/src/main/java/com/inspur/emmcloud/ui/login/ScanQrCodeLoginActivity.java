@@ -19,7 +19,7 @@ import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
-import com.inspur.imp.plugin.barcode.scan.CaptureActivity;
+import com.inspur.imp.plugin.barcode.decoder.PreviewDecodeActivity;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -116,7 +116,7 @@ public class ScanQrCodeLoginActivity extends BaseActivity {
             case R.id.scan_login_desktop_button:
                 if(!isLogin){
                     Intent intent = new Intent();
-                    intent.setClass(ScanQrCodeLoginActivity.this, CaptureActivity.class);
+                    intent.setClass(ScanQrCodeLoginActivity.this, PreviewDecodeActivity.class);
                     intent.putExtra("from", "ScanQrCodeLoginActivity");
                     startActivityForResult(intent, SCAN_LOGIN_QRCODE_RESULT);
                     return;

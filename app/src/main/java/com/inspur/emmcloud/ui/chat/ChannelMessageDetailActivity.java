@@ -39,8 +39,8 @@ import com.inspur.emmcloud.util.privates.CommunicationUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.TransHtmlToTextUtils;
-import com.inspur.emmcloud.util.privates.cache.ChannelCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 import com.inspur.emmcloud.widget.CircleTextImageView;
 import com.inspur.emmcloud.widget.ECMChatInputMenu;
@@ -120,7 +120,7 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
         chatInputMenu = (ECMChatInputMenu) findViewById(R.id.chat_input_menu);
         chatInputMenu.setOtherLayoutView(swipeRefreshLayout, commentListView);
         cid = getIntent().getExtras().getString("cid");
-        String channelType = ChannelCacheUtils.getChannelType(getApplicationContext(),
+        String channelType = ConversationCacheUtils.getConversationType(MyApplication.getInstance(),
                 cid);
         if (channelType.equals("GROUP")) {
             chatInputMenu.setCanMentions(true, cid);
@@ -134,7 +134,7 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
             }
 
             @Override
-            public void onSendVoiceRecordMsg(String results,float seconds, String filePath) {
+            public void onSendVoiceRecordMsg(String results, float seconds, String filePath) {
 
             }
 
@@ -148,7 +148,7 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
 
             }
         });
-        chatInputMenu.setInputLayout("1",false);
+        chatInputMenu.setInputLayout("1", false);
     }
 
 
@@ -181,7 +181,7 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
         disPlayCommonInfo();
         View msgDisplayView = null;
         if (!message.getType().equals("media/image")) {
-            msgDisplayView = DisplayRegularFileMsg.getView(ChannelMessageDetailActivity.this, message,1,true);
+            msgDisplayView = DisplayRegularFileMsg.getView(ChannelMessageDetailActivity.this, message, 1, true);
         } else {
             msgDisplayView = inflater.inflate(R.layout.msg_common_detail, null);
             msgContentImg = (ImageView) msgDisplayView
@@ -195,7 +195,7 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
             MsgContentMediaImage msgContentMediaImage = message.getMsgContentMediaImage();
             fileName = msgContentMediaImage.getName();
             fileSize = FileUtils.formatFileSize(msgContentMediaImage.getRawSize());
-            final String imgPath = APIUri.getChatFileResouceUrl(message.getChannel(),msgContentMediaImage.getRawMedia());
+            final String imgPath = APIUri.getChatFileResouceUrl(message.getChannel(), msgContentMediaImage.getRawMedia());
             ImageDisplayUtils.getInstance().displayImage(msgContentImg,
                     imgPath, R.drawable.icon_photo_default);
             msgContentImg.setOnClickListener(new OnClickListener() {
@@ -214,7 +214,6 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
 
     /**
      * 展示可以缩放的Image
-     *
      */
     protected void displayZoomImage(View view, String url) {
 
@@ -301,28 +300,29 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
     private void sendComment(String text, Map<String, String> mentionsMap) {
 
 //        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
-            Message message = CommunicationUtils.combinLocalCommentTextPlainMessage(cid, mid, text, mentionsMap);
-            handleUnSendMessage(message,Message.MESSAGE_SEND_ING);
-            commentList.add(message);
-            if (commentAdapter == null) {
-                commentAdapter = new CommentAdapter();
-                commentListView.setAdapter(commentAdapter);
-            } else {
-                commentAdapter.notifyDataSetChanged();
+        Message message = CommunicationUtils.combinLocalCommentTextPlainMessage(cid, mid, text, mentionsMap);
+        handleUnSendMessage(message, Message.MESSAGE_SEND_ING);
+        commentList.add(message);
+        if (commentAdapter == null) {
+            commentAdapter = new CommentAdapter();
+            commentListView.setAdapter(commentAdapter);
+        } else {
+            commentAdapter.notifyDataSetChanged();
+        }
+        // 滚动到页面最后
+        commentScrollView.post(new Runnable() {
+            public void run() {
+                commentScrollView.fullScroll(ScrollView.FOCUS_DOWN);
             }
-            // 滚动到页面最后
-            commentScrollView.post(new Runnable() {
-                public void run() {
-                    commentScrollView.fullScroll(ScrollView.FOCUS_DOWN);
-                }
-            });
-            InputMethodUtils.hide(ChannelMessageDetailActivity.this);
-            WSAPIService.getInstance().sendChatCommentTextPlainMsg(message);
+        });
+        InputMethodUtils.hide(ChannelMessageDetailActivity.this);
+        WSAPIService.getInstance().sendChatCommentTextPlainMsg(message);
 //        }
     }
 
     /**
      * 处理未发送成功的消息，存储临时消息
+     *
      * @param message
      * @param status
      */
@@ -330,8 +330,8 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
         //发送中，无网,发送消息失败
         message.setSendStatus(status);
         message.setRead(Message.MESSAGE_READ);
-        MessageCacheUtil.saveMessage(ChannelMessageDetailActivity.this,message);
-        SimpleEventMessage simpleEventMessage = new SimpleEventMessage(Constant.EVENTBUS_TAG_COMMENT_MESSAGE,message);
+        MessageCacheUtil.saveMessage(ChannelMessageDetailActivity.this, message);
+        SimpleEventMessage simpleEventMessage = new SimpleEventMessage(Constant.EVENTBUS_TAG_COMMENT_MESSAGE, message);
         EventBus.getDefault().post(simpleEventMessage);
     }
 
@@ -433,7 +433,7 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveWSMessageComment(EventMessage eventMessage) {
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_GET_MESSAGE_COMMENT)) {
-            if(eventMessage.getStatus() == 200){
+            if (eventMessage.getStatus() == 200) {
                 String content = eventMessage.getContent();
                 GetMessageCommentResult getMessageCommentResult = new GetMessageCommentResult(content);
                 commentList = getMessageCommentResult.getCommentList();
@@ -442,7 +442,7 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
                     commentListView.setAdapter(commentAdapter);
                     commentAdapter.notifyDataSetChanged();
                 }
-            }else {
+            } else {
 //                WebServiceMiddleUtils.hand(MyApplication.getInstance(), eventMessage.getContent(), eventMessage.getStatus());
             }
         }
@@ -452,14 +452,14 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onGetMessageById(EventMessage eventMessage) {
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_GET_MESSAGE_BY_ID)) {
-            if(eventMessage.getStatus() == 200){
+            if (eventMessage.getStatus() == 200) {
                 String content = eventMessage.getContent();
                 JSONObject contentobj = JSONUtils.getJSONObject(content);
                 Message message = new Message(contentobj);
                 if (message.getId().equals(mid)) {
                     handMsgData();
                 }
-            }else {
+            } else {
 //                WebServiceMiddleUtils.hand(MyApplication.getInstance(), eventMessage.getContent(), eventMessage.getStatus());
             }
 

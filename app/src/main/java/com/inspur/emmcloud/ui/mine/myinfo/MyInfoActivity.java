@@ -237,6 +237,17 @@ public class MyInfoActivity extends BaseActivity {
                 (findViewById(R.id.myinfo_usermail_layout)).setVisibility(View.GONE);
                 (findViewById(R.id.v_usermail_topliner)).setVisibility(View.GONE);
             }
+
+            if(!StringUtils.isBlank(userProfileInfoBean.getTelePhone())) {
+                (findViewById(R.id.rl_myinfo_telphone)).setVisibility(View.VISIBLE);
+                telPhoneText.setText(userProfileInfoBean.getTelePhone());
+            }
+
+            if(!StringUtils.isBlank(userProfileInfoBean.getEmpNum())) {
+                (findViewById(R.id.rl_myinfo_worknum_main)).setVisibility(View.VISIBLE);
+                empNumText.setText(userProfileInfoBean.getEmpNum());
+            }
+
         }
     }
 
