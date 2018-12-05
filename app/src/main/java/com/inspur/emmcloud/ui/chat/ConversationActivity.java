@@ -1284,7 +1284,7 @@ public class ConversationActivity extends ConversationBaseActivity {
         if (conversation.isHide()) {
             conversation.setHide(false);
             ConversationCacheUtils.updateConversationHide(MyApplication.getInstance(), conversation.getId(), false);
-            if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
+            if (NetUtils.isNetworkConnected(MyApplication.getInstance(),false)) {
                 ChatAPIService apiService = new ChatAPIService(this);
                 apiService.setAPIInterface(new WebService());
                 apiService.setConversationHide(conversation.getId(), false);
