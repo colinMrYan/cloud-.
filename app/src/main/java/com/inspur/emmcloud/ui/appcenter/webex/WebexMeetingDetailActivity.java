@@ -473,7 +473,7 @@ public class WebexMeetingDetailActivity extends BaseActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveWSMessage(EventMessage eventMessage) {
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE)) {
-            if (fakeMessageId != null && String.valueOf(eventMessage.getExtra()).equals(fakeMessageId)) {
+            if (fakeMessageId != null && String.valueOf(eventMessage.getId()).equals(fakeMessageId)) {
                 if (eventMessage.getStatus() == 200) {
                     ToastUtils.show(WebexMeetingDetailActivity.this, R.string.news_share_success);
                 } else {
