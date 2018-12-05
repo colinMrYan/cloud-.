@@ -248,7 +248,12 @@ public class CommunicationFragment extends Fragment {
      */
     private void showConversationOperationDlg(final UIConversation uiConversation) {
         // TODO Auto-generated method stub
-        final String[] items = new String[]{getString(uiConversation.getConversation().isStick() ? R.string.chat_remove_from_top : R.string.chat_stick_on_top), getString(R.string.chat_remove)};
+        final String[] items;
+        if(uiConversation.getConversation().getType().equals("CAST")) {
+            items = new String[]{getString(uiConversation.getConversation().isStick() ? R.string.chat_remove_from_top : R.string.chat_stick_on_top)};
+           } else {
+             items = new String[]{getString(uiConversation.getConversation().isStick() ? R.string.chat_remove_from_top : R.string.chat_stick_on_top), getString(R.string.chat_remove)};
+           }
         new MyQMUIDialog.MenuDialogBuilder(getActivity())
                 .setTitle(uiConversation.getTitle())
                 .addItems(items, new DialogInterface.OnClickListener() {
