@@ -78,7 +78,7 @@ import com.inspur.emmcloud.util.privates.cache.MsgReadCreationDateCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.widget.CircleTextImageView;
 import com.inspur.emmcloud.widget.WeakThread;
-import com.inspur.imp.plugin.barcode.scan.CaptureActivity;
+import com.inspur.imp.plugin.barcode.decoder.PreviewDecodeActivity;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 
 import org.greenrobot.eventbus.EventBus;
@@ -375,7 +375,7 @@ public class CommunicationV0Fragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
-                intent.setClass(getActivity(), CaptureActivity.class);
+                intent.setClass(getActivity(), PreviewDecodeActivity.class);
                 intent.putExtra("from", "CommunicationFragment");
                 startActivityForResult(intent, SCAN_LOGIN_QRCODE_RESULT);
                 popupWindow.dismiss();
@@ -1083,26 +1083,9 @@ public class CommunicationV0Fragment extends Fragment {
                         adapter.notifyDataSetChanged();
                     }
                     break;
-                case "removeChannelFromUI":
-                    String deleteCid = intent.getExtras().getString("cid");
-                    ChannelCacheUtils.deleteChannel(MyApplication.getInstance(),deleteCid);
-                    removeChannelFromUI(deleteCid);
-                    break;
                 default:
                     break;
             }
-        }
-    }
-
-    /**
-     * 从ui中移除这个频道
-     * @param cid
-     */
-    private void removeChannelFromUI(String cid){
-        Channel removeChannel = new Channel(cid);
-        if (displayChannelList.contains(removeChannel)){
-            displayChannelList.remove(removeChannel);
-            adapter.notifyDataSetChanged();
         }
     }
 
