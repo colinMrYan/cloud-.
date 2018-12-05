@@ -1042,7 +1042,7 @@ public class CommunicationFragment extends Fragment {
     private void setConversationHide(String id) {
         if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
             loadingDlg.show();
-            apiService.setConversationHide(id);
+            apiService.setConversationHide(id,true);
         }
     }
 
@@ -1077,12 +1077,12 @@ public class CommunicationFragment extends Fragment {
         }
 
         @Override
-        public void returnSetConversationHideSuccess(final String id) {
+        public void returnSetConversationHideSuccess(final String id,boolean isHide) {
             LoadingDialog.dimissDlg(loadingDlg);
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    ConversationCacheUtils.setConversationHide(MyApplication.getInstance(), id,true);
+                    ConversationCacheUtils.updateConversationHide(MyApplication.getInstance(), id,true);
                     MessageCacheUtil.setChannelMessageRead(MyApplication.getInstance(), id);
                 }
             }).start();

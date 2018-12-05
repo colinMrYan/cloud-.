@@ -84,7 +84,6 @@ import com.inspur.emmcloud.bean.system.GetUpgradeResult;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.bean.system.SplashPageBean;
 import com.inspur.emmcloud.bean.system.badge.BadgeBodyModel;
-import com.inspur.emmcloud.bean.system.badge.BadgeBodyModel;
 import com.inspur.emmcloud.bean.work.Attachment;
 import com.inspur.emmcloud.bean.work.GetCalendarEventsResult;
 import com.inspur.emmcloud.bean.work.GetCreateOfficeResult;
@@ -714,7 +713,7 @@ public interface APIInterface {
     void returnSetConversationStickSuccess(String id,boolean isStick);
     void returnSetConversationStickFail(String error,int errorCode);
 
-    void returnSetConversationHideSuccess(String id);
+    void returnSetConversationHideSuccess(String id,boolean isHide);
     void returnSetConversationHideFail(String error,int errorCode);
 
     void returnAddConversationGroupMemberSuccess(List<String> uidList);

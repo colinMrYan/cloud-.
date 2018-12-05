@@ -19,6 +19,8 @@ import android.widget.TextView;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.ChannelMessageAdapter;
+import com.inspur.emmcloud.api.APIInterfaceInstance;
+import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.bean.chat.Conversation;
@@ -57,6 +59,7 @@ import com.inspur.emmcloud.util.privates.UriUtils;
 import com.inspur.emmcloud.util.privates.Voice2StringMessageUtils;
 import com.inspur.emmcloud.util.privates.audioformat.AudioMp3ToPcm;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 import com.inspur.emmcloud.widget.ECMChatInputMenu;
 import com.inspur.emmcloud.widget.ECMChatInputMenu.ChatInputMenuListener;
@@ -958,6 +961,9 @@ public class ConversationActivity extends ConversationBaseActivity {
      * @param status
      */
     private void addLocalMessage(Message message, int status) {
+
+        setConversationUnhide();
+
         //存储发送中状态
         if (status == Message.MESSAGE_SEND_ING) {
             MessageCacheUtil.saveMessage(ConversationActivity.this, message);
@@ -973,6 +979,7 @@ public class ConversationActivity extends ConversationBaseActivity {
         adapter.notifyItemInserted(uiMessageList.size() - 1);
         msgListView.MoveToPosition(uiMessageList.size() - 1);
     }
+
 
     /**
      * 处理未发送成功的消息，存储临时消息
@@ -1270,4 +1277,22 @@ public class ConversationActivity extends ConversationBaseActivity {
         }
     }
 
+    /**
+     * 将频道置为不隐藏
+     */
+    private void setConversationUnhide() {
+        if (conversation.isHide()) {
+            conversation.setHide(false);
+            ConversationCacheUtils.updateConversationHide(MyApplication.getInstance(), conversation.getId(), false);
+            if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
+                ChatAPIService apiService = new ChatAPIService(this);
+                apiService.setAPIInterface(new WebService());
+                apiService.setConversationHide(conversation.getId(), false);
+            }
+        }
+    }
+
+    class WebService extends APIInterfaceInstance {
+
+    }
 }

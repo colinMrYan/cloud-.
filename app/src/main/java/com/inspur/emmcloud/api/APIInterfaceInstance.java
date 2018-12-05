@@ -1734,7 +1734,7 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnSetConversationHideSuccess(String id) {
+    public void returnSetConversationHideSuccess(String id,boolean isHide) {
     }
 
     @Override
