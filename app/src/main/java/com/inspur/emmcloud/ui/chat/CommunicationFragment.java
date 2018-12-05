@@ -65,14 +65,13 @@ import com.inspur.emmcloud.util.privates.DownLoaderUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.ScanQrCodeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
-import com.inspur.emmcloud.util.privates.cache.ChannelCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 import com.inspur.emmcloud.util.privates.cache.MessageMatheSetCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
-import com.inspur.imp.plugin.barcode.scan.CaptureActivity;
+import com.inspur.imp.plugin.barcode.decoder.PreviewDecodeActivity;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -383,7 +382,7 @@ public class CommunicationFragment extends Fragment {
                     break;
                 case R.id.message_scan_layout:
                     Intent scanIntent = new Intent();
-                    scanIntent.setClass(getActivity(), CaptureActivity.class);
+                    scanIntent.setClass(getActivity(), PreviewDecodeActivity.class);
                     scanIntent.putExtra("from", "CommunicationFragment");
                     startActivityForResult(scanIntent, REQUEST_SCAN_LOGIN_QRCODE_RESULT);
                     popupWindow.dismiss();
@@ -631,11 +630,6 @@ public class CommunicationFragment extends Fragment {
                     String socketStatus = intent.getExtras().getString("status");
                     showSocketStatusInTitle(socketStatus);
                     break;
-                case "removeChannelFromUI":
-                    String deleteCid = intent.getExtras().getString("cid");
-                    ChannelCacheUtils.deleteChannel(MyApplication.getInstance(), deleteCid);
-                    removeConversation(deleteCid);
-                    break;
                 default:
                     break;
             }
@@ -643,19 +637,6 @@ public class CommunicationFragment extends Fragment {
 
     }
 
-    /**
-     * 从ui中移除这个会话
-     *
-     * @param cid
-     */
-    private void removeConversation(String cid) {
-        UIConversation deleteUIConversation = new UIConversation(cid);
-        int position = displayUIConversationList.indexOf(deleteUIConversation);
-        if (position != -1) {
-            conversationAdapter.setData(displayUIConversationList);
-            conversationAdapter.notifyItemRemoved(position);
-        }
-    }
 
     /**
      * 显示websocket的连接状态
@@ -911,8 +892,14 @@ public class CommunicationFragment extends Fragment {
                     }
                 }
             } else {
-                //去掉提示
-//                WebServiceMiddleUtils.hand(getActivity(), eventMessage.getContent(), eventMessage.getStatus());
+                //当消息发送失败，已离开此频道时，存储该消息
+                Message fakeMessage = MessageCacheUtil.getMessageByMid(MyApplication.getInstance(),eventMessage.getId());
+                if (fakeMessage != null){
+                   if(!MyApplication.getInstance().getCurrentChannelCid().equals(fakeMessage.getChannel())){
+                       fakeMessage.setSendStatus(Message.MESSAGE_SEND_FAIL);
+                       MessageCacheUtil.saveMessage(MyApplication.getInstance(),fakeMessage);
+                   }
+                }
             }
 
         }
