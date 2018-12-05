@@ -431,7 +431,7 @@ public class NetUtils {
 	}
 
 	/**
-	 *Ping 网络状态 "www.baidu.com" /Constant.EVENTBUS_TAG__NET_EXCEPTION_HINT
+	 *Ping  网络通断状态检测（用于显示网络状态异常框）
 	 * */
 	public static void PingThreadStart(final  String[]  StrUrl,final int WaiteTime,final String eventBusAction) {
 		new Thread(new Runnable() {
@@ -463,7 +463,7 @@ public class NetUtils {
 	}
 
 	/**
-	 *Ping 网络状态 "www.baidu.com" /Constant.EVENTBUS_TAG__NET_EXCEPTION_HINT
+	 *Ping 网络通断检测
 	 * */
 	public static void PingThreadStart(final  String  StrUrl, final int WaiteTime, final String eventBusAction, final String id) {
 		new Thread(new Runnable() {
