@@ -9,6 +9,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.TypedValue;
 import android.view.View;
+import android.view.WindowManager;
 
 import com.inspur.emmcloud.BaseFragmentActivity;
 import com.inspur.emmcloud.R;
@@ -41,6 +42,7 @@ public class GroupNewsActivity extends BaseFragmentActivity implements
 		setContentView(R.layout.activity_group_news);
 		loadingDlg = new LoadingDialog(GroupNewsActivity.this);
 		getNewTitles();
+		this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
 	}
 
 	/**

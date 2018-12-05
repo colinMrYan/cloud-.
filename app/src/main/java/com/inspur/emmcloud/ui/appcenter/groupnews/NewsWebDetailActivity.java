@@ -110,6 +110,7 @@ public class NewsWebDetailActivity extends BaseActivity {
         initData();
         initViews();
         EventBus.getDefault().register(this);
+        this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
     }
 
     /**
