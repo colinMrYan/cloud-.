@@ -463,7 +463,7 @@ public class NetUtils {
 	}
 
 	/**
-	 *Ping 网络通断检测
+	 *Ping网络状态详细检测中网络通断检测（ping 多个地址）
 	 * */
 	public static void PingThreadStart(final  String  StrUrl, final int WaiteTime, final String eventBusAction, final String id) {
 		new Thread(new Runnable() {
