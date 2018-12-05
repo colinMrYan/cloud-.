@@ -21,6 +21,12 @@ public class Message implements Serializable {
     public static final String MESSAGE_TYPE_EXTENDED_ACTIONS = "extended/actions";
     public static final String MESSAGE_TYPE_COMMENT_TEXT_PLAIN = "comment/text-plain";
     public static final String MESSAGE_TYPE_EXTENDED_LINKS = "extended/links";
+    public static final int MESSAGE_SEND_ING = 0;
+    public static final int MESSAGE_SEND_SUCCESS = 1;
+    public static final int MESSAGE_SEND_FAIL = 2;
+    public static final int MESSAGE_SEND_EDIT = 3;
+    public static final int MESSAGE_READ = 1;
+    public static final int MESSAGE_UNREAD = 0;
     @Column(name = "id", isId = true)
     private String id;
     @Column(name = "message")
@@ -41,8 +47,11 @@ public class Message implements Serializable {
     private Long creationDate;
     @Column(name = "read")
     private int read = 0;  //0 未读，1 已读
-
-    private int sendStatus = 1;//0 发送中  1发送成功  2发送失败
+    @Column(name = "sendStatus")
+    private int sendStatus = 1;//0 发送中  1发送成功  2发送失败 字段扩展
+    @Column(name = "localPath")
+    private String localPath = "";
+    private String tmpId = "";
 
     public Message() {
 
@@ -58,6 +67,7 @@ public class Message implements Serializable {
         type = JSONUtils.getString(dataObj, "type", "");
         state = JSONUtils.getString(dataObj, "state", "");
         content = JSONUtils.getString(dataObj, "content", "");
+        tmpId = JSONUtils.getString(content,"tmpId","");
         channel = msg.getCid();
         creationDate = msg.getTime();
     }
@@ -75,6 +85,7 @@ public class Message implements Serializable {
         channel = JSONUtils.getString(obj, "channel", "");
         state = JSONUtils.getString(obj, "state", "");
         content = JSONUtils.getString(obj, "content", "");
+        tmpId = JSONUtils.getString(content,"tmpId","");
         String UTCTime = JSONUtils.getString(obj, "creationDate", "");
         creationDate = TimeUtils.UTCString2Long(UTCTime);
         boolean readState = JSONUtils.getBoolean(obj, "read", false);
@@ -212,6 +223,22 @@ public class Message implements Serializable {
 
     public void setRead(int read) {
         this.read = read;
+    }
+
+    public String getLocalPath() {
+        return localPath;
+    }
+
+    public void setLocalPath(String localPath) {
+        this.localPath = localPath;
+    }
+
+    public String getTmpId() {
+        return tmpId;
+    }
+
+    public void setTmpId(String tmpId) {
+        this.tmpId = tmpId;
     }
 
     /*

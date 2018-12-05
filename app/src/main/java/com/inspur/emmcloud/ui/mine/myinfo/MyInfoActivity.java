@@ -218,19 +218,6 @@ public class MyInfoActivity extends BaseActivity {
         }
         if (userProfileInfoBean != null) {
 
-            if(!(StringUtils.isBlank(userProfileInfoBean.getEmpNum()))) {
-                findViewById(R.id.rl_myinfo_worknum_main).setVisibility(View.VISIBLE);
-                findViewById(R.id.v_workernum_top_Liner).setVisibility(View.VISIBLE);
-                empNumText.setText(userProfileInfoBean.getEmpNum());
-            }
-
-            if(!(StringUtils.isBlank(userProfileInfoBean.getTelePhone()))) {
-                (findViewById(R.id.rl_myinfo_telphone)).setVisibility(View.VISIBLE);
-                (findViewById(R.id.v_telphone_topliner)).setVisibility(View.VISIBLE);
-                telPhoneText.setText(userProfileInfoBean.getTelePhone());
-            }
-
-
             if (userProfileInfoBean.getShowEpInfo() == 0) {
                 (findViewById(R.id.myinfo_usercompany_layout)).setVisibility(View.GONE);
             }
@@ -241,8 +228,14 @@ public class MyInfoActivity extends BaseActivity {
                 resetLayout.setVisibility(View.VISIBLE);
             }
             //这里手机号格式的正确性由服务端保证，客户端只关心是否为空
-            if (StringUtils.isBlank(userProfileInfoBean.getUserPhone())) {
-                resetLayout.setVisibility(View.GONE);
+            if (0==userProfileInfoBean.getShowUserPhone()) {
+                (findViewById(R.id.myinfo_userphone_layout)).setVisibility(View.GONE);
+                (findViewById(R.id.v_userphone_topliner)).setVisibility(View.GONE);
+            }
+
+            if (0==userProfileInfoBean.getShowUserMail()) {
+                (findViewById(R.id.myinfo_usermail_layout)).setVisibility(View.GONE);
+                (findViewById(R.id.v_usermail_topliner)).setVisibility(View.GONE);
             }
         }
     }

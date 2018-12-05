@@ -16,12 +16,13 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.chat.Channel;
+import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.system.MainTabProperty;
 import com.inspur.emmcloud.bean.system.MineLayoutItemGroup;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.ui.chat.ChannelActivity;
 import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
+import com.inspur.emmcloud.ui.chat.ConversationActivity;
 import com.inspur.emmcloud.ui.mine.card.CardPackageActivity;
 import com.inspur.emmcloud.ui.mine.feedback.FeedBackActivity;
 import com.inspur.emmcloud.ui.mine.myinfo.MyInfoActivity;
@@ -36,6 +37,7 @@ import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.widget.CircleTextImageView;
 
@@ -143,15 +145,25 @@ public class MoreFragment extends Fragment {
                         recordUserClick("feedback");
                         break;
                     case "my_customerService_function":
-                        Channel customerChannel = ChannelCacheUtils.getCustomerChannel(getActivity());
-                        if (customerChannel != null){
-                            Bundle bundle = new Bundle();
-                            bundle.putString("cid", customerChannel.getCid());
-                            //为区分来自云+客服添加一个from值，在ChannelActivity里使用
-                            bundle.putString("from", "customer");
-                            IntentUtils.startActivity(getActivity(), MyApplication.getInstance().isV0VersionChat()?
-                                    ChannelV0Activity.class:ChannelActivity.class, bundle);
+                        if (MyApplication.getInstance().isV0VersionChat()){
+                            Channel customerChannel = ChannelCacheUtils.getCustomerChannel(MyApplication.getInstance());
+                            if (customerChannel != null){
+                                Bundle bundle = new Bundle();
+                                bundle.putString("cid", customerChannel.getCid());
+                                //为区分来自云+客服添加一个from值，在ChannelActivity里使用
+                                bundle.putString("from", "customer");
+                                IntentUtils.startActivity(getActivity(),ChannelV0Activity.class, bundle);
+                            }
+                        }else if(MyApplication.getInstance().isV1xVersionChat()){
+                            Conversation conversation = ConversationCacheUtils.getCustomerConversation(MyApplication.getInstance());
+                            if (conversation != null){
+                                Bundle bundle = new Bundle();
+                                bundle.putSerializable(ConversationActivity.EXTRA_CONVERSATION, conversation);
+                                bundle.putString("from", "customer");
+                                IntentUtils.startActivity(getActivity(),ConversationActivity.class, bundle);
+                            }
                         }
+
                         recordUserClick("customservice");
                         break;
                     default:

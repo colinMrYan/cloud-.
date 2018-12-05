@@ -68,6 +68,7 @@ import com.inspur.emmcloud.bean.login.LoginDesktopCloudPlusBean;
 import com.inspur.emmcloud.bean.mine.GetBindingDeviceResult;
 import com.inspur.emmcloud.bean.mine.GetCardPackageResult;
 import com.inspur.emmcloud.bean.mine.GetDeviceLogResult;
+import com.inspur.emmcloud.bean.mine.GetExperienceUpgradeFlagResult;
 import com.inspur.emmcloud.bean.mine.GetFaceSettingResult;
 import com.inspur.emmcloud.bean.mine.GetLanguageResult;
 import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
@@ -1813,5 +1814,44 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnUpdateConversationNameFail(String error, int errorCode) {
+    }
+
+    @Override
+    public void returnExperienceUpgradeFlagSuccess(GetExperienceUpgradeFlagResult getExperienceUpgradeFlagResult) {
+    }
+
+    @Override
+    public void returnExperienceUpgradeFlagFail(String error, int errorCode) {
+    }
+    @Override
+    public void returnUpdateExperienceUpgradeFlagSuccess() {
+    }
+
+    @Override
+    public void returnUpdateExperienceUpgradeFlagFail(String error, int errorCode) {
+    }
+
+    @Override
+    public void returnCreateDirectConversationSuccess(Conversation conversation) {
+    }
+
+    @Override
+    public void returnCreateDirectConversationFail(String error, int errorCode) {
+    }
+
+    @Override
+    public void returnCreateGroupConversationSuccess(Conversation conversation) {
+    }
+
+    @Override
+    public void returnCreateGroupConversationFail(String error, int errorCode) {
+    }
+
+    @Override
+    public void returnDeleteConversationSuccess(String cid) {
+    }
+
+    @Override
+    public void returnDeleteConversationFail(String error, int errorCode) {
     }
 }

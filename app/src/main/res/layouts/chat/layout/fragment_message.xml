@@ -19,7 +19,7 @@
             android:paddingRight="13dp"
             android:adjustViewBounds="true"
             android:scaleType="centerInside"
-            android:src="@drawable/ic_contact" />
+            android:src="@drawable/ic_message_header_contact" />
 
         <TextView
             android:id="@+id/header_text"

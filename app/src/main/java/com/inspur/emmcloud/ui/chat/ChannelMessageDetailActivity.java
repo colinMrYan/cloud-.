@@ -25,6 +25,7 @@ import com.inspur.emmcloud.bean.chat.GetMessageCommentResult;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.MsgContentMediaImage;
 import com.inspur.emmcloud.bean.system.EventMessage;
+import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
@@ -38,7 +39,6 @@ import com.inspur.emmcloud.util.privates.CommunicationUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.TransHtmlToTextUtils;
-import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
@@ -181,7 +181,7 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
         disPlayCommonInfo();
         View msgDisplayView = null;
         if (!message.getType().equals("media/image")) {
-            msgDisplayView = DisplayRegularFileMsg.getView(MyApplication.getInstance(), message,1,true);
+            msgDisplayView = DisplayRegularFileMsg.getView(ChannelMessageDetailActivity.this, message,1,true);
         } else {
             msgDisplayView = inflater.inflate(R.layout.msg_common_detail, null);
             msgContentImg = (ImageView) msgDisplayView
@@ -247,7 +247,7 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
                 openUserInfo(message.getFromUser());
             }
         });
-        String msgSendTime = TimeUtils.getDisplayTime(MyApplication.getInstance(),
+        String msgSendTime = TimeUtils.getDisplayTime(ChannelMessageDetailActivity.this,
                 message.getCreationDate());
         msgSendTimeText.setText(msgSendTime);
         senderNameText.setText(ContactUserCacheUtils.getUserName(message.getFromUser()));
@@ -300,8 +300,9 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
      */
     private void sendComment(String text, Map<String, String> mentionsMap) {
 
-        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
+//        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
             Message message = CommunicationUtils.combinLocalCommentTextPlainMessage(cid, mid, text, mentionsMap);
+            handleUnSendMessage(message,Message.MESSAGE_SEND_ING);
             commentList.add(message);
             if (commentAdapter == null) {
                 commentAdapter = new CommentAdapter();
@@ -317,7 +318,21 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
             });
             InputMethodUtils.hide(ChannelMessageDetailActivity.this);
             WSAPIService.getInstance().sendChatCommentTextPlainMsg(message);
-        }
+//        }
+    }
+
+    /**
+     * 处理未发送成功的消息，存储临时消息
+     * @param message
+     * @param status
+     */
+    private void handleUnSendMessage(Message message, int status) {
+        //发送中，无网,发送消息失败
+        message.setSendStatus(status);
+        message.setRead(Message.MESSAGE_READ);
+        MessageCacheUtil.saveMessage(ChannelMessageDetailActivity.this,message);
+        SimpleEventMessage simpleEventMessage = new SimpleEventMessage(Constant.EVENTBUS_TAG_COMMENT_MESSAGE,message);
+        EventBus.getDefault().post(simpleEventMessage);
     }
 
 
@@ -357,7 +372,7 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
             contentText.setText(spannableString);
             TransHtmlToTextUtils.stripUnderlines(contentText,
                     Color.parseColor("#0f7bca"));
-            String time = TimeUtils.getDisplayTime(MyApplication.getInstance(),
+            String time = TimeUtils.getDisplayTime(ChannelMessageDetailActivity.this,
                     message.getCreationDate());
             sendTimeText.setText(time);
             String photoUrl = APIUri.getChannelImgUrl(MyApplication.getInstance(), message.getFromUser());
@@ -428,7 +443,7 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
                     commentAdapter.notifyDataSetChanged();
                 }
             }else {
-                WebServiceMiddleUtils.hand(MyApplication.getInstance(), eventMessage.getContent(), eventMessage.getStatus());
+//                WebServiceMiddleUtils.hand(MyApplication.getInstance(), eventMessage.getContent(), eventMessage.getStatus());
             }
         }
     }
@@ -445,7 +460,7 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
                     handMsgData();
                 }
             }else {
-                WebServiceMiddleUtils.hand(MyApplication.getInstance(), eventMessage.getContent(), eventMessage.getStatus());
+//                WebServiceMiddleUtils.hand(MyApplication.getInstance(), eventMessage.getContent(), eventMessage.getStatus());
             }
 
         }

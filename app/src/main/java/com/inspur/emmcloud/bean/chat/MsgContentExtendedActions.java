@@ -19,6 +19,7 @@ public class MsgContentExtendedActions {
     private boolean edgeToEdge;
     private Action singleAction;
     private String arrangement;
+    private String tmpId = "";
     private List<Action> actionList = new ArrayList<>();
 
     public MsgContentExtendedActions(String content) {
@@ -26,7 +27,9 @@ public class MsgContentExtendedActions {
         title = JSONUtils.getString(obj,"title","");
         description = JSONUtils.getString(obj,"description","");
         poster = JSONUtils.getString(obj,"poster","");
+        tmpId = JSONUtils.getString(obj,"tmpId","");
         edgeToEdge = JSONUtils.getBoolean(obj,"edgeToEdge",false);
+
         if (obj.has("singleAction")){
             singleAction = new Action(JSONUtils.getJSONObject(obj,"singleAction",new JSONObject()));
         }else {
@@ -95,4 +98,11 @@ public class MsgContentExtendedActions {
         this.actionList = actionList;
     }
 
+    public String getTmpId() {
+        return tmpId;
+    }
+
+    public void setTmpId(String tmpId) {
+        this.tmpId = tmpId;
+    }
 }

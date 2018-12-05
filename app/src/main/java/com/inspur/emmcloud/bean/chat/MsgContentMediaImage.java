@@ -22,6 +22,7 @@ public class MsgContentMediaImage {
     private int rawHeight;
     private long rawSize;
     private String rawMedia;
+    private String tmpId;
 
     public MsgContentMediaImage(){
 
@@ -45,6 +46,7 @@ public class MsgContentMediaImage {
         rawHeight = JSONUtils.getInt(rawObj, "height", 0);
         rawSize = JSONUtils.getLong(rawObj, "size", 0);
         rawMedia = JSONUtils.getString(rawObj, "media", "");
+        tmpId = JSONUtils.getString(rawObj,"tmpId","");
     }
 
     public String getName() {
@@ -150,6 +152,15 @@ public class MsgContentMediaImage {
     public void setRawMedia(String rawMedia) {
         this.rawMedia = rawMedia;
     }
+
+    public String getTmpId() {
+        return tmpId;
+    }
+
+    public void setTmpId(String tmpId) {
+        this.tmpId = tmpId;
+    }
+
     public String toString() {
         JSONObject obj = new JSONObject();
         try {
@@ -168,6 +179,7 @@ public class MsgContentMediaImage {
             rawObj.put("height",getRawHeight());
             rawObj.put("size",getRawSize());
             rawObj.put("media",getRawMedia());
+            rawObj.put("tmpId",getTmpId());
             obj.put("name", getName());
 //            obj.put("thumbnail", thumbnailObj);
 //            obj.put("preview", previewObj);

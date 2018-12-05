@@ -283,10 +283,8 @@ public class MediaPlayerManagerUtils {
 
     public void resetPlayMode() {
         if (audioManager.isWiredHeadsetOn()) {
-            LogUtils.jasonDebug("0000000000000000000000000000");
             changeToHeadsetMode();
         } else {
-            LogUtils.jasonDebug("1111111111111111111111111111111111");
             changeToSpeakerMode();
         }
     }

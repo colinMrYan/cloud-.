@@ -33,7 +33,6 @@ import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.ImageUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.imp.api.ImpBaseActivity;
@@ -369,14 +368,7 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
      * 拍照
      */
     private void takePicture(final int currentOrientation) {
-        // mCamera.cancelAutoFocus();
-        mCamera.takePicture(new Camera.ShutterCallback() {
-            @Override
-            public void onShutter() {
-            }
-        }, null, null, new Camera.PictureCallback() {
-
-
+        mCamera.takePicture(null, null, null, new Camera.PictureCallback() {
             @Override
             public void onPictureTaken(byte[] data, Camera camera) {
                 mCamera.stopPreview();

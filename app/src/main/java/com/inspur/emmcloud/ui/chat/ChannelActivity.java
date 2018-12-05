@@ -45,7 +45,6 @@ import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.ChannelInfoUtils;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
-import com.inspur.emmcloud.util.privates.DataCleanManager;
 import com.inspur.emmcloud.util.privates.DirectChannelUtils;
 import com.inspur.emmcloud.util.privates.GetPathFromUri4kitkat;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
@@ -59,11 +58,13 @@ import com.inspur.emmcloud.widget.ECMChatInputMenu;
 import com.inspur.emmcloud.widget.ECMChatInputMenu.ChatInputMenuListener;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.RecycleViewForSizeChange;
+import com.inspur.emmcloud.widget.bubble.BubbleLayout;
 import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
 import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
 import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
 import com.inspur.imp.plugin.camera.mycamera.MyCameraActivity;
 import com.inspur.imp.util.compressor.Compressor;
+import com.qmuiteam.qmui.widget.QMUILoadingView;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
@@ -325,7 +326,7 @@ public class ChannelActivity extends MediaPlayBaseActivity {
                     UIMessage uiMessage = uiMessageList.get(position);
                     int messageSendStatus = uiMessage.getSendStatus();
                     //当消息处于发送中状态时无法点击
-                    if (messageSendStatus == 1) {
+                    if (messageSendStatus == Message.MESSAGE_SEND_SUCCESS) {
                         openMessage(uiMessage.getMessage());
                     }
                 }
@@ -335,6 +336,16 @@ public class ChannelActivity extends MediaPlayBaseActivity {
                     if (uiMessage.getSendStatus() == 2) {
                         showResendMessageDlg(uiMessage);
                     }
+                }
+
+                @Override
+                public void onMediaVoiceReRecognize(UIMessage uiMessage, BubbleLayout bubbleLayout, QMUILoadingView downloadLoadingView) {
+
+                }
+
+                @Override
+                public void onAdapterDataSizeChange() {
+
                 }
             });
             adapter.setMessageList(uiMessageList);
@@ -413,7 +424,7 @@ public class ChannelActivity extends MediaPlayBaseActivity {
 
     /**
      * 打开消息
-     *
+     * 未发送成功的不可调用此方法，不会根据消息id获取评论
      * @param message
      */
     private void openMessage(Message message) {
@@ -593,13 +604,19 @@ public class ChannelActivity extends MediaPlayBaseActivity {
             public void onSuccess(VolumeFile volumeFile) {
                 switch (fakeMessage.getType()) {
                     case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
-                        WSAPIService.getInstance().sendChatRegularFileMsg(cid, fakeMessage.getId(), volumeFile);
+                        fakeMessage.getMsgContentAttachmentFile().setMedia(volumeFile.getPath());
+                        fakeMessage.getMsgContentAttachmentFile().setSize(volumeFile.getSize());
+                        fakeMessage.getMsgContentAttachmentFile().setName(volumeFile.getName());
+                        WSAPIService.getInstance().sendChatRegularFileMsg(fakeMessage);
                         break;
                     case Message.MESSAGE_TYPE_MEDIA_IMAGE:
-                        WSAPIService.getInstance().sendChatMediaImageMsg(volumeFile, fakeMessage);
+                        fakeMessage.getMsgContentMediaImage().setRawMedia(volumeFile.getPath());
+                        fakeMessage.getMsgContentMediaImage().setName(volumeFile.getName());
+                        WSAPIService.getInstance().sendChatMediaImageMsg(fakeMessage);
                         break;
                     case Message.MESSAGE_TYPE_MEDIA_VOICE:
-                        WSAPIService.getInstance().sendChatMediaVoiceMsg(fakeMessage, volumeFile);
+                        fakeMessage.getMsgContentMediaVoice().setMedia(volumeFile.getPath());
+                        WSAPIService.getInstance().sendChatMediaVoiceMsg(fakeMessage);
                         break;
                 }
             }
@@ -920,12 +937,14 @@ public class ChannelActivity extends MediaPlayBaseActivity {
         UIMessage fakeUIMessage = new UIMessage(fakeMessageId);
         int fakeUIMessageIndex = uiMessageList.indexOf(fakeUIMessage);
         if (fakeUIMessageIndex != -1) {
+            Message message = uiMessageList.get(fakeUIMessageIndex).getMessage();
+            message.setSendStatus(Message.MESSAGE_SEND_FAIL);
             uiMessageList.get(fakeUIMessageIndex).setSendStatus(2);
+            MessageCacheUtil.saveMessage(this,message);
             adapter.setMessageList(uiMessageList);
             adapter.notifyItemChanged(fakeUIMessageIndex);
         }
     }
-
 
     /**
      * 记录用户点击的频道，修改不是云+客服的时候才记录频道点击事件170629
@@ -968,7 +987,7 @@ public class ChannelActivity extends MediaPlayBaseActivity {
         }
         chatInputMenu.releaseVoliceInput();
         EventBus.getDefault().unregister(this);
-        DataCleanManager.cleanCustomCache(MyAppConfig.LOCAL_CACHE_VOICE_PATH);
+//        DataCleanManager.cleanCustomCache(MyAppConfig.LOCAL_CACHE_VOICE_PATH);
         MyApplication.getInstance().setCurrentChannelCid("");
     }
 

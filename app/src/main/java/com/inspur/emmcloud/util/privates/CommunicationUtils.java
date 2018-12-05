@@ -97,9 +97,11 @@ public class CommunicationUtils {
 
 
     public static Message combinLocalTextPlainMessage(String text, String cid, Map<String, String> mentionsMap) {
+        String tracer = getTracer();
         Message message = combinLocalMessageCommon();
         message.setChannel(cid);
-        message.setId(getTracer());
+        message.setId(tracer);
+        message.setTmpId(tracer);
         message.setType("text/plain");
         MsgContentTextPlain msgContentTextPlain = new MsgContentTextPlain();
         msgContentTextPlain.setText(text);
@@ -110,25 +112,32 @@ public class CommunicationUtils {
         return message;
     }
 
-    public static Message combinLocalRegularFileMessage(String cid, String localFilePath) {
+    /**
+     * 拼装草稿箱消息
+     * @param text
+     * @param cid
+     * @return
+     */
+    public static Message combinLocalTextPlainMessage(String text, String cid) {
+        String tracer = getTracer();
         Message message = combinLocalMessageCommon();
+        message.setSendStatus(Message.MESSAGE_SEND_EDIT);
         message.setChannel(cid);
-        message.setId(getTracer());
-        message.setType("file/regular-file");
-        File file = new File(localFilePath);
-        MsgContentRegularFile msgContentRegularFile = new MsgContentRegularFile();
-        msgContentRegularFile.setCategory(CommunicationUtils.getChatFileCategory(file.getName()));
-        msgContentRegularFile.setName(file.getName());
-        msgContentRegularFile.setSize(FileUtils.getFileSize(localFilePath));
-        msgContentRegularFile.setMedia(localFilePath);
-        message.setContent(msgContentRegularFile.toString());
+        message.setId(tracer);
+        message.setTmpId(tracer);
+        message.setType("text/plain");
+        MsgContentTextPlain msgContentTextPlain = new MsgContentTextPlain();
+        msgContentTextPlain.setText(text);
+        message.setContent(msgContentTextPlain.toString());
         return message;
     }
 
     public static Message combinLocalCommentTextPlainMessage(String cid, String commentedMid, String text, Map<String, String> mentionsMap) {
+        String tracer = getTracer();
         Message message = combinLocalMessageCommon();
         message.setChannel(cid);
-        message.setId(getTracer());
+        message.setId(tracer);
+        message.setTmpId(tracer);
         message.setType("comment/text-plain");
         MsgContentComment msgContentComment = new MsgContentComment();
         msgContentComment.setText(text);
@@ -142,25 +151,51 @@ public class CommunicationUtils {
 
     }
 
-    public static Message combinLocalExtendedLinksMessage(String cid, String poster, String title, String subTitle, String url) {
+    public static Message combinLocalRegularFileMessage(String cid, String localFilePath) {
+        String tracer = getTracer();
         Message message = combinLocalMessageCommon();
         message.setChannel(cid);
-        message.setId(getTracer());
-        message.setType("extended/links");
-        MsgContentExtendedLinks msgContentExtendedLinks = new MsgContentExtendedLinks();
-        msgContentExtendedLinks.setPoster(poster);
-        msgContentExtendedLinks.setTitle(title);
-        msgContentExtendedLinks.setSubtitle(subTitle);
-        msgContentExtendedLinks.setUrl(url);
-        message.setContent(msgContentExtendedLinks.toString());
+        message.setId(tracer);
+        message.setTmpId(tracer);
+        message.setType("file/regular-file");
+        message.setLocalPath(localFilePath);
+        File file = new File(localFilePath);
+        MsgContentRegularFile msgContentRegularFile = new MsgContentRegularFile();
+        msgContentRegularFile.setCategory(CommunicationUtils.getChatFileCategory(file.getName()));
+        msgContentRegularFile.setName(file.getName());
+        msgContentRegularFile.setSize(FileUtils.getFileSize(localFilePath));
+        msgContentRegularFile.setMedia(localFilePath);
+        message.setContent(msgContentRegularFile.toString());
+        return message;
+    }
+
+
+
+    public static Message combinLocalMediaVoiceMessage(String cid, String localFilePath, int duration, String results) {
+        String tracer = getTracer();
+        Message message = combinLocalMessageCommon();
+        message.setChannel(cid);
+        message.setId(tracer);
+        message.setTmpId(tracer);
+        message.setLocalPath(localFilePath);
+        message.setType(Message.MESSAGE_TYPE_MEDIA_VOICE);
+        message.setLocalPath(localFilePath);
+        MsgContentMediaVoice msgContentMediaVoice = new MsgContentMediaVoice();
+        msgContentMediaVoice.setDuration(duration);
+        msgContentMediaVoice.setMedia(localFilePath);
+        msgContentMediaVoice.setJsonResults(results);
+        message.setContent(msgContentMediaVoice.toString());
         return message;
     }
 
     public static Message combinLocalMediaImageMessage(String cid, String localFilePath) {
+        String tracer = getTracer();
         Message message = combinLocalMessageCommon();
         message.setChannel(cid);
-        message.setId(getTracer());
+        message.setId(tracer);
+        message.setTmpId(tracer);
         message.setType(Message.MESSAGE_TYPE_MEDIA_IMAGE);
+        message.setLocalPath(localFilePath);
         File file = new File(localFilePath);
         Bitmap bitmap = BitmapFactory.decodeFile(localFilePath);
         int imgHeight = bitmap.getHeight();
@@ -181,30 +216,36 @@ public class CommunicationUtils {
         msgContentMediaImage.setRawWidth(imgWidth);
         msgContentMediaImage.setRawSize(fileSize);
         msgContentMediaImage.setRawMedia(localFilePath);
+        msgContentMediaImage.setTmpId(tracer);
         message.setContent(msgContentMediaImage.toString());
         return message;
     }
 
 
-    public static Message combinLocalMediaVoiceMessage(String cid, String localFilePath, int duration, String results) {
+    public static Message combinLocalExtendedLinksMessage(String cid, String poster, String title, String subTitle, String url) {
+        String tracer = getTracer();
         Message message = combinLocalMessageCommon();
         message.setChannel(cid);
-        message.setId(getTracer());
-        message.setType(Message.MESSAGE_TYPE_MEDIA_VOICE);
-        MsgContentMediaVoice msgContentMediaVoice = new MsgContentMediaVoice();
-        msgContentMediaVoice.setDuration(duration);
-        msgContentMediaVoice.setMedia(localFilePath);
-        msgContentMediaVoice.setJsonResults(results);
-        message.setContent(msgContentMediaVoice.toString());
+        message.setId(tracer);
+        message.setTmpId(tracer);
+        message.setType("extended/links");
+        MsgContentExtendedLinks msgContentExtendedLinks = new MsgContentExtendedLinks();
+        msgContentExtendedLinks.setPoster(poster);
+        msgContentExtendedLinks.setTitle(title);
+        msgContentExtendedLinks.setSubtitle(subTitle);
+        msgContentExtendedLinks.setUrl(url);
+        message.setContent(msgContentExtendedLinks.toString());
         return message;
     }
 
 
     public static Message combinLocalReplyAttachmentCardMessage(ContactUser contactUser, String cid, String fromUser) {
+        String currentTime = System.currentTimeMillis() + "";
         Message msgRobot = new Message();
         msgRobot.setChannel(cid);
         msgRobot.setMessage("1.0");
-        msgRobot.setId(System.currentTimeMillis() + "");
+        msgRobot.setId(currentTime);
+        msgRobot.setTmpId(currentTime);
         msgRobot.setCreationDate(System.currentTimeMillis());
         msgRobot.setType(Message.MESSAGE_TYPE_EXTENDED_CONTACT_CARD);
         JSONObject fromObj = new JSONObject();

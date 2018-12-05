@@ -2,6 +2,7 @@ package com.inspur.imp.api;
 
 import android.content.Intent;
 
+import com.inspur.emmcloud.bean.system.MainTabMenu;
 import com.inspur.imp.plugin.window.DropItemTitle;
 
 import java.util.List;
@@ -14,7 +15,7 @@ import java.util.Map;
 public interface ImpCallBackInterface {
     void onLoadingDlgDimiss();
     void onShowImpDialog();
-    Map<String, String> onGetWebViewHeaders();
+    Map<String, String> onGetWebViewHeaders(String url);
     void onInitWebViewGoBackOrClose();
     void onSetTitle(String title);
     void onFinishActivity();
@@ -22,5 +23,5 @@ public interface ImpCallBackInterface {
     void onStartActivityForResult(Intent intent,int requestCode);
     void onSetDropTitles(List<DropItemTitle> dropItemTitleList);
     void onProgressChanged(int newProgress);
-
+    void onSetOptionMenu(List<MainTabMenu> optionMenuList);
 }

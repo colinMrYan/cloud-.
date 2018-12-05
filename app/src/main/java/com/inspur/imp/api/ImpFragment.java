@@ -8,7 +8,6 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -35,11 +34,11 @@ import com.inspur.emmcloud.bean.system.MainTabMenu;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppWebConfig;
 import com.inspur.emmcloud.ui.IndexActivity;
+import com.inspur.emmcloud.ui.mine.setting.NetWorkStateDetailActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
+import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.common.ResolutionUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.privates.AppTabUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.MDM.MDM;
@@ -52,6 +51,7 @@ import com.inspur.imp.plugin.PluginMgr;
 import com.inspur.imp.plugin.barcode.scan.BarCodeService;
 import com.inspur.imp.plugin.camera.CameraService;
 import com.inspur.imp.plugin.file.FileService;
+import com.inspur.imp.plugin.filetransfer.FileTransferService;
 import com.inspur.imp.plugin.photo.PhotoService;
 import com.inspur.imp.plugin.staff.SelectStaffService;
 import com.inspur.imp.plugin.window.DropItemTitle;
@@ -66,7 +66,7 @@ import java.util.Map;
  * Created by yufuchang on 2018/7/9.
  */
 
-public class ImpFragment extends Fragment {
+public class ImpFragment extends ImpBaseFragment {
     private ImpWebView webView;
     // 浏览文件resultCode
     public static final int CAMERA_SERVICE_CAMERA_REQUEST = 1;
@@ -77,12 +77,10 @@ public class ImpFragment extends Fragment {
     public static final int FILE_SERVICE_REQUEST = 6;
     public static final int DO_NOTHING_REQUEST = 7;
     public static final int BARCODE_SERVER__SCAN_REQUEST = 8;
+    public static final int SELECT_FILE_SERVICE_REQUEST = 9;
     public static final int FILE_CHOOSER_RESULT_CODE = 5173;
     private static final String JAVASCRIPT_PREFIX = "javascript:";
     private Map<String, String> webViewHeaders;
-    private TextView headerText;
-    private RelativeLayout functionLayout;
-    private LinearLayout webFunctionLayout;
     private LinearLayout loadFailLayout;
     private Button normalBtn, middleBtn, bigBtn, biggestBtn;
     private String appId = "";
@@ -92,7 +90,7 @@ public class ImpFragment extends Fragment {
     private String helpUrl = "";
     private HashMap<String, String> urlTilteMap = new HashMap<>();
     private View rootView;
-    private ArrayList<MainTabMenu> mainTabMenuArrayList;
+
     private String version;
     private ImpFragmentClickListener listener;
     private PopupWindow dropTitlePopupWindow;
@@ -100,8 +98,7 @@ public class ImpFragment extends Fragment {
     private List<DropItemTitle> dropItemTitleList = new ArrayList<>();
     private Adapter dropTitleAdapter;
     private ImpCallBackInterface impCallBackInterface;
-    private int functionLayoutWidth = -1;
-    private int webFunctionLayoutWidth = -1;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -163,10 +160,8 @@ public class ImpFragment extends Fragment {
             appId = getArguments().getString("appId");
         }
         initFragmentViews();
-        String uri = getArguments().getString("uri");
-        if (!StringUtils.isBlank(uri)) {
-            headerText.setText(AppTabUtils.getTabTitle(getActivity(), getClass().getSimpleName(), uri));
-        }
+        String appName = getArguments().getString(Constant.WEB_FRAGMENT_APP_NAME);
+        headerText.setText(StringUtils.isBlank(appName)?"":appName);
     }
 
 
@@ -174,8 +169,10 @@ public class ImpFragment extends Fragment {
      * 初始化Fragment的WebView
      */
     private void initFragmentViews() {
-        String url = getArguments().getString("uri");
-        initHeaderFunction();
+        String url = getArguments().getString(Constant.APP_WEB_URI);
+        optionMenuList = (ArrayList<MainTabMenu>) getArguments().getSerializable(Constant.WEB_FRAGMENT_MENU);
+        setWebViewFunctionVisiable();
+        initHeaderOptionMenu();
         initListeners();
         initWebViewHeaderLayout();
         setWebViewHeader(url);
@@ -194,7 +191,7 @@ public class ImpFragment extends Fragment {
             }
         });
         webView.loadUrl(url, webViewHeaders);
-        setWebViewFunctionVisiable();
+
     }
 
     /**
@@ -206,8 +203,7 @@ public class ImpFragment extends Fragment {
         rootView.findViewById(R.id.back_layout).setOnClickListener(listener);
         rootView.findViewById(R.id.imp_close_btn).setOnClickListener(listener);
         rootView.findViewById(R.id.refresh_text).setOnClickListener(listener);
-        rootView.findViewById(R.id.imp_cloud_function1_img).setOnClickListener(listener);
-        rootView.findViewById(R.id.imp_cloud_function2_img).setOnClickListener(listener);
+        rootView.findViewById(R.id.load_error_layout).setOnClickListener(listener);
     }
 
     class ImpFragmentClickListener implements View.OnClickListener {
@@ -237,16 +233,13 @@ public class ImpFragment extends Fragment {
                     finishActivity();
                     break;
                 case R.id.refresh_text:
+                    IntentUtils.startActivity(getActivity(), NetWorkStateDetailActivity.class);
+                    break;
+                case R.id.load_error_layout:
                     showLoadingDlg(getString(Res.getStringID("@string/loading_text")));
                     webView.reload();
                     webView.setVisibility(View.INVISIBLE);
                     loadFailLayout.setVisibility(View.GONE);
-                    break;
-                case R.id.imp_cloud_function1_img:
-                    runJavaScript(JAVASCRIPT_PREFIX + mainTabMenuArrayList.get(0).getAction());
-                    break;
-                case R.id.imp_cloud_function2_img:
-                    runJavaScript(JAVASCRIPT_PREFIX + mainTabMenuArrayList.get(1).getAction());
                     break;
                 case R.id.header_text:
                     if (dropItemTitleList != null && dropItemTitleList.size() > 0) {
@@ -265,44 +258,22 @@ public class ImpFragment extends Fragment {
     }
 
     /**
-     * 配置圈子标题栏上的功能
-     * 最多两个功能，超过两个取前两个
-     */
-    private void initHeaderFunction() {
-        mainTabMenuArrayList = (ArrayList<MainTabMenu>) getArguments().getSerializable(Constant.WEB_FRAGMENT_MENU);
-        if (mainTabMenuArrayList != null) {
-            if (mainTabMenuArrayList.size() == 1) {
-                ImageView imageViewFun1 = (ImageView) rootView.findViewById(R.id.imp_cloud_function1_img);
-                imageViewFun1.setVisibility(View.VISIBLE);
-                ImageDisplayUtils.getInstance().displayImage(imageViewFun1, mainTabMenuArrayList.get(0).getIco());
-            } else if (mainTabMenuArrayList.size() == 2) {
-                ImageView imageViewFun1 = (ImageView) rootView.findViewById(R.id.imp_cloud_function1_img);
-                ImageView imageViewFun2 = (ImageView) rootView.findViewById(R.id.imp_cloud_function2_img);
-                imageViewFun1.setVisibility(View.VISIBLE);
-                imageViewFun2.setVisibility(View.VISIBLE);
-                ImageDisplayUtils.getInstance().displayImage(imageViewFun1, mainTabMenuArrayList.get(0).getIco());
-                ImageDisplayUtils.getInstance().displayImage(imageViewFun2, mainTabMenuArrayList.get(1).getIco());
-            }
-            setHeaderTextWidth();
-        }
-    }
-
-    /**
      * 执行JS脚本
      *
      * @param script
      */
-    private void runJavaScript(String script) {
+    protected void runJavaScript(String script) {
         webView.loadUrl(script);
     }
 
 
     /**
      * 在WebClient获取header
-     *
+     * 为了防止第一层不符合规则，第二层符合添加token规则时不再检查url的问题，需要回传url重新检查增加每次检查是否需要加token
      * @return
      */
-    public Map<String, String> getWebViewHeaders() {
+    public Map<String, String> getWebViewHeaders(String url) {
+        addAuthorizationToken(url);
         return webViewHeaders;
     }
 
@@ -337,31 +308,6 @@ public class ImpFragment extends Fragment {
         }
     }
 
-    /**
-     * 动态监控布局变化
-     */
-    private void setHeaderTextWidth() {
-        webFunctionLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                functionLayoutWidth = functionLayout.getWidth();
-                webFunctionLayoutWidth = webFunctionLayout.getWidth();
-                headerText.setMaxWidth(ResolutionUtils.getWidth(getActivity()) - getMaxWidth() * 2);
-            }
-        });
-    }
-
-    /**
-     * 取两个宽度的最大值
-     *
-     * @return
-     */
-    private int getMaxWidth() {
-        if (functionLayoutWidth > webFunctionLayoutWidth) {
-            return functionLayoutWidth;
-        }
-        return webFunctionLayoutWidth;
-    }
 
     private void showDropTitlePop() {
         // 一个自定义的布局，作为显示的内容
@@ -459,8 +405,8 @@ public class ImpFragment extends Fragment {
             }
 
             @Override
-            public Map<String, String> onGetWebViewHeaders() {
-                return getWebViewHeaders();
+            public Map<String, String> onGetWebViewHeaders(String url) {
+                return getWebViewHeaders(url);
             }
 
             @Override
@@ -498,8 +444,13 @@ public class ImpFragment extends Fragment {
             public void onProgressChanged(int newProgress) {
             }
 
+            @Override
+            public void onSetOptionMenu(List<MainTabMenu> optionMenuList) {
+                ImpFragment.this.optionMenuList = optionMenuList;
+                initHeaderOptionMenu();
+            }
         };
-        }
+    }
 
     private void setHeaderTitleTextDropImg() {
         boolean isDropTitlePopShow = (dropTitlePopupWindow != null && dropTitlePopupWindow.isShowing());
@@ -545,11 +496,10 @@ public class ImpFragment extends Fragment {
         if (webView.canGoBack()) {
             webView.goBack();// 返回上一页面
             setGoBackTitle();
-            return true;
         } else {
             finishActivity();
         }
-        return false;
+        return true;
     }
 
     public void finishActivity() {
@@ -583,7 +533,7 @@ public class ImpFragment extends Fragment {
         try {
             URL urlHost = new URL(url);
             String token = MyApplication.getInstance().getToken();
-            if (token != null && (urlHost.getHost().endsWith(Constant.INSPUR_HOST_URL)) || urlHost.getHost().endsWith(Constant.INSPURONLINE_HOST_URL)) {
+            if (token != null && (urlHost.getHost().endsWith(Constant.INSPUR_HOST_URL)) || urlHost.getHost().endsWith(Constant.INSPURONLINE_HOST_URL) || urlHost.getPath().endsWith("/app/mdm/v3.0/loadForRegister")) {
                 webViewHeaders.put("Authorization", token);
             }
         } catch (Exception e) {
@@ -642,7 +592,7 @@ public class ImpFragment extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent();
                 intent.setClass(getActivity(), ImpActivity.class);
-                intent.putExtra("uri", helpUrl);
+                intent.putExtra(Constant.APP_WEB_URI, helpUrl);
                 intent.putExtra(Constant.WEB_FRAGMENT_APP_NAME, "");
                 startActivity(intent);
                 dialog.dismiss();
@@ -791,6 +741,10 @@ public class ImpFragment extends Fragment {
                         break;
                     case BARCODE_SERVER__SCAN_REQUEST:
                         serviceName = BarCodeService.class.getCanonicalName().trim();
+                        break;
+                    case SELECT_FILE_SERVICE_REQUEST:
+                        serviceName = FileTransferService.class.getCanonicalName().trim();
+                        break;
                     default:
                         break;
                 }

@@ -270,6 +270,38 @@
             android:layout_height="0.5px"
             android:visibility="gone"
             android:background="@color/color_list_divider" />
+        <RelativeLayout
+            android:id="@+id/rl_experience_upgrade"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:background="@drawable/text_layout_selector">
+
+            <TextView
+                android:id="@+id/tv_experience_upgrade"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="12dp"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp"
+                android:text="@string/setting_join_experience_plan"
+                android:textSize="16sp" />
+
+            <com.inspur.emmcloud.widget.SwitchView
+                android:id="@+id/sw_experience_upgrade"
+                android:layout_width="37dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="20dp" />
+            <View
+                android:id="@+id/v_experience_upgrade"
+                android:layout_width="match_parent"
+                android:layout_height="0.5px"
+                android:layout_below="@id/tv_experience_upgrade"
+                android:background="@color/color_list_divider" />
+        </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/signout_layout"

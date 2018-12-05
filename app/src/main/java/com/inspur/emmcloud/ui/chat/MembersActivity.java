@@ -21,6 +21,7 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.ChannelMemberListAdapter;
 import com.inspur.emmcloud.adapter.MemberSelectGridAdapter;
+import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.PersonDto;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
 import com.inspur.emmcloud.bean.contact.ContactUser;
@@ -32,6 +33,7 @@ import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 import com.inspur.emmcloud.widget.ECMSpaceItemDecoration;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.slidebar.CharacterParser;
@@ -59,8 +61,6 @@ public class MembersActivity extends BaseActivity implements TextWatcher {
     private static final int TOTAL_MEMBERS_NUM = 9;//最多可选择的人数配置，修改这个配置应当同时修改toast提示里的配置数量
     @ViewInject(R.id.sidrbar_channel_member_select)
     private SideBar lettersSideBar;
-    @ViewInject(R.id.tv_channel_member_select_dialog)
-    private TextView dialogTv;
     @ViewInject(R.id.tv_ok)
     private TextView okTv;
     @ViewInject(R.id.lv_channel_member_select)
@@ -100,7 +100,6 @@ public class MembersActivity extends BaseActivity implements TextWatcher {
         loadingDlg.show();
         selectedMemberRecylerView = (RecyclerView) findViewById(R.id.recyclerview_voice_communication_select_members);
         okTv.setVisibility(state == SELECT_STATE?View.VISIBLE:View.GONE);
-        lettersSideBar.setTextView(dialogTv);
         allReadySelectUserList = new ArrayList<>();
         allReadySelectUserList.add(ContactUserCacheUtils.getContactUserByUid(MyApplication.getInstance().getUid()));
         allReadySelectPersonDtoList = tranContactUserList2PersonDtoList(allReadySelectUserList);
@@ -124,7 +123,13 @@ public class MembersActivity extends BaseActivity implements TextWatcher {
             @Override
             public void run() {
                 if (!StringUtils.isBlank(channelId)) {
-                    List<String> uidList = ChannelGroupCacheUtils.getMemberUidList(MembersActivity.this, channelId, 0);
+                    List<String> uidList= null;
+                    if (MyApplication.getInstance().isV1xVersionChat()){
+                        Conversation conversation = ConversationCacheUtils.getConversation(MyApplication.getInstance(),channelId);
+                        uidList = conversation.getMemberList();
+                    }else {
+                        uidList = ChannelGroupCacheUtils.getMemberUidList(MembersActivity.this, channelId, 0);
+                    }
                     personDtoList = ContactUserCacheUtils.getShowMemberList(uidList);
                 } else if (getIntent().getStringArrayListExtra("uidList") != null) {
                     personDtoList = ContactUserCacheUtils.getShowMemberList(getIntent().getStringArrayListExtra("uidList"));

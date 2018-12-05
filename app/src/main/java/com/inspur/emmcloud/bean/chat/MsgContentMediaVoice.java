@@ -17,10 +17,13 @@ public class MsgContentMediaVoice {
     private int duration;
     private String media;
     private String result;
+    private String tmpId;
     private JSONObject jsonObject;
+
     public MsgContentMediaVoice(String content) {
         JSONObject object = JSONUtils.getJSONObject(content);
         duration = JSONUtils.getInt(object,"duration",0);
+        tmpId = JSONUtils.getString(object,"tmpId","");
         if (duration == 0){
             duration = 1;
         }
@@ -93,6 +96,14 @@ public class MsgContentMediaVoice {
             e.printStackTrace();
         }
         this.jsonObject = jsonObj;
+    }
+
+    public String getTmpId() {
+        return tmpId;
+    }
+
+    public void setTmpId(String tmpId) {
+        this.tmpId = tmpId;
     }
 
     public String toString() {

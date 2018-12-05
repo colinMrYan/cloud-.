@@ -53,8 +53,11 @@ import com.inspur.emmcloud.bean.chat.TransparentBean;
 import com.inspur.emmcloud.bean.system.ClientConfigItem;
 import com.inspur.emmcloud.bean.system.GetAllConfigVersionResult;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
+import com.inspur.emmcloud.bean.system.SimpleEventMessage;
+import com.inspur.emmcloud.broadcastreceiver.NetworkChangeReceiver;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.interf.OnRecommendAppWidgetItemClickListener;
+import com.inspur.emmcloud.ui.mine.setting.NetWorkStateDetailActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
@@ -117,6 +120,8 @@ public class MyAppFragment extends Fragment {
     private RecommendAppWidgetListAdapter recommendAppWidgetListAdapter = null;
     private int appListSizeExceptCommonlyUse = 0;
     private DataSetObserver dataSetObserver;
+    private View    netExceptionView;
+    private boolean haveHeader=false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -161,12 +166,20 @@ public class MyAppFragment extends Fragment {
         }
         getAppBadgeNum();
         refreshRecommendAppWidgetView();
+        NetUtils.PingThreadStart("www.baidu.com",5,Constant.EVENTBUS_TAG__NET_EXCEPTION_HINT);
     }
 
     /**
      * 初始化Views
      */
     private void initViews() {
+        netExceptionView  = LayoutInflater.from(getContext()).inflate(R.layout.recycleview_header_item,null);
+        netExceptionView.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                IntentUtils.startActivity(getActivity(), NetWorkStateDetailActivity.class);
+            }
+        });
         apiService = new MyAppAPIService(getActivity());
         apiService.setAPIInterface(new WebService());
         //当Adapter的大小发生改变时调用此方法
@@ -209,6 +222,26 @@ public class MyAppFragment extends Fragment {
         PreferencesByUserAndTanentUtils.putInt(getActivity(), Constant.PREF_MY_APP_RECOMMEND_LASTUPDATE_HOUR, 0);
 //        shortCutAppList.add("mobile_checkin_hcm");
 //        shortCutAppList.add("inspur_news_esg");//目前，除在此处添加id还需要为每个需要生成快捷方式的应用配置图标
+    }
+
+    /**
+     * 添加LIstView 的HeaderView
+     * */
+    private void AddHeaderView() {
+        if(!haveHeader){
+            appListView.addHeaderView(netExceptionView);
+            haveHeader=true;
+        }
+    }
+
+    /**
+     * 删除ListView 的HeaderView
+     * */
+    private void DeleteHeaderView() {
+        if(haveHeader){
+            appListView.removeHeaderView(netExceptionView);
+            haveHeader=false;
+        }
     }
 
     /**
@@ -345,6 +378,28 @@ public class MyAppFragment extends Fragment {
         }
     }
 
+    /**
+     * app页网络异常提示框
+     * @param netState  通过Action获取操作类型
+     * */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void netWorkStateHint(SimpleEventMessage netState) {
+        if(netState.getAction().equals(Constant.EVENTBUS_TAG__NET_STATE_CHANGE)){
+            if(((String)netState.getMessageObj()).equals(NetworkChangeReceiver.NET_WIFI_STATE_OK)){
+                NetUtils.PingThreadStart("www.baidu.com",5,Constant.EVENTBUS_TAG__NET_EXCEPTION_HINT);
+            } else if(((String)netState.getMessageObj()).equals(NetworkChangeReceiver.NET_STATE_ERROR)) {
+                AddHeaderView();
+            } else if (((String)netState.getMessageObj()).equals(NetworkChangeReceiver.NET_GPRS_STATE_OK)) {
+                DeleteHeaderView();
+            }
+        } else if (netState.getAction().equals(Constant.EVENTBUS_TAG__NET_EXCEPTION_HINT)) {   //网络异常提示
+            if(!(Boolean)netState.getMessageObj()) {
+                AddHeaderView();
+            } else {
+                DeleteHeaderView();
+            }
+        }
+    }
 
     /**
      * 获取我的apps
@@ -420,6 +475,10 @@ public class MyAppFragment extends Fragment {
         public View getView(final int listPosition, View convertView,
                             ViewGroup parent) {
             convertView = LayoutInflater.from(getActivity()).inflate(R.layout.app_drag_item, null);
+            if(listPosition==(getCount()-1)){
+                View dividerView  =  (View)convertView.findViewById(R.id.v_applist_devid);
+                dividerView.setVisibility(View.GONE);
+            }
             ((TextView) convertView.findViewById(R.id.app_title_text))
                     .setText(appAdapterList.get(listPosition).getCategoryName());
             DragGridView dragGridView = (DragGridView) convertView

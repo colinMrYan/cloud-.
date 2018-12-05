@@ -30,13 +30,14 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.chat.Channel;
-import com.inspur.emmcloud.bean.chat.ChannelGroup;
 import com.inspur.emmcloud.bean.contact.Contact;
 import com.inspur.emmcloud.bean.contact.FirstGroupTextModel;
 import com.inspur.emmcloud.bean.contact.SearchModel;
+import com.inspur.emmcloud.bean.system.SimpleEventMessage;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.emmcloud.ui.chat.ChannelActivity;
 import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
+import com.inspur.emmcloud.ui.chat.ConversationActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.EditTextUtils;
 import com.inspur.emmcloud.util.common.InputMethodUtils;
@@ -47,10 +48,15 @@ import com.inspur.emmcloud.util.privates.cache.ChannelCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.CommonContactCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 import com.inspur.emmcloud.widget.CircleTextImageView;
 import com.inspur.emmcloud.widget.FlowLayout;
 import com.inspur.emmcloud.widget.MaxHightScrollView;
 import com.inspur.emmcloud.widget.MySwipeRefreshLayout;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
 import java.io.Serializable;
@@ -66,11 +72,11 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
     private static final int REFRESH_CONTACT_DATA = 5;
     public static final String EXTRA_EXCLUDE_SELECT = "excludeContactUidList";
     public static final String EXTRA_LIMIT = "select_limit";
-    private List<ChannelGroup> searchChannelGroupList = new ArrayList<ChannelGroup>(); // 群组搜索结果
-    private List<Contact> searchContactList = new ArrayList<Contact>(); // 通讯录搜索结果
-    private List<Channel> searchRecentList = new ArrayList<Channel>();// 常用联系人搜索结果
-    private List<SearchModel> selectMemList = new ArrayList<SearchModel>();
-    private List<FirstGroupTextModel> groupTextList = new ArrayList<FirstGroupTextModel>();
+    private List<SearchModel> searchChannelGroupList = new ArrayList<>(); // 群组搜索结果
+    private List<Contact> searchContactList = new ArrayList<>(); // 通讯录搜索结果
+    private List<Channel> searchRecentList = new ArrayList<>();// 常用联系人搜索结果
+    private List<SearchModel> selectMemList = new ArrayList<>();
+    private List<FirstGroupTextModel> groupTextList = new ArrayList<>();
     private int searchArea;
     private int searchContent;
     private boolean isMultiSelect = false;
@@ -98,6 +104,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
         handMessage();
         initView();
         getIntentData();
+        EventBus.getDefault().register(this);
     }
 
     private void initView() {
@@ -121,8 +128,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
                 if (selectMemList.size() < selectLimit) {
                     SearchModel searchModel = null;
                     if (searchArea == SEARCH_CHANNELGROUP) {
-                        searchModel = new SearchModel(searchChannelGroupList
-                                .get(position));
+                        searchModel = searchChannelGroupList.get(position);
                     } else if (searchArea == SEARCH_CONTACT) {
                         searchModel = new SearchModel(searchContactList
                                 .get(position));
@@ -153,15 +159,16 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
             params.topMargin = DensityUtil.dip2px(getApplicationContext(), 2);
             params.bottomMargin =  params.topMargin;
             int piddingTop = DensityUtil.dip2px(getApplicationContext(), 1);
-            int piddingLeft = DensityUtil.dip2px(getApplicationContext(), 5);
+            int piddingLeft = DensityUtil.dip2px(getApplicationContext(), 10);
             searchEdit.setPadding(piddingLeft, piddingTop, piddingLeft, piddingTop);
             searchEdit.setLayoutParams(params);
             searchEdit.setSingleLine(true);
-            searchEdit.setHint(getString(R.string.search));
+            searchEdit.setHint(getString(R.string.msg_key_search_member));
             searchEdit.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
             searchEdit.setBackground(null);
             searchEdit.addTextChangedListener(myTextWatcher);
         }
+        searchEdit.setHint((selectMemList.size() == 0) ? getString(R.string.msg_key_search_member) : "");
         flowLayout.addView(searchEdit);
     }
 
@@ -216,19 +223,17 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
             final SearchModel searchModel = selectMemList.get(i);
             TextView searchResultText = new TextView(this);
             FlowLayout.LayoutParams params = new FlowLayout.LayoutParams(
-                    LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-            params.rightMargin = DensityUtil.dip2px(getApplicationContext(), 5);
-            params.topMargin = DensityUtil.dip2px(getApplicationContext(), 2);
-            params.bottomMargin =  params.topMargin;
+                    ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.leftMargin = DensityUtil.dip2px(MyApplication.getInstance(), 5);
+            params.topMargin = DensityUtil.dip2px(MyApplication.getInstance(), 2);
+            params.bottomMargin = params.topMargin;
             searchResultText.setLayoutParams(params);
-            int piddingTop = DensityUtil.dip2px(getApplicationContext(), 1);
-            int piddingLeft = DensityUtil.dip2px(getApplicationContext(), 5);
+            int piddingTop = DensityUtil.dip2px(MyApplication.getInstance(), 1);
+            int piddingLeft = DensityUtil.dip2px(MyApplication.getInstance(), 5);
             searchResultText.setPadding(piddingLeft, piddingTop, piddingLeft, piddingTop);
             searchResultText.setGravity(Gravity.CENTER);
-            searchResultText.setBackgroundResource(R.drawable.bg_corner_search_member);
             searchResultText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-            searchResultText.setTextColor(getResources()
-                    .getColor(R.color.white));
+            searchResultText.setTextColor(Color.parseColor("#0F7BCA"));
             searchResultText.setText(selectMemList.get(i).getName());
             searchResultText.setOnClickListener(new OnClickListener() {
 
@@ -238,7 +243,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
                     changeMembers(searchModel);
                 }
             });
-            int paddingLeft = DensityUtil.dip2px(getApplicationContext(), 5);
+            int paddingLeft = DensityUtil.dip2px(getApplicationContext(), 10);
             int paddingTop = DensityUtil.dip2px(getApplicationContext(), 1);
             searchResultText.setPadding(paddingLeft, paddingTop, paddingLeft,
                     paddingTop);
@@ -300,7 +305,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
             intent.setClass(getApplicationContext(), UserInfoActivity.class);
             startActivity(intent);
         } else {
-            intent.setClass(getApplicationContext(), MyApplication.getInstance().isV0VersionChat()? ChannelV0Activity.class:ChannelActivity.class);
+            intent.setClass(getApplicationContext(), MyApplication.getInstance().isV0VersionChat()? ChannelV0Activity.class:ConversationActivity.class);
             intent.putExtra("title", searchModel.getName());
             intent.putExtra("cid", searchModel.getId());
             intent.putExtra("channelType", searchModel.getType());
@@ -365,9 +370,14 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
                         adapter.notifyDataSetChanged();
                         break;
                     case SEARCH_CHANNELGROUP:
-                        searchChannelGroupList = ChannelGroupCacheUtils
-                                .getSearchChannelGroupList(getApplicationContext(),
-                                        searchText);
+                        if (MyApplication.getInstance().isV0VersionChat()) {
+                            searchChannelGroupList = ChannelGroupCacheUtils
+                                    .getSearchChannelGroupSearchModelList(MyApplication.getInstance(),
+                                            searchText);
+                        } else {
+                            searchChannelGroupList = ConversationCacheUtils.getSearchConversationSearchModelList(MyApplication.getInstance(), searchText);
+                        }
+
                         adapter.notifyDataSetChanged();
                         break;
 
@@ -463,10 +473,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
                 Channel channel = searchRecentList.get(position);
                 searchModel = new SearchModel(channel);
             } else if (searchArea == SEARCH_CHANNELGROUP) {
-                ChannelGroup channelGroup = searchChannelGroupList
-                        .get(position);
-                searchModel = new SearchModel(channelGroup);
-
+                searchModel = searchChannelGroupList.get(position);
             } else {
                 Contact contact = searchContactList.get(position);
                 searchModel = new SearchModel(contact);
@@ -476,10 +483,8 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
             viewHolder.nameText.setText(searchModel.getCompleteName());
             if (selectMemList.contains(searchModel)) {
                 viewHolder.selectedImg.setVisibility(View.VISIBLE);
-                viewHolder.nameText.setTextColor(Color.parseColor("#0f7bca"));
             } else {
                 viewHolder.selectedImg.setVisibility(View.INVISIBLE);
-                viewHolder.nameText.setTextColor(Color.parseColor("#030303"));
             }
             return convertView;
         }
@@ -547,21 +552,18 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
             arg0.titleText.setText(groupTextList.get(arg1).getName());
 
             if (count > 1) {
-                arg0.titleText.setBackgroundColor(Color.parseColor("#d8d8d8"));
                 if (arg1 != count - 1) {
-                    arg0.titleImg
-                            .setImageResource(R.drawable.icon_group_title_mid_img);
-                    arg0.titleText.setTextColor(Color.parseColor("#EFEFF4"));
+                    arg0.titleImg.setVisibility(View.VISIBLE);
+                    arg0.titleText
+                            .setTextColor(Color.parseColor("#018DD4"));
                 } else {
-                    arg0.titleImg
-                            .setImageResource(R.drawable.icon_group_title_end_img);
-                    arg0.titleText.setTextColor(Color.parseColor("#ffffff"));
+                    arg0.titleImg.setVisibility(View.GONE);
+                    arg0.titleText
+                            .setTextColor(Color.parseColor("#666666"));
                 }
             } else {
-                arg0.titleText
-                        .setBackgroundColor(Color.parseColor("#00000000"));
-                arg0.titleText.setTextColor(Color.parseColor("#8f8e94"));
-                arg0.titleImg.setImageDrawable(null);
+                arg0.titleText.setTextColor(Color.parseColor("#666666"));
+                arg0.titleImg.setVisibility(View.GONE);
             }
         }
 
@@ -615,12 +617,30 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
     }
 
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiverSimpleEventMessage(SimpleEventMessage eventMessage) {
+        switch (eventMessage.getAction()) {
+            case Constant.EVENTBUS_TAG_QUIT_CHANNEL_GROUP:
+            case Constant.EVENTBUS_TAG_UPDATE_CHANNEL_NAME:
+                if (searchChannelGroupList.size() > 0) {
+                    searchChannelGroupList = ConversationCacheUtils.getSearchConversationSearchModelList(MyApplication.getInstance(), searchText);
+                    if (adapter != null){
+                        adapter.notifyDataSetChanged();
+                    }
+                }
+
+                break;
+        }
+    }
+
+
     @Override
     protected void onDestroy() {
         if (handler != null) {
             handler = null;
         }
         super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 
 }

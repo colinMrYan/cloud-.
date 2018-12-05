@@ -12,7 +12,7 @@
         android:listSelector="@android:color/transparent"
         android:numColumns="4"
         android:horizontalSpacing="30dp"
-        android:verticalSpacing="25dp"
+        android:verticalSpacing="10dp"
         android:stretchMode="columnWidth"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">

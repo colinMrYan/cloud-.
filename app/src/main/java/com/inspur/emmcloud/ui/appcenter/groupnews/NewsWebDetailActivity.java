@@ -38,6 +38,7 @@ import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.bean.appcenter.news.GroupNews;
 import com.inspur.emmcloud.bean.appcenter.news.NewsIntrcutionUpdateEvent;
+import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.bean.chat.GetNewsInstructionResult;
 import com.inspur.emmcloud.bean.chat.GetSendMsgResult;
@@ -60,6 +61,7 @@ import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils.OnCreateDirectChannelListener;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
+import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
@@ -108,6 +110,7 @@ public class NewsWebDetailActivity extends BaseActivity {
         initData();
         initViews();
         EventBus.getDefault().register(this);
+        this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
     }
 
     /**
@@ -228,7 +231,7 @@ public class NewsWebDetailActivity extends BaseActivity {
         webView.setBackgroundColor(ContextCompat.getColor(NewsWebDetailActivity.this, (model.equals(darkMode)) ? R.color.app_news_night_color : R.color.white));
         //没有确定这里的影响，暂时不去掉
         webView.setLayerType(WebView.LAYER_TYPE_SOFTWARE, null);
-        webView.clearCache(true);
+//        webView.clearCache(true);
         webView.setDownloadListener(new FileDownloadListener());
         webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
         webView.setWebViewClient(new WebViewClient() {
@@ -893,18 +896,34 @@ public class NewsWebDetailActivity extends BaseActivity {
      * @param uid
      */
     private void createDirectChannel(String uid) {
-        new ChatCreateUtils().createDirectChannel(NewsWebDetailActivity.this, uid,
-                new OnCreateDirectChannelListener() {
-                    @Override
-                    public void createDirectChannelSuccess(GetCreateSingleChannelResult getCreateSingleChannelResult) {
-                        sendMsg(getCreateSingleChannelResult.getCid());
-                    }
+        if (MyApplication.getInstance().isV1xVersionChat()) {
+            new ConversationCreateUtils().createDirectConversation(NewsWebDetailActivity.this, uid,
+                    new ConversationCreateUtils.OnCreateDirectConversationListener() {
+                        @Override
+                        public void createDirectConversationSuccess(Conversation conversation) {
+                            sendMsg(conversation.getId());
+                        }
 
-                    @Override
-                    public void createDirectChannelFail() {
-                        //showShareFailToast();
-                    }
-                });
+                        @Override
+                        public void createDirectConversationFail() {
+
+                        }
+                    });
+        } else {
+            new ChatCreateUtils().createDirectChannel(NewsWebDetailActivity.this, uid,
+                    new OnCreateDirectChannelListener() {
+                        @Override
+                        public void createDirectChannelSuccess(GetCreateSingleChannelResult getCreateSingleChannelResult) {
+                            sendMsg(getCreateSingleChannelResult.getCid());
+                        }
+
+                        @Override
+                        public void createDirectChannelFail() {
+                            //showShareFailToast();
+                        }
+                    });
+        }
+
     }
 
     /**
@@ -929,7 +948,8 @@ public class NewsWebDetailActivity extends BaseActivity {
                 }
                 apiService.sendMsg(cid, jsonObject.toString(), "res_link", System.currentTimeMillis() + "");
             } else {
-                Message message = CommunicationUtils.combinLocalExtendedLinksMessage(cid, APIUri.getPreviewUrl(groupNews.getPoster()), groupNews.getTitle(), groupNews.getSummary(), url);
+                String poster = StringUtils.isBlank(groupNews.getPoster())?"":APIUri.getPreviewUrl(groupNews.getPoster());
+                Message message = CommunicationUtils.combinLocalExtendedLinksMessage(cid,poster, groupNews.getTitle(), groupNews.getSummary(), url);
                 fakeMessageId = message.getId();
                 WSAPIService.getInstance().sendChatExtendedLinksMsg(message);
             }

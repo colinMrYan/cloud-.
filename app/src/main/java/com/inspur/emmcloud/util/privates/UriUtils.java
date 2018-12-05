@@ -8,6 +8,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.appcenter.App;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.appcenter.ReactNativeAppActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
@@ -97,7 +98,7 @@ public class UriUtils {
     public static void openWebApp(Activity activity, String uri, App app) {
         Intent intent = new Intent();
         intent.setClass(activity, ImpActivity.class);
-        intent.putExtra("uri", uri);
+        intent.putExtra(Constant.APP_WEB_URI, uri);
         if (app.getAppType() == 3 || (app.getAppType() == 6 && app.getUserHeader() == 1)) {
             intent.putExtra("appName", app.getAppName());
         }

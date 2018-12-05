@@ -7,9 +7,9 @@ import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.webkit.MimeTypeMap;
 
 import com.inspur.emmcloud.R;
@@ -26,6 +26,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.math.BigInteger;
+import java.security.MessageDigest;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -696,6 +698,7 @@ public class FileUtils {
 
     /**
      * 获取文件大小
+     *
      * @param fileSize
      * @return
      */
@@ -865,7 +868,7 @@ public class FileUtils {
             if (context.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY) != null) {
                 context.startActivity(intent);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             ToastUtils.show(context, R.string.clouddriver_file_open_fail);
         }
@@ -911,10 +914,12 @@ public class FileUtils {
         }
         return imageIconId;
     }
-        /**
-         * 获取文件标识图片
-         * @param fileName
-         */
+
+    /**
+     * 获取文件标识图片
+     *
+     * @param fileName
+     */
     public static int getRegularFileIconResId(String fileName) {
         fileName = fileName.toLowerCase();
         int imageIconId = R.drawable.ic_volume_file_typ_unknown;
@@ -937,6 +942,7 @@ public class FileUtils {
         }
         return imageIconId;
     }
+
     /**
      * 传入目录名称，忽略删除的文件名
      * 返回成功删除的文件名列表
@@ -946,36 +952,38 @@ public class FileUtils {
      * @param protectedFileNameList
      * @return
      */
-    public static List<String> delFilesExceptNameList(String src, List<String> protectedFileNameList){
+    public static List<String> delFilesExceptNameList(String src, List<String> protectedFileNameList) {
         List<String> delSuccessFileNameList = new ArrayList<>();
-        try{
+        try {
             File[] files = new File(src).listFiles();
-            if(files != null && files.length > 0){
-                for(int i = 0; i < files.length; i++){
+            if (files != null && files.length > 0) {
+                for (int i = 0; i < files.length; i++) {
                     String fileName = files[i].getName();
-                    if(protectedFileNameList.indexOf(fileName) == -1){
+                    if (protectedFileNameList.indexOf(fileName) == -1) {
                         files[i].delete();
                         delSuccessFileNameList.add(fileName);
                     }
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return delSuccessFileNameList;
     }
 
-    /** 
-      * 判断assets文件夹下的文件是否存在 
-      * 
-      * @return false 不存在    true 存在 
-      */
-    public static boolean isAssetsFileExist(Context context,String fileName){
+    /**
+     *  
+     *  * 判断assets文件夹下的文件是否存在 
+     *  * 
+     *  * @return false 不存在    true 存在 
+     *  
+     */
+    public static boolean isAssetsFileExist(Context context, String fileName) {
         AssetManager assetManager = context.getAssets();
         try {
             String[] fileNames = assetManager.list("");
-            for(int i = 0; i < fileNames.length; i++){
-                if(fileNames[i].equals(fileName.trim())){
+            for (int i = 0; i < fileNames.length; i++) {
+                if (fileNames[i].equals(fileName.trim())) {
                     return true;
                 }
             }
@@ -1044,7 +1052,7 @@ public class FileUtils {
         // 判断Intent是否是“分享多个”功能(Share Via)
         if (extras.containsKey(Intent.EXTRA_STREAM)) {
             ArrayList<Uri> fileUriList = intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
-            return (fileUriList == null)?new ArrayList<Uri>():fileUriList;
+            return (fileUriList == null) ? new ArrayList<Uri>() : fileUriList;
         }
         return new ArrayList<Uri>();
     }
@@ -1075,15 +1083,16 @@ public class FileUtils {
 
     /**
      * 判断传入的List下的所有文件是否存在，有一个不存在即返回false
+     *
      * @param filePathList
      * @return
      */
-    public static boolean isFileInListExist(List<String> filePathList){
-        if(filePathList == null || filePathList.size() == 0){
+    public static boolean isFileInListExist(List<String> filePathList) {
+        if (filePathList == null || filePathList.size() == 0) {
             return false;
         }
-        for(int i = 0; i < filePathList.size(); i++){
-            if(!isFileExist(filePathList.get(i))){
+        for (int i = 0; i < filePathList.size(); i++) {
+            if (!isFileExist(filePathList.get(i))) {
                 return false;
             }
         }
@@ -1111,10 +1120,11 @@ public class FileUtils {
 
     /**
      * 读取filePath下的数据，读出格式为byte[]
+     *
      * @param filePath
      * @return
      */
-    public static byte[] readAudioFileFromSDcard(String filePath){
+    public static byte[] readAudioFileFromSDcard(String filePath) {
         try {
             File file = new File(
                     filePath);
@@ -1124,9 +1134,66 @@ public class FileUtils {
             inputStream.close();
             return data;
         } catch (Exception e) {
-            LogUtils.YfcDebug("异常："+e.getMessage());
+            LogUtils.YfcDebug("异常：" + e.getMessage());
             e.printStackTrace();
         }
         return null;
+    }
+
+    /**
+     * 获取指定文件夹下所有文件的文件路径
+     *
+     * @param dirPath
+     * @return
+     */
+    public static ArrayList<String> getAllFilePathByDirPath(String dirPath) {
+        File file = new File(dirPath);
+        File[] files = file.listFiles();
+        ArrayList<String> filePathList = new ArrayList<>();
+        if (files != null) {
+            for (int i = 0; i < files.length; i++) {
+                filePathList.add(files[i].getAbsolutePath());
+            }
+        }
+        return filePathList;
+    }
+
+    /**
+     * 获取单个文件的MD5值！
+     *
+     * @param file
+     * @return
+     */
+
+    public static String getFileMD5(File file) {
+        if (!file.isFile()) {
+            return null;
+        }
+        MessageDigest digest = null;
+        FileInputStream in = null;
+        byte buffer[] = new byte[1024];
+        int len;
+        try {
+            digest = MessageDigest.getInstance("MD5");
+            in = new FileInputStream(file);
+            while ((len = in.read(buffer, 0, 1024)) != -1) {
+                digest.update(buffer, 0, len);
+            }
+            in.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        BigInteger bigInt = new BigInteger(1, digest.digest());
+        return bigInt.toString(16);
+    }
+
+    public static String encodeBase64File(String filePath) throws Exception {
+        File file= new File(filePath);
+        FileInputStream inputFile = new FileInputStream(file);
+        byte[] buffer = new byte[(int) file.length()];
+        inputFile.read(buffer);
+        inputFile.close();
+        return Base64.encodeToString(buffer, Base64.NO_WRAP);
     }
 }

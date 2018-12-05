@@ -202,15 +202,13 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
             });
             Bundle bundle = new Bundle();
             if (tabBean.getMainTabResult().getType().equals(Constant.APP_TAB_TYPE_WEB)) {
-                bundle.putString("uri", tabBean.getMainTabResult().getUri());
                 if (tabBean.getMainTabResult().getMainTabProperty().isHaveNavbar()) {
-                    bundle.putString(Constant.WEB_FRAGMENT_APP_NAME, tabBean.getTabName());
                     bundle.putString(Constant.WEB_FRAGMENT_VERSION,PreferencesByUserAndTanentUtils.getString(IndexBaseActivity.this, Constant.PREF_APP_TAB_BAR_VERSION, ""));
                     bundle.putSerializable(Constant.WEB_FRAGMENT_MENU, (Serializable) tabBean.getMainTabResult().getMainTabProperty().getMainTabMenuList());
                 }
-            } else {
-                bundle.putString("uri", tabBean.getMainTabResult().getUri());
             }
+            bundle.putString(Constant.APP_WEB_URI, tabBean.getMainTabResult().getUri());
+            bundle.putString(Constant.WEB_FRAGMENT_APP_NAME,tabBean.getTabName());
             mTabHost.addTab(tab, tabBean.getClz(), bundle);
             mTabHost.getTabWidget().getChildAt(i).setOnTouchListener(this);
             mTabHost.getTabWidget().getChildAt(i).setTag(tabBean.getTabId());

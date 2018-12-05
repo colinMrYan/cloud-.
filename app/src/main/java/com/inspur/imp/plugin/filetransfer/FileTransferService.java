@@ -6,6 +6,7 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
@@ -16,12 +17,18 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.inspur.emmcloud.util.common.FileUtils;
+import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.imp.api.ImpFragment;
 import com.inspur.imp.api.Res;
 import com.inspur.imp.plugin.ImpPlugin;
+import com.inspur.imp.plugin.filetransfer.filemanager.FileManagerActivity;
 import com.inspur.imp.util.StrUtil;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -40,12 +47,14 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.text.DecimalFormat;
 import java.text.Format;
+import java.util.ArrayList;
 import java.util.UUID;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.X509TrustManager;
 
+import static android.app.Activity.RESULT_OK;
 import static com.inspur.imp.util.StrUtil.strIsNotNull;
 
 public class FileTransferService extends ImpPlugin {
@@ -94,18 +103,26 @@ public class FileTransferService extends ImpPlugin {
      */
     private int progress;
     private ProgressBar progressBar;
+    private String successCb, failCb;
 
     @Override
     public void execute(String action, JSONObject paramsObject) {
-        // 上传文件
-        if ("upload".equals(action)) {
-            upload(paramsObject);
-        }
-        // 下载文件
-        else if ("download".equals(action)) {
-            download(paramsObject);
-        }else{
-            showCallIMPMethodErrorDlg();
+        switch (action) {
+            case "upload":   // 上传文件
+                upload(paramsObject);
+                break;
+            case "download": // 下载文件
+                download(paramsObject);
+                break;
+            case "selectFile": // 选择文件
+                selectFile(paramsObject);
+                break;
+            case "base64File":
+                getFileBase64(paramsObject);
+                break;
+            default:
+                showCallIMPMethodErrorDlg();
+                break;
         }
     }
 
@@ -116,7 +133,7 @@ public class FileTransferService extends ImpPlugin {
         // 下载文件
         if ("download".equals(action)) {
             download(paramsObject);
-        }else if ("downloadFile".equals(action)) { // 为了兼容自定义的imp插件
+        } else if ("downloadFile".equals(action)) { // 为了兼容自定义的imp插件
             if (!paramsObject.isNull("key"))
                 try {
                     String key = paramsObject.getString("key");
@@ -129,7 +146,7 @@ public class FileTransferService extends ImpPlugin {
                     e.printStackTrace();
                     handler.sendEmptyMessage(1);
                 }
-        }else{
+        } else {
             showCallIMPMethodErrorDlg();
         }
 
@@ -186,6 +203,93 @@ public class FileTransferService extends ImpPlugin {
         showDownloadStatus();
     }
 
+    // 下载
+    private void selectFile(JSONObject jsonObject) {
+        successCb = JSONUtils.getString(jsonObject, "success", "");
+        failCb = JSONUtils.getString(jsonObject, "failCb", "");
+        JSONObject optionsObj = JSONUtils.getJSONObject(jsonObject, "options", new JSONObject());
+        int maximum = JSONUtils.getInt(optionsObj, "maximum", 1);
+        if (maximum == 0) {
+            maximum = 200;
+        }
+        String fileType = JSONUtils.getString(optionsObj, "fileType", "");
+
+        ArrayList<String> fileTypeList = new ArrayList<>();
+        if (!StringUtils.isBlank(fileType)) {
+            String[] fileTypes = fileType.split("\\|");
+            for (int i = 0; i < fileTypes.length; i++) {
+                fileTypeList.add(fileTypes[i]);
+                LogUtils.jasonDebug("fileType=" + fileTypes[i]);
+            }
+        }
+        Intent intent = new Intent(getActivity(), FileManagerActivity.class);
+        intent.putExtra(FileManagerActivity.EXTRA_MAXIMUM, maximum);
+        intent.putStringArrayListExtra(FileManagerActivity.EXTRA_FILTER_FILE_TYPE, fileTypeList);
+        getImpCallBackInterface().onStartActivityForResult(intent, ImpFragment.SELECT_FILE_SERVICE_REQUEST);
+    }
+
+    private void getFileBase64(JSONObject jsonObject) {
+        successCb = JSONUtils.getString(jsonObject, "success", "");
+        JSONObject optionsObj = JSONUtils.getJSONObject(jsonObject, "options", new JSONObject());
+        String filePath = JSONUtils.getString(optionsObj, "filePath", "");
+        if (!StringUtils.isBlank(filePath)) {
+            String result = "";
+            try {
+                result = FileUtils.encodeBase64File(filePath);
+                callbackSuccess(result);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case ImpFragment.SELECT_FILE_SERVICE_REQUEST:
+                if (resultCode == RESULT_OK) {
+                    ArrayList<String> pathList = data.getStringArrayListExtra("pathList");
+                    JSONArray array = new JSONArray();
+                    for (String path : pathList) {
+                        File file = new File(path);
+                        if (file.exists()) {
+                            JSONObject object = new JSONObject();
+                            try {
+                                object.put("name", file.getName());
+                                object.put("size", FileUtils.getFileSize(path));
+                                object.put("path", path);
+                                object.put("md5", FileUtils.getFileMD5(file));
+                                array.put(object);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+                    }
+                    callbackSuccess(array.toString());
+                } else {
+                    callbackFail(Res.getString("cancel_select"));
+                }
+                break;
+        }
+
+    }
+
+
+    private void callbackSuccess(String result) {
+        if (!StringUtils.isBlank(successCb)) {
+            this.jsCallback(successCb, result);
+        }
+    }
+
+    private void callbackFail(String result) {
+        if (!StringUtils.isBlank(failCb)) {
+            this.jsCallback(failCb, result);
+        }
+    }
 
     /**
      * 弹出提示SD卡不存在的对话框
@@ -252,7 +356,7 @@ public class FileTransferService extends ImpPlugin {
         @SuppressWarnings("synthetic-access")
         @Override
         public void handleMessage(Message msg) {
-
+            LogUtils.jasonDebug("是否主线程==" + (Looper.myLooper() == Looper.getMainLooper()));
             switch (msg.what) {
                 //下载中
                 case 0:
@@ -362,6 +466,7 @@ public class FileTransferService extends ImpPlugin {
         HttpURLConnection urlConnection = null;
         OutputStream outputStream = null;
         try {
+            LogUtils.jasonDebug("是否主线程==" + (Looper.myLooper() == Looper.getMainLooper()));
             //替换空格
             url = new URL(urlString);
             urlConnection = (HttpURLConnection) url.openConnection();
@@ -436,7 +541,7 @@ public class FileTransferService extends ImpPlugin {
         String headField = urlConnection.getHeaderField("Content-Disposition");
         if (!StringUtils.isBlank(headField)) {
             headField = headField.toLowerCase();
-            if (headField.contains("filename=")){
+            if (headField.contains("filename=")) {
                 //有些下载链接检测到的文件名带双引号，此处给去掉
                 try {
                     filename = headField.split("filename=")[1];
