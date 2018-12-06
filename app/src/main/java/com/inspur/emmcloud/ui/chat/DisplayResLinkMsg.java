@@ -62,7 +62,7 @@ public class DisplayResLinkMsg {
         } else {
             linkImageview.setVisibility(View.GONE);
         }
-        if (context instanceof ChannelActivity) {
+        if (context instanceof ChannelV0Activity) {
             int normalPadding = DensityUtil.dip2px(context, 10);
             int arrowPadding = DensityUtil.dip2px(context, 8);
             if (isMyMsg) {

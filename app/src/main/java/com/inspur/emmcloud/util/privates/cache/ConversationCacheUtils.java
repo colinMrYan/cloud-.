@@ -329,24 +329,23 @@ public class ConversationCacheUtils {
 //    }
 
 
-//    /**
-//     * 获取云+客服channel
-//     *
-//     * @param context
-//     * @return
-//     */
-//    public static Channel getCustomerChannel(Context context) {
-//        String uid = PreferencesUtils.getString(context, "userID", "");
-//        Channel channel = null;
-//        try {
-//            channel = DbCacheUtils.getDb(context).selector
-//                    (Channel.class)
-//                    .where("title", "=", "BOT6005" + "-" + uid)
-//                    .and("type", "=", "SERVICE").findFirst();
-//        } catch (Exception e) {
-//            // TODO: handle exception
-//            e.printStackTrace();
-//        }
-//        return channel;
-//    }
+    /**
+     * 获取云+conversation
+     *
+     * @param context
+     * @return
+     */
+    public static Conversation getCustomerConversation(Context context) {
+        try {
+            Conversation conversation = DbCacheUtils.getDb(context).selector
+                    (Conversation.class)
+                    .where("name", "=", "BOT6005")
+                    .and("type", "=", Conversation.TYPE_CAST).findFirst();
+            return conversation;
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
