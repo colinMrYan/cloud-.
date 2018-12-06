@@ -2,11 +2,9 @@ package com.inspur.emmcloud.util.privates;
 
 import android.content.Context;
 
-import com.alibaba.fastjson.JSON;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.bean.system.badge.BadgeBodyModel;
-import com.inspur.emmcloud.util.common.LogUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -28,13 +26,12 @@ public class AppBadgeUtils {
     class WebService extends APIInterfaceInstance{
         @Override
         public void returnBadgeCountSuccess(BadgeBodyModel badgeBodyModel) {
-            LogUtils.YfcDebug("http数据请求成功："+ JSON.toJSONString(badgeBodyModel));
             EventBus.getDefault().post(badgeBodyModel);
         }
 
         @Override
         public void returnBadgeCountFail(String error, int errorCode) {
-            LogUtils.YfcDebug("数据请求失败："+error+"------------"+errorCode);
+            EventBus.getDefault().post(new BadgeBodyModel(""));
         }
     }
 }

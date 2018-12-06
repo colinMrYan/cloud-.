@@ -16,7 +16,6 @@ import com.inspur.emmcloud.ui.SchemeHandleActivity;
 import com.inspur.emmcloud.ui.mine.setting.CreateGestureActivity;
 import com.inspur.emmcloud.ui.mine.setting.FaceVerifyActivity;
 import com.inspur.emmcloud.ui.mine.setting.GestureLoginActivity;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.privates.AppBadgeUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
@@ -50,7 +49,6 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
                 showSafeVerificationPage();
             }
             uploadMDMInfo(activity);
-            LogUtils.YfcDebug("前后台切换获取badge");
             new AppBadgeUtils(MyApplication.getInstance()).getAppBadgeCountFromServer();
         }
         count++;

@@ -54,7 +54,6 @@ import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.ui.mine.setting.NetWorkStateDetailActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
@@ -661,7 +660,6 @@ public class CommunicationFragment extends Fragment {
             } else {
                 titleText.setText(R.string.communicate);
             }
-            LogUtils.YfcDebug("websocket 断线重连重新获取badge");
             new AppBadgeUtils(MyApplication.getInstance()).getAppBadgeCountFromServer();
         } else if (socketStatus.equals(Socket.EVENT_DISCONNECT) || socketStatus.equals(Socket.EVENT_CONNECT_ERROR)) {
             titleText.setText(R.string.socket_close);
