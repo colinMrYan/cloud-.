@@ -1734,7 +1734,7 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnSetConversationHideSuccess(String id) {
+    public void returnSetConversationHideSuccess(String id,boolean isHide) {
     }
 
     @Override
@@ -1857,12 +1857,12 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnUnReadBadgeCountSuccess(BadgeBodyModel badgeBodyModel) {
+    public void returnBadgeCountSuccess(BadgeBodyModel badgeBodyModel) {
 
     }
 
     @Override
-    public void returnUnReadBadgeCountFail(String error, int errorCode) {
+    public void returnBadgeCountFail(String error, int errorCode) {
 
     }
 }

@@ -1569,7 +1569,7 @@ public class APIUri {
      * 未读消息url
      * @return
      */
-    public static String getUnReadBadgeCountUrl(){
+    public static String getBadgeCountUrl(){
         return getECMChatUrl()+"/rest/v1/unread-count";
     }
 }

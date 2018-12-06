@@ -41,6 +41,9 @@ public class Constant {
     public static final String PREF_WEBEX_FIRST_ENTER = "webex_first_enter";
     public static final String PREF_GET_OFFLINE_LAST_MID = "get_offline_last_mid";
     public static final String PREF_LAST_LANGUAGE = "last_language";
+    public static final String PREF_BADGE_NUM_COMMUNICATION = "badge_num_communication";
+    public static final String PREF_BADGE_NUM_APPSTORE = "badge_num_appstore";
+    public static final String PREF_BADGE_NUM_SNS = "badge_num_sns";
 
     public static final String PREF_V_CONFIG_ALL = "v_config_all";
     public static final String PREF_EXPERIENCE_UPGRATE = "experience_upgrade";
@@ -89,6 +92,8 @@ public class Constant {
     public static final String APP_TAB_TYPE_NATIVE = "native";
     public static final String APP_TAB_TYPE_RN = "react-native";
     public static final String APP_TAB_TYPE_WEB = "web";
+
+    public static final String APP_TAB_NAME_COMMUNACATE = "web";
 
     public static final String APP_TAB_BAR_COMMUNACATE = "native://communicate";
     public static final String APP_TAB_BAR_WORK = "native://work";
