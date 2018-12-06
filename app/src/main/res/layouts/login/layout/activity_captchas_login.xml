@@ -116,7 +116,7 @@
                 android:paddingRight="7dp"
                 android:background="@color/white"
                 android:textColor="@color/login_btn_nor"
-                android:text="@string/login_get_captchas"
+                android:text="@string/login_get_captchas_content"
                 android:hint="@string/login_resend"
                 android:textSize="@dimen/content_normal_textsize"  />
 

@@ -195,8 +195,9 @@
     <string name="login_send_captchas">Send Code</string>
     <string name="login_set_pwd">Set password</string>
     <string name="login_change_phone_num">Change Phone Number</string>
-    <string name="login_captchas_login">Verification Code Login</string>
-    <string name="login_get_captchas">Get Code </string>
+    <string name="login_captchas_login">Quick Login</string>
+    <string name="login_get_captchas">Reset Password By SMS</string>
+    <string name="login_get_captchas_content">Get Code</string>
     <string name="login_resent">Resent</string>
     <string name="login_resend">Resend（  ） </string>
     <string name="login_captchas_sent">Verification code has been sent to the phone：</string>
@@ -212,7 +213,7 @@
     <string name="login_code_login_text">Verification code to log in</string>
     <string name="login_reverification">Revalidation</string>
     <string name="login_code_verification_failure">Incorrect verification code</string>
-    <string name="login_sms">Log in via SMS</string>
+    <string name="login_sms">Quick Login</string>
     <string name="login_captchas_getcode_success">Code has been sent successfully</string>
     <string name="login_cost_report">Expense Report</string>
     <string name="login_your_contact">Your contact</string>
