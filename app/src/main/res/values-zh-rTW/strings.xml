@@ -886,6 +886,10 @@
     <string name="net_diagnosis_hard_detail_content_frist">1、打開手機“設置”並把“Wi-Fi”開關保持開啟狀態。</string>
     <string name="net_diagnosis_hard_detail_content_second">2、打開手機“設置”-"通用"-“蜂窩移動網絡”，並把“蜂窩移動數據”開關保持開啟狀態。</string>
     <string name="net_diagnosis_hard_detail_setting">去設置</string>
+    <string name="net_ping_url_baidu">百度</string>
+    <string name="net_ping_url_inspur">浪潮</string>
+    <string name="net_ping_url_ali">阿里</string>
+    <string name="net_ping_url_cloud">雲＋</string>
 
     <!-- ListView自訂控制項部分 -->
     <string name="xlistview_header_last_time">上次更新時間:</string>

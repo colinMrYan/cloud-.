@@ -892,6 +892,10 @@
     <string name="net_diagnosis_hard_detail_content_frist">1、打开手机“设置”并把“Wi-Fi”开关保持开启状态。</string>
     <string name="net_diagnosis_hard_detail_content_second">2、打开手机“设置”-"通用"-“蜂窝移动网络”，并把“蜂窝移动数据”开关保持开启状态。</string>
     <string name="net_diagnosis_hard_detail_setting">去设置</string>
+    <string name="net_ping_url_baidu">百度</string>
+    <string name="net_ping_url_inspur">浪潮</string>
+    <string name="net_ping_url_ali">阿里</string>
+    <string name="net_ping_url_cloud">云＋</string>
 
     <!-- ListView自定义控件部分 -->
     <string name="xlistview_header_last_time">上次更新时间:</string>

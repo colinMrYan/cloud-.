@@ -886,6 +886,10 @@
     <string name="net_diagnosis_hard_detail_content_frist">1.Turn on the phone \"Settings\" and turn on the \"Wi-Fi\".</string>
     <string name="net_diagnosis_hard_detail_content_second">2.Open the phone \"Settings\" and turn on the \"Cellular data\".</string>
     <string name="net_diagnosis_hard_detail_setting">Go To Set</string>
+    <string name="net_ping_url_baidu">Baidu</string>
+    <string name="net_ping_url_inspur">Inspur</string>
+    <string name="net_ping_url_ali">Alibaba</string>
+    <string name="net_ping_url_cloud">Cloud+</string>
 
     <!-- ListView自定义控件部分 -->
     <string name="xlistview_header_last_time">Last Update Time:</string>
