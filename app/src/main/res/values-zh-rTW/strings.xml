@@ -193,7 +193,7 @@
     <string name="login_direct">直接登錄</string>
     <string name="login_change_phone_num">更換號碼</string>
     <string name="login_captchas_login">短信登錄 </string>
-    <string name="login_get_captchas_content">獲取驗證碼</string>
+    <string name="login_get_captchas_code">獲取驗證碼</string>
     <string name="login_get_captchas">通過短信修改密碼</string>
     <string name="login_send_captchas">發送驗證碼 </string>
     <string name="login_set_pwd">設置密碼 </string>
