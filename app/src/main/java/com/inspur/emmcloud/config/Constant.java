@@ -103,6 +103,12 @@ public class Constant {
     public static final String APP_TAB_BAR_CONTACT = "native://contact";
     public static final String APP_TAB_BAR_NOSUPPORT = "native://nosupport"; //lbc
 
+    public static final String APP_TAB_BAR_COMMUNACATE_NAME = "communicate";
+    public static final String APP_TAB_BAR_WORK_NAME = "work";
+    public static final String APP_TAB_BAR_APPLICATION_NAME = "application";
+    public static final String APP_TAB_BAR_MOMENT_NAME = "moment";
+    public static final String APP_TAB_BAR_ME_NAME = "me";
+
     public static final String SHARE_LINK = "shareLink";
     public static final String SHARE_FILE_URI_LIST = "fileShareUriList";
 

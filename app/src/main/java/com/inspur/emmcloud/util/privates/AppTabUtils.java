@@ -10,6 +10,7 @@ import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.StringUtils;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by yufuchang on 2017/4/27.
@@ -96,6 +97,16 @@ public class AppTabUtils {
             return  tab.getMainTabProperty();
         }
         return null;
+    }
+
+    /**
+     * 获取当前mainTabList
+     * @param context
+     * @return
+     */
+    public static List<MainTabResult> getMainTabResultList(Context context){
+        String appTabs = PreferencesByUserAndTanentUtils.getString(context, Constant.PREF_APP_TAB_BAR_INFO_CURRENT,"");
+        return new GetAppMainTabResult(appTabs).getMainTabPayLoad().getMainTabResultList();
     }
 
 }

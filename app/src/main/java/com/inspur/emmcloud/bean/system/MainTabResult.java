@@ -6,6 +6,121 @@ import org.json.JSONObject;
 
 /**
  * Created by yufuchang on 2018/7/12.
+ *
+ *
+
+ {
+ "icon": "communicate",
+ "mainTabProperty": {
+ "canContact": true,
+ "canCreate": true,
+ "haveNavbar": false,
+ "mainTabMenuList": [],
+ "mineLayoutItemGroupList": []
+ },
+ "mainTabTitleResult": {
+ "enUS": "Messages",
+ "zhHans": "沟通",
+ "zhHant": "溝通"
+ },
+ "name": "communicate",
+ "selected": false,
+ "type": "native",
+ "uri": "native://communicate"
+ }
+
+ {
+ "icon": "work",
+ "mainTabProperty": {
+ "canContact": true,
+ "canCreate": true,
+ "haveNavbar": false,
+ "mainTabMenuList": [],
+ "mineLayoutItemGroupList": []
+ },
+ "mainTabTitleResult": {
+ "enUS": "Works",
+ "zhHans": "工作",
+ "zhHant": "工作"
+ },
+ "name": "work",
+ "selected": false,
+ "type": "native",
+ "uri": "native://work"
+ }
+
+
+ {
+ "icon": "application",
+ "mainTabProperty": {
+ "canContact": true,
+ "canCreate": true,
+ "haveNavbar": false,
+ "mainTabMenuList": [],
+ "mineLayoutItemGroupList": []
+ },
+ "mainTabTitleResult": {
+ "enUS": "Apps",
+ "zhHans": "应用",
+ "zhHant": "應用"
+ },
+ "name": "application",
+ "selected": true,
+ "type": "native",
+ "uri": "native://application"
+ }
+
+ {
+ "icon": "moment",
+ "mainTabProperty": {
+ "canContact": true,
+ "canCreate": true,
+ "haveNavbar": true,
+ "mainTabMenuList": [{
+ "action": "imp.iWindow.open({url: 'http://sns.ecm1.inspuronline.com/app/sns/web/m/home/index.html?spaceID=fd325341-e550-41bb-b464-17b5f22140b4#/Mypage'})",
+ "ico": "https://www.inspuronline.com/yjapp/images/sf.png",
+ "text": ""
+ }],
+ "mineLayoutItemGroupList": []
+ },
+ "mainTabTitleResult": {
+ "enUS": "Moments",
+ "zhHans": "动态",
+ "zhHant": "動態"
+ },
+ "name": "moment",
+ "selected": false,
+ "type": "web",
+ "uri": "http://sns.ecm1.inspuronline.com/app/sns/web/m/home/index.html?spaceID=fd325341-e550-41bb-b464-17b5f22140b4"
+ }
+
+ {
+ "icon": "me",
+ "mainTabProperty": {
+ "canContact": true,
+ "canCreate": true,
+ "haveNavbar": false,
+ "mainTabMenuList": [],
+ "mineLayoutItemGroupList": [{
+ "mineLayoutItemList": ["my_personalInfo_function"]
+ }, {
+ "mineLayoutItemList": ["my_setting_function"]
+ }, {
+ "mineLayoutItemList": ["my_cardbox_function"]
+ }, {
+ "mineLayoutItemList": ["my_aboutUs_function"]
+ }]
+ },
+ "mainTabTitleResult": {
+ "enUS": "Me",
+ "zhHans": "我",
+ "zhHant": "我"
+ },
+ "name": "me",
+ "selected": false,
+ "type": "native",
+ "uri": "native://me"
+ }
  */
 
 public class MainTabResult {

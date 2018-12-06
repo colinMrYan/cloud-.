@@ -43,6 +43,7 @@ import com.inspur.emmcloud.ui.work.WorkFragment;
 import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.privates.AppTabUtils;
 import com.inspur.emmcloud.util.privates.ECMShortcutBadgeNumberManagerUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
@@ -223,7 +224,6 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
         mTabHost.setCurrentTab((communicateIndex != -1 && isCommunicationRunning == false) ? communicateIndex : getTabIndex());
     }
 
-
     /**
      * 沟通未读数目变化
      *
@@ -233,11 +233,9 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
     public void onReceiveCommunicationBadgeNum(SimpleEventMessage eventMessage) {
         if (eventMessage.getAction().equals(Constant.EVENTBUS_TAG_SET_ALL_MESSAGE_UNREAD_COUNT)){
             int communicationBadgeNum = (Integer) eventMessage.getMessageObj();
-            PreferencesByUserAndTanentUtils.putInt(MyApplication.getInstance(),Constant.PREF_BADGE_NUM_COMMUNICATION,communicationBadgeNum);
-            setTabbarBadge(Constant.APP_TAB_BAR_COMMUNACATE,communicationBadgeNum);
+            setTabBarBadge(Constant.APP_TAB_BAR_COMMUNACATE_NAME,communicationBadgeNum);
         }
     }
-
 
     /**
      * 应用中心未读数目变化
@@ -247,8 +245,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveAppstoreBadgeNum(GetAppBadgeResult getAppBadgeResult) {
         int appstoreBadgeNum = getAppBadgeResult.getTabBadgeNumber();
-        PreferencesByUserAndTanentUtils.putInt(MyApplication.getInstance(),Constant.PREF_BADGE_NUM_COMMUNICATION,appstoreBadgeNum);
-        setTabbarBadge(Constant.APP_TAB_BAR_APPLICATION,appstoreBadgeNum);
+        setTabBarBadge(Constant.APP_TAB_BAR_APPLICATION_NAME,appstoreBadgeNum);
     }
 
     /**
@@ -257,16 +254,15 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveAppBadgeNum(BadgeBodyModel badgeBodyModel) {
-        int snsTabbarBadgeNum = badgeBodyModel.getSnsBadgeBodyModuleModel().getTotal();
-        PreferencesByUserAndTanentUtils.putInt(MyApplication.getInstance(),Constant.PREF_BADGE_NUM_SNS,snsTabbarBadgeNum);
-        setTabbarBadge(Constant.APP_TAB_TYPE_WEB,snsTabbarBadgeNum);
-        int appstoreTabbarBadgeNum = badgeBodyModel.getAppStoreBadgeBodyModuleModel().getTotal();
-        if (appstoreTabbarBadgeNum > 0){
-            Map<String,Integer> appstoreBadgeMap = badgeBodyModel.getAppStoreBadgeBodyModuleModel().getDetailBodyMap();
-            appstoreTabbarBadgeNum = getFilterAppstoreBadgeNum(appstoreBadgeMap);
+        int snsTabBarBadgeNum = badgeBodyModel.getSnsBadgeBodyModuleModel().getTotal();
+        setTabBarBadge(Constant.APP_TAB_BAR_MOMENT_NAME,snsTabBarBadgeNum);
+        int appStoreTabBarBadgeNum = badgeBodyModel.getAppStoreBadgeBodyModuleModel().getTotal();
+        if (appStoreTabBarBadgeNum > 0){
+            Map<String,Integer> appStoreBadgeMap = badgeBodyModel.getAppStoreBadgeBodyModuleModel().getDetailBodyMap();
+            appStoreTabBarBadgeNum = getFilterAppStoreBadgeNum(appStoreBadgeMap);
         }
-        PreferencesByUserAndTanentUtils.putInt(MyApplication.getInstance(),Constant.PREF_BADGE_NUM_APPSTORE,appstoreTabbarBadgeNum);
-        setTabbarBadge(Constant.APP_TAB_BAR_APPLICATION,snsTabbarBadgeNum);
+        PreferencesByUserAndTanentUtils.putInt(MyApplication.getInstance(),Constant.PREF_BADGE_NUM_APPSTORE,appStoreTabBarBadgeNum);
+        setTabBarBadge(Constant.APP_TAB_BAR_APPLICATION_NAME,snsTabBarBadgeNum);
     }
 
     /**
@@ -274,42 +270,74 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
      * @param appBadgeMap
      * @return
      */
-    private  int getFilterAppstoreBadgeNum(Map<String,Integer> appBadgeMap){
-        int appstoreBadgeNum = 0;
+    private  int getFilterAppStoreBadgeNum(Map<String,Integer> appBadgeMap){
+        int appStoreBadgeNum = 0;
         List<AppGroupBean> appGroupBeanList = MyAppCacheUtils.getMyAppList(this);
         for (AppGroupBean appGroupBean:appGroupBeanList){
             List<App> appList = appGroupBean.getAppItemList();
             for (App app:appList){
                 Integer num = appBadgeMap.get(app.getAppID());
                 if (num != null){
-                    appstoreBadgeNum = appstoreBadgeNum+num;
+                    appStoreBadgeNum = appStoreBadgeNum+num;
                 }
 
             }
         }
-        return  appstoreBadgeNum;
+        return  appStoreBadgeNum;
     }
 
-    private void setTabbarBadge(String tag, int number){
-        for (int i = 0; i < mTabHost.getTabWidget().getChildCount(); i++) {
-            View tabView = mTabHost.getTabWidget().getChildAt(i);
-            if (mTabHost.getTabWidget().getChildAt(i).getTag().toString().contains(tag)) {
+    private void setTabBarBadge(String tabName, int number){
+        //根据tabName确定tabView的位置
+        List<MainTabResult> mainTabResultList = AppTabUtils.getMainTabResultList(this);
+        for (int i = 0; i < mainTabResultList.size(); i++) {
+            if(mainTabResultList.get(i).getName().equals(tabName)){
+                View tabView = mTabHost.getTabWidget().getChildAt(i);
                 RelativeLayout badgeLayout = (RelativeLayout) tabView.findViewById(R.id.rl_badge);
-                View bageView = tabView.findViewById(R.id.v_badge);
-                if (number <0 ){
+                View badgeView = tabView.findViewById(R.id.v_badge);
+                if (number < 0){
                     badgeLayout.setVisibility(View.GONE);
-                    bageView.setVisibility(View.VISIBLE);
+                    badgeView.setVisibility(View.VISIBLE);
                 }else {
-                    bageView.setVisibility(View.GONE);
+                    badgeView.setVisibility(View.GONE);
                     badgeLayout.setVisibility((number == 0) ? View.GONE : View.VISIBLE);
                     TextView badgeText = (TextView) tabView.findViewById(R.id.tv_badge);
                     badgeText.setText("" + (number > 99 ? "99+" : number));
                 }
-                break;
+                saveTabBarBadgeNumber(tabName,number);
             }
+            //更新桌面角标数字
+            ECMShortcutBadgeNumberManagerUtils.setDesktopBadgeNumber(IndexBaseActivity.this, getDesktopNumber());
         }
-        //更新桌面角标数字
-        ECMShortcutBadgeNumberManagerUtils.setDesktopBadgeNumber(IndexBaseActivity.this, number);
+    }
+
+    /**
+     * 根据正负数规则获取桌面显示总数
+     * @return
+     */
+    private int getDesktopNumber() {
+        int communicationTabBarNumber = PreferencesByUserAndTanentUtils.getInt(MyApplication.getInstance(),Constant.PREF_BADGE_NUM_COMMUNICATION,0);
+        int appStoreTabBarNumber = PreferencesByUserAndTanentUtils.getInt(MyApplication.getInstance(),Constant.PREF_BADGE_NUM_APPSTORE,0);
+        int momentTabBarNumber = PreferencesByUserAndTanentUtils.getInt(MyApplication.getInstance(),Constant.PREF_BADGE_NUM_SNS,0);
+        return communicationTabBarNumber+appStoreTabBarNumber +(momentTabBarNumber >= 0? momentTabBarNumber:0);
+    }
+
+    /**
+     * 找到对应的tab后保存tabBarBadgeNumber
+     * @param tabName
+     * @param tabBarBadgeNumber
+     */
+    private void saveTabBarBadgeNumber(String tabName, int tabBarBadgeNumber) {
+        switch (tabName){
+            case Constant.APP_TAB_BAR_APPLICATION_NAME:
+                PreferencesByUserAndTanentUtils.putInt(MyApplication.getInstance(),Constant.PREF_BADGE_NUM_APPSTORE,tabBarBadgeNumber);
+                break;
+            case Constant.APP_TAB_BAR_COMMUNACATE_NAME:
+                PreferencesByUserAndTanentUtils.putInt(MyApplication.getInstance(),Constant.PREF_BADGE_NUM_COMMUNICATION,tabBarBadgeNumber);
+                break;
+            case Constant.APP_TAB_BAR_MOMENT_NAME:
+                PreferencesByUserAndTanentUtils.putInt(MyApplication.getInstance(),Constant.PREF_BADGE_NUM_SNS,tabBarBadgeNumber);
+                break;
+        }
     }
 
     /**
