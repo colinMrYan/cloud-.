@@ -754,8 +754,8 @@ public interface APIInterface {
     void returnCreateGroupConversationSuccess(Conversation conversation);
     void returnCreateGroupConversationFail(String error,int errorCode);
 
-    void returnUnReadBadgeCountSuccess(BadgeBodyModel badgeBodyModel);
-    void returnUnReadBadgeCountFail(String error,int errorCode);
+    void returnBadgeCountSuccess(BadgeBodyModel badgeBodyModel);
+    void returnBadgeCountFail(String error, int errorCode);
 
 
     void returnDeleteConversationSuccess(String cid);

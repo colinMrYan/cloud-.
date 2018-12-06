@@ -793,18 +793,18 @@ public class AppAPIService {
     /**
      * 获取badge数量
      */
-    public void getUnReadBadgeCount(){
-        final String url = APIUri.getUnReadBadgeCountUrl();
+    public void getBadgeCount(){
+        final String url = APIUri.getBadgeCountUrl();
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(url);
         HttpUtils.request(context,CloudHttpMethod.GET,params,new APICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
-                apiInterface.returnUnReadBadgeCountSuccess(new BadgeBodyModel(new String(arg0)));
+                apiInterface.returnBadgeCountSuccess(new BadgeBodyModel(new String(arg0)));
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                apiInterface.returnUnReadBadgeCountFail(error,responseCode);
+                apiInterface.returnBadgeCountFail(error,responseCode);
             }
 
             @Override
@@ -812,7 +812,7 @@ public class AppAPIService {
                 OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        getUnReadBadgeCount();
+                        getBadgeCount();
                     }
 
                     @Override

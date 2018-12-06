@@ -20,14 +20,14 @@ public class BadgeBodyModuleModel {
      */
 
     private int total;
-    private Map<String,String> detailBodyMap = new HashMap<>();
+    private Map<String,Integer> detailBodyMap = new HashMap<>();
 
     public BadgeBodyModuleModel(String bodyModule) {
         total = JSONUtils.getInt(bodyModule, "total", 0);
         JSONObject jsonObject = JSONUtils.getJSONObject(bodyModule,"detail",new JSONObject());
         Iterator<String> idIterator = jsonObject.keys();
         while (idIterator.hasNext()){
-            detailBodyMap.put(idIterator.next(),JSONUtils.getString(bodyModule,idIterator.next(),""));
+            detailBodyMap.put(idIterator.next(),JSONUtils.getInt(bodyModule,idIterator.next(),0));
         }
     }
 
@@ -39,11 +39,11 @@ public class BadgeBodyModuleModel {
         this.total = total;
     }
 
-    public Map<String, String> getDetailBodyMap() {
+    public Map<String, Integer> getDetailBodyMap() {
         return detailBodyMap;
     }
 
-    public void setDetailBodyMap(Map<String, String> detailBodyMap) {
+    public void setDetailBodyMap(Map<String, Integer> detailBodyMap) {
         this.detailBodyMap = detailBodyMap;
     }
 }

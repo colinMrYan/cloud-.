@@ -7,29 +7,9 @@ import com.inspur.emmcloud.util.common.JSONUtils;
  */
 
 public class GetWebSocketBadgeResult {
-    private BadgeActionModel badgeActionModel;
-    private BadgeHeadersModel badgeHeadersModel;
     private BadgeBodyModel badgeBodyModel;
     public GetWebSocketBadgeResult(String response){
-        badgeActionModel = new BadgeActionModel(JSONUtils.getString(response,"action",""));
-        badgeHeadersModel = new BadgeHeadersModel(JSONUtils.getString(response,"headers",""));
-        badgeBodyModel = new BadgeBodyModel(JSONUtils.getString(response,"body",""));
-    }
-
-    public BadgeActionModel getBadgeActionModel() {
-        return badgeActionModel;
-    }
-
-    public void setBadgeActionModel(BadgeActionModel badgeActionModel) {
-        this.badgeActionModel = badgeActionModel;
-    }
-
-    public BadgeHeadersModel getBadgeHeadersModel() {
-        return badgeHeadersModel;
-    }
-
-    public void setBadgeHeadersModel(BadgeHeadersModel badgeHeadersModel) {
-        this.badgeHeadersModel = badgeHeadersModel;
+        badgeBodyModel = new BadgeBodyModel(JSONUtils.getString(response,"content",""));
     }
 
     public BadgeBodyModel getBadgeBodyModel() {
