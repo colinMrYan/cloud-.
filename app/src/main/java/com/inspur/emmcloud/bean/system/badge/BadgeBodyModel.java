@@ -17,9 +17,9 @@ public class BadgeBodyModel {
     private String body = "";
     public BadgeBodyModel(String body){
         this.body = body;
-        snsBadgeBodyModuleModel = new BadgeBodyModuleModel(JSONUtils.getString(body,"com.inspur.ecm.sns",""));
-        appStoreBadgeBodyModuleModel = new BadgeBodyModuleModel(JSONUtils.getString(body,"com.inspur.emm.app-store",""));
-        chatBadgeBodyModuleModel = new BadgeBodyModuleModel(JSONUtils.getString(body,"com.inspur.ecm.chat",""));
+        snsBadgeBodyModuleModel = new BadgeBodyModuleModel(JSONUtils.getString(body,COM_INSPUR_ECM_SNS,""));
+        appStoreBadgeBodyModuleModel = new BadgeBodyModuleModel(JSONUtils.getString(body,COM_INSPUR_EMM_APP_STORE,""));
+        chatBadgeBodyModuleModel = new BadgeBodyModuleModel(JSONUtils.getString(body,COM_INSPUR_ECM_CHAT,""));
     }
 
     public BadgeBodyModuleModel getChatBadgeBodyModuleModel() {

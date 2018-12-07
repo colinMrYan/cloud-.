@@ -280,6 +280,8 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
     }
 
     private void setTabBarBadge(String tabName, int number){
+        //查找tab之前，先清空一下对应tab的数据，防止tab找不到，数据还有的情况
+        saveTabBarBadgeNumber(tabName,0);
         //根据tabName确定tabView的位置
         List<MainTabResult> mainTabResultList = AppTabUtils.getMainTabResultList(this);
         for (int i = 0; i < mainTabResultList.size(); i++) {
@@ -298,9 +300,9 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
                 }
                 saveTabBarBadgeNumber(tabName,number);
             }
-            //更新桌面角标数字
-            ECMShortcutBadgeNumberManagerUtils.setDesktopBadgeNumber(IndexBaseActivity.this, getDesktopNumber());
         }
+        //更新桌面角标数字
+        ECMShortcutBadgeNumberManagerUtils.setDesktopBadgeNumber(IndexBaseActivity.this, getDesktopNumber());
     }
 
     /**
