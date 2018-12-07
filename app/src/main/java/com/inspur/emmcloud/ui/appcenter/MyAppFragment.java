@@ -781,9 +781,6 @@ public class MyAppFragment extends Fragment {
     //接收从AppBadgeUtils里发回的角标数字
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveAppBadgeNum(BadgeBodyModel badgeBodyModel) {
-        if(swipeRefreshLayout != null && swipeRefreshLayout.isRefreshing()){
-            swipeRefreshLayout.setRefreshing(false);
-        }
         BadgeBodyModuleModel badgeBodyModuleModel = badgeBodyModel.getAppStoreBadgeBodyModuleModel();
         appStoreBadgeMap = badgeBodyModuleModel.getDetailBodyMap();
         appListAdapter.notifyDataSetChanged();
@@ -1209,6 +1206,7 @@ public class MyAppFragment extends Fragment {
     class WebService extends APIInterfaceInstance {
         @Override
         public void returnUserAppsSuccess(final GetAppGroupResult getAppGroupResult,String clientConfigMyAppVersion) {
+            swipeRefreshLayout.setRefreshing(false);
             myAppSaveTask = new MyAppSaveTask(clientConfigMyAppVersion);
             myAppSaveTask.execute(getAppGroupResult);
             appListSizeExceptCommonlyUse = getAppGroupResult.getAppGroupBeanList().size();
