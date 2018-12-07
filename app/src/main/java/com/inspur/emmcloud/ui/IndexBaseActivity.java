@@ -262,7 +262,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
             appStoreTabBarBadgeNum = getFilterAppStoreBadgeNum(appStoreBadgeMap);
         }
         PreferencesByUserAndTanentUtils.putInt(MyApplication.getInstance(),Constant.PREF_BADGE_NUM_APPSTORE,appStoreTabBarBadgeNum);
-        setTabBarBadge(Constant.APP_TAB_BAR_APPLICATION_NAME,snsTabBarBadgeNum);
+        setTabBarBadge(Constant.APP_TAB_BAR_APPLICATION_NAME,appStoreTabBarBadgeNum);
     }
 
     /**
