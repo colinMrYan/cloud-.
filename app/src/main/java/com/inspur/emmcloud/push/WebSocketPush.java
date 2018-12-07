@@ -11,6 +11,8 @@ import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.bean.chat.WSPushContent;
 import com.inspur.emmcloud.bean.system.EventMessage;
+import com.inspur.emmcloud.bean.system.badge.BadgeBodyModel;
+import com.inspur.emmcloud.bean.system.badge.GetWebSocketBadgeResult;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.JSONUtils;
@@ -421,6 +423,13 @@ public class WebSocketPush {
                                 if (wsPushContent.getMethod().equals("delete")) {
                                     EventMessage eventMessagea = new EventMessage("", Constant.EVENTBUS_TAG_RECERIVER_MESSAGE_STATE_READ, wsPushContent.getBody());
                                     EventBus.getDefault().post(eventMessagea);
+                                }
+                                break;
+                            case "/unread-count":
+                                if(wsPushContent.getMethod().equals("put")){
+                                    GetWebSocketBadgeResult getWebSocketBadgeResult = new GetWebSocketBadgeResult(wsPushContent.getBody());
+                                    BadgeBodyModel badgeBodyModel = getWebSocketBadgeResult.getBadgeBodyModel();
+                                    EventBus.getDefault().post(badgeBodyModel);
                                 }
                                 break;
                         }

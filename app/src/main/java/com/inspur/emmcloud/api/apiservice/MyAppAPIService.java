@@ -18,7 +18,6 @@ import com.inspur.emmcloud.bean.appcenter.App;
 import com.inspur.emmcloud.bean.appcenter.AppRedirectResult;
 import com.inspur.emmcloud.bean.appcenter.GetAddAppResult;
 import com.inspur.emmcloud.bean.appcenter.GetAllAppResult;
-import com.inspur.emmcloud.bean.appcenter.GetAppBadgeResult;
 import com.inspur.emmcloud.bean.appcenter.GetAppGroupResult;
 import com.inspur.emmcloud.bean.appcenter.GetRecommendAppWidgetListResult;
 import com.inspur.emmcloud.bean.appcenter.GetRemoveAppResult;
@@ -440,42 +439,6 @@ public class MyAppAPIService {
         });
     }
 
-    /**
-     * 获取所有app的未处理消息
-     */
-    public void getAppBadgeNum() {
-        final String completeUrl = APIUri.getAppBadgeNumUrl();
-        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(completeUrl);
-        HttpUtils.request(context,CloudHttpMethod.GET,params, new APICallback(context, completeUrl) {
-            @Override
-            public void callbackSuccess(byte[] arg0) {
-                apiInterface.returnGetAppBadgeResultSuccess(new GetAppBadgeResult(new String(arg0)));
-            }
-
-            @Override
-            public void callbackFail(String error, int responseCode) {
-                apiInterface.returnGetAppBadgeResultFail(error, responseCode);
-            }
-
-            @Override
-            public void callbackTokenExpire(long requestTime) {
-                OauthCallBack oauthCallBack = new OauthCallBack() {
-                    @Override
-                    public void reExecute() {
-                        getAppBadgeNum();
-                    }
-
-                    @Override
-                    public void executeFailCallback() {
-                        callbackFail("", -1);
-                    }
-                };
-                OauthUtils.getInstance().refreshToken(
-                        oauthCallBack, requestTime);
-            }
-
-        });
-    }
 
     /**
      * 获取真实的url地址

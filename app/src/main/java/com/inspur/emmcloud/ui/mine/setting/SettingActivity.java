@@ -33,6 +33,7 @@ import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.privates.AppBadgeUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ClientConfigUpdateUtils;
 import com.inspur.emmcloud.util.privates.DataCleanManager;
@@ -362,6 +363,7 @@ public class SettingActivity extends BaseActivity {
                         intentLog.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
                                 | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intentLog);
+                        new AppBadgeUtils(MyApplication.getInstance()).getAppBadgeCountFromServer();
                     }
                 })
                 .show();

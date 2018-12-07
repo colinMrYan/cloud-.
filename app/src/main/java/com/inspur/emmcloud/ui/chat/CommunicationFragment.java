@@ -57,6 +57,7 @@ import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.privates.AppBadgeUtils;
 import com.inspur.emmcloud.util.privates.AppTabUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
@@ -659,6 +660,7 @@ public class CommunicationFragment extends Fragment {
             } else {
                 titleText.setText(R.string.communicate);
             }
+            new AppBadgeUtils(MyApplication.getInstance()).getAppBadgeCountFromServer();
         } else if (socketStatus.equals(Socket.EVENT_DISCONNECT) || socketStatus.equals(Socket.EVENT_CONNECT_ERROR)) {
             titleText.setText(R.string.socket_close);
         }
@@ -1042,7 +1044,7 @@ public class CommunicationFragment extends Fragment {
     private void setConversationHide(String id) {
         if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
             loadingDlg.show();
-            apiService.setConversationHide(id);
+            apiService.setConversationHide(id,true);
         }
     }
 
@@ -1077,12 +1079,12 @@ public class CommunicationFragment extends Fragment {
         }
 
         @Override
-        public void returnSetConversationHideSuccess(final String id) {
+        public void returnSetConversationHideSuccess(final String id,boolean isHide) {
             LoadingDialog.dimissDlg(loadingDlg);
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    ConversationCacheUtils.setConversationHide(MyApplication.getInstance(), id,true);
+                    ConversationCacheUtils.updateConversationHide(MyApplication.getInstance(), id,true);
                     MessageCacheUtil.setChannelMessageRead(MyApplication.getInstance(), id);
                 }
             }).start();

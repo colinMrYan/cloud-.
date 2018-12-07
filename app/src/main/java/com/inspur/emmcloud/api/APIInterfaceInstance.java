@@ -5,7 +5,6 @@ import com.inspur.emmcloud.bean.appcenter.App;
 import com.inspur.emmcloud.bean.appcenter.AppRedirectResult;
 import com.inspur.emmcloud.bean.appcenter.GetAddAppResult;
 import com.inspur.emmcloud.bean.appcenter.GetAllAppResult;
-import com.inspur.emmcloud.bean.appcenter.GetAppBadgeResult;
 import com.inspur.emmcloud.bean.appcenter.GetAppGroupResult;
 import com.inspur.emmcloud.bean.appcenter.GetClientIdRsult;
 import com.inspur.emmcloud.bean.appcenter.GetIDResult;
@@ -83,6 +82,7 @@ import com.inspur.emmcloud.bean.system.GetBoolenResult;
 import com.inspur.emmcloud.bean.system.GetUpgradeResult;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.bean.system.SplashPageBean;
+import com.inspur.emmcloud.bean.system.badge.BadgeBodyModel;
 import com.inspur.emmcloud.bean.work.Attachment;
 import com.inspur.emmcloud.bean.work.GetCalendarEventsResult;
 import com.inspur.emmcloud.bean.work.GetCreateOfficeResult;
@@ -1356,13 +1356,6 @@ public class APIInterfaceInstance implements APIInterface {
     public void returnSaveWebAutoRotateConfigFail(String error, int errorCode) {
     }
 
-    @Override
-    public void returnGetAppBadgeResultSuccess(GetAppBadgeResult getAppBadgeResult) {
-    }
-
-    @Override
-    public void returnGetAppBadgeResultFail(String error, int errorCode) {
-    }
 
     @Override
     public void returnUploadPositionSuccess() {
@@ -1743,7 +1736,7 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnSetConversationHideSuccess(String id) {
+    public void returnSetConversationHideSuccess(String id,boolean isHide) {
     }
 
     @Override
@@ -1863,5 +1856,15 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnDeleteConversationFail(String error, int errorCode) {
+    }
+
+    @Override
+    public void returnBadgeCountSuccess(BadgeBodyModel badgeBodyModel) {
+
+    }
+
+    @Override
+    public void returnBadgeCountFail(String error, int errorCode) {
+
     }
 }

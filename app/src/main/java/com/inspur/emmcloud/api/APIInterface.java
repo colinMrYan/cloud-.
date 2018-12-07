@@ -5,7 +5,6 @@ import com.inspur.emmcloud.bean.appcenter.App;
 import com.inspur.emmcloud.bean.appcenter.AppRedirectResult;
 import com.inspur.emmcloud.bean.appcenter.GetAddAppResult;
 import com.inspur.emmcloud.bean.appcenter.GetAllAppResult;
-import com.inspur.emmcloud.bean.appcenter.GetAppBadgeResult;
 import com.inspur.emmcloud.bean.appcenter.GetAppGroupResult;
 import com.inspur.emmcloud.bean.appcenter.GetClientIdRsult;
 import com.inspur.emmcloud.bean.appcenter.GetIDResult;
@@ -83,6 +82,7 @@ import com.inspur.emmcloud.bean.system.GetBoolenResult;
 import com.inspur.emmcloud.bean.system.GetUpgradeResult;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.bean.system.SplashPageBean;
+import com.inspur.emmcloud.bean.system.badge.BadgeBodyModel;
 import com.inspur.emmcloud.bean.work.Attachment;
 import com.inspur.emmcloud.bean.work.GetCalendarEventsResult;
 import com.inspur.emmcloud.bean.work.GetCreateOfficeResult;
@@ -546,9 +546,6 @@ public interface APIInterface {
 
     void returnSaveWebAutoRotateConfigFail(String error, int errorCode);
 
-    void returnGetAppBadgeResultSuccess(GetAppBadgeResult getAppBadgeResult);
-
-    void returnGetAppBadgeResultFail(String error, int errorCode);
 
     void returnUploadPositionSuccess();
 
@@ -712,7 +709,7 @@ public interface APIInterface {
     void returnSetConversationStickSuccess(String id,boolean isStick);
     void returnSetConversationStickFail(String error,int errorCode);
 
-    void returnSetConversationHideSuccess(String id);
+    void returnSetConversationHideSuccess(String id,boolean isHide);
     void returnSetConversationHideFail(String error,int errorCode);
 
     void returnAddConversationGroupMemberSuccess(List<String> uidList);
@@ -752,6 +749,10 @@ public interface APIInterface {
 
     void returnCreateGroupConversationSuccess(Conversation conversation);
     void returnCreateGroupConversationFail(String error,int errorCode);
+
+    void returnBadgeCountSuccess(BadgeBodyModel badgeBodyModel);
+    void returnBadgeCountFail(String error, int errorCode);
+
 
     void returnDeleteConversationSuccess(String cid);
     void returnDeleteConversationFail(String error,int errorCode);

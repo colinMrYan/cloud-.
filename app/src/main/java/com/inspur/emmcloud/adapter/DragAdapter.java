@@ -17,14 +17,13 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.appcenter.App;
-import com.inspur.emmcloud.bean.appcenter.AppBadgeBean;
 import com.inspur.emmcloud.bean.appcenter.GetRemoveAppResult;
-import com.inspur.emmcloud.util.privates.cache.AppCacheUtils;
-import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.common.DensityUtil;
-import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.privates.AppUtils;
+import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
+import com.inspur.emmcloud.util.privates.cache.AppCacheUtils;
 import com.inspur.emmcloud.widget.GradientDrawableBuilder;
 import com.inspur.emmcloud.widget.ImageViewRound;
 import com.inspur.emmcloud.widget.LoadingDialog;
@@ -40,14 +39,14 @@ public class DragAdapter extends BaseAdapter {
     private boolean canEdit = false;//表示排序和删除两个状态
     private LoadingDialog loadingDialog;
     private int deletePosition = -1;
-    private Map<String, AppBadgeBean> appBadgeBeanMap;
+    private Map<String,Integer> appStoreBadgeMap;
 
-    public DragAdapter(Context context, List<App> appList, int position, Map<String, AppBadgeBean> appBadgeBeanMap) {
+    public DragAdapter(Context context, List<App> appList, int position, Map<String, Integer> appStoreBadgeMap) {
         this.context = context;
         this.appList = appList;
         this.groupPosition = position;
         loadingDialog = new LoadingDialog(context);
-        this.appBadgeBeanMap = appBadgeBeanMap;
+        this.appStoreBadgeMap = appStoreBadgeMap;
     }
 
     @Override
@@ -134,15 +133,15 @@ public class DragAdapter extends BaseAdapter {
      * @param unhandledBadges
      */
     private void setUnHandledBadgesDisplay(App app, TextView unhandledBadges) {
-        AppBadgeBean appBadgeBean = appBadgeBeanMap.get(app.getAppID());
-        if (appBadgeBean != null && appBadgeBean.getBadgeNum() > 0) {
+        Integer appBadgeNum = appStoreBadgeMap.get(app.getAppID());
+        if (appBadgeNum != null && appBadgeNum > 0) {
             unhandledBadges.setVisibility(View.VISIBLE);
             GradientDrawable gradientDrawable = new GradientDrawableBuilder()
                     .setCornerRadius(DensityUtil.dip2px(context, 40))
                     .setBackgroundColor(0xFFF74C31)
                     .setStrokeColor(0xFFF74C31).build();
             unhandledBadges.setBackground(gradientDrawable);
-            unhandledBadges.setText(appBadgeBean.getBadgeNum() > 99 ? "99+" : (appBadgeBean.getBadgeNum() + ""));
+            unhandledBadges.setText(appBadgeNum > 99 ? "99+" : (appBadgeNum + ""));
         }
     }
 
