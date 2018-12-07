@@ -1564,4 +1564,13 @@ public class APIUri {
     public static String getUnRegisterPushTokenUrl(){
         return "https://emm.inspuronline.com/api/sys/v6.0/config/unRegisterDevice";
     }
+
+    /**
+     * 网络状态检测API
+     * 固定地址
+     *@return */
+    public static String getCheckCloudPluseConnectUrl(){
+        return  "https://emm.inspur.com/api/mam/v3.0/heart/success";
+    }
+
 }
