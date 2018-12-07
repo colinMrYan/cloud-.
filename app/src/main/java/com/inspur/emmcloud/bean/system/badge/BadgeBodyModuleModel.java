@@ -20,14 +20,16 @@ public class BadgeBodyModuleModel {
      */
 
     private int total;
-    private Map<String,Integer> detailBodyMap = new HashMap<>();
+    private Map<String, Integer> detailBodyMap = new HashMap<>();
 
     public BadgeBodyModuleModel(String bodyModule) {
         total = JSONUtils.getInt(bodyModule, "total", 0);
-        JSONObject jsonObject = JSONUtils.getJSONObject(bodyModule,"detail",new JSONObject());
+        JSONObject jsonObject = JSONUtils.getJSONObject(bodyModule, "detail", new JSONObject());
         Iterator<String> idIterator = jsonObject.keys();
-        while (idIterator.hasNext()){
-            detailBodyMap.put(idIterator.next(),JSONUtils.getInt(bodyModule,idIterator.next(),0));
+        while (idIterator.hasNext()) {
+            String key = String.valueOf(idIterator.next());
+            Integer value = (Integer) jsonObject.optInt(key);
+            detailBodyMap.put(key, value);
         }
     }
 
