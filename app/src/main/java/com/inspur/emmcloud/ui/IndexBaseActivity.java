@@ -243,15 +243,19 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveAppBadgeNum(BadgeBodyModel badgeBodyModel) {
-        int snsTabBarBadgeNum = badgeBodyModel.getSnsBadgeBodyModuleModel().getTotal();
-        setTabBarBadge(Constant.APP_TAB_BAR_MOMENT_NAME,snsTabBarBadgeNum);
-        int appStoreTabBarBadgeNum = badgeBodyModel.getAppStoreBadgeBodyModuleModel().getTotal();
-        if (appStoreTabBarBadgeNum > 0){
-            Map<String,Integer> appStoreBadgeMap = badgeBodyModel.getAppStoreBadgeBodyModuleModel().getDetailBodyMap();
-            appStoreTabBarBadgeNum = getFilterAppStoreBadgeNum(appStoreBadgeMap);
+        if(badgeBodyModel.isSNSExist()){
+            int snsTabBarBadgeNum = badgeBodyModel.getSnsBadgeBodyModuleModel().getTotal();
+            setTabBarBadge(Constant.APP_TAB_BAR_MOMENT_NAME,snsTabBarBadgeNum);
         }
-        PreferencesByUserAndTanentUtils.putInt(MyApplication.getInstance(),Constant.PREF_BADGE_NUM_APPSTORE,appStoreTabBarBadgeNum);
-        setTabBarBadge(Constant.APP_TAB_BAR_APPLICATION_NAME,appStoreTabBarBadgeNum);
+        if(badgeBodyModel.isAppStoreExist()){
+            int appStoreTabBarBadgeNum = badgeBodyModel.getAppStoreBadgeBodyModuleModel().getTotal();
+            if (appStoreTabBarBadgeNum > 0){
+                Map<String,Integer> appStoreBadgeMap = badgeBodyModel.getAppStoreBadgeBodyModuleModel().getDetailBodyMap();
+                appStoreTabBarBadgeNum = getFilterAppStoreBadgeNum(appStoreBadgeMap);
+            }
+            PreferencesByUserAndTanentUtils.putInt(MyApplication.getInstance(),Constant.PREF_BADGE_NUM_APPSTORE,appStoreTabBarBadgeNum);
+            setTabBarBadge(Constant.APP_TAB_BAR_APPLICATION_NAME,appStoreTabBarBadgeNum);
+        }
     }
 
     /**

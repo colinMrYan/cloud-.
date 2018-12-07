@@ -8,13 +8,18 @@ import com.inspur.emmcloud.util.common.JSONUtils;
 
 public class BadgeBodyModel {
 
+    private String COM_INSPUR_ECM_CHAT = "com.inspur.ecm.chat";
+    private String COM_INSPUR_EMM_APP_STORE = "com.inspur.emm.app-store";
+    private String COM_INSPUR_ECM_SNS = "com.inspur.ecm.sns";
     private BadgeBodyModuleModel chatBadgeBodyModuleModel;
     private BadgeBodyModuleModel appStoreBadgeBodyModuleModel;
     private BadgeBodyModuleModel snsBadgeBodyModuleModel;
+    private String body = "";
     public BadgeBodyModel(String body){
-        chatBadgeBodyModuleModel = new BadgeBodyModuleModel(JSONUtils.getString(body,"com.inspur.ecm.chat",""));
-        appStoreBadgeBodyModuleModel = new BadgeBodyModuleModel(JSONUtils.getString(body,"com.inspur.emm.app-store",""));
+        this.body = body;
         snsBadgeBodyModuleModel = new BadgeBodyModuleModel(JSONUtils.getString(body,"com.inspur.ecm.sns",""));
+        appStoreBadgeBodyModuleModel = new BadgeBodyModuleModel(JSONUtils.getString(body,"com.inspur.emm.app-store",""));
+        chatBadgeBodyModuleModel = new BadgeBodyModuleModel(JSONUtils.getString(body,"com.inspur.ecm.chat",""));
     }
 
     public BadgeBodyModuleModel getChatBadgeBodyModuleModel() {
@@ -39,5 +44,17 @@ public class BadgeBodyModel {
 
     public void setSnsBadgeBodyModuleModel(BadgeBodyModuleModel snsBadgeBodyModuleModel) {
         this.snsBadgeBodyModuleModel = snsBadgeBodyModuleModel;
+    }
+
+    public boolean isChatExist(){
+        return JSONUtils.getJSONObject(body).has(COM_INSPUR_ECM_CHAT);
+    }
+
+    public boolean isAppStoreExist(){
+        return JSONUtils.getJSONObject(body).has(COM_INSPUR_EMM_APP_STORE);
+    }
+
+    public boolean isSNSExist(){
+        return JSONUtils.getJSONObject(body).has(COM_INSPUR_ECM_SNS);
     }
 }
