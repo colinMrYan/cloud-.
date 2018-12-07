@@ -231,6 +231,16 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
+    public void returnCheckCloudPluseConnectionSuccess(byte[] arg0) {
+
+    }
+
+    @Override
+    public void returnCheckCloudPluseConnectionError(String error, int responseCode) {
+
+    }
+
+    @Override
     public void returnReqLoginSMSSuccess(GetBoolenResult getBoolenResult) {
         // TODO Auto-generated method stub
 

@@ -117,7 +117,7 @@
                 android:gravity="center"
                 android:background="@color/white"
                 android:textColor="@color/login_btn_nor"
-                android:text="@string/login_get_captchas"
+                android:text="@string/login_get_captchas_code"
                 android:hint="@string/login_resent"
                 android:textSize="@dimen/content_normal_textsize" />
         </RelativeLayout>

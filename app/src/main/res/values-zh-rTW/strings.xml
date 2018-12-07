@@ -192,8 +192,9 @@
     <string name="login_phonenum_has_beeb_resgistered">手機號已經註冊，您可以選擇直接登錄，或者更換註冊手機號</string>
     <string name="login_direct">直接登錄</string>
     <string name="login_change_phone_num">更換號碼</string>
-    <string name="login_captchas_login">驗證碼登錄 </string>
-    <string name="login_get_captchas">獲取驗證碼 </string>
+    <string name="login_captchas_login">短信登錄 </string>
+    <string name="login_get_captchas_code">獲取驗證碼</string>
+    <string name="login_get_captchas">通過短信修改密碼</string>
     <string name="login_send_captchas">發送驗證碼 </string>
     <string name="login_set_pwd">設置密碼 </string>
     <string name="login_resent">當前</string>
@@ -885,6 +886,10 @@
     <string name="net_diagnosis_hard_detail_content_frist">1、打開手機“設置”並把“Wi-Fi”開關保持開啟狀態。</string>
     <string name="net_diagnosis_hard_detail_content_second">2、打開手機“設置”-"通用"-“蜂窩移動網絡”，並把“蜂窩移動數據”開關保持開啟狀態。</string>
     <string name="net_diagnosis_hard_detail_setting">去設置</string>
+    <string name="net_ping_url_baidu">百度</string>
+    <string name="net_ping_url_inspur">浪潮</string>
+    <string name="net_ping_url_ali">阿里</string>
+    <string name="net_ping_url_cloud">雲＋</string>
 
     <!-- ListView自訂控制項部分 -->
     <string name="xlistview_header_last_time">上次更新時間:</string>
