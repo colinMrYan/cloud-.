@@ -1572,4 +1572,13 @@ public class APIUri {
     public static String getBadgeCountUrl(){
         return getECMChatUrl()+"/rest/v1/unread-count";
     }
+
+    /**
+     * 网络状态检测API
+     * 固定地址
+     *@return */
+    public static String getCheckCloudPluseConnectUrl(){
+        return  "https://emm.inspur.com/api/mam/v3.0/heart/success";
+    }
+
 }

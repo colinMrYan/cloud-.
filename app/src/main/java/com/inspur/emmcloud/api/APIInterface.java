@@ -756,4 +756,7 @@ public interface APIInterface {
 
     void returnDeleteConversationSuccess(String cid);
     void returnDeleteConversationFail(String error,int errorCode);
+
+    void returnCheckCloudPluseConnectionSuccess(byte[] arg0);
+    void returnCheckCloudPluseConnectionError(String error, int responseCode);
 }

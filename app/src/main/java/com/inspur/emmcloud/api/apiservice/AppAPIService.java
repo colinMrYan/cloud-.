@@ -825,4 +825,44 @@ public class AppAPIService {
             }
         });
     }
+
+    /**
+     * 获取网络连通状态
+     * @param uri
+     */
+    public void getCloudConnectStateUrl(final String uri){
+        final String completeUrl = APIUri.getReactNativeInstallUrl();
+        RequestParams params = ((MyApplication) context.getApplicationContext())
+                .getHttpRequestParams(completeUrl);
+        params.addParameter("uri",uri);
+        HttpUtils.request(context,CloudHttpMethod.POST,params, new APICallback(context,completeUrl) {
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnCheckCloudPluseConnectionSuccess(arg0);
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnCheckCloudPluseConnectionError(error,responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        getCloudConnectStateUrl(uri);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+
+        });
+    }
 }
