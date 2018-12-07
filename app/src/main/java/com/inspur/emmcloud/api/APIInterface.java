@@ -5,7 +5,6 @@ import com.inspur.emmcloud.bean.appcenter.App;
 import com.inspur.emmcloud.bean.appcenter.AppRedirectResult;
 import com.inspur.emmcloud.bean.appcenter.GetAddAppResult;
 import com.inspur.emmcloud.bean.appcenter.GetAllAppResult;
-import com.inspur.emmcloud.bean.appcenter.GetAppBadgeResult;
 import com.inspur.emmcloud.bean.appcenter.GetAppGroupResult;
 import com.inspur.emmcloud.bean.appcenter.GetClientIdRsult;
 import com.inspur.emmcloud.bean.appcenter.GetIDResult;
@@ -547,9 +546,6 @@ public interface APIInterface {
 
     void returnSaveWebAutoRotateConfigFail(String error, int errorCode);
 
-    void returnGetAppBadgeResultSuccess(GetAppBadgeResult getAppBadgeResult);
-
-    void returnGetAppBadgeResultFail(String error, int errorCode);
 
     void returnUploadPositionSuccess();
 

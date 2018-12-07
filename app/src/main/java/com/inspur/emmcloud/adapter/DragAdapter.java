@@ -39,7 +39,6 @@ public class DragAdapter extends BaseAdapter {
     private boolean canEdit = false;//表示排序和删除两个状态
     private LoadingDialog loadingDialog;
     private int deletePosition = -1;
-//    private Map<String, AppBadgeBean> appBadgeBeanMap;
     private Map<String,Integer> appStoreBadgeMap;
 
     public DragAdapter(Context context, List<App> appList, int position, Map<String, Integer> appStoreBadgeMap) {
@@ -47,7 +46,6 @@ public class DragAdapter extends BaseAdapter {
         this.appList = appList;
         this.groupPosition = position;
         loadingDialog = new LoadingDialog(context);
-//        this.appBadgeBeanMap = appBadgeBeanMap;
         this.appStoreBadgeMap = appStoreBadgeMap;
     }
 
@@ -135,7 +133,6 @@ public class DragAdapter extends BaseAdapter {
      * @param unhandledBadges
      */
     private void setUnHandledBadgesDisplay(App app, TextView unhandledBadges) {
-//        AppBadgeBean appBadgeBean = appBadgeBeanMap.get(app.getAppID());
         Integer appBadgeNum = appStoreBadgeMap.get(app.getAppID());
         if (appBadgeNum != null && appBadgeNum > 0) {
             unhandledBadges.setVisibility(View.VISIBLE);

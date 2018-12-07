@@ -21,7 +21,6 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.appcenter.App;
 import com.inspur.emmcloud.bean.appcenter.AppGroupBean;
-import com.inspur.emmcloud.bean.appcenter.GetAppBadgeResult;
 import com.inspur.emmcloud.bean.contact.ContactClickMessage;
 import com.inspur.emmcloud.bean.system.ChangeTabBean;
 import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
@@ -237,16 +236,6 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
         }
     }
 
-    /**
-     * 应用中心未读数目变化
-     *
-     * @param getAppBadgeResult
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReceiveAppstoreBadgeNum(GetAppBadgeResult getAppBadgeResult) {
-        int appstoreBadgeNum = getAppBadgeResult.getTabBadgeNumber();
-        setTabBarBadge(Constant.APP_TAB_BAR_APPLICATION_NAME,appstoreBadgeNum);
-    }
 
     /**
      * 这个app未读数目变化

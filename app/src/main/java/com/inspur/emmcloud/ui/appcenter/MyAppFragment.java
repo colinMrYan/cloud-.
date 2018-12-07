@@ -114,7 +114,6 @@ public class MyAppFragment extends Fragment {
     private PopupWindow popupWindow;
     private boolean isNeedCommonlyUseApp = false;
     private MyAppSaveTask myAppSaveTask;
-//    private Map<String, AppBadgeBean> appBadgeBeanMap = new HashMap<>();
     private Map<String, Integer> appStoreBadgeMap = new HashMap<>();
     private RecyclerView recommendAppWidgetListView = null;
     private RecommendAppWidgetListAdapter recommendAppWidgetListAdapter = null;
@@ -310,7 +309,6 @@ public class MyAppFragment extends Fragment {
             @Override
             public void onRefresh() {
                 getMyApp();
-//                getAppBadgeNum();
                 new AppBadgeUtils(MyApplication.getInstance()).getAppBadgeCountFromServer();
             }
         });
@@ -587,7 +585,6 @@ public class MyAppFragment extends Fragment {
                         @Override
                         public void onNotifyCommonlyUseApp(App app) {
                             handCommonlyUseAppChange(appAdapterList, app);
-//                            getAppBadgeNum();
                             new AppBadgeUtils(MyApplication.getInstance()).getAppBadgeCountFromServer();
                             appListAdapter.notifyDataSetChanged();
                             dragGridViewAdapter.notifyDataSetChanged();
@@ -1206,29 +1203,7 @@ public class MyAppFragment extends Fragment {
     }
 
 
-//    /**
-//     * 获取需要显示的appId列表
-//     *
-//     * @return
-//     */
-//    public void calculateBadgeNumberAndSendToIndex(GetAppBadgeResult getAppBadgeResult) {
-//        int badageNum = 0;
-//        Set<String> appBadgeSet = appBadgeBeanMap.keySet();
-//        for (String appId : appBadgeSet) {
-//            App app = new App();
-//            app.setAppID(appId);
-//            for (int i = 0; i < appListAdapter.getAppAdapterList().size(); i++) {
-//                int index = appListAdapter.getAppAdapterList().get(i).getAppItemList().indexOf(app);
-//                if (index != -1) {
-//                    badageNum = badageNum + appBadgeBeanMap.get(appId).getBadgeNum();
-//                    break;
-//                }
-//            }
-//        }
-//        getAppBadgeResult.setTabBadgeNumber(badageNum);
-//        //发送到IndexActivity updateBadgeNumber
-//        EventBus.getDefault().post(getAppBadgeResult);
-//    }
+
 
 
     class WebService extends APIInterfaceInstance {
@@ -1245,17 +1220,6 @@ public class MyAppFragment extends Fragment {
   //          WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
         }
 
-//        @Override
-//        public void returnGetAppBadgeResultSuccess(GetAppBadgeResult getAppBadgeResult) {
-//            swipeRefreshLayout.setRefreshing(false);
-//            appBadgeBeanMap = getAppBadgeResult.getAppBadgeBeanMap();
-//            appListAdapter.notifyDataSetChanged();
-//            calculateBadgeNumberAndSendToIndex(getAppBadgeResult);
-//        }
-//
-//        @Override
-//        public void returnGetAppBadgeResultFail(String error, int errorCode) {
-//            swipeRefreshLayout.setRefreshing(false);
-//        }
+
     }
 }
