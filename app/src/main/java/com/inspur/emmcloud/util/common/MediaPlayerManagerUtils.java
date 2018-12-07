@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Build;
 
 import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.interf.CommonCallBack;
 
 /**
  * 音乐播放管理类
@@ -44,6 +45,7 @@ public class MediaPlayerManagerUtils {
 
     private boolean isLooping = false;
     private AudioManager.OnAudioFocusChangeListener mAudioFocusChangeListener = null;
+    private CommonCallBack wakeLockCallBack;//当视频播放完成时息屏需要释放
 
     public static MediaPlayerManagerUtils getManager() {
         if (mediaPlayerManagerUtils == null) {
@@ -79,12 +81,18 @@ public class MediaPlayerManagerUtils {
                         //暂停操作
                         if (isPlaying()){
                             stop();
+                            if (wakeLockCallBack != null){
+                                wakeLockCallBack.execute();
+                            }
                         }
                         break;
                     case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
                         //暂停操作
                         if (isPlaying()){
                             pause();
+                            if (wakeLockCallBack != null){
+                                wakeLockCallBack.execute();
+                            }
                         }
                         break;
                     default:
@@ -145,6 +153,14 @@ public class MediaPlayerManagerUtils {
     }
 
     /**
+     * 设置息屏释放监听
+     * @param wakeLockCallBack
+     */
+    public void setWakeLockReleaseListener(CommonCallBack wakeLockCallBack){
+        this.wakeLockCallBack = wakeLockCallBack;
+    }
+
+    /**
      * 播放音乐
      *
      * @param path     音乐文件路径
@@ -183,10 +199,14 @@ public class MediaPlayerManagerUtils {
                     if (callback != null){
                         callback.onComplete();
                     }
+                    if (wakeLockCallBack != null){
+                        wakeLockCallBack.execute();
+                    }
                     if(isLooping){
                         mediaPlayer.start();
                         mediaPlayer.setLooping(true);
                     }else {
+                        LogUtils.jasonDebug("resetPlayMode======================000");
                         resetPlayMode();
                         audioManager.abandonAudioFocus(mAudioFocusChangeListener);
                     }
@@ -282,6 +302,7 @@ public class MediaPlayerManagerUtils {
     }
 
     public void resetPlayMode() {
+        LogUtils.jasonDebug("resetPlayMode======================");
         if (audioManager.isWiredHeadsetOn()) {
             changeToHeadsetMode();
         } else {

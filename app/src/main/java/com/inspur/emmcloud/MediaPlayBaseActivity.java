@@ -13,13 +13,14 @@ import android.os.PowerManager;
 import android.view.KeyEvent;
 
 import com.inspur.emmcloud.broadcastreceiver.HeadsetReceiver;
+import com.inspur.emmcloud.interf.CommonCallBack;
 import com.inspur.emmcloud.util.common.MediaPlayerManagerUtils;
 
 /**
  * Created by chenmch on 2018/8/25.
  */
 
-public class MediaPlayBaseActivity extends BaseActivity implements SensorEventListener{
+public class MediaPlayBaseActivity extends BaseActivity implements SensorEventListener {
     private PowerManager powerManager;
     private PowerManager.WakeLock wakeLock;
     private SensorManager sensorManager;
@@ -35,6 +36,12 @@ public class MediaPlayBaseActivity extends BaseActivity implements SensorEventLi
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
         receiver = new HeadsetReceiver();
+        playerManager.setWakeLockReleaseListener(new CommonCallBack() {
+            @Override
+            public void execute() {
+                releaseWakeLock();
+            }
+        });
     }
 
     @Override
@@ -51,11 +58,11 @@ public class MediaPlayBaseActivity extends BaseActivity implements SensorEventLi
     @Override
     public void onSensorChanged(SensorEvent event) {
         //耳机模式下直接返回
-        if (playerManager.getCurrentMode() == MediaPlayerManagerUtils.MODE_HEADSET){
+        if (playerManager.getCurrentMode() == MediaPlayerManagerUtils.MODE_HEADSET) {
             return;
         }
         float value = event.values[0];
-        if (playerManager.isPlaying()){
+        if (playerManager.isPlaying()) {
             if (value == sensor.getMaximumRange()) {
                 playerManager.changeToSpeakerMode();
                 setScreenOn();
@@ -73,7 +80,7 @@ public class MediaPlayBaseActivity extends BaseActivity implements SensorEventLi
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        switch (keyCode){
+        switch (keyCode) {
             case KeyEvent.KEYCODE_VOLUME_UP:
                 MediaPlayerManagerUtils.getManager().raiseVolume();
                 break;
@@ -86,19 +93,29 @@ public class MediaPlayBaseActivity extends BaseActivity implements SensorEventLi
         return super.onKeyDown(keyCode, event);
     }
 
-    private void setScreenOff(){
-        if (wakeLock == null){
+    private void setScreenOff() {
+        if (wakeLock == null) {
             wakeLock = powerManager.newWakeLock(PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK, this.getClass().getName());
         }
         wakeLock.acquire();
     }
 
-    private void setScreenOn(){
-        if (wakeLock != null){
+    private void setScreenOn() {
+        if (wakeLock != null) {
             wakeLock.setReferenceCounted(false);
             wakeLock.release();
             wakeLock = null;
         }
+    }
+
+    public void releaseWakeLock(){
+        //释放息屏
+        if (wakeLock != null && wakeLock.isHeld()){
+            wakeLock.release();
+            wakeLock = null;
+        }
+
+
     }
 
 
@@ -106,6 +123,7 @@ public class MediaPlayBaseActivity extends BaseActivity implements SensorEventLi
     protected void onStop() {
         super.onStop();
         playerManager.stop();
+        releaseWakeLock();
         sensorManager.unregisterListener(this);
         unregisterReceiver(receiver);
     }

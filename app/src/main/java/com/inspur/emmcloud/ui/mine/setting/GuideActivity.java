@@ -90,7 +90,7 @@ public class GuideActivity extends Activity {
         for (int i = 0; i < splashResIdList.size(); i++) {
             View guideView = LayoutInflater.from(this).inflate(R.layout.view_pager_guide, null);
             ImageView img = (ImageView) guideView.findViewById(R.id.img);
-                    ImageDisplayUtils.getInstance().displayImage(img,"drawable://"+splashResIdList.get(i));
+            ImageDisplayUtils.getInstance().displayImageNoCache(img,"drawable://"+splashResIdList.get(i));
             if (i == splashResIdList.size() - 1) {
                 Button enterButton = ((Button) guideView
                         .findViewById(R.id.enter_app_btn));
