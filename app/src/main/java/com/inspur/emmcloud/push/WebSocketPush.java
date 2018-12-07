@@ -426,7 +426,6 @@ public class WebSocketPush {
                                 }
                                 break;
                             case "/unread-count":
-                                LogUtils.YfcDebug("未读消息数："+wsPushContent.getBody());
                                 if(wsPushContent.getMethod().equals("put")){
                                     GetWebSocketBadgeResult getWebSocketBadgeResult = new GetWebSocketBadgeResult(wsPushContent.getBody());
                                     BadgeBodyModel badgeBodyModel = getWebSocketBadgeResult.getBadgeBodyModel();
