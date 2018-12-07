@@ -243,15 +243,19 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveAppBadgeNum(BadgeBodyModel badgeBodyModel) {
-        int snsTabBarBadgeNum = badgeBodyModel.getSnsBadgeBodyModuleModel().getTotal();
-        setTabBarBadge(Constant.APP_TAB_BAR_MOMENT_NAME,snsTabBarBadgeNum);
-        int appStoreTabBarBadgeNum = badgeBodyModel.getAppStoreBadgeBodyModuleModel().getTotal();
-        if (appStoreTabBarBadgeNum > 0){
-            Map<String,Integer> appStoreBadgeMap = badgeBodyModel.getAppStoreBadgeBodyModuleModel().getDetailBodyMap();
-            appStoreTabBarBadgeNum = getFilterAppStoreBadgeNum(appStoreBadgeMap);
+        if(badgeBodyModel.isSNSExist()){
+            int snsTabBarBadgeNum = badgeBodyModel.getSnsBadgeBodyModuleModel().getTotal();
+            setTabBarBadge(Constant.APP_TAB_BAR_MOMENT_NAME,snsTabBarBadgeNum);
         }
-        PreferencesByUserAndTanentUtils.putInt(MyApplication.getInstance(),Constant.PREF_BADGE_NUM_APPSTORE,appStoreTabBarBadgeNum);
-        setTabBarBadge(Constant.APP_TAB_BAR_APPLICATION_NAME,appStoreTabBarBadgeNum);
+        if(badgeBodyModel.isAppStoreExist()){
+            int appStoreTabBarBadgeNum = badgeBodyModel.getAppStoreBadgeBodyModuleModel().getTotal();
+            if (appStoreTabBarBadgeNum > 0){
+                Map<String,Integer> appStoreBadgeMap = badgeBodyModel.getAppStoreBadgeBodyModuleModel().getDetailBodyMap();
+                appStoreTabBarBadgeNum = getFilterAppStoreBadgeNum(appStoreBadgeMap);
+            }
+            PreferencesByUserAndTanentUtils.putInt(MyApplication.getInstance(),Constant.PREF_BADGE_NUM_APPSTORE,appStoreTabBarBadgeNum);
+            setTabBarBadge(Constant.APP_TAB_BAR_APPLICATION_NAME,appStoreTabBarBadgeNum);
+        }
     }
 
     /**
@@ -276,6 +280,8 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
     }
 
     private void setTabBarBadge(String tabName, int number){
+        //查找tab之前，先清空一下对应tab的数据，防止tab找不到，数据还有的情况
+        saveTabBarBadgeNumber(tabName,0);
         //根据tabName确定tabView的位置
         List<MainTabResult> mainTabResultList = AppTabUtils.getMainTabResultList(this);
         for (int i = 0; i < mainTabResultList.size(); i++) {
@@ -294,9 +300,9 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
                 }
                 saveTabBarBadgeNumber(tabName,number);
             }
-            //更新桌面角标数字
-            ECMShortcutBadgeNumberManagerUtils.setDesktopBadgeNumber(IndexBaseActivity.this, getDesktopNumber());
         }
+        //更新桌面角标数字
+        ECMShortcutBadgeNumberManagerUtils.setDesktopBadgeNumber(IndexBaseActivity.this, getDesktopNumber());
     }
 
     /**
