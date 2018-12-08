@@ -874,11 +874,12 @@
     <!--网络链接及网络诊断-->
     <string name="net_connected_error">網絡不給力，請檢查網絡設置</string>
     <string name="net_diagnosis_title">網絡診斷</string>
-    <string name="net_diagnosis_hard_link_title">檢測網絡硬件鏈接</string>
+    <string name="net_diagnosis_hard_link_title">檢測網絡設定</string>
     <string name="net_diagnosis_wifi_link_title">檢測Wi-Fi路由器狀態</string>
     <string name="net_diagnosis_dns_link_title">檢測網絡連通性</string>
     <string name="net_diagnosis_hard_link_conent">當前檢查項目包含：硬件鏈接是否通暢，是否有鏈接Wi-Fi、4G、LTE等</string>
     <string name="net_diagnosis_hard_to_fix">去修復</string>
+    <string name="net_diagnosis_portal_to_set">去認證</string>
     <string name="net_diagnosis_wifi_link_conent">當前檢查項目包含：鏈接到的Wi-Fi是否有驗证需求,如果有需要先驗證此Wi-Fi才可繼續訪問</string>
     <string name="net_network_authentication">網絡認證</string>
     <string name="net_diagnosis_hard_detail_title">硬件鏈接診斷</string>

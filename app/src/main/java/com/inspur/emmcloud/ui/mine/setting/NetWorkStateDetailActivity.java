@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
@@ -35,21 +36,22 @@ import java.util.List;
  */
 
 public class NetWorkStateDetailActivity extends BaseActivity {
-   public static  String []  subUrls  = {"www.baidu.com","www.inspur.com","www.aliyun.com"};
+   public static  String []  subUrls  = {"www.baidu.com","www.aliyun.com"};
     private String PortalCheckingUrls  = "http://www.inspuronline.com/#/auth/0\\(arc4random() % 100000)";
    private ImageView hardImageView;
    private ImageView portalImageView;
    private ImageView ping1UrlImageView;
    private ImageView ping2UrlImageView;
    private ImageView ping3UrlImageView;
-   private ImageView ping4UrlImageView;
+   private RelativeLayout checkPortalLayout;
+    private RelativeLayout checkUrlsConnectionLayout;
+    private RelativeLayout portalCheckTipLayout;
 
    private QMUILoadingView qmulHardLoadingView ;
    private QMUILoadingView qmulWifiLoadingView ;
    private QMUILoadingView ping1UrlQMUIView ;
    private QMUILoadingView ping2UrlQMUIView ;
    private QMUILoadingView ping3UrlQMUIView ;
-   private QMUILoadingView ping4UrlQMUIView ;
    private Drawable drawableError;
    private Drawable drawableSuccess;
    private Drawable drawableDomainError;
@@ -91,11 +93,12 @@ public class NetWorkStateDetailActivity extends BaseActivity {
         ping1UrlImageView = (ImageView)findViewById(R.id.iv_ping_baidu_state);
         ping2UrlImageView = (ImageView)findViewById(R.id.iv_ping_inspur_state);
         ping3UrlImageView = (ImageView)findViewById(R.id.iv_ping_ali_state);
-        ping4UrlImageView =(ImageView)findViewById(R.id.iv_ping_cloudpluse_state);
         ping1UrlQMUIView = (QMUILoadingView)findViewById(R.id.qv_ping_baidu_loading);
         ping2UrlQMUIView = (QMUILoadingView)findViewById(R.id.qv_ping_inspur_loading);
         ping3UrlQMUIView = (QMUILoadingView)findViewById(R.id.qv_ping_ali_loading);
-        ping4UrlQMUIView = (QMUILoadingView)findViewById(R.id.qv_ping_cloudpluse_loading);
+        checkPortalLayout = (RelativeLayout)findViewById(R.id.rl_checking_portal_state);
+        checkUrlsConnectionLayout = (RelativeLayout)findViewById( R.id.rl_checking_dns_state );
+        portalCheckTipLayout =(RelativeLayout)findViewById( R.id.rl_portal_tip);
     }
 
     /**
@@ -106,18 +109,25 @@ public class NetWorkStateDetailActivity extends BaseActivity {
         netHardConnectState= checkingHardState();
         //检测端口
         if(netHardConnectState){
-            //检测小助手
-            checkingPortalState(PortalCheckingUrls);
+            //检测小助手 判断是否有wifi连接
+            if(NetworkInfo.State.CONNECTED== NetUtils.getNetworkWifiState( this)) {
+                checkPortalLayout.setVisibility(View.VISIBLE);
+                checkingPortalState(PortalCheckingUrls);
+            } else {
+                checkPortalLayout.setVisibility(View.GONE);
+            }
             //检测DNS服务
+            checkUrlsConnectionLayout.setVisibility( View.VISIBLE);
             checkingDNSConnectState();
         }else {
+            checkUrlsConnectionLayout.setVisibility( View.GONE);
+            checkPortalLayout.setVisibility( View.GONE );
             qmulWifiLoadingView.setVisibility(View.GONE);
             portalImageView.setVisibility(View.VISIBLE);
             portalImageView.setBackground(drawableError);
             ping1UrlImageView.setBackground(drawableDomainError);
             ping2UrlImageView.setBackground(drawableDomainError);
             ping3UrlImageView.setBackground(drawableDomainError);
-            ping4UrlImageView.setBackground(drawableDomainError);
             setShowDnsconnctstateUI(false);
         }
     }
@@ -186,8 +196,6 @@ public class NetWorkStateDetailActivity extends BaseActivity {
         ping2UrlQMUIView.setVisibility(iniState?View.VISIBLE:View.GONE);
         ping3UrlImageView.setVisibility(iniState?View.GONE:View.VISIBLE);
         ping3UrlQMUIView.setVisibility(iniState?View.VISIBLE:View.GONE);
-        ping4UrlImageView.setVisibility(iniState?View.GONE:View.VISIBLE);
-        ping4UrlQMUIView.setVisibility(iniState?View.VISIBLE:View.GONE);
     }
 
     /**
@@ -273,11 +281,6 @@ public class NetWorkStateDetailActivity extends BaseActivity {
                 ping1UrlQMUIView.setVisibility(View.GONE);
             }
             if (((String)idAndData.get(0)).equals(subUrls[1])){
-                ping2UrlImageView.setBackground((boolean)idAndData.get(1)?drawableDomainSuccess:drawableDomainError);
-                ping2UrlImageView.setVisibility(View.VISIBLE);
-                ping2UrlQMUIView.setVisibility(View.GONE);
-            }
-            if (((String)idAndData.get(0)).equals(subUrls[2])){
                 ping3UrlImageView.setBackground((boolean)idAndData.get(1)?drawableDomainSuccess:drawableDomainError);
                 ping3UrlImageView.setVisibility(View.VISIBLE);
                 ping3UrlQMUIView.setVisibility(View.GONE);
@@ -287,10 +290,12 @@ public class NetWorkStateDetailActivity extends BaseActivity {
                 qmulWifiLoadingView.setVisibility(View.GONE);
                 portalImageView.setBackground(drawableSuccess);
                 portalImageView.setVisibility(View.VISIBLE);
+                portalCheckTipLayout.setVisibility( View.GONE );
             } else {
                 qmulWifiLoadingView.setVisibility(View.GONE);
                 portalImageView.setBackground(drawableError);
                 portalImageView.setVisibility(View.VISIBLE);
+                portalCheckTipLayout.setVisibility( View.VISIBLE );
             }
         }
     }
@@ -307,16 +312,16 @@ public class NetWorkStateDetailActivity extends BaseActivity {
     public class WebService extends APIInterfaceInstance {
         @Override
         public void returnCheckCloudPluseConnectionSuccess(byte[] arg0) {
-            ping4UrlImageView.setBackground(drawableDomainSuccess);
-            ping4UrlImageView.setVisibility(View.VISIBLE);
-            ping4UrlQMUIView.setVisibility(View.GONE);
+            ping2UrlImageView.setBackground(drawableDomainSuccess);
+            ping2UrlImageView.setVisibility(View.VISIBLE);
+            ping2UrlQMUIView.setVisibility(View.GONE);
         }
 
         @Override
         public void returnCheckCloudPluseConnectionError(String error, int responseCode) {
-            ping4UrlImageView.setBackground(drawableDomainError);
-            ping4UrlImageView.setVisibility(View.VISIBLE);
-            ping4UrlQMUIView.setVisibility(View.GONE);
+            ping2UrlImageView.setBackground(drawableDomainError);
+            ping2UrlImageView.setVisibility(View.VISIBLE);
+            ping2UrlQMUIView.setVisibility(View.GONE);
         }
     }
 }

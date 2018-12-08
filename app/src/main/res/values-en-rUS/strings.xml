@@ -874,11 +874,12 @@
     <!--网络链接及网络诊断-->
     <string name="net_connected_error">No internet available,please check</string>
     <string name="net_diagnosis_title">Network Diagnoses</string>
-    <string name="net_diagnosis_hard_link_title">Detect network hardware</string>
+    <string name="net_diagnosis_hard_link_title">Detect network settings</string>
     <string name="net_diagnosis_wifi_link_title">Detect router</string>
     <string name="net_diagnosis_dns_link_title">Detect network connectivity</string>
     <string name="net_diagnosis_hard_link_conent">Contained Items:Connection status of Wi-Fi,4G,LTE and so on.</string>
     <string name="net_diagnosis_hard_to_fix">Repair</string>
+    <string name="net_diagnosis_portal_to_set">Authentication</string>
     <string name="net_diagnosis_wifi_link_conent">Contained Items:Does Connected Wi-Fi have verification requirement? if yes,Please verify Wi-Fi first, then continue to visit.</string>
     <string name="net_network_authentication">Network Certification</string>
     <string name="net_diagnosis_hard_detail_title">Hardware Link Diagnoses</string>
