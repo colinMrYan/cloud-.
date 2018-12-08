@@ -141,6 +141,21 @@ public class ImageDisplayUtils implements ImagePickerLoader {
         ImageLoader.getInstance().displayImage(uri, imageView, options);
     }
 
+
+    /**
+     * 展示不缓存的图片
+     * @param imageView
+     * @param uri
+     * @param defaultDrawableId
+     */
+    public void displayImageNoCache(final ImageView imageView, String uri) {
+        DisplayImageOptions options = new DisplayImageOptions.Builder()
+                .bitmapConfig(Bitmap.Config.RGB_565)
+                .cacheInMemory(false)
+                .cacheOnDisk(false)
+                .build();
+        ImageLoader.getInstance().displayImage(uri, imageView, options);
+    }
     /**
      * 展示固定大小的图片
      * @param activity

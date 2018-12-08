@@ -1501,10 +1501,10 @@ public class ChatAPIService {
      * 隐藏会话
      * @param uiConversation
      */
-    public void setConversationHide(final String id){
+    public void setConversationHide(final String id,final boolean isHide){
         final String completeUrl = APIUri.getConversationSetHide(id);
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
-        params.addParameter("hide",true);
+        params.addParameter("hide",isHide);
         HttpUtils.request(context, CloudHttpMethod.PUT, params, new APICallback(context, completeUrl) {
 
             @Override
@@ -1512,7 +1512,7 @@ public class ChatAPIService {
                 OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        setConversationHide(id);
+                        setConversationHide(id,isHide);
                     }
 
                     @Override
@@ -1527,7 +1527,7 @@ public class ChatAPIService {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
-                apiInterface.returnSetConversationHideSuccess(id);
+                apiInterface.returnSetConversationHideSuccess(id,isHide);
             }
 
             @Override

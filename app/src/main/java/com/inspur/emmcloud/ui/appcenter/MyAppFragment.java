@@ -41,19 +41,18 @@ import com.inspur.emmcloud.adapter.RecommendAppWidgetListAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.appcenter.App;
-import com.inspur.emmcloud.bean.appcenter.AppBadgeBean;
 import com.inspur.emmcloud.bean.appcenter.AppCommonlyUse;
 import com.inspur.emmcloud.bean.appcenter.AppGroupBean;
 import com.inspur.emmcloud.bean.appcenter.AppOrder;
-import com.inspur.emmcloud.bean.appcenter.GetAppBadgeResult;
 import com.inspur.emmcloud.bean.appcenter.GetAppGroupResult;
 import com.inspur.emmcloud.bean.appcenter.GetRecommendAppWidgetListResult;
 import com.inspur.emmcloud.bean.appcenter.RecommendAppWidgetBean;
-import com.inspur.emmcloud.bean.chat.TransparentBean;
 import com.inspur.emmcloud.bean.system.ClientConfigItem;
 import com.inspur.emmcloud.bean.system.GetAllConfigVersionResult;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
+import com.inspur.emmcloud.bean.system.badge.BadgeBodyModel;
+import com.inspur.emmcloud.bean.system.badge.BadgeBodyModuleModel;
 import com.inspur.emmcloud.broadcastreceiver.NetworkChangeReceiver;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.interf.OnRecommendAppWidgetItemClickListener;
@@ -64,6 +63,7 @@ import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ShortCutUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.privates.AppBadgeUtils;
 import com.inspur.emmcloud.util.privates.AppTabUtils;
 import com.inspur.emmcloud.util.privates.ClientConfigUpdateUtils;
 import com.inspur.emmcloud.util.privates.MyAppWidgetUtils;
@@ -93,7 +93,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 
 /**
@@ -115,7 +114,7 @@ public class MyAppFragment extends Fragment {
     private PopupWindow popupWindow;
     private boolean isNeedCommonlyUseApp = false;
     private MyAppSaveTask myAppSaveTask;
-    private Map<String, AppBadgeBean> appBadgeBeanMap = new HashMap<>();
+    private Map<String, Integer> appStoreBadgeMap = new HashMap<>();
     private RecyclerView recommendAppWidgetListView = null;
     private RecommendAppWidgetListAdapter recommendAppWidgetListAdapter = null;
     private int appListSizeExceptCommonlyUse = 0;
@@ -157,14 +156,14 @@ public class MyAppFragment extends Fragment {
         }
     }
 
-
     @Override
     public void onResume() {
         super.onResume();
         if (ClientConfigUpdateUtils.getInstance().isItemNeedUpdate(ClientConfigItem.CLIENT_CONFIG_MY_APP)){
             getMyApp();
         }
-        getAppBadgeNum();
+//        getAppBadgeNum();
+        new AppBadgeUtils(MyApplication.getInstance()).getAppBadgeCountFromServer();
         refreshRecommendAppWidgetView();
         NetUtils.PingThreadStart(NetUtils.pingUrls,5,Constant.EVENTBUS_TAG__NET_EXCEPTION_HINT);
     }
@@ -310,7 +309,7 @@ public class MyAppFragment extends Fragment {
             @Override
             public void onRefresh() {
                 getMyApp();
-                getAppBadgeNum();
+                new AppBadgeUtils(MyApplication.getInstance()).getAppBadgeCountFromServer();
             }
         });
     }
@@ -486,7 +485,7 @@ public class MyAppFragment extends Fragment {
             final List<App> appGroupItemList = appAdapterList.get(
                     listPosition).getAppItemList();
             final DragAdapter dragGridViewAdapter = new DragAdapter(
-                    getActivity(), appGroupItemList, listPosition, appBadgeBeanMap);
+                    getActivity(), appGroupItemList, listPosition, appStoreBadgeMap);
             dragGridView.setCanScroll(false);
             dragGridView.setPosition(listPosition);
             dragGridView.setPullRefreshLayout(swipeRefreshLayout);
@@ -586,7 +585,7 @@ public class MyAppFragment extends Fragment {
                         @Override
                         public void onNotifyCommonlyUseApp(App app) {
                             handCommonlyUseAppChange(appAdapterList, app);
-                            getAppBadgeNum();
+                            new AppBadgeUtils(MyApplication.getInstance()).getAppBadgeCountFromServer();
                             appListAdapter.notifyDataSetChanged();
                             dragGridViewAdapter.notifyDataSetChanged();
                             MyAppCacheUtils.saveMyAppList(getActivity(), appListAdapter.getAppAdapterList());
@@ -778,23 +777,13 @@ public class MyAppFragment extends Fragment {
         appGroupItemList.set(to, temp);
     }
 
-    /**
-     * 获取appBadge
-     */
-    private void getAppBadgeNum() {
-        if (NetUtils.isNetworkConnected(getActivity(), false)) {
-            apiService.getAppBadgeNum();
-        }
-    }
 
-    /**
-     * 修改tab角标，来自ECMTransparentUtils
-     *
-     * @param transparentBean
-     */
+    //接收从AppBadgeUtils里发回的角标数字
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void updateBadgeNumber(TransparentBean transparentBean) {
-        getAppBadgeNum();
+    public void onReceiveAppBadgeNum(BadgeBodyModel badgeBodyModel) {
+        BadgeBodyModuleModel badgeBodyModuleModel = badgeBodyModel.getAppStoreBadgeBodyModuleModel();
+        appStoreBadgeMap = badgeBodyModuleModel.getDetailBodyMap();
+        appListAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -1211,34 +1200,13 @@ public class MyAppFragment extends Fragment {
     }
 
 
-    /**
-     * 获取需要显示的appId列表
-     *
-     * @return
-     */
-    public void calculateBadgeNumberAndSendToIndex(GetAppBadgeResult getAppBadgeResult) {
-        int badageNum = 0;
-        Set<String> appBadgeSet = appBadgeBeanMap.keySet();
-        for (String appId : appBadgeSet) {
-            App app = new App();
-            app.setAppID(appId);
-            for (int i = 0; i < appListAdapter.getAppAdapterList().size(); i++) {
-                int index = appListAdapter.getAppAdapterList().get(i).getAppItemList().indexOf(app);
-                if (index != -1) {
-                    badageNum = badageNum + appBadgeBeanMap.get(appId).getBadgeNum();
-                    break;
-                }
-            }
-        }
-        getAppBadgeResult.setTabBadgeNumber(badageNum);
-        //发送到IndexActivity updateBadgeNumber
-        EventBus.getDefault().post(getAppBadgeResult);
-    }
+
 
 
     class WebService extends APIInterfaceInstance {
         @Override
         public void returnUserAppsSuccess(final GetAppGroupResult getAppGroupResult,String clientConfigMyAppVersion) {
+            swipeRefreshLayout.setRefreshing(false);
             myAppSaveTask = new MyAppSaveTask(clientConfigMyAppVersion);
             myAppSaveTask.execute(getAppGroupResult);
             appListSizeExceptCommonlyUse = getAppGroupResult.getAppGroupBeanList().size();
@@ -1250,17 +1218,6 @@ public class MyAppFragment extends Fragment {
   //          WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
         }
 
-        @Override
-        public void returnGetAppBadgeResultSuccess(GetAppBadgeResult getAppBadgeResult) {
-            swipeRefreshLayout.setRefreshing(false);
-            appBadgeBeanMap = getAppBadgeResult.getAppBadgeBeanMap();
-            appListAdapter.notifyDataSetChanged();
-            calculateBadgeNumberAndSendToIndex(getAppBadgeResult);
-        }
 
-        @Override
-        public void returnGetAppBadgeResultFail(String error, int errorCode) {
-            swipeRefreshLayout.setRefreshing(false);
-        }
     }
 }

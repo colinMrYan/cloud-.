@@ -4,8 +4,6 @@ import android.content.Context;
 
 import com.inspur.emmcloud.bean.chat.TransparentBean;
 
-import org.greenrobot.eventbus.EventBus;
-
 /**
  * Created by yufuchang on 2018/1/19.
  * 透传消息处理
@@ -21,7 +19,8 @@ public class ECMTransparentUtils {
     public static void handleTransparentMsg(Context context, String transparent){
         if(transparent != null && ECMShortcutBadgeNumberManagerUtils.isHasBadge(transparent)){
             TransparentBean transparentBean = new TransparentBean(transparent);
-            EventBus.getDefault().post(transparentBean);
+            //透传改变桌面角标后不再发出Eventbus
+//            EventBus.getDefault().post(transparentBean);
             ECMShortcutBadgeNumberManagerUtils.setDesktopBadgeNumber(context,transparentBean.getBadgeNumber());
         }
     }

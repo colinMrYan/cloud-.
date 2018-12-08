@@ -123,6 +123,22 @@ public class ConversationCacheUtils {
     }
 
     /**
+     * 设置会话是否隐藏
+     *
+     * @param context
+     * @param id
+     * @param name
+     */
+    public static void updateConversationHide(Context context, String id, boolean isHide) {
+        try {
+            DbCacheUtils.getDb(context).update(Conversation.class, WhereBuilder.b("id", "=", id), new KeyValue("hide", isHide));
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * 设置是否免打扰
      *
      * @param context

@@ -129,12 +129,13 @@ public class ImpBaseFragment extends Fragment {
     private void showOptionMenu(View view) {
         View contentView = LayoutInflater.from(getContext()).inflate(R.layout.pop_imp_header_option_menu, null);
         int width = StringUtils.isBlank(optionMenuList.get(0).getIco())?DensityUtil.dip2px(MyApplication.getInstance(),130):DensityUtil.dip2px(MyApplication.getInstance(),160);
-        PopupWindow optionMenuPop = new PopupWindow(contentView,width,RelativeLayout.LayoutParams.WRAP_CONTENT, true);
+       final PopupWindow optionMenuPop = new PopupWindow(contentView,width,RelativeLayout.LayoutParams.WRAP_CONTENT, true);
         ListView menuListView = (ListView)contentView.findViewById(R.id.lv_menu);
         menuListView.setAdapter(new MenuAdapter());
         menuListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                optionMenuPop.dismiss();
                 runJavaScript(JAVASCRIPT_PREFIX + optionMenuList.get(position).getAction());
             }
         });

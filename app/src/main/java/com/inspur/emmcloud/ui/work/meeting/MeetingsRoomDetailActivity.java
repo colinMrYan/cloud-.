@@ -2,6 +2,7 @@ package com.inspur.emmcloud.ui.work.meeting;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.LayoutInflater;
@@ -23,6 +24,7 @@ import com.inspur.emmcloud.api.apiservice.WorkAPIService;
 import com.inspur.emmcloud.bean.work.GetMeetingListResult;
 import com.inspur.emmcloud.bean.work.Meeting;
 import com.inspur.emmcloud.bean.work.MeetingSchedule;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
@@ -603,6 +605,11 @@ public class MeetingsRoomDetailActivity extends BaseActivity {
             if (loadingDlg != null && loadingDlg.isShowing()) {
                 loadingDlg.dismiss();
             }
+            Intent intent = new Intent();
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.setAction(Constant.ACTION_MEETING);
+            intent.putExtra("refreshMeeting",true);
+            LocalBroadcastManager.getInstance(MeetingsRoomDetailActivity.this).sendBroadcast(intent);
             ToastUtils.show(MeetingsRoomDetailActivity.this,
                     getString(R.string.meeting_list_cancel_success));
             allMeetingList.remove(deleteMeeting);

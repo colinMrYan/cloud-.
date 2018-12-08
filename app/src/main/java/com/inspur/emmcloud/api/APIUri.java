@@ -1566,6 +1566,14 @@ public class APIUri {
     }
 
     /**
+     * 未读消息url
+     * @return
+     */
+    public static String getBadgeCountUrl(){
+        return getECMChatUrl()+"/rest/v1/unread-count";
+    }
+
+    /**
      * 网络状态检测API
      * 固定地址
      *@return */

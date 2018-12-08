@@ -19,8 +19,8 @@ import android.widget.TextView;
 import com.inspur.emmcloud.BaseFragmentActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.bean.appcenter.GetAppBadgeResult;
-import com.inspur.emmcloud.bean.chat.TransparentBean;
+import com.inspur.emmcloud.bean.appcenter.App;
+import com.inspur.emmcloud.bean.appcenter.AppGroupBean;
 import com.inspur.emmcloud.bean.contact.ContactClickMessage;
 import com.inspur.emmcloud.bean.system.ChangeTabBean;
 import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
@@ -28,6 +28,7 @@ import com.inspur.emmcloud.bean.system.MainTabResult;
 import com.inspur.emmcloud.bean.system.MainTabTitleResult;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
+import com.inspur.emmcloud.bean.system.badge.BadgeBodyModel;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.appcenter.MyAppFragment;
 import com.inspur.emmcloud.ui.chat.CommunicationFragment;
@@ -41,9 +42,11 @@ import com.inspur.emmcloud.ui.work.WorkFragment;
 import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.privates.AppTabUtils;
 import com.inspur.emmcloud.util.privates.ECMShortcutBadgeNumberManagerUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
+import com.inspur.emmcloud.util.privates.cache.MyAppCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.widget.MyFragmentTabHost;
 import com.inspur.emmcloud.widget.tipsview.TipsView;
@@ -58,6 +61,8 @@ import org.xutils.x;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @ContentView(R.layout.activity_index)
 public class IndexBaseActivity extends BaseFragmentActivity implements
@@ -218,65 +223,122 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
         mTabHost.setCurrentTab((communicateIndex != -1 && isCommunicationRunning == false) ? communicateIndex : getTabIndex());
     }
 
-
     /**
-     * 显示消息tab上的小红点（未读消息提醒）
+     * 沟通未读数目变化
      *
      * @param eventMessage
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void setMessageUnreadCount(SimpleEventMessage eventMessage) {
+    public void onReceiveCommunicationBadgeNum(SimpleEventMessage eventMessage) {
         if (eventMessage.getAction().equals(Constant.EVENTBUS_TAG_SET_ALL_MESSAGE_UNREAD_COUNT)){
-            if (newMessageTipsText != null) {
-                int unreadCount = (Integer) eventMessage.getMessageObj();
-                if (unreadCount == 0) {
-                    newMessageTipsLayout.setVisibility(View.GONE);
-                } else {
-                    String shoWNum = (unreadCount > 99) ? "99+" : unreadCount + "";
-                    newMessageTipsLayout.setVisibility(View.VISIBLE);
-                    newMessageTipsText.setText(shoWNum);
+            int communicationBadgeNum = (Integer) eventMessage.getMessageObj();
+            setTabBarBadge(Constant.APP_TAB_BAR_COMMUNACATE_NAME,communicationBadgeNum);
+        }
+    }
+
+
+    /**
+     * 这个app未读数目变化
+     * @param badgeBodyModel
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiveAppBadgeNum(BadgeBodyModel badgeBodyModel) {
+        if(badgeBodyModel.isSNSExist()){
+            int snsTabBarBadgeNum = badgeBodyModel.getSnsBadgeBodyModuleModel().getTotal();
+            setTabBarBadge(Constant.APP_TAB_BAR_MOMENT_NAME,snsTabBarBadgeNum);
+        }
+        if(badgeBodyModel.isAppStoreExist()){
+            int appStoreTabBarBadgeNum = badgeBodyModel.getAppStoreBadgeBodyModuleModel().getTotal();
+            if (appStoreTabBarBadgeNum > 0){
+                Map<String,Integer> appStoreBadgeMap = badgeBodyModel.getAppStoreBadgeBodyModuleModel().getDetailBodyMap();
+                appStoreTabBarBadgeNum = getFilterAppStoreBadgeNum(appStoreBadgeMap);
+            }
+            PreferencesByUserAndTanentUtils.putInt(MyApplication.getInstance(),Constant.PREF_BADGE_NUM_APPSTORE,appStoreTabBarBadgeNum);
+            setTabBarBadge(Constant.APP_TAB_BAR_APPLICATION_NAME,appStoreTabBarBadgeNum);
+        }
+    }
+
+    /**
+     * 过滤应用角标数目（只显示已安装的应用角标数目）
+     * @param appBadgeMap
+     * @return
+     */
+    private  int getFilterAppStoreBadgeNum(Map<String,Integer> appBadgeMap){
+        int appStoreBadgeNum = 0;
+        List<AppGroupBean> appGroupBeanList = MyAppCacheUtils.getMyAppList(this);
+        for (AppGroupBean appGroupBean:appGroupBeanList){
+            List<App> appList = appGroupBean.getAppItemList();
+            for (App app:appList){
+                Integer num = appBadgeMap.get(app.getAppID());
+                if (num != null){
+                    appStoreBadgeNum = appStoreBadgeNum+num;
                 }
+
             }
         }
+        return  appStoreBadgeNum;
     }
 
-
-    /**
-     * 更新底部tab数字，从MyAppFragment badge请求返回
-     *
-     * @param getAppBadgeResult
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void updateBadgeNumber(GetAppBadgeResult getAppBadgeResult) {
-        int badgeNumber = getAppBadgeResult.getTabBadgeNumber();
-        findAndSetUnhandleBadgesDisplay(badgeNumber);
+    private void setTabBarBadge(String tabName, int number){
+        //查找tab之前，先清空一下对应tab的数据，防止tab找不到，数据还有的情况
+        saveTabBarBadgeNumber(tabName,0);
+        //根据tabName确定tabView的位置
+        List<MainTabResult> mainTabResultList = AppTabUtils.getMainTabResultList(this);
+        for (int i = 0; i < mainTabResultList.size(); i++) {
+            if(mainTabResultList.get(i).getName().equals(tabName)){
+                View tabView = mTabHost.getTabWidget().getChildAt(i);
+                RelativeLayout badgeLayout = (RelativeLayout) tabView.findViewById(R.id.rl_badge);
+                View badgeView = tabView.findViewById(R.id.v_badge);
+                if (number < 0){
+                    badgeLayout.setVisibility(View.GONE);
+                    badgeView.setVisibility(View.VISIBLE);
+                }else {
+                    badgeView.setVisibility(View.GONE);
+                    badgeLayout.setVisibility((number == 0) ? View.GONE : View.VISIBLE);
+                    TextView badgeText = (TextView) tabView.findViewById(R.id.tv_badge);
+                    badgeText.setText("" + (number > 99 ? "99+" : number));
+                }
+                saveTabBarBadgeNumber(tabName,number);
+            }
+        }
+        //更新桌面角标数字
+        ECMShortcutBadgeNumberManagerUtils.setDesktopBadgeNumber(IndexBaseActivity.this, getDesktopNumber());
     }
 
     /**
-     * 查找应用tab并改变tab上的角标
-     *
-     * @param badgeNumber
+     * 根据正负数规则获取桌面显示总数
+     * @return
      */
-    private void findAndSetUnhandleBadgesDisplay(int badgeNumber) {
-        for (int i = 0; i < mTabHost.getTabWidget().getChildCount(); i++) {
-            View tabView = mTabHost.getTabWidget().getChildAt(i);
-            if (mTabHost.getTabWidget().getChildAt(i).getTag().toString().contains(Constant.APP_TAB_BAR_APPLICATION)) {
-                setUnHandledBadgesDisplay(tabView, badgeNumber);
+    private int getDesktopNumber() {
+        int communicationTabBarNumber = PreferencesByUserAndTanentUtils.getInt(MyApplication.getInstance(),Constant.PREF_BADGE_NUM_COMMUNICATION,0);
+        int appStoreTabBarNumber = PreferencesByUserAndTanentUtils.getInt(MyApplication.getInstance(),Constant.PREF_BADGE_NUM_APPSTORE,0);
+        int momentTabBarNumber = PreferencesByUserAndTanentUtils.getInt(MyApplication.getInstance(),Constant.PREF_BADGE_NUM_SNS,0);
+        return communicationTabBarNumber+(appStoreTabBarNumber >= 0?appStoreTabBarNumber:0) +(momentTabBarNumber >= 0? momentTabBarNumber:0);
+    }
+
+    /**
+     * 找到对应的tab后保存tabBarBadgeNumber
+     * @param tabName
+     * @param tabBarBadgeNumber
+     */
+    private void saveTabBarBadgeNumber(String tabName, int tabBarBadgeNumber) {
+        switch (tabName){
+            case Constant.APP_TAB_BAR_APPLICATION_NAME:
+                PreferencesByUserAndTanentUtils.putInt(MyApplication.getInstance(),Constant.PREF_BADGE_NUM_APPSTORE,tabBarBadgeNumber);
                 break;
-            }
+            case Constant.APP_TAB_BAR_COMMUNACATE_NAME:
+                PreferencesByUserAndTanentUtils.putInt(MyApplication.getInstance(),Constant.PREF_BADGE_NUM_COMMUNICATION,tabBarBadgeNumber);
+                break;
+            case Constant.APP_TAB_BAR_MOMENT_NAME:
+                PreferencesByUserAndTanentUtils.putInt(MyApplication.getInstance(),Constant.PREF_BADGE_NUM_SNS,tabBarBadgeNumber);
+                break;
         }
     }
 
     /**
-     * 修改tab角标，来自ECMTransparentUtils
-     *
-     * @param transparentBean
+     * 打开相应位置的tab
+     * @param changeTabBean
      */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void updateBadgeNumber(TransparentBean transparentBean) {
-        findAndSetUnhandleBadgesDisplay(transparentBean.getBadgeNumber());
-    }
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void updateTabIndex(ChangeTabBean changeTabBean) {
         for (int i = 0; i < mTabHost.getTabWidget().getChildCount(); i++) {
@@ -285,20 +347,6 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
                 break;
             }
         }
-    }
-
-    /**
-     * 处理未处理消息个数的显示
-     *
-     * @param tabView
-     */
-    private void setUnHandledBadgesDisplay(View tabView, int badgeNumber) {
-        RelativeLayout unhandledBadgesLayout = (RelativeLayout) tabView.findViewById(R.id.new_message_tips_layout);
-        unhandledBadgesLayout.setVisibility((badgeNumber == 0) ? View.GONE : View.VISIBLE);
-        TextView unhandledBadgesText = (TextView) tabView.findViewById(R.id.new_message_tips_text);
-        unhandledBadgesText.setText("" + (badgeNumber > 99 ? "99+" : badgeNumber));
-        //更新桌面角标数字
-        ECMShortcutBadgeNumberManagerUtils.setDesktopBadgeNumber(IndexBaseActivity.this, badgeNumber);
     }
 
     /**
@@ -414,8 +462,8 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
      */
     private void handleTipsView(View tabView) {
         newMessageTipsText = (TextView) tabView
-                .findViewById(R.id.new_message_tips_text);
-        newMessageTipsLayout = (RelativeLayout) tabView.findViewById(R.id.new_message_tips_layout);
+                .findViewById(R.id.tv_badge);
+        newMessageTipsLayout = (RelativeLayout) tabView.findViewById(R.id.rl_badge);
         tipsView.attach(newMessageTipsLayout, new TipsView.Listener() {
 
             @Override
@@ -429,7 +477,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
                 Intent intent = new Intent("message_notify");
                 intent.putExtra("command", "set_all_message_read");
                 LocalBroadcastManager.getInstance(IndexBaseActivity.this).sendBroadcast(intent);
-                setMessageUnreadCount(new SimpleEventMessage(Constant.EVENTBUS_TAG_SET_ALL_MESSAGE_UNREAD_COUNT,0));
+                onReceiveCommunicationBadgeNum(new SimpleEventMessage(Constant.EVENTBUS_TAG_SET_ALL_MESSAGE_UNREAD_COUNT,0));
             }
 
             @Override
