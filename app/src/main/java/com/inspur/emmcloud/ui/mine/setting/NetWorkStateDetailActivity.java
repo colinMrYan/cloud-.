@@ -196,6 +196,7 @@ public class NetWorkStateDetailActivity extends BaseActivity {
         ping2UrlQMUIView.setVisibility(iniState?View.VISIBLE:View.GONE);
         ping3UrlImageView.setVisibility(iniState?View.GONE:View.VISIBLE);
         ping3UrlQMUIView.setVisibility(iniState?View.VISIBLE:View.GONE);
+        portalCheckTipLayout.setVisibility(View.GONE);
     }
 
     /**

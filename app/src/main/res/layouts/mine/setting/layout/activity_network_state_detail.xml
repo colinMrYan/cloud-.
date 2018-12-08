@@ -245,7 +245,7 @@
                         android:textSize="15sp"
                         android:layout_marginLeft="4dp"
                         android:textColor="#FFF54949"
-                        android:text="点击此处验证小助手"/>
+                        android:text="@string/net_diagnosis_portal_to_set"/>
                 </RelativeLayout>
 
                 <View
