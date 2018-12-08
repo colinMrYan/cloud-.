@@ -1234,6 +1234,7 @@
             android:name="com.huawei.hms.update.provider.UpdateProvider"
             android:authorities="com.inspur.emmcloud.hms.update.provider"
             android:exported="false"
+            android:process=":updateProvider"
             android:grantUriPermissions="true"></provider>
 
 
