@@ -835,6 +835,7 @@ public class AppAPIService {
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         params.addParameter("uri",uri);
+        params.setConnectTimeout( 5000 );
         HttpUtils.request(context,CloudHttpMethod.POST,params, new APICallback(context,completeUrl) {
             @Override
             public void callbackSuccess(byte[] arg0) {
