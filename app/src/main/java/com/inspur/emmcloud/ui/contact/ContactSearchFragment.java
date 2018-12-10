@@ -738,8 +738,6 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
             searchEdit.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
             searchEdit.setBackground(null);
             searchEdit.setHint(getString(R.string.msg_key_search_member));
-            searchEdit.requestFocus();
-            searchEdit.requestFocusFromTouch();
             searchEdit.addTextChangedListener(myTextWatcher);
         }
 
