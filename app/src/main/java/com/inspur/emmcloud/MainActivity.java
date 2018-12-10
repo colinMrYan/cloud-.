@@ -251,7 +251,6 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
                         startApp();
                     }
                 });
-                startApp();
             }
         };
         if (new SplashPageUtils(MainActivity.this).checkIfShowSplashPage() && (leftTime > 0)) {

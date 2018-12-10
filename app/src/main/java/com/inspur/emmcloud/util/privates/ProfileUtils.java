@@ -112,7 +112,8 @@ public class ProfileUtils {
     private boolean isForceUpdateProfile() {
         String accessToken = PreferencesUtils.getString(
                 activity, "accessToken", "");
-        return !StringUtils.isBlank(accessToken) && AppUtils.isAppHasUpgraded(activity);
+        //2.6.0以下版本使用消息V0的路由，2.6.0或以上使用消息V1的路由
+        return !StringUtils.isBlank(accessToken) && AppUtils.isPreviousLitterThan(activity,"2.6.0");
     }
 
     class WebService extends APIInterfaceInstance {
