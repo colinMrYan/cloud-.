@@ -115,6 +115,7 @@ public class GuideActivity extends Activity {
                                     new ProfileUtils(GuideActivity.this, new CommonCallBack() {
                                         @Override
                                         public void execute() {
+                                            PreferencesUtils.putString(GuideActivity.this, "previousVersion",AppUtils.getVersion(GuideActivity.this));
                                             IntentUtils.startActivity(GuideActivity.this,
                                                     IndexActivity.class, true);
                                         }
