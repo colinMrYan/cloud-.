@@ -168,7 +168,6 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
             searchEdit.setBackground(null);
             searchEdit.addTextChangedListener(myTextWatcher);
         }
-        searchEdit.setHint((selectMemList.size() == 0) ? getString(R.string.msg_key_search_member) : "");
         flowLayout.addView(searchEdit);
     }
 
