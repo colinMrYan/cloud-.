@@ -33,14 +33,14 @@ android {
             storePassword properties.getProperty("KEY_PASSWORD")
         }
     }
-    compileSdkVersion 24
+    compileSdkVersion 27
     buildToolsVersion "26.0.2"
     aaptOptions.cruncherEnabled = false
     aaptOptions.useNewCruncher = false
     defaultConfig {
         applicationId "com.inspur.emmcloud"
-        minSdkVersion 16
-        targetSdkVersion 22
+        minSdkVersion 21
+        targetSdkVersion 27
         versionCode 62
         versionName "2.7.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -197,6 +197,7 @@ dependencies {
     compile 'com.github.CarGuo:RecordWave:v1.1.8'
 
     compile('com.googlecode.soundlibs:mp3spi:1.9.5.4')
+    compile('com.yanzhenjie:permission:2.0.0-rc12')
 
     implementation 'com.github.Jay-Goo:Mp3Converter:v0.0.3'
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5.4'
