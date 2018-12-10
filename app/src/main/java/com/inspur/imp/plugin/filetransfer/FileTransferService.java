@@ -90,8 +90,6 @@ public class FileTransferService extends ImpPlugin {
     public static final String FAILURE = "0";
     private static double MBDATA = 1048576.0;
     private static double KBDATA = 1024.0;
-    // 设备版本号
-    private double osVersion;
     // 停止下载
     private boolean stopConn = false;
     private AlertDialog fileDownloadDlg;
@@ -128,7 +126,6 @@ public class FileTransferService extends ImpPlugin {
 
     @Override
     public String executeAndReturn(String action, JSONObject paramsObject) {
-        osVersion = getVersion();
         String result = "";
         // 下载文件
         if ("download".equals(action)) {
@@ -727,15 +724,6 @@ public class FileTransferService extends ImpPlugin {
             e.printStackTrace();
             return "";
         }
-    }
-
-    // 获取应用版本号
-    private double getVersion() {
-        String osVersion = android.os.Build.VERSION.RELEASE;
-        int index = osVersion.lastIndexOf(".");
-        osVersion = osVersion.substring(0, index);
-        Double version = Double.parseDouble(osVersion);
-        return version;
     }
 
     /**
