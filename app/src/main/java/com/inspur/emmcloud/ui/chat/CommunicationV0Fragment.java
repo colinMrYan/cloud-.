@@ -48,10 +48,12 @@ import com.inspur.emmcloud.bean.system.MainTabResult;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.broadcastreceiver.MsgReceiver;
+import com.inspur.emmcloud.broadcastreceiver.NetworkChangeReceiver;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
+import com.inspur.emmcloud.ui.mine.setting.NetWorkStateDetailActivity;
 import com.inspur.emmcloud.util.common.ImageUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
@@ -129,7 +131,8 @@ public class CommunicationV0Fragment extends Fragment {
     private boolean isHaveCreatGroupIcon = false;
     private PopupWindow popupWindow;
     private boolean isFirstConnectWebsockt = true;//判断是否第一次连上websockt
-
+    private boolean haveHeader=false;
+    private View    netExceptionView;
 
     /**
      * 记录用户点击的频道
@@ -179,6 +182,12 @@ public class CommunicationV0Fragment extends Fragment {
         EventBus.getDefault().register(this);
     }
 
+    @Override
+    public void onResume() {
+        NetUtils.PingThreadStart(NetUtils.pingUrls,5,Constant.EVENTBUS_TAG__NET_EXCEPTION_HINT);
+        super.onResume();
+    }
+
     /**
      * 展示创建
      */
@@ -216,6 +225,13 @@ public class CommunicationV0Fragment extends Fragment {
 
     private void initView() {
         // TODO Auto-generated method stub
+        netExceptionView  = LayoutInflater.from(getContext()).inflate(R.layout.recycleview_header_item,null);
+        netExceptionView.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                IntentUtils.startActivity(getActivity(), NetWorkStateDetailActivity.class);
+            }
+        });
         handMessage();
         apiService = new ChatAPIService(getActivity());
         apiService.setAPIInterface(new WebService());
@@ -322,6 +338,52 @@ public class CommunicationV0Fragment extends Fragment {
             }
         }
     };
+
+    /**
+     * 添加LIstView 的HeaderView
+     * */
+    private void AddHeaderView() {
+        if(!haveHeader){
+            msgListView.addHeaderView(netExceptionView);
+            haveHeader=true;
+        }
+    }
+
+    /**
+     * 删除ListView 的HeaderView
+     * */
+    private void DeleteHeaderView() {
+        if(haveHeader){
+            msgListView.removeHeaderView(netExceptionView);
+            haveHeader=false;
+        }
+    }
+
+
+
+    /**
+     * app页网络异常提示框
+     * @param netState  通过Action获取操作类型
+     * */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void netWorkStateHint(SimpleEventMessage netState) {
+        if(netState.getAction().equals(Constant.EVENTBUS_TAG__NET_STATE_CHANGE)){
+            if(((String)netState.getMessageObj()).equals(NetworkChangeReceiver.NET_WIFI_STATE_OK)){
+                NetUtils.PingThreadStart(NetUtils.pingUrls,5,Constant.EVENTBUS_TAG__NET_EXCEPTION_HINT);
+            } else if(((String)netState.getMessageObj()).equals(NetworkChangeReceiver.NET_STATE_ERROR)) {
+                AddHeaderView();
+            } else if (((String)netState.getMessageObj()).equals(NetworkChangeReceiver.NET_GPRS_STATE_OK)) {
+                DeleteHeaderView();
+            }
+        } else if (netState.getAction().equals(Constant.EVENTBUS_TAG__NET_EXCEPTION_HINT)) {   //网络异常提示
+               if(!(Boolean)netState.getMessageObj()||(!NetUtils.isNetworkConnected(getContext(),false))) {
+                   AddHeaderView();
+               } else {
+                   DeleteHeaderView();
+               }
+        }
+    }
+
 
     /**
      * 通讯录和创建群组，扫一扫合并
@@ -1322,7 +1384,7 @@ public class CommunicationV0Fragment extends Fragment {
     /**
      * 根据cid数组获取Channel信息
      *
-     * @param channelList
+     * @param serviceCidList
      */
     public void getServieChannelInputs(List<String> serviceCidList) {
         if (NetUtils.isNetworkConnected(MyApplication.getInstance(), false)) {
