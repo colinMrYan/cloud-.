@@ -392,7 +392,7 @@ public class MyAppFragment extends Fragment {
                 DeleteHeaderView();
             }
         } else if (netState.getAction().equals(Constant.EVENTBUS_TAG__NET_EXCEPTION_HINT)) {   //网络异常提示
-            if(!(Boolean)netState.getMessageObj()) {
+            if(!(Boolean)netState.getMessageObj()||(!NetUtils.isNetworkConnected(getContext(),false))) {
                 AddHeaderView();
             } else {
                 DeleteHeaderView();
