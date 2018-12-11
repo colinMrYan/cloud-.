@@ -235,6 +235,20 @@ public class AppUtils {
         return false;
     }
 
+    public static boolean isPreviousLitterThan(Context context,String version){
+        String previousVersionValue = PreferencesUtils.getString(context,"previousVersion", "");
+        try {
+            if (!StringUtils.isBlank(previousVersionValue)) {
+                Version previousVersion = Version.valueOf(previousVersionValue);
+                Version targetVersion = Version.valueOf(version);
+                return targetVersion.greaterThan(previousVersion);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     /**
      * 从字符串中截取连续6位数字 用于从短信中获取动态密码
      *

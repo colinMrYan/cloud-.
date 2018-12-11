@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
 
-import com.inspur.imp.api.ImpActivity;
 import com.inspur.imp.plugin.ImpPlugin;
 
 import org.json.JSONException;
@@ -132,10 +131,6 @@ public class DatePickerService extends ImpPlugin {
 				.getDecorView());
 		if (dp != null && !dateFormat.contains("dd")) {
 			String model = Build.MODEL;
-			String osVersion = Build.VERSION.RELEASE;
-			int index = osVersion.lastIndexOf(".");
-			osVersion = osVersion.substring(0, index);
-			Double version = Double.parseDouble(osVersion);
 			// 魅族手机设置
 			if (model.contains("MEIZU")||model.startsWith("m")) {
 				if (dp.getChildAt(0) != null
@@ -162,11 +157,6 @@ public class DatePickerService extends ImpPlugin {
 					((ViewGroup) dp.getChildAt(0)).getChildAt(0).setVisibility(
 							View.GONE);
 				}
-			}
-			// 其他品牌手机，版本小于3.0
-			else if (version < 3.0) {
-				((ViewGroup) dp.getChildAt(0)).getChildAt(0).setVisibility(
-						View.GONE);
 			}
 			// 其他品牌手机，版本大于3.0
 			else {
