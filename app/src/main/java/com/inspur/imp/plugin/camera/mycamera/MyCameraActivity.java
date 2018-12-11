@@ -85,6 +85,7 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
     private ImageView previewImg;
     private Bitmap originBitmap;
     private Bitmap cropBitmap;
+    private boolean safeToTakePicture = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -264,6 +265,7 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
                 parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);//连续对焦
             mCamera.setParameters(parameters);
             mCamera.startPreview();
+            safeToTakePicture = true;
             mCamera.cancelAutoFocus();// 如果要实现连续的自动对焦，这一句必须加上，这句必须要在startPreview后面加上去
         } catch (Exception e) {
             e.printStackTrace();
@@ -316,7 +318,10 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.take_bt:
-                takePicture(currentOrientation);
+                if (safeToTakePicture){
+                    takePicture(currentOrientation);
+                    safeToTakePicture= false;
+                }
                 break;
             case R.id.switch_camera_btn:
                 currentCameraFacing = 1 - currentCameraFacing;
@@ -338,6 +343,7 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
             case R.id.btn_retry:
                 previewLayout.setVisibility(View.GONE);
                 mCamera.startPreview();
+                safeToTakePicture = true;
                 mCamera.cancelAutoFocus();
                 break;
             case R.id.btn_edit:

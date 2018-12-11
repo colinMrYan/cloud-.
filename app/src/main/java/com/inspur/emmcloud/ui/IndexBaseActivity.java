@@ -61,6 +61,7 @@ import org.xutils.x;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -264,14 +265,17 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
      * @return
      */
     private  int getFilterAppStoreBadgeNum(Map<String,Integer> appBadgeMap){
+        Map<String,Integer> appBadgeMapSum = new HashMap<>();
+        appBadgeMapSum.putAll(appBadgeMap);
         int appStoreBadgeNum = 0;
         List<AppGroupBean> appGroupBeanList = MyAppCacheUtils.getMyAppList(this);
         for (AppGroupBean appGroupBean:appGroupBeanList){
             List<App> appList = appGroupBean.getAppItemList();
             for (App app:appList){
-                Integer num = appBadgeMap.get(app.getAppID());
+                Integer num = appBadgeMapSum.get(app.getAppID());
                 if (num != null){
                     appStoreBadgeNum = appStoreBadgeNum+num;
+                    appBadgeMapSum.remove(app.getAppID());
                 }
 
             }
