@@ -16,11 +16,18 @@ import com.inspur.emmcloud.ui.SchemeHandleActivity;
 import com.inspur.emmcloud.ui.mine.setting.CreateGestureActivity;
 import com.inspur.emmcloud.ui.mine.setting.FaceVerifyActivity;
 import com.inspur.emmcloud.ui.mine.setting.GestureLoginActivity;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.common.systool.permission.PermissionManagerUtils;
+import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
+import com.inspur.emmcloud.util.common.systool.permission.Permissions;
 import com.inspur.emmcloud.util.privates.AppBadgeUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ClientIDUtils;
 import com.inspur.emmcloud.util.privates.cache.DbCacheUtils;
+import com.yanzhenjie.permission.Permission;
+
+import java.util.List;
 
 /**
  * Created by chenmch on 2017/9/13.
@@ -50,9 +57,62 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
             }
             uploadMDMInfo(activity);
             new AppBadgeUtils(MyApplication.getInstance()).getAppBadgeCountFromServer();
+            getPhonePermissions();
+            getStoragePermission();
         }
         count++;
+    }
 
+    private void getStoragePermission() {
+        if(!PermissionManagerUtils.getInstance().isHasPermission(MyApplication.getInstance(), Permissions.STORAGE)){
+            LogUtils.YfcDebug("没有sd卡权限，开始申请");
+            PermissionManagerUtils.getInstance().requestGroupPermission(MyApplication.getInstance(), Permissions.STORAGE, new PermissionRequestCallback() {
+                @Override
+                public void onPermissionRequestSuccess(List<String> permissions) {
+                    LogUtils.YfcDebug("sd卡权限申请成功");
+                }
+
+                @Override
+                public void onPermissionRequestFail(List<String> permissions) {
+                    LogUtils.YfcDebug("sd卡权限申请失败");
+                    MyApplication.getInstance().exit();
+                }
+
+                @Override
+                public void onPermissionRequestException(Exception e) {
+                    LogUtils.YfcDebug("sd卡权限申请出现异常："+e.getMessage());
+                    MyApplication.getInstance().exit();
+                }
+            });
+        }
+    }
+
+    private void getPhonePermissions() {
+        LogUtils.YfcDebug("获取电话权限");
+        String[] phonePermissionArray = {Permissions.CALL_PHONE, Permission.READ_PHONE_STATE};
+        if(!PermissionManagerUtils.getInstance().isHasPermission(MyApplication.getInstance(), phonePermissionArray)){
+            LogUtils.YfcDebug("没有电话状态权限，开始申请");
+            PermissionManagerUtils.getInstance().requestGroupPermission(MyApplication.getInstance(), phonePermissionArray, new PermissionRequestCallback() {
+                @Override
+                public void onPermissionRequestSuccess(List<String> permissions) {
+                    LogUtils.YfcDebug("电话权限申请成功");
+                }
+
+                @Override
+                public void onPermissionRequestFail(List<String> permissions) {
+                    LogUtils.YfcDebug("电话权限申请失败");
+                    MyApplication.getInstance().exit();
+                }
+
+                @Override
+                public void onPermissionRequestException(Exception e) {
+                    LogUtils.YfcDebug("电话权限出现异常："+e.getMessage());
+                    MyApplication.getInstance().exit();
+                }
+            });
+        }else{
+            LogUtils.YfcDebug("已经拥有电话权限");
+        }
     }
 
     @Override

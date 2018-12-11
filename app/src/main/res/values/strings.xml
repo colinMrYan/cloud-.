@@ -1153,4 +1153,12 @@
 
 
     <string name="resend_file_failed">无法找到资源文件，消息重发失败</string>
+
+
+    <!--权限管理-->
+    <string name="permission_resume">Resume</string>
+    <string name="permission_dialog_title">Tips</string>
+    <string name="permission_dialog_message_rationale">Grant the following permissions to continue the program:\n\n%1$s</string>
+    <string name="permission_message_always_failed">Please give us permission in the settings:\n\n%1$s</string>
+    <string name="permission_message_setting_comeback">The user comes back from the settings page.</string>
 </resources>
