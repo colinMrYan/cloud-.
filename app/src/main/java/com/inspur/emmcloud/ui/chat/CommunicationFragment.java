@@ -311,7 +311,11 @@ public class CommunicationFragment extends Fragment {
                 conversationAdapter.setNetExceptionView(true);
             }
         } else if (netState.getAction().equals(Constant.EVENTBUS_TAG__NET_EXCEPTION_HINT)) {   //网络异常提示
-            conversationAdapter.setNetExceptionView((Boolean)netState.getMessageObj());
+            if(!NetUtils.isNetworkConnected(getContext())) {
+                conversationAdapter.setNetExceptionView(false);
+            } else {
+                conversationAdapter.setNetExceptionView((Boolean)netState.getMessageObj());
+            }
             if ((Boolean)netState.getMessageObj()){
                 WebSocketPush.getInstance().startWebSocket();
             }
