@@ -57,7 +57,6 @@ import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.privates.AppBadgeUtils;
 import com.inspur.emmcloud.util.privates.AppTabUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
@@ -667,7 +666,6 @@ public class CommunicationFragment extends Fragment {
             } else {
                 titleText.setText(R.string.communicate);
             }
-            new AppBadgeUtils(MyApplication.getInstance()).getAppBadgeCountFromServer();
         } else if (socketStatus.equals(Socket.EVENT_DISCONNECT) || socketStatus.equals(Socket.EVENT_CONNECT_ERROR)) {
             titleText.setText(R.string.socket_close);
         }
