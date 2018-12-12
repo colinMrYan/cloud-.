@@ -15,31 +15,35 @@ public class ECMTransparentUtils {
 
     /**
      * 来自极光的透传消息
+     *
      * @param context
      * @param transparent
      */
-    public static void handleTransparentMsg(Context context, String transparent){
-        if(transparent != null && ECMShortcutBadgeNumberManagerUtils.isHasBadge(transparent)){
+    public static void handleTransparentMsg(Context context, String transparent) {
+        if (transparent != null && ECMShortcutBadgeNumberManagerUtils.isHasBadge(transparent)) {
             TransparentBean transparentBean = new TransparentBean(transparent);
             //透传改变桌面角标后不再发出Eventbus
 //            EventBus.getDefault().post(transparentBean);
-            if(!(WebSocketPush.getInstance().isSocketConnect() && MyApplication.getInstance().isV1xVersionChat())){
+            //首先应用需要在前台，如果不在前台直接设置角标不做其他改动
+            //如果应用在前台，socket连接或者v1环境中有一个条件（或两个）不为true，则发起http请求
+            if (MyApplication.getInstance().getIsActive() && !(WebSocketPush.getInstance().isSocketConnect() && MyApplication.getInstance().isV1xVersionChat())) {
                 new AppBadgeUtils(context).getAppBadgeCountFromServer();
             }
-            ECMShortcutBadgeNumberManagerUtils.setDesktopBadgeNumber(context,transparentBean.getBadgeNumber());
+            ECMShortcutBadgeNumberManagerUtils.setDesktopBadgeNumber(context, transparentBean.getBadgeNumber());
         }
     }
 
     /**
      * 来自华为的透传消息
+     *
      * @param context
      * @param transparent
      */
-    public static void handleTransparentMsg(Context context, byte[] transparent){
-        if(transparent != null && ECMShortcutBadgeNumberManagerUtils.isHasBadge(transparent)){
+    public static void handleTransparentMsg(Context context, byte[] transparent) {
+        if (transparent != null && ECMShortcutBadgeNumberManagerUtils.isHasBadge(transparent)) {
             try {
-                String transparentStr = new String(transparent,"UTF-8");
-                handleTransparentMsg(context,transparentStr);
+                String transparentStr = new String(transparent, "UTF-8");
+                handleTransparentMsg(context, transparentStr);
             } catch (Exception e) {
                 e.printStackTrace();
             }
