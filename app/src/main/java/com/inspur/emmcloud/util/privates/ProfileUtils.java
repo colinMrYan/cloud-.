@@ -98,6 +98,7 @@ public class ProfileUtils {
     }
 
     private void callback(){
+        PreferencesUtils.putString(MyApplication.getInstance(), "previousVersion", AppUtils.getVersion(MyApplication.getInstance()));
         if (commonCallBack != null) {
             commonCallBack.execute();
         }
@@ -112,6 +113,7 @@ public class ProfileUtils {
     private boolean isForceUpdateProfile() {
         String accessToken = PreferencesUtils.getString(
                 activity, "accessToken", "");
+        //2.6.0以下版本使用消息V0的路由，2.6.0或以上使用消息V1的路由
         return !StringUtils.isBlank(accessToken) && AppUtils.isAppHasUpgraded(activity);
     }
 

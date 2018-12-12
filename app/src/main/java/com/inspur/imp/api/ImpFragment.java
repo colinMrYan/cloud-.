@@ -91,6 +91,7 @@ public class ImpFragment extends ImpBaseFragment {
     private HashMap<String, String> urlTilteMap = new HashMap<>();
     private View rootView;
 
+    private String appName = "";
     private String version;
     private ImpFragmentClickListener listener;
     private PopupWindow dropTitlePopupWindow;
@@ -136,6 +137,7 @@ public class ImpFragment extends ImpBaseFragment {
         if (getArguments() == null) {
             setArguments(new Bundle());
         }
+        appName = getArguments().getString(Constant.WEB_FRAGMENT_APP_NAME);
         headerLayout = (RelativeLayout) rootView.findViewById(Res.getWidgetID("header_layout"));
         loadingLayout = (RelativeLayout) rootView.findViewById(Res.getWidgetID("rl_loading"));
         loadingText = (TextView) rootView.findViewById(Res.getWidgetID("tv_loading"));
@@ -160,7 +162,6 @@ public class ImpFragment extends ImpBaseFragment {
             appId = getArguments().getString("appId");
         }
         initFragmentViews();
-        String appName = getArguments().getString(Constant.WEB_FRAGMENT_APP_NAME);
         headerText.setText(StringUtils.isBlank(appName)?"":appName);
     }
 
@@ -191,7 +192,6 @@ public class ImpFragment extends ImpBaseFragment {
             }
         });
         webView.loadUrl(url, webViewHeaders);
-
     }
 
     /**
@@ -416,7 +416,9 @@ public class ImpFragment extends ImpBaseFragment {
 
             @Override
             public void onSetTitle(String title) {
-                setTitle(title);
+                if(StringUtils.isBlank(appName)){
+                    setTitle(title);
+                }
             }
 
             @Override

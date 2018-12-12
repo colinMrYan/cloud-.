@@ -737,11 +737,11 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
             searchEdit.setSingleLine(true);
             searchEdit.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
             searchEdit.setBackground(null);
+            searchEdit.setHint(getString(R.string.msg_key_search_member));
             searchEdit.addTextChangedListener(myTextWatcher);
         }
 
         if (searchEdit.getParent() == null) {
-            searchEdit.setHint((selectMemList.size() == 0) ? getString(R.string.msg_key_search_member) : "");
             flowLayout.addView(searchEdit);
         }
     }

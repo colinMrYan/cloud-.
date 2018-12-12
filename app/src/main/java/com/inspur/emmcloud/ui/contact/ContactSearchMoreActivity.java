@@ -41,6 +41,7 @@ import com.inspur.emmcloud.ui.chat.ConversationActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.EditTextUtils;
 import com.inspur.emmcloud.util.common.InputMethodUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
@@ -165,10 +166,11 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
             searchEdit.setSingleLine(true);
             searchEdit.setHint(getString(R.string.msg_key_search_member));
             searchEdit.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+            searchEdit.requestFocus();
+            searchEdit.requestFocusFromTouch();
             searchEdit.setBackground(null);
             searchEdit.addTextChangedListener(myTextWatcher);
         }
-        searchEdit.setHint((selectMemList.size() == 0) ? getString(R.string.msg_key_search_member) : "");
         flowLayout.addView(searchEdit);
     }
 

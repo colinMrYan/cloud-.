@@ -26,7 +26,7 @@ public class NetHardConnectCheckActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.tv_show_system_hard_setting:
-                startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS));
+                startActivity(new Intent(Settings.ACTION_SETTINGS));
                 break;
         }
     }
