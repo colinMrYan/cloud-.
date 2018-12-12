@@ -10,6 +10,7 @@ import android.support.v4.app.NotificationCompat;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.privates.cache.AppExceptionCacheUtils;
 
 import org.json.JSONObject;
 
@@ -89,6 +90,7 @@ public class ECMShortcutBadgeNumberManagerUtils {
             try {
                 ShortcutBadger.applyCount(context,count);
             }catch (Exception e){
+                AppExceptionCacheUtils.saveAppException(context,Constant.APP_EXCEPTION_LEVEL,"Desktop badge count",e.getMessage(),-1);
                 e.printStackTrace();
             }
         }

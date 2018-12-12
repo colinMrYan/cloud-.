@@ -247,6 +247,9 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
         if(badgeBodyModel.isSNSExist()){
             int snsTabBarBadgeNum = badgeBodyModel.getSnsBadgeBodyModuleModel().getTotal();
             setTabBarBadge(Constant.APP_TAB_BAR_MOMENT_NAME,snsTabBarBadgeNum);
+        }else{
+            //如果没有动态的key就把动态清0
+            setTabBarBadge(Constant.APP_TAB_BAR_MOMENT_NAME,0);
         }
         if(badgeBodyModel.isAppStoreExist()){
             int appStoreTabBarBadgeNum = badgeBodyModel.getAppStoreBadgeBodyModuleModel().getTotal();
@@ -254,8 +257,10 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
                 Map<String,Integer> appStoreBadgeMap = badgeBodyModel.getAppStoreBadgeBodyModuleModel().getDetailBodyMap();
                 appStoreTabBarBadgeNum = getFilterAppStoreBadgeNum(appStoreBadgeMap);
             }
-            PreferencesByUserAndTanentUtils.putInt(MyApplication.getInstance(),Constant.PREF_BADGE_NUM_APPSTORE,appStoreTabBarBadgeNum);
             setTabBarBadge(Constant.APP_TAB_BAR_APPLICATION_NAME,appStoreTabBarBadgeNum);
+        }else{
+            //如果没有应用的key就把应用清0
+            setTabBarBadge(Constant.APP_TAB_BAR_APPLICATION_NAME,0);
         }
     }
 
