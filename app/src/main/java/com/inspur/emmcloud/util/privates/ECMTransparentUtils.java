@@ -2,7 +2,9 @@ package com.inspur.emmcloud.util.privates;
 
 import android.content.Context;
 
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.bean.chat.TransparentBean;
+import com.inspur.emmcloud.push.WebSocketPush;
 
 /**
  * Created by yufuchang on 2018/1/19.
@@ -21,6 +23,9 @@ public class ECMTransparentUtils {
             TransparentBean transparentBean = new TransparentBean(transparent);
             //透传改变桌面角标后不再发出Eventbus
 //            EventBus.getDefault().post(transparentBean);
+            if(!(WebSocketPush.getInstance().isSocketConnect() && MyApplication.getInstance().isV1xVersionChat())){
+                new AppBadgeUtils(context).getAppBadgeCountFromServer();
+            }
             ECMShortcutBadgeNumberManagerUtils.setDesktopBadgeNumber(context,transparentBean.getBadgeNumber());
         }
     }
