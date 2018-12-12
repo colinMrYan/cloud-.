@@ -22,9 +22,13 @@ import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.ui.mine.setting.GuideActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ResolutionUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.common.systool.permission.PermissionManagerUtils;
+import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
+import com.inspur.emmcloud.util.common.systool.permission.Permissions;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.LoginUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
@@ -32,7 +36,9 @@ import com.inspur.emmcloud.util.privates.SplashPageUtils;
 import com.inspur.emmcloud.util.privates.UpgradeUtils;
 import com.inspur.emmcloud.widget.dialogs.EasyDialog;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.yanzhenjie.permission.Permission;
 
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -72,7 +78,63 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
             this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
         }
         setContentView(R.layout.activity_main);
-        init();
+        getStoragePermission();
+    }
+
+    private void getStoragePermission() {
+        if(!PermissionManagerUtils.getInstance().isHasPermission(MyApplication.getInstance(), Permissions.STORAGE)){
+            LogUtils.YfcDebug("没有sd卡权限，开始申请");
+            PermissionManagerUtils.getInstance().requestGroupPermission(this, Permissions.STORAGE, new PermissionRequestCallback() {
+                @Override
+                public void onPermissionRequestSuccess(List<String> permissions) {
+                    LogUtils.YfcDebug("sd卡权限申请成功");
+                    getPhonePermissions();
+                }
+
+                @Override
+                public void onPermissionRequestFail(List<String> permissions) {
+                    LogUtils.YfcDebug("sd卡权限申请失败");
+                    MyApplication.getInstance().exit();
+                }
+
+                @Override
+                public void onPermissionRequestException(Exception e) {
+                    LogUtils.YfcDebug("sd卡权限申请出现异常："+e.getMessage());
+                    MyApplication.getInstance().exit();
+                }
+            });
+        }else {
+            getPhonePermissions();
+        }
+    }
+
+    private void getPhonePermissions() {
+        LogUtils.YfcDebug("获取电话权限");
+        String[] phonePermissionArray = {Permission.READ_PHONE_STATE};
+        if(!PermissionManagerUtils.getInstance().isHasPermission(this, Permission.READ_PHONE_STATE)){
+            LogUtils.YfcDebug("没有电话状态权限，开始申请");
+            PermissionManagerUtils.getInstance().requestGroupPermission(MyApplication.getInstance(), phonePermissionArray, new PermissionRequestCallback() {
+                @Override
+                public void onPermissionRequestSuccess(List<String> permissions) {
+                    LogUtils.YfcDebug("电话权限申请成功");
+                    init();
+                }
+
+                @Override
+                public void onPermissionRequestFail(List<String> permissions) {
+                    LogUtils.YfcDebug("电话权限申请失败");
+                    MyApplication.getInstance().exit();
+                }
+
+                @Override
+                public void onPermissionRequestException(Exception e) {
+                    LogUtils.YfcDebug("电话权限出现异常："+e.getMessage());
+                    MyApplication.getInstance().exit();
+                }
+            });
+        }else{
+            LogUtils.YfcDebug("已经拥有电话权限");
+        }
     }
 
 

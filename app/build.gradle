@@ -39,7 +39,7 @@ android {
     aaptOptions.useNewCruncher = false
     defaultConfig {
         applicationId "com.inspur.emmcloud"
-        minSdkVersion 21
+        minSdkVersion 16
         targetSdkVersion 27
         versionCode 65
         versionName "2.7.3"

@@ -1,15 +1,13 @@
 package com.inspur.emmcloud.util.common.systool.permission;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.text.TextUtils;
 import android.widget.Toast;
 
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.util.common.LogUtils;
-import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 import com.yanzhenjie.permission.Action;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
@@ -93,26 +91,51 @@ public class PermissionManagerUtils {
     private void showSettingDialog(final Context context, final List<String> permissions) {
         List<String> permissionNames = Permission.transformText(context, permissions);
         String message = context.getString(R.string.permission_message_always_failed, TextUtils.join("\n", permissionNames));
-        new MyQMUIDialog.MessageDialogBuilder(context)
-                .setTitle(R.string.permission_dialog_title)
-                .setMessage(message)
-                .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        LogUtils.YfcDebug("点击取消按钮");
-                        MyApplication.getInstance().exit();
-                        dialog.dismiss();
-                    }
-                })
-                .addAction(R.string.settings, new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        LogUtils.YfcDebug("点击确定按钮");
-                        dialog.dismiss();
-                        setPermission(context);
-                    }
-                })
-                .show();
+//        new MyQMUIDialog.MessageDialogBuilder(context)
+//                .setTitle(R.string.permission_dialog_title)
+//                .setMessage(message)
+//                .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
+//                    @Override
+//                    public void onClick(QMUIDialog dialog, int index) {
+//                        LogUtils.YfcDebug("点击取消按钮");
+//                        MyApplication.getInstance().exit();
+//                        dialog.dismiss();
+//                    }
+//                })
+//                .addAction(R.string.settings, new QMUIDialogAction.ActionListener() {
+//                    @Override
+//                    public void onClick(QMUIDialog dialog, int index) {
+//                        LogUtils.YfcDebug("点击确定按钮");
+//                        dialog.dismiss();
+//                        setPermission(context);
+//                    }
+//                })
+//                .show();
+
+        //    通过AlertDialog.Builder这个类来实例化我们的一个AlertDialog的对象
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        //    设置Title的图标
+        builder.setIcon(R.drawable.ic_launcher);
+        //    设置Title的内容
+        builder.setTitle("title");
+        //    设置Content来显示一个信息
+        builder.setMessage(message);
+        //    设置一个PositiveButton
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                setPermission(context);
+                Toast.makeText(context, "positive: " + which, Toast.LENGTH_SHORT).show();
+            }
+        });
+        //    设置一个NegativeButton
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(context, "negative: " + which, Toast.LENGTH_SHORT).show();
+            }
+        });
+        builder.show();
     }
 
     /**
@@ -125,6 +148,8 @@ public class PermissionManagerUtils {
                 .onComeback(new Setting.Action() {
                     @Override
                     public void onAction() {
+
+                        //判断申请权限是否成功
                         Toast.makeText(context, R.string.permission_message_setting_comeback, Toast.LENGTH_SHORT).show();
                     }
                 })

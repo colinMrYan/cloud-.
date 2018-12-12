@@ -57,7 +57,6 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
             }
             uploadMDMInfo(activity);
             new AppBadgeUtils(MyApplication.getInstance()).getAppBadgeCountFromServer();
-            getPhonePermissions();
             getStoragePermission();
         }
         count++;
@@ -70,6 +69,7 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
                 @Override
                 public void onPermissionRequestSuccess(List<String> permissions) {
                     LogUtils.YfcDebug("sd卡权限申请成功");
+                    getPhonePermissions();
                 }
 
                 @Override
@@ -84,13 +84,15 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
                     MyApplication.getInstance().exit();
                 }
             });
+        }else {
+            getPhonePermissions();
         }
     }
 
     private void getPhonePermissions() {
         LogUtils.YfcDebug("获取电话权限");
-        String[] phonePermissionArray = {Permissions.CALL_PHONE, Permission.READ_PHONE_STATE};
-        if(!PermissionManagerUtils.getInstance().isHasPermission(MyApplication.getInstance(), phonePermissionArray)){
+        String[] phonePermissionArray = {Permission.READ_PHONE_STATE};
+        if(!PermissionManagerUtils.getInstance().isHasPermission(MyApplication.getInstance(), Permission.READ_PHONE_STATE)){
             LogUtils.YfcDebug("没有电话状态权限，开始申请");
             PermissionManagerUtils.getInstance().requestGroupPermission(MyApplication.getInstance(), phonePermissionArray, new PermissionRequestCallback() {
                 @Override
