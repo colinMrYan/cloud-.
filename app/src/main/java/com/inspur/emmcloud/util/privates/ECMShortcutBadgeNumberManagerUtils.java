@@ -90,7 +90,7 @@ public class ECMShortcutBadgeNumberManagerUtils {
             try {
                 ShortcutBadger.applyCount(context,count);
             }catch (Exception e){
-                AppExceptionCacheUtils.saveAppException(context,2,"","DesktopBadge Count Error",500);
+                AppExceptionCacheUtils.saveAppException(context,Constant.APP_EXCEPTION_BADGE,"","DesktopBadge Count Error",500);
                 e.printStackTrace();
             }
         }
