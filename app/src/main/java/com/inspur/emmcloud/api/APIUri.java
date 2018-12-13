@@ -1570,7 +1570,13 @@ public class APIUri {
      * @return
      */
     public static String getBadgeCountUrl(){
-        return getECMChatUrl()+"/rest/v1/unread-count";
+        String badgeCountUrl = "";
+        if(MyApplication.getInstance().isV0VersionChat()){
+            badgeCountUrl = getECMChatUrl() +"/unread-count";
+        }else if(MyApplication.getInstance().isV1xVersionChat()){
+            badgeCountUrl = getECMChatUrl() + "/rest/v1/unread-count";
+        }
+        return badgeCountUrl;
     }
 
     /**

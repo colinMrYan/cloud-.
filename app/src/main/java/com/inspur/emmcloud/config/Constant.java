@@ -131,5 +131,7 @@ public class Constant {
 
     public static final String APP_WEB_URI = "uri";
 
+    public static final int APP_EXCEPTION_LEVEL = 4;
+
 
 }
