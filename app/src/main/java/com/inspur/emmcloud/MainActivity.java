@@ -133,6 +133,7 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
                 }
             });
         }else{
+            init();
             LogUtils.YfcDebug("已经拥有电话权限");
         }
     }
