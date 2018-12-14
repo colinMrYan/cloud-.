@@ -300,7 +300,7 @@ public class ConversationCacheUtils {
                     }
                 }
                 conversationList = DbCacheUtils.getDb(context).selector(Conversation.class)
-                        .where("name", "like", searchStr).findAll();
+                        .where("name", "like", searchStr).and("type","=",Conversation.TYPE_GROUP).findAll();
             } catch (Exception e) {
                 // TODO: handle exception
                 e.printStackTrace();
