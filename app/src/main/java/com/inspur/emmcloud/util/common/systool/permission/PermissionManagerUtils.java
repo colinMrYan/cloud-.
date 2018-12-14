@@ -2,7 +2,6 @@ package com.inspur.emmcloud.util.common.systool.permission;
 
 import android.content.Context;
 import android.text.TextUtils;
-import android.widget.Toast;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -110,6 +109,7 @@ public class PermissionManagerUtils {
                         LogUtils.YfcDebug("点击确定按钮");
                         dialog.dismiss();
                         setPermission(context);
+                        MyApplication.getInstance().exit();
                     }
                 })
                 .show();
@@ -150,9 +150,12 @@ public class PermissionManagerUtils {
                 .onComeback(new Setting.Action() {
                     @Override
                     public void onAction() {
-
                         //判断申请权限是否成功
-                        Toast.makeText(context, R.string.permission_message_setting_comeback, Toast.LENGTH_SHORT).show();
+                        if(!(PermissionManagerUtils.getInstance().isHasPermission(MyApplication.getInstance(), Permissions.STORAGE)
+                                &&PermissionManagerUtils.getInstance().isHasPermission(MyApplication.getInstance(), Permission.READ_PHONE_STATE))){
+                            MyApplication.getInstance().exit();
+                        }
+//                        Toast.makeText(context, R.string.permission_message_setting_comeback, Toast.LENGTH_SHORT).show();
                     }
                 })
                 .start();

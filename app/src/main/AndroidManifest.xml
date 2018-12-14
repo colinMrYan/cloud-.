@@ -1018,7 +1018,7 @@
             android:configChanges="orientation|screenSize"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
+            />
         <activity
             android:name="com.inspur.imp.plugin.camera.imagepicker.ui.ImagePreviewActivity"
             android:configChanges="orientation|screenSize"
