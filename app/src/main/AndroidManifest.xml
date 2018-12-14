@@ -351,7 +351,6 @@
 
         <activity
             android:name=".ui.SchemeHandleActivity"
-            android:theme="@android:style/Theme.Translucent"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:screenOrientation="portrait">
@@ -717,7 +716,6 @@
         <activity
             android:name=".ui.chat.ImagePagerActivity"
             android:resizeableActivity="true"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
 
