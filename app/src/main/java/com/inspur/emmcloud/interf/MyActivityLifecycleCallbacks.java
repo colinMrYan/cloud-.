@@ -40,6 +40,7 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
 
     @Override
     public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+        LogUtils.YfcDebug("Activity名称："+activity.getLocalClassName());
         MyApplication.getInstance().addActivity(activity);
     }
 
