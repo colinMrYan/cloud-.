@@ -18,11 +18,11 @@ import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.appcenter.news.GetNewsTitleResult;
 import com.inspur.emmcloud.bean.appcenter.news.NewsTitle;
 import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.PagerSlidingTabStrip;
+import com.qmuiteam.qmui.util.QMUIStatusBarHelper;
 
 import java.util.List;
 /**
@@ -38,7 +38,8 @@ public class GroupNewsActivity extends BaseFragmentActivity implements
     @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		StateBarUtils.changeStateBarColor(this);
+		//StateBarUtils.changeStateBarColor(this);
+		QMUIStatusBarHelper.translucent( this );
 		setContentView(R.layout.activity_group_news);
 		loadingDlg = new LoadingDialog(GroupNewsActivity.this);
 		getNewTitles();

@@ -7,8 +7,8 @@ import android.view.WindowManager;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.privates.cache.AppConfigCacheUtils;
+import com.qmuiteam.qmui.util.QMUIStatusBarHelper;
 
 
 public class ImpActivity extends ImpFragmentBaseActivity {
@@ -19,7 +19,8 @@ public class ImpActivity extends ImpFragmentBaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        StateBarUtils.changeStateBarColor(ImpActivity.this);
+       // StateBarUtils.changeStateBarColor(ImpActivity.this);
+        QMUIStatusBarHelper.translucent( this );
         boolean isWebAutoRotate = Boolean.parseBoolean(AppConfigCacheUtils.getAppConfigValue(this, Constant.CONCIG_WEB_AUTO_ROTATE, "false"));
         //设置是否开启webview自动旋转
         setRequestedOrientation(isWebAutoRotate ? ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED : ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);

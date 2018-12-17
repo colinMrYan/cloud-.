@@ -15,11 +15,11 @@ import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.bean.login.LoginDesktopCloudPlusBean;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.imp.plugin.barcode.decoder.PreviewDecodeActivity;
+import com.qmuiteam.qmui.util.QMUIStatusBarHelper;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -38,7 +38,8 @@ public class ScanQrCodeLoginActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        StateBarUtils.changeStateBarColor(this, R.color.scan_result_color);
+        //StateBarUtils.changeStateBarColor(this, R.color.scan_result_color);
+        QMUIStatusBarHelper.translucent( this );
 //        setStatusBarIconDark(true);
         setMiuiStatusBarDarkMode(this,true);
         setContentView(R.layout.activity_scan_qrcode_login_result);
