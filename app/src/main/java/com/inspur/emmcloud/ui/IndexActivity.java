@@ -33,6 +33,7 @@ import com.inspur.emmcloud.service.LocationService;
 import com.inspur.emmcloud.service.PVCollectService;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
+import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppConfigUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
@@ -135,7 +136,11 @@ public class IndexActivity extends IndexBaseActivity {
     @Override
     public void onTabChanged(String tabId) {
         super.onTabChanged( tabId );
-
+        if(tabId.equals("ecc-app-react-native://discover")) {
+            StateBarUtils.SetStateBarColor(this);
+        } else {
+            StateBarUtils.translucent(this);
+        }
     }
 
     /***
