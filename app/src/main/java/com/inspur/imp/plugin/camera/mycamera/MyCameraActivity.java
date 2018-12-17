@@ -33,12 +33,16 @@ import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.ImageUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.common.systool.permission.PermissionManagerUtils;
+import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
 import com.inspur.imp.api.ImpBaseActivity;
 import com.inspur.imp.plugin.camera.editimage.utils.BitmapUtils;
 import com.inspur.imp.plugin.camera.imageedit.IMGEditActivity;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.yanzhenjie.permission.Permission;
 
 import org.json.JSONObject;
 
@@ -189,19 +193,41 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
     }
 
     private void initCamera() {
-        if (checkPermission()) {
-            try {
-                mCamera = Camera.open(currentCameraFacing);//1:采集指纹的摄像头. 0:拍照的摄像头.
-                Camera.Parameters mParameters = mCamera.getParameters();
-                mCamera.setParameters(mParameters);
-                mCamera.setPreviewDisplay(mHolder);
-            } catch (Exception e) {
-                Toast.makeText(getApplicationContext(), R.string.open_camera_fail_by_perminssion, Toast.LENGTH_LONG).show();
-                finish();
-                e.printStackTrace();
-            }
+        if (PermissionManagerUtils.getInstance().isHasPermission(this, Permission.CAMERA)) {
+            openCamera();
         } else {
-            requestPermission();
+            PermissionManagerUtils.getInstance().requestSinglePermission(this, Permission.CAMERA, new PermissionRequestCallback() {
+                @Override
+                public void onPermissionRequestSuccess(List<String> permissions) {
+                    openCamera();
+                    setCameraParams();
+                }
+
+                @Override
+                public void onPermissionRequestFail(List<String> permissions) {
+                    finish();
+                }
+
+                @Override
+                public void onPermissionRequestException(Exception e) {
+                    finish();
+                }
+            });
+        }
+    }
+
+
+    private void openCamera() {
+        try {
+            mCamera = Camera.open(currentCameraFacing);//1:采集指纹的摄像头. 0:拍照的摄像头.
+            Camera.Parameters mParameters = mCamera.getParameters();
+            mCamera.setParameters(mParameters);
+            mCamera.setPreviewDisplay(mHolder);
+        } catch (Exception e) {
+            LogUtils.YfcDebug("出现异常："+e.getMessage());
+            Toast.makeText(getApplicationContext(), R.string.open_camera_fail_by_perminssion, Toast.LENGTH_LONG).show();
+            finish();
+            e.printStackTrace();
         }
     }
 

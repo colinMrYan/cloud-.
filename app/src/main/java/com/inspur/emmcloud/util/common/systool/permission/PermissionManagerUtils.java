@@ -3,6 +3,7 @@ package com.inspur.emmcloud.util.common.systool.permission;
 import android.content.Context;
 import android.text.TextUtils;
 
+import com.alibaba.fastjson.JSON;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.util.common.LogUtils;
@@ -92,6 +93,7 @@ public class PermissionManagerUtils {
     private void showSettingDialog(final Context context, final List<String> permissions) {
         List<String> permissionNames = Permission.transformText(context, permissions);
         String message = context.getString(R.string.permission_message_always_failed, TextUtils.join("\n", permissionNames));
+        LogUtils.YfcDebug("权限："+ JSON.toJSONString(permissions));
         new MyQMUIDialog.MessageDialogBuilder(context)
                 .setTitle(R.string.permission_dialog_title)
                 .setMessage(message)
