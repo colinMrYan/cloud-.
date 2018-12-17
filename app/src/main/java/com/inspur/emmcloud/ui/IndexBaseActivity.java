@@ -30,6 +30,7 @@ import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.bean.system.badge.BadgeBodyModel;
 import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.ui.appcenter.BatteryNoWarnDialog;
 import com.inspur.emmcloud.ui.appcenter.MyAppFragment;
 import com.inspur.emmcloud.ui.chat.CommunicationFragment;
 import com.inspur.emmcloud.ui.chat.CommunicationV0Fragment;
@@ -51,6 +52,8 @@ import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.widget.MyFragmentTabHost;
 import com.inspur.emmcloud.widget.tipsview.TipsView;
 import com.inspur.imp.api.ImpFragment;
+import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
+import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -78,6 +81,8 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
 
     private RelativeLayout newMessageTipsLayout;
 
+    private boolean  BatteryDialogIsShow =true;
+
     @ViewInject(R.id.tip)
     private TipsView tipsView;
     private boolean isCommunicationRunning = false;
@@ -92,6 +97,8 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
         x.view().inject(this);
         mTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
         initTabs();
+        batteryDialogToShow( );
+
     }
 
 
@@ -171,6 +178,47 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
             tabBeans = addDefaultTabs();
         }
         showTabs(tabBeans);
+    }
+
+    private void Test1(){
+
+        new QMUIDialog.CheckBoxMessageDialogBuilder(this).setTitle("退出后是否删除账号信息?")
+                .setMessage("删除账号信息")
+                .addAction("取消", new QMUIDialogAction.ActionListener() {
+                    @Override  public void onClick(QMUIDialog dialog, int index) {
+
+                        dialog.dismiss();}})
+                .addAction("退出", new QMUIDialogAction.ActionListener() {
+                    @Override public void onClick(QMUIDialog dialog, int index) {dialog.dismiss(); }})
+                .show();
+    }
+
+    private void batteryDialogToShow( ){
+        if(BatteryDialogIsShow){
+            final BatteryNoWarnDialog myDialog = new BatteryNoWarnDialog(this,"补发试卷","立即补发","下次再说",false);
+            myDialog.show();
+            myDialog.setClicklistener(new BatteryNoWarnDialog.ClickListenerInterface() {
+                @Override
+                public void doConfirm() {//点击确定的操作，
+                    myDialog.dismiss();
+                }
+
+                @Override
+                public void doCancel() {
+                    myDialog.dismiss();
+                }
+
+                @Override
+                public void setIsSelect(boolean isChecked) {
+                    if (isChecked){
+                        BatteryDialogIsShow = isChecked;
+                    }else {
+                        BatteryDialogIsShow = isChecked;
+                    }
+
+                }
+            });
+        }
     }
 
     /**
