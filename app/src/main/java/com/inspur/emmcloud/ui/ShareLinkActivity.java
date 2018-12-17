@@ -15,11 +15,11 @@ import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
-import com.qmuiteam.qmui.util.QMUIStatusBarHelper;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -36,7 +36,8 @@ public class ShareLinkActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
        // StateBarUtils.changeStateBarColor(this);
-        QMUIStatusBarHelper.translucent( this);
+        //QMUIStatusBarHelper.translucent( this);
+        StateBarUtils.translucent( this );
         shareLink = getIntent().getExtras().getString(Constant.SHARE_LINK);
         if(!StringUtils.isBlank(shareLink) ){
             shareLinkToFriends();

@@ -16,13 +16,13 @@ import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.ninelock.LockPatternUtil;
 import com.inspur.emmcloud.util.privates.ninelock.LockPatternView;
 import com.inspur.emmcloud.widget.CircleTextImageView;
-import com.qmuiteam.qmui.util.QMUIStatusBarHelper;
 import com.wei.android.lib.fingerprintidentify.FingerprintIdentify;
 import com.wei.android.lib.fingerprintidentify.base.BaseFingerprint;
 
@@ -57,7 +57,8 @@ public class GestureLoginActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //StateBarUtils.changeStateBarColor(this, R.color.grey_f6f6f6);
-        QMUIStatusBarHelper.translucent( this );
+        //QMUIStatusBarHelper.translucent( this );
+        StateBarUtils.translucent( this,R.color.grey_f6f6f6 ,false);
         x.view().inject(this);
         init();
 //        EventBus.getDefault().register(this);

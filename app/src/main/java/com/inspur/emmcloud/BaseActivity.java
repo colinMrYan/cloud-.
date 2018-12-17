@@ -5,8 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.privates.LanguageUtils;
-import com.qmuiteam.qmui.util.QMUIStatusBarHelper;
 
 import org.xutils.x;
 
@@ -22,7 +22,8 @@ public class BaseActivity extends Activity {
                 && !className.endsWith(".MainActivity") && !className.endsWith(".FaceVerifyActivity") && !className.endsWith(".ReactNativeAppActivity")  && !className.endsWith(".ScanQrCodeLoginGSActivity")
                 && !className.endsWith(".IMGEditActivity") && !className.endsWith(".ImageGalleryActivity")){
            // StateBarUtils.changeStateBarColor(this);
-            QMUIStatusBarHelper.translucent( this);
+           // QMUIStatusBarHelper.translucent( this);
+            StateBarUtils.translucent( this );
         }
        //禁止截屏
         //this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);

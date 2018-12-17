@@ -25,6 +25,7 @@ import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.MediaPlayerManagerUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.ResolutionUtils;
+import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.SuspensionWindowManagerUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
@@ -32,7 +33,6 @@ import com.inspur.emmcloud.util.privates.VoiceCommunicationUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.CircleTextImageView;
 import com.inspur.emmcloud.widget.ECMSpaceItemDecoration;
-import com.qmuiteam.qmui.util.QMUIStatusBarHelper;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -117,7 +117,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
        // StateBarUtils.changeStateBarColor(this,R.color.content_bg);
-        QMUIStatusBarHelper.translucent( this);
+         StateBarUtils.translucent( this,R.color.content_bg,false);
         voiceCommunicationUserInfoBeanList = (List<VoiceCommunicationJoinChannelInfoBean>) getIntent().getSerializableExtra("userList");
         voiceCommunicationUtils = VoiceCommunicationUtils.getVoiceCommunicationUtils(this);
         recoverData();

@@ -54,6 +54,7 @@ import com.inspur.emmcloud.util.common.HtmlRegexpUtil;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
+import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
@@ -68,7 +69,6 @@ import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.SwitchView;
 import com.inspur.imp.api.iLog;
 import com.inspur.imp.plugin.PluginMgr;
-import com.qmuiteam.qmui.util.QMUIStatusBarHelper;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -778,7 +778,8 @@ public class NewsWebDetailActivity extends BaseActivity {
      */
     private void setHeaderModel(String model) {
         //StateBarUtils.changeStateBarColor(NewsWebDetailActivity.this, model.equals(darkMode) ? R.color.app_news_night_color : R.color.header_bg);
-        QMUIStatusBarHelper.translucent( NewsWebDetailActivity.this);
+       // QMUIStatusBarHelper.translucent( NewsWebDetailActivity.this);
+        StateBarUtils.translucent(NewsWebDetailActivity.this, model.equals(darkMode) ? R.color.app_news_night_color : R.color.header_bg,false);
         (findViewById(R.id.header_layout)).setBackgroundColor(model.equals(darkMode) ? ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_news_night_color)
                 : ContextCompat.getColor(NewsWebDetailActivity.this, R.color.header_bg));
     }

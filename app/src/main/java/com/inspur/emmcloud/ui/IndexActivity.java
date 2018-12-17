@@ -132,6 +132,12 @@ public class IndexActivity extends IndexBaseActivity {
         startLocationService();
     }
 
+    @Override
+    public void onTabChanged(String tabId) {
+        super.onTabChanged( tabId );
+
+    }
+
     /***
      * 打开app应用行为分析上传的Service;
      */

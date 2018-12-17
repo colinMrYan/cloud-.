@@ -5,7 +5,7 @@ import android.view.View;
 
 import com.inspur.emmcloud.BaseFragmentActivity;
 import com.inspur.emmcloud.R;
-import com.qmuiteam.qmui.util.QMUIStatusBarHelper;
+import com.inspur.emmcloud.util.common.StateBarUtils;
 
 /**
  * 通讯录选择界面
@@ -19,7 +19,8 @@ public class ContactSearchActivity extends BaseFragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
        // StateBarUtils.changeStateBarColor(this);
-        QMUIStatusBarHelper.translucent( this );
+       // QMUIStatusBarHelper.translucent( this );
+        StateBarUtils.translucent( this );
         setContentView(R.layout.activity_contact_search_hold);
         //必需继承FragmentActivity,嵌套fragment只需要这行代码
         fragment = new ContactSearchFragment();
