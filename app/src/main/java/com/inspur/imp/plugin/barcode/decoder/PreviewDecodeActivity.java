@@ -119,7 +119,7 @@ public class PreviewDecodeActivity extends Activity implements FunDecodeHandler 
         //mDecode.setFlash("torch");
         mDecode.setZoomLevel(0.1);
         mDecodeView.startScan();
-        mDecodeView.setRange(rangeRect);
+        mDecodeView.setRange(new Rect(0,0,0,0));
         //Set Zoom Component visible/invisible. 1: visible, 0: invisible
         //mDecode.ZoomShow(0);
 
