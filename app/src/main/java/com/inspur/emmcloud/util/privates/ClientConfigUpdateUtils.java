@@ -110,6 +110,7 @@ public class ClientConfigUpdateUtils extends APIInterfaceInstance {
        PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), ClientConfigItem.CLIENT_CONFIG_CONTACT_USER.getValue(), "");
        PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), ClientConfigItem.CLIENT_CONFIG_CONTACT_ORG.getValue(), "");
        PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), ClientConfigItem.CLIENT_CONFIG_MY_APP.getValue(), "");
+        PreferencesByUserAndTanentUtils.putBoolean(MyApplication.getInstance(), Constant.BATTERY_WHITE_LIST_STATE, true);
     }
 
     public void clearDbDataConfigWithMyApp(){

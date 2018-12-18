@@ -44,7 +44,6 @@ import com.inspur.emmcloud.ui.mine.MoreFragment;
 import com.inspur.emmcloud.ui.notsupport.NotSupportFragment;
 import com.inspur.emmcloud.ui.work.TabBean;
 import com.inspur.emmcloud.ui.work.WorkFragment;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
@@ -58,8 +57,6 @@ import com.inspur.emmcloud.widget.MyFragmentTabHost;
 import com.inspur.emmcloud.widget.dialogs.BatteryWhiteListDialog;
 import com.inspur.emmcloud.widget.tipsview.TipsView;
 import com.inspur.imp.api.ImpFragment;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -186,63 +183,24 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
         showTabs( tabBeans );
     }
 
-    private void batteryWhiteListRemind(Context context){
+    private void batteryWhiteListRemind(final Context context){
+        BatteryDialogIsShow= PreferencesByUserAndTanentUtils.getBoolean( context, Constant.BATTERY_WHITE_LIST_STATE,true);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && BatteryDialogIsShow) {
             try{
                 PowerManager powerManager = (PowerManager) getSystemService( POWER_SERVICE );
                 boolean hasIgnored = powerManager.isIgnoringBatteryOptimizations(context.getPackageName());
                 if(!hasIgnored){
-                    batteryWhiteListShowDialog(context);
-                }
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private void batteryWhiteListShowDialog(final Context context) {
-        final QMUIDialog.CheckBoxMessageDialogBuilder builder = new QMUIDialog.CheckBoxMessageDialogBuilder( this )
-                .setTitle( "系统已对云+开启省电优化"+"'/r/n'"+"，可能导致消息延迟或丢失，请将云+加入到省电优化白名单（点击“去设置”，在弹出对话框中点击“允许”" )
-                .setMessage( "不再提醒" )
-                .setChecked( false);
-        builder.addAction( "取消", new QMUIDialogAction.ActionListener() {
-            @Override
-            public void onClick(QMUIDialog dialog, int index) {
-                if (builder.isChecked()) {
-                    BatteryDialogIsShow = false;
-                }
-                Intent intent = new Intent( Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS );
-                intent.setData( Uri.parse( "package:" + context.getPackageName() ) );
-                startActivity( intent );
-                dialog.dismiss();
-            }
-        } ).addAction( "退出", new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        if (builder.isChecked()) {
-                            BatteryDialogIsShow = false;
-                        }
-                        dialog.dismiss();
-                    }
-                } ).show();
-    }
-
-    public void BatteryRemind(final Context context) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && BatteryDialogIsShow) {
-            try {
-                PowerManager powerManager = (PowerManager) getSystemService( POWER_SERVICE );
-                boolean hasIgnored = powerManager.isIgnoringBatteryOptimizations( context.getPackageName() );
-                LogUtils.LbcDebug( "data12222222221" );
-                if (!hasIgnored) {
-                    LogUtils.LbcDebug( "data33333333333333333333333333333" );
-                    confirmDialog = new BatteryWhiteListDialog( context, "提示", "系统已对云+开启省电优化，可能导致消息延迟或丢失，请将云+加入到省电优化白名单（点击“去设置”，在弹出对话框中点击“允许”", "不再提醒" );
-                    LogUtils.LbcDebug("44444444444444444444444444444");
+                    int res1 =context.getResources().getIdentifier("battery_tip_content","string",context.getPackageName());
+                    int res2 =context.getResources().getIdentifier("battery_tip_ishide","string",context.getPackageName());
+                    int res3 =context.getResources().getIdentifier("battery_tip_toset","string",context.getPackageName());
+                    int res4 =context.getResources().getIdentifier("battery_tip_cancel","string",context.getPackageName());
+                    confirmDialog = new BatteryWhiteListDialog( context,res1,res2,res3,res4);
                     confirmDialog.setClicklistener( new BatteryWhiteListDialog.ClickListenerInterface() {
                         @Override
                         public void doConfirm() {
                             if (confirmDialog.getIsHide()) {
-                                BatteryDialogIsShow = false;
-                            }
+                                PreferencesByUserAndTanentUtils.putBoolean(context, Constant.BATTERY_WHITE_LIST_STATE, false);
+                                }
                             Intent intent = new Intent( Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS );
                             intent.setData( Uri.parse( "package:" + context.getPackageName() ) );
                             startActivity( intent );
@@ -252,22 +210,19 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
                         @Override
                         public void doCancel() {
                             if (confirmDialog.getIsHide()) {
-                                BatteryDialogIsShow = false;
+                                PreferencesByUserAndTanentUtils.putBoolean(context, Constant.BATTERY_WHITE_LIST_STATE, false);
                             }
                             // TODO Auto-generated method stub
                             confirmDialog.dismiss();
                         }
-                    } );
-                    LogUtils.LbcDebug( "5555555555555555555555555555555" );
+                    });
                     confirmDialog.show();
-                    LogUtils.LbcDebug( "data111111111" );
                 }
-            } catch (Exception e) {
+            }catch (Exception e){
                 e.printStackTrace();
             }
         }
     }
-
 
     /**
      * 根据定制展示App

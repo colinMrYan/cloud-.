@@ -22,12 +22,14 @@ import com.inspur.emmcloud.R;
 public class BatteryWhiteListDialog extends Dialog {
 
     private Context context;
-    private String title;
-    private String confirmButtonText;
-    private String cacelButtonText;
+    private int confirmButtonTextId;
+    private int cancelButtonTextId;
+    private int tipContentId;
+    private int tipHideHintId;
     private ClickListenerInterface clickListenerInterface;
-    private  CheckBox cbIsHide;
-    private boolean  isHide=false;
+    private CheckBox cbIsHide;
+    private boolean isHide = false;
+
     public interface ClickListenerInterface {
         public void doConfirm();
         public void doCancel();
@@ -37,56 +39,60 @@ public class BatteryWhiteListDialog extends Dialog {
         return isHide;
     }
 
-
-    public BatteryWhiteListDialog(Context context, String title, String confirmButtonText, String cacelButtonText) {
-        super(context);
+    /**
+     * @param context
+     * @param cacelButtonTextId
+     * @param confirmButtonTextId
+     * @param tipContentId
+     * @param tipHideHintId
+     */
+    public BatteryWhiteListDialog(Context context, int tipContentId, int tipHideHintId, int confirmButtonTextId, int cacelButtonTextId) {
+        super( context );
         this.context = context;
-        this.title = title;
-        this.confirmButtonText = confirmButtonText;
-        this.cacelButtonText = cacelButtonText;
+        this.tipContentId = tipContentId;
+        this.tipHideHintId = tipHideHintId;
+        this.confirmButtonTextId = confirmButtonTextId;
+        this.cancelButtonTextId = cacelButtonTextId;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
-        super.onCreate(savedInstanceState);
-
+        super.onCreate( savedInstanceState );
         init();
     }
 
     public void init() {
-        LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.dialog_battery_white_list, null);
-        setContentView(view);
+        LayoutInflater inflater = LayoutInflater.from( context );
+        View view = inflater.inflate( R.layout.dialog_battery_white_list, null );
+        setContentView( view );
 
-        TextView tvTitle = (TextView) view.findViewById(R.id.title);
-        TextView tvTip_Content = (TextView) view.findViewById(R.id.tv_tip_content);
-        TextView tvishideHit = (TextView) view.findViewById(R.id.tv_ishide_hint);
-        Button   btnCancel =(Button) view.findViewById(R.id.btn_cancel);
-        Button   btnToSet  = (Button) view.findViewById(R.id.btn_toset);
-          cbIsHide  = (CheckBox) view.findViewById( R.id.cb_ishide);
-          cbIsHide.setOnCheckedChangeListener( new CompoundButton.OnCheckedChangeListener() {
-              @Override
-              public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                  if(isChecked){
-                      isHide=true;
-                  }else {
-                      isHide=false;
-                  }
-              }
-          } );
+        TextView tvTip_Content = (TextView) view.findViewById( R.id.tv_tip_content );
+        Button btnCancel = (Button) view.findViewById( R.id.btn_cancel );
+        Button btnToSet = (Button) view.findViewById( R.id.btn_toset );
+        cbIsHide = (CheckBox) view.findViewById( R.id.cb_ishide );
+        cbIsHide.setOnCheckedChangeListener( new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    isHide = true;
+                } else {
+                    isHide = false;
+                }
+            }
+        } );
 
-        tvTitle.setText(title);
-        tvTip_Content.setText(confirmButtonText);
-        tvishideHit.setText(cacelButtonText);
-
-        btnCancel.setOnClickListener(new clickListener());
-        btnToSet.setOnClickListener(new clickListener());
+        tvTip_Content.setText( tipContentId );
+        cbIsHide.setText( tipHideHintId );
+        btnCancel.setText( cancelButtonTextId );
+        btnToSet.setText( confirmButtonTextId );
+        btnCancel.setOnClickListener( new clickListener() );
+        btnToSet.setOnClickListener( new clickListener() );
         Window dialogWindow = getWindow();
         WindowManager.LayoutParams lp = dialogWindow.getAttributes();
         DisplayMetrics d = context.getResources().getDisplayMetrics(); // 获取屏幕宽、高用
-        lp.width = (int) (d.widthPixels * 0.8); // 高度设置为屏幕的0.6
-        dialogWindow.setAttributes(lp);
+        lp.width = (int) (d.widthPixels * 0.9); // 高度设置为屏幕的0.6
+        dialogWindow.setAttributes( lp );
     }
 
     public void setClicklistener(ClickListenerInterface clickListenerInterface) {
@@ -107,7 +113,5 @@ public class BatteryWhiteListDialog extends Dialog {
                     break;
             }
         }
-    };
-
-
+    }
 }
