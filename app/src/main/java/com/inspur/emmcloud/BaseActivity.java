@@ -21,9 +21,7 @@ public class BaseActivity extends Activity {
         if ( !className.endsWith(".CaptureActivity") &&!className.endsWith(".MyCameraActivity") && !className.endsWith(".LoginActivity")
                 && !className.endsWith(".MainActivity") && !className.endsWith(".FaceVerifyActivity") && !className.endsWith(".ReactNativeAppActivity")  && !className.endsWith(".ScanQrCodeLoginGSActivity")
                 && !className.endsWith(".IMGEditActivity") && !className.endsWith(".ImageGalleryActivity")){
-           // StateBarUtils.changeStateBarColor(this);
-           // QMUIStatusBarHelper.translucent( this);
-            StateBarUtils.translucent( this );
+            StateBarUtils.changeStateBarColor(this);
         }
        //禁止截屏
         //this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);

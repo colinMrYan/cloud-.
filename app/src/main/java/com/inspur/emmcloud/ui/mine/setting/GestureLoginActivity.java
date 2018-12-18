@@ -56,7 +56,7 @@ public class GestureLoginActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        StateBarUtils.translucent( this,R.color.grey_f6f6f6 );
+        StateBarUtils.changeStateBarColor(this, R.color.grey_f6f6f6);
         x.view().inject(this);
         init();
 //        EventBus.getDefault().register(this);

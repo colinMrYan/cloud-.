@@ -38,8 +38,7 @@ public class CardPackageActivity extends BaseActivity  implements RxCardStackVie
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        StateBarUtils.translucent(this,R.color.content_bg);
-        StateBarUtils.setStateBarTextColor( this,true );
+        StateBarUtils.changeStateBarColor(this,R.color.content_bg);
         initViews();
         getCardPackageListFromNet();
     }
