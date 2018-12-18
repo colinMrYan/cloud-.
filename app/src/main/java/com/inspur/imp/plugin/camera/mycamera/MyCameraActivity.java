@@ -33,7 +33,6 @@ import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.ImageUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionManagerUtils;
@@ -189,12 +188,12 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
         }
         currentCameraFacing = hasBackFacingCamera() ? Camera.CameraInfo.CAMERA_FACING_BACK : Camera.CameraInfo.CAMERA_FACING_FRONT;
         initCamera();
-        setCameraParams();
     }
 
     private void initCamera() {
         if (PermissionManagerUtils.getInstance().isHasPermission(this, Permission.CAMERA)) {
             openCamera();
+            setCameraParams();
         } else {
             PermissionManagerUtils.getInstance().requestSinglePermission(this, Permission.CAMERA, new PermissionRequestCallback() {
                 @Override
@@ -224,7 +223,6 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
             mCamera.setParameters(mParameters);
             mCamera.setPreviewDisplay(mHolder);
         } catch (Exception e) {
-            LogUtils.YfcDebug("出现异常："+e.getMessage());
             Toast.makeText(getApplicationContext(), R.string.open_camera_fail_by_perminssion, Toast.LENGTH_LONG).show();
             finish();
             e.printStackTrace();
