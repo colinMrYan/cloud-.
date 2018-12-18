@@ -9,6 +9,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.util.common.LogUtils;
@@ -29,7 +30,7 @@ public class ImagePreviewActivity extends ImagePreviewBaseActivity implements
 	private boolean isOrigin; // 是否选中原图
 	private SuperCheckBox mCbCheck; // 是否选中当前图片的CheckBox
 	private Button editBtn; // 原图
-	private Button mBtnOk; // 确认图片的选择
+	private TextView OKText; // 确认图片的选择
 	private View bottomBar;
 
 	@Override
@@ -40,8 +41,8 @@ public class ImagePreviewActivity extends ImagePreviewBaseActivity implements
 				false);
 		imagePicker.addOnImageSelectedListener(this);
 
-		mBtnOk = (Button) topBar.findViewById(R.id.btn_ok);
-		mBtnOk.setVisibility(View.VISIBLE);
+		OKText = (TextView) topBar.findViewById(R.id.tv_ok);
+		OKText.setVisibility(View.VISIBLE);
 
 		bottomBar = findViewById(R.id.bottom_bar);
 		bottomBar.setVisibility(View.VISIBLE);
@@ -134,8 +135,8 @@ public class ImagePreviewActivity extends ImagePreviewBaseActivity implements
 	 */
 	@Override
 	public void onImageSelected(int position, ImageItem item, boolean isAdd) {
-		mBtnOk.setText(getString(R.string.send));
-		mBtnOk.setEnabled(isAdd);
+		OKText.setText(getString(R.string.send));
+		OKText.setEnabled(isAdd);
 	}
 
 	@Override
@@ -147,7 +148,7 @@ public class ImagePreviewActivity extends ImagePreviewBaseActivity implements
 	@Override
 	public void onClick(View v) {
 		int id = v.getId();
-		if (id == R.id.btn_ok) {
+		if (id == R.id.tv_ok) {
 			Intent intent = new Intent();
 			intent.putExtra(ImagePicker.EXTRA_RESULT_ITEMS,
 					imagePicker.getSelectedImages());

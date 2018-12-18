@@ -38,9 +38,9 @@ public class ImageCropActivity extends ImageBaseActivity implements View.OnClick
 
         //初始化View
         findViewById(R.id.btn_back).setOnClickListener(this);
-        Button btn_ok = (Button) findViewById(R.id.btn_ok);
-        btn_ok.setText(getString(R.string.complete));
-        btn_ok.setOnClickListener(this);
+        TextView OkText = (TextView) findViewById(R.id.tv_ok);
+        OkText.setText(getString(R.string.complete));
+        OkText.setOnClickListener(this);
         TextView tv_des = (TextView) findViewById(R.id.tv_des);
         tv_des.setText(getString(R.string.photo_crop));
         mCropImageView = (CropImageView) findViewById(R.id.cv_crop_image);
@@ -99,7 +99,7 @@ public class ImageCropActivity extends ImageBaseActivity implements View.OnClick
         if (id == R.id.btn_back) {
             setResult(RESULT_CANCELED);
             finish();
-        } else if (id == R.id.btn_ok) {
+        } else if (id == R.id.tv_ok) {
             mCropImageView.saveBitmapToFile(imagePicker.getCropCacheFolder(this), mOutputX, mOutputY, mIsSaveRectangle);
         }
     }
