@@ -32,7 +32,7 @@ public class BaseFragmentActivity extends FragmentActivity {
         String className = this.getClass().getCanonicalName();
         boolean isContain = Arrays.asList(classNames).contains(className);
         if (!isContain){
-            StateBarUtils.changeStateBarColor(this);
+            StateBarUtils.translucent(this);
         }
     }
 

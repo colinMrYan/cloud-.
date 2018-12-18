@@ -376,7 +376,7 @@
         <TextView
             android:id="@+id/start_chat_img"
             android:paddingTop="9dp"
-            android:paddingBottom="8dp"
+            android:paddingBottom="9dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:onClick="onClick"

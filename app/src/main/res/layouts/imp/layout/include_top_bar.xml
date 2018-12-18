@@ -40,7 +40,7 @@
         android:textStyle="normal"
         android:onClick="onClick"
         android:textColor="#ffffff"
-        android:textSize="@dimen/header_textsize"/>
+        android:textSize="17sp"/>
 
     <ImageView
         android:id="@+id/btn_del"

@@ -1034,7 +1034,7 @@
             android:configChanges="orientation|screenSize"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
+           ></activity>
 
         <!-- ImagePicker -->
 

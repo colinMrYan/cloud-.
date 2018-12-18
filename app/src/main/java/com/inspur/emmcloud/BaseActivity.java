@@ -40,8 +40,8 @@ public class BaseActivity extends Activity {
         x.view().inject(this);
         String className = this.getClass().getCanonicalName();
         boolean isContain = Arrays.asList(classNames).contains(className);
-        if (!isContain){
-            StateBarUtils.changeStateBarColor(this);
+        if (!isContain) {
+            StateBarUtils.translucent(this);
         }
     }
 

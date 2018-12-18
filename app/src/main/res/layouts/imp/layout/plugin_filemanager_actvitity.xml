@@ -52,8 +52,8 @@
             android:paddingLeft="12dp"
             android:paddingRight="12dp"
             android:text="@string/complete"
-            android:textColor="#3BF1F8"
-            android:textSize="@dimen/header_textsize" />
+            android:textColor="@color/white"
+            android:textSize="17sp" />
     </RelativeLayout>
     <RelativeLayout
         android:layout_below="@id/rl_header"
