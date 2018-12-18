@@ -19,7 +19,9 @@ public class ImpActivity extends ImpFragmentBaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        StateBarUtils.changeStateBarColor(ImpActivity.this);
+       // StateBarUtils.changeStateBarColor(ImpActivity.this);
+       // QMUIStatusBarHelper.translucent( this );
+        StateBarUtils.translucent( ImpActivity.this );
         boolean isWebAutoRotate = Boolean.parseBoolean(AppConfigCacheUtils.getAppConfigValue(this, Constant.CONCIG_WEB_AUTO_ROTATE, "false"));
         //设置是否开启webview自动旋转
         setRequestedOrientation(isWebAutoRotate ? ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED : ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);

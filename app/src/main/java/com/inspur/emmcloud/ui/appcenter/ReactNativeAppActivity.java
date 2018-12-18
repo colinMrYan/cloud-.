@@ -28,6 +28,7 @@ import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
+import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.common.ZipUtils;
@@ -67,6 +68,8 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
         init();
         checkSource();
         initReactNativeApp();
+        StateBarUtils.translucent( this ,R.color.white);
+        StateBarUtils.setStateBarTextColor( this,true );
     }
 
     /**

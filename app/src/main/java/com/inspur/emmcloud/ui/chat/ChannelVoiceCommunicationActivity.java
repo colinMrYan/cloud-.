@@ -116,7 +116,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        StateBarUtils.changeStateBarColor(this,R.color.content_bg);
+         StateBarUtils.translucent( this,R.color.content_bg);
         voiceCommunicationUserInfoBeanList = (List<VoiceCommunicationJoinChannelInfoBean>) getIntent().getSerializableExtra("userList");
         voiceCommunicationUtils = VoiceCommunicationUtils.getVoiceCommunicationUtils(this);
         recoverData();

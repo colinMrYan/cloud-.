@@ -87,7 +87,9 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        StateBarUtils.changeStateBarColor(this);
+        //StateBarUtils.changeStateBarColor(this);
+        //QMUIStatusBarHelper.translucent( this);
+        StateBarUtils.translucent( this );
         clearOldMainTabData();
         x.view().inject(this);
         mTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
