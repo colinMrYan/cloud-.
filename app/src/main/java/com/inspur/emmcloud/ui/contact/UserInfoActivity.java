@@ -24,6 +24,9 @@ import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.common.systool.permission.PermissionManagerUtils;
+import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
+import com.inspur.emmcloud.util.common.systool.permission.Permissions;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
@@ -35,6 +38,7 @@ import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @ContentView(R.layout.activity_user_info)
 public class UserInfoActivity extends BaseActivity {
@@ -167,16 +171,38 @@ public class UserInfoActivity extends BaseActivity {
 
 
     public void onClick(View v) {
-        String phoneNum = phoneNumText.getText().toString();
+        final String phoneNum = phoneNumText.getText().toString();
         String TelephoneNum = telText.getText().toString();
-
         switch (v.getId()) {
             case R.id.mail_img:
                 String mail = mailText.getText().toString();
                 AppUtils.sendMail(UserInfoActivity.this, mail, 1);
                 break;
             case R.id.phone_img:
-                AppUtils.call(UserInfoActivity.this, phoneNum, 1);
+//                LogUtils.YfcDebug("是否有电话权限："+PermissionManagerUtils.getInstance().isHasPermission(this,Permissions.PHONE));
+//                makeCallByPhoneNumber(phoneNum);
+
+                if(PermissionManagerUtils.getInstance().isHasPermission(this, Permissions.PHONE)){
+                    AppUtils.call(UserInfoActivity.this, phoneNum, 1);
+                }else{
+                    PermissionManagerUtils.getInstance().requestSinglePermission(this,Permissions.CALL_PHONE, new PermissionRequestCallback() {
+                        @Override
+                        public void onPermissionRequestSuccess(List<String> permissions) {
+                            AppUtils.call(UserInfoActivity.this, phoneNum, 1);
+                        }
+
+                        @Override
+                        public void onPermissionRequestFail(List<String> permissions) {
+                            ToastUtils.show(getApplicationContext(),"授权失败");
+                            finish();
+                        }
+
+                        @Override
+                        public void onPermissionRequestException(Exception e) {
+                            finish();
+                        }
+                    });
+                }
                 // 取消申请权限
                 // if (isMobileSet) {
                 // if (ContextCompat.checkSelfPermission(UserInfoActivity.this,
@@ -229,6 +255,34 @@ public class UserInfoActivity extends BaseActivity {
                 break;
             default:
                 break;
+        }
+    }
+
+    /**
+     * 打电话
+     * @param phoneNum
+     */
+    private void makeCallByPhoneNumber(final String phoneNum) {
+        if(PermissionManagerUtils.getInstance().isHasPermission(this, Permissions.PHONE)){
+            AppUtils.call(UserInfoActivity.this, phoneNum, 1);
+        }else{
+            PermissionManagerUtils.getInstance().requestGroupPermission(this,Permissions.PHONE, new PermissionRequestCallback() {
+                @Override
+                public void onPermissionRequestSuccess(List<String> permissions) {
+                    AppUtils.call(UserInfoActivity.this, phoneNum, 1);
+                }
+
+                @Override
+                public void onPermissionRequestFail(List<String> permissions) {
+                    ToastUtils.show(getApplicationContext(),"授权失败");
+                    finish();
+                }
+
+                @Override
+                public void onPermissionRequestException(Exception e) {
+                    finish();
+                }
+            });
         }
     }
 
