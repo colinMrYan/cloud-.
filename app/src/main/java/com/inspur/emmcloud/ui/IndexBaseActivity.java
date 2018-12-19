@@ -104,7 +104,6 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
         batteryWhiteListRemind(this);
     }
 
-
     /**
      * 清除旧版本的MainTab数据
      */
