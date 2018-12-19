@@ -13,6 +13,9 @@ import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.common.systool.permission.PermissionManagerUtils;
+import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
+import com.inspur.emmcloud.util.common.systool.permission.Permissions;
 import com.inspur.imp.plugin.ImpPlugin;
 import com.inspur.imp.plugin.amaplocation.ECMLoactionTransformUtils;
 
@@ -109,7 +112,30 @@ public class GpsService extends ImpPlugin implements
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        startLocation();
+        if(PermissionManagerUtils.getInstance().isHasPermission(getFragmentContext(), Permissions.LOCATION)){
+            LogUtils.YfcDebug("有位置权限");
+            startLocation();
+        }else{
+            PermissionManagerUtils.getInstance().requestGroupPermission(getFragmentContext(), Permissions.LOCATION, new PermissionRequestCallback() {
+                @Override
+                public void onPermissionRequestSuccess(List<String> permissions) {
+                    LogUtils.YfcDebug("申请位置权限成功");
+                    startLocation();
+                }
+
+                @Override
+                public void onPermissionRequestFail(List<String> permissions) {
+                    LogUtils.YfcDebug("申请位置权限失败");
+                    getActivity().finish();
+                }
+
+                @Override
+                public void onPermissionRequestException(Exception e) {
+                    LogUtils.YfcDebug("异常："+e.getMessage());
+                    getActivity().finish();
+                }
+            });
+        }
     }
 
     /**
