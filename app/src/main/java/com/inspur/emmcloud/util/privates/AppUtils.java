@@ -35,6 +35,7 @@ import com.inspur.emmcloud.bean.mine.Language;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.chat.DisplayMediaVoiceMsg;
 import com.inspur.emmcloud.ui.chat.MembersActivity;
+import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.common.EncryptUtils;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
@@ -42,6 +43,9 @@ import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ResolutionUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.common.systool.permission.PermissionManagerUtils;
+import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
+import com.inspur.emmcloud.util.common.systool.permission.Permissions;
 import com.inspur.imp.api.ImpActivity;
 import com.inspur.imp.api.Res;
 import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
@@ -672,11 +676,35 @@ public class AppUtils {
      * @param phoneNum
      * @param requestCode
      */
-    public static void call(Activity activity,String phoneNum,int requestCode){
-        MyApplication.getInstance().setEnterSystemUI(true);
-        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:"
-                + phoneNum));
-        activity.startActivityForResult(intent, requestCode);
+    public static void call(final Activity activity, final String phoneNum, final int requestCode){
+        if(PermissionManagerUtils.getInstance().isHasPermission(activity, Permissions.PHONE)){
+            MyApplication.getInstance().setEnterSystemUI(true);
+            Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:"
+                    + phoneNum));
+            activity.startActivityForResult(intent, requestCode);
+        }else{
+            PermissionManagerUtils.getInstance().requestSinglePermission(activity,Permissions.CALL_PHONE, new PermissionRequestCallback() {
+                @Override
+                public void onPermissionRequestSuccess(List<String> permissions) {
+                    MyApplication.getInstance().setEnterSystemUI(true);
+                    Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:"
+                            + phoneNum));
+                    activity.startActivityForResult(intent, requestCode);
+                }
+
+                @Override
+                public void onPermissionRequestFail(List<String> permissions) {
+                    ToastUtils.show(activity,"授权失败");
+                    activity.finish();
+                }
+
+                @Override
+                public void onPermissionRequestException(Exception e) {
+                    activity.finish();
+                }
+            });
+        }
+
     }
 
     /**
