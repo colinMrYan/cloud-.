@@ -28,35 +28,39 @@
              android:textSize="20sp"
              android:paddingLeft="10dp"
              style="@style/CustomCheckboxTheme"/>
-    <LinearLayout
+    <RelativeLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:gravity="right"
         android:layout_marginTop="10dp" >
-        <Button
-            android:id="@+id/btn_cancel"
-            android:layout_width="47dp"
-            android:layout_height="26dp"
-            android:background="@color/white"
-            android:gravity="right"
-            android:text="取消"
-            android:textSize="14sp"
-            android:layout_marginBottom="10dp"/>
 
-        <Button
-            android:id="@+id/btn_toset"
-            android:layout_width="52dp"
-            android:layout_height="match_parent"
+        <TextView
+            android:id="@+id/tv_toset"
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:layout_marginLeft="10dp"
             android:background="@color/white"
-            android:gravity="right"
             android:text="去设置"
+            android:textColor="#137de7"
+            android:paddingLeft="10dp"
             android:textSize="14sp" />
-    </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/tv_toset"
+            android:background="@color/white"
+            android:text="取消"
+            android:paddingRight="20dp"
+            android:paddingLeft="30dp"
+            android:textSize="14sp"
+            android:textColor="#137de7"
+            android:layout_marginBottom="10dp"/>
+    </RelativeLayout>
 
 
 </LinearLayout>

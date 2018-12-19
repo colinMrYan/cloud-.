@@ -231,7 +231,7 @@ public class MyInfoActivity extends BaseActivity {
             //这里手机号格式的正确性由服务端保证，客户端只关心是否为空
             (findViewById(R.id.rl_userphone_all)).setVisibility((0==userProfileInfoBean.getShowUserPhone())?View.GONE:View.VISIBLE);
             (findViewById(R.id.rl_usermail_all)).setVisibility(0==userProfileInfoBean.getShowUserMail()?View.GONE:View.VISIBLE);
-            (findViewById(R.id.rl_usertelephone_all)).setVisibility((!StringUtils.isBlank(userProfileInfoBean.getTelePhone()))?View.VISIBLE:View.VISIBLE);
+            (findViewById(R.id.rl_usertelephone_all)).setVisibility((!StringUtils.isBlank(userProfileInfoBean.getTelePhone()))?View.VISIBLE:View.GONE);
             telPhoneText.setText(userProfileInfoBean.getTelePhone());
             (findViewById(R.id.rl_worknum_all)).setVisibility((!StringUtils.isBlank(userProfileInfoBean.getEmpNum()))?View.VISIBLE:View.GONE);
             empNumText.setText(userProfileInfoBean.getEmpNum());

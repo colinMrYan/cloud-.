@@ -892,6 +892,12 @@
     <string name="net_ping_url_ali">Alibaba</string>
     <string name="net_ping_url_cloud">Cloud+</string>
 
+    <!--电源白名单-->
+    <string name="battery_tip_content">System has applied battery optimizations to Cloud+,which may cause messages be delayed or missed,please add Cloud+ to battery optimizations whitelist.(Click Set,then in the dialog pops,click Allow)</string>
+    <string name="battery_tip_ishide">Don\'t ask again</string>
+    <string name="battery_tip_cancel">CANCEL</string>
+    <string name="battery_tip_toset">SET</string>
+
     <!-- ListView自定义控件部分 -->
     <string name="xlistview_header_last_time">Last Update Time:</string>
     <string name="release_to_refresh">Release to Refresh</string>

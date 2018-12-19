@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
@@ -68,8 +67,8 @@ public class BatteryWhiteListDialog extends Dialog {
         setContentView( view );
 
         TextView tvTip_Content = (TextView) view.findViewById( R.id.tv_tip_content );
-        Button btnCancel = (Button) view.findViewById( R.id.btn_cancel );
-        Button btnToSet = (Button) view.findViewById( R.id.btn_toset );
+        TextView tvCancel = (TextView) view.findViewById( R.id.tv_cancel );
+        TextView tvToSet = (TextView) view.findViewById( R.id.tv_toset );
         cbIsHide = (CheckBox) view.findViewById( R.id.cb_ishide );
         cbIsHide.setOnCheckedChangeListener( new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -84,10 +83,10 @@ public class BatteryWhiteListDialog extends Dialog {
 
         tvTip_Content.setText( tipContentId );
         cbIsHide.setText( tipHideHintId );
-        btnCancel.setText( cancelButtonTextId );
-        btnToSet.setText( confirmButtonTextId );
-        btnCancel.setOnClickListener( new clickListener() );
-        btnToSet.setOnClickListener( new clickListener() );
+        tvCancel.setText( cancelButtonTextId );
+        tvToSet.setText( confirmButtonTextId );
+        tvCancel.setOnClickListener( new clickListener() );
+        tvToSet.setOnClickListener( new clickListener() );
         Window dialogWindow = getWindow();
         WindowManager.LayoutParams lp = dialogWindow.getAttributes();
         DisplayMetrics d = context.getResources().getDisplayMetrics(); // 获取屏幕宽、高用
@@ -105,10 +104,10 @@ public class BatteryWhiteListDialog extends Dialog {
             // TODO Auto-generated method stub
             int id = v.getId();
             switch (id) {
-                case R.id.btn_toset:
+                case R.id.tv_toset:
                     clickListenerInterface.doConfirm();
                     break;
-                case R.id.btn_cancel:
+                case R.id.tv_cancel:
                     clickListenerInterface.doCancel();
                     break;
             }
