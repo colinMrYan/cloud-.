@@ -35,9 +35,7 @@ public class ShareLinkActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-       // StateBarUtils.changeStateBarColor(this);
-        //QMUIStatusBarHelper.translucent( this);
-        StateBarUtils.translucent( this );
+        StateBarUtils.changeStateBarColor(this);
         shareLink = getIntent().getExtras().getString(Constant.SHARE_LINK);
         if(!StringUtils.isBlank(shareLink) ){
             shareLinkToFriends();

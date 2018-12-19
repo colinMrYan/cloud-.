@@ -777,7 +777,7 @@ public class NewsWebDetailActivity extends BaseActivity {
      * 改变原生导航栏
      */
     private void setHeaderModel(String model) {
-        StateBarUtils.translucent(NewsWebDetailActivity.this, model.equals(darkMode) ? R.color.app_news_night_color : R.color.header_bg);
+        StateBarUtils.changeStateBarColor(NewsWebDetailActivity.this, model.equals(darkMode) ? R.color.app_news_night_color : R.color.header_bg);
         (findViewById(R.id.header_layout)).setBackgroundColor(model.equals(darkMode) ? ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_news_night_color)
                 : ContextCompat.getColor(NewsWebDetailActivity.this, R.color.header_bg));
     }

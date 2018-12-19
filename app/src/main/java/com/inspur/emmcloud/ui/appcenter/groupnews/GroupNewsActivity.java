@@ -38,9 +38,7 @@ public class GroupNewsActivity extends BaseFragmentActivity implements
     @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		//StateBarUtils.changeStateBarColor(this);
-		//QMUIStatusBarHelper.translucent( this );
-		StateBarUtils.translucent( this );
+		StateBarUtils.changeStateBarColor(this);
 		setContentView(R.layout.activity_group_news);
 		loadingDlg = new LoadingDialog(GroupNewsActivity.this);
 		getNewTitles();
