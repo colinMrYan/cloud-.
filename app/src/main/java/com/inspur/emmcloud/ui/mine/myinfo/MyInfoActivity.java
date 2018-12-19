@@ -216,38 +216,18 @@ public class MyInfoActivity extends BaseActivity {
                 userProfileInfoBean = new UserProfileInfoBean(response);
             }
         }
+
         if (userProfileInfoBean != null) {
-
-            if (userProfileInfoBean.getShowEpInfo() == 0) {
-                (findViewById(R.id.myinfo_usercompany_layout)).setVisibility(View.GONE);
-            }
-            if (userProfileInfoBean.getShowModifyPsd() == 1) {
-                (findViewById(R.id.myinfo_modifypsd_layout)).setVisibility(View.VISIBLE);
-            }
-            if (userProfileInfoBean.getShowResetPsd() == 1) {
-                resetLayout.setVisibility(View.VISIBLE);
-            }
+                (findViewById(R.id.myinfo_usercompany_layout)).setVisibility((userProfileInfoBean.getShowEpInfo() == 0)?View.GONE:View.VISIBLE);
+                (findViewById(R.id.myinfo_modifypsd_layout)).setVisibility((userProfileInfoBean.getShowModifyPsd() == 1)?View.VISIBLE:View.GONE);
+                resetLayout.setVisibility((userProfileInfoBean.getShowResetPsd() == 1)?View.VISIBLE:View.GONE);
             //这里手机号格式的正确性由服务端保证，客户端只关心是否为空
-            if (0==userProfileInfoBean.getShowUserPhone()) {
-                (findViewById(R.id.myinfo_userphone_layout)).setVisibility(View.GONE);
-                (findViewById(R.id.v_userphone_topliner)).setVisibility(View.GONE);
-            }
-
-            if (0==userProfileInfoBean.getShowUserMail()) {
-                (findViewById(R.id.myinfo_usermail_layout)).setVisibility(View.GONE);
-                (findViewById(R.id.v_usermail_topliner)).setVisibility(View.GONE);
-            }
-
-            if(!StringUtils.isBlank(userProfileInfoBean.getTelePhone())) {
-                (findViewById(R.id.rl_myinfo_telphone)).setVisibility(View.VISIBLE);
-                telPhoneText.setText(userProfileInfoBean.getTelePhone());
-            }
-
-            if(!StringUtils.isBlank(userProfileInfoBean.getEmpNum())) {
-                (findViewById(R.id.rl_myinfo_worknum_main)).setVisibility(View.VISIBLE);
-                empNumText.setText(userProfileInfoBean.getEmpNum());
-            }
-
+            (findViewById(R.id.rl_userphone_all)).setVisibility((0==userProfileInfoBean.getShowUserPhone())?View.GONE:View.VISIBLE);
+            (findViewById(R.id.rl_usermail_all)).setVisibility(0==userProfileInfoBean.getShowUserMail()?View.GONE:View.VISIBLE);
+            (findViewById(R.id.rl_usertelephone_all)).setVisibility((!StringUtils.isBlank(userProfileInfoBean.getTelePhone()))?View.VISIBLE:View.VISIBLE);
+            telPhoneText.setText(userProfileInfoBean.getTelePhone());
+            (findViewById(R.id.rl_worknum_all)).setVisibility((!StringUtils.isBlank(userProfileInfoBean.getEmpNum()))?View.VISIBLE:View.GONE);
+            empNumText.setText(userProfileInfoBean.getEmpNum());
         }
     }
 

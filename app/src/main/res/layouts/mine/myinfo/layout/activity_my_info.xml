@@ -113,309 +113,339 @@
                 </LinearLayout>
             </RelativeLayout>
 
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="0.5px"
-                android:layout_marginLeft="10dp"
-                android:background="@color/color_list_divider" />
 
             <RelativeLayout
-                android:id="@+id/myinfo_username_layout"
+                android:id="@+id/rl_name_all"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/text_layout_selector"
-                android:paddingBottom="10dp"
-                android:paddingLeft="10dp"
-                android:paddingTop="10dp">
-
-                <TextView
-                    android:id="@+id/myinfo_usernametext_text"
-                    android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <View
+                    android:id="@+id/v_head_line"
+                    android:layout_width="fill_parent"
+                    android:layout_height="0.5px"
+                    android:layout_marginLeft="10dp"
+                    android:background="@color/color_list_divider" />
+                <RelativeLayout
+                    android:id="@+id/myinfo_username_layout"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_centerVertical="true"
-                    android:text="@string/user_info_name"
-                    android:textSize="16sp" />
-
-                <LinearLayout
-                    android:id="@+id/myinfo_usernamelayout_layout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingRight="15dp">
+                    android:background="@drawable/text_layout_selector"
+                    android:layout_below="@id/v_head_line"
+                    android:paddingBottom="10dp"
+                    android:paddingLeft="10dp"
+                    android:paddingTop="10dp">
 
                     <TextView
-                        android:id="@+id/myinfo_username_text"
+                        android:id="@+id/myinfo_usernametext_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingRight="10dp"
-                        android:textColor="@color/onekey_content_text"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
+                        android:text="@string/user_info_name"
                         android:textSize="16sp" />
 
-                    <ImageView
-                        android:id="@+id/myinfo_usernamearrow_img"
-                        style="@style/arrow_right"
-                        android:src="@drawable/icon_arrow_right"
-                        android:visibility="gone" />
-                </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/myinfo_usernamelayout_layout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingRight="15dp">
+
+                        <TextView
+                            android:id="@+id/myinfo_username_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingRight="10dp"
+                            android:textColor="@color/onekey_content_text"
+                            android:textSize="16sp" />
+
+                        <ImageView
+                            android:id="@+id/myinfo_usernamearrow_img"
+                            style="@style/arrow_right"
+                            android:src="@drawable/icon_arrow_right"
+                            android:visibility="gone" />
+                    </LinearLayout>
+                </RelativeLayout>
             </RelativeLayout>
 
-            <View
-                android:id="@+id/v_workernum_top_Liner"
-                android:layout_width="fill_parent"
-                android:layout_height="0.5px"
-                android:layout_marginLeft="10dp"
-                android:background="@color/color_list_divider"
-                android:visibility="gone" />
 
             <RelativeLayout
-                android:id="@+id/rl_myinfo_worknum_main"
+                android:id="@+id/rl_worknum_all"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/text_layout_selector"
-                android:paddingBottom="10dp"
-                android:paddingLeft="12dp"
-                android:paddingTop="10dp"
                 android:visibility="gone">
-
-                <TextView
-                    android:id="@+id/tv_myinfo_worknum_text"
-                    android:layout_width="wrap_content"
+                <View
+                    android:id="@+id/v_workernum_top_Liner"
+                    android:layout_width="fill_parent"
+                    android:layout_height="0.5px"
+                    android:layout_marginLeft="10dp"
+                    android:background="@color/color_list_divider"/>
+                <RelativeLayout
+                    android:id="@+id/rl_myinfo_worknum_main"
+                    android:layout_below="@id/v_workernum_top_Liner"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_centerVertical="true"
-                    android:text="@string/user_worker_num"
-                    android:textSize="16sp" />
-
-                <LinearLayout
-                    android:id="@+id/ll_myinfo_worknum_sub"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingRight="15dp">
+                    android:background="@drawable/text_layout_selector"
+                    android:paddingBottom="10dp"
+                    android:paddingLeft="12dp"
+                    android:paddingTop="10dp">
 
                     <TextView
-                        android:id="@+id/tv_myinfo_worknum_rewrite"
+                        android:id="@+id/tv_myinfo_worknum_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingRight="10dp"
-                        android:textColor="@color/onekey_content_text"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
+                        android:text="@string/user_worker_num"
                         android:textSize="16sp" />
 
-                    <ImageView
-                        android:id="@+id/iv_myinfo_worknumarrow"
-                        style="@style/arrow_right"
-                        android:src="@drawable/icon_arrow_right"
-                        android:visibility="gone" />
-                </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/ll_myinfo_worknum_sub"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingRight="15dp">
+
+                        <TextView
+                            android:id="@+id/tv_myinfo_worknum_rewrite"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingRight="10dp"
+                            android:textColor="@color/onekey_content_text"
+                            android:textSize="16sp" />
+
+                        <ImageView
+                            android:id="@+id/iv_myinfo_worknumarrow"
+                            style="@style/arrow_right"
+                            android:src="@drawable/icon_arrow_right"
+                            android:visibility="gone" />
+                    </LinearLayout>
+                </RelativeLayout>
             </RelativeLayout>
 
-            <View
-                android:id="@+id/v_userdepart_topliner"
-                android:layout_width="fill_parent"
-                android:layout_height="0.5px"
-                android:layout_marginLeft="10dp"
-                android:background="@color/color_list_divider"
-                android:visibility="gone" />
+            <RelativeLayout
+                 android:id="@+id/rl_depart_all"
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:visibility="gone">
+                 <View
+                     android:id="@+id/v_userdepart_topliner"
+                     android:layout_width="fill_parent"
+                     android:layout_height="0.5px"
+                     android:layout_marginLeft="10dp"
+                     android:background="@color/color_list_divider"/>
+                 <RelativeLayout
+                     android:id="@+id/myinfo_userdepart_layout"
+                     android:layout_width="match_parent"
+                     android:layout_height="wrap_content"
+                     android:background="@drawable/text_layout_selector"
+                     android:layout_below="@id/v_userdepart_topliner"
+                     android:paddingBottom="10dp"
+                     android:paddingLeft="12dp"
+                     android:paddingTop="10dp">
+
+                     <TextView
+                         android:id="@+id/myinfo_userdeparttext_text"
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+                         android:layout_alignParentLeft="true"
+                         android:layout_centerVertical="true"
+                         android:text="@string/user_depart"
+                         android:textSize="16sp" />
+
+                     <LinearLayout
+                         android:id="@+id/myinfo_userdepartlayout_layout"
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+                         android:layout_alignParentRight="true"
+                         android:gravity="center_vertical"
+                         android:orientation="horizontal"
+                         android:paddingRight="15dp">
+
+                         <TextView
+                             android:id="@+id/myinfo_userdepart_text"
+                             android:layout_width="wrap_content"
+                             android:layout_height="wrap_content"
+                             android:paddingRight="10dp"
+                             android:textColor="@color/onekey_content_text"
+                             android:textSize="16sp" />
+
+                         <ImageView
+                             android:id="@+id/myinfo_userdepartarrow_img"
+                             style="@style/arrow_right"
+                             android:src="@drawable/icon_arrow_right"
+                             android:visibility="gone" />
+                     </LinearLayout>
+                 </RelativeLayout>
+             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/myinfo_userdepart_layout"
+                android:id="@+id/rl_usermail_all"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <View
+                    android:id="@+id/v_usermail_topliner"
+                    android:layout_width="fill_parent"
+                    android:layout_height="0.5px"
+                    android:layout_marginLeft="10dp"
+                    android:background="@color/color_list_divider" />
+                <RelativeLayout
+                    android:id="@+id/myinfo_usermail_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/text_layout_selector"
+                    android:layout_below="@id/v_usermail_topliner"
+                    android:paddingBottom="10dp"
+                    android:paddingLeft="12dp"
+                    android:paddingTop="10dp">
+
+                    <TextView
+                        android:id="@+id/myinfo_usermailtext_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
+                        android:text="@string/mail"
+                        android:textSize="16sp" />
+
+                    <LinearLayout
+                        android:id="@+id/myinfo_usermaillayout_layout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingRight="15dp">
+
+                        <TextView
+                            android:id="@+id/myinfo_usermail_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingRight="10dp"
+                            android:textColor="@color/onekey_content_text"
+                            android:textSize="16sp" />
+
+                        <ImageView
+                            android:id="@+id/myinfo_usermailarrow_img"
+                            style="@style/arrow_right"
+                            android:src="@drawable/icon_arrow_right"
+                            android:visibility="gone" />
+                    </LinearLayout>
+                </RelativeLayout>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_userphone_all"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <View
+                    android:id="@+id/v_userphone_topliner"
+                    android:layout_width="fill_parent"
+                    android:layout_height="0.5px"
+                    android:layout_marginLeft="10dp"
+                    android:background="@color/color_list_divider" />
+                <RelativeLayout
+                    android:id="@+id/myinfo_userphone_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/text_layout_selector"
+                    android:layout_below="@id/v_userphone_topliner"
+                    android:paddingBottom="10dp"
+                    android:paddingLeft="12dp"
+                    android:paddingTop="10dp">
+
+                    <TextView
+                        android:id="@+id/myinfo_userphonetext_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
+                        android:text="@string/user_info_phone_number"
+                        android:textSize="16sp" />
+
+                    <LinearLayout
+                        android:id="@+id/myinfo_userphonelayout_layout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingRight="15dp">
+
+                        <TextView
+                            android:id="@+id/myinfo_userphone_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingRight="10dp"
+                            android:textColor="@color/onekey_content_text"
+                            android:textSize="16sp" />
+
+                        <ImageView
+                            android:id="@+id/myinfo_userphonearrow_img"
+                            style="@style/arrow_right"
+                            android:src="@drawable/icon_arrow_right"
+                            android:visibility="gone" />
+                    </LinearLayout>
+                </RelativeLayout>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_usertelephone_all"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/text_layout_selector"
-                android:paddingBottom="10dp"
-                android:paddingLeft="12dp"
-                android:paddingTop="10dp"
                 android:visibility="gone">
-
-                <TextView
-                    android:id="@+id/myinfo_userdeparttext_text"
-                    android:layout_width="wrap_content"
+                <View
+                    android:id="@+id/v_telphone_topliner"
+                    android:layout_width="fill_parent"
+                    android:layout_height="0.5px"
+                    android:layout_marginLeft="10dp"
+                    android:background="@color/color_list_divider" />
+                <RelativeLayout
+                    android:id="@+id/rl_myinfo_telphone"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_centerVertical="true"
-                    android:text="@string/user_depart"
-                    android:textSize="16sp" />
-
-                <LinearLayout
-                    android:id="@+id/myinfo_userdepartlayout_layout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingRight="15dp">
+                    android:layout_below="@id/v_telphone_topliner"
+                    android:background="@drawable/text_layout_selector"
+                    android:paddingBottom="10dp"
+                    android:paddingLeft="12dp"
+                    android:paddingTop="10dp">
 
                     <TextView
-                        android:id="@+id/myinfo_userdepart_text"
+                        android:id="@+id/tv_myinfo_telphone_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingRight="10dp"
-                        android:textColor="@color/onekey_content_text"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
+                        android:text="@string/user_telephone"
                         android:textSize="16sp" />
 
-                    <ImageView
-                        android:id="@+id/myinfo_userdepartarrow_img"
-                        style="@style/arrow_right"
-                        android:src="@drawable/icon_arrow_right"
-                        android:visibility="gone" />
-                </LinearLayout>
-            </RelativeLayout>
-
-            <View
-                android:id="@+id/v_usermail_topliner"
-                android:layout_width="fill_parent"
-                android:layout_height="0.5px"
-                android:layout_marginLeft="10dp"
-                android:background="@color/color_list_divider" />
-
-            <RelativeLayout
-                android:id="@+id/myinfo_usermail_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/text_layout_selector"
-                android:paddingBottom="10dp"
-                android:paddingLeft="12dp"
-                android:paddingTop="10dp">
-
-                <TextView
-                    android:id="@+id/myinfo_usermailtext_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_centerVertical="true"
-                    android:text="@string/mail"
-                    android:textSize="16sp" />
-
-                <LinearLayout
-                    android:id="@+id/myinfo_usermaillayout_layout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingRight="15dp">
-
-                    <TextView
-                        android:id="@+id/myinfo_usermail_text"
+                    <LinearLayout
+                        android:id="@+id/ll_myinfo_telphone_sub"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingRight="10dp"
-                        android:textColor="@color/onekey_content_text"
-                        android:textSize="16sp" />
+                        android:layout_alignParentRight="true"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingRight="15dp">
 
-                    <ImageView
-                        android:id="@+id/myinfo_usermailarrow_img"
-                        style="@style/arrow_right"
-                        android:src="@drawable/icon_arrow_right"
-                        android:visibility="gone" />
-                </LinearLayout>
-            </RelativeLayout>
+                        <TextView
+                            android:id="@+id/tv_myinfo_telphone_rewrite"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingRight="10dp"
+                            android:textColor="@color/onekey_content_text"
+                            android:textSize="16sp" />
 
-            <View
-                android:id="@+id/v_telphone_topliner"
-                android:layout_width="fill_parent"
-                android:layout_height="0.5px"
-                android:layout_marginLeft="10dp"
-                android:background="@color/color_list_divider"
-                android:visibility="gone" />
-
-            <RelativeLayout
-                android:id="@+id/rl_myinfo_telphone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/text_layout_selector"
-                android:paddingBottom="10dp"
-                android:paddingLeft="12dp"
-                android:paddingTop="10dp"
-                android:visibility="gone">
-
-                <TextView
-                    android:id="@+id/tv_myinfo_telphone_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_centerVertical="true"
-                    android:text="@string/user_telephone"
-                    android:textSize="16sp" />
-
-                <LinearLayout
-                    android:id="@+id/ll_myinfo_telphone_sub"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingRight="15dp">
-
-                    <TextView
-                        android:id="@+id/tv_myinfo_telphone_rewrite"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingRight="10dp"
-                        android:textColor="@color/onekey_content_text"
-                        android:textSize="16sp" />
-
-                    <ImageView
-                        android:id="@+id/iv_myinfo_telphonearrow"
-                        style="@style/arrow_right"
-                        android:src="@drawable/icon_arrow_right"
-                        android:visibility="gone" />
-                </LinearLayout>
-            </RelativeLayout>
-
-            <View
-                android:id="@+id/v_userphone_topliner"
-                android:layout_width="fill_parent"
-                android:layout_height="0.5px"
-                android:layout_marginLeft="10dp"
-                android:background="@color/color_list_divider" />
-
-            <RelativeLayout
-                android:id="@+id/myinfo_userphone_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/text_layout_selector"
-                android:paddingBottom="10dp"
-                android:paddingLeft="12dp"
-                android:paddingTop="10dp">
-
-                <TextView
-                    android:id="@+id/myinfo_userphonetext_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_centerVertical="true"
-                    android:text="@string/user_info_phone_number"
-                    android:textSize="16sp" />
-
-                <LinearLayout
-                    android:id="@+id/myinfo_userphonelayout_layout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingRight="15dp">
-
-                    <TextView
-                        android:id="@+id/myinfo_userphone_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingRight="10dp"
-                        android:textColor="@color/onekey_content_text"
-                        android:textSize="16sp" />
-
-                    <ImageView
-                        android:id="@+id/myinfo_userphonearrow_img"
-                        style="@style/arrow_right"
-                        android:src="@drawable/icon_arrow_right"
-                        android:visibility="gone" />
-                </LinearLayout>
+                        <ImageView
+                            android:id="@+id/iv_myinfo_telphonearrow"
+                            style="@style/arrow_right"
+                            android:src="@drawable/icon_arrow_right"
+                            android:visibility="gone" />
+                    </LinearLayout>
+                </RelativeLayout>
             </RelativeLayout>
 
             <View
@@ -530,7 +560,6 @@
                 </LinearLayout>
             </RelativeLayout>
         </LinearLayout>
-
 
         <RelativeLayout
             android:id="@+id/myinfo_usercompany_layout"
