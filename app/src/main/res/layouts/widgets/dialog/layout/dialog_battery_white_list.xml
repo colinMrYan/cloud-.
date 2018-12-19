@@ -22,10 +22,11 @@
              android:layout_marginRight="20dp"
              android:layout_marginLeft="5dp"
              android:layout_marginTop="10dp"
+             android:text="不再提醒"
              android:scaleX="0.7"
              android:scaleY="0.7"
-             android:text="不再提醒"
-             android:textSize="23sp"
+             android:textSize="20sp"
+             android:paddingLeft="10dp"
              style="@style/CustomCheckboxTheme"/>
     <LinearLayout
         android:orientation="horizontal"
