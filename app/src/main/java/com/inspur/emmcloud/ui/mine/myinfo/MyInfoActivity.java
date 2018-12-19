@@ -218,9 +218,16 @@ public class MyInfoActivity extends BaseActivity {
         }
 
         if (userProfileInfoBean != null) {
-                (findViewById(R.id.myinfo_usercompany_layout)).setVisibility((userProfileInfoBean.getShowEpInfo() == 0)?View.GONE:View.VISIBLE);
-                (findViewById(R.id.myinfo_modifypsd_layout)).setVisibility((userProfileInfoBean.getShowModifyPsd() == 1)?View.VISIBLE:View.GONE);
-                resetLayout.setVisibility((userProfileInfoBean.getShowResetPsd() == 1)?View.VISIBLE:View.GONE);
+
+            if (userProfileInfoBean.getShowEpInfo() == 0) {
+                (findViewById(R.id.myinfo_usercompany_layout)).setVisibility(View.GONE);
+            }
+            if (userProfileInfoBean.getShowModifyPsd() == 1) {
+                (findViewById(R.id.myinfo_modifypsd_layout)).setVisibility(View.VISIBLE);
+            }
+            if (userProfileInfoBean.getShowResetPsd() == 1) {
+                resetLayout.setVisibility(View.VISIBLE);
+            }
             //这里手机号格式的正确性由服务端保证，客户端只关心是否为空
             (findViewById(R.id.rl_userphone_all)).setVisibility((0==userProfileInfoBean.getShowUserPhone())?View.GONE:View.VISIBLE);
             (findViewById(R.id.rl_usermail_all)).setVisibility(0==userProfileInfoBean.getShowUserMail()?View.GONE:View.VISIBLE);
