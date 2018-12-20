@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!-- 头部-->
     <RelativeLayout
         android:id="@+id/header_layout"
         android:layout_width="match_parent"
@@ -36,7 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="@string/user_info_my_info"
+            android:text="写邮件"
             android:textColor="@color/header_text"
             android:textSize="@dimen/header_textsize" />
 
@@ -51,62 +52,63 @@
             android:onClick="onClick"
             android:paddingLeft="12dp"
             android:paddingRight="12dp"
-            android:text="发邮件"
+            android:text="发送"
             android:textColor="@color/white"
             android:textSize="16sp"/>
     </RelativeLayout>
-
-
-
-
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/header_layout">
 
+        <!-- 邮件收件人-->
         <RelativeLayout
-            android:id="@+id/rl_send_to_all"
+            android:id="@+id/rl_recipients_all"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <RelativeLayout
-                android:id="@+id/rl_to_emails"
+                android:id="@+id/rl_recipient"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp">
                 <TextView
                     android:id="@+id/tv_recipient_tip"
-                    android:text="至："
+                    android:text="收件人："
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:textSize="16sp"/>
+                    android:textSize="15sp"/>
                 <EditText
                     android:id="@+id/et_recipient"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"/>
+                    android:layout_toRightOf="@id/tv_recipient_tip"
+                    android:layout_toLeftOf="@id/iv_recipients"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:textSize="15sp" />
                 <ImageView
                     android:id="@+id/iv_recipients"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:background="@color/black"
+                    android:background="@drawable/icon_mail_add_contacts"
                     android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"/>
+                    android:layout_centerVertical="true" />
             </RelativeLayout>
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5sp"
-                android:background="@color/black"
+                android:background="#C8C7CC"
                 android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:layout_below="@id/rl_to_emails"></View>
+                android:layout_below="@id/rl_recipient"></View>
         </RelativeLayout>
 
+        <!-- 邮件抄送人-->
         <RelativeLayout
             android:id="@+id/rl_copy_to_all"
-            android:layout_below="@id/rl_send_to_all"
+            android:layout_below="@id/rl_recipients_all"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <RelativeLayout
@@ -117,42 +119,47 @@
                 android:layout_marginRight="15dp">
                 <TextView
                     android:id="@+id/tv_copy_to_tip"
-                    android:text="抄送："
+                    android:text="抄送人："
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:textSize="16sp"/>
                 <EditText
                     android:id="@+id/et_copy_to_recipient"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@id/iv_copy_to_recipients"
+                    android:layout_toRightOf="@id/tv_copy_to_tip"
                     android:layout_centerVertical="true"/>
                 <ImageView
                     android:id="@+id/iv_copy_to_recipients"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:background="@color/black"
+                    android:background="@drawable/icon_mail_add_contacts"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"/>
             </RelativeLayout>
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5sp"
-                android:background="@color/black"
+                android:background="#C8C7CC"
                 android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
                 android:layout_below="@id/rl_copy_to"></View>
         </RelativeLayout>
 
+        <!-- 邮件发件人-->
         <RelativeLayout
             android:id="@+id/rl_sender_all"
             android:layout_below="@id/rl_copy_to_all"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:visibility="gone">
             <RelativeLayout
                 android:id="@+id/rl_sender"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="12dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp">
                 <TextView
@@ -171,19 +178,21 @@
                     android:id="@+id/iv_senders"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:background="@color/black"
+                    android:background="@drawable/icon_mail_add_contacts"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"/>
             </RelativeLayout>
             <View
                 android:layout_width="match_parent"
+                android:visibility="gone"
                 android:layout_height="0.5sp"
-                android:background="@color/black"
+                android:background="#C8C7CC"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
                 android:layout_below="@id/rl_sender"></View>
         </RelativeLayout>
 
+        <!-- 邮件主题-->
         <RelativeLayout
             android:id="@+id/rl_sender_theme_all"
             android:layout_below="@id/rl_sender_all"
@@ -211,31 +220,34 @@
                     android:id="@+id/iv_senders_theme"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:background="@color/black"
+                    android:background="@drawable/icon_mail_add_contacts"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"/>
             </RelativeLayout>
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5sp"
-                android:background="@color/black"
+                android:background="#C8C7CC"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
                 android:layout_below="@id/rl_sender_theme"></View>
         </RelativeLayout>
 
+        <!-- 邮件内容编写-->
         <RelativeLayout
             android:id="@+id/rl_send_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/rl_sender_theme_all"
+            android:layout_marginTop="5dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp">
             <EditText
                 android:id="@+id/et_send_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"/>
+                android:layout_centerVertical="true"
+                android:textSize="14sp"/>
         </RelativeLayout>
 
         <RelativeLayout
