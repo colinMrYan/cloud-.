@@ -26,6 +26,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
             android:text="写邮件"
             android:textColor="@color/header_text"
             android:textSize="@dimen/header_textsize" />
@@ -259,8 +260,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"></RelativeLayout>
         </RelativeLayout>
-
-
 
     </RelativeLayout>
 </RelativeLayout>
