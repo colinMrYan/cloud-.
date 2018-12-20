@@ -1,6 +1,5 @@
 package com.inspur.emmcloud.ui;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -13,6 +12,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
@@ -66,7 +66,7 @@ import java.util.regex.Pattern;
  * scheme统一处理类
  */
 
-public class SchemeHandleActivity extends Activity {
+public class SchemeHandleActivity extends BaseActivity {
     private BroadcastReceiver unlockReceiver;
 
     @Override

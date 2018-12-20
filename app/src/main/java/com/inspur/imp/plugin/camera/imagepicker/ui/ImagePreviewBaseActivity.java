@@ -49,7 +49,7 @@ public abstract class ImagePreviewBaseActivity extends ImageBaseActivity {
             params.topMargin = Utils.getStatusHeight(this);
             topBar.setLayoutParams(params);
         }
-        topBar.findViewById(R.id.btn_ok).setVisibility(View.GONE);
+        topBar.findViewById(R.id.tv_ok).setVisibility(View.GONE);
         topBar.findViewById(R.id.btn_back).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

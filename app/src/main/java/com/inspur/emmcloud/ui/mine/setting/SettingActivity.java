@@ -88,19 +88,19 @@ public class SettingActivity extends BaseActivity {
         boolean isAppSetRunBackground = PreferencesUtils.getBoolean(getApplicationContext(), Constant.PREF_APP_RUN_BACKGROUND, false);
         backgroundRunSwitch.setOpened(isAppSetRunBackground);
         backgroundRunSwitch.setOnStateChangedListener(onStateChangedListener);
-        experienceUpgradeLayout = (RelativeLayout)findViewById(R.id.rl_experience_upgrade);
-        experienceUpgradeSwitch = (SwitchView)findViewById(R.id.sw_experience_upgrade);
-        if(MyApplication.getInstance().isV1xVersionChat()){
+        experienceUpgradeLayout = (RelativeLayout) findViewById(R.id.rl_experience_upgrade);
+        experienceUpgradeSwitch = (SwitchView) findViewById(R.id.sw_experience_upgrade);
+        if (MyApplication.getInstance().isV1xVersionChat()) {
             voice2WordSwitch = (SwitchView) findViewById(R.id.switch_voice_word);
             findViewById(R.id.rl_voice_word).setVisibility(View.VISIBLE);
             findViewById(R.id.v_voice_word_line).setVisibility(View.VISIBLE);
             voice2WordSwitch.setOpened(AppUtils.getIsVoiceWordOpen());
             voice2WordSwitch.setOnStateChangedListener(onStateChangedListener);
         }
-        if (AppUtils.isAppVersionStandard()){
+        if (AppUtils.isAppVersionStandard()) {
             getUserExperienceUpgradeFlag();
             experienceUpgradeLayout.setVisibility(View.VISIBLE);
-            boolean isExperienceUpgradeFlag = PreferencesByUserAndTanentUtils.getBoolean(MyApplication.getInstance(),Constant.PREF_EXPERIENCE_UPGRATE,false);
+            boolean isExperienceUpgradeFlag = PreferencesByUserAndTanentUtils.getBoolean(MyApplication.getInstance(), Constant.PREF_EXPERIENCE_UPGRATE, false);
             experienceUpgradeSwitch.setOpened(isExperienceUpgradeFlag);
             experienceUpgradeSwitch.setOnStateChangedListener(onStateChangedListener);
         }
@@ -246,6 +246,15 @@ public class SettingActivity extends BaseActivity {
             case R.id.setting_gesture_layout:
                 IntentUtils.startActivity(SettingActivity.this, SafeCenterActivity.class);
                 break;
+            case R.id.rl_switch_theme:
+                int currentThemeNo = PreferencesUtils.getInt(MyApplication.getInstance(), Constant.PREF_APP_THEME, 0);
+                PreferencesUtils.putInt(MyApplication.getInstance(), Constant.PREF_APP_THEME, (currentThemeNo == 0) ? 1 : 0);
+                Intent intent = new Intent(SettingActivity.this,
+                        IndexActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                        | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                break;
             default:
                 break;
         }
@@ -268,8 +277,8 @@ public class SettingActivity extends BaseActivity {
                     public void onClick(QMUIDialog dialog, int index) {
                         new PushIdManagerUtils(SettingActivity.this).unregisterPushId2Emm();
                         dialog.dismiss();
-                        boolean isCommunicateExist = TabAndAppExistUtils.isTabExist(MyApplication.getInstance(),Constant.APP_TAB_BAR_COMMUNACATE);
-                        if (NetUtils.isNetworkConnected(getApplicationContext(),false) && MyApplication.getInstance().isV1xVersionChat() && isCommunicateExist){
+                        boolean isCommunicateExist = TabAndAppExistUtils.isTabExist(MyApplication.getInstance(), Constant.APP_TAB_BAR_COMMUNACATE);
+                        if (NetUtils.isNetworkConnected(getApplicationContext(), false) && MyApplication.getInstance().isV1xVersionChat() && isCommunicateExist) {
                             loadingDlg.show();
                             WSAPIService.getInstance().sendAppStatus("REMOVED");
                         } else {
@@ -358,11 +367,11 @@ public class SettingActivity extends BaseActivity {
                         ToastUtils.show(getApplicationContext(),
                                 R.string.data_clear_success);
                         //((MyApplication) getApplicationContext()).exit();
-                        Intent intentLog = new Intent(SettingActivity.this,
+                        Intent intent = new Intent(SettingActivity.this,
                                 IndexActivity.class);
-                        intentLog.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
                                 | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(intentLog);
+                        startActivity(intent);
                         new AppBadgeUtils(MyApplication.getInstance()).getAppBadgeCountFromServer();
                     }
                 })
@@ -399,30 +408,30 @@ public class SettingActivity extends BaseActivity {
         }
     }
 
-    private void getUserExperienceUpgradeFlag(){
-       if (NetUtils.isNetworkConnected(MyApplication.getInstance(),false)){
-           apiService.getUserExperienceUpgradeFlag();
-       }
+    private void getUserExperienceUpgradeFlag() {
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance(), false)) {
+            apiService.getUserExperienceUpgradeFlag();
+        }
 
     }
 
-    private void updateUserExperienceUpgradeFlag(){
-        boolean isExperienceUpgradeFlag = PreferencesByUserAndTanentUtils.getBoolean(MyApplication.getInstance(),Constant.PREF_EXPERIENCE_UPGRATE,false);
-        if (NetUtils.isNetworkConnected(MyApplication.getInstance())){
+    private void updateUserExperienceUpgradeFlag() {
+        boolean isExperienceUpgradeFlag = PreferencesByUserAndTanentUtils.getBoolean(MyApplication.getInstance(), Constant.PREF_EXPERIENCE_UPGRATE, false);
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
             loadingDlg.show();
-            apiService.updateUserExperienceUpgradeFlag(isExperienceUpgradeFlag?0:1);
-        }else {
+            apiService.updateUserExperienceUpgradeFlag(isExperienceUpgradeFlag ? 0 : 1);
+        } else {
             experienceUpgradeSwitch.setOpened(isExperienceUpgradeFlag);
         }
 
     }
 
-    private class WebService extends APIInterfaceInstance{
+    private class WebService extends APIInterfaceInstance {
         @Override
         public void returnExperienceUpgradeFlagSuccess(GetExperienceUpgradeFlagResult getExperienceUpgradeFlagResult) {
             boolean isExperienceUpgradeFlag = (getExperienceUpgradeFlagResult.getStatus() == 1);
-            PreferencesByUserAndTanentUtils.putBoolean(MyApplication.getInstance(),Constant.PREF_EXPERIENCE_UPGRATE,isExperienceUpgradeFlag);
-            if (experienceUpgradeSwitch.isOpened() != isExperienceUpgradeFlag){
+            PreferencesByUserAndTanentUtils.putBoolean(MyApplication.getInstance(), Constant.PREF_EXPERIENCE_UPGRATE, isExperienceUpgradeFlag);
+            if (experienceUpgradeSwitch.isOpened() != isExperienceUpgradeFlag) {
                 experienceUpgradeSwitch.setOpened(isExperienceUpgradeFlag);
             }
 
@@ -441,16 +450,16 @@ public class SettingActivity extends BaseActivity {
         @Override
         public void returnUpdateExperienceUpgradeFlagSuccess() {
             LoadingDialog.dimissDlg(loadingDlg);
-            boolean isExperienceUpgradeFlag = PreferencesByUserAndTanentUtils.getBoolean(MyApplication.getInstance(),Constant.PREF_EXPERIENCE_UPGRATE,false);
-            PreferencesByUserAndTanentUtils.putBoolean(MyApplication.getInstance(),Constant.PREF_EXPERIENCE_UPGRATE,!isExperienceUpgradeFlag);
+            boolean isExperienceUpgradeFlag = PreferencesByUserAndTanentUtils.getBoolean(MyApplication.getInstance(), Constant.PREF_EXPERIENCE_UPGRATE, false);
+            PreferencesByUserAndTanentUtils.putBoolean(MyApplication.getInstance(), Constant.PREF_EXPERIENCE_UPGRATE, !isExperienceUpgradeFlag);
             experienceUpgradeSwitch.setOpened(!isExperienceUpgradeFlag);
         }
 
         @Override
         public void returnUpdateExperienceUpgradeFlagFail(String error, int errorCode) {
             LoadingDialog.dimissDlg(loadingDlg);
-            WebServiceMiddleUtils.hand(MyApplication.getInstance(),error,errorCode);
-            boolean isExperienceUpgradeFlag = PreferencesByUserAndTanentUtils.getBoolean(MyApplication.getInstance(),Constant.PREF_EXPERIENCE_UPGRATE,false);
+            WebServiceMiddleUtils.hand(MyApplication.getInstance(), error, errorCode);
+            boolean isExperienceUpgradeFlag = PreferencesByUserAndTanentUtils.getBoolean(MyApplication.getInstance(), Constant.PREF_EXPERIENCE_UPGRATE, false);
             experienceUpgradeSwitch.setOpened(isExperienceUpgradeFlag);
         }
     }

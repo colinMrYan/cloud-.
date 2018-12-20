@@ -8,7 +8,7 @@
         android:id="@+id/header_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/header_bg"
+        android:background="?attr/header_bg_color"
         >
 
 
@@ -40,7 +40,7 @@
                 android:layout_marginRight="25dp"
                 android:gravity="center"
                 android:text="@string/work"
-                android:textColor="@color/header_text"
+                android:textColor="?attr/header_text_color"
                 android:textSize="@dimen/header_textsize" />
         </RelativeLayout>
 
@@ -61,7 +61,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="7dp"
                 android:paddingLeft="2dp"
-                android:textColor="@color/white"
+                android:textColor="?attr/header_text_color"
                 android:textSize="20sp" />
 
 
@@ -84,7 +84,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/work_date_text"
                 android:clickable="true"
-                android:textColor="@color/white"
+                android:textColor="?attr/header_text_color"
                 android:textSize="13sp" />
 
             <TextView
@@ -95,7 +95,7 @@
                 android:layout_alignParentRight="true"
                 android:paddingRight="17dp"
                 android:visibility="invisible"
-                android:textColor="@color/white"
+                android:textColor="?attr/header_text_color"
                 android:textSize="14sp" />
 
         </RelativeLayout>

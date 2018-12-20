@@ -1,15 +1,17 @@
 package com.inspur.imp.plugin.camera;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
+
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.util.Base64;
 
 public class Bimp {
 	
@@ -75,5 +77,24 @@ public class Bimp {
 			}
 		}
 		return result;
+	}
+
+	public static void saveBitmap(Bitmap bm, String filePath,int quality,int encodeType) {
+		File f = new File(filePath);
+		if (f.exists()) {
+			f.delete();
+		}
+		try {
+			FileOutputStream out = new FileOutputStream(f);
+			bm.compress((encodeType == 0)? Bitmap.CompressFormat.JPEG:Bitmap.CompressFormat.PNG, quality, out);
+			out.flush();
+			out.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
