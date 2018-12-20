@@ -36,7 +36,7 @@ import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.imp.api.ImpBaseActivity;
-import com.inspur.imp.plugin.camera.editimage.utils.BitmapUtils;
+import com.inspur.imp.plugin.camera.Bimp;
 import com.inspur.imp.plugin.camera.imageedit.IMGEditActivity;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -415,7 +415,8 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
         if (photoFile.exists()) {
             photoFile.delete();
         }
-        BitmapUtils.saveBitmap(cropBitmap, photoFilePath, 100, encodingType);
+        Bimp.saveBitmap(cropBitmap, photoFilePath, 100, encodingType);
+
     }
 
     private void showPreview() {

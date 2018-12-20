@@ -38,7 +38,7 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:text="@string/login_please_input_captchas"
-            android:textColor="@color/header_text"
+            android:textColor="?attr/header_text_color"
             android:textSize="@dimen/header_textsize" />
     </RelativeLayout>
 
