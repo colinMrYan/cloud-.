@@ -5,11 +5,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.SchemeHandleActivity;
 import com.inspur.emmcloud.ui.appcenter.ReactNativeAppActivity;
 import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.ui.login.ScanQrCodeLoginGSActivity;
 import com.inspur.emmcloud.ui.mine.setting.FaceVerifyActivity;
+import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.privates.LanguageUtils;
 import com.inspur.imp.plugin.barcode.scan.CaptureActivity;
@@ -37,12 +39,18 @@ public class BaseActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        x.view().inject(this);
         String className = this.getClass().getCanonicalName();
         boolean isContain = Arrays.asList(classNames).contains(className);
         if (!isContain) {
+            int currentThemeNo = PreferencesUtils.getInt(MyApplication.getInstance(), Constant.PREF_APP_THEME, 0);
+            if (currentThemeNo == 0){
+                setTheme(R.style.AppTheme_1);
+            }else {
+                setTheme(R.style.AppTheme_2);
+            }
             StateBarUtils.translucent(this);
         }
+        x.view().inject(this);
     }
 
     //解决调用系统应用后会弹出手势解锁的问题

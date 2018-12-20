@@ -118,7 +118,7 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:largeHeap="true"
-        android:theme="@style/AppTheme"
+        android:theme="@style/AppTheme_2"
         tools:replace="android:allowBackup,label">
         <!--custom-->
         <meta-data
