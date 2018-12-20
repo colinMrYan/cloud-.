@@ -4,6 +4,7 @@
     <color name="progress_grey">#c1c1c1</color>
     <color name="content_border">#c8c7cc</color>
     <color name="header_bg">#0F7BCA</color>
+    <color name="header_bg_white">#FDFDFD</color>
     <color name="contact_header_bg">#EFEFF4</color>
     <color name="bg_my_card">#0F7BCA</color>
     <color name="bg_my_card_press">#e00F7BCA</color>

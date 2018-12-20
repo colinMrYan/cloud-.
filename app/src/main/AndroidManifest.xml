@@ -118,7 +118,7 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:largeHeap="true"
-        android:theme="@style/AppTheme"
+        android:theme="@style/AppTheme_2"
         tools:replace="android:allowBackup,label">
         <!--custom-->
         <meta-data
@@ -129,8 +129,7 @@
             android:name=".MainActivity"
             android:exported="true"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar">
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
@@ -346,15 +345,14 @@
             android:name=".ui.ShareLinkActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"></activity>
 
         <activity
             android:name=".ui.SchemeHandleActivity"
-            android:theme="@android:style/Theme.Translucent"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Transparent">
             <intent-filter>
                 <action android:name="android.intent.action.SEND_MULTIPLE" />
 
@@ -476,18 +474,10 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="inspur-ecc-native"/>
+                <data android:scheme="inspur-ecc-native" />
             </intent-filter>
 
         </activity>
-
-
-        <!--<activity-->
-            <!--android:name=".ui.chat.ChannelActivity"-->
-            <!--android:launchMode="singleTask"-->
-            <!--android:resizeableActivity="true"-->
-            <!--android:screenOrientation="portrait"-->
-            <!--android:windowSoftInputMode="adjustResize|stateHidden"></activity>-->
         <activity
             android:name=".ui.chat.ChannelV0Activity"
             android:launchMode="singleTask"
@@ -540,11 +530,12 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden" />
-        <activity android:name=".ui.chat.CorrectedSpeechInputActivity"
+        <activity
+            android:name=".ui.chat.CorrectedSpeechInputActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize|stateHidden"/>
+            android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".ui.chat.ChatFileDownloadActivtiy"
             android:launchMode="singleTask"
@@ -712,13 +703,13 @@
             android:name=".ui.chat.ImagePagerV0Activity"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"
+            android:theme="@style/AppTheme.Transparent"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".ui.chat.ImagePagerActivity"
             android:resizeableActivity="true"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"
             android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Transparent"
             android:windowSoftInputMode="adjustPan" />
 
         <activity
@@ -771,8 +762,7 @@
             android:name=".ui.find.trip.TripDetailActivity"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize|stateHidden">
-        </activity>
+            android:windowSoftInputMode="adjustResize|stateHidden"></activity>
         <activity
             android:name=".ui.appcenter.groupnews.GroupNewsActivity"
             android:resizeableActivity="true"
@@ -1020,37 +1010,31 @@
             android:configChanges="orientation|screenSize"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
+            ></activity>
         <activity
             android:name="com.inspur.imp.plugin.camera.imagepicker.ui.ImagePreviewActivity"
             android:configChanges="orientation|screenSize"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
+            ></activity>
         <activity
             android:name="com.inspur.imp.plugin.camera.imagepicker.ui.ImageCropActivity"
             android:configChanges="orientation|screenSize"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
+            ></activity>
         <activity
             android:name="com.inspur.imp.plugin.camera.imagepicker.ui.ImagePreviewDelActivity"
             android:configChanges="orientation|screenSize"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
-        <activity
-            android:name="com.inspur.imp.plugin.camera.editimage.EditImageActivity"
-            android:configChanges="orientation|screenSize"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
+            ></activity>
         <activity
             android:name="com.inspur.imp.plugin.camera.imageedit.IMGEditActivity"
             android:configChanges="orientation|screenSize"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
+           ></activity>
 
         <!-- ImagePicker -->
 
@@ -1079,14 +1063,12 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait"
             android:stateNotNeeded="true"
-            android:supportsRtl="true"
-           ></activity>
+            android:supportsRtl="true"></activity>
         <activity
             android:name="com.inspur.imp.plugin.photo.ImageGalleryActivity"
             android:label="@string/app_name"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"
-            ></activity>
+            android:screenOrientation="portrait"></activity>
 
         <activity
             android:name="com.inspur.imp.plugin.file.FileBrowerAppActivity"
@@ -1234,8 +1216,8 @@
             android:name="com.huawei.hms.update.provider.UpdateProvider"
             android:authorities="com.inspur.emmcloud.hms.update.provider"
             android:exported="false"
-            android:process=":updateProvider"
-            android:grantUriPermissions="true"></provider>
+            android:grantUriPermissions="true"
+            android:process=":updateProvider"></provider>
 
 
         <!-- 第三方相关 :接收Push消息（注册、Push消息、Push连接状态）广播 -->
@@ -1294,20 +1276,22 @@
         <activity
             android:name="com.tencent.tauth.AuthActivity"
             android:launchMode="singleTask"
-            android:noHistory="true" >
+            android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data android:scheme="tencent1105561850" />
             </intent-filter>
         </activity>
         <activity
             android:name="com.tencent.connect.common.AssistActivity"
-            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:resizeableActivity="true"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
-            android:configChanges="orientation|keyboardHidden|screenSize"/>
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
             android:name="com.umeng.socialize.editorpage.ShareActivity"
             android:excludeFromRecents="true"

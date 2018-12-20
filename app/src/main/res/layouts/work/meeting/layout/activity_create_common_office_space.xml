@@ -12,7 +12,7 @@
         android:id="@+id/header_layout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/header_height"
-        android:background="@color/header_bg" >
+        android:background="?attr/header_bg_color" >
 
         <RelativeLayout
             android:id="@+id/back_layout"
@@ -41,7 +41,7 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:text="@string/choose_common_office"
-            android:textColor="@color/header_text"
+            android:textColor="?attr/header_text_color"
             android:textSize="@dimen/header_textsize" />
 <!-- 
         <LinearLayout
@@ -59,7 +59,7 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:paddingRight="10dp"
-            android:textColor="@color/header_text"
+            android:textColor="?attr/header_text_color"
             android:textSize="@dimen/header_textsize" />
 
         </LinearLayout>

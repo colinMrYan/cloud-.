@@ -9,7 +9,7 @@
         android:id="@+id/header_layout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="@color/header_bg">
+        android:background="?attr/header_bg_color">
 
         <RelativeLayout
             android:id="@+id/back_layout"
@@ -48,7 +48,7 @@
             android:layout_marginRight="6dp"
             android:layout_marginTop="10dp"
             android:paddingBottom="10dp"
-            android:textColor="@color/white"
+            android:textColor="?attr/header_text_color"
             android:textSize="@dimen/content_normal_textsize" />
     </RelativeLayout>
 

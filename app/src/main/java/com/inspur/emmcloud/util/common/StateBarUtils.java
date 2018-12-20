@@ -37,7 +37,8 @@ public class StateBarUtils {
      */
     public static void translucent(Activity activity) {
         //系统版本小于19的不再处理
-        translucent( activity, R.color.header_bg );
+        int color = ResourceUtils.getValueOfColorAttr(activity,R.attr.header_bg_color);
+        translucent( activity, color );
     }
 
     /**
