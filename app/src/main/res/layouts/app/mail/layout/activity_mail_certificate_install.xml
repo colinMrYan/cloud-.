@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:fitsSystemWindows="true"
     android:layout_height="match_parent">
 
     <!-- 头部-->
@@ -56,303 +59,313 @@
             android:textSize="16sp"/>
     </RelativeLayout>
 
-    <!-- 安装指南-->
-    <RelativeLayout
-        android:id="@+id/rl_install_order"
+
+    <ScrollView
+        android:fitsSystemWindows="true"
         android:layout_below="@id/header_layout"
         android:layout_width="match_parent"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:layout_height="wrap_content">
-        <TextView
-            android:id="@+id/tv_certificate_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingTop="10dp"
-            android:textSize="14sp"
-            android:text="安装指南"
-            android:textColor="#333333"/>
-
-        <TextView
-            android:id="@+id/tv_install_tip1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/tv_certificate_title"
-            android:paddingTop="4dp"
-            android:text="1、首先将证书导入到手机（ios可以通过其他邮箱将pfx证书或者p12证书以附件形式发送到本邮箱，然后将此证书附件下载）"
-            android:textColor="#666666" />
-        <TextView
-            android:id="@+id/tv_install_tip2"
-            android:paddingTop="2dp"
-            android:layout_below="@id/tv_install_tip1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="#666666"
-            android:text="2、点击右下角的安装证书进行安装"/>
-    </RelativeLayout>
-
-    <!-- 已安证书详情-->
-    <RelativeLayout
-        android:id="@+id/rl_installed_certificate"
-        android:layout_below="@id/rl_install_order"
-        android:layout_width="match_parent"
-        android:layout_marginTop="20dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp">
-        <TextView
-            android:id="@+id/tv_installed_certificate_tip"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#333333"
-            android:textSize="14sp"
-            android:text="已安装证书"/>
+        android:paddingBottom="10dp">
         <RelativeLayout
-            android:id="@+id/rl_installed_content"
-            android:layout_below="@id/tv_installed_certificate_tip"
-            android:layout_marginTop="10dp"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content">
-            <LinearLayout
-                android:id="@+id/ll_installed_content"
+            <!-- 安装指南-->
+            <RelativeLayout
+                android:id="@+id/rl_install_order"
+                android:layout_below="@id/header_layout"
                 android:layout_width="match_parent"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/tv_certificate_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="10dp"
+                    android:textSize="14sp"
+                    android:text="安装指南"
+                    android:textColor="#333333"/>
+
+                <TextView
+                    android:id="@+id/tv_install_tip1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/tv_certificate_title"
+                    android:paddingTop="4dp"
+                    android:text="1、首先将证书导入到手机（ios可以通过其他邮箱将pfx证书或者p12证书以附件形式发送到本邮箱，然后将此证书附件下载）"
+                    android:textColor="#666666" />
+                <TextView
+                    android:id="@+id/tv_install_tip2"
+                    android:paddingTop="2dp"
+                    android:layout_below="@id/tv_install_tip1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#666666"
+                    android:text="2、点击右下角的安装证书进行安装"/>
+            </RelativeLayout>
+
+            <!-- 已安证书详情-->
+            <RelativeLayout
+                android:id="@+id/rl_installed_certificate"
+                android:layout_below="@id/rl_install_order"
+                android:layout_width="match_parent"
+                android:layout_marginTop="20dp"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="@drawable/bg_certificate_content"
-                android:layout_alignParentTop="true">
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp">
+                <TextView
+                    android:id="@+id/tv_installed_certificate_tip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#333333"
+                    android:textSize="14sp"
+                    android:text="已安装证书"/>
                 <RelativeLayout
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
+                    android:id="@+id/rl_installed_content"
+                    android:layout_below="@id/tv_installed_certificate_tip"
                     android:layout_marginTop="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
-                    <TextView
-                        android:id="@+id/tv_installed_certificate_title"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:id="@+id/ll_installed_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="证书1.pfx" />
-                    <TextView
-                        android:id="@+id/tv_certificate_use"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:text="使用中"
-                        android:textColor="#4A90E2"
-                        android:textSize="14sp" />
+                        android:orientation="vertical"
+                        android:background="@drawable/bg_certificate_content"
+                        android:layout_alignParentTop="true">
+                        <RelativeLayout
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginRight="8dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+                            <TextView
+                                android:id="@+id/tv_installed_certificate_title"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="证书1.pfx" />
+                            <TextView
+                                android:id="@+id/tv_certificate_use"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:text="使用中"
+                                android:textColor="#4A90E2"
+                                android:textSize="14sp" />
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginRight="8dp"
+                            android:layout_marginTop="6dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+                            <TextView
+                                android:id="@+id/tv_certificate_have"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="#666666"
+                                android:text="颁发给：" />
+                            <TextView
+                                android:id="@+id/tv_certificate_used_name"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="90dp"
+                                android:text="李宝超"
+                                android:textColor="#666666"
+                                android:textSize="14sp" />
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginRight="8dp"
+                            android:layout_marginTop="6dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+                            <TextView
+                                android:id="@+id/tv_certificate_giver"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="#666666 "
+                                android:text="颁发者：" />
+                            <TextView
+                                android:id="@+id/tv_certificate_giver_id"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="90dp"
+                                android:text="使用中"
+                                android:textColor="#666666 "
+                                android:textSize="14sp" />
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginRight="8dp"
+                            android:layout_marginTop="6dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+                            <TextView
+                                android:id="@+id/tv_certificate_expirty"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="#666666 "
+                                android:text="有效期至：" />
+                            <TextView
+                                android:id="@+id/tv_certificate_expirty_data"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="90dp"
+                                android:text="2023-03-12 18:08:00"
+                                android:textColor="#666666 "
+                                android:textSize="14sp" />
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginRight="8dp"
+                            android:layout_marginTop="12dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+                            <View
+                                android:id="@+id/v_topline1"
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:background="#C8C7CC">
+                            </View>
+                            <TextView
+                                android:id="@+id/tv_secrity_action_title"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="12dp"
+                                android:layout_marginBottom="12dp"
+                                android:textColor="#333333"
+                                android:textSize="14sp"
+                                android:text="加密发送邮件的内容和附件" />
+                            <com.inspur.emmcloud.widget.SwitchView
+                                android:id="@+id/s_secrity_action1"
+                                android:layout_width="31dp"
+                                android:layout_height="51dp"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:textColor="#666666 "
+                                android:textSize="14sp" />
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginRight="8dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+                            <View
+                                android:id="@+id/v_topline2"
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:background="#C8C7CC">
+                            </View>
+                            <TextView
+                                android:id="@+id/tv_secrity_action2_title"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="12dp"
+                                android:layout_marginBottom="12dp"
+                                android:textColor="#333333"
+                                android:textSize="14sp"
+                                android:text="加签发送邮件的内容和附件" />
+                            <com.inspur.emmcloud.widget.SwitchView
+                                android:id="@+id/s_secrity_action2"
+                                android:layout_width="31dp"
+                                android:layout_height="51dp"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:textColor="#666666 "
+                                android:textSize="14sp" />
+                        </RelativeLayout>
+
+                    </LinearLayout>
                 </RelativeLayout>
 
+            </RelativeLayout>
+
+            <!-- 替换证书-->
+            <LinearLayout
+                android:id="@+id/ll_certificate_new"
+                android:layout_below="@id/rl_installed_certificate"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:paddingTop="12dp"
+                android:paddingLeft="8dp"
+                android:paddingBottom="5dp"
+                android:orientation="vertical"
+                android:background="@drawable/bg_certificate_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/tv_new_certificate_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:text="证书1.pfx" />
                 <RelativeLayout
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
-                    android:layout_marginTop="6dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp">
                     <TextView
-                        android:id="@+id/tv_certificate_have"
+                        android:id="@+id/tv_new_certificate_user_tip"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="#666666"
-                        android:text="颁发给：" />
+                        android:text="颁发给："/>
                     <TextView
-                        android:id="@+id/tv_certificate_used_name"
+                        android:id="@+id/tv_new_certificate_user"
+                        android:layout_marginLeft="98dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="90dp"
-                        android:text="李宝超"
                         android:textColor="#666666"
-                        android:textSize="14sp" />
+                        android:text="李宝超"/>
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
-                    android:layout_marginTop="6dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp">
                     <TextView
-                        android:id="@+id/tv_certificate_giver"
+                        android:id="@+id/tv_new_certificate_publisher_tip"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="#666666 "
-                        android:text="颁发者：" />
+                        android:textColor="#666666"
+                        android:text="颁发者："/>
                     <TextView
-                        android:id="@+id/tv_certificate_giver_id"
+                        android:id="@+id/tv_new_certificate_publisher"
+                        android:layout_marginLeft="98dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="90dp"
-                        android:text="使用中"
-                        android:textColor="#666666 "
-                        android:textSize="14sp" />
+                        android:textColor="#666666"
+                        android:text="浪潮"/>
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
-                    android:layout_marginTop="6dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp">
                     <TextView
-                        android:id="@+id/tv_certificate_expirty"
+                        android:id="@+id/tv_new_certificate_expirty"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="#666666 "
-                        android:text="有效期至：" />
+                        android:textColor="#666666"
+                        android:text="有效期至："/>
                     <TextView
-                        android:id="@+id/tv_certificate_expirty_data"
+                        android:id="@+id/tv_new_certificate_expirty_data"
+                        android:layout_marginLeft="98dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="90dp"
-                        android:text="2023-03-12 18:08:00"
-                        android:textColor="#666666 "
-                        android:textSize="14sp" />
+                        android:textColor="#666666"
+                        android:text="2023-03-12 18:09:11"/>
                 </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
-                    android:layout_marginTop="12dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <View
-                        android:id="@+id/v_topline1"
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="#C8C7CC">
-                    </View>
-                    <TextView
-                        android:id="@+id/tv_secrity_action_title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="18dp"
-                        android:layout_marginBottom="17dp"
-                        android:textColor="#333333"
-                        android:textSize="14sp"
-                        android:text="加密发送邮件的内容和附件" />
-                    <Switch
-                        android:id="@+id/s_secrity_action1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:textColor="#666666 "
-                        android:textSize="14sp" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <View
-                        android:id="@+id/v_topline2"
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="#C8C7CC">
-                    </View>
-                    <TextView
-                        android:id="@+id/tv_secrity_action2_title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="18dp"
-                        android:layout_marginBottom="17dp"
-                        android:textColor="#333333"
-                        android:textSize="14sp"
-                        android:text="加签发送邮件的内容和附件" />
-                     <Switch
-                        android:id="@+id/s_secrity_action2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:textColor="#666666 "
-                        android:textSize="14sp" />
-                </RelativeLayout>
-
             </LinearLayout>
+
         </RelativeLayout>
-
-    </RelativeLayout>
-
-    <!-- 替换证书-->
-    <LinearLayout
-        android:id="@+id/ll_certificate_new"
-        android:layout_below="@id/rl_installed_certificate"
-        android:layout_marginTop="20dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:paddingTop="12dp"
-        android:paddingLeft="8dp"
-        android:paddingBottom="5dp"
-        android:orientation="vertical"
-        android:background="@drawable/bg_certificate_content"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-       <TextView
-           android:id="@+id/tv_new_certificate_title"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:textSize="14sp"
-           android:text="证书1.pfx" />
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp">
-            <TextView
-                android:id="@+id/tv_new_certificate_user_tip"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="#666666"
-                android:text="颁发给："/>
-            <TextView
-                android:id="@+id/tv_new_certificate_user"
-                android:layout_marginLeft="98dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="#666666"
-                android:text="李宝超"/>
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp">
-            <TextView
-                android:id="@+id/tv_new_certificate_publisher_tip"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="#666666"
-                android:text="颁发者："/>
-            <TextView
-                android:id="@+id/tv_new_certificate_publisher"
-                android:layout_marginLeft="98dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="#666666"
-                android:text="浪潮"/>
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp">
-            <TextView
-                android:id="@+id/tv_new_certificate_expirty"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="#666666"
-                android:text="有效期至："/>
-            <TextView
-                android:id="@+id/tv_new_certificate_expirty_data"
-                android:layout_marginLeft="98dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="#666666"
-                android:text="2023-03-12 18:09:11"/>
-        </RelativeLayout>
-
-
-    </LinearLayout>
-
+    </ScrollView>
 </RelativeLayout>

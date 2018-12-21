@@ -556,6 +556,7 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>
 
+
         <activity
             android:name=".ui.mine.setting.SettingActivity"
             android:launchMode="singleTask"
@@ -936,6 +937,17 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
 
+        <!-- Mail-->
+        <activity
+            android:name=".ui.appcenter.mail.MailCertificateInstallActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.appcenter.mail.MailSendActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
+
+
 
         <!-- service -->
         <service android:name=".service.LocationService"></service>
@@ -1297,6 +1309,8 @@
             android:excludeFromRecents="true"
             android:resizeableActivity="true"
             android:theme="@style/Theme.UMDefault" />
+
+
     </application>
 
 </manifest>
