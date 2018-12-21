@@ -289,29 +289,34 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
     }
 
     private void setTabBarBadge(String tabName, int number){
-        //查找tab之前，先清空一下对应tab的数据，防止tab找不到，数据还有的情况
-        saveTabBarBadgeNumber(tabName,0);
-        //根据tabName确定tabView的位置
-        List<MainTabResult> mainTabResultList = AppTabUtils.getMainTabResultList(this);
-        for (int i = 0; i < mainTabResultList.size(); i++) {
-            if(mainTabResultList.get(i).getName().equals(tabName)){
-                View tabView = mTabHost.getTabWidget().getChildAt(i);
-                RelativeLayout badgeLayout = (RelativeLayout) tabView.findViewById(R.id.rl_badge);
-                View badgeView = tabView.findViewById(R.id.v_badge);
-                if (number < 0){
-                    badgeLayout.setVisibility(View.GONE);
-                    badgeView.setVisibility(View.VISIBLE);
-                }else {
-                    badgeView.setVisibility(View.GONE);
-                    badgeLayout.setVisibility((number == 0) ? View.GONE : View.VISIBLE);
-                    TextView badgeText = (TextView) tabView.findViewById(R.id.tv_badge);
-                    badgeText.setText("" + (number > 99 ? "99+" : number));
+        //在某些情况下
+        try {
+            //查找tab之前，先清空一下对应tab的数据，防止tab找不到，数据还有的情况
+            saveTabBarBadgeNumber(tabName,0);
+            //根据tabName确定tabView的位置
+            List<MainTabResult> mainTabResultList = AppTabUtils.getMainTabResultList(this);
+            for (int i = 0; i < mainTabResultList.size(); i++) {
+                if(mainTabResultList.get(i).getName().equals(tabName)){
+                    View tabView = mTabHost.getTabWidget().getChildAt(i);
+                    RelativeLayout badgeLayout = (RelativeLayout) tabView.findViewById(R.id.rl_badge);
+                    View badgeView = tabView.findViewById(R.id.v_badge);
+                    if (number < 0){
+                        badgeLayout.setVisibility(View.GONE);
+                        badgeView.setVisibility(View.VISIBLE);
+                    }else {
+                        badgeView.setVisibility(View.GONE);
+                        badgeLayout.setVisibility((number == 0) ? View.GONE : View.VISIBLE);
+                        TextView badgeText = (TextView) tabView.findViewById(R.id.tv_badge);
+                        badgeText.setText("" + (number > 99 ? "99+" : number));
+                    }
+                    saveTabBarBadgeNumber(tabName,number);
                 }
-                saveTabBarBadgeNumber(tabName,number);
             }
+            //更新桌面角标数字
+            ECMShortcutBadgeNumberManagerUtils.setDesktopBadgeNumber(IndexBaseActivity.this, getDesktopNumber());
+        }catch (Exception e){
+            e.printStackTrace();
         }
-        //更新桌面角标数字
-        ECMShortcutBadgeNumberManagerUtils.setDesktopBadgeNumber(IndexBaseActivity.this, getDesktopNumber());
     }
 
     /**
@@ -322,7 +327,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
         int communicationTabBarNumber = PreferencesByUserAndTanentUtils.getInt(MyApplication.getInstance(),Constant.PREF_BADGE_NUM_COMMUNICATION,0);
         int appStoreTabBarNumber = PreferencesByUserAndTanentUtils.getInt(MyApplication.getInstance(),Constant.PREF_BADGE_NUM_APPSTORE,0);
         int momentTabBarNumber = PreferencesByUserAndTanentUtils.getInt(MyApplication.getInstance(),Constant.PREF_BADGE_NUM_SNS,0);
-        return communicationTabBarNumber+(appStoreTabBarNumber >= 0?appStoreTabBarNumber:0) +(momentTabBarNumber >= 0? momentTabBarNumber:0);
+        return (MyApplication.getInstance().isV0VersionChat()?0:communicationTabBarNumber)+(appStoreTabBarNumber >= 0?appStoreTabBarNumber:0) +(momentTabBarNumber >= 0? momentTabBarNumber:0);
     }
 
     /**
