@@ -41,7 +41,7 @@
             android:textSize="@dimen/header_textsize" />
 
         <TextView
-            android:id="@+id/switch_enterprese_text"
+            android:id="@+id/tv_install_certificate"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
@@ -230,13 +230,12 @@
                         android:textColor="#333333"
                         android:textSize="14sp"
                         android:text="加密发送邮件的内容和附件" />
-                    <TextView
-                        android:id="@+id/tv_secrity_action"
+                    <Switch
+                        android:id="@+id/s_secrity_action1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:text="2023-03-12 18:08:00"
                         android:textColor="#666666 "
                         android:textSize="14sp" />
                 </RelativeLayout>
@@ -260,14 +259,13 @@
                         android:layout_marginBottom="17dp"
                         android:textColor="#333333"
                         android:textSize="14sp"
-                        android:text="加密发送邮件的内容和附件" />
-                    <TextView
-                        android:id="@+id/tv_secrity_action2"
+                        android:text="加签发送邮件的内容和附件" />
+                     <Switch
+                        android:id="@+id/s_secrity_action2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:text="2023-03-12 18:08:00"
                         android:textColor="#666666 "
                         android:textSize="14sp" />
                 </RelativeLayout>
@@ -292,6 +290,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
        <TextView
+           android:id="@+id/tv_new_certificate_title"
            android:layout_width="wrap_content"
            android:layout_height="wrap_content"
            android:textSize="14sp"
