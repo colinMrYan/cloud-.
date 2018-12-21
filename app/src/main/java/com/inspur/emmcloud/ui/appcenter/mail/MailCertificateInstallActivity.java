@@ -87,6 +87,7 @@ public class MailCertificateInstallActivity extends BaseActivity {
             actualimagecursor.moveToFirst();
            String img_path = actualimagecursor.getString(actual_image_column_index);
             LogUtils.LbcDebug( "Path::"+img_path );
+            //判断文件后
         }
         super.onActivityResult( requestCode, resultCode, data );
     }
