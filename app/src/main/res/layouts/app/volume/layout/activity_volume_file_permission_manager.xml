@@ -14,7 +14,7 @@
             android:id="@+id/common_header_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/header_bg">
+            android:background="?attr/header_bg_color">
 
             <RelativeLayout
                 android:id="@+id/back_layout"
@@ -45,7 +45,7 @@
                 android:maxLines="1"
                 android:paddingLeft="100dp"
                 android:paddingRight="100dp"
-                android:textColor="@color/header_text"
+                android:textColor="?attr/header_text_color"
                 android:textSize="@dimen/header_textsize"
                 android:text="@string/clouddriver_file_permission_manager"/>
 

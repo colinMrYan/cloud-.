@@ -38,8 +38,7 @@ public class ScanQrCodeLoginActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        StateBarUtils.changeStateBarColor(this, R.color.scan_result_color);
-//        setStatusBarIconDark(true);
+        StateBarUtils.translucent( this,R.color.scan_result_color);
         setMiuiStatusBarDarkMode(this,true);
         setContentView(R.layout.activity_scan_qrcode_login_result);
         initViews();

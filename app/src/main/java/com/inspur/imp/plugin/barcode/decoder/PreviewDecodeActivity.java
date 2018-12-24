@@ -100,7 +100,7 @@ public class PreviewDecodeActivity extends Activity implements FunDecodeHandler 
 //        frameRectWidth = frameRectWidth - frameRectWidth % 4;
         int frameRectHeight = frameRectWidth;
         int frameRectLeftOffset = (screenWidth - frameRectWidth) / 2;
-        int frameRectTopOffset = (int) ((screenHeight - frameRectHeight) / 2.5);
+        int frameRectTopOffset = (int) ((screenHeight - frameRectHeight) / 2);
         frameRect = new Rect(frameRectLeftOffset, frameRectTopOffset, frameRectLeftOffset + frameRectWidth,
                 frameRectTopOffset + frameRectHeight);
         mRangeView.setRange(frameRect);
@@ -148,7 +148,7 @@ public class PreviewDecodeActivity extends Activity implements FunDecodeHandler 
         //mDecode.setFlash("torch");
         mDecode.setZoomLevel(0.1);
         mDecodeView.startScan();
-        mDecodeView.setRange(rangeRect);
+        mDecodeView.setRange(new Rect(0,0,0,0));
         //Set Zoom Component visible/invisible. 1: visible, 0: invisible
         //mDecode.ZoomShow(0);
 

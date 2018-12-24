@@ -7,7 +7,7 @@
         android:id="@+id/header_layout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/header_height"
-        android:background="@color/header_bg">
+        android:background="?attr/header_bg_color">
 
 
 
@@ -20,7 +20,7 @@
             android:layout_marginRight="25dp"
             android:gravity="center"
             android:text="@string/app_home_page"
-            android:textColor="@color/header_text"
+            android:textColor="?attr/header_text_color"
             android:textSize="@dimen/header_textsize" />
     </RelativeLayout>
 

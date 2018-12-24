@@ -39,7 +39,6 @@ import com.inspur.emmcloud.ui.mine.MoreFragment;
 import com.inspur.emmcloud.ui.notsupport.NotSupportFragment;
 import com.inspur.emmcloud.ui.work.TabBean;
 import com.inspur.emmcloud.ui.work.WorkFragment;
-import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.AppTabUtils;
@@ -87,7 +86,6 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        StateBarUtils.changeStateBarColor(this);
         clearOldMainTabData();
         x.view().inject(this);
         mTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
@@ -322,7 +320,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
         int communicationTabBarNumber = PreferencesByUserAndTanentUtils.getInt(MyApplication.getInstance(),Constant.PREF_BADGE_NUM_COMMUNICATION,0);
         int appStoreTabBarNumber = PreferencesByUserAndTanentUtils.getInt(MyApplication.getInstance(),Constant.PREF_BADGE_NUM_APPSTORE,0);
         int momentTabBarNumber = PreferencesByUserAndTanentUtils.getInt(MyApplication.getInstance(),Constant.PREF_BADGE_NUM_SNS,0);
-        return communicationTabBarNumber+(appStoreTabBarNumber >= 0?appStoreTabBarNumber:0) +(momentTabBarNumber >= 0? momentTabBarNumber:0);
+        return (MyApplication.getInstance().isV0VersionChat()?0:communicationTabBarNumber)+(appStoreTabBarNumber >= 0?appStoreTabBarNumber:0) +(momentTabBarNumber >= 0? momentTabBarNumber:0);
     }
 
     /**
