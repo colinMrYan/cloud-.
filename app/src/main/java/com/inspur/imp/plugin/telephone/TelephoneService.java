@@ -28,10 +28,14 @@ public class TelephoneService extends ImpPlugin {
 		}
 		// 直接拨打电话
 		else if ("call".equals(action)) {
+			checkCallPermission();
 			call(paramsObject);
 		}else{
 			showCallIMPMethodErrorDlg();
 		}
+	}
+
+	private void checkCallPermission() {
 	}
 
 	@Override
