@@ -12,9 +12,13 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.telephony.SmsManager;
 import android.widget.Toast;
 
+import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.emmcloud.util.common.systool.permission.PermissionManagerUtils;
+import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
 import com.inspur.imp.api.ImpFragment;
 import com.inspur.imp.plugin.ImpPlugin;
 import com.inspur.imp.util.StrUtil;
+import com.yanzhenjie.permission.Permission;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -22,6 +26,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 发送短信
@@ -43,22 +48,58 @@ public class SmsService extends ImpPlugin {
 	String SENT_SMS_ACTION = "SENT_SMS_ACTION";
 
 	@Override
-	public void execute(String action, JSONObject paramsObject) {
+	public void execute(String action, final JSONObject paramsObject) {
 		// 打开系统发送短信的界面，根据传入参数自动填写好相关信息
 		if ("open".equals(action)) {
 			open(paramsObject);
 		}
 		// 直接发送短
 		else if ("send".equals(action)) {
-			send(paramsObject);
+			checkSendSMSPermissionAndSendSMS("send",paramsObject);
 		}
 		// 直接发送短
 		else if ("batchSend".equals(action)) {
-			batchSend(paramsObject);
+			checkSendSMSPermissionAndSendSMS("batchSend",paramsObject);
 		}else{
 			showCallIMPMethodErrorDlg();
 		}
 
+	}
+
+	/**
+	 * 根据需求发送短信，群发（batchSend）或单发（send）
+	 * @param send
+	 * @param paramsObject
+	 */
+	private void checkSendSMSPermissionAndSendSMS(final String send, final JSONObject paramsObject) {
+		if(PermissionManagerUtils.getInstance().isHasPermission(getFragmentContext(), Permission.SEND_SMS)){
+			if(send.equals("send")){
+				send(paramsObject);
+			}else if(send.equals("batchSend")){
+				batchSend(paramsObject);
+			}
+		}else{
+			PermissionManagerUtils.getInstance().requestSinglePermission(getFragmentContext(), Permission.SEND_SMS, new PermissionRequestCallback() {
+				@Override
+				public void onPermissionRequestSuccess(List<String> permissions) {
+					if(send.equals("send")){
+						send(paramsObject);
+					}else if(send.equals("batchSend")){
+						batchSend(paramsObject);
+					}
+				}
+
+				@Override
+				public void onPermissionRequestFail(List<String> permissions) {
+					LogUtils.YfcDebug("申请短信权限失败");
+				}
+
+				@Override
+				public void onPermissionRequestException(Exception e) {
+					LogUtils.YfcDebug("申请短信权限异常："+e.getMessage());
+				}
+			});
+		}
 	}
 
 	@Override
