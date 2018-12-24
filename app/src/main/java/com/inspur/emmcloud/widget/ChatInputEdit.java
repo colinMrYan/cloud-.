@@ -21,6 +21,7 @@ import android.widget.EditText;
 import com.inspur.emmcloud.bean.chat.InsertModel;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.DensityUtil;
+import com.inspur.emmcloud.util.common.LogUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -170,22 +171,57 @@ public class ChatInputEdit extends EditText {
      */
     @Override
     protected void onSelectionChanged(int selStart, int selEnd) {
-        super.onSelectionChanged(selStart, selEnd);
-        if (insertModelList == null || insertModelList.size() == 0)
+        if (insertModelList == null || insertModelList.size() == 0){
+            super.onSelectionChanged(selStart, selEnd);
             return;
+        }
+
         SpannableStringBuilder spannableStringBuilder = (SpannableStringBuilder) getText();
         MyForegroundColorSpan[] mSpans = getText().getSpans(0, spannableStringBuilder.length(), MyForegroundColorSpan.class);
+        LogUtils.jasonDebug("spannableStringBuilder.length()="+spannableStringBuilder.length());
+        MyForegroundColorSpan selInSpan = null;
+        LogUtils.jasonDebug("selStart="+selStart);
+        LogUtils.jasonDebug("selEnd="+selEnd);
         for (int i = 0; i < mSpans.length; i++) {
             MyForegroundColorSpan span = mSpans[i];
             int spanStartPos = spannableStringBuilder.getSpanStart(span);
             int spanEndPos = spannableStringBuilder.getSpanEnd(span);
+            LogUtils.jasonDebug("spanStartPos===="+spanStartPos);
+            LogUtils.jasonDebug("spanEndPos===="+spanEndPos);
             //重新设置选中位置
-            if (selStart > spanStartPos && selStart <= spanEndPos) {
-                setSelection(spanStartPos,selEnd);
-            }else if(selEnd > spanStartPos && selEnd <= spanEndPos){
-                setSelection(selStart,spanEndPos);
+            if (selStart > spanStartPos && selStart < spanEndPos) {
+                selInSpan = span;
+                break;
+            }
+            if (selEnd > spanStartPos && selEnd < spanEndPos) {
+                selInSpan = span;
+                break;
             }
         }
+        if (selInSpan != null){
+            LogUtils.jasonDebug("自己处理=========");
+            int spanStartPos = spannableStringBuilder.getSpanStart(selInSpan);
+            int spanEndPos = spannableStringBuilder.getSpanEnd(selInSpan);
+            if (selStart == selEnd){
+                LogUtils.jasonDebug("自己处理=========selStart=="+spanEndPos);
+                LogUtils.jasonDebug("自己处理=========selEnd=="+spanEndPos);
+                setSelection(spanEndPos,spanEndPos);
+            }else {
+                if (selStart > spanStartPos){
+                    selStart = spanStartPos;
+                }
+                if (selEnd <spanEndPos){
+                    selEnd = spanEndPos;
+                }
+                LogUtils.jasonDebug("自己处理=========selStart=="+selStart);
+                LogUtils.jasonDebug("自己处理=========selEnd=="+selEnd);
+                setSelection(selStart,selEnd);
+            }
+        }else {
+            LogUtils.jasonDebug("系统默认=========");
+            super.onSelectionChanged(selStart, selEnd);
+        }
+
     }
 
     /**
@@ -204,8 +240,9 @@ public class ChatInputEdit extends EditText {
             int spanEndPos = spannableStringBuilder.getSpanEnd(span);
             //光标起始和结束在同一位置
             if (selectionStart == selectionEnd) {
-                if (selectionStart != 0 && selectionStart >= spanStartPos && selectionStart <= spanEndPos) {
+                if ( selectionStart == spanEndPos) {
                     // 选中话题
+                    LogUtils.jasonDebug("000000000000");
                     setSelection(spanStartPos, spanEndPos);
                     //删除insertModel
                     insertModelList.remove(new InsertModel(span.getId()));
