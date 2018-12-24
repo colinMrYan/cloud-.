@@ -13,9 +13,16 @@ import com.czt.mp3recorder.MP3Recorder;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.config.MyAppConfig;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.MediaPlayerManagerUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.common.systool.permission.PermissionManagerUtils;
+import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
+import com.inspur.emmcloud.util.common.systool.permission.Permissions;
+import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.shuyu.waveview.FileUtils;
+
+import java.util.List;
 
 public class AudioRecordButton extends Button {
 
@@ -58,7 +65,7 @@ public class AudioRecordButton extends Button {
         this(context, null);
     }
 
-    public AudioRecordButton(Context context, AttributeSet attrs) {
+    public AudioRecordButton(final Context context, AttributeSet attrs) {
         super(context, attrs);
 
         audioManager = (android.media.AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
@@ -66,52 +73,80 @@ public class AudioRecordButton extends Button {
         setOnLongClickListener(new OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                audioManager.requestAudioFocus(null, android.media.AudioManager.STREAM_MUSIC,
-                        android.media.AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
-                isRecording = true;
-                mDialogManager.showRecordingDialog();
-//                if (AppUtils.getIsVoiceWordOpen()) {
-                    //录制wav的分支
-                    audioRecorderManager = AudioRecorderManager.getInstance();
-                    audioRecorderManager.setCallBack(new AudioRecorderManager.AudioDataCallBack() {
+                if(PermissionManagerUtils.getInstance().isHasPermission(getContext(), Permissions.RECORD_AUDIO)){
+                    LogUtils.YfcDebug("有权限，启动录音");
+                    startRecordVoice();
+                }else{
+                    LogUtils.YfcDebug("没有权限");
+                    PermissionManagerUtils.getInstance().requestSinglePermission(getContext(), Permissions.RECORD_AUDIO, new PermissionRequestCallback() {
                         @Override
-                        public void onDataChange(int volume, float duration) {
-                            if (isRecording) {
-                                //超过0.2秒再回调
-                                if (duration - durationTime > 0.2) {
-                                    durationTime = duration;
-                                    volumeSize = volume;
-                                    handler.sendEmptyMessage(VOICE_MESSAGE);
-                                }
-                            }
+                        public void onPermissionRequestSuccess(List<String> permissions) {
+                            startRecordVoice();
                         }
 
                         @Override
-                        public void onWavAudioPrepareState(int state) {
-                            switch (state) {
-                                case AudioRecordErrorCode.SUCCESS:
-                                    if (audioRecorderManager != null) {
-                                        audioRecorderManager.startRecord();
-                                        mListener.onStartRecordingVoice();
-                                    }
-                                    changeState(STATE_RECORDING);
-                                    break;
-                                case AudioRecordErrorCode.E_NOSDCARD:
-                                    recoveryState();
-                                    ToastUtils.show(MyApplication.getInstance(), MyApplication.getInstance().getString(R.string.error_no_sdcard));
-                                    break;
-                                case AudioRecordErrorCode.E_ERROR:
-                                    handler.sendEmptyMessage(VOICE_ERROR_TOAST);
-                                    break;
-                                default:
-                                    recoveryState();
-                                    break;
-                            }
+                        public void onPermissionRequestFail(List<String> permissions) {
+                            LogUtils.YfcDebug("申请录音权限失败");
                         }
 
+                        @Override
+                        public void onPermissionRequestException(Exception e) {
+                            LogUtils.YfcDebug("申请录音权限异常："+e.getMessage());
+                        }
                     });
-                    //按下开关，先调用准备Audio
-                    audioRecorderManager.prepareWavAudioRecord();
+                }
+                return false;
+            }
+        });
+    }
+
+    private void startRecordVoice() {
+        audioManager.requestAudioFocus(null, android.media.AudioManager.STREAM_MUSIC,
+                android.media.AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
+        isRecording = true;
+        mDialogManager.showRecordingDialog();
+//                if (AppUtils.getIsVoiceWordOpen()) {
+        //录制wav的分支
+        audioRecorderManager = AudioRecorderManager.getInstance();
+        audioRecorderManager.setCallBack(new AudioRecorderManager.AudioDataCallBack() {
+            @Override
+            public void onDataChange(int volume, float duration) {
+                if (isRecording) {
+                    //超过0.2秒再回调
+                    if (duration - durationTime > 0.2) {
+                        durationTime = duration;
+                        volumeSize = volume;
+                        handler.sendEmptyMessage(VOICE_MESSAGE);
+                    }
+                }
+            }
+
+            @Override
+            public void onWavAudioPrepareState(int state) {
+                switch (state) {
+                    case AudioRecordErrorCode.SUCCESS:
+                        if (audioRecorderManager != null) {
+                            audioRecorderManager.startRecord();
+                            mListener.onStartRecordingVoice();
+                        }
+                        changeState(STATE_RECORDING);
+                        break;
+                    case AudioRecordErrorCode.E_NOSDCARD:
+                        recoveryState();
+                        ToastUtils.show(MyApplication.getInstance(), MyApplication.getInstance().getString(R.string.error_no_sdcard));
+                        break;
+                    case AudioRecordErrorCode.E_ERROR:
+                        handler.sendEmptyMessage(VOICE_ERROR_TOAST);
+                        break;
+                    default:
+                        recoveryState();
+                        break;
+                }
+            }
+
+        });
+        //按下开关，先调用准备Audio
+        audioRecorderManager.prepareWavAudioRecord();
 //                } else {
 //                    //录制mp3的分支
 //                    isDeviceError = false;
@@ -140,9 +175,6 @@ public class AudioRecordButton extends Button {
 //                        recorderMp3Voice();
 //                    }
 //                }
-                return false;
-            }
-        });
     }
 
     /**
