@@ -178,16 +178,11 @@ public class ChatInputEdit extends EditText {
 
         SpannableStringBuilder spannableStringBuilder = (SpannableStringBuilder) getText();
         MyForegroundColorSpan[] mSpans = getText().getSpans(0, spannableStringBuilder.length(), MyForegroundColorSpan.class);
-        LogUtils.jasonDebug("spannableStringBuilder.length()="+spannableStringBuilder.length());
         MyForegroundColorSpan selInSpan = null;
-        LogUtils.jasonDebug("selStart="+selStart);
-        LogUtils.jasonDebug("selEnd="+selEnd);
         for (int i = 0; i < mSpans.length; i++) {
             MyForegroundColorSpan span = mSpans[i];
             int spanStartPos = spannableStringBuilder.getSpanStart(span);
             int spanEndPos = spannableStringBuilder.getSpanEnd(span);
-            LogUtils.jasonDebug("spanStartPos===="+spanStartPos);
-            LogUtils.jasonDebug("spanEndPos===="+spanEndPos);
             //重新设置选中位置
             if (selStart > spanStartPos && selStart < spanEndPos) {
                 selInSpan = span;
@@ -199,12 +194,9 @@ public class ChatInputEdit extends EditText {
             }
         }
         if (selInSpan != null){
-            LogUtils.jasonDebug("自己处理=========");
             int spanStartPos = spannableStringBuilder.getSpanStart(selInSpan);
             int spanEndPos = spannableStringBuilder.getSpanEnd(selInSpan);
             if (selStart == selEnd){
-                LogUtils.jasonDebug("自己处理=========selStart=="+spanEndPos);
-                LogUtils.jasonDebug("自己处理=========selEnd=="+spanEndPos);
                 setSelection(spanEndPos,spanEndPos);
             }else {
                 if (selStart > spanStartPos){
@@ -213,12 +205,9 @@ public class ChatInputEdit extends EditText {
                 if (selEnd <spanEndPos){
                     selEnd = spanEndPos;
                 }
-                LogUtils.jasonDebug("自己处理=========selStart=="+selStart);
-                LogUtils.jasonDebug("自己处理=========selEnd=="+selEnd);
                 setSelection(selStart,selEnd);
             }
         }else {
-            LogUtils.jasonDebug("系统默认=========");
             super.onSelectionChanged(selStart, selEnd);
         }
 
