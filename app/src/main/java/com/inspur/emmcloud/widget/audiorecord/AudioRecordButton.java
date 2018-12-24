@@ -19,7 +19,6 @@ import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionManagerUtils;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.util.common.systool.permission.Permissions;
-import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.shuyu.waveview.FileUtils;
 
 import java.util.List;
@@ -74,14 +73,14 @@ public class AudioRecordButton extends Button {
             @Override
             public boolean onLongClick(View v) {
                 if(PermissionManagerUtils.getInstance().isHasPermission(getContext(), Permissions.RECORD_AUDIO)){
-                    LogUtils.YfcDebug("有权限，启动录音");
                     startRecordVoice();
                 }else{
-                    LogUtils.YfcDebug("没有权限");
                     PermissionManagerUtils.getInstance().requestSinglePermission(getContext(), Permissions.RECORD_AUDIO, new PermissionRequestCallback() {
                         @Override
                         public void onPermissionRequestSuccess(List<String> permissions) {
-                            startRecordVoice();
+//                            startRecordVoice();
+                            voiceRecordUIFinish();
+                            reset();
                         }
 
                         @Override

@@ -40,6 +40,9 @@ import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.common.audioformat.AndroidMp3ConvertUtils;
+import com.inspur.emmcloud.util.common.systool.permission.PermissionManagerUtils;
+import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
+import com.inspur.emmcloud.util.common.systool.permission.Permissions;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.Voice2StringMessageUtils;
 import com.inspur.emmcloud.widget.audiorecord.AudioDialogManager;
@@ -472,12 +475,28 @@ public class ECMChatInputMenu extends LinearLayout {
                             break;
                         case "voice_input":
                             if(NetUtils.isNetworkConnected(MyApplication.getInstance())){
-                                addMenuLayout.setVisibility(GONE);
-                                voiceInputLayout.setVisibility(View.VISIBLE);
-                                lastVolumeLevel=0;
-                                waterWaveProgress.setProgress(0);
-                                mediaPlayerUtils.playVoiceOn();
-                                voice2StringMessageUtils.startVoiceListening();
+                                if(PermissionManagerUtils.getInstance().isHasPermission(getContext(), Permissions.RECORD_AUDIO)){
+                                    startVoice2Word();
+                                }else{
+                                    PermissionManagerUtils.getInstance().requestSinglePermission(getContext(), Permissions.RECORD_AUDIO, new PermissionRequestCallback() {
+                                        @Override
+                                        public void onPermissionRequestSuccess(List<String> permissions) {
+//                                            startVoice2Word();
+                                            stopVoiceInput();
+                                        }
+
+                                        @Override
+                                        public void onPermissionRequestFail(List<String> permissions) {
+
+                                        }
+
+                                        @Override
+                                        public void onPermissionRequestException(Exception e) {
+
+                                        }
+                                    });
+                                }
+
                             }
                             break;
                         case "voice_call":
@@ -496,6 +515,16 @@ public class ECMChatInputMenu extends LinearLayout {
             viewpagerLayout.setInputTypeBeanList(inputTypeBeanList);
         }
     }
+
+    private void startVoice2Word() {
+        addMenuLayout.setVisibility(GONE);
+        voiceInputLayout.setVisibility(View.VISIBLE);
+        lastVolumeLevel=0;
+        waterWaveProgress.setProgress(0);
+        mediaPlayerUtils.playVoiceOn();
+        voice2StringMessageUtils.startVoiceListening();
+    }
+
     public void setChatDrafts(String drafts){
         inputEdit.setText(drafts);
     }
