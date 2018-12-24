@@ -677,7 +677,7 @@ public class AppUtils {
      * @param requestCode
      */
     public static void call(final Activity activity, final String phoneNum, final int requestCode){
-        if(PermissionManagerUtils.getInstance().isHasPermission(activity, Permissions.PHONE)){
+        if(PermissionManagerUtils.getInstance().isHasPermission(activity, Permissions.CALL_PHONE)){
             MyApplication.getInstance().setEnterSystemUI(true);
             Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:"
                     + phoneNum));
