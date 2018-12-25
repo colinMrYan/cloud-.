@@ -87,16 +87,14 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:textSize="15sp"/>
-                    <com.inspur.emmcloud.widget.MailEditText
-                        android:id="@+id/et_recipient"
+                    <com.inspur.emmcloud.widget.FlowLayout
+                        android:id="@+id/fl_recipient"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_toRightOf="@id/tv_recipient_tip"
                         android:layout_toLeftOf="@id/iv_recipients"
                         android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp"
-                        android:background="@null"
-                        android:textSize="15sp" />
+                        android:layout_marginRight="5dp" />
                     <ImageView
                         android:id="@+id/iv_recipients"
                         android:layout_width="20dp"

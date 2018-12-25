@@ -12,7 +12,10 @@ public class CertificateDetail {
     private String mCertificateSubjectDN;//颁发给
     private String mCertificatePassword; //证书密码
     private String mCertificateStartDate;//证书有效期Start
-    private String mCertificateFinalDate;
+    private String mCertificateFinalDate;//证书截止日期
+
+    private String mCertificatePublicKey;//证书公钥
+    private String mCertificatePrivateKey;//证书私钥
 
     public  CertificateDetail(Object data) {
     }
@@ -63,5 +66,21 @@ public class CertificateDetail {
 
     public void setmCertificateFinalDate(String mCertificateFinalDate) {
         this.mCertificateFinalDate = mCertificateFinalDate;
+    }
+
+    public String getmCertificatePublicKey() {
+        return mCertificatePublicKey;
+    }
+
+    public void setmCertificatePublicKey(String mCertificatePublicKey) {
+        this.mCertificatePublicKey = mCertificatePublicKey;
+    }
+
+    public String getmCertificatePrivateKey() {
+        return mCertificatePrivateKey;
+    }
+
+    public void setmCertificatePrivateKey(String mCertificatePrivateKey) {
+        this.mCertificatePrivateKey = mCertificatePrivateKey;
     }
 }
