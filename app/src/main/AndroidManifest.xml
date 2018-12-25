@@ -100,8 +100,8 @@
     <!--科大讯飞语音增加权限-->
     <!--获取手机录音机使用权限，听写、识别、语义理解需要用到此权限 -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <!--读取联系人权限，上传联系人需要用到此权限 -->
-    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <!--&lt;!&ndash;读取联系人权限，上传联系人需要用到此权限 &ndash;&gt;-->
+    <!--<uses-permission android:name="android.permission.READ_CONTACTS" />-->
     <supports-screens
         android:anyDensity="true"
         android:largeScreens="true"
@@ -703,7 +703,6 @@
             android:name=".ui.chat.ImagePagerV0Activity"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Transparent"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".ui.chat.ImagePagerActivity"
