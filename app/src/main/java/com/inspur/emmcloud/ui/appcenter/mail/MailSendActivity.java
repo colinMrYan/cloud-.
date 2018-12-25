@@ -58,10 +58,11 @@ public class MailSendActivity extends BaseActivity {
     private ArrayList<MailRecipientModel> mCTRecipients = new ArrayList<>();
     private String searchText;
     private MyTextWatcher myTextWatcher;
-
+    private Boolean synchronousState=true;
 
     private static final int QEQUEST_ADD_MEMBER = 2;
     private static final int QEQUEST_CT_MEMBER = 3;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,15 +141,11 @@ public class MailSendActivity extends BaseActivity {
                     List<SearchModel> ctaddMemberList = (List<SearchModel>) data
                             .getSerializableExtra( "selectMemList" );
                     if (ctaddMemberList.size() > 0) {
-                        LogUtils.LbcDebug( "addMemberList.size()" + ctaddMemberList.size() );
-                        LogUtils.LbcDebug( "data:::::" + ctaddMemberList.toString() );
                         for (int i = 0; i < ctaddMemberList.size(); i++) {
                             ctAddUidList.add( ctaddMemberList.get( i ).getId() );
                             ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid( ctAddUidList.get( i ) );
                             ctaddEmailList.add( contactUser.getEmail() );
                             ctaddNameList.add( ctaddMemberList.get( i ).getName() );
-                            LogUtils.LbcDebug( "Email:::::" + ctaddEmailList.get( i ) + "    Name:::" + ctaddNameList.get( i ) );
-                            CTNameEmails = CTNameEmails + ctaddNameList.get( i ) + "(" + ctaddEmailList.get( i ) + "),";
                         }
                         mCopyToEditText.setText( CTNameEmails );
                     }
@@ -194,13 +191,13 @@ public class MailSendActivity extends BaseActivity {
                 @Override
                 public void onClick(View v) {
                     // TODO Auto-generated method stub
-                    LogUtils.LbcDebug( "点击事件,删除对象重绘" );
                     delectRecipient(searchModel);
                 }
             });
             mRecipientFlowLayout.addView(searchResultText);
         }
        flowAddEdit();
+
     }
 
     private void delectRecipient(MailRecipientModel model){
@@ -225,9 +222,26 @@ public class MailSendActivity extends BaseActivity {
             searchEdit.setSingleLine( true );
             searchEdit.setTextSize( TypedValue.COMPLEX_UNIT_SP, 16 );
             searchEdit.setBackground( null );
-            searchEdit.setHint( "请输入邮箱名称");
+            searchEdit.setFocusable( true );
+            searchEdit.requestFocus();
+            searchEdit.requestFocusFromTouch();
+            searchEdit.setHint( "添加");
             searchEdit.addTextChangedListener( myTextWatcher );
+            searchEdit.setOnFocusChangeListener(new View.
+                    OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View v, boolean hasFocus) {
+                    if (false) {
+                        synchronousState=true;
+                       handEmailAddressFocuseChange();
+                    }
+                }
+            });
+
         }else{
+            searchEdit.setFocusable( true );
+            searchEdit.requestFocus();
+            searchEdit.requestFocusFromTouch();
             searchEdit.setText("");
         }
         if (searchEdit.getParent() == null) {
@@ -253,7 +267,7 @@ public class MailSendActivity extends BaseActivity {
         @Override
         public void afterTextChanged(Editable s) {
             // TODO Auto-generated method stub
-        searchText = searchEdit.getText().toString().trim();
+         searchText = searchEdit.getText().toString().trim();
          if(!(StringUtils.isBlank(searchText))&&','==searchText.charAt(searchText.length()-1)){
              String email = searchText.substring( 0,searchText.length()-1 );
              MailRecipientModel mailRecipientModel = new MailRecipientModel();
@@ -263,8 +277,24 @@ public class MailSendActivity extends BaseActivity {
             if(!contaionState){
                 mRecipients.add(mailRecipientModel);
                 notifyFlowLayoutDataChange(mRecipients);
+
             }
          }
         }
     }
+
+    private void handEmailAddressFocuseChange(){
+        searchText = searchEdit.getText().toString().trim();
+        if(!(StringUtils.isBlank(searchText))){
+            MailRecipientModel mailRecipientModel = new MailRecipientModel();
+            mailRecipientModel.setmRecipientName(searchText);
+            mailRecipientModel.setmRecipientEmail(searchText);
+            boolean contaionState= isListContaionSpecItem(mRecipients,mailRecipientModel);
+            if(!contaionState){
+                mRecipients.add(mailRecipientModel);
+                notifyFlowLayoutDataChange(mRecipients);
+            }
+        }
+    }
+
 }
