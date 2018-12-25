@@ -708,7 +708,6 @@
             android:name=".ui.chat.ImagePagerActivity"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Transparent"
             android:windowSoftInputMode="adjustPan" />
 
         <activity
