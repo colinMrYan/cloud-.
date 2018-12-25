@@ -175,30 +175,7 @@ public class UserInfoActivity extends BaseActivity {
                 AppUtils.sendMail(UserInfoActivity.this, mail, 1);
                 break;
             case R.id.phone_img:
-//                LogUtils.YfcDebug("是否有电话权限："+PermissionManagerUtils.getInstance().isHasPermission(this,Permissions.PHONE));
-//                makeCallByPhoneNumber(phoneNum);
                 AppUtils.call(UserInfoActivity.this, phoneNum, 1);
-//                if(PermissionManagerUtils.getInstance().isHasPermission(this, Permissions.PHONE)){
-//                    AppUtils.call(UserInfoActivity.this, phoneNum, 1);
-//                }else{
-//                    PermissionManagerUtils.getInstance().requestSinglePermission(this,Permissions.CALL_PHONE, new PermissionRequestCallback() {
-//                        @Override
-//                        public void onPermissionRequestSuccess(List<String> permissions) {
-//                            AppUtils.call(UserInfoActivity.this, phoneNum, 1);
-//                        }
-//
-//                        @Override
-//                        public void onPermissionRequestFail(List<String> permissions) {
-//                            ToastUtils.show(getApplicationContext(),"授权失败");
-//                            finish();
-//                        }
-//
-//                        @Override
-//                        public void onPermissionRequestException(Exception e) {
-//                            finish();
-//                        }
-//                    });
-//                }
                 break;
             case R.id.short_msg_img:
                 AppUtils.sendSMS(UserInfoActivity.this, phoneNum, 1);
@@ -280,39 +257,6 @@ public class UserInfoActivity extends BaseActivity {
         }
 
     }
-
-
-    // 取消申请权限
-    // /**
-    // * 授权回调方法
-    // */
-    // @Override
-    // public void onRequestPermissionsResult(int requestCode,
-    // String permissions[], int[] grantResults) {
-    // String phoneNum = phoneNumText.getText().toString();
-    // switch (requestCode) {
-    // case MY_PERMISSIONS_PHONECALL:
-    // // If request is cancelled, the result arrays are empty.
-    // if (grantResults.length > 0
-    // && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-    // call(phoneNum);
-    // } else {
-    // Toast.makeText(UserInfoActivity.this, "未授权拨打电话",
-    // Toast.LENGTH_SHORT).show();
-    // }
-    // break;
-    // case MY_PERMISSIONS_SMS:
-    // if (grantResults.length > 0
-    // && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-    // sendSMS(phoneNum);
-    // } else {
-    // Toast.makeText(UserInfoActivity.this, "未授权发送短信",
-    // Toast.LENGTH_SHORT).show();
-    // }
-    // break;
-    //
-    // }
-    // }
 
 
 }

@@ -1161,4 +1161,5 @@
     <string name="permission_dialog_message_rationale">Grant the following permissions to continue the program:\n\n%1$s</string>
     <string name="permission_message_always_failed">Please give us permission in the settings:\n\n%1$s</string>
     <string name="permission_message_setting_comeback">The user comes back from the settings page.</string>
+    <string name="permission_grant_fail">授权失败</string>
 </resources>

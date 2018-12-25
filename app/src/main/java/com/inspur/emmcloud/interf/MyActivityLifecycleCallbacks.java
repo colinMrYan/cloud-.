@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 
 import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.service.PVCollectService;
@@ -18,6 +19,7 @@ import com.inspur.emmcloud.ui.mine.setting.FaceVerifyActivity;
 import com.inspur.emmcloud.ui.mine.setting.GestureLoginActivity;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionManagerUtils;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.util.common.systool.permission.Permissions;
@@ -40,7 +42,6 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
 
     @Override
     public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-        LogUtils.YfcDebug("Activity名称："+activity.getLocalClassName());
         MyApplication.getInstance().addActivity(activity);
     }
 
@@ -64,24 +65,22 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
     }
 
     private void getStoragePermission() {
+        LogUtils.YfcDebug("是否有存储权限："+PermissionManagerUtils.getInstance().isHasPermission(MyApplication.getInstance(), Permissions.STORAGE));
         if(!PermissionManagerUtils.getInstance().isHasPermission(MyApplication.getInstance(), Permissions.STORAGE)){
-            LogUtils.YfcDebug("没有sd卡权限，开始申请");
             PermissionManagerUtils.getInstance().requestGroupPermission(MyApplication.getInstance(), Permissions.STORAGE, new PermissionRequestCallback() {
                 @Override
                 public void onPermissionRequestSuccess(List<String> permissions) {
-                    LogUtils.YfcDebug("sd卡权限申请成功");
                     getPhonePermissions();
                 }
 
                 @Override
                 public void onPermissionRequestFail(List<String> permissions) {
-                    LogUtils.YfcDebug("sd卡权限申请失败");
+                    ToastUtils.show(currentActivity,currentActivity.getString(R.string.permission_grant_fail));
                     MyApplication.getInstance().exit();
                 }
 
                 @Override
                 public void onPermissionRequestException(Exception e) {
-                    LogUtils.YfcDebug("sd卡权限申请出现异常："+e.getMessage());
                     MyApplication.getInstance().exit();
                 }
             });
@@ -91,30 +90,24 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
     }
 
     private void getPhonePermissions() {
-        LogUtils.YfcDebug("获取电话权限");
         String[] phonePermissionArray = {Permission.READ_PHONE_STATE};
         if(!PermissionManagerUtils.getInstance().isHasPermission(MyApplication.getInstance(), Permission.READ_PHONE_STATE)){
-            LogUtils.YfcDebug("没有电话状态权限，开始申请");
             PermissionManagerUtils.getInstance().requestGroupPermission(MyApplication.getInstance(), phonePermissionArray, new PermissionRequestCallback() {
                 @Override
                 public void onPermissionRequestSuccess(List<String> permissions) {
-                    LogUtils.YfcDebug("电话权限申请成功");
                 }
 
                 @Override
                 public void onPermissionRequestFail(List<String> permissions) {
-                    LogUtils.YfcDebug("电话权限申请失败");
+                    ToastUtils.show(currentActivity,currentActivity.getString(R.string.permission_grant_fail));
                     MyApplication.getInstance().exit();
                 }
 
                 @Override
                 public void onPermissionRequestException(Exception e) {
-                    LogUtils.YfcDebug("电话权限出现异常："+e.getMessage());
                     MyApplication.getInstance().exit();
                 }
             });
-        }else{
-            LogUtils.YfcDebug("已经拥有电话权限");
         }
     }
 

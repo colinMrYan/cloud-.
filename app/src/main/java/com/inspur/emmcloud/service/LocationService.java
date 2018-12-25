@@ -60,25 +60,21 @@ public class LocationService extends Service implements AMapLocationListener {
 					// TODO Auto-generated method stub
 					if (NetUtils.isNetworkConnected(getApplicationContext(),false)){
 						if(PermissionManagerUtils.getInstance().isHasPermission(LocationService.this, Permissions.LOCATION)){
-							LogUtils.YfcDebug("有位置权限");
 							startLocation();
 						}else{
 							PermissionManagerUtils.getInstance().requestGroupPermission(LocationService.this, Permissions.LOCATION, new PermissionRequestCallback() {
 								@Override
 								public void onPermissionRequestSuccess(List<String> permissions) {
-									LogUtils.YfcDebug("申请位置权限成功");
 									startLocation();
 								}
 
 								@Override
 								public void onPermissionRequestFail(List<String> permissions) {
-									LogUtils.YfcDebug("申请位置权限失败");
 									LocationService.this.stopSelf();
 								}
 
 								@Override
 								public void onPermissionRequestException(Exception e) {
-									LogUtils.YfcDebug("异常："+e.getMessage());
 									LocationService.this.stopSelf();
 								}
 							});

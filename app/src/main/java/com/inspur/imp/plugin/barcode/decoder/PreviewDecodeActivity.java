@@ -17,7 +17,6 @@ import com.funcode.decoder.inspuremmcloud.FunDecode;
 import com.funcode.decoder.inspuremmcloud.FunDecodeHandler;
 import com.funcode.decoder.inspuremmcloud.FunDecodeSurfaceView;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionManagerUtils;
@@ -62,8 +61,7 @@ public class PreviewDecodeActivity extends Activity implements FunDecodeHandler 
 
                 @Override
                 public void onPermissionRequestFail(List<String> permissions) {
-                    ToastUtils.show(getApplicationContext(),"授权失败");
-                    LogUtils.YfcDebug("授权失败");
+                    ToastUtils.show(getApplicationContext(),getString(R.string.permission_grant_fail));
                     finish();
                 }
 

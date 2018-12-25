@@ -35,7 +35,6 @@ public class TelephoneService extends ImpPlugin {
 		}
 	}
 
-
 	@Override
 	public String executeAndReturn(String action, JSONObject paramsObject) {
 		showCallIMPMethodErrorDlg();

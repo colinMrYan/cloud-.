@@ -9,6 +9,14 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 
+import com.alibaba.fastjson.JSON;
+import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.emmcloud.util.common.systool.permission.PermissionManagerUtils;
+import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
+import com.inspur.emmcloud.util.common.systool.permission.Permissions;
+
+import java.util.List;
+
 /**
  * 监听短信数据库
  * 
@@ -32,9 +40,33 @@ public class SmsCaptchasReceiver extends ContentObserver {
 	@Override
 	public void onChange(boolean selfChange) {
 		super.onChange(selfChange);
+		if(PermissionManagerUtils.getInstance().isHasPermission(context, Permissions.SMS)){
+			readSMSMessages();
+		}else{
+			PermissionManagerUtils.getInstance().requestGroupPermission(context, Permissions.SMS, new PermissionRequestCallback() {
+				@Override
+				public void onPermissionRequestSuccess(List<String> permissions) {
+					readSMSMessages();
+				}
+
+				@Override
+				public void onPermissionRequestFail(List<String> permissions) {
+					LogUtils.YfcDebug("获取短信权限失败："+ JSON.toJSONString(permissions));
+				}
+
+				@Override
+				public void onPermissionRequestException(Exception e) {
+					LogUtils.YfcDebug("获取短信权限异常："+e.getMessage());
+				}
+			});
+		}
+
+	}
+
+	private void readSMSMessages() {
 		// 读取收件箱中指定号码的短信
 		cursor = context.managedQuery(Uri.parse("content://sms/inbox"), new String[] {
-				"_id", "address", "read", "body" }, " address=? and read=?",
+						"_id", "address", "read", "body" }, " address=? and read=?",
 				new String[] { "10655010187420709105", "0" }, "_id desc");// 按id排序，如果按date排序的话，修改手机时间后，读取的短信就不准了
 		if (cursor != null && cursor.getCount() > 0) {
 			ContentValues values = new ContentValues();

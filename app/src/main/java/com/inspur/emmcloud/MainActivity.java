@@ -26,6 +26,7 @@ import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ResolutionUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionManagerUtils;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.util.common.systool.permission.Permissions;
@@ -83,23 +84,20 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
 
     private void getStoragePermission() {
         if(!PermissionManagerUtils.getInstance().isHasPermission(MyApplication.getInstance(), Permissions.STORAGE)){
-            LogUtils.YfcDebug("没有sd卡权限，开始申请");
             PermissionManagerUtils.getInstance().requestGroupPermission(this, Permissions.STORAGE, new PermissionRequestCallback() {
                 @Override
                 public void onPermissionRequestSuccess(List<String> permissions) {
-                    LogUtils.YfcDebug("sd卡权限申请成功");
                     getPhonePermissions();
                 }
 
                 @Override
                 public void onPermissionRequestFail(List<String> permissions) {
-                    LogUtils.YfcDebug("sd卡权限申请失败");
+                    ToastUtils.show(MainActivity.this,getString(R.string.permission_grant_fail));
                     MyApplication.getInstance().exit();
                 }
 
                 @Override
                 public void onPermissionRequestException(Exception e) {
-                    LogUtils.YfcDebug("sd卡权限申请出现异常："+e.getMessage());
                     MyApplication.getInstance().exit();
                 }
             });
@@ -116,13 +114,13 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
             PermissionManagerUtils.getInstance().requestGroupPermission(MyApplication.getInstance(), phonePermissionArray, new PermissionRequestCallback() {
                 @Override
                 public void onPermissionRequestSuccess(List<String> permissions) {
-                    LogUtils.YfcDebug("电话权限申请成功");
                     init();
                 }
 
                 @Override
                 public void onPermissionRequestFail(List<String> permissions) {
                     LogUtils.YfcDebug("电话权限申请失败");
+                    ToastUtils.show(MainActivity.this,getString(R.string.permission_grant_fail));
                     MyApplication.getInstance().exit();
                 }
 
@@ -134,7 +132,6 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
             });
         }else{
             init();
-            LogUtils.YfcDebug("已经拥有电话权限");
         }
     }
 

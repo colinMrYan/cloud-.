@@ -694,7 +694,7 @@ public class AppUtils {
 
                 @Override
                 public void onPermissionRequestFail(List<String> permissions) {
-                    ToastUtils.show(activity,"授权失败");
+                    ToastUtils.show(activity,activity.getString(R.string.permission_grant_fail));
                     activity.finish();
                 }
 
