@@ -118,17 +118,15 @@ public class MailSendActivity extends BaseActivity {
                             .getSerializableExtra( "selectMemList" );
                     if (addMemberList.size() > 0) {
                         for (int i = 0; i < addMemberList.size(); i++) {
-                           final  MailRecipientModel singleRecipient = new MailRecipientModel();
+                             MailRecipientModel singleRecipient = new MailRecipientModel();
                             ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(addMemberList.get(i).getId());
                             LogUtils.LbcDebug( contactUser.getEmail() );
                             singleRecipient.setmRecipientEmail( contactUser.getEmail() );
                             singleRecipient.setmRecipientName( contactUser.getName() );
                             LogUtils.LbcDebug( singleRecipient.getmRecipientEmail() );
-                            if(!mRecipients.contains(singleRecipient)){
-                                LogUtils.LbcDebug( "不包含" );
-                                mRecipients.add(singleRecipient);
-                            }else{
-                                LogUtils.LbcDebug( "包含不操作" );
+                            boolean isContaion = isListContaionSpecItem( mRecipients,singleRecipient );
+                            if(!isContaion){
+                                mRecipients.add( singleRecipient );
                             }
                         }
                         notifyFlowLayoutDataChange(mRecipients);
@@ -160,6 +158,16 @@ public class MailSendActivity extends BaseActivity {
             }
         }
     }
+
+    private boolean isListContaionSpecItem(ArrayList<MailRecipientModel> selectMemList,MailRecipientModel specItem){
+        for(int i=0;i<selectMemList.size();i++){
+            if(selectMemList.get( i ).getmRecipientEmail().equals( specItem.getmRecipientEmail())){
+               return true;
+            }
+        }
+        return false;
+    }
+
 
     /**
      * 刷新FlowLayout
@@ -251,8 +259,9 @@ public class MailSendActivity extends BaseActivity {
              MailRecipientModel mailRecipientModel = new MailRecipientModel();
              mailRecipientModel.setmRecipientName(email);
              mailRecipientModel.setmRecipientEmail(email);
-            if(!mRecipients.contains(mailRecipientModel)){
-                mRecipients.add( mailRecipientModel );
+            boolean contaionState= isListContaionSpecItem(mRecipients,mailRecipientModel);
+            if(!contaionState){
+                mRecipients.add(mailRecipientModel);
                 notifyFlowLayoutDataChange(mRecipients);
             }
          }
