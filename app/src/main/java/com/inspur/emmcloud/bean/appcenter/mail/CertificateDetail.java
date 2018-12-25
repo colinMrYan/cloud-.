@@ -7,11 +7,11 @@ package com.inspur.emmcloud.bean.appcenter.mail;
 
 public class CertificateDetail {
 
-    private String mCertificateName;    //证书文件名称
-    private String mCertificateIssuerDN;//颁发者
+    private String mCertificateName;     //证书文件名称
+    private String mCertificateIssuerDN; //颁发者
     private String mCertificateSubjectDN;//颁发给
     private String mCertificatePassword; //证书密码
-    private String mCertificateStartDate; //证书有效期Start
+    private String mCertificateStartDate;//证书有效期Start
     private String mCertificateFinalDate;
 
     public  CertificateDetail(Object data) {
@@ -64,6 +64,4 @@ public class CertificateDetail {
     public void setmCertificateFinalDate(String mCertificateFinalDate) {
         this.mCertificateFinalDate = mCertificateFinalDate;
     }
-
-
 }
