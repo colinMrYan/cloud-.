@@ -257,6 +257,7 @@ public class MailSendActivity extends BaseActivity {
                 public void onFocusChange(View v, boolean hasFocus) {
                     if(!hasFocus){
                         handEmailAddressFocuseChange();
+                        searchEdit.clearFocus();
                     }
                 }});
         }else{
@@ -296,12 +297,14 @@ public class MailSendActivity extends BaseActivity {
                 public void onFocusChange(View v, boolean hasFocus) {
                     if(!hasFocus){
                         handCTEmailAddressFocuseChange();
+                        ctSearchEdit.clearFocus();
                     }
                 }});
         }else{
             ctSearchEdit.setFocusable( true );
             ctSearchEdit.requestFocus();
             ctSearchEdit.requestFocusFromTouch();
+            ctSearchEdit.findFocus();
             ctSearchEdit.setText("");
         }
         if (ctSearchEdit.getParent() == null) {
