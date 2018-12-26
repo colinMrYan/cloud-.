@@ -969,7 +969,7 @@ public class CommunicationFragment extends Fragment {
                     }
                     if (currentChannelRecentMessageList.size() > 0) {
                         //将离线消息发送到当前频道
-                        EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_CURRENT_CHANNEL_OFFLINE_MESSAGE,recentMessageList));
+                        EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_CURRENT_CHANNEL_OFFLINE_MESSAGE,currentChannelRecentMessageList));
                     }
                 }
                 new CacheMessageListThread(getRecentMessageListResult.getMessageList(), getRecentMessageListResult.getChannelMessageSetList()).start();
