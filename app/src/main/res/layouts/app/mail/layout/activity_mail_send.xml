@@ -133,14 +133,15 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:textSize="16sp"/>
-                    <EditText
-                        android:id="@+id/et_copy_to_recipient"
-                        android:layout_width="wrap_content"
+                    <com.inspur.emmcloud.widget.FlowLayout
+                        android:id="@+id/fl_copy_to_recipient"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_toLeftOf="@id/iv_copy_to_recipients"
-                        android:background="@null"
                         android:layout_toRightOf="@id/tv_copy_to_tip"
-                        android:layout_centerVertical="true"/>
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp" />
+
                     <ImageView
                         android:id="@+id/iv_copy_to_recipients"
                         android:layout_width="20dp"
