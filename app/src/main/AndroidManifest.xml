@@ -556,7 +556,6 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>
 
-
         <activity
             android:name=".ui.mine.setting.SettingActivity"
             android:launchMode="singleTask"
