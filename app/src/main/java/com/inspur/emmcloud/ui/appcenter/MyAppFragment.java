@@ -121,6 +121,7 @@ public class MyAppFragment extends Fragment {
     private DataSetObserver dataSetObserver;
     private View    netExceptionView;
     private boolean haveHeader=false;
+    private boolean hasRequestBadgeNum = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -163,7 +164,11 @@ public class MyAppFragment extends Fragment {
             getMyApp();
         }
 //        getAppBadgeNum();
-        new AppBadgeUtils(MyApplication.getInstance()).getAppBadgeCountFromServer();
+        hasRequestBadgeNum = false;
+        if(!StringUtils.isBlank(MyAppCacheUtils.getMyAppListJson(getActivity()))){
+            new AppBadgeUtils(MyApplication.getInstance()).getAppBadgeCountFromServer();
+            hasRequestBadgeNum = true;
+        }
         refreshRecommendAppWidgetView();
         NetUtils.PingThreadStart(NetUtils.pingUrls,5,Constant.EVENTBUS_TAG__NET_EXCEPTION_HINT);
     }
@@ -1133,7 +1138,7 @@ public class MyAppFragment extends Fragment {
         textView.setMovementMethod(ScrollingMovementMethod.getInstance());
         textView.setText(getString(R.string.app_commonly_use_app));
         Button okBtn = (Button) view.findViewById(R.id.ok_btn);
-        okBtn.setOnClickListener(new View.OnClickListener() {
+        okBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (icon == 0) {
@@ -1149,7 +1154,7 @@ public class MyAppFragment extends Fragment {
             }
         });
         Button cancelBtn = (Button) view.findViewById(R.id.cancel_btn);
-        cancelBtn.setOnClickListener(new View.OnClickListener() {
+        cancelBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (checkBox.isChecked()) {
@@ -1193,6 +1198,9 @@ public class MyAppFragment extends Fragment {
         @Override
         protected void onPostExecute(List<AppGroupBean> appGroupList) {
             super.onPostExecute(appGroupList);
+            if(!hasRequestBadgeNum){
+                new AppBadgeUtils(MyApplication.getInstance()).getAppBadgeCountFromServer();
+            }
             appListAdapter.setAppAdapterList(appGroupList);
             swipeRefreshLayout.setRefreshing(false);
             refreshRecommendAppWidgetView();
