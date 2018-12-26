@@ -122,6 +122,9 @@ public class WebSocketPush {
         if (!MyApplication.getInstance().isHaveLogin()) {
             return;
         }
+        if(MyApplication.getInstance().getCurrentEnterprise() == null){
+            return;
+        }
         //App在后台时不启动websocket
         if (!MyApplication.getInstance().getIsActive()) {
             return;

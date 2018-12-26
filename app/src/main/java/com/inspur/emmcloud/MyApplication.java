@@ -116,6 +116,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     public void onCreate() {
         super.onCreate();
         init();
+        LogUtils.isDebug = AppUtils.isApkDebugable(getInstance());
         setAppLanguageAndFontScale();
         removeAllSessionCookie();
         myActivityLifecycleCallbacks = new MyActivityLifecycleCallbacks();
@@ -387,7 +388,6 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
      */
     public void restartAllDb() {
         // TODO Auto-generated method stub
-        DbCacheUtils.closeDb(getInstance());
         DbCacheUtils.closeDb(getInstance());
         DbCacheUtils.initDb(getInstance());
     }
