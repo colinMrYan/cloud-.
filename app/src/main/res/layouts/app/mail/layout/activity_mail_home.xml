@@ -20,12 +20,15 @@
                 android:background="?attr/header_bg_color">
 
                 <ImageButton
-                    android:id="@+id/bt_setting"
-                    android:layout_width="40dp"
-                    android:layout_height="30dp"
+                    android:id="@+id/ibt_setting"
+                    android:layout_width="45dp"
+                    android:layout_height="40dp"
                     android:layout_centerVertical="true"
                     android:onClick="onClick"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
                     android:paddingLeft="10dp"
+                    android:paddingRight="5dp"
                     android:src="@drawable/ic_mail_header_setting" />
 
                 <TextView
@@ -33,7 +36,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:text="收件箱"
                     android:textColor="?attr/header_text_color"
                     android:textSize="@dimen/header_textsize" />
 
@@ -43,11 +45,11 @@
                     android:layout_alignParentRight="true">
 
                     <Button
-                        android:id="@+id/bt_add_mail"
+                        android:id="@+id/bt_mail_add"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_centerVertical="true"
-                        android:background="@drawable/ic_mail_header_add_mail"
+                        android:background="@drawable/ic_mail_header_add"
                         android:onClick="onClick" />
 
                     <Button
@@ -57,25 +59,25 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="10dp"
                         android:layout_marginRight="10dp"
-                        android:layout_toRightOf="@id/bt_add_mail"
+                        android:layout_toRightOf="@id/bt_mail_add"
                         android:background="@drawable/ic_mail_header_close"
                         android:onClick="onClick" />
                 </RelativeLayout>
             </RelativeLayout>
 
-                <android.support.v4.widget.SwipeRefreshLayout
+                <com.inspur.emmcloud.widget.MySwipeRefreshLayout
                     android:id="@+id/srl_refresh"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_below="@id/rl_header"
                     android:background="@color/content_bg">
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/rcv_mail"
+                    <ListView
+                        android:id="@+id/lv_mail"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:divider="@null"
                         android:dividerHeight="0dp" />
-                </android.support.v4.widget.SwipeRefreshLayout>
+                </com.inspur.emmcloud.widget.MySwipeRefreshLayout>
 
             <View
                 android:id="@+id/v_shadow"

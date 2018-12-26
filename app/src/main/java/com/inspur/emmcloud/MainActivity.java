@@ -71,7 +71,6 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
             requestWindowFeature(Window.FEATURE_NO_TITLE);//没有标题
             this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
         }
-        //IntentUtils.startActivity(this, MailHomeActivity.class,true);
         setContentView(R.layout.activity_main);
         init();
     }

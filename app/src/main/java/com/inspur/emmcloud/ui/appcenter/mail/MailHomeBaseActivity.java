@@ -10,6 +10,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.widget.sildemenu.AllInterface;
 import com.inspur.emmcloud.widget.sildemenu.LeftDrawerLayout;
 
+import org.greenrobot.eventbus.EventBus;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
@@ -31,6 +32,7 @@ public class MailHomeBaseActivity extends BaseFragmentActivity implements AllInt
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
         x.view().inject(this);
         FragmentManager fm = getSupportFragmentManager();
         mailLeftMenuFragment = (MailLeftMenuFragment) fm.findFragmentById(R.id.fm_container_menu);
@@ -42,13 +44,13 @@ public class MailHomeBaseActivity extends BaseFragmentActivity implements AllInt
 
     public void onClick(View v){
         switch (v.getId()){
-            case R.id.bt_setting:
+            case R.id.ibt_setting:
                openMenu();
                 break;
             case R.id.rl_back:
                 closeMenu();
                 break;
-            case R.id.bt_add_mail:
+            case R.id.bt_mail_add:
                 break;
             case R.id.bt_close:
                finish();
@@ -65,8 +67,11 @@ public class MailHomeBaseActivity extends BaseFragmentActivity implements AllInt
     }
 
     public void closeMenu() {
-        leftDrawerLayout.closeDrawer();
-        shadowView.setVisibility(View.GONE);
+        if (leftDrawerLayout.isDrawerOpen()){
+            leftDrawerLayout.closeDrawer();
+            shadowView.setVisibility(View.GONE);
+        }
+
     }
 
     @Override
@@ -74,5 +79,11 @@ public class MailHomeBaseActivity extends BaseFragmentActivity implements AllInt
         shadowView.setVisibility(offset == 0 ? View.INVISIBLE : View.VISIBLE);
         int alpha = (int) Math.round(offset * 255 * 0.4);
         shadowView.setBackgroundColor(Color.argb(alpha, 0, 0, 0));
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 }

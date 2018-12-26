@@ -40,10 +40,16 @@
         android:layout_width="match_parent"
         android:layout_height="0.6dp">
     </View>
-    <ListView
-        android:id="@+id/lv_mail_forder"
-        android:divider="#00000000"
+    <ScrollView
+        android:layout_weight="1"
+        android:focusableInTouchMode="true"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    </ListView>
+        android:layout_height="0dp">
+        <RelativeLayout
+            android:id="@+id/rl_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </RelativeLayout>
+    </ScrollView>
+
 </LinearLayout>

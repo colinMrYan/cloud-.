@@ -1,60 +1,111 @@
 package com.inspur.emmcloud.ui.appcenter.mail;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.RelativeLayout;
 
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIInterfaceInstance;
+import com.inspur.emmcloud.api.apiservice.MailApiService;
+import com.inspur.emmcloud.bean.appcenter.mail.GetMailFolderResult;
+import com.inspur.emmcloud.bean.appcenter.mail.MailFolder;
+import com.inspur.emmcloud.bean.system.SimpleEventMessage;
+import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.privates.cache.MailFolderCacheUtils;
+import com.inspur.emmcloud.widget.LoadingDialog;
+import com.unnamed.b.atv.model.TreeNode;
+import com.unnamed.b.atv.view.AndroidTreeView;
+
+import org.greenrobot.eventbus.EventBus;
+
+import java.util.List;
 
 /**
  * Created by chenmch on 2018/12/20.
  */
 
 public class MailLeftMenuFragment extends Fragment {
-    private final int[] forderIcons = {R.drawable.ic_mail_inbox,R.drawable.ic_mail_outbox,R.drawable.ic_mail_outbox};
-    private final String[]  forderNames= {"收件箱","已发送邮件","导入证书"};
-    private ListView mailForderListView;
+    private LoadingDialog loadingDialog;
+    private MailApiService apiService;
+    private AndroidTreeView treeView;
+    private RelativeLayout containerLayout;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        apiService = new MailApiService(getActivity());
+        apiService.setAPIInterface(new WebService());
+    }
+
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.mail_left_menu,null);
-        initView(view);
+        loadingDialog = new LoadingDialog(getActivity());
+        containerLayout = (RelativeLayout) view.findViewById(R.id.rl_container);
+        addTreeView();
+        getMailFolder();
         return view;
     }
+    private void addTreeView(){
+        List<MailFolder> rootChildMailFolderList = MailFolderCacheUtils.getChildMailFolderList("");
+        if (rootChildMailFolderList.size()>0){
+            openMailFolder(rootChildMailFolderList.get(0));
+            containerLayout.removeAllViews();
+            containerLayout.removeAllViewsInLayout();
+            TreeNode root = TreeNode.root();
+            for (MailFolder mailFolder:rootChildMailFolderList){
+                TreeNode treeNode = new TreeNode(mailFolder);
+                root.addChild(treeNode);
+            }
+            treeView = new AndroidTreeView(getActivity(),root);
+            treeView.setDefaultAnimation(true);
+            treeView.setUseAutoToggle(false);
+            treeView.setDefaultContainerStyle(R.style.AndroidTreeNodeStyleCustom);
+            treeView.setDefaultViewHolder(IconTreeItemHolder.class);
+            treeView.setDefaultNodeClickListener(new TreeNode.TreeNodeClickListener() {
+                @Override
+                public void onClick(TreeNode node, Object value) {
+                    MailFolder mailFolder = (MailFolder)value;
+                    openMailFolder(mailFolder);
 
-    private void initView(View view){
-        mailForderListView = (ListView)view.findViewById(R.id.lv_mail_forder);
-        mailForderListView.setAdapter(adapter);
+                }
+            });
+            containerLayout.addView(treeView.getView());
+        }
+
     }
 
-    private BaseAdapter adapter = new BaseAdapter() {
+    private void openMailFolder(MailFolder mailFolder){
+        EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_GET_MAIL_BY_FOLDER,mailFolder));
+    }
+
+
+    private void getMailFolder(){
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance())){
+            //loadingDialog.show();
+            apiService.getMailFolder();
+        }
+    }
+
+
+    private class WebService extends APIInterfaceInstance{
         @Override
-        public int getCount() {
-            return forderIcons.length;
+        public void returnMailFolderSuccess(GetMailFolderResult getMailfolderResult) {
+            LoadingDialog.dimissDlg(loadingDialog);
+            List<MailFolder> mailFolderList = getMailfolderResult.getMailFolderList();
+            MailFolderCacheUtils.saveMailFolderList(mailFolderList);
+            addTreeView();
+
         }
 
         @Override
-        public Object getItem(int position) {
-            return null;
+        public void returnMailFolderFail(String error, int errorCode) {
+            LoadingDialog.dimissDlg(loadingDialog);
         }
-
-        @Override
-        public long getItemId(int position) {
-            return 0;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.mail_forder_item_view,null);
-            ImageView imageView = (ImageView)convertView.findViewById(R.id.iv_forder_icon);
-            TextView textView = (TextView)convertView.findViewById(R.id.tv_forder_name);
-            imageView.setImageResource(forderIcons[position]);
-            textView.setText(forderNames[position]);
-            return convertView;
-        }
-    };
+    }
 }

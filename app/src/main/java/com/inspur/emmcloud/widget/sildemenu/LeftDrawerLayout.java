@@ -164,6 +164,10 @@ public class LeftDrawerLayout extends ViewGroup {
         }
     }
 
+    public boolean isDrawerOpen(){
+        return  mLeftMenuOnScrren == 1;
+    }
+
     public void closeDrawer() {
         View menuView = mLeftMenuView;
         mLeftMenuOnScrren = 0.f;
