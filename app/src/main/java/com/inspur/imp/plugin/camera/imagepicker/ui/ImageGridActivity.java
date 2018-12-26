@@ -6,7 +6,6 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
@@ -51,13 +50,14 @@ public class ImageGridActivity extends ImageBaseActivity implements
     private FolderPopUpWindow mFolderPopupWindow; // ImageSet的PopupWindow
     private List<ImageFolder> mImageFolders; // 所有的图片文件夹
     private ImageGridAdapter mImageGridAdapter; // 图片九宫格展示的适配器
+    private int requestCode = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);//没有标题
         setContentView(R.layout.activity_image_grid);
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
+//        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
         // hideBars();
         imagePicker = ImagePicker.getInstance();
         imagePicker.clear();
@@ -159,15 +159,17 @@ public class ImageGridActivity extends ImageBaseActivity implements
 
     @Override
     public void onImagesLoaded(List<ImageFolder> imageFolders) {
-        this.mImageFolders = imageFolders;
-        imagePicker.setImageFolders(imageFolders);
-        if (imageFolders.size() == 0)
-            mImageGridAdapter.refreshData(null);
-        else
-            mImageGridAdapter.refreshData(imageFolders.get(0).images);
-        mImageGridAdapter.setOnImageItemClickListener(this);
-        mGridView.setAdapter(mImageGridAdapter);
-        mImageFolderAdapter.refreshData(imageFolders);
+        if(!(requestCode == ImagePicker.REQUEST_CODE_CROP)){
+            this.mImageFolders = imageFolders;
+            imagePicker.setImageFolders(imageFolders);
+            if (imageFolders.size() == 0)
+                mImageGridAdapter.refreshData(null);
+            else
+                mImageGridAdapter.refreshData(imageFolders.get(0).images);
+            mImageGridAdapter.setOnImageItemClickListener(this);
+            mGridView.setAdapter(mImageGridAdapter);
+            mImageFolderAdapter.refreshData(imageFolders);
+        }
     }
 
     @Override
@@ -232,6 +234,7 @@ public class ImageGridActivity extends ImageBaseActivity implements
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        this.requestCode = requestCode;
         if (resultCode == RESULT_OK
                 && requestCode == ImagePicker.REQUEST_CODE_TAKE) {
             ImageItem imageItem = new ImageItem();
@@ -252,10 +255,7 @@ public class ImageGridActivity extends ImageBaseActivity implements
                 setResult(ImagePicker.RESULT_CODE_ITEMS, intent); // 单选不需要裁剪，返回数据
                 finish();
             }
-        }
-
-
-         else if (data != null) {
+        } else if (data != null) {
             if (requestCode == ImagePicker.REQUEST_CODE_EDIT) {// 说明是从裁剪页面过来的数据，直接返回就可以
                 if (resultCode == RESULT_OK) {
                     String newPath = data.getStringExtra(
