@@ -936,6 +936,15 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
 
+        <activity android:name="com.inspur.emmcloud.ui.appcenter.mail.MailHomeActivity">
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait"
+        </activity>
+        <activity android:name="com.inspur.emmcloud.ui.appcenter.mail.MailDetailActivity">
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait"
+        </activity>
+
         <!-- Mail-->
         <activity
             android:name=".ui.appcenter.mail.MailCertificateInstallActivity"
@@ -1308,8 +1317,6 @@
             android:excludeFromRecents="true"
             android:resizeableActivity="true"
             android:theme="@style/Theme.UMDefault" />
-
-
     </application>
 
 </manifest>

@@ -41,8 +41,8 @@ android {
         applicationId "com.inspur.emmcloud"
         minSdkVersion 16
         targetSdkVersion 22
-        versionCode 66
-        versionName "2.7.4"
+        versionCode 67
+        versionName "2.7.5"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             abiFilters "armeabi-v7a", "x86"
@@ -241,6 +241,7 @@ dependencies {
     compile 'com.wang.avi:library:2.1.3'
     compile 'com.github.open-android:RoundedImageView:v1.0.0'
     compile 'com.github.zafarkhaja:java-semver:0.7.2' //版本号包
+    compile 'com.github.bmelnychuk:atv:1.2.9'//AndroidTreeView
 }
 repositories { flatDir { dirs 'aars' } }
 
