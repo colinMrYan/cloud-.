@@ -100,6 +100,7 @@ public class PermissionManagerUtils {
                     public void onClick(QMUIDialog dialog, int index) {
                         dialog.dismiss();
                         setPermission(context,permissionList);
+                        exitByPermission(permissionList);
                     }
                 })
                 .show();
