@@ -1102,4 +1102,9 @@
     <string name="voice_to_word">Voice to Text</string>
 
     <string name="resend_file_failed">The message resent failed because the resource file could not be found</string>
+
+    <!--权限管理-->
+    <string name="permission_dialog_title">Tips</string>
+    <string name="permission_message_always_failed">Please give us permission in the settings:\n\n%1$s</string>
+    <string name="permission_grant_fail">Grant failed</string>
 </resources>

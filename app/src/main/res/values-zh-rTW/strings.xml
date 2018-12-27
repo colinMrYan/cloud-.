@@ -1101,4 +1101,10 @@
     <string name="voice_to_word">轉文字</string>
 
     <string name="resend_file_failed">無法找到資源檔，消息重發失敗</string>
+
+
+    <!--权限管理-->
+    <string name="permission_dialog_title">提示</string>
+    <string name="permission_message_always_failed">請在設定中授予這項許可權:\n\n%1$s</string>
+    <string name="permission_grant_fail">授權失敗</string>
 </resources>
