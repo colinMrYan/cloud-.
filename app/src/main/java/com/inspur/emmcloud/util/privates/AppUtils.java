@@ -47,6 +47,7 @@ import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallb
 import com.inspur.emmcloud.util.common.systool.permission.Permissions;
 import com.inspur.imp.api.ImpActivity;
 import com.inspur.imp.api.Res;
+import com.inspur.imp.plugin.barcode.decoder.PreviewDecodeActivity;
 import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
 import com.inspur.imp.plugin.camera.imagepicker.ui.ImageGridActivity;
 import com.inspur.imp.plugin.camera.mycamera.MyCameraActivity;
@@ -677,6 +678,36 @@ public class AppUtils {
         intent.putExtra(MyCameraActivity.EXTRA_PHOTO_NAME,fileName);
         intent.setClass(activity,MyCameraActivity.class);
         activity.startActivityForResult(intent, requestCode);
+    }
+
+    public static void openScanCode(final Activity activity, final int requestCode){
+        if(PermissionManagerUtils.getInstance().isHasPermission(activity,Permissions.CAMERA)){
+            openScanCodeAfterCheckPermission(activity,requestCode);
+        }else{
+            PermissionManagerUtils.getInstance().requestSinglePermission(activity, Permissions.CAMERA, new PermissionRequestCallback() {
+                @Override
+                public void onPermissionRequestSuccess(List<String> permissions) {
+                    openScanCodeAfterCheckPermission(activity,requestCode);
+                }
+
+                @Override
+                public void onPermissionRequestFail(List<String> permissions) {
+                    ToastUtils.show(activity,activity.getString(R.string.permission_grant_fail));
+                }
+
+                @Override
+                public void onPermissionRequestException(Exception e) {
+
+                }
+            });
+        }
+
+    }
+
+    private static void openScanCodeAfterCheckPermission(Activity activity,int requestCode) {
+        Intent intent = new Intent();
+        intent.setClass(activity, PreviewDecodeActivity.class);
+        activity.startActivityForResult(intent,requestCode);
     }
 
     /**

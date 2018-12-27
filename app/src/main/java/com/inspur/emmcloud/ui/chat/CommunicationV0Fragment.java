@@ -60,6 +60,7 @@ import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.AppTabUtils;
+import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ChannelGroupIconUtils;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils.OnCreateGroupChannelListener;
@@ -80,7 +81,6 @@ import com.inspur.emmcloud.util.privates.cache.MsgReadCreationDateCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.widget.CircleTextImageView;
 import com.inspur.emmcloud.widget.WeakThread;
-import com.inspur.imp.plugin.barcode.decoder.PreviewDecodeActivity;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 
 import org.greenrobot.eventbus.EventBus;
@@ -436,10 +436,11 @@ public class CommunicationV0Fragment extends Fragment {
         scanLayout.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setClass(getActivity(), PreviewDecodeActivity.class);
-                intent.putExtra("from", "CommunicationFragment");
-                startActivityForResult(intent, SCAN_LOGIN_QRCODE_RESULT);
+//                Intent intent = new Intent();
+//                intent.setClass(getActivity(), PreviewDecodeActivity.class);
+//                intent.putExtra("from", "CommunicationFragment");
+//                startActivityForResult(intent, SCAN_LOGIN_QRCODE_RESULT);
+                AppUtils.openScanCode(getActivity(),SCAN_LOGIN_QRCODE_RESULT);
                 popupWindow.dismiss();
             }
         });

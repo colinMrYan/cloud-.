@@ -18,6 +18,9 @@ import com.google.zxing.EncodeHintType;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
+import com.inspur.emmcloud.util.common.systool.permission.PermissionManagerUtils;
+import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
+import com.inspur.emmcloud.util.common.systool.permission.Permissions;
 import com.inspur.imp.api.ImpFragment;
 import com.inspur.imp.api.Res;
 import com.inspur.imp.plugin.ImpPlugin;
@@ -27,6 +30,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Hashtable;
+import java.util.List;
 
 
 /**
@@ -99,8 +103,29 @@ public class BarCodeService extends ImpPlugin {
 		}
 
 		if (getImpCallBackInterface() != null) {
-			Intent scanIntent = new Intent(getFragmentContext(), PreviewDecodeActivity.class);
-			getImpCallBackInterface().onStartActivityForResult(scanIntent, ImpFragment.BARCODE_SERVER__SCAN_REQUEST);
+			if(PermissionManagerUtils.getInstance().isHasPermission(getFragmentContext(), Permissions.CAMERA)){
+				Intent scanIntent = new Intent(getFragmentContext(), PreviewDecodeActivity.class);
+				getImpCallBackInterface().onStartActivityForResult(scanIntent, ImpFragment.BARCODE_SERVER__SCAN_REQUEST);
+			}else{
+				PermissionManagerUtils.getInstance().requestSinglePermission(getFragmentContext(), Permissions.CAMERA, new PermissionRequestCallback() {
+					@Override
+					public void onPermissionRequestSuccess(List<String> permissions) {
+						Intent scanIntent = new Intent(getFragmentContext(), PreviewDecodeActivity.class);
+						getImpCallBackInterface().onStartActivityForResult(scanIntent, ImpFragment.BARCODE_SERVER__SCAN_REQUEST);
+					}
+
+					@Override
+					public void onPermissionRequestFail(List<String> permissions) {
+
+					}
+
+					@Override
+					public void onPermissionRequestException(Exception e) {
+
+					}
+				});
+			}
+
 		}
 	}
 	
