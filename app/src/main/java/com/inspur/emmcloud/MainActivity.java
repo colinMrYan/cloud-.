@@ -107,10 +107,8 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
     }
 
     private void getPhonePermissions() {
-        LogUtils.YfcDebug("获取电话权限");
         String[] phonePermissionArray = {Permission.READ_PHONE_STATE};
         if(!PermissionManagerUtils.getInstance().isHasPermission(this, Permission.READ_PHONE_STATE)){
-            LogUtils.YfcDebug("没有电话状态权限，开始申请");
             PermissionManagerUtils.getInstance().requestGroupPermission(MyApplication.getInstance(), phonePermissionArray, new PermissionRequestCallback() {
                 @Override
                 public void onPermissionRequestSuccess(List<String> permissions) {
@@ -119,14 +117,12 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
 
                 @Override
                 public void onPermissionRequestFail(List<String> permissions) {
-                    LogUtils.YfcDebug("电话权限申请失败");
                     ToastUtils.show(MainActivity.this,getString(R.string.permission_grant_fail));
                     MyApplication.getInstance().exit();
                 }
 
                 @Override
                 public void onPermissionRequestException(Exception e) {
-                    LogUtils.YfcDebug("电话权限出现异常："+e.getMessage());
                     MyApplication.getInstance().exit();
                 }
             });

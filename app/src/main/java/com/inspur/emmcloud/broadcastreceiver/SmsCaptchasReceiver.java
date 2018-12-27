@@ -9,8 +9,6 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 
-import com.alibaba.fastjson.JSON;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionManagerUtils;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.util.common.systool.permission.Permissions;
@@ -51,12 +49,10 @@ public class SmsCaptchasReceiver extends ContentObserver {
 
 				@Override
 				public void onPermissionRequestFail(List<String> permissions) {
-					LogUtils.YfcDebug("获取短信权限失败："+ JSON.toJSONString(permissions));
 				}
 
 				@Override
 				public void onPermissionRequestException(Exception e) {
-					LogUtils.YfcDebug("获取短信权限异常："+e.getMessage());
 				}
 			});
 		}

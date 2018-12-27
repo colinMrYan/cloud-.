@@ -3,10 +3,8 @@ package com.inspur.emmcloud.util.common.systool.permission;
 import android.content.Context;
 import android.text.TextUtils;
 
-import com.alibaba.fastjson.JSON;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
@@ -20,8 +18,7 @@ import java.util.List;
 /**
  * 1.请求单个权限或者权限组的时候使用的是Permission这个类下的，如：Permission.WRITE_EXTERNAL_STORAGE
  * 2.AndPermission可以在任何地方使用 如：AndPermission.with(activity/fragment/context)
- * 3.当用户拒绝时想要再次申请调用Rationale方法，在该方法中去申请
- * 4.AndPermission.hasAlwaysDeniedPermission只能在onDenied()的回调中调用，不能在其它地方使用
+ * 3.AndPermission.hasAlwaysDeniedPermission只能在onDenied()的回调中调用，不能在其它地方使用
  */
 public class PermissionManagerUtils {
 
@@ -63,23 +60,18 @@ public class PermissionManagerUtils {
         AndPermission.with(context)
                 .runtime()
                 .permission(permissionGroup)
-//                .rationale(new RuntimeRationale())
                 .onGranted(new Action<List<String>>() {
                     @Override
                     public void onAction(List<String> permissions) {
-                        LogUtils.YfcDebug("申请成功");
                         callback.onPermissionRequestSuccess(permissions);
                     }
                 })
                 .onDenied(new Action<List<String>>() {
                     @Override
                     public void onAction(List<String> permissions) {
-                        LogUtils.YfcDebug("申请失败");
                         if (AndPermission.hasAlwaysDeniedPermission(context, permissions)) {
-                            LogUtils.YfcDebug("永久拒绝，"+JSON.toJSONString(permissions));
                             showSettingDialog(context, permissions);
                         }else{
-                            LogUtils.YfcDebug("拒绝一次");
                             callback.onPermissionRequestFail(permissions);
                         }
                     }
@@ -93,14 +85,12 @@ public class PermissionManagerUtils {
     private void showSettingDialog(final Context context, final List<String> permissionList) {
         List<String> permissionNames = Permission.transformText(context, permissionList);
         String message = context.getString(R.string.permission_message_always_failed, TextUtils.join("\n", permissionNames));
-        LogUtils.YfcDebug("权限："+ JSON.toJSONString(permissionList));
         new MyQMUIDialog.MessageDialogBuilder(context)
                 .setTitle(R.string.permission_dialog_title)
                 .setMessage(message)
                 .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
                     @Override
                     public void onClick(QMUIDialog dialog, int index) {
-                        LogUtils.YfcDebug("点击取消按钮");
                         dialog.dismiss();
                         exitByPermission(permissionList);
                     }
@@ -108,7 +98,6 @@ public class PermissionManagerUtils {
                 .addAction(R.string.settings, new QMUIDialogAction.ActionListener() {
                     @Override
                     public void onClick(QMUIDialog dialog, int index) {
-                        LogUtils.YfcDebug("点击确定按钮");
                         dialog.dismiss();
                         setPermission(context,permissionList);
                     }
@@ -161,6 +150,5 @@ public class PermissionManagerUtils {
     public boolean isHasPermission(Context context,String[] permissions){
         return AndPermission.hasPermissions(context,permissions);
     }
-
 
 }

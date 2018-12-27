@@ -39,6 +39,7 @@
                 android:text="@string/app_center"
                 android:textColor="?attr/header_text_color"
                 android:textSize="13sp" />
+
         </RelativeLayout>
 
         <TextView

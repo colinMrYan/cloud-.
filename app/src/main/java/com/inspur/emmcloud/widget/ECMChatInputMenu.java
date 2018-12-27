@@ -481,7 +481,6 @@ public class ECMChatInputMenu extends LinearLayout {
                                     PermissionManagerUtils.getInstance().requestSinglePermission(getContext(), Permissions.RECORD_AUDIO, new PermissionRequestCallback() {
                                         @Override
                                         public void onPermissionRequestSuccess(List<String> permissions) {
-//                                            startVoice2Word();
                                             stopVoiceInput();
                                         }
 
