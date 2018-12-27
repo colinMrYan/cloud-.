@@ -486,7 +486,7 @@ public class ECMChatInputMenu extends LinearLayout {
 
                                         @Override
                                         public void onPermissionRequestFail(List<String> permissions) {
-
+                                            ToastUtils.show(getContext(),getContext().getString(R.string.permission_grant_fail));
                                         }
 
                                         @Override
@@ -495,16 +495,32 @@ public class ECMChatInputMenu extends LinearLayout {
                                         }
                                     });
                                 }
-
                             }
                             break;
                         case "voice_call":
-                            //语音通话
-                            if(!canMentions){
-                                chatInputMenuListener.onVoiceCommucaiton();
-                            }else{
-                                AppUtils.openChannelMemeberSelect((Activity)getContext(),cid,6);
+                            if(NetUtils.isNetworkConnected(MyApplication.getInstance())){
+                                if(PermissionManagerUtils.getInstance().isHasPermission(getContext(), Permissions.RECORD_AUDIO)){
+                                    startVoiceCall();
+                                }else{
+                                    PermissionManagerUtils.getInstance().requestSinglePermission(getContext(), Permissions.RECORD_AUDIO, new PermissionRequestCallback() {
+                                        @Override
+                                        public void onPermissionRequestSuccess(List<String> permissions) {
+                                            startVoiceCall();
+                                        }
+
+                                        @Override
+                                        public void onPermissionRequestFail(List<String> permissions) {
+                                            ToastUtils.show(getContext(),getContext().getString(R.string.permission_grant_fail));
+                                        }
+
+                                        @Override
+                                        public void onPermissionRequestException(Exception e) {
+
+                                        }
+                                    });
+                                }
                             }
+
                             break;
                         default:
                             break;
@@ -512,6 +528,15 @@ public class ECMChatInputMenu extends LinearLayout {
                 }
             });
             viewpagerLayout.setInputTypeBeanList(inputTypeBeanList);
+        }
+    }
+
+    private void startVoiceCall() {
+        //语音通话
+        if(!canMentions){
+            chatInputMenuListener.onVoiceCommucaiton();
+        }else{
+            AppUtils.openChannelMemeberSelect((Activity)getContext(),cid,6);
         }
     }
 

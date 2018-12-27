@@ -35,7 +35,6 @@ import com.inspur.emmcloud.bean.mine.Language;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.chat.DisplayMediaVoiceMsg;
 import com.inspur.emmcloud.ui.chat.MembersActivity;
-import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.common.EncryptUtils;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
@@ -51,6 +50,7 @@ import com.inspur.imp.api.Res;
 import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
 import com.inspur.imp.plugin.camera.imagepicker.ui.ImageGridActivity;
 import com.inspur.imp.plugin.camera.mycamera.MyCameraActivity;
+import com.yanzhenjie.permission.Permission;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -636,24 +636,47 @@ public class AppUtils {
      * @param fileName
      * @param requestCode
      */
-    public static void openCamera(Activity activity, String fileName, int requestCode) {
+    public static void openCamera(final Activity activity, final String fileName, final int requestCode) {
         // 判断存储卡是否可以用，可用进行存储
         if (Environment.getExternalStorageState().equals(
                 Environment.MEDIA_MOUNTED)) {
-            MyApplication.getInstance().setEnterSystemUI(true);
-            File appDir = new File(Environment.getExternalStorageDirectory(),
-                    "DCIM");
-            if (!appDir.exists()) {
-                appDir.mkdir();
+            if (PermissionManagerUtils.getInstance().isHasPermission(activity, Permission.CAMERA)) {
+                openCameraAfterCheckPermission(activity,fileName,requestCode);
+            } else {
+                PermissionManagerUtils.getInstance().requestSinglePermission(activity, Permission.CAMERA, new PermissionRequestCallback() {
+                    @Override
+                    public void onPermissionRequestSuccess(List<String> permissions) {
+                        openCameraAfterCheckPermission(activity,fileName,requestCode);
+                    }
+
+                    @Override
+                    public void onPermissionRequestFail(List<String> permissions) {
+                        ToastUtils.show(activity,activity.getString(R.string.permission_grant_fail));
+                    }
+
+                    @Override
+                    public void onPermissionRequestException(Exception e) {
+                    }
+                });
             }
-            Intent intent = new Intent();
-            intent.putExtra(MyCameraActivity.EXTRA_PHOTO_DIRECTORY_PATH, appDir.getAbsolutePath());
-            intent.putExtra(MyCameraActivity.EXTRA_PHOTO_NAME,fileName);
-            intent.setClass(activity,MyCameraActivity.class);
-            activity.startActivityForResult(intent, requestCode);
+
         } else {
             ToastUtils.show(activity, R.string.filetransfer_sd_not_exist);
         }
+    }
+
+    private static void openCameraAfterCheckPermission(Activity activity, String fileName, int requestCode) {
+        MyApplication.getInstance().setEnterSystemUI(true);
+        File appDir = new File(Environment.getExternalStorageDirectory(),
+                "DCIM");
+        if (!appDir.exists()) {
+            appDir.mkdir();
+        }
+        Intent intent = new Intent();
+        intent.putExtra(MyCameraActivity.EXTRA_PHOTO_DIRECTORY_PATH, appDir.getAbsolutePath());
+        intent.putExtra(MyCameraActivity.EXTRA_PHOTO_NAME,fileName);
+        intent.setClass(activity,MyCameraActivity.class);
+        activity.startActivityForResult(intent, requestCode);
     }
 
     /**

@@ -13,7 +13,6 @@ import com.czt.mp3recorder.MP3Recorder;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.MediaPlayerManagerUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionManagerUtils;
@@ -78,19 +77,17 @@ public class AudioRecordButton extends Button {
                     PermissionManagerUtils.getInstance().requestSinglePermission(getContext(), Permissions.RECORD_AUDIO, new PermissionRequestCallback() {
                         @Override
                         public void onPermissionRequestSuccess(List<String> permissions) {
-//                            startRecordVoice();
                             voiceRecordUIFinish();
                             reset();
                         }
 
                         @Override
                         public void onPermissionRequestFail(List<String> permissions) {
-                            LogUtils.YfcDebug("申请录音权限失败");
+                            ToastUtils.show(context,context.getString(R.string.permission_grant_fail));
                         }
 
                         @Override
                         public void onPermissionRequestException(Exception e) {
-                            LogUtils.YfcDebug("申请录音权限异常："+e.getMessage());
                         }
                     });
                 }
