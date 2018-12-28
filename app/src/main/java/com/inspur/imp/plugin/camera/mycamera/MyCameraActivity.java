@@ -35,7 +35,7 @@ import com.inspur.emmcloud.util.common.ImageUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.common.systool.permission.PermissionManagerUtils;
+import com.inspur.emmcloud.util.common.systool.permission.PermissionMangerUtils;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
 import com.inspur.imp.api.ImpBaseActivity;
 import com.inspur.imp.plugin.camera.Bimp;
@@ -191,29 +191,24 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
     }
 
     private void initCamera() {
-        if (PermissionManagerUtils.getInstance().isHasPermission(this, Permission.CAMERA)) {
-            openCamera();
-            setCameraParams();
-        } else {
-            PermissionManagerUtils.getInstance().requestSinglePermission(this, Permission.CAMERA, new PermissionRequestCallback() {
-                @Override
-                public void onPermissionRequestSuccess(List<String> permissions) {
-                    openCamera();
-                    setCameraParams();
-                }
+        new PermissionMangerUtils(this, Permission.CAMERA, new PermissionRequestCallback() {
+            @Override
+            public void onPermissionRequestSuccess(List<String> permissions) {
+                openCamera();
+                setCameraParams();
+            }
 
-                @Override
-                public void onPermissionRequestFail(List<String> permissions) {
-                    ToastUtils.show(getApplicationContext(),MyCameraActivity.this.getString(R.string.permission_grant_fail));
-                    finish();
-                }
+            @Override
+            public void onPermissionRequestFail(List<String> permissions) {
+                ToastUtils.show(getApplicationContext(),MyCameraActivity.this.getString(R.string.permission_grant_fail));
+                finish();
+            }
 
-                @Override
-                public void onPermissionRequestException(Exception e) {
-                    finish();
-                }
-            });
-        }
+            @Override
+            public void onPermissionRequestException(Exception e) {
+                finish();
+            }
+        }).start();
     }
 
 

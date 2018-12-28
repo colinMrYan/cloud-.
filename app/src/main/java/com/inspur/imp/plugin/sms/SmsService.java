@@ -14,7 +14,7 @@ import android.widget.Toast;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.common.systool.permission.PermissionManagerUtils;
+import com.inspur.emmcloud.util.common.systool.permission.PermissionMangerUtils;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
 import com.inspur.imp.api.ImpFragment;
 import com.inspur.imp.plugin.ImpPlugin;
@@ -73,33 +73,26 @@ public class SmsService extends ImpPlugin {
 	 * @param paramsObject
 	 */
 	private void checkSendSMSPermissionAndSendSMS(final String send, final JSONObject paramsObject) {
-		if(PermissionManagerUtils.getInstance().isHasPermission(getFragmentContext(), Permission.SEND_SMS)){
-			if(send.equals("send")){
-				send(paramsObject);
-			}else if(send.equals("batchSend")){
-				batchSend(paramsObject);
+		new PermissionMangerUtils(getActivity(), Permission.SEND_SMS, new PermissionRequestCallback() {
+			@Override
+			public void onPermissionRequestSuccess(List<String> permissions) {
+				if(send.equals("send")){
+					send(paramsObject);
+				}else if(send.equals("batchSend")){
+					batchSend(paramsObject);
+				}
 			}
-		}else{
-			PermissionManagerUtils.getInstance().requestSinglePermission(getFragmentContext(), Permission.SEND_SMS, new PermissionRequestCallback() {
-				@Override
-				public void onPermissionRequestSuccess(List<String> permissions) {
-					if(send.equals("send")){
-						send(paramsObject);
-					}else if(send.equals("batchSend")){
-						batchSend(paramsObject);
-					}
-				}
 
-				@Override
-				public void onPermissionRequestFail(List<String> permissions) {
-					ToastUtils.show(getFragmentContext(),getFragmentContext().getString(R.string.permission_grant_fail));
-				}
+			@Override
+			public void onPermissionRequestFail(List<String> permissions) {
+				ToastUtils.show(getFragmentContext(),getFragmentContext().getString(R.string.permission_grant_fail));
+			}
 
-				@Override
-				public void onPermissionRequestException(Exception e) {
-				}
-			});
-		}
+			@Override
+			public void onPermissionRequestException(Exception e) {
+
+			}
+		}).start();
 	}
 
 	@Override

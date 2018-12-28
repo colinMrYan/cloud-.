@@ -15,7 +15,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.MediaPlayerManagerUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.common.systool.permission.PermissionManagerUtils;
+import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.util.common.systool.permission.Permissions;
 import com.shuyu.waveview.FileUtils;
@@ -71,10 +71,10 @@ public class AudioRecordButton extends Button {
         setOnLongClickListener(new OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                if(PermissionManagerUtils.getInstance().isHasPermission(getContext(), Permissions.RECORD_AUDIO)){
+                if(PermissionRequestManagerUtils.getInstance().isHasPermission(getContext(), Permissions.RECORD_AUDIO)){
                     startRecordVoice();
                 }else{
-                    PermissionManagerUtils.getInstance().requestSinglePermission(getContext(), Permissions.RECORD_AUDIO, new PermissionRequestCallback() {
+                    PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getContext(), Permissions.RECORD_AUDIO, new PermissionRequestCallback() {
                         @Override
                         public void onPermissionRequestSuccess(List<String> permissions) {
                             voiceRecordUIFinish();

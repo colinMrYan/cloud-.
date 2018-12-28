@@ -19,7 +19,7 @@ import com.inspur.emmcloud.ui.mine.setting.FaceVerifyActivity;
 import com.inspur.emmcloud.ui.mine.setting.GestureLoginActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.systool.permission.PermissionManagerUtils;
+import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
 import com.inspur.emmcloud.util.common.systool.permission.Permissions;
 import com.inspur.emmcloud.util.privates.AppBadgeUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
@@ -62,7 +62,7 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
 
     private void getStoragePermission() {
         //如果没有存储权限则跳转到MainActivity进行处理
-        if(!PermissionManagerUtils.getInstance().isHasPermission(MyApplication.getInstance(), Permissions.STORAGE)){
+        if(!PermissionRequestManagerUtils.getInstance().isHasPermission(MyApplication.getInstance(), Permissions.STORAGE)){
             IntentUtils.startActivity(currentActivity, MainActivity.class);
         }else {
             getPhonePermissions();
@@ -71,7 +71,7 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
 
     private void getPhonePermissions() {
         //如果没有电话权限，则跳转到MainActivity进行处理
-        if(!PermissionManagerUtils.getInstance().isHasPermission(MyApplication.getInstance(), Permission.READ_PHONE_STATE)){
+        if(!PermissionRequestManagerUtils.getInstance().isHasPermission(MyApplication.getInstance(), Permission.READ_PHONE_STATE)){
             IntentUtils.startActivity(currentActivity, MainActivity.class);
         }
     }

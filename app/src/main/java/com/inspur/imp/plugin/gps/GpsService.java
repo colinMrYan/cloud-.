@@ -15,7 +15,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.common.systool.permission.PermissionManagerUtils;
+import com.inspur.emmcloud.util.common.systool.permission.PermissionMangerUtils;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.util.common.systool.permission.Permissions;
 import com.inspur.imp.plugin.ImpPlugin;
@@ -114,25 +114,22 @@ public class GpsService extends ImpPlugin implements
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        if(PermissionManagerUtils.getInstance().isHasPermission(getFragmentContext(), Permissions.LOCATION)){
-            startLocation();
-        }else{
-            PermissionManagerUtils.getInstance().requestGroupPermission(getFragmentContext(), Permissions.LOCATION, new PermissionRequestCallback() {
-                @Override
-                public void onPermissionRequestSuccess(List<String> permissions) {
-                    startLocation();
-                }
+        new PermissionMangerUtils(getActivity(), Permissions.LOCATION, new PermissionRequestCallback() {
+            @Override
+            public void onPermissionRequestSuccess(List<String> permissions) {
+                startLocation();
+            }
 
-                @Override
-                public void onPermissionRequestFail(List<String> permissions) {
-                    ToastUtils.show(getFragmentContext(),getFragmentContext().getString(R.string.permission_grant_fail));
-                }
+            @Override
+            public void onPermissionRequestFail(List<String> permissions) {
+                ToastUtils.show(getFragmentContext(),getFragmentContext().getString(R.string.permission_grant_fail));
+            }
 
-                @Override
-                public void onPermissionRequestException(Exception e) {
-                }
-            });
-        }
+            @Override
+            public void onPermissionRequestException(Exception e) {
+
+            }
+        }).start();
     }
 
     /**

@@ -17,7 +17,7 @@ import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.common.systool.permission.PermissionManagerUtils;
+import com.inspur.emmcloud.util.common.systool.permission.PermissionMangerUtils;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.util.common.systool.permission.Permissions;
 import com.inspur.emmcloud.util.privates.cache.AppConfigCacheUtils;
@@ -59,26 +59,22 @@ public class LocationService extends Service implements AMapLocationListener {
 				public void run() {
 					// TODO Auto-generated method stub
 					if (NetUtils.isNetworkConnected(getApplicationContext(),false)){
-						if(PermissionManagerUtils.getInstance().isHasPermission(LocationService.this, Permissions.LOCATION)){
-							startLocation();
-						}else{
-							PermissionManagerUtils.getInstance().requestGroupPermission(LocationService.this, Permissions.LOCATION, new PermissionRequestCallback() {
-								@Override
-								public void onPermissionRequestSuccess(List<String> permissions) {
-									startLocation();
-								}
+						new PermissionMangerUtils(LocationService.this, Permissions.LOCATION, new PermissionRequestCallback() {
+							@Override
+							public void onPermissionRequestSuccess(List<String> permissions) {
+								startLocation();
+							}
 
-								@Override
-								public void onPermissionRequestFail(List<String> permissions) {
-									LocationService.this.stopSelf();
-								}
+							@Override
+							public void onPermissionRequestFail(List<String> permissions) {
+								LocationService.this.stopSelf();
+							}
 
-								@Override
-								public void onPermissionRequestException(Exception e) {
-									LocationService.this.stopSelf();
-								}
-							});
-						}
+							@Override
+							public void onPermissionRequestException(Exception e) {
+								LocationService.this.stopSelf();
+							}
+						}).start();
 
 					}else {
                         continueLocation();

@@ -42,7 +42,7 @@ import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ResolutionUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.common.systool.permission.PermissionManagerUtils;
+import com.inspur.emmcloud.util.common.systool.permission.PermissionMangerUtils;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.util.common.systool.permission.Permissions;
 import com.inspur.imp.api.ImpActivity;
@@ -641,26 +641,22 @@ public class AppUtils {
         // 判断存储卡是否可以用，可用进行存储
         if (Environment.getExternalStorageState().equals(
                 Environment.MEDIA_MOUNTED)) {
-            if (PermissionManagerUtils.getInstance().isHasPermission(activity, Permission.CAMERA)) {
-                openCameraAfterCheckPermission(activity,fileName,requestCode);
-            } else {
-                PermissionManagerUtils.getInstance().requestSinglePermission(activity, Permission.CAMERA, new PermissionRequestCallback() {
-                    @Override
-                    public void onPermissionRequestSuccess(List<String> permissions) {
-                        openCameraAfterCheckPermission(activity,fileName,requestCode);
-                    }
+            new PermissionMangerUtils(activity, Permission.CAMERA, new PermissionRequestCallback() {
+                @Override
+                public void onPermissionRequestSuccess(List<String> permissions) {
+                    openCameraAfterCheckPermission(activity,fileName,requestCode);
+                }
 
-                    @Override
-                    public void onPermissionRequestFail(List<String> permissions) {
-                        ToastUtils.show(activity,activity.getString(R.string.permission_grant_fail));
-                    }
+                @Override
+                public void onPermissionRequestFail(List<String> permissions) {
+                    ToastUtils.show(activity,activity.getString(R.string.permission_grant_fail));
+                }
 
-                    @Override
-                    public void onPermissionRequestException(Exception e) {
-                    }
-                });
-            }
+                @Override
+                public void onPermissionRequestException(Exception e) {
 
+                }
+            }).start();
         } else {
             ToastUtils.show(activity, R.string.filetransfer_sd_not_exist);
         }
@@ -681,27 +677,22 @@ public class AppUtils {
     }
 
     public static void openScanCode(final Activity activity, final int requestCode){
-        if(PermissionManagerUtils.getInstance().isHasPermission(activity,Permissions.CAMERA)){
-            openScanCodeAfterCheckPermission(activity,requestCode);
-        }else{
-            PermissionManagerUtils.getInstance().requestSinglePermission(activity, Permissions.CAMERA, new PermissionRequestCallback() {
-                @Override
-                public void onPermissionRequestSuccess(List<String> permissions) {
-//                    openScanCodeAfterCheckPermission(activity,requestCode);
-                }
+        new PermissionMangerUtils(activity, Permissions.CAMERA, new PermissionRequestCallback() {
+            @Override
+            public void onPermissionRequestSuccess(List<String> permissions) {
+                openScanCodeAfterCheckPermission(activity,requestCode);
+            }
 
-                @Override
-                public void onPermissionRequestFail(List<String> permissions) {
-                    ToastUtils.show(activity,activity.getString(R.string.permission_grant_fail));
-                }
+            @Override
+            public void onPermissionRequestFail(List<String> permissions) {
+                ToastUtils.show(activity,activity.getString(R.string.permission_grant_fail));
+            }
 
-                @Override
-                public void onPermissionRequestException(Exception e) {
+            @Override
+            public void onPermissionRequestException(Exception e) {
 
-                }
-            });
-        }
-
+            }
+        }).start();
     }
 
     private static void openScanCodeAfterCheckPermission(Activity activity,int requestCode) {
@@ -731,34 +722,26 @@ public class AppUtils {
      * @param requestCode
      */
     public static void call(final Activity activity, final String phoneNum, final int requestCode){
-        if(PermissionManagerUtils.getInstance().isHasPermission(activity, Permissions.CALL_PHONE)){
-            MyApplication.getInstance().setEnterSystemUI(true);
-            Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:"
+        new PermissionMangerUtils(activity, Permissions.CALL_PHONE, new PermissionRequestCallback() {
+            @Override
+            public void onPermissionRequestSuccess(List<String> permissions) {
+                MyApplication.getInstance().setEnterSystemUI(true);
+                Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:"
                     + phoneNum));
-            activity.startActivityForResult(intent, requestCode);
-        }else{
-            PermissionManagerUtils.getInstance().requestSinglePermission(activity,Permissions.CALL_PHONE, new PermissionRequestCallback() {
-                @Override
-                public void onPermissionRequestSuccess(List<String> permissions) {
-                    MyApplication.getInstance().setEnterSystemUI(true);
-                    Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:"
-                            + phoneNum));
-                    activity.startActivityForResult(intent, requestCode);
-                }
+                activity.startActivityForResult(intent, requestCode);
+            }
 
-                @Override
-                public void onPermissionRequestFail(List<String> permissions) {
-                    ToastUtils.show(activity,activity.getString(R.string.permission_grant_fail));
-                    activity.finish();
-                }
+            @Override
+            public void onPermissionRequestFail(List<String> permissions) {
+                ToastUtils.show(activity,activity.getString(R.string.permission_grant_fail));
+                activity.finish();
+            }
 
-                @Override
-                public void onPermissionRequestException(Exception e) {
-                    activity.finish();
-                }
-            });
-        }
+            @Override
+            public void onPermissionRequestException(Exception e) {
 
+            }
+        }).start();
     }
 
     /**

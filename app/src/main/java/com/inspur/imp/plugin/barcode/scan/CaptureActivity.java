@@ -26,15 +26,15 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.ImageUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.common.systool.permission.PermissionManagerUtils;
+import com.inspur.emmcloud.util.common.systool.permission.PermissionMangerUtils;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
-import com.inspur.emmcloud.util.common.systool.permission.Permissions;
 import com.inspur.imp.api.Res;
 import com.inspur.imp.plugin.barcode.camera.CameraManager;
 import com.inspur.imp.plugin.barcode.decoding.CaptureActivityHandler;
 import com.inspur.imp.plugin.barcode.decoding.GetDecodeResultFromServer;
 import com.inspur.imp.plugin.barcode.decoding.InactivityTimer;
 import com.inspur.imp.plugin.barcode.view.ViewfinderView;
+import com.yanzhenjie.permission.Permission;
 
 import org.xutils.common.Callback.CommonCallback;
 import org.xutils.http.RequestParams;
@@ -190,27 +190,23 @@ public class CaptureActivity extends Activity implements Callback {
     public void surfaceCreated(final SurfaceHolder holder) {
         if (!hasSurface) {
             hasSurface = true;
-            if(PermissionManagerUtils.getInstance().isHasPermission(this, Permissions.CAMERA)){
-                initCamera(holder);
-            }else{
-                PermissionManagerUtils.getInstance().requestSinglePermission(this,Permissions.CAMERA, new PermissionRequestCallback() {
-                    @Override
-                    public void onPermissionRequestSuccess(List<String> permissions) {
-                        initCamera(holder);
-                    }
+            new PermissionMangerUtils(this, Permission.CAMERA, new PermissionRequestCallback() {
+                @Override
+                public void onPermissionRequestSuccess(List<String> permissions) {
+                    initCamera(holder);
+                }
 
-                    @Override
-                    public void onPermissionRequestFail(List<String> permissions) {
-                        ToastUtils.show(getApplicationContext(),getString(R.string.permission_grant_fail));
-                        finish();
-                    }
+                @Override
+                public void onPermissionRequestFail(List<String> permissions) {
+                    ToastUtils.show(getApplicationContext(),getString(R.string.permission_grant_fail));
+                    finish();
+                }
 
-                    @Override
-                    public void onPermissionRequestException(Exception e) {
-                        finish();
-                    }
-                });
-            }
+                @Override
+                public void onPermissionRequestException(Exception e) {
+                    finish();
+                }
+            }).start();
         }
 
     }

@@ -19,7 +19,7 @@ import com.funcode.decoder.inspuremmcloud.FunDecodeSurfaceView;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.common.systool.permission.PermissionManagerUtils;
+import com.inspur.emmcloud.util.common.systool.permission.PermissionMangerUtils;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.util.common.systool.permission.Permissions;
 import com.inspur.imp.api.Res;
@@ -48,29 +48,24 @@ public class PreviewDecodeActivity extends Activity implements FunDecodeHandler 
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);//没有标题
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
-        if(PermissionManagerUtils.getInstance().isHasPermission(this, Permissions.CAMERA)){
-            setContentView(Res.getLayoutID("activity_preview_decode"));
-            initView();
-        }else{
-            PermissionManagerUtils.getInstance().requestSinglePermission(this,Permissions.CAMERA, new PermissionRequestCallback() {
-                @Override
-                public void onPermissionRequestSuccess(List<String> permissions) {
-                    setContentView(Res.getLayoutID("activity_preview_decode"));
-                    initView();
-                }
+        new PermissionMangerUtils(this, Permissions.CAMERA, new PermissionRequestCallback() {
+            @Override
+            public void onPermissionRequestSuccess(List<String> permissions) {
+                setContentView(Res.getLayoutID("activity_preview_decode"));
+                initView();
+            }
 
-                @Override
-                public void onPermissionRequestFail(List<String> permissions) {
-                    ToastUtils.show(getApplicationContext(),getString(R.string.permission_grant_fail));
-                    finish();
-                }
+            @Override
+            public void onPermissionRequestFail(List<String> permissions) {
+                ToastUtils.show(getApplicationContext(),getString(R.string.permission_grant_fail));
+                finish();
+            }
 
-                @Override
-                public void onPermissionRequestException(Exception e) {
-                    finish();
-                }
-            });
-        }
+            @Override
+            public void onPermissionRequestException(Exception e) {
+                finish();
+            }
+        }).start();
 
     }
 

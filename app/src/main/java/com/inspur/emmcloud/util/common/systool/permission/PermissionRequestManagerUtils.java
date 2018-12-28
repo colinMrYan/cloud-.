@@ -22,38 +22,38 @@ import java.util.List;
  * 2.AndPermission可以在任何地方使用 如：AndPermission.with(activity/fragment/context)
  * 3.AndPermission.hasAlwaysDeniedPermission只能在onDenied()的回调中调用，不能在其它地方使用
  */
-public class PermissionManagerUtils {
+public class PermissionRequestManagerUtils {
 
-    private static PermissionManagerUtils permissionManagerUtils;
+    private static PermissionRequestManagerUtils permissionManagerUtils;
     private PermissionRequestCallback callback;
     private Context context;
 
-    public static PermissionManagerUtils getInstance(){
+    public static PermissionRequestManagerUtils getInstance(){
         if(permissionManagerUtils == null){
-            synchronized (PermissionManagerUtils.class){
+            synchronized (PermissionRequestManagerUtils.class){
                 if(permissionManagerUtils == null){
-                    permissionManagerUtils = new PermissionManagerUtils();
+                    permissionManagerUtils = new PermissionRequestManagerUtils();
                 }
             }
         }
         return permissionManagerUtils;
     }
 
-    private PermissionManagerUtils(){}
+    private PermissionRequestManagerUtils(){}
 
     /**
      * 请求单个权限
      * @param context
      */
-    public void requestSinglePermission(Context context,String permission,PermissionRequestCallback callback){
-        requestGroupPermission(context,new String[]{permission},callback);
+    public void requestRuntimePermission(Context context, String permission, PermissionRequestCallback callback){
+        requestRuntimePermission(context,new String[]{permission},callback);
     }
 
     /**
      * 请求一组权限
      * @param context
      */
-    public void requestGroupPermission(final Context context, String[] permissionGroup, final PermissionRequestCallback callback){
+    public void requestRuntimePermission(final Context context, String[] permissionGroup, final PermissionRequestCallback callback){
         if(callback == null){
             return;
         }
@@ -117,8 +117,8 @@ public class PermissionManagerUtils {
     }
 
     private void exitByPermission(List<String> permissionList) {
-        if(!(PermissionManagerUtils.getInstance().isHasPermission(MyApplication.getInstance(), Permissions.STORAGE)
-                &&PermissionManagerUtils.getInstance().isHasPermission(MyApplication.getInstance(), Permission.READ_PHONE_STATE))){
+        if(!(PermissionRequestManagerUtils.getInstance().isHasPermission(MyApplication.getInstance(), Permissions.STORAGE)
+                && PermissionRequestManagerUtils.getInstance().isHasPermission(MyApplication.getInstance(), Permission.READ_PHONE_STATE))){
             MyApplication.getInstance().exit();
         }else {
             if(isHasPermission(context,stringList2StringArray(permissionList))){

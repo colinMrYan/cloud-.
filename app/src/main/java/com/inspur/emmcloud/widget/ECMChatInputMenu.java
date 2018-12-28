@@ -40,7 +40,7 @@ import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.common.audioformat.AndroidMp3ConvertUtils;
-import com.inspur.emmcloud.util.common.systool.permission.PermissionManagerUtils;
+import com.inspur.emmcloud.util.common.systool.permission.PermissionMangerUtils;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.util.common.systool.permission.Permissions;
 import com.inspur.emmcloud.util.privates.AppUtils;
@@ -475,50 +475,43 @@ public class ECMChatInputMenu extends LinearLayout {
                             break;
                         case "voice_input":
                             if(NetUtils.isNetworkConnected(MyApplication.getInstance())){
-                                if(PermissionManagerUtils.getInstance().isHasPermission(getContext(), Permissions.RECORD_AUDIO)){
-                                    startVoice2Word();
-                                }else{
-                                    PermissionManagerUtils.getInstance().requestSinglePermission(getContext(), Permissions.RECORD_AUDIO, new PermissionRequestCallback() {
-                                        @Override
-                                        public void onPermissionRequestSuccess(List<String> permissions) {
-                                            stopVoiceInput();
-                                        }
+                                LogUtils.YfcDebug("语音转文字输入");
+                                new PermissionMangerUtils(getContext(), Permissions.RECORD_AUDIO, new PermissionRequestCallback() {
+                                    @Override
+                                    public void onPermissionRequestSuccess(List<String> permissions) {
+                                        startVoice2Word();
+                                    }
 
-                                        @Override
-                                        public void onPermissionRequestFail(List<String> permissions) {
-                                            ToastUtils.show(getContext(),getContext().getString(R.string.permission_grant_fail));
-                                        }
+                                    @Override
+                                    public void onPermissionRequestFail(List<String> permissions) {
+                                        ToastUtils.show(getContext(),getContext().getString(R.string.permission_grant_fail));
+                                    }
 
-                                        @Override
-                                        public void onPermissionRequestException(Exception e) {
+                                    @Override
+                                    public void onPermissionRequestException(Exception e) {
 
-                                        }
-                                    });
-                                }
+                                    }
+                                }).start();
                             }
                             break;
                         case "voice_call":
                             if(NetUtils.isNetworkConnected(MyApplication.getInstance())){
-                                if(PermissionManagerUtils.getInstance().isHasPermission(getContext(), Permissions.RECORD_AUDIO)){
-                                    startVoiceCall();
-                                }else{
-                                    PermissionManagerUtils.getInstance().requestSinglePermission(getContext(), Permissions.RECORD_AUDIO, new PermissionRequestCallback() {
-                                        @Override
-                                        public void onPermissionRequestSuccess(List<String> permissions) {
-                                            startVoiceCall();
-                                        }
+                                new PermissionMangerUtils(getContext(), Permissions.RECORD_AUDIO, new PermissionRequestCallback() {
+                                    @Override
+                                    public void onPermissionRequestSuccess(List<String> permissions) {
+                                        startVoiceCall();
+                                    }
 
-                                        @Override
-                                        public void onPermissionRequestFail(List<String> permissions) {
-                                            ToastUtils.show(getContext(),getContext().getString(R.string.permission_grant_fail));
-                                        }
+                                    @Override
+                                    public void onPermissionRequestFail(List<String> permissions) {
+                                        ToastUtils.show(getContext(),getContext().getString(R.string.permission_grant_fail));
+                                    }
 
-                                        @Override
-                                        public void onPermissionRequestException(Exception e) {
+                                    @Override
+                                    public void onPermissionRequestException(Exception e) {
 
-                                        }
-                                    });
-                                }
+                                    }
+                                }).start();
                             }
 
                             break;

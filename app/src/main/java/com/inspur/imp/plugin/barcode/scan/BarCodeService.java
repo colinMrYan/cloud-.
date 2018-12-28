@@ -20,7 +20,7 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.common.systool.permission.PermissionManagerUtils;
+import com.inspur.emmcloud.util.common.systool.permission.PermissionMangerUtils;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.util.common.systool.permission.Permissions;
 import com.inspur.imp.api.ImpFragment;
@@ -105,29 +105,23 @@ public class BarCodeService extends ImpPlugin {
 		}
 
 		if (getImpCallBackInterface() != null) {
-			if(PermissionManagerUtils.getInstance().isHasPermission(getFragmentContext(), Permissions.CAMERA)){
-				Intent scanIntent = new Intent(getFragmentContext(), PreviewDecodeActivity.class);
-				getImpCallBackInterface().onStartActivityForResult(scanIntent, ImpFragment.BARCODE_SERVER__SCAN_REQUEST);
-			}else{
-				PermissionManagerUtils.getInstance().requestSinglePermission(getFragmentContext(), Permissions.CAMERA, new PermissionRequestCallback() {
-					@Override
-					public void onPermissionRequestSuccess(List<String> permissions) {
-						Intent scanIntent = new Intent(getFragmentContext(), PreviewDecodeActivity.class);
-						getImpCallBackInterface().onStartActivityForResult(scanIntent, ImpFragment.BARCODE_SERVER__SCAN_REQUEST);
-					}
+			new PermissionMangerUtils(getActivity(), Permissions.CAMERA, new PermissionRequestCallback() {
+				@Override
+				public void onPermissionRequestSuccess(List<String> permissions) {
+					Intent scanIntent = new Intent(getFragmentContext(), PreviewDecodeActivity.class);
+					getImpCallBackInterface().onStartActivityForResult(scanIntent, ImpFragment.BARCODE_SERVER__SCAN_REQUEST);
+				}
 
-					@Override
-					public void onPermissionRequestFail(List<String> permissions) {
-						ToastUtils.show(getFragmentContext(),getFragmentContext().getString(R.string.permission_grant_fail));
-					}
+				@Override
+				public void onPermissionRequestFail(List<String> permissions) {
+					ToastUtils.show(getFragmentContext(),getFragmentContext().getString(R.string.permission_grant_fail));
+				}
 
-					@Override
-					public void onPermissionRequestException(Exception e) {
+				@Override
+				public void onPermissionRequestException(Exception e) {
 
-					}
-				});
-			}
-
+				}
+			}).start();
 		}
 	}
 	

@@ -26,7 +26,7 @@ import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ResolutionUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.common.systool.permission.PermissionManagerUtils;
+import com.inspur.emmcloud.util.common.systool.permission.PermissionMangerUtils;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.util.common.systool.permission.Permissions;
 import com.inspur.emmcloud.util.privates.AppUtils;
@@ -82,52 +82,43 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
     }
 
     private void getStoragePermission() {
-        if(!PermissionManagerUtils.getInstance().isHasPermission(MyApplication.getInstance(), Permissions.STORAGE)){
-            PermissionManagerUtils.getInstance().requestGroupPermission(this, Permissions.STORAGE, new PermissionRequestCallback() {
-                @Override
-                public void onPermissionRequestSuccess(List<String> permissions) {
-                    getPhonePermissions();
-                }
+        new PermissionMangerUtils(this, Permissions.STORAGE, new PermissionRequestCallback() {
+            @Override
+            public void onPermissionRequestSuccess(List<String> permissions) {
+                getPhonePermissions();
+            }
 
-                @Override
-                public void onPermissionRequestFail(List<String> permissions) {
-                    ToastUtils.show(MainActivity.this,getString(R.string.permission_grant_fail));
-                    MyApplication.getInstance().exit();
-                }
+            @Override
+            public void onPermissionRequestFail(List<String> permissions) {
+                ToastUtils.show(MainActivity.this,getString(R.string.permission_grant_fail));
+                MyApplication.getInstance().exit();
+            }
 
-                @Override
-                public void onPermissionRequestException(Exception e) {
-                    MyApplication.getInstance().exit();
-                }
-            });
-        }else {
-            getPhonePermissions();
-        }
+            @Override
+            public void onPermissionRequestException(Exception e) {
+
+            }
+        }).start();
     }
 
     private void getPhonePermissions() {
-        String[] phonePermissionArray = {Permission.READ_PHONE_STATE};
-        if(!PermissionManagerUtils.getInstance().isHasPermission(this, Permission.READ_PHONE_STATE)){
-            PermissionManagerUtils.getInstance().requestGroupPermission(this, phonePermissionArray, new PermissionRequestCallback() {
-                @Override
-                public void onPermissionRequestSuccess(List<String> permissions) {
-                    init();
-                }
+        new PermissionMangerUtils(this, Permission.READ_PHONE_STATE, new PermissionRequestCallback() {
+            @Override
+            public void onPermissionRequestSuccess(List<String> permissions) {
+                init();
+            }
 
-                @Override
-                public void onPermissionRequestFail(List<String> permissions) {
-                    ToastUtils.show(MainActivity.this,getString(R.string.permission_grant_fail));
-                    MyApplication.getInstance().exit();
-                }
+            @Override
+            public void onPermissionRequestFail(List<String> permissions) {
+                ToastUtils.show(MainActivity.this,getString(R.string.permission_grant_fail));
+                MyApplication.getInstance().exit();
+            }
 
-                @Override
-                public void onPermissionRequestException(Exception e) {
-                    MyApplication.getInstance().exit();
-                }
-            });
-        }else{
-            init();
-        }
+            @Override
+            public void onPermissionRequestException(Exception e) {
+
+            }
+        }).start();
     }
 
 
