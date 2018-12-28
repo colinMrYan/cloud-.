@@ -43,6 +43,7 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
 
     @Override
     public void onActivityStarted(Activity activity) {
+        getStoragePermission();
         MyApplication.getInstance().setEnterSystemUI(false);
         currentActivity = activity;
         //此处不能用（count == 0）判断，由于Activity跳转生命周期因素导致，已登录账号进入应用不会打开手势解锁
@@ -55,7 +56,6 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
             }
             uploadMDMInfo(activity);
             new AppBadgeUtils(MyApplication.getInstance()).getAppBadgeCountFromServer();
-            getStoragePermission();
         }
         count++;
     }

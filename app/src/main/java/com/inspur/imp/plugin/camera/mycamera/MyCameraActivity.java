@@ -204,7 +204,7 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
 
                 @Override
                 public void onPermissionRequestFail(List<String> permissions) {
-                    ToastUtils.show(MyCameraActivity.this,MyCameraActivity.this.getString(R.string.permission_grant_fail));
+                    ToastUtils.show(getApplicationContext(),MyCameraActivity.this.getString(R.string.permission_grant_fail));
                     finish();
                 }
 

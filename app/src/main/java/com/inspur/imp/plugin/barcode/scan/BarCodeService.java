@@ -18,6 +18,8 @@ import com.google.zxing.EncodeHintType;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionManagerUtils;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.util.common.systool.permission.Permissions;
@@ -116,7 +118,7 @@ public class BarCodeService extends ImpPlugin {
 
 					@Override
 					public void onPermissionRequestFail(List<String> permissions) {
-
+						ToastUtils.show(getFragmentContext(),getFragmentContext().getString(R.string.permission_grant_fail));
 					}
 
 					@Override

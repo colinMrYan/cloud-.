@@ -11,8 +11,10 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
+import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionManagerUtils;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.util.common.systool.permission.Permissions;
@@ -123,12 +125,11 @@ public class GpsService extends ImpPlugin implements
 
                 @Override
                 public void onPermissionRequestFail(List<String> permissions) {
-                    getActivity().finish();
+                    ToastUtils.show(getFragmentContext(),getFragmentContext().getString(R.string.permission_grant_fail));
                 }
 
                 @Override
                 public void onPermissionRequestException(Exception e) {
-                    getActivity().finish();
                 }
             });
         }

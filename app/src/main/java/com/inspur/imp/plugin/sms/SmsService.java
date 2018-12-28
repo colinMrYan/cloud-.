@@ -12,7 +12,8 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.telephony.SmsManager;
 import android.widget.Toast;
 
-import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionManagerUtils;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
 import com.inspur.imp.api.ImpFragment;
@@ -91,12 +92,11 @@ public class SmsService extends ImpPlugin {
 
 				@Override
 				public void onPermissionRequestFail(List<String> permissions) {
-					LogUtils.YfcDebug("申请短信权限失败");
+					ToastUtils.show(getFragmentContext(),getFragmentContext().getString(R.string.permission_grant_fail));
 				}
 
 				@Override
 				public void onPermissionRequestException(Exception e) {
-					LogUtils.YfcDebug("申请短信权限异常："+e.getMessage());
 				}
 			});
 		}

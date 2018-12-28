@@ -202,6 +202,7 @@ public class CaptureActivity extends Activity implements Callback {
                     @Override
                     public void onPermissionRequestFail(List<String> permissions) {
                         ToastUtils.show(getApplicationContext(),getString(R.string.permission_grant_fail));
+                        finish();
                     }
 
                     @Override
