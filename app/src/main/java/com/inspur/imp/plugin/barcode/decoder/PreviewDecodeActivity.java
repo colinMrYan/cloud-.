@@ -69,7 +69,7 @@ public class PreviewDecodeActivity extends Activity implements FunDecodeHandler 
                 public void onPermissionRequestException(Exception e) {
                     finish();
                 }
-            },PermissionManagerUtils.PERMISSION_REQUEST_FROM_SCAN_CODE);
+            });
         }
 
     }
@@ -235,6 +235,17 @@ public class PreviewDecodeActivity extends Activity implements FunDecodeHandler 
         }
         */
 
+    }
+
+    private void startScanQrCode() {
+        if (mDecodeView != null) {
+            if (surface_ready == 0) {
+                mDecodeView.setVisibility(View.VISIBLE);
+            } else {
+                mDecodeView.setVisibility(View.VISIBLE);
+                mDecodeView.startScan();
+            }
+        }
     }
 
 }

@@ -22,7 +22,6 @@ import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.ui.mine.setting.GuideActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ResolutionUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -109,7 +108,7 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
     private void getPhonePermissions() {
         String[] phonePermissionArray = {Permission.READ_PHONE_STATE};
         if(!PermissionManagerUtils.getInstance().isHasPermission(this, Permission.READ_PHONE_STATE)){
-            PermissionManagerUtils.getInstance().requestGroupPermission(MyApplication.getInstance(), phonePermissionArray, new PermissionRequestCallback() {
+            PermissionManagerUtils.getInstance().requestGroupPermission(this, phonePermissionArray, new PermissionRequestCallback() {
                 @Override
                 public void onPermissionRequestSuccess(List<String> permissions) {
                     init();

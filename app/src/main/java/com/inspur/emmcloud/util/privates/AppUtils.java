@@ -687,7 +687,7 @@ public class AppUtils {
             PermissionManagerUtils.getInstance().requestSinglePermission(activity, Permissions.CAMERA, new PermissionRequestCallback() {
                 @Override
                 public void onPermissionRequestSuccess(List<String> permissions) {
-                    openScanCodeAfterCheckPermission(activity,requestCode);
+//                    openScanCodeAfterCheckPermission(activity,requestCode);
                 }
 
                 @Override

@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.util.common.systool.permission;
 
+import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
 
@@ -13,6 +14,7 @@ import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
 import com.yanzhenjie.permission.Setting;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,9 +25,8 @@ import java.util.List;
 public class PermissionManagerUtils {
 
     private static PermissionManagerUtils permissionManagerUtils;
-    private int from = -1;
-    public static final int PERMISSION_REQUEST_FROM_SCAN_CODE = 1;
     private PermissionRequestCallback callback;
+    private Context context;
 
     public static PermissionManagerUtils getInstance(){
         if(permissionManagerUtils == null){
@@ -49,15 +50,6 @@ public class PermissionManagerUtils {
     }
 
     /**
-     * 请求单个权限
-     * @param context
-     */
-    public void requestSinglePermission(Context context,String permission,PermissionRequestCallback callback,int from){
-        this.from = from;
-        requestGroupPermission(context,new String[]{permission},callback);
-    }
-
-    /**
      * 请求一组权限
      * @param context
      */
@@ -66,8 +58,9 @@ public class PermissionManagerUtils {
             return;
         }
         this.callback = callback;
+        this.context = context;
         if(permissionGroup == null || permissionGroup.length == 0){
-            callback.onPermissionRequestException(new Exception("permissionGroup is null"));
+            callback.onPermissionRequestSuccess(new ArrayList<String>());
             return;
         }
         AndPermission.with(context)
@@ -96,36 +89,43 @@ public class PermissionManagerUtils {
      * 展示设置权限dialog
      */
     private void showSettingDialog(final Context context, final List<String> permissionList) {
-        List<String> permissionNames = Permission.transformText(context, permissionList);
-        String message = context.getString(R.string.permission_message_always_failed, TextUtils.join("\n", permissionNames));
-        new MyQMUIDialog.MessageDialogBuilder(context)
-                .setTitle(R.string.permission_dialog_title)
-                .setMessage(message)
-                .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        dialog.dismiss();
-                        exitByPermission(permissionList);
-                    }
-                })
-                .addAction(R.string.settings, new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        dialog.dismiss();
-                        setComeBackFromSysPermissionSetting(context,permissionList);
-                        if(from == PERMISSION_REQUEST_FROM_SCAN_CODE && callback != null){
+        if(context instanceof Activity){
+            List<String> permissionNames = Permission.transformText(context, permissionList);
+            String message = context.getString(R.string.permission_message_always_failed, TextUtils.join("\n", permissionNames));
+            new MyQMUIDialog.MessageDialogBuilder(context)
+                    .setTitle(R.string.permission_dialog_title)
+                    .setMessage(message)
+                    .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
+                        @Override
+                        public void onClick(QMUIDialog dialog, int index) {
+                            dialog.dismiss();
+                            exitByPermission(permissionList);
                             callback.onPermissionRequestFail(permissionList);
                         }
-                    }
-                })
-                .show();
+                    })
+                    .addAction(R.string.settings, new QMUIDialogAction.ActionListener() {
+                        @Override
+                        public void onClick(QMUIDialog dialog, int index) {
+                            dialog.dismiss();
+                            setComeBackFromSysPermissionSetting(context,permissionList);
+                        }
+                    })
+                    .show();
+        }else{
+            callback.onPermissionRequestFail(permissionList);
+        }
     }
-
 
     private void exitByPermission(List<String> permissionList) {
         if(!(PermissionManagerUtils.getInstance().isHasPermission(MyApplication.getInstance(), Permissions.STORAGE)
                 &&PermissionManagerUtils.getInstance().isHasPermission(MyApplication.getInstance(), Permission.READ_PHONE_STATE))){
             MyApplication.getInstance().exit();
+        }else {
+            if(isHasPermission(context,stringList2StringArray(permissionList))){
+                callback.onPermissionRequestSuccess(permissionList);
+            }else{
+                callback.onPermissionRequestFail(permissionList);
+            }
         }
     }
 
@@ -165,6 +165,11 @@ public class PermissionManagerUtils {
      */
     public boolean isHasPermission(Context context,String[] permissions){
         return AndPermission.hasPermissions(context,permissions);
+    }
+
+    private String[] stringList2StringArray(List<String> permissionList){
+        String[] strings = new String[permissionList.size()];
+        return permissionList.toArray(strings);
     }
 
 }
