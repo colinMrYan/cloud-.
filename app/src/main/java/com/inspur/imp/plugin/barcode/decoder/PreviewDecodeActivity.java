@@ -69,7 +69,7 @@ public class PreviewDecodeActivity extends Activity implements FunDecodeHandler 
                 public void onPermissionRequestException(Exception e) {
                     finish();
                 }
-            });
+            },PermissionManagerUtils.PERMISSION_REQUEST_FROM_SCAN_CODE);
         }
 
     }

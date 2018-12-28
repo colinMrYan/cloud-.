@@ -23,6 +23,9 @@ import java.util.List;
 public class PermissionManagerUtils {
 
     private static PermissionManagerUtils permissionManagerUtils;
+    private int from = -1;
+    public static final int PERMISSION_REQUEST_FROM_SCAN_CODE = 1;
+    private PermissionRequestCallback callback;
 
     public static PermissionManagerUtils getInstance(){
         if(permissionManagerUtils == null){
@@ -46,6 +49,15 @@ public class PermissionManagerUtils {
     }
 
     /**
+     * 请求单个权限
+     * @param context
+     */
+    public void requestSinglePermission(Context context,String permission,PermissionRequestCallback callback,int from){
+        this.from = from;
+        requestGroupPermission(context,new String[]{permission},callback);
+    }
+
+    /**
      * 请求一组权限
      * @param context
      */
@@ -53,6 +65,7 @@ public class PermissionManagerUtils {
         if(callback == null){
             return;
         }
+        this.callback = callback;
         if(permissionGroup == null || permissionGroup.length == 0){
             callback.onPermissionRequestException(new Exception("permissionGroup is null"));
             return;
@@ -99,8 +112,10 @@ public class PermissionManagerUtils {
                     @Override
                     public void onClick(QMUIDialog dialog, int index) {
                         dialog.dismiss();
-                        setPermission(context,permissionList);
-                        exitByPermission(permissionList);
+                        setComeBackFromSysPermissionSetting(context,permissionList);
+                        if(from == PERMISSION_REQUEST_FROM_SCAN_CODE && callback != null){
+                            callback.onPermissionRequestFail(permissionList);
+                        }
                     }
                 })
                 .show();
@@ -117,7 +132,7 @@ public class PermissionManagerUtils {
     /**
      * 设置权限回来
      */
-    private void setPermission(final Context context, final List<String> permissionList) {
+    private void setComeBackFromSysPermissionSetting(final Context context, final List<String> permissionList) {
         AndPermission.with(context)
                 .runtime()
                 .setting()
