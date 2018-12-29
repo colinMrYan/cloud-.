@@ -773,4 +773,7 @@ public interface APIInterface {
     void returnMailDetailFail(String error, int errorCode);
     void returnMailLoginSuccess();
     void returnMailLoginFail(String error, int errorCode);
+
+    void returnMailCertificateUploadSuccess(byte[] arg0);
+    void returnMailCertificateUploadFail(String error, int errorCode);
 }

@@ -1900,4 +1900,14 @@ public class APIInterfaceInstance implements APIInterface {
     @Override
     public void returnMailLoginFail(String error, int errorCode) {
     }
+
+    @Override
+    public void returnMailCertificateUploadSuccess(byte[] arg0) {
+
+    }
+
+    @Override
+    public void returnMailCertificateUploadFail(String error, int errorCode) {
+
+    }
 }

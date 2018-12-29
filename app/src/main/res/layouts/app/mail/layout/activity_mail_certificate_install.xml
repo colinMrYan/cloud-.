@@ -8,12 +8,12 @@
 
     <!-- 头部-->
     <RelativeLayout
-        android:id="@+id/header_layout"
+        android:id="@+id/rl_header_layout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/header_height"
         android:background="@color/header_bg">
         <RelativeLayout
-            android:id="@+id/back_layout"
+            android:id="@+id/rl_back_layout"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
@@ -23,7 +23,7 @@
             android:paddingRight="12dp">
 
             <ImageView
-                android:id="@+id/back_btn"
+                android:id="@+id/iv_back_btn"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_centerVertical="true"
@@ -34,7 +34,7 @@
         </RelativeLayout>
 
         <TextView
-            android:id="@+id/header_text"
+            android:id="@+id/tv_header_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
@@ -61,7 +61,7 @@
 
 
     <ScrollView
-        android:layout_below="@id/header_layout"
+        android:layout_below="@id/rl_header_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="10dp">
@@ -71,7 +71,6 @@
             <!-- 安装指南-->
             <RelativeLayout
                 android:id="@+id/rl_install_order"
-                android:layout_below="@id/header_layout"
                 android:layout_width="match_parent"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
@@ -243,7 +242,7 @@
                                 android:textSize="14sp"
                                 android:text="加密发送邮件的内容和附件" />
                             <com.inspur.emmcloud.widget.SwitchView
-                                android:id="@+id/s_secrity_action1"
+                                android:id="@+id/sv_secrity_action1"
                                 android:layout_width="31dp"
                                 android:layout_height="51dp"
                                 android:layout_alignParentRight="true"
@@ -273,7 +272,7 @@
                                 android:textSize="14sp"
                                 android:text="加签发送邮件的内容和附件" />
                             <com.inspur.emmcloud.widget.SwitchView
-                                android:id="@+id/s_secrity_action2"
+                                android:id="@+id/sv_secrity_action2"
                                 android:layout_width="31dp"
                                 android:layout_height="51dp"
                                 android:layout_alignParentRight="true"
