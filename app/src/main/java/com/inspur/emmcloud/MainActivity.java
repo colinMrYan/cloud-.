@@ -78,10 +78,10 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
             this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
         }
         setContentView(R.layout.activity_main);
-        getStoragePermission();
+        getNecessaryPermission();
     }
 
-    private void getStoragePermission() {
+    private void getNecessaryPermission() {
         String[] necessaryPermissionArray = StringUtils.concatAll(Permissions.STORAGE,Permissions.CALL_PHONE_PERMISSION);
         new PermissionMangerUtils(this, necessaryPermissionArray, new PermissionRequestCallback() {
             @Override
