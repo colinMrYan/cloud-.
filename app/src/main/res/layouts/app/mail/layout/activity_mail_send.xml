@@ -87,12 +87,14 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:textSize="15sp"/>
-                    <com.inspur.emmcloud.widget.FlowLayout
-                        android:id="@+id/fl_recipient"
+                    <com.inspur.emmcloud.widget.RichEdit
+                        android:id="@+id/re_recipient"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_toRightOf="@id/tv_recipient_tip"
                         android:layout_toLeftOf="@id/iv_recipients"
+                        android:background="@null"
+                        android:textSize="15sp"
                         android:layout_marginLeft="5dp"
                         android:layout_marginRight="5dp" />
                     <ImageView
@@ -115,35 +117,36 @@
 
             <!-- 邮件抄送人-->
             <RelativeLayout
-                android:id="@+id/rl_copy_to_all"
+                android:id="@+id/rl_cc_all"
                 android:layout_below="@id/rl_recipients_all"
                 android:paddingTop="12dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <RelativeLayout
-                    android:id="@+id/rl_copy_to"
+                    android:id="@+id/rl_cc"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp">
                     <TextView
-                        android:id="@+id/tv_copy_to_tip"
+                        android:id="@+id/tv_cc_tip"
                         android:text="抄送人："
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:textSize="16sp"/>
-                    <com.inspur.emmcloud.widget.FlowLayout
-                        android:id="@+id/fl_copy_to_recipient"
+                    <com.inspur.emmcloud.widget.RichEdit
+                        android:id="@+id/re_cc_recipient"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_toLeftOf="@id/iv_copy_to_recipients"
-                        android:layout_toRightOf="@id/tv_copy_to_tip"
+                        android:layout_toLeftOf="@id/iv_cc_recipients"
+                        android:layout_toRightOf="@id/tv_cc_tip"
+                        android:background="@null"
                         android:layout_marginLeft="5dp"
                         android:layout_marginRight="5dp" />
 
                     <ImageView
-                        android:id="@+id/iv_copy_to_recipients"
+                        android:id="@+id/iv_cc_recipients"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:onClick="onClick"
@@ -157,13 +160,13 @@
                     android:background="#C8C7CC"
                     android:layout_marginTop="12dp"
                     android:layout_marginLeft="15dp"
-                    android:layout_below="@id/rl_copy_to"></View>
+                    android:layout_below="@id/rl_cc"></View>
             </RelativeLayout>
 
             <!-- 邮件发件人-->
             <RelativeLayout
                 android:id="@+id/rl_sender_all"
-                android:layout_below="@id/rl_copy_to_all"
+                android:layout_below="@id/rl_cc_all"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingTop="12dp"
@@ -219,6 +222,8 @@
                     android:id="@+id/rl_sender_theme"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp">
                     <TextView
@@ -233,6 +238,8 @@
                         android:layout_toRightOf="@id/tv_theme_tip"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"
                         android:background="@null"
                         android:layout_centerVertical="true"/>
                     <ImageView

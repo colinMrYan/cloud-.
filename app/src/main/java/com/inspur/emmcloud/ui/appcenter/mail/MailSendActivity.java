@@ -1,31 +1,23 @@
 package com.inspur.emmcloud.ui.appcenter.mail;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.appcenter.mail.MailRecipientModel;
+import com.inspur.emmcloud.bean.chat.InsertModel;
 import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.bean.contact.SearchModel;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
-import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.LogUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
-import com.inspur.emmcloud.widget.FlowLayout;
+import com.inspur.emmcloud.widget.RichEdit;
 
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
@@ -36,32 +28,36 @@ import java.util.List;
 /**
  * Created by libaochao on 2018/12/20.
  */
-@ContentView( R.layout.activity_mail_send )
+@ContentView(R.layout.activity_mail_send)
 public class MailSendActivity extends BaseActivity {
-    @ViewInject(R.id.fl_recipient)
-    private FlowLayout mRecipientFlowLayout;
-    @ViewInject(R.id.fl_copy_to_recipient)
-    private FlowLayout mCopyToFlowLayout;
+    @ViewInject(R.id.re_recipient)
+    private RichEdit mRecipientRichEdit;
+    @ViewInject(R.id.re_cc_recipient)
+    private RichEdit mCCRecipientRichEdit;
+//    @ViewInject(R.id.fl_recipient)
+//    private FlowLayout mRecipientFlowLayout;
+//    @ViewInject(R.id.fl_copy_to_recipient)
+//    private FlowLayout mCopyToFlowLayout;
     @ViewInject(R.id.et_sender_theme)
     private EditText mSendThemeEditText;
 
     @ViewInject(R.id.iv_recipients)
     private ImageView mRecipientsImageView;
-    @ViewInject(R.id.iv_copy_to_recipients)
-    private ImageView mCopy2RecipientsImageView;
+    @ViewInject(R.id.iv_cc_recipients)
+    private ImageView mCCRecipientsImageView;
 
-    private EditText searchEdit;
-    private EditText ctSearchEdit;
-
-    private ArrayList<String> memberUidList = new ArrayList<>();
-    private ArrayList<MailRecipientModel> mRecipients = new ArrayList<>();
-    private ArrayList<MailRecipientModel> mCTRecipients = new ArrayList<>();
-    private String searchText;
-    private MyTextWatcher myTextWatcher;
-    private MyCTTextWatcher myCTTextWatcher;
+//    private EditText searchEdit;
+//    private EditText ctSearchEdit;
+//
+      private ArrayList<String> memberUidList = new ArrayList<>();
+      private ArrayList<MailRecipientModel> mRecipients = new ArrayList<>();
+      private ArrayList<MailRecipientModel> mCCRecipients = new ArrayList<>();
+//    private String searchText;
+//    private MyTextWatcher myTextWatcher;
+//    private MyCTTextWatcher myCTTextWatcher;
 
     private static final int QEQUEST_ADD_MEMBER = 2;
-    private static final int QEQUEST_CT_MEMBER = 3;
+    private static final int QEQUEST_CC_MEMBER = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,13 +67,89 @@ public class MailSendActivity extends BaseActivity {
 
     /***/
     private void init() {
-        myTextWatcher  = new MyTextWatcher();
-        myCTTextWatcher= new MyCTTextWatcher();
-         flowAddEdit();
-         flowAddCtEdit();
-        if(mRecipients.size()>0){
-            notifyFlowLayoutDataChange(mRecipients);
-        }
+        mRecipientRichEdit.setInputWatcher( new RichEdit.InputWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                String  data ;
+
+            }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+        } );
+        mRecipientRichEdit.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            //  InsertModel data =  mRecipientRichEdit.insertHandData();
+//               if(data==null){
+//                   LogUtils.LbcDebug( "数据为空" );
+//               } else{
+//                   LogUtils.LbcDebug( "数据不为空" );
+//               }
+            }
+        } );
+
+        mRecipientRichEdit.setOnFocusChangeListener( new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus){
+                    LogUtils.LbcDebug( "dfocuse true" );
+                }else{
+                     mRecipientRichEdit.insertHandData();
+                    LogUtils.LbcDebug( "focuse false" );
+                }
+            }
+        } );
+
+        mRecipientRichEdit.setInsertModelListWatcher( new RichEdit.InsertModelListWatcher() {
+            @Override
+            public void onDataChanged(List<InsertModel> insertModelList) {
+               List<MailRecipientModel> delctRecipients = new ArrayList<>() ;
+                for(int i=0;i<mRecipients.size();i++){
+                   String email = mRecipients.get(i).getmRecipientEmail();
+                   boolean haveEmail=false;
+                   for(int j=0;j<insertModelList.size();j++){
+                       if(email.equals(insertModelList.get( j ).getInsertContentId())){
+                           haveEmail=true;
+                       }
+                   }
+                   if(!haveEmail){
+                       mRecipients.remove( i );
+                   }
+                }
+            }
+        } );
+
+        mCCRecipientRichEdit.setInputWatcher( new RichEdit.InputWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+        } );
+
+        mCCRecipientRichEdit.setInsertModelListWatcher( new RichEdit.InsertModelListWatcher() {
+            @Override
+            public void onDataChanged(List<InsertModel> insertModelList) {
+                List<MailRecipientModel> delctRecipients = new ArrayList<>() ;
+                for(int i=0;i<mCCRecipients.size();i++){
+                    String email = mCCRecipients.get(i).getmRecipientEmail();
+                    boolean haveEmail=false;
+                    for(int j=0;j<insertModelList.size();j++){
+                        if(email.equals(insertModelList.get( j ).getInsertContentId())){
+                            haveEmail=true;
+                        }
+                    }
+                    if(!haveEmail){
+                        mCCRecipients.remove( i );
+                    }
+                }
+            }
+        } );
+
     }
 
     public void onClick(View v) {
@@ -94,7 +166,7 @@ public class MailSendActivity extends BaseActivity {
                         ContactSearchActivity.class );
                 startActivityForResult( intent, QEQUEST_ADD_MEMBER );
                 break;
-            case R.id.iv_copy_to_recipients:
+            case R.id.iv_cc_recipients:
                 Intent intent1 = new Intent();
                 intent1.putExtra( ContactSearchFragment.EXTRA_TYPE, 2 );
                 intent1.putExtra( ContactSearchFragment.EXTRA_EXCLUDE_SELECT, memberUidList );
@@ -102,7 +174,7 @@ public class MailSendActivity extends BaseActivity {
                 intent1.putExtra( ContactSearchFragment.EXTRA_TITLE, "添加抄送人" );
                 intent1.setClass( getApplicationContext(),
                         ContactSearchActivity.class );
-                startActivityForResult( intent1, QEQUEST_CT_MEMBER);
+                startActivityForResult( intent1, QEQUEST_CC_MEMBER );
                 break;
             default:
                 break;
@@ -120,35 +192,35 @@ public class MailSendActivity extends BaseActivity {
                             .getSerializableExtra( "selectMemList" );
                     if (addMemberList.size() > 0) {
                         for (int i = 0; i < addMemberList.size(); i++) {
-                             MailRecipientModel singleRecipient = new MailRecipientModel();
-                            ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(addMemberList.get(i).getId());
+                            MailRecipientModel singleRecipient = new MailRecipientModel();
+                            ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid( addMemberList.get( i ).getId() );
                             singleRecipient.setmRecipientEmail( contactUser.getEmail() );
                             singleRecipient.setmRecipientName( contactUser.getName() );
                             LogUtils.LbcDebug( singleRecipient.getmRecipientEmail() );
-                            boolean isContaion = isListContaionSpecItem( mRecipients,singleRecipient );
-                            if(!isContaion){
+                            boolean isContaion = isListContaionSpecItem( mRecipients, singleRecipient );
+                            if (!isContaion) {
                                 mRecipients.add( singleRecipient );
+                                notifyRichEdit(mRecipientRichEdit, singleRecipient);
                             }
                         }
-                        notifyFlowLayoutDataChange(mRecipients);
                     }
                     break;
-                case QEQUEST_CT_MEMBER:
+                case QEQUEST_CC_MEMBER:
                     List<SearchModel> ctAddMemberList = (List<SearchModel>) data
                             .getSerializableExtra( "selectMemList" );
                     if (ctAddMemberList.size() > 0) {
                         for (int i = 0; i < ctAddMemberList.size(); i++) {
                             MailRecipientModel singleRecipient = new MailRecipientModel();
-                            ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(ctAddMemberList.get(i).getId());
+                            ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid( ctAddMemberList.get( i ).getId() );
                             singleRecipient.setmRecipientEmail( contactUser.getEmail() );
                             singleRecipient.setmRecipientName( contactUser.getName() );
                             LogUtils.LbcDebug( singleRecipient.getmRecipientEmail() );
-                            boolean isContaion = isListContaionSpecItem( mCTRecipients,singleRecipient );
-                            if(!isContaion){
-                                mCTRecipients.add( singleRecipient );
+                            boolean isContaion = isListContaionSpecItem( mCCRecipients, singleRecipient );
+                            if (!isContaion) {
+                                mCCRecipients.add( singleRecipient );
+                                notifyRichEdit(mCCRecipientRichEdit, singleRecipient);
                             }
                         }
-                        notifyFlowLayoutDataChange(mCTRecipients);
                     }
                     break;
                 default:
@@ -157,257 +229,23 @@ public class MailSendActivity extends BaseActivity {
         }
     }
 
-    private boolean isListContaionSpecItem(ArrayList<MailRecipientModel> selectMemList,MailRecipientModel specItem){
-        for(int i=0;i<selectMemList.size();i++){
-            if(selectMemList.get( i ).getmRecipientEmail().equals( specItem.getmRecipientEmail())){
-               return true;
+    private boolean isListContaionSpecItem(ArrayList<MailRecipientModel> selectMemList, MailRecipientModel specItem) {
+        for (int i = 0; i < selectMemList.size(); i++) {
+            if (selectMemList.get( i ).getmRecipientEmail().equals( specItem.getmRecipientEmail() )) {
+                return true;
             }
         }
         return false;
     }
 
-    /**
-     * 刷新FlowLayout
-     */
-    private void notifyFlowLayoutDataChange(ArrayList<MailRecipientModel> selectMemList) {
-        boolean ismRepicients=false;
-        if(selectMemList==mRecipients){
-            mRecipientFlowLayout.removeAllViews();
-            ismRepicients=true;
-            }else if(selectMemList==mCTRecipients) {
-            mCopyToFlowLayout.removeAllViews();
-            ismRepicients=false;
-            }
-          final boolean finalIsmRepicients = ismRepicients;
-        for (int i = 0; i < selectMemList.size(); i++) {
-            final MailRecipientModel searchModel = selectMemList.get(i);
-            TextView searchResultText = new TextView(this);
-            FlowLayout.LayoutParams params = new FlowLayout.LayoutParams(
-                    ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.leftMargin = DensityUtil.dip2px( MyApplication.getInstance(), 5);
-            params.topMargin = DensityUtil.dip2px(MyApplication.getInstance(), 2);
-            params.bottomMargin = params.topMargin;
-            searchResultText.setLayoutParams(params);
-            int piddingTop = DensityUtil.dip2px(this.getApplicationContext(), 1);
-            int piddingLeft = DensityUtil.dip2px(this.getApplicationContext(), 5);
-            searchResultText.setPadding(piddingLeft, piddingTop, piddingLeft, piddingTop);
-            searchResultText.setGravity( Gravity.CENTER);
-            searchResultText.setTextSize( TypedValue.COMPLEX_UNIT_SP, 16);
-            searchResultText.setTextColor(searchModel.getmEmailFormat()? Color.parseColor("#0F7BCA"):Color.parseColor("#f96666"));
-            searchResultText.setText(selectMemList.get(i).getmRecipientName()+",");
-            searchResultText.setOnClickListener( new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // TODO Auto-generated method stub
-                    delectRecipient( finalIsmRepicients,searchModel);
-                }
-            });
-            if(finalIsmRepicients){
-                mRecipientFlowLayout.addView(searchResultText);
-            }else{
-                mCopyToFlowLayout.addView( searchResultText );
-            }
-        }
-        if(finalIsmRepicients){
-            flowAddEdit();
-        }else{
-            flowAddCtEdit();
-        }
-
+    private void  notifyRichEdit( RichEdit richEdit,   MailRecipientModel mRecipients){
+            String name = mRecipients.getmRecipientName();
+            String email = mRecipients.getmRecipientEmail();
+            InsertModel  insertModel = new InsertModel(";", (System.currentTimeMillis()) + "", name, email);
+            richEdit.insertSpecialStr(false, insertModel);
     }
 
-    private void delectRecipient(boolean ismRecipients,MailRecipientModel model){
-       if(ismRecipients){
-           if(mRecipients.contains(model)){
-               mRecipients.remove(model);
-               notifyFlowLayoutDataChange(mRecipients);
-           }
-       }else {
-           if(mCTRecipients.contains(model)){
-               mCTRecipients.remove(model);
-               notifyFlowLayoutDataChange(mCTRecipients);
-           }
-       }
 
-    }
-
-    private void flowAddEdit() {
-        if (searchEdit == null) {
-            searchEdit = new EditText( this );
-            FlowLayout.LayoutParams params = new FlowLayout.LayoutParams(
-                    ViewGroup.LayoutParams.WRAP_CONTENT, DensityUtil.dip2px(
-                    this.getApplicationContext(), ViewGroup.LayoutParams.WRAP_CONTENT ) );
-            params.topMargin = DensityUtil.dip2px( this.getApplicationContext(), 2 );
-            params.bottomMargin = params.topMargin;
-            int piddingTop = DensityUtil.dip2px( MyApplication.getInstance(), 1 );
-            int piddingLeft = DensityUtil.dip2px( MyApplication.getInstance(), 10 );
-            searchEdit.setPadding( piddingLeft, piddingTop, piddingLeft, piddingTop );
-            searchEdit.setLayoutParams( params );
-            searchEdit.setSingleLine( true );
-            searchEdit.setTextSize( TypedValue.COMPLEX_UNIT_SP, 16 );
-            searchEdit.setBackground( null );
-            searchEdit.setFocusable( true );
-            searchEdit.requestFocus();
-            searchEdit.requestFocusFromTouch();
-            searchEdit.setHint( "添加");
-            searchEdit.addTextChangedListener( myTextWatcher );
-            searchEdit.setOnFocusChangeListener(new View.
-                    OnFocusChangeListener() {
-                @Override
-                public void onFocusChange(View v, boolean hasFocus) {
-                    if(!hasFocus){
-                        handEmailAddressFocuseChange();
-                        searchEdit.clearFocus();
-                    }
-                }});
-        }else{
-            searchEdit.setFocusable( true );
-            searchEdit.requestFocus();
-            searchEdit.requestFocusFromTouch();
-            searchEdit.setText("");
-        }
-        if (searchEdit.getParent() == null) {
-            mRecipientFlowLayout.addView( searchEdit );
-        }
-    }
-
-    private void flowAddCtEdit() {
-        if (ctSearchEdit == null) {
-            ctSearchEdit = new EditText( this );
-            FlowLayout.LayoutParams params = new FlowLayout.LayoutParams(
-                    ViewGroup.LayoutParams.WRAP_CONTENT, DensityUtil.dip2px(
-                    this.getApplicationContext(), ViewGroup.LayoutParams.WRAP_CONTENT ) );
-            params.topMargin = DensityUtil.dip2px( this.getApplicationContext(), 2 );
-            params.bottomMargin = params.topMargin;
-            int piddingTop = DensityUtil.dip2px( MyApplication.getInstance(), 1 );
-            int piddingLeft = DensityUtil.dip2px( MyApplication.getInstance(), 10 );
-            ctSearchEdit.setPadding( piddingLeft, piddingTop, piddingLeft, piddingTop );
-            ctSearchEdit.setLayoutParams( params );
-            ctSearchEdit.setSingleLine( true );
-            ctSearchEdit.setTextSize( TypedValue.COMPLEX_UNIT_SP, 16 );
-            ctSearchEdit.setBackground( null );
-            ctSearchEdit.setFocusable( true );
-            ctSearchEdit.requestFocus();
-            ctSearchEdit.requestFocusFromTouch();
-            ctSearchEdit.setHint( "添加");
-            ctSearchEdit.addTextChangedListener( myCTTextWatcher );
-            ctSearchEdit.setOnFocusChangeListener(new View.
-                    OnFocusChangeListener() {
-                @Override
-                public void onFocusChange(View v, boolean hasFocus) {
-                    if(!hasFocus){
-                        handCTEmailAddressFocuseChange();
-                        ctSearchEdit.clearFocus();
-                    }
-                }});
-        }else{
-            ctSearchEdit.setFocusable( true );
-            ctSearchEdit.requestFocus();
-            ctSearchEdit.requestFocusFromTouch();
-            ctSearchEdit.findFocus();
-            ctSearchEdit.setText("");
-        }
-        if (ctSearchEdit.getParent() == null) {
-            mCopyToFlowLayout.addView( ctSearchEdit );
-        }
-    }
-
-    private class MyTextWatcher implements TextWatcher {
-
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count,
-                                      int after) {
-            // TODO Auto-generated method stub
-
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before,
-                                  int count) {
-            // TODO Auto-generated method stub
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-            // TODO Auto-generated method stub
-         searchText = searchEdit.getText().toString().trim();
-         if(!(StringUtils.isBlank(searchText))&&','==searchText.charAt(searchText.length()-1)){
-             String email = searchText.substring( 0,searchText.length()-1 );
-             MailRecipientModel mailRecipientModel = new MailRecipientModel();
-             mailRecipientModel.setmRecipientName(email);
-             mailRecipientModel.setmRecipientEmail(email);
-            boolean contaionState= isListContaionSpecItem(mRecipients,mailRecipientModel);
-            if(!contaionState){
-                mRecipients.add(mailRecipientModel);
-                notifyFlowLayoutDataChange(mRecipients);
-            }
-         }
-            LogUtils.LbcDebug( "focus on 3::"+searchText);
-        }
-
-    }
-
-    private class MyCTTextWatcher implements TextWatcher {
-
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count,
-                                      int after) {
-            // TODO Auto-generated method stub
-
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before,
-                                  int count) {
-            // TODO Auto-generated method stub
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-            // TODO Auto-generated method stub
-            String ctSearchText = ctSearchEdit.getText().toString().trim();
-            if(!(StringUtils.isBlank(ctSearchText))&&','==ctSearchText.charAt(ctSearchText.length()-1)){
-                String email = ctSearchText.substring( 0,ctSearchText.length()-1 );
-                MailRecipientModel mailRecipientModel = new MailRecipientModel();
-                mailRecipientModel.setmRecipientName(email);
-                mailRecipientModel.setmRecipientEmail(email);
-                boolean contaionState= isListContaionSpecItem(mCTRecipients,mailRecipientModel);
-                if(!contaionState){
-                    mCTRecipients.add(mailRecipientModel);
-                    notifyFlowLayoutDataChange(mCTRecipients);
-                }
-            }
-        }
-
-    }
-
-    private void handEmailAddressFocuseChange() {
-        String searchText = searchEdit.getText().toString().trim();
-        if(!(StringUtils.isBlank(searchText))&&','!=searchText.charAt(searchText.length()-1)){
-            MailRecipientModel mailRecipientModel = new MailRecipientModel();
-            mailRecipientModel.setmRecipientName(searchText);
-            mailRecipientModel.setmRecipientEmail(searchText);
-                boolean contaionState= isListContaionSpecItem(mRecipients,mailRecipientModel);
-                if(!contaionState){
-                    mRecipients.add(mailRecipientModel);
-                    notifyFlowLayoutDataChange(mRecipients);
-                }
-        }
-    }
-
-    private void handCTEmailAddressFocuseChange() {
-        String searchText = ctSearchEdit.getText().toString().trim();
-        if(!(StringUtils.isBlank(searchText))&&','!=searchText.charAt(searchText.length()-1)){
-            MailRecipientModel mailRecipientModel = new MailRecipientModel();
-            mailRecipientModel.setmRecipientName(searchText);
-            mailRecipientModel.setmRecipientEmail(searchText);
-                boolean contaionState= isListContaionSpecItem(mCTRecipients,mailRecipientModel);
-                if(!contaionState){
-                    mCTRecipients.add(mailRecipientModel);
-                    notifyFlowLayoutDataChange(mCTRecipients);
-                }
-        }
-    }
 
 
 }
