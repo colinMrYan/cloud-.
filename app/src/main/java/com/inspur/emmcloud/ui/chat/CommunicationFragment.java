@@ -660,7 +660,7 @@ public class CommunicationFragment extends Fragment {
             }
             getMessage();
             isFirstConnectWebsockt = false;
-            String appTabs = PreferencesByUserAndTanentUtils.getString(getActivity(), "app_tabbar_info_current", "");
+            String appTabs = PreferencesByUserAndTanentUtils.getString(getActivity(), Constant.PREF_APP_TAB_BAR_INFO_CURRENT, "");
             if (!StringUtils.isBlank(appTabs)) {
                 titleText.setText(AppTabUtils.getTabTitle(getActivity(), getClass().getSimpleName()));
             } else {

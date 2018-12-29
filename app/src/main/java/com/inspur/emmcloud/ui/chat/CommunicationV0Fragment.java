@@ -1161,7 +1161,7 @@ public class CommunicationV0Fragment extends Fragment {
                 getChannelList();
             }
             isFirstConnectWebsockt = false;
-            String appTabs = PreferencesByUserAndTanentUtils.getString(getActivity(), "app_tabbar_info_current", "");
+            String appTabs = PreferencesByUserAndTanentUtils.getString(getActivity(), Constant.PREF_APP_TAB_BAR_INFO_CURRENT, "");
             if (!StringUtils.isBlank(appTabs)) {
                 titleText.setText(AppTabUtils.getTabTitle(getActivity(), getClass().getSimpleName()));
             } else {
