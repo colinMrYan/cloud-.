@@ -1140,6 +1140,10 @@ public class APIUri {
     public static String getMailDetailUrl(){
         return  getMailBaseUrl()+"/Mail/Detail";
     }
+
+    public static String getLoginMailUrl(){
+        return  getMailBaseUrl()+"/UserProfile/MailBind";
+    }
 /************************************************************************工作****************************************************************************/
     /***************会议接口*****************************/
     /**

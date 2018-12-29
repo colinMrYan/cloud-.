@@ -17,7 +17,7 @@ import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
+import com.inspur.emmcloud.util.privates.cache.MailCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MailFolderCacheUtils;
 import com.inspur.emmcloud.widget.MySwipeRefreshLayout;
 
@@ -34,6 +34,7 @@ import java.util.List;
 
 public class MailHomeActivity extends MailHomeBaseActivity implements MySwipeRefreshLayout.OnRefreshListener, MySwipeRefreshLayout.OnLoadListener {
 
+    private static final int pageSize = 10;
     @ViewInject(R.id.srl_refresh)
     private MySwipeRefreshLayout swipeRefreshLayout;
 
@@ -74,10 +75,34 @@ public class MailHomeActivity extends MailHomeBaseActivity implements MySwipeRef
 
     }
 
+    private List<Mail>  updateMailStatusFromDb(GetMailListResult getMailListResult){
+        List<Mail> requestMailList = getMailListResult.getMailList();
+        if (requestMailList.size()>0){
+            List<String> mailIdList =new ArrayList<>();
+            for (Mail mail:requestMailList){
+                mailIdList.add(mail.getId());
+            }
+            List<Mail> requestMailInDbList = MailCacheUtils.getMailListByMailIdList(mailIdList);
+            for (int i=0;i<requestMailList.size();i++){
+                Mail mail = requestMailList.get(i);
+                int index = requestMailInDbList.indexOf(mail);
+                if (index != -1){
+                    Mail mailInDb = requestMailInDbList.get(index);
+                    mailInDb.setFolderId(mail.getFolderId());
+                    mailInDb.setRead(mail.isRead());
+                    requestMailList.remove(i);
+                    requestMailList.add(i,mailInDb);
+                }
+            }
+        }
+        return requestMailList;
+    }
+
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveGetMailByFolder(SimpleEventMessage simpleEventMessage) {
         if (simpleEventMessage.getAction().equals(Constant.EVENTBUS_TAG_GET_MAIL_BY_FOLDER)) {
-            closeMenu();
+           closeMenu();
            MailFolder mailFolder = (MailFolder) simpleEventMessage.getMessageObj();
            if (currentMailFolder == null || !mailFolder.getId().equals(currentMailFolder.getId())){
                mailList.clear();
@@ -95,6 +120,10 @@ public class MailHomeActivity extends MailHomeBaseActivity implements MySwipeRef
                    header += "(" + currentMailFolder.getUnreadCount() + ")";
                }
                headerText.setText(header);
+               mailList = MailCacheUtils.getMailListInFolder(currentMailFolder.getId(),pageSize);
+               mailAdapter.setMailList(mailList, currentRootMailFolder);
+               swipeRefreshLayout.setCanLoadMore(mailList.size() >= pageSize);
+               mailAdapter.notifyDataSetChanged();
                getMail(0);
            }
 
@@ -114,7 +143,7 @@ public class MailHomeActivity extends MailHomeBaseActivity implements MySwipeRef
 
     private void getMail(int offset) {
         if (NetUtils.isNetworkConnected(this)) {
-            apiService.getMailList(currentMailFolder.getId(), 10, offset);
+            apiService.getMailList(currentMailFolder.getId(), pageSize, offset);
         } else {
             swipeRefreshLayout.setLoading(false);
         }
@@ -125,13 +154,15 @@ public class MailHomeActivity extends MailHomeBaseActivity implements MySwipeRef
         @Override
         public void returnMailListSuccess(String folderId, int pageSize, int offset, GetMailListResult getMailListResult) {
             swipeRefreshLayout.setLoading(false);
+            List<Mail> requestMailList = updateMailStatusFromDb(getMailListResult);
+            MailCacheUtils.saveMailList(requestMailList);
             if (folderId.equals(currentMailFolder.getId())) {
                 if (offset == 0) {
                     mailList.clear();
                 }
-                mailList.addAll(getMailListResult.getMailList());
+                mailList.addAll(requestMailList);
                 mailAdapter.setMailList(mailList, currentRootMailFolder);
-                swipeRefreshLayout.setCanLoadMore(mailList.size()>9);
+                swipeRefreshLayout.setCanLoadMore(mailList.size() >= pageSize);
                 mailAdapter.notifyDataSetChanged();
             }
 
@@ -141,7 +172,6 @@ public class MailHomeActivity extends MailHomeBaseActivity implements MySwipeRef
         @Override
         public void returnMailListFail(String folderId, int pageSize, int offset, String error, int errorCode) {
             swipeRefreshLayout.setLoading(false);
-            WebServiceMiddleUtils.hand(MailHomeActivity.this, error, errorCode);
         }
     }
 }
