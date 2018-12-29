@@ -1,26 +1,20 @@
 package com.inspur.emmcloud.util.privates.cache;
 
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.bean.chat.PersonDto;
 import com.inspur.emmcloud.bean.chat.Robot;
 import com.inspur.emmcloud.bean.contact.Contact;
 import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PinyinUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 
 import org.xutils.db.sqlite.WhereBuilder;
-import org.xutils.ex.DbException;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Created by chenmch on 2018/5/10.
@@ -64,6 +58,19 @@ public class ContactUserCacheUtils {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+    }
+
+    public static String getUserMail(String uid){
+        String mail = "";
+        try {
+            ContactUser contactUser = DbCacheUtils.getDb().findById(ContactUser.class, uid);
+            if (contactUser != null) {
+                mail = contactUser.getEmail();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return mail;
     }
 
     public static void setLastQueryTime(long lastQueryTime) {

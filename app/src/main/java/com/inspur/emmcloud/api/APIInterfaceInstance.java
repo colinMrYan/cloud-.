@@ -18,9 +18,9 @@ import com.inspur.emmcloud.bean.appcenter.GetWebAppRealUrlResult;
 import com.inspur.emmcloud.bean.appcenter.ReactNativeDownloadUrlBean;
 import com.inspur.emmcloud.bean.appcenter.ReactNativeInstallUriBean;
 import com.inspur.emmcloud.bean.appcenter.ReactNativeUpdateBean;
-import com.inspur.emmcloud.bean.appcenter.mail.GetMailDetailResult;
 import com.inspur.emmcloud.bean.appcenter.mail.GetMailFolderResult;
 import com.inspur.emmcloud.bean.appcenter.mail.GetMailListResult;
+import com.inspur.emmcloud.bean.appcenter.mail.Mail;
 import com.inspur.emmcloud.bean.appcenter.news.GetGroupNewsDetailResult;
 import com.inspur.emmcloud.bean.appcenter.news.GetNewsTitleResult;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileListResult;
@@ -1886,10 +1886,18 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnMailDetailSuccess(GetMailDetailResult getMailDetailResult) {
+    public void returnMailDetailSuccess(Mail mail) {
     }
 
     @Override
     public void returnMailDetailFail(String error, int errorCode) {
+    }
+
+    @Override
+    public void returnMailLoginSuccess() {
+    }
+
+    @Override
+    public void returnMailLoginFail(String error, int errorCode) {
     }
 }

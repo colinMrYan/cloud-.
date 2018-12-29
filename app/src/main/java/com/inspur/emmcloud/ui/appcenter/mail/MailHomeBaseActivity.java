@@ -61,6 +61,16 @@ public class MailHomeBaseActivity extends BaseFragmentActivity implements AllInt
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        if (leftDrawerLayout.isDrawerOpen()){
+            leftDrawerLayout.closeDrawer();
+            shadowView.setVisibility(View.GONE);
+        }else {
+            super.onBackPressed();
+        }
+    }
+
     public void openMenu() {
         leftDrawerLayout.openDrawer();
         shadowView.setVisibility(View.VISIBLE);
