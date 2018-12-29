@@ -1105,6 +1105,6 @@
 
     <!--权限管理-->
     <string name="permission_dialog_title">Tips</string>
-    <string name="permission_message_always_failed">Please give us permission in the settings:\n\n%1$s</string>
-    <string name="permission_grant_fail">Grant failed</string>
+    <string name="permission_message_always_failed">You have forbidden granting %1$s %2$s permission, which may cause the function to be unavailable. If you need to use it, please go to the settings to grant permission.</string>
+    <string name="permission_grant_fail">You have forbidden granting %1$s %2$s permission</string>
 </resources>
