@@ -102,7 +102,6 @@ public class PermissionRequestManagerUtils {
                         public void onClick(QMUIDialog dialog, int index) {
                             dialog.dismiss();
                             exitByPermission(permissionList);
-                            callback.onPermissionRequestFail(permissionList);
                         }
                     })
                     .addAction(R.string.settings, new QMUIDialogAction.ActionListener() {

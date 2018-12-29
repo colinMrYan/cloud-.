@@ -37,7 +37,6 @@ import com.inspur.emmcloud.util.privates.SplashPageUtils;
 import com.inspur.emmcloud.util.privates.UpgradeUtils;
 import com.inspur.emmcloud.widget.dialogs.EasyDialog;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.yanzhenjie.permission.Permission;
 
 import java.util.List;
 import java.util.Timer;
@@ -83,24 +82,8 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
     }
 
     private void getStoragePermission() {
-        new PermissionMangerUtils(this, Permissions.STORAGE, new PermissionRequestCallback() {
-            @Override
-            public void onPermissionRequestSuccess(List<String> permissions) {
-                getPhonePermissions();
-            }
-
-            @Override
-            public void onPermissionRequestFail(List<String> permissions) {
-                ToastUtils.show(MainActivity.this, PermissionRequestManagerUtils.getInstance().getPermissionToast(MainActivity.this,permissions));
-                MyApplication.getInstance().exit();
-            }
-
-
-        }).start();
-    }
-
-    private void getPhonePermissions() {
-        new PermissionMangerUtils(this, Permission.READ_PHONE_STATE, new PermissionRequestCallback() {
+        String[] necessaryPermissionArray = StringUtils.concatAll(Permissions.STORAGE,Permissions.CALL_PHONE_PERMISSION);
+        new PermissionMangerUtils(this, necessaryPermissionArray, new PermissionRequestCallback() {
             @Override
             public void onPermissionRequestSuccess(List<String> permissions) {
                 init();
@@ -111,8 +94,6 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
                 ToastUtils.show(MainActivity.this, PermissionRequestManagerUtils.getInstance().getPermissionToast(MainActivity.this,permissions));
                 MyApplication.getInstance().exit();
             }
-
-
         }).start();
     }
 

@@ -97,8 +97,8 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
      * 清除旧版本的MainTab数据
      */
     private void clearOldMainTabData() {
-        PreferencesByUserAndTanentUtils.clearDataByKey(this,Constant.PREF_APP_TAB_BAR_VERSION);
-        PreferencesByUserAndTanentUtils.clearDataByKey(this,Constant.PREF_APP_TAB_BAR_INFO_CURRENT);
+        PreferencesByUserAndTanentUtils.clearDataByKey(this,"app_tabbar_version");
+        PreferencesByUserAndTanentUtils.clearDataByKey(this,"app_tabbar_info_current");
     }
 
     /**
