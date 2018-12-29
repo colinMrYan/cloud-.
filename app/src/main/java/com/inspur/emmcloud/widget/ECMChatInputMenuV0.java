@@ -39,6 +39,7 @@ import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionMangerUtils;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
+import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
 import com.inspur.emmcloud.util.common.systool.permission.Permissions;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.Voice2StringMessageUtils;
@@ -301,13 +302,10 @@ public class ECMChatInputMenuV0 extends LinearLayout {
 
                                     @Override
                                     public void onPermissionRequestFail(List<String> permissions) {
-                                        ToastUtils.show(getContext(),getContext().getString(R.string.permission_grant_fail));
+                                        ToastUtils.show(getContext(), PermissionRequestManagerUtils.getInstance().getPermissionToast(getContext(),permissions));
                                     }
 
-                                    @Override
-                                    public void onPermissionRequestException(Exception e) {
 
-                                    }
                                 }).start();
                             }
                             break;

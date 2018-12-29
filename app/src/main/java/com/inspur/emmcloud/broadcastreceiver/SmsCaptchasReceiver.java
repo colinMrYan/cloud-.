@@ -9,10 +9,10 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 
-import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionMangerUtils;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
+import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
 import com.yanzhenjie.permission.Permission;
 
 import java.util.List;
@@ -48,13 +48,9 @@ public class SmsCaptchasReceiver extends ContentObserver {
 
 			@Override
 			public void onPermissionRequestFail(List<String> permissions) {
-				ToastUtils.show(context,context.getString(R.string.permission_grant_fail));
+				ToastUtils.show(context, PermissionRequestManagerUtils.getInstance().getPermissionToast(context,permissions));
 			}
 
-			@Override
-			public void onPermissionRequestException(Exception e) {
-
-			}
 		}).start();
 
 	}

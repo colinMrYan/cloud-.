@@ -22,12 +22,12 @@ import android.widget.TextView;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
-import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.ImageUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionMangerUtils;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
+import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
 import com.inspur.imp.api.Res;
 import com.inspur.imp.plugin.barcode.camera.CameraManager;
 import com.inspur.imp.plugin.barcode.decoding.CaptureActivityHandler;
@@ -198,14 +198,11 @@ public class CaptureActivity extends Activity implements Callback {
 
                 @Override
                 public void onPermissionRequestFail(List<String> permissions) {
-                    ToastUtils.show(getApplicationContext(),getString(R.string.permission_grant_fail));
+                    ToastUtils.show(CaptureActivity.this, PermissionRequestManagerUtils.getInstance().getPermissionToast(CaptureActivity.this,permissions));
                     finish();
                 }
 
-                @Override
-                public void onPermissionRequestException(Exception e) {
-                    finish();
-                }
+
             }).start();
         }
 

@@ -83,12 +83,10 @@ public class AudioRecordButton extends Button {
 
                         @Override
                         public void onPermissionRequestFail(List<String> permissions) {
-                            ToastUtils.show(context,context.getString(R.string.permission_grant_fail));
+                            ToastUtils.show(context, PermissionRequestManagerUtils.getInstance().getPermissionToast(context,permissions));
                         }
 
-                        @Override
-                        public void onPermissionRequestException(Exception e) {
-                        }
+
                     });
                 }
                 return false;

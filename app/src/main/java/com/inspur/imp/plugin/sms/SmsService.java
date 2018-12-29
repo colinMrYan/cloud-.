@@ -12,10 +12,10 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.telephony.SmsManager;
 import android.widget.Toast;
 
-import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionMangerUtils;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
+import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
 import com.inspur.imp.api.ImpFragment;
 import com.inspur.imp.plugin.ImpPlugin;
 import com.inspur.imp.util.StrUtil;
@@ -85,13 +85,9 @@ public class SmsService extends ImpPlugin {
 
 			@Override
 			public void onPermissionRequestFail(List<String> permissions) {
-				ToastUtils.show(getFragmentContext(),getFragmentContext().getString(R.string.permission_grant_fail));
+				ToastUtils.show(getFragmentContext(), PermissionRequestManagerUtils.getInstance().getPermissionToast(getFragmentContext(),permissions));
 			}
 
-			@Override
-			public void onPermissionRequestException(Exception e) {
-
-			}
 		}).start();
 	}
 

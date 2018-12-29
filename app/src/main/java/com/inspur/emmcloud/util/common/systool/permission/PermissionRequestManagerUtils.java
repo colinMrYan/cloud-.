@@ -1,11 +1,13 @@
 package com.inspur.emmcloud.util.common.systool.permission;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
@@ -88,12 +90,12 @@ public class PermissionRequestManagerUtils {
     /**
      * 展示设置权限dialog
      */
+    @SuppressLint("StringFormatMatches")
     private void showSettingDialog(final Context context, final List<String> permissionList) {
         if(context instanceof Activity){
-            List<String> permissionNames = Permission.transformText(context, permissionList);
-            String message = context.getString(R.string.permission_message_always_failed, TextUtils.join("\n", permissionNames));
+            List<String> permissionNameList = Permission.transformText(context, permissionList);
+            String message = context.getString(R.string.permission_message_always_failed, AppUtils.getAppName(context), TextUtils.join(" ", permissionNameList));
             new MyQMUIDialog.MessageDialogBuilder(context)
-                    .setTitle(R.string.permission_dialog_title)
                     .setMessage(message)
                     .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
                         @Override
@@ -119,6 +121,7 @@ public class PermissionRequestManagerUtils {
     private void exitByPermission(List<String> permissionList) {
         if(!(PermissionRequestManagerUtils.getInstance().isHasPermission(MyApplication.getInstance(), Permissions.STORAGE)
                 && PermissionRequestManagerUtils.getInstance().isHasPermission(MyApplication.getInstance(), Permission.READ_PHONE_STATE))){
+            callback.onPermissionRequestFail(permissionList);
             MyApplication.getInstance().exit();
         }else {
             if(isHasPermission(context,stringList2StringArray(permissionList))){
@@ -170,6 +173,12 @@ public class PermissionRequestManagerUtils {
     private String[] stringList2StringArray(List<String> permissionList){
         String[] strings = new String[permissionList.size()];
         return permissionList.toArray(strings);
+    }
+
+    @SuppressLint("StringFormatInvalid")
+    public String getPermissionToast(Context context, List<String> permissionList){
+        List<String> permissionNameList = Permission.transformText(context, permissionList);
+        return context.getString(R.string.permission_grant_fail, AppUtils.getAppName(context), TextUtils.join(" ", permissionNameList));
     }
 
 }

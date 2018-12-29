@@ -70,10 +70,6 @@ public class LocationService extends Service implements AMapLocationListener {
 								LocationService.this.stopSelf();
 							}
 
-							@Override
-							public void onPermissionRequestException(Exception e) {
-								LocationService.this.stopSelf();
-							}
 						}).start();
 
 					}else {

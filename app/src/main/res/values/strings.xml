@@ -1155,7 +1155,6 @@
     <string name="resend_file_failed">无法找到资源文件，消息重发失败</string>
 
     <!--权限管理-->
-    <string name="permission_dialog_title">提示</string>
-    <string name="permission_message_always_failed">请在设置中授予这项权限:\n\n%1$s</string>
-    <string name="permission_grant_fail">授权失败</string>
+    <string name="permission_message_always_failed">您已禁止授予%1$s %2$s 权限，可能会造成功能不可用，如需使用请到设置里授予权限</string>
+    <string name="permission_grant_fail">您已禁止授予%1$s %2$s 权限</string>
 </resources>

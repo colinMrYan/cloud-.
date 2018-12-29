@@ -28,6 +28,7 @@ import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionMangerUtils;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
+import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
 import com.inspur.emmcloud.util.common.systool.permission.Permissions;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.LoginUtils;
@@ -90,14 +91,11 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
 
             @Override
             public void onPermissionRequestFail(List<String> permissions) {
-                ToastUtils.show(MainActivity.this,getString(R.string.permission_grant_fail));
+                ToastUtils.show(MainActivity.this, PermissionRequestManagerUtils.getInstance().getPermissionToast(MainActivity.this,permissions));
                 MyApplication.getInstance().exit();
             }
 
-            @Override
-            public void onPermissionRequestException(Exception e) {
 
-            }
         }).start();
     }
 
@@ -110,14 +108,11 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
 
             @Override
             public void onPermissionRequestFail(List<String> permissions) {
-                ToastUtils.show(MainActivity.this,getString(R.string.permission_grant_fail));
+                ToastUtils.show(MainActivity.this, PermissionRequestManagerUtils.getInstance().getPermissionToast(MainActivity.this,permissions));
                 MyApplication.getInstance().exit();
             }
 
-            @Override
-            public void onPermissionRequestException(Exception e) {
 
-            }
         }).start();
     }
 

@@ -44,6 +44,7 @@ import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionMangerUtils;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
+import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
 import com.inspur.emmcloud.util.common.systool.permission.Permissions;
 import com.inspur.imp.api.ImpActivity;
 import com.inspur.imp.api.Res;
@@ -649,13 +650,10 @@ public class AppUtils {
 
                 @Override
                 public void onPermissionRequestFail(List<String> permissions) {
-                    ToastUtils.show(activity,activity.getString(R.string.permission_grant_fail));
+                    ToastUtils.show(activity, PermissionRequestManagerUtils.getInstance().getPermissionToast(activity,permissions));
                 }
 
-                @Override
-                public void onPermissionRequestException(Exception e) {
 
-                }
             }).start();
         } else {
             ToastUtils.show(activity, R.string.filetransfer_sd_not_exist);
@@ -685,13 +683,10 @@ public class AppUtils {
 
             @Override
             public void onPermissionRequestFail(List<String> permissions) {
-                ToastUtils.show(activity,activity.getString(R.string.permission_grant_fail));
+                ToastUtils.show(activity, PermissionRequestManagerUtils.getInstance().getPermissionToast(activity,permissions));
             }
 
-            @Override
-            public void onPermissionRequestException(Exception e) {
 
-            }
         }).start();
     }
 
@@ -733,14 +728,11 @@ public class AppUtils {
 
             @Override
             public void onPermissionRequestFail(List<String> permissions) {
-                ToastUtils.show(activity,activity.getString(R.string.permission_grant_fail));
+                ToastUtils.show(activity, PermissionRequestManagerUtils.getInstance().getPermissionToast(activity,permissions));
                 activity.finish();
             }
 
-            @Override
-            public void onPermissionRequestException(Exception e) {
 
-            }
         }).start();
     }
 
