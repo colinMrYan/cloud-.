@@ -81,7 +81,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_marginRight="15dp"
-            android:hint="2018年1月1日"
+            android:hint="1月1日"
             android:gravity="right"
             android:textColor="#333333"
             android:textSize="13sp" />

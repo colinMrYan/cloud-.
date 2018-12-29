@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -17,6 +18,7 @@ import com.inspur.emmcloud.bean.appcenter.mail.MailFolder;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MailFolderCacheUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.unnamed.b.atv.model.TreeNode;
@@ -35,6 +37,8 @@ public class MailLeftMenuFragment extends Fragment {
     private MailApiService apiService;
     private AndroidTreeView treeView;
     private RelativeLayout containerLayout;
+    private TextView mailCountText;
+    private boolean hasOpenFirstMailFolder = false;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,6 +51,8 @@ public class MailLeftMenuFragment extends Fragment {
         View view=inflater.inflate(R.layout.mail_left_menu,null);
         loadingDialog = new LoadingDialog(getActivity());
         containerLayout = (RelativeLayout) view.findViewById(R.id.rl_container);
+        mailCountText=(TextView)view.findViewById(R.id.tv_mail_count);
+        mailCountText.setText(ContactUserCacheUtils.getUserMail(MyApplication.getInstance().getUid()));
         addTreeView();
         getMailFolder();
         return view;
@@ -54,7 +60,10 @@ public class MailLeftMenuFragment extends Fragment {
     private void addTreeView(){
         List<MailFolder> rootChildMailFolderList = MailFolderCacheUtils.getChildMailFolderList("");
         if (rootChildMailFolderList.size()>0){
-            openMailFolder(rootChildMailFolderList.get(0));
+            if (!hasOpenFirstMailFolder){
+                openMailFolder(rootChildMailFolderList.get(0));
+                hasOpenFirstMailFolder = true;
+            }
             containerLayout.removeAllViews();
             containerLayout.removeAllViewsInLayout();
             TreeNode root = TreeNode.root();

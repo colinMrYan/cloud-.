@@ -14,11 +14,11 @@ import java.util.List;
 
 public class GetMailListResult {
     private List<Mail> MailList = new ArrayList<>();
-    public GetMailListResult(String response){
+    public GetMailListResult(String response,String folderId){
         JSONArray array = JSONUtils.getJSONArray(response,new JSONArray());
         for (int i=0;i<array.length();i++){
             JSONObject object = JSONUtils.getJSONObject(array,i,new JSONObject());
-            MailList.add(new Mail(object));
+            MailList.add(new Mail(object,folderId));
         }
     }
 
