@@ -86,7 +86,6 @@ public class AppUtils {
         long divide = nowTimeStamp - lastTimeStamp;
         long speed = ((nowTotalRxBytes - lastTotalRxBytes) * 1000 / (divide == 0? 1:divide));//毫秒转换
         lastTimeStamp = nowTimeStamp;
-        lastTotalRxBytes = nowTotalRxBytes;
         return String.valueOf(speed) + " kb/s";
     }
 

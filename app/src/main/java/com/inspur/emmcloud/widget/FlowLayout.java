@@ -16,9 +16,6 @@
 
 package com.inspur.emmcloud.widget;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -29,6 +26,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.util.common.LogUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * User: Blaž Šolar
@@ -148,7 +149,7 @@ public class FlowLayout extends ViewGroup {
 
 		int left;
 		int top = 0;
-
+		LogUtils.jasonDebug("numLines="+numLines);
 		for(int i = 0; i < numLines; i++) {
 
 			lineHeight = mLineHeights.get(i);
@@ -294,14 +295,12 @@ public class FlowLayout extends ViewGroup {
 				lineWidth += childWidth;
 				lineHeight = Math.max(lineHeight, child.getMeasuredHeight() + lp.topMargin + lp.bottomMargin);
 			}
-
             if(i == childCount - 1) {
                 width = Math.max(width, lineWidth);
                 height += lineHeight;
             }
 
 		}
-
 		setMeasuredDimension(
 				(modeWidth == MeasureSpec.EXACTLY) ? sizeWidth : width,
 				(modeHeight == MeasureSpec.EXACTLY) ? sizeHeight : height);

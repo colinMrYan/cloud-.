@@ -8,9 +8,9 @@ import com.inspur.emmcloud.api.APIInterface;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.CloudHttpMethod;
 import com.inspur.emmcloud.api.HttpUtils;
-import com.inspur.emmcloud.bean.appcenter.mail.GetMailDetailResult;
 import com.inspur.emmcloud.bean.appcenter.mail.GetMailFolderResult;
 import com.inspur.emmcloud.bean.appcenter.mail.GetMailListResult;
+import com.inspur.emmcloud.bean.appcenter.mail.Mail;
 import com.inspur.emmcloud.interf.OauthCallBack;
 import com.inspur.emmcloud.util.privates.OauthUtils;
 
@@ -98,7 +98,7 @@ public class MailApiService {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
-                apiInterface.returnMailListSuccess(folderId, pageSize, offset,new GetMailListResult(new String(arg0)));
+                apiInterface.returnMailListSuccess(folderId, pageSize, offset,new GetMailListResult(new String(arg0),folderId));
             }
 
             @Override
@@ -137,13 +137,53 @@ public class MailApiService {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
-                apiInterface.returnMailDetailSuccess(new GetMailDetailResult(new String(arg0)));
+                apiInterface.returnMailDetailSuccess(new Mail(new String(arg0)));
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
                 // TODO Auto-generated method stub
                 apiInterface.returnMailDetailFail(error, responseCode);
+
+            }
+        });
+    }
+
+    public void loginMail(final String username,final String password){
+        String completeUrl = APIUri.getLoginMailUrl();
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
+        params.addParameter("Email",username);
+        params.addParameter("Password",password);
+        params.setAsJsonContent(true);
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        loginMail(username,password);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+                apiInterface.returnMailLoginSuccess();
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                apiInterface.returnMailLoginFail(error, responseCode);
 
             }
         });

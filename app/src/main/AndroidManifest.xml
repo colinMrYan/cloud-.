@@ -941,6 +941,10 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait"
         </activity>
+        <activity android:name="com.inspur.emmcloud.ui.appcenter.mail.MailLoginActivity">
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait"
+        </activity>
 
 
         <!-- service -->

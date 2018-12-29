@@ -514,6 +514,8 @@
     <string name="join">加入</string>
     <string name="none">无</string>
 
+    <!--Webex 邮箱-->
+    <string name="mail_install_cert"><u>安装数字证书</u></string>
 
     <!-- 动态部分 -->
     <string name="moments">动态</string>
