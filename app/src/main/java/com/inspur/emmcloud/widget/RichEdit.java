@@ -164,12 +164,13 @@ public class RichEdit extends EditText {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (keyCode == KeyEvent.KEYCODE_DEL && event.getAction() == KeyEvent.ACTION_DOWN) {
-                    LogUtils.LbcDebug( "error0" );
                     int selectionStart = getSelectionStart();
-                    LogUtils.LbcDebug( "error1" );
                     int selectionEnd = getSelectionEnd();
-                    LogUtils.LbcDebug( "error2" );
                     removeInsertModelByDeleteContent(selectionStart, selectionEnd);
+                }
+                if(KeyEvent.KEYCODE_ENTER==keyCode){
+                    insertLastManualData( KeyEvent.KEYCODE_ENTER );
+                    return true;
                 }
                 return false;
             }

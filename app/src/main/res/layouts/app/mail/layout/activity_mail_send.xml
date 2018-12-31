@@ -139,6 +139,7 @@
                         android:id="@+id/re_cc_recipient"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:textSize="15sp"
                         android:layout_toLeftOf="@id/iv_cc_recipients"
                         android:layout_toRightOf="@id/tv_cc_tip"
                         android:background="@null"

@@ -92,6 +92,7 @@ public class MailSendActivity extends BaseActivity {
             public void onDataChanged(List<InsertModel> insertModelList) {
                      synchronousRemoveRecipients( mRecipients,insertModelList );
                      synchronousAddRecipients( mRecipients,insertModelList );
+                     LogUtils.LbcDebug( "当前："+mRecipients.size() );
             }
         });
 
