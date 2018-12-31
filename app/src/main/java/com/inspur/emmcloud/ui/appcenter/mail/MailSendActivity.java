@@ -34,10 +34,6 @@ public class MailSendActivity extends BaseActivity {
     private RichEdit mRecipientRichEdit;
     @ViewInject(R.id.re_cc_recipient)
     private RichEdit mCCRecipientRichEdit;
-//    @ViewInject(R.id.fl_recipient)
-//    private FlowLayout mRecipientFlowLayout;
-//    @ViewInject(R.id.fl_copy_to_recipient)
-//    private FlowLayout mCopyToFlowLayout;
     @ViewInject(R.id.et_sender_theme)
     private EditText mSendThemeEditText;
 
@@ -46,15 +42,10 @@ public class MailSendActivity extends BaseActivity {
     @ViewInject(R.id.iv_cc_recipients)
     private ImageView mCCRecipientsImageView;
 
-//    private EditText searchEdit;
-//    private EditText ctSearchEdit;
-//
-      private ArrayList<String> memberUidList = new ArrayList<>();
-      private ArrayList<MailRecipientModel> mRecipients = new ArrayList<>();
-      private ArrayList<MailRecipientModel> mCCRecipients = new ArrayList<>();
-//    private String searchText;
-//    private MyTextWatcher myTextWatcher;
-//    private MyCTTextWatcher myCTTextWatcher;
+    private ArrayList<String> memberUidList = new ArrayList<>();
+    private ArrayList<MailRecipientModel> mRecipients = new ArrayList<>();
+    private ArrayList<MailRecipientModel> mCCRecipients = new ArrayList<>();
+
 
     private static final int QEQUEST_ADD_MEMBER = 2;
     private static final int QEQUEST_CC_MEMBER = 3;
@@ -65,88 +56,98 @@ public class MailSendActivity extends BaseActivity {
         init();
     }
 
-    /***/
+    /**
+     *Recipient 根据insertModels 多的删掉*/
+    private void synchronousRemoveRecipients(ArrayList<MailRecipientModel>recipients,List<InsertModel> insertModels){
+        for(int i=0;i<recipients.size();i++){
+            String email = recipients.get(i).getmRecipientEmail();
+            boolean haveEmail=false;
+            for(int j=0;j<insertModels.size();j++){
+                if(email.equals(insertModels.get( j ).getInsertContentId())){
+                    haveEmail=true;
+                    break;
+                }
+            }
+            if(!haveEmail){
+               recipients.remove( i );
+            }
+        }
+    }
+    /**
+     *Re 根据InsertModel少的添加
+     **/
+    private void   synchronousAddRecipients(ArrayList<MailRecipientModel>recipients,List<InsertModel> insertModels){
+        for(int m=0;m<insertModels.size();m++){
+            String email = insertModels.get(m).getInsertContentId().toString();
+            boolean haveEmail=false;
+            for(int n=0;n<recipients.size();n++){
+                if(email.equals(recipients.get(n).getmRecipientEmail())){
+                    haveEmail=true;
+                    break;
+                }
+            }
+            if(!haveEmail){
+                MailRecipientModel mailRecipientModel = new MailRecipientModel();
+                mailRecipientModel.setmRecipientEmail( email );
+                mailRecipientModel.setmRecipientName( email );
+                recipients.add(mailRecipientModel);
+            }
+        }
+
+    }
+    /**
+     * 初始化
+     * */
     private void init() {
         mRecipientRichEdit.setInputWatcher( new RichEdit.InputWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
                 String  data ;
-
             }
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.toString().length()>1&&' '==s.charAt(s.length()-1)){
+                    mRecipientRichEdit.insertLastManualData(32);
+                }
             }
         } );
         mRecipientRichEdit.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            //  InsertModel data =  mRecipientRichEdit.insertHandData();
-//               if(data==null){
-//                   LogUtils.LbcDebug( "数据为空" );
-//               } else{
-//                   LogUtils.LbcDebug( "数据不为空" );
-//               }
             }
         } );
-
         mRecipientRichEdit.setOnFocusChangeListener( new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if(hasFocus){
-                    LogUtils.LbcDebug( "dfocuse true" );
                 }else{
-                     mRecipientRichEdit.insertHandData();
-                    LogUtils.LbcDebug( "focuse false" );
+                     mRecipientRichEdit.insertLastManualData(-1);
                 }
             }
-        } );
+        });
 
         mRecipientRichEdit.setInsertModelListWatcher( new RichEdit.InsertModelListWatcher() {
             @Override
             public void onDataChanged(List<InsertModel> insertModelList) {
-               List<MailRecipientModel> delctRecipients = new ArrayList<>() ;
-                for(int i=0;i<mRecipients.size();i++){
-                   String email = mRecipients.get(i).getmRecipientEmail();
-                   boolean haveEmail=false;
-                   for(int j=0;j<insertModelList.size();j++){
-                       if(email.equals(insertModelList.get( j ).getInsertContentId())){
-                           haveEmail=true;
-                       }
-                   }
-                   if(!haveEmail){
-                       mRecipients.remove( i );
-                   }
-                }
+                     synchronousRemoveRecipients( mRecipients,insertModelList );
+                     synchronousAddRecipients( mRecipients,insertModelList );
             }
-        } );
+        });
 
         mCCRecipientRichEdit.setInputWatcher( new RichEdit.InputWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
-
             }
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
             }
         } );
 
         mCCRecipientRichEdit.setInsertModelListWatcher( new RichEdit.InsertModelListWatcher() {
             @Override
             public void onDataChanged(List<InsertModel> insertModelList) {
-                List<MailRecipientModel> delctRecipients = new ArrayList<>() ;
-                for(int i=0;i<mCCRecipients.size();i++){
-                    String email = mCCRecipients.get(i).getmRecipientEmail();
-                    boolean haveEmail=false;
-                    for(int j=0;j<insertModelList.size();j++){
-                        if(email.equals(insertModelList.get( j ).getInsertContentId())){
-                            haveEmail=true;
-                        }
-                    }
-                    if(!haveEmail){
-                        mCCRecipients.remove( i );
-                    }
-                }
+                synchronousRemoveRecipients( mCCRecipients,insertModelList );
+                synchronousAddRecipients( mCCRecipients,insertModelList );
             }
         } );
 
@@ -229,6 +230,10 @@ public class MailSendActivity extends BaseActivity {
         }
     }
 
+    /**
+     *选择去重
+     * @param selectMemList
+     * @param specItem */
     private boolean isListContaionSpecItem(ArrayList<MailRecipientModel> selectMemList, MailRecipientModel specItem) {
         for (int i = 0; i < selectMemList.size(); i++) {
             if (selectMemList.get( i ).getmRecipientEmail().equals( specItem.getmRecipientEmail() )) {
@@ -238,14 +243,15 @@ public class MailSendActivity extends BaseActivity {
         return false;
     }
 
+    /**
+     * 更新RichEdit
+     * @param mRecipients
+     * @param richEdit*/
     private void  notifyRichEdit( RichEdit richEdit,   MailRecipientModel mRecipients){
             String name = mRecipients.getmRecipientName();
             String email = mRecipients.getmRecipientEmail();
             InsertModel  insertModel = new InsertModel(";", (System.currentTimeMillis()) + "", name, email);
             richEdit.insertSpecialStr(false, insertModel);
     }
-
-
-
 
 }

@@ -73,6 +73,22 @@ public class MailCertificateDetail implements Parcelable {
         this.certificatePrivateKey = certificatePrivateKey;
     }
 
+    public boolean isEncryptedMail() {
+        return isEncryptedMail;
+    }
+
+    public void setEncryptedMail(boolean encryptedMail) {
+        this.isEncryptedMail = encryptedMail;
+    }
+
+    public boolean isSignedMail() {
+        return isSignedMail;
+    }
+
+    public void setSignedMail(boolean signedMail) {
+        this.isSignedMail = signedMail;
+    }
+
     private String certificateName;     //证书文件名称
     private String certificateIssuerDN; //颁发者
     private String certificateSubjectDN;//颁发给
@@ -82,6 +98,10 @@ public class MailCertificateDetail implements Parcelable {
 
     private String certificatePublicKey;//证书公钥
     private String certificatePrivateKey;//证书私钥
+
+
+    private boolean isEncryptedMail;
+    private boolean isSignedMail;
 
 
 
@@ -94,6 +114,8 @@ public class MailCertificateDetail implements Parcelable {
          certificateFinalDate=in.readString();
          certificatePublicKey=in.readString();
          certificatePrivateKey=in.readString();
+         isEncryptedMail=in.readInt()==1;
+         isSignedMail   =in.readInt()==1;
     }
 
     public MailCertificateDetail(String cName,String cIssuerDN,String cSubjectDN,String cPassword,String cStartTime,String cFinalTime,String pubKey,String priKey){
@@ -108,6 +130,8 @@ public class MailCertificateDetail implements Parcelable {
     }
 
     public MailCertificateDetail(){
+        isEncryptedMail=true;
+        isSignedMail=true;
     }
 
     public static final Creator<MailCertificateDetail> CREATOR = new Creator<MailCertificateDetail>() {
@@ -137,5 +161,7 @@ public class MailCertificateDetail implements Parcelable {
         dest.writeString( certificateFinalDate );
         dest.writeString( certificatePublicKey );
         dest.writeString( certificatePrivateKey );
+        dest.writeInt( isEncryptedMail?1:0 );
+        dest.writeInt( isSignedMail?1:0 );
     }
 }

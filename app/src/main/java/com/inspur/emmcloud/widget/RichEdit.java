@@ -164,8 +164,11 @@ public class RichEdit extends EditText {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (keyCode == KeyEvent.KEYCODE_DEL && event.getAction() == KeyEvent.ACTION_DOWN) {
+                    LogUtils.LbcDebug( "error0" );
                     int selectionStart = getSelectionStart();
+                    LogUtils.LbcDebug( "error1" );
                     int selectionEnd = getSelectionEnd();
+                    LogUtils.LbcDebug( "error2" );
                     removeInsertModelByDeleteContent(selectionStart, selectionEnd);
                 }
                 return false;
@@ -189,203 +192,23 @@ public class RichEdit extends EditText {
          return mSpans;
      }
 
-    public  String returrnStringData(){
-         String data="";
-         return data;
-    }
-
-    public  void insertLastHandData(){
+     /**
+      * 插入手动数据
+      * @param KeyCode 按键数据暂时未用*/
+    public  void insertLastManualData(int KeyCode){
         //获取当前光标位置
         SpannableStringBuilder spannableStringBuilder = (SpannableStringBuilder) getText();
         MyForegroundColorSpan[] mSpans = getText().getSpans(0, spannableStringBuilder.length(), MyForegroundColorSpan.class);
-        List<String> HandData=new ArrayList<>();
-        int start=0;
-
-            String AllData= this.getText().toString();
-            MyForegroundColorSpan spanT = mSpans[mSpans.length-1];
-            int spanStartPos = spannableStringBuilder.getSpanStart(spanT);
-            int spanEndPos = spannableStringBuilder.getSpanEnd(spanT);
-            LogUtils.LbcDebug( "Start："+spanStartPos+"  end："+spanEndPos );
-            int lastIndex = AllData.length();
-            String lastEmail = AllData.substring( spanEndPos+1,lastIndex-1 );
-                spannableStringBuilder.delete( spanEndPos+1,lastIndex-1);
-                String subData = AllData.substring( start,spanStartPos);
-                LogUtils.LbcDebug( "subdata::"+subData );
-               subData= subData.replace( " ","" );
-                if(!StringUtils.isBlank( subData )){
-                    HandData.add(subData);
-                }
-
-            start = spanEndPos;
-
-          setText( spannableStringBuilder );
-        if(HandData.size()>0){
-            for(int i = 0;i<HandData.size();i++){
-                InsertModel  insertModel = new InsertModel("@", (System.currentTimeMillis()) + "", HandData.get(i), HandData.get(i));
-                insertSpecialStr(  false, insertModel);
-             }
+        int spanEndPos = mSpans.length>0?(spannableStringBuilder.getSpanEnd(mSpans[mSpans.length-1])):0;
+        String allTextData=this.getText().toString();
+        String manualData  = allTextData.substring(spanEndPos,allTextData.length());
+        manualData = manualData.replace(" ","");
+        if(!StringUtils.isBlank(manualData)&&StringUtils.isEmail( manualData )){
+            this.getText().delete(spanEndPos,allTextData.length());
+            InsertModel lastInsert = new InsertModel(";", (System.currentTimeMillis()) + "",manualData );
+            insertSpecialStr(false, lastInsert);
         }
-
-
-//         if(mSpans.length>0){
-//             MyForegroundColorSpan span=null;
-//             int length =0;
-//            for(int i=0;i<mSpans.length;i++) {
-//                MyForegroundColorSpan spanT = mSpans[i];
-//            int spanEndPos = spannableStringBuilder.getSpanEnd(spanT);
-//            if(spanEndPos>length){
-//                span = spanT;
-//                length=spanEndPos;
-//            }
-//            }
-//             String AllData= this.getText().toString();
-//            String noSpanStr=AllData.substring( length+1,endSelect );
-//            LogUtils.LbcDebug( "d:"+noSpanStr );
-//            noSpanStr = noSpanStr.replace( " ","" );
-//            LogUtils.LbcDebug( "noblackdata:"+noSpanStr );
-//            if(!StringUtils.isBlank(noSpanStr)){
-//                //判定邮箱格式 正确为蓝色 不正确为红色
-//                //删除空字符串
-//                this.getText().delete(length,endSelect);
-//                  insertModel = new InsertModel("@", (System.currentTimeMillis()) + "", noSpanStr, noSpanStr);
-//                insertSpecialStr(false, insertModel  );
-//                return insertModel ;
-//            }
-
-//        }
-
-
-//        ArrayList<Integer> SpansEndPos=new ArrayList<>();
-//        for(int i=0;i<mSpans.length;i++){
-//            MyForegroundColorSpan span = mSpans[i];
-//            int spanEndPos = spannableStringBuilder.getSpanEnd(span)-endSelect;
-//            SpansEndPos.add( spanEndPos);
-//        }
-//
-//
-//
-//        for(int i=mSpans.length-1;i>-1;i--){
-//            MyForegroundColorSpan span = mSpans[i];
-//            int spanEndPos = spannableStringBuilder.getSpanEnd(span);
-//
-//
-//            LogUtils.LbcDebug( "spanEndPos："+spanEndPos );
-//            LogUtils.LbcDebug( "endSelect："+endSelect);
-//            if(spanEndPos<endSelect){
-//                String AllData= this.getText().toString();
-//                String noSpanStr=AllData.substring( spanEndPos+1,endSelect );
-//                LogUtils.LbcDebug( "data:"+noSpanStr );
-//                noSpanStr = noSpanStr.replace( " ","" );
-//                LogUtils.LbcDebug( "noblackdata:"+noSpanStr );
-//                if(!StringUtils.isBlank(noSpanStr)){
-//                    //判定邮箱格式 正确为蓝色 不正确为红色
-//                    //删除空字符串
-//                    this.getText().delete(spanEndPos,endSelect);
-//                      insertModel = new InsertModel("@", (System.currentTimeMillis()) + "", noSpanStr, noSpanStr);
-//                    insertSpecialStr(true, insertModel  );
-//                    return insertModel ;
-//                }
-//            }
-//        }
     }
-
-    public  void insertHandData(){
-        //获取当前光标位置
-        SpannableStringBuilder spannableStringBuilder = (SpannableStringBuilder) getText();
-        MyForegroundColorSpan[] mSpans = getText().getSpans(0, spannableStringBuilder.length(), MyForegroundColorSpan.class);
-        List<String> HandData=new ArrayList<>();
-        int start=0;
-
-
-//        for(int i=0;i<mSpans.length;i++){
-//            String AllData= this.getText().toString();
-//            MyForegroundColorSpan spanT = mSpans[i];
-//            int spanStartPos = spannableStringBuilder.getSpanStart(spanT);
-//            int spanEndPos = spannableStringBuilder.getSpanEnd(spanT);
-//            LogUtils.LbcDebug( "Start："+spanStartPos+"  end："+spanEndPos );
-//            if(start<spanStartPos){
-//                spannableStringBuilder.delete( start,spanStartPos);
-//                String subData = AllData.substring( start,spanStartPos);
-//                LogUtils.LbcDebug( "subdata::"+subData );
-//               subData= subData.replace( " ","" );
-//                if(!StringUtils.isBlank( subData )){
-//                    HandData.add(subData);
-//                }
-//            }else{
-//            }
-//            start = spanEndPos;
-//        }
-      //  setText( spannableStringBuilder );
-//        if(HandData.size()>0){
-//            for(int i = 0;i<HandData.size();i++){
-//                InsertModel  insertModel = new InsertModel("@", (System.currentTimeMillis()) + "", HandData.get(i), HandData.get(i));
-//                insertSpecialStr(  false, insertModel);
-//             }
-//        }
-
-
-//         if(mSpans.length>0){
-//             MyForegroundColorSpan span=null;
-//             int length =0;
-//            for(int i=0;i<mSpans.length;i++) {
-//                MyForegroundColorSpan spanT = mSpans[i];
-//            int spanEndPos = spannableStringBuilder.getSpanEnd(spanT);
-//            if(spanEndPos>length){
-//                span = spanT;
-//                length=spanEndPos;
-//            }
-//            }
-//             String AllData= this.getText().toString();
-//            String noSpanStr=AllData.substring( length+1,endSelect );
-//            LogUtils.LbcDebug( "d:"+noSpanStr );
-//            noSpanStr = noSpanStr.replace( " ","" );
-//            LogUtils.LbcDebug( "noblackdata:"+noSpanStr );
-//            if(!StringUtils.isBlank(noSpanStr)){
-//                //判定邮箱格式 正确为蓝色 不正确为红色
-//                //删除空字符串
-//                this.getText().delete(length,endSelect);
-//                  insertModel = new InsertModel("@", (System.currentTimeMillis()) + "", noSpanStr, noSpanStr);
-//                insertSpecialStr(false, insertModel  );
-//                return insertModel ;
-//            }
-
-//        }
-
-
-//        ArrayList<Integer> SpansEndPos=new ArrayList<>();
-//        for(int i=0;i<mSpans.length;i++){
-//            MyForegroundColorSpan span = mSpans[i];
-//            int spanEndPos = spannableStringBuilder.getSpanEnd(span)-endSelect;
-//            SpansEndPos.add( spanEndPos);
-//        }
-//
-//
-//
-//        for(int i=mSpans.length-1;i>-1;i--){
-//            MyForegroundColorSpan span = mSpans[i];
-//            int spanEndPos = spannableStringBuilder.getSpanEnd(span);
-//
-//
-//            LogUtils.LbcDebug( "spanEndPos："+spanEndPos );
-//            LogUtils.LbcDebug( "endSelect："+endSelect);
-//            if(spanEndPos<endSelect){
-//                String AllData= this.getText().toString();
-//                String noSpanStr=AllData.substring( spanEndPos+1,endSelect );
-//                LogUtils.LbcDebug( "data:"+noSpanStr );
-//                noSpanStr = noSpanStr.replace( " ","" );
-//                LogUtils.LbcDebug( "noblackdata:"+noSpanStr );
-//                if(!StringUtils.isBlank(noSpanStr)){
-//                    //判定邮箱格式 正确为蓝色 不正确为红色
-//                    //删除空字符串
-//                    this.getText().delete(spanEndPos,endSelect);
-//                      insertModel = new InsertModel("@", (System.currentTimeMillis()) + "", noSpanStr, noSpanStr);
-//                    insertSpecialStr(true, insertModel  );
-//                    return insertModel ;
-//                }
-//            }
-//        }
-    }
-
 
     /**
      * 监听光标的位置,若光标处于话题内容中间则移动光标到话题结束位置
@@ -430,12 +253,6 @@ public class RichEdit extends EditText {
         }else {
             super.onSelectionChanged(selStart, selEnd);
         }
-    }
-
-
-    @Override
-    protected void onFocusChanged(boolean focused, int direction, Rect previouslyFocusedRect) {
-        super.onFocusChanged( focused, direction, previouslyFocusedRect );
     }
 
     /**
@@ -483,7 +300,6 @@ public class RichEdit extends EditText {
     public void insertSpecialStr(boolean isInputKeyWord, InsertModel insertModel) {
         if (insertModel == null)
             return;
-
         String insertRule = insertModel.getInsertRule();
         String insertContent = insertModel.getInsertContent();
         String insertColor = insertModel.getInsertColor();
@@ -519,9 +335,9 @@ public class RichEdit extends EditText {
         spannableStringBuilder.setSpan(foregroundColorSpan, index, index + insertContent.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 //        Spanned htmlText = Html.fromHtml(String.format(String.format("<font color='%s'>" + insertContent + "</font>", insertColor)));
 //        spannableStringBuilder.insert(index, htmlText);
-        spannableStringBuilder.insert(index + insertContent.length(), " ");
+        //spannableStringBuilder.insert(index + insertContent.length(), " ");
         setText(spannableStringBuilder);
-        setSelection(index + insertContent.length() + 1);
+        setSelection(index + insertContent.length() );
         //mSumSpanCharsNum = mSumSpanCharsNum+insertModel.getInsertContent().length();
     }
 
@@ -631,7 +447,9 @@ public class RichEdit extends EditText {
         return isRequest;
     }
 
-    //是否可以点击滑动
+    /**
+     * 是否可以点击滑动
+     */
     public void setIsRequest(boolean isRequest) {
         this.isRequest = isRequest;
     }
@@ -641,7 +459,9 @@ public class RichEdit extends EditText {
         return maxLength;
     }
 
-    //最大可输入长度
+    /**最大可输入长度
+     *@param maxLength
+     **/
     public void setEditTextMaxLength(int maxLength) {
         this.maxLength = maxLength;
     }

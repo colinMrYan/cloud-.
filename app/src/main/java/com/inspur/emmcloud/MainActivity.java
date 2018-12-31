@@ -19,6 +19,7 @@ import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.service.AppExceptionService;
 import com.inspur.emmcloud.ui.IndexActivity;
+import com.inspur.emmcloud.ui.appcenter.mail.MailSendActivity;
 import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.ui.mine.setting.GuideActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
@@ -71,8 +72,9 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
             requestWindowFeature(Window.FEATURE_NO_TITLE);//没有标题
             this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
         }
-        setContentView(R.layout.activity_main);
-        init();
+        //setContentView(R.layout.activity_main);
+        //init();
+        IntentUtils.startActivity( this, MailSendActivity.class );
 
     }
 
