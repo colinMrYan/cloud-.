@@ -46,7 +46,7 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
         MyApplication.getInstance().setEnterSystemUI(false);
         currentActivity = activity;
         //检查是否有必要权限，如果有则继续下面逻辑，如果没有则转到MainActivity
-        if(checkNecessaryPermission()){
+        if(isLackNecessaryPermission()){
             return;
         }
         //此处不能用（count == 0）判断，由于Activity跳转生命周期因素导致，已登录账号进入应用不会打开手势解锁
@@ -63,7 +63,7 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
         count++;
     }
 
-    private boolean checkNecessaryPermission() {
+    private boolean isLackNecessaryPermission() {
         //如果没有存储权限则跳转到MainActivity进行处理
         String[] necessaryPermissionArray = StringUtils.concatAll(Permissions.STORAGE,Permissions.CALL_PHONE_PERMISSION);
         if(!PermissionRequestManagerUtils.getInstance().isHasPermission(MyApplication.getInstance(), necessaryPermissionArray)){
