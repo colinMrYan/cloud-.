@@ -71,7 +71,9 @@ public class PermissionRequestManagerUtils {
                 .onGranted(new Action<List<String>>() {
                     @Override
                     public void onAction(List<String> permissions) {
-                        callback.onPermissionRequestSuccess(permissions);
+                        if(callback != null){
+                            callback.onPermissionRequestSuccess(permissions);
+                        }
                     }
                 })
                 .onDenied(new Action<List<String>>() {
@@ -80,7 +82,9 @@ public class PermissionRequestManagerUtils {
                         if (AndPermission.hasAlwaysDeniedPermission(context, permissions)) {
                             showSettingDialog(context, permissions);
                         }else{
-                            callback.onPermissionRequestFail(permissions);
+                            if(callback != null){
+                                callback.onPermissionRequestFail(permissions);
+                            }
                         }
                     }
                 })
@@ -113,20 +117,28 @@ public class PermissionRequestManagerUtils {
                     })
                     .show();
         }else{
-            callback.onPermissionRequestFail(permissionList);
+            if(callback != null){
+                callback.onPermissionRequestFail(permissionList);
+            }
         }
     }
 
     private void exitByPermission(List<String> permissionList) {
         if(!(PermissionRequestManagerUtils.getInstance().isHasPermission(MyApplication.getInstance(), Permissions.STORAGE)
                 && PermissionRequestManagerUtils.getInstance().isHasPermission(MyApplication.getInstance(), Permission.READ_PHONE_STATE))){
-            callback.onPermissionRequestFail(permissionList);
+            if(callback != null){
+                callback.onPermissionRequestFail(permissionList);
+            }
             MyApplication.getInstance().exit();
         }else {
             if(isHasPermission(context,stringList2StringArray(permissionList))){
-                callback.onPermissionRequestSuccess(permissionList);
+                if(callback != null){
+                    callback.onPermissionRequestSuccess(permissionList);
+                }
             }else{
-                callback.onPermissionRequestFail(permissionList);
+                if(callback != null){
+                    callback.onPermissionRequestFail(permissionList);
+                }
             }
         }
     }
