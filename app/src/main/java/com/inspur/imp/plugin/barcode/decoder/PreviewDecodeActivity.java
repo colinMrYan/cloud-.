@@ -16,11 +16,9 @@ import android.widget.TextView;
 import com.funcode.decoder.inspuremmcloud.FunDecode;
 import com.funcode.decoder.inspuremmcloud.FunDecodeHandler;
 import com.funcode.decoder.inspuremmcloud.FunDecodeSurfaceView;
-import com.inspur.emmcloud.MainActivity;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.common.systool.permission.PermissionMangerUtils;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
 import com.inspur.emmcloud.util.common.systool.permission.Permissions;
@@ -50,7 +48,7 @@ public class PreviewDecodeActivity extends Activity implements FunDecodeHandler 
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);//没有标题
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
-        new PermissionMangerUtils(this, Permissions.CAMERA, new PermissionRequestCallback() {
+        PermissionRequestManagerUtils.getInstance().requestRuntimePermission(this, Permissions.CAMERA, new PermissionRequestCallback() {
             @Override
             public void onPermissionRequestSuccess(List<String> permissions) {
                 setContentView(Res.getLayoutID("activity_preview_decode"));
@@ -63,8 +61,7 @@ public class PreviewDecodeActivity extends Activity implements FunDecodeHandler 
                 finish();
             }
 
-        }).start();
-
+        });
     }
 
 

@@ -1,6 +1,5 @@
 package com.inspur.imp.plugin.amaplocation;
 
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 
 import com.amap.api.location.AMapLocation;
@@ -10,7 +9,6 @@ import com.amap.api.location.AMapLocationListener;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.common.systool.permission.PermissionMangerUtils;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
 import com.inspur.emmcloud.util.common.systool.permission.Permissions;
@@ -81,7 +79,7 @@ public class AmapLocateService extends ImpPlugin implements
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        new PermissionMangerUtils(getFragmentContext(), Permissions.LOCATION, new PermissionRequestCallback() {
+        PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getFragmentContext(), Permissions.LOCATION, new PermissionRequestCallback() {
             @Override
             public void onPermissionRequestSuccess(List<String> permissions) {
                 startLocation();
@@ -91,7 +89,7 @@ public class AmapLocateService extends ImpPlugin implements
             public void onPermissionRequestFail(List<String> permissions) {
                 ToastUtils.show(getFragmentContext(),PermissionRequestManagerUtils.getInstance().getPermissionToast(getFragmentContext(),permissions));
             }
-        }).start();
+        });
     }
 
     /**

@@ -25,7 +25,6 @@ import com.google.zxing.Result;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.ImageUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.common.systool.permission.PermissionMangerUtils;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
 import com.inspur.imp.api.Res;
@@ -190,7 +189,7 @@ public class CaptureActivity extends Activity implements Callback {
     public void surfaceCreated(final SurfaceHolder holder) {
         if (!hasSurface) {
             hasSurface = true;
-            new PermissionMangerUtils(this, Permission.CAMERA, new PermissionRequestCallback() {
+            PermissionRequestManagerUtils.getInstance().requestRuntimePermission(this, Permission.CAMERA, new PermissionRequestCallback() {
                 @Override
                 public void onPermissionRequestSuccess(List<String> permissions) {
                     initCamera(holder);
@@ -201,9 +200,7 @@ public class CaptureActivity extends Activity implements Callback {
                     ToastUtils.show(CaptureActivity.this, PermissionRequestManagerUtils.getInstance().getPermissionToast(CaptureActivity.this,permissions));
                     finish();
                 }
-
-
-            }).start();
+            });
         }
 
     }

@@ -17,6 +17,7 @@ import com.yanzhenjie.permission.Permission;
 import com.yanzhenjie.permission.Setting;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -65,30 +66,34 @@ public class PermissionRequestManagerUtils {
             callback.onPermissionRequestSuccess(new ArrayList<String>());
             return;
         }
-        AndPermission.with(context)
-                .runtime()
-                .permission(permissionGroup)
-                .onGranted(new Action<List<String>>() {
-                    @Override
-                    public void onAction(List<String> permissions) {
-                        if(callback != null){
-                            callback.onPermissionRequestSuccess(permissions);
-                        }
-                    }
-                })
-                .onDenied(new Action<List<String>>() {
-                    @Override
-                    public void onAction(List<String> permissions) {
-                        if (AndPermission.hasAlwaysDeniedPermission(context, permissions)) {
-                            showSettingDialog(context, permissions);
-                        }else{
+        if(PermissionRequestManagerUtils.getInstance().isHasPermission(context,permissionGroup)){
+            callback.onPermissionRequestSuccess(Arrays.asList(permissionGroup));
+        }else{
+            AndPermission.with(context)
+                    .runtime()
+                    .permission(permissionGroup)
+                    .onGranted(new Action<List<String>>() {
+                        @Override
+                        public void onAction(List<String> permissions) {
                             if(callback != null){
-                                callback.onPermissionRequestFail(permissions);
+                                callback.onPermissionRequestSuccess(permissions);
                             }
                         }
-                    }
-                })
-                .start();
+                    })
+                    .onDenied(new Action<List<String>>() {
+                        @Override
+                        public void onAction(List<String> permissions) {
+                            if (AndPermission.hasAlwaysDeniedPermission(context, permissions)) {
+                                showSettingDialog(context, permissions);
+                            }else{
+                                if(callback != null){
+                                    callback.onPermissionRequestFail(permissions);
+                                }
+                            }
+                        }
+                    })
+                    .start();
+        }
     }
 
     /**

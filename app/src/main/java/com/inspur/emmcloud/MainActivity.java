@@ -26,7 +26,6 @@ import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ResolutionUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.common.systool.permission.PermissionMangerUtils;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
 import com.inspur.emmcloud.util.common.systool.permission.Permissions;
@@ -83,7 +82,7 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
 
     private void getNecessaryPermission() {
         String[] necessaryPermissionArray = StringUtils.concatAll(Permissions.STORAGE,Permissions.CALL_PHONE_PERMISSION);
-        new PermissionMangerUtils(this, necessaryPermissionArray, new PermissionRequestCallback() {
+        PermissionRequestManagerUtils.getInstance().requestRuntimePermission(this, necessaryPermissionArray, new PermissionRequestCallback() {
             @Override
             public void onPermissionRequestSuccess(List<String> permissions) {
                 init();
@@ -94,7 +93,7 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
                 ToastUtils.show(MainActivity.this, PermissionRequestManagerUtils.getInstance().getPermissionToast(MainActivity.this,permissions));
                 MyApplication.getInstance().exit();
             }
-        }).start();
+        });
     }
 
 

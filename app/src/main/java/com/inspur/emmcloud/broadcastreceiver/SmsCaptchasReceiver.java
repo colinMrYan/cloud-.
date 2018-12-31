@@ -10,7 +10,6 @@ import android.os.Handler;
 import android.os.Message;
 
 import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.common.systool.permission.PermissionMangerUtils;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
 import com.yanzhenjie.permission.Permission;
@@ -40,7 +39,7 @@ public class SmsCaptchasReceiver extends ContentObserver {
 	@Override
 	public void onChange(boolean selfChange) {
 		super.onChange(selfChange);
-		new PermissionMangerUtils(context, Permission.READ_SMS, new PermissionRequestCallback() {
+		PermissionRequestManagerUtils.getInstance().requestRuntimePermission(context, Permission.READ_SMS, new PermissionRequestCallback() {
 			@Override
 			public void onPermissionRequestSuccess(List<String> permissions) {
 				readSMSMessages();
@@ -51,8 +50,7 @@ public class SmsCaptchasReceiver extends ContentObserver {
 				ToastUtils.show(context, PermissionRequestManagerUtils.getInstance().getPermissionToast(context,permissions));
 			}
 
-		}).start();
-
+		});
 	}
 
 	private void readSMSMessages() {

@@ -28,7 +28,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.inspur.emmcloud.MainActivity;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.DensityUtil;
@@ -36,7 +35,6 @@ import com.inspur.emmcloud.util.common.ImageUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.common.systool.permission.PermissionMangerUtils;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
 import com.inspur.imp.api.ImpBaseActivity;
@@ -193,7 +191,7 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
     }
 
     private void initCamera() {
-        new PermissionMangerUtils(this, Permission.CAMERA, new PermissionRequestCallback() {
+        PermissionRequestManagerUtils.getInstance().requestRuntimePermission(this, Permission.CAMERA, new PermissionRequestCallback() {
             @Override
             public void onPermissionRequestSuccess(List<String> permissions) {
                 openCamera();
@@ -205,9 +203,7 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
                 ToastUtils.show(MyCameraActivity.this, PermissionRequestManagerUtils.getInstance().getPermissionToast(MyCameraActivity.this,permissions));
                 finish();
             }
-
-
-        }).start();
+        });
     }
 
 

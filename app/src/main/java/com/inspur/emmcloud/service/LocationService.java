@@ -17,8 +17,8 @@ import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.common.systool.permission.PermissionMangerUtils;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
+import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
 import com.inspur.emmcloud.util.common.systool.permission.Permissions;
 import com.inspur.emmcloud.util.privates.cache.AppConfigCacheUtils;
 
@@ -59,7 +59,7 @@ public class LocationService extends Service implements AMapLocationListener {
 				public void run() {
 					// TODO Auto-generated method stub
 					if (NetUtils.isNetworkConnected(getApplicationContext(),false)){
-						new PermissionMangerUtils(LocationService.this, Permissions.LOCATION, new PermissionRequestCallback() {
+						PermissionRequestManagerUtils.getInstance().requestRuntimePermission(LocationService.this, Permissions.LOCATION, new PermissionRequestCallback() {
 							@Override
 							public void onPermissionRequestSuccess(List<String> permissions) {
 								startLocation();
@@ -69,8 +69,7 @@ public class LocationService extends Service implements AMapLocationListener {
 							public void onPermissionRequestFail(List<String> permissions) {
 								LocationService.this.stopSelf();
 							}
-
-						}).start();
+						});
 
 					}else {
                         continueLocation();

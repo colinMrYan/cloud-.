@@ -40,7 +40,6 @@ import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.common.audioformat.AndroidMp3ConvertUtils;
-import com.inspur.emmcloud.util.common.systool.permission.PermissionMangerUtils;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
 import com.inspur.emmcloud.util.common.systool.permission.Permissions;
@@ -476,8 +475,7 @@ public class ECMChatInputMenu extends LinearLayout {
                             break;
                         case "voice_input":
                             if(NetUtils.isNetworkConnected(MyApplication.getInstance())){
-                                LogUtils.YfcDebug("语音转文字输入");
-                                new PermissionMangerUtils(getContext(), Permissions.RECORD_AUDIO, new PermissionRequestCallback() {
+                                PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getContext(), Permissions.RECORD_AUDIO, new PermissionRequestCallback() {
                                     @Override
                                     public void onPermissionRequestSuccess(List<String> permissions) {
                                         startVoice2Word();
@@ -487,13 +485,12 @@ public class ECMChatInputMenu extends LinearLayout {
                                     public void onPermissionRequestFail(List<String> permissions) {
                                         ToastUtils.show(getContext(), PermissionRequestManagerUtils.getInstance().getPermissionToast(getContext(),permissions));
                                     }
-
-                                }).start();
+                                });
                             }
                             break;
                         case "voice_call":
                             if(NetUtils.isNetworkConnected(MyApplication.getInstance())){
-                                new PermissionMangerUtils(getContext(), Permissions.RECORD_AUDIO, new PermissionRequestCallback() {
+                                PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getContext(), Permissions.RECORD_AUDIO, new PermissionRequestCallback() {
                                     @Override
                                     public void onPermissionRequestSuccess(List<String> permissions) {
                                         startVoiceCall();
@@ -504,9 +501,8 @@ public class ECMChatInputMenu extends LinearLayout {
                                         ToastUtils.show(getContext(), PermissionRequestManagerUtils.getInstance().getPermissionToast(getContext(),permissions));
                                     }
 
-                                }).start();
+                                });
                             }
-
                             break;
                         default:
                             break;

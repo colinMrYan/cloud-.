@@ -19,7 +19,6 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.common.systool.permission.PermissionMangerUtils;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
 import com.inspur.emmcloud.util.common.systool.permission.Permissions;
@@ -105,7 +104,7 @@ public class BarCodeService extends ImpPlugin {
 		}
 
 		if (getImpCallBackInterface() != null) {
-			new PermissionMangerUtils(getActivity(), Permissions.CAMERA, new PermissionRequestCallback() {
+			PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getActivity(), Permissions.CAMERA, new PermissionRequestCallback() {
 				@Override
 				public void onPermissionRequestSuccess(List<String> permissions) {
 					Intent scanIntent = new Intent(getFragmentContext(), PreviewDecodeActivity.class);
@@ -116,9 +115,7 @@ public class BarCodeService extends ImpPlugin {
 				public void onPermissionRequestFail(List<String> permissions) {
 					ToastUtils.show(getFragmentContext(), PermissionRequestManagerUtils.getInstance().getPermissionToast(getFragmentContext(),permissions));
 				}
-
-
-			}).start();
+			});
 		}
 	}
 	

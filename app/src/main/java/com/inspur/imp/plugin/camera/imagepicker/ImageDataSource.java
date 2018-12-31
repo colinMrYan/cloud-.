@@ -138,12 +138,7 @@ public class ImageDataSource implements LoaderManager.LoaderCallbacks<Cursor> {
 		//回调接口，通知图片数据准备完成
 		com.inspur.imp.plugin.camera.imagepicker.ImagePicker.getInstance().setImageFolders(imageFolders);
 		loadedListener.onImagesLoaded(imageFolders);
-	}
-
-	/**
-	 * 用完之后销毁LoaderManager
-	 */
-	public void destoryLoaderManager(){
+		//用完之后销毁代码
 		if(loadManagerId != -1){
 			loaderManager.destroyLoader(loadManagerId);
 		}

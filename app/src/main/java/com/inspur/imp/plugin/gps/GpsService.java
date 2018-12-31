@@ -14,7 +14,6 @@ import com.amap.api.location.AMapLocationListener;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.common.systool.permission.PermissionMangerUtils;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
 import com.inspur.emmcloud.util.common.systool.permission.Permissions;
@@ -114,7 +113,7 @@ public class GpsService extends ImpPlugin implements
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        new PermissionMangerUtils(getActivity(), Permissions.LOCATION, new PermissionRequestCallback() {
+        PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getActivity(), Permissions.LOCATION, new PermissionRequestCallback() {
             @Override
             public void onPermissionRequestSuccess(List<String> permissions) {
                 startLocation();
@@ -125,7 +124,7 @@ public class GpsService extends ImpPlugin implements
                 ToastUtils.show(getFragmentContext(), PermissionRequestManagerUtils.getInstance().getPermissionToast(getFragmentContext(),permissions));
             }
 
-        }).start();
+        });
     }
 
     /**

@@ -165,8 +165,7 @@ public class ImageGridActivity extends ImageBaseActivity implements
         mImageGridAdapter.setOnImageItemClickListener(this);
         mGridView.setAdapter(mImageGridAdapter);
         mImageFolderAdapter.refreshData(imageFolders);
-        //用完LoaderManager后及时销毁，防止重启时循环调用
-        imageDataSource.destoryLoaderManager();
+
     }
 
     @Override
