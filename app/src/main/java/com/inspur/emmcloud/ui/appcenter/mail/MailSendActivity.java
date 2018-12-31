@@ -57,45 +57,6 @@ public class MailSendActivity extends BaseActivity {
     }
 
     /**
-     *Recipient 根据insertModels 多的删掉*/
-    private void synchronousRemoveRecipients(ArrayList<MailRecipientModel>recipients,List<InsertModel> insertModels){
-        for(int i=0;i<recipients.size();i++){
-            String email = recipients.get(i).getmRecipientEmail();
-            boolean haveEmail=false;
-            for(int j=0;j<insertModels.size();j++){
-                if(email.equals(insertModels.get( j ).getInsertContentId())){
-                    haveEmail=true;
-                    break;
-                }
-            }
-            if(!haveEmail){
-               recipients.remove( i );
-            }
-        }
-    }
-    /**
-     *Re 根据InsertModel少的添加
-     **/
-    private void   synchronousAddRecipients(ArrayList<MailRecipientModel>recipients,List<InsertModel> insertModels){
-        for(int m=0;m<insertModels.size();m++){
-            String email = insertModels.get(m).getInsertContentId().toString();
-            boolean haveEmail=false;
-            for(int n=0;n<recipients.size();n++){
-                if(email.equals(recipients.get(n).getmRecipientEmail())){
-                    haveEmail=true;
-                    break;
-                }
-            }
-            if(!haveEmail){
-                MailRecipientModel mailRecipientModel = new MailRecipientModel();
-                mailRecipientModel.setmRecipientEmail( email );
-                mailRecipientModel.setmRecipientName( email );
-                recipients.add(mailRecipientModel);
-            }
-        }
-
-    }
-    /**
      * 初始化
      * */
     private void init() {
@@ -107,7 +68,7 @@ public class MailSendActivity extends BaseActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.toString().length()>1&&' '==s.charAt(s.length()-1)){
-                    mRecipientRichEdit.insertLastManualData(32);
+                    mRecipientRichEdit.insertLastManualData(1);
                 }
             }
         } );
@@ -140,6 +101,9 @@ public class MailSendActivity extends BaseActivity {
             }
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.toString().length()>1&&' '==s.charAt(s.length()-1)){
+                    mCCRecipientRichEdit.insertLastManualData(1);
+                }
             }
         } );
 
@@ -150,6 +114,15 @@ public class MailSendActivity extends BaseActivity {
                 synchronousAddRecipients( mCCRecipients,insertModelList );
             }
         } );
+        mCCRecipientRichEdit.setOnFocusChangeListener( new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus){
+                }else{
+                    mCCRecipientRichEdit.insertLastManualData(-1);
+                }
+            }
+        });
 
     }
 
@@ -254,4 +227,45 @@ public class MailSendActivity extends BaseActivity {
             richEdit.insertSpecialStr(false, insertModel);
     }
 
+
+    /**
+     *Recipient 根据insertModels 多的删掉*/
+    private void synchronousRemoveRecipients(ArrayList<MailRecipientModel>recipients,List<InsertModel> insertModels){
+        for(int i=0;i<recipients.size();i++){
+            String email = recipients.get(i).getmRecipientEmail();
+            boolean haveEmail=false;
+            for(int j=0;j<insertModels.size();j++){
+                if(email.equals(insertModels.get( j ).getInsertContentId())){
+                    haveEmail=true;
+                    break;
+                }
+            }
+            if(!haveEmail){
+                recipients.remove( i );
+            }
+        }
+    }
+
+    /**
+     *Re 根据InsertModel少的添加
+     **/
+    private void   synchronousAddRecipients(ArrayList<MailRecipientModel>recipients,List<InsertModel> insertModels){
+        for(int m=0;m<insertModels.size();m++){
+            String email = insertModels.get(m).getInsertContentId().toString();
+            boolean haveEmail=false;
+            for(int n=0;n<recipients.size();n++){
+                if(email.equals(recipients.get(n).getmRecipientEmail())){
+                    haveEmail=true;
+                    break;
+                }
+            }
+            if(!haveEmail){
+                MailRecipientModel mailRecipientModel = new MailRecipientModel();
+                mailRecipientModel.setmRecipientEmail( email );
+                mailRecipientModel.setmRecipientName( email );
+                recipients.add(mailRecipientModel);
+            }
+        }
+
+    }
 }
