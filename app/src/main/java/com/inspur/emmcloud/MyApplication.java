@@ -926,13 +926,13 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     }
 
     /**
-     * 清除除了MainActivity之外的Activity
+     * 清除除了指定名称之外的Activity
      *
      */
-    public void closeOtherActivityExceptMain() {
+    public void closeOtherActivity(String activityName) {
         try {
             for (Activity activity : activityList) {
-                if(!activity.getClass().getSimpleName().equals(MainActivity.class.getSimpleName())){
+                if(!activity.getClass().getSimpleName().equals(activityName)){
                     activity.finish();
                 }
             }

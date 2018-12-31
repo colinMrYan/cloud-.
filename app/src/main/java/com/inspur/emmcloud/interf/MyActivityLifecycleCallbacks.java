@@ -70,7 +70,7 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
             if(!(currentActivity instanceof MainActivity || currentActivity instanceof PermissionActivity)){
                 Intent intent = new Intent(currentActivity,MainActivity.class);
                 currentActivity.startActivity(intent);
-                MyApplication.getInstance().closeOtherActivityExceptMain();
+                MyApplication.getInstance().closeOtherActivity(MainActivity.class.getSimpleName());
             }
             return true;
         }
