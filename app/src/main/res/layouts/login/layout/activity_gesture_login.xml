@@ -40,8 +40,8 @@
 
         <com.inspur.emmcloud.util.privates.ninelock.LockPatternView
             android:id="@+id/lockPatternView"
-            android:layout_width="@dimen/_270dp"
-            android:layout_height="@dimen/_270dp"
+            android:layout_width="270dp"
+            android:layout_height="270dp"
             android:layout_gravity="center_horizontal" />
 
             <Button
@@ -55,9 +55,9 @@
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
                 android:textColor="@color/header_bg"
-                android:padding="@dimen/_20dp"
+                android:padding="20dp"
                 android:text="@string/forgetpwd"
-                android:textSize="@dimen/_14sp" />
+                android:textSize="14sp" />
 
     </RelativeLayout>
 </LinearLayout>
