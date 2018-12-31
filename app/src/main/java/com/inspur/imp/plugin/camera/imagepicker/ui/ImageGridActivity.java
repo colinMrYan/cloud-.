@@ -49,6 +49,7 @@ public class ImageGridActivity extends ImageBaseActivity implements
     private FolderPopUpWindow mFolderPopupWindow; // ImageSet的PopupWindow
     private List<ImageFolder> mImageFolders; // 所有的图片文件夹
     private ImageGridAdapter mImageGridAdapter; // 图片九宫格展示的适配器
+    private ImageDataSource imageDataSource;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +69,7 @@ public class ImageGridActivity extends ImageBaseActivity implements
         mImageGridAdapter = new ImageGridAdapter(this, null);
         mImageFolderAdapter = new ImageFolderAdapter(this, null);
         onImageSelected(0, null, false);
-        new ImageDataSource(this, null, this);
+        imageDataSource = new ImageDataSource(this, null, this);
         encodingType = getIntent().getIntExtra(EXTRA_ENCODING_TYPE, 0);
     }
 
@@ -164,6 +165,7 @@ public class ImageGridActivity extends ImageBaseActivity implements
         mImageGridAdapter.setOnImageItemClickListener(this);
         mGridView.setAdapter(mImageGridAdapter);
         mImageFolderAdapter.refreshData(imageFolders);
+
     }
 
     @Override

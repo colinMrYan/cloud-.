@@ -14,12 +14,17 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.privates.cache.AppConfigCacheUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
+import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
+import com.inspur.emmcloud.util.common.systool.permission.Permissions;
+import com.inspur.emmcloud.util.privates.cache.AppConfigCacheUtils;
 
 import org.json.JSONObject;
+
+import java.util.List;
 
 public class LocationService extends Service implements AMapLocationListener {
 
@@ -54,10 +59,18 @@ public class LocationService extends Service implements AMapLocationListener {
 				public void run() {
 					// TODO Auto-generated method stub
 					if (NetUtils.isNetworkConnected(getApplicationContext(),false)){
-						if (mlocationClient == null){
-							initLocation();
-						}
-						mlocationClient.startLocation();
+						PermissionRequestManagerUtils.getInstance().requestRuntimePermission(LocationService.this, Permissions.LOCATION, new PermissionRequestCallback() {
+							@Override
+							public void onPermissionRequestSuccess(List<String> permissions) {
+								startLocation();
+							}
+
+							@Override
+							public void onPermissionRequestFail(List<String> permissions) {
+								LocationService.this.stopSelf();
+							}
+						});
+
 					}else {
                         continueLocation();
 					}
@@ -67,6 +80,16 @@ public class LocationService extends Service implements AMapLocationListener {
 		}
 
 		return START_STICKY;
+	}
+
+	/**
+	 * 启动定位
+	 */
+	private void startLocation() {
+		if (mlocationClient == null){
+			initLocation();
+		}
+		mlocationClient.startLocation();
 	}
 
 	/**
