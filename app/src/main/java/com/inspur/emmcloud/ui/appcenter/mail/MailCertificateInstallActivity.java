@@ -99,14 +99,44 @@ public class MailCertificateInstallActivity extends BaseActivity {
 
         if(null==myCertificate){
             myCertificate = new MailCertificateDetail();
+            LogUtils.LbcDebug( "null" );
         }else {
             installedCertificate.setVisibility(View.VISIBLE);
         }
-
         if(null==myInfoResult){
             String myInfo = PreferencesUtils.getString(this, "myInfo", "");
             myInfoResult = new GetMyInfoResult(myInfo);
         }
+        secrityActionSwitch1.setOnStateChangedListener( new SwitchView.OnStateChangedListener() {
+            @Override
+            public void toggleToOn(View view) {
+                myCertificate.setEncryptedMail( true );
+                secrityActionSwitch1.toggleSwitch( true );
+                LogUtils.LbcDebug( "On" );
+            }
+            @Override
+            public void toggleToOff(View view) {
+               myCertificate.setSignedMail( false);
+                secrityActionSwitch1.toggleSwitch( false );
+                LogUtils.LbcDebug( "OFF" );
+            }
+        } );
+
+        secrityActionSwitch2.setOnStateChangedListener( new SwitchView.OnStateChangedListener() {
+            @Override
+            public void toggleToOn(View view) {
+                myCertificate.setEncryptedMail( true );
+                secrityActionSwitch2.toggleSwitch( true );
+                LogUtils.LbcDebug( "On" );
+            }
+
+            @Override
+            public void toggleToOff(View view) {
+                myCertificate.setSignedMail( false );
+                secrityActionSwitch2.toggleSwitch( false );
+                LogUtils.LbcDebug( "Off" );
+            }
+        } );
     }
 
     /**
@@ -123,6 +153,19 @@ public class MailCertificateInstallActivity extends BaseActivity {
                 intent.putExtra( FileManagerActivity.EXTRA_MAXIMUM,1);
                 startActivityForResult( intent,SELECT_CREDIFICATE_FILE );
                 break;
+            case R.id.btn_data11:
+                myCertificate=(MailCertificateDetail)readCertificate( CERTIFICATER_KEY);
+                if(null==myCertificate){
+                   LogUtils.LbcDebug( "null" );
+                }else {
+                    LogUtils.LbcDebug( "data"+myCertificate.getCertificateName() );
+                    LogUtils.LbcDebug( "data"+myCertificate.getCertificateFinalDate() );
+                    installedCertificate.setVisibility(View.VISIBLE);
+                    saveCertifivate(myCertificate);
+                    updataCertificateUI( myCertificate );
+                    LogUtils.LbcDebug( "Seri:"+myCertificate.isEncryptedMail()+" Sign:"+myCertificate.isEncryptedMail() );
+                }
+                break;
         }
     }
 
@@ -138,6 +181,8 @@ public class MailCertificateInstallActivity extends BaseActivity {
                     Toast.makeText(getBaseContext(), "选取文件失败", Toast.LENGTH_SHORT).show();
                 }
                 break;
+                default:
+                    break;
         }
     }
 
@@ -200,7 +245,9 @@ public class MailCertificateInstallActivity extends BaseActivity {
     private boolean  dealCertificate(String path,String passWord){
         String strPfx =  path;
         String fileName = path.substring(path.lastIndexOf("/")+1);
-        if(StringUtils.isBlank(fileName)){
+        LogUtils.LbcDebug("fileName:"+ fileName );
+        LogUtils.LbcDebug( "path:"+strPfx );
+        if(!StringUtils.isBlank(fileName)){
             myCertificate.setCertificateName(fileName);
         }
         String strPassword =passWord;
@@ -272,7 +319,6 @@ public class MailCertificateInstallActivity extends BaseActivity {
             Toast.makeText(getBaseContext(), "上传证书成功", Toast.LENGTH_SHORT).show();
             saveCertifivate(myCertificate);
             updataCertificateUI(myCertificate);
-            //存储证书信息
             super.returnMailCertificateUploadSuccess( arg0 );
         }
 
@@ -282,7 +328,6 @@ public class MailCertificateInstallActivity extends BaseActivity {
             super.returnMailCertificateUploadFail( error, errorCode );
         }
     }
-
 
     /**
      *存储证书详细信息*/
@@ -400,9 +445,12 @@ public class MailCertificateInstallActivity extends BaseActivity {
          certificateUseNameTV.setText(StringUtils.isBlank( Subject)?"未知":Subject.substring(3));
          certificateGiverIdTV.setText( StringUtils.isBlank( IsUer)?"未知":IsUer.substring( 3 ));
          certificateExpirtyDataTV.setText( StringUtils.isBlank(mailCertificateDetail.getCertificateFinalDate())?"未知":mailCertificateDetail.getCertificateFinalDate());
-         secrityActionSwitch1.setOpened(mailCertificateDetail.isEncryptedMail());
-         secrityActionSwitch2.setOpened(mailCertificateDetail.isSignedMail());
-         installedCertificate.setVisibility(View.VISIBLE);
+         secrityActionSwitch1.toggleSwitch(mailCertificateDetail.isEncryptedMail());
+         secrityActionSwitch2.toggleSwitch(mailCertificateDetail.isSignedMail());
+         if(View.VISIBLE!=installedCertificate.getVisibility()){
+             installedCertificate.setVisibility(View.VISIBLE);
+         }
+        LogUtils.LbcDebug("Data"+mailCertificateDetail.isEncryptedMail()+"::"+mailCertificateDetail.isSignedMail());
     }
 
     private String getContentSpeStrData(String[] datas,String Spec){
