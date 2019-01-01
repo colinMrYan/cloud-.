@@ -512,9 +512,10 @@ public class MessageCacheUtil {
             List<Message> localFakeMessageList = getLocalFakeMessageList(context, cid, messageTmpIdList);
             for (int i = 0; i < messageList.size(); i++) {
                 for (int j = 0; j < localFakeMessageList.size(); j++) {
-                    if (messageList.get(i).getTmpId().equals(localFakeMessageList.get(j).getTmpId())) {
-                        messageList.get(i).setCreationDate(localFakeMessageList.get(j).getCreationDate());
-                    }
+                    //去掉修改时间逻辑
+//                    if (messageList.get(i).getTmpId().equals(localFakeMessageList.get(j).getTmpId())) {
+//                        messageList.get(i).setCreationDate(localFakeMessageList.get(j).getCreationDate());
+//                    }
                     if (messageList.get(i).getType().equals(Message.MESSAGE_TYPE_MEDIA_VOICE)) {
                         deleteLocalVoiceFile(messageList.get(i));
                     }
@@ -572,7 +573,7 @@ public class MessageCacheUtil {
             //更新本地假消息，把id改成真消息的id，并把发送状态改为发送成功，creationDate保持假消息的时间即可
             try {
                 DbCacheUtils.getDb(context).update(Message.class, WhereBuilder.b("id", "=", message.getTmpId())
-                        , new KeyValue("id", message.getId()), new KeyValue("sendStatus", Message.MESSAGE_SEND_SUCCESS));
+                        , new KeyValue("id", message.getId()), new KeyValue("sendStatus", Message.MESSAGE_SEND_SUCCESS),new KeyValue("creationDate",message.getCreationDate()));
             } catch (Exception e) {
                 e.printStackTrace();
             }

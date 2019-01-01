@@ -1131,14 +1131,15 @@ public class ConversationActivity extends ConversationBaseActivity {
                         }
 
                     }
-                    Long creationDate = 0L;
-                    Message message = MessageCacheUtil.getMessageByMid(MyApplication.getInstance(), receivedWSMessage.getId());
-                    if (message != null) {
-                        creationDate = message.getCreationDate();
-                    } else {
-                        creationDate = MessageCacheUtil.getMessageByMid(MyApplication.getInstance(), receivedWSMessage.getTmpId()).getCreationDate();
-                    }
-                    receivedWSMessage.setCreationDate(creationDate);
+                    //去除以本地时间为发送时间的代码
+//                    Long creationDate = 0L;
+//                    Message message = MessageCacheUtil.getMessageByMid(MyApplication.getInstance(), receivedWSMessage.getId());
+//                    if (message != null) {
+//                        creationDate = message.getCreationDate();
+//                    } else {
+//                        creationDate = MessageCacheUtil.getMessageByMid(MyApplication.getInstance(), receivedWSMessage.getTmpId()).getCreationDate();
+//                    }
+//                    receivedWSMessage.setCreationDate(creationDate);
                     if (index == -1) {
                         uiMessageList.add(new UIMessage(receivedWSMessage));
                         adapter.setMessageList(uiMessageList);
@@ -1146,16 +1147,16 @@ public class ConversationActivity extends ConversationBaseActivity {
                         msgListView.MoveToPosition(uiMessageList.size() - 1);
                     } else {
                         uiMessageList.remove(index);
-                        uiMessageList.add(index, new UIMessage(receivedWSMessage));
-                        //如果是图片类型消息的话不再重新刷新消息体，防止图片重新加载
-                        if (receivedWSMessage.getType().equals(Message.MESSAGE_TYPE_MEDIA_IMAGE)) {
-                            setMessageSendSuccess(index, receivedWSMessage);
+                        uiMessageList.add(new UIMessage(receivedWSMessage));
+//                        //如果是图片类型消息的话不再重新刷新消息体，防止图片重新加载
+//                        if (receivedWSMessage.getType().equals(Message.MESSAGE_TYPE_MEDIA_IMAGE)) {
+//                            setMessageSendSuccess(index, receivedWSMessage);
+//                            adapter.setMessageList(uiMessageList);
+//                        } else {
                             adapter.setMessageList(uiMessageList);
-                        } else {
-                            adapter.setMessageList(uiMessageList);
-                            adapter.notifyItemChanged(index);
-                        }
-
+                            adapter.notifyItemRangeChanged(index,uiMessageList.size()  - index);
+                            msgListView.MoveToPosition(uiMessageList.size() - 1);
+//                        }
                     }
                 }
                 WSAPIService.getInstance().setChannelMessgeStateRead(cid);
