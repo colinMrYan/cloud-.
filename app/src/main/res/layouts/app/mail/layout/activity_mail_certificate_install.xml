@@ -107,6 +107,7 @@
             <!-- 已安证书详情-->
             <RelativeLayout
                 android:id="@+id/rl_installed_certificate"
+                android:visibility="gone"
                 android:layout_below="@id/rl_install_order"
                 android:layout_width="match_parent"
                 android:layout_marginTop="20dp"
@@ -289,6 +290,7 @@
             <!-- 替换证书-->
             <LinearLayout
                 android:id="@+id/ll_certificate_new"
+                android:visibility="gone"
                 android:layout_below="@id/rl_installed_certificate"
                 android:layout_marginTop="20dp"
                 android:layout_marginLeft="15dp"

@@ -1,13 +1,14 @@
 package com.inspur.emmcloud.bean.appcenter.mail;
 
 import android.os.Parcel;
-import android.os.Parcelable;
+
+import java.io.Serializable;
 
 /**
  * Created by libaochao on 2018/12/29.
  */
 
-public class MailCertificateDetail implements Parcelable {
+public class MailCertificateDetail implements Serializable {
 
     public String getCertificateName() {
         return certificateName;
@@ -127,6 +128,8 @@ public class MailCertificateDetail implements Parcelable {
         certificateFinalDate=cFinalTime;
         certificatePublicKey=pubKey;
         certificatePrivateKey=priKey;
+        isEncryptedMail=true;
+        isSignedMail=true;
     }
 
     public MailCertificateDetail(){
@@ -134,34 +137,6 @@ public class MailCertificateDetail implements Parcelable {
         isSignedMail=true;
     }
 
-    public static final Creator<MailCertificateDetail> CREATOR = new Creator<MailCertificateDetail>() {
-        @Override
-        public MailCertificateDetail createFromParcel(Parcel in) {
-            return new MailCertificateDetail( in );
-        }
 
-        @Override
-        public MailCertificateDetail[] newArray(int size) {
-            return new MailCertificateDetail[size];
-        }
-    };
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString( certificateName );
-        dest.writeString( certificateIssuerDN );
-        dest.writeString( certificateSubjectDN );
-        dest.writeString( certificatePassword );
-        dest.writeString( certificateStartDate );
-        dest.writeString( certificateFinalDate );
-        dest.writeString( certificatePublicKey );
-        dest.writeString( certificatePrivateKey );
-        dest.writeInt( isEncryptedMail?1:0 );
-        dest.writeInt( isSignedMail?1:0 );
-    }
 }

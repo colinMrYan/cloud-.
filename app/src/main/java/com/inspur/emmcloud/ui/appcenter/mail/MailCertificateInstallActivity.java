@@ -3,6 +3,7 @@ package com.inspur.emmcloud.ui.appcenter.mail;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.util.Base64;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -21,6 +22,7 @@ import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.widget.SwitchView;
 import com.inspur.imp.plugin.filetransfer.filemanager.FileManagerActivity;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
@@ -29,7 +31,11 @@ import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.security.KeyStore;
 import java.security.PrivateKey;
 import java.security.PublicKey;
@@ -46,6 +52,8 @@ public class MailCertificateInstallActivity extends BaseActivity {
     private TextView installCertificateTV;
     @ViewInject( R.id.rl_back_layout)
     private RelativeLayout BackLayout;
+    @ViewInject( R.id.rl_installed_certificate )
+    private RelativeLayout installedCertificate;
     @ViewInject( R.id.tv_certificate_use)
     private TextView certificateUseTV;
     @ViewInject( R.id.tv_installed_certificate_title)
@@ -76,6 +84,7 @@ public class MailCertificateInstallActivity extends BaseActivity {
     private GetMyInfoResult myInfoResult;
     private MailCertificateDetail myCertificate;
 
+    public static String CERTIFICATER_KEY="certificate";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,7 +95,14 @@ public class MailCertificateInstallActivity extends BaseActivity {
     /**
      * 初始化*/
     private void init(){
-        myCertificate = new MailCertificateDetail();
+        myCertificate=(MailCertificateDetail)readCertificate( CERTIFICATER_KEY);
+
+        if(null==myCertificate){
+            myCertificate = new MailCertificateDetail();
+        }else {
+            installedCertificate.setVisibility(View.VISIBLE);
+        }
+
         if(null==myInfoResult){
             String myInfo = PreferencesUtils.getString(this, "myInfo", "");
             myInfoResult = new GetMyInfoResult(myInfo);
@@ -244,16 +260,18 @@ public class MailCertificateInstallActivity extends BaseActivity {
       String finalTime = data.substring( indexFinalDate,endIndexFinalDate );
       String IssuerDN  = data.substring( indexIssuerDN,endIndexIssuerDN);
       String SubjectDN  = data.substring( indexSubjectDN,endIndexSubjectDN );
-       myCertificate.setCertificateStartDate( startTime );
-       myCertificate.setCertificateFinalDate( finalTime );
-       myCertificate.setCertificateIssuerDN( IssuerDN );
-       myCertificate.setCertificateSubjectDN( SubjectDN );
+       myCertificate.setCertificateStartDate( startTime.substring( 12) );
+       myCertificate.setCertificateFinalDate( finalTime.substring( 12 ) );
+       myCertificate.setCertificateIssuerDN( IssuerDN.substring( 9 ) );
+       myCertificate.setCertificateSubjectDN( SubjectDN.substring(10) );
     }
 
     private class WebService extends APIInterfaceInstance {
         @Override
         public void returnMailCertificateUploadSuccess(byte[] arg0) {
             Toast.makeText(getBaseContext(), "上传证书成功", Toast.LENGTH_SHORT).show();
+            saveCertifivate(myCertificate);
+            updataCertificateUI(myCertificate);
             //存储证书信息
             super.returnMailCertificateUploadSuccess( arg0 );
         }
@@ -263,5 +281,136 @@ public class MailCertificateInstallActivity extends BaseActivity {
             Toast.makeText(getBaseContext(), "上传证书失败", Toast.LENGTH_SHORT).show();
             super.returnMailCertificateUploadFail( error, errorCode );
         }
+    }
+
+
+    /**
+     *存储证书详细信息*/
+    private void saveCertifivate(MailCertificateDetail certificateDetail){
+        try {
+            //先将序列化结果写到byte缓存中，其实就分配一个内存空间
+            ByteArrayOutputStream bos=new ByteArrayOutputStream();
+            ObjectOutputStream os=new ObjectOutputStream(bos);
+            //将对象序列化写入byte缓存
+            os.writeObject(certificateDetail);
+            //将序列化的数据转为16进制保存
+            String bytesToHexString = bytesToHexString(bos.toByteArray());
+            //保存该16进制数组
+            PreferencesByUserAndTanentUtils.putString(this,CERTIFICATER_KEY,bytesToHexString);
+        } catch (Exception e) {
+        }
+    }
+
+    /**
+     * desc:将数组转为16进制
+     * @param bArray
+     * @return
+     * modified:
+     */
+    public static String bytesToHexString(byte[] bArray) {
+        if(bArray == null){
+            return null;
+        }
+        if(bArray.length == 0){
+            return "";
+        }
+        StringBuffer sb = new StringBuffer(bArray.length);
+        String sTemp;
+        for (int i = 0; i < bArray.length; i++) {
+            sTemp = Integer.toHexString(0xFF & bArray[i]);
+            if (sTemp.length() < 2)
+                sb.append(0);
+            sb.append(sTemp.toUpperCase());
+        }
+        return sb.toString();
+    }
+
+    /**
+     * desc:获取保存的Object对象
+     * @param key
+     * @return
+     * modified:
+     */
+    public Object readCertificate(String key){
+        try {
+                String string = PreferencesByUserAndTanentUtils.getString(this,CERTIFICATER_KEY);
+                if(TextUtils.isEmpty(string)){
+                    return null;
+                }else{
+                    //将16进制的数据转为数组，准备反序列化
+                    byte[] stringToBytes = StringToBytes(string);
+                    ByteArrayInputStream bis=new ByteArrayInputStream(stringToBytes);
+                    ObjectInputStream is=new ObjectInputStream(bis);
+                    //返回反序列化得到的对象
+                    Object readObject = is.readObject();
+                    return readObject;
+                }
+        } catch (Exception e) {
+        }
+        //所有异常返回null
+        return null;
+
+    }
+
+    /**
+     * desc:将16进制的数据转为数组
+     * <p>创建人：聂旭阳 , 2014-5-25 上午11:08:33</p>
+     * @param data
+     * @return
+     * modified:
+     */
+    public static byte[] StringToBytes(String data){
+        String hexString=data.toUpperCase().trim();
+        if (hexString.length()%2!=0) {
+            return null;
+        }
+        byte[] retData=new byte[hexString.length()/2];
+        for(int i=0;i<hexString.length();i++)
+        {
+            int int_ch;  // 两位16进制数转化后的10进制数
+            char hex_char1 = hexString.charAt(i); ////两位16进制数中的第一位(高位*16)
+            int int_ch3;
+            if(hex_char1 >= '0' && hex_char1 <='9')
+                int_ch3 = (hex_char1-48)*16;   //// 0 的Ascll - 48
+            else if(hex_char1 >= 'A' && hex_char1 <='F')
+                int_ch3 = (hex_char1-55)*16; //// A 的Ascll - 65
+            else
+                return null;
+            i++;
+            char hex_char2 = hexString.charAt(i); ///两位16进制数中的第二位(低位)
+            int int_ch4;
+            if(hex_char2 >= '0' && hex_char2 <='9')
+                int_ch4 = (hex_char2-48); //// 0 的Ascll - 48
+            else if(hex_char2 >= 'A' && hex_char2 <='F')
+                int_ch4 = hex_char2-55; //// A 的Ascll - 65
+            else
+                return null;
+            int_ch = int_ch3+int_ch4;
+            retData[i/2]=(byte) int_ch;//将转化后的数放入Byte里
+        }
+        return retData;
+    }
+
+    private void updataCertificateUI(MailCertificateDetail mailCertificateDetail){
+         installedCerTitleTV.setText(StringUtils.isBlank( mailCertificateDetail.getCertificateName())?"未知":mailCertificateDetail.getCertificateName());
+         String[] SubjectDN = mailCertificateDetail.getCertificateSubjectDN().split(",");
+         String[] IssuerDN  = mailCertificateDetail.getCertificateIssuerDN().split(",");
+         String IsUer    = getContentSpeStrData( IssuerDN,"CN=");
+         String Subject  = getContentSpeStrData( SubjectDN,"CN=");
+         certificateUseNameTV.setText(StringUtils.isBlank( Subject)?"未知":Subject.substring(3));
+         certificateGiverIdTV.setText( StringUtils.isBlank( IsUer)?"未知":IsUer.substring( 3 ));
+         certificateExpirtyDataTV.setText( StringUtils.isBlank(mailCertificateDetail.getCertificateFinalDate())?"未知":mailCertificateDetail.getCertificateFinalDate());
+         secrityActionSwitch1.setOpened(mailCertificateDetail.isEncryptedMail());
+         secrityActionSwitch2.setOpened(mailCertificateDetail.isSignedMail());
+         installedCertificate.setVisibility(View.VISIBLE);
+    }
+
+    private String getContentSpeStrData(String[] datas,String Spec){
+        for (int i=0;i<datas.length;i++){
+            if(datas[i].indexOf(Spec)>=0){
+                return datas[i];
+            }
+        }
+        return null;
     }
 }
