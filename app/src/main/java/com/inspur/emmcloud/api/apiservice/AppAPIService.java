@@ -260,7 +260,6 @@ public class AppAPIService {
     }
 
     /**
-     * 异常上传
      *
      * @param mail   邮箱
      * @param certifivate 加密后证书文件
