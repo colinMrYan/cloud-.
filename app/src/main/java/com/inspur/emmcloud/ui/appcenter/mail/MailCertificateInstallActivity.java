@@ -95,12 +95,11 @@ public class MailCertificateInstallActivity extends BaseActivity {
     /**
      * 初始化*/
     private void init(){
-        myCertificate=(MailCertificateDetail)readCertificate( CERTIFICATER_KEY);
-
-        if(null==myCertificate){
+        Object certificateObject=readCertificate( CERTIFICATER_KEY);
+        if(null==certificateObject){
             myCertificate = new MailCertificateDetail();
-            LogUtils.LbcDebug( "null" );
         }else {
+            myCertificate =(MailCertificateDetail)certificateObject;
             installedCertificate.setVisibility(View.VISIBLE);
         }
         if(null==myInfoResult){
@@ -399,7 +398,6 @@ public class MailCertificateInstallActivity extends BaseActivity {
 
     /**
      * desc:将16进制的数据转为数组
-     * <p>创建人：聂旭阳 , 2014-5-25 上午11:08:33</p>
      * @param data
      * @return
      * modified:
