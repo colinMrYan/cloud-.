@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -180,35 +181,30 @@ public class UpgradeUtils extends APIInterfaceInstance {
     }
 
     private void showSelectUpgradeDlg() {
-        // TODO Auto-generated method stub
         final MyDialog dialog = new MyDialog(context,
                 R.layout.dialog_two_buttons);
         dialog.setCancelable(false);
-        Button okBt = (Button) dialog.findViewById(R.id.ok_btn);
-        okBt.setText(context.getString(R.string.upgrade));
-        TextView text = (TextView) dialog.findViewById(R.id.text);
-        text.setText(upgradeMsg);
-        TextView appUpdateTitle = (TextView) dialog.findViewById(R.id.app_update_title);
-        TextView appUpdateVersion = (TextView) dialog.findViewById(R.id.app_update_version);
+        Button okBtn = dialog.findViewById(R.id.ok_btn);
+        okBtn.setText(context.getString(R.string.upgrade));
+        TextView appUpdateContentText = dialog.findViewById(R.id.text);
+        appUpdateContentText.setMovementMethod(ScrollingMovementMethod.getInstance());
+        appUpdateContentText.setText(upgradeMsg);
+        TextView appUpdateTitle =  dialog.findViewById(R.id.app_update_title);
+        TextView appUpdateVersion =  dialog.findViewById(R.id.app_update_version);
         appUpdateTitle.setText(context.getString(R.string.app_update_remind));
         appUpdateVersion.setText(context.getString(R.string.app_last_version) + "(" + getUpgradeResult.getLatestVersion() + ")");
-        okBt.setOnClickListener(new View.OnClickListener() {
-
+        okBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO Auto-generated method stub
                 dialog.dismiss();
                 showDownloadDialog();
             }
-
         });
-        Button cancelBt = (Button) dialog.findViewById(R.id.cancel_btn);
+        Button cancelBt =  dialog.findViewById(R.id.cancel_btn);
         cancelBt.setText(context.getString(R.string.not_upgrade));
         cancelBt.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
-                // TODO Auto-generated method stub
                 dialog.dismiss();
                 PreferencesUtils.putLong(context, "appNotUpdateTime", System.currentTimeMillis());
                 if (handler != null) {
@@ -227,30 +223,29 @@ public class UpgradeUtils extends APIInterfaceInstance {
         final MyDialog dialog = new MyDialog(context,
                 R.layout.dialog_two_buttons);
         dialog.setCancelable(false);
-        Button okBt = (Button) dialog.findViewById(R.id.ok_btn);
-        okBt.setText(context.getString(R.string.upgrade));
-        TextView text = (TextView) dialog.findViewById(R.id.text);
+        Button okBtn = dialog.findViewById(R.id.ok_btn);
+        okBtn.setText(context.getString(R.string.upgrade));
+        TextView text =  dialog.findViewById(R.id.text);
+        text.setMovementMethod(ScrollingMovementMethod.getInstance());
         text.setText(upgradeMsg);
-        TextView appUpdateTitle = (TextView) dialog.findViewById(R.id.app_update_title);
+        TextView appUpdateTitle =  dialog.findViewById(R.id.app_update_title);
         appUpdateTitle.setText(context.getString(R.string.app_update_remind));
-        TextView appUpdateVersion = (TextView) dialog.findViewById(R.id.app_update_version);
+        TextView appUpdateVersion =  dialog.findViewById(R.id.app_update_version);
         appUpdateVersion.setText(context.getString(R.string.app_last_version) + "(" + getUpgradeResult.getLatestVersion() + ")");
-        okBt.setOnClickListener(new View.OnClickListener() {
+        okBtn.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                // TODO Auto-generated method stub
                 dialog.dismiss();
                 showDownloadDialog();
             }
         });
-        Button cancelBt = (Button) dialog.findViewById(R.id.cancel_btn);
+        Button cancelBt =  dialog.findViewById(R.id.cancel_btn);
         cancelBt.setText(context.getString(R.string.exit));
         cancelBt.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                // TODO Auto-generated method stub
                 dialog.dismiss();
                 ((MyApplication) context.getApplicationContext()).exit();
             }
@@ -261,7 +256,6 @@ public class UpgradeUtils extends APIInterfaceInstance {
     }
 
     private void showDownloadDialog() {
-        // TODO Auto-generated method stub
         cancelUpdate = false;
         mDownloadDialog = new MyDialog(context,
                 R.layout.dialog_app_update_progress);
@@ -272,7 +266,6 @@ public class UpgradeUtils extends APIInterfaceInstance {
 
             @Override
             public void onClick(View v) {
-                // TODO Auto-generated method stub
                 mDownloadDialog.dismiss();
                 if (cancelable != null) {
                     cancelable.cancel();
@@ -296,7 +289,6 @@ public class UpgradeUtils extends APIInterfaceInstance {
      * 下载apk文件
      */
     private void downloadApk() {
-
         // 判断SD卡是否存在，并且是否具有读写权限
         if (Environment.getExternalStorageState().equals(
                 Environment.MEDIA_MOUNTED)) {
