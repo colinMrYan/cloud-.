@@ -11,18 +11,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.inspur.emmcloud.BaseActivity;
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.bean.appcenter.mail.MailCertificateDetail;
-import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.EncryptUtils;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
+import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.widget.SwitchView;
 import com.inspur.imp.plugin.filetransfer.filemanager.FileManagerActivity;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
@@ -50,38 +51,37 @@ import java.util.Enumeration;
 public class MailCertificateInstallActivity extends BaseActivity {
     @ViewInject( R.id.tv_install_certificate)
     private TextView installCertificateTV;
-    @ViewInject( R.id.rl_back_layout)
-    private RelativeLayout BackLayout;
+    @ViewInject( R.id.rl_back)
+    private RelativeLayout backLayout;
     @ViewInject( R.id.rl_installed_certificate )
-    private RelativeLayout installedCertificate;
-    @ViewInject( R.id.tv_certificate_use)
-    private TextView certificateUseTV;
-    @ViewInject( R.id.tv_installed_certificate_title)
-    private TextView installedCerTitleTV;
-    @ViewInject( R.id.tv_certificate_used_name)
-    private TextView certificateUseNameTV;
-    @ViewInject( R.id.tv_certificate_giver_id)
-    private TextView certificateGiverIdTV;
-    @ViewInject( R.id.tv_certificate_expirty_data)
-    private TextView certificateExpirtyDataTV;
-    @ViewInject( R.id.sv_secrity_action1)
-    private SwitchView secrityActionSwitch1;
-    @ViewInject( R.id.sv_secrity_action2)
-    private SwitchView secrityActionSwitch2;
+    private RelativeLayout installedCerLayout;
+    @ViewInject( R.id.tv_cer_use_state)
+    private TextView cerUseStateText;
+    @ViewInject( R.id.tv_installed_cer_title)
+    private TextView installedCerTitleText;
+    @ViewInject( R.id.tv_installed_cer_owner_name)
+    private TextView cerOwerNameText;
+    @ViewInject( R.id.tv_installed_cer_issuer_name)
+    private TextView cerIssuerNameText;
+    @ViewInject( R.id.tv_installed_cer_final_data)
+    private TextView cerFinalDataText;
+    @ViewInject( R.id.switchview_encryption_action)
+    private SwitchView encryptionSwitchView;
+    @ViewInject( R.id.switchview_signature_action)
+    private SwitchView signatureSwitchView;
 
 
-    @ViewInject( R.id.tv_new_certificate_title)
-    private TextView newCertificateTitleTV;
-    @ViewInject( R.id.tv_new_certificate_user)
-    private TextView newCertificateUserTV;
-    @ViewInject( R.id.tv_new_certificate_publisher)
-    private TextView newCertificatePublisherTV;
-    @ViewInject( R.id.tv_new_certificate_expirty_data)
-    private TextView newCertificateExpirtyDataTV;
+    @ViewInject( R.id.tv_new_cer_title)
+    private TextView newCerTitleYext;
+    @ViewInject( R.id.tv_new_cer_ower_name)
+    private TextView newCerOwnerNameText;
+    @ViewInject( R.id.tv_new_cer_issuer_name)
+    private TextView newCerIssuerNameText;
+    @ViewInject( R.id.tv_new_cer_final_data)
+    private TextView newCerFinalDataText;
 
     public static final int SELECT_CREDIFICATE_FILE = 10;
-    private String mCertificateKeyWord;
-    private GetMyInfoResult myInfoResult;
+    private String certificatePassWord;
     private MailCertificateDetail myCertificate;
 
     public static String CERTIFICATER_KEY="certificate";
@@ -100,39 +100,36 @@ public class MailCertificateInstallActivity extends BaseActivity {
             myCertificate = new MailCertificateDetail();
         }else {
             myCertificate =(MailCertificateDetail)certificateObject;
-            installedCertificate.setVisibility(View.VISIBLE);
+            installedCerLayout.setVisibility(View.VISIBLE);
         }
-        if(null==myInfoResult){
-            String myInfo = PreferencesUtils.getString(this, "myInfo", "");
-            myInfoResult = new GetMyInfoResult(myInfo);
-        }
-        secrityActionSwitch1.setOnStateChangedListener( new SwitchView.OnStateChangedListener() {
+
+        encryptionSwitchView.setOnStateChangedListener( new SwitchView.OnStateChangedListener() {
             @Override
             public void toggleToOn(View view) {
                 myCertificate.setEncryptedMail( true );
-                secrityActionSwitch1.toggleSwitch( true );
+                encryptionSwitchView.toggleSwitch( true );
                 LogUtils.LbcDebug( "On" );
             }
             @Override
             public void toggleToOff(View view) {
                myCertificate.setSignedMail( false);
-                secrityActionSwitch1.toggleSwitch( false );
+                encryptionSwitchView.toggleSwitch( false );
                 LogUtils.LbcDebug( "OFF" );
             }
         } );
 
-        secrityActionSwitch2.setOnStateChangedListener( new SwitchView.OnStateChangedListener() {
+        signatureSwitchView.setOnStateChangedListener( new SwitchView.OnStateChangedListener() {
             @Override
             public void toggleToOn(View view) {
                 myCertificate.setEncryptedMail( true );
-                secrityActionSwitch2.toggleSwitch( true );
+                signatureSwitchView.toggleSwitch( true );
                 LogUtils.LbcDebug( "On" );
             }
 
             @Override
             public void toggleToOff(View view) {
                 myCertificate.setSignedMail( false );
-                secrityActionSwitch2.toggleSwitch( false );
+                signatureSwitchView.toggleSwitch( false );
                 LogUtils.LbcDebug( "Off" );
             }
         } );
@@ -159,7 +156,7 @@ public class MailCertificateInstallActivity extends BaseActivity {
                 }else {
                     LogUtils.LbcDebug( "data"+myCertificate.getCertificateName() );
                     LogUtils.LbcDebug( "data"+myCertificate.getCertificateFinalDate() );
-                    installedCertificate.setVisibility(View.VISIBLE);
+                    installedCerLayout.setVisibility(View.VISIBLE);
                     saveCertifivate(myCertificate);
                     updataCertificateUI( myCertificate );
                     LogUtils.LbcDebug( "Seri:"+myCertificate.isEncryptedMail()+" Sign:"+myCertificate.isEncryptedMail() );
@@ -205,8 +202,9 @@ public class MailCertificateInstallActivity extends BaseActivity {
                             CharSequence text = builder.getEditText().getText();
                             String key = text.toString().trim();
                             if(dealCertificate(path,key)){
-                                mCertificateKeyWord =key;
-                                upLoadCertificateFile(myInfoResult.getMail(),path,mCertificateKeyWord);
+                                certificatePassWord =key;
+                                String mail = ContactUserCacheUtils.getUserMail( MyApplication.getInstance().getUid());
+                                upLoadCertificateFile(mail,path,certificatePassWord);
                                 dialog.dismiss();
                             }else{
                                 Toast.makeText(getBaseContext(), "密码无效或证书有误，请重试", Toast.LENGTH_LONG).show();
@@ -224,7 +222,7 @@ public class MailCertificateInstallActivity extends BaseActivity {
         try {
             String certificateBase64Data = FileUtils.encodeBase64File( path );
             String key = EncryptUtils.stringToMD5( mail );
-            String iv  = "inspurcloud+2019";
+            String iv  = Constant.MAIL_ENCRYPT_IV;
             String cerBase64DataResult= EncryptUtils.encode( certificateBase64Data,key,iv, Base64.NO_WRAP);
             String KeyResult = EncryptUtils.encode( orgKey,key,iv, Base64.NO_WRAP);
             if(NetUtils.isNetworkConnected( this )){
@@ -435,18 +433,18 @@ public class MailCertificateInstallActivity extends BaseActivity {
     }
 
     private void updataCertificateUI(MailCertificateDetail mailCertificateDetail){
-         installedCerTitleTV.setText(StringUtils.isBlank( mailCertificateDetail.getCertificateName())?"未知":mailCertificateDetail.getCertificateName());
+         installedCerTitleText.setText(StringUtils.isBlank( mailCertificateDetail.getCertificateName())?"未知":mailCertificateDetail.getCertificateName());
          String[] SubjectDN = mailCertificateDetail.getCertificateSubjectDN().split(",");
          String[] IssuerDN  = mailCertificateDetail.getCertificateIssuerDN().split(",");
          String IsUer    = getContentSpeStrData( IssuerDN,"CN=");
          String Subject  = getContentSpeStrData( SubjectDN,"CN=");
-         certificateUseNameTV.setText(StringUtils.isBlank( Subject)?"未知":Subject.substring(3));
-         certificateGiverIdTV.setText( StringUtils.isBlank( IsUer)?"未知":IsUer.substring( 3 ));
-         certificateExpirtyDataTV.setText( StringUtils.isBlank(mailCertificateDetail.getCertificateFinalDate())?"未知":mailCertificateDetail.getCertificateFinalDate());
-         secrityActionSwitch1.toggleSwitch(mailCertificateDetail.isEncryptedMail());
-         secrityActionSwitch2.toggleSwitch(mailCertificateDetail.isSignedMail());
-         if(View.VISIBLE!=installedCertificate.getVisibility()){
-             installedCertificate.setVisibility(View.VISIBLE);
+         cerOwerNameText.setText(StringUtils.isBlank( Subject)?"未知":Subject.substring(3));
+         cerIssuerNameText.setText( StringUtils.isBlank( IsUer)?"未知":IsUer.substring( 3 ));
+         cerFinalDataText.setText( StringUtils.isBlank(mailCertificateDetail.getCertificateFinalDate())?"未知":mailCertificateDetail.getCertificateFinalDate());
+         encryptionSwitchView.toggleSwitch(mailCertificateDetail.isEncryptedMail());
+         signatureSwitchView.toggleSwitch(mailCertificateDetail.isSignedMail());
+         if(View.VISIBLE!=installedCerLayout.getVisibility()){
+             installedCerLayout.setVisibility(View.VISIBLE);
          }
         LogUtils.LbcDebug("Data"+mailCertificateDetail.isEncryptedMail()+"::"+mailCertificateDetail.isSignedMail());
     }
