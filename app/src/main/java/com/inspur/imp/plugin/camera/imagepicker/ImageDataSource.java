@@ -36,6 +36,8 @@ public class ImageDataSource implements LoaderManager.LoaderCallbacks<Cursor> {
 	private FragmentActivity activity;
 	private OnImagesLoadedListener loadedListener;                     //图片加载完成的回调接口
 	private ArrayList<ImageFolder> imageFolders = new ArrayList<ImageFolder>();   //所有的图片文件夹
+	private LoaderManager loaderManager;   //Loader管理对象
+	private int loadManagerId = -1;
 
 	/**
 	 * @param activity       用于初始化LoaderManager，需要兼容到2.3
@@ -45,11 +47,12 @@ public class ImageDataSource implements LoaderManager.LoaderCallbacks<Cursor> {
 	public ImageDataSource(FragmentActivity activity, String path, OnImagesLoadedListener loadedListener) {
 		this.activity = activity;
 		this.loadedListener = loadedListener;
-
-		LoaderManager loaderManager = activity.getSupportLoaderManager();
+		loaderManager = activity.getSupportLoaderManager();
 		if (path == null) {
+			loadManagerId = LOADER_ALL;
 			loaderManager.initLoader(LOADER_ALL, null, this);//加载所有的图片
 		} else {
+			loadManagerId = LOADER_CATEGORY;
 			//加载指定目录的图片
 			Bundle bundle = new Bundle();
 			bundle.putString("path", path);
@@ -135,6 +138,10 @@ public class ImageDataSource implements LoaderManager.LoaderCallbacks<Cursor> {
 		//回调接口，通知图片数据准备完成
 		com.inspur.imp.plugin.camera.imagepicker.ImagePicker.getInstance().setImageFolders(imageFolders);
 		loadedListener.onImagesLoaded(imageFolders);
+		//用完之后销毁代码
+		if(loadManagerId != -1){
+			loaderManager.destroyLoader(loadManagerId);
+		}
 	}
 
 	@Override

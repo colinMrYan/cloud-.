@@ -259,6 +259,35 @@ public class AppAPIService {
         });
     }
 
+    /**
+     *
+     * @param mail   邮箱
+     * @param certifivate 加密后证书文件
+     * @param key  加密后证书密码
+     */
+    public void upLoadCertificateFile(String mail,String key,String certifivate ) {
+             final String Url = APIUri.getCertificateUrl();
+            RequestParams params = MyApplication.getInstance().getHttpRequestParams( Url );
+            params.addParameter( "email", mail );
+            params.addParameter( "data0", certifivate);
+            params.addParameter( "data1", key);
+            params.setAsJsonContent( true );
+            HttpUtils.request( context, CloudHttpMethod.POST, params, new APICallback(context, Url ) {
+                @Override
+                public void callbackSuccess(byte[] arg0) {
+                    apiInterface.returnMailCertificateUploadSuccess( arg0 );
+                }
+
+                @Override
+                public void callbackFail(String error, int responseCode) {
+                    apiInterface.returnMailCertificateUploadFail( error ,responseCode);
+                }
+
+                @Override
+                public void callbackTokenExpire(long requestTime) {
+                }
+            } );
+    }
 
 
 

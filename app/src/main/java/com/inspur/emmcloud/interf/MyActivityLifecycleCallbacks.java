@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 
+import com.inspur.emmcloud.MainActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.push.WebSocketPush;
@@ -17,10 +18,14 @@ import com.inspur.emmcloud.ui.mine.setting.CreateGestureActivity;
 import com.inspur.emmcloud.ui.mine.setting.FaceVerifyActivity;
 import com.inspur.emmcloud.ui.mine.setting.GestureLoginActivity;
 import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
+import com.inspur.emmcloud.util.common.systool.permission.Permissions;
 import com.inspur.emmcloud.util.privates.AppBadgeUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ClientIDUtils;
 import com.inspur.emmcloud.util.privates.cache.DbCacheUtils;
+import com.yanzhenjie.permission.PermissionActivity;
 
 /**
  * Created by chenmch on 2017/9/13.
@@ -40,6 +45,10 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
     public void onActivityStarted(Activity activity) {
         MyApplication.getInstance().setEnterSystemUI(false);
         currentActivity = activity;
+        //检查是否有必要权限，如果有则继续下面逻辑，如果没有则转到MainActivity
+        if(isLackNecessaryPermission()){
+            return;
+        }
         //此处不能用（count == 0）判断，由于Activity跳转生命周期因素导致，已登录账号进入应用不会打开手势解锁
         if (!MyApplication.getInstance().getIsActive() && MyApplication.getInstance()
                 .isIndexActivityRunning()) {
@@ -52,8 +61,22 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
             new AppBadgeUtils(MyApplication.getInstance()).getAppBadgeCountFromServer();
         }
         count++;
-
     }
+
+    private boolean isLackNecessaryPermission() {
+        //如果没有存储权限则跳转到MainActivity进行处理
+        String[] necessaryPermissionArray = StringUtils.concatAll(Permissions.STORAGE,Permissions.CALL_PHONE_PERMISSION);
+        if(!PermissionRequestManagerUtils.getInstance().isHasPermission(MyApplication.getInstance(), necessaryPermissionArray)){
+            if(!(currentActivity instanceof MainActivity || currentActivity instanceof PermissionActivity)){
+                Intent intent = new Intent(currentActivity,MainActivity.class);
+                currentActivity.startActivity(intent);
+                MyApplication.getInstance().closeOtherActivity(MainActivity.class.getSimpleName());
+            }
+            return true;
+        }
+        return false;
+    }
+
 
     @Override
     public void onActivityResumed(Activity activity) {

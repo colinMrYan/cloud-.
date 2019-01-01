@@ -37,6 +37,9 @@ import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
+import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
+import com.inspur.emmcloud.util.common.systool.permission.Permissions;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.Voice2StringMessageUtils;
 import com.inspur.emmcloud.widget.waveprogress.WaterWaveProgress;
@@ -289,10 +292,18 @@ public class ECMChatInputMenuV0 extends LinearLayout {
                             break;
                         case "voice_call":
                             //语音通话
-                            if(!canMentions){
-                                chatInputMenuListener.onVoiceCommucaiton();
-                            }else{
-                                AppUtils.openChannelMemeberSelect((Activity)getContext(),cid,6);
+                            if(NetUtils.isNetworkConnected(MyApplication.getInstance())){
+                                PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getContext(), Permissions.RECORD_AUDIO, new PermissionRequestCallback() {
+                                    @Override
+                                    public void onPermissionRequestSuccess(List<String> permissions) {
+                                        startVoiceCall();
+                                    }
+
+                                    @Override
+                                    public void onPermissionRequestFail(List<String> permissions) {
+                                        ToastUtils.show(getContext(), PermissionRequestManagerUtils.getInstance().getPermissionToast(getContext(),permissions));
+                                    }
+                                });
                             }
                             break;
                         default:
@@ -301,6 +312,15 @@ public class ECMChatInputMenuV0 extends LinearLayout {
                 }
             });
             viewpagerLayout.setInputTypeBeanList(inputTypeBeanList);
+        }
+    }
+
+    private void startVoiceCall() {
+        //语音通话
+        if(!canMentions){
+            chatInputMenuListener.onVoiceCommucaiton();
+        }else{
+            AppUtils.openChannelMemeberSelect((Activity)getContext(),cid,6);
         }
     }
 
