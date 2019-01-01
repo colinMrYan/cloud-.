@@ -2,12 +2,10 @@ package com.inspur.emmcloud.ui.appcenter.mail;
 
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
@@ -43,8 +41,6 @@ public class MailLoginActivity extends BaseActivity {
     private ClearEditText passwordEdit;
     @ViewInject(R.id.bt_login)
     private Button loginBtn;
-    @ViewInject(R.id.iv_password_visible)
-    private ImageView passwordVisibleImg;
     private LoadingDialog loadingDlg;
     private MailApiService apiService;
 
@@ -74,16 +70,6 @@ public class MailLoginActivity extends BaseActivity {
                     return;
                 }
                 login(mail, password);
-                break;
-            case R.id.iv_password_visible:
-                if (passwordEdit.getTransformationMethod() instanceof HideReturnsTransformationMethod) {
-                    passwordEdit.setTransformationMethod(PasswordTransformationMethod.getInstance());
-                    passwordVisibleImg.setImageResource(R.drawable.icon_no_see_pw);
-                } else {
-                    passwordEdit.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
-                    passwordVisibleImg.setImageResource(R.drawable.icon_see_pw);
-                }
-                passwordEdit.setSelection(passwordEdit.getText().toString().length());
                 break;
             case R.id.ibt_back:
                 finish();
