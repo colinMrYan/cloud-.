@@ -925,6 +925,22 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         }
     }
 
+    /**
+     * 清除除了指定名称之外的Activity
+     *
+     */
+    public void closeOtherActivity(String activityName) {
+        try {
+            for (Activity activity : activityList) {
+                if(!activity.getClass().getSimpleName().equals(activityName)){
+                    activity.finish();
+                }
+            }
+        } catch (Exception e) {
+            LogUtils.exceptionDebug(TAG, e.toString());
+        }
+    }
+
     @Override
     public void onLowMemory() {
         super.onLowMemory();

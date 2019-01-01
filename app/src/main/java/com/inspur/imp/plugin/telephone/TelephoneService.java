@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.widget.Toast;
 
+import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.imp.plugin.ImpPlugin;
 import com.inspur.imp.util.StrUtil;
 
@@ -79,12 +80,7 @@ public class TelephoneService extends ImpPlugin {
 			Toast.makeText(getFragmentContext(), "电话号码不能为空！", Toast.LENGTH_SHORT).show();
 			return;
 		}
-		Intent intent = new Intent();
-		intent.setAction("android.intent.action.CALL");
-		// intent.addCategory("android.intent.category.DEFAULT");
-		intent.setData(Uri.parse("tel:" + tel));
-		// 方法内部会自动为Intent添加类别：android.intent.category.DEFAULT
-		getActivity().startActivity(intent);
+		AppUtils.call(getActivity(),tel,1);
 	}
 
 	@Override

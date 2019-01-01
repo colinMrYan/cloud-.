@@ -24,12 +24,16 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.ImageUtils;
+import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
+import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
 import com.inspur.imp.api.Res;
 import com.inspur.imp.plugin.barcode.camera.CameraManager;
 import com.inspur.imp.plugin.barcode.decoding.CaptureActivityHandler;
 import com.inspur.imp.plugin.barcode.decoding.GetDecodeResultFromServer;
 import com.inspur.imp.plugin.barcode.decoding.InactivityTimer;
 import com.inspur.imp.plugin.barcode.view.ViewfinderView;
+import com.yanzhenjie.permission.Permission;
 
 import org.xutils.common.Callback.CommonCallback;
 import org.xutils.http.RequestParams;
@@ -37,6 +41,7 @@ import org.xutils.x;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Vector;
 
 
@@ -181,17 +186,27 @@ public class CaptureActivity extends Activity implements Callback {
 
     }
 
-    public void surfaceCreated(SurfaceHolder holder) {
+    public void surfaceCreated(final SurfaceHolder holder) {
         if (!hasSurface) {
             hasSurface = true;
-            initCamera(holder);
+            PermissionRequestManagerUtils.getInstance().requestRuntimePermission(this, Permission.CAMERA, new PermissionRequestCallback() {
+                @Override
+                public void onPermissionRequestSuccess(List<String> permissions) {
+                    initCamera(holder);
+                }
+
+                @Override
+                public void onPermissionRequestFail(List<String> permissions) {
+                    ToastUtils.show(CaptureActivity.this, PermissionRequestManagerUtils.getInstance().getPermissionToast(CaptureActivity.this,permissions));
+                    finish();
+                }
+            });
         }
 
     }
 
     public void surfaceDestroyed(SurfaceHolder holder) {
         hasSurface = false;
-
     }
 
     public ViewfinderView getViewfinderView() {

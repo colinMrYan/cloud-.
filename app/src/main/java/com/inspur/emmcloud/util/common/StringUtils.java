@@ -2,6 +2,7 @@ package com.inspur.emmcloud.util.common;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -393,5 +394,26 @@ public class StringUtils {
         Matcher m = p.matcher(email);
         return m.matches();
     }
+    /**
+     * 合并数组
+     * @param first
+     * @param rest
+     * @param <T>
+     * @return
+     */
+    public static <T> T[] concatAll(T[] first, T[]... rest) {
+        int totalLength = first.length;
+        for (T[] array : rest) {
+            totalLength += array.length;
+        }
+        T[] result = Arrays.copyOf(first, totalLength);
+        int offset = first.length;
+        for (T[] array : rest) {
+            System.arraycopy(array, 0, result, offset, array.length);
+            offset += array.length;
+        }
+        return result;
+    }
+
 
 }

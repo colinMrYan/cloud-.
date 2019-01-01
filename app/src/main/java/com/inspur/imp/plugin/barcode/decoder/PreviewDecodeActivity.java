@@ -18,9 +18,14 @@ import com.funcode.decoder.inspuremmcloud.FunDecodeHandler;
 import com.funcode.decoder.inspuremmcloud.FunDecodeSurfaceView;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
+import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
+import com.inspur.emmcloud.util.common.systool.permission.Permissions;
 import com.inspur.imp.api.Res;
 
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 
 
 /**
@@ -43,8 +48,20 @@ public class PreviewDecodeActivity extends Activity implements FunDecodeHandler 
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);//没有标题
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
-        setContentView(Res.getLayoutID("activity_preview_decode"));
-        initView();
+        PermissionRequestManagerUtils.getInstance().requestRuntimePermission(this, Permissions.CAMERA, new PermissionRequestCallback() {
+            @Override
+            public void onPermissionRequestSuccess(List<String> permissions) {
+                setContentView(Res.getLayoutID("activity_preview_decode"));
+                initView();
+            }
+
+            @Override
+            public void onPermissionRequestFail(List<String> permissions) {
+                ToastUtils.show(PreviewDecodeActivity.this, PermissionRequestManagerUtils.getInstance().getPermissionToast(PreviewDecodeActivity.this,permissions));
+                finish();
+            }
+
+        });
     }
 
 
@@ -208,6 +225,17 @@ public class PreviewDecodeActivity extends Activity implements FunDecodeHandler 
         }
         */
 
+    }
+
+    private void startScanQrCode() {
+        if (mDecodeView != null) {
+            if (surface_ready == 0) {
+                mDecodeView.setVisibility(View.VISIBLE);
+            } else {
+                mDecodeView.setVisibility(View.VISIBLE);
+                mDecodeView.startScan();
+            }
+        }
     }
 
 }
