@@ -563,7 +563,6 @@ public class MessageCacheUtil {
      * @param message
      */
     public static void handleRealMessage(Context context, Message message) {
-        //删除临时消息前把创建时间改为临时消息的创建时间，保证排序
         Message messageTmp = MessageCacheUtil.getMessageByMid(context, message.getTmpId());
         if (messageTmp != null) {
             //如果发送的消息是音频消息，在发送成功后删除本地消息
