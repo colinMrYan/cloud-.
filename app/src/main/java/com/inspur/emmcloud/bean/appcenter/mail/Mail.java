@@ -49,10 +49,13 @@ public class Mail implements Serializable {
     private boolean isComplete = false;//是否是内容完整的Mail，在列表获取的Mail不完整
     @Column(name = "folderId")
     private String folderId;
+    @Column(name = "attachments")
+    private String attachments;
     private MailRecipient fromMailRecipient;
     private List<MailRecipient> ccMailRecipientList = new ArrayList<>();
     private List<MailRecipient> bccMailRecipientList = new ArrayList<>();
     private List<MailRecipient> toMailRecipientList = new ArrayList<>();
+    private List<MailAttachment> mailAttachmentList = new ArrayList<>();
     private int bodyType = -1;
     private String bodyText="";
 
@@ -103,6 +106,14 @@ public class Mail implements Serializable {
             toMailRecipientList.add(new MailRecipient(obj));
         }
         this.folderId = folderId;
+        if (hasAttachments){
+            attachments = JSONUtils.getString(object,"attachments","");
+            JSONArray attachmentArray = JSONUtils.getJSONArray(attachments,new JSONArray());
+            for (int i = 0; i < attachmentArray.length(); i++) {
+                JSONObject obj = JSONUtils.getJSONObject(attachmentArray, i, new JSONObject());
+                mailAttachmentList.add(new MailAttachment(obj));
+            }
+        }
     }
 
     public MailRecipient getFromMailRecipient() {
@@ -144,6 +155,29 @@ public class Mail implements Serializable {
             }
         }
         return toMailRecipientList;
+    }
+
+    public String getAttachments() {
+        return attachments;
+    }
+
+    public void setAttachments(String attachments) {
+        this.attachments = attachments;
+    }
+
+    public List<MailAttachment> getMailAttachmentList() {
+        if (isHasAttachments() && mailAttachmentList.size()==0){
+            JSONArray attachmentArray = JSONUtils.getJSONArray(attachments,new JSONArray());
+            for (int i = 0; i < attachmentArray.length(); i++) {
+                JSONObject obj = JSONUtils.getJSONObject(attachmentArray, i, new JSONObject());
+                mailAttachmentList.add(new MailAttachment(obj));
+            }
+        }
+        return mailAttachmentList;
+    }
+
+    public void setMailAttachmentList(List<MailAttachment> mailAttachmentList) {
+        this.mailAttachmentList = mailAttachmentList;
     }
 
     public void setFromMailRecipient(MailRecipient fromMailRecipient) {

@@ -7,6 +7,7 @@ import android.view.View;
 
 import com.inspur.emmcloud.BaseFragmentActivity;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.widget.sildemenu.AllInterface;
 import com.inspur.emmcloud.widget.sildemenu.LeftDrawerLayout;
 
@@ -57,6 +58,9 @@ public class MailHomeBaseActivity extends BaseFragmentActivity implements AllInt
                 break;
             case R.id.v_shadow:
                 closeMenu();
+                break;
+            case R.id.tv_mail_acount:
+                IntentUtils.startActivity(this,MailCertificateInstallActivity.class);
                 break;
         }
     }

@@ -6,6 +6,7 @@ import android.text.method.PasswordTransformationMethod;
 import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
@@ -38,7 +39,7 @@ public class MailLoginActivity extends BaseActivity {
     @ViewInject(R.id.et_mail)
     private ClearEditText mailEdit;
     @ViewInject(R.id.et_password)
-    private ClearEditText passwordEdit;
+    private EditText passwordEdit;
     @ViewInject(R.id.bt_login)
     private Button loginBtn;
     private LoadingDialog loadingDlg;
