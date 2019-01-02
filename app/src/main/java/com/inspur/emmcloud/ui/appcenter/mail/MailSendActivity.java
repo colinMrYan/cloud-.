@@ -30,20 +30,20 @@ import java.util.List;
  */
 @ContentView(R.layout.activity_mail_send)
 public class MailSendActivity extends BaseActivity {
-    @ViewInject(R.id.re_recipient)
-    private RichEdit mRecipientRichEdit;
-    @ViewInject(R.id.re_cc_recipient)
-    private RichEdit mCCRecipientRichEdit;
-    @ViewInject(R.id.et_sender_theme)
-    private EditText mSendThemeEditText;
+    @ViewInject(R.id.richedit_recipients)
+    private RichEdit recipientRichEdit;
+    @ViewInject(R.id.richedit_cc_recipient)
+    private RichEdit ccRecipientRichEdit;
+    @ViewInject(R.id.et_theme_send)
+    private EditText sendThemeEditText;
 
     @ViewInject(R.id.iv_recipients)
-    private ImageView mRecipientsImageView;
+    private ImageView recipientsImageView;
     @ViewInject(R.id.iv_cc_recipients)
-    private ImageView mCCRecipientsImageView;
+    private ImageView ccRecipientsImageView;
 
     private ArrayList<String> memberUidList = new ArrayList<>();
-    private ArrayList<MailRecipientModel> mRecipients = new ArrayList<>();
+    private ArrayList<MailRecipientModel> recipientList = new ArrayList<>();
     private ArrayList<MailRecipientModel> mCCRecipients = new ArrayList<>();
 
 
@@ -60,7 +60,7 @@ public class MailSendActivity extends BaseActivity {
      * 初始化
      * */
     private void init() {
-        mRecipientRichEdit.setInputWatcher( new RichEdit.InputWatcher() {
+        recipientRichEdit.setInputWatcher( new RichEdit.InputWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
                 String  data ;
@@ -68,59 +68,59 @@ public class MailSendActivity extends BaseActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.toString().length()>1&&' '==s.charAt(s.length()-1)){
-                    mRecipientRichEdit.insertLastManualData(1);
+                    recipientRichEdit.insertLastManualData(1);
                 }
             }
         } );
-        mRecipientRichEdit.setOnClickListener( new View.OnClickListener() {
+        recipientRichEdit.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
             }
         } );
-        mRecipientRichEdit.setOnFocusChangeListener( new View.OnFocusChangeListener() {
+        recipientRichEdit.setOnFocusChangeListener( new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if(hasFocus){
                 }else{
-                     mRecipientRichEdit.insertLastManualData(-1);
+                     recipientRichEdit.insertLastManualData(-1);
                 }
             }
         });
 
-        mRecipientRichEdit.setInsertModelListWatcher( new RichEdit.InsertModelListWatcher() {
+        recipientRichEdit.setInsertModelListWatcher( new RichEdit.InsertModelListWatcher() {
             @Override
             public void onDataChanged(List<InsertModel> insertModelList) {
-                     synchronousRemoveRecipients( mRecipients,insertModelList );
-                     synchronousAddRecipients( mRecipients,insertModelList );
-                     LogUtils.LbcDebug( "当前："+mRecipients.size() );
+                     synchronousRemoveRecipients( recipientList,insertModelList );
+                     synchronousAddRecipients( recipientList,insertModelList );
+                     LogUtils.LbcDebug( "当前："+recipientList.size() );
             }
         });
 
-        mCCRecipientRichEdit.setInputWatcher( new RichEdit.InputWatcher() {
+        ccRecipientRichEdit.setInputWatcher( new RichEdit.InputWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
             }
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.toString().length()>1&&' '==s.charAt(s.length()-1)){
-                    mCCRecipientRichEdit.insertLastManualData(1);
+                    ccRecipientRichEdit.insertLastManualData(1);
                 }
             }
         } );
 
-        mCCRecipientRichEdit.setInsertModelListWatcher( new RichEdit.InsertModelListWatcher() {
+        ccRecipientRichEdit.setInsertModelListWatcher( new RichEdit.InsertModelListWatcher() {
             @Override
             public void onDataChanged(List<InsertModel> insertModelList) {
                 synchronousRemoveRecipients( mCCRecipients,insertModelList );
                 synchronousAddRecipients( mCCRecipients,insertModelList );
             }
         } );
-        mCCRecipientRichEdit.setOnFocusChangeListener( new View.OnFocusChangeListener() {
+        ccRecipientRichEdit.setOnFocusChangeListener( new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if(hasFocus){
                 }else{
-                    mCCRecipientRichEdit.insertLastManualData(-1);
+                    ccRecipientRichEdit.insertLastManualData(-1);
                 }
             }
         });
@@ -172,10 +172,10 @@ public class MailSendActivity extends BaseActivity {
                             singleRecipient.setmRecipientEmail( contactUser.getEmail() );
                             singleRecipient.setmRecipientName( contactUser.getName() );
                             LogUtils.LbcDebug( singleRecipient.getmRecipientEmail() );
-                            boolean isContaion = isListContaionSpecItem( mRecipients, singleRecipient );
+                            boolean isContaion = isListContaionSpecItem( recipientList, singleRecipient );
                             if (!isContaion) {
-                                mRecipients.add( singleRecipient );
-                                notifyRichEdit(mRecipientRichEdit, singleRecipient);
+                                recipientList.add( singleRecipient );
+                                notifyRichEdit(recipientRichEdit, singleRecipient);
                             }
                         }
                     }
@@ -193,7 +193,7 @@ public class MailSendActivity extends BaseActivity {
                             boolean isContaion = isListContaionSpecItem( mCCRecipients, singleRecipient );
                             if (!isContaion) {
                                 mCCRecipients.add( singleRecipient );
-                                notifyRichEdit(mCCRecipientRichEdit, singleRecipient);
+                                notifyRichEdit(ccRecipientRichEdit, singleRecipient);
                             }
                         }
                     }
