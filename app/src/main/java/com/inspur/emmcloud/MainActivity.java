@@ -86,7 +86,6 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
             @Override
             public void onPermissionRequestSuccess(List<String> permissions) {
               init();
-              //IntentUtils.startActivity( MainActivity.this ,MailCertificateInstallActivity.class );
             }
 
             @Override

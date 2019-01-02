@@ -228,7 +228,6 @@ public class MailSendActivity extends BaseActivity {
             richEdit.insertSpecialStr(false, insertModel);
     }
 
-
     /**
      *Recipient 根据insertModels 多的删掉*/
     private void synchronousRemoveRecipients(ArrayList<MailRecipientModel>recipients,List<InsertModel> insertModels){
