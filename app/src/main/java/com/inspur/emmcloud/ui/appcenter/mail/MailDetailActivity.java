@@ -28,6 +28,7 @@ import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.EncryptUtils;
 import com.inspur.emmcloud.util.common.FileUtils;
+import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -105,9 +106,9 @@ public class MailDetailActivity extends BaseActivity {
         loadingDlg = new LoadingDialog(this);
         Mail simpleMail = (Mail) getIntent().getSerializableExtra(EXTRA_MAIL);
         mail = MailCacheUtils.getMail(simpleMail.getId());
-     //   if (!mail.isComplete()) {
+        if (!mail.isComplete()) {
             getMailDetail();
-    //    }
+        }
         initView();
     }
 
@@ -282,10 +283,13 @@ public class MailDetailActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.bt_mail_forward:
+                intentMailSendActivity(MailSendActivity.MODEL_FORWARD);
                 break;
             case R.id.bt_mail_reply_all:
+                intentMailSendActivity(MailSendActivity.MODEL_REPLY_ALL);
                 break;
             case R.id.bt_mail_reply:
+                intentMailSendActivity(MailSendActivity.MODEL_REPLY);
                 break;
             case R.id.bt_mail_delete:
                 break;
@@ -314,6 +318,13 @@ public class MailDetailActivity extends BaseActivity {
             case R.id.tv_install_cert:
                 break;
         }
+    }
+
+    private void intentMailSendActivity(String extraMailModel){
+        Bundle bundle = new Bundle();
+        bundle.putString(MailSendActivity.EXTRA_MAIL_ID,mail.getId());
+        bundle.putString(MailSendActivity.EXTRA_MAIL_MODEL,extraMailModel);
+        IntentUtils.startActivity(this,MailSendActivity.class,bundle);
     }
 
     private void getMailDetail() {

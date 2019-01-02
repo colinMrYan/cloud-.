@@ -52,6 +52,9 @@ public class MailHomeBaseActivity extends BaseFragmentActivity implements AllInt
                 closeMenu();
                 break;
             case R.id.bt_mail_add:
+                Bundle bundle = new Bundle();
+                bundle.putString(MailSendActivity.EXTRA_MAIL_MODEL,MailSendActivity.MODEL_NEW);
+                IntentUtils.startActivity(this,MailSendActivity.class,bundle);
                 break;
             case R.id.bt_close:
                finish();
