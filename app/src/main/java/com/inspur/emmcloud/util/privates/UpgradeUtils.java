@@ -225,9 +225,9 @@ public class UpgradeUtils extends APIInterfaceInstance {
         dialog.setCancelable(false);
         Button okBtn = dialog.findViewById(R.id.ok_btn);
         okBtn.setText(context.getString(R.string.upgrade));
-        TextView text =  dialog.findViewById(R.id.text);
-        text.setMovementMethod(ScrollingMovementMethod.getInstance());
-        text.setText(upgradeMsg);
+        TextView appUpdateContentText =  dialog.findViewById(R.id.text);
+        appUpdateContentText.setMovementMethod(ScrollingMovementMethod.getInstance());
+        appUpdateContentText.setText(upgradeMsg);
         TextView appUpdateTitle =  dialog.findViewById(R.id.app_update_title);
         appUpdateTitle.setText(context.getString(R.string.app_update_remind));
         TextView appUpdateVersion =  dialog.findViewById(R.id.app_update_version);

@@ -426,10 +426,18 @@ public class ConversationActivity extends ConversationBaseActivity {
                 return;
             }
             uiMessage.setSendStatus(Message.MESSAGE_SEND_ING);
-            setMessageSendStatus(message, Message.MESSAGE_SEND_ING);
+            setMessageSendStatusAndSendTime(message, Message.MESSAGE_SEND_ING);
             int position = uiMessageList.indexOf(uiMessage);
-            adapter.setMessageList(uiMessageList);
-            adapter.notifyItemChanged(position);
+            if (position != uiMessageList.size() - 1) {
+                uiMessageList.remove(position);
+                uiMessageList.add(uiMessage);
+                adapter.setMessageList(uiMessageList);
+                adapter.notifyDataSetChanged();
+                msgListView.MoveToPosition(uiMessageList.size() - 1);
+            } else {
+                adapter.setMessageList(uiMessageList);
+                adapter.notifyItemChanged(uiMessageList.size() - 1);
+            }
             switch (messageType) {
                 case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
                     if (message.getMsgContentAttachmentFile().getMedia().equals(message.getLocalPath())) {
@@ -495,6 +503,7 @@ public class ConversationActivity extends ConversationBaseActivity {
     }
 
     private void sendVoiceMessage(Message message) {
+        message.setCreationDate(System.currentTimeMillis());
         if (message.getMsgContentMediaVoice().getMedia().equals(message.getLocalPath())) {
             sendMessageWithFile(message);
         } else {
@@ -971,7 +980,7 @@ public class ConversationActivity extends ConversationBaseActivity {
         }
         message.setRead(Message.MESSAGE_READ);
         UIMessage UIMessage = new UIMessage(message);
-        setMessageSendStatus(message, status);
+        setMessageSendStatusAndSendTime(message, status);
         //本地添加的消息设置为正在发送状态
         UIMessage.setSendStatus(status);
         uiMessageList.add(UIMessage);
@@ -988,10 +997,11 @@ public class ConversationActivity extends ConversationBaseActivity {
      * @param status
      * @return
      */
-    private void setMessageSendStatus(Message message, int status) {
+    private void setMessageSendStatusAndSendTime(Message message, int status) {
         //发送中，无网,发送消息失败
         message.setSendStatus(status);
         message.setRead(Message.MESSAGE_READ);
+        message.setCreationDate(System.currentTimeMillis());
         MessageCacheUtil.saveMessage(ConversationActivity.this, message);
         notifyCommucationFragmentMessageSendStatus();
     }
@@ -1014,7 +1024,7 @@ public class ConversationActivity extends ConversationBaseActivity {
         int index = uiMessageList.indexOf(fakeUIMessage);
         if (index != -1) {
             uiMessageList.get(index).setSendStatus(Message.MESSAGE_SEND_FAIL);
-            setMessageSendStatus(uiMessageList.get(index).getMessage(), Message.MESSAGE_SEND_FAIL);
+            setMessageSendStatusAndSendTime(uiMessageList.get(index).getMessage(), Message.MESSAGE_SEND_FAIL);
             adapter.setMessageList(uiMessageList);
             adapter.notifyItemChanged(index);
         }
@@ -1147,16 +1157,16 @@ public class ConversationActivity extends ConversationBaseActivity {
                         msgListView.MoveToPosition(uiMessageList.size() - 1);
                     } else {
                         uiMessageList.remove(index);
-                        uiMessageList.add(new UIMessage(receivedWSMessage));
-//                        //如果是图片类型消息的话不再重新刷新消息体，防止图片重新加载
-//                        if (receivedWSMessage.getType().equals(Message.MESSAGE_TYPE_MEDIA_IMAGE)) {
-//                            setMessageSendSuccess(index, receivedWSMessage);
-//                            adapter.setMessageList(uiMessageList);
-//                        } else {
+                        uiMessageList.add(index, new UIMessage(receivedWSMessage));
+                        //如果是图片类型消息的话不再重新刷新消息体，防止图片重新加载
+                        if (receivedWSMessage.getType().equals(Message.MESSAGE_TYPE_MEDIA_IMAGE)) {
+                            setMessageSendSuccess(index, receivedWSMessage);
                             adapter.setMessageList(uiMessageList);
-                            adapter.notifyItemRangeChanged(index,uiMessageList.size()  - index);
-                            msgListView.MoveToPosition(uiMessageList.size() - 1);
-//                        }
+                        } else {
+                            adapter.setMessageList(uiMessageList);
+                            adapter.notifyItemChanged(index);
+                        }
+
                     }
                 }
                 WSAPIService.getInstance().setChannelMessgeStateRead(cid);
