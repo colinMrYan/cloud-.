@@ -8,20 +8,26 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.bean.appcenter.mail.Mail;
+import com.inspur.emmcloud.bean.appcenter.mail.MailAttachment;
+import com.inspur.emmcloud.config.MyAppConfig;
+import com.inspur.emmcloud.util.common.FileUtils;
 
 /**
  * Created by chenmch on 2018/12/27.
  */
 
 public class MailAttachmentListAdapter extends BaseAdapter {
+    private Mail mail;
     private Context context;
-    public MailAttachmentListAdapter(Context context){
+    public MailAttachmentListAdapter(Context context, Mail mail){
         this.context = context;
+        this.mail = mail;
     }
 
     @Override
     public int getCount() {
-        return 0;
+        return mail.getMailAttachmentList().size();
     }
 
     @Override
@@ -36,9 +42,13 @@ public class MailAttachmentListAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        MailAttachment mailAttachment = mail.getMailAttachmentList().get(position);
         convertView = LayoutInflater.from(context).inflate(R.layout.mail_attachment_item_view,null);
-        TextView attachmentNameText = (TextView)convertView.findViewById(R.id.tv_name);
-        attachmentNameText.setText("山东健康大讲堂报名表.xlsx");
+        TextView attachmentNameText = convertView.findViewById(R.id.tv_name);
+        attachmentNameText.setText(mailAttachment.getName());
+        TextView downloadText = convertView.findViewById(R.id.tv_download);
+        String attachmentFilePath = MyAppConfig.LOCAL_DOWNLOAD_PATH_MAIL_ATTCACHEMENT +mail.getId()+"/"+ mailAttachment.getName();
+        downloadText.setText(FileUtils.isFileExist(attachmentFilePath)?R.string.open:R.string.download);
         return convertView;
     }
 }

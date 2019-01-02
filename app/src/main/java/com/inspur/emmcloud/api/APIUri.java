@@ -1137,12 +1137,16 @@ public class APIUri {
         return getMailBaseUrl()+"/Mail/List";
     }
 
-    public static String getMailDetailUrl(){
-        return  getMailBaseUrl()+"/Mail/Detail";
+    public static String getMailDetailUrl(boolean isEncrypted){
+        return  getMailBaseUrl()+ (isEncrypted?"/Mail/EncryptedDetail":"/Mail/Detail");
     }
 
     public static String getLoginMailUrl(){
         return  getMailBaseUrl()+"/UserProfile/MailBind";
+    }
+
+    public static String getMailAttachmentUrl(){
+        return getMailBaseUrl()+"/Mail/SafeAttachment?";
     }
 /************************************************************************工作****************************************************************************/
     /***************会议接口*****************************/
