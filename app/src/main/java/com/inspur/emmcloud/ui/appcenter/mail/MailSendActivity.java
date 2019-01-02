@@ -6,9 +6,11 @@ import android.text.Editable;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.bean.appcenter.mail.MailRecipient;
 import com.inspur.emmcloud.bean.appcenter.mail.MailRecipientModel;
 import com.inspur.emmcloud.bean.chat.InsertModel;
 import com.inspur.emmcloud.bean.contact.ContactUser;
@@ -36,6 +38,8 @@ public class MailSendActivity extends BaseActivity {
     private RichEdit ccRecipientRichEdit;
     @ViewInject(R.id.et_theme_send)
     private EditText sendThemeEditText;
+    @ViewInject( R.id.tv_recipients_show )
+    private TextView recipientsShowText;
 
     @ViewInject(R.id.iv_recipients)
     private ImageView recipientsImageView;
@@ -79,6 +83,11 @@ public class MailSendActivity extends BaseActivity {
         recipientRichEdit.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                LogUtils.LbcDebug( "onClick" );
+                if(1==recipientRichEdit.getMaxLines()){
+                    LogUtils.LbcDebug( "setMaxLinse1000" );
+                    recipientRichEdit.setMaxLines(1000);
+                }
             }
         } );
         recipientRichEdit.setOnFocusChangeListener( new View.OnFocusChangeListener() {
@@ -129,7 +138,63 @@ public class MailSendActivity extends BaseActivity {
             }
         });
 
+        recipientsShowText.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                recipientsShowText.setVisibility(View.GONE);
+                recipientRichEdit.setVisibility(View.VISIBLE);
+            }
+        } );
+//       Bundle mailData  =  getIntent().getExtras();
+//       String replyMailMode = mailData.getString(EXTRA_MAIL_MODEL);
+//       String replyMailId = mailData.getString( EXTRA_MAIL_ID );
+//       Mail replayMail =  MailCacheUtils.getMail( replyMailId );
+//        String theme;
+//        List<MailRecipient> mailRecipientList = new ArrayList<>();
+//       switch (replyMailMode){
+//           case MODEL_NEW:
+//
+//               break;
+//           case MODEL_REPLY:
+//              mailRecipientList = new ArrayList<>();
+//              mailRecipientList.add( replayMail.getFromMailRecipient());
+//              insertReciversFromExtra( recipientRichEdit,mailRecipientList,recipientList );
+//              theme = replayMail.getSubject();
+//              sendThemeEditText.setText(theme);
+//               break;
+//           case MODEL_REPLY_ALL:
+//               mailRecipientList = new ArrayList<>();
+//               mailRecipientList.add( replayMail.getFromMailRecipient());
+//               insertReciversFromExtra( recipientRichEdit,mailRecipientList,recipientList );
+//               mailRecipientList = replayMail.getCcMailRecipientList();
+//               insertReciversFromExtra( recipientRichEdit,mailRecipientList,recipientList );
+//               theme = replayMail.getSubject();
+//               sendThemeEditText.setText(theme);
+//               break;
+//           case MODEL_FORWARD:
+//               theme = replayMail.getSubject();
+//               sendThemeEditText.setText(theme);
+//               break;
+//       }
     }
+
+    /**
+     *转发、回复等插入收件人
+     **/
+    private void insertReciversFromExtra(RichEdit richRdit, List<MailRecipient> mailRecipients, ArrayList<MailRecipientModel> recipientsList){
+        for(int i=0;i<mailRecipients.size();i++){
+            MailRecipientModel reciver = new MailRecipientModel();
+            reciver.setmRecipientName( mailRecipients.get( i ).getName() );
+            reciver.setmRecipientEmail(mailRecipients.get( i ).getAddress());
+            boolean isContaion = isListContaionSpecItem( recipientsList, reciver );
+            if (!isContaion) {
+                recipientsList.add(reciver);
+                notifyRichEdit(richRdit, reciver);
+            }
+        }
+    }
+
+
 
     public void onClick(View v) {
         switch (v.getId()) {

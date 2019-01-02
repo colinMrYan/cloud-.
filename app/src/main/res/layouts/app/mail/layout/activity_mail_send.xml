@@ -88,6 +88,7 @@
                         android:textSize="15sp"/>
                     <com.inspur.emmcloud.widget.RichEdit
                         android:id="@+id/richedit_recipients"
+                        android:visibility="gone"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_toRightOf="@id/tv_recipients_tip"
@@ -95,7 +96,22 @@
                         android:background="@null"
                         android:textSize="15sp"
                         android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp" />
+                        android:layout_marginRight="5dp"
+                        android:maxLines="1"/>
+                    <TextView
+                        android:id="@+id/tv_recipients_show"
+                        android:visibility="gone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@id/tv_recipients_tip"
+                        android:layout_toLeftOf="@id/iv_recipients"
+                        android:background="@null"
+                        android:textSize="15sp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:textColor="#2788CF"
+                        android:ellipsize="end"
+                        android:maxLines="1" />
                     <ImageView
                         android:id="@+id/iv_recipients"
                         android:layout_width="20dp"
@@ -136,6 +152,18 @@
                         android:textSize="16sp"/>
                     <com.inspur.emmcloud.widget.RichEdit
                         android:id="@+id/richedit_cc_recipient"
+                        android:visibility="gone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="15sp"
+                        android:layout_toLeftOf="@id/iv_cc_recipients"
+                        android:layout_toRightOf="@id/tv_cc_tip"
+                        android:background="@null"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp" />
+                    <TextView
+                        android:id="@+id/tv_cc_recipient_show"
+                        android:visibility="gone"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textSize="15sp"
@@ -276,11 +304,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
+                    android:background="@null"
+                    android:text="\n\t\n\t\n\t\n\t---发自我的云+移动端邮件服务"
                     android:textSize="14sp"/>
             </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/rl_signature"
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/rl_content_send"
