@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.ui;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
@@ -302,6 +303,17 @@ public class IndexActivity extends IndexBaseActivity {
             handler = null;
         }
         EventBus.getDefault().unregister(this);
+        if(android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.N){
+            if(networkChangeReceiver != null){
+                unregisterReceiver(networkChangeReceiver);
+                networkChangeReceiver = null;
+            }
+        }else{
+            if(connectivityManager != null && networkCallback != null){
+                connectivityManager.unregisterNetworkCallback(networkCallback);
+                networkCallback = null;
+            }
+        }
         super.onDestroy();
     }
 
