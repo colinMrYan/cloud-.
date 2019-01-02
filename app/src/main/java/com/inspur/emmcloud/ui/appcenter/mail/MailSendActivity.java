@@ -45,8 +45,12 @@ public class MailSendActivity extends BaseActivity {
     private ArrayList<String> memberUidList = new ArrayList<>();
     private ArrayList<MailRecipientModel> mRecipients = new ArrayList<>();
     private ArrayList<MailRecipientModel> mCCRecipients = new ArrayList<>();
-
-
+    public static final String MODEL_NEW="mail_new";
+    public static final String MODEL_REPLY="mail_replay";
+    public static final String MODEL_REPLY_ALL="mail_replay_ALL";
+    public static final String MODEL_FORWARD="mail_forward";
+    public static final String EXTRA_MAIL_ID ="extra_mail_id";
+    public static final String EXTRA_MAIL_MODEL ="extra_mail_model";
     private static final int QEQUEST_ADD_MEMBER = 2;
     private static final int QEQUEST_CC_MEMBER = 3;
 
