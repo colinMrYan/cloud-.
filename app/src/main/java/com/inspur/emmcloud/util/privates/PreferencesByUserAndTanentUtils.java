@@ -268,5 +268,4 @@ public class PreferencesByUserAndTanentUtils {
         editor.remove(key);
         return editor.commit();
     }
-
 }

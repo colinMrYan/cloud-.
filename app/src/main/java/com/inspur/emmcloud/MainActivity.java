@@ -19,7 +19,6 @@ import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.service.AppExceptionService;
 import com.inspur.emmcloud.ui.IndexActivity;
-import com.inspur.emmcloud.ui.appcenter.mail.MailCertificateInstallActivity;
 import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.ui.mine.setting.GuideActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
@@ -86,8 +85,8 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
         PermissionRequestManagerUtils.getInstance().requestRuntimePermission(this, necessaryPermissionArray, new PermissionRequestCallback() {
             @Override
             public void onPermissionRequestSuccess(List<String> permissions) {
-              //init();
-                IntentUtils.startActivity( MainActivity.this ,MailCertificateInstallActivity.class );
+              init();
+              //IntentUtils.startActivity( MainActivity.this ,MailCertificateInstallActivity.class );
             }
 
             @Override
