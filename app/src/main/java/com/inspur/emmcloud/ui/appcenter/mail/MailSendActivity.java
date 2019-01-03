@@ -4,12 +4,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.bean.appcenter.mail.Mail;
 import com.inspur.emmcloud.bean.appcenter.mail.MailRecipient;
 import com.inspur.emmcloud.bean.appcenter.mail.MailRecipientModel;
 import com.inspur.emmcloud.bean.chat.InsertModel;
@@ -19,7 +23,9 @@ import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.MailCacheUtils;
 import com.inspur.emmcloud.widget.RichEdit;
+import com.inspur.imp.engine.webview.ImpWebView;
 
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
@@ -40,6 +46,18 @@ public class MailSendActivity extends BaseActivity {
     private EditText sendThemeEditText;
     @ViewInject( R.id.tv_recipients_show )
     private TextView recipientsShowText;
+    @ViewInject( R.id.tv_cc_recipient_show)
+    private TextView ccRecipientsShowText;
+    @ViewInject( R.id.iv_fw_tip )
+    private ImageView fwTipImageView;
+    @ViewInject( R.id.rl_fw_body )
+    private RelativeLayout fwBodyLayout;
+    @ViewInject(R.id.cb_fw_body)
+    private CheckBox fwBodyCheckBox;
+    @ViewInject( R.id.impwebview_fw_body )
+    private ImpWebView  fwBodyImpWebView;
+    @ViewInject(R.id.tv_header_title)
+    private TextView headerTitleText;
 
     @ViewInject(R.id.iv_recipients)
     private ImageView recipientsImageView;
@@ -48,7 +66,7 @@ public class MailSendActivity extends BaseActivity {
 
     private ArrayList<String> memberUidList = new ArrayList<>();
     private ArrayList<MailRecipientModel> recipientList = new ArrayList<>();
-    private ArrayList<MailRecipientModel> mCCRecipients = new ArrayList<>();
+    private ArrayList<MailRecipientModel> ccRecipientList = new ArrayList<>();
     public static final String MODEL_NEW="mail_new";
     public static final String MODEL_REPLY="mail_replay";
     public static final String MODEL_REPLY_ALL="mail_replay_ALL";
@@ -83,11 +101,6 @@ public class MailSendActivity extends BaseActivity {
         recipientRichEdit.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LogUtils.LbcDebug( "onClick" );
-                if(1==recipientRichEdit.getMaxLines()){
-                    LogUtils.LbcDebug( "setMaxLinse1000" );
-                    recipientRichEdit.setMaxLines(1000);
-                }
             }
         } );
         recipientRichEdit.setOnFocusChangeListener( new View.OnFocusChangeListener() {
@@ -124,8 +137,8 @@ public class MailSendActivity extends BaseActivity {
         ccRecipientRichEdit.setInsertModelListWatcher( new RichEdit.InsertModelListWatcher() {
             @Override
             public void onDataChanged(List<InsertModel> insertModelList) {
-                synchronousRemoveRecipients( mCCRecipients,insertModelList );
-                synchronousAddRecipients( mCCRecipients,insertModelList );
+                synchronousRemoveRecipients( ccRecipientList,insertModelList );
+                synchronousAddRecipients( ccRecipientList,insertModelList );
             }
         } );
         ccRecipientRichEdit.setOnFocusChangeListener( new View.OnFocusChangeListener() {
@@ -145,37 +158,70 @@ public class MailSendActivity extends BaseActivity {
                 recipientRichEdit.setVisibility(View.VISIBLE);
             }
         } );
-//       Bundle mailData  =  getIntent().getExtras();
-//       String replyMailMode = mailData.getString(EXTRA_MAIL_MODEL);
-//       String replyMailId = mailData.getString( EXTRA_MAIL_ID );
-//       Mail replayMail =  MailCacheUtils.getMail( replyMailId );
-//        String theme;
-//        List<MailRecipient> mailRecipientList = new ArrayList<>();
-//       switch (replyMailMode){
-//           case MODEL_NEW:
-//
-//               break;
-//           case MODEL_REPLY:
-//              mailRecipientList = new ArrayList<>();
-//              mailRecipientList.add( replayMail.getFromMailRecipient());
-//              insertReciversFromExtra( recipientRichEdit,mailRecipientList,recipientList );
-//              theme = replayMail.getSubject();
-//              sendThemeEditText.setText(theme);
-//               break;
-//           case MODEL_REPLY_ALL:
-//               mailRecipientList = new ArrayList<>();
-//               mailRecipientList.add( replayMail.getFromMailRecipient());
-//               insertReciversFromExtra( recipientRichEdit,mailRecipientList,recipientList );
-//               mailRecipientList = replayMail.getCcMailRecipientList();
-//               insertReciversFromExtra( recipientRichEdit,mailRecipientList,recipientList );
-//               theme = replayMail.getSubject();
-//               sendThemeEditText.setText(theme);
-//               break;
-//           case MODEL_FORWARD:
-//               theme = replayMail.getSubject();
-//               sendThemeEditText.setText(theme);
-//               break;
-//       }
+        ccRecipientsShowText.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ccRecipientRichEdit.setVisibility( View.VISIBLE );
+                ccRecipientsShowText.setVisibility( View.GONE);
+            }
+        } );
+
+        fwBodyCheckBox.setOnCheckedChangeListener( new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if(b){
+                    fwBodyImpWebView.setVisibility( View.VISIBLE );
+                }else{
+                    fwBodyImpWebView.setVisibility( View.GONE );
+                }
+            }
+        } );
+       Bundle mailBundle  =  getIntent().getExtras();
+       if(null!=mailBundle){
+           String replyMailMode =mailBundle.getString(EXTRA_MAIL_MODEL);
+           String replyMailId = mailBundle.getString( EXTRA_MAIL_ID );
+           Mail   replayMail =  MailCacheUtils.getMail( replyMailId );
+           if(null==replayMail){
+               replayMail = new Mail();
+           }
+           List<MailRecipient> mailRecipientList = new ArrayList<>();
+           switch (replyMailMode){
+               case MODEL_NEW:
+                   headerTitleText.setText("发邮件");
+
+                   break;
+               case MODEL_REPLY:
+                   mailRecipientList = new ArrayList<>();
+                   mailRecipientList.add(replayMail.getFromMailRecipient());
+                   insertReciversFromExtra(recipientRichEdit,mailRecipientList,recipientList);
+
+                   sendThemeEditText.setText(replayMail.getSubject().toString());
+                   headerTitleText.setText("回复");
+                   break;
+               case MODEL_REPLY_ALL:
+                   mailRecipientList = new ArrayList<>();
+                   mailRecipientList.add(replayMail.getFromMailRecipient());
+                   insertReciversFromExtra(recipientRichEdit,mailRecipientList,recipientList );
+                   recipientsShowText.setText(recipientRichEdit.getText().toString());
+                   recipientRichEdit.setVisibility( View.GONE );
+                   recipientsShowText.setVisibility( View.VISIBLE);
+
+                   mailRecipientList = replayMail.getCcMailRecipientList();
+                   insertReciversFromExtra(ccRecipientRichEdit,mailRecipientList,ccRecipientList);
+                   ccRecipientsShowText.setText(ccRecipientRichEdit.getText().toString());
+                   ccRecipientRichEdit.setVisibility( View.GONE );
+                   ccRecipientsShowText.setVisibility(View.VISIBLE);
+
+                   sendThemeEditText.setText(replayMail.getSubject().toString());
+                   headerTitleText.setText("回复全部");
+                   break;
+               case MODEL_FORWARD:
+
+                   sendThemeEditText.setText(replayMail.getSubject().toString());
+                   headerTitleText.setText("转发");
+                   break;
+           }
+       }
     }
 
     /**
@@ -194,13 +240,12 @@ public class MailSendActivity extends BaseActivity {
         }
     }
 
-
-
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tv_send_mail:
                 break;
             case R.id.iv_recipients:
+                recipientRichEdit.insertLastManualData( 0 );
                 Intent intent = new Intent();
                 intent.putExtra( ContactSearchFragment.EXTRA_TYPE, 2 );
                 intent.putExtra( ContactSearchFragment.EXTRA_EXCLUDE_SELECT, memberUidList );
@@ -211,6 +256,7 @@ public class MailSendActivity extends BaseActivity {
                 startActivityForResult( intent, QEQUEST_ADD_MEMBER );
                 break;
             case R.id.iv_cc_recipients:
+                ccRecipientRichEdit.insertLastManualData( 0 );
                 Intent intent1 = new Intent();
                 intent1.putExtra( ContactSearchFragment.EXTRA_TYPE, 2 );
                 intent1.putExtra( ContactSearchFragment.EXTRA_EXCLUDE_SELECT, memberUidList );
@@ -219,6 +265,13 @@ public class MailSendActivity extends BaseActivity {
                 intent1.setClass( getApplicationContext(),
                         ContactSearchActivity.class );
                 startActivityForResult( intent1, QEQUEST_CC_MEMBER );
+                break;
+            case R.id.iv_fw_tip:
+                fwTipImageView.setVisibility(View.GONE);
+                fwBodyLayout.setVisibility(View.VISIBLE);
+                break;
+            case R.id.rl_back:
+                finish();
                 break;
             default:
                 break;
@@ -259,9 +312,9 @@ public class MailSendActivity extends BaseActivity {
                             singleRecipient.setmRecipientEmail( contactUser.getEmail() );
                             singleRecipient.setmRecipientName( contactUser.getName() );
                             LogUtils.LbcDebug( singleRecipient.getmRecipientEmail() );
-                            boolean isContaion = isListContaionSpecItem( mCCRecipients, singleRecipient );
+                            boolean isContaion = isListContaionSpecItem( ccRecipientList, singleRecipient );
                             if (!isContaion) {
-                                mCCRecipients.add( singleRecipient );
+                                ccRecipientList.add( singleRecipient );
                                 notifyRichEdit(ccRecipientRichEdit, singleRecipient);
                             }
                         }

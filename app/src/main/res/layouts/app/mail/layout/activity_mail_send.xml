@@ -88,16 +88,15 @@
                         android:textSize="15sp"/>
                     <com.inspur.emmcloud.widget.RichEdit
                         android:id="@+id/richedit_recipients"
-                        android:visibility="gone"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_toRightOf="@id/tv_recipients_tip"
                         android:layout_toLeftOf="@id/iv_recipients"
+                        android:lineSpacingExtra="5dp"
                         android:background="@null"
                         android:textSize="15sp"
                         android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp"
-                        android:maxLines="1"/>
+                        android:layout_marginRight="5dp"/>
                     <TextView
                         android:id="@+id/tv_recipients_show"
                         android:visibility="gone"
@@ -127,6 +126,7 @@
                     android:layout_height="0.5sp"
                     android:background="#C8C7CC"
                     android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
                     android:layout_below="@id/rl_recipients"></View>
             </RelativeLayout>
 
@@ -152,7 +152,6 @@
                         android:textSize="16sp"/>
                     <com.inspur.emmcloud.widget.RichEdit
                         android:id="@+id/richedit_cc_recipient"
-                        android:visibility="gone"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textSize="15sp"
@@ -188,6 +187,7 @@
                     android:background="#C8C7CC"
                     android:layout_marginTop="12dp"
                     android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
                     android:layout_below="@id/rl_cc"></View>
             </RelativeLayout>
 
@@ -268,6 +268,7 @@
                         android:layout_height="wrap_content"
                         android:focusable="true"
                         android:focusableInTouchMode="true"
+                        android:textSize="15sp"
                         android:background="@null"
                         android:layout_centerVertical="true"/>
                     <ImageView
@@ -309,25 +310,52 @@
                     android:textSize="14sp"/>
             </RelativeLayout>
 
+            <!-- 邮件转发内容-->
             <RelativeLayout
-                android:id="@+id/rl_signature"
-                android:visibility="gone"
+                android:id="@+id/rl_include_all"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/rl_content_send"
+                android:layout_marginTop="10dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp">
-                <TextView
-                    android:id="@+id/et_send_conten"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="---发自我的云+移动端邮件服务"
-                    android:textSize="14sp"
-                    android:textColor="#151515"
-                    android:layout_centerVertical="true"/>
+
+                <ImageView
+                    android:id="@+id/iv_fw_tip"
+                    android:visibility="gone"
+                    android:layout_width="46dp"
+                    android:layout_height="23dp"
+                    android:background="@drawable/bg_corner"
+                    android:onClick="onClick"
+                    android:padding="2dp"
+                    android:src="@drawable/icon_mail_include_tip"
+                    android:textColor="#151515" />
                 <RelativeLayout
+                    android:id="@+id/rl_fw_body"
+                    android:visibility="gone"
+                    android:layout_marginTop="5dp"
+                    android:layout_below="@id/iv_fw_tip"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"></RelativeLayout>
+                    android:layout_height="wrap_content">
+                    <View
+                        android:id="@+id/v_include_topLine"
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5sp"
+                        android:background="#C8C7CC"></View>
+                    <CheckBox
+                        android:id="@+id/cb_fw_body"
+                        android:layout_below="@id/v_include_topLine"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        android:text="包含引用文字"/>
+                    <com.inspur.imp.engine.webview.ImpWebView
+                        android:id="@+id/impwebview_fw_body"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/cb_fw_body">
+                    </com.inspur.imp.engine.webview.ImpWebView>
+                </RelativeLayout>
             </RelativeLayout>
 
         </RelativeLayout>

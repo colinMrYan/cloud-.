@@ -19,7 +19,7 @@ import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.service.AppExceptionService;
 import com.inspur.emmcloud.ui.IndexActivity;
-import com.inspur.emmcloud.ui.appcenter.mail.MailSendActivity;
+import com.inspur.emmcloud.ui.appcenter.mail.MailLoginActivity;
 import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.ui.mine.setting.GuideActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
@@ -87,7 +87,7 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
             @Override
             public void onPermissionRequestSuccess(List<String> permissions) {
               //init();
-              IntentUtils.startActivity(MainActivity.this, MailSendActivity.class );
+              IntentUtils.startActivity(MainActivity.this, MailLoginActivity.class );
             }
 
             @Override

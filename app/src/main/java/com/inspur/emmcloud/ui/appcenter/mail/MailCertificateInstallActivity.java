@@ -99,19 +99,23 @@ public class MailCertificateInstallActivity extends BaseActivity {
         } else {
             myCertificate = (MailCertificateDetail) certificateObject;
             installedCerLayout.setVisibility( View.VISIBLE );
+            updataCertificateUI( myCertificate );
         }
 
         encryptionSwitchView.setOnStateChangedListener( new SwitchView.OnStateChangedListener() {
             @Override
             public void toggleToOn(View view) {
                 myCertificate.setEncryptedMail( true );
-                encryptionSwitchView.toggleSwitch( true );
+                saveCertifivate( myCertificate );
+                encryptionSwitchView.setOpened( true );
+
             }
 
             @Override
             public void toggleToOff(View view) {
                 myCertificate.setEncryptedMail( false );
-                encryptionSwitchView.toggleSwitch( false );
+                saveCertifivate( myCertificate );
+                encryptionSwitchView.setOpened( false );
             }
         } );
 
@@ -119,13 +123,16 @@ public class MailCertificateInstallActivity extends BaseActivity {
             @Override
             public void toggleToOn(View view) {
                 myCertificate.setSignedMail( true );
-                signatureSwitchView.toggleSwitch( true );
+                saveCertifivate( myCertificate );
+                signatureSwitchView.setOpened( true );
             }
 
             @Override
             public void toggleToOff(View view) {
                 myCertificate.setSignedMail( false );
-                signatureSwitchView.toggleSwitch( false );
+                saveCertifivate( myCertificate );
+                signatureSwitchView.setOpened( false );
+
             }
         } );
     }
@@ -266,6 +273,8 @@ public class MailCertificateInstallActivity extends BaseActivity {
             }
             PublicKey pubkey = cert.getPublicKey();
             myCertificate.setCertificatePassword( passWord );
+            myCertificate.setSignedMail( true );
+            myCertificate.setEncryptedMail( true );
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -384,8 +393,12 @@ public class MailCertificateInstallActivity extends BaseActivity {
         cerOwnerNameText.setText( StringUtils.isBlank( Subject ) ? "未知" : Subject.substring( 3 ) );
         cerIssuerNameText.setText( StringUtils.isBlank( IsUer ) ? "未知" : IsUer.substring( 3 ) );
         cerFinalDataText.setText( StringUtils.isBlank( mailCertificateDetail.getCertificateFinalDate() ) ? "未知" : mailCertificateDetail.getCertificateFinalDate() );
-        encryptionSwitchView.toggleSwitch( mailCertificateDetail.isEncryptedMail() );
-        signatureSwitchView.toggleSwitch( mailCertificateDetail.isSignedMail() );
+         if(encryptionSwitchView.isOpened()!=mailCertificateDetail.isEncryptedMail()){
+            encryptionSwitchView.setOpened(  mailCertificateDetail.isEncryptedMail());
+         }
+         if(signatureSwitchView.isOpened()!=mailCertificateDetail.isSignedMail()){
+            signatureSwitchView.setOpened( mailCertificateDetail.isSignedMail() );
+         }
         if (View.VISIBLE != installedCerLayout.getVisibility()) {
             installedCerLayout.setVisibility( View.VISIBLE );
         }
