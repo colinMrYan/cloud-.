@@ -863,44 +863,6 @@ public class FileUtils {
      * @param mime
      */
     public static void openFile(Context context, String path, String mime) {
-//        try {
-//            File file = new File(path);
-//            Intent intent = new Intent("android.intent.action.VIEW");
-////            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-////            Uri uri = null;
-////            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-////                // "com.inspur.emmcloud.fileprovider"即是在清单文件中配置的authorities
-////                uri = FileProvider.getUriForFile(context, "com.inspur.emmcloud.fileprovider", file);
-////                // 给目标应用一个临时授权
-////                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-////                LogUtils.YfcDebug("111111111111");
-////            } else {
-////                uri = Uri.fromFile(file);
-////                LogUtils.YfcDebug("222222222222222");
-////            }
-//            Uri uri = FileProvider7.getUriForFile(context,file);
-//            LogUtils.YfcDebug("生成的Uri："+uri.toString());
-//            LogUtils.YfcDebug("mime:"+mime);
-////            intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-////            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-//            intent.setDataAndType(Uri.fromFile(file), mime);
-//            List<ResolveInfo> resInfoList = context.getPackageManager()
-//                    .queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
-//            for (ResolveInfo resolveInfo : resInfoList) {
-//                String packageName = resolveInfo.activityInfo.packageName;
-//                LogUtils.YfcDebug("授权的应用名称："+packageName);
-//                context.grantUriPermission(packageName, uri, Intent.FLAG_GRANT_READ_URI_PERMISSION
-//                        | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-//            }
-//            if (context.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY) != null) {
-//                context.startActivity(intent);
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            ToastUtils.show(context, R.string.clouddriver_file_open_fail);
-//        }
-
-
         //可用，但不是最好的方法
 //        Intent intent = new Intent();
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
