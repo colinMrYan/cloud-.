@@ -99,7 +99,11 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
         clearOldMainTabData();
         x.view().inject(this);
         mTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
+        registerNetWorkListenerAccordingSysLevel();
         initTabs();
+    }
+
+    private void registerNetWorkListenerAccordingSysLevel() {
         if(android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.N){
             networkChangeReceiver = new NetworkChangeReceiver();
             registerReceiver(networkChangeReceiver, new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE"));
@@ -111,7 +115,6 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
             connectivityManager.registerNetworkCallback(request, networkCallback);
         }
     }
-
 
     /**
      * 清除旧版本的MainTab数据
@@ -627,5 +630,21 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
             mTabHost.clearAllTabs(); //更新tabbar
             initTabs();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        if(android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.N){
+            if(networkChangeReceiver != null){
+                unregisterReceiver(networkChangeReceiver);
+                networkChangeReceiver = null;
+            }
+        }else{
+            if(connectivityManager != null && networkCallback != null){
+                connectivityManager.unregisterNetworkCallback(networkCallback);
+                networkCallback = null;
+            }
+        }
+        super.onDestroy();
     }
 }
