@@ -32,17 +32,18 @@
             android:id="@+id/text_input_layout_username"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:errorEnabled="true"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
-            android:layout_marginTop="25dp">
+            android:layout_marginTop="35dp">
 
             <com.inspur.emmcloud.widget.ClearEditText
                 android:id="@+id/et_mail"
                 android:layout_width="match_parent"
-                android:layout_height="55dp"
+                android:layout_height="45dp"
                 android:gravity="center_vertical"
                 android:drawableRight="@drawable/app_edittext_clear"
-                android:paddingRight="8dp"
+                android:paddingRight="12dp"
                 android:inputType="textEmailAddress"
                 android:imeOptions="actionNext"
                 android:hint="@string/mail"
@@ -62,11 +63,11 @@
             app:passwordToggleEnabled="true"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
-            android:layout_marginTop="10dp">
+            >
             <EditText
                 android:id="@+id/et_password"
                 android:layout_width="match_parent"
-                android:layout_height="55dp"
+                android:layout_height="45dp"
                 android:imeOptions="actionDone"
                 android:inputType="textPassword"
                 android:hint="@string/password"
