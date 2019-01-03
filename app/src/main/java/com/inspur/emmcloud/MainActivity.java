@@ -19,7 +19,6 @@ import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.service.AppExceptionService;
 import com.inspur.emmcloud.ui.IndexActivity;
-import com.inspur.emmcloud.ui.appcenter.mail.MailLoginActivity;
 import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.ui.mine.setting.GuideActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
@@ -78,11 +77,10 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
             this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
         }
         setContentView(R.layout.activity_main);
-      // getNecessaryPermission();
-        IntentUtils.startActivity(this, MailLoginActivity.class,true);
+        checkNecessaryPermission();
     }
 
-    private void getNecessaryPermission() {
+    private void checkNecessaryPermission() {
         String[] necessaryPermissionArray = StringUtils.concatAll(Permissions.STORAGE,Permissions.CALL_PHONE_PERMISSION);
         PermissionRequestManagerUtils.getInstance().requestRuntimePermission(this, necessaryPermissionArray, new PermissionRequestCallback() {
             @Override
