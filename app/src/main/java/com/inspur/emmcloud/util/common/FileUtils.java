@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.util.common;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -16,6 +17,7 @@ import android.webkit.MimeTypeMap;
 
 import com.inspur.emmcloud.BuildConfig;
 import com.inspur.emmcloud.R;
+import com.inspur.imp.api.ImpActivity;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -844,6 +846,19 @@ public class FileUtils {
      * 打开文件多的方法
      *
      * @param context
+     */
+    public static void openFile(Activity context, File file,boolean isNeedStartForResult) {
+        String mime = FileUtils.getMimeType(file);
+        if (StringUtils.isBlank(mime)) {
+            mime = "text/plain";
+        }
+        openFile(context, file, mime,isNeedStartForResult);
+    }
+
+    /**
+     * 打开文件多的方法
+     *
+     * @param context
      * @param path
      */
     public static void openFile(Context context, String path) {
@@ -852,8 +867,33 @@ public class FileUtils {
         if (StringUtils.isBlank(mime)) {
             mime = "text/plain";
         }
-
         openFile(context, path, mime);
+    }
+
+    /**
+     * 打开文件
+     *
+     * @param context
+     * @param mime
+     */
+    public static void openFile(Activity context, File file, String mime, boolean isNeedStartActivityForResult) {
+        Intent intent =new Intent(Intent.ACTION_VIEW);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        //判断是否是AndroidN以及更高的版本
+        if(Build.VERSION.SDK_INT>= Build.VERSION_CODES.N) {
+            Uri contentUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID+".fileprovider",file);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION|Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+            intent.setDataAndType(contentUri,mime);
+        }else{
+            intent.setDataAndType(Uri.fromFile(file),mime);
+        }
+        if (context.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY) != null) {
+            if(isNeedStartActivityForResult){
+                context.startActivityForResult(intent, ImpActivity.DO_NOTHING_RESULTCODE);
+            }else{
+                context.startActivity(intent);
+            }
+        }
     }
 
     /**

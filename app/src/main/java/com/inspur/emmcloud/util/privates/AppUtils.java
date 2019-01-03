@@ -481,27 +481,27 @@ public class AppUtils {
         return installed;
     }
 
-    /**
-     * 打开APK文件（安装APK应用）
-     *
-     * @param context
-     * @param file
-     */
-    public static void openAPKFile(Activity context, File file) {
-        Intent intent =new Intent(Intent.ACTION_VIEW);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        //判断是否是AndroidN以及更高的版本
-        if(Build.VERSION.SDK_INT>= Build.VERSION_CODES.N) {
-            Uri contentUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID+".fileprovider",file);
-            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION|Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-            intent.setDataAndType(contentUri, FileUtils.getMimeType(file));
-        }else{
-            intent.setDataAndType(Uri.fromFile(file),FileUtils.getMimeType(file));
-        }
-        if (context.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY) != null) {
-            context.startActivityForResult(intent, ImpActivity.DO_NOTHING_RESULTCODE);
-        }
-    }
+//    /**
+//     * 打开APK文件（安装APK应用）
+//     *
+//     * @param context
+//     * @param file
+//     */
+//    public static void openAPKFile(Activity context, File file) {
+//        Intent intent =new Intent(Intent.ACTION_VIEW);
+//        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        //判断是否是AndroidN以及更高的版本
+//        if(Build.VERSION.SDK_INT>= Build.VERSION_CODES.N) {
+//            Uri contentUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID+".fileprovider",file);
+//            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION|Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+//            intent.setDataAndType(contentUri, FileUtils.getMimeType(file));
+//        }else{
+//            intent.setDataAndType(Uri.fromFile(file),FileUtils.getMimeType(file));
+//        }
+//        if (context.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY) != null) {
+//            context.startActivityForResult(intent, ImpActivity.DO_NOTHING_RESULTCODE);
+//        }
+//    }
 
     /**
      * 获取手机dpi的方法 返回整型值
@@ -1112,31 +1112,31 @@ public class AppUtils {
         return false;
     }
 
-    /**
-     * 安装apk
-     * @param context
-     * @param apkFilePath
-     */
-    public static void installApk(Context context,String apkFilePath,String apkFileName){
-        File apkFile = new File(apkFilePath, apkFileName);
-        if (!apkFile.exists()) {
-            ToastUtils.show(context, R.string.update_fail);
-            return;
-        }
-        Intent intent =new Intent(Intent.ACTION_VIEW);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        //判断是否是AndroidN以及更高的版本
-        if(Build.VERSION.SDK_INT>= Build.VERSION_CODES.N) {
-            Uri contentUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID+".fileprovider",apkFile);
-            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION|Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-            intent.setDataAndType(contentUri, FileUtils.getMimeType(apkFile));
-        }else{
-            intent.setDataAndType(Uri.fromFile(apkFile),FileUtils.getMimeType(apkFile));
-        }
-        if (context.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY) != null) {
-            context.startActivity(intent);
-        }
-    }
+//    /**
+//     * 安装apk
+//     * @param context
+//     * @param apkFilePath
+//     */
+//    public static void installApk(Context context,String apkFilePath,String apkFileName){
+//        File apkFile = new File(apkFilePath, apkFileName);
+//        if (!apkFile.exists()) {
+//            ToastUtils.show(context, R.string.update_fail);
+//            return;
+//        }
+//        Intent intent =new Intent(Intent.ACTION_VIEW);
+//        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        //判断是否是AndroidN以及更高的版本
+//        if(Build.VERSION.SDK_INT>= Build.VERSION_CODES.N) {
+//            Uri contentUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID+".fileprovider",apkFile);
+//            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION|Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+//            intent.setDataAndType(contentUri, FileUtils.getMimeType(apkFile));
+//        }else{
+//            intent.setDataAndType(Uri.fromFile(apkFile),FileUtils.getMimeType(apkFile));
+//        }
+//        if (context.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY) != null) {
+//            context.startActivity(intent);
+//        }
+//    }
 
     /**
      * 获取kb或者mb格式的数字
