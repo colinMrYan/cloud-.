@@ -14,6 +14,6 @@ import com.inspur.emmcloud.util.privates.NetWorkStateChangeUtils;
 public class NetworkChangeReceiver extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		new NetWorkStateChangeUtils().netWorkStateChange(context);
+		NetWorkStateChangeUtils.getInstance().netWorkStateChange();
 	}
 }

@@ -23,8 +23,26 @@ public class NetWorkStateChangeUtils {
     public static final String NET_GPRS_STATE_OK = "net_gprs_state_ok";
     public static final String NET_WIFI_STATE_OK = "net_wifi_state_ok";
     public static final String NET_STATE_ERROR = "net_state_error";
-    public void netWorkStateChange(Context context){
+    private static NetWorkStateChangeUtils netWorkStateChangeUtils;
+
+    private NetWorkStateChangeUtils(){
+
+    }
+
+    public static NetWorkStateChangeUtils getInstance(){
+        if(netWorkStateChangeUtils == null){
+            synchronized (NetWorkStateChangeUtils.class){
+                if(netWorkStateChangeUtils == null){
+                    netWorkStateChangeUtils = new NetWorkStateChangeUtils();
+                }
+            }
+        }
+        return netWorkStateChangeUtils;
+    }
+
+    public void netWorkStateChange(){
         try {
+            Context context = MyApplication.getInstance();
             ConnectivityManager conMan = (ConnectivityManager) context
                     .getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo.State mobile = conMan.getNetworkInfo(

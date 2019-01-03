@@ -24,14 +24,14 @@ public class NetworkCallbackImpl extends ConnectivityManager.NetworkCallback {
     @Override
     public void onUnavailable() {
         super.onUnavailable();
-        new NetWorkStateChangeUtils().netWorkStateChange(context);
+        NetWorkStateChangeUtils.getInstance().netWorkStateChange();
     }
 
     //网络可用
     @Override
     public void onAvailable(Network network) {
         super.onAvailable(network);
-        new NetWorkStateChangeUtils().netWorkStateChange(context);
+        NetWorkStateChangeUtils.getInstance().netWorkStateChange();
     }
 
     //网络即将断开时调用 maxMsToLive 应用将尝试保持网络连接的时间，此时网络随时可能断开
@@ -44,20 +44,20 @@ public class NetworkCallbackImpl extends ConnectivityManager.NetworkCallback {
     @Override
     public void onLost(Network network) {
         super.onLost(network);
-        new NetWorkStateChangeUtils().netWorkStateChange(context);
+        NetWorkStateChangeUtils.getInstance().netWorkStateChange();
     }
 
     //网络发生了改变，但仍然可用 NetWorkCapabilities 这个网络的新功能
     @Override
     public void onCapabilitiesChanged(Network network, NetworkCapabilities networkCapabilities) {
         super.onCapabilitiesChanged(network, networkCapabilities);
-        new NetWorkStateChangeUtils().netWorkStateChange(context);
+        NetWorkStateChangeUtils.getInstance().netWorkStateChange();
     }
 
     //网络属性发生了改变
     @Override
     public void onLinkPropertiesChanged(Network network, LinkProperties linkProperties) {
         super.onLinkPropertiesChanged(network, linkProperties);
-        new NetWorkStateChangeUtils().netWorkStateChange(context);
+        NetWorkStateChangeUtils.getInstance().netWorkStateChange();
     }
 }
