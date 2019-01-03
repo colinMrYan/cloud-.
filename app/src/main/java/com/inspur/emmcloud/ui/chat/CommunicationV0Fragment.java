@@ -440,7 +440,7 @@ public class CommunicationV0Fragment extends Fragment {
 //                intent.setClass(getActivity(), PreviewDecodeActivity.class);
 //                intent.putExtra("from", "CommunicationFragment");
 //                startActivityForResult(intent, SCAN_LOGIN_QRCODE_RESULT);
-                AppUtils.openScanCode(getActivity(),SCAN_LOGIN_QRCODE_RESULT);
+                AppUtils.openScanCode(CommunicationV0Fragment.this,SCAN_LOGIN_QRCODE_RESULT);
                 popupWindow.dismiss();
             }
         });

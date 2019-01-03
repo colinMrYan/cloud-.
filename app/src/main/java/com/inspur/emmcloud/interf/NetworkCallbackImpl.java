@@ -51,11 +51,13 @@ public class NetworkCallbackImpl extends ConnectivityManager.NetworkCallback {
     @Override
     public void onCapabilitiesChanged(Network network, NetworkCapabilities networkCapabilities) {
         super.onCapabilitiesChanged(network, networkCapabilities);
+        new NetWorkStateChangeUtils().netWorkStateChange(context);
     }
 
     //网络属性发生了改变
     @Override
     public void onLinkPropertiesChanged(Network network, LinkProperties linkProperties) {
         super.onLinkPropertiesChanged(network, linkProperties);
+        new NetWorkStateChangeUtils().netWorkStateChange(context);
     }
 }

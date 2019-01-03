@@ -6,12 +6,15 @@ import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.webkit.MimeTypeMap;
 
+import com.inspur.emmcloud.BuildConfig;
 import com.inspur.emmcloud.R;
 
 import java.io.BufferedOutputStream;
@@ -860,17 +863,74 @@ public class FileUtils {
      * @param mime
      */
     public static void openFile(Context context, String path, String mime) {
-        try {
-            File file = new File(path);
-            Intent intent = new Intent("android.intent.action.VIEW");
+//        try {
+//            File file = new File(path);
+//            Intent intent = new Intent("android.intent.action.VIEW");
+////            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+////            Uri uri = null;
+////            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+////                // "com.inspur.emmcloud.fileprovider"即是在清单文件中配置的authorities
+////                uri = FileProvider.getUriForFile(context, "com.inspur.emmcloud.fileprovider", file);
+////                // 给目标应用一个临时授权
+////                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+////                LogUtils.YfcDebug("111111111111");
+////            } else {
+////                uri = Uri.fromFile(file);
+////                LogUtils.YfcDebug("222222222222222");
+////            }
+//            Uri uri = FileProvider7.getUriForFile(context,file);
+//            LogUtils.YfcDebug("生成的Uri："+uri.toString());
+//            LogUtils.YfcDebug("mime:"+mime);
+////            intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+////            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+//            intent.setDataAndType(Uri.fromFile(file), mime);
+//            List<ResolveInfo> resInfoList = context.getPackageManager()
+//                    .queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
+//            for (ResolveInfo resolveInfo : resInfoList) {
+//                String packageName = resolveInfo.activityInfo.packageName;
+//                LogUtils.YfcDebug("授权的应用名称："+packageName);
+//                context.grantUriPermission(packageName, uri, Intent.FLAG_GRANT_READ_URI_PERMISSION
+//                        | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+//            }
+//            if (context.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY) != null) {
+//                context.startActivity(intent);
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            ToastUtils.show(context, R.string.clouddriver_file_open_fail);
+//        }
+
+
+        //可用，但不是最好的方法
+//        Intent intent = new Intent();
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+//            StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+//            StrictMode.setVmPolicy(builder.build());
+//        }
+//        File file = new File(path);
+//        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);//设置标记
+//        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+//        intent.setAction(Intent.ACTION_VIEW);//动作，查看
+//        intent.setDataAndType(Uri.fromFile(file), mime);//设置类型
+//        if (context.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY) != null) {
+//            context.startActivity(intent);
+//        }
+
+
+        File file = new File(path);
+        Intent intent =new Intent(Intent.ACTION_VIEW);
+        //判断是否是AndroidN以及更高的版本
+        if(Build.VERSION.SDK_INT>= Build.VERSION_CODES.N) {
+            Uri contentUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID+".fileprovider",file);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.setDataAndType(Uri.fromFile(file), mime);
-            if (context.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY) != null) {
-                context.startActivity(intent);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            ToastUtils.show(context, R.string.clouddriver_file_open_fail);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION|Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+            intent.setDataAndType(contentUri,mime);
+        }else{
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.setDataAndType(Uri.fromFile(file),mime);
+        }
+        if (context.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY) != null) {
+            context.startActivity(intent);
         }
     }
 

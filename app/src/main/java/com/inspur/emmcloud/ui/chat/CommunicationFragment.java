@@ -391,7 +391,8 @@ public class CommunicationFragment extends Fragment {
 //                    scanIntent.setClass(getActivity(), PreviewDecodeActivity.class);
 //                    scanIntent.putExtra("from", "CommunicationFragment");
 //                    startActivityForResult(scanIntent, REQUEST_SCAN_LOGIN_QRCODE_RESULT);
-                    AppUtils.openScanCode(getActivity(),REQUEST_SCAN_LOGIN_QRCODE_RESULT);
+//                    AppUtils.openScanCode(getActivity(),REQUEST_SCAN_LOGIN_QRCODE_RESULT);
+                    AppUtils.openScanCode(CommunicationFragment.this,REQUEST_SCAN_LOGIN_QRCODE_RESULT);
                     popupWindow.dismiss();
                     break;
                 default:
