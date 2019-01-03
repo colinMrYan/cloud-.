@@ -2,26 +2,19 @@ package com.inspur.emmcloud.util.privates;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.content.FileProvider;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.inspur.emmcloud.BuildConfig;
 import com.inspur.emmcloud.MainActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.bean.system.GetUpgradeResult;
-import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -102,12 +95,12 @@ public class UpgradeUtils extends APIInterfaceInstance {
                                 + setFormat(totalSize);
                         ratioText.setText(text);
                         break;
-
                     case DOWNLOAD_FINISH:
                         if (mDownloadDialog != null && mDownloadDialog.isShowing()) {
                             mDownloadDialog.dismiss();
                         }
-                        installApk();
+                        AppUtils.installApk(context,DOWNLOAD_PATH, "update.apk");
+//                        installApk();
                         if (context instanceof MainActivity) {
                             ((Activity) context).finish();
                         }
@@ -363,26 +356,25 @@ public class UpgradeUtils extends APIInterfaceInstance {
 
     }
 
-    /**
-     * 安装APK文件
-     */
-    public void installApk() {
-        File file = new File(DOWNLOAD_PATH, "update.apk");
-        Intent intent =new Intent(Intent.ACTION_VIEW);
-        //判断是否是AndroidN以及更高的版本
-        if(Build.VERSION.SDK_INT>= Build.VERSION_CODES.N) {
-            Uri contentUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID+".fileprovider",file);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION|Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-            intent.setDataAndType(contentUri, FileUtils.getMimeType(file));
-        }else{
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.setDataAndType(Uri.fromFile(file),FileUtils.getMimeType(file));
-        }
-        if (context.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY) != null) {
-            context.startActivity(intent);
-        }
-    }
+//    /**
+//     * 安装APK文件
+//     */
+//    public void installApk() {
+//        File file = new File(DOWNLOAD_PATH, "update.apk");
+//        Intent intent =new Intent(Intent.ACTION_VIEW);
+//        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        //判断是否是AndroidN以及更高的版本
+//        if(Build.VERSION.SDK_INT>= Build.VERSION_CODES.N) {
+//            Uri contentUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID+".fileprovider",file);
+//            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION|Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+//            intent.setDataAndType(contentUri, FileUtils.getMimeType(file));
+//        }else{
+//            intent.setDataAndType(Uri.fromFile(file),FileUtils.getMimeType(file));
+//        }
+//        if (context.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY) != null) {
+//            context.startActivity(intent);
+//        }
+//    }
 
     /**
      * 获取百分率
