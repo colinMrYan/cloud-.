@@ -49,7 +49,7 @@ public class EncryptUtils {
      * @throws Exception
      */
     public static String encode(String stringToEncode, String keyString, String offset,int base64Flag) throws Exception {
-        if (keyString.length() == 0 || keyString == null) {
+        if ( keyString == null || keyString.length() == 0) {
             throw new NullPointerException("Please give Password");
         }
 
@@ -113,7 +113,7 @@ public class EncryptUtils {
     public static String decode(String text, String keyString,String offset,int base64Flag) throws NullPointerException {
 
 
-        if (text.length() == 0 || text == null) {
+        if ( text == null || text.length() == 0 ) {
             throw new NullPointerException("Please give text");
         }
 
@@ -159,6 +159,51 @@ public class EncryptUtils {
             e.printStackTrace();
         }
         return "";
+    }
+
+
+    public static byte[] decode(byte[] encrypedPwdBytes,String keyString,String offset) throws NullPointerException {
+        if ( encrypedPwdBytes == null || encrypedPwdBytes.length == 0 ) {
+            throw new NullPointerException("Please give text");
+        }
+
+        try {
+            SecretKey key = getKey(keyString);
+
+            // IMPORTANT TO GET SAME RESULTS ON iOS and ANDROID
+            IvParameterSpec ivParameterSpec = null;
+            if (StringUtils.isBlank(offset)) {
+                byte[] iv = new byte[16];
+                Arrays.fill(iv, (byte) 0x00);
+                ivParameterSpec = new IvParameterSpec(iv);
+            } else {
+                // IMPORTANT TO GET SAME RESULTS ON iOS and ANDROID
+                byte[] iv = offset.getBytes();
+                ivParameterSpec = new IvParameterSpec(iv);
+
+            }
+            // cipher is not thread safe
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS7Padding");
+            cipher.init(Cipher.DECRYPT_MODE, key, ivParameterSpec);
+            byte[] decrypedValueBytes = (cipher.doFinal(encrypedPwdBytes));
+            return decrypedValueBytes;
+
+        } catch (InvalidKeyException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (BadPaddingException e) {
+            e.printStackTrace();
+        } catch (NoSuchPaddingException e) {
+            e.printStackTrace();
+        } catch (IllegalBlockSizeException e) {
+            e.printStackTrace();
+        } catch (InvalidAlgorithmParameterException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     /**

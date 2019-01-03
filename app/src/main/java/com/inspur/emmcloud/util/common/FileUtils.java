@@ -852,6 +852,7 @@ public class FileUtils {
         if (StringUtils.isBlank(mime)) {
             mime = "text/plain";
         }
+
         openFile(context, path, mime);
     }
 
@@ -1210,11 +1211,38 @@ public class FileUtils {
     }
 
     public static String encodeBase64File(String filePath) throws Exception {
-        File file= new File(filePath);
+        File file = new File(filePath);
         FileInputStream inputFile = new FileInputStream(file);
         byte[] buffer = new byte[(int) file.length()];
         inputFile.read(buffer);
         inputFile.close();
         return Base64.encodeToString(buffer, Base64.NO_WRAP);
     }
+
+
+    /**
+     * 获得指定文件的byte数组
+     */
+    public static byte[] file2Bytes(String filePath) {
+        byte[] buffer = null;
+        try {
+            File file = new File(filePath);
+            FileInputStream fis = new FileInputStream(file);
+            ByteArrayOutputStream bos = new ByteArrayOutputStream(1000);
+            byte[] b = new byte[1000];
+            int n;
+            while ((n = fis.read(b)) != -1) {
+                bos.write(b, 0, n);
+            }
+            fis.close();
+            bos.close();
+            buffer = bos.toByteArray();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return buffer;
+    }
+
 }

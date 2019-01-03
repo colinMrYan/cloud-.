@@ -1,13 +1,13 @@
 package com.inspur.emmcloud.ui.appcenter.mail;
 
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
-import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
+import android.widget.EditText;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
@@ -22,7 +22,6 @@ import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.widget.ClearEditText;
@@ -40,11 +39,13 @@ public class MailLoginActivity extends BaseActivity {
     @ViewInject(R.id.et_mail)
     private ClearEditText mailEdit;
     @ViewInject(R.id.et_password)
-    private ClearEditText passwordEdit;
+    private EditText passwordEdit;
     @ViewInject(R.id.bt_login)
     private Button loginBtn;
-    @ViewInject(R.id.iv_password_visible)
-    private ImageView passwordVisibleImg;
+    @ViewInject(R.id.text_input_layout_username)
+    private TextInputLayout usernameTextInputLayout;
+    @ViewInject(R.id.text_input_layout_password)
+    private TextInputLayout passwordTextInputLayout;
     private LoadingDialog loadingDlg;
     private MailApiService apiService;
 
@@ -69,21 +70,8 @@ public class MailLoginActivity extends BaseActivity {
             case R.id.bt_login:
                 String mail = mailEdit.getText().toString();
                 String password= passwordEdit.getText().toString();
-                if (!FomatUtils.isValiadEmail(mail)){
-                    ToastUtils.show(this, R.string.webex_input_correct_invitee_emails);
-                    return;
-                }
+
                 login(mail, password);
-                break;
-            case R.id.iv_password_visible:
-                if (passwordEdit.getTransformationMethod() instanceof HideReturnsTransformationMethod) {
-                    passwordEdit.setTransformationMethod(PasswordTransformationMethod.getInstance());
-                    passwordVisibleImg.setImageResource(R.drawable.icon_no_see_pw);
-                } else {
-                    passwordEdit.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
-                    passwordVisibleImg.setImageResource(R.drawable.icon_see_pw);
-                }
-                passwordEdit.setSelection(passwordEdit.getText().toString().length());
                 break;
             case R.id.ibt_back:
                 finish();
@@ -121,7 +109,12 @@ public class MailLoginActivity extends BaseActivity {
         public void afterTextChanged(Editable s) {
             String mail = mailEdit.getText().toString();
             String password= passwordEdit.getText().toString();
-            boolean isInputComplete = password.length() >= 6 && !StringUtils.isBlank(mail);
+            if (!StringUtils.isBlank(mail) && !FomatUtils.isValiadEmail(mail)){
+                usernameTextInputLayout.setError(getString(R.string.webex_input_correct_invitee_emails));
+            }else {
+                usernameTextInputLayout.setError("");
+            }
+            boolean isInputComplete = password.length() >= 6 && !StringUtils.isBlank(mail) && FomatUtils.isValiadEmail(mail);
             loginBtn.setEnabled(isInputComplete);
             loginBtn.setBackgroundResource(isInputComplete ? R.drawable.selector_login_btn : R.drawable.bg_login_btn_unable);
         }

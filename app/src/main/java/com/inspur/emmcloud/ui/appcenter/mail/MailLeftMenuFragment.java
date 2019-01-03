@@ -37,7 +37,7 @@ public class MailLeftMenuFragment extends Fragment {
     private MailApiService apiService;
     private AndroidTreeView treeView;
     private RelativeLayout containerLayout;
-    private TextView mailCountText;
+    private TextView mailAcountText;
     private boolean hasOpenFirstMailFolder = false;
 
     @Override
@@ -50,9 +50,9 @@ public class MailLeftMenuFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.mail_left_menu,null);
         loadingDialog = new LoadingDialog(getActivity());
-        containerLayout = (RelativeLayout) view.findViewById(R.id.rl_container);
-        mailCountText=(TextView)view.findViewById(R.id.tv_mail_count);
-        mailCountText.setText(ContactUserCacheUtils.getUserMail(MyApplication.getInstance().getUid()));
+        containerLayout = view.findViewById(R.id.rl_container);
+        mailAcountText =view.findViewById(R.id.tv_mail_acount);
+        mailAcountText.setText(ContactUserCacheUtils.getUserMail(MyApplication.getInstance().getUid()));
         addTreeView();
         getMailFolder();
         return view;

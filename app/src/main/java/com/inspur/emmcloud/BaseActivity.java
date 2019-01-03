@@ -8,7 +8,6 @@ import android.os.Bundle;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.SchemeHandleActivity;
 import com.inspur.emmcloud.ui.appcenter.ReactNativeAppActivity;
-import com.inspur.emmcloud.ui.appcenter.mail.MailLoginActivity;
 import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.ui.login.ScanQrCodeLoginGSActivity;
 import com.inspur.emmcloud.ui.mine.setting.FaceVerifyActivity;
@@ -34,7 +33,6 @@ public class BaseActivity extends Activity {
             ScanQrCodeLoginGSActivity.class.getName(),
             IMGEditActivity.class.getName(),
             ImageGalleryActivity.class.getName(),
-            MailLoginActivity.class.getName()
     };
 
     @Override
