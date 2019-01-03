@@ -15,6 +15,7 @@ import com.inspur.emmcloud.bean.appcenter.App;
 import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.EncryptUtils;
+import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
@@ -180,7 +181,7 @@ public class AppCenterNativeAppUtils {
 					if (loadingDlg != null && loadingDlg.isShowing()) {
 						loadingDlg.dismiss();
 					}
-					AppUtils.openAPKFile(context, file);
+					FileUtils.openFile(context,file,true);
 				}
 
 				@Override

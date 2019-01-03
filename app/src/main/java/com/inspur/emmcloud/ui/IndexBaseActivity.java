@@ -1,7 +1,12 @@
 package com.inspur.emmcloud.ui;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Configuration;
+import android.net.ConnectivityManager;
+import android.net.NetworkRequest;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.KeyEvent;
@@ -29,7 +34,9 @@ import com.inspur.emmcloud.bean.system.MainTabTitleResult;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.bean.system.badge.BadgeBodyModel;
+import com.inspur.emmcloud.broadcastreceiver.NetworkChangeReceiver;
 import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.interf.NetworkCallbackImpl;
 import com.inspur.emmcloud.ui.appcenter.MyAppFragment;
 import com.inspur.emmcloud.ui.chat.CommunicationFragment;
 import com.inspur.emmcloud.ui.chat.CommunicationV0Fragment;
@@ -82,6 +89,9 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
     private boolean isCommunicationRunning = false;
     private boolean isSystemChangeTag = true;//控制如果是系统切换的tab则不计入用户行为
     private String tabId = "";
+    protected NetworkChangeReceiver networkChangeReceiver;
+    protected ConnectivityManager.NetworkCallback networkCallback;
+    protected ConnectivityManager connectivityManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -89,9 +99,22 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
         clearOldMainTabData();
         x.view().inject(this);
         mTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
+        registerNetWorkListenerAccordingSysLevel();
         initTabs();
     }
 
+    private void registerNetWorkListenerAccordingSysLevel() {
+        if(android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.N){
+            networkChangeReceiver = new NetworkChangeReceiver();
+            registerReceiver(networkChangeReceiver, new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE"));
+        }else{
+            networkCallback = new NetworkCallbackImpl(this);
+            NetworkRequest.Builder builder = new NetworkRequest.Builder();
+            NetworkRequest request = builder.build();
+            connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+            connectivityManager.registerNetworkCallback(request, networkCallback);
+        }
+    }
 
     /**
      * 清除旧版本的MainTab数据
@@ -607,5 +630,21 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
             mTabHost.clearAllTabs(); //更新tabbar
             initTabs();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        if(android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.N){
+            if(networkChangeReceiver != null){
+                unregisterReceiver(networkChangeReceiver);
+                networkChangeReceiver = null;
+            }
+        }else{
+            if(connectivityManager != null && networkCallback != null){
+                connectivityManager.unregisterNetworkCallback(networkCallback);
+                networkCallback = null;
+            }
+        }
+        super.onDestroy();
     }
 }

@@ -2,9 +2,6 @@ package com.inspur.emmcloud.util.privates;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
@@ -18,6 +15,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.bean.system.GetUpgradeResult;
+import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -98,12 +96,12 @@ public class UpgradeUtils extends APIInterfaceInstance {
                                 + setFormat(totalSize);
                         ratioText.setText(text);
                         break;
-
                     case DOWNLOAD_FINISH:
                         if (mDownloadDialog != null && mDownloadDialog.isShowing()) {
                             mDownloadDialog.dismiss();
                         }
-                        installApk();
+//                        AppUtils.installApk(context,DOWNLOAD_PATH, "update.apk");
+                        FileUtils.openFile(context,DOWNLOAD_PATH + "update.apk");
                         if (context instanceof MainActivity) {
                             ((Activity) context).finish();
                         }
@@ -359,25 +357,6 @@ public class UpgradeUtils extends APIInterfaceInstance {
 
     }
 
-    /**
-     * 安装APK文件
-     */
-    public void installApk() {
-        File apkfile = new File(DOWNLOAD_PATH, "update.apk");
-        if (!apkfile.exists()) {
-            ToastUtils.show(context, R.string.update_fail);
-            return;
-        }
-        // 通过Intent安装APK文件
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        // 更新后启动
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.setDataAndType(Uri.parse("file://" + apkfile.toString()),
-                "application/vnd.android.package-archive");
-        if (context.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY) != null) {
-            context.startActivity(intent);
-        }
-    }
 
     /**
      * 获取百分率
