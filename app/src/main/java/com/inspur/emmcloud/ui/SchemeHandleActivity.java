@@ -13,6 +13,7 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import com.inspur.emmcloud.BaseActivity;
+import com.inspur.emmcloud.MainActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
@@ -46,6 +47,8 @@ import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
+import com.inspur.emmcloud.util.common.systool.permission.Permissions;
 import com.inspur.emmcloud.util.privates.AppId2AppAndOpenAppUtils;
 import com.inspur.emmcloud.util.privates.GetPathFromUri4kitkat;
 import com.inspur.emmcloud.util.privates.ProfileUtils;
@@ -74,6 +77,9 @@ public class SchemeHandleActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);//没有标题
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
+        if(isLackNecessaryPermission()){
+            return;
+        }
         new ProfileUtils(SchemeHandleActivity.this, new CommonCallBack() {
             @Override
             public void execute() {
@@ -96,11 +102,27 @@ public class SchemeHandleActivity extends BaseActivity {
         }).initProfile();
     }
 
+    private boolean isLackNecessaryPermission() {
+        //如果没有存储权限则跳转到MainActivity进行处理
+        String[] necessaryPermissionArray = StringUtils.concatAll(Permissions.STORAGE,Permissions.CALL_PHONE_PERMISSION);
+        if(!PermissionRequestManagerUtils.getInstance().isHasPermission(MyApplication.getInstance(), necessaryPermissionArray)){
+                Intent intent = new Intent(SchemeHandleActivity.this,MainActivity.class);
+                startActivity(intent);
+                MyApplication.getInstance().closeOtherActivity(MainActivity.class.getSimpleName());
+                return true;
+        }
+        return  false;
+    }
+
+
     @Override
     protected void onNewIntent(Intent intent) {
         // TODO Auto-generated method stub
         super.onNewIntent(intent);
         setIntent(intent);
+        if(isLackNecessaryPermission()){
+            return;
+        }
         new ProfileUtils(SchemeHandleActivity.this, new CommonCallBack() {
             @Override
             public void execute() {
