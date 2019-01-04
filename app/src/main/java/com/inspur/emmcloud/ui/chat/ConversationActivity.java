@@ -426,10 +426,18 @@ public class ConversationActivity extends ConversationBaseActivity {
                 return;
             }
             uiMessage.setSendStatus(Message.MESSAGE_SEND_ING);
-            setMessageSendStatus(message, Message.MESSAGE_SEND_ING);
+            setMessageSendStatusAndSendTime(message, Message.MESSAGE_SEND_ING);
             int position = uiMessageList.indexOf(uiMessage);
-            adapter.setMessageList(uiMessageList);
-            adapter.notifyItemChanged(position);
+            if (position != uiMessageList.size() - 1) {
+                uiMessageList.remove(position);
+                uiMessageList.add(uiMessage);
+                adapter.setMessageList(uiMessageList);
+                adapter.notifyDataSetChanged();
+                msgListView.MoveToPosition(uiMessageList.size() - 1);
+            } else {
+                adapter.setMessageList(uiMessageList);
+                adapter.notifyItemChanged(uiMessageList.size() - 1);
+            }
             switch (messageType) {
                 case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
                     if (message.getMsgContentAttachmentFile().getMedia().equals(message.getLocalPath())) {
@@ -495,6 +503,7 @@ public class ConversationActivity extends ConversationBaseActivity {
     }
 
     private void sendVoiceMessage(Message message) {
+        message.setCreationDate(System.currentTimeMillis());
         if (message.getMsgContentMediaVoice().getMedia().equals(message.getLocalPath())) {
             sendMessageWithFile(message);
         } else {
@@ -971,7 +980,7 @@ public class ConversationActivity extends ConversationBaseActivity {
         }
         message.setRead(Message.MESSAGE_READ);
         UIMessage UIMessage = new UIMessage(message);
-        setMessageSendStatus(message, status);
+        setMessageSendStatusAndSendTime(message, status);
         //本地添加的消息设置为正在发送状态
         UIMessage.setSendStatus(status);
         uiMessageList.add(UIMessage);
@@ -988,10 +997,11 @@ public class ConversationActivity extends ConversationBaseActivity {
      * @param status
      * @return
      */
-    private void setMessageSendStatus(Message message, int status) {
+    private void setMessageSendStatusAndSendTime(Message message, int status) {
         //发送中，无网,发送消息失败
         message.setSendStatus(status);
         message.setRead(Message.MESSAGE_READ);
+        message.setCreationDate(System.currentTimeMillis());
         MessageCacheUtil.saveMessage(ConversationActivity.this, message);
         notifyCommucationFragmentMessageSendStatus();
     }
@@ -1014,7 +1024,7 @@ public class ConversationActivity extends ConversationBaseActivity {
         int index = uiMessageList.indexOf(fakeUIMessage);
         if (index != -1) {
             uiMessageList.get(index).setSendStatus(Message.MESSAGE_SEND_FAIL);
-            setMessageSendStatus(uiMessageList.get(index).getMessage(), Message.MESSAGE_SEND_FAIL);
+            setMessageSendStatusAndSendTime(uiMessageList.get(index).getMessage(), Message.MESSAGE_SEND_FAIL);
             adapter.setMessageList(uiMessageList);
             adapter.notifyItemChanged(index);
         }
@@ -1131,14 +1141,15 @@ public class ConversationActivity extends ConversationBaseActivity {
                         }
 
                     }
-                    Long creationDate = 0L;
-                    Message message = MessageCacheUtil.getMessageByMid(MyApplication.getInstance(), receivedWSMessage.getId());
-                    if (message != null) {
-                        creationDate = message.getCreationDate();
-                    } else {
-                        creationDate = MessageCacheUtil.getMessageByMid(MyApplication.getInstance(), receivedWSMessage.getTmpId()).getCreationDate();
-                    }
-                    receivedWSMessage.setCreationDate(creationDate);
+                    //去除以本地时间为发送时间的代码
+//                    Long creationDate = 0L;
+//                    Message message = MessageCacheUtil.getMessageByMid(MyApplication.getInstance(), receivedWSMessage.getId());
+//                    if (message != null) {
+//                        creationDate = message.getCreationDate();
+//                    } else {
+//                        creationDate = MessageCacheUtil.getMessageByMid(MyApplication.getInstance(), receivedWSMessage.getTmpId()).getCreationDate();
+//                    }
+//                    receivedWSMessage.setCreationDate(creationDate);
                     if (index == -1) {
                         uiMessageList.add(new UIMessage(receivedWSMessage));
                         adapter.setMessageList(uiMessageList);
