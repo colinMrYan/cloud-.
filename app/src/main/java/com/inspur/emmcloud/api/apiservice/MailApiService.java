@@ -10,7 +10,6 @@ import com.inspur.emmcloud.api.CloudHttpMethod;
 import com.inspur.emmcloud.api.HttpUtils;
 import com.inspur.emmcloud.bean.appcenter.mail.GetMailFolderResult;
 import com.inspur.emmcloud.bean.appcenter.mail.GetMailListResult;
-import com.inspur.emmcloud.bean.appcenter.mail.Mail;
 import com.inspur.emmcloud.interf.OauthCallBack;
 import com.inspur.emmcloud.util.privates.OauthUtils;
 
@@ -111,8 +110,8 @@ public class MailApiService {
     }
 
 
-    public void getMailDetail(final String mailId){
-        String completeUrl = APIUri.getMailDetailUrl();
+    public void getMailDetail(final String mailId,final boolean isEncrypted){
+        String completeUrl = APIUri.getMailDetailUrl(isEncrypted);
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
         params.addQueryStringParameter("mailId",mailId);
         HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
@@ -122,7 +121,7 @@ public class MailApiService {
                 OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        getMailDetail(mailId);
+                        getMailDetail(mailId,isEncrypted);
                     }
 
                     @Override
@@ -137,7 +136,7 @@ public class MailApiService {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
-                apiInterface.returnMailDetailSuccess(new Mail(new String(arg0)));
+                apiInterface.returnMailDetailSuccess(arg0);
             }
 
             @Override

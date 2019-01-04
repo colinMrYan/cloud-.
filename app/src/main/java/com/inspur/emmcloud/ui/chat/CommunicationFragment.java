@@ -45,7 +45,6 @@ import com.inspur.emmcloud.bean.system.MainTabProperty;
 import com.inspur.emmcloud.bean.system.MainTabResult;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
-import com.inspur.emmcloud.broadcastreceiver.NetworkChangeReceiver;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.push.WebSocketPush;
@@ -62,6 +61,7 @@ import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 import com.inspur.emmcloud.util.privates.ConversationGroupIconUtils;
 import com.inspur.emmcloud.util.privates.DownLoaderUtils;
+import com.inspur.emmcloud.util.privates.NetWorkStateChangeUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.ScanQrCodeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
@@ -301,11 +301,11 @@ public class CommunicationFragment extends Fragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void netWorkStateTip(SimpleEventMessage netState) {
         if(netState.getAction().equals(Constant.EVENTBUS_TAG__NET_STATE_CHANGE)){
-            if(((String)netState.getMessageObj()).equals(NetworkChangeReceiver.NET_WIFI_STATE_OK)){
+            if(((String)netState.getMessageObj()).equals(NetWorkStateChangeUtils.NET_WIFI_STATE_OK)){
                 NetUtils.PingThreadStart(NetUtils.pingUrls,5,Constant.EVENTBUS_TAG__NET_EXCEPTION_HINT);
-            } else if(((String)netState.getMessageObj()).equals(NetworkChangeReceiver.NET_STATE_ERROR)) {
+            } else if(((String)netState.getMessageObj()).equals(NetWorkStateChangeUtils.NET_STATE_ERROR)) {
                 conversationAdapter.setNetExceptionView(false);
-            } else if (((String)netState.getMessageObj()).equals(NetworkChangeReceiver.NET_GPRS_STATE_OK)) {
+            } else if (((String)netState.getMessageObj()).equals(NetWorkStateChangeUtils.NET_GPRS_STATE_OK)) {
                 conversationAdapter.setNetExceptionView(true);
             }
         } else if (netState.getAction().equals(Constant.EVENTBUS_TAG__NET_EXCEPTION_HINT)) {   //网络异常提示
@@ -391,7 +391,8 @@ public class CommunicationFragment extends Fragment {
 //                    scanIntent.setClass(getActivity(), PreviewDecodeActivity.class);
 //                    scanIntent.putExtra("from", "CommunicationFragment");
 //                    startActivityForResult(scanIntent, REQUEST_SCAN_LOGIN_QRCODE_RESULT);
-                    AppUtils.openScanCode(getActivity(),REQUEST_SCAN_LOGIN_QRCODE_RESULT);
+//                    AppUtils.openScanCode(getActivity(),REQUEST_SCAN_LOGIN_QRCODE_RESULT);
+                    AppUtils.openScanCode(CommunicationFragment.this,REQUEST_SCAN_LOGIN_QRCODE_RESULT);
                     popupWindow.dismiss();
                     break;
                 default:

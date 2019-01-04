@@ -11,11 +11,11 @@
     <!-- 极光推送权限配置开始 -->
     <!-- Required -->
     <permission
-        android:name="com.inspur.emmcloud.permission.JPUSH_MESSAGE"
+        android:name="${applicationId}.permission.JPUSH_MESSAGE"
         android:protectionLevel="signature" />
 
     <!-- Required -->
-    <uses-permission android:name="com.inspur.emmcloud.permission.JPUSH_MESSAGE" />
+    <uses-permission android:name="${applicationId}.permission.JPUSH_MESSAGE" />
     <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -120,6 +120,7 @@
         android:largeHeap="true"
         android:theme="@style/AppTheme_2"
         tools:replace="android:allowBackup,label">
+
         <!--custom-->
         <meta-data
             android:name="FLAG_APP_VERSION_TYPE"
@@ -175,11 +176,6 @@
         <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
         <activity
             android:name=".ui.IndexActivity"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustNothing"></activity>
-        <activity
-            android:name=".ui.TestActivity"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustNothing"></activity>
@@ -933,18 +929,29 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
 
-        <activity android:name="com.inspur.emmcloud.ui.appcenter.mail.MailHomeActivity">
+        <activity android:name=".ui.appcenter.mail.MailHomeActivity">
             android:resizeableActivity="true"
             android:screenOrientation="portrait"
         </activity>
-        <activity android:name="com.inspur.emmcloud.ui.appcenter.mail.MailDetailActivity">
+        <activity android:name=".ui.appcenter.mail.MailDetailActivity">
             android:resizeableActivity="true"
             android:screenOrientation="portrait"
         </activity>
-        <activity android:name="com.inspur.emmcloud.ui.appcenter.mail.MailLoginActivity">
+        <activity android:name=".ui.appcenter.mail.MailLoginActivity">
             android:resizeableActivity="true"
             android:screenOrientation="portrait"
         </activity>
+
+        <!-- Mail-->
+        <activity
+            android:name=".ui.appcenter.mail.MailCertificateInstallActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.appcenter.mail.MailSendActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
+
 
 
         <!-- service -->
@@ -961,13 +968,13 @@
 
 
         <!-- receiver -->
-        <receiver
-            android:name=".broadcastreceiver.NetworkChangeReceiver"
-            android:label="NetworkConnection">
-            <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-            </intent-filter>
-        </receiver>
+        <!--<receiver-->
+            <!--android:name=".broadcastreceiver.NetworkChangeReceiver"-->
+            <!--android:label="NetworkConnection">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.net.conn.CONNECTIVITY_CHANGE" />-->
+            <!--</intent-filter>-->
+        <!--</receiver>-->
         <receiver
             android:name=".broadcastreceiver.ActionReceiver"
             android:exported="true">
@@ -997,7 +1004,7 @@
             </intent-filter>
             <!--闹钟广播，怎么用？-->
             <intent-filter>
-                <action android:name="com.inspur.emmcloud.TIMER_ACTION_REPEATING" />
+                <action android:name="${applicationId}.TIMER_ACTION_REPEATING" />
             </intent-filter>
             <!--开机广播-->
             <intent-filter>
@@ -1019,27 +1026,32 @@
             android:name="com.inspur.imp.plugin.camera.imagepicker.ui.ImageGridActivity"
             android:configChanges="orientation|screenSize"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"
+            ></activity>
         <activity
             android:name="com.inspur.imp.plugin.camera.imagepicker.ui.ImagePreviewActivity"
             android:configChanges="orientation|screenSize"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"
+            ></activity>
         <activity
             android:name="com.inspur.imp.plugin.camera.imagepicker.ui.ImageCropActivity"
             android:configChanges="orientation|screenSize"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"
+            ></activity>
         <activity
             android:name="com.inspur.imp.plugin.camera.imagepicker.ui.ImagePreviewDelActivity"
             android:configChanges="orientation|screenSize"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"
+            ></activity>
         <activity
             android:name="com.inspur.imp.plugin.camera.imageedit.IMGEditActivity"
             android:configChanges="orientation|screenSize"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"
+           ></activity>
 
         <!-- ImagePicker -->
 
@@ -1090,7 +1102,7 @@
 
         <!-- MDM设备管理 -->
         <activity
-            android:name="com.inspur.emmcloud.ui.mdm.DeviceRegisterFailDetailActivity"
+            android:name=".ui.mdm.DeviceRegisterFailDetailActivity"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>
 
@@ -1106,7 +1118,7 @@
         <!-- since 3.0.9 Required SDK 核心功能-->
         <provider
             android:name="cn.jpush.android.service.DataProvider"
-            android:authorities="com.inspur.emmcloud.DataProvider"
+            android:authorities="${applicationId}.DataProvider"
             android:exported="false" />
 
         <!-- Required SDK核心功能-->
@@ -1120,7 +1132,7 @@
                 <action android:name="cn.jpush.android.ui.PushActivity" />
 
                 <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="com.inspur.emmcloud" />
+                <category android:name="${applicationId}" />
             </intent-filter>
         </activity>
 
@@ -1146,7 +1158,7 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="cn.jpush.android.intent.DaemonService" />
-                <category android:name="com.inspur.emmcloud" />
+                <category android:name="${applicationId}" />
             </intent-filter>
 
         </service>
@@ -1157,7 +1169,7 @@
             android:enabled="true">
             <intent-filter android:priority="1000">
                 <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED_PROXY" />   <!--Required  显示通知栏 -->
-                <category android:name="com.inspur.emmcloud" />
+                <category android:name="${applicationId}" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.USER_PRESENT" />
@@ -1189,7 +1201,7 @@
                 <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED" /> <!--Required  用户接收SDK通知栏信息的intent-->
                 <action android:name="cn.jpush.android.intent.NOTIFICATION_OPENED" /> <!--Required  用户打开自定义通知栏的intent-->
                 <action android:name="cn.jpush.android.intent.CONNECTION" /><!-- 接收网络变化 连接/断开 since 1.6.3 -->
-                <category android:name="com.inspur.emmcloud" />
+                <category android:name="${applicationId}" />
             </intent-filter>
         </receiver>
 
@@ -1219,7 +1231,7 @@
             android:value="10772129"></meta-data>
         <provider
             android:name="com.huawei.hms.update.provider.UpdateProvider"
-            android:authorities="com.inspur.emmcloud.hms.update.provider"
+            android:authorities="${applicationId}.hms.update.provider"
             android:exported="false"
             android:grantUriPermissions="true"
             android:process=":updateProvider"></provider>
@@ -1302,6 +1314,18 @@
             android:excludeFromRecents="true"
             android:resizeableActivity="true"
             android:theme="@style/Theme.UMDefault" />
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
     </application>
+
+
 
 </manifest>

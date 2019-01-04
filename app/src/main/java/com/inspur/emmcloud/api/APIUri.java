@@ -831,6 +831,15 @@ public class APIUri {
         return getEMMBaseUrl() + "api/mam/v3.0/gs_sso/app_uri?id=" + appId;
     }
 
+    /**
+     * 获取上传Certificate的接口
+     * @param appId
+     * @return
+     */
+    public static String getCertificateUrl () {
+        return  "http://172.31.2.18/api/ews/v1.0/UserProfile/CheckData";
+    }
+
     /*****************************************ReactNative**************************************/
     /**
      * 更新的Native地址
@@ -1128,12 +1137,16 @@ public class APIUri {
         return getMailBaseUrl()+"/Mail/List";
     }
 
-    public static String getMailDetailUrl(){
-        return  getMailBaseUrl()+"/Mail/Detail";
+    public static String getMailDetailUrl(boolean isEncrypted){
+        return  getMailBaseUrl()+ (isEncrypted?"/Mail/EncryptedDetail":"/Mail/Detail");
     }
 
     public static String getLoginMailUrl(){
         return  getMailBaseUrl()+"/UserProfile/MailBind";
+    }
+
+    public static String getMailAttachmentUrl(){
+        return getMailBaseUrl()+"/Mail/SafeAttachment?";
     }
 /************************************************************************工作****************************************************************************/
     /***************会议接口*****************************/

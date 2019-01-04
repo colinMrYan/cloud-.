@@ -18,9 +18,9 @@ import com.inspur.emmcloud.bean.appcenter.GetWebAppRealUrlResult;
 import com.inspur.emmcloud.bean.appcenter.ReactNativeDownloadUrlBean;
 import com.inspur.emmcloud.bean.appcenter.ReactNativeInstallUriBean;
 import com.inspur.emmcloud.bean.appcenter.ReactNativeUpdateBean;
+import com.inspur.emmcloud.bean.appcenter.mail.GetMailDetailResult;
 import com.inspur.emmcloud.bean.appcenter.mail.GetMailFolderResult;
 import com.inspur.emmcloud.bean.appcenter.mail.GetMailListResult;
-import com.inspur.emmcloud.bean.appcenter.mail.Mail;
 import com.inspur.emmcloud.bean.appcenter.news.GetGroupNewsDetailResult;
 import com.inspur.emmcloud.bean.appcenter.news.GetNewsTitleResult;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileListResult;
@@ -769,8 +769,12 @@ public interface APIInterface {
     void returnMailListSuccess(String folderId, int pageSize, int offset, GetMailListResult getMailListResult);
     void returnMailListFail(String folderId, int pageSize, int offset, String error, int errorCode);
 
-    void returnMailDetailSuccess(Mail mail);
+    void returnMailDetailSuccess(GetMailDetailResult getMailDetailResult);
+    void returnMailDetailSuccess(byte[] arg0);
     void returnMailDetailFail(String error, int errorCode);
     void returnMailLoginSuccess();
     void returnMailLoginFail(String error, int errorCode);
+
+    void returnMailCertificateUploadSuccess(byte[] arg0);
+    void returnMailCertificateUploadFail(String error, int errorCode);
 }

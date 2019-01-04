@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
@@ -23,86 +24,77 @@
         <ImageView
             android:layout_width="220dp"
             android:layout_height="56dp"
-            android:layout_marginTop="87dp"
+            android:layout_marginTop="80dp"
             android:scaleType="fitXY"
             android:src="@drawable/ic_mail_login_logo" />
 
-        <com.inspur.emmcloud.widget.ClearEditText
-            android:id="@+id/et_mail"
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/text_input_layout_username"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:textSize="16sp"
-            android:textColor="#333333"
-            android:background="@null"
+            app:errorEnabled="true"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
-            android:layout_marginTop="60dp"
-            android:hint="@string/mail"
-            android:singleLine="true" />
+            android:layout_marginTop="35dp">
 
-        <View
-            android:background="#C8C7CC"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
-            android:layout_width="match_parent"
-            android:layout_height="0.6dp"></View>
-        <RelativeLayout
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
-            android:layout_marginTop="40dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
             <com.inspur.emmcloud.widget.ClearEditText
+                android:id="@+id/et_mail"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:gravity="center_vertical"
+                android:drawableRight="@drawable/app_edittext_clear"
+                android:paddingRight="12dp"
+                android:inputType="textEmailAddress"
+                android:imeOptions="actionNext"
+                android:hint="@string/mail"
+                android:singleLine="true"
+                android:textColor="#333333"
+                android:textSize="16sp"
+                android:theme="@style/MyEditText" />
+
+        </android.support.design.widget.TextInputLayout>
+
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/text_input_layout_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:passwordToggleDrawable="@drawable/app_edittext_eye_selector"
+            app:passwordToggleEnabled="true"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            >
+            <EditText
                 android:id="@+id/et_password"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="16sp"
-                android:textColor="#333333"
-                android:layout_toLeftOf="@+id/iv_password_visible"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                android:background="@null"
+                android:layout_height="45dp"
+                android:imeOptions="actionDone"
+                android:inputType="textPassword"
                 android:hint="@string/password"
-                android:singleLine="true" />
-            <ImageView
-                android:id="@+id/iv_password_visible"
-                android:layout_width="35dp"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@id/et_password"
-                android:layout_alignParentRight="true"
-                android:layout_alignTop="@id/et_password"
-                android:layout_centerVertical="true"
-                android:adjustViewBounds="true"
-                android:onClick="onClick"
-                android:paddingBottom="4dp"
-                android:paddingLeft="10dp"
-                android:paddingTop="4dp"
-                android:src="@drawable/icon_no_see_pw" />
-        </RelativeLayout>
+                android:singleLine="true"
+                android:gravity="center_vertical"
+                android:textColor="#333333"
+                android:textSize="16sp"
+                android:theme="@style/MyEditText" />
 
-        <View
-            android:background="#C8C7CC"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
-            android:layout_width="match_parent"
-            android:layout_height="0.6dp"></View>
+
+        </android.support.design.widget.TextInputLayout>
+
 
         <Button
             android:id="@+id/bt_login"
-            android:onClick="onClick"
             android:layout_width="match_parent"
             android:layout_height="46dp"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
-            android:layout_marginTop="70dp"
-            android:gravity="center"
-            android:text="@string/login"
+            android:layout_marginTop="60dp"
             android:background="@drawable/bg_login_btn_unable"
             android:enabled="false"
-            android:textColor="@color/white"
-             />
+            android:gravity="center"
+            android:onClick="onClick"
+            android:textSize="16sp"
+            android:text="@string/login"
+            android:textColor="@color/white" />
     </LinearLayout>
 
 </RelativeLayout>

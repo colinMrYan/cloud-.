@@ -35,6 +35,8 @@ public class MyAppConfig {
             .getExternalStorageDirectory() + "/IMP-Cloud/cache/photo";
     public static final String LOCAL_DOWNLOAD_PATH = Environment
             .getExternalStorageDirectory() + "/IMP-Cloud/download/";
+    public static final String LOCAL_DOWNLOAD_PATH_MAIL_ATTCACHEMENT = Environment
+            .getExternalStorageDirectory() + "/IMP-Cloud/download/mail/";
     public static final String LOCAL_CACHE_MARKDOWN_PATH = Environment
             .getExternalStorageDirectory() + "/IMP-Cloud/cache/Markdown/";
     public static final String[] clientLanguages = {"zh-CN", "en-US", "zh-TW"};
