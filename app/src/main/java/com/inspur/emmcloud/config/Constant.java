@@ -47,6 +47,7 @@ public class Constant {
 
     public static final String PREF_V_CONFIG_ALL = "v_config_all";
     public static final String PREF_EXPERIENCE_UPGRATE = "experience_upgrade";
+    public static final String PREF_APP_THEME = "app_theme";
 
     public static final String ACTION_MEETING = "com.inspur.meeting";
     public static final String ACTION_TASK = "com.inspur.task";
@@ -85,6 +86,7 @@ public class Constant {
     public static final String EVENTBUS_TAG__NET_PING_CONNECTION = "tag_net_ping_connection";
     public static final String EVENTBUS_TAG__NET_PORTAL_HTTP_POST = "tag_net_portal_http_post";
     public static final String EVENTBUS_TAG_COMMENT_MESSAGE = "tag_comment_message";
+    public static final String EVENTBUS_TAG_GET_MAIL_BY_FOLDER = "tag_get_mail_by_folder";
 
     public static final String SERVICE_VERSION_CHAT_V0 = "v0";
     public static final String SERVICE_VERSION_CHAT_V1 = "v1";
@@ -134,6 +136,7 @@ public class Constant {
     public static final String APP_WEB_URI = "uri";
 
     public static final int APP_EXCEPTION_LEVEL = 4;
+    public static final String MAIL_ENCRYPT_IV="inspurcloud+2019";
 
 
 }

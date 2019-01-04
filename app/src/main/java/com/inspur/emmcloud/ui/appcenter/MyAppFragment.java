@@ -53,7 +53,6 @@ import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.bean.system.badge.BadgeBodyModel;
 import com.inspur.emmcloud.bean.system.badge.BadgeBodyModuleModel;
-import com.inspur.emmcloud.broadcastreceiver.NetworkChangeReceiver;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.interf.OnRecommendAppWidgetItemClickListener;
 import com.inspur.emmcloud.ui.mine.setting.NetWorkStateDetailActivity;
@@ -67,6 +66,7 @@ import com.inspur.emmcloud.util.privates.AppBadgeUtils;
 import com.inspur.emmcloud.util.privates.AppTabUtils;
 import com.inspur.emmcloud.util.privates.ClientConfigUpdateUtils;
 import com.inspur.emmcloud.util.privates.MyAppWidgetUtils;
+import com.inspur.emmcloud.util.privates.NetWorkStateChangeUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.UriUtils;
@@ -121,6 +121,7 @@ public class MyAppFragment extends Fragment {
     private DataSetObserver dataSetObserver;
     private View    netExceptionView;
     private boolean haveHeader=false;
+    private boolean hasRequestBadgeNum = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -163,7 +164,11 @@ public class MyAppFragment extends Fragment {
             getMyApp();
         }
 //        getAppBadgeNum();
-        new AppBadgeUtils(MyApplication.getInstance()).getAppBadgeCountFromServer();
+        hasRequestBadgeNum = false;
+        if(!StringUtils.isBlank(MyAppCacheUtils.getMyAppListJson(getActivity()))){
+            new AppBadgeUtils(MyApplication.getInstance()).getAppBadgeCountFromServer();
+            hasRequestBadgeNum = true;
+        }
         refreshRecommendAppWidgetView();
         NetUtils.PingThreadStart(NetUtils.pingUrls,5,Constant.EVENTBUS_TAG__NET_EXCEPTION_HINT);
     }
@@ -384,11 +389,11 @@ public class MyAppFragment extends Fragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void netWorkStateHint(SimpleEventMessage netState) {
         if(netState.getAction().equals(Constant.EVENTBUS_TAG__NET_STATE_CHANGE)){
-            if(((String)netState.getMessageObj()).equals(NetworkChangeReceiver.NET_WIFI_STATE_OK)){
+            if(((String)netState.getMessageObj()).equals(NetWorkStateChangeUtils.NET_WIFI_STATE_OK)){
                 NetUtils.PingThreadStart(NetUtils.pingUrls,5,Constant.EVENTBUS_TAG__NET_EXCEPTION_HINT);
-            } else if(((String)netState.getMessageObj()).equals(NetworkChangeReceiver.NET_STATE_ERROR)) {
+            } else if(((String)netState.getMessageObj()).equals(NetWorkStateChangeUtils.NET_STATE_ERROR)) {
                 AddHeaderView();
-            } else if (((String)netState.getMessageObj()).equals(NetworkChangeReceiver.NET_GPRS_STATE_OK)) {
+            } else if (((String)netState.getMessageObj()).equals(NetWorkStateChangeUtils.NET_GPRS_STATE_OK)) {
                 DeleteHeaderView();
             }
         } else if (netState.getAction().equals(Constant.EVENTBUS_TAG__NET_EXCEPTION_HINT)) {   //网络异常提示
@@ -1133,7 +1138,7 @@ public class MyAppFragment extends Fragment {
         textView.setMovementMethod(ScrollingMovementMethod.getInstance());
         textView.setText(getString(R.string.app_commonly_use_app));
         Button okBtn = (Button) view.findViewById(R.id.ok_btn);
-        okBtn.setOnClickListener(new View.OnClickListener() {
+        okBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (icon == 0) {
@@ -1149,7 +1154,7 @@ public class MyAppFragment extends Fragment {
             }
         });
         Button cancelBtn = (Button) view.findViewById(R.id.cancel_btn);
-        cancelBtn.setOnClickListener(new View.OnClickListener() {
+        cancelBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (checkBox.isChecked()) {
@@ -1193,6 +1198,9 @@ public class MyAppFragment extends Fragment {
         @Override
         protected void onPostExecute(List<AppGroupBean> appGroupList) {
             super.onPostExecute(appGroupList);
+            if(!hasRequestBadgeNum){
+                new AppBadgeUtils(MyApplication.getInstance()).getAppBadgeCountFromServer();
+            }
             appListAdapter.setAppAdapterList(appGroupList);
             swipeRefreshLayout.setRefreshing(false);
             refreshRecommendAppWidgetView();

@@ -66,7 +66,6 @@ public class JpushReceiver extends BroadcastReceiver {
             String extraMessage = bundle.getString(JPushInterface.EXTRA_EXTRA);
             if(!AppUtils.GetChangShang().toLowerCase().startsWith(Constant.XIAOMI_FLAG) && JSONUtils.isJsonObjStringHasKey(extraMessage,"badge")){
                 ECMShortcutBadgeNumberManagerUtils.setDesktopBadgeNumber(context,JSONUtils.getInt(extraMessage,"badge",0));
-                return;
             }
         } else if (JPushInterface.ACTION_NOTIFICATION_OPENED.equals(intent
                 .getAction())) {

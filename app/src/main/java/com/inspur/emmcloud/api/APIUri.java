@@ -33,12 +33,13 @@ public class APIUri {
 //        return MyApplication.getInstance().getClusterEcm() + MyApplication.getInstance().getTanent();
 //    }
 
-    public static String getEcmUrl(){
+    public static String getEcmUrl() {
         return MyApplication.getInstance().getClusterEcm();
     }
 
     /**
      * EMM服务
+     *
      * @return
      */
     public static String getEMMBaseUrl() {
@@ -47,49 +48,55 @@ public class APIUri {
 
     /**
      * EcmChat服务
+     *
      * @return
      */
-    public static String getECMChatUrl(){
+    public static String getECMChatUrl() {
         return MyApplication.getInstance().getClusterChat();
     }
 
     /**
      * EcmSchedule服务
+     *
      * @return
      */
-    public static String getECMScheduleUrl(){
+    public static String getECMScheduleUrl() {
         return MyApplication.getInstance().getClusterSchedule();
     }
 
     /**
      * ECMDistribution服务
+     *
      * @return
      */
-    public static String getECMDistribution(){
+    public static String getECMDistribution() {
         return MyApplication.getInstance().getClusterDistribution();
     }
 
     /**
      * ECMNews服务
+     *
      * @return
      */
-    public static String getECMNews(){
+    public static String getECMNews() {
         return MyApplication.getInstance().getClusterNews();
     }
 
     /**
      * ECMCloudDriver服务
+     *
      * @return
      */
-    public static String getCloudDriver(){
+    public static String getCloudDriver() {
         return MyApplication.getInstance().getClusterCloudDrive();
     }
 
     /**
      * StorageLegacy服务
+     *
      * @return
      */
-    public static String getStorageLegacy(){
+    public static String getStorageLegacy() {
         return MyApplication.getInstance().getClusterStorageLegacy();
     }
 
@@ -112,9 +119,10 @@ public class APIUri {
 
     /**
      * PV收集
+     *
      * @return
      */
-    public static String getUploadPVCollectUrl(){
+    public static String getUploadPVCollectUrl() {
         return "https://uvc1.inspuronline.com/clientpv";
     }
 
@@ -129,8 +137,8 @@ public class APIUri {
     }
 
 
-    public static String getAppConfigUrl( boolean isGetCommonAppConfig, boolean isGetWorkPortletAppConfig, boolean isGetWebAutoRotate) {
-        return MyApplication.getInstance().getClusterEmm() + "api/sys/v6.0/config/array?key=PosReportTimeInterval"+(isGetCommonAppConfig?"&key=CommonFunctions":"")+(isGetWorkPortletAppConfig?"&key=WorkPortlet":"")+(isGetWebAutoRotate?"&key=WebAutoRotate":"");
+    public static String getAppConfigUrl(boolean isGetCommonAppConfig, boolean isGetWorkPortletAppConfig, boolean isGetWebAutoRotate) {
+        return MyApplication.getInstance().getClusterEmm() + "api/sys/v6.0/config/array?key=PosReportTimeInterval" + (isGetCommonAppConfig ? "&key=CommonFunctions" : "") + (isGetWorkPortletAppConfig ? "&key=WorkPortlet" : "") + (isGetWebAutoRotate ? "&key=WebAutoRotate" : "");
     }
 
     /**
@@ -273,33 +281,33 @@ public class APIUri {
             return null;
         String headImgUrl = null;
         boolean isCacheUserPhotoUrl = MyApplication.getInstance().isKeysContainUid(uid);
-        if (isCacheUserPhotoUrl){
+        if (isCacheUserPhotoUrl) {
             headImgUrl = MyApplication.getInstance().getUserPhotoUrl(uid);
-        }else {
+        } else {
             ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(uid);
             if (contactUser != null) {
-                if (contactUser.getHasHead() == 1){
+                if (contactUser.getHasHead() == 1) {
                     headImgUrl = MyApplication.getInstance().getClusterEmm() + "api/sys/v3.0/img/userhead/" + uid;
                     String lastQueryTime = contactUser.getLastQueryTime();
                     if (!StringUtils.isBlank(lastQueryTime) && (!lastQueryTime.equals("null"))) {
                         headImgUrl = headImgUrl + "?" + lastQueryTime;
                     }
                     MyApplication.getInstance().setUsesrPhotoUrl(uid, headImgUrl);
-                }else {
+                } else {
                     String name = contactUser.getName();
-                    if (!StringUtils.isBlank(name)){
-                        String photoName = name.replaceAll("(\\(|（)[^（\\(\\)）]*?(\\)|）)|\\d*$","");
-                        if (photoName.length()>0){
-                            name = photoName.substring(photoName.length()-1,photoName.length());
-                        }else {
-                            name = name.substring(name.length()-1,name.length());
+                    if (!StringUtils.isBlank(name)) {
+                        String photoName = name.replaceAll("(\\(|（)[^（\\(\\)）]*?(\\)|）)|\\d*$", "");
+                        if (photoName.length() > 0) {
+                            name = photoName.substring(photoName.length() - 1, photoName.length());
+                        } else {
+                            name = name.substring(name.length() - 1, name.length());
                         }
-                        String localPhotoFileName = "u"+(int)(name.charAt(0));
+                        String localPhotoFileName = "u" + (int) (name.charAt(0));
                         File file = new File(MyAppConfig.LOCAL_CACHE_PHOTO_PATH,
                                 localPhotoFileName);
-                        headImgUrl = "file://"+file.getAbsolutePath();
-                        if (!file.exists()){
-                            ImageUtils.drawAndSavePhotoTextImg(context,name,file.getAbsolutePath());
+                        headImgUrl = "file://" + file.getAbsolutePath();
+                        if (!file.exists()) {
+                            ImageUtils.drawAndSavePhotoTextImg(context, name, file.getAbsolutePath());
                         }
                     }
                 }
@@ -313,13 +321,14 @@ public class APIUri {
 
     /**
      * Imp获取头像路径
+     *
      * @param uid
      * @return
      */
-    public static String getChannelImgUrl4Imp(String uid){
+    public static String getChannelImgUrl4Imp(String uid) {
         String headImgUrl = "";
         ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(uid);
-        if(contactUser != null){
+        if (contactUser != null) {
             headImgUrl = MyApplication.getInstance().getClusterEmm() + "api/sys/v3.0/img/userhead/" + uid;
             String lastQueryTime = contactUser.getLastQueryTime();
             if (!StringUtils.isBlank(lastQueryTime) && (!lastQueryTime.equals("null"))) {
@@ -342,27 +351,27 @@ public class APIUri {
 
     /**
      * 返回忽略v0,v1版本的地址
+     *
      * @return
      */
-    public static String getECMChatChannelUrl(){
+    public static String getECMChatChannelUrl() {
         String channelUrl = "";
-        if(MyApplication.getInstance().isV0VersionChat()){
+        if (MyApplication.getInstance().isV0VersionChat()) {
             channelUrl = getECMChatUrl();
-        }else if(MyApplication.getInstance().isV1xVersionChat()){
-            channelUrl = (getWebsocketConnectUrl()+"/"+MyApplication.getInstance().getTanent());
+        } else if (MyApplication.getInstance().isV1xVersionChat()) {
+            channelUrl = (getWebsocketConnectUrl() + "/" + MyApplication.getInstance().getTanent());
         }
         return channelUrl;
     }
 
     /**
      * 获取chat v1 channel base url
+     *
      * @return
      */
-    public static String getECMChatConversationBaseUrl(){
-        return getECMChatUrl()+"/api/v1";
+    public static String getECMChatConversationBaseUrl() {
+        return getECMChatUrl() + "/api/v1";
     }
-
-
 
 
     /**
@@ -387,21 +396,22 @@ public class APIUri {
 
     /**
      * 获取普通人和机器人人头像url
+     *
      * @param context
      * @param uid
      * @return
      */
-    public static String getUserIconUrl(Context context, String uid){
+    public static String getUserIconUrl(Context context, String uid) {
         String iconUrl = null;
         if (uid.startsWith("BOT")) {
             Robot robot = RobotCacheUtils.getRobotById(context, uid);
-            if (robot != null){
+            if (robot != null) {
                 iconUrl = APIUri.getRobotIconUrl(robot.getAvatar());
             }
         } else {
             iconUrl = APIUri.getChannelImgUrl(context, uid);
         }
-        return  iconUrl;
+        return iconUrl;
     }
 
     /**
@@ -418,7 +428,7 @@ public class APIUri {
      * @return
      */
     public static String getResUrl(String url) {
-        return getStorageLegacy()  + "/res/" + url;
+        return getStorageLegacy() + "/res/" + url;
     }
 
     /**
@@ -470,184 +480,205 @@ public class APIUri {
 
     /**
      * 获取聊天上传文件token url
+     *
      * @param cid
      * @return
      */
-    public static String getUploadFileTokenUrl(String cid){
-        return getECMChatUrl() +"/api/v1/channel/"+cid+"/file/request";
+    public static String getUploadFileTokenUrl(String cid) {
+        return getECMChatUrl() + "/api/v1/channel/" + cid + "/file/request";
     }
 
     /**
      * 获取聊天语音文件token url
+     *
      * @param cid
      * @return
      */
-    public static String getUploadMediaVoiceFileTokenUrl(String cid){
-        return getECMChatUrl() +"/api/v1/channel/"+cid+"/voice/request";
+    public static String getUploadMediaVoiceFileTokenUrl(String cid) {
+        return getECMChatUrl() + "/api/v1/channel/" + cid + "/voice/request";
     }
 
     /**
      * 获取V1版消息中聊天文件下载地址
+     *
      * @param cid
      * @param path
      * @return
      */
-    public static String getChatFileResouceUrl(String cid,String path){
-        return getECMChatUrl() +"/api/v1/channel/"+cid+"/file/request?path="+path;
+    public static String getChatFileResouceUrl(String cid, String path) {
+        return getECMChatUrl() + "/api/v1/channel/" + cid + "/file/request?path=" + path;
     }
 
     /**
      * 获取V1版消息中聊天语音文件下载地址
+     *
      * @param cid
      * @param path
      * @return
      */
-    public static String getChatVoiceFileResouceUrl(String cid,String path){
-        return getECMChatUrl() +"/api/v1/channel/"+cid+"/voice/request?path="+path;
+    public static String getChatVoiceFileResouceUrl(String cid, String path) {
+        return getECMChatUrl() + "/api/v1/channel/" + cid + "/voice/request?path=" + path;
     }
 
     /**
      * 获取session列表url
+     *
      * @return
      */
-    public static String getChannelListUrl(){
+    public static String getChannelListUrl() {
         return getECMChatChannelUrl() + "/channel/session";
     }
 
     /**
      * 获取频道信息url
+     *
      * @param cid
      * @return
      */
-    public static String getChannelInfoUrl(String cid){
+    public static String getChannelInfoUrl(String cid) {
         return getECMChatChannelUrl() + "/channel/" + cid;
     }
 
     /**
      * 获取所有群组类型频道列表url
+     *
      * @return
      */
-    public static String getAllGroupChannelListUrl(){
+    public static String getAllGroupChannelListUrl() {
         return getECMChatChannelUrl() + "/channel/group?limit=-1";
     }
 
     /**
      * 获取所有群组频道信息
+     *
      * @return
      */
-    public static String getChannelGroupInfoList(){
-        return getECMChatChannelUrl()+"/channel?limit=1000";
+    public static String getChannelGroupInfoList() {
+        return getECMChatChannelUrl() + "/channel?limit=1000";
     }
 
     /**
      * 获取创建聊天url
+     *
      * @return
      */
-    public static String getCreateChannelUrl(){
+    public static String getCreateChannelUrl() {
         return getECMChatChannelUrl() + "/channel";
     }
 
     /**
      * 获取创建聊天url
+     *
      * @return
      */
-    public static String getCreateDirectConversationUrl(){
+    public static String getCreateDirectConversationUrl() {
         return getECMChatConversationBaseUrl() + "/channel/direct";
     }
 
     /**
      * 获取创建聊天url
+     *
      * @return
      */
-    public static String getCreateGroupConversationUrl(){
+    public static String getCreateGroupConversationUrl() {
         return getECMChatConversationBaseUrl() + "/channel/group";
     }
 
 
     /**
      * 获取更新群组名称url
+     *
      * @param cid
      * @return
      */
-    public static String getUpdateChannelGroupNameUrl(String cid){
-        return  getECMChatChannelUrl()+"/channel?cid="+cid;
+    public static String getUpdateChannelGroupNameUrl(String cid) {
+        return getECMChatChannelUrl() + "/channel?cid=" + cid;
     }
 
     /**
      * 获取退出群聊url
+     *
      * @param cid
      * @return
      */
-    public static String getQuitChannelGroupUrl(String cid){
-        return  getECMChatConversationBaseUrl()+"/channel/group/"+cid+"/participation";
+    public static String getQuitChannelGroupUrl(String cid) {
+        return getECMChatConversationBaseUrl() + "/channel/group/" + cid + "/participation";
     }
 
     /**
      * 获取删除频道url
+     *
      * @param cid
      * @return
      */
-    public static String getDeleteChannelUrl(String cid){
-        return  getECMChatConversationBaseUrl()+"/channel/"+cid;
+    public static String getDeleteChannelUrl(String cid) {
+        return getECMChatConversationBaseUrl() + "/channel/" + cid;
     }
 
     /**
      * 获取会话列表
+     *
      * @return
      */
-    public static String getConversationListUrl(){
-        return   getECMChatConversationBaseUrl()+"/channel";
+    public static String getConversationListUrl() {
+        return getECMChatConversationBaseUrl() + "/channel";
     }
 
     /**
      * 设置会话是否置顶
+     *
      * @return
      */
-    public static String getConversationSetStick(String id){
-        return getECMChatConversationBaseUrl()+"/channel/"+id+"/focus";
+    public static String getConversationSetStick(String id) {
+        return getECMChatConversationBaseUrl() + "/channel/" + id + "/focus";
     }
 
     /**
      * 设置会话是否可见
+     *
      * @return
      */
-    public static String getConversationSetHide(String id){
-        return getECMChatConversationBaseUrl()+"/channel/"+id+"/visuality";
+    public static String getConversationSetHide(String id) {
+        return getECMChatConversationBaseUrl() + "/channel/" + id + "/visuality";
     }
 
     /**
      * 设置会话是否消息免打扰
+     *
      * @return
      */
-    public static String getConversationSetDnd(String id){
-        return getECMChatConversationBaseUrl()+"/channel/"+id+"/dnd";
+    public static String getConversationSetDnd(String id) {
+        return getECMChatConversationBaseUrl() + "/channel/" + id + "/dnd";
     }
 
     /**
      * 修改群组成员
+     *
      * @param id
      * @return
      */
-    public static String getModifyGroupMemberUrl(String id){
-        return  getECMChatConversationBaseUrl()+"/channel/group/"+id+"/member";
+    public static String getModifyGroupMemberUrl(String id) {
+        return getECMChatConversationBaseUrl() + "/channel/group/" + id + "/member";
     }
 
     /**
      * 获取会话信息
+     *
      * @param id
      * @return
      */
-    public static String getConversationInfoUrl(String id){
-        return  getECMChatConversationBaseUrl()+"/channel/"+id;
+    public static String getConversationInfoUrl(String id) {
+        return getECMChatConversationBaseUrl() + "/channel/" + id;
     }
 
     /**
      * 获取修改会话名称url
+     *
      * @param id
      * @return
      */
-    public static String getUpdateConversationNameUrl(String id){
-        return  getECMChatConversationBaseUrl()+"/channel/"+id+"/name";
+    public static String getUpdateConversationNameUrl(String id) {
+        return getECMChatConversationBaseUrl() + "/channel/" + id + "/name";
     }
     /**************************************************应用和应用中心********************************************************************/
 
@@ -736,33 +767,38 @@ public class APIUri {
 
     /**
      * 获取通讯录中的人员
+     *
      * @return
      */
-    public static String getContactUserUrl(){
+    public static String getContactUserUrl() {
         return MyApplication.getInstance().getClusterEmm() + "api/sys/v4.0/contacts/users";
     }
+
     /**
      * 获取通讯录中的人员更新
+     *
      * @return
      */
-    public static String getContactUserUrlUpdate(){
+    public static String getContactUserUrlUpdate() {
         return MyApplication.getInstance().getClusterEmm() + "api/sys/v3.0/contacts/users";
     }
 
 
     /**
      * 获取通讯录中的组织
+     *
      * @return
      */
-    public static String getContactOrgUrl(){
+    public static String getContactOrgUrl() {
         return MyApplication.getInstance().getClusterEmm() + "api/sys/v4.0/contacts/orgs";
     }
 
     /**
      * 获取通讯录中的组织更新
+     *
      * @return
      */
-    public static String getContactOrgUrlUpdate(){
+    public static String getContactOrgUrlUpdate() {
         return MyApplication.getInstance().getClusterEmm() + "api/sys/v3.0/contacts/orgs";
     }
 
@@ -787,11 +823,21 @@ public class APIUri {
 
     /**
      * 获取app真实地址
+     *
      * @param appId
      * @return
      */
     public static String getAppRealUrl(String appId) {
         return getEMMBaseUrl() + "api/mam/v3.0/gs_sso/app_uri?id=" + appId;
+    }
+
+    /**
+     * 获取上传Certificate的接口
+     * @param appId
+     * @return
+     */
+    public static String getCertificateUrl () {
+        return  "http://172.31.2.18/api/ews/v1.0/UserProfile/CheckData";
     }
 
     /*****************************************ReactNative**************************************/
@@ -857,15 +903,16 @@ public class APIUri {
      * @return
      */
     public static String getGroupNewsUrl(String url) {
-        return getECMNews()  + url;
+        return getECMNews() + url;
     }
 
     /**
      * 获取网页地址
+     *
      * @param url
      * @return
      */
-    public static String getGroupNewsHtmlUrl(String url){
+    public static String getGroupNewsHtmlUrl(String url) {
         return getStorageLegacy() + url;
     }
 
@@ -1012,65 +1059,95 @@ public class APIUri {
 
     /**
      * 根据volumeId
+     *
      * @param volumeId
      * @return
      */
-    public static String getVolumeFileGroupUrl(String volumeId){
+    public static String getVolumeFileGroupUrl(String volumeId) {
         return getUrlBaseVolume() + "/" + volumeId + "/file/group/privilege";
     }
     /**************************Webex********************************************/
 
     /**
      * 获取webex会议列表
+     *
      * @return
      */
-    public static String getWebexMeetingListUrl(){
-        return getEMMBaseUrl()+"api/mam/v6.0/webex";
+    public static String getWebexMeetingListUrl() {
+        return getEMMBaseUrl() + "api/mam/v6.0/webex";
     }
 
     /**
      * 预定会议
+     *
      * @return
      */
-    public static String getScheduleWebexMeetingUrl(){
-        return getEMMBaseUrl()+"api/mam/v6.0/webex/v2";
+    public static String getScheduleWebexMeetingUrl() {
+        return getEMMBaseUrl() + "api/mam/v6.0/webex/v2";
     }
 
     /**
      * 获取webex头像地址
+     *
      * @param email
      * @return
      */
-    public static String getWebexPhotoUrl(String email){
-        return getEMMBaseUrl()+"img/userhead/"+email;
+    public static String getWebexPhotoUrl(String email) {
+        return getEMMBaseUrl() + "img/userhead/" + email;
     }
 
     /**
      * 获取webex会议
+     *
      * @return
      */
-    public static String getWebexMeetingUrl(String meetingID){
-        return getEMMBaseUrl()+"api/mam/v6.0/webex/SessionInfo/"+meetingID;
+    public static String getWebexMeetingUrl(String meetingID) {
+        return getEMMBaseUrl() + "api/mam/v6.0/webex/SessionInfo/" + meetingID;
     }
 
     /**
      * 删除webex会议
+     *
      * @return
      */
-    public static String getRemoveWebexMeetingUrl(String meetingID){
-        return getEMMBaseUrl()+"api/mam/v6.0/webex/remove/"+meetingID;
+    public static String getRemoveWebexMeetingUrl(String meetingID) {
+        return getEMMBaseUrl() + "api/mam/v6.0/webex/remove/" + meetingID;
     }
 
     /**
      * 获取webex会议TK
+     *
      * @return
      */
-    public static String getWebexTK(){
-        return getEMMBaseUrl()+"api/mam/v6.0/webex/gettk";
+    public static String getWebexTK() {
+        return getEMMBaseUrl() + "api/mam/v6.0/webex/gettk";
+    }
+
+    /**************************Mail********************************************/
+    public static String getMailBaseUrl() {
+        return "http://172.31.2.18/api/ews/v1.0";
+    }
+
+    public static String getMailFolderUrl() {
+        return getMailBaseUrl()+"/Folder";
     }
 
 
+    public static String getMailListUrl() {
+        return getMailBaseUrl()+"/Mail/List";
+    }
 
+    public static String getMailDetailUrl(boolean isEncrypted){
+        return  getMailBaseUrl()+ (isEncrypted?"/Mail/EncryptedDetail":"/Mail/Detail");
+    }
+
+    public static String getLoginMailUrl(){
+        return  getMailBaseUrl()+"/UserProfile/MailBind";
+    }
+
+    public static String getMailAttachmentUrl(){
+        return getMailBaseUrl()+"/Mail/SafeAttachment?";
+    }
 /************************************************************************工作****************************************************************************/
     /***************会议接口*****************************/
     /**
@@ -1079,7 +1156,7 @@ public class APIUri {
      * @return
      */
     private static String getMeetingBaseUrl() {
-        return getECMScheduleUrl()  + "/meeting/";
+        return getECMScheduleUrl() + "/meeting/";
     }
 
     /**
@@ -1089,7 +1166,7 @@ public class APIUri {
      */
     public static String getMeetingsUrl() {
         String meetingUrl = "";
-        if(MyApplication.getInstance().getClusterScheduleVersion().toLowerCase().startsWith("v0") || MyApplication.getInstance().getClusterScheduleVersion().toLowerCase().startsWith("v1")){
+        if (MyApplication.getInstance().getClusterScheduleVersion().toLowerCase().startsWith("v0") || MyApplication.getInstance().getClusterScheduleVersion().toLowerCase().startsWith("v1")) {
             meetingUrl = getMeetingBaseUrl() + "room/bookings";
         }
         return meetingUrl;
@@ -1195,9 +1272,9 @@ public class APIUri {
     public static String getCalendarUrl() {
         String scheduleVersion = MyApplication.getInstance().getClusterScheduleVersion().toLowerCase();
         String calendarUrl = "";
-        if(scheduleVersion.startsWith("v0")){
+        if (scheduleVersion.startsWith("v0")) {
             calendarUrl = getECMScheduleUrl() + "/api/v0";
-        }else if(scheduleVersion.startsWith("v1")){
+        } else if (scheduleVersion.startsWith("v1")) {
             calendarUrl = getECMScheduleUrl();
         }
         return calendarUrl;
@@ -1212,9 +1289,9 @@ public class APIUri {
     private static String getToDoBaseUrl() {
         String scheduleVersion = MyApplication.getInstance().getClusterScheduleVersion().toLowerCase();
         String todoUrl = "";
-        if(scheduleVersion.startsWith("v0")){
+        if (scheduleVersion.startsWith("v0")) {
             todoUrl = getECMScheduleUrl() + "/api/v0/todo/";
-        }else if(scheduleVersion.startsWith("v1")){
+        } else if (scheduleVersion.startsWith("v1")) {
             todoUrl = getECMScheduleUrl() + "/todo/";
         }
         return todoUrl;
@@ -1311,7 +1388,7 @@ public class APIUri {
      * @return
      */
     public static String getTripArriveCityUrl() {
-        return "https://ecm.inspur.com/"+MyApplication.getInstance().getTanent()+"/trip/simple/city";
+        return "https://ecm.inspur.com/" + MyApplication.getInstance().getTanent() + "/trip/simple/city";
     }
 
     /**
@@ -1325,14 +1402,15 @@ public class APIUri {
 
     /**
      * 更新行程信息接口
+     *
      * @return
      */
-    public static String getUpdateTripInfoUrl(){
-        return "https://ecm.inspur.com/"+MyApplication.getInstance().getTanent()+"/trip/simple/upload";
+    public static String getUpdateTripInfoUrl() {
+        return "https://ecm.inspur.com/" + MyApplication.getInstance().getTanent() + "/trip/simple/upload";
     }
 
-    public static String getTripInfoUrl(){
-        return "https://ecm.inspur.com/"+MyApplication.getInstance().getTanent()+"/trip/simple/detail?trip_ticket=";
+    public static String getTripInfoUrl() {
+        return "https://ecm.inspur.com/" + MyApplication.getInstance().getTanent() + "/trip/simple/detail?trip_ticket=";
     }
 
     /**
@@ -1341,7 +1419,7 @@ public class APIUri {
      * @return
      */
     public static String getLangUrl() {
-        return getEcmUrl() +"/"+ MyApplication.getInstance().getTanent() + "/settings/lang";
+        return getEcmUrl() + "/" + MyApplication.getInstance().getTanent() + "/settings/lang";
     }
 
 
@@ -1376,12 +1454,11 @@ public class APIUri {
     }
 
     /**
-     *获取个人信息及其显示配置
+     * 获取个人信息及其显示配置
      */
-    public  static String getUserProfileAndDisPlayUrl() {
+    public static String getUserProfileAndDisPlayUrl() {
         return MyApplication.getInstance().getClusterEmm() + "api/sys/v3.0/userprofile/detail";
     }
-
 
 
     /**
@@ -1488,92 +1565,102 @@ public class APIUri {
 
     /**
      * 获取卡包信息
+     *
      * @return
      */
-    public static String getCardPackageUrl(){
-        return MyApplication.getInstance().getClusterEmm()+"api/buildinapp/v6.0/CardPackage";
+    public static String getCardPackageUrl() {
+        return MyApplication.getInstance().getClusterEmm() + "api/buildinapp/v6.0/CardPackage";
     }
 
     /**
      * 获取是否打开体验升级
+     *
      * @return
      */
-    public static String getUserExperienceUpgradeFlagUrl(){
-        return MyApplication.getInstance().getClusterEmm()+"api/sys/v3.0/upgrade/checkExperiencePlan";
+    public static String getUserExperienceUpgradeFlagUrl() {
+        return MyApplication.getInstance().getClusterEmm() + "api/sys/v3.0/upgrade/checkExperiencePlan";
     }
 
-    public static String getUpdateUserExperienceUpgradeFlagUrl(int flag){
-        return MyApplication.getInstance().getClusterEmm()+"api/sys/v3.0/upgrade/joinExperiencePlan?flag="+flag;
+    public static String getUpdateUserExperienceUpgradeFlagUrl(int flag) {
+        return MyApplication.getInstance().getClusterEmm() + "api/sys/v3.0/upgrade/joinExperiencePlan?flag=" + flag;
     }
 
     /**
      * 获取声网参数Url
+     *
      * @return
      */
-    public static String getAgoraUrl(){
+    public static String getAgoraUrl() {
 //        return MyApplication.getInstance().getClusterEmm()+"";
         return "http://172.31.2.36:88/api/sys/v6.0/voice/create";
     }
 
     /**
      * 加入频道成功后告诉服务端
+     *
      * @return
      */
-    public static String getAgoraJoinChannelSuccessUrl(){
+    public static String getAgoraJoinChannelSuccessUrl() {
         return "http://172.31.2.36:88/api/sys/v6.0/voice/join/";
     }
 
     /**
      * 获取频道信息url
+     *
      * @return
      */
-    public static String getAgoraChannelInfoUrl(){
+    public static String getAgoraChannelInfoUrl() {
         return "http://172.31.2.36:88/api/sys/v6.0/voice/";
     }
 
     /**
      * 拒绝频道url
+     *
      * @return
      */
-    public static String getAgoraRefuseChannelUrl(){
+    public static String getAgoraRefuseChannelUrl() {
         return "http://172.31.2.36:88/api/sys/v6.0/voice/refuse/";
     }
 
     /**
      * 离开channel
+     *
      * @return
      */
-    public static String getAgoraLeaveChannelUrl(){
+    public static String getAgoraLeaveChannelUrl() {
         return "http://172.31.2.36:88/api/sys/v6.0/voice/leave/";
     }
 
     /**
      * 向emm注册推送token的url
      * 固定地址
+     *
      * @return
      */
-    public static String getRegisterPushTokenUrl(){
+    public static String getRegisterPushTokenUrl() {
         return "https://emm.inspuronline.com/api/sys/v6.0/config/registerDevice";
     }
 
     /**
      * 解除注册token的url
      * 固定地址
+     *
      * @return
      */
-    public static String getUnRegisterPushTokenUrl(){
+    public static String getUnRegisterPushTokenUrl() {
         return "https://emm.inspuronline.com/api/sys/v6.0/config/unRegisterDevice";
     }
 
     /**
      * 未读消息url
+     *
      * @return
      */
-    public static String getBadgeCountUrl(){
+    public static String getBadgeCountUrl() {
         String badgeCountUrl = "";
-        if(MyApplication.getInstance().isV0VersionChat()){
-            badgeCountUrl = getECMChatUrl() +"/unread-count";
-        }else if(MyApplication.getInstance().isV1xVersionChat()){
+        if (MyApplication.getInstance().isV0VersionChat()) {
+            badgeCountUrl = getECMChatUrl() + "/unread-count";
+        } else if (MyApplication.getInstance().isV1xVersionChat()) {
             badgeCountUrl = getECMChatUrl() + "/rest/v1/unread-count";
         }
         return badgeCountUrl;
@@ -1582,9 +1669,11 @@ public class APIUri {
     /**
      * 网络状态检测API
      * 固定地址
-     *@return */
-    public static String getCheckCloudPluseConnectUrl(){
-        return  "https://emm.inspur.com/api/mam/v3.0/heart/success";
+     *
+     * @return
+     */
+    public static String getCheckCloudPluseConnectUrl() {
+        return "https://emm.inspur.com/api/mam/v3.0/heart/success";
     }
 
 }

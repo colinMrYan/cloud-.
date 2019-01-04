@@ -2,7 +2,11 @@ package com.inspur.emmcloud.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Configuration;
+import android.net.ConnectivityManager;
+import android.net.NetworkRequest;
+import android.os.Build;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -34,7 +38,9 @@ import com.inspur.emmcloud.bean.system.MainTabTitleResult;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.bean.system.badge.BadgeBodyModel;
+import com.inspur.emmcloud.broadcastreceiver.NetworkChangeReceiver;
 import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.interf.NetworkCallbackImpl;
 import com.inspur.emmcloud.ui.appcenter.MyAppFragment;
 import com.inspur.emmcloud.ui.chat.CommunicationFragment;
 import com.inspur.emmcloud.ui.chat.CommunicationV0Fragment;
@@ -44,7 +50,6 @@ import com.inspur.emmcloud.ui.mine.MoreFragment;
 import com.inspur.emmcloud.ui.notsupport.NotSupportFragment;
 import com.inspur.emmcloud.ui.work.TabBean;
 import com.inspur.emmcloud.ui.work.WorkFragment;
-import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.AppTabUtils;
@@ -90,19 +95,34 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
     private boolean isCommunicationRunning = false;
     private boolean isSystemChangeTag = true;//控制如果是系统切换的tab则不计入用户行为
     private String tabId = "";
+    protected NetworkChangeReceiver networkChangeReceiver;
+    protected ConnectivityManager.NetworkCallback networkCallback;
+    protected ConnectivityManager connectivityManager;
     BatteryWhiteListDialog confirmDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        StateBarUtils.translucent( this );
         clearOldMainTabData();
         x.view().inject(this);
         mTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
+        registerNetWorkListenerAccordingSysLevel();
         initTabs();
         batteryWhiteListRemind(this);
     }
 
+    private void registerNetWorkListenerAccordingSysLevel() {
+        if(android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.N){
+            networkChangeReceiver = new NetworkChangeReceiver();
+            registerReceiver(networkChangeReceiver, new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE"));
+        }else{
+            networkCallback = new NetworkCallbackImpl(this);
+            NetworkRequest.Builder builder = new NetworkRequest.Builder();
+            NetworkRequest request = builder.build();
+            connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+            connectivityManager.registerNetworkCallback(request, networkCallback);
+        }
+    }
 
     /**
      * 清除旧版本的MainTab数据
@@ -339,29 +359,34 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
     }
 
     private void setTabBarBadge(String tabName, int number){
-        //查找tab之前，先清空一下对应tab的数据，防止tab找不到，数据还有的情况
-        saveTabBarBadgeNumber(tabName,0);
-        //根据tabName确定tabView的位置
-        List<MainTabResult> mainTabResultList = AppTabUtils.getMainTabResultList(this);
-        for (int i = 0; i < mainTabResultList.size(); i++) {
-            if(mainTabResultList.get(i).getName().equals(tabName)){
-                View tabView = mTabHost.getTabWidget().getChildAt(i);
-                RelativeLayout badgeLayout = (RelativeLayout) tabView.findViewById(R.id.rl_badge);
-                View badgeView = tabView.findViewById(R.id.v_badge);
-                if (number < 0){
-                    badgeLayout.setVisibility(View.GONE);
-                    badgeView.setVisibility(View.VISIBLE);
-                }else {
-                    badgeView.setVisibility(View.GONE);
-                    badgeLayout.setVisibility((number == 0) ? View.GONE : View.VISIBLE);
-                    TextView badgeText = (TextView) tabView.findViewById(R.id.tv_badge);
-                    badgeText.setText("" + (number > 99 ? "99+" : number));
+        //在某些情况下
+        try {
+            //查找tab之前，先清空一下对应tab的数据，防止tab找不到，数据还有的情况
+            saveTabBarBadgeNumber(tabName,0);
+            //根据tabName确定tabView的位置
+            List<MainTabResult> mainTabResultList = AppTabUtils.getMainTabResultList(this);
+            for (int i = 0; i < mainTabResultList.size(); i++) {
+                if(mainTabResultList.get(i).getName().equals(tabName)){
+                    View tabView = mTabHost.getTabWidget().getChildAt(i);
+                    RelativeLayout badgeLayout = (RelativeLayout) tabView.findViewById(R.id.rl_badge);
+                    View badgeView = tabView.findViewById(R.id.v_badge);
+                    if (number < 0){
+                        badgeLayout.setVisibility(View.GONE);
+                        badgeView.setVisibility(View.VISIBLE);
+                    }else {
+                        badgeView.setVisibility(View.GONE);
+                        badgeLayout.setVisibility((number == 0) ? View.GONE : View.VISIBLE);
+                        TextView badgeText = (TextView) tabView.findViewById(R.id.tv_badge);
+                        badgeText.setText("" + (number > 99 ? "99+" : number));
+                    }
+                    saveTabBarBadgeNumber(tabName,number);
                 }
-                saveTabBarBadgeNumber(tabName,number);
             }
+            //更新桌面角标数字
+            ECMShortcutBadgeNumberManagerUtils.setDesktopBadgeNumber(IndexBaseActivity.this, getDesktopNumber());
+        }catch (Exception e){
+            e.printStackTrace();
         }
-        //更新桌面角标数字
-        ECMShortcutBadgeNumberManagerUtils.setDesktopBadgeNumber(IndexBaseActivity.this, getDesktopNumber());
     }
 
     /**
@@ -372,7 +397,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
         int communicationTabBarNumber = PreferencesByUserAndTanentUtils.getInt(MyApplication.getInstance(),Constant.PREF_BADGE_NUM_COMMUNICATION,0);
         int appStoreTabBarNumber = PreferencesByUserAndTanentUtils.getInt(MyApplication.getInstance(),Constant.PREF_BADGE_NUM_APPSTORE,0);
         int momentTabBarNumber = PreferencesByUserAndTanentUtils.getInt(MyApplication.getInstance(),Constant.PREF_BADGE_NUM_SNS,0);
-        return communicationTabBarNumber+(appStoreTabBarNumber >= 0?appStoreTabBarNumber:0) +(momentTabBarNumber >= 0? momentTabBarNumber:0);
+        return (MyApplication.getInstance().isV0VersionChat()?0:communicationTabBarNumber)+(appStoreTabBarNumber >= 0?appStoreTabBarNumber:0) +(momentTabBarNumber >= 0? momentTabBarNumber:0);
     }
 
     /**
@@ -654,5 +679,21 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
             mTabHost.clearAllTabs(); //更新tabbar
             initTabs();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        if(android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.N){
+            if(networkChangeReceiver != null){
+                unregisterReceiver(networkChangeReceiver);
+                networkChangeReceiver = null;
+            }
+        }else{
+            if(connectivityManager != null && networkCallback != null){
+                connectivityManager.unregisterNetworkCallback(networkCallback);
+                networkCallback = null;
+            }
+        }
+        super.onDestroy();
     }
 }

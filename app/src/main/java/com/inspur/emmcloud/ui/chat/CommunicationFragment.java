@@ -45,7 +45,6 @@ import com.inspur.emmcloud.bean.system.MainTabProperty;
 import com.inspur.emmcloud.bean.system.MainTabResult;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
-import com.inspur.emmcloud.broadcastreceiver.NetworkChangeReceiver;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.push.WebSocketPush;
@@ -62,6 +61,7 @@ import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 import com.inspur.emmcloud.util.privates.ConversationGroupIconUtils;
 import com.inspur.emmcloud.util.privates.DownLoaderUtils;
+import com.inspur.emmcloud.util.privates.NetWorkStateChangeUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.ScanQrCodeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
@@ -71,7 +71,6 @@ import com.inspur.emmcloud.util.privates.cache.MessageMatheSetCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
-import com.inspur.imp.plugin.barcode.decoder.PreviewDecodeActivity;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -302,11 +301,11 @@ public class CommunicationFragment extends Fragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void netWorkStateTip(SimpleEventMessage netState) {
         if(netState.getAction().equals(Constant.EVENTBUS_TAG__NET_STATE_CHANGE)){
-            if(((String)netState.getMessageObj()).equals(NetworkChangeReceiver.NET_WIFI_STATE_OK)){
+            if(((String)netState.getMessageObj()).equals(NetWorkStateChangeUtils.NET_WIFI_STATE_OK)){
                 NetUtils.PingThreadStart(NetUtils.pingUrls,5,Constant.EVENTBUS_TAG__NET_EXCEPTION_HINT);
-            } else if(((String)netState.getMessageObj()).equals(NetworkChangeReceiver.NET_STATE_ERROR)) {
+            } else if(((String)netState.getMessageObj()).equals(NetWorkStateChangeUtils.NET_STATE_ERROR)) {
                 conversationAdapter.setNetExceptionView(false);
-            } else if (((String)netState.getMessageObj()).equals(NetworkChangeReceiver.NET_GPRS_STATE_OK)) {
+            } else if (((String)netState.getMessageObj()).equals(NetWorkStateChangeUtils.NET_GPRS_STATE_OK)) {
                 conversationAdapter.setNetExceptionView(true);
             }
         } else if (netState.getAction().equals(Constant.EVENTBUS_TAG__NET_EXCEPTION_HINT)) {   //网络异常提示
@@ -388,10 +387,12 @@ public class CommunicationFragment extends Fragment {
                     popupWindow.dismiss();
                     break;
                 case R.id.message_scan_layout:
-                    Intent scanIntent = new Intent();
-                    scanIntent.setClass(getActivity(), PreviewDecodeActivity.class);
-                    scanIntent.putExtra("from", "CommunicationFragment");
-                    startActivityForResult(scanIntent, REQUEST_SCAN_LOGIN_QRCODE_RESULT);
+//                    Intent scanIntent = new Intent();
+//                    scanIntent.setClass(getActivity(), PreviewDecodeActivity.class);
+//                    scanIntent.putExtra("from", "CommunicationFragment");
+//                    startActivityForResult(scanIntent, REQUEST_SCAN_LOGIN_QRCODE_RESULT);
+//                    AppUtils.openScanCode(getActivity(),REQUEST_SCAN_LOGIN_QRCODE_RESULT);
+                    AppUtils.openScanCode(CommunicationFragment.this,REQUEST_SCAN_LOGIN_QRCODE_RESULT);
                     popupWindow.dismiss();
                     break;
                 default:
@@ -660,7 +661,7 @@ public class CommunicationFragment extends Fragment {
             }
             getMessage();
             isFirstConnectWebsockt = false;
-            String appTabs = PreferencesByUserAndTanentUtils.getString(getActivity(), "app_tabbar_info_current", "");
+            String appTabs = PreferencesByUserAndTanentUtils.getString(getActivity(), Constant.PREF_APP_TAB_BAR_INFO_CURRENT, "");
             if (!StringUtils.isBlank(appTabs)) {
                 titleText.setText(AppTabUtils.getTabTitle(getActivity(), getClass().getSimpleName()));
             } else {
@@ -969,7 +970,7 @@ public class CommunicationFragment extends Fragment {
                     }
                     if (currentChannelRecentMessageList.size() > 0) {
                         //将离线消息发送到当前频道
-                        EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_CURRENT_CHANNEL_OFFLINE_MESSAGE,recentMessageList));
+                        EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_CURRENT_CHANNEL_OFFLINE_MESSAGE,currentChannelRecentMessageList));
                     }
                 }
                 new CacheMessageListThread(getRecentMessageListResult.getMessageList(), getRecentMessageListResult.getChannelMessageSetList()).start();

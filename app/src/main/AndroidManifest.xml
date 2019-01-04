@@ -11,11 +11,11 @@
     <!-- 极光推送权限配置开始 -->
     <!-- Required -->
     <permission
-        android:name="com.inspur.emmcloud.permission.JPUSH_MESSAGE"
+        android:name="${applicationId}.permission.JPUSH_MESSAGE"
         android:protectionLevel="signature" />
 
     <!-- Required -->
-    <uses-permission android:name="com.inspur.emmcloud.permission.JPUSH_MESSAGE" />
+    <uses-permission android:name="${applicationId}.permission.JPUSH_MESSAGE" />
     <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -102,8 +102,8 @@
     <!--科大讯飞语音增加权限-->
     <!--获取手机录音机使用权限，听写、识别、语义理解需要用到此权限 -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <!--读取联系人权限，上传联系人需要用到此权限 -->
-    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <!--&lt;!&ndash;读取联系人权限，上传联系人需要用到此权限 &ndash;&gt;-->
+    <!--<uses-permission android:name="android.permission.READ_CONTACTS" />-->
     <supports-screens
         android:anyDensity="true"
         android:largeScreens="true"
@@ -120,8 +120,9 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:largeHeap="true"
-        android:theme="@style/AppTheme"
+        android:theme="@style/AppTheme_2"
         tools:replace="android:allowBackup,label">
+
         <!--custom-->
         <meta-data
             android:name="FLAG_APP_VERSION_TYPE"
@@ -131,8 +132,7 @@
             android:name=".MainActivity"
             android:exported="true"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar">
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
@@ -178,11 +178,6 @@
         <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
         <activity
             android:name=".ui.IndexActivity"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustNothing"></activity>
-        <activity
-            android:name=".ui.TestActivity"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustNothing"></activity>
@@ -348,12 +343,10 @@
             android:name=".ui.ShareLinkActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"></activity>
 
         <activity
             android:name=".ui.SchemeHandleActivity"
-            android:theme="@android:style/Theme.Translucent"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:screenOrientation="portrait">
@@ -478,18 +471,10 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="inspur-ecc-native"/>
+                <data android:scheme="inspur-ecc-native" />
             </intent-filter>
 
         </activity>
-
-
-        <!--<activity-->
-            <!--android:name=".ui.chat.ChannelActivity"-->
-            <!--android:launchMode="singleTask"-->
-            <!--android:resizeableActivity="true"-->
-            <!--android:screenOrientation="portrait"-->
-            <!--android:windowSoftInputMode="adjustResize|stateHidden"></activity>-->
         <activity
             android:name=".ui.chat.ChannelV0Activity"
             android:launchMode="singleTask"
@@ -542,11 +527,12 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden" />
-        <activity android:name=".ui.chat.CorrectedSpeechInputActivity"
+        <activity
+            android:name=".ui.chat.CorrectedSpeechInputActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize|stateHidden"/>
+            android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".ui.chat.ChatFileDownloadActivtiy"
             android:launchMode="singleTask"
@@ -714,12 +700,10 @@
             android:name=".ui.chat.ImagePagerV0Activity"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".ui.chat.ImagePagerActivity"
             android:resizeableActivity="true"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
 
@@ -773,8 +757,7 @@
             android:name=".ui.find.trip.TripDetailActivity"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize|stateHidden">
-        </activity>
+            android:windowSoftInputMode="adjustResize|stateHidden"></activity>
         <activity
             android:name=".ui.appcenter.groupnews.GroupNewsActivity"
             android:resizeableActivity="true"
@@ -948,6 +931,30 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
 
+        <activity android:name=".ui.appcenter.mail.MailHomeActivity">
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait"
+        </activity>
+        <activity android:name=".ui.appcenter.mail.MailDetailActivity">
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait"
+        </activity>
+        <activity android:name=".ui.appcenter.mail.MailLoginActivity">
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait"
+        </activity>
+
+        <!-- Mail-->
+        <activity
+            android:name=".ui.appcenter.mail.MailCertificateInstallActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.appcenter.mail.MailSendActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
+
+
 
         <!-- service -->
         <service android:name=".service.LocationService"></service>
@@ -963,13 +970,13 @@
 
 
         <!-- receiver -->
-        <receiver
-            android:name=".broadcastreceiver.NetworkChangeReceiver"
-            android:label="NetworkConnection">
-            <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-            </intent-filter>
-        </receiver>
+        <!--<receiver-->
+            <!--android:name=".broadcastreceiver.NetworkChangeReceiver"-->
+            <!--android:label="NetworkConnection">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.net.conn.CONNECTIVITY_CHANGE" />-->
+            <!--</intent-filter>-->
+        <!--</receiver>-->
         <receiver
             android:name=".broadcastreceiver.ActionReceiver"
             android:exported="true">
@@ -999,7 +1006,7 @@
             </intent-filter>
             <!--闹钟广播，怎么用？-->
             <intent-filter>
-                <action android:name="com.inspur.emmcloud.TIMER_ACTION_REPEATING" />
+                <action android:name="${applicationId}.TIMER_ACTION_REPEATING" />
             </intent-filter>
             <!--开机广播-->
             <intent-filter>
@@ -1022,37 +1029,31 @@
             android:configChanges="orientation|screenSize"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
+            ></activity>
         <activity
             android:name="com.inspur.imp.plugin.camera.imagepicker.ui.ImagePreviewActivity"
             android:configChanges="orientation|screenSize"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
+            ></activity>
         <activity
             android:name="com.inspur.imp.plugin.camera.imagepicker.ui.ImageCropActivity"
             android:configChanges="orientation|screenSize"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
+            ></activity>
         <activity
             android:name="com.inspur.imp.plugin.camera.imagepicker.ui.ImagePreviewDelActivity"
             android:configChanges="orientation|screenSize"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
-        <activity
-            android:name="com.inspur.imp.plugin.camera.editimage.EditImageActivity"
-            android:configChanges="orientation|screenSize"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
+            ></activity>
         <activity
             android:name="com.inspur.imp.plugin.camera.imageedit.IMGEditActivity"
             android:configChanges="orientation|screenSize"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
+           ></activity>
 
         <!-- ImagePicker -->
 
@@ -1081,14 +1082,12 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait"
             android:stateNotNeeded="true"
-            android:supportsRtl="true"
-           ></activity>
+            android:supportsRtl="true"></activity>
         <activity
             android:name="com.inspur.imp.plugin.photo.ImageGalleryActivity"
             android:label="@string/app_name"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"
-            ></activity>
+            android:screenOrientation="portrait"></activity>
 
         <activity
             android:name="com.inspur.imp.plugin.file.FileBrowerAppActivity"
@@ -1105,7 +1104,7 @@
 
         <!-- MDM设备管理 -->
         <activity
-            android:name="com.inspur.emmcloud.ui.mdm.DeviceRegisterFailDetailActivity"
+            android:name=".ui.mdm.DeviceRegisterFailDetailActivity"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>
 
@@ -1121,7 +1120,7 @@
         <!-- since 3.0.9 Required SDK 核心功能-->
         <provider
             android:name="cn.jpush.android.service.DataProvider"
-            android:authorities="com.inspur.emmcloud.DataProvider"
+            android:authorities="${applicationId}.DataProvider"
             android:exported="false" />
 
         <!-- Required SDK核心功能-->
@@ -1135,7 +1134,7 @@
                 <action android:name="cn.jpush.android.ui.PushActivity" />
 
                 <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="com.inspur.emmcloud" />
+                <category android:name="${applicationId}" />
             </intent-filter>
         </activity>
 
@@ -1161,7 +1160,7 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="cn.jpush.android.intent.DaemonService" />
-                <category android:name="com.inspur.emmcloud" />
+                <category android:name="${applicationId}" />
             </intent-filter>
 
         </service>
@@ -1172,7 +1171,7 @@
             android:enabled="true">
             <intent-filter android:priority="1000">
                 <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED_PROXY" />   <!--Required  显示通知栏 -->
-                <category android:name="com.inspur.emmcloud" />
+                <category android:name="${applicationId}" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.USER_PRESENT" />
@@ -1204,7 +1203,7 @@
                 <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED" /> <!--Required  用户接收SDK通知栏信息的intent-->
                 <action android:name="cn.jpush.android.intent.NOTIFICATION_OPENED" /> <!--Required  用户打开自定义通知栏的intent-->
                 <action android:name="cn.jpush.android.intent.CONNECTION" /><!-- 接收网络变化 连接/断开 since 1.6.3 -->
-                <category android:name="com.inspur.emmcloud" />
+                <category android:name="${applicationId}" />
             </intent-filter>
         </receiver>
 
@@ -1234,10 +1233,10 @@
             android:value="10772129"></meta-data>
         <provider
             android:name="com.huawei.hms.update.provider.UpdateProvider"
-            android:authorities="com.inspur.emmcloud.hms.update.provider"
+            android:authorities="${applicationId}.hms.update.provider"
             android:exported="false"
-            android:process=":updateProvider"
-            android:grantUriPermissions="true"></provider>
+            android:grantUriPermissions="true"
+            android:process=":updateProvider"></provider>
 
 
         <!-- 第三方相关 :接收Push消息（注册、Push消息、Push连接状态）广播 -->
@@ -1296,25 +1295,39 @@
         <activity
             android:name="com.tencent.tauth.AuthActivity"
             android:launchMode="singleTask"
-            android:noHistory="true" >
+            android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data android:scheme="tencent1105561850" />
             </intent-filter>
         </activity>
         <activity
             android:name="com.tencent.connect.common.AssistActivity"
-            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:resizeableActivity="true"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
-            android:configChanges="orientation|keyboardHidden|screenSize"/>
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
             android:name="com.umeng.socialize.editorpage.ShareActivity"
             android:excludeFromRecents="true"
             android:resizeableActivity="true"
             android:theme="@style/Theme.UMDefault" />
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
     </application>
+
+
 
 </manifest>

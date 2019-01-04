@@ -1108,4 +1108,9 @@
     <string name="voice_to_word">Voice to Text</string>
 
     <string name="resend_file_failed">The message resent failed because the resource file could not be found</string>
+
+    <!--权限管理-->
+    <string name="permission_dialog_title">Tips</string>
+    <string name="permission_message_always_failed">You have forbidden granting %1$s %2$s permission, which may cause the function to be unavailable. If you need to use it, please go to the settings to grant permission.</string>
+    <string name="permission_grant_fail">You have forbidden granting %1$s %2$s permission</string>
 </resources>

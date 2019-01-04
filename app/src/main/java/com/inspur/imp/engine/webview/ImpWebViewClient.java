@@ -159,7 +159,7 @@ public class ImpWebViewClient extends WebViewClient {
     }
 
 
-    @TargetApi(android.os.Build.VERSION_CODES.LOLLIPOP)
+    @TargetApi(Build.VERSION_CODES.N)
     @Override
     public boolean shouldOverrideUrlLoading(WebView view, final WebResourceRequest request) {
         if (runnable != null) {
@@ -211,7 +211,7 @@ public class ImpWebViewClient extends WebViewClient {
     @SuppressWarnings("deprecation")
     @Override
     public boolean shouldOverrideUrlLoading(WebView view, String url) {
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             return false;
         }
         if (runnable != null) {

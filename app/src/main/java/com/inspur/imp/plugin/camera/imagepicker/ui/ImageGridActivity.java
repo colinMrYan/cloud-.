@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.inspur.emmcloud.R;
@@ -40,7 +41,7 @@ public class ImageGridActivity extends ImageBaseActivity implements
     private boolean isOrigin = false; // 是否选中原图
     private GridView mGridView; // 图片展示控件
     private View mFooterBar; // 底部栏
-    private Button mBtnOk; // 确定按钮
+    private TextView OkText; // 确定按钮
     private Button mBtnDir; // 文件夹切换按钮
     private Button mBtnPre; // 预览按钮
     //private Button mBtnEdit;
@@ -48,6 +49,7 @@ public class ImageGridActivity extends ImageBaseActivity implements
     private FolderPopUpWindow mFolderPopupWindow; // ImageSet的PopupWindow
     private List<ImageFolder> mImageFolders; // 所有的图片文件夹
     private ImageGridAdapter mImageGridAdapter; // 图片九宫格展示的适配器
+    private ImageDataSource imageDataSource;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,17 +59,17 @@ public class ImageGridActivity extends ImageBaseActivity implements
         imagePicker = ImagePicker.getInstance();
         imagePicker.clear();
         imagePicker.addOnImageSelectedListener(this);
-        mBtnOk = (Button) findViewById(R.id.btn_ok);
+        OkText = (TextView) findViewById(R.id.tv_ok);
         mBtnDir = (Button) findViewById(R.id.btn_dir);
         mBtnPre = (Button) findViewById(R.id.btn_preview);
         mGridView = (GridView) findViewById(R.id.gridview);
         mFooterBar = findViewById(R.id.footer_bar);
-        mBtnOk.setVisibility(imagePicker.isMultiMode() ? View.VISIBLE : View.GONE);
+        OkText.setVisibility(imagePicker.isMultiMode() ? View.VISIBLE : View.GONE);
         mBtnPre.setVisibility(imagePicker.isMultiMode() ? View.VISIBLE : View.GONE);
         mImageGridAdapter = new ImageGridAdapter(this, null);
         mImageFolderAdapter = new ImageFolderAdapter(this, null);
         onImageSelected(0, null, false);
-        new ImageDataSource(this, null, this);
+        imageDataSource = new ImageDataSource(this, null, this);
         encodingType = getIntent().getIntExtra(EXTRA_ENCODING_TYPE, 0);
     }
 
@@ -80,7 +82,7 @@ public class ImageGridActivity extends ImageBaseActivity implements
 
     public void onClick(View v) {
         int id = v.getId();
-        if (id == R.id.btn_ok) {
+        if (id == R.id.tv_ok) {
             returnDataAndClose();
         } else if (id == R.id.btn_dir) {
             if (mImageFolders == null) {
@@ -163,6 +165,7 @@ public class ImageGridActivity extends ImageBaseActivity implements
         mImageGridAdapter.setOnImageItemClickListener(this);
         mGridView.setAdapter(mImageGridAdapter);
         mImageFolderAdapter.refreshData(imageFolders);
+
     }
 
     @Override
@@ -201,13 +204,13 @@ public class ImageGridActivity extends ImageBaseActivity implements
     @Override
     public void onImageSelected(int position, ImageItem item, boolean isAdd) {
         if (imagePicker.getSelectImageCount() > 0) {
-            mBtnOk.setText(getString(R.string.select_complete,
+            OkText.setText(getString(R.string.select_complete,
                     imagePicker.getSelectImageCount(),
                     imagePicker.getSelectLimit()));
-            mBtnOk.setEnabled(true);
+            OkText.setEnabled(true);
         } else {
-            mBtnOk.setText(getString(R.string.complete));
-            mBtnOk.setEnabled(false);
+            OkText.setText(getString(R.string.complete));
+            OkText.setEnabled(false);
         }
 
         if (imagePicker.getSelectImageCount() == 1 && imagePicker.isMultiMode()) {

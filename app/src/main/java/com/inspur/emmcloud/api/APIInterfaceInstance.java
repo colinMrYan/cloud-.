@@ -18,6 +18,9 @@ import com.inspur.emmcloud.bean.appcenter.GetWebAppRealUrlResult;
 import com.inspur.emmcloud.bean.appcenter.ReactNativeDownloadUrlBean;
 import com.inspur.emmcloud.bean.appcenter.ReactNativeInstallUriBean;
 import com.inspur.emmcloud.bean.appcenter.ReactNativeUpdateBean;
+import com.inspur.emmcloud.bean.appcenter.mail.GetMailDetailResult;
+import com.inspur.emmcloud.bean.appcenter.mail.GetMailFolderResult;
+import com.inspur.emmcloud.bean.appcenter.mail.GetMailListResult;
 import com.inspur.emmcloud.bean.appcenter.news.GetGroupNewsDetailResult;
 import com.inspur.emmcloud.bean.appcenter.news.GetNewsTitleResult;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileListResult;
@@ -1860,11 +1863,55 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnBadgeCountSuccess(BadgeBodyModel badgeBodyModel) {
-
     }
 
     @Override
     public void returnBadgeCountFail(String error, int errorCode) {
+    }
+
+    @Override
+    public void returnMailFolderSuccess(GetMailFolderResult getMailForderResult) {
+    }
+
+    @Override
+    public void returnMailFolderFail(String error, int errorCode) {
+    }
+
+    @Override
+    public void returnMailListSuccess(String folderId, int pageSize, int offset, GetMailListResult getMailListResult) {
+    }
+
+    @Override
+    public void returnMailListFail(String folderId, int pageSize, int offset, String error, int errorCode) {
+    }
+
+    @Override
+    public void returnMailDetailSuccess(GetMailDetailResult getMailDetailResult) {
+    }
+
+    @Override
+    public void returnMailDetailSuccess(byte[] arg0) {
+    }
+
+    @Override
+    public void returnMailDetailFail(String error, int errorCode) {
+    }
+
+    @Override
+    public void returnMailLoginSuccess() {
+    }
+
+    @Override
+    public void returnMailLoginFail(String error, int errorCode) {
+    }
+
+    @Override
+    public void returnMailCertificateUploadSuccess(byte[] arg0) {
+
+    }
+
+    @Override
+    public void returnMailCertificateUploadFail(String error, int errorCode) {
 
     }
 }

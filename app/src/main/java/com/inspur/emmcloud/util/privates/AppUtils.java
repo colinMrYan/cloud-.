@@ -21,7 +21,9 @@ import android.net.Uri;
 import android.os.Binder;
 import android.os.Build;
 import android.os.Environment;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -29,6 +31,7 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.github.zafarkhaja.semver.Version;
+import com.inspur.emmcloud.BuildConfig;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.mine.Language;
@@ -42,11 +45,16 @@ import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ResolutionUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
+import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
+import com.inspur.emmcloud.util.common.systool.permission.Permissions;
 import com.inspur.imp.api.ImpActivity;
 import com.inspur.imp.api.Res;
+import com.inspur.imp.plugin.barcode.decoder.PreviewDecodeActivity;
 import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
 import com.inspur.imp.plugin.camera.imagepicker.ui.ImageGridActivity;
 import com.inspur.imp.plugin.camera.mycamera.MyCameraActivity;
+import com.yanzhenjie.permission.Permission;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -80,7 +88,6 @@ public class AppUtils {
         long divide = nowTimeStamp - lastTimeStamp;
         long speed = ((nowTotalRxBytes - lastTotalRxBytes) * 1000 / (divide == 0? 1:divide));//毫秒转换
         lastTimeStamp = nowTimeStamp;
-        lastTotalRxBytes = nowTotalRxBytes;
         return String.valueOf(speed) + " kb/s";
     }
 
@@ -474,22 +481,27 @@ public class AppUtils {
         return installed;
     }
 
-    /**
-     * 打开APK文件（安装APK应用）
-     *
-     * @param context
-     * @param file
-     */
-    public static void openAPKFile(Activity context, File file) {
-        Intent intent = new Intent();
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.setAction(android.content.Intent.ACTION_VIEW);
-        intent.setDataAndType(Uri.fromFile(file),
-                "application/vnd.android.package-archive");
-        if (context.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY) != null) {
-            context.startActivityForResult(intent, ImpActivity.DO_NOTHING_RESULTCODE);
-        }
-    }
+//    /**
+//     * 打开APK文件（安装APK应用）
+//     *
+//     * @param context
+//     * @param file
+//     */
+//    public static void openAPKFile(Activity context, File file) {
+//        Intent intent =new Intent(Intent.ACTION_VIEW);
+//        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        //判断是否是AndroidN以及更高的版本
+//        if(Build.VERSION.SDK_INT>= Build.VERSION_CODES.N) {
+//            Uri contentUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID+".fileprovider",file);
+//            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION|Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+//            intent.setDataAndType(contentUri, FileUtils.getMimeType(file));
+//        }else{
+//            intent.setDataAndType(Uri.fromFile(file),FileUtils.getMimeType(file));
+//        }
+//        if (context.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY) != null) {
+//            context.startActivityForResult(intent, ImpActivity.DO_NOTHING_RESULTCODE);
+//        }
+//    }
 
     /**
      * 获取手机dpi的方法 返回整型值
@@ -632,24 +644,80 @@ public class AppUtils {
      * @param fileName
      * @param requestCode
      */
-    public static void openCamera(Activity activity, String fileName, int requestCode) {
+    public static void openCamera(final Activity activity, final String fileName, final int requestCode) {
         // 判断存储卡是否可以用，可用进行存储
         if (Environment.getExternalStorageState().equals(
                 Environment.MEDIA_MOUNTED)) {
-            MyApplication.getInstance().setEnterSystemUI(true);
-            File appDir = new File(Environment.getExternalStorageDirectory(),
-                    "DCIM");
-            if (!appDir.exists()) {
-                appDir.mkdir();
-            }
-            Intent intent = new Intent();
-            intent.putExtra(MyCameraActivity.EXTRA_PHOTO_DIRECTORY_PATH, appDir.getAbsolutePath());
-            intent.putExtra(MyCameraActivity.EXTRA_PHOTO_NAME,fileName);
-            intent.setClass(activity,MyCameraActivity.class);
-            activity.startActivityForResult(intent, requestCode);
+            PermissionRequestManagerUtils.getInstance().requestRuntimePermission(activity, Permission.CAMERA, new PermissionRequestCallback() {
+                @Override
+                public void onPermissionRequestSuccess(List<String> permissions) {
+                    openCameraAfterCheckPermission(activity,fileName,requestCode);
+                }
+
+                @Override
+                public void onPermissionRequestFail(List<String> permissions) {
+                    ToastUtils.show(activity, PermissionRequestManagerUtils.getInstance().getPermissionToast(activity,permissions));
+                }
+            });
         } else {
             ToastUtils.show(activity, R.string.filetransfer_sd_not_exist);
         }
+    }
+
+    private static void openCameraAfterCheckPermission(Activity activity, String fileName, int requestCode) {
+        MyApplication.getInstance().setEnterSystemUI(true);
+        File appDir = new File(Environment.getExternalStorageDirectory(),
+                "DCIM");
+        if (!appDir.exists()) {
+            appDir.mkdir();
+        }
+        Intent intent = new Intent();
+        intent.putExtra(MyCameraActivity.EXTRA_PHOTO_DIRECTORY_PATH, appDir.getAbsolutePath());
+        intent.putExtra(MyCameraActivity.EXTRA_PHOTO_NAME,fileName);
+        intent.setClass(activity,MyCameraActivity.class);
+        activity.startActivityForResult(intent, requestCode);
+    }
+
+    public static void openScanCode(final Activity activity, final int requestCode){
+        PermissionRequestManagerUtils.getInstance().requestRuntimePermission(activity, Permissions.CAMERA, new PermissionRequestCallback() {
+            @Override
+            public void onPermissionRequestSuccess(List<String> permissions) {
+                openScanCodeAfterCheckPermission(activity,requestCode);
+            }
+
+            @Override
+            public void onPermissionRequestFail(List<String> permissions) {
+                ToastUtils.show(activity, PermissionRequestManagerUtils.getInstance().getPermissionToast(activity,permissions));
+            }
+
+
+        });
+    }
+
+    private static void openScanCodeAfterCheckPermission(Activity activity,int requestCode) {
+        Intent intent = new Intent();
+        intent.setClass(activity, PreviewDecodeActivity.class);
+        activity.startActivityForResult(intent,requestCode);
+    }
+
+    public static void openScanCode(final Fragment fragment, final int requestCode){
+        PermissionRequestManagerUtils.getInstance().requestRuntimePermission(fragment.getActivity(), Permissions.CAMERA, new PermissionRequestCallback() {
+            @Override
+            public void onPermissionRequestSuccess(List<String> permissions) {
+                openScanCodeAfterCheckPermission(fragment,requestCode);
+            }
+
+            @Override
+            public void onPermissionRequestFail(List<String> permissions) {
+                ToastUtils.show(fragment.getActivity(), PermissionRequestManagerUtils.getInstance().getPermissionToast(fragment.getActivity(),permissions));
+            }
+        });
+    }
+
+    private static void openScanCodeAfterCheckPermission(Fragment fragment,int requestCode) {
+        Intent intent = new Intent();
+        intent.setClass(fragment.getActivity(), PreviewDecodeActivity.class);
+        fragment.startActivityForResult(intent,requestCode);
     }
 
     /**
@@ -672,11 +740,22 @@ public class AppUtils {
      * @param phoneNum
      * @param requestCode
      */
-    public static void call(Activity activity,String phoneNum,int requestCode){
-        MyApplication.getInstance().setEnterSystemUI(true);
-        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:"
-                + phoneNum));
-        activity.startActivityForResult(intent, requestCode);
+    public static void call(final Activity activity, final String phoneNum, final int requestCode){
+        PermissionRequestManagerUtils.getInstance().requestRuntimePermission(activity, Permissions.CALL_PHONE, new PermissionRequestCallback() {
+            @Override
+            public void onPermissionRequestSuccess(List<String> permissions) {
+                MyApplication.getInstance().setEnterSystemUI(true);
+                Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:"
+                    + phoneNum));
+                activity.startActivityForResult(intent, requestCode);
+            }
+
+            @Override
+            public void onPermissionRequestFail(List<String> permissions) {
+                ToastUtils.show(activity, PermissionRequestManagerUtils.getInstance().getPermissionToast(activity,permissions));
+                activity.finish();
+            }
+        });
     }
 
     /**
@@ -1033,27 +1112,31 @@ public class AppUtils {
         return false;
     }
 
-    /**
-     * 安装apk
-     * @param context
-     * @param apkFilePath
-     */
-    public static void installApk(Context context,String apkFilePath,String apkFileName){
-        File apkFile = new File(apkFilePath, apkFileName);
-        if (!apkFile.exists()) {
-            ToastUtils.show(context, R.string.update_fail);
-            return;
-        }
-        // 通过Intent安装APK文件
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        // 更新后启动
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.setDataAndType(Uri.parse("file://" + apkFile.toString()),
-                "application/vnd.android.package-archive");
-        if (context.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY) != null) {
-            context.startActivity(intent);
-        }
-    }
+//    /**
+//     * 安装apk
+//     * @param context
+//     * @param apkFilePath
+//     */
+//    public static void installApk(Context context,String apkFilePath,String apkFileName){
+//        File apkFile = new File(apkFilePath, apkFileName);
+//        if (!apkFile.exists()) {
+//            ToastUtils.show(context, R.string.update_fail);
+//            return;
+//        }
+//        Intent intent =new Intent(Intent.ACTION_VIEW);
+//        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        //判断是否是AndroidN以及更高的版本
+//        if(Build.VERSION.SDK_INT>= Build.VERSION_CODES.N) {
+//            Uri contentUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID+".fileprovider",apkFile);
+//            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION|Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+//            intent.setDataAndType(contentUri, FileUtils.getMimeType(apkFile));
+//        }else{
+//            intent.setDataAndType(Uri.fromFile(apkFile),FileUtils.getMimeType(apkFile));
+//        }
+//        if (context.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY) != null) {
+//            context.startActivity(intent);
+//        }
+//    }
 
     /**
      * 获取kb或者mb格式的数字

@@ -19,6 +19,32 @@
         <item name="qmui_dialog_content_list_item_height">44dp</item>
         <item name="qmui_dialog_content_padding_top">10dp</item>
         <item name="qmui_dialog_title_margin_top">20dp</item>
+        <item name="qmui_config_color_blue">@color/transparent</item>
+        <item name="colorAccent">#24ABE9</item>
+    </style>
+    <style name="MyEditText" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorControlNormal">#C8C7CC</item>
+        <item name="colorControlActivated">#24ABE9</item>
+
+    </style>
+
+    <style name="AppTheme_1"  parent="AppTheme">
+        <item name="header_bg_color">@color/header_bg</item>
+        <item name="header_text_color">@android:color/white</item>
+    </style>
+    <style name="AppTheme_2"  parent="AppTheme">
+        <item name="header_bg_color">@color/header_bg_white</item>
+        <item name="header_text_color">#333333</item>
+    </style>
+
+    <!-- Application theme. -->
+    <style name="AppTheme.Transparent" parent="AppTheme">
+        <!--不设置activity进入和退出动画样式-->
+        <item name="android:windowAnimationStyle">@null</item>
+        <!--设置窗口的背景为透明，设置透明背景必须要设置此项-->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <!--设置窗口的背景是否为半透明，设置透明背景必须要设置此项-->
+        <item name="android:windowIsTranslucent">true</item>
     </style>
 
 
@@ -191,5 +217,9 @@
             <flag name="upDownStack" value="2"/>
         </attr>
     </declare-styleable>
-
+    <style name="AndroidTreeNodeStyleCustom">
+        <item name="android:paddingLeft">20dp</item>
+        <!--<item name="android:showDividers">middle</item>-->
+        <!--<item name="android:divider">@android:drawable/divider_horizontal_bright</item>-->
+    </style>
 </resources>

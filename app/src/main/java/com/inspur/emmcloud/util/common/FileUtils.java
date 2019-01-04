@@ -1,18 +1,23 @@
 package com.inspur.emmcloud.util.common;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.webkit.MimeTypeMap;
 
+import com.inspur.emmcloud.BuildConfig;
 import com.inspur.emmcloud.R;
+import com.inspur.imp.api.ImpActivity;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -841,6 +846,19 @@ public class FileUtils {
      * 打开文件多的方法
      *
      * @param context
+     */
+    public static void openFile(Activity context, File file,boolean isNeedStartForResult) {
+        String mime = FileUtils.getMimeType(file);
+        if (StringUtils.isBlank(mime)) {
+            mime = "text/plain";
+        }
+        openFile(context, file, mime,isNeedStartForResult);
+    }
+
+    /**
+     * 打开文件多的方法
+     *
+     * @param context
      * @param path
      */
     public static void openFile(Context context, String path) {
@@ -856,21 +874,65 @@ public class FileUtils {
      * 打开文件
      *
      * @param context
+     * @param mime
+     */
+    public static void openFile(Activity context, File file, String mime, boolean isNeedStartActivityForResult) {
+        Intent intent =new Intent(Intent.ACTION_VIEW);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        //判断是否是AndroidN以及更高的版本
+        if(Build.VERSION.SDK_INT>= Build.VERSION_CODES.N) {
+            Uri contentUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID+".fileprovider",file);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION|Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+            intent.setDataAndType(contentUri,mime);
+        }else{
+            intent.setDataAndType(Uri.fromFile(file),mime);
+        }
+        if (context.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY) != null) {
+            if(isNeedStartActivityForResult){
+                context.startActivityForResult(intent, ImpActivity.DO_NOTHING_RESULTCODE);
+            }else{
+                context.startActivity(intent);
+            }
+        }
+    }
+
+    /**
+     * 打开文件
+     *
+     * @param context
      * @param path
      * @param mime
      */
     public static void openFile(Context context, String path, String mime) {
-        try {
-            File file = new File(path);
-            Intent intent = new Intent("android.intent.action.VIEW");
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.setDataAndType(Uri.fromFile(file), mime);
-            if (context.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY) != null) {
-                context.startActivity(intent);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            ToastUtils.show(context, R.string.clouddriver_file_open_fail);
+        //可用，但不是最好的方法
+//        Intent intent = new Intent();
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+//            StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+//            StrictMode.setVmPolicy(builder.build());
+//        }
+//        File file = new File(path);
+//        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);//设置标记
+//        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+//        intent.setAction(Intent.ACTION_VIEW);//动作，查看
+//        intent.setDataAndType(Uri.fromFile(file), mime);//设置类型
+//        if (context.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY) != null) {
+//            context.startActivity(intent);
+//        }
+
+
+        File file = new File(path);
+        Intent intent =new Intent(Intent.ACTION_VIEW);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        //判断是否是AndroidN以及更高的版本
+        if(Build.VERSION.SDK_INT>= Build.VERSION_CODES.N) {
+            Uri contentUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID+".fileprovider",file);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION|Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+            intent.setDataAndType(contentUri,mime);
+        }else{
+            intent.setDataAndType(Uri.fromFile(file),mime);
+        }
+        if (context.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY) != null) {
+            context.startActivity(intent);
         }
     }
 
@@ -1189,11 +1251,38 @@ public class FileUtils {
     }
 
     public static String encodeBase64File(String filePath) throws Exception {
-        File file= new File(filePath);
+        File file = new File(filePath);
         FileInputStream inputFile = new FileInputStream(file);
         byte[] buffer = new byte[(int) file.length()];
         inputFile.read(buffer);
         inputFile.close();
         return Base64.encodeToString(buffer, Base64.NO_WRAP);
     }
+
+
+    /**
+     * 获得指定文件的byte数组
+     */
+    public static byte[] file2Bytes(String filePath) {
+        byte[] buffer = null;
+        try {
+            File file = new File(filePath);
+            FileInputStream fis = new FileInputStream(file);
+            ByteArrayOutputStream bos = new ByteArrayOutputStream(1000);
+            byte[] b = new byte[1000];
+            int n;
+            while ((n = fis.read(b)) != -1) {
+                bos.write(b, 0, n);
+            }
+            fis.close();
+            bos.close();
+            buffer = bos.toByteArray();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return buffer;
+    }
+
 }

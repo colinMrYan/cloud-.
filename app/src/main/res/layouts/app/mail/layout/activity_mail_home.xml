@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <com.inspur.emmcloud.widget.sildemenu.LeftDrawerLayout
+        android:id="@+id/ldl_menu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:id="@+id/rl_header"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/header_height"
+                android:background="?attr/header_bg_color">
+
+                <ImageButton
+                    android:id="@+id/ibt_setting"
+                    android:layout_width="45dp"
+                    android:layout_height="40dp"
+                    android:layout_centerVertical="true"
+                    android:onClick="onClick"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="5dp"
+                    android:src="@drawable/ic_mail_header_setting" />
+
+                <TextView
+                    android:id="@+id/tv_header"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:textColor="?attr/header_text_color"
+                    android:textSize="@dimen/header_textsize" />
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true">
+
+                    <Button
+                        android:id="@+id/bt_mail_add"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_centerVertical="true"
+                        android:background="@drawable/ic_mail_header_add"
+                        android:onClick="onClick" />
+
+                    <Button
+                        android:id="@+id/bt_close"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_toRightOf="@id/bt_mail_add"
+                        android:background="@drawable/ic_mail_header_close"
+                        android:onClick="onClick" />
+                </RelativeLayout>
+            </RelativeLayout>
+
+                <com.inspur.emmcloud.widget.MySwipeRefreshLayout
+                    android:id="@+id/srl_refresh"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@id/rl_header"
+                    android:background="@color/content_bg">
+                    <ListView
+                        android:id="@+id/lv_mail"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:divider="@null"
+                        android:dividerHeight="0dp" />
+                </com.inspur.emmcloud.widget.MySwipeRefreshLayout>
+
+            <View
+                android:id="@+id/v_shadow"
+                android:onClick="onClick"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/rl_header">
+            </View>
+
+        </RelativeLayout>
+
+        <FrameLayout
+            android:id="@+id/fm_container_menu"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"></FrameLayout>
+    </com.inspur.emmcloud.widget.sildemenu.LeftDrawerLayout>
+</RelativeLayout>
+

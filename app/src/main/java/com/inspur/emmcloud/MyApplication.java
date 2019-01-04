@@ -116,11 +116,19 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     public void onCreate() {
         super.onCreate();
         init();
+        int currentThemeNo = PreferencesUtils.getInt(MyApplication.getInstance(), Constant.PREF_APP_THEME, 0);
+        if (currentThemeNo == 0){
+            setTheme(R.style.AppTheme_1);
+        }else {
+            setTheme(R.style.AppTheme_2);
+        }
+        LogUtils.isDebug = AppUtils.isApkDebugable(getInstance());
         setAppLanguageAndFontScale();
         removeAllSessionCookie();
         myActivityLifecycleCallbacks = new MyActivityLifecycleCallbacks();
         registerActivityLifecycleCallbacks(myActivityLifecycleCallbacks);
         WebSocketPush.getInstance().startWebSocket();
+
     }
 
     public String getCloudId() {
@@ -387,7 +395,6 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
      */
     public void restartAllDb() {
         // TODO Auto-generated method stub
-        DbCacheUtils.closeDb(getInstance());
         DbCacheUtils.closeDb(getInstance());
         DbCacheUtils.initDb(getInstance());
     }
@@ -910,6 +917,22 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         try {
             for (Activity activity : activityList) {
                 if (activity != targetActivity) {
+                    activity.finish();
+                }
+            }
+        } catch (Exception e) {
+            LogUtils.exceptionDebug(TAG, e.toString());
+        }
+    }
+
+    /**
+     * 清除除了指定名称之外的Activity
+     *
+     */
+    public void closeOtherActivity(String activityName) {
+        try {
+            for (Activity activity : activityList) {
+                if(!activity.getClass().getSimpleName().equals(activityName)){
                     activity.finish();
                 }
             }

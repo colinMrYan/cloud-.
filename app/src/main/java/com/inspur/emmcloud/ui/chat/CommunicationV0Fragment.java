@@ -48,7 +48,6 @@ import com.inspur.emmcloud.bean.system.MainTabResult;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.broadcastreceiver.MsgReceiver;
-import com.inspur.emmcloud.broadcastreceiver.NetworkChangeReceiver;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.push.WebSocketPush;
@@ -60,12 +59,14 @@ import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.AppTabUtils;
+import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ChannelGroupIconUtils;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils.OnCreateGroupChannelListener;
 import com.inspur.emmcloud.util.privates.CustomProtocol;
 import com.inspur.emmcloud.util.privates.DirectChannelUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
+import com.inspur.emmcloud.util.privates.NetWorkStateChangeUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.ScanQrCodeUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
@@ -80,7 +81,6 @@ import com.inspur.emmcloud.util.privates.cache.MsgReadCreationDateCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.widget.CircleTextImageView;
 import com.inspur.emmcloud.widget.WeakThread;
-import com.inspur.imp.plugin.barcode.decoder.PreviewDecodeActivity;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 
 import org.greenrobot.eventbus.EventBus;
@@ -368,11 +368,11 @@ public class CommunicationV0Fragment extends Fragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void netWorkStateHint(SimpleEventMessage netState) {
         if(netState.getAction().equals(Constant.EVENTBUS_TAG__NET_STATE_CHANGE)){
-            if(((String)netState.getMessageObj()).equals(NetworkChangeReceiver.NET_WIFI_STATE_OK)){
+            if(((String)netState.getMessageObj()).equals(NetWorkStateChangeUtils.NET_WIFI_STATE_OK)){
                 NetUtils.PingThreadStart(NetUtils.pingUrls,5,Constant.EVENTBUS_TAG__NET_EXCEPTION_HINT);
-            } else if(((String)netState.getMessageObj()).equals(NetworkChangeReceiver.NET_STATE_ERROR)) {
+            } else if(((String)netState.getMessageObj()).equals(NetWorkStateChangeUtils.NET_STATE_ERROR)) {
                 AddHeaderView();
-            } else if (((String)netState.getMessageObj()).equals(NetworkChangeReceiver.NET_GPRS_STATE_OK)) {
+            } else if (((String)netState.getMessageObj()).equals(NetWorkStateChangeUtils.NET_GPRS_STATE_OK)) {
                 DeleteHeaderView();
             }
         } else if (netState.getAction().equals(Constant.EVENTBUS_TAG__NET_EXCEPTION_HINT)) {   //网络异常提示
@@ -436,10 +436,11 @@ public class CommunicationV0Fragment extends Fragment {
         scanLayout.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setClass(getActivity(), PreviewDecodeActivity.class);
-                intent.putExtra("from", "CommunicationFragment");
-                startActivityForResult(intent, SCAN_LOGIN_QRCODE_RESULT);
+//                Intent intent = new Intent();
+//                intent.setClass(getActivity(), PreviewDecodeActivity.class);
+//                intent.putExtra("from", "CommunicationFragment");
+//                startActivityForResult(intent, SCAN_LOGIN_QRCODE_RESULT);
+                AppUtils.openScanCode(CommunicationV0Fragment.this,SCAN_LOGIN_QRCODE_RESULT);
                 popupWindow.dismiss();
             }
         });
@@ -1160,7 +1161,7 @@ public class CommunicationV0Fragment extends Fragment {
                 getChannelList();
             }
             isFirstConnectWebsockt = false;
-            String appTabs = PreferencesByUserAndTanentUtils.getString(getActivity(), "app_tabbar_info_current", "");
+            String appTabs = PreferencesByUserAndTanentUtils.getString(getActivity(), Constant.PREF_APP_TAB_BAR_INFO_CURRENT, "");
             if (!StringUtils.isBlank(appTabs)) {
                 titleText.setText(AppTabUtils.getTabTitle(getActivity(), getClass().getSimpleName()));
             } else {

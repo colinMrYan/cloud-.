@@ -5,27 +5,54 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.ui.SchemeHandleActivity;
+import com.inspur.emmcloud.ui.appcenter.ReactNativeAppActivity;
+import com.inspur.emmcloud.ui.login.LoginActivity;
+import com.inspur.emmcloud.ui.login.ScanQrCodeLoginGSActivity;
+import com.inspur.emmcloud.ui.mine.setting.FaceVerifyActivity;
+import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.privates.LanguageUtils;
+import com.inspur.imp.plugin.barcode.scan.CaptureActivity;
+import com.inspur.imp.plugin.camera.imageedit.IMGEditActivity;
+import com.inspur.imp.plugin.photo.ImageGalleryActivity;
 
 import org.xutils.x;
 
+import java.util.Arrays;
+
 public class BaseActivity extends Activity {
+    private static final String[] classNames = {
+            MainActivity.class.getName(),
+            LoginActivity.class.getName(),
+            SchemeHandleActivity.class.getName(),
+            CaptureActivity.class.getName(),
+            FaceVerifyActivity.class.getName(),
+            ReactNativeAppActivity.class.getName(),
+            ScanQrCodeLoginGSActivity.class.getName(),
+            IMGEditActivity.class.getName(),
+            ImageGalleryActivity.class.getName(),
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        x.view().inject(this);
         String className = this.getClass().getCanonicalName();
-        if ( !className.endsWith(".CaptureActivity") &&!className.endsWith(".MyCameraActivity") && !className.endsWith(".LoginActivity")
-                && !className.endsWith(".MainActivity") && !className.endsWith(".FaceVerifyActivity") && !className.endsWith(".ReactNativeAppActivity")  && !className.endsWith(".ScanQrCodeLoginGSActivity")
-                && !className.endsWith(".IMGEditActivity") && !className.endsWith(".ImageGalleryActivity")){
-            StateBarUtils.translucent( this );
+        boolean isContain = Arrays.asList(classNames).contains(className);
+        if (!isContain) {
+            int currentThemeNo = PreferencesUtils.getInt(MyApplication.getInstance(), Constant.PREF_APP_THEME, 0);
+            if (currentThemeNo == 0){
+                setTheme(R.style.AppTheme_1);
+            }else {
+                setTheme(R.style.AppTheme_2);
+            }
+            StateBarUtils.translucent(this);
         }
-       //禁止截屏
-        //this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
+        x.view().inject(this);
     }
+
     //解决调用系统应用后会弹出手势解锁的问题
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

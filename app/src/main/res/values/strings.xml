@@ -514,6 +514,8 @@
     <string name="join">加入</string>
     <string name="none">无</string>
 
+    <!--Webex 邮箱-->
+    <string name="mail_install_cert"><u>安装数字证书</u></string>
 
     <!-- 动态部分 -->
     <string name="moments">动态</string>
@@ -1158,4 +1160,8 @@
 
 
     <string name="resend_file_failed">无法找到资源文件，消息重发失败</string>
+
+    <!--权限管理-->
+    <string name="permission_message_always_failed">您已禁止授予%1$s %2$s 权限，可能会造成功能不可用，如需使用请到设置里授予权限</string>
+    <string name="permission_grant_fail">您已禁止授予%1$s %2$s 权限</string>
 </resources>

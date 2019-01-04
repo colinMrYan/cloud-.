@@ -9,7 +9,7 @@
         android:id="@+id/header_layout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/header_height"
-        android:background="@color/header_bg">
+        android:background="?attr/header_bg_color">
 
         <RelativeLayout
             android:id="@+id/back_layout"
@@ -38,7 +38,7 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:text="@string/work_approval_head_text"
-            android:textColor="@color/header_text"
+            android:textColor="?attr/header_text_color"
             android:textSize="@dimen/header_textsize" />
 
         <ImageView
@@ -60,20 +60,6 @@
         android:layout_below="@id/header_layout"
         android:background="@color/white">
 
-        <!--<RelativeLayout-->
-            <!--android:id="@+id/work_all_approval_layout"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginLeft="9dp"-->
-            <!--android:layout_marginRight="9dp"-->
-            <!--android:background="@drawable/shape_round_white_background_5dp">-->
-
-        <!--android:layout_marginTop="26dp"-->
-        <!--android:layout_marginLeft="9dp"-->
-        <!--android:layout_marginRight="9dp"-->
-        <!--android:overScrollMode="never"-->
-            <!--android:background="@drawable/shape_round_white_background_5dp"-->
-        <!--</RelativeLayout>-->
         <android.support.v7.widget.RecyclerView
             android:id="@+id/work_all_approval_recyclerview"
             android:layout_width="match_parent"

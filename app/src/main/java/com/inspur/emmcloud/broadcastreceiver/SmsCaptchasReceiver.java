@@ -9,6 +9,13 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 
+import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
+import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
+import com.yanzhenjie.permission.Permission;
+
+import java.util.List;
+
 /**
  * 监听短信数据库
  * 
@@ -32,9 +39,24 @@ public class SmsCaptchasReceiver extends ContentObserver {
 	@Override
 	public void onChange(boolean selfChange) {
 		super.onChange(selfChange);
+		PermissionRequestManagerUtils.getInstance().requestRuntimePermission(context, Permission.READ_SMS, new PermissionRequestCallback() {
+			@Override
+			public void onPermissionRequestSuccess(List<String> permissions) {
+				readSMSMessages();
+			}
+
+			@Override
+			public void onPermissionRequestFail(List<String> permissions) {
+				ToastUtils.show(context, PermissionRequestManagerUtils.getInstance().getPermissionToast(context,permissions));
+			}
+
+		});
+	}
+
+	private void readSMSMessages() {
 		// 读取收件箱中指定号码的短信
 		cursor = context.managedQuery(Uri.parse("content://sms/inbox"), new String[] {
-				"_id", "address", "read", "body" }, " address=? and read=?",
+						"_id", "address", "read", "body" }, " address=? and read=?",
 				new String[] { "10655010187420709105", "0" }, "_id desc");// 按id排序，如果按date排序的话，修改手机时间后，读取的短信就不准了
 		if (cursor != null && cursor.getCount() > 0) {
 			ContentValues values = new ContentValues();

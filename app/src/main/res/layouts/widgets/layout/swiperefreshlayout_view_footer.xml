@@ -20,5 +20,5 @@
         android:layout_toLeftOf="@id/text"
         android:layout_centerVertical="true"
         android:color="@color/header_bg"
-        app:qmui_loading_view_size="25dp" />
+        app:qmui_loading_view_size="20dp" />
 </RelativeLayout>
