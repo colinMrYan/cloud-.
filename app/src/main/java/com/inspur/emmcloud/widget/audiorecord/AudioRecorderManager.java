@@ -19,6 +19,8 @@ import java.text.DecimalFormat;
  */
 public class AudioRecorderManager {
 
+    //录音音频的放大倍数
+    private final static int VOICE_ENLARGE_TIMES = 5;
     //音频输入-麦克风
     public final static int AUDIO_INPUT = MediaRecorder.AudioSource.MIC;
     //采用频率
@@ -211,6 +213,10 @@ public class AudioRecorderManager {
                     return;
                 }
                 readSize = audioRecord.read(audioData, 0, bufferSizeInBytes);
+                volume = getVolumeLevel(audioData);
+                for(int i=0;i<audioData.length;i++) {
+                    audioData[i]= (byte) (audioData[i]*VOICE_ENLARGE_TIMES);
+                }
                 if (AudioRecord.ERROR_INVALID_OPERATION != readSize && fos != null) {
                     isHasData = true;
                     fos.write(audioData);
@@ -220,7 +226,6 @@ public class AudioRecorderManager {
                         callBack.onWavAudioPrepareState(AudioRecordErrorCode.E_ERROR);
                     }
                 }
-                volume = getVolumeLevel(audioData);
                 duration = System.currentTimeMillis() - beginTime;
                 DecimalFormat decimalFormat = new DecimalFormat("##0.0");
                 String time = decimalFormat.format(duration / 1000f);
