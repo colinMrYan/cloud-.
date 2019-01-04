@@ -46,18 +46,18 @@ public class MailSendActivity extends BaseActivity {
     private RichEdit ccRecipientRichEdit;
     @ViewInject(R.id.et_theme_send)
     private EditText sendThemeEditText;
-    @ViewInject( R.id.tv_recipients_show )
+    @ViewInject(R.id.tv_recipients_show)
     private TextView recipientsShowText;
-    @ViewInject( R.id.tv_cc_recipient_show)
+    @ViewInject(R.id.tv_cc_recipient_show)
     private TextView ccRecipientsShowText;
-    @ViewInject( R.id.iv_fw_tip )
+    @ViewInject(R.id.iv_fw_tip)
     private ImageView fwTipImageView;
-    @ViewInject( R.id.rl_fw_body )
+    @ViewInject(R.id.rl_fw_body)
     private RelativeLayout fwBodyLayout;
     @ViewInject(R.id.cb_fw_body)
     private CheckBox fwBodyCheckBox;
-    @ViewInject( R.id.impwebview_fw_body )
-    private ImpWebView  fwBodyImpWebView;
+    @ViewInject(R.id.impwebview_fw_body)
+    private ImpWebView fwBodyImpWebView;
     @ViewInject(R.id.tv_header_title)
     private TextView headerTitleText;
 
@@ -69,12 +69,12 @@ public class MailSendActivity extends BaseActivity {
     private ArrayList<String> memberUidList = new ArrayList<>();
     private ArrayList<MailRecipientModel> recipientList = new ArrayList<>();
     private ArrayList<MailRecipientModel> ccRecipientList = new ArrayList<>();
-    public static final String MODEL_NEW="mail_new";
-    public static final String MODEL_REPLY="mail_replay";
-    public static final String MODEL_REPLY_ALL="mail_replay_ALL";
-    public static final String MODEL_FORWARD="mail_forward";
-    public static final String EXTRA_MAIL_ID ="extra_mail_id";
-    public static final String EXTRA_MAIL_MODEL ="extra_mail_model";
+    public static final String MODEL_NEW = "mail_new";
+    public static final String MODEL_REPLY = "mail_replay";
+    public static final String MODEL_REPLY_ALL = "mail_replay_ALL";
+    public static final String MODEL_FORWARD = "mail_forward";
+    public static final String EXTRA_MAIL_ID = "extra_mail_id";
+    public static final String EXTRA_MAIL_MODEL = "extra_mail_model";
     private static final int QEQUEST_ADD_MEMBER = 2;
     private static final int QEQUEST_CC_MEMBER = 3;
 
@@ -88,17 +88,18 @@ public class MailSendActivity extends BaseActivity {
 
     /**
      * 初始化
-     * */
+     */
     private void init() {
         recipientRichEdit.setInputWatcher( new RichEdit.InputWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
-                String  data ;
+                String data;
             }
+
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.toString().length()>1&&' '==s.charAt(s.length()-1)){
-                    recipientRichEdit.insertLastManualData(1);
+                if (s.toString().length() > 1 && ' ' == s.charAt( s.length() - 1 )) {
+                    recipientRichEdit.insertLastManualData( 1 );
                 }
             }
         } );
@@ -110,30 +111,31 @@ public class MailSendActivity extends BaseActivity {
         recipientRichEdit.setOnFocusChangeListener( new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus){
-                }else{
-                     recipientRichEdit.insertLastManualData(-1);
+                if (hasFocus) {
+                } else {
+                    recipientRichEdit.insertLastManualData( -1 );
                 }
             }
-        });
+        } );
 
         recipientRichEdit.setInsertModelListWatcher( new RichEdit.InsertModelListWatcher() {
             @Override
             public void onDataChanged(List<InsertModel> insertModelList) {
-                     synchronousRemoveRecipients( recipientList,insertModelList );
-                     synchronousAddRecipients( recipientList,insertModelList );
-                     LogUtils.LbcDebug( "当前："+recipientList.size() );
+                synchronousRemoveRecipients( recipientList, insertModelList );
+                synchronousAddRecipients( recipientList, insertModelList );
+                LogUtils.LbcDebug( "当前：" + recipientList.size() );
             }
-        });
+        } );
 
         ccRecipientRichEdit.setInputWatcher( new RichEdit.InputWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
             }
+
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.toString().length()>1&&' '==s.charAt(s.length()-1)){
-                    ccRecipientRichEdit.insertLastManualData(1);
+                if (s.toString().length() > 1 && ' ' == s.charAt( s.length() - 1 )) {
+                    ccRecipientRichEdit.insertLastManualData( 1 );
                 }
             }
         } );
@@ -141,114 +143,114 @@ public class MailSendActivity extends BaseActivity {
         ccRecipientRichEdit.setInsertModelListWatcher( new RichEdit.InsertModelListWatcher() {
             @Override
             public void onDataChanged(List<InsertModel> insertModelList) {
-                synchronousRemoveRecipients( ccRecipientList,insertModelList );
-                synchronousAddRecipients( ccRecipientList,insertModelList );
+                synchronousRemoveRecipients( ccRecipientList, insertModelList );
+                synchronousAddRecipients( ccRecipientList, insertModelList );
             }
         } );
         ccRecipientRichEdit.setOnFocusChangeListener( new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus){
-                }else{
-                    ccRecipientRichEdit.insertLastManualData(-1);
+                if (hasFocus) {
+                } else {
+                    ccRecipientRichEdit.insertLastManualData( -1 );
                 }
             }
-        });
+        } );
 
         recipientsShowText.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                recipientsShowText.setVisibility(View.GONE);
-                recipientRichEdit.setVisibility(View.VISIBLE);
+                recipientsShowText.setVisibility( View.GONE );
+                recipientRichEdit.setVisibility( View.VISIBLE );
             }
         } );
         ccRecipientsShowText.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 ccRecipientRichEdit.setVisibility( View.VISIBLE );
-                ccRecipientsShowText.setVisibility( View.GONE);
+                ccRecipientsShowText.setVisibility( View.GONE );
             }
         } );
 
         fwBodyCheckBox.setOnCheckedChangeListener( new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if(b){
+                if (b) {
                     fwBodyImpWebView.setVisibility( View.VISIBLE );
-                }else{
+                } else {
                     fwBodyImpWebView.setVisibility( View.GONE );
                 }
             }
         } );
-       Bundle mailBundle  =  getIntent().getExtras();
-       if(null!=mailBundle){
-           String replyMailMode =mailBundle.getString(EXTRA_MAIL_MODEL);
-           String replyMailId = mailBundle.getString( EXTRA_MAIL_ID );
-           Mail   replayMail =  MailCacheUtils.getMail( replyMailId );
-           if(null==replayMail){
-               replayMail = new Mail();
-           }
-           List<MailRecipient> mailRecipientList = new ArrayList<>();
-           switch (replyMailMode){
-               case MODEL_NEW:
-                   headerTitleText.setText("发邮件");
+        Bundle mailBundle = getIntent().getExtras();
+        if (null != mailBundle) {
+            String replyMailMode = mailBundle.getString( EXTRA_MAIL_MODEL );
+            String replyMailId = mailBundle.getString( EXTRA_MAIL_ID );
+            Mail replayMail = MailCacheUtils.getMail( replyMailId );
+            if (null == replayMail) {
+                replayMail = new Mail();
+            }
+            List<MailRecipient> mailRecipientList = new ArrayList<>();
+            switch (replyMailMode) {
+                case MODEL_NEW:
+                    headerTitleText.setText( "发邮件" );
 
-                   break;
-               case MODEL_REPLY:
-                   mailRecipientList.clear();
-                   mailRecipientList.add(replayMail.getFromMailRecipient());
-                   insertReciversFromExtra(recipientRichEdit,mailRecipientList,recipientList);
+                    break;
+                case MODEL_REPLY:
+                    mailRecipientList.clear();
+                    mailRecipientList.add( replayMail.getFromMailRecipient() );
+                    insertReciversFromExtra( recipientRichEdit, mailRecipientList, recipientList );
 
-                   sendThemeEditText.setText(replayMail.getSubject().toString());
-                   headerTitleText.setText("回复");
-                   break;
-               case MODEL_REPLY_ALL:
-                   mailRecipientList.clear();
-                   mailRecipientList.add(replayMail.getFromMailRecipient());
-                   insertReciversFromExtra(recipientRichEdit,mailRecipientList,recipientList );
+                    sendThemeEditText.setText( replayMail.getSubject().toString() );
+                    headerTitleText.setText( "回复" );
+                    break;
+                case MODEL_REPLY_ALL:
+                    mailRecipientList.clear();
+                    mailRecipientList.add( replayMail.getFromMailRecipient() );
+                    insertReciversFromExtra( recipientRichEdit, mailRecipientList, recipientList );
 
-                   mailRecipientList.clear();
-                   mailRecipientList=replayMail.getToMailRecipientList();
-                   insertReciversFromExtra(recipientRichEdit,mailRecipientList,recipientList );
-                   recipientsShowText.setText(recipientRichEdit.getText().toString());
-                   recipientRichEdit.setVisibility( View.GONE );
-                   recipientsShowText.setVisibility( View.VISIBLE);
+                    mailRecipientList.clear();
+                    mailRecipientList = replayMail.getToMailRecipientList();
+                    insertReciversFromExtra( recipientRichEdit, mailRecipientList, recipientList );
+                    recipientsShowText.setText( recipientRichEdit.getText().toString() );
+                    recipientRichEdit.setVisibility( View.GONE );
+                    recipientsShowText.setVisibility( View.VISIBLE );
 
-                   mailRecipientList.clear();
-                   mailRecipientList = replayMail.getCcMailRecipientList();
-                   insertReciversFromExtra(ccRecipientRichEdit,mailRecipientList,ccRecipientList);
-                   ccRecipientsShowText.setText(ccRecipientRichEdit.getText().toString());
-                   ccRecipientRichEdit.setVisibility( View.GONE );
-                   ccRecipientsShowText.setVisibility(View.VISIBLE);
+                    mailRecipientList.clear();
+                    mailRecipientList = replayMail.getCcMailRecipientList();
+                    insertReciversFromExtra( ccRecipientRichEdit, mailRecipientList, ccRecipientList );
+                    ccRecipientsShowText.setText( ccRecipientRichEdit.getText().toString() );
+                    ccRecipientRichEdit.setVisibility( View.GONE );
+                    ccRecipientsShowText.setVisibility( View.VISIBLE );
 
-                   sendThemeEditText.setText(replayMail.getSubject().toString());
-                   break;
-               case MODEL_FORWARD:
+                    sendThemeEditText.setText( replayMail.getSubject().toString() );
+                    break;
+                case MODEL_FORWARD:
 
-                   sendThemeEditText.setText(replayMail.getSubject().toString());
-                   break;
-           }
+                    sendThemeEditText.setText( replayMail.getSubject().toString() );
+                    break;
+            }
 
-               boolean isHaveH5Data = true;
-               setH5DataUI(isHaveH5Data);
-       }
+            boolean isHaveH5Data = true;
+            setH5DataUI( isHaveH5Data );
+        }
 
-       Object object = PreferencesSaveGetCerUtils.getCertificateByUsers( this,MailCertificateInstallActivity.CERTIFICATER_KEY );
-       if(null==object){
-         myCertificate  = new MailCertificateDetail();
-         myCertificate.setEncryptedMail( false );
-         myCertificate.setSignedMail( false );
-       }else{
-           myCertificate = (MailCertificateDetail)object;
-       }
+        Object object = PreferencesSaveGetCerUtils.getCertificateByUsers( this, MailCertificateInstallActivity.CERTIFICATER_KEY );
+        if (null == object) {
+            myCertificate = new MailCertificateDetail();
+            myCertificate.setEncryptedMail( false );
+            myCertificate.setSignedMail( false );
+        } else {
+            myCertificate = (MailCertificateDetail) object;
+        }
     }
 
     /**
      * H5数据显示
-     * */
-    private void setH5DataUI(Boolean isHaveH5Data){
-        fwTipImageView.setVisibility(isHaveH5Data?View.VISIBLE:View.GONE);
-        if(isHaveH5Data){
+     */
+    private void setH5DataUI(Boolean isHaveH5Data) {
+        fwTipImageView.setVisibility( isHaveH5Data ? View.VISIBLE : View.GONE );
+        if (isHaveH5Data) {
             //数据填充WebView
         }
     }
@@ -258,17 +260,17 @@ public class MailSendActivity extends BaseActivity {
 
 
     /**
-     *转发、回复等插入收件人
+     * 转发、回复等插入收件人
      **/
-    private void insertReciversFromExtra(RichEdit richRdit, List<MailRecipient> mailRecipients, ArrayList<MailRecipientModel> recipientsList){
-        for(int i=0;i<mailRecipients.size();i++){
+    private void insertReciversFromExtra(RichEdit richRdit, List<MailRecipient> mailRecipients, ArrayList<MailRecipientModel> recipientsList) {
+        for (int i = 0; i < mailRecipients.size(); i++) {
             MailRecipientModel reciver = new MailRecipientModel();
             reciver.setmRecipientName( mailRecipients.get( i ).getName() );
-            reciver.setmRecipientEmail(mailRecipients.get( i ).getAddress());
+            reciver.setmRecipientEmail( mailRecipients.get( i ).getAddress() );
             boolean isContaion = isListContaionSpecItem( recipientsList, reciver );
             if (!isContaion) {
-                 recipientsList.add(reciver);
-                 notifyRichEdit(richRdit, reciver,i);
+                recipientsList.add( reciver );
+                notifyRichEdit( richRdit, reciver, i );
             }
         }
     }
@@ -276,7 +278,7 @@ public class MailSendActivity extends BaseActivity {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tv_send_mail:
-                if(true){
+                if (true) {
 
                 }
                 break;
@@ -303,8 +305,8 @@ public class MailSendActivity extends BaseActivity {
                 startActivityForResult( intent1, QEQUEST_CC_MEMBER );
                 break;
             case R.id.iv_fw_tip:
-                fwTipImageView.setVisibility(View.GONE);
-                fwBodyLayout.setVisibility(View.VISIBLE);
+                fwTipImageView.setVisibility( View.GONE );
+                fwBodyLayout.setVisibility( View.VISIBLE );
                 break;
             case R.id.rl_back:
                 finish();
@@ -332,7 +334,7 @@ public class MailSendActivity extends BaseActivity {
                             boolean isContaion = isListContaionSpecItem( recipientList, singleRecipient );
                             if (!isContaion) {
                                 recipientList.add( singleRecipient );
-                                notifyRichEdit(recipientRichEdit, singleRecipient,i);
+                                notifyRichEdit( recipientRichEdit, singleRecipient, i );
                             }
                         }
                     }
@@ -349,7 +351,7 @@ public class MailSendActivity extends BaseActivity {
                             boolean isContaion = isListContaionSpecItem( ccRecipientList, singleRecipient );
                             if (!isContaion) {
                                 ccRecipientList.add( singleRecipient );
-                                notifyRichEdit(ccRecipientRichEdit, singleRecipient,i);
+                                notifyRichEdit( ccRecipientRichEdit, singleRecipient, i );
                             }
                         }
                     }
@@ -361,9 +363,11 @@ public class MailSendActivity extends BaseActivity {
     }
 
     /**
-     *选择去重
+     * 选择去重
+     *
      * @param selectMemList
-     * @param specItem */
+     * @param specItem
+     */
     private boolean isListContaionSpecItem(ArrayList<MailRecipientModel> selectMemList, MailRecipientModel specItem) {
         for (int i = 0; i < selectMemList.size(); i++) {
             if (selectMemList.get( i ).getmRecipientEmail().equals( specItem.getmRecipientEmail() )) {
@@ -375,49 +379,52 @@ public class MailSendActivity extends BaseActivity {
 
     /**
      * 更新RichEdit
+     *
      * @param mRecipients
-     * @param richEdit*/
-    private void  notifyRichEdit( RichEdit richEdit,   MailRecipientModel mRecipients,int subId){
-            InsertModel  insertModel = new InsertModel("； ", (System.currentTimeMillis()) + ""+subId, mRecipients.getmRecipientName(), mRecipients.getmRecipientEmail());
-            richEdit.insertSpecialStr(false, insertModel);
+     * @param richEdit
+     */
+    private void notifyRichEdit(RichEdit richEdit, MailRecipientModel mRecipients, int subId) {
+        InsertModel insertModel = new InsertModel( "； ", (System.currentTimeMillis()) + "" + subId, mRecipients.getmRecipientName(), mRecipients.getmRecipientEmail() );
+        richEdit.insertSpecialStr( false, insertModel );
     }
 
     /**
-     *Recipient 根据insertModels 多的删掉*/
-    private void synchronousRemoveRecipients(ArrayList<MailRecipientModel>recipients,List<InsertModel> insertModels){
-        for(int i=0;i<recipients.size();i++){
-            String email = recipients.get(i).getmRecipientEmail();
-            boolean haveEmail=false;
-            for(int j=0;j<insertModels.size();j++){
-                if(email.equals(insertModels.get( j ).getInsertContentId())){
-                    haveEmail=true;
+     * Recipient 根据insertModels 多的删掉
+     */
+    private void synchronousRemoveRecipients(ArrayList<MailRecipientModel> recipients, List<InsertModel> insertModels) {
+        for (int i = 0; i < recipients.size(); i++) {
+            String email = recipients.get( i ).getmRecipientEmail();
+            boolean haveEmail = false;
+            for (int j = 0; j < insertModels.size(); j++) {
+                if (email.equals( insertModels.get( j ).getInsertContentId() )) {
+                    haveEmail = true;
                     break;
                 }
             }
-            if(!haveEmail){
+            if (!haveEmail) {
                 recipients.remove( i );
             }
         }
     }
 
     /**
-     *Re 根据InsertModel少的添加
+     * Re 根据InsertModel少的添加
      **/
-    private void   synchronousAddRecipients(ArrayList<MailRecipientModel>recipients,List<InsertModel> insertModels){
-        for(int m=0;m<insertModels.size();m++){
-            String email = insertModels.get(m).getInsertContentId().toString();
-            boolean haveEmail=false;
-            for(int n=0;n<recipients.size();n++){
-                if(email.equals(recipients.get(n).getmRecipientEmail())){
-                    haveEmail=true;
+    private void synchronousAddRecipients(ArrayList<MailRecipientModel> recipients, List<InsertModel> insertModels) {
+        for (int m = 0; m < insertModels.size(); m++) {
+            String email = insertModels.get( m ).getInsertContentId().toString();
+            boolean haveEmail = false;
+            for (int n = 0; n < recipients.size(); n++) {
+                if (email.equals( recipients.get( n ).getmRecipientEmail() )) {
+                    haveEmail = true;
                     break;
                 }
             }
-            if(!haveEmail){
+            if (!haveEmail) {
                 MailRecipientModel mailRecipientModel = new MailRecipientModel();
                 mailRecipientModel.setmRecipientEmail( email );
                 mailRecipientModel.setmRecipientName( email );
-                recipients.add(mailRecipientModel);
+                recipients.add( mailRecipientModel );
             }
         }
 

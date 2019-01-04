@@ -87,7 +87,7 @@ public class MailCertificateInstallActivity extends BaseActivity {
      * 初始化
      */
     private void init() {
-        Object certificateObject = PreferencesSaveGetCerUtils.getCertificateByUsers( this,CERTIFICATER_KEY );
+        Object certificateObject = PreferencesSaveGetCerUtils.getCertificateByUsers( this, CERTIFICATER_KEY );
         if (null == certificateObject) {
             myCertificate = new MailCertificateDetail();
         } else {
@@ -100,7 +100,7 @@ public class MailCertificateInstallActivity extends BaseActivity {
             @Override
             public void toggleToOn(View view) {
                 myCertificate.setEncryptedMail( true );
-                PreferencesSaveGetCerUtils.saveCertifivateByUsers( getBaseContext(),myCertificate,CERTIFICATER_KEY);
+                PreferencesSaveGetCerUtils.saveCertifivateByUsers( getBaseContext(), myCertificate, CERTIFICATER_KEY );
                 encryptionSwitchView.setOpened( true );
 
             }
@@ -108,7 +108,7 @@ public class MailCertificateInstallActivity extends BaseActivity {
             @Override
             public void toggleToOff(View view) {
                 myCertificate.setEncryptedMail( false );
-                PreferencesSaveGetCerUtils.saveCertifivateByUsers( getBaseContext(),myCertificate,CERTIFICATER_KEY);
+                PreferencesSaveGetCerUtils.saveCertifivateByUsers( getBaseContext(), myCertificate, CERTIFICATER_KEY );
                 encryptionSwitchView.setOpened( false );
             }
         } );
@@ -117,14 +117,14 @@ public class MailCertificateInstallActivity extends BaseActivity {
             @Override
             public void toggleToOn(View view) {
                 myCertificate.setSignedMail( true );
-                PreferencesSaveGetCerUtils.saveCertifivateByUsers( getBaseContext(),myCertificate,CERTIFICATER_KEY);
+                PreferencesSaveGetCerUtils.saveCertifivateByUsers( getBaseContext(), myCertificate, CERTIFICATER_KEY );
                 signatureSwitchView.setOpened( true );
             }
 
             @Override
             public void toggleToOff(View view) {
                 myCertificate.setSignedMail( false );
-                PreferencesSaveGetCerUtils.saveCertifivateByUsers( getBaseContext(),myCertificate,CERTIFICATER_KEY);
+                PreferencesSaveGetCerUtils.saveCertifivateByUsers( getBaseContext(), myCertificate, CERTIFICATER_KEY );
                 signatureSwitchView.setOpened( false );
             }
         } );
@@ -310,7 +310,7 @@ public class MailCertificateInstallActivity extends BaseActivity {
         @Override
         public void returnMailCertificateUploadSuccess(byte[] arg0) {
             Toast.makeText( getBaseContext(), "上传证书成功", Toast.LENGTH_SHORT ).show();
-            PreferencesSaveGetCerUtils.saveCertifivateByUsers( getBaseContext(),myCertificate,CERTIFICATER_KEY);
+            PreferencesSaveGetCerUtils.saveCertifivateByUsers( getBaseContext(), myCertificate, CERTIFICATER_KEY );
             updataCertificateUI( myCertificate );
             super.returnMailCertificateUploadSuccess( arg0 );
         }
@@ -336,12 +336,12 @@ public class MailCertificateInstallActivity extends BaseActivity {
         cerOwnerNameText.setText( StringUtils.isBlank( Subject ) ? "未知" : Subject.substring( 3 ) );
         cerIssuerNameText.setText( StringUtils.isBlank( IsUer ) ? "未知" : IsUer.substring( 3 ) );
         cerFinalDataText.setText( StringUtils.isBlank( mailCertificateDetail.getCertificateFinalDate() ) ? "未知" : mailCertificateDetail.getCertificateFinalDate() );
-         if(encryptionSwitchView.isOpened()!=mailCertificateDetail.isEncryptedMail()){
-            encryptionSwitchView.setOpened(  mailCertificateDetail.isEncryptedMail());
-         }
-         if(signatureSwitchView.isOpened()!=mailCertificateDetail.isSignedMail()){
+        if (encryptionSwitchView.isOpened() != mailCertificateDetail.isEncryptedMail()) {
+            encryptionSwitchView.setOpened( mailCertificateDetail.isEncryptedMail() );
+        }
+        if (signatureSwitchView.isOpened() != mailCertificateDetail.isSignedMail()) {
             signatureSwitchView.setOpened( mailCertificateDetail.isSignedMail() );
-         }
+        }
         if (View.VISIBLE != installedCerLayout.getVisibility()) {
             installedCerLayout.setVisibility( View.VISIBLE );
         }
