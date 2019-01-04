@@ -89,7 +89,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
 
     private RelativeLayout newMessageTipsLayout;
 
-    private boolean BatteryDialogIsShow = true;
+    private boolean batteryDialogIsShow = true;
     @ViewInject(R.id.tip)
     private TipsView tipsView;
     private boolean isCommunicationRunning = false;
@@ -203,8 +203,8 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
     }
 
     private void batteryWhiteListRemind(final Context context){
-        BatteryDialogIsShow= PreferencesUtils.getBoolean( context, Constant.BATTERY_WHITE_LIST_STATE,true);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && BatteryDialogIsShow) {
+        batteryDialogIsShow= PreferencesUtils.getBoolean( context, Constant.BATTERY_WHITE_LIST_STATE,true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && batteryDialogIsShow) {
             try{
                 PowerManager powerManager = (PowerManager) getSystemService( POWER_SERVICE );
                 boolean hasIgnored = powerManager.isIgnoringBatteryOptimizations(context.getPackageName());
