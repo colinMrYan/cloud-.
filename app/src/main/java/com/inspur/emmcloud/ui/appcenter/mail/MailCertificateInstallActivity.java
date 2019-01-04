@@ -293,7 +293,6 @@ public class MailCertificateInstallActivity extends BaseActivity {
 
         int indexFinalDate = data.indexOf( "Final Date:" );
         int endIndexFinalDate = data.indexOf( '\n', indexFinalDate );
-        LogUtils.LbcDebug( "indexFinalDate" + indexFinalDate );
 
         int indexIssuerDN = data.indexOf( "IssuerDN:" );
         int endIndexIssuerDN = data.indexOf( '\n', indexIssuerDN );
@@ -347,7 +346,6 @@ public class MailCertificateInstallActivity extends BaseActivity {
             //保存该16进制数组
             PreferencesByUserAndTanentUtils.putString( this, CERTIFICATER_KEY, bytesToHexString );
         } catch (Exception e) {
-            LogUtils.LbcDebug( "存储证书失败" );
             e.printStackTrace();
         }
     }
@@ -372,7 +370,6 @@ public class MailCertificateInstallActivity extends BaseActivity {
                 return readObject;
             }
         } catch (Exception e) {
-            LogUtils.LbcDebug( "读取证书失败" );
             e.printStackTrace();
         }
         return null;
@@ -402,7 +399,6 @@ public class MailCertificateInstallActivity extends BaseActivity {
         if (View.VISIBLE != installedCerLayout.getVisibility()) {
             installedCerLayout.setVisibility( View.VISIBLE );
         }
-        LogUtils.LbcDebug( "Data" + mailCertificateDetail.isEncryptedMail() + "::" + mailCertificateDetail.isSignedMail() );
     }
 
     /**

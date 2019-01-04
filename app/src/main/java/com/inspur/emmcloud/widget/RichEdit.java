@@ -39,7 +39,7 @@ import java.util.regex.Pattern;
 
 public class RichEdit extends EditText {
     private int size;
-    private int maxLength = 2000;
+    private int maxLength = 100000;
     private List<InsertModel> insertModelList = new ArrayList<>();
     private static final int BACKGROUND_COLOR = Color.parseColor("#FFDEAD"); // 默认,话题背景高亮颜色
     private Context mContext;
@@ -205,7 +205,7 @@ public class RichEdit extends EditText {
         manualData = manualData.replace(" ","");
         if(!StringUtils.isBlank(manualData)&&StringUtils.isEmail( manualData )){
             this.getText().delete(spanEndPos,allTextData.length());
-            InsertModel lastInsert = new InsertModel(";", (System.currentTimeMillis()) + "",manualData );
+            InsertModel lastInsert = new InsertModel("； ", (System.currentTimeMillis()) + "",manualData );
             insertSpecialStr(false, lastInsert);
         }
     }

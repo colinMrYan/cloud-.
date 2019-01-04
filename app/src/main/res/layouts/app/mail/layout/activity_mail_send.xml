@@ -105,9 +105,9 @@
                         android:layout_toRightOf="@id/tv_recipients_tip"
                         android:layout_toLeftOf="@id/iv_recipients"
                         android:background="@null"
-                        android:textSize="15sp"
                         android:layout_marginLeft="5dp"
                         android:layout_marginRight="5dp"
+                        android:textSize="15sp"
                         android:textColor="#2788CF"
                         android:ellipsize="end"
                         android:maxLines="1" />
@@ -149,7 +149,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:textSize="16sp"/>
+                        android:textSize="15sp"/>
                     <com.inspur.emmcloud.widget.RichEdit
                         android:id="@+id/richedit_cc_recipient"
                         android:layout_width="match_parent"
@@ -157,6 +157,7 @@
                         android:textSize="15sp"
                         android:layout_toLeftOf="@id/iv_cc_recipients"
                         android:layout_toRightOf="@id/tv_cc_tip"
+                        android:lineSpacingExtra="5dp"
                         android:background="@null"
                         android:layout_marginLeft="5dp"
                         android:layout_marginRight="5dp" />
@@ -166,11 +167,14 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textSize="15sp"
+                        android:textColor="#2788CF"
                         android:layout_toLeftOf="@id/iv_cc_recipients"
                         android:layout_toRightOf="@id/tv_cc_tip"
                         android:background="@null"
                         android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp" />
+                        android:layout_marginRight="5dp"
+                        android:ellipsize="end"
+                        android:maxLines="1" />
 
                     <ImageView
                         android:id="@+id/iv_cc_recipients"

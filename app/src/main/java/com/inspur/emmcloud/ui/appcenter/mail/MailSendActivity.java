@@ -191,7 +191,7 @@ public class MailSendActivity extends BaseActivity {
 
                    break;
                case MODEL_REPLY:
-                   mailRecipientList = new ArrayList<>();
+                   mailRecipientList.clear();
                    mailRecipientList.add(replayMail.getFromMailRecipient());
                    insertReciversFromExtra(recipientRichEdit,mailRecipientList,recipientList);
 
@@ -199,13 +199,18 @@ public class MailSendActivity extends BaseActivity {
                    headerTitleText.setText("回复");
                    break;
                case MODEL_REPLY_ALL:
-                   mailRecipientList = new ArrayList<>();
+                   mailRecipientList.clear();
                    mailRecipientList.add(replayMail.getFromMailRecipient());
+                   insertReciversFromExtra(recipientRichEdit,mailRecipientList,recipientList );
+
+                   mailRecipientList.clear();
+                   mailRecipientList=replayMail.getToMailRecipientList();
                    insertReciversFromExtra(recipientRichEdit,mailRecipientList,recipientList );
                    recipientsShowText.setText(recipientRichEdit.getText().toString());
                    recipientRichEdit.setVisibility( View.GONE );
                    recipientsShowText.setVisibility( View.VISIBLE);
 
+                   mailRecipientList.clear();
                    mailRecipientList = replayMail.getCcMailRecipientList();
                    insertReciversFromExtra(ccRecipientRichEdit,mailRecipientList,ccRecipientList);
                    ccRecipientsShowText.setText(ccRecipientRichEdit.getText().toString());
@@ -213,15 +218,23 @@ public class MailSendActivity extends BaseActivity {
                    ccRecipientsShowText.setVisibility(View.VISIBLE);
 
                    sendThemeEditText.setText(replayMail.getSubject().toString());
-                   headerTitleText.setText("回复全部");
                    break;
                case MODEL_FORWARD:
 
                    sendThemeEditText.setText(replayMail.getSubject().toString());
-                   headerTitleText.setText("转发");
                    break;
            }
+
+               boolean isHaveH5Data = true;
+               setH5DataUI(isHaveH5Data);
        }
+    }
+
+    private void setH5DataUI(Boolean isHaveH5Data){
+        fwTipImageView.setVisibility(isHaveH5Data?View.VISIBLE:View.GONE);
+        if(isHaveH5Data){
+            //数据填充WebView
+        }
     }
 
     /**
@@ -234,8 +247,8 @@ public class MailSendActivity extends BaseActivity {
             reciver.setmRecipientEmail(mailRecipients.get( i ).getAddress());
             boolean isContaion = isListContaionSpecItem( recipientsList, reciver );
             if (!isContaion) {
-                recipientsList.add(reciver);
-                notifyRichEdit(richRdit, reciver);
+                 recipientsList.add(reciver);
+                 notifyRichEdit(richRdit, reciver,i);
             }
         }
     }
@@ -293,11 +306,10 @@ public class MailSendActivity extends BaseActivity {
                             ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid( addMemberList.get( i ).getId() );
                             singleRecipient.setmRecipientEmail( contactUser.getEmail() );
                             singleRecipient.setmRecipientName( contactUser.getName() );
-                            LogUtils.LbcDebug( singleRecipient.getmRecipientEmail() );
                             boolean isContaion = isListContaionSpecItem( recipientList, singleRecipient );
                             if (!isContaion) {
                                 recipientList.add( singleRecipient );
-                                notifyRichEdit(recipientRichEdit, singleRecipient);
+                                notifyRichEdit(recipientRichEdit, singleRecipient,i);
                             }
                         }
                     }
@@ -311,11 +323,10 @@ public class MailSendActivity extends BaseActivity {
                             ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid( ctAddMemberList.get( i ).getId() );
                             singleRecipient.setmRecipientEmail( contactUser.getEmail() );
                             singleRecipient.setmRecipientName( contactUser.getName() );
-                            LogUtils.LbcDebug( singleRecipient.getmRecipientEmail() );
                             boolean isContaion = isListContaionSpecItem( ccRecipientList, singleRecipient );
                             if (!isContaion) {
                                 ccRecipientList.add( singleRecipient );
-                                notifyRichEdit(ccRecipientRichEdit, singleRecipient);
+                                notifyRichEdit(ccRecipientRichEdit, singleRecipient,i);
                             }
                         }
                     }
@@ -343,10 +354,8 @@ public class MailSendActivity extends BaseActivity {
      * 更新RichEdit
      * @param mRecipients
      * @param richEdit*/
-    private void  notifyRichEdit( RichEdit richEdit,   MailRecipientModel mRecipients){
-            String name = mRecipients.getmRecipientName();
-            String email = mRecipients.getmRecipientEmail();
-            InsertModel  insertModel = new InsertModel(";", (System.currentTimeMillis()) + "", name, email);
+    private void  notifyRichEdit( RichEdit richEdit,   MailRecipientModel mRecipients,int subId){
+            InsertModel  insertModel = new InsertModel("； ", (System.currentTimeMillis()) + ""+subId, mRecipients.getmRecipientName(), mRecipients.getmRecipientEmail());
             richEdit.insertSpecialStr(false, insertModel);
     }
 
