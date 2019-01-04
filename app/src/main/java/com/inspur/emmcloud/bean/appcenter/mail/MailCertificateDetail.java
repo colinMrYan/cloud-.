@@ -8,6 +8,19 @@ import java.io.Serializable;
 
 public class MailCertificateDetail implements Serializable {
 
+    private static final long serialVersionUID = 1232612312342333L;
+    private String certificateName;     //证书文件名称
+    private String certificateIssuerDN; //颁发者
+    private String certificateSubjectDN;//颁发给
+    private String certificatePassword; //证书密码
+    private String certificateStartDate;//证书有效期Start
+    private String certificateFinalDate;//证书截止日期
+    private String certificatePublicKey;//证书公钥
+    private String certificatePrivateKey;//证书私钥
+
+    private boolean isEncryptedMail;
+    private boolean isSignedMail;
+
     public String getCertificateName() {
         return certificateName;
     }
@@ -87,21 +100,6 @@ public class MailCertificateDetail implements Serializable {
     public void setSignedMail(boolean signedMail) {
         this.isSignedMail = signedMail;
     }
-
-    private static final long serialVersionUID = 1232612312342333L;
-    private String certificateName;     //证书文件名称
-    private String certificateIssuerDN; //颁发者
-    private String certificateSubjectDN;//颁发给
-    private String certificatePassword; //证书密码
-    private String certificateStartDate;//证书有效期Start
-    private String certificateFinalDate;//证书截止日期
-    private String certificatePublicKey;//证书公钥
-    private String certificatePrivateKey;//证书私钥
-
-
-    private boolean isEncryptedMail;
-    private boolean isSignedMail;
-
 
 
     public MailCertificateDetail(String cName,String cIssuerDN,String cSubjectDN,String cPassword,String cStartTime,String cFinalTime,String pubKey,String priKey){

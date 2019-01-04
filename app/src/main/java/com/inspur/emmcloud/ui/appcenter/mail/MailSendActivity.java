@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.appcenter.mail.Mail;
+import com.inspur.emmcloud.bean.appcenter.mail.MailCertificateDetail;
 import com.inspur.emmcloud.bean.appcenter.mail.MailRecipient;
 import com.inspur.emmcloud.bean.appcenter.mail.MailRecipientModel;
 import com.inspur.emmcloud.bean.chat.InsertModel;
@@ -24,6 +25,7 @@ import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MailCacheUtils;
+import com.inspur.emmcloud.util.privates.mail.PreferencesSaveGetCerUtils;
 import com.inspur.emmcloud.widget.RichEdit;
 import com.inspur.imp.engine.webview.ImpWebView;
 
@@ -75,6 +77,8 @@ public class MailSendActivity extends BaseActivity {
     public static final String EXTRA_MAIL_MODEL ="extra_mail_model";
     private static final int QEQUEST_ADD_MEMBER = 2;
     private static final int QEQUEST_CC_MEMBER = 3;
+
+    private MailCertificateDetail myCertificate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -228,14 +232,30 @@ public class MailSendActivity extends BaseActivity {
                boolean isHaveH5Data = true;
                setH5DataUI(isHaveH5Data);
        }
+
+       Object object = PreferencesSaveGetCerUtils.getCertificateByUsers( this,MailCertificateInstallActivity.CERTIFICATER_KEY );
+       if(null==object){
+         myCertificate  = new MailCertificateDetail();
+         myCertificate.setEncryptedMail( false );
+         myCertificate.setSignedMail( false );
+       }else{
+           myCertificate = (MailCertificateDetail)object;
+       }
     }
 
+    /**
+     * H5数据显示
+     * */
     private void setH5DataUI(Boolean isHaveH5Data){
         fwTipImageView.setVisibility(isHaveH5Data?View.VISIBLE:View.GONE);
         if(isHaveH5Data){
             //数据填充WebView
         }
     }
+
+    /**
+     *为邮件设置加密加签提示*/
+
 
     /**
      *转发、回复等插入收件人
@@ -256,6 +276,9 @@ public class MailSendActivity extends BaseActivity {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tv_send_mail:
+                if(true){
+
+                }
                 break;
             case R.id.iv_recipients:
                 recipientRichEdit.insertLastManualData( 0 );

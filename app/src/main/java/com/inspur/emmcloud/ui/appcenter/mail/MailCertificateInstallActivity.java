@@ -3,7 +3,6 @@ package com.inspur.emmcloud.ui.appcenter.mail;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
-import android.text.TextUtils;
 import android.util.Base64;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -22,9 +21,8 @@ import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
-import com.inspur.emmcloud.util.privates.PreferencesSaveSerialObjectUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
+import com.inspur.emmcloud.util.privates.mail.PreferencesSaveGetCerUtils;
 import com.inspur.emmcloud.widget.SwitchView;
 import com.inspur.imp.plugin.filetransfer.filemanager.FileManagerActivity;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
@@ -33,11 +31,7 @@ import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.security.KeyStore;
 import java.security.PrivateKey;
 import java.security.PublicKey;
@@ -93,7 +87,7 @@ public class MailCertificateInstallActivity extends BaseActivity {
      * 初始化
      */
     private void init() {
-        Object certificateObject = readCertificate( CERTIFICATER_KEY );
+        Object certificateObject = PreferencesSaveGetCerUtils.getCertificateByUsers( this,CERTIFICATER_KEY );
         if (null == certificateObject) {
             myCertificate = new MailCertificateDetail();
         } else {
@@ -106,7 +100,7 @@ public class MailCertificateInstallActivity extends BaseActivity {
             @Override
             public void toggleToOn(View view) {
                 myCertificate.setEncryptedMail( true );
-                saveCertifivate( myCertificate );
+                PreferencesSaveGetCerUtils.saveCertifivateByUsers( getBaseContext(),myCertificate,CERTIFICATER_KEY);
                 encryptionSwitchView.setOpened( true );
 
             }
@@ -114,7 +108,7 @@ public class MailCertificateInstallActivity extends BaseActivity {
             @Override
             public void toggleToOff(View view) {
                 myCertificate.setEncryptedMail( false );
-                saveCertifivate( myCertificate );
+                PreferencesSaveGetCerUtils.saveCertifivateByUsers( getBaseContext(),myCertificate,CERTIFICATER_KEY);
                 encryptionSwitchView.setOpened( false );
             }
         } );
@@ -123,16 +117,15 @@ public class MailCertificateInstallActivity extends BaseActivity {
             @Override
             public void toggleToOn(View view) {
                 myCertificate.setSignedMail( true );
-                saveCertifivate( myCertificate );
+                PreferencesSaveGetCerUtils.saveCertifivateByUsers( getBaseContext(),myCertificate,CERTIFICATER_KEY);
                 signatureSwitchView.setOpened( true );
             }
 
             @Override
             public void toggleToOff(View view) {
                 myCertificate.setSignedMail( false );
-                saveCertifivate( myCertificate );
+                PreferencesSaveGetCerUtils.saveCertifivateByUsers( getBaseContext(),myCertificate,CERTIFICATER_KEY);
                 signatureSwitchView.setOpened( false );
-
             }
         } );
     }
@@ -317,7 +310,7 @@ public class MailCertificateInstallActivity extends BaseActivity {
         @Override
         public void returnMailCertificateUploadSuccess(byte[] arg0) {
             Toast.makeText( getBaseContext(), "上传证书成功", Toast.LENGTH_SHORT ).show();
-            saveCertifivate( myCertificate );
+            PreferencesSaveGetCerUtils.saveCertifivateByUsers( getBaseContext(),myCertificate,CERTIFICATER_KEY);
             updataCertificateUI( myCertificate );
             super.returnMailCertificateUploadSuccess( arg0 );
         }
@@ -327,53 +320,6 @@ public class MailCertificateInstallActivity extends BaseActivity {
             Toast.makeText( getBaseContext(), "上传证书失败", Toast.LENGTH_SHORT ).show();
             super.returnMailCertificateUploadFail( error, errorCode );
         }
-    }
-
-    /**
-     * 存储证书详细信息
-     *
-     * @param certificateDetail
-     **/
-    private void saveCertifivate(MailCertificateDetail certificateDetail) {
-        try {
-            //先将序列化结果写到byte缓存中，其实就分配一个内存空间
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            ObjectOutputStream os = new ObjectOutputStream( bos );
-            //将对象序列化写入byte缓存
-            os.writeObject( certificateDetail );
-            //将序列化的数据转为16进制保存
-            String bytesToHexString = PreferencesSaveSerialObjectUtils.bytesToHexString( bos.toByteArray() );
-            //保存该16进制数组
-            PreferencesByUserAndTanentUtils.putString( this, CERTIFICATER_KEY, bytesToHexString );
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * 从 preference 数据库中读取数据
-     *
-     * @param key 关键字
-     **/
-    public Object readCertificate(String key) {
-        try {
-            String string = PreferencesByUserAndTanentUtils.getString( this, CERTIFICATER_KEY );
-            if (TextUtils.isEmpty( string )) {
-                return null;
-            } else {
-                //将16进制的数据转为数组，准备反序列化
-                byte[] stringToBytes = PreferencesSaveSerialObjectUtils.StringToBytes( string );
-                ByteArrayInputStream bis = new ByteArrayInputStream( stringToBytes );
-                ObjectInputStream is = new ObjectInputStream( bis );
-                //返回反序列化得到的对象
-                Object readObject = is.readObject();
-                return readObject;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-
     }
 
     /**

@@ -1,8 +1,10 @@
-package com.inspur.emmcloud.util.privates;
+package com.inspur.emmcloud.util.privates.mail;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.text.TextUtils;
+
+import com.inspur.emmcloud.bean.appcenter.mail.MailCertificateDetail;
+import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -10,37 +12,58 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 /**
- * Created by libaochao on 2019/1/2.
+ * Created by libaochao on 2019/1/4.
  */
 
-public class PreferencesSaveSerialObjectUtils {
-    private final static String FILENAME= "data_save";
+public class PreferencesSaveGetCerUtils {
 
     /**
-     * desc:保存对象
-     * @param context
-     * @param key
-     * @param obj
-     * modified:
-     */
-    public static void saveObject(Context context, String key,Object obj){
+     * 存储证书详细信息
+     *
+     * @param certificateDetail
+     **/
+    public static void saveCertifivateByUsers(Context context, MailCertificateDetail certificateDetail, String Key) {
         try {
-            // 保存对象
-            SharedPreferences.Editor sharedata = context.getSharedPreferences(FILENAME, 0).edit();
             //先将序列化结果写到byte缓存中，其实就分配一个内存空间
-            ByteArrayOutputStream bos=new ByteArrayOutputStream();
-            ObjectOutputStream os=new ObjectOutputStream(bos);
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            ObjectOutputStream os = new ObjectOutputStream( bos );
             //将对象序列化写入byte缓存
-            os.writeObject(obj);
+            os.writeObject( certificateDetail );
             //将序列化的数据转为16进制保存
-            String bytesToHexString = bytesToHexString(bos.toByteArray());
+            String bytesToHexString =  bytesToHexString( bos.toByteArray() );
             //保存该16进制数组
-            sharedata.putString(key, bytesToHexString);
-            sharedata.commit();
+            PreferencesByUsersUtils.putString(context, Key, bytesToHexString );
         } catch (Exception e) {
-         e.printStackTrace();
+            e.printStackTrace();
         }
     }
+
+    /**
+     *读取证书*/
+    /**
+     * 从 preference 数据库中读取数据
+     * @param Key 关键字
+     **/
+    public static Object getCertificateByUsers(Context context, String Key) {
+        try {
+            String string = PreferencesByUsersUtils.getString( context, Key );
+            if (TextUtils.isEmpty( string )) {
+                return null;
+            } else {
+                //将16进制的数据转为数组，准备反序列化
+                byte[] stringToBytes = StringToBytes( string );
+                ByteArrayInputStream bis = new ByteArrayInputStream( stringToBytes );
+                ObjectInputStream is = new ObjectInputStream( bis );
+                //返回反序列化得到的对象
+                Object readObject = is.readObject();
+                return readObject;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     /**
      * desc:将数组转为16进制
      * @param bArray
@@ -64,37 +87,7 @@ public class PreferencesSaveSerialObjectUtils {
         }
         return sb.toString();
     }
-    /**
-     * desc:获取保存的Object对象
-     * @param context
-     * @param key
-     * @return
-     * modified:
-     */
-    public static Object readObject(Context context,String key){
-        try {
-            SharedPreferences sharedata = context.getSharedPreferences(FILENAME, 0);
-            if (sharedata.contains(key)) {
-                String string = sharedata.getString(key, "");
-                if(TextUtils.isEmpty(string)){
-                    return null;
-                }else{
-                    //将16进制的数据转为数组，准备反序列化
-                    byte[] stringToBytes = StringToBytes(string);
-                    ByteArrayInputStream bis=new ByteArrayInputStream(stringToBytes);
-                    ObjectInputStream is=new ObjectInputStream(bis);
-                    //返回反序列化得到的对象
-                    Object readObject = is.readObject();
-                    return readObject;
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        //所有异常返回null
-        return null;
 
-    }
     /**
      * desc:将16进制的数据转为数组
      * @param data
@@ -132,4 +125,6 @@ public class PreferencesSaveSerialObjectUtils {
         }
         return retData;
     }
+
+
 }
