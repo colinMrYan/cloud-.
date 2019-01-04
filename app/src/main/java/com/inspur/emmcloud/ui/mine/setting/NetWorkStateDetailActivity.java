@@ -143,9 +143,8 @@ public class NetWorkStateDetailActivity extends BaseActivity {
     private boolean checkingHardState() {
         NetStateintegerData = NetUtils.getNetWrokState( this );
         if (-1 == NetStateintegerData.get( 0 )) {
-            hardImageView.setBackground( drawableError );
+            hardImageView.setVisibility( View.GONE );
             qmulHardLoadingView.setVisibility( View.GONE );
-            hardImageView.setVisibility( View.VISIBLE );
             findViewById( R.id.rl_to_fix ).setVisibility( View.VISIBLE );
             findViewById( R.id.rl_net_error_fix ).setClickable( true );
             return false;
@@ -186,7 +185,6 @@ public class NetWorkStateDetailActivity extends BaseActivity {
      * @param iniState true 初始化时loading显示状态imageview消失，false 相反
      */
     private void setShowDnsconnctstateUI(Boolean iniState) {
-        hardImageView.setVisibility( iniState ? View.GONE : View.VISIBLE );
         qmulHardLoadingView.setVisibility( iniState ? View.VISIBLE : View.GONE );
         portalImageView.setVisibility( iniState ? View.GONE : View.VISIBLE );
         qmulWifiLoadingView.setVisibility( iniState ? View.VISIBLE : View.GONE );
