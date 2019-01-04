@@ -49,6 +49,7 @@ import com.inspur.emmcloud.ui.mine.MoreFragment;
 import com.inspur.emmcloud.ui.notsupport.NotSupportFragment;
 import com.inspur.emmcloud.ui.work.TabBean;
 import com.inspur.emmcloud.ui.work.WorkFragment;
+import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.AppTabUtils;
@@ -202,7 +203,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
     }
 
     private void batteryWhiteListRemind(final Context context){
-        BatteryDialogIsShow= PreferencesByUserAndTanentUtils.getBoolean( context, Constant.BATTERY_WHITE_LIST_STATE,true);
+        BatteryDialogIsShow= PreferencesUtils.getBoolean( context, Constant.BATTERY_WHITE_LIST_STATE,true);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && BatteryDialogIsShow) {
             try{
                 PowerManager powerManager = (PowerManager) getSystemService( POWER_SERVICE );
@@ -217,7 +218,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
                         @Override
                         public void doConfirm() {
                             if (confirmDialog.getIsHide()) {
-                                PreferencesByUserAndTanentUtils.putBoolean(context, Constant.BATTERY_WHITE_LIST_STATE, false);
+                                PreferencesUtils.putBoolean(context, Constant.BATTERY_WHITE_LIST_STATE, false);
                                 }
                             Intent intent = new Intent( Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS );
                             intent.setData( Uri.parse( "package:" + context.getPackageName() ) );
@@ -228,7 +229,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
                         @Override
                         public void doCancel() {
                             if (confirmDialog.getIsHide()) {
-                                PreferencesByUserAndTanentUtils.putBoolean(context, Constant.BATTERY_WHITE_LIST_STATE, false);
+                                PreferencesUtils.putBoolean(context, Constant.BATTERY_WHITE_LIST_STATE, false);
                             }
                             // TODO Auto-generated method stub
                             confirmDialog.dismiss();
