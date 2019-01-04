@@ -26,7 +26,7 @@ public class BatteryWhiteListDialog extends Dialog {
     private int tipContentId;
     private int tipHideHintId;
     private ClickListenerInterface clickListenerInterface;
-    private CheckBox cbIsHide;
+    private CheckBox hideCheckBox;
     private boolean isHide = false;
 
     public interface ClickListenerInterface {
@@ -69,8 +69,8 @@ public class BatteryWhiteListDialog extends Dialog {
         TextView tvTip_Content = (TextView) view.findViewById( R.id.tv_tip_content );
         TextView tvCancel = (TextView) view.findViewById( R.id.tv_cancel );
         TextView tvToSet = (TextView) view.findViewById( R.id.tv_toset );
-        cbIsHide = (CheckBox) view.findViewById( R.id.cb_ishide );
-        cbIsHide.setOnCheckedChangeListener( new CompoundButton.OnCheckedChangeListener() {
+        hideCheckBox = (CheckBox) view.findViewById( R.id.cb_ishide );
+        hideCheckBox.setOnCheckedChangeListener( new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
@@ -82,7 +82,7 @@ public class BatteryWhiteListDialog extends Dialog {
         } );
 
         tvTip_Content.setText( tipContentId );
-        cbIsHide.setText( tipHideHintId );
+        hideCheckBox.setText( tipHideHintId );
         tvCancel.setText( cancelButtonTextId );
         tvToSet.setText( confirmButtonTextId );
         tvCancel.setOnClickListener( new clickListener() );
