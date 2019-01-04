@@ -101,7 +101,6 @@ public class MailCertificateDetail implements Serializable {
         this.isSignedMail = signedMail;
     }
 
-
     public MailCertificateDetail(String cName,String cIssuerDN,String cSubjectDN,String cPassword,String cStartTime,String cFinalTime,String pubKey,String priKey){
         certificateName=cName;
         certificateIssuerDN=cIssuerDN;
@@ -127,7 +126,5 @@ public class MailCertificateDetail implements Serializable {
         certificatePublicKey="";//证书公钥
         certificatePrivateKey="";//证书私钥
     }
-
-
 
 }
