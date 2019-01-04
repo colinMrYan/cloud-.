@@ -959,7 +959,6 @@
     <string name="assemble_json_exception">Json objects assembled exception！</string>
     <string name="inputpwd">Please enter a password gesture</string>
     <string name="forgetpwd">Forget Password</string>
-    <string name="forgetpwd_error">Loading Forgot password interface error </string>
     <string name="download_fail">Download Failed</string>
     <string name="download_success">Download Success</string>
     <string name="file_downloading">In the download, please later...</string>

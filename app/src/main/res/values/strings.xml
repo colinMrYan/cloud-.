@@ -230,6 +230,11 @@
     <string name="more">更多</string>
     <string name="no_search_term">没有更多的搜索结果</string>
 
+    <string name="login_tv_welcome">你好，\n欢迎使用%1$s</string>
+    <string name="login_current_login_enterprise">当前系统：%1$s</string>
+    <string name="login_to_register">还没有账户？<Data><![CDATA[<font color=\'#36A5F6\'>注册</font>]]></Data></string>
+    <string name="login_forget_password">忘记密码？</string>
+
     <!-- 消息部分 -->
     <string name="msgcontent_cannot_null">请输入消息内容</string>
     <string name="comment_type">   的图片</string>
@@ -967,7 +972,6 @@
     <string name="assemble_json_exception">组装Json对象出现异常！</string>
     <string name="inputpwd">请输入手势密码</string>
     <string name="forgetpwd">忘记密码</string>
-    <string name="forgetpwd_error">加载忘记密码界面出错 </string>
     <string name="download_fail">下载失败</string>
     <string name="download_success">下载成功</string>
     <string name="file_downloading">文件下载中，请稍候...</string>

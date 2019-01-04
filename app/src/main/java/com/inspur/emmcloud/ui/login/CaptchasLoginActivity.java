@@ -20,18 +20,19 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.LoginAPIService;
 import com.inspur.emmcloud.bean.system.GetBoolenResult;
 import com.inspur.emmcloud.broadcastreceiver.SmsCaptchasReceiver;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.IndexActivity;
-import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.common.EditTextUtils;
 import com.inspur.emmcloud.util.common.FomatUtils;
 import com.inspur.emmcloud.util.common.InputMethodUtils;
+import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
-import com.inspur.emmcloud.util.privates.LoginUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.privates.AppUtils;
+import com.inspur.emmcloud.util.privates.LoginUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 
@@ -87,7 +88,7 @@ public class CaptchasLoginActivity extends BaseActivity {
         time = new TimeCount(60000, 1000);// 构造CountDownTimer对象
         apiService = new LoginAPIService(CaptchasLoginActivity.this);
         apiService.setAPIInterface(new WebService());
-        String uerName = PreferencesUtils.getString(this, "userName", "");
+        String uerName = PreferencesUtils.getString(this, Constant.PREF_LOGIN_USERNAME, "");
         boolean isPhoneNum = FomatUtils.isPhoneNum(uerName);
         if (isPhoneNum) {
             EditTextUtils.setText(phoneNumEdit, uerName);
@@ -109,10 +110,10 @@ public class CaptchasLoginActivity extends BaseActivity {
                         phoneNumEdit.setEnabled(true);
                         time.cancel();
                         PreferencesUtils.putString(getApplicationContext(),
-                                "userName", phoneNum);
+                                Constant.PREF_LOGIN_USERNAME, phoneNum);
                         PreferencesUtils.putString(getApplicationContext(),
-                                "password", "");
-                        goIndex();
+                                Constant.PREF_LOGIN_PASSWORD, "");
+                        enterApp();
                         break;
                     case LOGIN_FAIL:
                         phoneNumEdit.setEnabled(true);
@@ -269,74 +270,13 @@ public class CaptchasLoginActivity extends BaseActivity {
         }
     }
 
-    class WebService extends APIInterfaceInstance {
-
-        @Override
-        public void returnReqLoginSMSSuccess(GetBoolenResult getBoolenResult) {
-            // TODO Auto-generated method stub
-            if (loadingDlg != null && loadingDlg.isShowing()) {
-                loadingDlg.dismiss();
-            }
-            phoneNumEdit.setEnabled(false);
-            ToastUtils.show(getApplicationContext(),
-                    getString(R.string.login_captchas_getcode_success));
-            time.start();
+    private void enterApp() {
+        boolean isHasSetShortPassword = PreferencesUtils.getBoolean(CaptchasLoginActivity.this, "hasPassword",false);
+        if (!isHasSetShortPassword){
+            IntentUtils.startActivity(CaptchasLoginActivity.this,ModifyUserFirstPsdActivity.class,true);
+        }else {
+            IntentUtils.startActivity(CaptchasLoginActivity.this,IndexActivity.class,true);
         }
-
-        @Override
-        public void returnReqLoginSMSFail(String error, int errorCode) {
-            // TODO Auto-generated method stub
-            if (loadingDlg != null && loadingDlg.isShowing()) {
-                loadingDlg.dismiss();
-            }
-            if (errorCode == 400) {
-                handleErrorCode(error,errorCode);
-            } else {
-                WebServiceMiddleUtils.hand(CaptchasLoginActivity.this, error,errorCode);
-            }
-            unRegisterSMSReceiver();
-        }
-
-    }
-
-    /**
-     * 处理400错，因现在10901错不是基本的错误类型
-     * 只在此处进行了特殊处理，如果以后是统一错误将封装，
-     * 此处理方法已确认
-     * 20170513  yfc
-     *
-     * @param error
-     */
-    private void handleErrorCode(String error,int errorCode) {
-        String code = JSONUtils.getString(error, "code", "");
-        if (!StringUtils.isBlank(code) && code.equals("10901")) {
-            ToastUtils.show(getApplicationContext(), getApplicationContext().getString(R.string.login_cant_login_with_sms));
-        } else {
-            WebServiceMiddleUtils.hand(CaptchasLoginActivity.this, error,errorCode);
-        }
-    }
-
-
-    // 跳转到主页面
-    private void goIndex() {
-        Intent intent = new Intent();
-        if (!PreferencesUtils.getBoolean(CaptchasLoginActivity.this, "hasPassword")) {
-            intent.setClass(CaptchasLoginActivity.this,
-                    ModifyUserFirstPsdActivity.class);
-        } else {
-            boolean hasPassWord = false;
-            hasPassWord = PreferencesUtils.getBoolean(CaptchasLoginActivity.this,"hasPassword",false);
-            if(hasPassWord){
-                LogUtils.YfcDebug("CaptchasLoginActivity有haspassword");
-                intent.setClass(CaptchasLoginActivity.this, IndexActivity.class);
-            }else{
-                LogUtils.YfcDebug("CaptchasLoginActivity没有haspassword");
-                intent.setClass(CaptchasLoginActivity.this,
-                        ModifyUserFirstPsdActivity.class);
-            }
-        }
-        startActivity(intent);
-        CaptchasLoginActivity.this.finish();
     }
 
     @Override
@@ -349,5 +289,34 @@ public class CaptchasLoginActivity extends BaseActivity {
         }
 
     }
+
+    class WebService extends APIInterfaceInstance {
+
+        @Override
+        public void returnReqLoginSMSSuccess(GetBoolenResult getBoolenResult) {
+            // TODO Auto-generated method stub
+            LoadingDialog.dimissDlg(loadingDlg);
+            phoneNumEdit.setEnabled(false);
+            ToastUtils.show(CaptchasLoginActivity.this,R.string.login_captchas_getcode_success);
+            time.start();
+        }
+
+        @Override
+        public void returnReqLoginSMSFail(String error, int errorCode) {
+            // TODO Auto-generated method stub
+            LoadingDialog.dimissDlg(loadingDlg);
+            String code = JSONUtils.getString(error, "code", "");
+            if (errorCode == 400 && code.equals("10901")) {
+                ToastUtils.show(CaptchasLoginActivity.this, R.string.login_cant_login_with_sms);
+            } else {
+                WebServiceMiddleUtils.hand(CaptchasLoginActivity.this, error,errorCode);
+            }
+            unRegisterSMSReceiver();
+        }
+
+    }
+
+
+
 
 }

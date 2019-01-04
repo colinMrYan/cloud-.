@@ -45,13 +45,13 @@ public class LoginUtils extends APIInterfaceInstance {
     private Handler loginUtilsHandler;
     private LanguageUtils languageUtils;
     private GetLoginResult getLoginResult;
-    private LoadingDialog loadingDialog;
+    private LoadingDialog loadingDlg;
     private boolean isLogin = false;  //标记是登录界面(包括手机验证码登录界面)调用
 
     public LoginUtils(Activity activity, Handler handler) {
         this.handler = handler;
         this.activity = activity;
-        loadingDialog = new LoadingDialog(activity);
+        loadingDlg = new LoadingDialog(activity);
         apiServices = new LoginAPIService(activity);
         apiServices.setAPIInterface(LoginUtils.this);
         handMessage();
@@ -73,14 +73,14 @@ public class LoginUtils extends APIInterfaceInstance {
                         startMDM();
                         break;
                     case LOGIN_SUCCESS:
-                        if (loadingDialog != null && loadingDialog.isShowing()) {
-                            loadingDialog.dismiss();
+                        if (loadingDlg != null && loadingDlg.isShowing()) {
+                            loadingDlg.dismiss();
                         }
                         handler.sendEmptyMessage(LOGIN_SUCCESS);
                         break;
                     case LOGIN_FAIL:
-                        if (loadingDialog != null && loadingDialog.isShowing()) {
-                            loadingDialog.dismiss();
+                        if (loadingDlg != null && loadingDlg.isShowing()) {
+                            loadingDlg.dismiss();
                         }
                         handler.sendEmptyMessage(LOGIN_FAIL);
                         break;
@@ -97,9 +97,8 @@ public class LoginUtils extends APIInterfaceInstance {
         // TODO Auto-generated method stub
         String userName = PreferencesUtils.getString(activity, "userRealName",
                 "");
-        String tanentId = ((MyApplication) activity.getApplicationContext()).getCurrentEnterprise().getId();
-        String userCode = ((MyApplication) activity.getApplicationContext())
-                .getUid();
+        String tanentId = MyApplication.getInstance().getCurrentEnterprise().getId();
+        String userCode = MyApplication.getInstance().getUid();
         final MDM mdm = new MDM(activity, tanentId, userCode, userName);
         mdm.addOnMDMListener(new MDMListener() {
 
@@ -125,8 +124,8 @@ public class LoginUtils extends APIInterfaceInstance {
             @Override
             public void dimissExternalLoadingDlg() {
                 // TODO Auto-generated method stub
-                if (loadingDialog != null && loadingDialog.isShowing()) {
-                    loadingDialog.dismiss();
+                if (loadingDlg != null && loadingDlg.isShowing()) {
+                    loadingDlg.dismiss();
                 }
             }
         });
@@ -137,7 +136,7 @@ public class LoginUtils extends APIInterfaceInstance {
     public void login(String userName, String password) {
         isLogin = true;
         if (NetUtils.isNetworkConnected(activity)) {
-            loadingDialog.show();
+            loadingDlg.show();
             clearLoginInfo();
             apiServices.OauthSignin(userName, password);
         } else {
@@ -233,13 +232,13 @@ public class LoginUtils extends APIInterfaceInstance {
      * @param enterpriseList
      * @param defaultEnterprise
      */
-    private void showSelectEnterpriseDlg(final List<Enterprise> enterpriseList, Enterprise defaultEnterprise) {
+    private void showSelectEnterpriseDlg(final List<Enterprise> enterpriseList) {
         final MyDialog myDialog = new MyDialog(activity, R.layout.dialog_login_select_tanent);
-        final SwitchView switchView = (SwitchView) myDialog.findViewById(R.id.auto_select_switch);
+        final SwitchView switchView = myDialog.findViewById(R.id.auto_select_switch);
         switchView.setOpened(true);
-        MaxHightListView enterpriseListView = (MaxHightListView) myDialog.findViewById(R.id.enterprise_list);
+        MaxHightListView enterpriseListView = myDialog.findViewById(R.id.enterprise_list);
         enterpriseListView.setMaxHeight(DensityUtil.dip2px(activity, 180));
-        enterpriseListView.setAdapter(new LoginSelectEnterpriseAdapter(activity, enterpriseList, defaultEnterprise));
+        enterpriseListView.setAdapter(new LoginSelectEnterpriseAdapter(activity, enterpriseList));
         enterpriseListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -249,7 +248,7 @@ public class LoginUtils extends APIInterfaceInstance {
                 PreferencesByUsersUtils.putString(activity, Constant.PREF_CURRENT_ENTERPRISE_ID, enterpriseId);
                 myDialog.dismiss();
                 MyApplication.getInstance().initTanent();
-                loadingDialog.show();
+                loadingDlg.show();
                 getServerSupportLanguage();
             }
         });
@@ -264,10 +263,8 @@ public class LoginUtils extends APIInterfaceInstance {
         this.getLoginResult = getLoginResult;
         String accessToken = getLoginResult.getAccessToken();
         String refreshToken = getLoginResult.getRefreshToken();
-        ((MyApplication) activity.getApplicationContext())
-                .setAccessToken(accessToken);
-        ((MyApplication) activity.getApplicationContext())
-                .setRefreshToken(refreshToken);
+        MyApplication.getInstance().setAccessToken(accessToken);
+        MyApplication.getInstance().setRefreshToken(refreshToken);
         getMyInfo();
     }
 
@@ -291,7 +288,7 @@ public class LoginUtils extends APIInterfaceInstance {
         PreferencesUtils.putString(activity, "userRealName", name);
         PreferencesUtils.putString(activity, "userID", getMyInfoResult.getID());
         PreferencesUtils.putString(activity, "myInfo", myInfo);
-        PreferencesUtils.putBoolean(activity, "hasPassword",
+        PreferencesUtils.putBoolean(activity, Constant.PREF_HAS_SET_SHORT_PASSWORD,
                 getMyInfoResult.getHasPassord());
         ((MyApplication) activity.getApplicationContext())
                 .setUid(getMyInfoResult.getID());
@@ -307,10 +304,8 @@ public class LoginUtils extends APIInterfaceInstance {
                 String selectLoginEnterpriseId = PreferencesByUsersUtils.getString(activity, Constant.PREF_SELECT_LOGIN_ENTERPRISE_ID, "");
                 //当用户没有指定登录的企业时或已指定登录企业但是此企业不存在时则弹出选择登录企业的页面
                 if (StringUtils.isBlank(selectLoginEnterpriseId) || !isEnterpriseIdValid(enterpriseList, selectLoginEnterpriseId)) {
-                    if (loadingDialog != null && loadingDialog.isShowing()) {
-                        loadingDialog.dismiss();
-                    }
-                    showSelectEnterpriseDlg(enterpriseList, defaultEnterprise);
+                    LoadingDialog.dimissDlg(loadingDlg);
+                    showSelectEnterpriseDlg(enterpriseList);
                     return;
                 }
             }

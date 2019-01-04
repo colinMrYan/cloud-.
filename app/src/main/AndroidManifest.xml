@@ -275,7 +275,7 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".ui.login.CaptchasLoginActivity"
+            android:name=".ui.login.LoginViaSmsActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>

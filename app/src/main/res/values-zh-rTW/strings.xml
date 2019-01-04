@@ -959,7 +959,6 @@
     <string name="assemble_json_exception">組裝Json物件出現異常！</string>
     <string name="inputpwd">請輸入手勢密碼</string>
     <string name="forgetpwd">忘記密碼</string>
-    <string name="forgetpwd_error">載入忘記密碼介面出錯 </string>
     <string name="download_fail">下載失敗</string>
     <string name="download_success">下載成功</string>
     <string name="file_downloading">文件下載中，請稍候...</string>
