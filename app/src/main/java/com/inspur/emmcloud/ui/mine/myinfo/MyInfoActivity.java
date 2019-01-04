@@ -216,7 +216,6 @@ public class MyInfoActivity extends BaseActivity {
                 userProfileInfoBean = new UserProfileInfoBean(response);
             }
         }
-
         if (userProfileInfoBean != null) {
 
             if (userProfileInfoBean.getShowEpInfo() == 0) {

@@ -6,7 +6,6 @@ import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkRequest;
-import android.os.Build;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -209,11 +208,11 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
                 PowerManager powerManager = (PowerManager) getSystemService( POWER_SERVICE );
                 boolean hasIgnored = powerManager.isIgnoringBatteryOptimizations(context.getPackageName());
                 if(!hasIgnored){
-                    int res1 =context.getResources().getIdentifier("battery_tip_content","string",context.getPackageName());
-                    int res2 =context.getResources().getIdentifier("battery_tip_ishide","string",context.getPackageName());
-                    int res3 =context.getResources().getIdentifier("battery_tip_toset","string",context.getPackageName());
-                    int res4 =context.getResources().getIdentifier("battery_tip_cancel","string",context.getPackageName());
-                    confirmDialog = new BatteryWhiteListDialog( context,res1,res2,res3,res4);
+                    int tipContent =context.getResources().getIdentifier("battery_tip_content","string",context.getPackageName());
+                    int isHide =context.getResources().getIdentifier("battery_tip_ishide","string",context.getPackageName());
+                    int toSet =context.getResources().getIdentifier("battery_tip_toset","string",context.getPackageName());
+                    int cancel =context.getResources().getIdentifier("battery_tip_cancel","string",context.getPackageName());
+                    confirmDialog = new BatteryWhiteListDialog( context,tipContent,isHide,toSet,cancel);
                     confirmDialog.setClicklistener( new BatteryWhiteListDialog.ClickListenerInterface() {
                         @Override
                         public void doConfirm() {
