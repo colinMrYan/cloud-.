@@ -78,17 +78,17 @@ public class BatteryWhiteListDialog extends Dialog {
             }
         } );
 
-        tipContentText.setText( tipContentId );
-        hideCheckBox.setText( tipHideHintId );
-        cancelText.setText( cancelButtonTextId );
-        setText.setText( confirmButtonTextId );
-        cancelText.setOnClickListener( new ClickListener() );
-        setText.setOnClickListener( new ClickListener() );
+        tipContentText.setText(tipContentId);
+        hideCheckBox.setText(tipHideHintId);
+        cancelText.setText(cancelButtonTextId);
+        setText.setText(confirmButtonTextId);
+        cancelText.setOnClickListener(new ClickListener());
+        setText.setOnClickListener(new ClickListener());
         Window dialogWindow = getWindow();
         WindowManager.LayoutParams lp = dialogWindow.getAttributes();
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics(); // 获取屏幕宽、高用
         lp.width = (int)(displayMetrics.widthPixels * 0.9); // 高度设置为屏幕的0.6
-        dialogWindow.setAttributes( lp );
+        dialogWindow.setAttributes(lp);
     }
 
     public void setClicklistener(ClickListenerInterface clickListenerInterface) {
