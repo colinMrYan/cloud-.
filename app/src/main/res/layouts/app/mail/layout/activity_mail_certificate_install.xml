@@ -8,12 +8,12 @@
 
     <!-- 头部-->
     <RelativeLayout
-        android:id="@+id/rl_header_layout"
+        android:id="@+id/rl_header"
         android:layout_width="match_parent"
         android:layout_height="@dimen/header_height"
         android:background="@color/header_bg">
         <RelativeLayout
-            android:id="@+id/rl_back_layout"
+            android:id="@+id/rl_back"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
@@ -34,7 +34,7 @@
         </RelativeLayout>
 
         <TextView
-            android:id="@+id/tv_header_text"
+            android:id="@+id/tv_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
@@ -59,9 +59,8 @@
             android:textSize="16sp"/>
     </RelativeLayout>
 
-
     <ScrollView
-        android:layout_below="@id/rl_header_layout"
+        android:layout_below="@id/rl_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="10dp">
@@ -76,7 +75,7 @@
                 android:layout_marginRight="15dp"
                 android:layout_height="wrap_content">
                 <TextView
-                    android:id="@+id/tv_certificate_title"
+                    android:id="@+id/tv_installed_cer_tip_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingTop="10dp"
@@ -85,19 +84,19 @@
                     android:textColor="#333333"/>
 
                 <TextView
-                    android:id="@+id/tv_install_tip1"
+                    android:id="@+id/tv_installed_tip1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
-                    android:layout_below="@+id/tv_certificate_title"
+                    android:layout_below="@id/tv_installed_cer_tip_title"
                     android:paddingTop="4dp"
                     android:text="1、首先将证书导入到手机（ios可以通过其他邮箱将pfx证书或者p12证书以附件形式发送到本邮箱，然后将此证书附件下载）"
                     android:textColor="#666666" />
                 <TextView
-                    android:id="@+id/tv_install_tip2"
+                    android:id="@+id/tv_installed_tip2"
                     android:paddingTop="2dp"
-                    android:layout_below="@id/tv_install_tip1"
+                    android:layout_below="@id/tv_installed_tip1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="#666666"
@@ -115,7 +114,7 @@
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp">
                 <TextView
-                    android:id="@+id/tv_installed_certificate_tip"
+                    android:id="@+id/tv_installed_cer_tip"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="#333333"
@@ -123,7 +122,7 @@
                     android:text="已安装证书"/>
                 <RelativeLayout
                     android:id="@+id/rl_installed_content"
-                    android:layout_below="@id/tv_installed_certificate_tip"
+                    android:layout_below="@id/tv_installed_cer_tip"
                     android:layout_marginTop="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
@@ -141,12 +140,12 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
                             <TextView
-                                android:id="@+id/tv_installed_certificate_title"
+                                android:id="@+id/tv_installed_cer_title"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="证书1.pfx" />
                             <TextView
-                                android:id="@+id/tv_certificate_use"
+                                android:id="@+id/tv_cer_use_state"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentRight="true"
@@ -162,13 +161,13 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
                             <TextView
-                                android:id="@+id/tv_certificate_have"
+                                android:id="@+id/tv_cer_owner_tip"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textColor="#666666"
                                 android:text="颁发给：" />
                             <TextView
-                                android:id="@+id/tv_certificate_used_name"
+                                android:id="@+id/tv_installed_cer_owner_name"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="90dp"
@@ -184,13 +183,13 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
                             <TextView
-                                android:id="@+id/tv_certificate_giver"
+                                android:id="@+id/tv_cer_issuer_tip"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textColor="#666666 "
                                 android:text="颁发者：" />
                             <TextView
-                                android:id="@+id/tv_certificate_giver_id"
+                                android:id="@+id/tv_installed_cer_issuer_name"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="90dp"
@@ -206,13 +205,13 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
                             <TextView
-                                android:id="@+id/tv_certificate_expirty"
+                                android:id="@+id/tv_installed_cer_final_data_tip"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textColor="#666666 "
                                 android:text="有效期至：" />
                             <TextView
-                                android:id="@+id/tv_certificate_expirty_data"
+                                android:id="@+id/tv_installed_cer_final_data"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="90dp"
@@ -234,7 +233,7 @@
                                 android:background="#C8C7CC">
                             </View>
                             <TextView
-                                android:id="@+id/tv_secrity_action_title"
+                                android:id="@+id/tv_encryption_title"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="12dp"
@@ -243,7 +242,7 @@
                                 android:textSize="14sp"
                                 android:text="加密发送邮件的内容和附件" />
                             <com.inspur.emmcloud.widget.SwitchView
-                                android:id="@+id/sv_secrity_action1"
+                                android:id="@+id/switchview_encryption_action"
                                 android:layout_width="31dp"
                                 android:layout_height="51dp"
                                 android:layout_alignParentRight="true"
@@ -264,7 +263,7 @@
                                 android:background="#C8C7CC">
                             </View>
                             <TextView
-                                android:id="@+id/tv_secrity_action2_title"
+                                android:id="@+id/tv_signature_title"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="12dp"
@@ -273,7 +272,7 @@
                                 android:textSize="14sp"
                                 android:text="加签发送邮件的内容和附件" />
                             <com.inspur.emmcloud.widget.SwitchView
-                                android:id="@+id/sv_secrity_action2"
+                                android:id="@+id/switchview_signature_action"
                                 android:layout_width="31dp"
                                 android:layout_height="51dp"
                                 android:layout_alignParentRight="true"
@@ -289,7 +288,7 @@
 
             <!-- 替换证书-->
             <LinearLayout
-                android:id="@+id/ll_certificate_new"
+                android:id="@+id/ll_new_cer"
                 android:visibility="gone"
                 android:layout_below="@id/rl_installed_certificate"
                 android:layout_marginTop="20dp"
@@ -303,7 +302,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <TextView
-                    android:id="@+id/tv_new_certificate_title"
+                    android:id="@+id/tv_new_cer_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="14sp"
@@ -313,13 +312,13 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp">
                     <TextView
-                        android:id="@+id/tv_new_certificate_user_tip"
+                        android:id="@+id/tv_new_cer_owner_tip"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="#666666"
                         android:text="颁发给："/>
                     <TextView
-                        android:id="@+id/tv_new_certificate_user"
+                        android:id="@+id/tv_new_cer_ower_name"
                         android:layout_marginLeft="98dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -332,13 +331,13 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp">
                     <TextView
-                        android:id="@+id/tv_new_certificate_publisher_tip"
+                        android:id="@+id/tv_new_cer_issuer_tip"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="#666666"
                         android:text="颁发者："/>
                     <TextView
-                        android:id="@+id/tv_new_certificate_publisher"
+                        android:id="@+id/tv_new_cer_issuer_name"
                         android:layout_marginLeft="98dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -351,13 +350,13 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp">
                     <TextView
-                        android:id="@+id/tv_new_certificate_expirty"
+                        android:id="@+id/tv_new_cer_final_data_tip"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="#666666"
                         android:text="有效期至："/>
                     <TextView
-                        android:id="@+id/tv_new_certificate_expirty_data"
+                        android:id="@+id/tv_new_cer_final_data"
                         android:layout_marginLeft="98dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -365,7 +364,7 @@
                         android:text="2023-03-12 18:09:11"/>
                 </RelativeLayout>
             </LinearLayout>
-
         </RelativeLayout>
     </ScrollView>
+
 </RelativeLayout>

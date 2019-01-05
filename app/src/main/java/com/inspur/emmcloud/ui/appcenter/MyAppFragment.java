@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.DataSetObserver;
 import android.graphics.Bitmap;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Vibrator;
@@ -170,7 +171,11 @@ public class MyAppFragment extends Fragment {
             hasRequestBadgeNum = true;
         }
         refreshRecommendAppWidgetView();
-        NetUtils.PingThreadStart(NetUtils.pingUrls,5,Constant.EVENTBUS_TAG__NET_EXCEPTION_HINT);
+        if(NetworkInfo.State.CONNECTED==NetUtils.getNetworkMobileState(getContext())||NetworkInfo.State.CONNECTING==NetUtils.getNetworkMobileState(getContext())){
+            DeleteHeaderView();
+        }else {
+            NetUtils.PingThreadStart(NetUtils.pingUrls,5,Constant.EVENTBUS_TAG__NET_EXCEPTION_HINT);
+        }
     }
 
     /**

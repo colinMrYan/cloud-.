@@ -126,10 +126,20 @@
                          android:layout_toRightOf="@id/rl_hard_loading_img"
                          android:layout_width="wrap_content"
                          android:layout_height="wrap_content">
+                         <ImageView
+                             android:id="@+id/iv_fix_left_arrow"
+                             android:layout_width="15dp"
+                             android:layout_height="15dp"
+                             android:layout_marginTop="14dp"
+                             android:layout_marginLeft="4dp"
+                             android:scaleType="fitCenter"
+                             android:background="@drawable/ic_fix_left_arrow"
+                             />
                          <TextView
                              android:id="@+id/tv_fix"
                              android:layout_width="wrap_content"
                              android:layout_height="wrap_content"
+                             android:layout_toRightOf="@id/iv_fix_left_arrow"
                              android:layout_marginTop="11dp"
                              android:layout_marginLeft="4dp"
                              android:textSize="15sp"
