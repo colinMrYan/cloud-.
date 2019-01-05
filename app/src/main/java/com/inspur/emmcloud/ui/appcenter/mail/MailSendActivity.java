@@ -23,9 +23,9 @@ import com.inspur.emmcloud.bean.contact.SearchModel;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MailCacheUtils;
-import com.inspur.emmcloud.util.privates.mail.PreferencesSaveGetCerUtils;
 import com.inspur.emmcloud.widget.RichEdit;
 import com.inspur.imp.engine.webview.ImpWebView;
 
@@ -235,7 +235,7 @@ public class MailSendActivity extends BaseActivity {
             setH5DataUI( isHaveH5Data );
         }
 
-        Object object = PreferencesSaveGetCerUtils.getCertificateByUsers( this, MailCertificateInstallActivity.CERTIFICATER_KEY );
+        Object object = PreferencesByUsersUtils.getObject( this, MailCertificateInstallActivity.CERTIFICATER_KEY );
         if (null == object) {
             myCertificate = new MailCertificateDetail();
             myCertificate.setEncryptedMail( false );

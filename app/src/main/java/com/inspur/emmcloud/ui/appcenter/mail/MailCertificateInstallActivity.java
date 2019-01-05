@@ -21,8 +21,8 @@ import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
-import com.inspur.emmcloud.util.privates.mail.PreferencesSaveGetCerUtils;
 import com.inspur.emmcloud.widget.SwitchView;
 import com.inspur.imp.plugin.filetransfer.filemanager.FileManagerActivity;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
@@ -87,7 +87,7 @@ public class MailCertificateInstallActivity extends BaseActivity {
      * 初始化
      */
     private void init() {
-        Object certificateObject = PreferencesSaveGetCerUtils.getCertificateByUsers( this, CERTIFICATER_KEY );
+        Object certificateObject = PreferencesByUsersUtils.getObject( this,CERTIFICATER_KEY );
         if (null == certificateObject) {
             myCertificate = new MailCertificateDetail();
         } else {
@@ -100,7 +100,7 @@ public class MailCertificateInstallActivity extends BaseActivity {
             @Override
             public void toggleToOn(View view) {
                 myCertificate.setEncryptedMail( true );
-                PreferencesSaveGetCerUtils.saveCertifivateByUsers( getBaseContext(), myCertificate, CERTIFICATER_KEY );
+                PreferencesByUsersUtils.putObject( MailCertificateInstallActivity.this,myCertificate,CERTIFICATER_KEY );
                 encryptionSwitchView.setOpened( true );
 
             }
@@ -108,7 +108,7 @@ public class MailCertificateInstallActivity extends BaseActivity {
             @Override
             public void toggleToOff(View view) {
                 myCertificate.setEncryptedMail( false );
-                PreferencesSaveGetCerUtils.saveCertifivateByUsers( getBaseContext(), myCertificate, CERTIFICATER_KEY );
+                PreferencesByUsersUtils.putObject( MailCertificateInstallActivity.this,myCertificate,CERTIFICATER_KEY );
                 encryptionSwitchView.setOpened( false );
             }
         } );
@@ -117,14 +117,14 @@ public class MailCertificateInstallActivity extends BaseActivity {
             @Override
             public void toggleToOn(View view) {
                 myCertificate.setSignedMail( true );
-                PreferencesSaveGetCerUtils.saveCertifivateByUsers( getBaseContext(), myCertificate, CERTIFICATER_KEY );
+                PreferencesByUsersUtils.putObject( MailCertificateInstallActivity.this,myCertificate,CERTIFICATER_KEY );
                 signatureSwitchView.setOpened( true );
             }
 
             @Override
             public void toggleToOff(View view) {
                 myCertificate.setSignedMail( false );
-                PreferencesSaveGetCerUtils.saveCertifivateByUsers( getBaseContext(), myCertificate, CERTIFICATER_KEY );
+                PreferencesByUsersUtils.putObject( MailCertificateInstallActivity.this,myCertificate,CERTIFICATER_KEY );
                 signatureSwitchView.setOpened( false );
             }
         } );
@@ -310,7 +310,7 @@ public class MailCertificateInstallActivity extends BaseActivity {
         @Override
         public void returnMailCertificateUploadSuccess(byte[] arg0) {
             Toast.makeText( getBaseContext(), "上传证书成功", Toast.LENGTH_SHORT ).show();
-            PreferencesSaveGetCerUtils.saveCertifivateByUsers( getBaseContext(), myCertificate, CERTIFICATER_KEY );
+            PreferencesByUsersUtils.putObject( MailCertificateInstallActivity.this,myCertificate,CERTIFICATER_KEY );
             updataCertificateUI( myCertificate );
             super.returnMailCertificateUploadSuccess( arg0 );
         }
