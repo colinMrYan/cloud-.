@@ -209,11 +209,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
                 PowerManager powerManager = (PowerManager) getSystemService( POWER_SERVICE );
                 boolean hasIgnored = powerManager.isIgnoringBatteryOptimizations(context.getPackageName());
                 if(!hasIgnored){
-                    int tipContent =context.getResources().getIdentifier("battery_tip_content","string",context.getPackageName());
-                    int isHide =context.getResources().getIdentifier("battery_tip_ishide","string",context.getPackageName());
-                    int toSet =context.getResources().getIdentifier("battery_tip_toset","string",context.getPackageName());
-                    int cancel =context.getResources().getIdentifier("battery_tip_cancel","string",context.getPackageName());
-                    confirmDialog = new BatteryWhiteListDialog( context,tipContent,isHide,toSet,cancel);
+                    confirmDialog = new BatteryWhiteListDialog( context,R.string.battery_tip_content,R.string.battery_tip_ishide,R.string.battery_tip_toset,R.string.battery_tip_cancel);
                     confirmDialog.setClicklistener( new BatteryWhiteListDialog.ClickListenerInterface() {
                         @Override
                         public void doConfirm() {
