@@ -66,9 +66,9 @@ public class BatteryWhiteListDialog extends Dialog {
         View view = inflater.inflate( R.layout.dialog_battery_white_list, null );
         setContentView( view );
 
-        TextView tvTip_Content = (TextView) view.findViewById( R.id.tv_tip_content );
-        TextView tvCancel = (TextView) view.findViewById( R.id.tv_cancel );
-        TextView tvToSet = (TextView) view.findViewById( R.id.tv_toset );
+        TextView tipContentText = (TextView) view.findViewById( R.id.tv_tip_content );
+        TextView cancelText = (TextView) view.findViewById( R.id.tv_cancel );
+        TextView setText = (TextView) view.findViewById( R.id.tv_toset );
         hideCheckBox = (CheckBox) view.findViewById( R.id.cb_ishide );
         hideCheckBox.setOnCheckedChangeListener( new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -81,12 +81,12 @@ public class BatteryWhiteListDialog extends Dialog {
             }
         } );
 
-        tvTip_Content.setText( tipContentId );
+        tipContentText.setText( tipContentId );
         hideCheckBox.setText( tipHideHintId );
-        tvCancel.setText( cancelButtonTextId );
-        tvToSet.setText( confirmButtonTextId );
-        tvCancel.setOnClickListener( new clickListener() );
-        tvToSet.setOnClickListener( new clickListener() );
+        cancelText.setText( cancelButtonTextId );
+        setText.setText( confirmButtonTextId );
+        cancelText.setOnClickListener( new clickListener() );
+        setText.setOnClickListener( new clickListener() );
         Window dialogWindow = getWindow();
         WindowManager.LayoutParams lp = dialogWindow.getAttributes();
         DisplayMetrics d = context.getResources().getDisplayMetrics(); // 获取屏幕宽、高用
