@@ -98,7 +98,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
     protected NetworkChangeReceiver networkChangeReceiver;
     protected ConnectivityManager.NetworkCallback networkCallback;
     protected ConnectivityManager connectivityManager;
-    BatteryWhiteListDialog confirmDialog;
+    private   BatteryWhiteListDialog confirmDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
