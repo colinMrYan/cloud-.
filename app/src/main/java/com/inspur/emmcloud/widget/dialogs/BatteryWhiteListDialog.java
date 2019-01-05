@@ -31,6 +31,7 @@ public class BatteryWhiteListDialog extends Dialog {
 
     public interface ClickListenerInterface {
         public void doConfirm();
+
         public void doCancel();
     }
 
@@ -73,7 +74,7 @@ public class BatteryWhiteListDialog extends Dialog {
         hideCheckBox.setOnCheckedChangeListener( new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    isHide = isChecked;
+                isHide = isChecked;
             }
         } );
 
@@ -81,8 +82,8 @@ public class BatteryWhiteListDialog extends Dialog {
         hideCheckBox.setText( tipHideHintId );
         cancelText.setText( cancelButtonTextId );
         setText.setText( confirmButtonTextId );
-        cancelText.setOnClickListener( new clickListener() );
-        setText.setOnClickListener( new clickListener() );
+        cancelText.setOnClickListener( new ClickListener() );
+        setText.setOnClickListener( new ClickListener() );
         Window dialogWindow = getWindow();
         WindowManager.LayoutParams lp = dialogWindow.getAttributes();
         DisplayMetrics d = context.getResources().getDisplayMetrics(); // 获取屏幕宽、高用
@@ -94,7 +95,7 @@ public class BatteryWhiteListDialog extends Dialog {
         this.clickListenerInterface = clickListenerInterface;
     }
 
-    private class clickListener implements View.OnClickListener {
+    private class ClickListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
             // TODO Auto-generated method stub
