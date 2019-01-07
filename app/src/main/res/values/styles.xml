@@ -222,4 +222,9 @@
         <!--<item name="android:showDividers">middle</item>-->
         <!--<item name="android:divider">@android:drawable/divider_horizontal_bright</item>-->
     </style>
+
+    <style name="WelcomeStyle" parent="android:Theme">
+        <item name="android:windowBackground">@color/content_bg</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
 </resources>
