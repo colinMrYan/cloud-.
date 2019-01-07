@@ -10,24 +10,34 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIInterfaceInstance;
+import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.bean.appcenter.mail.Mail;
 import com.inspur.emmcloud.bean.appcenter.mail.MailCertificateDetail;
 import com.inspur.emmcloud.bean.appcenter.mail.MailRecipient;
 import com.inspur.emmcloud.bean.appcenter.mail.MailRecipientModel;
+import com.inspur.emmcloud.bean.appcenter.mail.MailSend;
 import com.inspur.emmcloud.bean.chat.InsertModel;
 import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.bean.contact.SearchModel;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MailCacheUtils;
 import com.inspur.emmcloud.widget.RichEdit;
 import com.inspur.imp.engine.webview.ImpWebView;
+import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
+import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
@@ -50,6 +60,8 @@ public class MailSendActivity extends BaseActivity {
     private TextView recipientsShowText;
     @ViewInject(R.id.tv_cc_recipient_show)
     private TextView ccRecipientsShowText;
+    @ViewInject( R.id.et_content_send )
+    private EditText contentSendEditText;
     @ViewInject(R.id.iv_fw_tip)
     private ImageView fwTipImageView;
     @ViewInject(R.id.rl_fw_body)
@@ -79,6 +91,9 @@ public class MailSendActivity extends BaseActivity {
     private static final int QEQUEST_CC_MEMBER = 3;
 
     private MailCertificateDetail myCertificate;
+    private boolean isForward =false;
+    private boolean isReply   =false;
+    boolean isHaveOriginalMail =false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,14 +131,13 @@ public class MailSendActivity extends BaseActivity {
                     recipientRichEdit.insertLastManualData( -1 );
                 }
             }
-        } );
+        });
 
         recipientRichEdit.setInsertModelListWatcher( new RichEdit.InsertModelListWatcher() {
             @Override
             public void onDataChanged(List<InsertModel> insertModelList) {
                 synchronousRemoveRecipients( recipientList, insertModelList );
                 synchronousAddRecipients( recipientList, insertModelList );
-                LogUtils.LbcDebug( "当前：" + recipientList.size() );
             }
         } );
 
@@ -197,12 +211,17 @@ public class MailSendActivity extends BaseActivity {
 
                     break;
                 case MODEL_REPLY:
+                    String string = JSON.toJSONString(((Object)replayMail));
+                    LogUtils.LbcDebug( "JSonData:"+string );
+
                     mailRecipientList.clear();
                     mailRecipientList.add( replayMail.getFromMailRecipient() );
                     insertReciversFromExtra( recipientRichEdit, mailRecipientList, recipientList );
 
                     sendThemeEditText.setText( replayMail.getSubject().toString() );
                     headerTitleText.setText( "回复" );
+                    isReply=true;
+                    isHaveOriginalMail=true;
                     break;
                 case MODEL_REPLY_ALL:
                     mailRecipientList.clear();
@@ -224,15 +243,19 @@ public class MailSendActivity extends BaseActivity {
                     ccRecipientsShowText.setVisibility( View.VISIBLE );
 
                     sendThemeEditText.setText( replayMail.getSubject().toString() );
+
+                    isReply=true;
+                    isHaveOriginalMail=true;
                     break;
                 case MODEL_FORWARD:
 
                     sendThemeEditText.setText( replayMail.getSubject().toString() );
+                    isForward=true;
+                    isHaveOriginalMail=true;
                     break;
             }
 
-            boolean isHaveH5Data = true;
-            setH5DataUI( isHaveH5Data );
+            setH5DataUI( isHaveOriginalMail );
         }
 
         Object object = PreferencesByUsersUtils.getObject( this, MailCertificateInstallActivity.CERTIFICATER_KEY );
@@ -265,8 +288,8 @@ public class MailSendActivity extends BaseActivity {
     private void insertReciversFromExtra(RichEdit richRdit, List<MailRecipient> mailRecipients, ArrayList<MailRecipientModel> recipientsList) {
         for (int i = 0; i < mailRecipients.size(); i++) {
             MailRecipientModel reciver = new MailRecipientModel();
-            reciver.setmRecipientName( mailRecipients.get( i ).getName() );
-            reciver.setmRecipientEmail( mailRecipients.get( i ).getAddress() );
+            reciver.setName( mailRecipients.get( i ).getName() );
+            reciver.setAddress( mailRecipients.get( i ).getAddress() );
             boolean isContaion = isListContaionSpecItem( recipientsList, reciver );
             if (!isContaion) {
                 recipientsList.add( reciver );
@@ -275,11 +298,64 @@ public class MailSendActivity extends BaseActivity {
         }
     }
 
+    /**
+     *发送邮件 数据准备*/
+    private MailSend prepareSendData(){
+     MailSend mail = new MailSend();
+     mail.setBody( StringUtils.isBlank(contentSendEditText.getText().toString())?"":contentSendEditText.getText().toString());
+     mail.setToRecipients(recipientList);
+     mail.setCcRecipients(ccRecipientList);
+     mail.setFrom(new MailRecipientModel("libaochao","libaochao@inspur.com"));
+     mail.setNeedEncrypt(myCertificate.isEncryptedMail());
+     mail.setNeedSign(myCertificate.isSignedMail());
+     mail.setOriginalMail("");
+     mail.setSubject(StringUtils.isBlank( sendThemeEditText.getText().toString())?"":sendThemeEditText.getText().toString());
+     mail.setIsForward(isForward);
+     mail.setIsReply( isReply );
+     return mail;
+    }
+
+    /**
+     *发邮件时提醒*/
+    private void noSignOrEncryptHintDialog(){
+        if(!myCertificate.isSignedMail()||!myCertificate.isEncryptedMail()){
+            String signedMail = myCertificate.isSignedMail()?"":"加签";
+            String encryptMail= myCertificate.isEncryptedMail()?"":"加密";
+            String mailHint   = "该邮件未"+(myCertificate.isSignedMail()?"":"加签")+(myCertificate.isEncryptedMail()?"":"加密")+"确定发送？";
+            new QMUIDialog.MessageDialogBuilder(getBaseContext())
+                    .setMessage(mailHint)
+                    .addAction("取消", new QMUIDialogAction.ActionListener() {
+                        @Override
+                        public void onClick(QMUIDialog dialog, int index) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .addAction("确定", new QMUIDialogAction.ActionListener() {
+                        @Override
+                        public void onClick(QMUIDialog dialog, int index) {
+                            dialog.dismiss();
+                            Toast.makeText(getBaseContext(), "发送成功", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .create().show();
+        }
+    }
+
+    /**
+     *点击事件*/
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tv_send_mail:
-                if (true) {
-
+                if (recipientList.size()>0) {
+                   MailSend mailSend = prepareSendData();
+                   String   jsonMail = JSON.toJSONString(mailSend);
+                   LogUtils.LbcDebug( "JsonMail::"+jsonMail );
+                    if (NetUtils.isNetworkConnected( this )) {
+                        LogUtils.LbcDebug( "准备发送邮件" );
+                       AppAPIService apiService = new AppAPIService( this );
+                       apiService.setAPIInterface( new WebService() );
+                        apiService.uploadMailFile(jsonMail);
+                    }
                 }
                 break;
             case R.id.iv_recipients:
@@ -329,8 +405,8 @@ public class MailSendActivity extends BaseActivity {
                         for (int i = 0; i < addMemberList.size(); i++) {
                             MailRecipientModel singleRecipient = new MailRecipientModel();
                             ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid( addMemberList.get( i ).getId() );
-                            singleRecipient.setmRecipientEmail( contactUser.getEmail() );
-                            singleRecipient.setmRecipientName( contactUser.getName() );
+                            singleRecipient.setAddress( contactUser.getEmail() );
+                            singleRecipient.setName( contactUser.getName() );
                             boolean isContaion = isListContaionSpecItem( recipientList, singleRecipient );
                             if (!isContaion) {
                                 recipientList.add( singleRecipient );
@@ -346,8 +422,8 @@ public class MailSendActivity extends BaseActivity {
                         for (int i = 0; i < ctAddMemberList.size(); i++) {
                             MailRecipientModel singleRecipient = new MailRecipientModel();
                             ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid( ctAddMemberList.get( i ).getId() );
-                            singleRecipient.setmRecipientEmail( contactUser.getEmail() );
-                            singleRecipient.setmRecipientName( contactUser.getName() );
+                            singleRecipient.setAddress( contactUser.getEmail() );
+                            singleRecipient.setName( contactUser.getName() );
                             boolean isContaion = isListContaionSpecItem( ccRecipientList, singleRecipient );
                             if (!isContaion) {
                                 ccRecipientList.add( singleRecipient );
@@ -364,13 +440,12 @@ public class MailSendActivity extends BaseActivity {
 
     /**
      * 选择去重
-     *
      * @param selectMemList
      * @param specItem
      */
     private boolean isListContaionSpecItem(ArrayList<MailRecipientModel> selectMemList, MailRecipientModel specItem) {
         for (int i = 0; i < selectMemList.size(); i++) {
-            if (selectMemList.get( i ).getmRecipientEmail().equals( specItem.getmRecipientEmail() )) {
+            if (selectMemList.get( i ).getAddress().equals( specItem.getName())) {
                 return true;
             }
         }
@@ -384,7 +459,7 @@ public class MailSendActivity extends BaseActivity {
      * @param richEdit
      */
     private void notifyRichEdit(RichEdit richEdit, MailRecipientModel mRecipients, int subId) {
-        InsertModel insertModel = new InsertModel( "； ", (System.currentTimeMillis()) + "" + subId, mRecipients.getmRecipientName(), mRecipients.getmRecipientEmail() );
+        InsertModel insertModel = new InsertModel( "； ", (System.currentTimeMillis()) + "" + subId, mRecipients.getName(), mRecipients.getAddress());
         richEdit.insertSpecialStr( false, insertModel );
     }
 
@@ -393,7 +468,7 @@ public class MailSendActivity extends BaseActivity {
      */
     private void synchronousRemoveRecipients(ArrayList<MailRecipientModel> recipients, List<InsertModel> insertModels) {
         for (int i = 0; i < recipients.size(); i++) {
-            String email = recipients.get( i ).getmRecipientEmail();
+            String email = recipients.get( i ).getAddress();
             boolean haveEmail = false;
             for (int j = 0; j < insertModels.size(); j++) {
                 if (email.equals( insertModels.get( j ).getInsertContentId() )) {
@@ -412,21 +487,44 @@ public class MailSendActivity extends BaseActivity {
      **/
     private void synchronousAddRecipients(ArrayList<MailRecipientModel> recipients, List<InsertModel> insertModels) {
         for (int m = 0; m < insertModels.size(); m++) {
-            String email = insertModels.get( m ).getInsertContentId().toString();
+            String address = insertModels.get( m ).getInsertContentId().toString();
+            String name = insertModels.get( m ).getInsertContent().toString();
+            LogUtils.LbcDebug( "address:"+address+"name:"+name );
             boolean haveEmail = false;
             for (int n = 0; n < recipients.size(); n++) {
-                if (email.equals( recipients.get( n ).getmRecipientEmail() )) {
+                if (address.equals( recipients.get(n).getAddress())) {
                     haveEmail = true;
                     break;
                 }
             }
             if (!haveEmail) {
                 MailRecipientModel mailRecipientModel = new MailRecipientModel();
-                mailRecipientModel.setmRecipientEmail( email );
-                mailRecipientModel.setmRecipientName( email );
+                mailRecipientModel.setAddress(address);
+                mailRecipientModel.setName(name);
                 recipients.add( mailRecipientModel );
             }
         }
 
     }
+
+    /**
+     * 网络通信类
+     */
+    private class WebService extends APIInterfaceInstance {
+        @Override
+        public void returnMailCertificateUploadSuccess(byte[] arg0) {
+             LogUtils.LbcDebug( "发送邮件成功:"+arg0.toString());
+            ToastUtils.show( MailSendActivity.this,"恭喜 ，发送邮件成功了" );
+             super.returnMailCertificateUploadSuccess(arg0);
+        }
+
+        @Override
+        public void returnMailCertificateUploadFail(String error, int errorCode) {
+            LogUtils.LbcDebug( "发送邮件失败" );
+            Toast.makeText( MailSendActivity.this,"真糟糕，发送失败",Toast.LENGTH_SHORT );
+            super.returnMailCertificateUploadFail( error, errorCode );
+        }
+    }
+
+
 }

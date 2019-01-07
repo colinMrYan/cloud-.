@@ -899,15 +899,11 @@ public class AppAPIService {
     /**
      *
      * @param mail   邮箱
-     * @param certifivate 加密后证书文件
-     * @param key  加密后证书密码
      */
-    public void uploadMailFile(String mail,String key,String certifivate ) {
+    public void uploadMailFile(String mail ) {
         final String Url = APIUri.getMailReciveUrl();
         RequestParams params = MyApplication.getInstance().getHttpRequestParams( Url );
-        params.addParameter( "email", mail );
-        params.addParameter( "data0", certifivate );
-        params.addParameter( "data1", key );
+        params.setBodyContent(mail);
         params.setAsJsonContent( true );
         HttpUtils.request( context, CloudHttpMethod.POST, params, new APICallback( context, Url ) {
             @Override

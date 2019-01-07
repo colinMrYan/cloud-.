@@ -844,7 +844,7 @@ public class APIUri {
      * @return
      */
     public static String getMailReciveUrl() {
-        return  " ";
+        return  "http://172.31.2.18/api/ews/v1.0/Mail/SafeSend";
     }
 
     /*****************************************ReactNative**************************************/
