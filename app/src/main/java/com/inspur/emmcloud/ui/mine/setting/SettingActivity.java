@@ -396,8 +396,17 @@ public class SettingActivity extends BaseActivity {
             LoadingDialog.dimissDlg(loadingDlg);
             MyApplication.getInstance().signout(true);
             stopAppService();
+            cancelToken();
         }
 
+    }
+
+    /**
+     * 退出登录时注销token
+     */
+    private void cancelToken() {
+        AppAPIService appAPIService = new AppAPIService(this);
+        appAPIService.cancelToken();
     }
 
 

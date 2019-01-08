@@ -1683,4 +1683,8 @@ public class APIUri {
         return "https://emm.inspur.com/api/mam/v3.0/heart/success";
     }
 
+    public static String getCancelTokenUrl(){
+        return MyApplication.getInstance().getCloudId()+"oauth2.0/profile";
+    }
+
 }
