@@ -25,6 +25,7 @@ import com.inspur.emmcloud.bean.appcenter.mail.MailSend;
 import com.inspur.emmcloud.bean.chat.InsertModel;
 import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.bean.contact.SearchModel;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.util.common.LogUtils;
@@ -91,6 +92,7 @@ public class MailSendActivity extends BaseActivity {
     private static final int QEQUEST_CC_MEMBER = 3;
 
     private MailCertificateDetail myCertificate;
+    private String sendMailAddress;
     private boolean isForward =false;
     private boolean isReply   =false;
     boolean isHaveOriginalMail =false;
@@ -266,6 +268,15 @@ public class MailSendActivity extends BaseActivity {
         } else {
             myCertificate = (MailCertificateDetail) object;
         }
+
+
+
+
+    }
+    /**
+     *获取默认地址*/
+    private String  getSenderAddress(){
+       return PreferencesByUsersUtils.getString( this,Constant.MAIL_LOG_ADDRESS );
     }
 
     /**
@@ -305,7 +316,10 @@ public class MailSendActivity extends BaseActivity {
      mail.setBody( StringUtils.isBlank(contentSendEditText.getText().toString())?"":contentSendEditText.getText().toString());
      mail.setToRecipients(recipientList);
      mail.setCcRecipients(ccRecipientList);
-     mail.setFrom(new MailRecipientModel("libaochao","libaochao@inspur.com"));
+     String mailSenderAddess = getSenderAddress();
+     LogUtils.LbcDebug( "mailSenderAddress"+mailSenderAddess );
+     ContactUser contactUser =ContactUserCacheUtils.getContactUserByEmail( mailSenderAddess );
+     mail.setFrom(new MailRecipientModel(contactUser.getName(),contactUser.getEmail()));
      mail.setNeedEncrypt(myCertificate.isEncryptedMail());
      mail.setNeedSign(myCertificate.isSignedMail());
      mail.setOriginalMail("");
@@ -327,6 +341,7 @@ public class MailSendActivity extends BaseActivity {
                     .addAction("取消", new QMUIDialogAction.ActionListener() {
                         @Override
                         public void onClick(QMUIDialog dialog, int index) {
+                            sendMail();
                             dialog.dismiss();
                         }
                     })
@@ -338,6 +353,22 @@ public class MailSendActivity extends BaseActivity {
                         }
                     })
                     .create().show();
+        }else{
+            sendMail();
+        }
+    }
+
+    /**
+     *发送邮件*/
+    private void sendMail(){
+        MailSend mailSend = prepareSendData();
+        String   jsonMail = JSON.toJSONString(mailSend);
+        LogUtils.LbcDebug( "JsonMail::"+jsonMail );
+        if (NetUtils.isNetworkConnected( this )) {
+            LogUtils.LbcDebug( "准备发送邮件" );
+            AppAPIService apiService = new AppAPIService( this );
+            apiService.setAPIInterface( new WebService() );
+            apiService.uploadMailFile(jsonMail);
         }
     }
 
@@ -347,15 +378,7 @@ public class MailSendActivity extends BaseActivity {
         switch (v.getId()) {
             case R.id.tv_send_mail:
                 if (recipientList.size()>0) {
-                   MailSend mailSend = prepareSendData();
-                   String   jsonMail = JSON.toJSONString(mailSend);
-                   LogUtils.LbcDebug( "JsonMail::"+jsonMail );
-                    if (NetUtils.isNetworkConnected( this )) {
-                        LogUtils.LbcDebug( "准备发送邮件" );
-                       AppAPIService apiService = new AppAPIService( this );
-                       apiService.setAPIInterface( new WebService() );
-                        apiService.uploadMailFile(jsonMail);
-                    }
+                  noSignOrEncryptHintDialog();
                 }
                 break;
             case R.id.iv_recipients:

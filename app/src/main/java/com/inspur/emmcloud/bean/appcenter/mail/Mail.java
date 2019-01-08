@@ -51,6 +51,9 @@ public class Mail implements Serializable {
     private String folderId;
     @Column(name = "attachments")
     private String attachments;
+    @Column(name = "OriginalMail" )
+    private String originalMail;
+
     private MailRecipient fromMailRecipient;
     private List<MailRecipient> ccMailRecipientList = new ArrayList<>();
     private List<MailRecipient> bccMailRecipientList = new ArrayList<>();
