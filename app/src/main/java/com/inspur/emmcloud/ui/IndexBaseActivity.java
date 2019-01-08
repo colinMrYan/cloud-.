@@ -6,8 +6,11 @@ import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkRequest;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.PowerManager;
+import android.provider.Settings;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -46,6 +49,7 @@ import com.inspur.emmcloud.ui.mine.MoreFragment;
 import com.inspur.emmcloud.ui.notsupport.NotSupportFragment;
 import com.inspur.emmcloud.ui.work.TabBean;
 import com.inspur.emmcloud.ui.work.WorkFragment;
+import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.AppTabUtils;
@@ -55,6 +59,7 @@ import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.cache.MyAppCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.widget.MyFragmentTabHost;
+import com.inspur.emmcloud.widget.dialogs.BatteryWhiteListDialog;
 import com.inspur.emmcloud.widget.tipsview.TipsView;
 import com.inspur.imp.api.ImpFragment;
 
@@ -84,6 +89,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
 
     private RelativeLayout newMessageTipsLayout;
 
+    private boolean batteryDialogIsShow = true;
     @ViewInject(R.id.tip)
     private TipsView tipsView;
     private boolean isCommunicationRunning = false;
@@ -92,6 +98,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
     protected NetworkChangeReceiver networkChangeReceiver;
     protected ConnectivityManager.NetworkCallback networkCallback;
     protected ConnectivityManager connectivityManager;
+    private   BatteryWhiteListDialog confirmDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -101,6 +108,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
         mTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
         registerNetWorkListenerAccordingSysLevel();
         initTabs();
+        batteryWhiteListRemind(this);
     }
 
     private void registerNetWorkListenerAccordingSysLevel() {
@@ -192,6 +200,43 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
             tabBeans = addDefaultTabs();
         }
         showTabs(tabBeans);
+    }
+
+    private void batteryWhiteListRemind(final Context context){
+        batteryDialogIsShow= PreferencesUtils.getBoolean( context, Constant.BATTERY_WHITE_LIST_STATE,true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && batteryDialogIsShow) {
+            try{
+                PowerManager powerManager = (PowerManager) getSystemService( POWER_SERVICE );
+                boolean hasIgnored = powerManager.isIgnoringBatteryOptimizations(context.getPackageName());
+                if(!hasIgnored){
+                    confirmDialog = new BatteryWhiteListDialog( context,R.string.battery_tip_content,R.string.battery_tip_ishide,R.string.battery_tip_toset,R.string.battery_tip_cancel);
+                    confirmDialog.setClicklistener( new BatteryWhiteListDialog.ClickListenerInterface() {
+                        @Override
+                        public void doConfirm() {
+                            if (confirmDialog.getIsHide()) {
+                                PreferencesUtils.putBoolean(context, Constant.BATTERY_WHITE_LIST_STATE, false);
+                                }
+                            Intent intent = new Intent( Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS );
+                            intent.setData( Uri.parse( "package:" + context.getPackageName() ) );
+                            startActivity( intent );
+                            // TODO Auto-generated method stub
+                            confirmDialog.dismiss();
+                        }
+                        @Override
+                        public void doCancel() {
+                            if (confirmDialog.getIsHide()) {
+                                PreferencesUtils.putBoolean(context, Constant.BATTERY_WHITE_LIST_STATE, false);
+                            }
+                            // TODO Auto-generated method stub
+                            confirmDialog.dismiss();
+                        }
+                    });
+                    confirmDialog.show();
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
     }
 
     /**
