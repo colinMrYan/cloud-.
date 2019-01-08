@@ -49,6 +49,7 @@ public class MailLoginActivity extends BaseActivity {
     private TextInputLayout passwordTextInputLayout;
     private LoadingDialog loadingDlg;
     private MailApiService apiService;
+    private boolean remeberKey;
 
 
     @Override
@@ -64,6 +65,12 @@ public class MailLoginActivity extends BaseActivity {
         if(StringUtils.isBlank(mail))
         mail = ContactUserCacheUtils.getUserMail(MyApplication.getInstance().getUid());
         EditTextUtils.setText(mailEdit,mail);
+
+        String mailKey = PreferencesByUsersUtils.getString( MailLoginActivity.this,Constant.MAIL_LOG_ADDRESS,"");
+        if(!StringUtils.isBlank(mailKey))
+            EditTextUtils.setText(passwordEdit,"lbc081412;");
+
+
         mailEdit.addTextChangedListener(watcher);
         passwordEdit.addTextChangedListener(watcher);
         passwordEdit.setTransformationMethod(PasswordTransformationMethod.getInstance());
@@ -79,6 +86,8 @@ public class MailLoginActivity extends BaseActivity {
                 break;
             case R.id.ibt_back:
                 finish();
+                break;
+            case R.id.rl_rember_key:
                 break;
         }
     }

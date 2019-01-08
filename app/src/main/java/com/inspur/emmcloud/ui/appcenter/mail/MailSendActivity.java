@@ -3,6 +3,7 @@ package com.inspur.emmcloud.ui.appcenter.mail;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
+import android.util.Base64;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -28,6 +29,7 @@ import com.inspur.emmcloud.bean.contact.SearchModel;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
+import com.inspur.emmcloud.util.common.EncryptUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -36,6 +38,7 @@ import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MailCacheUtils;
 import com.inspur.emmcloud.widget.RichEdit;
+import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
 import com.inspur.imp.engine.webview.ImpWebView;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
@@ -336,39 +339,52 @@ public class MailSendActivity extends BaseActivity {
             String signedMail = myCertificate.isSignedMail()?"":"加签";
             String encryptMail= myCertificate.isEncryptedMail()?"":"加密";
             String mailHint   = "该邮件未"+(myCertificate.isSignedMail()?"":"加签")+(myCertificate.isEncryptedMail()?"":"加密")+"确定发送？";
-            new QMUIDialog.MessageDialogBuilder(getBaseContext())
+            new MyQMUIDialog.MessageDialogBuilder(MailSendActivity.this)
                     .setMessage(mailHint)
-                    .addAction("取消", new QMUIDialogAction.ActionListener() {
-                        @Override
-                        public void onClick(QMUIDialog dialog, int index) {
-                            sendMail();
-                            dialog.dismiss();
-                        }
-                    })
-                    .addAction("确定", new QMUIDialogAction.ActionListener() {
+                    .addAction(getString(R.string.cancel), new QMUIDialogAction.ActionListener() {
                         @Override
                         public void onClick(QMUIDialog dialog, int index) {
                             dialog.dismiss();
-                            Toast.makeText(getBaseContext(), "发送成功", Toast.LENGTH_SHORT).show();
                         }
                     })
-                    .create().show();
+                    .addAction(getString(R.string.ok), new QMUIDialogAction.ActionListener() {
+                        @Override
+                        public void onClick(QMUIDialog dialog, int index) {
+                            try {
+                                sendMail();
+                            } catch (Exception e) {
+                                LogUtils.LbcDebug( "Error" );
+                                e.printStackTrace();
+                            }
+                            dialog.dismiss();
+
+                        }
+                    })
+                    .show();
         }else{
-            sendMail();
+            try {
+                sendMail();
+            } catch (Exception e) {
+                LogUtils.LbcDebug( "Error" );
+                e.printStackTrace();
+            }
         }
     }
 
     /**
      *发送邮件*/
-    private void sendMail(){
+    private void sendMail() throws Exception {
         MailSend mailSend = prepareSendData();
         String   jsonMail = JSON.toJSONString(mailSend);
+        String key = EncryptUtils.stringToMD5(mailSend.getFrom().getAddress().toString());
+        String iv  = Constant.MAIL_ENCRYPT_IV;
+        String base64JsonMail = EncryptUtils.encode(jsonMail, key, iv, Base64.NO_WRAP );
         LogUtils.LbcDebug( "JsonMail::"+jsonMail );
         if (NetUtils.isNetworkConnected( this )) {
             LogUtils.LbcDebug( "准备发送邮件" );
             AppAPIService apiService = new AppAPIService( this );
             apiService.setAPIInterface( new WebService() );
-            apiService.uploadMailFile(jsonMail);
+            apiService.uploadMailFile(base64JsonMail);
         }
     }
 

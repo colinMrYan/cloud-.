@@ -28,6 +28,7 @@ import com.inspur.emmcloud.bean.system.SplashPageBean;
 import com.inspur.emmcloud.bean.system.badge.BadgeBodyModel;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.interf.OauthCallBack;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.romadaptation.RomInfoUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
@@ -36,6 +37,7 @@ import com.inspur.emmcloud.util.privates.OauthUtils;
 import org.json.JSONObject;
 import org.xutils.http.RequestParams;
 
+import java.io.File;
 import java.util.List;
 
 
