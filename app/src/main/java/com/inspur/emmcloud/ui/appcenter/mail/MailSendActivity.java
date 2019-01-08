@@ -377,8 +377,7 @@ public class MailSendActivity extends BaseActivity {
         MailSend mailSend = prepareSendData();
         String   jsonMail = JSON.toJSONString(mailSend);
         String key = EncryptUtils.stringToMD5(mailSend.getFrom().getAddress().toString());
-        String iv  = Constant.MAIL_ENCRYPT_IV;
-        String base64JsonMail = EncryptUtils.encode(jsonMail, key, iv, Base64.NO_WRAP );
+        String base64JsonMail = EncryptUtils.encode(jsonMail, key,Constant.MAIL_ENCRYPT_IV, Base64.NO_WRAP );
         LogUtils.LbcDebug( "JsonMail::"+jsonMail );
         if (NetUtils.isNetworkConnected( this )) {
             LogUtils.LbcDebug( "准备发送邮件" );

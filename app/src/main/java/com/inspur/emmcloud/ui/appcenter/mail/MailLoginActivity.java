@@ -87,8 +87,6 @@ public class MailLoginActivity extends BaseActivity {
             case R.id.ibt_back:
                 finish();
                 break;
-            case R.id.rl_rember_key:
-                break;
         }
     }
 
