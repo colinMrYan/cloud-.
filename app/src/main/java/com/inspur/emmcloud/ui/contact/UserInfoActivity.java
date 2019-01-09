@@ -76,6 +76,7 @@ public class UserInfoActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
+        LogUtils.YfcDebug("进入UserInfo");
         init();
     }
 
