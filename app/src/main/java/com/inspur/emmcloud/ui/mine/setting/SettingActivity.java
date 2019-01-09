@@ -394,9 +394,9 @@ public class SettingActivity extends BaseActivity {
     public void onReiceiveWebsocketRemoveCallback(EventMessage eventMessage) {
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_WEBSOCKET_STATUS_REMOVE)) {
             LoadingDialog.dimissDlg(loadingDlg);
+            cancelToken();
             MyApplication.getInstance().signout(true);
             stopAppService();
-            cancelToken();
         }
 
     }
