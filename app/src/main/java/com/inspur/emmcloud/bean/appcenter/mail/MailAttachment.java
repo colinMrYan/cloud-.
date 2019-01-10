@@ -11,6 +11,8 @@ import org.json.JSONObject;
 public class MailAttachment {
     private String id;
     private String name;
+    private String data;
+
     public MailAttachment(JSONObject obj){
         id= JSONUtils.getString(obj,"id","");
         name= JSONUtils.getString(obj,"name","");
@@ -31,4 +33,19 @@ public class MailAttachment {
     public void setName(String name) {
         this.name = name;
     }
+
+    public String getData() {
+        return data;
+    }
+
+    public void setData(String data) {
+        this.data = data;
+    }
+
+    public JSONObject getMailAttachment(){
+        JSONObject jsonObject = new JSONObject();
+
+        return  jsonObject;
+    }
+
 }

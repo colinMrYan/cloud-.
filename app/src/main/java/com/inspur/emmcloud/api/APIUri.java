@@ -836,7 +836,7 @@ public class APIUri {
      * @return
      */
     public static String getCertificateUrl () {
-        return  "http://172.31.2.18/api/ews/v1.0/UserProfile/CheckData";
+        return  "https://emm.inspur.com/api/ews/v1.0/UserProfile/CheckData";
     }
 
     /**
@@ -844,7 +844,7 @@ public class APIUri {
      * @return
      */
     public static String getMailReciveUrl() {
-        return  " ";
+        return  "https://emm.inspur.com/api/ews/v1.0/Mail/SafeSend";
     }
 
     /*****************************************ReactNative**************************************/
@@ -1681,6 +1681,10 @@ public class APIUri {
      */
     public static String getCheckCloudPluseConnectUrl() {
         return "https://emm.inspur.com/api/mam/v3.0/heart/success";
+    }
+
+    public static String getCancelTokenUrl(){
+        return MyApplication.getInstance().getCloudId()+"oauth2.0/profile";
     }
 
 }

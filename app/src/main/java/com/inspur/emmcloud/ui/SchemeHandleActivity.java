@@ -23,7 +23,7 @@ import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.interf.CommonCallBack;
 import com.inspur.emmcloud.ui.appcenter.ReactNativeAppActivity;
 import com.inspur.emmcloud.ui.appcenter.groupnews.GroupNewsActivity;
-import com.inspur.emmcloud.ui.appcenter.mail.MailLoginActivity;
+import com.inspur.emmcloud.ui.appcenter.mail.MailHomeActivity;
 import com.inspur.emmcloud.ui.appcenter.volume.VolumeHomePageActivity;
 import com.inspur.emmcloud.ui.appcenter.webex.WebexMyMeetingActivity;
 import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
@@ -471,7 +471,7 @@ public class SchemeHandleActivity extends BaseActivity {
                 IntentUtils.startActivity(SchemeHandleActivity.this, WebexMyMeetingActivity.class,bundle,true);
                 break;
             case "mail":
-                IntentUtils.startActivity(SchemeHandleActivity.this, MailLoginActivity.class,true);
+                IntentUtils.startActivity(SchemeHandleActivity.this, MailHomeActivity.class,true);
             default:
                 finish();
                 break;

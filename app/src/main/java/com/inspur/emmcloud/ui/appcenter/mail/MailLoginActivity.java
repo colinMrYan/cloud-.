@@ -22,6 +22,7 @@ import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.widget.ClearEditText;
@@ -44,10 +45,10 @@ public class MailLoginActivity extends BaseActivity {
     private Button loginBtn;
     @ViewInject(R.id.text_input_layout_username)
     private TextInputLayout usernameTextInputLayout;
-    @ViewInject(R.id.text_input_layout_password)
-    private TextInputLayout passwordTextInputLayout;
     private LoadingDialog loadingDlg;
     private MailApiService apiService;
+    private String mail ="";
+    private String password="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +59,10 @@ public class MailLoginActivity extends BaseActivity {
         apiService = new MailApiService(this);
         apiService.setAPIInterface(new WebServie());
         TextWatcher watcher = new TextWatcher();
-        String mail = ContactUserCacheUtils.getUserMail(MyApplication.getInstance().getUid());
+        mail = PreferencesByUsersUtils.getString(MyApplication.getInstance(),Constant.PREF_MAIL_ACCOUNT,"");
+        if (StringUtils.isBlank(mail)){
+            mail = ContactUserCacheUtils.getUserMail(MyApplication.getInstance().getUid());
+        }
         EditTextUtils.setText(mailEdit,mail);
         mailEdit.addTextChangedListener(watcher);
         passwordEdit.addTextChangedListener(watcher);
@@ -68,9 +72,8 @@ public class MailLoginActivity extends BaseActivity {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.bt_login:
-                String mail = mailEdit.getText().toString();
-                String password= passwordEdit.getText().toString();
-
+                mail = mailEdit.getText().toString();
+                password= passwordEdit.getText().toString();
                 login(mail, password);
                 break;
             case R.id.ibt_back:
@@ -79,20 +82,6 @@ public class MailLoginActivity extends BaseActivity {
         }
     }
 
-
-    private void login(String mail, String password) {
-        if (NetUtils.isNetworkConnected(this)) {
-            String key = EncryptUtils.stringToMD5(mail);
-            try {
-                password = EncryptUtils.encode(password, key, Constant.MAIL_ENCRYPT_IV, Base64.NO_WRAP);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            loadingDlg.show();
-            apiService.loginMail(mail, password);
-
-        }
-    }
 
     private class TextWatcher implements android.text.TextWatcher{
         @Override
@@ -120,10 +109,26 @@ public class MailLoginActivity extends BaseActivity {
         }
     }
 
+    private void login(String mail, String password) {
+        if (NetUtils.isNetworkConnected(this)) {
+            String key = EncryptUtils.stringToMD5(mail);
+            try {
+                password = EncryptUtils.encode(password, key, Constant.MAIL_ENCRYPT_IV, Base64.NO_WRAP);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            loadingDlg.show();
+            apiService.loginMail(mail, password);
+
+        }
+    }
+
     private class WebServie extends APIInterfaceInstance {
         @Override
         public void returnMailLoginSuccess() {
             LoadingDialog.dimissDlg(loadingDlg);
+            PreferencesByUsersUtils.putString(MyApplication.getInstance(),Constant.PREF_MAIL_ACCOUNT,mail);
+            PreferencesByUsersUtils.putString(MyApplication.getInstance(),Constant.PREF_MAIL_PASSWORD,password);
             IntentUtils.startActivity(MailLoginActivity.this,MailHomeActivity.class,true);
         }
 

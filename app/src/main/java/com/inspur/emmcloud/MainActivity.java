@@ -77,8 +77,7 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
             this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
         }
         setContentView(R.layout.activity_main);
-       getNecessaryPermission();
-//        IntentUtils.startActivity(this, MailLoginActivity.class,true);
+        getNecessaryPermission();
     }
 
     private void getNecessaryPermission() {
@@ -86,7 +85,7 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
         PermissionRequestManagerUtils.getInstance().requestRuntimePermission(this, necessaryPermissionArray, new PermissionRequestCallback() {
             @Override
             public void onPermissionRequestSuccess(List<String> permissions) {
-                init();
+                 init();
             }
 
             @Override

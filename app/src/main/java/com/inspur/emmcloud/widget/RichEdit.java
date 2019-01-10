@@ -202,11 +202,14 @@ public class RichEdit extends EditText {
         int spanEndPos = mSpans.length>0?(spannableStringBuilder.getSpanEnd(mSpans[mSpans.length-1])):0;
         String allTextData=this.getText().toString();
         String manualData  = allTextData.substring(spanEndPos,allTextData.length());
+        LogUtils.LbcDebug( "manual Data:"+manualData );
         manualData = manualData.replace(" ","");
         if(!StringUtils.isBlank(manualData)&&StringUtils.isEmail( manualData )){
             this.getText().delete(spanEndPos,allTextData.length());
-            InsertModel lastInsert = new InsertModel("； ", (System.currentTimeMillis()) + "",manualData );
+            InsertModel lastInsert = new InsertModel("； ", (System.currentTimeMillis()) + "",manualData ,manualData);
+            LogUtils.LbcDebug( "manual Data:"+manualData );
             insertSpecialStr(false, lastInsert);
+            notifyInsertModelListDataChanged();
         }
     }
 
