@@ -23,54 +23,50 @@ import org.xutils.view.annotation.ViewInject;
 
 @ContentView(R.layout.activity_mail_setting)
 public class MailSettingActivity extends BaseActivity {
-    @ViewInject( R.id.rl_back)
+    @ViewInject(R.id.rl_back)
     RelativeLayout mailSettingLayout;
-    @ViewInject( R.id.ibt_mail_setting_password )
+    @ViewInject(R.id.ibt_mail_setting_password)
     ImageButton settingPasswordButton;
     @ViewInject( R.id.tv_setting_mail_password )
     TextView    passwordTextView;
 
-    private boolean isSeePassword=false;
+    private boolean isSeePassword = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate( savedInstanceState );
+        super.onCreate(savedInstanceState);
     }
 
 
-    private void initView(){
+    private void initView() {
 
     }
 
-    public void onClick(View v){
-        switch (v.getId()){
+    public void onClick(View v) {
+        switch (v.getId()) {
             case R.id.rl_setting_back:
                 finish();
-            break;
+                break;
             case R.id.tv_save_setting:
 
-            break;
+                break;
             case R.id.ibt_mail_setting_password:
-             String mailPassWord = PreferencesByUsersUtils.getString( MailSettingActivity.this,Constant.MAIL_LOG_KEY,"");
-             isSeePassword = isSeePassword?false:true;
-             settingPasswordButton.setImageResource(isSeePassword?R.drawable.icon_mail_password_yes:R.drawable.icon_mail_password_no);
-             passwordTextView.setText( isSeePassword?mailPassWord:"**********" );
-             break;
+                String mailPassWord = PreferencesByUsersUtils.getString(MailSettingActivity.this, Constant.PREF_MAIL_PASSWORD, "");
+                isSeePassword = isSeePassword ? false : true;
+                settingPasswordButton.setImageResource(isSeePassword ? R.drawable.icon_mail_password_yes : R.drawable.icon_mail_password_no);
+                passwordTextView.setText( isSeePassword?mailPassWord:"**********" );
+                break;
             case R.id.tv_setting_mail_account_delect:
-                PreferencesByUsersUtils.putString( MailSettingActivity.this, Constant.MAIL_LOG_ADDRESS,"");
-                PreferencesByUsersUtils.putString( MailSettingActivity.this,Constant.MAIL_LOG_KEY,"");
+                PreferencesByUsersUtils.putString(MailSettingActivity.this, Constant.PREF_MAIL_ACCOUNT, "");
+                PreferencesByUsersUtils.putString(MailSettingActivity.this, Constant.PREF_MAIL_PASSWORD, "");
                 EventBus.getDefault().post( new SimpleEventMessage(Constant.EVENTBUS_TAG_DELECTE_MAIL_HOME_ACTIVITY, ""));
-                IntentUtils.startActivity( MailSettingActivity.this,MailLoginActivity.class,true );
-            break;
+                IntentUtils.startActivity(MailSettingActivity.this, MailLoginActivity.class, true);
+                break;
             case R.id.ibt_mail_setting_certificate:
                 IntentUtils.startActivity(this,MailCertificateInstallActivity.class);
-            break;
+                break;
         }
 
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
 }

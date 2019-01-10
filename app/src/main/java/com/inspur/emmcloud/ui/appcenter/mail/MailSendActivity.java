@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.inspur.emmcloud.BaseActivity;
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MailApiService;
@@ -289,12 +290,6 @@ public class MailSendActivity extends BaseActivity {
 
 
     }
-    /**
-     *获取默认地址*/
-    private String  getSenderAddress(){
-       return PreferencesByUsersUtils.getString( this,Constant.MAIL_LOG_ADDRESS );
-    }
-
 
 
     /**
@@ -321,10 +316,10 @@ public class MailSendActivity extends BaseActivity {
      *发送邮件 数据准备*/
     private MailSend prepareSendData(){
      MailSend mail = new MailSend();
-     mail.setBody( StringUtils.isBlank(contentSendEditText.getText().toString())?"":contentSendEditText.getText().toString());
+     mail.setBody(contentSendEditText.getText().toString());
      mail.setToRecipients(recipientList);
      mail.setCcRecipients(ccRecipientList);
-     String mailSenderAddess = getSenderAddress();
+     String mailSenderAddess = PreferencesByUsersUtils.getString(MyApplication.getInstance(),Constant.PREF_MAIL_ACCOUNT);
      LogUtils.LbcDebug( "mailSenderAddress"+mailSenderAddess );
      ContactUser contactUser =ContactUserCacheUtils.getContactUserByEmail( mailSenderAddess );
      mail.setFrom(new MailRecipientModel(contactUser.getName(),contactUser.getEmail()));
@@ -380,7 +375,7 @@ public class MailSendActivity extends BaseActivity {
      *发送邮件*/
     private void sendMail() throws Exception {
         MailSend mailSend = prepareSendData();
-        String   jsonMail = mailSend.toJson().toString();
+        String   jsonMail = JSON.toJSONString(mailSend);
         String key = EncryptUtils.stringToMD5(mailSend.getFrom().getAddress().toString());
         byte[] mailContent = EncryptUtils.encodeNoBase64(jsonMail, key,Constant.MAIL_ENCRYPT_IV);
         if (NetUtils.isNetworkConnected( this )) {
@@ -396,9 +391,12 @@ public class MailSendActivity extends BaseActivity {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tv_send_mail:
-                if (recipientList.size()>0) {
-                  noSignOrEncryptHintDialog();
+                if (recipientList.size() == 0) {
+                    //showxx();
+                    return;
                 }
+                noSignOrEncryptHintDialog();
+
                 break;
             case R.id.iv_recipients:
                 recipientRichEdit.insertLastManualData( 0 );

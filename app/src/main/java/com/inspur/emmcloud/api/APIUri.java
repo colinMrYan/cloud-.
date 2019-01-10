@@ -831,6 +831,22 @@ public class APIUri {
         return getEMMBaseUrl() + "api/mam/v3.0/gs_sso/app_uri?id=" + appId;
     }
 
+    /**
+     * 获取上传Certificate的接口
+     * @return
+     */
+    public static String getCertificateUrl () {
+        return  "https://emm.inspur.com/api/ews/v1.0/UserProfile/CheckData";
+    }
+
+    /**
+     * 获取上传邮件Url
+     * @return
+     */
+    public static String getMailReciveUrl() {
+        return  "https://emm.inspur.com/api/ews/v1.0/Mail/SafeSend";
+    }
+
     /*****************************************ReactNative**************************************/
     /**
      * 更新的Native地址
@@ -1139,29 +1155,6 @@ public class APIUri {
     public static String getMailAttachmentUrl(){
         return getMailBaseUrl()+"/Mail/SafeAttachment?";
     }
-
-    /**
-     * 获取上传Certificate的接口
-     * @return
-     */
-    public static String getCertificateUrl () {
-        return  getMailBaseUrl()+"/UserProfile/CheckData";
-    }
-
-    /**
-     * 获取上传邮件Url
-     * @return
-     */
-    public static String getUploadMailUrl() {
-        return   getMailBaseUrl()+"/Mail/SafeSend?mail=libaochao@inspur.com";
-    }
-
-    public static String getReUrl() {
-        return  getMailBaseUrl()+"/Mail/SafeSend?mail=libaochao@inspur.com";
-    }
-
-
-
 /************************************************************************工作****************************************************************************/
     /***************会议接口*****************************/
     /**

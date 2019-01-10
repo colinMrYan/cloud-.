@@ -48,6 +48,8 @@ public class Constant {
     public static final String PREF_V_CONFIG_ALL = "v_config_all";
     public static final String PREF_EXPERIENCE_UPGRATE = "experience_upgrade";
     public static final String PREF_APP_THEME = "app_theme";
+    public static final String PREF_MAIL_ACCOUNT = "mail_account";
+    public static final String PREF_MAIL_PASSWORD = "mail_password";
 
     public static final String ACTION_MEETING = "com.inspur.meeting";
     public static final String ACTION_TASK = "com.inspur.task";
@@ -88,6 +90,8 @@ public class Constant {
     public static final String EVENTBUS_TAG_COMMENT_MESSAGE = "tag_comment_message";
     public static final String EVENTBUS_TAG_GET_MAIL_BY_FOLDER = "tag_get_mail_by_folder";
     public static final String EVENTBUS_TAG_DELECTE_MAIL_HOME_ACTIVITY = "tag_delecte_mail_home_activity";
+    public static final String EVENTBUS_TAG_MAIL_LOGIN_SUCCESS = "tag_mail_login_success";
+    public static final String EVENTBUS_TAG_MAIL_LOGIN_FAIL = "tag_mail_login_fail";
 
     public static final String SERVICE_VERSION_CHAT_V0 = "v0";
     public static final String SERVICE_VERSION_CHAT_V1 = "v1";
@@ -140,8 +144,6 @@ public class Constant {
 
     //邮箱
     public static final String MAIL_ENCRYPT_IV="inspurcloud+2019";
-    public static String MAIL_LOG_ADDRESS = "mailLogAddress";
-    public static String MAIL_LOG_KEY = "mailLogKey";
 
 
 }
