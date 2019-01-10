@@ -87,6 +87,7 @@ public class Constant {
     public static final String EVENTBUS_TAG__NET_PORTAL_HTTP_POST = "tag_net_portal_http_post";
     public static final String EVENTBUS_TAG_COMMENT_MESSAGE = "tag_comment_message";
     public static final String EVENTBUS_TAG_GET_MAIL_BY_FOLDER = "tag_get_mail_by_folder";
+    public static final String EVENTBUS_TAG_DELECTE_MAIL_HOME_ACTIVITY = "tag_delecte_mail_home_activity";
 
     public static final String SERVICE_VERSION_CHAT_V0 = "v0";
     public static final String SERVICE_VERSION_CHAT_V1 = "v1";

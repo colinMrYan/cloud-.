@@ -126,7 +126,8 @@ public class MailHomeActivity extends MailHomeBaseActivity implements MySwipeRef
                mailAdapter.notifyDataSetChanged();
                getMail(0);
            }
-
+        } else if(simpleEventMessage.getAction().equals(Constant.EVENTBUS_TAG_DELECTE_MAIL_HOME_ACTIVITY)){
+             finish();
         }
     }
 

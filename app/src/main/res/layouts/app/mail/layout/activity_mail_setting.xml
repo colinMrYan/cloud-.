@@ -129,6 +129,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
+                    android:onClick="onClick"
                     android:layout_marginRight="11dp"
                     android:src="@drawable/icon_mail_password_no"
                     android:padding="5dp"/>
