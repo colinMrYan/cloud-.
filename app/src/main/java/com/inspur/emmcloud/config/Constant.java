@@ -136,7 +136,11 @@ public class Constant {
     public static final String APP_WEB_URI = "uri";
 
     public static final int APP_EXCEPTION_LEVEL = 4;
+
+    //邮箱
     public static final String MAIL_ENCRYPT_IV="inspurcloud+2019";
+    public static String MAIL_LOG_ADDRESS = "mailLogAddress";
+    public static String MAIL_LOG_KEY = "mailLogKey";
 
 
 }
