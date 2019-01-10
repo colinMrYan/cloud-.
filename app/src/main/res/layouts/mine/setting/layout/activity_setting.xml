@@ -144,6 +144,7 @@
                 android:id="@+id/rl_switch_theme"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:background="@drawable/text_layout_selector"
                 android:onClick="onClick"
                 android:paddingLeft="12dp">

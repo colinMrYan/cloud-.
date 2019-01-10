@@ -833,11 +833,18 @@ public class APIUri {
 
     /**
      * 获取上传Certificate的接口
-     * @param appId
      * @return
      */
     public static String getCertificateUrl () {
-        return  "http://172.31.2.18/api/ews/v1.0/UserProfile/CheckData";
+        return  "https://emm.inspur.com/api/ews/v1.0/UserProfile/CheckData";
+    }
+
+    /**
+     * 获取上传邮件Url
+     * @return
+     */
+    public static String getMailReciveUrl() {
+        return  "https://emm.inspur.com/api/ews/v1.0/Mail/SafeSend?mail=libaochao@inspur.com";
     }
 
     /*****************************************ReactNative**************************************/

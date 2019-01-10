@@ -39,7 +39,7 @@ import java.util.regex.Pattern;
 
 public class RichEdit extends EditText {
     private int size;
-    private int maxLength = 2000;
+    private int maxLength = 100000;
     private List<InsertModel> insertModelList = new ArrayList<>();
     private static final int BACKGROUND_COLOR = Color.parseColor("#FFDEAD"); // 默认,话题背景高亮颜色
     private Context mContext;
@@ -197,17 +197,19 @@ public class RichEdit extends EditText {
       * 插入手动数据
       * @param KeyCode 按键数据暂时未用*/
     public  void insertLastManualData(int KeyCode){
-        //获取当前光标位置
         SpannableStringBuilder spannableStringBuilder = (SpannableStringBuilder) getText();
         MyForegroundColorSpan[] mSpans = getText().getSpans(0, spannableStringBuilder.length(), MyForegroundColorSpan.class);
         int spanEndPos = mSpans.length>0?(spannableStringBuilder.getSpanEnd(mSpans[mSpans.length-1])):0;
         String allTextData=this.getText().toString();
         String manualData  = allTextData.substring(spanEndPos,allTextData.length());
+        LogUtils.LbcDebug( "manual Data:"+manualData );
         manualData = manualData.replace(" ","");
         if(!StringUtils.isBlank(manualData)&&StringUtils.isEmail( manualData )){
             this.getText().delete(spanEndPos,allTextData.length());
-            InsertModel lastInsert = new InsertModel(";", (System.currentTimeMillis()) + "",manualData );
+            InsertModel lastInsert = new InsertModel("； ", (System.currentTimeMillis()) + "",manualData ,manualData);
+            LogUtils.LbcDebug( "manual Data:"+manualData );
             insertSpecialStr(false, lastInsert);
+            notifyInsertModelListDataChanged();
         }
     }
 
