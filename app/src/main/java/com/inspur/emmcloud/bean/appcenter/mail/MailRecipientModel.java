@@ -10,42 +10,48 @@ import java.util.regex.Pattern;
 
 public class MailRecipientModel {
 
-    private  String mRecipientName;  //收件人名称
-    private  String mRecipientEmail; //收件人邮箱
-    private  boolean mEmailFormat;   //邮箱格式
+    private  String address; //收件人邮箱
+    private  boolean format;   //邮箱格式
 
     public MailRecipientModel(){
-        mEmailFormat=false;
-        mRecipientName="";
-        mRecipientEmail="";
+        format=false;
+        name="";
+        address="";
     }
 
     public  MailRecipientModel(String mRecipientName,String mRecipientEmail ){
-        this.mRecipientEmail=mRecipientEmail;
-        this.mRecipientName=mRecipientName;
-        mEmailFormat = EmailCheckoutFormat(mRecipientEmail);
+        this.address=mRecipientEmail;
+        this.name=mRecipientName;
+        format = EmailCheckoutFormat(mRecipientEmail);
     }
 
-    public boolean getmEmailFormat(){
-        return  mEmailFormat;
+    public String getName() {
+        return name;
     }
 
-    public String getmRecipientName() {
-        return mRecipientName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public void setmRecipientName(String mRecipientName) {
-        this.mRecipientName = mRecipientName;
+    private  String name;  //收件人名称
+
+    public String getAddress() {
+        return address;
     }
 
-    public String getmRecipientEmail() {
-        return mRecipientEmail;
+    public void setAddress(String address) {
+        format = EmailCheckoutFormat( address );
+        this.address = address;
     }
 
-    public void setmRecipientEmail(String mRecipientEmail) {
-        mEmailFormat=EmailCheckoutFormat(mRecipientEmail);
-        this.mRecipientEmail = mRecipientEmail;
+    public boolean isFormat() {
+        return format;
     }
+
+    public void setFormat(boolean format) {
+        this.format = format;
+    }
+
 
     //校验邮箱格式
     private boolean EmailCheckoutFormat(String s){

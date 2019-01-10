@@ -28,11 +28,9 @@ public class EncryptUtils {
 
     /**
      * Encodes a String in AES-256 with a given key
-     *
-     * @param context
-     * @param password
-     * @param text
-     * @return String Base64 and AES encoded String
+     * @param stringToEncode
+     * @return
+     * @throws Exception
      */
     public static String encode(String stringToEncode) throws Exception {
         String defaltKeyString = "inspurIMPCloud968842022285d325h9";
@@ -96,6 +94,61 @@ public class EncryptUtils {
     }
 
 
+    /**
+     *
+     * @param stringToEncode
+     * @param keyString
+     * @param offset  偏移量
+     * @return
+     * @throws Exception
+     */
+    public static byte[] encodeNoBase64(String stringToEncode, String keyString, String offset) throws Exception {
+        if ( keyString == null || keyString.length() == 0) {
+            throw new NullPointerException("Please give Password");
+        }
+
+        if (stringToEncode.length() == 0 || stringToEncode == null) {
+            throw new NullPointerException("Please give text");
+        }
+
+        try {
+            SecretKeySpec skeySpec = getKey(keyString);
+            byte[] clearText = stringToEncode.getBytes("UTF8");
+            IvParameterSpec ivParameterSpec = null;
+            if (StringUtils.isBlank(offset)) {
+                byte[] iv = new byte[16];
+                Arrays.fill(iv, (byte) 0x00);
+                ivParameterSpec = new IvParameterSpec(iv);
+            } else {
+                // IMPORTANT TO GET SAME RESULTS ON iOS and ANDROID
+                byte[] iv = offset.getBytes();
+                ivParameterSpec = new IvParameterSpec(iv);
+
+            }
+            // Cipher is not thread safe
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS7Padding");
+            cipher.init(Cipher.ENCRYPT_MODE, skeySpec, ivParameterSpec);
+            return cipher.doFinal(clearText);
+
+        } catch (InvalidKeyException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (BadPaddingException e) {
+            e.printStackTrace();
+        } catch (NoSuchPaddingException e) {
+            e.printStackTrace();
+        } catch (IllegalBlockSizeException e) {
+            e.printStackTrace();
+        } catch (InvalidAlgorithmParameterException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
     public static String decode(String text) throws NullPointerException {
         String defaltKeyString = "inspurIMPCloud968842022285d325h9";
         return decode(text, defaltKeyString,null,Base64.DEFAULT);
@@ -103,12 +156,13 @@ public class EncryptUtils {
 
 
     /**
-     * Decodes a String using AES-256 and Base64
      *
-     * @param context
-     * @param password
      * @param text
-     * @return desoded String
+     * @param keyString
+     * @param offset
+     * @param base64Flag
+     * @return
+     * @throws NullPointerException
      */
     public static String decode(String text, String keyString,String offset,int base64Flag) throws NullPointerException {
 
