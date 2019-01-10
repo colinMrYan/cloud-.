@@ -66,11 +66,6 @@ public class MailLoginActivity extends BaseActivity {
         mail = ContactUserCacheUtils.getUserMail(MyApplication.getInstance().getUid());
         EditTextUtils.setText(mailEdit,mail);
 
-        String mailKey = PreferencesByUsersUtils.getString( MailLoginActivity.this,Constant.MAIL_LOG_ADDRESS,"");
-        if(!StringUtils.isBlank(mailKey))
-            EditTextUtils.setText(passwordEdit,"lbc081412;");
-
-
         mailEdit.addTextChangedListener(watcher);
         passwordEdit.addTextChangedListener(watcher);
         passwordEdit.setTransformationMethod(PasswordTransformationMethod.getInstance());
@@ -131,17 +126,19 @@ public class MailLoginActivity extends BaseActivity {
         }
     }
 
-    private class WebServie extends APIInterfaceInstance {
+    public class WebServie extends APIInterfaceInstance {
         @Override
         public void returnMailLoginSuccess() {
             LoadingDialog.dimissDlg(loadingDlg);
             PreferencesByUsersUtils.putString( MailLoginActivity.this,Constant.MAIL_LOG_ADDRESS,mailEdit.getText().toString());
+            PreferencesByUsersUtils.putString( MailLoginActivity.this,Constant.MAIL_LOG_KEY,passwordEdit.getText().toString());
             IntentUtils.startActivity(MailLoginActivity.this,MailHomeActivity.class,true);
         }
 
         @Override
         public void returnMailLoginFail(String error, int errorCode) {
             LoadingDialog.dimissDlg(loadingDlg);
+            MailLoginActivity.this.setVisible( true );
             WebServiceMiddleUtils.hand(MailLoginActivity.this, error, errorCode);
         }
     }

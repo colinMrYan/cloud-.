@@ -28,7 +28,6 @@ import com.inspur.emmcloud.bean.system.SplashPageBean;
 import com.inspur.emmcloud.bean.system.badge.BadgeBodyModel;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.interf.OauthCallBack;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.romadaptation.RomInfoUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
@@ -37,7 +36,6 @@ import com.inspur.emmcloud.util.privates.OauthUtils;
 import org.json.JSONObject;
 import org.xutils.http.RequestParams;
 
-import java.io.File;
 import java.util.List;
 
 
@@ -259,36 +257,6 @@ public class AppAPIService {
                 apiInterface.returnUploadExceptionFail(error, responseCode);
             }
         });
-    }
-
-    /**
-     *
-     * @param mail   邮箱
-     * @param certifivate 加密后证书文件
-     * @param key  加密后证书密码
-     */
-    public void upLoadCertificateFile(String mail,String key,String certifivate ) {
-             final String Url = APIUri.getCertificateUrl();
-            RequestParams params = MyApplication.getInstance().getHttpRequestParams( Url );
-            params.addParameter( "email", mail );
-            params.addParameter( "data0", certifivate);
-            params.addParameter( "data1", key);
-            params.setAsJsonContent( true );
-            HttpUtils.request( context, CloudHttpMethod.POST, params, new APICallback(context, Url ) {
-                @Override
-                public void callbackSuccess(byte[] arg0) {
-                    apiInterface.returnMailCertificateUploadSuccess( arg0 );
-                }
-
-                @Override
-                public void callbackFail(String error, int responseCode) {
-                    apiInterface.returnMailCertificateUploadFail( error ,responseCode);
-                }
-
-                @Override
-                public void callbackTokenExpire(long requestTime) {
-                }
-            } );
     }
 
 
@@ -782,8 +750,8 @@ public class AppAPIService {
             unregisterPushTokenJsonObject.put("appVersion",AppUtils.getVersion(context));
             unregisterPushTokenJsonObject.put("type",AppUtils.getPushProvider(context));
             unregisterPushTokenJsonObject.put("token",AppUtils.getPushId(context));
-            unregisterPushTokenJsonObject.put("inspurId",MyApplication.getInstance().getUid());
-            unregisterPushTokenJsonObject.put("tenantId",MyApplication.getInstance().getTanent());
+            unregisterPushTokenJsonObject.put("inspurId", MyApplication.getInstance().getUid());
+            unregisterPushTokenJsonObject.put("tenantId", MyApplication.getInstance().getTanent());
             unregisterPushTokenJsonObject.put("deviceModel",AppUtils.GetChangShang()+"/"+AppUtils.GetModel());
             unregisterPushTokenJsonObject.put("deviceOS","Android");
             unregisterPushTokenJsonObject.put("deviceOSVersion",AppUtils.getReleaseVersion());
@@ -896,32 +864,6 @@ public class AppAPIService {
             }
 
         });
-    }
-
-    /**
-     *
-     * @param mail   邮箱
-     */
-    public void uploadMailFile(String mail ) {
-        final String Url = APIUri.getMailReciveUrl();
-        RequestParams params = MyApplication.getInstance().getHttpRequestParams( Url );
-        params.setBodyContent(mail);
-        params.setAsJsonContent( true );
-        HttpUtils.request( context, CloudHttpMethod.POST, params, new APICallback( context, Url ) {
-            @Override
-            public void callbackSuccess(byte[] arg0) {
-                apiInterface.returnMailCertificateUploadSuccess( arg0 );
-            }
-
-            @Override
-            public void callbackFail(String error, int responseCode) {
-                apiInterface.returnMailCertificateUploadFail( error, responseCode );
-            }
-
-            @Override
-            public void callbackTokenExpire(long requestTime) {
-            }
-        } );
     }
 
     }

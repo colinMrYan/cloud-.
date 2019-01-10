@@ -384,12 +384,12 @@
                         android:layout_height="wrap_content"
                         android:checked="true"
                         android:text="包含引用文字"/>
-                    <com.inspur.imp.engine.webview.ImpWebView
-                        android:id="@+id/impwebview_fw_body"
+                    <com.inspur.emmcloud.widget.NoScrollWebView
+                        android:id="@+id/noscrollwebview_fw_body"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/cb_fw_body">
-                    </com.inspur.imp.engine.webview.ImpWebView>
+                    </com.inspur.emmcloud.widget.NoScrollWebView>
                 </RelativeLayout>
             </RelativeLayout>
 

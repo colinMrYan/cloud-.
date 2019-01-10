@@ -3,8 +3,8 @@ package com.inspur.emmcloud.ui.appcenter.mail;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
-import android.util.Base64;
 import android.view.View;
+import android.webkit.WebSettings;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -17,7 +17,7 @@ import com.alibaba.fastjson.JSON;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
-import com.inspur.emmcloud.api.apiservice.AppAPIService;
+import com.inspur.emmcloud.api.apiservice.MailApiService;
 import com.inspur.emmcloud.bean.appcenter.mail.Mail;
 import com.inspur.emmcloud.bean.appcenter.mail.MailCertificateDetail;
 import com.inspur.emmcloud.bean.appcenter.mail.MailRecipient;
@@ -37,9 +37,9 @@ import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MailCacheUtils;
+import com.inspur.emmcloud.widget.NoScrollWebView;
 import com.inspur.emmcloud.widget.RichEdit;
 import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
-import com.inspur.imp.engine.webview.ImpWebView;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
@@ -72,8 +72,8 @@ public class MailSendActivity extends BaseActivity {
     private RelativeLayout fwBodyLayout;
     @ViewInject(R.id.cb_fw_body)
     private CheckBox fwBodyCheckBox;
-    @ViewInject(R.id.impwebview_fw_body)
-    private ImpWebView fwBodyImpWebView;
+    @ViewInject(R.id.noscrollwebview_fw_body)
+    private NoScrollWebView fwBodyWebView;
     @ViewInject(R.id.tv_header_title)
     private TextView headerTitleText;
 
@@ -195,9 +195,9 @@ public class MailSendActivity extends BaseActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (b) {
-                    fwBodyImpWebView.setVisibility( View.VISIBLE );
+                    fwBodyWebView.setVisibility( View.VISIBLE );
                 } else {
-                    fwBodyImpWebView.setVisibility( View.GONE );
+                    fwBodyWebView.setVisibility( View.GONE );
                 }
             }
         } );
@@ -206,9 +206,7 @@ public class MailSendActivity extends BaseActivity {
             String replyMailMode = mailBundle.getString( EXTRA_MAIL_MODEL );
             String replyMailId = mailBundle.getString( EXTRA_MAIL_ID );
             Mail replayMail = MailCacheUtils.getMail( replyMailId );
-            if (null == replayMail) {
-                replayMail = new Mail();
-            }
+            if (null != replayMail) {
             List<MailRecipient> mailRecipientList = new ArrayList<>();
             switch (replyMailMode) {
                 case MODEL_NEW:
@@ -216,8 +214,8 @@ public class MailSendActivity extends BaseActivity {
 
                     break;
                 case MODEL_REPLY:
-                    String string = JSON.toJSONString(((Object)replayMail));
-                    LogUtils.LbcDebug( "JSonData:"+string );
+                    String string = JSON.toJSONString( ((Object) replayMail) );
+                    LogUtils.LbcDebug( "JSonData:" + string );
 
                     mailRecipientList.clear();
                     mailRecipientList.add( replayMail.getFromMailRecipient() );
@@ -225,8 +223,8 @@ public class MailSendActivity extends BaseActivity {
 
                     sendThemeEditText.setText( replayMail.getSubject().toString() );
                     headerTitleText.setText( "回复" );
-                    isReply=true;
-                    isHaveOriginalMail=true;
+                    isReply = true;
+                    isHaveOriginalMail = true;
                     break;
                 case MODEL_REPLY_ALL:
                     mailRecipientList.clear();
@@ -249,18 +247,33 @@ public class MailSendActivity extends BaseActivity {
 
                     sendThemeEditText.setText( replayMail.getSubject().toString() );
 
-                    isReply=true;
-                    isHaveOriginalMail=true;
+                    isReply = true;
+                    isHaveOriginalMail = true;
                     break;
                 case MODEL_FORWARD:
 
                     sendThemeEditText.setText( replayMail.getSubject().toString() );
-                    isForward=true;
-                    isHaveOriginalMail=true;
+                    isForward = true;
+                    isHaveOriginalMail = true;
                     break;
             }
 
-            setH5DataUI( isHaveOriginalMail );
+                String mailBodyText = replayMail.getBodyText();
+                if (!StringUtils.isBlank(mailBodyText)) {
+                    WebSettings webSettings = fwBodyWebView.getSettings();
+                    webSettings.setUseWideViewPort(true);
+                    webSettings.setJavaScriptEnabled(true);
+                    webSettings.setSupportZoom(true);
+                    webSettings.setBuiltInZoomControls(true);
+                    webSettings.setDisplayZoomControls(false);
+                    webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
+                    webSettings.setLoadWithOverviewMode(true);
+                    webSettings.setDefaultFontSize(40);
+                    webSettings.setMinimumFontSize(40);
+                    fwBodyWebView.loadDataWithBaseURL(null,mailBodyText, "text/html", "utf-8",null);
+                    fwTipImageView.setVisibility( isHaveOriginalMail?View.VISIBLE:View.GONE );
+                }
+            }
         }
 
         Object object = PreferencesByUsersUtils.getObject( this, MailCertificateInstallActivity.CERTIFICATER_KEY );
@@ -282,15 +295,7 @@ public class MailSendActivity extends BaseActivity {
        return PreferencesByUsersUtils.getString( this,Constant.MAIL_LOG_ADDRESS );
     }
 
-    /**
-     * H5数据显示
-     */
-    private void setH5DataUI(Boolean isHaveH5Data) {
-        fwTipImageView.setVisibility( isHaveH5Data ? View.VISIBLE : View.GONE );
-        if (isHaveH5Data) {
-            //数据填充WebView
-        }
-    }
+
 
     /**
      *为邮件设置加密加签提示*/
@@ -375,15 +380,14 @@ public class MailSendActivity extends BaseActivity {
      *发送邮件*/
     private void sendMail() throws Exception {
         MailSend mailSend = prepareSendData();
-        String   jsonMail = JSON.toJSONString(mailSend);
+        String   jsonMail = mailSend.toJson().toString();
         String key = EncryptUtils.stringToMD5(mailSend.getFrom().getAddress().toString());
-        String base64JsonMail = EncryptUtils.encode(jsonMail, key,Constant.MAIL_ENCRYPT_IV, Base64.NO_WRAP );
-        LogUtils.LbcDebug( "JsonMail::"+jsonMail );
+        byte[] mailContent = EncryptUtils.encodeNoBase64(jsonMail, key,Constant.MAIL_ENCRYPT_IV);
         if (NetUtils.isNetworkConnected( this )) {
             LogUtils.LbcDebug( "准备发送邮件" );
-            AppAPIService apiService = new AppAPIService( this );
+            MailApiService apiService = new MailApiService( this );
             apiService.setAPIInterface( new WebService() );
-            apiService.uploadMailFile(base64JsonMail);
+            apiService.sendEncryptMail(mailContent);
         }
     }
 
@@ -558,7 +562,7 @@ public class MailSendActivity extends BaseActivity {
 
         @Override
         public void returnMailCertificateUploadFail(String error, int errorCode) {
-            LogUtils.LbcDebug( "发送邮件失败" );
+            LogUtils.LbcDebug( "发送邮件失败"+error );
             Toast.makeText( MailSendActivity.this,"真糟糕，发送失败",Toast.LENGTH_SHORT );
             super.returnMailCertificateUploadFail( error, errorCode );
         }

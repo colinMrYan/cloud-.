@@ -1,5 +1,8 @@
 package com.inspur.emmcloud.bean.appcenter.mail;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -117,6 +120,30 @@ public class MailSend implements Serializable {
 
     public void setNeedSign(boolean needSign) {
         NeedSign = needSign;
+    }
+
+    public JSONObject  toJson(){
+        JSONObject object = new JSONObject(  );
+        try {
+            object.put( "Subject",Subject );
+            object.put( "Body",Body );
+            object.put( "Subject",Subject );
+            JSONObject from = new JSONObject(  );
+            from.put( "name","李宝超" );
+            from.put( "address","libaochao@inspur.com" );
+            object.put( "From",from );
+            JSONArray to = new JSONArray(  );
+            to.put( from );
+            object.put( "ToRecipients",to );
+            object.put( "NeedEncrypt",true );
+            object.put( "IsReply",false );
+            object.put( "IsFoward",false );
+            object.put( "NeedSign",true );
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return object;
+
     }
 }
 

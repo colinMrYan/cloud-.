@@ -844,7 +844,7 @@ public class APIUri {
      * @return
      */
     public static String getMailReciveUrl() {
-        return  "https://emm.inspur.com/api/ews/v1.0/Mail/SafeSend";
+        return  "https://emm.inspur.com/api/ews/v1.0/Mail/SafeSend?mail=libaochao@inspur.com";
     }
 
     /*****************************************ReactNative**************************************/
