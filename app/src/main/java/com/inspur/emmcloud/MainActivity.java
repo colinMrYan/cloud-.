@@ -86,7 +86,7 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
         PermissionRequestManagerUtils.getInstance().requestRuntimePermission(this, necessaryPermissionArray, new PermissionRequestCallback() {
             @Override
             public void onPermissionRequestSuccess(List<String> permissions) {
-                init();
+                 init();
             }
 
             @Override

@@ -13,7 +13,7 @@ import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
-import com.inspur.emmcloud.api.apiservice.AppAPIService;
+import com.inspur.emmcloud.api.apiservice.MailApiService;
 import com.inspur.emmcloud.bean.appcenter.mail.MailCertificateDetail;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.EncryptUtils;
@@ -211,7 +211,7 @@ public class MailCertificateInstallActivity extends BaseActivity {
             String cerBase64DataResult = EncryptUtils.encode( certificateBase64Data, key, iv, Base64.NO_WRAP );
             String KeyResult = EncryptUtils.encode( orgKey, key, iv, Base64.NO_WRAP );
             if (NetUtils.isNetworkConnected( this )) {
-                AppAPIService apiService = new AppAPIService( this );
+                MailApiService apiService = new MailApiService( this );
                 apiService.setAPIInterface( new WebService() );
                 apiService.upLoadCertificateFile( mail, KeyResult, cerBase64DataResult );
             }

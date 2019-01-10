@@ -836,7 +836,7 @@ public class APIUri {
      * @return
      */
     public static String getCertificateUrl () {
-        return  "http://172.31.2.18/api/ews/v1.0/UserProfile/CheckData";
+        return  "https://emm.inspur.com/api/ews/v1.0/UserProfile/CheckData";
     }
 
     /**
@@ -844,7 +844,7 @@ public class APIUri {
      * @return
      */
     public static String getMailReciveUrl() {
-        return  " ";
+        return  "https://emm.inspur.com/api/ews/v1.0/Mail/SafeSend?mail=libaochao@inspur.com";
     }
 
     /*****************************************ReactNative**************************************/
