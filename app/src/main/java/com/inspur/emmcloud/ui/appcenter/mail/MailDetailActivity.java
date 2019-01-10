@@ -44,6 +44,7 @@ import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.NoScrollWebView;
 import com.inspur.emmcloud.widget.ScrollViewWithListView;
 import com.inspur.imp.plugin.file.FileUtil;
+import com.qmuiteam.qmui.widget.QMUIObservableScrollView;
 
 import org.xutils.common.Callback;
 import org.xutils.http.HttpMethod;
@@ -83,6 +84,8 @@ public class MailDetailActivity extends BaseActivity {
     private TextView ccCollapseText;
     @ViewInject(R.id.rl_cc_collapse)
     private RelativeLayout ccCollapseLayout;
+    @ViewInject( R.id.sv_slide_data )
+    QMUIObservableScrollView scrollView;
 
     @ViewInject(R.id.iv_flag_encrypt)
     private ImageView encryptImg;
@@ -96,6 +99,8 @@ public class MailDetailActivity extends BaseActivity {
     private ScrollViewWithListView attachmentListView;
     @ViewInject(R.id.wv_content)
     private NoScrollWebView contentWebView;
+    @ViewInject( R.id.rl_send_about )
+    private RelativeLayout sendAboutLayout;
     private MailAttachmentListAdapter mailAttachmentListAdapter;
 
     private Mail mail;
@@ -116,6 +121,7 @@ public class MailDetailActivity extends BaseActivity {
 
     private void initView() {
         encryptImg.setImageResource(mail.isEncrypted() ? R.drawable.ic_mail_flag_encrypt_yes : R.drawable.ic_mail_flag_encrypt_no);
+        encryptImg.setVisibility( mail.isEncrypted()?View.VISIBLE:View.INVISIBLE );
         topicText.setText(mail.getSubject());
         sendTimeText.setText(TimeUtils.getTime(this, mail.getCreationTimestamp(), TimeUtils.FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE));
         senderText.setText(mail.getDisplaySender());
@@ -169,6 +175,20 @@ public class MailDetailActivity extends BaseActivity {
                 }
             });
         }
+
+        scrollView.addOnScrollChangedListener( new QMUIObservableScrollView.OnScrollChangedListener() {
+            @Override
+            public void onScrollChanged(QMUIObservableScrollView qmuiObservableScrollView, int i, int i1, int i2, int i3) {
+                int oldt = i3;
+                int t = i1;
+                if (oldt > t && oldt - t > 20) {
+                    sendAboutLayout.setVisibility( View.VISIBLE );
+                } else if (oldt < t && t - oldt > 20) {
+                    sendAboutLayout.setVisibility( View.GONE );
+                }
+            }
+        } );
+
     }
 
     private void downloadAttachment(final MailAttachment mailAttachment){
@@ -291,16 +311,18 @@ public class MailDetailActivity extends BaseActivity {
             case R.id.ibt_back:
                 finish();
                 break;
-            case R.id.bt_mail_forward:
+            case R.id.rl_forward:
                 intentMailSendActivity(MailSendActivity.MODEL_FORWARD);
                 break;
-            case R.id.bt_mail_reply_all:
+            case R.id.rl_reply_all:
                 intentMailSendActivity(MailSendActivity.MODEL_REPLY_ALL);
                 break;
-            case R.id.bt_mail_reply:
+            case R.id.rl_reply:
                 intentMailSendActivity(MailSendActivity.MODEL_REPLY);
                 break;
             case R.id.bt_mail_delete:
+                break;
+            case R.id.bt_mail_tab:
                 break;
             case R.id.tv_mail_receiver_expand:
                 if (receiverFlowLayout.getVisibility() == View.GONE) {

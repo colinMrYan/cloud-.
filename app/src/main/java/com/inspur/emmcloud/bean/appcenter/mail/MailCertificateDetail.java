@@ -1,7 +1,5 @@
 package com.inspur.emmcloud.bean.appcenter.mail;
 
-import android.os.Parcel;
-
 import java.io.Serializable;
 
 /**
@@ -9,6 +7,19 @@ import java.io.Serializable;
  */
 
 public class MailCertificateDetail implements Serializable {
+
+    private static final long serialVersionUID = 1232612312342333L;
+    private String certificateName;     //证书文件名称
+    private String certificateIssuerDN; //颁发者
+    private String certificateSubjectDN;//颁发给
+    private String certificatePassword; //证书密码
+    private String certificateStartDate;//证书有效期Start
+    private String certificateFinalDate;//证书截止日期
+    private String certificatePublicKey;//证书公钥
+    private String certificatePrivateKey;//证书私钥
+
+    private boolean isEncryptedMail;
+    private boolean isSignedMail;
 
     public String getCertificateName() {
         return certificateName;
@@ -90,35 +101,6 @@ public class MailCertificateDetail implements Serializable {
         this.isSignedMail = signedMail;
     }
 
-    private String certificateName;     //证书文件名称
-    private String certificateIssuerDN; //颁发者
-    private String certificateSubjectDN;//颁发给
-    private String certificatePassword; //证书密码
-    private String certificateStartDate;//证书有效期Start
-    private String certificateFinalDate;//证书截止日期
-
-    private String certificatePublicKey;//证书公钥
-    private String certificatePrivateKey;//证书私钥
-
-
-    private boolean isEncryptedMail;
-    private boolean isSignedMail;
-
-
-
-    protected MailCertificateDetail(Parcel in) {
-         certificateName=in.readString();
-         certificateIssuerDN =in.readString();
-         certificateSubjectDN=in.readString();
-        certificatePassword  = in.readString();
-         certificateStartDate=in.readString();
-         certificateFinalDate=in.readString();
-         certificatePublicKey=in.readString();
-         certificatePrivateKey=in.readString();
-         isEncryptedMail=in.readInt()==1;
-         isSignedMail   =in.readInt()==1;
-    }
-
     public MailCertificateDetail(String cName,String cIssuerDN,String cSubjectDN,String cPassword,String cStartTime,String cFinalTime,String pubKey,String priKey){
         certificateName=cName;
         certificateIssuerDN=cIssuerDN;
@@ -135,8 +117,14 @@ public class MailCertificateDetail implements Serializable {
     public MailCertificateDetail(){
         isEncryptedMail=true;
         isSignedMail=true;
+        certificateName="";     //证书文件名称
+        certificateIssuerDN=""; //颁发者
+        certificateSubjectDN="";//颁发给
+        certificatePassword=""; //证书密码
+        certificateStartDate="";//证书有效期Start
+        certificateFinalDate="";//证书截止日期
+        certificatePublicKey="";//证书公钥
+        certificatePrivateKey="";//证书私钥
     }
-
-
 
 }

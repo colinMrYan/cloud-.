@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.imp.plugin.filetransfer.filemanager.adapter.FileAdapter;
 import com.inspur.imp.plugin.filetransfer.filemanager.adapter.TitleAdapter;
@@ -95,20 +96,7 @@ public class FileManagerActivity extends BaseActivity {
                         }
 
                     } else {
-                        if (fileType == FileType.apk) {
-                            //安装app
-                            FileUtil.openAppIntent(FileManagerActivity.this, new File(file.getPath()));
-                        } else if (fileType == FileType.image) {
-                            FileUtil.openImageIntent(FileManagerActivity.this, new File(file.getPath()));
-                        } else if (fileType == FileType.txt) {
-                            FileUtil.openTextIntent(FileManagerActivity.this, new File(file.getPath()));
-                        } else if (fileType == FileType.music) {
-                            FileUtil.openMusicIntent(FileManagerActivity.this, new File(file.getPath()));
-                        } else if (fileType == FileType.video) {
-                            FileUtil.openVideoIntent(FileManagerActivity.this, new File(file.getPath()));
-                        } else {
-                            FileUtil.openApplicationIntent(FileManagerActivity.this, new File(file.getPath()));
-                        }
+                        FileUtils.openFile(FileManagerActivity.this,file.getPath());
                     }
                 }
 

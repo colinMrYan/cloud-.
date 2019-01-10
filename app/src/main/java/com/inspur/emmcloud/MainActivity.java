@@ -78,7 +78,7 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
         }
         setContentView(R.layout.activity_main);
        getNecessaryPermission();
-//        IntentUtils.startActivity(this, MailHomeActivity.class,true);
+//        IntentUtils.startActivity(this, MailLoginActivity.class,true);
     }
 
     private void getNecessaryPermission() {
@@ -86,7 +86,7 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
         PermissionRequestManagerUtils.getInstance().requestRuntimePermission(this, necessaryPermissionArray, new PermissionRequestCallback() {
             @Override
             public void onPermissionRequestSuccess(List<String> permissions) {
-                init();
+                 init();
             }
 
             @Override
