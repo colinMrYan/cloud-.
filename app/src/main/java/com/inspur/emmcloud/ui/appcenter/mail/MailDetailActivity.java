@@ -6,7 +6,9 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
+import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -156,9 +158,16 @@ public class MailDetailActivity extends BaseActivity {
             webSettings.setDisplayZoomControls(false);
             webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
             webSettings.setLoadWithOverviewMode(true);
-            webSettings.setDefaultFontSize(40);
-            webSettings.setMinimumFontSize(40);
             contentWebView.loadDataWithBaseURL(null,mailBodyText, "text/html", "utf-8",null);
+            contentWebView.setWebChromeClient(new WebChromeClient(){
+                @Override
+                public void onProgressChanged(WebView view, int newProgress) {
+                    super.onProgressChanged(view, newProgress);
+                    if (newProgress == 100){
+                        view.loadUrl("javascript: var meta = document.createElement('meta'); meta.setAttribute('name', 'viewport'); meta.setAttribute('content', 'width=device-width'); document.getElementsByTagName('head')[0].appendChild(meta);");
+                    }
+                }
+            });
         }
     }
 

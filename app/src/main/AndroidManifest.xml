@@ -124,7 +124,7 @@
         <!--custom-->
         <meta-data
             android:name="FLAG_APP_VERSION_TYPE"
-            android:value="Standard" />
+            android:value="zhihuichengjian" />
 
         <activity
             android:name=".MainActivity"
