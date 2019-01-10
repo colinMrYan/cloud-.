@@ -885,19 +885,6 @@ public class AppAPIService {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
-                OauthCallBack oauthCallBack = new OauthCallBack() {
-                    @Override
-                    public void reExecute() {
-                        cancelToken();
-                    }
-
-                    @Override
-                    public void executeFailCallback() {
-                        callbackFail("", -1);
-                    }
-                };
-                OauthUtils.getInstance().refreshToken(
-                        oauthCallBack, requestTime);
             }
         });
     }
