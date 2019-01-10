@@ -10,12 +10,17 @@ import com.inspur.emmcloud.api.CloudHttpMethod;
 import com.inspur.emmcloud.api.HttpUtils;
 import com.inspur.emmcloud.bean.appcenter.mail.GetMailFolderResult;
 import com.inspur.emmcloud.bean.appcenter.mail.GetMailListResult;
+import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.interf.OauthCallBack;
+import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.privates.OauthUtils;
+import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
 
 import org.xutils.http.RequestParams;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 
 import static com.inspur.emmcloud.MyApplication.getInstance;
 
@@ -286,7 +291,13 @@ public class MailApiService {
         final String url = APIUri.getMailReciveUrl();
         RequestParams params = MyApplication.getInstance().getHttpRequestParams( url );
         params.setMultipart(true);
-        params.addBodyParameter("file", new ByteArrayInputStream( mailContent ),"application/octet-stream");
+        params.addQueryStringParameter("mail", PreferencesByUsersUtils.getString(MyApplication.getInstance(), Constant.PREF_MAIL_ACCOUNT));
+        params.addBodyParameter("file", new ByteArrayInputStream( mailContent ),"application/octet-stream","111");
+        String fileName = System.currentTimeMillis()+".aa";
+        String path = MyAppConfig.LOCAL_DOWNLOAD_PATH+fileName;
+        FileUtils.writeFile(new File(path),new ByteArrayInputStream(mailContent));
+       // params.addBodyParameter("file",new File(path));
+        params.setAsJsonContent(true);
         HttpUtils.request( context, CloudHttpMethod.POST, params, new APICallback(context, url ) {
             @Override
             public void callbackSuccess(byte[] arg0) {
