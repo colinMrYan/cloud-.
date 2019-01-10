@@ -71,7 +71,6 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
                 Intent intent = new Intent(currentActivity,MainActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 currentActivity.startActivity(intent);
-//                MyApplication.getInstance().closeOtherActivity(MainActivity.class.getSimpleName());
             }
             return true;
         }
