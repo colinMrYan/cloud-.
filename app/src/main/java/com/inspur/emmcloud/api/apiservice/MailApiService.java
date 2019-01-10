@@ -283,7 +283,7 @@ public class MailApiService {
 
 
     public void sendEncryptMail(final byte[] mailContent){
-        final String url = APIUri.getMailReciveUrl();
+        final String url = APIUri.getUploadMailUrl();
         RequestParams params = MyApplication.getInstance().getHttpRequestParams( url );
         params.setMultipart(true);
         params.addBodyParameter("file", new ByteArrayInputStream( mailContent ),"application/octet-stream");

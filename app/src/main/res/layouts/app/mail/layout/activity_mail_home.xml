@@ -26,7 +26,7 @@
                     android:onClick="onClick"
                     android:src="@drawable/icon_mail_back"
                     android:layout_marginLeft="11dp"
-                    android:scaleType="fitCenter"/>
+                    android:scaleType="fitXY"/>
 
                 <ImageButton
                     android:id="@+id/ibt_setting"
@@ -36,7 +36,7 @@
                     android:layout_height="30dp"
                     android:layout_centerVertical="true"
                     android:onClick="onClick"
-                    android:scaleType="fitCenter"
+                    android:scaleType="fitXY"
                     android:src="@drawable/icon_mail_side_lip" />
 
                 <TextView

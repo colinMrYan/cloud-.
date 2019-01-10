@@ -407,6 +407,7 @@ public class MailSendActivity extends BaseActivity {
                 intent.putExtra( ContactSearchFragment.EXTRA_EXCLUDE_SELECT, memberUidList );
                 intent.putExtra( ContactSearchFragment.EXTRA_MULTI_SELECT, true );
                 intent.putExtra( ContactSearchFragment.EXTRA_TITLE, "添加收件人" );
+
                 intent.setClass( getApplicationContext(),
                         ContactSearchActivity.class );
                 startActivityForResult( intent, QEQUEST_ADD_MEMBER );

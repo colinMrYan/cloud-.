@@ -131,6 +131,7 @@
                     android:layout_height="30dp"
                     android:onClick="onClick"
                     android:layout_marginRight="11dp"
+                    android:scaleType="fitXY"
                     android:src="@drawable/icon_mail_password_no"
                     android:padding="5dp"/>
             </RelativeLayout>
@@ -161,7 +162,6 @@
                 android:id="@+id/rl_certificate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:onClick="onClick"
                 android:paddingLeft="4dp"
                 android:layout_below="@id/tv_mail_setting_certificate_title">
                 <TextView
@@ -174,11 +174,13 @@
                     android:textSize="16sp"/>
                 <ImageButton
                     android:id="@+id/ibt_mail_setting_certificate"
+                    android:onClick="onClick"
                     android:layout_alignParentRight="true"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:src="@drawable/icon_mail_certificate_manager"
                     android:layout_marginRight="11dp"
+                    android:scaleType="fitXY"
                     android:padding="5dp"/>
             </RelativeLayout>
             <View
