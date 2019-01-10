@@ -321,6 +321,7 @@ public class MailDetailActivity extends BaseActivity {
                 intentMailSendActivity(MailSendActivity.MODEL_REPLY);
                 break;
             case R.id.bt_mail_delete:
+
                 break;
             case R.id.bt_mail_tab:
                 break;
@@ -348,6 +349,15 @@ public class MailDetailActivity extends BaseActivity {
                 break;
             case R.id.tv_install_cert:
                 break;
+        }
+    }
+
+    private void delectCurrentMail(){
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
+            loadingDlg.show();
+            apiService = new MailApiService(this);
+            apiService.setAPIInterface(new WebService());
+            apiService.getMailDetail(mail.getId(),mail.isEncrypted());
         }
     }
 
@@ -380,7 +390,6 @@ public class MailDetailActivity extends BaseActivity {
     }
 
     private class WebService extends APIInterfaceInstance {
-
         @Override
         public void returnMailDetailSuccess(byte[] response) {
             if (mail.isEncrypted()){
@@ -396,7 +405,6 @@ public class MailDetailActivity extends BaseActivity {
                 MailDetailActivity.this.mail = mail;
                 initView();
             }
-
         }
 
         @Override

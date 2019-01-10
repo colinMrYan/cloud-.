@@ -377,18 +377,19 @@
             android:layout_alignParentBottom="true"
             android:layout_width="match_parent"
             android:background="#F9F9F9"
-            android:layout_height="54dp">
+            android:layout_height="wrap_content">
             <RelativeLayout
                 android:id="@+id/rl_reply"
                 android:onClick="onClick"
                 android:layout_toLeftOf="@id/rl_reply_all"
                 android:layout_marginRight="56dp"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content">
                 <ImageView
                     android:id="@+id/iv_reply"
                     android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_height="34dp"
+                    android:paddingTop="4dp"
                     android:layout_centerHorizontal="true"
                     android:background="@drawable/icon_mail_reply"/>
                 <TextView
@@ -407,11 +408,12 @@
           android:layout_centerHorizontal="true"
           android:onClick="onClick"
           android:layout_width="wrap_content"
-          android:layout_height="match_parent">
+          android:layout_height="wrap_content">
           <ImageView
               android:id="@+id/iv_reply_all"
               android:layout_width="30dp"
-              android:layout_height="30dp"
+              android:layout_height="34dp"
+              android:paddingTop="4dp"
               android:layout_centerHorizontal="true"
               android:background="@drawable/icon_mail_reply_all"/>
           <TextView
@@ -430,11 +432,12 @@
                 android:layout_toRightOf="@id/rl_reply_all"
                 android:layout_marginLeft="65dp"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content">
                 <ImageView
                     android:id="@+id/iv_forward"
                     android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_height="34dp"
+                    android:paddingTop="4dp"
                     android:layout_centerHorizontal="true"
                     android:background="@drawable/icon_mail_forward"/>
                 <TextView
