@@ -77,7 +77,6 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
             this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
         }
         setContentView(R.layout.activity_main);
-        //IntentUtils.startActivity(this, MailHomeActivity.class,true);
         getNecessaryPermission();
     }
 
