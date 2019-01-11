@@ -1157,10 +1157,10 @@ public class APIUri {
     }
 
     /**
-     * 获取上传邮件Url
+     * 获取删除邮件Url
      * @return
      */
-    public static String getRemoveAloneMailUrl() {
+    public static String getRemoveMailUrl() {
         return  getMailBaseUrl()+"/Mail/Remove";
     }
 

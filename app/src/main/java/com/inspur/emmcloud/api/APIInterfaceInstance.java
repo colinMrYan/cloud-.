@@ -1926,12 +1926,12 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnRemoveAloneMailSuccess(byte[] arg0) {
+    public void returnRemoveMailSuccess(byte[] arg0) {
 
     }
 
     @Override
-    public void returnRemoveAloneMailFail(String error, int errorCode) {
+    public void returnRemoveMailFail(String error, int errorCode) {
 
     }
 }

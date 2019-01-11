@@ -1,9 +1,11 @@
 package com.inspur.emmcloud.ui.appcenter.mail;
 
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
@@ -16,7 +18,9 @@ import com.inspur.emmcloud.bean.appcenter.mail.MailFolder;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.cache.MailCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MailFolderCacheUtils;
 import com.inspur.emmcloud.widget.MySwipeRefreshLayout;
@@ -43,12 +47,16 @@ public class MailHomeActivity extends MailHomeBaseActivity implements MySwipeRef
 
     @ViewInject(R.id.tv_header)
     private TextView headerText;
+    @ViewInject( R.id.rl_home_long_click )
+    private RelativeLayout homeLongClickLayout;
 
     private MailListAdapter mailAdapter;
     private MailApiService apiService;
     private MailFolder currentMailFolder;
     private MailFolder currentRootMailFolder;
     private List<Mail> mailList = new ArrayList<>();
+    private boolean    isItemClickable=true;
+    private List<String> needDelectItemId=new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,11 +74,43 @@ public class MailHomeActivity extends MailHomeBaseActivity implements MySwipeRef
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Mail mail = mailList.get(position);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable(MailDetailActivity.EXTRA_MAIL,mail);
-                IntentUtils.startActivity(MailHomeActivity.this,MailDetailActivity.class,bundle);
+                if(isItemClickable){
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable(MailDetailActivity.EXTRA_MAIL,mail);
+                    IntentUtils.startActivity(MailHomeActivity.this,MailDetailActivity.class,bundle);
+                }else{
+                      if(mail.isDelectItem()){
+                          mailList.get( position ).setDelectItem(false);
+                      }else {
+                          needDelectItemId.add(mail.getId());
+                          mailList.get( position ).setDelectItem(true);
+                      }
+                    mailAdapter.setMailList( mailList,currentRootMailFolder);//?
+                    mailAdapter.notifyDataSetChanged();
+                }
             }
         });
+        mailListView.setOnItemLongClickListener( new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long l) {
+                homeLongClickLayout.setVisibility(View.VISIBLE);
+                Mail mail = mailList.get(position);
+                for(int j=0;j<mailList.size();j++){
+                    mailList.get(j).setHideLeftCheck(false);
+                }
+                if(mail.isDelectItem()){
+                    mailList.get(position).setDelectItem(false);
+                }else {
+                    needDelectItemId.add(mail.getId());
+                    mailList.get(position).setDelectItem(true);
+                }
+                mailAdapter.setMailList( mailList,currentRootMailFolder);  //?
+                mailAdapter.notifyDataSetChanged();
+                isItemClickable = false;
+                return true;
+            }
+        } );
+
         mailListView.setAdapter(mailAdapter);
 
     }
@@ -128,18 +168,72 @@ public class MailHomeActivity extends MailHomeBaseActivity implements MySwipeRef
            }
         } else if(simpleEventMessage.getAction().equals(Constant.EVENTBUS_TAG_DELECTE_MAIL_HOME_ACTIVITY)){
              finish();
+        } else if(simpleEventMessage.getAction().equals(Constant.EVENTBUS_TAG_MAIL_REMOVE_SUCCESS)){
+            //1、那个文件夹下的那个邮件删除
+            LogUtils.LbcDebug( "删除更新UI" );
+              List<String>  removeMailIdList=(List<String>)simpleEventMessage.getMessageObj();
+//              MailCacheUtils.removeMailListByMailIdList(removeMailIdList);
+//            //2、更新UI
+//             mailList = MailCacheUtils.getMailListInFolder(currentMailFolder.getId(),pageSize);
+//            mailAdapter.setMailList(mailList, currentRootMailFolder);
+//            swipeRefreshLayout.setCanLoadMore(mailList.size() >= pageSize);
+//            mailAdapter.notifyDataSetChanged();
+              removeMailById( removeMailIdList );
         }
     }
 
+    private void removeMailById(List<String> mailIdList){
+        MailCacheUtils.removeMailListByMailIdList(mailIdList);
+        //2、更新UI
+        mailList = MailCacheUtils.getMailListInFolder(currentMailFolder.getId(),pageSize);
+        if(isItemClickable){
+            for (int i=0;i<mailList.size();i++){
+                mailList.get( i ).setHideLeftCheck( false );
+            }
+        }
+        mailAdapter.setMailList(mailList, currentRootMailFolder);
+        swipeRefreshLayout.setCanLoadMore(mailList.size() >= pageSize);
+        mailAdapter.notifyDataSetChanged();
+        needDelectItemId.clear();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+    if(keyCode == KeyEvent.KEYCODE_BACK&&View.VISIBLE==homeLongClickLayout.getVisibility()){
+        homeLongClickLayout.setVisibility(View.GONE);
+        for(int i=0;i<mailList.size();i++){
+            mailList.get(i).setHideLeftCheck(true);
+        }
+        mailAdapter.setMailList( mailList,currentMailFolder );
+        mailAdapter.notifyDataSetChanged();
+        isItemClickable=true;
+        return true;
+    }
+     return super.onKeyDown( keyCode, event );
+    }
 
     @Override
     public void onRefresh() {
+        if(isItemClickable)
         getMail(0);
     }
 
     @Override
     public void onLoadMore() {
         getMail(mailList.size());
+    }
+
+    public void onClick(View v){
+        switch (v.getId()){
+            case R.id.rl_delete_select_item:
+                ToastUtils.show( this,"删除Id个数"+needDelectItemId.size() );
+                removeMailById(needDelectItemId);
+                ToastUtils.show( this,"删除Id个数"+needDelectItemId.size() );
+
+                break;
+            default:
+                break;
+        }
     }
 
     private void getMail(int offset) {
@@ -161,13 +255,16 @@ public class MailHomeActivity extends MailHomeBaseActivity implements MySwipeRef
                 if (offset == 0) {
                     mailList.clear();
                 }
+                if(!isItemClickable){
+                    for(int i=0;i<requestMailList.size();i++){
+                        requestMailList.get( i ).setHideLeftCheck(false);
+                    }
+                }
                 mailList.addAll(requestMailList);
                 mailAdapter.setMailList(mailList, currentRootMailFolder);
                 swipeRefreshLayout.setCanLoadMore(mailList.size() >= pageSize);
                 mailAdapter.notifyDataSetChanged();
             }
-
-
         }
 
         @Override

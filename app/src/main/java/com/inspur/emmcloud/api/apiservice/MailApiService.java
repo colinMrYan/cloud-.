@@ -115,7 +115,6 @@ public class MailApiService {
         });
     }
 
-
     public void getMailDetail(final String mailId,final boolean isEncrypted){
         String completeUrl = APIUri.getMailDetailUrl(isEncrypted);
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
@@ -282,28 +281,26 @@ public class MailApiService {
 
     /**
      *删除邮件*/
-    public void removeAloneMail(final byte[] mailInfo){
-        final String url = APIUri.getRemoveAloneMailUrl();
+    public void removeMail(final String mailInfo){
+        final String url = APIUri.getRemoveMailUrl();
         RequestParams params = MyApplication.getInstance().getHttpRequestParams( url );
-        params.setMultipart(true);
-        params.addQueryStringParameter("mail", PreferencesByUsersUtils.getString(MyApplication.getInstance(), Constant.PREF_MAIL_ACCOUNT));
-        params.addBodyParameter("file", new ByteArrayInputStream( mailInfo ),"application/octet-stream","111");
+        params.setBodyContent(mailInfo);
         params.setAsJsonContent(true);
         HttpUtils.request( context, CloudHttpMethod.POST, params, new APICallback(context, url ) {
             @Override
             public void callbackSuccess(byte[] arg0) {
-                apiInterface.returnRemoveAloneMailSuccess( arg0 );
+                apiInterface.returnRemoveMailSuccess( arg0 );
             }
             @Override
             public void callbackFail(String error, int responseCode) {
-                apiInterface.returnRemoveAloneMailFail( error,responseCode );
+                apiInterface.returnRemoveMailFail( error,responseCode );
             }
             @Override
             public void callbackTokenExpire(long requestTime) {
                 OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        sendEncryptMail(mailInfo);
+                        removeMail( mailInfo );
                     }
                     @Override
                     public void executeFailCallback() {

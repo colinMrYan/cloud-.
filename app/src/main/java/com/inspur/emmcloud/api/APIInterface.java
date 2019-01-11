@@ -781,6 +781,6 @@ public interface APIInterface {
     void returnSendMailSuccess(byte[] arg0);
     void returnSendMailFail(String error, int errorCode);
 
-    void returnRemoveAloneMailSuccess(byte[] arg0);
-    void returnRemoveAloneMailFail(String error, int errorCode);
+    void returnRemoveMailSuccess(byte[] arg0);
+    void returnRemoveMailFail(String error, int errorCode);
 }
