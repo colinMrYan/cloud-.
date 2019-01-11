@@ -2,7 +2,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/content_bg"
     android:fitsSystemWindows="true"
     android:orientation="vertical">
@@ -37,15 +36,15 @@
                 android:src="@drawable/selector_back_btn" />
         </RelativeLayout>
 
-        <android.support.v7.widget.CardView
-            android:id="@+id/cv_cardview"
+        <RelativeLayout
+            android:id="@+id/rl_user_info_summary"
             android:layout_width="345dp"
             android:layout_height="185dp"
             android:layout_marginTop="20dp"
             android:layout_below="@id/back_layout"
+            android:elevation="10dp"
+            android:background="@drawable/shape_user_info"
             android:layout_gravity="center_horizontal"
-            app:cardCornerRadius="5dp"
-            app:cardElevation="5dp"
             android:layout_centerInParent="true">
             <ImageView
                 android:layout_width="wrap_content"
@@ -53,7 +52,7 @@
                 android:visibility="invisible"
                 android:background="@drawable/icon_photo_default"
                 android:scaleType="centerInside"/>
-        </android.support.v7.widget.CardView>
+        </RelativeLayout>
 
         <com.inspur.emmcloud.widget.CircleTextImageView
             android:id="@+id/img_photo"
@@ -90,7 +89,11 @@
             android:maxLines="2"
             android:gravity="center"/>
 
+
+
     </RelativeLayout>
+
+
 
     <LinearLayout
         android:layout_width="match_parent"
