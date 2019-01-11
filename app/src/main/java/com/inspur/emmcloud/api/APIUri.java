@@ -1132,7 +1132,7 @@ public class APIUri {
 
     /**************************Mail********************************************/
     public static String getMailBaseUrl() {
-        return "http://172.31.2.18/api/ews/v1.0";
+        return getEMMBaseUrl()+"api/ews/v1.0";
     }
 
     public static String getMailFolderUrl() {

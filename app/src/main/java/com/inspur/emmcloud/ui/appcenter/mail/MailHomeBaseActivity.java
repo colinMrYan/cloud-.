@@ -6,14 +6,10 @@ import android.support.v4.app.FragmentManager;
 import android.view.View;
 
 import com.inspur.emmcloud.BaseFragmentActivity;
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.privates.MailLoginUtils;
-import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.sildemenu.AllInterface;
 import com.inspur.emmcloud.widget.sildemenu.LeftDrawerLayout;
@@ -46,18 +42,18 @@ public class MailHomeBaseActivity extends BaseFragmentActivity implements AllInt
         EventBus.getDefault().register(this);
         x.view().inject(this);
         loadingDlg = new LoadingDialog(this);
-        loginMail();
+        addMailLeftMenyu();
     }
 
-    private void loginMail(){
-        String mail = PreferencesByUsersUtils.getString(MyApplication.getInstance(), Constant.PREF_MAIL_ACCOUNT,"");
-        String password = PreferencesByUsersUtils.getString(MyApplication.getInstance(), Constant.PREF_MAIL_PASSWORD,"");
-        if (StringUtils.isBlank(mail) || StringUtils.isBlank(password)){
-            IntentUtils.startActivity(this,MailLoginActivity.class,true);
-        }else {
-            MailLoginUtils.getInstance().loginMail();
-        }
-    }
+//    private void loginMail(){
+//        String mail = PreferencesByUsersUtils.getString(MyApplication.getInstance(), Constant.PREF_MAIL_ACCOUNT,"");
+//        String password = PreferencesByUsersUtils.getString(MyApplication.getInstance(), Constant.PREF_MAIL_PASSWORD,"");
+//        if (StringUtils.isBlank(mail) || StringUtils.isBlank(password)){
+//            IntentUtils.startActivity(this,MailLoginActivity.class,true);
+//        }else {
+//            MailLoginUtils.getInstance().loginMail();
+//        }
+//    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveSimpleEventMessage(SimpleEventMessage simpleEventMessage) {

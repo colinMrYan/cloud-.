@@ -10,8 +10,6 @@ import android.widget.TextView;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.appcenter.mail.Mail;
 import com.inspur.emmcloud.bean.appcenter.mail.MailAttachment;
-import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.emmcloud.util.common.FileUtils;
 
 /**
  * Created by chenmch on 2018/12/27.
@@ -47,8 +45,7 @@ public class MailAttachmentListAdapter extends BaseAdapter {
         TextView attachmentNameText = convertView.findViewById(R.id.tv_name);
         attachmentNameText.setText(mailAttachment.getName());
         TextView downloadText = convertView.findViewById(R.id.tv_download);
-        String attachmentFilePath = MyAppConfig.LOCAL_DOWNLOAD_PATH_MAIL_ATTCACHEMENT +mail.getId()+"/"+ mailAttachment.getName();
-        downloadText.setText(FileUtils.isFileExist(attachmentFilePath)?R.string.open:R.string.download);
+        downloadText.setText(R.string.open);
         return convertView;
     }
 }
