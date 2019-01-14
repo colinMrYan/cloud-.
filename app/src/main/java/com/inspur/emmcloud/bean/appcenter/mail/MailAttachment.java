@@ -1,7 +1,6 @@
 package com.inspur.emmcloud.bean.appcenter.mail;
 
 import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 
 import org.json.JSONObject;
 
@@ -18,7 +17,6 @@ public class MailAttachment {
     private String contentId;
 
     public MailAttachment(JSONObject obj){
-        LogUtils.jasonDebug("obj=="+obj.toString());
         id= JSONUtils.getString(obj,"id","");
         contentId = JSONUtils.getString(obj,"contentId","");
         name= JSONUtils.getString(obj,"name","");
@@ -52,10 +50,6 @@ public class MailAttachment {
 
     public int getSize() {
         return size;
-    }
-
-    public void setSize(int size) {
-        this.size = size;
     }
 
     public boolean isAttachment() {

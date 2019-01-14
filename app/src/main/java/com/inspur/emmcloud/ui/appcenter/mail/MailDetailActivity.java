@@ -20,6 +20,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -31,6 +32,8 @@ import com.inspur.emmcloud.api.apiservice.MailApiService;
 import com.inspur.emmcloud.bean.appcenter.mail.Mail;
 import com.inspur.emmcloud.bean.appcenter.mail.MailAttachment;
 import com.inspur.emmcloud.bean.appcenter.mail.MailRecipient;
+import com.inspur.emmcloud.bean.appcenter.mail.RemoveItemModel;
+import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.DensityUtil;
@@ -51,6 +54,7 @@ import com.inspur.emmcloud.widget.NoScrollWebView;
 import com.inspur.emmcloud.widget.ScrollViewWithListView;
 import com.qmuiteam.qmui.widget.QMUIObservableScrollView;
 
+import org.greenrobot.eventbus.EventBus;
 import org.xutils.common.Callback;
 import org.xutils.http.HttpMethod;
 import org.xutils.http.RequestParams;
@@ -61,6 +65,7 @@ import org.xutils.x;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -180,9 +185,8 @@ public class MailDetailActivity extends BaseActivity {
             webSettings.setDisplayZoomControls(false);
             webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
             webSettings.setLoadWithOverviewMode(true);
-            LogUtils.jasonDebug(mailBodyText);
-            contentWebView.loadDataWithBaseURL(null, mailBodyText, "text/html", "utf-8", null);
-            contentWebView.setWebChromeClient(new WebChromeClient() {
+            contentWebView.loadDataWithBaseURL(null,mailBodyText, "text/html", "utf-8",null);
+            contentWebView.setWebChromeClient(new WebChromeClient(){
                 @Override
                 public void onProgressChanged(WebView view, int newProgress) {
                     super.onProgressChanged(view, newProgress);
@@ -427,6 +431,9 @@ public class MailDetailActivity extends BaseActivity {
                 intentMailSendActivity(MailSendActivity.MODEL_REPLY);
                 break;
             case R.id.bt_mail_delete:
+                String removeMail = getRemoveMailInfo( mail);
+                LogUtils.LbcDebug( "removeMail::"+removeMail );
+                removeCurrentMail( removeMail );
                 break;
             case R.id.bt_mail_tab:
                 break;
@@ -458,6 +465,28 @@ public class MailDetailActivity extends BaseActivity {
     }
 
     private void intentMailSendActivity(String extraMailModel) {
+    /**获取删除邮件信息*/
+    private String  getRemoveMailInfo(Mail RemoveMail){
+        RemoveItemModel removeItemModel = new RemoveItemModel();
+        removeItemModel.setDeleteMode( 2 );
+        removeItemModel.setEmail(RemoveMail.getFromMailRecipient().getAddress());
+        List<String> removeMailId = new ArrayList<>();
+        removeMailId.add(RemoveMail.getId());
+        removeItemModel.setItemIds(removeMailId);
+        String removeMailJSON= JSON.toJSONString( removeItemModel );
+        return removeMailJSON;
+    }
+
+    /**删除当前邮件*/
+    private void removeCurrentMail(String removeItemModel){
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
+            apiService = new MailApiService(this);
+            apiService.setAPIInterface(new WebService());
+            apiService.removeMail(removeItemModel);
+        }
+    }
+
+    private void intentMailSendActivity(String extraMailModel){
         Bundle bundle = new Bundle();
         bundle.putString(MailSendActivity.EXTRA_MAIL_ID, mail.getId());
         bundle.putString(MailSendActivity.EXTRA_MAIL_MODEL, extraMailModel);
@@ -512,3 +541,27 @@ public class MailDetailActivity extends BaseActivity {
             }
         }
     }
+
+        @Override
+        public void returnMailDetailFail(String error, int errorCode) {
+            WebServiceMiddleUtils.hand(MailDetailActivity.this, error, errorCode);
+        }
+
+        @Override
+        public void returnRemoveMailSuccess(byte[] arg0) {
+            List<String> mailIdList = new ArrayList<>();
+            mailIdList.add(mail.getId().toString() );
+            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_MAIL_REMOVE_SUCCESS,mailIdList));
+            LogUtils.LbcDebug( "returndata"+String.valueOf( arg0 ) );
+            ToastUtils.show(MailDetailActivity.this,"删除邮件成功:::"+String.valueOf(arg0) );
+            finish();
+            super.returnRemoveMailSuccess( arg0 );
+        }
+
+        @Override
+        public void returnRemoveMailFail(String error, int errorCode) {
+            ToastUtils.show(MailDetailActivity.this,"删除邮件失败" );
+            super.returnRemoveMailFail( error, errorCode );
+        }
+    }
+}
