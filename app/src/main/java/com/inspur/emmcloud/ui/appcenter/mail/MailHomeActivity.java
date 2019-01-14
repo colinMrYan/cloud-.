@@ -47,7 +47,8 @@ public class MailHomeActivity extends MailHomeBaseActivity implements MySwipeRef
 
     @ViewInject(R.id.tv_header)
     private TextView headerText;
-    @ViewInject( R.id.rl_home_long_click )
+
+    @ViewInject(R.id.rl_home_long_click )
     private RelativeLayout homeLongClickLayout;
 
     private MailListAdapter mailAdapter;
@@ -237,7 +238,7 @@ public class MailHomeActivity extends MailHomeBaseActivity implements MySwipeRef
     }
 
     private void getMail(int offset) {
-        if (NetUtils.isNetworkConnected(this)) {
+        if (NetUtils.isNetworkConnected(this) && currentMailFolder != null) {
             apiService.getMailList(currentMailFolder.getId(), pageSize, offset);
         } else {
             swipeRefreshLayout.setLoading(false);

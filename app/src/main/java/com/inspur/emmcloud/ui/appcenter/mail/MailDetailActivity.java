@@ -43,6 +43,7 @@ import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.common.ZipUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
@@ -433,7 +434,7 @@ public class MailDetailActivity extends BaseActivity {
             case R.id.bt_mail_delete:
                 String removeMail = getRemoveMailInfo( mail);
                 LogUtils.LbcDebug( "removeMail::"+removeMail );
-                removeCurrentMail( removeMail );
+                removeMail( removeMail );
                 break;
             case R.id.bt_mail_tab:
                 break;
@@ -464,7 +465,18 @@ public class MailDetailActivity extends BaseActivity {
         }
     }
 
-    private void intentMailSendActivity(String extraMailModel) {
+    private byte[] decryptBytes(byte[] encryptBytes) {
+        String account = ContactUserCacheUtils.getUserMail(MyApplication.getInstance().getUid());
+        String key = EncryptUtils.stringToMD5(account);
+
+        try {
+            encryptBytes = EncryptUtils.decode(encryptBytes, key, Constant.MAIL_ENCRYPT_IV);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return encryptBytes;
+    }
+
     /**获取删除邮件信息*/
     private String  getRemoveMailInfo(Mail RemoveMail){
         RemoveItemModel removeItemModel = new RemoveItemModel();
@@ -477,20 +489,22 @@ public class MailDetailActivity extends BaseActivity {
         return removeMailJSON;
     }
 
-    /**删除当前邮件*/
-    private void removeCurrentMail(String removeItemModel){
-        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
-            apiService = new MailApiService(this);
-            apiService.setAPIInterface(new WebService());
-            apiService.removeMail(removeItemModel);
-        }
-    }
-
     private void intentMailSendActivity(String extraMailModel){
         Bundle bundle = new Bundle();
         bundle.putString(MailSendActivity.EXTRA_MAIL_ID, mail.getId());
         bundle.putString(MailSendActivity.EXTRA_MAIL_MODEL, extraMailModel);
         IntentUtils.startActivity(this, MailSendActivity.class, bundle);
+    }
+
+    /**
+     * @param removeItemModel
+     */
+    private void removeMail(String removeItemModel){
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
+            apiService = new MailApiService(this);
+            apiService.setAPIInterface(new WebService());
+            apiService.removeMail(removeItemModel);
+        }
     }
 
     private void getMailDetail() {
@@ -501,17 +515,6 @@ public class MailDetailActivity extends BaseActivity {
         }
     }
 
-    private byte[] decryptBytes(byte[] encryptBytes) {
-        String account = ContactUserCacheUtils.getUserMail(MyApplication.getInstance().getUid());
-        String key = EncryptUtils.stringToMD5(account);
-
-        try {
-            encryptBytes = EncryptUtils.decode(encryptBytes, key, Constant.MAIL_ENCRYPT_IV);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return encryptBytes;
-    }
 
     private class WebService extends APIInterfaceInstance {
 
@@ -535,12 +538,6 @@ public class MailDetailActivity extends BaseActivity {
                 }
             }
         }
-            @Override
-            public void returnMailDetailFail (String error,int errorCode){
-                WebServiceMiddleUtils.hand(MailDetailActivity.this, error, errorCode);
-            }
-        }
-    }
 
         @Override
         public void returnMailDetailFail(String error, int errorCode) {
@@ -561,7 +558,6 @@ public class MailDetailActivity extends BaseActivity {
         @Override
         public void returnRemoveMailFail(String error, int errorCode) {
             ToastUtils.show(MailDetailActivity.this,"删除邮件失败" );
-            super.returnRemoveMailFail( error, errorCode );
         }
     }
 }
