@@ -80,7 +80,7 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
         setContentView(R.layout.activity_main);
 //        getNecessaryPermission();
         Bundle bundle = new Bundle();
-        bundle.putString("uid","99999");
+        bundle.putString("uid","66666");
         IntentUtils.startActivity(this, UserInfoActivity.class,bundle,true);
     }
 

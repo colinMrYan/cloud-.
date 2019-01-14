@@ -39,32 +39,32 @@ import java.util.ArrayList;
 @ContentView(R.layout.activity_user_info)
 public class UserInfoActivity extends BaseActivity {
 
-    @ViewInject(R.id.department_layout)
+    @ViewInject(R.id.ll_user_department)
     private LinearLayout departmentLayout;
-    @ViewInject(R.id.department_text)
+    @ViewInject(R.id.tv_user_department)
     private TextView departmentText;
 
-    @ViewInject(R.id.telephone_ll)
+    @ViewInject(R.id.ll_user_telephone)
     private LinearLayout telLayout;
-    @ViewInject(R.id.telephone_tv)
+    @ViewInject(R.id.tv_user_telephone)
     private TextView telText;
 
-    @ViewInject(R.id.mail_layout)
+    @ViewInject(R.id.ll_user_mail)
     private LinearLayout mailLayout;
-    @ViewInject(R.id.tv_mail)
+    @ViewInject(R.id.tv_user_mail)
     private TextView mailText;
-    @ViewInject(R.id.contact_layout)
+    @ViewInject(R.id.rl_user_contact)
     private RelativeLayout contactLayout;
-    @ViewInject(R.id.phone_num_text)
+    @ViewInject(R.id.tv_user_phone_num)
     private TextView phoneNumText;
-    @ViewInject(R.id.img_photo)
+    @ViewInject(R.id.iv_user_photo)
     private ImageView photoImg;
-    @ViewInject(R.id.tv_name)
+    @ViewInject(R.id.tv_user_name)
     private TextView nameText;
-    @ViewInject(R.id.duty_tv)
+    @ViewInject(R.id.tv_user_duty)
     private TextView dutyText;
 
-    @ViewInject(R.id.start_chat_img)
+    @ViewInject(R.id.iv_start_chat)
     private TextView startChatImg;
 
     private ContactUser contactUser;
@@ -76,7 +76,6 @@ public class UserInfoActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        LogUtils.YfcDebug("进入UserInfo");
         init();
     }
 
@@ -171,20 +170,20 @@ public class UserInfoActivity extends BaseActivity {
         final String phoneNum = phoneNumText.getText().toString();
         String TelephoneNum = telText.getText().toString();
         switch (v.getId()) {
-            case R.id.mail_img:
+            case R.id.ll_mobile_email:
                 String mail = mailText.getText().toString();
                 AppUtils.sendMail(UserInfoActivity.this, mail, 1);
                 break;
-            case R.id.phone_img:
+            case R.id.ll_mobile_phone:
                 AppUtils.call(UserInfoActivity.this, phoneNum, 1);
                 break;
-            case R.id.short_msg_img:
+            case R.id.ll_mobile_sms:
                 AppUtils.sendSMS(UserInfoActivity.this, phoneNum, 1);
                 break;
             case R.id.back_layout:
                 finish();
                 break;
-            case R.id.img_photo:
+            case R.id.iv_user_photo:
                 Intent intent = new Intent(UserInfoActivity.this,
                         ImagePagerV0Activity.class);
                 ArrayList<String> urls = new ArrayList<>();
@@ -193,16 +192,13 @@ public class UserInfoActivity extends BaseActivity {
                 intent.putStringArrayListExtra("image_urls", urls);
                 startActivity(intent);
                 break;
-            case R.id.start_chat_img:
+            case R.id.iv_start_chat:
                 createDireactChannel();
                 break;
-            case R.id.depart_btn_img:
-                Bundle bundle22 = new Bundle();
-                bundle22.putString("uid", parentUid);
-                IntentUtils.startActivity(UserInfoActivity.this, ContactOrgStructureActivity.class, bundle22);
-                break;
-            case R.id.telephone_iv:
-                AppUtils.call(UserInfoActivity.this, TelephoneNum, 1);
+            case R.id.iv_user_depart_detail:
+                Bundle bundle = new Bundle();
+                bundle.putString("uid", parentUid);
+                IntentUtils.startActivity(UserInfoActivity.this, ContactOrgStructureActivity.class, bundle);
                 break;
             default:
                 break;
