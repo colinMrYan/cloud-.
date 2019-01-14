@@ -1,14 +1,19 @@
 package com.inspur.emmcloud.ui.appcenter.mail;
 
+import android.annotation.TargetApi;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -35,6 +40,7 @@ import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.common.ZipUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
@@ -54,6 +60,7 @@ import org.xutils.x;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.util.List;
 
 /**
@@ -84,7 +91,7 @@ public class MailDetailActivity extends BaseActivity {
     private TextView ccCollapseText;
     @ViewInject(R.id.rl_cc_collapse)
     private RelativeLayout ccCollapseLayout;
-    @ViewInject( R.id.sv_slide_data )
+    @ViewInject(R.id.sv_slide_data)
     QMUIObservableScrollView scrollView;
 
     @ViewInject(R.id.iv_flag_encrypt)
@@ -99,7 +106,7 @@ public class MailDetailActivity extends BaseActivity {
     private ScrollViewWithListView mailAttachmentListView;
     @ViewInject(R.id.wv_content)
     private NoScrollWebView contentWebView;
-    @ViewInject( R.id.rl_send_about )
+    @ViewInject(R.id.rl_send_about)
     private RelativeLayout sendAboutLayout;
     @ViewInject(R.id.progress_bar_load)
     private ProgressBar loadProgressBar;
@@ -122,8 +129,9 @@ public class MailDetailActivity extends BaseActivity {
     }
 
     private void initView() {
+        setMailContentVisible(false);
         encryptImg.setImageResource(mail.isEncrypted() ? R.drawable.ic_mail_flag_encrypt_yes : R.drawable.ic_mail_flag_encrypt_no);
-        encryptImg.setVisibility( mail.isEncrypted()?View.VISIBLE:View.INVISIBLE );
+        encryptImg.setVisibility(mail.isEncrypted() ? View.VISIBLE : View.INVISIBLE);
         topicText.setText(mail.getSubject());
         sendTimeText.setText(TimeUtils.getTime(this, mail.getCreationTimestamp(), TimeUtils.FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE));
         senderText.setText(mail.getDisplaySender());
@@ -140,20 +148,23 @@ public class MailDetailActivity extends BaseActivity {
             initCcExpandTextStatus();
             initCcFlowLayout();
         }
-        final List<MailAttachment> mailAttachmentList = mail.getMailAttachmentList();
-        boolean isMailAttachmentsDownload = checkMailAttachmentsDownload(mailAttachmentList);
-        setMailContentVisible(isMailAttachmentsDownload);
-        if (!isMailAttachmentsDownload){
-           downloadMailAttachments(mailAttachmentList);
+        if (mail.isComplete()) {
+            initMailContentView();
         }
-        mailAttachmentListAdapter = new MailAttachmentListAdapter(this,mail);
+    }
+
+
+    private void initMailContentView() {
+        setMailContentVisible(true);
+        final List<MailAttachment> reallyMailAttachmentList = mail.getReallyMailAttachmentList();
+        mailAttachmentListAdapter = new MailAttachmentListAdapter(this, reallyMailAttachmentList);
         mailAttachmentListView.setAdapter(mailAttachmentListAdapter);
         mailAttachmentListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                MailAttachment mailAttachment = mailAttachmentList.get(position);
-                String attachmentFilePath = MyAppConfig.LOCAL_DOWNLOAD_PATH_MAIL_ATTCACHEMENT +mail.getId()+"/"+ mailAttachment.getName();
-                if (FileUtils.isFileExist(attachmentFilePath)){
+                MailAttachment mailAttachment = reallyMailAttachmentList.get(position);
+                String attachmentFilePath = MyAppConfig.LOCAL_DOWNLOAD_PATH_MAIL_ATTCACHEMENT + mail.getId() + "/" + mailAttachment.getName();
+                if (FileUtils.isFileExist(attachmentFilePath)) {
                     FileUtils.openFile(MailDetailActivity.this, attachmentFilePath);
                 }
 
@@ -169,43 +180,93 @@ public class MailDetailActivity extends BaseActivity {
             webSettings.setDisplayZoomControls(false);
             webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
             webSettings.setLoadWithOverviewMode(true);
-            contentWebView.loadDataWithBaseURL(null,mailBodyText, "text/html", "utf-8",null);
-            contentWebView.setWebChromeClient(new WebChromeClient(){
+            LogUtils.jasonDebug(mailBodyText);
+            contentWebView.loadDataWithBaseURL(null, mailBodyText, "text/html", "utf-8", null);
+            contentWebView.setWebChromeClient(new WebChromeClient() {
                 @Override
                 public void onProgressChanged(WebView view, int newProgress) {
                     super.onProgressChanged(view, newProgress);
-                    if (newProgress == 100){
+                    if (newProgress == 100) {
                         view.loadUrl("javascript: var meta = document.createElement('meta'); meta.setAttribute('name', 'viewport'); meta.setAttribute('content', 'width=device-width'); document.getElementsByTagName('head')[0].appendChild(meta);");
                     }
                 }
             });
+            contentWebView.setWebViewClient(new WebViewClient() {
+                @Override
+                public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
+                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+                        WebResourceResponse webResourceResponse = getWebResourceResponse(url);
+                        if (webResourceResponse != null) {
+                            return webResourceResponse;
+                        }
+
+                    }
+                    return super.shouldInterceptRequest(view, url);
+                }
+
+                @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+                @Override
+                public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
+                    WebResourceResponse webResourceResponse = getWebResourceResponse(request.getUrl().toString());
+                    if (webResourceResponse != null) {
+                        return webResourceResponse;
+                    }
+                    return super.shouldInterceptRequest(view, request);
+
+                }
+            });
         }
 
-        scrollView.addOnScrollChangedListener( new QMUIObservableScrollView.OnScrollChangedListener() {
+        scrollView.addOnScrollChangedListener(new QMUIObservableScrollView.OnScrollChangedListener() {
             @Override
             public void onScrollChanged(QMUIObservableScrollView qmuiObservableScrollView, int i, int i1, int i2, int i3) {
                 int oldt = i3;
                 int t = i1;
                 if (oldt > t && oldt - t > 20) {
-                    sendAboutLayout.setVisibility( View.VISIBLE );
+                    sendAboutLayout.setVisibility(View.VISIBLE);
                 } else if (oldt < t && t - oldt > 20) {
-                    sendAboutLayout.setVisibility( View.GONE );
+                    sendAboutLayout.setVisibility(View.GONE);
                 }
             }
-        } );
+        });
+    }
 
+    private WebResourceResponse getWebResourceResponse(String url) {
+        WebResourceResponse webResourceResponse = null;
+        for (MailAttachment mailAttachment : mail.getMailAttachmentList()) {
+            if (!mailAttachment.isAttachment()) {
+                if (url.contains(mailAttachment.getContentId())) {
+                    String attachmentFilePath = MyAppConfig.LOCAL_DOWNLOAD_PATH_MAIL_ATTCACHEMENT + mail.getId() + "/" + mailAttachment.getName();
+                    if (FileUtils.isFileExist(attachmentFilePath)) {
+                        try {
+                            File attachmentFile = new File(attachmentFilePath);
+                            FileInputStream fileInputStream = new FileInputStream(attachmentFile);
+                            String mimeType = FileUtils.getMimeType(attachmentFile);
+                            webResourceResponse = new WebResourceResponse(mimeType, "UTF-8", fileInputStream);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+
+                    break;
+                }
+            }
+        }
+        return webResourceResponse;
     }
 
     /**
      * 判断是否所有的附件下载完成
+     *
      * @param mailAttachmentList
      * @return
      */
-    private boolean checkMailAttachmentsDownload(List<MailAttachment> mailAttachmentList){
+    private boolean checkMailAttachmentsDownload(List<MailAttachment> mailAttachmentList) {
         boolean isMailAttachmentsDownload = true;
-        for (MailAttachment mailAttachment:mailAttachmentList){
-            String attachmentFilePath = MyAppConfig.LOCAL_DOWNLOAD_PATH_MAIL_ATTCACHEMENT +mail.getId()+"/"+ mailAttachment.getName();
-            if (!FileUtils.isFileExist(attachmentFilePath)){
+        for (MailAttachment mailAttachment : mailAttachmentList) {
+            String attachmentFilePath = MyAppConfig.LOCAL_DOWNLOAD_PATH_MAIL_ATTCACHEMENT + mail.getId() + "/" + mailAttachment.getName();
+            if (!FileUtils.isFileExist(attachmentFilePath)) {
                 isMailAttachmentsDownload = false;
                 break;
             }
@@ -215,18 +276,19 @@ public class MailDetailActivity extends BaseActivity {
 
     /**
      * 设置邮件内容是否可见
+     *
      * @param isVisible
      */
-    private void setMailContentVisible(boolean isVisible){
-        mailAttachmentListView.setVisibility(isVisible?View.VISIBLE:View.GONE);
-        contentWebView.setVisibility(isVisible?View.VISIBLE:View.GONE);
-        loadProgressBar.setVisibility(isVisible?View.GONE:View.VISIBLE);
+    private void setMailContentVisible(boolean isVisible) {
+        mailAttachmentListView.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        contentWebView.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        loadProgressBar.setVisibility(isVisible ? View.GONE : View.VISIBLE);
     }
 
-    private void downloadMailAttachments(final List<MailAttachment> mailAttachmentList){
-        for (final MailAttachment mailAttachment:mailAttachmentList){
-            final String mailAttachmentFilePath = MyAppConfig.LOCAL_DOWNLOAD_PATH_MAIL_ATTCACHEMENT +mail.getId()+"/"+(mail.isEncrypted()?System.currentTimeMillis()+".tmp": mailAttachment.getName());
-            if (FileUtils.isFileExist(mailAttachmentFilePath)){
+    private void downloadMailAttachments(final List<MailAttachment> mailAttachmentList) {
+        for (final MailAttachment mailAttachment : mailAttachmentList) {
+            final String mailAttachmentFilePath = MyAppConfig.LOCAL_DOWNLOAD_PATH_MAIL_ATTCACHEMENT + mail.getId() + "/" + (mail.isEncrypted() ? System.currentTimeMillis() + ".tmp" : mailAttachment.getName());
+            if (FileUtils.isFileExist(mailAttachmentFilePath)) {
                 return;
             }
             String source = APIUri.getMailAttachmentUrl();
@@ -245,13 +307,22 @@ public class MailDetailActivity extends BaseActivity {
 
                 @Override
                 public void callbackSuccess(File file) {
-                    if (mail.isEncrypted()){
+                    if (mail.isEncrypted()) {
                         byte[] encryptBytes = FileUtils.file2Bytes(file.getPath());
                         byte[] decryptBytes = decryptBytes(encryptBytes);
-                        FileUtils.writeFile(MyAppConfig.LOCAL_DOWNLOAD_PATH_MAIL_ATTCACHEMENT +mail.getId()+"/"+mailAttachment.getName(),new ByteArrayInputStream(decryptBytes));
+                        //如果是加密邮件中真正的附件，需要解密后再解压缩
+                        if (mailAttachment.isAttachment()) {
+                            decryptBytes = ZipUtils.unGzipcompress(decryptBytes);
+                        }
+                        FileUtils.writeFile(MyAppConfig.LOCAL_DOWNLOAD_PATH_MAIL_ATTCACHEMENT + mail.getId() + "/" + mailAttachment.getName(), new ByteArrayInputStream(decryptBytes));
                         FileUtils.deleteFile(file.getAbsolutePath());
                     }
-                    setMailContentVisible(checkMailAttachmentsDownload(mailAttachmentList));
+                    boolean isMailAttachmentsDownload = checkMailAttachmentsDownload(mailAttachmentList);
+                    if (isMailAttachmentsDownload) {
+                        mail.setComplete(true);
+                        MailCacheUtils.saveMail(mail);
+                        initView();
+                    }
                 }
 
                 @Override
@@ -265,12 +336,12 @@ public class MailDetailActivity extends BaseActivity {
             };
 
             RequestParams params = MyApplication.getInstance().getHttpRequestParams(source);
-            params.addQueryStringParameter("itemId",mailAttachment.getId());
+            params.addQueryStringParameter("itemId", mailAttachment.getId());
             params.setAutoResume(true);// 断点下载
             params.setSaveFilePath(mailAttachmentFilePath);
             params.setCancelFast(true);
             params.setMethod(HttpMethod.GET);
-            Callback.Cancelable cancelable =  x.http().get(params, callBack);
+            Callback.Cancelable cancelable = x.http().get(params, callBack);
         }
 
 
@@ -386,28 +457,28 @@ public class MailDetailActivity extends BaseActivity {
         }
     }
 
-    private void intentMailSendActivity(String extraMailModel){
+    private void intentMailSendActivity(String extraMailModel) {
         Bundle bundle = new Bundle();
-        bundle.putString(MailSendActivity.EXTRA_MAIL_ID,mail.getId());
-        bundle.putString(MailSendActivity.EXTRA_MAIL_MODEL,extraMailModel);
-        IntentUtils.startActivity(this,MailSendActivity.class,bundle);
+        bundle.putString(MailSendActivity.EXTRA_MAIL_ID, mail.getId());
+        bundle.putString(MailSendActivity.EXTRA_MAIL_MODEL, extraMailModel);
+        IntentUtils.startActivity(this, MailSendActivity.class, bundle);
     }
 
     private void getMailDetail() {
         if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
             apiService = new MailApiService(this);
             apiService.setAPIInterface(new WebService());
-            apiService.getMailDetail(mail.getId(),mail.isEncrypted());
+            apiService.getMailDetail(mail.getId(), mail.isEncrypted());
         }
     }
 
-    private byte[] decryptBytes(byte[] encryptBytes){
+    private byte[] decryptBytes(byte[] encryptBytes) {
         String account = ContactUserCacheUtils.getUserMail(MyApplication.getInstance().getUid());
         String key = EncryptUtils.stringToMD5(account);
 
-        try{
-            encryptBytes = EncryptUtils.decode(encryptBytes,key, Constant.MAIL_ENCRYPT_IV);
-        }catch (Exception e){
+        try {
+            encryptBytes = EncryptUtils.decode(encryptBytes, key, Constant.MAIL_ENCRYPT_IV);
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return encryptBytes;
@@ -417,24 +488,27 @@ public class MailDetailActivity extends BaseActivity {
 
         @Override
         public void returnMailDetailSuccess(byte[] response) {
-            if (mail.isEncrypted()){
+            if (mail.isEncrypted()) {
                 response = decryptBytes(response);
             }
-            if (response != null){
-                LogUtils.jasonDebug("response="+new String(response));
+            if (response != null) {
                 mail = new Mail(new String(response));
-                mail.setComplete(true);
                 mail.setFolderId(MailDetailActivity.this.mail.getFolderId());
-                MailCacheUtils.saveMail(mail);
                 MailDetailActivity.this.mail = mail;
-                initView();
+                List<MailAttachment> mailAttachmentList = mail.getMailAttachmentList();
+                boolean isMailAttachmentsDownload = checkMailAttachmentsDownload(mailAttachmentList);
+                if (isMailAttachmentsDownload) {
+                    mail.setComplete(true);
+                    MailCacheUtils.saveMail(mail);
+                    initView();
+                } else {
+                    downloadMailAttachments(mailAttachmentList);
+                }
             }
-
         }
-
-        @Override
-        public void returnMailDetailFail(String error, int errorCode) {
-            WebServiceMiddleUtils.hand(MailDetailActivity.this, error, errorCode);
+            @Override
+            public void returnMailDetailFail (String error,int errorCode){
+                WebServiceMiddleUtils.hand(MailDetailActivity.this, error, errorCode);
+            }
         }
     }
-}

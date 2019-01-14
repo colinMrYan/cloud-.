@@ -78,6 +78,7 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
         }
         setContentView(R.layout.activity_main);
         getNecessaryPermission();
+        //IntentUtils.startActivity(this, MailHomeActivity.class,true);
     }
 
     private void getNecessaryPermission() {
