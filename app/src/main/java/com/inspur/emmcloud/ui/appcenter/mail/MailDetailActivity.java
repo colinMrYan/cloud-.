@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -25,6 +26,8 @@ import com.inspur.emmcloud.api.apiservice.MailApiService;
 import com.inspur.emmcloud.bean.appcenter.mail.Mail;
 import com.inspur.emmcloud.bean.appcenter.mail.MailAttachment;
 import com.inspur.emmcloud.bean.appcenter.mail.MailRecipient;
+import com.inspur.emmcloud.bean.appcenter.mail.RemoveItemModel;
+import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.DensityUtil;
@@ -46,6 +49,7 @@ import com.inspur.emmcloud.widget.ScrollViewWithListView;
 import com.inspur.imp.plugin.file.FileUtil;
 import com.qmuiteam.qmui.widget.QMUIObservableScrollView;
 
+import org.greenrobot.eventbus.EventBus;
 import org.xutils.common.Callback;
 import org.xutils.http.HttpMethod;
 import org.xutils.http.RequestParams;
@@ -54,6 +58,7 @@ import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -321,6 +326,9 @@ public class MailDetailActivity extends BaseActivity {
                 intentMailSendActivity(MailSendActivity.MODEL_REPLY);
                 break;
             case R.id.bt_mail_delete:
+                String removeMail = getRemoveMailInfo( mail);
+                LogUtils.LbcDebug( "removeMail::"+removeMail );
+                removeCurrentMail( removeMail );
                 break;
             case R.id.bt_mail_tab:
                 break;
@@ -348,6 +356,27 @@ public class MailDetailActivity extends BaseActivity {
                 break;
             case R.id.tv_install_cert:
                 break;
+        }
+    }
+
+    /**获取删除邮件信息*/
+    private String  getRemoveMailInfo(Mail RemoveMail){
+        RemoveItemModel removeItemModel = new RemoveItemModel();
+        removeItemModel.setDeleteMode( 2 );
+        removeItemModel.setEmail(RemoveMail.getFromMailRecipient().getAddress());
+        List<String> removeMailId = new ArrayList<>();
+        removeMailId.add(RemoveMail.getId());
+        removeItemModel.setItemIds(removeMailId);
+        String removeMailJSON= JSON.toJSONString( removeItemModel );
+        return removeMailJSON;
+    }
+
+    /**删除当前邮件*/
+    private void removeCurrentMail(String removeItemModel){
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
+            apiService = new MailApiService(this);
+            apiService.setAPIInterface(new WebService());
+            apiService.removeMail(removeItemModel);
         }
     }
 
@@ -380,7 +409,6 @@ public class MailDetailActivity extends BaseActivity {
     }
 
     private class WebService extends APIInterfaceInstance {
-
         @Override
         public void returnMailDetailSuccess(byte[] response) {
             if (mail.isEncrypted()){
@@ -396,13 +424,29 @@ public class MailDetailActivity extends BaseActivity {
                 MailDetailActivity.this.mail = mail;
                 initView();
             }
-
         }
 
         @Override
         public void returnMailDetailFail(String error, int errorCode) {
             LoadingDialog.dimissDlg(loadingDlg);
             WebServiceMiddleUtils.hand(MailDetailActivity.this, error, errorCode);
+        }
+
+        @Override
+        public void returnRemoveMailSuccess(byte[] arg0) {
+            List<String> mailIdList = new ArrayList<>();
+            mailIdList.add(mail.getId().toString() );
+            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_MAIL_REMOVE_SUCCESS,mailIdList));
+            LogUtils.LbcDebug( "returndata"+String.valueOf( arg0 ) );
+            ToastUtils.show(MailDetailActivity.this,"删除邮件成功:::"+String.valueOf(arg0) );
+            finish();
+            super.returnRemoveMailSuccess( arg0 );
+        }
+
+        @Override
+        public void returnRemoveMailFail(String error, int errorCode) {
+            ToastUtils.show(MailDetailActivity.this,"删除邮件失败" );
+            super.returnRemoveMailFail( error, errorCode );
         }
     }
 }

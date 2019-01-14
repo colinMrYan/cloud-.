@@ -11,16 +11,13 @@ import com.inspur.emmcloud.api.HttpUtils;
 import com.inspur.emmcloud.bean.appcenter.mail.GetMailFolderResult;
 import com.inspur.emmcloud.bean.appcenter.mail.GetMailListResult;
 import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.interf.OauthCallBack;
-import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.privates.OauthUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
 
 import org.xutils.http.RequestParams;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
 
 import static com.inspur.emmcloud.MyApplication.getInstance;
 
@@ -118,7 +115,6 @@ public class MailApiService {
         });
     }
 
-
     public void getMailDetail(final String mailId,final boolean isEncrypted){
         String completeUrl = APIUri.getMailDetailUrl(isEncrypted);
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
@@ -197,52 +193,6 @@ public class MailApiService {
         });
     }
 
-
-    //
-//    /**
-//     *
-//     * @param mail   邮箱
-//     */
-//    public void uploadMailFile(String mail ) {
-//
-//        final String Url = APIUri.getMailReciveUrl();
-//        RequestParams params = MyApplication.getInstance().getHttpRequestParams(Url);
-//        params.setBodyContent( mail );
-//        params.setAsJsonContent( true );
-//        HttpUtils.request( context, CloudHttpMethod.POST, params, new APICallback( context, Url ) {
-//            @Override
-//            public void callbackSuccess(byte[] arg0) {
-//                apiInterface.returnMailCertificateUploadSuccess( arg0 );
-//            }
-//
-//            @Override
-//            public void callbackFail(String error, int responseCode) {
-//                LogUtils.LbcDebug("Error"+error +"ErrorCode"+responseCode );
-//                apiInterface.returnMailCertificateUploadFail( error, responseCode );
-//            }
-//
-//            @Override
-//            public void callbackTokenExpire(long requestTime) {
-//                OauthCallBack oauthCallBack = new OauthCallBack() {
-//                    @Override
-//                    public void reExecute() {
-//                        getCloudConnectStateUrl(Url);
-//                    }
-//
-//                    @Override
-//                    public void executeFailCallback() {
-//                        callbackFail("", -1);
-//                    }
-//                };
-//                OauthUtils.getInstance().refreshToken(
-//                        oauthCallBack, requestTime);
-//
-//            }
-//        } );
-//    }
-//
-
-
     /**
      *
      * @param mail   邮箱
@@ -286,25 +236,28 @@ public class MailApiService {
         } );
     }
 
-
+    /**
+     *发送加密邮件*/
     public void sendEncryptMail(final byte[] mailContent){
-        final String url = APIUri.getMailReciveUrl();
+        final String url = APIUri.getUploadMailUrl();
         RequestParams params = MyApplication.getInstance().getHttpRequestParams( url );
         params.setMultipart(true);
         params.addQueryStringParameter("mail", PreferencesByUsersUtils.getString(MyApplication.getInstance(), Constant.PREF_MAIL_ACCOUNT));
         params.addBodyParameter("file", new ByteArrayInputStream( mailContent ),"application/octet-stream","111");
-        String fileName = System.currentTimeMillis()+".aa";
-        String path = MyAppConfig.LOCAL_DOWNLOAD_PATH+fileName;
-        FileUtils.writeFile(new File(path),new ByteArrayInputStream(mailContent));
+//        String fileName = System.currentTimeMillis()+".aa";
+//        String path = MyAppConfig.LOCAL_DOWNLOAD_PATH+fileName;
+//        FileUtils.writeFile(new File(path),new ByteArrayInputStream(mailContent));
        // params.addBodyParameter("file",new File(path));
         params.setAsJsonContent(true);
         HttpUtils.request( context, CloudHttpMethod.POST, params, new APICallback(context, url ) {
             @Override
             public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnSendMailSuccess( arg0 );
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
+                apiInterface.returnSendMailFail( error,responseCode );
             }
 
             @Override
@@ -315,6 +268,40 @@ public class MailApiService {
                         sendEncryptMail(mailContent);
                     }
 
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+        } );
+    }
+
+    /**
+     *删除邮件*/
+    public void removeMail(final String mailInfo){
+        final String url = APIUri.getRemoveMailUrl();
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams( url );
+        params.setBodyContent(mailInfo);
+        params.setAsJsonContent(true);
+        HttpUtils.request( context, CloudHttpMethod.POST, params, new APICallback(context, url ) {
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnRemoveMailSuccess( arg0 );
+            }
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnRemoveMailFail( error,responseCode );
+            }
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        removeMail( mailInfo );
+                    }
                     @Override
                     public void executeFailCallback() {
                         callbackFail("", -1);

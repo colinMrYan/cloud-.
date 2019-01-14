@@ -65,6 +65,7 @@ public class MailListAdapter extends BaseAdapter {
             viewHolder.topicText = (TextView) convertView.findViewById(R.id.tv_topic);
             viewHolder.encryptFlagImg = (ImageView) convertView.findViewById(R.id.iv_flag_encrypt);
             viewHolder.signFlagImg = (ImageView) convertView.findViewById(R.id.iv_flag_sign);
+            viewHolder.selectImageView=(ImageView) convertView.findViewById( R.id.iv_left_check );
             viewHolder.unReadView = convertView.findViewById(R.id.v_unread);
             convertView.setTag(viewHolder);
         }else {
@@ -85,6 +86,8 @@ public class MailListAdapter extends BaseAdapter {
         viewHolder.encryptFlagImg.setVisibility(mail.isEncrypted()?View.VISIBLE:View.INVISIBLE );
         viewHolder.unReadView.setVisibility(mail.isRead()?View.GONE:View.VISIBLE);
         viewHolder.timeText.setText(time);
+        viewHolder.selectImageView.setVisibility( mail.isHideLeftCheck()?View.GONE:View.VISIBLE);
+        viewHolder.selectImageView.setImageResource( mail.isDelectItem()?R.drawable.ic_volume_file_selct_yes:R.drawable.ic_volume_file_selct_no);
         return convertView;
     }
 
@@ -95,6 +98,7 @@ public class MailListAdapter extends BaseAdapter {
         TextView timeText;
         TextView topicText;
        View unReadView;
+       ImageView selectImageView;
     }
 
 //    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {

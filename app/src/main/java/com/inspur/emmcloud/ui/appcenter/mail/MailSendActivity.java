@@ -116,7 +116,6 @@ public class MailSendActivity extends BaseActivity {
             public void afterTextChanged(Editable s) {
                 String data;
             }
-
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.toString().length() > 1 && ' ' == s.charAt( s.length() - 1 )) {
@@ -124,16 +123,10 @@ public class MailSendActivity extends BaseActivity {
                 }
             }
         } );
-        recipientRichEdit.setOnClickListener( new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            }
-        } );
         recipientRichEdit.setOnFocusChangeListener( new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-                } else {
+                if (!hasFocus) {
                     recipientRichEdit.insertLastManualData( -1 );
                 }
             }
@@ -151,7 +144,6 @@ public class MailSendActivity extends BaseActivity {
             @Override
             public void afterTextChanged(Editable s) {
             }
-
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.toString().length() > 1 && ' ' == s.charAt( s.length() - 1 )) {
@@ -170,36 +162,16 @@ public class MailSendActivity extends BaseActivity {
         ccRecipientRichEdit.setOnFocusChangeListener( new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-                } else {
+                if (!hasFocus) {
                     ccRecipientRichEdit.insertLastManualData( -1 );
                 }
-            }
-        } );
-
-        recipientsShowText.setOnClickListener( new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                recipientsShowText.setVisibility( View.GONE );
-                recipientRichEdit.setVisibility( View.VISIBLE );
-            }
-        } );
-        ccRecipientsShowText.setOnClickListener( new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ccRecipientRichEdit.setVisibility( View.VISIBLE );
-                ccRecipientsShowText.setVisibility( View.GONE );
             }
         } );
 
         fwBodyCheckBox.setOnCheckedChangeListener( new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (b) {
-                    fwBodyWebView.setVisibility( View.VISIBLE );
-                } else {
-                    fwBodyWebView.setVisibility( View.GONE );
-                }
+                fwBodyWebView.setVisibility(b? View.VISIBLE:View.GONE );
             }
         } );
         Bundle mailBundle = getIntent().getExtras();
@@ -212,7 +184,6 @@ public class MailSendActivity extends BaseActivity {
             switch (replyMailMode) {
                 case MODEL_NEW:
                     headerTitleText.setText( "发邮件" );
-
                     break;
                 case MODEL_REPLY:
                     String string = JSON.toJSONString( ((Object) replayMail) );
@@ -285,16 +256,7 @@ public class MailSendActivity extends BaseActivity {
         } else {
             myCertificate = (MailCertificateDetail) object;
         }
-
-
-
-
     }
-
-
-    /**
-     *为邮件设置加密加签提示*/
-
 
     /**
      * 转发、回复等插入收件人
@@ -336,36 +298,28 @@ public class MailSendActivity extends BaseActivity {
      *发邮件时提醒*/
     private void noSignOrEncryptHintDialog(){
         if(!myCertificate.isSignedMail()||!myCertificate.isEncryptedMail()){
-            String signedMail = myCertificate.isSignedMail()?"":"加签";
-            String encryptMail= myCertificate.isEncryptedMail()?"":"加密";
             String mailHint   = "该邮件未"+(myCertificate.isSignedMail()?"":"加签")+(myCertificate.isEncryptedMail()?"":"加密")+"确定发送？";
             new MyQMUIDialog.MessageDialogBuilder(MailSendActivity.this)
                     .setMessage(mailHint)
                     .addAction(getString(R.string.cancel), new QMUIDialogAction.ActionListener() {
                         @Override
                         public void onClick(QMUIDialog dialog, int index) {
-                            dialog.dismiss();
-                        }
+                            dialog.dismiss();}
                     })
                     .addAction(getString(R.string.ok), new QMUIDialogAction.ActionListener() {
                         @Override
                         public void onClick(QMUIDialog dialog, int index) {
                             try {
-                                sendMail();
+                                sendMail();   //发送邮件
                             } catch (Exception e) {
                                 LogUtils.LbcDebug( "Error" );
-                                e.printStackTrace();
-                            }
-                            dialog.dismiss();
-
-                        }
-                    })
-                    .show();
+                                e.printStackTrace();}
+                            dialog.dismiss();}
+                    }).show();
         }else{
             try {
                 sendMail();
             } catch (Exception e) {
-                LogUtils.LbcDebug( "Error" );
                 e.printStackTrace();
             }
         }
@@ -379,7 +333,6 @@ public class MailSendActivity extends BaseActivity {
         String key = EncryptUtils.stringToMD5(mailSend.getFrom().getAddress().toString());
         byte[] mailContent = EncryptUtils.encodeNoBase64(jsonMail, key,Constant.MAIL_ENCRYPT_IV);
         if (NetUtils.isNetworkConnected( this )) {
-            LogUtils.LbcDebug( "准备发送邮件" );
             MailApiService apiService = new MailApiService( this );
             apiService.setAPIInterface( new WebService() );
             apiService.sendEncryptMail(mailContent);
@@ -392,32 +345,33 @@ public class MailSendActivity extends BaseActivity {
         switch (v.getId()) {
             case R.id.tv_send_mail:
                 if (recipientList.size() == 0) {
-                    //showxx();
+                    ToastUtils.show( this,"至少添加一个收件人" );
                     return;
                 }
                 noSignOrEncryptHintDialog();
-
                 break;
             case R.id.iv_recipients:
+                fwTipImageView.setVisibility( View.GONE );
+                fwBodyLayout.setVisibility( View.VISIBLE );
                 recipientRichEdit.insertLastManualData( 0 );
                 Intent intent = new Intent();
                 intent.putExtra( ContactSearchFragment.EXTRA_TYPE, 2 );
                 intent.putExtra( ContactSearchFragment.EXTRA_EXCLUDE_SELECT, memberUidList );
                 intent.putExtra( ContactSearchFragment.EXTRA_MULTI_SELECT, true );
                 intent.putExtra( ContactSearchFragment.EXTRA_TITLE, "添加收件人" );
-                intent.setClass( getApplicationContext(),
-                        ContactSearchActivity.class );
+                intent.setClass( getApplicationContext(), ContactSearchActivity.class );
                 startActivityForResult( intent, QEQUEST_ADD_MEMBER );
                 break;
             case R.id.iv_cc_recipients:
+                ccRecipientsShowText.setVisibility( View.GONE );
+                ccRecipientRichEdit.setVisibility( View.VISIBLE );
                 ccRecipientRichEdit.insertLastManualData( 0 );
                 Intent intent1 = new Intent();
                 intent1.putExtra( ContactSearchFragment.EXTRA_TYPE, 2 );
                 intent1.putExtra( ContactSearchFragment.EXTRA_EXCLUDE_SELECT, memberUidList );
                 intent1.putExtra( ContactSearchFragment.EXTRA_MULTI_SELECT, true );
                 intent1.putExtra( ContactSearchFragment.EXTRA_TITLE, "添加抄送人" );
-                intent1.setClass( getApplicationContext(),
-                        ContactSearchActivity.class );
+                intent1.setClass( getApplicationContext(), ContactSearchActivity.class );
                 startActivityForResult( intent1, QEQUEST_CC_MEMBER );
                 break;
             case R.id.iv_fw_tip:
@@ -426,6 +380,14 @@ public class MailSendActivity extends BaseActivity {
                 break;
             case R.id.rl_back:
                 finish();
+                break;
+            case R.id.tv_recipients_show:
+                recipientsShowText.setVisibility( View.GONE );
+                recipientRichEdit.setVisibility( View.VISIBLE );
+                break;
+            case R.id.tv_cc_recipient_show:
+                ccRecipientsShowText.setVisibility( View.GONE );
+                ccRecipientRichEdit.setVisibility( View.VISIBLE );
                 break;
             default:
                 break;

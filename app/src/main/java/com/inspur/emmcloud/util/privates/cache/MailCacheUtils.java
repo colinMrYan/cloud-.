@@ -2,6 +2,8 @@ package com.inspur.emmcloud.util.privates.cache;
 
 import com.inspur.emmcloud.bean.appcenter.mail.Mail;
 
+import org.xutils.db.sqlite.WhereBuilder;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,5 +68,20 @@ public class MailCacheUtils {
             mailList = new ArrayList<>();
         }
         return mailList;
+    }
+
+    public static boolean removeMailListByMailIdList( List<String> mailIdList){
+        List<Mail> mailList = null;
+        try {
+            WhereBuilder b = WhereBuilder.b();
+            for(int i=0;i<mailIdList.size();i++){
+                b.and("id","=",mailIdList.get(i)); //构造修改的条件
+            }
+            DbCacheUtils.getDb().delete(Mail.class,b);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

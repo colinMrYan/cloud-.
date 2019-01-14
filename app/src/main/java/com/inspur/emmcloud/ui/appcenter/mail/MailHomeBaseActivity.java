@@ -101,7 +101,7 @@ public class MailHomeBaseActivity extends BaseFragmentActivity implements AllInt
                 closeMenu();
                 break;
             case R.id.tv_mail_acount:
-                IntentUtils.startActivity(this,MailCertificateInstallActivity.class);
+
                 break;
         }
     }
