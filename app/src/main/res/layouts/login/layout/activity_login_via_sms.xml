@@ -29,9 +29,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:errorEnabled="true"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
-            android:layout_marginTop="35dp">
+           >
 
             <com.inspur.emmcloud.widget.ClearEditText
                 android:id="@+id/et_phone"
@@ -42,7 +40,7 @@
                 android:paddingRight="12dp"
                 android:inputType="textEmailAddress"
                 android:imeOptions="actionNext"
-                android:hint="@string/mail"
+                android:hint="@string/login_please_input_phone_num"
                 android:singleLine="true"
                 android:textColor="#333333"
                 android:textSize="16sp"
@@ -57,16 +55,14 @@
             android:layout_height="wrap_content"
             app:passwordToggleDrawable="@drawable/app_edittext_eye_selector"
             app:passwordToggleEnabled="true"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
             >
             <EditText
-                android:id="@+id/et_password"
+                android:id="@+id/et_captcha"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
                 android:imeOptions="actionDone"
                 android:inputType="textPassword"
-                android:hint="@string/password"
+                android:hint="@string/login_please_input_captchas"
                 android:singleLine="true"
                 android:gravity="center_vertical"
                 android:textColor="#333333"
@@ -113,7 +109,7 @@
             android:layout_height="46dp"
             android:layout_marginLeft="4dp"
             android:layout_marginRight="4dp"
-            android:layout_marginTop="28dp"
+            android:layout_marginTop="40dp"
             android:background="@drawable/bg_login_btn_unable"
             android:enabled="false"
             android:gravity="center"
@@ -122,30 +118,7 @@
             android:textColor="@color/white"
             android:textSize="16sp" />
 
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="17dp"
-            android:background="@null"
-            android:text="@string/login_to_register"
-            android:id="@+id/tv_register"
-            android:textColor="#733E4A59"
-            android:textSize="13sp" />
-
-
     </LinearLayout>
-    <Button
-        android:id="@+id/bt_more"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"
-        android:background="@null"
-        android:onClick="onClick"
-        android:padding="10dp"
-        android:text="@string/more"
-        android:textColor="#FF36A5F6"
-        android:textSize="13sp" />
 </RelativeLayout>
 
 
