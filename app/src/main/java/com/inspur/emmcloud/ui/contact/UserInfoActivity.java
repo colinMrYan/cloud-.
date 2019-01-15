@@ -36,19 +36,24 @@ import org.xutils.view.annotation.ViewInject;
 
 import java.util.ArrayList;
 
+/**
+ * 从群聊，单聊，通讯录等位置进入的个人信息页面
+ * 规范化改造代码
+ */
 @ContentView(R.layout.activity_user_info)
 public class UserInfoActivity extends BaseActivity {
+
+    private static final String USER_UID = "uid";
+    private static final int USER_INFO_ACTIVITY_REQUEST_CODE = 1;
 
     @ViewInject(R.id.ll_user_department)
     private LinearLayout departmentLayout;
     @ViewInject(R.id.tv_user_department)
     private TextView departmentText;
-
     @ViewInject(R.id.ll_user_telephone)
     private LinearLayout telLayout;
     @ViewInject(R.id.tv_user_telephone)
     private TextView telText;
-
     @ViewInject(R.id.ll_user_mail)
     private LinearLayout mailLayout;
     @ViewInject(R.id.tv_user_mail)
@@ -63,18 +68,14 @@ public class UserInfoActivity extends BaseActivity {
     private TextView nameText;
     @ViewInject(R.id.tv_user_duty)
     private TextView dutyText;
-
     @ViewInject(R.id.iv_start_chat)
     private TextView startChatImg;
 
     private ContactUser contactUser;
-    private final static int MY_PERMISSIONS_PHONECALL = 0;
-    private final static int MY_PERMISSIONS_SMS = 1;
     private String parentUid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         init();
     }
@@ -92,9 +93,8 @@ public class UserInfoActivity extends BaseActivity {
         if (scheme != null) {
             String uri = getIntent().getDataString();
             uid = uri.split("//")[1];
-        } else if (getIntent().hasExtra("uid")) {
-            uid = getIntent().getExtras().getString("uid");
-
+        } else if (getIntent().hasExtra(USER_UID)) {
+            uid = getIntent().getExtras().getString(USER_UID);
         }
         if (!StringUtils.isBlank(uid)) {
             parentUid = uid;
@@ -162,23 +162,20 @@ public class UserInfoActivity extends BaseActivity {
         } else {
             startChatImg.setVisibility(View.VISIBLE);
         }
-
     }
 
-
     public void onClick(View v) {
-        final String phoneNum = phoneNumText.getText().toString();
-        String TelephoneNum = telText.getText().toString();
+        final String phoneNum = contactUser.getMobile();
         switch (v.getId()) {
             case R.id.ll_mobile_email:
                 String mail = mailText.getText().toString();
-                AppUtils.sendMail(UserInfoActivity.this, mail, 1);
+                AppUtils.sendMail(UserInfoActivity.this, mail, USER_INFO_ACTIVITY_REQUEST_CODE);
                 break;
             case R.id.ll_mobile_phone:
-                AppUtils.call(UserInfoActivity.this, phoneNum, 1);
+                AppUtils.call(UserInfoActivity.this, phoneNum, USER_INFO_ACTIVITY_REQUEST_CODE);
                 break;
             case R.id.ll_mobile_sms:
-                AppUtils.sendSMS(UserInfoActivity.this, phoneNum, 1);
+                AppUtils.sendSMS(UserInfoActivity.this, phoneNum, USER_INFO_ACTIVITY_REQUEST_CODE);
                 break;
             case R.id.back_layout:
                 finish();
@@ -188,16 +185,16 @@ public class UserInfoActivity extends BaseActivity {
                         ImagePagerV0Activity.class);
                 ArrayList<String> urls = new ArrayList<>();
                 urls.add(APIUri.getChannelImgUrl(UserInfoActivity.this, contactUser.getId()));
-                intent.putExtra("image_index", 0);
-                intent.putStringArrayListExtra("image_urls", urls);
+                intent.putExtra(ImagePagerV0Activity.EXTRA_IMAGE_INDEX, 0);
+                intent.putStringArrayListExtra(ImagePagerV0Activity.EXTRA_IMAGE_URLS, urls);
                 startActivity(intent);
                 break;
             case R.id.iv_start_chat:
-                createDireactChannel();
+                createDirectChannel();
                 break;
             case R.id.iv_user_depart_detail:
                 Bundle bundle = new Bundle();
-                bundle.putString("uid", parentUid);
+                bundle.putString(USER_UID, parentUid);
                 IntentUtils.startActivity(UserInfoActivity.this, ContactOrgStructureActivity.class, bundle);
                 break;
             default:
@@ -205,11 +202,7 @@ public class UserInfoActivity extends BaseActivity {
         }
     }
 
-    /**
-     * 创建单聊
-     */
-    private void createDireactChannel() {
-        // TODO Auto-generated method stub
+    private void createDirectChannel() {
         if (MyApplication.getInstance().isV1xVersionChat()) {
             new ConversationCreateUtils().createDirectConversation(UserInfoActivity.this, contactUser.getId(),
                     new ConversationCreateUtils.OnCreateDirectConversationListener() {
@@ -222,17 +215,14 @@ public class UserInfoActivity extends BaseActivity {
 
                         @Override
                         public void createDirectConversationFail() {
-
                         }
                     });
         } else {
             new ChatCreateUtils().createDirectChannel(UserInfoActivity.this, contactUser.getId(),
                     new ChatCreateUtils.OnCreateDirectChannelListener() {
-
                         @Override
                         public void createDirectChannelSuccess(
                                 GetCreateSingleChannelResult getCreateSingleChannelResult) {
-                            // TODO Auto-generated method stub
                             Bundle bundle = new Bundle();
                             bundle.putString("cid",
                                     getCreateSingleChannelResult.getCid());
@@ -247,13 +237,9 @@ public class UserInfoActivity extends BaseActivity {
 
                         @Override
                         public void createDirectChannelFail() {
-                            // TODO Auto-generated method stub
-
                         }
                     });
         }
 
     }
-
-
 }

@@ -19,7 +19,6 @@ import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.service.AppExceptionService;
 import com.inspur.emmcloud.ui.IndexActivity;
-import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.ui.mine.setting.GuideActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
@@ -78,10 +77,7 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
             this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
         }
         setContentView(R.layout.activity_main);
-//        getNecessaryPermission();
-        Bundle bundle = new Bundle();
-        bundle.putString("uid","66666");
-        IntentUtils.startActivity(this, UserInfoActivity.class,bundle,true);
+        getNecessaryPermission();
     }
 
     private void getNecessaryPermission() {
