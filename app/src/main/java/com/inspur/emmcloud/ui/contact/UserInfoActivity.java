@@ -71,6 +71,15 @@ public class UserInfoActivity extends BaseActivity {
     @ViewInject(R.id.iv_start_chat)
     private TextView startChatImg;
 
+    @ViewInject(R.id.ll_mobile_contact_info)
+    private LinearLayout mobileContactInfoLayout;
+    @ViewInject(R.id.ll_mobile_phone)
+    private LinearLayout mobilePhoneLayout;
+    @ViewInject(R.id.ll_mobile_sms)
+    private LinearLayout mobileSMSLayout;
+    @ViewInject(R.id.ll_mobile_email)
+    private LinearLayout mobileEmailLayout;
+
     private ContactUser contactUser;
     private String parentUid;
 
@@ -162,6 +171,10 @@ public class UserInfoActivity extends BaseActivity {
         } else {
             startChatImg.setVisibility(View.VISIBLE);
         }
+        mobilePhoneLayout.setVisibility((StringUtils.isBlank(phoneNum) && StringUtils.isBlank(telStr))?View.GONE:View.VISIBLE);
+        mobileSMSLayout.setVisibility(StringUtils.isBlank(phoneNum)?View.GONE:View.VISIBLE);
+        mobileEmailLayout.setVisibility(StringUtils.isBlank(mail)?View.GONE:View.VISIBLE);
+        mobileContactInfoLayout.setVisibility((StringUtils.isBlank(phoneNum) && StringUtils.isBlank(telStr) && StringUtils.isBlank(mail))?View.GONE:View.VISIBLE);
     }
 
     public void onClick(View v) {
