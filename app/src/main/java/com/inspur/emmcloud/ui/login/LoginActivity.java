@@ -15,6 +15,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
@@ -32,6 +33,9 @@ import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.LoginUtils;
 import com.inspur.emmcloud.widget.ClearEditText;
 import com.inspur.emmcloud.widget.LoadingDialog;
+import com.inspur.emmcloud.widget.keyboardview.EmmKeyboardType;
+import com.inspur.emmcloud.widget.keyboardview.EmmSecurityConfigure;
+import com.inspur.emmcloud.widget.keyboardview.EmmSecurityKeyboard;
 
 
 /**
@@ -55,6 +59,7 @@ public class LoginActivity extends BaseActivity {
     private ImageView seePWImg;
     private TextView enterpriseTextView;
     private boolean canSee = false;
+    private EmmSecurityKeyboard securityKeyboard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +71,9 @@ public class LoginActivity extends BaseActivity {
         MyApplication.getInstance().closeOtherActivity(LoginActivity.this);
         initView();
         handMessage();
+        EmmSecurityConfigure configure = new EmmSecurityConfigure()
+                .setDefaultKeyboardType(EmmKeyboardType.NUMBER);
+        securityKeyboard = new EmmSecurityKeyboard((LinearLayout)findViewById(R.id.ll_login_layout), configure);
     }
 
     private void initView() {
