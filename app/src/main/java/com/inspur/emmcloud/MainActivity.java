@@ -64,7 +64,6 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
     private long activitySplashShowTime = 0;
     private Timer timer;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
