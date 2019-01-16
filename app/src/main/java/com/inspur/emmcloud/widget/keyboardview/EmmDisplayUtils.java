@@ -5,11 +5,6 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Rect;
 
-/**
- * 显示工具类
- *
- * @author Created by jiangyujiang on 2016/9/7.
- */
 public class EmmDisplayUtils {
     private static int mScreenWidth;
     private static int mScreenHeight;

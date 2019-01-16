@@ -1,11 +1,5 @@
 package com.inspur.emmcloud.widget.keyboardview;
 
-/**
- * EmmKeyboardType 键盘类型
- *
- * @author yidong (onlyloveyd@gmail.com)
- * @date 2018/6/22 08:45
- */
 public enum EmmKeyboardType {
 
     /**

@@ -14,7 +14,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.animation.Animation;
@@ -32,17 +31,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-/**
- * 安全键盘主类
- *
- * @author yidong (onlyloveyd@gmaol.com)
- * @date 2018/6/22 07:45
- */
 public class EmmSecurityKeyboard extends PopupWindow {
 
     private static final int KEYBOARD_RADIX = 10;
     private static final int KEYBOARD_NUMBER_RADOM_TYPE = 1;
     private static final int KEYBOARD_LETTER_RADOM_TYPE = 2;
+    private static final int KEYBOARD_CHANGE_NUMBER = -7;
+    private static final int KEYBOARD_CHANGE_LETTER = -8;
+    private static final int KEYBOARD_CHANGE_SYMBOL = -9;
     private KeyboardView keyboardView;
     private Keyboard keyboardLetter;
     private Keyboard keyboardNumber;
@@ -90,10 +86,12 @@ public class EmmSecurityKeyboard extends PopupWindow {
                     R.xml.emm_keyboard_english_land);
             keyboardNumber = new Keyboard(context, R.xml.emm_keyboard_number_land);
             keyboardSymbol = new Keyboard(context, R.xml.emm_keyboard_symbols_shift_land);
+            randomKeysForOnce();
         } else {
             keyboardLetter = new Keyboard(context, R.xml.emm_keyboard_english);
             keyboardNumber = new Keyboard(context, R.xml.emm_keyboard_number);
             keyboardSymbol = new Keyboard(context, R.xml.emm_keyboard_symbols_shift);
+            randomKeysForOnce();
         }
         keyboardView = mainView.findViewById(R.id.keyboard_view);
         keyboardViewLy = mainView.findViewById(R.id.keyboard_view_ly);
@@ -109,23 +107,14 @@ public class EmmSecurityKeyboard extends PopupWindow {
         if (!configuration.isSymbolEnabled()) {
             symbolText.setVisibility(View.GONE);
         }
-        switchKeyboardType(configuration.getDefaultKeyboardType(),
-                configuration.getSelectedColor(), configuration.getUnselectedColor());
-
         switch (configuration.getDefaultKeyboardType().getCode()) {
             case 0:
                 keyboardView.setKeyboard(keyboardLetter);
                 break;
             case 1:
-                EmmCreateKeyList.initNumbers(numberList);
-//                randomNumbers();
-                randomKeys(KEYBOARD_NUMBER_RADOM_TYPE);
                 keyboardView.setKeyboard(keyboardNumber);
                 break;
             case 2:
-                EmmCreateKeyList.initLetters(letterList);
-//                randomLetters();
-                randomKeys(KEYBOARD_LETTER_RADOM_TYPE);
                 keyboardView.setKeyboard(keyboardSymbol);
                 break;
             default:
@@ -135,40 +124,6 @@ public class EmmSecurityKeyboard extends PopupWindow {
         keyboardView.setEnabled(true);
         keyboardView.setPreviewEnabled(false);
         keyboardView.setOnKeyboardActionListener(listener);
-        numberText.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View arg0) {
-                switchKeyboardType(EmmKeyboardType.NUMBER,
-                        configuration.getSelectedColor(),
-                        configuration.getUnselectedColor());
-                //点击需要改变时，解开这里
-//                randomNumbers();
-                randomKeys(KEYBOARD_NUMBER_RADOM_TYPE);
-                keyboardView.setKeyboard(keyboardNumber);
-            }
-        });
-        letterText.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View arg0) {
-                switchKeyboardType(EmmKeyboardType.LETTER,
-                        configuration.getSelectedColor(),
-                        configuration.getUnselectedColor());
-                //点击需要改变时，解开这里
-//                randomLetters();
-                randomKeys(KEYBOARD_LETTER_RADOM_TYPE);
-                keyboardView.setKeyboard(keyboardLetter);
-            }
-        });
-        symbolText.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View arg0) {
-                switchKeyboardType(EmmKeyboardType.SYMBOL,
-                        configuration.getSelectedColor(),
-                        configuration.getUnselectedColor());
-                keyboardView.setKeyboard(keyboardSymbol);
-            }
-        });
         List<View> children = getAllChildren(parentLayout);
         for (int i = 0; i < children.size(); i++) {
             View view = children.get(i);
@@ -192,6 +147,13 @@ public class EmmSecurityKeyboard extends PopupWindow {
                 });
             }
         }
+    }
+
+    private void randomKeysForOnce() {
+        EmmCreateKeyList.initLetters(letterList);
+        randomKeys(KEYBOARD_LETTER_RADOM_TYPE);
+        EmmCreateKeyList.initNumbers(numberList);
+        randomKeys(KEYBOARD_NUMBER_RADOM_TYPE);
     }
 
     /**
@@ -265,7 +227,7 @@ public class EmmSecurityKeyboard extends PopupWindow {
                 }
             } else if (primaryCode == Keyboard.KEYCODE_SHIFT) {
                 // 大小写切换
-                changeKey();
+                changeLetterKey();
                 keyboardView.setKeyboard(keyboardLetter);
 
             } else if (primaryCode == Keyboard.KEYCODE_MODE_CHANGE) {
@@ -287,20 +249,26 @@ public class EmmSecurityKeyboard extends PopupWindow {
                 if (start < curEditText.length()) {
                     curEditText.setSelection(start + 1);
                 }
+            }else if(primaryCode == KEYBOARD_CHANGE_LETTER){
+                //切换到字母键盘
+                keyboardView.setKeyboard(keyboardLetter);
+            }else if(primaryCode == KEYBOARD_CHANGE_NUMBER){
+                //切换到数字键盘
+                keyboardView.setKeyboard(keyboardNumber);
+            }else if(primaryCode == KEYBOARD_CHANGE_SYMBOL){
+                //切换到特殊符号键盘
+                keyboardView.setKeyboard(keyboardSymbol);
             } else {
                 editable.insert(start, Character.toString((char) primaryCode));
             }
         }
     };
 
-    /**
-     * 键盘大小写切换
-     */
-    private void changeKey() {
-        List<Key> keylist = keyboardLetter.getKeys();
+    private void changeLetterKey() {
+        List<Key> keyList = keyboardLetter.getKeys();
         if (isUpper) {
             isUpper = false;
-            for (Key key : keylist) {
+            for (Key key : keyList) {
                 if (key.label != null && isLetter(key.label.toString())) {
                     key.label = key.label.toString().toLowerCase();
                     key.codes[0] = key.codes[0] + 32;
@@ -312,7 +280,7 @@ public class EmmSecurityKeyboard extends PopupWindow {
             }
         } else {// 小写切换大写
             isUpper = true;
-            for (Key key : keylist) {
+            for (Key key : keyList) {
                 if (key.label != null && isLetter(key.label.toString())) {
                     key.label = key.label.toString().toUpperCase();
                     key.codes[0] = key.codes[0] - 32;
@@ -354,7 +322,7 @@ public class EmmSecurityKeyboard extends PopupWindow {
                 int number = new Random().nextInt(temNumList.size());
                 String[] textArray = temNumList.get(number).split("#");
                 key.label = textArray[1];
-                key.codes[0] = Integer.valueOf(textArray[0], 10);
+                key.codes[0] = Integer.valueOf(textArray[0], KEYBOARD_RADIX);
                 temNumList.remove(number);
             }
         }
@@ -399,35 +367,6 @@ public class EmmSecurityKeyboard extends PopupWindow {
     @Override
     public void dismiss() {
         super.dismiss();
-    }
-
-    /**
-     * 键盘类型切换后文本颜色变化
-     *
-     * @param keyboardType
-     * @param selectedColor
-     * @param unSelectedColor
-     */
-    private void switchKeyboardType(EmmKeyboardType keyboardType, int selectedColor, int unSelectedColor) {
-        switch (keyboardType.getCode()) {
-            case 0:
-                letterText.setTextColor(selectedColor);
-                symbolText.setTextColor(unSelectedColor);
-                numberText.setTextColor(unSelectedColor);
-                break;
-            case 1:
-                numberText.setTextColor(selectedColor);
-                symbolText.setTextColor(unSelectedColor);
-                letterText.setTextColor(unSelectedColor);
-                break;
-            case 2:
-                symbolText.setTextColor(selectedColor);
-                letterText.setTextColor(unSelectedColor);
-                numberText.setTextColor(unSelectedColor);
-                break;
-            default:
-                throw new IllegalArgumentException("不支持的键盘类型");
-        }
     }
 
     /**

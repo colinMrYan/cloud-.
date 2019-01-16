@@ -15,7 +15,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
@@ -71,9 +71,6 @@ public class LoginActivity extends BaseActivity {
         MyApplication.getInstance().closeOtherActivity(LoginActivity.this);
         initView();
         handMessage();
-        EmmSecurityConfigure configure = new EmmSecurityConfigure()
-                .setDefaultKeyboardType(EmmKeyboardType.NUMBER);
-        securityKeyboard = new EmmSecurityKeyboard((LinearLayout)findViewById(R.id.ll_login_layout), configure);
     }
 
     private void initView() {
@@ -121,6 +118,9 @@ public class LoginActivity extends BaseActivity {
             }
         });
         initCloudPlusCluster();
+        EmmSecurityConfigure configure = new EmmSecurityConfigure()
+                .setDefaultKeyboardType(EmmKeyboardType.LETTER);
+        securityKeyboard = new EmmSecurityKeyboard((RelativeLayout)findViewById(R.id.rl_login_password), configure);
     }
 
     /**

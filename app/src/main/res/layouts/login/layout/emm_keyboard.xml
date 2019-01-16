@@ -8,18 +8,17 @@
 
     <android.inputmethodservice.KeyboardView
         android:id="@+id/keyboard_view"
-        android:layout_width="fill_parent"
-        android:layout_height="236dip"
-        android:layout_alignParentRight="true"
+        android:layout_width="match_parent"
+        android:layout_height="216dp"
         android:background="#ebebeb"
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:keyBackground="@drawable/keyboard_key"
         android:keyTextColor="#000000"
         android:paddingBottom="10dip"
-        android:paddingLeft="8dip"
-        android:paddingRight="8dip"
-        android:paddingTop="40dip"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:paddingTop="10dp"
         android:shadowRadius="0.0"
         android:textStyle="normal"
         />
@@ -30,6 +29,7 @@
         android:layout_width="match_parent"
         android:layout_height="32dip"
         android:background="#ebebeb"
+        android:visibility="gone"
         android:gravity="right"
         android:orientation="horizontal">
 

@@ -34,19 +34,33 @@
             android:codes="56"
             android:keyLabel="8" />
         <Key
-            android:codes="-5"
-            android:isRepeatable="true"
-            android:keyIcon="@drawable/icon_keyboard_delete" />
-    </Row>
-    <Row>
-        <Key
             android:codes="57"
             android:keyLabel="9" />
+    </Row>
+    <Row>
+
+        <Key
+            android:codes="-9"
+            android:keyLabel="符号"
+            android:keyWidth="14.7%p"/>
+        <Key
+            android:codes="-8"
+            android:keyLabel="ABC"
+            android:keyWidth="14.7%p"/>
+
         <Key
             android:codes="48"
-            android:keyLabel="0" />
+            android:keyLabel="0"
+            android:keyWidth="30.6%p"/>
+        <!--<Key-->
+        <!--android:codes="-3"-->
+        <!--android:keyLabel="完成" />-->
+
         <Key
-            android:codes="-3"
-            android:keyLabel="完成" />
+            android:codes="-5"
+            android:isRepeatable="true"
+            android:keyWidth="30.6%p"
+            android:keyLabel="删除"
+            android:keyIcon="@drawable/icon_keyboard_delete" />
     </Row>
 </Keyboard>

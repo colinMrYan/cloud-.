@@ -2,12 +2,6 @@ package com.inspur.emmcloud.widget.keyboardview;
 
 import android.graphics.Color;
 
-/**
- * 安全键盘相关配置
- *
- * @author yidong (onlyloveyd@gmaol.com)
- * @date 2018/6/22 07:45
- */
 public class EmmSecurityConfigure {
 
     /**

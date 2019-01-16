@@ -106,16 +106,36 @@
             android:keyIcon="@drawable/icon_keyboard_delete"
             android:keyWidth="13.799998%p" />
     </Row>
+    <!--<Row android:rowEdgeFlags="bottom">-->
+
+        <!--<Key-->
+            <!--android:codes="32"-->
+            <!--android:keyLabel=""-->
+            <!--android:keyWidth="75.999998%p" />-->
+        <!--<Key-->
+            <!--android:codes="-3"-->
+            <!--android:keyEdgeFlags="right"-->
+            <!--android:keyLabel="完成"-->
+            <!--android:keyWidth="19.380004%p" />-->
+    <!--</Row>-->
     <Row android:rowEdgeFlags="bottom">
 
+        <!--<Key-->
+        <!--android:codes="32"-->
+        <!--android:keyLabel="space"-->
+        <!--android:keyWidth="75.299998%p" />-->
         <Key
-            android:codes="32"
-            android:keyLabel=""
-            android:keyWidth="75.999998%p" />
+            android:codes="-7"
+            android:keyLabel="123"
+            android:keyWidth="36.0%p"/>
+        <Key
+            android:codes="-9"
+            android:keyLabel="符号"
+            android:keyWidth="36.0%p"/>
         <Key
             android:codes="-3"
             android:keyEdgeFlags="right"
             android:keyLabel="完成"
-            android:keyWidth="19.380004%p" />
+            android:keyWidth="20.0%p" />
     </Row>
 </Keyboard>

@@ -94,6 +94,7 @@
             android:background="#d9dddf" />
 
         <RelativeLayout
+            android:id="@+id/rl_login_password"
             android:layout_width="fill_parent"
             android:layout_height="46dp">
 

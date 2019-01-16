@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Keyboard xmlns:android="http://schemas.android.com/apk/res/android"
-    android:horizontalGap="4dip"
+    android:horizontalGap="4dp"
     android:keyHeight="@dimen/key_height"
     android:keyWidth="8.42500%p"
     android:verticalGap="4dip">
@@ -108,14 +108,22 @@
     </Row>
     <Row android:rowEdgeFlags="bottom">
 
+        <!--<Key-->
+            <!--android:codes="32"-->
+            <!--android:keyLabel="space"-->
+            <!--android:keyWidth="75.299998%p" />-->
         <Key
-            android:codes="32"
-            android:keyLabel="space"
-            android:keyWidth="75.299998%p" />
+            android:codes="-7"
+            android:keyLabel="123"
+            android:keyWidth="36.0%p"/>
+        <Key
+            android:codes="-9"
+            android:keyLabel="符号"
+            android:keyWidth="36.0%p"/>
         <Key
             android:codes="-3"
             android:keyEdgeFlags="right"
             android:keyLabel="完成"
-            android:keyWidth="18.000004%p" />
+            android:keyWidth="20.0%p" />
     </Row>
 </Keyboard>
