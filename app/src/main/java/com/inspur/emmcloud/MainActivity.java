@@ -86,6 +86,7 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
         if(!PermissionRequestManagerUtils.getInstance().isHasPermission(this,necessaryPermissionArray)){
             final MyDialog permissionDialog = new MyDialog(this,R.layout.dialog_permisson_tip);
             permissionDialog.setDimAmount(0.2f);
+            permissionDialog.setCancelable(false);
             permissionDialog.setCanceledOnTouchOutside(false);
             ((TextView)permissionDialog.findViewById(R.id.tv_permission_dialog_title)).setText(getString(R.string.permission_open_cloud_plus, AppUtils.getAppName(MainActivity.this)));
             ((TextView)permissionDialog.findViewById(R.id.tv_permission_dialog_summary)).setText(getString(R.string.permission_necessary_permission, AppUtils.getAppName(MainActivity.this)));
