@@ -63,6 +63,7 @@ public class LoginActivity extends BaseActivity {
         setContentView(R.layout.activity_login);
         PreferencesUtils.putString(this, "previousVersion",AppUtils.getVersion(this));
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
+        this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
         MyApplication.getInstance().closeOtherActivity(LoginActivity.this);
         initView();
         handMessage();
