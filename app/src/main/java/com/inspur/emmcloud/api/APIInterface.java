@@ -778,9 +778,9 @@ public interface APIInterface {
     void returnMailCertificateUploadSuccess(byte[] arg0);
     void returnMailCertificateUploadFail(String error, int errorCode);
 
-    void returnSendMailSuccess(byte[] arg0);
+    void returnSendMailSuccess();
     void returnSendMailFail(String error, int errorCode);
 
-    void returnRemoveMailSuccess(byte[] arg0);
+    void returnRemoveMailSuccess();
     void returnRemoveMailFail(String error, int errorCode);
 }

@@ -22,22 +22,8 @@ public class NoScrollWebView extends WebView {
     }
 
     @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int mExpandSpec = MeasureSpec.makeMeasureSpec(Integer.MAX_VALUE >> 2, MeasureSpec.AT_MOST);
-        super.onMeasure(widthMeasureSpec, mExpandSpec);
-    }
-    @Override
-    public boolean overScrollBy(int deltaX, int deltaY, int scrollX, int scrollY,
-                                int scrollRangeX, int scrollRangeY, int maxOverScrollX,
-                                int maxOverScrollY, boolean isTouchEvent) {
-        return false;
-    }
-
-    /**
-     * 使WebView不可滚动
-     */
-    @Override
-    public void scrollTo(int x, int y) {
-        super.scrollTo(0, 0);
+    protected void onScrollChanged(int l, int t, int oldl, int oldt) {
+        super.onScrollChanged(l, t, oldl, oldt);
+        scrollTo(l,0);
     }
 }
