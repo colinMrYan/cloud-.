@@ -36,8 +36,7 @@
             android:id="@+id/tv_header_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/rl_back"
-            android:layout_centerVertical="true"
+            android:layout_centerInParent="true"
             android:text="写邮件"
             android:paddingLeft="5dp"
             android:textColor="@color/header_text"
@@ -54,6 +53,7 @@
             android:onClick="onClick"
             android:paddingLeft="12dp"
             android:paddingRight="12dp"
+            android:visibility="gone"
             android:text="设置"
             android:textColor="@color/white"
             android:textSize="16sp"/>
@@ -63,6 +63,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
+            android:visibility="gone"
             android:layout_toLeftOf="@id/tv_send_mail"
             android:clickable="true"
             android:gravity="center_vertical"
@@ -118,7 +119,7 @@
                         android:layout_centerVertical="true"
                         android:textSize="15sp"/>
                     <com.inspur.emmcloud.widget.RichEdit
-                        android:id="@+id/richedit_recipients"
+                        android:id="@+id/rich_edit_recipients"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_toRightOf="@id/tv_recipients_tip"
@@ -148,7 +149,7 @@
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:onClick="onClick"
-                        android:background="@drawable/icon_mail_add_contacts"
+                        android:background="@drawable/ic_mail_add_contacts"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true" />
                 </RelativeLayout>
@@ -183,7 +184,7 @@
                         android:layout_centerVertical="true"
                         android:textSize="15sp"/>
                     <com.inspur.emmcloud.widget.RichEdit
-                        android:id="@+id/richedit_cc_recipient"
+                        android:id="@+id/rich_edit_cc_recipient"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textSize="15sp"
@@ -213,7 +214,7 @@
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:onClick="onClick"
-                        android:background="@drawable/icon_mail_add_contacts"
+                        android:background="@drawable/ic_mail_add_contacts"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"/>
                 </RelativeLayout>
@@ -260,7 +261,7 @@
                         android:id="@+id/iv_senders"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
-                        android:background="@drawable/icon_mail_add_contacts"
+                        android:background="@drawable/ic_mail_add_contacts"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"/>
                 </RelativeLayout>
@@ -292,11 +293,11 @@
                     android:layout_marginRight="15dp">
                     <TextView
                         android:id="@+id/tv_theme_tip"
-                        android:text="主题："
+                        android:text="主&#12288;题："
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:textSize="16sp"/>
+                        android:textSize="15sp"/>
                     <EditText
                         android:id="@+id/et_theme_send"
                         android:layout_toRightOf="@id/tv_theme_tip"
@@ -313,7 +314,7 @@
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:onClick="onClick"
-                        android:background="@drawable/icon_mail_add_contacts"
+                        android:background="@drawable/ic_mail_add_contacts"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"/>
                 </RelativeLayout>
@@ -342,13 +343,12 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:background="@null"
-                    android:text="\n\t\n\t\n\t\n\t---发自我的云+移动端邮件服务"
                     android:textSize="14sp"/>
             </RelativeLayout>
 
             <!-- 邮件转发内容-->
             <RelativeLayout
-                android:id="@+id/rl_include_all"
+                android:id="@+id/rl_include_origin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/rl_content_send"
@@ -364,7 +364,7 @@
                     android:background="@drawable/bg_corner"
                     android:onClick="onClick"
                     android:padding="2dp"
-                    android:src="@drawable/icon_mail_include_tip"
+                    android:src="@drawable/ic_mail_include_tip"
                     android:textColor="#151515" />
                 <RelativeLayout
                     android:id="@+id/rl_fw_body"
@@ -383,10 +383,11 @@
                         android:layout_below="@id/v_include_topLine"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textSize="16sp"
                         android:checked="true"
                         android:text="包含引用文字"/>
                     <com.inspur.emmcloud.widget.NoScrollWebView
-                        android:id="@+id/noscrollwebview_fw_body"
+                        android:id="@+id/wv_body"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/cb_fw_body">

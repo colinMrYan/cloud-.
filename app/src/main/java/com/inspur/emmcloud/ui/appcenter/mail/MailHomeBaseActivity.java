@@ -35,7 +35,7 @@ public class MailHomeBaseActivity extends BaseFragmentActivity implements AllInt
     private View shadowView;
 
     private MailLeftMenuFragment mailLeftMenuFragment;
-    private LoadingDialog loadingDlg;
+    protected LoadingDialog loadingDlg;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,7 +87,7 @@ public class MailHomeBaseActivity extends BaseFragmentActivity implements AllInt
                 break;
             case R.id.bt_mail_add:
                 Bundle bundle = new Bundle();
-                bundle.putString(MailSendActivity.EXTRA_MAIL_MODEL,MailSendActivity.MODEL_NEW);
+                bundle.putString(MailSendActivity.EXTRA_MAIL_MODE,MailSendActivity.MODE_NEW);
                 IntentUtils.startActivity(this,MailSendActivity.class,bundle);
                 break;
             case R.id.ibt_back:

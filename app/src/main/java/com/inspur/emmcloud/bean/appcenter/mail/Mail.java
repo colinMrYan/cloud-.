@@ -60,10 +60,6 @@ public class Mail implements Serializable {
     private int bodyType = -1;
     private String bodyText = "";
 
-    private boolean hideLeftCheck=true;
-    private boolean isDelectItem=false;
-
-
     public Mail() {
 
     }
@@ -360,22 +356,6 @@ public class Mail implements Serializable {
 
     public void setBodyText(String bodyText) {
         this.bodyText = bodyText;
-    }
-
-    public boolean isHideLeftCheck() {
-        return hideLeftCheck;
-    }
-
-    public void setHideLeftCheck(boolean hideLeftCheck) {
-        this.hideLeftCheck = hideLeftCheck;
-    }
-
-    public boolean isDelectItem() {
-        return isDelectItem;
-    }
-
-    public void setDelectItem(boolean delectItem) {
-        isDelectItem = delectItem;
     }
 
     public boolean equals(Object other) {

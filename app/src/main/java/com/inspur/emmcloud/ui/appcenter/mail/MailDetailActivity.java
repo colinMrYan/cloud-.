@@ -20,7 +20,8 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -32,7 +33,6 @@ import com.inspur.emmcloud.api.apiservice.MailApiService;
 import com.inspur.emmcloud.bean.appcenter.mail.Mail;
 import com.inspur.emmcloud.bean.appcenter.mail.MailAttachment;
 import com.inspur.emmcloud.bean.appcenter.mail.MailRecipient;
-import com.inspur.emmcloud.bean.appcenter.mail.RemoveItemModel;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
@@ -40,7 +40,6 @@ import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.EncryptUtils;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
@@ -66,7 +65,6 @@ import org.xutils.x;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -112,8 +110,8 @@ public class MailDetailActivity extends BaseActivity {
     private ScrollViewWithListView mailAttachmentListView;
     @ViewInject(R.id.wv_content)
     private NoScrollWebView contentWebView;
-    @ViewInject(R.id.rl_send_about)
-    private RelativeLayout sendAboutLayout;
+    @ViewInject(R.id.rl_mail_operation)
+    private RelativeLayout mailOperationLayout;
     @ViewInject(R.id.progress_bar_load)
     private ProgressBar loadProgressBar;
     private MailAttachmentListAdapter mailAttachmentListAdapter;
@@ -228,9 +226,9 @@ public class MailDetailActivity extends BaseActivity {
                 int oldt = i3;
                 int t = i1;
                 if (oldt > t && oldt - t > 20) {
-                    sendAboutLayout.setVisibility(View.VISIBLE);
+                    mailOperationLayout.setVisibility(View.VISIBLE);
                 } else if (oldt < t && t - oldt > 20) {
-                    sendAboutLayout.setVisibility(View.GONE);
+                    mailOperationLayout.setVisibility(View.GONE);
                 }
             }
         });
@@ -378,7 +376,7 @@ public class MailDetailActivity extends BaseActivity {
             receiverFlowLayout.addView(receiverTipsText);
             for (MailRecipient recipient : toRecipientList) {
                 TextView receiverText = getFlowChildText();
-//                receiverText.setTextColor(Color.parseColor("#666666"));
+                receiverText.setTextColor(Color.parseColor("#666666"));
                 receiverText.setText(recipient.getName());
                 receiverFlowLayout.addView(receiverText);
             }
@@ -396,7 +394,7 @@ public class MailDetailActivity extends BaseActivity {
             ccFlowLayout.addView(ccTipsText);
             for (MailRecipient recipient : ccRecipientList) {
                 TextView ccText = getFlowChildText();
-//                ccText.setTextColor(Color.parseColor("#666666"));
+                ccText.setTextColor(Color.parseColor("#666666"));
                 ccText.setText(recipient.getName());
                 ccFlowLayout.addView(ccText);
             }
@@ -423,18 +421,16 @@ public class MailDetailActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.rl_forward:
-                intentMailSendActivity(MailSendActivity.MODEL_FORWARD);
+                intentMailSendActivity(MailSendActivity.MODE_FORWARD);
                 break;
             case R.id.rl_reply_all:
-                intentMailSendActivity(MailSendActivity.MODEL_REPLY_ALL);
+                intentMailSendActivity(MailSendActivity.MODE_REPLY_ALL);
                 break;
             case R.id.rl_reply:
-                intentMailSendActivity(MailSendActivity.MODEL_REPLY);
+                intentMailSendActivity(MailSendActivity.MODE_REPLY);
                 break;
             case R.id.bt_mail_delete:
-                String removeMail = getRemoveMailInfo( mail);
-                LogUtils.LbcDebug( "removeMail::"+removeMail );
-                removeMail( removeMail );
+                removeMail(mail);
                 break;
             case R.id.bt_mail_tab:
                 break;
@@ -465,6 +461,7 @@ public class MailDetailActivity extends BaseActivity {
         }
     }
 
+
     private byte[] decryptBytes(byte[] encryptBytes) {
         String account = ContactUserCacheUtils.getUserMail(MyApplication.getInstance().getUid());
         String key = EncryptUtils.stringToMD5(account);
@@ -477,33 +474,25 @@ public class MailDetailActivity extends BaseActivity {
         return encryptBytes;
     }
 
-    /**获取删除邮件信息*/
-    private String  getRemoveMailInfo(Mail RemoveMail){
-        RemoveItemModel removeItemModel = new RemoveItemModel();
-        removeItemModel.setDeleteMode( 2 );
-        removeItemModel.setEmail(RemoveMail.getFromMailRecipient().getAddress());
-        List<String> removeMailId = new ArrayList<>();
-        removeMailId.add(RemoveMail.getId());
-        removeItemModel.setItemIds(removeMailId);
-        String removeMailJSON= JSON.toJSONString( removeItemModel );
-        return removeMailJSON;
-    }
-
     private void intentMailSendActivity(String extraMailModel){
         Bundle bundle = new Bundle();
         bundle.putString(MailSendActivity.EXTRA_MAIL_ID, mail.getId());
-        bundle.putString(MailSendActivity.EXTRA_MAIL_MODEL, extraMailModel);
+        bundle.putString(MailSendActivity.EXTRA_MAIL_MODE, extraMailModel);
         IntentUtils.startActivity(this, MailSendActivity.class, bundle);
     }
 
-    /**
-     * @param removeItemModel
-     */
-    private void removeMail(String removeItemModel){
+    private void removeMail(Mail mail){
         if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
+            loadingDlg.show();
+            JSONObject object = new JSONObject();
+            object.put("Email",ContactUserCacheUtils.getUserMail(MyApplication.getInstance().getUid()));
+            object.put("DeleteMode",2);
+            JSONArray array = new JSONArray();
+            array.add(mail.getId());
+            object.put("ItemIds",array);
             apiService = new MailApiService(this);
             apiService.setAPIInterface(new WebService());
-            apiService.removeMail(removeItemModel);
+            apiService.removeMail(object.toJSONString());
         }
     }
 
@@ -545,19 +534,17 @@ public class MailDetailActivity extends BaseActivity {
         }
 
         @Override
-        public void returnRemoveMailSuccess(byte[] arg0) {
-            List<String> mailIdList = new ArrayList<>();
-            mailIdList.add(mail.getId().toString() );
-            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_MAIL_REMOVE_SUCCESS,mailIdList));
-            LogUtils.LbcDebug( "returndata"+String.valueOf( arg0 ) );
-            ToastUtils.show(MailDetailActivity.this,"删除邮件成功:::"+String.valueOf(arg0) );
+        public void returnRemoveMailSuccess() {
+            LoadingDialog.dimissDlg(loadingDlg);
+            ToastUtils.show(MailDetailActivity.this,"邮件删除成功");
             finish();
-            super.returnRemoveMailSuccess( arg0 );
+            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_MAIL_REMOVE,mail));
         }
 
         @Override
         public void returnRemoveMailFail(String error, int errorCode) {
-            ToastUtils.show(MailDetailActivity.this,"删除邮件失败" );
+            LoadingDialog.dimissDlg(loadingDlg);
+            WebServiceMiddleUtils.hand(MailDetailActivity.this,error,errorCode);
         }
     }
 }
