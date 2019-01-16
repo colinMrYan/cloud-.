@@ -108,7 +108,6 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
         mTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
         registerNetWorkListenerAccordingSysLevel();
         initTabs();
-        batteryWhiteListRemind(this);
     }
 
     private void registerNetWorkListenerAccordingSysLevel() {
@@ -202,7 +201,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
         showTabs(tabBeans);
     }
 
-    private void batteryWhiteListRemind(final Context context){
+    protected void batteryWhiteListRemind(final Context context){
         batteryDialogIsShow= PreferencesUtils.getBoolean( context, Constant.BATTERY_WHITE_LIST_STATE,true);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && batteryDialogIsShow) {
             try{

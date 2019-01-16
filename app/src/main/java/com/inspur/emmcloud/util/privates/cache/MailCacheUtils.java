@@ -44,7 +44,7 @@ public class MailCacheUtils {
         return null;
     }
 
-    public static List<Mail> getMailListByMailIdList( List<String> mailIdList){
+    public static List<Mail> getMailListByMailIdList(List<String> mailIdList){
         List<Mail> mailList = null;
         try {
             mailList =  DbCacheUtils.getDb().selector(Mail.class). where("id", "in", mailIdList).findAll();
@@ -57,7 +57,7 @@ public class MailCacheUtils {
         return mailList;
     }
 
-    public static List<Mail> getMailListInFolder( String folderId,int limit){
+    public static List<Mail> getMailListInFolder(String folderId,int limit){
         List<Mail> mailList = null;
         try {
             mailList =  DbCacheUtils.getDb().selector(Mail.class). where("folderId", "=", folderId).orderBy("creationTimestamp", true).limit(limit).findAll();
@@ -68,6 +68,14 @@ public class MailCacheUtils {
             mailList = new ArrayList<>();
         }
         return mailList;
+    }
+
+    public static void deleteMailList(List<Mail> mailList){
+        try {
+            DbCacheUtils.getDb().delete(mailList);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static boolean removeMailListByMailIdList( List<String> mailIdList){

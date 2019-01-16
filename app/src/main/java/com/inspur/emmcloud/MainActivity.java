@@ -80,11 +80,11 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
             this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
         }
         setContentView(R.layout.activity_main);
-        getNecessaryPermission();
+        checkNecessaryPermission();
     }
 
     @SuppressLint("StringFormatMatches")
-    private void getNecessaryPermission() {
+    private void checkNecessaryPermission() {
         final String[] necessaryPermissionArray = StringUtils.concatAll(Permissions.STORAGE,Permissions.CALL_PHONE_PERMISSION);
         if(!PermissionRequestManagerUtils.getInstance().isHasPermission(this,necessaryPermissionArray)){
             final MyDialog permissionDialog = new MyDialog(this,R.layout.dialog_permisson_tip);
