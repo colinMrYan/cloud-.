@@ -350,7 +350,7 @@
             android:name=".ui.SchemeHandleActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait">
+            android:theme="@style/AppTheme.Transparent">
             <intent-filter>
                 <action android:name="android.intent.action.SEND_MULTIPLE" />
 

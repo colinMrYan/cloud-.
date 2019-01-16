@@ -117,12 +117,6 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     public void onCreate() {
         super.onCreate();
         init();
-        int currentThemeNo = PreferencesUtils.getInt(MyApplication.getInstance(), Constant.PREF_APP_THEME, 0);
-        if (currentThemeNo == 0){
-            setTheme(R.style.AppTheme_1);
-        }else {
-            setTheme(R.style.AppTheme_2);
-        }
         LogUtils.isDebug = AppUtils.isApkDebugable(getInstance());
         setAppLanguageAndFontScale();
         removeAllSessionCookie();
