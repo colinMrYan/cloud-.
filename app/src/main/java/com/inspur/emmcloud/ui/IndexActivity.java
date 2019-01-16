@@ -270,6 +270,7 @@ public class IndexActivity extends IndexBaseActivity {
                             WebSocketPush.getInstance().startWebSocket();// 启动webSocket推送
                             getContactOrg();
                         }
+                        batteryWhiteListRemind(IndexActivity.this);
                         break;
                     case RELOAD_WEB:
                         if (webView != null) {

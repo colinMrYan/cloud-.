@@ -4,7 +4,6 @@ import android.content.Context;
 import android.util.Log;
 
 import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.privates.cache.AppExceptionCacheUtils;
 
 import java.io.PrintWriter;
@@ -40,7 +39,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
 	public void uncaughtException(Thread thread, Throwable throwable) {
 		// 把错误的堆栈信息 获取出来
 		String errorInfo = getErrorInfo(throwable);
-		LogUtils.jasonDebug("errorInfo="+errorInfo);
+		Log.d("jason","errorInfo="+errorInfo);
 		Log.e("AndroidRuntime", errorInfo);
 		AppExceptionCacheUtils.saveAppException(mContext,1,"",errorInfo,0);
         //如果系统提供了默认的异常处理器，则交给系统去结束我们的程序，否则就由我们自己结束自己
