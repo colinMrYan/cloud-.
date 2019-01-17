@@ -9,22 +9,19 @@ import android.inputmethodservice.Keyboard.Key;
 import android.inputmethodservice.KeyboardView;
 import android.inputmethodservice.KeyboardView.OnKeyboardActionListener;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.Selection;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.widget.ClearEditText;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -45,28 +42,23 @@ public class EmmSecurityKeyboard extends PopupWindow {
     private Keyboard keyboardSymbol;
     private boolean isNumber = false;
     private boolean isUpper = false;
-    private TextView symbolText, letterText, numberText;
     private View mainView;
     private ArrayList<String> numberList = new ArrayList<>();
     private ArrayList<String> letterList = new ArrayList<>();
-    private ClearEditText curEditText;
-
-    private RelativeLayout keyboardViewLy;
     private EmmSecurityConfigure configuration;
-
-    private ViewGroup keyboardParentLayout;
+    private EditText curEditText;
     private Context context;
 
     @SuppressLint("ClickableViewAccessibility")
-    public EmmSecurityKeyboard(final ViewGroup parentLayout, EmmSecurityConfigure securityConfigure) {
-        super(parentLayout.getContext());
+    public EmmSecurityKeyboard(final EditText clearEditText, EmmSecurityConfigure securityConfigure) {
+        super(clearEditText.getContext());
         if (securityConfigure == null) {
             configuration = new EmmSecurityConfigure();
         } else {
             configuration = securityConfigure;
         }
-        keyboardParentLayout = parentLayout;
-        context = parentLayout.getContext();
+        this.curEditText = clearEditText;
+        context = clearEditText.getContext();
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mainView = inflater.inflate(R.layout.emm_keyboard, null);
@@ -94,19 +86,6 @@ public class EmmSecurityKeyboard extends PopupWindow {
             randomKeysForOnce();
         }
         keyboardView = mainView.findViewById(R.id.keyboard_view);
-        keyboardViewLy = mainView.findViewById(R.id.keyboard_view_ly);
-        symbolText = mainView.findViewById(R.id.tv_symbol);
-        letterText = mainView.findViewById(R.id.tv_letter);
-        numberText = mainView.findViewById(R.id.tv_number);
-        if (!configuration.isLetterEnabled()) {
-            letterText.setVisibility(View.GONE);
-        }
-        if (!configuration.isNumberEnabled()) {
-            numberText.setVisibility(View.GONE);
-        }
-        if (!configuration.isSymbolEnabled()) {
-            symbolText.setVisibility(View.GONE);
-        }
         switch (configuration.getDefaultKeyboardType().getCode()) {
             case 0:
                 keyboardView.setKeyboard(keyboardLetter);
@@ -124,27 +103,34 @@ public class EmmSecurityKeyboard extends PopupWindow {
         keyboardView.setEnabled(true);
         keyboardView.setPreviewEnabled(false);
         keyboardView.setOnKeyboardActionListener(listener);
-        List<View> children = getAllChildren(parentLayout);
-        for (int i = 0; i < children.size(); i++) {
-            View view = children.get(i);
-            if (view instanceof ClearEditText) {
-                ClearEditText securityEditText = (ClearEditText) view;
-                securityEditText.setOnTouchListener(new View.OnTouchListener() {
-                    @Override
-                    public boolean onTouch(View v, MotionEvent event) {
-                        if (event.getAction() == MotionEvent.ACTION_UP) {
-                            curEditText = (ClearEditText) v;
-                            curEditText.requestFocus();
-                            //curEditText.setInputType(InputType.TYPE_NULL);
-                            //将光标移到文本最后
-                            Editable editable = curEditText.getText();
-                            Selection.setSelection(editable, editable.length());
-                            hideSystemKeyboard(v);
-                            showKeyboard(keyboardParentLayout);
-                        }
-                        return true;
-                    }
-                });
+    }
+
+    /**
+     * 自主调用安全键盘
+     */
+    public void showSecurityKeyBoard() {
+        disableShowInput();
+        curEditText.requestFocus();
+        //curEditText.setInputType(InputType.TYPE_NULL);
+        //将光标移到文本最后
+        Editable editable = curEditText.getText();
+        Selection.setSelection(editable, editable.length());
+        hideSystemKeyboard(curEditText);
+        showKeyboard(curEditText);
+    }
+
+    private void disableShowInput() {
+        if (android.os.Build.VERSION.SDK_INT <= 10) {
+            curEditText.setInputType(InputType.TYPE_NULL);
+        } else {
+            Class<EditText> cls = EditText.class;
+            Method method;
+            try {
+                method = cls.getMethod("setShowSoftInputOnFocus", boolean.class);
+                method.setAccessible(true);
+                method.invoke(curEditText, false);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }
@@ -217,7 +203,7 @@ public class EmmSecurityKeyboard extends PopupWindow {
             int start = curEditText.getSelectionStart();
             if (primaryCode == Keyboard.KEYCODE_CANCEL) {
                 // 完成按钮所做的动作
-                hideKeyboard();
+                dismiss();
             } else if (primaryCode == Keyboard.KEYCODE_DELETE) {
                 // 删除按钮所做的动作
                 if (editable != null && editable.length() > 0) {
@@ -229,7 +215,6 @@ public class EmmSecurityKeyboard extends PopupWindow {
                 // 大小写切换
                 changeLetterKey();
                 keyboardView.setKeyboard(keyboardLetter);
-
             } else if (primaryCode == Keyboard.KEYCODE_MODE_CHANGE) {
                 // 数字键盘切换,默认是英文键盘
                 if (isNumber) {
@@ -249,13 +234,13 @@ public class EmmSecurityKeyboard extends PopupWindow {
                 if (start < curEditText.length()) {
                     curEditText.setSelection(start + 1);
                 }
-            }else if(primaryCode == KEYBOARD_CHANGE_LETTER){
+            } else if (primaryCode == KEYBOARD_CHANGE_LETTER) {
                 //切换到字母键盘
                 keyboardView.setKeyboard(keyboardLetter);
-            }else if(primaryCode == KEYBOARD_CHANGE_NUMBER){
+            } else if (primaryCode == KEYBOARD_CHANGE_NUMBER) {
                 //切换到数字键盘
                 keyboardView.setKeyboard(keyboardNumber);
-            }else if(primaryCode == KEYBOARD_CHANGE_SYMBOL){
+            } else if (primaryCode == KEYBOARD_CHANGE_SYMBOL) {
                 //切换到特殊符号键盘
                 keyboardView.setKeyboard(keyboardSymbol);
             } else {
@@ -293,19 +278,19 @@ public class EmmSecurityKeyboard extends PopupWindow {
         }
     }
 
-    private void randomKeys(int keyType){
+    private void randomKeys(int keyType) {
         List<Key> keyList = null;
         ArrayList<String> temNumList = null;
-        switch (keyType){
+        switch (keyType) {
             case KEYBOARD_NUMBER_RADOM_TYPE:
-                if(numberList.size() == 0){
+                if (numberList.size() == 0) {
                     EmmCreateKeyList.initNumbers(numberList);
                 }
                 keyList = keyboardNumber.getKeys();
                 temNumList = new ArrayList<>(numberList);
                 break;
             case KEYBOARD_LETTER_RADOM_TYPE:
-                if(letterList.size() == 0){
+                if (letterList.size() == 0) {
                     EmmCreateKeyList.initLetters(letterList);
                 }
                 keyList = keyboardLetter.getKeys();
@@ -317,8 +302,8 @@ public class EmmSecurityKeyboard extends PopupWindow {
                 break;
         }
         for (Key key : keyList) {
-            if (key.label != null && (keyType == KEYBOARD_LETTER_RADOM_TYPE?
-                    isLetter(key.label.toString()):isNumber(key.label.toString()))) {
+            if (key.label != null && (keyType == KEYBOARD_LETTER_RADOM_TYPE ?
+                    isLetter(key.label.toString()) : isNumber(key.label.toString()))) {
                 int number = new Random().nextInt(temNumList.size());
                 String[] textArray = temNumList.get(number).split("#");
                 key.label = textArray[1];
@@ -347,12 +332,6 @@ public class EmmSecurityKeyboard extends PopupWindow {
         getContentView().setAnimation(animation);
     }
 
-    /**
-     * 隐藏键盘
-     */
-    private void hideKeyboard() {
-        this.dismiss();
-    }
 
     private boolean isLetter(String str) {
         String letterStr = context.getString(R.string.aToz);
@@ -369,23 +348,10 @@ public class EmmSecurityKeyboard extends PopupWindow {
         super.dismiss();
     }
 
-    /**
-     * 获取所有子元素
-     *
-     * @param parent
-     * @return
-     */
-    private List<View> getAllChildren(View parent) {
-        List<View> allChildren = new ArrayList<>();
-        if (parent instanceof ViewGroup) {
-            ViewGroup vp = (ViewGroup) parent;
-            for (int i = 0; i < vp.getChildCount(); i++) {
-                View child = vp.getChildAt(i);
-                allChildren.add(child);
-                //再次 调用本身（递归）
-                allChildren.addAll(getAllChildren(child));
-            }
-        }
-        return allChildren;
+    public void showInput(final EditText et) {
+        dismiss();
+        et.requestFocus();
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(et, InputMethodManager.SHOW_IMPLICIT);
     }
 }

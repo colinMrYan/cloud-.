@@ -13,9 +13,7 @@ import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
@@ -54,7 +52,7 @@ public class LoginActivity extends BaseActivity {
     private LoadingDialog LoadingDlg;
     private Handler handler;
     private ClearEditText userNameEdit;
-    private EditText passwordEdit;
+    private ClearEditText passwordEdit;
     private Button loginBtn;
     private ImageView seePWImg;
     private TextView enterpriseTextView;
@@ -84,11 +82,11 @@ public class LoginActivity extends BaseActivity {
                         return false;
                     }
                 });
-        loginBtn = (Button) findViewById(R.id.login_btn);
+        loginBtn =  findViewById(R.id.login_btn);
         LoadingDlg = new LoadingDialog(LoginActivity.this,
                 getString(R.string.login_loading_text));
-        userNameEdit = ((ClearEditText) findViewById(R.id.username_edit));
-        passwordEdit = ((EditText) findViewById(R.id.password_edit));
+        userNameEdit =  findViewById(R.id.username_edit);
+        passwordEdit =  findViewById(R.id.password_edit);
         // 为用户名输入框设置输入监听
         EditWatcher watcher = new EditWatcher();
         userNameEdit.addTextChangedListener(watcher);
@@ -120,7 +118,22 @@ public class LoginActivity extends BaseActivity {
         initCloudPlusCluster();
         EmmSecurityConfigure configure = new EmmSecurityConfigure()
                 .setDefaultKeyboardType(EmmKeyboardType.LETTER);
-        securityKeyboard = new EmmSecurityKeyboard((RelativeLayout)findViewById(R.id.rl_login_password), configure);
+        securityKeyboard = new EmmSecurityKeyboard(passwordEdit,configure);
+        securityKeyboard.setOutsideTouchable(false);
+        passwordEdit.setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                securityKeyboard.showSecurityKeyBoard();
+                return false;
+            }
+        });
+        userNameEdit.setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                securityKeyboard.showInput(userNameEdit);
+                return false;
+            }
+        });
     }
 
     /**
