@@ -41,7 +41,7 @@
 
         <Key
             android:codes="-9"
-            android:keyLabel="符号"
+            android:keyLabel="@string/emm_keyboard_symbol"
             android:keyWidth="14.7%p"/>
         <Key
             android:codes="-8"
@@ -60,7 +60,7 @@
             android:codes="-5"
             android:isRepeatable="true"
             android:keyWidth="30.6%p"
-            android:keyLabel="删除"
+            android:keyLabel="@string/delete"
             android:keyIcon="@drawable/icon_keyboard_delete" />
     </Row>
 </Keyboard>

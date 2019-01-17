@@ -131,12 +131,12 @@
             android:codes="-5"
             android:isRepeatable="true"
             android:keyWidth="18%p"
-            android:keyLabel="删除"
+            android:keyLabel="@string/delete"
             android:keyIcon="@drawable/icon_keyboard_delete" />
         <Key
             android:codes="-3"
             android:keyEdgeFlags="right"
-            android:keyLabel="完成"
+            android:keyLabel="@string/finish"
             android:keyWidth="18%p" />
     </Row>
 </Keyboard>

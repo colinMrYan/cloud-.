@@ -1166,6 +1166,9 @@
     <string name="permission_grant_fail">您已禁止授予%1$s %2$s 权限</string>
 
     <!--键盘相关-->
-    <string name="aToz">abcdefghijklmnopqrstuvwxyz</string>
-    <string name="zeroTonine">1234567890</string>
+    <string name="emm_keyboard_a2z">abcdefghijklmnopqrstuvwxyz</string>
+    <string name="emm_keyboard_zero2nine">1234567890</string>
+    <string name="emm_keyboard_number">数字</string>
+    <string name="emm_keyboard_symbol">符号</string>
+    <string name="emm_keyboard_letter">字母</string>
 </resources>

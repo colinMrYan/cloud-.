@@ -1113,4 +1113,11 @@
     <string name="permission_dialog_title">Tips</string>
     <string name="permission_message_always_failed">You have forbidden granting %1$s %2$s permission, which may cause the function to be unavailable. If you need to use it, please go to the settings to grant permission.</string>
     <string name="permission_grant_fail">You have forbidden granting %1$s %2$s permission</string>
+
+    <!--键盘相关-->
+    <string name="emm_keyboard_a2z">abcdefghijklmnopqrstuvwxyz</string>
+    <string name="emm_keyboard_zero2nine">1234567890</string>
+    <string name="emm_keyboard_number">Number</string>
+    <string name="emm_keyboard_symbol">Symbol</string>
+    <string name="emm_keyboard_letter">Letter</string>
 </resources>

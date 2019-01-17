@@ -69,8 +69,8 @@ public class EmmSecurityKeyboard extends PopupWindow{
         ColorDrawable dw = new ColorDrawable(Color.parseColor("#00000000"));
         // 设置SelectPicPopupWindow弹出窗体的背景
         this.setBackgroundDrawable(dw);
-        this.setFocusable(true);
-        this.setOutsideTouchable(true);
+        this.setFocusable(false);
+        this.setOutsideTouchable(false);
         this.setPopupWindowTouchModal(this, false);
         this.setAnimationStyle(R.style.PopupKeybroad);
         if (EmmDisplayUtils.dp2px(context, 236) > (int) (EmmDisplayUtils
@@ -354,12 +354,12 @@ public class EmmSecurityKeyboard extends PopupWindow{
 
 
     private boolean isLetter(String str) {
-        String letterStr = context.getString(R.string.aToz);
+        String letterStr = context.getString(R.string.emm_keyboard_a2z);
         return letterStr.contains(str.toLowerCase());
     }
 
     private boolean isNumber(String str) {
-        String numStr = context.getString(R.string.zeroTonine);
+        String numStr = context.getString(R.string.emm_keyboard_zero2nine);
         return numStr.contains(str.toLowerCase());
     }
 
