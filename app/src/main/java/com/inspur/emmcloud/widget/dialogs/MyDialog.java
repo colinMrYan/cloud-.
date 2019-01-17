@@ -48,7 +48,7 @@ public class MyDialog extends Dialog {
 
 	private void setWidth() {
 		WindowManager m = getWindow().getWindowManager();
-		Display d = m.getDefaultDisplay(); 
+		Display d = m.getDefaultDisplay();
 		int width = d.getWidth();
 		WindowManager.LayoutParams p = getWindow().getAttributes();
 		p.x = 0;
@@ -56,6 +56,16 @@ public class MyDialog extends Dialog {
 		p.width = (int) (width * ratio);
 		this.getWindow().setAttributes(
                 p);
+	}
+
+	/**
+	 * 调整透明度
+	 * @param dimAmount
+	 */
+	public void setDimAmount(float dimAmount){
+		WindowManager.LayoutParams p = getWindow().getAttributes();
+		p.dimAmount = dimAmount;
+		this.getWindow().setAttributes(p);
 	}
 
 }

@@ -610,7 +610,7 @@
     <string name="modify_input_confirm_passord">请输入确认密码</string>
     <string name="modify_new_old_same">新密码不能和原密码相同</string>
     <string name="modify_not_same">新密码和确认密码不一致</string>
-    <string name="modify_input_password">请输入6~64位密码</string>
+    <string name="modify_password_invalid">所设密码需包含数字、小写字母、大写字母、特殊符号四类字符其中的三类，并且长度最少为8位</string>
     <string name="modify_password_not_correct">密码填写不正确，请确认</string>
     <string name="modify_password_fail">修改密码失败</string>
     <string name="modify_password">修改密码</string>
@@ -1164,6 +1164,12 @@
     <!--权限管理-->
     <string name="permission_message_always_failed">您已禁止授予%1$s %2$s 权限，可能会造成功能不可用，如需使用请到设置里授予权限</string>
     <string name="permission_grant_fail">您已禁止授予%1$s %2$s 权限</string>
+
+    <string name="permission_open_cloud_plus">开启%1$s</string>
+    <string name="permission_necessary_permission">为了您能正常使用%1$s，需要以下权限</string>
+    <string name="permission_phone_permission">设备信息</string>
+    <string name="permission_storage_permission">存储空间</string>
+    <string name="permission_next">下一步</string>
 
     <!--键盘相关-->
     <string name="emm_keyboard_a2z">abcdefghijklmnopqrstuvwxyz</string>

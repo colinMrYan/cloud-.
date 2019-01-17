@@ -15,7 +15,7 @@
         android:layout_height="30dp" />
     <TextView
         android:id="@+id/tv_download"
-        android:text="@string/download"
+        android:text="@string/open"
         android:textColor="#4A90E2"
         android:textSize="14sp"
         android:layout_alignParentRight="true"

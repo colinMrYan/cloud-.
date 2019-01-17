@@ -1116,7 +1116,7 @@ public class APIUri {
 
     /**************************Mail********************************************/
     public static String getMailBaseUrl() {
-        return "https://emm.inspur.com/api/ews/v1.0";
+        return getEMMBaseUrl()+"api/ews/v1.0";
     }
 
     public static String getMailFolderUrl() {

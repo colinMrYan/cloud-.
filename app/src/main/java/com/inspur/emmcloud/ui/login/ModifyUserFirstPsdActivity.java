@@ -1,6 +1,5 @@
 package com.inspur.emmcloud.ui.login;
 
-import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,10 +8,12 @@ import android.view.View;
 import android.widget.Button;
 
 import com.inspur.emmcloud.BaseActivity;
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.LoginAPIService;
 import com.inspur.emmcloud.ui.IndexActivity;
+import com.inspur.emmcloud.util.common.FomatUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
@@ -95,23 +96,17 @@ public class ModifyUserFirstPsdActivity extends BaseActivity {
 			Pattern pattern = Pattern.compile("^\\S{6,128}$");
 			Matcher matcher = pattern.matcher(newpsd);
 			if(TextUtils.isEmpty(newpsd)||TextUtils.isEmpty(confirmpsd)||!newpsd.equals(confirmpsd)){
-//				Toast.makeText(ModifyUserFirstPsdActivity.this, "请确认密码不为空，且两次输入密码一致", Toast.LENGTH_SHORT).show();
-				ToastUtils.show(ModifyUserFirstPsdActivity.this, getString(R.string.modify_user_password));	
+				ToastUtils.show(ModifyUserFirstPsdActivity.this, getString(R.string.modify_user_password));
 				break;
-				
-			}else {
-				if(matcher.matches()&&NetUtils.isNetworkConnected(ModifyUserFirstPsdActivity.this)){
-					loadingDialog.show();
-					if(newpsd.equals(confirmpsd)){
-						apiService.changePsd("", newpsd);
-					}
-				}else if(!TextUtils.isEmpty(newpsd)&&!matcher.matches()){
-//					Toast.makeText(ModifyUserFirstPsdActivity.this, "请输入6~128位密码", Toast.LENGTH_SHORT).show();
-					ToastUtils.show(ModifyUserFirstPsdActivity.this, getString(R.string.modify_input_password));	
-				}
+
 			}
-			
-			
+			if (newpsd.length()<8 || newpsd.length()>64 ||!FomatUtils.isPasswrodStrong(newpsd) ){
+				ToastUtils.show(MyApplication.getInstance(),R.string.modify_password_invalid);
+				return;
+			}
+			if (NetUtils.isNetworkConnected(MyApplication.getInstance())){
+				apiService.changePsd("", newpsd);
+			}
 			break;
 
 		default:

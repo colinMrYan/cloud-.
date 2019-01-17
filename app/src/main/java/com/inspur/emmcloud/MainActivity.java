@@ -12,6 +12,8 @@ import android.os.Message;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.inspur.emmcloud.bean.system.SplashDefaultBean;
 import com.inspur.emmcloud.bean.system.SplashPageBean;
@@ -21,6 +23,7 @@ import com.inspur.emmcloud.service.AppExceptionService;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.ui.mine.setting.GuideActivity;
+import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ResolutionUtils;
@@ -35,6 +38,7 @@ import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.SplashPageUtils;
 import com.inspur.emmcloud.util.privates.UpgradeUtils;
 import com.inspur.emmcloud.widget.dialogs.EasyDialog;
+import com.inspur.emmcloud.widget.dialogs.MyDialog;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.List;
@@ -62,7 +66,6 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
     private long activitySplashShowTime = 0;
     private Timer timer;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,26 +80,50 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
             this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
         }
         setContentView(R.layout.activity_main);
-        getNecessaryPermission();
-//        IntentUtils.startActivity(this, ModifyUserPsdActivity.class);
+        checkNecessaryPermission();
     }
 
-    private void getNecessaryPermission() {
-        String[] necessaryPermissionArray = StringUtils.concatAll(Permissions.STORAGE,Permissions.CALL_PHONE_PERMISSION);
-        PermissionRequestManagerUtils.getInstance().requestRuntimePermission(this, necessaryPermissionArray, new PermissionRequestCallback() {
-            @Override
-            public void onPermissionRequestSuccess(List<String> permissions) {
-                 init();
+    private void checkNecessaryPermission() {
+        final String[] necessaryPermissionArray = StringUtils.concatAll(Permissions.STORAGE,Permissions.CALL_PHONE_PERMISSION);
+        if(!PermissionRequestManagerUtils.getInstance().isHasPermission(this,necessaryPermissionArray)){
+            final MyDialog permissionDialog = new MyDialog(this,R.layout.dialog_permisson_tip);
+            permissionDialog.setDimAmount(0.2f);
+            permissionDialog.setCancelable(false);
+            permissionDialog.setCanceledOnTouchOutside(false);
+            permissionDialog.findViewById(R.id.ll_permission_storage).setVisibility(!PermissionRequestManagerUtils.getInstance().isHasPermission(this,Permissions.STORAGE)?View.VISIBLE:View.GONE);
+            permissionDialog.findViewById(R.id.ll_permission_phone).setVisibility(!PermissionRequestManagerUtils.getInstance().isHasPermission(this,Permissions.CALL_PHONE_PERMISSION)?View.VISIBLE:View.GONE);
+            if(!PermissionRequestManagerUtils.getInstance().isHasPermission(this,Permissions.STORAGE)
+                    && !PermissionRequestManagerUtils.getInstance().isHasPermission(this,Permissions.CALL_PHONE_PERMISSION)){
+                LinearLayout layout = permissionDialog.findViewById(R.id.ll_permission_storage);
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) layout.getLayoutParams();
+                params.setMargins(DensityUtil.dip2px(this,60.0f),0,0,0);
+                layout.setLayoutParams(params);
             }
+            ((TextView)permissionDialog.findViewById(R.id.tv_permission_dialog_title)).setText(getString(R.string.permission_open_cloud_plus, AppUtils.getAppName(MainActivity.this)));
+            ((TextView)permissionDialog.findViewById(R.id.tv_permission_dialog_summary)).setText(getString(R.string.permission_necessary_permission, AppUtils.getAppName(MainActivity.this)));
+            permissionDialog.findViewById(R.id.tv_next_step).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    permissionDialog.dismiss();
+                    PermissionRequestManagerUtils.getInstance().requestRuntimePermission(MainActivity.this, necessaryPermissionArray, new PermissionRequestCallback() {
+                        @Override
+                        public void onPermissionRequestSuccess(List<String> permissions) {
+                            init();
+                        }
 
-            @Override
-            public void onPermissionRequestFail(List<String> permissions) {
-                ToastUtils.show(MainActivity.this, PermissionRequestManagerUtils.getInstance().getPermissionToast(MainActivity.this,permissions));
-                MyApplication.getInstance().exit();
-            }
-        });
+                        @Override
+                        public void onPermissionRequestFail(List<String> permissions) {
+                            ToastUtils.show(MainActivity.this, PermissionRequestManagerUtils.getInstance().getPermissionToast(MainActivity.this,permissions));
+                            MyApplication.getInstance().exit();
+                        }
+                    });
+                }
+            });
+            permissionDialog.show();
+        }else{
+            init();
+        }
     }
-
 
     /**
      * 初始化

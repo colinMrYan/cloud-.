@@ -603,7 +603,7 @@
     <string name="modify_input_confirm_passord">Enter confirm password</string>
     <string name="modify_new_old_same">New password can not be the same as original one</string>
     <string name="modify_not_same">Passwords do not match, make sure</string>
-    <string name="modify_input_password">Enter a password between 6-64 characters.</string>
+    <string name="modify_password_invalid">The password should contain three of the four types of characters: numerals, lowercase letters, uppercase letters and special symbols, and the length should be at least 8</string>
     <string name="modify_password_not_correct">The original password is incorrect</string>
     <string name="modify_password_fail">Failed to modify password</string>
     <string name="modify_password">Change the password</string>
@@ -1113,6 +1113,12 @@
     <string name="permission_dialog_title">Tips</string>
     <string name="permission_message_always_failed">You have forbidden granting %1$s %2$s permission, which may cause the function to be unavailable. If you need to use it, please go to the settings to grant permission.</string>
     <string name="permission_grant_fail">You have forbidden granting %1$s %2$s permission</string>
+
+    <string name="permission_open_cloud_plus">Open %1$s</string>
+    <string name="permission_necessary_permission">In order for you to use the %1$s properly, you need the following permissions</string>
+    <string name="permission_phone_permission">Phone</string>
+    <string name="permission_storage_permission">Storage</string>
+    <string name="permission_next">Next</string>
 
     <!--键盘相关-->
     <string name="emm_keyboard_a2z">abcdefghijklmnopqrstuvwxyz</string>
