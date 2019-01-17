@@ -12,6 +12,7 @@ import android.os.Message;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.bean.system.SplashDefaultBean;
@@ -22,6 +23,7 @@ import com.inspur.emmcloud.service.AppExceptionService;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.ui.mine.setting.GuideActivity;
+import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ResolutionUtils;
@@ -88,6 +90,15 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
             permissionDialog.setDimAmount(0.2f);
             permissionDialog.setCancelable(false);
             permissionDialog.setCanceledOnTouchOutside(false);
+            permissionDialog.findViewById(R.id.ll_permission_storage).setVisibility(!PermissionRequestManagerUtils.getInstance().isHasPermission(this,Permissions.STORAGE)?View.VISIBLE:View.GONE);
+            permissionDialog.findViewById(R.id.ll_permission_phone).setVisibility(!PermissionRequestManagerUtils.getInstance().isHasPermission(this,Permissions.CALL_PHONE_PERMISSION)?View.VISIBLE:View.GONE);
+            if(!PermissionRequestManagerUtils.getInstance().isHasPermission(this,Permissions.STORAGE)
+                    && !PermissionRequestManagerUtils.getInstance().isHasPermission(this,Permissions.CALL_PHONE_PERMISSION)){
+                LinearLayout layout = permissionDialog.findViewById(R.id.ll_permission_storage);
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) layout.getLayoutParams();
+                params.setMargins(DensityUtil.dip2px(this,60.0f),0,0,0);
+                layout.setLayoutParams(params);
+            }
             ((TextView)permissionDialog.findViewById(R.id.tv_permission_dialog_title)).setText(getString(R.string.permission_open_cloud_plus, AppUtils.getAppName(MainActivity.this)));
             ((TextView)permissionDialog.findViewById(R.id.tv_permission_dialog_summary)).setText(getString(R.string.permission_necessary_permission, AppUtils.getAppName(MainActivity.this)));
             permissionDialog.findViewById(R.id.tv_next_step).setOnClickListener(new View.OnClickListener() {
