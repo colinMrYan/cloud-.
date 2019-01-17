@@ -12,6 +12,7 @@ import android.os.Message;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.bean.system.SplashDefaultBean;
@@ -22,6 +23,7 @@ import com.inspur.emmcloud.service.AppExceptionService;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.ui.mine.setting.GuideActivity;
+import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ResolutionUtils;
@@ -82,11 +84,28 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
     }
 
     private void checkNecessaryPermission() {
+        boolean isNotHasStoragePermission = false;
+        boolean isNotHasPhonePermission = false;
         final String[] necessaryPermissionArray = StringUtils.concatAll(Permissions.STORAGE,Permissions.CALL_PHONE_PERMISSION);
         if(!PermissionRequestManagerUtils.getInstance().isHasPermission(this,necessaryPermissionArray)){
             final MyDialog permissionDialog = new MyDialog(this,R.layout.dialog_permisson_tip);
             permissionDialog.setDimAmount(0.2f);
+            permissionDialog.setCancelable(false);
             permissionDialog.setCanceledOnTouchOutside(false);
+            if(!PermissionRequestManagerUtils.getInstance().isHasPermission(this,Permissions.STORAGE)){
+                isNotHasStoragePermission = true;
+                permissionDialog.findViewById(R.id.ll_permission_storage).setVisibility(View.VISIBLE);
+            }
+            if(!PermissionRequestManagerUtils.getInstance().isHasPermission(this,Permissions.CALL_PHONE_PERMISSION)){
+                isNotHasPhonePermission = true;
+                permissionDialog.findViewById(R.id.ll_permission_phone).setVisibility(View.VISIBLE);
+            }
+            if(isNotHasPhonePermission && isNotHasStoragePermission){
+                LinearLayout layout = permissionDialog.findViewById(R.id.ll_permission_storage);
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) layout.getLayoutParams();
+                params.setMargins(DensityUtil.dip2px(MainActivity.this,60.0f),0,0,0);
+                layout.setLayoutParams(params);
+            }
             ((TextView)permissionDialog.findViewById(R.id.tv_permission_dialog_title)).setText(getString(R.string.permission_open_cloud_plus, AppUtils.getAppName(MainActivity.this)));
             ((TextView)permissionDialog.findViewById(R.id.tv_permission_dialog_summary)).setText(getString(R.string.permission_necessary_permission, AppUtils.getAppName(MainActivity.this)));
             permissionDialog.findViewById(R.id.tv_next_step).setOnClickListener(new View.OnClickListener() {
