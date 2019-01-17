@@ -84,26 +84,19 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
     }
 
     private void checkNecessaryPermission() {
-        boolean isNotHasStoragePermission = false;
-        boolean isNotHasPhonePermission = false;
         final String[] necessaryPermissionArray = StringUtils.concatAll(Permissions.STORAGE,Permissions.CALL_PHONE_PERMISSION);
         if(!PermissionRequestManagerUtils.getInstance().isHasPermission(this,necessaryPermissionArray)){
             final MyDialog permissionDialog = new MyDialog(this,R.layout.dialog_permisson_tip);
             permissionDialog.setDimAmount(0.2f);
             permissionDialog.setCancelable(false);
             permissionDialog.setCanceledOnTouchOutside(false);
-            if(!PermissionRequestManagerUtils.getInstance().isHasPermission(this,Permissions.STORAGE)){
-                isNotHasStoragePermission = true;
-                permissionDialog.findViewById(R.id.ll_permission_storage).setVisibility(View.VISIBLE);
-            }
-            if(!PermissionRequestManagerUtils.getInstance().isHasPermission(this,Permissions.CALL_PHONE_PERMISSION)){
-                isNotHasPhonePermission = true;
-                permissionDialog.findViewById(R.id.ll_permission_phone).setVisibility(View.VISIBLE);
-            }
-            if(isNotHasPhonePermission && isNotHasStoragePermission){
+            permissionDialog.findViewById(R.id.ll_permission_storage).setVisibility(!PermissionRequestManagerUtils.getInstance().isHasPermission(this,Permissions.STORAGE)?View.VISIBLE:View.GONE);
+            permissionDialog.findViewById(R.id.ll_permission_phone).setVisibility(!PermissionRequestManagerUtils.getInstance().isHasPermission(this,Permissions.CALL_PHONE_PERMISSION)?View.VISIBLE:View.GONE);
+            if(!PermissionRequestManagerUtils.getInstance().isHasPermission(this,Permissions.STORAGE)
+                    && !PermissionRequestManagerUtils.getInstance().isHasPermission(this,Permissions.CALL_PHONE_PERMISSION)){
                 LinearLayout layout = permissionDialog.findViewById(R.id.ll_permission_storage);
                 LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) layout.getLayoutParams();
-                params.setMargins(DensityUtil.dip2px(MainActivity.this,60.0f),0,0,0);
+                params.setMargins(DensityUtil.dip2px(this,60.0f),0,0,0);
                 layout.setLayoutParams(params);
             }
             ((TextView)permissionDialog.findViewById(R.id.tv_permission_dialog_title)).setText(getString(R.string.permission_open_cloud_plus, AppUtils.getAppName(MainActivity.this)));
