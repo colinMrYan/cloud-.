@@ -603,7 +603,7 @@
     <string name="modify_input_confirm_passord">Enter confirm password</string>
     <string name="modify_new_old_same">New password can not be the same as original one</string>
     <string name="modify_not_same">Passwords do not match, make sure</string>
-    <string name="modify_input_password">Enter a password between 6-64 characters.</string>
+    <string name="modify_password_invalid">The password should contain three of the four types of characters: numerals, lowercase letters, uppercase letters and special symbols, and the length should be at least 8</string>
     <string name="modify_password_not_correct">The original password is incorrect</string>
     <string name="modify_password_fail">Failed to modify password</string>
     <string name="modify_password">Change the password</string>
@@ -892,6 +892,12 @@
     <string name="net_ping_url_ali">Alibaba</string>
     <string name="net_ping_url_cloud">Cloud+</string>
 
+    <!--电源白名单-->
+    <string name="battery_tip_content">System has applied battery optimizations to Cloud+,which may cause messages be delayed or missed,please add Cloud+ to battery optimizations whitelist.(Click Set,then in the dialog pops,click Allow)</string>
+    <string name="battery_tip_ishide">Don\'t ask again</string>
+    <string name="battery_tip_cancel">CANCEL</string>
+    <string name="battery_tip_toset">SET</string>
+
     <!-- ListView自定义控件部分 -->
     <string name="xlistview_header_last_time">Last Update Time:</string>
     <string name="release_to_refresh">Release to Refresh</string>
@@ -1106,4 +1112,10 @@
     <string name="permission_dialog_title">Tips</string>
     <string name="permission_message_always_failed">You have forbidden granting %1$s %2$s permission, which may cause the function to be unavailable. If you need to use it, please go to the settings to grant permission.</string>
     <string name="permission_grant_fail">You have forbidden granting %1$s %2$s permission</string>
+
+    <string name="permission_open_cloud_plus">Open %1$s</string>
+    <string name="permission_necessary_permission">In order for you to use the %1$s properly, you need the following permissions</string>
+    <string name="permission_phone_permission">Phone</string>
+    <string name="permission_storage_permission">Storage</string>
+    <string name="permission_next">Next</string>
 </resources>

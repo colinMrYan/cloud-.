@@ -2,31 +2,30 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-
-    <!--<com.inspur.emmcloud.widget.CircleTextImageView-->
-    <!--android:id="@+id/iv_mail_sender_photo"-->
-    <!--android:layout_width="42dp"-->
-    <!--android:layout_height="42dp"-->
-    <!--android:src="@drawable/icon_person_default"-->
-    <!--android:layout_centerVertical="true"-->
-    <!--android:layout_marginLeft="15dp"-->
-    <!--android:layout_marginRight="8dp"-->
-    <!--/>-->
+    <ImageView
+        android:id="@+id/iv_left_check"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        android:src="@drawable/ic_volume_file_select_no"
+        android:visibility="gone" />
 
     <RelativeLayout
         android:id="@+id/rl_top"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@id/iv_left_check">
 
         <View
             android:id="@+id/v_unread"
-            android:background="@drawable/ic_mail_unread"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
             android:layout_centerVertical="true"
             android:layout_marginRight="4dp"
-            android:layout_width="10dp"
-            android:layout_height="10dp" />
+            android:background="@drawable/ic_mail_unread" />
 
         <TextView
             android:id="@+id/tv_title"
@@ -34,8 +33,8 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginRight="15dp"
-            android:layout_toRightOf="@id/v_unread"
             android:layout_toLeftOf="@+id/rl_flag"
+            android:layout_toRightOf="@id/v_unread"
             android:ellipsize="end"
             android:singleLine="true"
             android:textColor="#333333"
@@ -52,7 +51,7 @@
                 android:id="@+id/iv_flag_encrypt"
                 android:layout_width="16dp"
                 android:layout_height="16dp"
-                android:layout_marginRight="8dp"
+                android:layout_marginRight="15dp"
                 android:src="@drawable/ic_mail_flag_encrypt_yes" />
 
             <ImageView
@@ -60,6 +59,7 @@
                 android:layout_width="16dp"
                 android:layout_height="16dp"
                 android:layout_marginRight="15dp"
+                android:visibility="gone"
                 android:layout_toRightOf="@id/iv_flag_encrypt"
                 android:src="@drawable/ic_mail_flag_sign_yes" />
         </RelativeLayout>
@@ -73,7 +73,8 @@
         android:layout_below="@id/rl_top"
         android:layout_marginBottom="12dp"
         android:layout_marginLeft="15dp"
-        android:layout_marginTop="4dp">
+        android:layout_marginTop="4dp"
+        android:layout_toRightOf="@id/iv_left_check">
 
         <TextView
             android:id="@+id/tv_time"
@@ -81,7 +82,6 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_marginRight="15dp"
-            android:hint="1月1日"
             android:gravity="right"
             android:textColor="#333333"
             android:textSize="13sp" />
@@ -92,6 +92,7 @@
             android:layout_height="match_parent"
             android:layout_marginRight="10dp"
             android:layout_toLeftOf="@id/tv_time"
+            android:gravity="center_vertical"
             android:ellipsize="end"
             android:lines="2"
             android:textColor="#666666"

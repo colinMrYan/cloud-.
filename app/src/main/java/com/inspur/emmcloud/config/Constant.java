@@ -53,7 +53,8 @@ public class Constant {
     public static final String PREF_HAS_SET_SHORT_PASSWORD = "hasPassword";
     public static final String PREF_APP_PREVIOUS_VERSION = "previousVersion";
     public static final String PREF_LOGIN_ENTERPRISE_NAME = "login_enterprise_name";
-
+    public static final String PREF_MAIL_ACCOUNT = "mail_account";
+    public static final String PREF_MAIL_PASSWORD = "mail_password";
     public static final String ACTION_MEETING = "com.inspur.meeting";
     public static final String ACTION_TASK = "com.inspur.task";
     public static final String ACTION_CALENDAR = "com.inspur.calendar";
@@ -92,6 +93,10 @@ public class Constant {
     public static final String EVENTBUS_TAG__NET_PORTAL_HTTP_POST = "tag_net_portal_http_post";
     public static final String EVENTBUS_TAG_COMMENT_MESSAGE = "tag_comment_message";
     public static final String EVENTBUS_TAG_GET_MAIL_BY_FOLDER = "tag_get_mail_by_folder";
+    public static final String EVENTBUS_TAG_MAIL_ACCOUNT_DELETE = "tag_mail_account_delelte";
+    public static final String EVENTBUS_TAG_MAIL_LOGIN_SUCCESS = "tag_mail_login_success";
+    public static final String EVENTBUS_TAG_MAIL_LOGIN_FAIL = "tag_mail_login_fail";
+    public static final String EVENTBUS_TAG_MAIL_REMOVE = "tag_mail_remove";
 
     public static final String SERVICE_VERSION_CHAT_V0 = "v0";
     public static final String SERVICE_VERSION_CHAT_V1 = "v1";
@@ -125,6 +130,8 @@ public class Constant {
 
     public static final String INSPUR_HOST_URL = ".inspur.com";
     public static final String INSPURONLINE_HOST_URL = ".inspuronline.com";
+
+    public static final String BATTERY_WHITE_LIST_STATE="battery_white_list_state";
 
     //推送相关配置
     public static final String PUSH_FLAG = "pushFlag";

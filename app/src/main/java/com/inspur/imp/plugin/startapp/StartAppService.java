@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.config.MyAppConfig;
+import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
@@ -211,7 +212,8 @@ public class StartAppService extends ImpPlugin {
                     if (downloadingDialog != null && downloadingDialog.isShowing()) {
                         downloadingDialog.dismiss();
                     }
-                    AppUtils.installApk(getActivity(),MyAppConfig.LOCAL_DOWNLOAD_PATH,"impInstall.apk");
+//                    AppUtils.installApk(getActivity(),MyAppConfig.LOCAL_DOWNLOAD_PATH,"impInstall.apk");
+                    FileUtils.openFile(getActivity(),MyAppConfig.LOCAL_DOWNLOAD_PATH + "impInstall.apk");
                     break;
                 case DOWNLOAD_FAIL:
                     if (downloadingDialog != null && downloadingDialog.isShowing()) {

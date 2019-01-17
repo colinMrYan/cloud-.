@@ -15,6 +15,7 @@ import com.inspur.emmcloud.bean.appcenter.App;
 import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.EncryptUtils;
+import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
@@ -116,7 +117,7 @@ public class AppCenterNativeAppUtils {
 				if (StringUtils.isBlank(password)) {
 					ToastUtils.show(context, R.string.login_please_input_password);
 				}else if(password.length()<6){
-					ToastUtils.show(context, R.string.modify_input_password);
+					ToastUtils.show(context, R.string.modify_password_invalid);
 				}else{
 					try {
 						String encodePassword = EncryptUtils.encodeApprovalPassword(password);
@@ -180,7 +181,7 @@ public class AppCenterNativeAppUtils {
 					if (loadingDlg != null && loadingDlg.isShowing()) {
 						loadingDlg.dismiss();
 					}
-					AppUtils.openAPKFile(context, file);
+					FileUtils.openFile(context,file,true);
 				}
 
 				@Override

@@ -51,24 +51,24 @@ public class Mail implements Serializable {
     private String folderId;
     @Column(name = "attachments")
     private String attachments;
+
     private MailRecipient fromMailRecipient;
     private List<MailRecipient> ccMailRecipientList = new ArrayList<>();
     private List<MailRecipient> bccMailRecipientList = new ArrayList<>();
     private List<MailRecipient> toMailRecipientList = new ArrayList<>();
     private List<MailAttachment> mailAttachmentList = new ArrayList<>();
     private int bodyType = -1;
-    private String bodyText="";
-
+    private String bodyText = "";
 
     public Mail() {
 
     }
 
     public Mail(String response) {
-        this(JSONUtils.getJSONObject(response),"");
+        this(JSONUtils.getJSONObject(response), "");
     }
 
-    public Mail(JSONObject object,String folderId) {
+    public Mail(JSONObject object, String folderId) {
         id = JSONUtils.getString(object, "id", "");
         subject = JSONUtils.getString(object, "subject", "");
         displaySender = JSONUtils.getString(object, "displaySender", "");
@@ -79,9 +79,9 @@ public class Mail implements Serializable {
         size = JSONUtils.getInt(object, "size", 0);
         creationTimestamp = JSONUtils.getLong(object, "creationTimestamp", 0L);
         body = JSONUtils.getString(object, "body", "");
-        if (!body.equals("")){
-            bodyType = JSONUtils.getInt(body,"bodyType",-1);
-            bodyText = JSONUtils.getString(body,"text","");
+        if (!body.equals("")) {
+            bodyType = JSONUtils.getInt(body, "bodyType", -1);
+            bodyText = JSONUtils.getString(body, "text", "");
         }
         isComplete = !body.equals("");
         from = JSONUtils.getString(object, "from", "");
@@ -106,9 +106,9 @@ public class Mail implements Serializable {
             toMailRecipientList.add(new MailRecipient(obj));
         }
         this.folderId = folderId;
-        if (hasAttachments){
-            attachments = JSONUtils.getString(object,"attachments","");
-            JSONArray attachmentArray = JSONUtils.getJSONArray(attachments,new JSONArray());
+        if (hasAttachments) {
+            attachments = JSONUtils.getString(object, "attachments", "");
+            JSONArray attachmentArray = JSONUtils.getJSONArray(attachments, new JSONArray());
             for (int i = 0; i < attachmentArray.length(); i++) {
                 JSONObject obj = JSONUtils.getJSONObject(attachmentArray, i, new JSONObject());
                 mailAttachmentList.add(new MailAttachment(obj));
@@ -166,14 +166,25 @@ public class Mail implements Serializable {
     }
 
     public List<MailAttachment> getMailAttachmentList() {
-        if (isHasAttachments() && mailAttachmentList.size()==0){
-            JSONArray attachmentArray = JSONUtils.getJSONArray(attachments,new JSONArray());
+        if (isHasAttachments() && mailAttachmentList.size() == 0) {
+            JSONArray attachmentArray = JSONUtils.getJSONArray(attachments, new JSONArray());
             for (int i = 0; i < attachmentArray.length(); i++) {
                 JSONObject obj = JSONUtils.getJSONObject(attachmentArray, i, new JSONObject());
                 mailAttachmentList.add(new MailAttachment(obj));
             }
         }
         return mailAttachmentList;
+    }
+
+    public List<MailAttachment> getReallyMailAttachmentList() {
+        List<MailAttachment> mailAttachmentList = getMailAttachmentList();
+        List<MailAttachment> reallyMailAttachmentList = new ArrayList<>();
+        for (MailAttachment mailAttachment : mailAttachmentList) {
+            if (mailAttachment.isAttachment()) {
+                reallyMailAttachmentList.add(mailAttachment);
+            }
+        }
+        return reallyMailAttachmentList;
     }
 
     public void setMailAttachmentList(List<MailAttachment> mailAttachmentList) {
@@ -326,8 +337,8 @@ public class Mail implements Serializable {
     }
 
     public int getBodyType() {
-        if (bodyType == -1 && !body.equals("")){
-            bodyType = JSONUtils.getInt(body,"bodyType",-1);
+        if (bodyType == -1 && !body.equals("")) {
+            bodyType = JSONUtils.getInt(body, "bodyType", -1);
         }
         return bodyType;
     }
@@ -337,8 +348,8 @@ public class Mail implements Serializable {
     }
 
     public String getBodyText() {
-        if (bodyText.equals("") && !body.equals("")){
-            bodyText = JSONUtils.getString(body,"text","");
+        if (bodyText.equals("") && !body.equals("")) {
+            bodyText = JSONUtils.getString(body, "text", "");
         }
         return bodyText;
     }

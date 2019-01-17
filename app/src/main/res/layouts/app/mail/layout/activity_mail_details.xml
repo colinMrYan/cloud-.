@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
@@ -40,7 +39,8 @@
                     android:layout_height="30dp"
                     android:layout_marginRight="10dp"
                     android:background="@drawable/ic_mail_header_forward"
-                    android:onClick="onClick" />
+                    android:onClick="onClick"
+                    android:visibility="gone" />
 
                 <Button
                     android:id="@+id/bt_mail_reply_all"
@@ -48,27 +48,30 @@
                     android:layout_height="30dp"
                     android:layout_marginRight="10dp"
                     android:background="@drawable/ic_mail_header_replay_all"
-                    android:onClick="onClick" />
+                    android:onClick="onClick"
+                    android:visibility="gone" />
 
                 <Button
-                    android:id="@+id/bt_mail_reply"
+                    android:id="@+id/bt_mail_tab"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_marginRight="10dp"
-                    android:background="@drawable/ic_mail_header_replay"
-                    android:onClick="onClick" />
+                    android:background="@drawable/ic_mail_tab"
+                    android:onClick="onClick"
+                    android:visibility="gone" />
 
                 <Button
                     android:id="@+id/bt_mail_delete"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_marginRight="10dp"
-                    android:background="@drawable/ic_mail_header_delete"
+                    android:background="@drawable/ic_mail_delete_white"
                     android:onClick="onClick" />
             </LinearLayout>
         </RelativeLayout>
 
-        <ScrollView
+        <com.qmuiteam.qmui.widget.QMUIObservableScrollView
+            android:id="@+id/sv_slide_data"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_alignParentBottom="true"
@@ -78,6 +81,7 @@
             android:background="#ffffff">
 
             <RelativeLayout
+                android:id="@+id/rl_mail_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -322,15 +326,26 @@
 
                 <com.inspur.emmcloud.widget.NoScrollWebView
                     android:id="@+id/wv_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_below="@id/lv_attachment"
-                    android:layout_marginTop="10dp"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
-                    android:paddingBottom="200dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_marginTop="10dp"
+                    android:paddingBottom="200dp">
 
                 </com.inspur.emmcloud.widget.NoScrollWebView>
+
+                <ProgressBar
+                    android:id="@+id/progress_bar_load"
+                    style="@android:style/Widget.ProgressBar"
+                    android:layout_width="21dp"
+                    android:layout_height="21dp"
+                    android:layout_below="@id/ll_mail_header"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="120dp"
+                    android:indeterminateDrawable="@drawable/react_native_ios_progress"
+                    android:indeterminateDuration="1000" />
 
                 <LinearLayout
                     android:id="@+id/rl_decrypt_fail"
@@ -338,9 +353,9 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/lv_attachment"
                     android:layout_marginBottom="30dp"
-                    android:visibility="gone"
                     android:gravity="center_horizontal"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
                     <TextView
                         android:layout_width="match_parent"
@@ -366,7 +381,100 @@
             </RelativeLayout>
 
 
-        </ScrollView>
+        </com.qmuiteam.qmui.widget.QMUIObservableScrollView>
+
+        <RelativeLayout
+            android:id="@+id/rl_mail_operation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="#F9F9F9">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
+
+                <RelativeLayout
+                    android:id="@+id/rl_reply"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="62dp"
+                    android:onClick="onClick"
+                    android:paddingBottom="4dp"
+                    android:paddingTop="4dp">
+
+                    <ImageView
+                        android:id="@+id/iv_reply"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_centerHorizontal="true"
+                        android:background="@drawable/ic_mail_reply" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/iv_reply"
+                        android:layout_centerHorizontal="true"
+                        android:text="回复"
+                        android:textColor="#333333"
+                        android:textSize="12sp" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/rl_reply_all"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="62dp"
+                    android:onClick="onClick"
+                    android:paddingBottom="4dp"
+                    android:paddingTop="4dp">
+
+                    <ImageView
+                        android:id="@+id/iv_reply_all"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_centerHorizontal="true"
+                        android:background="@drawable/ic_mail_reply_all" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/iv_reply_all"
+                        android:layout_marginBottom="4dp"
+                        android:text="回复全部"
+                        android:textColor="#333333"
+                        android:textSize="12sp" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/rl_forward"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="onClick"
+                    android:paddingBottom="4dp"
+                    android:paddingTop="4dp">
+
+                    <ImageView
+                        android:id="@+id/iv_forward"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_centerHorizontal="true"
+                        android:background="@drawable/ic_mail_forward" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/iv_forward"
+                        android:text="转发"
+                        android:textColor="#333333"
+                        android:textSize="12sp" />
+                </RelativeLayout>
+            </LinearLayout>
+
+
+        </RelativeLayout>
 
     </RelativeLayout>
 </RelativeLayout>

@@ -831,15 +831,6 @@ public class APIUri {
         return getEMMBaseUrl() + "api/mam/v3.0/gs_sso/app_uri?id=" + appId;
     }
 
-    /**
-     * 获取上传Certificate的接口
-     * @param appId
-     * @return
-     */
-    public static String getCertificateUrl () {
-        return  "http://172.31.2.18/api/ews/v1.0/UserProfile/CheckData";
-    }
-
     /*****************************************ReactNative**************************************/
     /**
      * 更新的Native地址
@@ -1125,7 +1116,7 @@ public class APIUri {
 
     /**************************Mail********************************************/
     public static String getMailBaseUrl() {
-        return "http://172.31.2.18/api/ews/v1.0";
+        return getEMMBaseUrl()+"api/ews/v1.0";
     }
 
     public static String getMailFolderUrl() {
@@ -1148,6 +1139,31 @@ public class APIUri {
     public static String getMailAttachmentUrl(){
         return getMailBaseUrl()+"/Mail/SafeAttachment?";
     }
+
+    /**
+     * 获取上传Certificate的接口
+     * @return
+     */
+    public static String getCertificateUrl () {
+        return  getMailBaseUrl()+"/UserProfile/CheckData";
+    }
+
+    /**
+     * 获取上传邮件Url
+     * @return
+     */
+    public static String getUploadMailUrl() {
+        return  getMailBaseUrl()+"/Mail/SafeSend";
+    }
+
+    /**
+     * 获取删除邮件Url
+     * @return
+     */
+    public static String getRemoveMailUrl() {
+        return  getMailBaseUrl()+"/Mail/Remove";
+    }
+
 /************************************************************************工作****************************************************************************/
     /***************会议接口*****************************/
     /**
@@ -1674,6 +1690,10 @@ public class APIUri {
      */
     public static String getCheckCloudPluseConnectUrl() {
         return "https://emm.inspur.com/api/mam/v3.0/heart/success";
+    }
+
+    public static String getCancelTokenUrl(){
+        return MyApplication.getInstance().getCloudId()+"oauth2.0/profile";
     }
 
 }

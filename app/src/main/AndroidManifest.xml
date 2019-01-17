@@ -91,11 +91,14 @@
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.SYSTEM_OVERLAY_WINDOW" />
 
+    <!--电源权限-->
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"/>
 
     <!-- 语音播放 -->
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.Manifest.permission.DEVICE_POWER" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 
     <!--科大讯飞语音增加权限-->
     <!--获取手机录音机使用权限，听写、识别、语义理解需要用到此权限 -->
@@ -347,7 +350,7 @@
             android:name=".ui.SchemeHandleActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait">
+            android:theme="@style/AppTheme.Transparent">
             <intent-filter>
                 <action android:name="android.intent.action.SEND_MULTIPLE" />
 
@@ -929,6 +932,7 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
 
+        <!-- Mail-->
         <activity android:name=".ui.appcenter.mail.MailHomeActivity">
             android:resizeableActivity="true"
             android:screenOrientation="portrait"
@@ -942,13 +946,16 @@
             android:screenOrientation="portrait"
         </activity>
 
-        <!-- Mail-->
         <activity
             android:name=".ui.appcenter.mail.MailCertificateInstallActivity"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.appcenter.mail.MailSendActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.appcenter.mail.MailSettingActivity"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
 
@@ -1314,6 +1321,16 @@
             android:excludeFromRecents="true"
             android:resizeableActivity="true"
             android:theme="@style/Theme.UMDefault" />
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
     </application>
 
 

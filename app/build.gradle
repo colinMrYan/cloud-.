@@ -41,8 +41,8 @@ android {
         applicationId "com.inspur.emmcloud"
         minSdkVersion 16
         targetSdkVersion 27
-        versionCode 67
-        versionName "2.7.5"
+        versionCode 69
+        versionName "2.7.6-beta.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             abiFilters "armeabi-v7a", "x86"
@@ -217,7 +217,7 @@ dependencies {
     androidTestCompile('com.android.support.test:rules:0.5') {
         exclude module: 'support-annotations'
     }
-    compile(name: 'xutils-3.5.0.1', ext: 'aar')
+    compile(name: 'xutils-3.5.0.2', ext: 'aar')
     compile(name: 'qmui-1.0.4', ext: 'aar')
     compile 'commons-codec:commons-codec:20041127.091804'
     compile files('libs/jpush-android-3.1.1.jar')

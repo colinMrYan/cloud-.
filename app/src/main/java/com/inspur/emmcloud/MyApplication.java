@@ -27,6 +27,7 @@ import com.github.zafarkhaja.semver.Version;
 import com.horcrux.svg.SvgPackage;
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechUtility;
+import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.bean.mine.Enterprise;
 import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
 import com.inspur.emmcloud.bean.mine.Language;
@@ -116,12 +117,6 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     public void onCreate() {
         super.onCreate();
         init();
-        int currentThemeNo = PreferencesUtils.getInt(MyApplication.getInstance(), Constant.PREF_APP_THEME, 0);
-        if (currentThemeNo == 0){
-            setTheme(R.style.AppTheme_1);
-        }else {
-            setTheme(R.style.AppTheme_2);
-        }
         LogUtils.isDebug = AppUtils.isApkDebugable(getInstance());
         setAppLanguageAndFontScale();
         removeAllSessionCookie();
@@ -196,6 +191,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         removeAllCookie();
         removeAllSessionCookie();
         clearUserPhotoMap();
+        cancelToken();
         PreferencesUtils.putString(this, "accessToken", "");
         PreferencesUtils.putString(this, "refreshToken", "");
         setAccessToken("");
@@ -206,6 +202,15 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         startActivity(intent);
         WebSocketPush.getInstance().webSocketSignout();
         ECMShortcutBadgeNumberManagerUtils.setDesktopBadgeNumber(getInstance(), 0);
+    }
+
+    /**
+     * 退出登录时注销token
+     * 无后续需要根据返回内容
+     */
+    private void cancelToken() {
+        AppAPIService appAPIService = new AppAPIService(this);
+        appAPIService.cancelToken();
     }
 /****************************通知相关（极光和华为推送）******************************************/
     /**

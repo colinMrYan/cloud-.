@@ -1,9 +1,5 @@
 package com.inspur.imp.plugin.filetransfer.filemanager;
 
-import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
-
 import com.inspur.imp.plugin.filetransfer.filemanager.bean.FileType;
 
 import java.io.File;
@@ -115,94 +111,4 @@ public class FileUtil {
         return size + " B" ;
     }
 
-    /**
-     * 安装apk
-     * @param context
-     * @param file
-     */
-    public static void openAppIntent(Context context , File file ){
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setDataAndType(Uri.fromFile( file ), "application/vnd.android.package-archive");
-        context.startActivity(intent);
-    }
-
-    /**
-     * 打开图片资源
-     * @param context
-     * @param file
-     */
-    public static void openImageIntent( Context context , File file ) {
-        Uri path = Uri.fromFile(file);
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.addCategory("android.intent.category.DEFAULT");
-        intent.setDataAndType(path, "image/*");
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        context.startActivity(intent);
-    }
-
-    /**
-     * 打开文本资源
-     * @param context
-     * @param file
-     */
-    public static void openTextIntent( Context context , File file ) {
-        Uri path = Uri.fromFile(file);
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.addCategory("android.intent.category.DEFAULT");
-        intent.setDataAndType(path, "text/*");
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        context.startActivity(intent);
-    }
-
-    /**
-     * 打开音频资源
-     * @param context
-     * @param file
-     */
-    public static void openMusicIntent( Context context , File file ){
-        Uri path = Uri.fromFile(file);
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.setDataAndType(path, "audio/*");
-        context.startActivity(intent);
-    }
-
-    /**
-     * 打开视频资源
-     * @param context
-     * @param file
-     */
-    public static void openVideoIntent( Context context , File file ){
-        Uri path = Uri.fromFile(file);
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.setDataAndType(path, "video/*");
-        context.startActivity(intent);
-    }
-
-    /**
-     * 打开所有能打开应用资源
-     * @param context
-     * @param file
-     */
-    public static void openApplicationIntent( Context context , File file ){
-        Uri path = Uri.fromFile(file);
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.setDataAndType(path, "application/*");
-        context.startActivity(intent);
-    }
-
-    /**
-     * 发送文件给第三方app
-     * @param context
-     * @param file
-     */
-    public static void sendFile( Context context , File file ){
-        Intent share = new Intent(Intent.ACTION_SEND);
-        share.putExtra(Intent.EXTRA_STREAM,
-                Uri.fromFile(file));
-        share.setType("*/*");//此处可发送多种文件
-        context.startActivity(Intent.createChooser(share, "发送"));
-    }
 }

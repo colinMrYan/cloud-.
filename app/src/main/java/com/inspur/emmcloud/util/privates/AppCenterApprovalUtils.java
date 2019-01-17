@@ -66,7 +66,7 @@ public class AppCenterApprovalUtils {
                 if (StringUtils.isBlank(password)) {
                     ToastUtils.show(context, R.string.login_please_input_password);
                 }else if(password.length()<6){
-                    ToastUtils.show(context, R.string.modify_input_password);
+                    ToastUtils.show(context, R.string.modify_password_invalid);
                 }else{
                     try {
                         String encodePassword = EncryptUtils.encodeApprovalPassword(password);

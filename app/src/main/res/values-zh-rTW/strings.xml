@@ -606,7 +606,7 @@
     <string name="modify_input_confirm_passord">請輸入確認密碼</string>
     <string name="modify_new_old_same">新密碼不能和原密碼相同</string>
     <string name="modify_not_same">新密碼和確認密碼不一致</string>
-    <string name="modify_input_password">請輸入6~64位元密碼</string>
+    <string name="modify_password_invalid">所設密碼需包含數位、小寫字母、大寫字母、特殊符號四類字元其中的三類，並且長度最少為8位</string>
     <string name="modify_password_not_correct">密碼填寫不正確，請確認</string>
     <string name="modify_password_fail">修改密碼失敗</string>
     <string name="modify_password">修改密碼</string>
@@ -892,6 +892,12 @@
     <string name="net_ping_url_ali">阿里</string>
     <string name="net_ping_url_cloud">雲＋</string>
 
+    <!--电源白名单-->
+    <string name="battery_tip_content">系統已對雲+開啟省電優化，可能導致消息延遲或丟失，請將雲+加入到省電優化白名單（點擊“去設置”，在彈出對話框中點擊“允許”)</string>
+    <string name="battery_tip_ishide">不再提醒</string>
+    <string name="battery_tip_cancel">取消</string>
+    <string name="battery_tip_toset">去設置</string>
+
     <!-- ListView自訂控制項部分 -->
     <string name="xlistview_header_last_time">上次更新時間:</string>
     <string name="release_to_refresh">釋放立即刷新</string>
@@ -1106,4 +1112,10 @@
     <string name="permission_dialog_title">提示</string>
     <string name="permission_message_always_failed">您已禁止授予%1$s %2$s許可權，可能會造成功能不可用，如需使用請到設定裏授予許可權</string>
     <string name="permission_grant_fail">您已禁止授予%1$s %2$s許可權</string>
+
+    <string name="permission_open_cloud_plus">開啟%1$s</string>
+    <string name="permission_necessary_permission">為了您能正常使用%1$s，需要以下許可權</string>
+    <string name="permission_phone_permission">設備資訊</string>
+    <string name="permission_storage_permission">存儲空間</string>
+        <string name="permission_next">下一步</string>
 </resources>

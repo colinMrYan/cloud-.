@@ -36,7 +36,6 @@ public class BaseActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
-        super.onCreate(savedInstanceState);
         String className = this.getClass().getCanonicalName();
         boolean isContain = Arrays.asList(classNames).contains(className);
         if (!isContain) {
@@ -48,6 +47,7 @@ public class BaseActivity extends Activity {
             }
             StateBarUtils.translucent(this);
         }
+        super.onCreate(savedInstanceState);
         x.view().inject(this);
     }
 
