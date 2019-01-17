@@ -120,17 +120,11 @@ public class LoginActivity extends BaseActivity {
                 .setDefaultKeyboardType(EmmKeyboardType.LETTER);
         securityKeyboard = new EmmSecurityKeyboard(passwordEdit,configure);
         securityKeyboard.setOutsideTouchable(false);
+        securityKeyboard.setFocusable(false);
         passwordEdit.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 securityKeyboard.showSecurityKeyBoard();
-                return false;
-            }
-        });
-        userNameEdit.setOnTouchListener(new OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                securityKeyboard.showInput(userNameEdit);
                 return false;
             }
         });
