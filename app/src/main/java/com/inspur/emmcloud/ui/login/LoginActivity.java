@@ -31,8 +31,6 @@ import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.LoginUtils;
 import com.inspur.emmcloud.widget.ClearEditText;
 import com.inspur.emmcloud.widget.LoadingDialog;
-import com.inspur.emmcloud.widget.keyboardview.EmmKeyboardType;
-import com.inspur.emmcloud.widget.keyboardview.EmmSecurityConfigure;
 import com.inspur.emmcloud.widget.keyboardview.EmmSecurityKeyboard;
 
 
@@ -117,9 +115,7 @@ public class LoginActivity extends BaseActivity {
             }
         });
         initCloudPlusCluster();
-        EmmSecurityConfigure configure = new EmmSecurityConfigure()
-                .setDefaultKeyboardType(EmmKeyboardType.LETTER);
-        securityKeyboard = new EmmSecurityKeyboard(this,configure);
+        securityKeyboard = new EmmSecurityKeyboard(this);
         passwordEdit.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {

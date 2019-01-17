@@ -49,7 +49,10 @@ public class EmmSecurityKeyboard extends PopupWindow{
     private EditText curEditText;
     private Context context;
 
-    @SuppressLint("ClickableViewAccessibility")
+    public EmmSecurityKeyboard(Context context){
+        this(context,null);
+    }
+
     public EmmSecurityKeyboard(Context context, EmmSecurityConfigure securityConfigure) {
         super(context);
         if (securityConfigure == null) {

@@ -4,8 +4,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
@@ -21,6 +21,7 @@ import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.ClearEditText;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.dialogs.EasyDialog;
+import com.inspur.emmcloud.widget.keyboardview.EmmSecurityKeyboard;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -28,12 +29,11 @@ import java.util.regex.Pattern;
 public class ModifyUserFirstPsdActivity extends BaseActivity {
 
 
-	private Button confirmModifyButton;
 	private LoginAPIService apiService;
 	private LoadingDialog loadingDialog;
-//	private ClearEditText oldpsdEdit;
 	private ClearEditText newpsdEdit;
 	private ClearEditText confirmpsdEdit;
+	private EmmSecurityKeyboard emmSecurityKeyboard;
 	
 	
 	@Override
@@ -41,43 +41,36 @@ public class ModifyUserFirstPsdActivity extends BaseActivity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_modify_firstuserpsd);
+		init();
+	}
+
+	private void init() {
 		apiService = new LoginAPIService(ModifyUserFirstPsdActivity.this);
 		apiService.setAPIInterface(new WebService());
-		confirmModifyButton = (Button) findViewById(R.id.modifyuserpsd_button);
 		loadingDialog = new LoadingDialog(ModifyUserFirstPsdActivity.this);
-		
-//		oldpsdEdit = (ClearEditText) findViewById(R.id.modifyuserpsd_old_edit);
-		newpsdEdit = (ClearEditText) findViewById(R.id.modifyuserpsd_new_edit);
-		confirmpsdEdit = (ClearEditText) findViewById(R.id.modifyuserpsd_confirm_edit);
-		
-		
-		
-//		confirmModifyButton.setOnClickListener(new OnClickListener() {
-//			
-//			@Override
-//			public void onClick(View v) {
-//				// TODO Auto-generated method stub
-//
-////				String oldpsd = oldpsdEdit.getText().toString();
-//				String newpsd = newpsdEdit.getText().toString();
-//				String confirmpsd = confirmpsdEdit.getText().toString();
-//				Pattern pattern = Pattern.compile("^\\S{6,128}$");
-//				Matcher matcher = pattern.matcher(newpsd);
-//				
-//				
-//				if(!TextUtils.isEmpty(newpsd)&&matcher.matches()&&!TextUtils.isEmpty(confirmpsd)&&NetUtils.isNetworkConnected(ModifyUserFirstPsdActivity.this)){
-//					loadingDialog.show();
-//					if(newpsd.equals(confirmpsd)){
-//						apiService.changePsd("", newpsd);
-//					}
-//				}else if(!TextUtils.isEmpty(newpsd)&&!matcher.matches()){
-//					Toast.makeText(ModifyUserFirstPsdActivity.this, "请输入6~128位密码", Toast.LENGTH_SHORT).show();
-//				}
-//
-//			}
-//		});
+		newpsdEdit = findViewById(R.id.modifyuserpsd_new_edit);
+		confirmpsdEdit = findViewById(R.id.modifyuserpsd_confirm_edit);
+		emmSecurityKeyboard = new EmmSecurityKeyboard(this);
+		EditOnTouchListener editOnTouchListener = new EditOnTouchListener();
+		newpsdEdit.setOnTouchListener(editOnTouchListener);
 	}
-	
+
+	class EditOnTouchListener implements View.OnTouchListener{
+
+		@Override
+		public boolean onTouch(View view, MotionEvent motionEvent) {
+			switch (view.getId()){
+				case R.id.modifyuserpsd_new_edit:
+					emmSecurityKeyboard.showSecurityKeyBoard(newpsdEdit);
+					break;
+				case R.id.modifyuserpsd_old_edit:
+					emmSecurityKeyboard.showSecurityKeyBoard(confirmpsdEdit);
+					break;
+			}
+			return false;
+		}
+	}
+
 	public void onClick(View v){
 		Intent intent = new Intent();
 		switch (v.getId()) {
