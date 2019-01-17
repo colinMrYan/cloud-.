@@ -60,7 +60,7 @@ public class FillNewPwdActivity extends BaseActivity{
 				break;
 			}
 			if(!matcher.matches()){
-				ToastUtils.show(FillNewPwdActivity.this, getString(R.string.modify_input_password));
+				ToastUtils.show(FillNewPwdActivity.this, getString(R.string.modify_password_invalid));
 				break;
 			}
 			if(StringUtils.isBlank(smsCode)){
