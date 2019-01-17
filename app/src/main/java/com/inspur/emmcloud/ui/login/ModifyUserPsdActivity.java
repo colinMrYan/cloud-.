@@ -1,6 +1,5 @@
 package com.inspur.emmcloud.ui.login;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -40,12 +39,12 @@ public class ModifyUserPsdActivity extends BaseActivity {
 		setContentView(R.layout.activity_modify_userpsd);
 		apiService = new LoginAPIService(ModifyUserPsdActivity.this);
 		apiService.setAPIInterface(new WebService());
-		confirmModifyButton = (Button) findViewById(R.id.modifyuserpsd_button);
+		confirmModifyButton =  findViewById(R.id.modifyuserpsd_button);
 		loadingDialog = new LoadingDialog(ModifyUserPsdActivity.this);
 		
-		oldpsdEdit = (ClearEditText) findViewById(R.id.modifyuserpsd_old_edit);
-		newpsdEdit = (ClearEditText) findViewById(R.id.modifyuserpsd_new_edit);
-		confirmpsdEdit = (ClearEditText) findViewById(R.id.modifyuserpsd_confirm_edit);
+		oldpsdEdit =  findViewById(R.id.modifyuserpsd_old_edit);
+		newpsdEdit = findViewById(R.id.modifyuserpsd_new_edit);
+		confirmpsdEdit = findViewById(R.id.modifyuserpsd_confirm_edit);
 		confirmModifyButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {

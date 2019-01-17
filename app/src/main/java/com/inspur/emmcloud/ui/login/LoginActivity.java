@@ -118,11 +118,11 @@ public class LoginActivity extends BaseActivity {
         initCloudPlusCluster();
         EmmSecurityConfigure configure = new EmmSecurityConfigure()
                 .setDefaultKeyboardType(EmmKeyboardType.LETTER);
-        securityKeyboard = new EmmSecurityKeyboard(passwordEdit,configure);
+        securityKeyboard = new EmmSecurityKeyboard(this,configure);
         passwordEdit.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                securityKeyboard.showSecurityKeyBoard();
+                securityKeyboard.showSecurityKeyBoard(passwordEdit);
                 return false;
             }
         });

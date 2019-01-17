@@ -22,7 +22,6 @@ import android.widget.EditText;
 import android.widget.PopupWindow;
 
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.widget.ClearEditText;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -51,15 +50,14 @@ public class EmmSecurityKeyboard extends PopupWindow{
     private Context context;
 
     @SuppressLint("ClickableViewAccessibility")
-    public EmmSecurityKeyboard(final ClearEditText clearEditText, EmmSecurityConfigure securityConfigure) {
-        super(clearEditText.getContext());
+    public EmmSecurityKeyboard(Context context, EmmSecurityConfigure securityConfigure) {
+        super(context);
         if (securityConfigure == null) {
             configuration = new EmmSecurityConfigure();
         } else {
             configuration = securityConfigure;
         }
-        this.curEditText = clearEditText;
-        context = clearEditText.getContext();
+        this.context = context;
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mainView = inflater.inflate(R.layout.emm_keyboard, null);
@@ -104,6 +102,9 @@ public class EmmSecurityKeyboard extends PopupWindow{
         keyboardView.setEnabled(true);
         keyboardView.setPreviewEnabled(false);
         keyboardView.setOnKeyboardActionListener(listener);
+    }
+
+    private void editTextAddListener() {
         //方法1，需要把构造函数里的EditText换成ClearEditText
 //        curEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 //            @Override
@@ -128,7 +129,9 @@ public class EmmSecurityKeyboard extends PopupWindow{
     /**
      * 自主调用安全键盘
      */
-    public void showSecurityKeyBoard() {
+    public void showSecurityKeyBoard(EditText clearEditText) {
+        this.curEditText = clearEditText;
+        editTextAddListener();
         disableShowInput();
         curEditText.requestFocus();
         //curEditText.setInputType(InputType.TYPE_NULL);
