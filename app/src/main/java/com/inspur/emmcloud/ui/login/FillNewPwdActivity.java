@@ -2,6 +2,7 @@ package com.inspur.emmcloud.ui.login;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 
@@ -15,6 +16,7 @@ import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
+import com.inspur.emmcloud.widget.keyboardview.EmmSecurityKeyboard;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -30,6 +32,7 @@ public class FillNewPwdActivity extends BaseActivity{
 	private LoginAPIService apiService;
 	private LoadingDialog loadingDialog;
 	private String smsCode = "";
+	private EmmSecurityKeyboard emmSecurityKeyboard;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -60,7 +63,7 @@ public class FillNewPwdActivity extends BaseActivity{
 				break;
 			}
 			if(!matcher.matches()){
-				ToastUtils.show(FillNewPwdActivity.this, getString(R.string.modify_input_password));
+				ToastUtils.show(FillNewPwdActivity.this, getString(R.string.modify_password_invalid));
 				break;
 			}
 			if(StringUtils.isBlank(smsCode)){
@@ -93,8 +96,27 @@ public class FillNewPwdActivity extends BaseActivity{
 		apiService = new LoginAPIService(FillNewPwdActivity.this);
 		apiService.setAPIInterface(new WebService());
 		loadingDialog = new LoadingDialog(FillNewPwdActivity.this);
-		newPwdEdit = (EditText) findViewById(R.id.new_password_edit);
-		confirmPwdEdit = (EditText) findViewById(R.id.confirm_new_password_edit);
+		newPwdEdit = findViewById(R.id.new_password_edit);
+		confirmPwdEdit =  findViewById(R.id.confirm_new_password_edit);
+		emmSecurityKeyboard = new EmmSecurityKeyboard(this);
+		EditOnTouchListener editOnTouchListener = new EditOnTouchListener();
+		newPwdEdit.setOnTouchListener(editOnTouchListener);
+		confirmPwdEdit.setOnTouchListener(editOnTouchListener);
+	}
+
+	class EditOnTouchListener implements View.OnTouchListener{
+		@Override
+		public boolean onTouch(View view, MotionEvent motionEvent) {
+			switch (view.getId()){
+				case R.id.new_password_edit:
+					emmSecurityKeyboard.showSecurityKeyBoard(newPwdEdit);
+					break;
+				case R.id.confirm_new_password_edit:
+					emmSecurityKeyboard.showSecurityKeyBoard(confirmPwdEdit);
+					break;
+			}
+			return false;
+		}
 	}
 	
 	class WebService extends APIInterfaceInstance{

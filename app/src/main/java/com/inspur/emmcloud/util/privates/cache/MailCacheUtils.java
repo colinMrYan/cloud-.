@@ -2,6 +2,8 @@ package com.inspur.emmcloud.util.privates.cache;
 
 import com.inspur.emmcloud.bean.appcenter.mail.Mail;
 
+import org.xutils.db.sqlite.WhereBuilder;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,7 +44,7 @@ public class MailCacheUtils {
         return null;
     }
 
-    public static List<Mail> getMailListByMailIdList( List<String> mailIdList){
+    public static List<Mail> getMailListByMailIdList(List<String> mailIdList){
         List<Mail> mailList = null;
         try {
             mailList =  DbCacheUtils.getDb().selector(Mail.class). where("id", "in", mailIdList).findAll();
@@ -55,7 +57,7 @@ public class MailCacheUtils {
         return mailList;
     }
 
-    public static List<Mail> getMailListInFolder( String folderId,int limit){
+    public static List<Mail> getMailListInFolder(String folderId,int limit){
         List<Mail> mailList = null;
         try {
             mailList =  DbCacheUtils.getDb().selector(Mail.class). where("folderId", "=", folderId).orderBy("creationTimestamp", true).limit(limit).findAll();
@@ -66,5 +68,28 @@ public class MailCacheUtils {
             mailList = new ArrayList<>();
         }
         return mailList;
+    }
+
+    public static void deleteMailList(List<Mail> mailList){
+        try {
+            DbCacheUtils.getDb().delete(mailList);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static boolean removeMailListByMailIdList( List<String> mailIdList){
+        List<Mail> mailList = null;
+        try {
+            WhereBuilder b = WhereBuilder.b();
+            for(int i=0;i<mailIdList.size();i++){
+                b.and("id","=",mailIdList.get(i)); //构造修改的条件
+            }
+            DbCacheUtils.getDb().delete(Mail.class,b);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

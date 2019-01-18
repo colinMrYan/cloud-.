@@ -23,22 +23,33 @@ import java.util.List;
 public class MailListAdapter extends BaseAdapter {
     private Context context;
     private List<Mail> mailList = new ArrayList<>();
+    private List<Mail> mailSelectList = new ArrayList<>();
     private MailFolder currentRootMailFolder;
+    private boolean isSelectMode = false;
 
     public MailListAdapter(Context context) {
         this.context = context;
     }
 
-    public void setMailList(List<Mail> mailList,MailFolder currentRootMailFolder){
+    public void setMailList(List<Mail> mailList, MailFolder currentRootMailFolder,List<Mail> mailSelectList) {
         this.mailList = mailList;
         this.currentRootMailFolder = currentRootMailFolder;
+        this.mailSelectList = mailSelectList;
     }
 
-    public void clearMailList(){
+    public void clearMailList() {
         this.mailList.clear();
         notifyDataSetChanged();
     }
 
+
+    public void setSelectMode(boolean isSelectModel){
+        this.isSelectMode = isSelectModel;
+    }
+
+    public boolean getSelectMode(){
+        return isSelectMode;
+    }
 
     @Override
     public int getCount() {
@@ -58,62 +69,47 @@ public class MailListAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder = new ViewHolder();
-        if (convertView == null){
+        if (convertView == null) {
             convertView = LayoutInflater.from(context).inflate(R.layout.mail_list_item_view, null);
-            viewHolder.titleText = (TextView) convertView.findViewById(R.id.tv_title);
-            viewHolder.timeText = (TextView) convertView.findViewById(R.id.tv_time);
-            viewHolder.topicText = (TextView) convertView.findViewById(R.id.tv_topic);
-            viewHolder.encryptFlagImg = (ImageView) convertView.findViewById(R.id.iv_flag_encrypt);
-            viewHolder.signFlagImg = (ImageView) convertView.findViewById(R.id.iv_flag_sign);
+            viewHolder.titleText = convertView.findViewById(R.id.tv_title);
+            viewHolder.timeText = convertView.findViewById(R.id.tv_time);
+            viewHolder.topicText = convertView.findViewById(R.id.tv_topic);
+            viewHolder.encryptFlagImg = convertView.findViewById(R.id.iv_flag_encrypt);
+            viewHolder.signFlagImg = convertView.findViewById(R.id.iv_flag_sign);
+            viewHolder.selectImageView = convertView.findViewById(R.id.iv_left_check);
             viewHolder.unReadView = convertView.findViewById(R.id.v_unread);
             convertView.setTag(viewHolder);
-        }else {
-            viewHolder = (ViewHolder)convertView.getTag();
+        } else {
+            viewHolder = (ViewHolder) convertView.getTag();
         }
 
         Mail mail = mailList.get(position);
         int folderType = currentRootMailFolder.getFolderType();
         //当root文件夹为发件箱、已发送和草稿箱时title显示收件人，否则显示发件人
-        if (folderType == 0 || folderType == 2 || folderType ==3){
+        if (folderType == 0 || folderType == 2 || folderType == 3) {
             viewHolder.titleText.setText(mail.getDisplayTo());
-        }else {
+        } else {
             viewHolder.titleText.setText(mail.getDisplaySender());
         }
-        String time = TimeUtils.getDisplayTime(context,mail.getCreationTimestamp());
+        String time = TimeUtils.getDisplayTime(context, mail.getCreationTimestamp());
         viewHolder.topicText.setText(mail.getSubject());
         viewHolder.encryptFlagImg.setImageResource(R.drawable.ic_mail_flag_encrypt_yes);
-        viewHolder.encryptFlagImg.setVisibility(mail.isEncrypted()?View.VISIBLE:View.INVISIBLE );
-        viewHolder.unReadView.setVisibility(mail.isRead()?View.GONE:View.VISIBLE);
+        viewHolder.encryptFlagImg.setVisibility(mail.isEncrypted() ? View.VISIBLE : View.INVISIBLE);
+        viewHolder.unReadView.setVisibility(mail.isRead() ? View.GONE : View.VISIBLE);
         viewHolder.timeText.setText(time);
+        viewHolder.selectImageView.setVisibility(isSelectMode ? View.VISIBLE : View.GONE);
+        boolean isMailSelect = isSelectMode && mailSelectList.contains(mail);
+        viewHolder.selectImageView.setImageResource(isMailSelect ? R.drawable.ic_volume_file_select_yes : R.drawable.ic_volume_file_select_no);
         return convertView;
     }
 
-    public static class ViewHolder{
-       TextView titleText;
+    public static class ViewHolder {
+        TextView titleText;
         ImageView encryptFlagImg;
         ImageView signFlagImg;
         TextView timeText;
         TextView topicText;
-       View unReadView;
+        View unReadView;
+        ImageView selectImageView;
     }
-
-//    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
-////        private CircleTextImageView senderPhotoImg;
-//
-//
-//        public ViewHolder(View convertView, AdapterListener adapterListener) {
-//            super(convertView);
-//            this.adapterListener = adapterListener;
-//            itemView.setOnClickListener(this);
-//            itemView.setOnLongClickListener(this);
-////            senderPhotoImg = (CircleTextImageView) convertView.findViewById(R.id.iv_mail_sender_photo);
-//            titleText = (TextView) convertView.findViewById(R.id.tv_title);
-//            timeText = (TextView) convertView.findViewById(R.id.tv_time);
-//            topicText = (TextView) convertView.findViewById(R.id.tv_topic);
-//            encryptFlagImg = (ImageView) convertView.findViewById(R.id.iv_flag_encrypt);
-//            signFlagImg = (ImageView) convertView.findViewById(R.id.iv_flag_sign);
-//            unReadView=convertView.findViewById(R.id.v_unread);
-//        }
-//    }
-
 }

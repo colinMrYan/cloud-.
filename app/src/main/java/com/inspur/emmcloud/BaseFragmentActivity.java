@@ -26,7 +26,6 @@ public class BaseFragmentActivity extends FragmentActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         String className = this.getClass().getCanonicalName();
         boolean isContain = Arrays.asList(classNames).contains(className);
         if (!isContain){
@@ -38,6 +37,7 @@ public class BaseFragmentActivity extends FragmentActivity {
             }
             StateBarUtils.translucent(this);
         }
+        super.onCreate(savedInstanceState);
     }
 
 

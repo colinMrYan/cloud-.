@@ -54,7 +54,7 @@ public class MailLoginActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         StateBarUtils.translucent(this,R.color.white);
-        StateBarUtils.setStateBarTextColor( this,true );
+        StateBarUtils.setStateBarTextColor(this,true);
         loadingDlg = new LoadingDialog(this);
         apiService = new MailApiService(this);
         apiService.setAPIInterface(new WebServie());

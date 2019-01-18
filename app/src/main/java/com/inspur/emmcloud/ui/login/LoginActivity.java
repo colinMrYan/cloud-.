@@ -7,13 +7,13 @@ import android.os.Message;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -32,6 +32,7 @@ import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.LoginUtils;
 import com.inspur.emmcloud.widget.ClearEditText;
 import com.inspur.emmcloud.widget.LoadingDialog;
+import com.inspur.emmcloud.widget.keyboardview.EmmSecurityKeyboard;
 
 
 /**
@@ -50,11 +51,12 @@ public class LoginActivity extends BaseActivity {
     private LoadingDialog LoadingDlg;
     private Handler handler;
     private ClearEditText userNameEdit;
-    private EditText passwordEdit;
+    private ClearEditText passwordEdit;
     private Button loginBtn;
     private ImageView seePWImg;
     private TextView enterpriseTextView;
     private boolean canSee = false;
+    private EmmSecurityKeyboard securityKeyboard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +65,7 @@ public class LoginActivity extends BaseActivity {
         setContentView(R.layout.activity_login);
         PreferencesUtils.putString(this, "previousVersion",AppUtils.getVersion(this));
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
+        this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
         MyApplication.getInstance().closeOtherActivity(LoginActivity.this);
         initView();
         handMessage();
@@ -79,11 +82,11 @@ public class LoginActivity extends BaseActivity {
                         return false;
                     }
                 });
-        loginBtn = (Button) findViewById(R.id.login_btn);
+        loginBtn =  findViewById(R.id.login_btn);
         LoadingDlg = new LoadingDialog(LoginActivity.this,
                 getString(R.string.login_loading_text));
-        userNameEdit = ((ClearEditText) findViewById(R.id.username_edit));
-        passwordEdit = ((EditText) findViewById(R.id.password_edit));
+        userNameEdit =  findViewById(R.id.username_edit);
+        passwordEdit =  findViewById(R.id.password_edit);
         // 为用户名输入框设置输入监听
         EditWatcher watcher = new EditWatcher();
         userNameEdit.addTextChangedListener(watcher);
@@ -113,6 +116,21 @@ public class LoginActivity extends BaseActivity {
             }
         });
         initCloudPlusCluster();
+        securityKeyboard = new EmmSecurityKeyboard(this);
+        passwordEdit.setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                securityKeyboard.showSecurityKeyBoard(passwordEdit);
+                return false;
+            }
+        });
+        userNameEdit.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                securityKeyboard.showSecurityKeyBoard(passwordEdit);
+                return false;
+            }
+        });
     }
 
     /**

@@ -12,10 +12,16 @@ public class MailAttachment {
     private String id;
     private String name;
     private String data;
+    private int size;
+    private boolean isAttachment;
+    private String contentId;
 
     public MailAttachment(JSONObject obj){
         id= JSONUtils.getString(obj,"id","");
+        contentId = JSONUtils.getString(obj,"contentId","");
         name= JSONUtils.getString(obj,"name","");
+        size= JSONUtils.getInt(obj,"size",-1);
+        isAttachment= JSONUtils.getBoolean(obj,"isAttachment",true);
     }
 
     public String getId() {
@@ -42,10 +48,23 @@ public class MailAttachment {
         this.data = data;
     }
 
-    public JSONObject getMailAttachment(){
-        JSONObject jsonObject = new JSONObject();
-
-        return  jsonObject;
+    public int getSize() {
+        return size;
     }
 
+    public boolean isAttachment() {
+        return isAttachment;
+    }
+
+    public void setAttachment(boolean attachment) {
+        isAttachment = attachment;
+    }
+
+    public String getContentId() {
+        return contentId;
+    }
+
+    public void setContentId(String contentId) {
+        this.contentId = contentId;
+    }
 }

@@ -1,27 +1,27 @@
 package com.inspur.emmcloud.ui.login;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
 
 import com.inspur.emmcloud.BaseActivity;
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.LoginAPIService;
+import com.inspur.emmcloud.util.common.FomatUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.widget.ClearEditText;
 import com.inspur.emmcloud.widget.LoadingDialog;
+import com.inspur.emmcloud.widget.keyboardview.EmmSecurityKeyboard;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class ModifyUserPsdActivity extends BaseActivity {
 
@@ -32,33 +32,40 @@ public class ModifyUserPsdActivity extends BaseActivity {
 	private ClearEditText oldpsdEdit;
 	private ClearEditText newpsdEdit;
 	private ClearEditText confirmpsdEdit;
+	private EmmSecurityKeyboard emmSecurityKeyboard;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_modify_userpsd);
+		init();
+	}
+
+	private void init() {
 		apiService = new LoginAPIService(ModifyUserPsdActivity.this);
 		apiService.setAPIInterface(new WebService());
-		confirmModifyButton = (Button) findViewById(R.id.modifyuserpsd_button);
+		confirmModifyButton =  findViewById(R.id.modifyuserpsd_button);
 		loadingDialog = new LoadingDialog(ModifyUserPsdActivity.this);
-		
-		oldpsdEdit = (ClearEditText) findViewById(R.id.modifyuserpsd_old_edit);
-		newpsdEdit = (ClearEditText) findViewById(R.id.modifyuserpsd_new_edit);
-		confirmpsdEdit = (ClearEditText) findViewById(R.id.modifyuserpsd_confirm_edit);
-		confirmModifyButton.setOnClickListener(new OnClickListener() {
+		emmSecurityKeyboard = new EmmSecurityKeyboard(this);
+		oldpsdEdit =  findViewById(R.id.modifyuserpsd_old_edit);
+		newpsdEdit = findViewById(R.id.modifyuserpsd_new_edit);
+		confirmpsdEdit = findViewById(R.id.modifyuserpsd_confirm_edit);
+		addListeners();
+	}
+
+	private void addListeners() {
+		confirmModifyButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				String oldpsd = oldpsdEdit.getText().toString();
 				String newpsd = newpsdEdit.getText().toString();
 				String confirmpsd = confirmpsdEdit.getText().toString();
-				Pattern pattern = Pattern.compile("^\\S{6,128}$");
-				Matcher matcher = pattern.matcher(newpsd);
 				if(TextUtils.isEmpty(oldpsd)){
 					Toast.makeText(ModifyUserPsdActivity.this, getString(R.string.modify_input_old_password), Toast.LENGTH_SHORT).show();
 					return;
 				}
-				
+
 				if(TextUtils.isEmpty(newpsd)){
 					Toast.makeText(ModifyUserPsdActivity.this, getString(R.string.modify_input_user_new_password), Toast.LENGTH_SHORT).show();
 					return;
@@ -75,18 +82,48 @@ public class ModifyUserPsdActivity extends BaseActivity {
 					Toast.makeText(ModifyUserPsdActivity.this, getString(R.string.modify_not_same), Toast.LENGTH_SHORT).show();
 					return;
 				}
-				if(!TextUtils.isEmpty(newpsd)&&matcher.matches()&&!TextUtils.isEmpty(confirmpsd)&&NetUtils.isNetworkConnected(ModifyUserPsdActivity.this)){
-					loadingDialog.show();
-					apiService.changePsd(oldpsd, newpsd);
-				}else if(!TextUtils.isEmpty(newpsd)&&!matcher.matches()){
-					Toast.makeText(ModifyUserPsdActivity.this, getString(R.string.modify_input_password), Toast.LENGTH_SHORT).show();
+
+				if (newpsd.length()<8 || newpsd.length()>64 ||!FomatUtils.isPasswrodStrong(newpsd) ){
+					ToastUtils.show(MyApplication.getInstance(),R.string.modify_password_invalid);
+					return;
 				}
+				changePsw(oldpsd,newpsd);
 			}
 		});
+		EditOnTouchListener editOnTouchListener = new EditOnTouchListener();
+		oldpsdEdit.setOnTouchListener(editOnTouchListener);
+		newpsdEdit.setOnTouchListener(editOnTouchListener);
+		confirmpsdEdit.setOnTouchListener(editOnTouchListener);
 	}
-	
+
+	class EditOnTouchListener implements View.OnTouchListener{
+
+		@Override
+		public boolean onTouch(View view, MotionEvent motionEvent) {
+			switch (view.getId()){
+				case R.id.modifyuserpsd_old_edit:
+					emmSecurityKeyboard.showSecurityKeyBoard(oldpsdEdit);
+					break;
+				case R.id.modifyuserpsd_new_edit:
+					emmSecurityKeyboard.showSecurityKeyBoard(newpsdEdit);
+					break;
+				case R.id.modifyuserpsd_confirm_edit:
+					emmSecurityKeyboard.showSecurityKeyBoard(confirmpsdEdit);
+					break;
+			}
+			return false;
+		}
+	}
+
 	public void onClick(View v){
 		finish();
+	}
+
+	private void changePsw(String oldpsd,String newpsd){
+		if (NetUtils.isNetworkConnected(MyApplication.getInstance())){
+			loadingDialog.show();
+			apiService.changePsd(oldpsd, newpsd);
+		}
 	}
 	
 	class WebService extends APIInterfaceInstance{

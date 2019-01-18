@@ -52,6 +52,7 @@
         android:background="#d9dddf" />
 
     <LinearLayout
+        android:id="@+id/ll_login_layout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
@@ -93,6 +94,7 @@
             android:background="#d9dddf" />
 
         <RelativeLayout
+            android:id="@+id/rl_login_password"
             android:layout_width="fill_parent"
             android:layout_height="46dp">
 
