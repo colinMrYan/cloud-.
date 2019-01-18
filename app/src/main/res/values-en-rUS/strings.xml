@@ -1119,4 +1119,11 @@
     <string name="permission_phone_permission">Phone</string>
     <string name="permission_storage_permission">Storage</string>
     <string name="permission_next">Next</string>
+
+    <!--键盘相关-->
+    <string name="emm_keyboard_a2z">abcdefghijklmnopqrstuvwxyz</string>
+    <string name="emm_keyboard_zero2nine">1234567890</string>
+    <string name="emm_keyboard_number">Number</string>
+    <string name="emm_keyboard_symbol">Symbol</string>
+    <string name="emm_keyboard_letter">Letter</string>
 </resources>

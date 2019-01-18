@@ -1119,4 +1119,11 @@
     <string name="permission_phone_permission">設備資訊</string>
     <string name="permission_storage_permission">存儲空間</string>
         <string name="permission_next">下一步</string>
+
+    <!--键盘相关-->
+    <string name="emm_keyboard_a2z">abcdefghijklmnopqrstuvwxyz</string>
+    <string name="emm_keyboard_zero2nine">1234567890</string>
+    <string name="emm_keyboard_number">數位</string>
+    <string name="emm_keyboard_symbol">符號</string>
+    <string name="emm_keyboard_letter">字母</string>
 </resources>

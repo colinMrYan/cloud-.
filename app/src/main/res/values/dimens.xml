@@ -42,4 +42,7 @@
     <dimen name="selected_day_radius">15.5dip</dimen>
     <dimen name="calendar_height">320dip</dimen>
 
+    <dimen name="key_height">48dp</dimen>
+    <dimen name="key_height_land">40dp</dimen>
+
 </resources>
