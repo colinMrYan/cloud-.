@@ -14,7 +14,7 @@
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:keyBackground="@drawable/keyboard_key"
-        android:keyTextColor="#030303"
+        android:keyTextColor="#666666"
         android:paddingBottom="10dip"
         android:paddingLeft="8dp"
         android:paddingRight="8dp"

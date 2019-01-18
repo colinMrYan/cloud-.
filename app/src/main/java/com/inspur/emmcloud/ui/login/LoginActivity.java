@@ -7,6 +7,7 @@ import android.os.Message;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -119,6 +120,13 @@ public class LoginActivity extends BaseActivity {
         passwordEdit.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
+                securityKeyboard.showSecurityKeyBoard(passwordEdit);
+                return false;
+            }
+        });
+        userNameEdit.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
                 securityKeyboard.showSecurityKeyBoard(passwordEdit);
                 return false;
             }

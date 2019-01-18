@@ -53,6 +53,7 @@ public class ModifyUserFirstPsdActivity extends BaseActivity {
 		emmSecurityKeyboard = new EmmSecurityKeyboard(this);
 		EditOnTouchListener editOnTouchListener = new EditOnTouchListener();
 		newpsdEdit.setOnTouchListener(editOnTouchListener);
+		confirmpsdEdit.setOnTouchListener(editOnTouchListener);
 	}
 
 	class EditOnTouchListener implements View.OnTouchListener{
@@ -63,7 +64,7 @@ public class ModifyUserFirstPsdActivity extends BaseActivity {
 				case R.id.modifyuserpsd_new_edit:
 					emmSecurityKeyboard.showSecurityKeyBoard(newpsdEdit);
 					break;
-				case R.id.modifyuserpsd_old_edit:
+				case R.id.modifyuserpsd_confirm_edit:
 					emmSecurityKeyboard.showSecurityKeyBoard(confirmpsdEdit);
 					break;
 			}
