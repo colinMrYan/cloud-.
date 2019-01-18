@@ -123,12 +123,6 @@ public class LoginActivity extends BaseActivity {
                 return false;
             }
         });
-//        passwordEdit.setOnClickListener(new OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                LogUtils.YfcDebug("监听到点击事件");
-//            }
-//        });
     }
 
     /**
