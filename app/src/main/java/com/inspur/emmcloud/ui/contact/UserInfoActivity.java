@@ -30,6 +30,7 @@ import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactOrgCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
+import com.inspur.emmcloud.widget.dialogs.ActionSheetDialog;
 
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
@@ -166,11 +167,7 @@ public class UserInfoActivity extends BaseActivity {
             dutyText.setVisibility(View.GONE);
         }
         ImageDisplayUtils.getInstance().displayImage(photoImg, headUrl, R.drawable.icon_person_default);
-        if (contactUser.getId().equals(MyApplication.getInstance().getUid())) {
-            startChatImg.setVisibility(View.GONE);
-        } else {
-            startChatImg.setVisibility(View.VISIBLE);
-        }
+        startChatImg.setVisibility(contactUser.getId().equals(MyApplication.getInstance().getUid())?View.GONE:View.VISIBLE);
         mobilePhoneLayout.setVisibility((StringUtils.isBlank(phoneNum) && StringUtils.isBlank(telStr))?View.GONE:View.VISIBLE);
         mobileSMSLayout.setVisibility(StringUtils.isBlank(phoneNum)?View.GONE:View.VISIBLE);
         mobileEmailLayout.setVisibility(StringUtils.isBlank(mail)?View.GONE:View.VISIBLE);
@@ -185,7 +182,7 @@ public class UserInfoActivity extends BaseActivity {
                 AppUtils.sendMail(UserInfoActivity.this, mail, USER_INFO_ACTIVITY_REQUEST_CODE);
                 break;
             case R.id.ll_mobile_phone:
-                AppUtils.call(UserInfoActivity.this, phoneNum, USER_INFO_ACTIVITY_REQUEST_CODE);
+                showCallPhoneDialog();
                 break;
             case R.id.ll_mobile_sms:
                 AppUtils.sendSMS(UserInfoActivity.this, phoneNum, USER_INFO_ACTIVITY_REQUEST_CODE);
@@ -213,6 +210,31 @@ public class UserInfoActivity extends BaseActivity {
             default:
                 break;
         }
+    }
+
+    private void showCallPhoneDialog() {
+        final String phoneNum = contactUser.getMobile();
+        final String officePhoneNum = contactUser.getTel();
+        new ActionSheetDialog.ActionListSheetBuilder(UserInfoActivity.this)
+                .setTitle(getString(R.string.user_call)+contactUser.getName())
+                .addItem(getString(R.string.user_info_phone_number)+":"+phoneNum)
+                .addItem(getString(R.string.user_office_phone)+":"+officePhoneNum)
+                .setOnSheetItemClickListener(new ActionSheetDialog.ActionListSheetBuilder.OnSheetItemClickListener() {
+                    @Override
+                    public void onClick(ActionSheetDialog dialog, View itemView, int position) {
+                        dialog.dismiss();
+                        switch (position){
+                            case 0:
+                                AppUtils.call(UserInfoActivity.this, phoneNum, USER_INFO_ACTIVITY_REQUEST_CODE);
+                                break;
+                            case 1:
+                                AppUtils.call(UserInfoActivity.this, officePhoneNum, USER_INFO_ACTIVITY_REQUEST_CODE);
+                                break;
+                        }
+                    }
+                })
+                .build()
+                .show();
     }
 
     private void createDirectChannel() {

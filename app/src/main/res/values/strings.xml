@@ -1181,4 +1181,7 @@
 
     <string name="phone_sms">短信</string>
     <string name="phone_email">邮件</string>
+
+    <string name="user_call">呼叫</string>
+    <string name="user_office_phone">固话</string>
 </resources>
