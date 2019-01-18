@@ -127,7 +127,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     }
 
     public String getCloudId() {
-        String clusterId = PreferencesUtils.getString(this, "cloud_idm", Constant.DEFAULT_CLUSTER_ID);
+        String clusterId = PreferencesUtils.getString(this, Constant.PREF_CLOUD_IDM, Constant.DEFAULT_CLUSTER_ID);
         return StringUtils.isBlank(clusterId) ? Constant.DEFAULT_CLUSTER_ID : clusterId;
     }
 

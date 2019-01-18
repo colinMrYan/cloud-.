@@ -7,8 +7,8 @@ import android.os.Message;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
-import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -31,7 +31,6 @@ import com.inspur.emmcloud.widget.ClearEditText;
 import com.inspur.emmcloud.widget.LoadingDialog;
 
 import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
 
 
@@ -69,6 +68,7 @@ public class LoginActivity extends BaseActivity {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         PreferencesUtils.putString(this,Constant.PREF_APP_PREVIOUS_VERSION,AppUtils.getVersion(this));
+        this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
         StateBarUtils.translucent(this,R.color.white);
         StateBarUtils.setStateBarTextColor( this,true );
         MyApplication.getInstance().closeOtherActivity(LoginActivity.this);
@@ -108,13 +108,6 @@ public class LoginActivity extends BaseActivity {
         setCurrentLoginEnterpriseName();
     }
 
-    @Event(value = R.id.ll_main,type = View.OnTouchListener.class)
-    private boolean onMainLayoutTouch(View v, MotionEvent event){
-        InputMethodUtils.hide(LoginActivity.this);
-        return false;
-    }
-
-
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.bt_login:
@@ -123,21 +116,21 @@ public class LoginActivity extends BaseActivity {
                 loginApp();
                 break;
             case R.id.tv_register:
-                IntentUtils
-                        .startActivity(LoginActivity.this, NewUserActivity.class);
+                IntentUtils.startActivity(LoginActivity.this, NewUserActivity.class);
                 break;
             case R.id.tv_forget_password:
-                IntentUtils
-                        .startActivity(LoginActivity.this, ModifyUserPwdBySMSActivity.class);
+                IntentUtils.startActivity(LoginActivity.this, ModifyUserPwdBySMSActivity.class);
                 break;
             case R.id.tv_login_via_sms:
-                IntentUtils.startActivity(LoginActivity.this,
-                        LoginViaSmsActivity.class);
+                IntentUtils.startActivity(LoginActivity.this,LoginViaSmsActivity.class);
                 break;
             case R.id.bt_more:
                 Intent intent = new Intent();
                 intent.setClass(LoginActivity.this, LoginMoreActivity.class);
                 startActivityForResult(intent, LOGIN_MORE);
+                break;
+            case R.id.ll_main:
+                InputMethodUtils.hide(LoginActivity.this);
                 break;
             default:
                 break;
