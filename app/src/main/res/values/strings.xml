@@ -260,7 +260,7 @@
     <string name="chanel_cancel_top"> 取消置顶</string>
     <string name="creat_group">创建群组</string>
     <string name="creat_group_fail">群组创建失败</string>
-    <string name="all_group_member">全部群成员(%1$d)</string>
+    <string name="all_group_member">群成员</string>
     <string name="add_group_member">添加群成员 </string>
     <string name="channel_group">群组</string>
     <string name="group_member">群成员列表 </string>
@@ -1184,4 +1184,7 @@
 
     <string name="user_call">呼叫</string>
     <string name="user_office_phone">固话</string>
+    <string name="group_qrcode">群二维码</string>
+
+    <string name="bracket_with_word">(%1$s)</string>
 </resources>
