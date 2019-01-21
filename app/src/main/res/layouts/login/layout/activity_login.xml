@@ -140,6 +140,7 @@
             android:layout_height="wrap_content"
             android:padding="17dp"
             android:background="@null"
+            android:visibility="gone"
             android:text="@string/login_to_register"
             android:id="@+id/tv_register"
             android:textColor="#733E4A59"

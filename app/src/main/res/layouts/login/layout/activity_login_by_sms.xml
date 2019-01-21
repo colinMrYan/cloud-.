@@ -88,7 +88,18 @@
                 android:layout_height="wrap_content" />
 
         </RelativeLayout>
-
+        <TextView
+            android:id="@+id/tv_login_by_account"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:paddingLeft="4dp"
+            android:onClick="onClick"
+            android:paddingBottom="15dp"
+            android:paddingTop="10dp"
+            android:text="@string/login_by_account"
+            android:textColor="#36A5F6"
+            android:textSize="13sp" />
 
         <Button
             android:id="@+id/bt_login"
@@ -96,7 +107,7 @@
             android:layout_height="46dp"
             android:layout_marginLeft="4dp"
             android:layout_marginRight="4dp"
-            android:layout_marginTop="70dp"
+            android:layout_marginTop="46dp"
             android:background="@drawable/bg_login_btn_unable"
             android:enabled="false"
             android:gravity="center"

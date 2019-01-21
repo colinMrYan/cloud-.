@@ -117,12 +117,12 @@ public class LoginActivity extends BaseActivity {
                 loginApp();
                 break;
             case R.id.tv_forget_password:
-                bundle.putInt(LoginViaSmsActivity.EXTRA_MODE,LoginViaSmsActivity.MODE_FORGET_PASSWORD);
-                IntentUtils.startActivity(LoginActivity.this, LoginViaSmsActivity.class,bundle);
+                bundle.putInt(LoginBySmsActivity.EXTRA_MODE, LoginBySmsActivity.MODE_FORGET_PASSWORD);
+                IntentUtils.startActivity(LoginActivity.this, LoginBySmsActivity.class,bundle);
                 break;
             case R.id.tv_login_via_sms:
-                bundle.putInt(LoginViaSmsActivity.EXTRA_MODE,LoginViaSmsActivity.MODE_LOGIN);
-                IntentUtils.startActivity(LoginActivity.this,LoginViaSmsActivity.class,bundle);
+                bundle.putInt(LoginBySmsActivity.EXTRA_MODE, LoginBySmsActivity.MODE_LOGIN);
+                IntentUtils.startActivity(LoginActivity.this,LoginBySmsActivity.class,bundle);
                 break;
             case R.id.bt_more:
                 Intent intent = new Intent();

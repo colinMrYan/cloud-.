@@ -43,8 +43,8 @@ import org.xutils.view.annotation.ViewInject;
  * 短信登录
  */
 
-@ContentView(R.layout.activity_login_via_sms)
-public class LoginViaSmsActivity extends BaseActivity {
+@ContentView(R.layout.activity_login_by_sms)
+public class LoginBySmsActivity extends BaseActivity {
 
     private static final int LOGIN_SUCCESS = 0;
     private static final int LOGIN_FAIL = 1;
@@ -66,6 +66,8 @@ public class LoginViaSmsActivity extends BaseActivity {
     private Button getCapthaBtn;
     @ViewInject(R.id.bt_login)
     private Button loginBtn;
+    @ViewInject(R.id.tv_login_by_account)
+    private TextView loginByAccountText;
     private Handler handler;
     private LoadingDialog loadingDlg;
     private SmsCaptchasReceiver smsCaptchasReceiver;
@@ -90,6 +92,7 @@ public class LoginViaSmsActivity extends BaseActivity {
         mode = getIntent().getExtras().getInt(EXTRA_MODE,MODE_LOGIN);
         loginBtn.setText((mode == MODE_LOGIN)?R.string.login:R.string.next_step);
         titleText.setText((mode == MODE_LOGIN)?R.string.login_code_login_text:R.string.login_find_password);
+        loginByAccountText.setVisibility((mode == MODE_LOGIN)?View.VISIBLE:View.INVISIBLE);
         handMessage();
         if (getIntent().hasExtra(EXTRA_PHONE)){
             phone = getIntent().getExtras().getString(EXTRA_PHONE,"");
@@ -111,7 +114,7 @@ public class LoginViaSmsActivity extends BaseActivity {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ll_main:
-                InputMethodUtils.hide(LoginViaSmsActivity.this);
+                InputMethodUtils.hide(LoginBySmsActivity.this);
                     break;
             case R.id.bt_get_captcha:
                 phone = phoneEdit.getText().toString();
@@ -133,6 +136,9 @@ public class LoginViaSmsActivity extends BaseActivity {
                     return;
                 }
                 login();
+                break;
+            case R.id.tv_login_by_account:
+                finish();
                 break;
 
         }
@@ -172,7 +178,7 @@ public class LoginViaSmsActivity extends BaseActivity {
     private void registerSMSReceiver() {
         // TODO Auto-generated method stub
         SmsCaptchasReceiver receiver = new SmsCaptchasReceiver(
-                LoginViaSmsActivity.this, handler);
+                LoginBySmsActivity.this, handler);
         // 注册短信变化监听
         this.getContentResolver().registerContentObserver(
                 Uri.parse("content://sms/"), true, receiver);
@@ -187,11 +193,11 @@ public class LoginViaSmsActivity extends BaseActivity {
     }
 
     private void enterApp() {
-        boolean isHasSetShortPassword = PreferencesUtils.getBoolean(LoginViaSmsActivity.this, Constant.PREF_LOGIN_HAVE_SET_PASSWORD,false);
+        boolean isHasSetShortPassword = PreferencesUtils.getBoolean(LoginBySmsActivity.this, Constant.PREF_LOGIN_HAVE_SET_PASSWORD,false);
         if (!isHasSetShortPassword){
-            IntentUtils.startActivity(LoginViaSmsActivity.this,ModifyUserFirstPsdActivity.class,true);
+            IntentUtils.startActivity(LoginBySmsActivity.this,ModifyUserFirstPsdActivity.class,true);
         }else {
-            IntentUtils.startActivity(LoginViaSmsActivity.this,IndexActivity.class,true);
+            IntentUtils.startActivity(LoginBySmsActivity.this,IndexActivity.class,true);
         }
     }
     private void handMessage(){
@@ -209,7 +215,7 @@ public class LoginViaSmsActivity extends BaseActivity {
                         }else {
                             Bundle bundle = new Bundle();
                             bundle.putString(PasswordResetActivity.EXTRA_CAPTCHA,captcha);
-                            IntentUtils.startActivity(LoginViaSmsActivity.this, PasswordResetActivity.class, bundle, true);
+                            IntentUtils.startActivity(LoginBySmsActivity.this, PasswordResetActivity.class, bundle, true);
                         }
                         break;
                     case LOGIN_FAIL:
@@ -261,7 +267,7 @@ public class LoginViaSmsActivity extends BaseActivity {
     private void login(){
         if (NetUtils.isNetworkConnected(this)){
             LoginUtils loginUtils = new LoginUtils(
-                    LoginViaSmsActivity.this, handler);
+                    LoginBySmsActivity.this, handler);
             loginUtils.login(phone, captcha, true);
         }
 
@@ -270,7 +276,7 @@ public class LoginViaSmsActivity extends BaseActivity {
     private void getSMSCaptcha(){
         if (NetUtils.isNetworkConnected(this)){
             loadingDlg.show();
-            LoginAPIService apiService = new LoginAPIService(LoginViaSmsActivity.this);
+            LoginAPIService apiService = new LoginAPIService(LoginBySmsActivity.this);
             apiService.setAPIInterface(new WebService());
             apiService.getLoginSMSCaptcha(phone);
             registerSMSReceiver();
@@ -284,7 +290,7 @@ public class LoginViaSmsActivity extends BaseActivity {
             LoadingDialog.dimissDlg(loadingDlg);
             phoneEdit.setEnabled(false);
             captchaEdit.setEnabled(true);
-            ToastUtils.show(LoginViaSmsActivity.this,R.string.login_captchas_getcode_success);
+            ToastUtils.show(LoginBySmsActivity.this,R.string.login_captchas_getcode_success);
             myCountDownTimer.start();
         }
 
@@ -294,9 +300,9 @@ public class LoginViaSmsActivity extends BaseActivity {
             LoadingDialog.dimissDlg(loadingDlg);
             String code = JSONUtils.getString(error, "code", "");
             if (errorCode == 400 && code.equals("10901")) {
-                ToastUtils.show(LoginViaSmsActivity.this, R.string.login_cant_login_with_sms);
+                ToastUtils.show(LoginBySmsActivity.this, R.string.login_cant_login_with_sms);
             } else {
-                WebServiceMiddleUtils.hand(LoginViaSmsActivity.this, error,errorCode);
+                WebServiceMiddleUtils.hand(LoginBySmsActivity.this, error,errorCode);
             }
             unRegisterSMSReceiver();
         }

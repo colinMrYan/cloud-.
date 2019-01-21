@@ -21,7 +21,7 @@ import com.inspur.emmcloud.bean.mine.Enterprise;
 import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
 import com.inspur.emmcloud.bean.mine.GetUploadMyHeadResult;
 import com.inspur.emmcloud.bean.mine.UserProfileInfoBean;
-import com.inspur.emmcloud.ui.login.LoginViaSmsActivity;
+import com.inspur.emmcloud.ui.login.LoginBySmsActivity;
 import com.inspur.emmcloud.ui.login.PasswordModifyActivity;
 import com.inspur.emmcloud.ui.mine.setting.SwitchEnterpriseActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
@@ -134,10 +134,10 @@ public class MyInfoActivity extends BaseActivity {
                 break;
             case R.id.myinfo_reset_layout:
                 Bundle bundle = new Bundle();
-                bundle.putInt(LoginViaSmsActivity.EXTRA_MODE,LoginViaSmsActivity.MODE_FORGET_PASSWORD);
-                bundle.putString(LoginViaSmsActivity.EXTRA_PHONE, getMyInfoResult.getPhoneNumber());
+                bundle.putInt(LoginBySmsActivity.EXTRA_MODE, LoginBySmsActivity.MODE_FORGET_PASSWORD);
+                bundle.putString(LoginBySmsActivity.EXTRA_PHONE, getMyInfoResult.getPhoneNumber());
                 IntentUtils.startActivity(MyInfoActivity.this,
-                        LoginViaSmsActivity.class, bundle);
+                        LoginBySmsActivity.class, bundle);
                 break;
             case R.id.switch_enterprese_text:
                 IntentUtils.startActivity(MyInfoActivity.this, SwitchEnterpriseActivity.class);

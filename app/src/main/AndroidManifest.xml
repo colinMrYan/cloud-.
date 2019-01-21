@@ -250,6 +250,12 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>
         <activity
+            android:name=".ui.login.PasswordFirstSettingActivity"
+            android:launchMode="singleTask"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait"></activity>
+
+        <activity
             android:name=".ui.login.ScanQrCodeLoginGSActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
@@ -274,7 +280,7 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".ui.login.LoginViaSmsActivity"
+            android:name=".ui.login.LoginBySmsActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>
