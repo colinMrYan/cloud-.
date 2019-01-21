@@ -7,9 +7,12 @@ import android.os.Message;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -29,6 +32,7 @@ import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.LoginUtils;
 import com.inspur.emmcloud.widget.ClearEditText;
 import com.inspur.emmcloud.widget.LoadingDialog;
+import com.inspur.emmcloud.widget.keyboardview.EmmSecurityKeyboard;
 
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
@@ -62,7 +66,7 @@ public class LoginActivity extends BaseActivity {
     private TextView welcomeText;
     @ViewInject(R.id.tv_register)
     private TextView registerText;
-
+    private EmmSecurityKeyboard securityKeyboard;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
@@ -76,7 +80,6 @@ public class LoginActivity extends BaseActivity {
         handMessage();
     }
 
-
     private void initView() {
         welcomeText.setText(getString(R.string.login_tv_welcome,AppUtils.getAppName(this)));
         registerText.setText(Html.fromHtml(getString(R.string.login_to_register)));
@@ -88,6 +91,21 @@ public class LoginActivity extends BaseActivity {
                 Constant.PREF_LOGIN_USERNAME, "");
         EditTextUtils.setText(usernameEdit, userName);
         setCurrentLoginEnterpriseName();
+        securityKeyboard = new EmmSecurityKeyboard(this);
+        passwordEdit.setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                securityKeyboard.showSecurityKeyBoard(passwordEdit);
+                return false;
+            }
+        });
+        usernameEdit.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                securityKeyboard.showSecurityKeyBoard(passwordEdit);
+                return false;
+            }
+        });
     }
 
 

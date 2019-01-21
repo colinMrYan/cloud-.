@@ -259,7 +259,7 @@
     <string name="chanel_cancel_top"> 取消置頂</string>
     <string name="creat_group">創建群組</string>
     <string name="creat_group_fail">群組創建失敗</string>
-    <string name="all_group_member">全部群成員(%1$d)</string>
+    <string name="all_group_member">群成員</string>
     <string name="add_group_member">添加群成員 </string>
     <string name="channel_group">群組</string>
     <string name="group_member">群成員列表 </string>
@@ -632,7 +632,7 @@
     <string name="user_info_name">姓名</string>
     <string name="user_depart">部門</string>
     <string name="user_depart_info_text">部門資訊</string>
-    <string name="user_telephone">辦公電話</string>
+    <string name="user_telephone">座機</string>
     <string name="user_info_sex">性別</string>
     <string name="user_qr_code">我的二維碼</string>
     <string name="user_function_introduction">功能簡介 </string>
@@ -648,7 +648,7 @@
     <string name="user_no_storage">沒有存放裝置</string>
     <string name="user_employee_num">員工編號</string>
     <string name="user_worker_num">工號</string>
-    <string name="user_new_chat">發消息</string>
+    <string name="user_new_chat">發起會話</string>
 
     <!-- 集團新聞 部分 -->
     <string name="news_group_news">集團新聞</string>
@@ -1120,4 +1120,11 @@
     <string name="permission_phone_permission">設備資訊</string>
     <string name="permission_storage_permission">存儲空間</string>
         <string name="permission_next">下一步</string>
+
+    <!--键盘相关-->
+    <string name="emm_keyboard_a2z">abcdefghijklmnopqrstuvwxyz</string>
+    <string name="emm_keyboard_zero2nine">1234567890</string>
+    <string name="emm_keyboard_number">數位</string>
+    <string name="emm_keyboard_symbol">符號</string>
+    <string name="emm_keyboard_letter">字母</string>
 </resources>

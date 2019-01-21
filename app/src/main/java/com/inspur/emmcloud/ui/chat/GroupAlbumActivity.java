@@ -1,24 +1,24 @@
 package com.inspur.emmcloud.ui.chat;
 
 import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.support.v4.util.ArrayMap;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.BaseAdapter;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.adapter.GroupAlbumItemAdapter;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.Msg;
+import com.inspur.emmcloud.util.common.GroupUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
+import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 import com.inspur.emmcloud.util.privates.cache.MsgCacheUtil;
 
@@ -28,36 +28,40 @@ import org.xutils.view.annotation.ViewInject;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.Map;
 
 @ContentView(R.layout.activity_group_album)
 public class GroupAlbumActivity extends BaseActivity {
 
+    private static final int GROUP_TYPE_MSG = 1;
+    private static final int GROUP_TYPE_MESSAGE = 2;
     @ViewInject(R.id.gv_album)
     private GridView albumGrid;
-
     @ViewInject(R.id.rl_no_channel_album)
     private RelativeLayout noChannelAlbumLayout;
-
+    @ViewInject(R.id.recycler_view_album)
+    private RecyclerView albumRecyclerView;
     private String cid;
     private ArrayList<String> imgUrlList = new ArrayList<>();
     private List<Msg> imgTypeMsgList;
     private List<Message> imgTypeMessageList;
+    private Map<String, List<Message>> messageGroupByDayMap = new ArrayMap<String, List<Message>>();
+    private Map<String, List<Msg>> msgGroupByDayMap = new ArrayMap<String, List<Msg>>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
+        init();
+    }
+
+    private void init() {
         cid = getIntent().getExtras().getString("cid");
         getImgMsgList();
         noChannelAlbumLayout.setVisibility(imgUrlList.size() == 0 ? View.VISIBLE:View.GONE);
-        albumGrid.setAdapter(new Adapter());
+        albumGrid.setAdapter(new GroupAlbumItemAdapter(this,imgUrlList));
         albumGrid.setOnItemClickListener(new OnItemClickListener() {
-
             @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-                // TODO Auto-generated method stub
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 int[] location = new int[2];
                 view.getLocationOnScreen(location);
                 view.invalidate();
@@ -68,8 +72,8 @@ public class GroupAlbumActivity extends BaseActivity {
                 bundle.putInt(ImagePagerV0Activity.PHOTO_SELECT_Y_TAG, location[1]);
                 bundle.putInt(ImagePagerV0Activity.PHOTO_SELECT_W_TAG, width);
                 bundle.putInt(ImagePagerV0Activity.PHOTO_SELECT_H_TAG, height);
-                bundle.putInt("image_index", position);
-                bundle.putStringArrayList("image_urls", imgUrlList);
+                bundle.putInt(ImagePagerActivity.EXTRA_IMAGE_INDEX, position);
+                bundle.putStringArrayList(ImagePagerActivity.EXTRA_IMAGE_URLS, imgUrlList);
                 if (MyApplication.getInstance().isV0VersionChat()){
                     bundle.putSerializable(ImagePagerV0Activity.EXTRA_IMAGE_MSG_LIST, (Serializable) imgTypeMsgList);
                     bundle.putSerializable(ImagePagerV0Activity.EXTRA_CURRENT_IMAGE_MSG, imgTypeMsgList.get(position));
@@ -79,31 +83,31 @@ public class GroupAlbumActivity extends BaseActivity {
                     bundle.putSerializable(ImagePagerV0Activity.EXTRA_CURRENT_IMAGE_MSG, imgTypeMessageList.get(position));
                     IntentUtils.startActivity(GroupAlbumActivity.this,ImagePagerActivity.class,bundle);
                 }
-
             }
         });
-
+//        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(GroupAlbumActivity.this);
+//        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+//        albumRecyclerView.setLayoutManager(linearLayoutManager);
+//        albumRecyclerView.setAdapter(new GroupAlbumAdapter(this,));
     }
 
-    /**
-     * 获取图片消息列表
-     */
     private void getImgMsgList() {
-        // TODO Auto-generated method stub
         if (MyApplication.getInstance().isV0VersionChat()){
             imgTypeMsgList = MsgCacheUtil.getImgTypeMsgList(MyApplication.getInstance(), cid);
             for (Msg msg :imgTypeMsgList){
                 String url = APIUri.getPreviewUrl(msg.getImgTypeMsgImg());
                 imgUrlList.add(url);
+                msg.setGroupDate(TimeUtils.getTime(msg.getTime(),TimeUtils.getFormat(this,TimeUtils.FORMAT_YEAR_MONTH)));
             }
-
+            Map<String, List<Msg>> messageGroupByDayMap  = GroupUtils.group(imgTypeMsgList,new ImageGroupByDate(GROUP_TYPE_MSG));
         }else {
             imgTypeMessageList = MessageCacheUtil.getImgTypeMessageList(MyApplication.getInstance(), cid);
             for (Message message:imgTypeMessageList) {
                 String url = APIUri.getChatFileResouceUrl(message.getChannel(),message.getMsgContentMediaImage().getRawMedia());
                 imgUrlList.add(url);
+                message.setGroupDate(TimeUtils.getTime(message.getCreationDate(),TimeUtils.getFormat(this,TimeUtils.FORMAT_YEAR_MONTH)));
             }
-
+            Map<String, List<Message>> messageGroupByDayMap = GroupUtils.group(imgTypeMessageList,new ImageGroupByDate(GROUP_TYPE_MESSAGE));
         }
     }
 
@@ -111,48 +115,24 @@ public class GroupAlbumActivity extends BaseActivity {
         finish();
     }
 
-    private class Adapter extends BaseAdapter {
+    class ImageGroupByDate implements GroupUtils.GroupBy<String> {
 
-        @Override
-        public int getCount() {
-            // TODO Auto-generated method stub
-            return imgUrlList.size();
+        private int groupType = -1;
+        public ImageGroupByDate(int groupType){
+            this.groupType = groupType;
         }
 
         @Override
-        public Object getItem(int position) {
-            // TODO Auto-generated method stub
-            return null;
-        }
-
-        @Override
-        public long getItemId(int position) {
-            // TODO Auto-generated method stub
-            return 0;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            // TODO Auto-generated method stub
-            ViewHolder holder = null;
-            if (convertView == null) {
-                holder = new ViewHolder();
-                LayoutInflater vi = (LayoutInflater)
-                        getSystemService(LAYOUT_INFLATER_SERVICE);
-                convertView = vi.inflate(R.layout.group_album_item_view, null);
-                holder.albumImg = (ImageView) convertView
-                        .findViewById(R.id.album_img);
-                convertView.setTag(holder);
-            } else {
-                holder = (ViewHolder) convertView.getTag();
+        public String groupBy(Object obj) {
+            if(groupType == GROUP_TYPE_MSG){
+                Msg msg = (Msg) obj;
+                return msg.getGroupDate();
+            }else if(groupType == GROUP_TYPE_MESSAGE){
+                Message message = (Message)obj;
+                return message.getGroupDate();
             }
-            ImageDisplayUtils.getInstance().displayImage(holder.albumImg, imgUrlList.get(position), R.drawable.default_image);
-            return convertView;
+            return "";
         }
 
-    }
-
-    private static class ViewHolder {
-        ImageView albumImg;
     }
 }

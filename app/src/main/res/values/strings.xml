@@ -127,6 +127,7 @@
     <string name="channel_group_image"> 群图片</string>
     <string name="channel_group_file"> 群文件</string>
     <string name="channel_group_members_name"> 群名称</string>
+    <string name="channel_group_qrcode">群二维码</string>
     <string name="channel_set_top"> 置顶</string>
     <string name="message_without_interruption">消息免打扰</string>
     <string name="login_hint_text">用户名/邮箱/手机号</string>
@@ -267,7 +268,7 @@
     <string name="chanel_cancel_top"> 取消置顶</string>
     <string name="creat_group">创建群组</string>
     <string name="creat_group_fail">群组创建失败</string>
-    <string name="all_group_member">全部群成员(%1$d)</string>
+    <string name="all_group_member">群成员</string>
     <string name="add_group_member">添加群成员 </string>
     <string name="channel_group">群组</string>
     <string name="group_member">群成员列表 </string>
@@ -653,11 +654,11 @@
     <string name="user_info_my_info">个人信息</string>
     <string name="user_info_organ">浪潮国际</string>
     <string name="user_info_phone_number">手机</string>
-    <string name="user_telephone">办公电话</string>
+    <string name="user_telephone">座机</string>
     <string name="user_no_storage">没有存储设备</string>
     <string name="user_employee_num">员工编号</string>
     <string name="user_worker_num">工号</string>
-    <string name="user_new_chat">发消息</string>
+    <string name="user_new_chat">发起会话</string>
 
     <!-- 集团新闻 部分 -->
     <string name="news_group_news">集团新闻</string>
@@ -1176,4 +1177,21 @@
     <string name="permission_phone_permission">设备信息</string>
     <string name="permission_storage_permission">存储空间</string>
     <string name="permission_next">下一步</string>
+
+    <!--键盘相关-->
+    <string name="emm_keyboard_a2z">abcdefghijklmnopqrstuvwxyz</string>
+    <string name="emm_keyboard_zero2nine">1234567890</string>
+    <string name="emm_keyboard_number">数字</string>
+    <string name="emm_keyboard_symbol">符号</string>
+    <string name="emm_keyboard_letter">字母</string>
+
+
+    <string name="phone_sms">短信</string>
+    <string name="phone_email">邮件</string>
+
+    <string name="user_call">呼叫</string>
+    <string name="user_office_phone">固话</string>
+    <string name="group_qrcode">群二维码</string>
+
+    <string name="bracket_with_word">(%1$s)</string>
 </resources>

@@ -216,10 +216,15 @@
             <flag name="upDown" value="1"/>
             <flag name="upDownStack" value="2"/>
         </attr>
-    </declare-styleable>
+    </declare-styleable>anim
     <style name="AndroidTreeNodeStyleCustom">
         <item name="android:paddingLeft">20dp</item>
         <!--<item name="android:showDividers">middle</item>-->
         <!--<item name="android:divider">@android:drawable/divider_horizontal_bright</item>-->
+    </style>
+
+
+    <style name="PopupKeybroad" parent="android:Animation">
+        <item name="android:windowExitAnimation">@anim/push_bottom_out</item>
     </style>
 </resources>

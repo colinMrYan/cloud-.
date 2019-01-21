@@ -85,10 +85,8 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
                 getWindow().setAttributes(lp);
             }
         }
-
         setContentView(R.layout.activity_main);
-//        checkNecessaryPermission();
-        IntentUtils.startActivity(this, LoginActivity.class,true);
+        checkNecessaryPermission();
 
     }
 

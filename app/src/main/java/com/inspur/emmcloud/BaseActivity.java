@@ -5,13 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.SchemeHandleActivity;
 import com.inspur.emmcloud.ui.appcenter.ReactNativeAppActivity;
 import com.inspur.emmcloud.ui.login.ScanQrCodeLoginGSActivity;
 import com.inspur.emmcloud.ui.mine.setting.FaceVerifyActivity;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.privates.LanguageUtils;
 import com.inspur.imp.plugin.barcode.scan.CaptureActivity;
 import com.inspur.imp.plugin.camera.imageedit.IMGEditActivity;
@@ -38,15 +35,15 @@ public class BaseActivity extends Activity {
         // TODO Auto-generated method stub
         String className = this.getClass().getCanonicalName();
         boolean isContain = Arrays.asList(classNames).contains(className);
-        if (!isContain) {
-            int currentThemeNo = PreferencesUtils.getInt(MyApplication.getInstance(), Constant.PREF_APP_THEME, 0);
-            if (currentThemeNo == 0){
-                setTheme(R.style.AppTheme_1);
-            }else {
-                setTheme(R.style.AppTheme_2);
-            }
-            StateBarUtils.translucent(this);
-        }
+//        if (!isContain) {
+//            int currentThemeNo = PreferencesUtils.getInt(MyApplication.getInstance(), Constant.PREF_APP_THEME, 0);
+//            if (currentThemeNo == 0){
+//                setTheme(R.style.AppTheme_1);
+//            }else {
+//                setTheme(R.style.AppTheme_2);
+//            }
+//            StateBarUtils.translucent(this);
+//        }
         super.onCreate(savedInstanceState);
         x.view().inject(this);
     }

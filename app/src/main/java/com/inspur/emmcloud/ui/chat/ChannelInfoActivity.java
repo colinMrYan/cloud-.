@@ -85,7 +85,6 @@ public class ChannelInfoActivity extends BaseActivity {
         getChannelInfo();
     }
 
-
     /**
      * 获取频道信息
      */
@@ -123,7 +122,6 @@ public class ChannelInfoActivity extends BaseActivity {
                 this, cid);
         setTopSwitch.setOpened(isSetTop);
         setTopSwitch.setOnStateChangedListener(onStateChangedListener);
-
     }
 
     /**
@@ -209,12 +207,12 @@ public class ChannelInfoActivity extends BaseActivity {
             case R.id.back_layout:
                 finish();
                 break;
-            case R.id.rl_chat_imgs:
+            case R.id.ll_group_image:
                 bundle.putString("cid", cid);
                 IntentUtils.startActivity(ChannelInfoActivity.this,
                         GroupAlbumActivity.class, bundle);
                 break;
-            case R.id.rl_chat_files:
+            case R.id.ll_group_file:
                 bundle.putString("cid", cid);
                 IntentUtils.startActivity(ChannelInfoActivity.this,
                         GroupFileActivity.class, bundle);
@@ -380,7 +378,7 @@ public class ChannelInfoActivity extends BaseActivity {
      */
     private void filterMemberData(List<String> memberList) {
         //查三十人，如果不满三十人则查实际人数保证查到的人都是存在的群成员
-        List<ContactUser> contactUserList = ContactUserCacheUtils.getContactUserListByIdListOrderBy(memberList,9);
+        List<ContactUser> contactUserList = ContactUserCacheUtils.getContactUserListByIdListOrderBy(memberList,channelGroup.getOwner().equals(MyApplication.getInstance().getUid())?5:6);
         ArrayList<String> contactUserIdList = new ArrayList<>();
         for (int i = 0; i < contactUserList.size(); i++) {
             contactUserIdList.add(contactUserList.get(i).getId());

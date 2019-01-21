@@ -52,6 +52,7 @@ public class Message implements Serializable {
     @Column(name = "localPath")
     private String localPath = "";
     private String tmpId = "";
+    private String groupDate = "";
 
     public Message() {
 
@@ -241,9 +242,17 @@ public class Message implements Serializable {
         this.tmpId = tmpId;
     }
 
+    public String getGroupDate() {
+        return groupDate;
+    }
+
+    public void setGroupDate(String groupDate) {
+        this.groupDate = groupDate;
+    }
+
     /*
-                     * 重写equals方法修饰符必须是public,因为是重写的Object的方法. 2.参数类型必须是Object.
-                     */
+                         * 重写equals方法修饰符必须是public,因为是重写的Object的方法. 2.参数类型必须是Object.
+                         */
     public boolean equals(Object other) { // 重写equals方法，后面最好重写hashCode方法
 
         if (this == other) // 先检查是否其自反性，后比较other是否为空。这样效率高
