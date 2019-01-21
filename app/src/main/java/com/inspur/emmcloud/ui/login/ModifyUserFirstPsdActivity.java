@@ -99,7 +99,7 @@ public class ModifyUserFirstPsdActivity extends BaseActivity {
 				return;
 			}
 			if (NetUtils.isNetworkConnected(MyApplication.getInstance())){
-				apiService.changePsd("", newpsd);
+				apiService.modifyPassword("", newpsd);
 			}
 			break;
 
@@ -112,9 +112,8 @@ public class ModifyUserFirstPsdActivity extends BaseActivity {
 	class WebService extends APIInterfaceInstance{
 
 		@Override
-		public void returnModifyPsdSuccess() {
+		public void returnModifyPasswordSuccess() {
 			// TODO Auto-generated method stub
-			super.returnModifyPsdSuccess();
 			if(loadingDialog.isShowing()){
 				loadingDialog.dismiss();
 			}
@@ -129,7 +128,7 @@ public class ModifyUserFirstPsdActivity extends BaseActivity {
 		}
 
 		@Override
-		public void returnModifyPsdFail(String error,int errorCode) {
+		public void returnModifyPasswordFail(String error,int errorCode) {
 			// TODO Auto-generated method stub
 			WebServiceMiddleUtils.hand(ModifyUserFirstPsdActivity.this, error,errorCode);
 			if(loadingDialog.isShowing()){

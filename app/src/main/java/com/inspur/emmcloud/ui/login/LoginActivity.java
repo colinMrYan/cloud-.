@@ -12,7 +12,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -74,7 +73,6 @@ public class LoginActivity extends BaseActivity {
         PreferencesUtils.putString(this,Constant.PREF_APP_PREVIOUS_VERSION,AppUtils.getVersion(this));
         this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
         StateBarUtils.translucent(this,R.color.white);
-        StateBarUtils.setStateBarTextColor( this,true );
         MyApplication.getInstance().closeOtherActivity(LoginActivity.this);
         initView();
         handMessage();
@@ -92,7 +90,7 @@ public class LoginActivity extends BaseActivity {
         EditTextUtils.setText(usernameEdit, userName);
         setCurrentLoginEnterpriseName();
         securityKeyboard = new EmmSecurityKeyboard(this);
-        passwordEdit.setOnTouchListener(new OnTouchListener() {
+        passwordEdit.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 securityKeyboard.showSecurityKeyBoard(passwordEdit);
