@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.ui.chat;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -19,15 +20,19 @@ import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.bean.contact.SearchModel;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
+import com.inspur.emmcloud.util.common.ImageUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
+import com.inspur.emmcloud.widget.CircleTextImageView;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.NoScrollGridView;
 import com.inspur.emmcloud.widget.SwitchView;
@@ -39,9 +44,11 @@ import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.w3c.dom.Text;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,6 +73,12 @@ public class ConversationGroupInfoActivity extends BaseActivity {
     private TextView nameText;
     @ViewInject(R.id.bt_exit)
     private Button exitBtn;
+    @ViewInject(R.id.tv_group_members)
+    private TextView groupMembersText;
+    @ViewInject(R.id.iv_group_photo)
+    private CircleTextImageView circleTextImageView;
+    @ViewInject(R.id.tv_group_member_size)
+    private TextView memberSizeText;
 
     private ChatAPIService apiService;
     private ConversationMemberAdapter adapter;
@@ -92,12 +105,14 @@ public class ConversationGroupInfoActivity extends BaseActivity {
     /**
      * 数据取出后显示ui
      */
+    @SuppressLint("StringFormatInvalid")
     private void initView() {
         loadingDlg = new LoadingDialog(ConversationGroupInfoActivity.this);
         memberUidList = conversation.getMemberList();
         int memberSize = ContactUserCacheUtils.getContactUserListById(memberUidList).size();
         memberText.setText(getString(R.string.all_group_member,memberSize));
         nameText.setText(conversation.getName());
+        groupMembersText.setText(conversation.getName()+getString(R.string.bracket_with_word,(memberSize + "")));
         filterGroupMember(memberUidList);
         adapter = new ConversationMemberAdapter(this,uiMemberUidList,isOwner);
         memberGrid.setAdapter(adapter);
@@ -108,8 +123,18 @@ public class ConversationGroupInfoActivity extends BaseActivity {
         stickSwitch.setOnStateChangedListener(onStateChangedListener);
         exitBtn.setVisibility(View.VISIBLE);
         exitBtn.setText(conversation.getOwner().equals(MyApplication.getInstance().getUid())?getString(R.string.dismiss_group):getString(R.string.quit_group));
+        memberSizeText.setText(getString(R.string.people_num,memberSize));
+        showGroupLogo();
     }
 
+    private void showGroupLogo(){
+        File file = new File(MyAppConfig.LOCAL_CACHE_PHOTO_PATH + "/" + MyApplication.getInstance().getTanent() + conversation.getId() + "_100.png1");
+        if (file.exists()) {
+            circleTextImageView.setImageBitmap(ImageUtils.getBitmapByFile(file));
+        }else {
+            circleTextImageView.setImageResource(R.drawable.icon_channel_group_default);
+        }
+    }
 
     private OnItemClickListener onItemClickListener = new OnItemClickListener() {
 
@@ -172,12 +197,12 @@ public class ConversationGroupInfoActivity extends BaseActivity {
             case R.id.back_layout:
                 finish();
                 break;
-            case R.id.rl_chat_imgs:
+            case R.id.ll_group_image:
                 bundle.putString("cid", conversation.getId());
                 IntentUtils.startActivity(ConversationGroupInfoActivity.this,
                         GroupAlbumActivity.class, bundle);
                 break;
-            case R.id.rl_chat_files:
+            case R.id.ll_group_file:
                 bundle.putString("cid", conversation.getId());
                 IntentUtils.startActivity(ConversationGroupInfoActivity.this,
                         GroupFileActivity.class, bundle);
@@ -281,7 +306,7 @@ public class ConversationGroupInfoActivity extends BaseActivity {
      */
     private void filterGroupMember(List<String> memberList) {
         //查三十人，如果不满三十人则查实际人数保证查到的人都是存在的群成员
-        List<ContactUser> contactUserList = ContactUserCacheUtils.getContactUserListByIdListOrderBy(memberList,9);
+        List<ContactUser> contactUserList = ContactUserCacheUtils.getContactUserListByIdListOrderBy(memberList,isOwner?5:6);
         ArrayList<String> contactUserIdList = new ArrayList<>();
         for (ContactUser contactUser:contactUserList) {
             contactUserIdList.add(contactUser.getId());
@@ -312,7 +337,6 @@ public class ConversationGroupInfoActivity extends BaseActivity {
     /**
      * 更改是否频道消息免打扰
      *
-     * @param isNoInterruption
      */
     private void updateConversationDnd() {
         // TODO Auto-generated method stub
@@ -327,8 +351,6 @@ public class ConversationGroupInfoActivity extends BaseActivity {
     /**
      * 设置频道是否置顶
      *
-     * @param id
-     * @param isStick
      */
     private void setConversationStick() {
         if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {

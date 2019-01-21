@@ -38,6 +38,7 @@ public class Msg implements Serializable {
 
     private int sendStatus = 1;//0 发送中  1发送成功  2发送失败
     private String tmpId = "";
+    private String groupDate = "";
 
     public Msg() {
 
@@ -191,6 +192,14 @@ public class Msg implements Serializable {
     public String getTmpId(){
 		return  tmpId;
 	}
+
+    public String getGroupDate() {
+        return groupDate;
+    }
+
+    public void setGroupDate(String groupDate) {
+        this.groupDate = groupDate;
+    }
 
     public String getCommentMid() {
         JSONObject bodyJsonObject;

@@ -744,6 +744,9 @@
             android:name=".ui.chat.ConversationNameModifyActivity"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
+        <activity android:name=".ui.chat.ConversationQrCodeActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".ui.find.trip.TravelActivity"
             android:launchMode="singleTask"

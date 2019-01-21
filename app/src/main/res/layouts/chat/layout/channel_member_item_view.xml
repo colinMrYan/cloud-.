@@ -22,6 +22,7 @@
         android:id="@+id/tv_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         android:layout_below="@id/square_layout"
         android:layout_marginTop="2dp"
         android:ellipsize="end"
