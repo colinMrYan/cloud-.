@@ -47,6 +47,12 @@
         android:layout_height="match_parent"
         android:layout_below="@id/header_layout"
         android:background="#FFECEFF3" >
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view_album"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:listSelector="@android:color/transparent"
+            android:verticalSpacing="5dp"/>
 
         <GridView
             android:id="@+id/gv_album"
