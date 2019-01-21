@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,6 +20,7 @@ import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
+import com.inspur.emmcloud.widget.keyboardview.EmmSecurityKeyboard;
 
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
@@ -43,6 +45,7 @@ public class PasswordModifyActivity extends Activity {
     private String passwordNew;
     private String passwordConfirm;
     private LoadingDialog loadingDlg;
+    private EmmSecurityKeyboard emmSecurityKeyboard;
 
 
     @Override
@@ -56,6 +59,30 @@ public class PasswordModifyActivity extends Activity {
         passwordNewEdit.addTextChangedListener(editWatcher);
         passwordConfirmEdit.addTextChangedListener(editWatcher);
         loadingDlg = new LoadingDialog(this);
+        emmSecurityKeyboard = new EmmSecurityKeyboard(this);
+        EditOnTouchListener editOnTouchListener = new EditOnTouchListener();
+        passwordOriginEdit.setOnTouchListener(editOnTouchListener);
+        passwordNewEdit.setOnTouchListener(editOnTouchListener);
+        passwordConfirmEdit.setOnTouchListener(editOnTouchListener);
+    }
+
+    class EditOnTouchListener implements View.OnTouchListener{
+
+        @Override
+        public boolean onTouch(View view, MotionEvent motionEvent) {
+            switch (view.getId()){
+                case R.id.et_password_origin:
+                    emmSecurityKeyboard.showSecurityKeyBoard(passwordOriginEdit);
+                    break;
+                case R.id.et_password_new:
+                    emmSecurityKeyboard.showSecurityKeyBoard(passwordNewEdit);
+                    break;
+                case R.id.et_password_confirm:
+                    emmSecurityKeyboard.showSecurityKeyBoard(passwordConfirmEdit);
+                    break;
+            }
+            return false;
+        }
     }
 
     public void onClick(View v){
