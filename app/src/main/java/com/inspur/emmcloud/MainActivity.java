@@ -22,7 +22,6 @@ import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.service.AppExceptionService;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.chat.ConversationGroupInfoActivity;
-import com.inspur.emmcloud.ui.chat.ConversationQrCodeActivity;
 import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.ui.mine.setting.GuideActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
@@ -85,7 +84,7 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
 //        checkNecessaryPermission();
         Bundle bundle = new Bundle();
         bundle.putString(ConversationGroupInfoActivity.EXTRA_CID,"2");
-        IntentUtils.startActivity(this, ConversationQrCodeActivity.class,true);
+        IntentUtils.startActivity(this, ConversationGroupInfoActivity.class,bundle,true);
     }
 
     private void checkNecessaryPermission() {
