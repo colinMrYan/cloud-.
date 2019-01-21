@@ -21,7 +21,6 @@ import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.service.AppExceptionService;
 import com.inspur.emmcloud.ui.IndexActivity;
-import com.inspur.emmcloud.ui.chat.ConversationGroupInfoActivity;
 import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.ui.mine.setting.GuideActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
@@ -81,10 +80,10 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
             this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
         }
         setContentView(R.layout.activity_main);
-//        checkNecessaryPermission();
-        Bundle bundle = new Bundle();
-        bundle.putString(ConversationGroupInfoActivity.EXTRA_CID,"2");
-        IntentUtils.startActivity(this, ConversationGroupInfoActivity.class,bundle,true);
+        checkNecessaryPermission();
+//        Bundle bundle = new Bundle();
+//        bundle.putString(ConversationGroupInfoActivity.EXTRA_CID,"2");
+//        IntentUtils.startActivity(this, ConversationGroupInfoActivity.class,bundle,true);
     }
 
     private void checkNecessaryPermission() {
