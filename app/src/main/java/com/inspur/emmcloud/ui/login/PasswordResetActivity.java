@@ -3,6 +3,7 @@ package com.inspur.emmcloud.ui.login;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,6 +19,7 @@ import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
+import com.inspur.emmcloud.widget.keyboardview.EmmSecurityKeyboard;
 
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
@@ -39,6 +41,7 @@ public class PasswordResetActivity extends BaseActivity {
     private String passwordNew;
     private String passwordConfirm;
     private LoadingDialog loadingDlg;
+    private EmmSecurityKeyboard emmSecurityKeyboard;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,7 +51,27 @@ public class PasswordResetActivity extends BaseActivity {
         EditWatcher editWatcher = new EditWatcher();
         passwordNewEdit.addTextChangedListener(editWatcher);
         passwordConfirmEdit.addTextChangedListener(editWatcher);
+        emmSecurityKeyboard = new EmmSecurityKeyboard(this);
+        EditOnTouchListener editOnTouchListener = new EditOnTouchListener();
+        passwordNewEdit.setOnTouchListener(editOnTouchListener);
+        passwordConfirmEdit.setOnTouchListener(editOnTouchListener);
         loadingDlg = new LoadingDialog(this);
+    }
+
+    class EditOnTouchListener implements View.OnTouchListener{
+
+        @Override
+        public boolean onTouch(View view, MotionEvent motionEvent) {
+            switch (view.getId()){
+                case R.id.et_password_new:
+                    emmSecurityKeyboard.showSecurityKeyBoard(passwordNewEdit);
+                    break;
+                case R.id.et_password_confirm:
+                    emmSecurityKeyboard.showSecurityKeyBoard(passwordConfirmEdit);
+                    break;
+            }
+            return false;
+        }
     }
 
     public void onClick(View v){
