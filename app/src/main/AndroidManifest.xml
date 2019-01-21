@@ -92,7 +92,7 @@
     <uses-permission android:name="android.permission.SYSTEM_OVERLAY_WINDOW" />
 
     <!--电源权限-->
-    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"/>
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
 
     <!-- 语音播放 -->
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
@@ -122,6 +122,7 @@
         android:label="@string/app_name"
         android:largeHeap="true"
         android:theme="@style/AppTheme_1"
+        android:networkSecurityConfig="@xml/network_security_config"
         tools:replace="android:allowBackup,label">
         <!--custom-->
         <meta-data
@@ -132,7 +133,9 @@
             android:exported="true"
             android:resizeableActivity="true"
             android:screenOrientation="portrait">
-            <meta-data android:name="android.notch_support" android:value="true"/>
+            <meta-data
+                android:name="android.notch_support"
+                android:value="true" />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
@@ -186,7 +189,9 @@
             android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:screenOrientation="portrait">
-            <meta-data android:name="android.notch_support" android:value="true"/>
+            <meta-data
+                android:name="android.notch_support"
+                android:value="true" />
         </activity>
         <activity
             android:name=".ui.mine.setting.NoPermissionDialogActivity"
@@ -259,20 +264,10 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name="ui.login.NewUserActivity"
+            android:name=".ui.login.PasswordModifyActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"></activity>
-        <activity
-            android:name=".ui.login.FillCaptchasActivity"
-            android:launchMode="singleTask"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait"></activity>
-        <activity
-            android:name=".ui.login.PerfectInfoActivity"
-            android:launchMode="singleTask"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.mine.setting.ServiceTermActivity"
             android:launchMode="singleTask"
@@ -610,17 +605,7 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".ui.login.ModifyUserPsdActivity"
-            android:launchMode="singleTask"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait"></activity>
-        <activity
-            android:name=".ui.login.ModifyUserPwdBySMSActivity"
-            android:launchMode="singleTask"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait"></activity>
-        <activity
-            android:name=".ui.login.FillNewPwdActivity"
+            android:name=".ui.login.PasswordResetActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>
@@ -961,7 +946,6 @@
             android:screenOrientation="portrait" />
 
 
-
         <!-- service -->
         <service android:name=".service.LocationService"></service>
         <service android:name=".service.PVCollectService"></service>
@@ -977,11 +961,11 @@
 
         <!-- receiver -->
         <!--<receiver-->
-            <!--android:name=".broadcastreceiver.NetworkChangeReceiver"-->
-            <!--android:label="NetworkConnection">-->
-            <!--<intent-filter>-->
-                <!--<action android:name="android.net.conn.CONNECTIVITY_CHANGE" />-->
-            <!--</intent-filter>-->
+        <!--android:name=".broadcastreceiver.NetworkChangeReceiver"-->
+        <!--android:label="NetworkConnection">-->
+        <!--<intent-filter>-->
+        <!--<action android:name="android.net.conn.CONNECTIVITY_CHANGE" />-->
+        <!--</intent-filter>-->
         <!--</receiver>-->
         <receiver
             android:name=".broadcastreceiver.ActionReceiver"
@@ -1034,32 +1018,27 @@
             android:name="com.inspur.imp.plugin.camera.imagepicker.ui.ImageGridActivity"
             android:configChanges="orientation|screenSize"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"
-            ></activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name="com.inspur.imp.plugin.camera.imagepicker.ui.ImagePreviewActivity"
             android:configChanges="orientation|screenSize"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"
-            ></activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name="com.inspur.imp.plugin.camera.imagepicker.ui.ImageCropActivity"
             android:configChanges="orientation|screenSize"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"
-            ></activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name="com.inspur.imp.plugin.camera.imagepicker.ui.ImagePreviewDelActivity"
             android:configChanges="orientation|screenSize"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"
-            ></activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name="com.inspur.imp.plugin.camera.imageedit.IMGEditActivity"
             android:configChanges="orientation|screenSize"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"
-           ></activity>
+            android:screenOrientation="portrait"></activity>
 
         <!-- ImagePicker -->
 
@@ -1333,7 +1312,6 @@
                 android:resource="@xml/file_paths" />
         </provider>
     </application>
-
 
 
 </manifest>

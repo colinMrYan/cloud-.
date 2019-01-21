@@ -196,6 +196,7 @@
     <string name="login_direct">直接登录</string>
     <string name="login_change_phone_num">更换号码</string>
     <string name="login_captchas_login">短信登录 </string>
+    <string name="login_find_password">找回密码</string>
     <string name="login_get_captchas">通过短信修改密码</string>
     <string name="login_get_captchas_code">获取验证码</string>
     <string name="login_send_captchas">发送验证码 </string>

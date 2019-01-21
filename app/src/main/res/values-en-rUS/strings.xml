@@ -196,6 +196,7 @@
     <string name="login_set_pwd">Set password</string>
     <string name="login_change_phone_num">Change Phone Number</string>
     <string name="login_captchas_login">Quick Login</string>
+    <string name="login_find_password">找回密码</string>
     <string name="login_get_captchas">Reset Password By SMS</string>
     <string name="login_get_captchas_code">Get Code</string>
     <string name="login_resent">Resent</string>

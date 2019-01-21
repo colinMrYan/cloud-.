@@ -46,36 +46,8 @@ public class ModifyUserFirstPsdActivity extends BaseActivity {
 		confirmModifyButton = (Button) findViewById(R.id.modifyuserpsd_button);
 		loadingDialog = new LoadingDialog(ModifyUserFirstPsdActivity.this);
 		
-//		oldpsdEdit = (ClearEditText) findViewById(R.id.modifyuserpsd_old_edit);
 		newpsdEdit = (ClearEditText) findViewById(R.id.modifyuserpsd_new_edit);
 		confirmpsdEdit = (ClearEditText) findViewById(R.id.modifyuserpsd_confirm_edit);
-		
-		
-		
-//		confirmModifyButton.setOnClickListener(new OnClickListener() {
-//			
-//			@Override
-//			public void onClick(View v) {
-//				// TODO Auto-generated method stub
-//
-////				String oldpsd = oldpsdEdit.getText().toString();
-//				String newpsd = newpsdEdit.getText().toString();
-//				String confirmpsd = confirmpsdEdit.getText().toString();
-//				Pattern pattern = Pattern.compile("^\\S{6,128}$");
-//				Matcher matcher = pattern.matcher(newpsd);
-//				
-//				
-//				if(!TextUtils.isEmpty(newpsd)&&matcher.matches()&&!TextUtils.isEmpty(confirmpsd)&&NetUtils.isNetworkConnected(ModifyUserFirstPsdActivity.this)){
-//					loadingDialog.show();
-//					if(newpsd.equals(confirmpsd)){
-//						apiService.changePsd("", newpsd);
-//					}
-//				}else if(!TextUtils.isEmpty(newpsd)&&!matcher.matches()){
-//					Toast.makeText(ModifyUserFirstPsdActivity.this, "请输入6~128位密码", Toast.LENGTH_SHORT).show();
-//				}
-//
-//			}
-//		});
 	}
 	
 	public void onClick(View v){
@@ -100,12 +72,12 @@ public class ModifyUserFirstPsdActivity extends BaseActivity {
 				break;
 
 			}
-			if (newpsd.length()<8 || newpsd.length()>64 ||!FomatUtils.isPasswrodStrong(newpsd) ){
+			if (newpsd.length()<8 || newpsd.length()>128 ||!FomatUtils.isPasswrodStrong(newpsd) ){
 				ToastUtils.show(MyApplication.getInstance(),R.string.modify_password_invalid);
 				return;
 			}
 			if (NetUtils.isNetworkConnected(MyApplication.getInstance())){
-				apiService.changePsd("", newpsd);
+				apiService.modifyPassword("", newpsd);
 			}
 			break;
 
@@ -118,9 +90,9 @@ public class ModifyUserFirstPsdActivity extends BaseActivity {
 	class WebService extends APIInterfaceInstance{
 
 		@Override
-		public void returnModifyPsdSuccess() {
+		public void returnModifyPasswordSuccess() {
 			// TODO Auto-generated method stub
-			super.returnModifyPsdSuccess();
+			super.returnModifyPasswordSuccess();
 			if(loadingDialog.isShowing()){
 				loadingDialog.dismiss();
 			}
@@ -135,7 +107,7 @@ public class ModifyUserFirstPsdActivity extends BaseActivity {
 		}
 
 		@Override
-		public void returnModifyPsdFail(String error,int errorCode) {
+		public void returnModifyPasswordFail(String error, int errorCode) {
 			// TODO Auto-generated method stub
 			WebServiceMiddleUtils.hand(ModifyUserFirstPsdActivity.this, error,errorCode);
 			if(loadingDialog.isShowing()){

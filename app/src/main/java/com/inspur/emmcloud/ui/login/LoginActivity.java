@@ -109,20 +109,20 @@ public class LoginActivity extends BaseActivity {
     }
 
     public void onClick(View v) {
+        Bundle bundle = new Bundle();
         switch (v.getId()) {
             case R.id.bt_login:
                 userName = usernameEdit.getText().toString();
                 password = passwordEdit.getText().toString();
                 loginApp();
                 break;
-            case R.id.tv_register:
-                IntentUtils.startActivity(LoginActivity.this, NewUserActivity.class);
-                break;
             case R.id.tv_forget_password:
-                IntentUtils.startActivity(LoginActivity.this, ModifyUserPwdBySMSActivity.class);
+                bundle.putInt(LoginViaSmsActivity.EXTRA_MODE,LoginViaSmsActivity.MODE_FORGET_PASSWORD);
+                IntentUtils.startActivity(LoginActivity.this, LoginViaSmsActivity.class,bundle);
                 break;
             case R.id.tv_login_via_sms:
-                IntentUtils.startActivity(LoginActivity.this,LoginViaSmsActivity.class);
+                bundle.putInt(LoginViaSmsActivity.EXTRA_MODE,LoginViaSmsActivity.MODE_LOGIN);
+                IntentUtils.startActivity(LoginActivity.this,LoginViaSmsActivity.class,bundle);
                 break;
             case R.id.bt_more:
                 Intent intent = new Intent();

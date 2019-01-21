@@ -55,9 +55,9 @@ public class Constant {
     public static final String PREF_HAS_SET_SHORT_PASSWORD = "hasPassword";
     public static final String PREF_APP_PREVIOUS_VERSION = "previousVersion";
     public static final String PREF_LOGIN_ENTERPRISE_NAME = "login_enterprise_name";
+    public static final String PREF_LOGIN_HAVE_SET_PASSWORD = "hasPassword";
     public static final String PREF_MAIL_ACCOUNT = "mail_account";
     public static final String PREF_MAIL_PASSWORD = "mail_password";
-
 
 
     public static final String ACTION_MEETING = "com.inspur.meeting";

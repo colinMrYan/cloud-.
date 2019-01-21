@@ -74,8 +74,12 @@ public class InputMethodUtils {
                 screenHeight = screenHeight + navigationBarHeight;
             }
         }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            screenHeight = screenHeight + ResolutionUtils.getStatusBarHeightAboutAndroidP(activity);
+        }
         int softInputHeight = screenHeight - r.bottom;
         if (softInputHeight < 0) {
+            softInputHeight = 0;
             Log.w("EmotionInputDetector",
                     "Warning: value of softInputHeight is below zero!");
         }
@@ -84,4 +88,6 @@ public class InputMethodUtils {
         }
         return softInputHeight;
     }
+
+
 }

@@ -210,7 +210,7 @@ public class ChannelGroupIconUtils {
         localCanvas.drawBitmap(bit2, rangetWidth / 2 + PADDING, 0, null);
         bit1.recycle();
         // 重置padding
-        localCanvas.save(Canvas.ALL_SAVE_FLAG);
+        localCanvas.save();
         localCanvas.restore();
         return canvasBitmap;
     }
@@ -247,7 +247,7 @@ public class ChannelGroupIconUtils {
                 + PADDING, null);
         bit3.recycle();
 
-        localCanvas.save(Canvas.ALL_SAVE_FLAG);
+        localCanvas.save();
         localCanvas.restore();
         return canvasBitmap;
     }
@@ -289,7 +289,7 @@ public class ChannelGroupIconUtils {
                 + PADDING, null);
         bit4.recycle();
 
-        localCanvas.save(Canvas.ALL_SAVE_FLAG);
+        localCanvas.save();
         localCanvas.restore();
         return canvasBitmap;
     }

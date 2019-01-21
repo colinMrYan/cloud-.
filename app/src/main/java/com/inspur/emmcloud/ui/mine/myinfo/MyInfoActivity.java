@@ -21,8 +21,8 @@ import com.inspur.emmcloud.bean.mine.Enterprise;
 import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
 import com.inspur.emmcloud.bean.mine.GetUploadMyHeadResult;
 import com.inspur.emmcloud.bean.mine.UserProfileInfoBean;
-import com.inspur.emmcloud.ui.login.ModifyUserPsdActivity;
-import com.inspur.emmcloud.ui.login.ModifyUserPwdBySMSActivity;
+import com.inspur.emmcloud.ui.login.LoginViaSmsActivity;
+import com.inspur.emmcloud.ui.login.PasswordModifyActivity;
 import com.inspur.emmcloud.ui.mine.setting.SwitchEnterpriseActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
@@ -130,14 +130,14 @@ public class MyInfoActivity extends BaseActivity {
                 finishActivity();
                 break;
             case R.id.myinfo_modifypsd_layout:
-                IntentUtils.startActivity(MyInfoActivity.this,
-                        ModifyUserPsdActivity.class);
+                IntentUtils.startActivity(MyInfoActivity.this,PasswordModifyActivity.class);
                 break;
             case R.id.myinfo_reset_layout:
                 Bundle bundle = new Bundle();
-                bundle.putString("phoneNum", getMyInfoResult.getPhoneNumber());
+                bundle.putInt(LoginViaSmsActivity.EXTRA_MODE,LoginViaSmsActivity.MODE_FORGET_PASSWORD);
+                bundle.putString(LoginViaSmsActivity.EXTRA_PHONE, getMyInfoResult.getPhoneNumber());
                 IntentUtils.startActivity(MyInfoActivity.this,
-                        ModifyUserPwdBySMSActivity.class, bundle);
+                        LoginViaSmsActivity.class, bundle);
                 break;
             case R.id.switch_enterprese_text:
                 IntentUtils.startActivity(MyInfoActivity.this, SwitchEnterpriseActivity.class);

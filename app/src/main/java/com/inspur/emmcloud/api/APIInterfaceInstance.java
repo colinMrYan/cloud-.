@@ -65,7 +65,6 @@ import com.inspur.emmcloud.bean.login.GetDeviceCheckResult;
 import com.inspur.emmcloud.bean.login.GetLoginResult;
 import com.inspur.emmcloud.bean.login.GetMDMStateResult;
 import com.inspur.emmcloud.bean.login.GetSignoutResult;
-import com.inspur.emmcloud.bean.login.GetUpdatePwdBySMSCodeBean;
 import com.inspur.emmcloud.bean.login.LoginDesktopCloudPlusBean;
 import com.inspur.emmcloud.bean.mine.GetBindingDeviceResult;
 import com.inspur.emmcloud.bean.mine.GetCardPackageResult;
@@ -244,13 +243,13 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnReqLoginSMSSuccess(GetBoolenResult getBoolenResult) {
+    public void returnLoginSMSCaptchaSuccess() {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void returnReqLoginSMSFail(String error, int errorCode) {
+    public void returnLoginSMSCaptchaFail(String error, int errorCode) {
         // TODO Auto-generated method stub
 
     }
@@ -959,13 +958,13 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnModifyPsdSuccess() {
+    public void returnModifyPasswordSuccess() {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void returnModifyPsdFail(String error, int errorCode) {
+    public void returnModifyPasswordFail(String error, int errorCode) {
         // TODO Auto-generated method stub
 
     }
@@ -1127,11 +1126,11 @@ public class APIInterfaceInstance implements APIInterface {
 
 
     @Override
-    public void returnUpdatePwdBySMSCodeSuccess(GetUpdatePwdBySMSCodeBean getUpdatePwdBySMSCodeBean) {
+    public void returnResetPasswordSuccess() {
     }
 
     @Override
-    public void returnUpdatePwdBySMSCodeFail(String error, int errorCode) {
+    public void returnResetPasswordFail(String error, int errorCode) {
         // TODO Auto-generated method stub
     }
 

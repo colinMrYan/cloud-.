@@ -101,7 +101,7 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
             ToastUtils.show(this, R.string.filetransfer_sd_not_exist);
             finish();
         }
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);//拍照过程屏幕一直处于高亮
         setContentView(R.layout.activity_mycamera);
         initData();
