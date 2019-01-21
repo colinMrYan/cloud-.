@@ -228,7 +228,7 @@ public class AppUtils {
      */
     public static boolean isAppHasUpgraded(Context context) {
         String previousVersionValue = PreferencesUtils.getString(context,
-                "previousVersion", "");
+                Constant.PREF_APP_PREVIOUS_VERSION, "");
         String currentVersionValue = getVersion(context);
         try {
             if (!StringUtils.isBlank(previousVersionValue)) {
@@ -243,7 +243,7 @@ public class AppUtils {
     }
 
     public static boolean isPreviousLitterThan(Context context,String version){
-        String previousVersionValue = PreferencesUtils.getString(context,"previousVersion", "");
+        String previousVersionValue = PreferencesUtils.getString(context,Constant.PREF_APP_PREVIOUS_VERSION, "");
         try {
             if (!StringUtils.isBlank(previousVersionValue)) {
                 Version previousVersion = Version.valueOf(previousVersionValue);

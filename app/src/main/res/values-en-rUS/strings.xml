@@ -196,6 +196,8 @@
     <string name="login_set_pwd">Set password</string>
     <string name="login_change_phone_num">Change Phone Number</string>
     <string name="login_captchas_login">Quick Login</string>
+    <string name="login_by_account">帳號密碼登錄</string>
+    <string name="login_find_password">找回密码</string>
     <string name="login_get_captchas">Reset Password By SMS</string>
     <string name="login_get_captchas_code">Get Code</string>
     <string name="login_resent">Resent</string>
@@ -965,7 +967,6 @@
     <string name="assemble_json_exception">Json objects assembled exception！</string>
     <string name="inputpwd">Please enter a password gesture</string>
     <string name="forgetpwd">Forget Password</string>
-    <string name="forgetpwd_error">Loading Forgot password interface error </string>
     <string name="download_fail">Download Failed</string>
     <string name="download_success">Download Success</string>
     <string name="file_downloading">In the download, please later...</string>

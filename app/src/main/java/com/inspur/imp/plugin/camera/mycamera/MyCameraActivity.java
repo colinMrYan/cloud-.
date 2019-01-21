@@ -33,6 +33,8 @@ import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.ImageUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.emmcloud.util.common.ResolutionUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
@@ -99,10 +101,11 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
             ToastUtils.show(this, R.string.filetransfer_sd_not_exist);
             finish();
         }
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);//拍照过程屏幕一直处于高亮
         setContentView(R.layout.activity_mycamera);
         initData();
+        ResolutionUtils.getResolutionRate(this);
     }
 
     @Override
@@ -200,7 +203,7 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
 
             @Override
             public void onPermissionRequestFail(List<String> permissions) {
-                ToastUtils.show(MyCameraActivity.this, PermissionRequestManagerUtils.getInstance().getPermissionToast(MyCameraActivity.this,permissions));
+                ToastUtils.show(MyCameraActivity.this, PermissionRequestManagerUtils.getInstance().getPermissionToast(MyCameraActivity.this, permissions));
                 finish();
             }
         });
@@ -269,7 +272,7 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
             Camera.Size pictureSize = CameraUtils.getInstance(this).getPictureSize(PictureSizeList, MyAppConfig.UPLOAD_ORIGIN_IMG_MAX_SIZE);
             parameters.setPictureSize(pictureSize.width, pictureSize.height);
             List<Camera.Size> previewSizeList = parameters.getSupportedPreviewSizes();
-            Camera.Size previewSize = CameraUtils.getInstance(this).getPreviewSize(previewSizeList, 1300);
+            Camera.Size previewSize = CameraUtils.getInstance(this).getPreviewSize(previewSizeList, 2000);
             parameters.setPreviewSize(previewSize.width, previewSize.height);
             List<String> modelList = parameters.getSupportedFlashModes();
             if (modelList != null && modelList.contains(cameraFlashModel)) {
@@ -333,9 +336,9 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.take_bt:
-                if (safeToTakePicture){
+                if (safeToTakePicture) {
                     takePicture(currentOrientation);
-                    safeToTakePicture= false;
+                    safeToTakePicture = false;
                 }
                 break;
             case R.id.switch_camera_btn:
@@ -400,6 +403,8 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
                 originBitmap = BitmapFactory.decodeByteArray(data, 0, data.length, options);
                 //如果是三星手机需要先旋转90度
                 boolean isSamSungType = originBitmap.getWidth() > originBitmap.getHeight();
+                LogUtils.jasonDebug("originBitmap.getWidth()="+originBitmap.getWidth());
+                LogUtils.jasonDebug("originBitmap.getHeight()="+originBitmap.getHeight());
                 if (isSamSungType) {
                     originBitmap = ImageUtils.rotaingImageView(90, originBitmap);
                 }

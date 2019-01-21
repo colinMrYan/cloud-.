@@ -151,9 +151,9 @@ public interface APIInterface {
 
     void returnSearchAppMoreFail(String error, int errorCode);
 
-    void returnReqLoginSMSSuccess(GetBoolenResult getBoolenResult);
+    void returnLoginSMSCaptchaSuccess();
 
-    void returnReqLoginSMSFail(String error, int errorCode);
+    void returnLoginSMSCaptchaFail(String error, int errorCode);
 
 
     void returnRegisterSMSSuccess(GetRegisterResult getRegisterResult);
@@ -393,9 +393,9 @@ public interface APIInterface {
 
     void returnDndFail(String error, int errorCode);
 
-    void returnModifyPsdSuccess();
+    void returnModifyPasswordSuccess();
 
-    void returnModifyPsdFail(String error, int errorCode);
+    void returnModifyPasswordFail(String error, int errorCode);
 
     void returnTripArriveSuccess(GetTripArriveCity getTripArriveCity);
 
@@ -452,9 +452,9 @@ public interface APIInterface {
 
     void returnRobotByIdFail(String error, int errorCode);
 
-    void returnUpdatePwdBySMSCodeSuccess(GetUpdatePwdBySMSCodeBean getUpdatePwdBySMSCodeBean);
+    void returnResetPasswordSuccess();
 
-    void returnUpdatePwdBySMSCodeFail(String error, int errorCode);
+    void returnResetPasswordFail(String error, int errorCode);
 
     void returnGetAppTabsSuccess(GetAppMainTabResult getAppTabsResult);
 

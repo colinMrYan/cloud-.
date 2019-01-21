@@ -175,7 +175,7 @@ public class ConversationGroupIconUtils {
         localCanvas.drawBitmap(bit2, rangetWidth / 2 + padding, 0, null);
         bit1.recycle();
         // 重置padding
-        localCanvas.save(Canvas.ALL_SAVE_FLAG);
+        localCanvas.save();
         localCanvas.restore();
         return canvasBitmap;
     }
@@ -211,7 +211,7 @@ public class ConversationGroupIconUtils {
                 + padding, null);
         bit3.recycle();
 
-        localCanvas.save(Canvas.ALL_SAVE_FLAG);
+        localCanvas.save();
         localCanvas.restore();
         return canvasBitmap;
     }
@@ -252,7 +252,7 @@ public class ConversationGroupIconUtils {
                 + padding, null);
         bit4.recycle();
 
-        localCanvas.save(Canvas.ALL_SAVE_FLAG);
+        localCanvas.save();
         localCanvas.restore();
         return canvasBitmap;
     }

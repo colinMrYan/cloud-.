@@ -48,8 +48,17 @@ public class Constant {
     public static final String PREF_V_CONFIG_ALL = "v_config_all";
     public static final String PREF_EXPERIENCE_UPGRATE = "experience_upgrade";
     public static final String PREF_APP_THEME = "app_theme";
+    public static final String PREF_LOGIN_USERNAME = "userName";
+    public static final String PREF_LOGIN_PASSWORD = "password";
+    public static final String PREF_CLOUD_IDM = "cloud_idm";
+
+    public static final String PREF_HAS_SET_SHORT_PASSWORD = "hasPassword";
+    public static final String PREF_APP_PREVIOUS_VERSION = "previousVersion";
+    public static final String PREF_LOGIN_ENTERPRISE_NAME = "login_enterprise_name";
+    public static final String PREF_LOGIN_HAVE_SET_PASSWORD = "hasPassword";
     public static final String PREF_MAIL_ACCOUNT = "mail_account";
     public static final String PREF_MAIL_PASSWORD = "mail_password";
+
 
     public static final String ACTION_MEETING = "com.inspur.meeting";
     public static final String ACTION_TASK = "com.inspur.task";
@@ -142,8 +151,6 @@ public class Constant {
     public static final String APP_WEB_URI = "uri";
 
     public static final int APP_EXCEPTION_LEVEL = 4;
-
-    //邮箱
     public static final String MAIL_ENCRYPT_IV="inspurcloud+2019";
 
 

@@ -193,6 +193,8 @@
     <string name="login_direct">直接登錄</string>
     <string name="login_change_phone_num">更換號碼</string>
     <string name="login_captchas_login">短信登錄 </string>
+    <string name="login_by_account">帳號密碼登錄</string>
+    <string name="login_find_password">找回密碼</string>
     <string name="login_get_captchas_code">獲取驗證碼</string>
     <string name="login_get_captchas">通過短信修改密碼</string>
     <string name="login_send_captchas">發送驗證碼 </string>
@@ -965,7 +967,6 @@
     <string name="assemble_json_exception">組裝Json物件出現異常！</string>
     <string name="inputpwd">請輸入手勢密碼</string>
     <string name="forgetpwd">忘記密碼</string>
-    <string name="forgetpwd_error">載入忘記密碼介面出錯 </string>
     <string name="download_fail">下載失敗</string>
     <string name="download_success">下載成功</string>
     <string name="file_downloading">文件下載中，請稍候...</string>

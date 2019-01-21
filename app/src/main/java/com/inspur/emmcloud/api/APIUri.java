@@ -203,7 +203,7 @@ public class APIUri {
      * @param mobile
      * @return
      */
-    public static String getReqLoginSMSUrl(String mobile) {
+    public static String getLoginSMSCaptchaUrl(String mobile) {
         return MyApplication.getInstance().getCloudId() + "api/v1/passcode?phone=" + mobile;
     }
 
