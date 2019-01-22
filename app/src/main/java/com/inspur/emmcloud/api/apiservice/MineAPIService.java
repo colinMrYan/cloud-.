@@ -25,7 +25,6 @@ import com.inspur.emmcloud.bean.mine.GetUploadMyHeadResult;
 import com.inspur.emmcloud.bean.mine.UserProfileInfoBean;
 import com.inspur.emmcloud.bean.system.GetBoolenResult;
 import com.inspur.emmcloud.interf.OauthCallBack;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.OauthUtils;
