@@ -1194,4 +1194,5 @@
     <string name="group_qrcode">群二维码</string>
 
     <string name="bracket_with_word">(%1$s)</string>
+    <string name="current_month">本月</string>
 </resources>

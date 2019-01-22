@@ -86,8 +86,10 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
             }
         }
         setContentView(R.layout.activity_main);
-        checkNecessaryPermission();
-
+      checkNecessaryPermission();
+//        Bundle bundle = new Bundle();
+//        bundle.putString(ConversationGroupInfoActivity.EXTRA_CID,"2");
+//        IntentUtils.startActivity(this, ConversationGroupInfoActivity.class,bundle,true);
     }
 
     private void checkNecessaryPermission() {
