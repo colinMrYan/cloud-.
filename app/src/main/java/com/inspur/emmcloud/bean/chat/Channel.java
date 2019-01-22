@@ -56,6 +56,10 @@ public class Channel implements Serializable {
     private boolean dnd = false;
     @Column(name = "inputs")
     private String inputs = "";
+    @Column(name = "action")
+    private String action = "";
+    @Column(name = "avatar")
+    private String avatar = "";
     private List<Msg> newMsgList = new ArrayList<>();
     private List<Message> newMessageList = new ArrayList<>();
     private long unReadCount = 0;
@@ -101,6 +105,14 @@ public class Channel implements Serializable {
             }
             if (obj.has("inputs")) {
                 this.inputs = obj.getString("inputs");
+            }
+
+            if(obj.has("action")){
+                this.action = obj.getString("action");
+            }
+
+            if(obj.has("avatar")){
+                this.avatar = obj.getString("avatar");
             }
         } catch (Exception e) {
             // TODO: handle exception
@@ -267,7 +279,10 @@ public class Channel implements Serializable {
             Message message = newMessageList.get(newMessageList.size() - 1);
             String fromUserName = "";
             String messageType = message.getType();
-            if (!type.equals("DIRECT") && !message.getFromUser().equals(MyApplication.getInstance().getUid())) {
+//            if (!type.equals("DIRECT") && !message.getFromUser().equals(MyApplication.getInstance().getUid())) {
+//                fromUserName = ContactUserCacheUtils.getUserName(message.getFromUser()) + "：";
+//            }
+            if (type.equals("GROUP") && !message.getFromUser().equals(MyApplication.getInstance().getUid())) {
                 fromUserName = ContactUserCacheUtils.getUserName(message.getFromUser()) + "：";
             }
             switch (messageType) {
@@ -312,6 +327,8 @@ public class Channel implements Serializable {
             } else if (type.equals("GROUP")) {
                 newMsgContent = context.getString(
                         R.string.group_no_message);
+            } else if(type.equals("LINK")){
+                newMsgContent = context.getString(R.string.welcome_to)+" "+title;
             } else {
                 newMsgContent = context.getString(
                         R.string.direct_no_message);
@@ -451,10 +468,25 @@ public class Channel implements Serializable {
         this.pyFull = pyFull;
     }
 
+    public String getAction() {
+        return action;
+    }
+
+    public void setAction(String action) {
+        this.action = action;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
 
     /*
-         * 重写equals方法修饰符必须是public,因为是重写的Object的方法. 2.参数类型必须是Object.
-         */
+                 * 重写equals方法修饰符必须是public,因为是重写的Object的方法. 2.参数类型必须是Object.
+                 */
     public boolean equals(Object other) { // 重写equals方法，后面最好重写hashCode方法
 
         if (this == other) // 先检查是否其自反性，后比较other是否为空。这样效率高
