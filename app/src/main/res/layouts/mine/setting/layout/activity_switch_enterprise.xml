@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/content_bg"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <RelativeLayout
+        android:id="@+id/header_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/header_height"
+        android:background="?attr/header_bg_color">
+
+        <RelativeLayout
+            android:id="@+id/back_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:onClick="onClick"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp">
+
+            <ImageView
+                android:id="@+id/back_btn"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_centerVertical="true"
+                android:background="@null"
+                android:paddingRight="5dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/selector_back_btn"/>
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/header_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="@string/settings_device_manager"
+            android:textColor="?attr/header_text_color"
+            android:textSize="@dimen/header_textsize"/>
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_below="@id/header_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <RelativeLayout
+            android:background="@color/content_bg"
+            android:layout_below="@id/header_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <com.inspur.emmcloud.widget.ScrollViewWithListView
+                android:id="@+id/device_list"
+                android:dividerHeight="0.5px"
+                android:divider="@color/color_list_divider"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"></com.inspur.emmcloud.widget.ScrollViewWithListView>
+            <RelativeLayout
+                android:id="@+id/clear_auto_select_enterprise_layout"
+                android:layout_width="match_parent"
+                android:layout_below="@id/device_list"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="30dp"
+                android:onClick="onClick"
+                android:paddingLeft="10dp"
+                android:background="@color/white">
+                <TextView
+                    android:id="@+id/tv_clearauto_select"
+                    android:layout_width="match_parent"
+                    android:layout_height="42dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="@string/close_auto_select_enterprise"
+                    android:gravity="center_vertical"
+                    android:textColor="#333333"
+                    android:textSize="17sp" />
+
+                <ImageView
+                    android:id="@+id/img"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/icon_arrow_right" />
+            </RelativeLayout>
+        </RelativeLayout>
+    </ScrollView>
+</RelativeLayout>

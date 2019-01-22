@@ -1,0 +1,218 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/content_bg"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/header_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/header_height"
+        android:background="?attr/header_bg_color"
+        android:visibility="gone" >
+
+        <TextView
+            android:id="@+id/header_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="@string/find"
+            android:textColor="?attr/header_text_color"
+            android:textSize="@dimen/header_textsize" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/function_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/header_bg_color"
+        android:paddingLeft="9dp"
+        android:paddingRight="8dp"
+        android:visibility="gone" >
+
+        <LinearLayout
+            android:id="@+id/find_scan_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingBottom="8dp"
+            android:paddingLeft="3dp"
+            android:paddingRight="3dp"
+            android:paddingTop="8dp"
+            android:visibility="gone" >
+
+            <ImageView
+                android:id="@+id/find_img"
+                android:layout_width="wrap_content"
+                android:layout_height="22dp"
+                android:adjustViewBounds="true"
+                android:src="@drawable/icon_scan_code" />
+
+            <TextView
+                android:id="@+id/find_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sweep"
+                android:textColor="@color/white"
+                android:textSize="8sp" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/search_layout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/header_height"
+            android:layout_marginLeft="9dp"
+            android:layout_marginRight="9dp"
+            android:layout_toRightOf="@id/find_scan_layout" >
+
+            <TextView
+                android:id="@+id/find_search_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical"
+                android:background="@drawable/bg_search_input"
+                android:drawableLeft="@drawable/ic_search"
+                android:drawablePadding="5dp"
+                android:editable="false"
+                android:freezesText="true"
+                android:hint="@string/search"
+                android:paddingRight="5dp"
+                android:clickable="false"
+                android:singleLine="true"
+                android:textColor="@color/black"
+                android:textColorHint="@color/login_form_hint"
+                android:textSize="14sp" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/find_choose_btn"
+        android:layout_width="match_parent"
+        android:layout_height="85dp"
+        android:background="#ffffff"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingBottom="9dp"
+        android:paddingTop="13dp" >
+
+        <LinearLayout
+            android:id="@+id/find_analysis"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical" >
+
+            <ImageView
+                android:id="@+id/analysis_img"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:src="@drawable/icon_find_analysis" />
+
+            <TextView
+                android:id="@+id/analysis_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/analysis"
+                android:textColor="#FF666666"
+                android:textSize="@dimen/content_moresmaller_textsize" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/find_news"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical" >
+
+            <ImageView
+                android:id="@+id/news_img"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:src="@drawable/icon_find_news" />
+
+            <TextView
+                android:id="@+id/news_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/news"
+                android:textColor="#FF666666"
+                android:textSize="@dimen/content_moresmaller_textsize" >
+            </TextView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/find_knowage"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical" >
+
+            <ImageView
+                android:id="@+id/knowage_img"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:src="@drawable/icon_find_knowledge" />
+
+            <TextView
+                android:id="@+id/knowage_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/knowledge"
+                android:textColor="#FF666666"
+                android:textSize="@dimen/content_moresmaller_textsize" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/find_doc"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical" >
+
+            <ImageView
+                android:id="@+id/doc_img"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:src="@drawable/icon_find_doc" />
+
+            <TextView
+                android:id="@+id/doc_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/docunment"
+                android:textColor="#FF666666"
+                android:textSize="@dimen/content_moresmaller_textsize" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout
+        android:id="@+id/refresh_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp"
+        android:background="@color/content_bg" >
+
+        <include layout="@layout/pull_refresh_head" />
+        <!-- 支持所有实现Pullable接口的View -->
+
+        <com.inspur.emmcloud.widget.pullableview.PullableListView
+            android:id="@+id/task_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@null"
+            android:dividerHeight="10dp" />
+
+        <include layout="@layout/pull_load_more" />
+    </com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout>
+
+</LinearLayout>

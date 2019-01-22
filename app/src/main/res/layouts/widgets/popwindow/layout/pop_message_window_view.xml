@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+    <!--android:background="@drawable/message_popwindow_list"-->
+    <ImageView
+        android:id="@+id/meesage_popwindow_arrow_img"
+        android:layout_width="12dp"
+        android:layout_height="8dp"
+        android:layout_marginRight="20dp"
+        android:layout_alignParentRight="true"
+        android:adjustViewBounds="true"
+        android:scaleType="fitXY"
+        android:src="@drawable/message_popwindow_list_arrow" />
+
+    <RelativeLayout
+        android:id="@+id/message_popwindow_outsize_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="10dp"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/meesage_popwindow_arrow_img"
+        android:background="@drawable/shape_message_pop_round_blue_layout">
+
+
+        <RelativeLayout
+            android:id="@+id/message_create_group_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="12dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:paddingTop="12dp">
+
+            <ImageView
+                android:id="@+id/message_create_group_img"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_message_menu_creat_group" />
+
+            <TextView
+                android:id="@+id/message_create_group_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="12dp"
+                android:layout_toRightOf="@id/message_create_group_img"
+                android:background="@color/transparent"
+                android:clickable="false"
+                android:text="@string/message_create_group"
+                android:textColor="#ffffff"
+                android:textSize="16sp" />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="0.5dp"
+            android:layout_alignLeft="@id/message_create_group_layout"
+            android:layout_alignRight="@id/message_create_group_layout"
+            android:layout_below="@id/message_create_group_layout"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:background="#3895D9" />
+
+        <RelativeLayout
+            android:id="@+id/message_scan_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/message_create_group_layout"
+            android:orientation="horizontal"
+            android:paddingBottom="12dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:paddingTop="12dp">
+
+            <ImageView
+                android:id="@+id/message_scan_img"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_centerVertical="true"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_message_menu_scan" />
+
+            <TextView
+                android:id="@+id/message_scan_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="12dp"
+                android:layout_toRightOf="@id/message_scan_img"
+                android:background="@color/transparent"
+                android:clickable="false"
+                android:text="@string/sweep"
+                android:textColor="#ffffff"
+                android:textSize="16sp" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+
+</RelativeLayout>

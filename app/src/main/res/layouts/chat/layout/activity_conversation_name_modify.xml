@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true" >
+
+    <RelativeLayout
+        android:id="@+id/header_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/header_height"
+        android:background="?attr/header_bg_color" >
+
+        <RelativeLayout
+            android:id="@+id/back_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:onClick="onClick"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp" >
+
+            <TextView
+                android:id="@+id/back_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:background="@null"
+                android:paddingRight="5dp"
+                android:gravity="center"
+                android:paddingLeft="12dp"
+                android:text="@string/cancel"
+                android:textColor="?attr/header_text_color"
+                android:textSize="@dimen/header_textsize" />
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/header_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="@string/modify_group_name"
+            android:textColor="?attr/header_text_color"
+            android:textSize="@dimen/header_textsize" />
+
+        <TextView
+            android:id="@+id/save_text"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:clickable="true"
+            android:gravity="center"
+            android:onClick="onClick"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:text="@string/save"
+            android:textColor="#3BF1F8"
+            android:textSize="@dimen/header_textsize" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/header_layout"
+        android:background="@color/content_bg"
+        android:paddingTop="10dp" >
+        <TextView
+            android:id="@+id/tv_edit_gropName_tip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:text="@string/channel_group_members_name"
+            android:layout_marginLeft="15dp"
+            android:textColor="#999999"/>
+        <com.inspur.emmcloud.widget.ClearEditText
+            android:id="@+id/edit"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_edit_gropName_tip"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/bg_rectangle_no_fillet"
+            android:lines="1"
+            android:paddingTop="10dp"
+            android:paddingLeft="15dp"
+            android:paddingBottom="10dp"
+            android:singleLine="true"
+            android:textColor="#FF333333"
+            android:textSize="@dimen/content_title_textsize" />
+    </RelativeLayout>
+
+</RelativeLayout>
