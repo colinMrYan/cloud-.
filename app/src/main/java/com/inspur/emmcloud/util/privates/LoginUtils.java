@@ -288,7 +288,7 @@ public class LoginUtils extends APIInterfaceInstance {
         PreferencesUtils.putString(activity, "userRealName", name);
         PreferencesUtils.putString(activity, "userID", getMyInfoResult.getID());
         PreferencesUtils.putString(activity, "myInfo", myInfo);
-        PreferencesUtils.putBoolean(activity, Constant.PREF_HAS_SET_SHORT_PASSWORD,
+        PreferencesUtils.putBoolean(activity, Constant.PREF_LOGIN_HAVE_SET_PASSWORD,
                 getMyInfoResult.getHasPassord());
         ((MyApplication) activity.getApplicationContext())
                 .setUid(getMyInfoResult.getID());

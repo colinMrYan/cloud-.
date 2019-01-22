@@ -3,6 +3,7 @@ package com.inspur.emmcloud.util.common;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
+import android.os.Build;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
@@ -71,13 +72,18 @@ public class ResolutionUtils {
     }
 
     private static int getNotchHeight(Context context) {
-        int NotchHeight = 0;
-        if (AppUtils.getIsHuaWei()) {
-            if (hasNotchInScreenHuaWei(context)) {
-                NotchHeight =getNotchSizeHuaWei(context)[1];
+        int notchHeight = 0;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            notchHeight = ResolutionUtils.getStatusBarHeightAboutAndroidP(context);
+        }else {
+            if (AppUtils.getIsHuaWei()) {
+                if (hasNotchInScreenHuaWei(context)) {
+                    notchHeight =getNotchSizeHuaWei(context)[1];
+                }
             }
         }
-        return NotchHeight;
+
+        return notchHeight;
     }
 
     /**

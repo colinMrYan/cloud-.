@@ -25,7 +25,6 @@ import com.inspur.emmcloud.util.common.InputMethodUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.LoginUtils;
@@ -72,7 +71,7 @@ public class LoginActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         PreferencesUtils.putString(this,Constant.PREF_APP_PREVIOUS_VERSION,AppUtils.getVersion(this));
         this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
-        StateBarUtils.translucent(this,R.color.white);
+
         MyApplication.getInstance().closeOtherActivity(LoginActivity.this);
         initView();
         handMessage();
@@ -185,9 +184,9 @@ public class LoginActivity extends BaseActivity {
         //当没有设置短密码时进入密码设置界面
         PreferencesUtils.putString(getApplicationContext(),
                 Constant.PREF_LOGIN_USERNAME, userName);
-        boolean isHasSetShortPassword = PreferencesUtils.getBoolean(LoginActivity.this, "hasPassword",false);
+        boolean isHasSetShortPassword = PreferencesUtils.getBoolean(LoginActivity.this, Constant.PREF_LOGIN_HAVE_SET_PASSWORD,false);
         if (!isHasSetShortPassword){
-            IntentUtils.startActivity(LoginActivity.this,ModifyUserFirstPsdActivity.class,true);
+            IntentUtils.startActivity(LoginActivity.this,PasswordFirstSettingActivity.class,true);
         }else {
             IntentUtils.startActivity(LoginActivity.this,IndexActivity.class,true);
         }

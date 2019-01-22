@@ -5,10 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
-import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.chat.ImagePagerActivity;
 import com.inspur.emmcloud.ui.chat.ImagePagerV0Activity;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.privates.LanguageUtils;
 import com.inspur.imp.plugin.camera.imageedit.IMGEditActivity;
@@ -29,13 +27,15 @@ public class BaseFragmentActivity extends FragmentActivity {
         String className = this.getClass().getCanonicalName();
         boolean isContain = Arrays.asList(classNames).contains(className);
         if (!isContain){
-            int currentThemeNo = PreferencesUtils.getInt(MyApplication.getInstance(), Constant.PREF_APP_THEME, 0);
-            if (currentThemeNo == 0){
-                setTheme(R.style.AppTheme_1);
-            }else {
-                setTheme(R.style.AppTheme_2);
-            }
+//            int currentThemeNo = PreferencesUtils.getInt(MyApplication.getInstance(), Constant.PREF_APP_THEME, 0);
+//            if (currentThemeNo == 0){
+//                setTheme(R.style.AppTheme_1);
+//                StateBarUtils.setStateBarTextColor(this,true);
+//            }else {
+//                setTheme(R.style.AppTheme_2);
+//            }
             StateBarUtils.translucent(this);
+            StateBarUtils.setStateBarTextColor(this,true);
         }
         super.onCreate(savedInstanceState);
     }

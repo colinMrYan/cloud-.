@@ -41,7 +41,9 @@ public class UserProfileInfoBean {
 
     private String response;
 
+    public UserProfileInfoBean(){
 
+    }
     public UserProfileInfoBean(String response){
         this.response = response;
         try {
@@ -164,5 +166,13 @@ public class UserProfileInfoBean {
 
     public String getResponse(){
         return response;
+    }
+
+    public int getShowEmpNum() {
+        return showEmpNum;
+    }
+
+    public void setShowEmpNum(int showEmpNum) {
+        this.showEmpNum = showEmpNum;
     }
 }

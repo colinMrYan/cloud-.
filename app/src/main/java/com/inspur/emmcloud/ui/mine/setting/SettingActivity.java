@@ -227,7 +227,7 @@ public class SettingActivity extends BaseActivity {
     public void onClick(View v) {
         // TODO Auto-generated method stub
         switch (v.getId()) {
-            case R.id.back_layout:
+            case R.id.ibt_back:
                 finish();
                 break;
             case R.id.signout_layout:

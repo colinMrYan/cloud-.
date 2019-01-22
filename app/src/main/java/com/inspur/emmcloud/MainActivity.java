@@ -11,7 +11,6 @@ import android.os.Looper;
 import android.os.Message;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -77,17 +76,16 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
         //当Android版本在4.4以下时不全屏显示，否则在进入IndexActivity时状态栏过度不美观
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             requestWindowFeature(Window.FEATURE_NO_TITLE);//没有标题
-            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                //全屏显示
-                WindowManager.LayoutParams lp = getWindow().getAttributes();
-                lp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
-                getWindow().setAttributes(lp);
-            }
+//            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+//                //全屏显示
+//                WindowManager.LayoutParams lp = getWindow().getAttributes();
+//                lp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+//                getWindow().setAttributes(lp);
+//            }
         }
         setContentView(R.layout.activity_main);
         checkNecessaryPermission();
-
     }
 
     private void checkNecessaryPermission() {
