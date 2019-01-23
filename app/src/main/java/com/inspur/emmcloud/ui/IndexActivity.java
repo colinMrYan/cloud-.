@@ -267,9 +267,9 @@ public class IndexActivity extends IndexBaseActivity {
                             MyApplication.getInstance()
                                     .setIsContactReady(true);
                             notifySyncAllBaseDataSuccess();
-                            WebSocketPush.getInstance().startWebSocket();// 启动webSocket推送
                             getContactOrg();
                         }
+                        WebSocketPush.getInstance().startWebSocket();// 启动webSocket推送
                         batteryWhiteListRemind(IndexActivity.this);
                         break;
                     case RELOAD_WEB:
