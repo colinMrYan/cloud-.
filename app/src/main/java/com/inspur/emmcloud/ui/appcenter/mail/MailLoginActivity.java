@@ -103,9 +103,9 @@ public class MailLoginActivity extends BaseActivity {
             }else {
                 usernameTextInputLayout.setError("");
             }
-            boolean isInputComplete = password.length() >= 6 && !StringUtils.isBlank(mail) && FomatUtils.isValiadEmail(mail);
-            loginBtn.setEnabled(isInputComplete);
-            loginBtn.setBackgroundResource(isInputComplete ? R.drawable.selector_login_btn : R.drawable.bg_login_btn_unable);
+            boolean isInputValaid = password.length() >= 6 && !StringUtils.isBlank(mail) && FomatUtils.isValiadEmail(mail);
+            loginBtn.setEnabled(isInputValaid);
+            loginBtn.setBackgroundResource(isInputValaid ? R.drawable.selector_login_btn : R.drawable.bg_login_btn_unable);
         }
     }
 

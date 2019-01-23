@@ -3,6 +3,7 @@ package com.inspur.imp.plugin.camera.mycamera;
 import android.app.Activity;
 import android.hardware.Camera.Size;
 
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.ResolutionUtils;
 
 import java.util.Collections;
@@ -77,6 +78,9 @@ public class CameraUtils {
      */
     public Size getPictureSize(List<Size> list, int th){
         Collections.sort(list, sizeComparator);
+        for(Size s:list){
+            LogUtils.jasonDebug("s.width()="+s.width+"   s.height="+s.height);
+        }
         Size size = null;
         for(Size s:list){
             if((s.width < th) && (s.height < th) && equalRateLevel0(s, rate)){

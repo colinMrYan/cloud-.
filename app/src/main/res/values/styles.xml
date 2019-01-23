@@ -22,17 +22,19 @@
         <item name="qmui_config_color_blue">@color/transparent</item>
         <item name="colorAccent">#24ABE9</item>
     </style>
+
     <style name="MyEditText" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorControlNormal">#C8C7CC</item>
         <item name="colorControlActivated">#24ABE9</item>
 
     </style>
 
-    <style name="AppTheme_1"  parent="AppTheme">
+    <style name="AppTheme_1" parent="AppTheme">
         <item name="header_bg_color">@color/header_bg</item>
         <item name="header_text_color">@android:color/white</item>
     </style>
-    <style name="AppTheme_2"  parent="AppTheme">
+
+    <style name="AppTheme_2" parent="AppTheme">
         <item name="header_bg_color">@color/header_bg_white</item>
         <item name="header_text_color">#333333</item>
     </style>
@@ -46,7 +48,6 @@
         <!--设置窗口的背景是否为半透明，设置透明背景必须要设置此项-->
         <item name="android:windowIsTranslucent">true</item>
     </style>
-
 
     <style name="userhead_dialog_bg" parent="@android:style/Theme.Dialog">
         <item name="android:windowIsFloating">true</item>
@@ -98,9 +99,6 @@
         <item name="android:windowBackground">@drawable/photo_choose_bg</item>
         <item name="android:background">@android:color/transparent</item>
     </style>
-
-
-
 
 
     <!-- 增加加号部分的style -->
@@ -206,17 +204,19 @@
     </style>
 
     <declare-styleable name="RxCardStackView">
-        <attr name="stackOverlapGaps" format="dimension"/>
-        <attr name="stackOverlapGapsCollapse" format="dimension"/>
-        <attr name="stackHeaderHeight" format="dimension"/>
-        <attr name="stackDuration" format="integer"/>
-        <attr name="stackNumBottomShow" format="integer"/>
+        <attr name="stackOverlapGaps" format="dimension" />
+        <attr name="stackOverlapGapsCollapse" format="dimension" />
+        <attr name="stackHeaderHeight" format="dimension" />
+        <attr name="stackDuration" format="integer" />
+        <attr name="stackNumBottomShow" format="integer" />
         <attr name="stackAnimationType">
-            <flag name="allDown" value="0"/>
-            <flag name="upDown" value="1"/>
-            <flag name="upDownStack" value="2"/>
+            <flag name="allDown" value="0" />
+            <flag name="upDown" value="1" />
+            <flag name="upDownStack" value="2" />
         </attr>
-    </declare-styleable>anim
+    </declare-styleable>
+    anim
+
     <style name="AndroidTreeNodeStyleCustom">
         <item name="android:paddingLeft">20dp</item>
         <!--<item name="android:showDividers">middle</item>-->

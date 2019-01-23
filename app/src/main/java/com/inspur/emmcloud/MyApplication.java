@@ -327,6 +327,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         params.addHeader("Accept", "application/json");
         if (getToken() != null) {
             params.addHeader("Authorization", getToken());
+            LogUtils.jasonDebug("getToken()="+getToken());
         }
         if (currentEnterprise != null) {
             params.addHeader("X-ECC-Current-Enterprise", currentEnterprise.getId());

@@ -33,6 +33,7 @@ import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.ImageUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
@@ -99,7 +100,7 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
             ToastUtils.show(this, R.string.filetransfer_sd_not_exist);
             finish();
         }
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);//拍照过程屏幕一直处于高亮
         setContentView(R.layout.activity_mycamera);
         initData();
@@ -268,9 +269,11 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
             List<Camera.Size> PictureSizeList = parameters.getSupportedPictureSizes();
             Camera.Size pictureSize = CameraUtils.getInstance(this).getPictureSize(PictureSizeList, MyAppConfig.UPLOAD_ORIGIN_IMG_MAX_SIZE);
             parameters.setPictureSize(pictureSize.width, pictureSize.height);
+            LogUtils.jasonDebug("pictureSize.width="+pictureSize.width + "   pictureSize.height="+pictureSize.height);
             List<Camera.Size> previewSizeList = parameters.getSupportedPreviewSizes();
-            Camera.Size previewSize = CameraUtils.getInstance(this).getPreviewSize(previewSizeList, 1300);
+            Camera.Size previewSize = CameraUtils.getInstance(this).getPreviewSize(previewSizeList, 2000);
             parameters.setPreviewSize(previewSize.width, previewSize.height);
+            LogUtils.jasonDebug("previewSize.width="+previewSize.width + "   previewSize.height="+previewSize.height);
             List<String> modelList = parameters.getSupportedFlashModes();
             if (modelList != null && modelList.contains(cameraFlashModel)) {
                 parameters.setFlashMode(cameraFlashModel);
