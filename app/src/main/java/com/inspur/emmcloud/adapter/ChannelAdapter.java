@@ -117,6 +117,8 @@ public class ChannelAdapter extends BaseAdapter {
             }
         } else if(channel.getType().equals("DIRECT") ||channel.getType().equals("SERVICE")){
             ImageDisplayUtils.getInstance().displayImageByTag(channelPhotoImg, channel.getShowIcon(), R.drawable.icon_person_default);
+        }else if(channel.getType().equals("LINK")){
+            ImageDisplayUtils.getInstance().displayImage(channelPhotoImg, channel.getShowIcon(), R.drawable.icon_channel_group_default);
         }else {
             channelPhotoImg.setTag("");
             channelPhotoImg.setImageResource(R.drawable.icon_channel_group_default);
@@ -135,6 +137,7 @@ public class ChannelAdapter extends BaseAdapter {
         long unReadCount = channel.getUnReadCount();
         holder.channelTimeText.setText(TimeUtils.getDisplayTime(
                 context, channel.getMsgLastUpdate()));
+
         String chatDrafts = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), MyAppConfig.getChannelDrafsPreKey(channel.getCid()),null);
         if (chatDrafts != null){
             String content = "<font color='#FF0000'>"+context.getString(R.string.message_type_drafts)+"</font>"+chatDrafts;

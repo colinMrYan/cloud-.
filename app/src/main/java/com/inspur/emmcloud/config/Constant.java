@@ -146,5 +146,6 @@ public class Constant {
     //邮箱
     public static final String MAIL_ENCRYPT_IV="inspurcloud+2019";
 
+    public static final String SF_OPEN_URL = "open-url";
 
 }
