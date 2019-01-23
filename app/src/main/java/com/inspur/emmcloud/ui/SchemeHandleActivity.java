@@ -106,7 +106,7 @@ public class SchemeHandleActivity extends BaseActivity {
 
     private boolean isLackNecessaryPermission() {
         //如果没有存储权限则跳转到MainActivity进行处理
-        String[] necessaryPermissionArray = StringUtils.concatAll(Permissions.STORAGE,Permissions.CALL_PHONE_PERMISSION);
+        String[] necessaryPermissionArray = StringUtils.concatAll(Permissions.STORAGE,Permissions.PHONE_PERMISSION);
         if(!PermissionRequestManagerUtils.getInstance().isHasPermission(MyApplication.getInstance(), necessaryPermissionArray)){
                 Intent intent = new Intent(SchemeHandleActivity.this,MainActivity.class);
                 startActivity(intent);
