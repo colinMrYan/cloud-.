@@ -31,7 +31,7 @@ public class NetworkCallbackImpl extends ConnectivityManager.NetworkCallback {
     @Override
     public void onAvailable(Network network) {
         super.onAvailable(network);
-        NetWorkStateChangeUtils.getInstance().netWorkStateChange();
+      //  NetWorkStateChangeUtils.getInstance().netWorkStateChange();
     }
 
     //断开或重连时调用，maxMsToLive 应用将尝试保持网络连接的时间，此时网络随时可能断开
@@ -51,11 +51,13 @@ public class NetworkCallbackImpl extends ConnectivityManager.NetworkCallback {
     @Override
     public void onCapabilitiesChanged(Network network, NetworkCapabilities networkCapabilities) {
         super.onCapabilitiesChanged(network, networkCapabilities);
+        NetWorkStateChangeUtils.getInstance().netWorkStateChange();
     }
 
     //网络属性发生了改变
     @Override
     public void onLinkPropertiesChanged(Network network, LinkProperties linkProperties) {
         super.onLinkPropertiesChanged(network, linkProperties);
+        //NetWorkStateChangeUtils.getInstance().netWorkStateChange();
     }
 }
