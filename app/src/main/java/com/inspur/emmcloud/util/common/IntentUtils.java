@@ -1,7 +1,10 @@
 package com.inspur.emmcloud.util.common;
 
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 
 public class IntentUtils {
@@ -58,6 +61,23 @@ public class IntentUtils {
 		context.startActivity(intent);
 		if (isFinishCurrentActivity) {
 			context.finish();
+		}
+	}
+
+	public static void startActivity(Activity context,String scheme) {
+		try {
+//			Uri uri = Uri.parse("scheme://host/path?param1=abc&param2=cde");
+			Uri uri = Uri.parse(scheme);
+			Intent intent = new Intent();
+			intent.setAction(Intent.ACTION_VIEW);
+			intent.setData(uri);
+			PackageManager packageManager= context.getPackageManager();
+			ComponentName componentName=intent.resolveActivity(packageManager);
+			if (componentName!=null){
+				context.startActivity(intent);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 

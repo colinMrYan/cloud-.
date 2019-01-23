@@ -19,6 +19,7 @@ public class Conversation implements Serializable{
     public static final String TYPE_DIRECT = "DIRECT";
     public static final String TYPE_GROUP = "GROUP";
     public static final String TYPE_CAST = "CAST";
+    public static final String TYPE_LINK = "LINK";
     @Column(name = "id", isId = true)
     private String id;
     @Column(name = "enterprise")
@@ -27,8 +28,6 @@ public class Conversation implements Serializable{
     private String name;
     @Column(name = "owner")
     private String owner;
-    @Column(name = "avatar")
-    private String avatar;
     @Column(name = "type")
     private String type;
     @Column(name = "state")
@@ -47,6 +46,10 @@ public class Conversation implements Serializable{
     private boolean stick;
     @Column(name = "hide")
     private boolean hide;
+    @Column(name = "action")
+    private String action = "";
+    @Column(name = "avatar")
+    private String avatar = "";
 
     private String draft = "";
 
@@ -75,6 +78,7 @@ public class Conversation implements Serializable{
         this.dnd = JSONUtils.getBoolean(obj,"dnd",false);
         this.stick = JSONUtils.getBoolean(obj,"stick",false);
         this.hide = JSONUtils.getBoolean(obj,"hide",false);
+        this.action = JSONUtils.getString(obj,"action","");
     }
 
     public String getId() {
@@ -198,6 +202,14 @@ public class Conversation implements Serializable{
 
     public void setDraft(String draft) {
         this.draft = draft;
+    }
+
+    public String getAction() {
+        return action;
+    }
+
+    public void setAction(String action) {
+        this.action = action;
     }
 
     public boolean equals(Object other) { // 重写equals方法，后面最好重写hashCode方法

@@ -40,6 +40,7 @@ import com.inspur.emmcloud.bean.chat.GetRecentMessageListResult;
 import com.inspur.emmcloud.bean.chat.MatheSet;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.UIConversation;
+import com.inspur.emmcloud.bean.system.EmmAction;
 import com.inspur.emmcloud.bean.system.EventMessage;
 import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
 import com.inspur.emmcloud.bean.system.MainTabProperty;
@@ -65,6 +66,7 @@ import com.inspur.emmcloud.util.privates.DownLoaderUtils;
 import com.inspur.emmcloud.util.privates.NetWorkStateChangeUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.ScanQrCodeUtils;
+import com.inspur.emmcloud.util.privates.UriUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
@@ -208,7 +210,16 @@ public class CommunicationFragment extends Fragment {
                             Bundle bundle = new Bundle();
                             bundle.putSerializable(ConversationActivity.EXTRA_CONVERSATION, conversation);
                             IntentUtils.startActivity(getActivity(), ConversationActivity.class, bundle);
-                        } else {
+                        }else if(conversation.getType().equals(Conversation.TYPE_LINK)){
+                            EmmAction emmAction = new EmmAction(conversation.getAction());
+                            if(emmAction.getCanOpenAction()){
+                                if(emmAction.getUrl().startsWith("http")){
+                                    UriUtils.openUrl(getActivity(),emmAction.getUrl());
+                                }else{
+                                    IntentUtils.startActivity(getActivity(),emmAction.getUrl());
+                                }
+                            }
+                        }  else {
                             ToastUtils.show(MyApplication.getInstance(), R.string.not_support_open_channel);
                         }
                         setConversationRead(position, uiConversation);
