@@ -55,7 +55,6 @@ import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.ui.mine.setting.NetWorkStateDetailActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
@@ -131,7 +130,6 @@ public class CommunicationFragment extends Fragment {
         registerMessageFragmentReceiver();
         getConversationList();
         setHeaderFunctionOptions(null);
-        LogUtils.YfcDebug("进入V1UI");
     }
 
     /**
