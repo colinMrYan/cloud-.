@@ -266,6 +266,8 @@ public class Channel implements Serializable {
             } else if (type.equals("GROUP")) {
                 newMsgContent = context.getString(
                         R.string.group_no_message);
+            } else if(type.equals("LINK")){
+                newMsgContent = context.getString(R.string.welcome_to)+" "+title;
             } else {
                 newMsgContent = context.getString(
                         R.string.direct_no_message);

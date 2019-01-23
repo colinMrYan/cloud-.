@@ -951,7 +951,7 @@ public class CommunicationV0Fragment extends Fragment {
                 } else {
                     channelPhotoImg.setImageResource(R.drawable.icon_channel_group_default);
                 }
-            } else if (channel.getType().equals("DIRECT") || channel.getType().equals("SERVICE")) {
+            } else if (channel.getType().equals("DIRECT") || channel.getType().equals("SERVICE") || channel.getType().equals("LINK")) {
                 ImageDisplayUtils.getInstance().displayImageByTag(channelPhotoImg, channel.getShowIcon(), R.drawable.icon_person_default);
             } else {
                 channelPhotoImg.setTag("");
