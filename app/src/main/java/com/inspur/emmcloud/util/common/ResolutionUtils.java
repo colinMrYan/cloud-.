@@ -1,20 +1,25 @@
 package com.inspur.emmcloud.util.common;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Rect;
 import android.os.Build;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
+import android.view.DisplayCutout;
 import android.view.KeyCharacterMap;
 import android.view.KeyEvent;
 import android.view.ViewConfiguration;
+import android.view.WindowInsets;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.util.privates.AppUtils;
 
 import java.lang.reflect.Method;
+import java.util.List;
 
 public class ResolutionUtils {
 
@@ -71,7 +76,7 @@ public class ResolutionUtils {
 		return height * 1.0f / width;
 	}
 
-	private static int getNotchHeight(Context context) {
+	private static int getNotchHeight(Activity context) {
 		int notchHeight = 0;
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
 			notchHeight = ResolutionUtils.getStatusBarHeightAboutAndroidP(context);
@@ -85,6 +90,8 @@ public class ResolutionUtils {
 
 		return notchHeight;
 	}
+
+
 
 	/**
 	 * 支持带有虚拟按键手机屏幕高度的计算
@@ -172,11 +179,32 @@ public class ResolutionUtils {
 		}
 	}
 
-	public static int getStatusBarHeightAboutAndroidP(Context context) {
+	@TargetApi(28)
+	private static boolean hasNotchInScreenAboutAndroidP(Activity context){
+		boolean isNotchScreen = false;
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+			WindowInsets windowInsets = context.getWindow().getDecorView().getRootWindowInsets();
+			if (windowInsets != null) {
+				DisplayCutout displayCutout = windowInsets.getDisplayCutout();
+				if (displayCutout != null) {
+					List<Rect> rects = displayCutout.getBoundingRects();
+					//通过判断是否存在rects来确定是否刘海屏手机
+					if (rects != null && rects.size() > 0) {
+						isNotchScreen = true;
+					}
+				}
+			}
+		}
+		return isNotchScreen;
+	}
+
+	public static int getStatusBarHeightAboutAndroidP(Activity context) {
 		int result = 0;
-		int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
-		if (resourceId > 0) {
-			result = context.getResources().getDimensionPixelSize(resourceId);
+		if (hasNotchInScreenAboutAndroidP(context)){
+			int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
+			if (resourceId > 0) {
+				result = context.getResources().getDimensionPixelSize(resourceId);
+			}
 		}
 		return result;
 	}
