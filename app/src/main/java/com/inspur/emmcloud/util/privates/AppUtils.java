@@ -815,20 +815,32 @@ public class AppUtils {
      * @param context
      * @return
      */
-    private static String getDeviceUUID(Context context) {
-        final TelephonyManager tm = (TelephonyManager) context
-                .getSystemService(Context.TELEPHONY_SERVICE);
-        final String tmDevice, tmSerial, androidId;
-        tmDevice = "" + tm.getDeviceId();
-        tmSerial = "" + tm.getSimSerialNumber();
-        androidId = ""
-                + android.provider.Settings.Secure.getString(
-                context.getContentResolver(),
-                android.provider.Settings.Secure.ANDROID_ID);
-        UUID deviceUuid = new UUID(androidId.hashCode(),
-                ((long) tmDevice.hashCode() << 32) | tmSerial.hashCode());
-        String uniqueId = deviceUuid.toString();
-        return uniqueId;
+    private static String getDeviceUUID(final Context context) {
+        final String[] uniqueId = new String[1];
+        PermissionRequestManagerUtils.getInstance().requestRuntimePermission(context, Permissions.CALL_PHONE, new PermissionRequestCallback() {
+            @Override
+            public void onPermissionRequestSuccess(List<String> permissions) {
+                TelephonyManager tm = (TelephonyManager) context
+                        .getSystemService(Context.TELEPHONY_SERVICE);
+                String tmDevice, tmSerial, androidId;
+                tmDevice = "" + tm.getDeviceId();
+                tmSerial = "" + tm.getSimSerialNumber();
+                androidId = ""
+                        + android.provider.Settings.Secure.getString(
+                        context.getContentResolver(),
+                        android.provider.Settings.Secure.ANDROID_ID);
+                UUID deviceUuid = new UUID(androidId.hashCode(),
+                        ((long) tmDevice.hashCode() << 32) | tmSerial.hashCode());
+                uniqueId[0] = deviceUuid.toString();
+            }
+
+            @Override
+            public void onPermissionRequestFail(List<String> permissions) {
+                uniqueId[0] = "";
+                ToastUtils.show(context, PermissionRequestManagerUtils.getInstance().getPermissionToast(context,permissions));
+            }
+        });
+        return uniqueId[0];
     }
 
 
