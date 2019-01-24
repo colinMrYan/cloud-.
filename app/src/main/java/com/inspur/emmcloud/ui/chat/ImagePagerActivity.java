@@ -79,9 +79,8 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-      //  requestWindowFeature(Window.FEATURE_NO_TITLE);//没有标题
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_image_pager);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);//没有标题
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             //全屏显示
@@ -89,6 +88,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
             lp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
             getWindow().setAttributes(lp);
         }
+        setContentView(R.layout.activity_image_pager);
         EventBus.getDefault().register(this);
         init();
     }
