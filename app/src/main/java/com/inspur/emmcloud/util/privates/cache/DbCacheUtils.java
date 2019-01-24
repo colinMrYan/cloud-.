@@ -116,10 +116,13 @@ public class DbCacheUtils {
                                 db.execNonQuery("DROP TABLE IF EXISTS Mail");
                             }
                             if(oldVersion<17){
-                                db.execNonQuery("ALTER TABLE ChannelGroup ADD COLUMN action TEXT DEFAULT ''");
-                                db.execNonQuery("ALTER TABLE Channel ADD COLUMN action TEXT DEFAULT ''");
-                                db.execNonQuery("ALTER TABLE Channel ADD COLUMN avatar TEXT DEFAULT ''");
-                                db.execNonQuery("ALTER TABLE Conversation ADD COLUMN action TEXT DEFAULT ''");
+                                if(tableIsExist(db,"ChannelGroup") && tableIsExist(db,"Channel")){
+                                    db.execNonQuery("ALTER TABLE ChannelGroup ADD COLUMN action TEXT DEFAULT ''");
+                                    db.execNonQuery("ALTER TABLE Channel ADD COLUMN action TEXT DEFAULT ''");
+                                    db.execNonQuery("ALTER TABLE Channel ADD COLUMN avatar TEXT DEFAULT ''");
+                                }else if(tableIsExist(db,"Conversation")){
+                                    db.execNonQuery("ALTER TABLE Conversation ADD COLUMN action TEXT DEFAULT ''");
+                                }
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
