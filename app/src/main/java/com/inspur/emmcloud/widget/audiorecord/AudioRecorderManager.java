@@ -20,7 +20,7 @@ import java.text.DecimalFormat;
 public class AudioRecorderManager {
 
     //录音音频的放大倍数
-    private final static int VOICE_ENLARGE_TIMES = 5;
+    private final static int VOICE_ENLARGE_TIMES = 2;
     //音频输入-麦克风
     public final static int AUDIO_INPUT = MediaRecorder.AudioSource.MIC;
     //采用频率
