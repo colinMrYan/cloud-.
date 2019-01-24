@@ -26,9 +26,19 @@ import static com.iflytek.cloud.ErrorCode.ERROR_AUDIO_RECORD;
 
 /**
  * Created by yufuchang on 2018/1/18.
+ * 讯飞听写转写的不同
+ * ①使用场景：      听写主要应用于人机对话，可支持实时及已录制音频，如输入法、语音搜索，转写更自然地贴近日常的对话和演讲，仅支持已录制音频；
+ * ②SDK平台：      听写可支持Android\IOS\Linux\Windows\Java，转写只支持Java；
+ * ③支持语言：      听写可支持中英文及部分方言，转写暂时仅支持中文普通话；
+ * ④支持的音频时长： 听写为一分钟以内，转写为五小时以内；
+ * ⑤音频格式：      听写必须是采样率为8KHz或16KHz，位长16bit，单声道的wav或pcm，转写支持的音频格式更多，具体请看官网
+ * ⑥收费方式：      听写按照交互次数收费，前期提供一定的免费次数供试用 ，转写及按时时长收费，前期为每个帐号提供5个小时的免费时长供试用
+ * 目前使用的方式为听写
  */
 
 public class Voice2StringMessageUtils {
+    private static final int VOICE_FROM_XUNFEI = 0;
+    private static final int VOICE_FROM_LOCAL_FILE = 1;
     public static final int MSG_FROM_XUNFEI = 1;
     public static final int MSG_FROM_CUSTOM = 2;
     public static final int MSG_XUNFEI_PERMISSION_ERROR = 3;
@@ -64,7 +74,7 @@ public class Voice2StringMessageUtils {
     public void startVoiceListening() {
         // 使用SpeechRecognizer对象，可根据回调消息自定义界面；
         speechRecognizer = SpeechRecognizer.createRecognizer(context, initListener);
-        setParam();
+        setParam(VOICE_FROM_XUNFEI);
         speechRecognizer.startListening(recognizerListener);
         voiceState = MSG_FROM_XUNFEI;
     }
@@ -82,7 +92,7 @@ public class Voice2StringMessageUtils {
         this.voiceFilePath = voiceFilePath;
         // 使用SpeechRecognizer对象，可根据回调消息自定义界面；
         speechRecognizer = SpeechRecognizer.createRecognizer(context, initListener);
-        setParam();
+        setParam(VOICE_FROM_LOCAL_FILE);
         //注释掉的这几句是读取文件听写文字的
         speechRecognizer.setParameter(SpeechConstant.AUDIO_SOURCE, "-1");
         // 设置标点符号,设置为"0"返回结果无标点,设置为"1"返回结果有标点
@@ -102,15 +112,17 @@ public class Voice2StringMessageUtils {
      *
      * @return
      */
-    public void setParam() {
+    private void setParam(int type) {
 //        // 清空参数
         speechRecognizer.setParameter(SpeechConstant.PARAMS, null);
         // 设置听写引擎
         speechRecognizer.setParameter(SpeechConstant.ENGINE_TYPE, engineType);
         // 设置返回结果格式
         speechRecognizer.setParameter(SpeechConstant.RESULT_TYPE, "json");
-        //网络转写超时设置
-        speechRecognizer.setParameter(SpeechConstant.NET_TIMEOUT, "8000");
+
+        //IOS未设置
+//        //网络转写超时设置
+//        speechRecognizer.setParameter(SpeechConstant.NET_TIMEOUT, "8000");
 
         String language = AppUtils.getCurrentAppLanguage(context);
         switch (language) {
@@ -131,10 +143,13 @@ public class Voice2StringMessageUtils {
                 speechRecognizer.setParameter(SpeechConstant.ACCENT, "mandarin");
                 break;
         }
-        // 设置语音前端点:静音超时时间，即用户多长时间不说话则当做超时处理
-        speechRecognizer.setParameter(SpeechConstant.VAD_BOS, "5000");
-        // 设置语音后端点:后端点静音检测时间，即用户停止说话多长时间内即认为不再输入， 自动停止录音
-        speechRecognizer.setParameter(SpeechConstant.VAD_EOS, "1800");
+        //来自本地录音文件时，前后端时间都设置为60s，其他情况使用默认值
+        if(type == VOICE_FROM_LOCAL_FILE){
+            // 设置语音前端点:静音超时时间，即用户多长时间不说话则当做超时处理
+            speechRecognizer.setParameter(SpeechConstant.VAD_BOS, "60000");
+            // 设置语音后端点:后端点静音检测时间，即用户停止说话多长时间内即认为不再输入， 自动停止录音
+            speechRecognizer.setParameter(SpeechConstant.VAD_EOS, "60000");
+        }
         // 设置标点符号,设置为"0"返回结果无标点,设置为"1"返回结果有标点
         speechRecognizer.setParameter(SpeechConstant.ASR_PTT, "0");
         //根据IOS参数新加参数
