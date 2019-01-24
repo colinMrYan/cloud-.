@@ -14,7 +14,7 @@
             android:id="@+id/common_header_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="?attr/header_bg_color">
+            android:background="@drawable/shape_header_bg">
 
             <RelativeLayout
                 android:id="@+id/back_layout"
@@ -104,7 +104,7 @@
             android:id="@+id/batch_operation_header_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="?attr/header_bg_color"
+            android:background="@drawable/shape_header_bg"
             android:visibility="gone">
 
             <TextView

@@ -336,7 +336,7 @@ public class MoreFragment extends Fragment {
     private void setUserInfoConfig(View view) {
         String myInfoShowConfig = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_MY_INFO_SHOW_CONFIG);
         UserProfileInfoBean userProfileInfoBean = null;
-        if (StringUtils.isBlank(myInfoShowConfig)){
+        if (!StringUtils.isBlank(myInfoShowConfig)){
             userProfileInfoBean = new UserProfileInfoBean(myInfoShowConfig);
         }else {
             userProfileInfoBean = new UserProfileInfoBean();

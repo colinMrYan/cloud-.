@@ -117,7 +117,7 @@ public class SettingActivity extends BaseActivity {
      */
     private void setLanguage() {
         // TODO Auto-generated method stub
-        TextView languageText = (TextView) findViewById(R.id.msg_languagechg_result_text);
+        TextView languageText = (TextView) findViewById(R.id.tv_setting_language_name);
         String languageName = PreferencesUtils.getString(
                 getApplicationContext(), MyApplication.getInstance().getTanent() + "language", "");
         String languageJson = PreferencesUtils
@@ -130,7 +130,7 @@ public class SettingActivity extends BaseActivity {
             iso = iso.toLowerCase();
             int id = getResources().getIdentifier(iso, "drawable", getApplicationContext().getPackageName());
             //设置语言国旗标志
-            ((ImageView) findViewById(R.id.msg_language_flag_img)).setImageResource(id);
+            ((ImageView) findViewById(R.id.iv_setting_language_flag)).setImageResource(id);
         } else {
             languageText.setText(getString(R.string.follow_system));
         }
@@ -230,10 +230,10 @@ public class SettingActivity extends BaseActivity {
             case R.id.ibt_back:
                 finish();
                 break;
-            case R.id.signout_layout:
+            case R.id.rl_setting_logout:
                 showSignoutDlg();
                 break;
-            case R.id.msg_languagechg_layout:
+            case R.id.rl_setting_language:
                 IntentUtils.startActivity(SettingActivity.this,
                         LanguageChangeActivity.class);
                 break;
@@ -243,10 +243,10 @@ public class SettingActivity extends BaseActivity {
             case R.id.switch_enterprese_text:
                 IntentUtils.startActivity(SettingActivity.this, SwitchEnterpriseActivity.class);
                 break;
-            case R.id.setting_gesture_layout:
+            case R.id.rl_setting_account_safe:
                 IntentUtils.startActivity(SettingActivity.this, SafeCenterActivity.class);
                 break;
-            case R.id.rl_switch_theme:
+            case R.id.rl_setting_switch_theme:
                 int currentThemeNo = PreferencesUtils.getInt(MyApplication.getInstance(), Constant.PREF_APP_THEME, 0);
                 PreferencesUtils.putInt(MyApplication.getInstance(), Constant.PREF_APP_THEME, (currentThemeNo == 0) ? 1 : 0);
                 Intent intent = new Intent(SettingActivity.this,
