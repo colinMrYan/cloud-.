@@ -343,6 +343,7 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
                 break;
             case R.id.switch_camera_btn:
                 currentCameraFacing = 1 - currentCameraFacing;
+                cameraLightSwitchBtn.setVisibility((currentCameraFacing ==Camera.CameraInfo.CAMERA_FACING_FRONT)?View.INVISIBLE:View.VISIBLE);
                 releaseCamera();
                 initCamera();
                 setCameraParams();
