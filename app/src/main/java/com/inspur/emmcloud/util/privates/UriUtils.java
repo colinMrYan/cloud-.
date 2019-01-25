@@ -99,9 +99,6 @@ public class UriUtils {
         Intent intent = new Intent();
         intent.setClass(activity, ImpActivity.class);
         intent.putExtra(Constant.APP_WEB_URI, uri);
-        if (app.getAppType() == 3 || (app.getAppType() == 6 && app.getUserHeader() == 1)) {
-            intent.putExtra(Constant.WEB_FRAGMENT_SHOW_HEADER,true);
-        }
         intent.putExtra(Constant.WEB_FRAGMENT_SHOW_HEADER,(app.getAppType() == 3 || (app.getAppType() == 6 && app.getUserHeader() == 1))?true:false);
         intent.putExtra(Constant.WEB_FRAGMENT_APP_NAME, app.getAppName());
         intent.putExtra("is_zoomable", app.getIsZoomable());
