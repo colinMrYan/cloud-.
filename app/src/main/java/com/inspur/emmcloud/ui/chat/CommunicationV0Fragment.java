@@ -42,6 +42,7 @@ import com.inspur.emmcloud.bean.chat.MatheSet;
 import com.inspur.emmcloud.bean.chat.MessageReadCreationDate;
 import com.inspur.emmcloud.bean.chat.Msg;
 import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
+import com.inspur.emmcloud.bean.system.EmmAction;
 import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
 import com.inspur.emmcloud.bean.system.MainTabProperty;
 import com.inspur.emmcloud.bean.system.MainTabResult;
@@ -71,6 +72,7 @@ import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.ScanQrCodeUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.TransHtmlToTextUtils;
+import com.inspur.emmcloud.util.privates.UriUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelOperationCacheUtils;
@@ -280,6 +282,15 @@ public class CommunicationV0Fragment extends Fragment {
                 if (channelType.equals("GROUP") || channelType.equals("DIRECT") || channelType.equals("SERVICE")) {
                     IntentUtils.startActivity(getActivity(),
                             ChannelV0Activity.class, bundle);
+                } else if(channelType.equals("LINK")){
+                    EmmAction emmAction = new EmmAction(channel.getAction());
+                    if(emmAction.getCanOpenAction()){
+                        if(emmAction.getUrl().startsWith("http")){
+                            UriUtils.openUrl(getActivity(),emmAction.getUrl());
+                        }else{
+                            IntentUtils.startActivity(getActivity(),emmAction.getUrl());
+                        }
+                    }
                 } else {
                     ToastUtils.show(getActivity(),
                             R.string.not_support_open_channel);
@@ -534,6 +545,8 @@ public class CommunicationV0Fragment extends Fragment {
                                 channel.setShowIcon(DirectChannelUtils.getDirectChannelIcon(MyApplication.getInstance(), channel.getTitle()));
                             } else if (channel.getType().equals("SERVICE")) {
                                 channel.setShowIcon(DirectChannelUtils.getRobotIcon(MyApplication.getInstance(), channel.getTitle()));
+                            }else if(channel.getType().equals("LINK")){
+                                channel.setShowIcon(channel.getAvatar());
                             }
                         }
 
@@ -938,7 +951,7 @@ public class CommunicationV0Fragment extends Fragment {
                 } else {
                     channelPhotoImg.setImageResource(R.drawable.icon_channel_group_default);
                 }
-            } else if (channel.getType().equals("DIRECT") || channel.getType().equals("SERVICE")) {
+            } else if (channel.getType().equals("DIRECT") || channel.getType().equals("SERVICE") || channel.getType().equals("LINK")) {
                 ImageDisplayUtils.getInstance().displayImageByTag(channelPhotoImg, channel.getShowIcon(), R.drawable.icon_person_default);
             } else {
                 channelPhotoImg.setTag("");
@@ -1035,10 +1048,12 @@ public class CommunicationV0Fragment extends Fragment {
                 List<Channel> allchannelList = getChannelListResult.getChannelList();
                 List<Channel> cacheChannelList = ChannelCacheUtils.getCacheChannelList(MyApplication.getInstance());
                 for (Channel channel:allchannelList){
-                    if (channel.getType().equals("SERVICE")){
+                    if (channel.getType().equals("SERVICE") || channel.getType().equals("LINK")){
                         int position = cacheChannelList.indexOf(cacheChannelList);
                         if (position != -1){
                             channel.setInputs(cacheChannelList.get(position).getInputs());
+                            channel.setShowIcon(cacheChannelList.get(position).getAvatar());
+                            channel.setAction(cacheChannelList.get(position).getAction());
                         }
                         serviceCidList.add(channel.getCid());
                     }
@@ -1244,10 +1259,17 @@ public class CommunicationV0Fragment extends Fragment {
                             channelList.get(index).setInputs(channelGroup.getInputs());
                         }
 
+                    }else if(channelGroup.getType().equals("LINK")){
+                        int index = channelList.indexOf(new Channel(channelGroup.getCid()));
+                        if (index != -1) {
+                            channelList.get(index).setAction(channelGroup.getAction());
+                            channelList.get(index).setAvatar(channelGroup.getAvatar());
+                        }
                     }
                 }
                 ChannelGroupCacheUtils.saveChannelGroupList(MyApplication.getInstance(), channelGroupList);
                 ChannelCacheUtils.saveChannelList(MyApplication.getInstance(), channelList);
+                sortChannelList();
             }
         }).start();
 

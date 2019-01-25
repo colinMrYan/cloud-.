@@ -50,11 +50,13 @@
                     android:id="@+id/iv_permission_dialog_phone"
                     android:layout_width="52dp"
                     android:layout_height="52dp"
+                    android:layout_gravity="center_horizontal"
                     android:src="@drawable/icon_permission_phone"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="11dp"
+                    android:layout_gravity="center_horizontal"
                     android:textColor="#333333"
                     android:textSize="16sp"
                     android:text="@string/permission_phone_permission"/>
@@ -70,11 +72,13 @@
                     android:id="@+id/iv_permission_dialog_storage"
                     android:layout_width="52dp"
                     android:layout_height="52dp"
+                    android:layout_gravity="center_horizontal"
                     android:src="@drawable/icon_permission_storage"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="11dp"
+                    android:layout_gravity="center_horizontal"
                     android:textColor="#333333"
                     android:textSize="16sp"
                     android:text="@string/permission_storage_permission"/>

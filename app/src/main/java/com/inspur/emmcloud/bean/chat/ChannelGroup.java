@@ -33,6 +33,10 @@ public class ChannelGroup {
     private String owner = "";
     @Column(name = "inputs")
     private String inputs = "";
+    @Column(name = "action")
+    private String action = "";
+    @Column(name = "avatar")
+    private String avatar = "";
 
     public ChannelGroup() {
 
@@ -83,6 +87,14 @@ public class ChannelGroup {
                 this.inputs = obj.getString("inputs");
             }
 
+            if(obj.has("action")){
+                this.action = obj.getString("action");
+            }
+
+            if(obj.has("avatar")){
+                this.avatar = obj.getString("avatar");
+            }
+
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
@@ -120,6 +132,14 @@ public class ChannelGroup {
             }
             if (obj.has("inputs")) {
                 this.inputs = obj.getString("inputs");
+            }
+
+            if(obj.has("action")){
+                this.action = obj.getString("action");
+            }
+
+            if(obj.has("avatar")){
+                this.avatar = obj.getString("avatar");
             }
 
         } catch (Exception e) {
@@ -212,6 +232,22 @@ public class ChannelGroup {
 
     public String getInputs() {
         return inputs;
+    }
+
+    public String getAction() {
+        return action;
+    }
+
+    public void setAction(String action) {
+        this.action = action;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     public JSONArray getMembersArray() {

@@ -62,6 +62,9 @@ public class UIConversation implements Serializable{
             case Conversation.TYPE_CAST:
                 icon = DirectChannelUtils.getRobotIcon(MyApplication.getInstance(), conversation.getName());
                 break;
+            case Conversation.TYPE_LINK:
+                icon = conversation.getAvatar();
+                break;
             default:
                 icon="drawable//"+R.drawable.icon_channel_group_default;
                 break;
@@ -118,6 +121,8 @@ public class UIConversation implements Serializable{
                 content = MyApplication.getInstance().getString(R.string.welcome_to_attention) + " " + title;
             } else if (type.equals(Conversation.TYPE_GROUP)) {
                 content = MyApplication.getInstance().getString(R.string.group_no_message);
+            } else if(type.equals(Conversation.TYPE_LINK)){
+                content = MyApplication.getInstance().getString(R.string.welcome_to)+" "+title;;
             } else {
                 content = MyApplication.getInstance().getString(R.string.direct_no_message);
             }
