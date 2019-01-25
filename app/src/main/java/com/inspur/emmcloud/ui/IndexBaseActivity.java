@@ -276,6 +276,8 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
                 if (tabBean.getMainTabResult().getMainTabProperty().isHaveNavbar()) {
                     bundle.putString(Constant.WEB_FRAGMENT_VERSION, PreferencesByUserAndTanentUtils.getString(IndexBaseActivity.this, Constant.PREF_APP_TAB_BAR_VERSION, ""));
                     bundle.putSerializable(Constant.WEB_FRAGMENT_MENU, (Serializable) tabBean.getMainTabResult().getMainTabProperty().getMainTabMenuList());
+                }else{
+                    bundle.putBoolean(Constant.WEB_FRAGMENT_SHOW_HEADER,false);
                 }
             }
             bundle.putString(Constant.APP_WEB_URI, tabBean.getMainTabResult().getUri());
