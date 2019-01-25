@@ -91,7 +91,7 @@ public class GestureLoginActivity extends BaseActivity {
             LogUtils.YfcDebug("设备指纹不可用");
             return;
         }
-        if (!PreferencesByUserAndTanentUtils.getBoolean(GestureLoginActivity.this, SafeCenterActivity.FINGER_PRINT_STATE, false)) {
+        if (!PreferencesByUserAndTanentUtils.getBoolean(GestureLoginActivity.this, "finger_print_state", false)) {
             LogUtils.YfcDebug("用户没有开启指纹解锁");
             return;
         }

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.RelativeLayout;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MainActivity;
@@ -16,9 +17,9 @@ import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
 import com.inspur.emmcloud.widget.ScrollViewWithListView;
-import com.inspur.emmcloud.widget.SwitchView;
 import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
@@ -34,12 +35,13 @@ import java.util.List;
 
 @ContentView(R.layout.activity_switch_enterprise)
 public class SwitchEnterpriseActivity extends BaseActivity {
-    private List<Enterprise> enterpriseList;
+
     @ViewInject(R.id.lv_enterprise)
     private ScrollViewWithListView enterpriseListView;
-    @ViewInject(R.id.switch_view_setting_auto_select_enterprise)
-    private SwitchView autoSelectEnterpriseSwitch;
+    @ViewInject(R.id.rl_setting_close_auto_select)
+    private RelativeLayout closeAutoSelectLayout;
     private GetMyInfoResult getMyInfoResult;
+    private List<Enterprise> enterpriseList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,9 +59,7 @@ public class SwitchEnterpriseActivity extends BaseActivity {
     private void initView() {
         String selectLoginEnterpriseId= PreferencesByUsersUtils.getString(this, Constant.PREF_SELECT_LOGIN_ENTERPRISE_ID,"");
         if(!StringUtils.isBlank(selectLoginEnterpriseId)){
-            autoSelectEnterpriseSwitch.setOpened(true);
-        }else {
-            autoSelectEnterpriseSwitch.setOpened(false);
+            closeAutoSelectLayout.setVisibility(View.VISIBLE);
         }
         enterpriseListView.setAdapter(new EnterpriseAdapter(this,enterpriseList));
         enterpriseListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -124,11 +124,11 @@ public class SwitchEnterpriseActivity extends BaseActivity {
             case R.id.ibt_back:
                 finish();
                 break;
-//            case R.id.clear_auto_select_enterprise_layout:
-//                v.setVisibility(View.GONE);
-//                PreferencesByUsersUtils.putString(this, Constant.PREF_SELECT_LOGIN_ENTERPRISE_ID,"");
-//                ToastUtils.show(MyApplication.getInstance(),R.string.turn_off_success);
-//                break;
+            case R.id.rl_setting_close_auto_select:
+                v.setVisibility(View.GONE);
+                PreferencesByUsersUtils.putString(this, Constant.PREF_SELECT_LOGIN_ENTERPRISE_ID,"");
+                ToastUtils.show(MyApplication.getInstance(),R.string.turn_off_success);
+                break;
             default:
                 break;
         }

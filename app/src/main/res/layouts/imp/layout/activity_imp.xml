@@ -19,32 +19,22 @@
             android:layout_centerVertical="true"
             android:paddingLeft="10dp">
 
-            <RelativeLayout
-                android:id="@+id/back_layout"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+
+            <ImageButton
+                android:id="@+id/ibt_back"
+                android:layout_width="44dp"
+                android:padding="11dp"
+                android:layout_height="44dp"
                 android:layout_centerVertical="true"
                 android:onClick="onClick"
-                android:paddingRight="10dp">
-
-                <ImageView
-                    android:id="@+id/back_btn"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_centerVertical="true"
-                    android:background="@null"
-                    android:paddingRight="3dp"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/selector_back_btn" />
-
-            </RelativeLayout>
-
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_back_btn_black" />
 
             <TextView
                 android:id="@+id/imp_close_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_toRightOf="@id/back_layout"
+                android:layout_toRightOf="@id/ibt_back"
                 android:background="@null"
                 android:clickable="true"
                 android:gravity="center"

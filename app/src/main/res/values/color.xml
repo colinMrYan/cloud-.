@@ -34,7 +34,6 @@
     <color name="text_lightblue">#007aff</color>
     <color name="item_select_bg">#D9D9D9</color>
     <color name="set_textColor">#d10100</color>
-    <color name="set_protected">#4f89a2</color>
     <color name="set_item1_bgColor">#ffffff</color>
     <color name="onekey_username_textcolor">#359fdd</color>
     <color name="onekey_line_view">#cfd3d6</color>

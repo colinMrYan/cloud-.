@@ -1006,6 +1006,8 @@
     <string name="splash_skip">Enter immediately</string>
 
     <!--安全中心-->
+    <string name="setting_safe_gesture_face">面容ID、手势密码</string>
+    <string name="setting_safe_gesture_face_setting">面容ID、手势密码设置</string>
     <string name="setting_safe_center">Account,Device Security</string>
     <string name="safe_center_gesture">Gesture Password</string>
     <string name="safe_center_finger_print">Fingerprint</string>

@@ -111,7 +111,7 @@
                         android:paddingBottom="11dp"
                         android:paddingTop="11dp"
                         android:text="@string/follow_system"
-                        android:textColor="@color/set_protected"
+                        android:textColor="#888888"
                         android:textSize="16sp" />
 
                     <ImageView
@@ -159,7 +159,7 @@
                         android:paddingBottom="11dp"
                         android:paddingTop="11dp"
                         android:visibility="gone"
-                        android:textColor="@color/set_protected"
+                        android:textColor="#888888"
                         android:textSize="16sp" />
 
                     <ImageView
@@ -234,7 +234,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="20dp" />
+                    android:layout_marginRight="16dp" />
                 <View
                     android:layout_below="@id/tv_setting_web_rotate"
                     android:layout_width="match_parent"
@@ -264,7 +264,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="20dp" />
+                    android:layout_marginRight="16dp" />
                 <View
                     android:layout_below="@id/tv_setting_run_background"
                     android:layout_width="match_parent"
@@ -296,7 +296,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="20dp" />
+                    android:layout_marginRight="16dp" />
                 <View
                     android:layout_below="@id/tv_setting_voice_2_word"
                     android:layout_width="match_parent"
@@ -328,7 +328,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="20dp" />
+                    android:layout_marginRight="16dp" />
                 <View
                     android:id="@+id/v_experience_upgrade"
                     android:layout_width="match_parent"
@@ -342,7 +342,9 @@
         <com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton
             android:id="@+id/bt_setting_signout"
             android:layout_width="200dp"
-            android:layout_height="40dp"
+            android:layout_height="wrap_content"
+            android:paddingTop="12dp"
+            android:paddingBottom="13dp"
             android:layout_centerHorizontal="true"
             android:gravity="center"
             android:text="@string/quit_check"
@@ -352,7 +354,7 @@
             app:qmui_borderWidth="0dp"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="40dp"
-            app:qmui_radius="20dp"
+            app:qmui_isRadiusAdjustBounds="true"
             android:elevation="1dp"
 
             />
