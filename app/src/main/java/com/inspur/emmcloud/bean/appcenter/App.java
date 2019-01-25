@@ -42,7 +42,7 @@ public class App implements Serializable {
 
 	//应用功能扩展字段
 	private int isZoomable = 0;
-	private int userHeader = 0;
+	private int userHeader = 1;
 
 	private List<App> subAppList = new ArrayList<>();
 
