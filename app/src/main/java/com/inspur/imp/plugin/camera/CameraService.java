@@ -12,6 +12,7 @@ import android.util.Base64;
 import android.widget.Toast;
 
 import com.inspur.emmcloud.config.MyAppConfig;
+import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.ImageUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
@@ -313,17 +314,13 @@ public class CameraService extends ImpPlugin {
                         File originImgFile = new Compressor(getFragmentContext()).setMaxHeight(mOriginHeightSize).setMaxWidth(mOriginWidthtSize).setQuality(mQuality).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
                                 .setCompressFormat(format).compressToFile(cameraFile, originImgFileName);
                         String originImgPath = originImgFile.getAbsolutePath();
-                        if (StringUtils.isBlank(watermarkContent)){
-                            originBitmap = ImageUtils.getBitmapByFile(originImgFile);
-                        }else {
-                            originBitmap = ImageUtils.createWaterMask(getFragmentContext(),originImgPath,watermarkContent,color,background, align,valign,fontSize);
+                        if (!StringUtils.isBlank(watermarkContent)){
+                            ImageUtils.createWaterMask(getFragmentContext(),originImgPath,watermarkContent,color,background, align,valign,fontSize);
                         }
                         File thumbnailImgFile = new Compressor(getFragmentContext()).setMaxHeight(uploadThumbnailMaxSize).setMaxWidth(uploadThumbnailMaxSize).setQuality(mQuality).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
                                 .setCompressFormat(format) .compressToFile(originImgFile, thumbnailImgFileName);
                         String thumbnailImgPath = thumbnailImgFile.getAbsolutePath();
-                        thumbnailBitmap = ImageUtils.getBitmapByPath(thumbnailImgPath);
-                        callbackData(originBitmap, thumbnailBitmap, originImgPath,
-                                thumbnailImgPath);
+                        callbackData(originImgPath,thumbnailImgPath);
                     } catch (Exception e) {
                         e.printStackTrace();
                         saveNetException("CameraService.camera",e.toString());
@@ -498,49 +495,34 @@ public class CameraService extends ImpPlugin {
     /**
      * IMP代码修改处
      *
-     * @param originalBitmap 原图Bitmap
+     * @param originalBitmap  原图Bitmap
      * @param thumbnailBitmap 缩略图Bitmap
-     * @param saveUri        原图URI
-     * @param uri            缩略图URI
+     * @param saveUri         原图URI
+     * @param uri             缩略图URI
      */
-    private void callbackData(Bitmap originalBitmap, Bitmap thumbnailBitmap,
-                              String originImgPath, String thumbnailImgPath) {
+    private void callbackData(String originImgPath, String thumbnailImgPath) {
         // TODO Auto-generated method stub
-        ByteArrayOutputStream jpeg_data = new ByteArrayOutputStream();
-        ByteArrayOutputStream originalJpeg_data = new ByteArrayOutputStream();
         // 将选中的大图和小图地址传回前端
         JSONObject jsonObject = new JSONObject();
         try {
-            if (thumbnailBitmap.compress(CompressFormat.JPEG, 100, jpeg_data)) {
-                byte[] code = jpeg_data.toByteArray();
-                byte[] output = Base64.encode(code, Base64.NO_WRAP);
-                String js_out = new String(output);
-                jsonObject.put("thumbnailUrl", thumbnailImgPath);
-                jsonObject.put("thumbnailData", js_out.toString());
-                js_out = null;
-                output = null;
-                code = null;
-            }
-            if (originalBitmap.compress(CompressFormat.JPEG, 100,
-                    originalJpeg_data)) {
-                byte[] code = originalJpeg_data.toByteArray();
-                byte[] output = Base64.encode(code, Base64.NO_WRAP);
-                String js_out = new String(output);
-                jsonObject.put("originalUrl", originImgPath);
-                jsonObject.put("originalData", js_out.toString());
-                js_out = null;
-                output = null;
-                code = null;
-            }
+            byte[] thumbnailFileBytes = FileUtils.file2Bytes(thumbnailImgPath);
+            byte[] thumbnailFileBytesBase64 = Base64.encode(thumbnailFileBytes, Base64.NO_WRAP);
+            String thumbnailOutput = new String(thumbnailFileBytesBase64);
+            jsonObject.put("thumbnailUrl", thumbnailImgPath);
+            jsonObject.put("thumbnailData", thumbnailOutput.toString());
+
+            byte[] originalFileBytes = FileUtils.file2Bytes(originImgPath);
+            byte[] originalFileBytesBase64 = Base64.encode(originalFileBytes, Base64.NO_WRAP);
+            String originalOutput = new String(originalFileBytesBase64);
+            jsonObject.put("originalUrl", originImgPath);
+            jsonObject.put("originalData", originalOutput.toString());
             this.jsCallback(successCb, jsonObject.toString());
         } catch (Exception e) {
             e.printStackTrace();
             this.failPicture(Res.getString("compress_error"));
         }
-        jpeg_data = null;
-        originalJpeg_data = null;
-
     }
+
 
     /**
      * IMP代码修改处
