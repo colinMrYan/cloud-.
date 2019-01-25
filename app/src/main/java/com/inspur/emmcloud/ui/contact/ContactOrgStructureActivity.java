@@ -22,9 +22,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-    /**
-     * 系統組織功能顯示
-     * **/
+/**
+ * 系統組織功能顯示
+ **/
 public class ContactOrgStructureActivity extends BaseActivity {
     private ContactUser contactUser;
     private OrgStrContactAdapter adapter;
@@ -44,10 +44,10 @@ public class ContactOrgStructureActivity extends BaseActivity {
 
     /**
      * 返回按鈕
-     * **/
+     **/
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.rl_org_back:
+            case R.id.ibt_back:
                 finish();
         }
     }
@@ -58,17 +58,17 @@ public class ContactOrgStructureActivity extends BaseActivity {
     private void init() {
         String uid = null;
         uid = getIntent().getExtras().getString("uid");
-            contactUser = ContactUserCacheUtils.getContactUserByUid(uid);
-            orgNameList = new ArrayList<>();
-            String root = "root";
-            String orgNameOrID = contactUser.getParentId();
-            while (!root.equals(orgNameOrID)) {
-                ContactOrg contactOrgTest = ContactOrgCacheUtils.getContactOrg(orgNameOrID);
-                orgNameOrID = contactOrgTest.getName();
-                orgNameList.add(orgNameOrID);
-                orgNameOrID = contactOrgTest.getParentId();
-            }
-            Collections.reverse(orgNameList);
+        contactUser = ContactUserCacheUtils.getContactUserByUid(uid);
+        orgNameList = new ArrayList<>();
+        String root = "root";
+        String orgNameOrID = contactUser.getParentId();
+        while (!root.equals(orgNameOrID)) {
+            ContactOrg contactOrgTest = ContactOrgCacheUtils.getContactOrg(orgNameOrID);
+            orgNameOrID = contactOrgTest.getName();
+            orgNameList.add(orgNameOrID);
+            orgNameOrID = contactOrgTest.getParentId();
+        }
+        Collections.reverse(orgNameList);
     }
 }
 
@@ -103,19 +103,14 @@ class OrgStrContactAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        String currentOrgName = groupOrgList.get(position).toString();
-        LayoutInflater inflater = LayoutInflater.from(adpContext);
-        if (convertView == null) {
-            convertView = inflater.inflate(R.layout.contact_org_structure_item, null);
-        }
-
-        ImageView logImage = (ImageView) convertView.findViewById(R.id.iv_org_item_log);
+        convertView = LayoutInflater.from(adpContext).inflate(R.layout.contact_org_structure_item, null);
+        ImageView logImage = (ImageView) convertView.findViewById(R.id.iv_org_item_flag);
         ImageView lineImage = (ImageView) convertView.findViewById(R.id.iv_org_item_line);
         TextView Name = (TextView) convertView.findViewById(R.id.tv_org_item_name);
         logImage.setImageResource((position == 0) ? R.drawable.ic_org_structure_head_log : R.drawable.ic_org_structure_mid_log);
         lineImage.setImageResource(R.drawable.ic_org_structure_liner);
         lineImage.setVisibility(position == (getCount() - 1) ? View.GONE : View.VISIBLE);
-        Name.setText(currentOrgName);
+        Name.setText(groupOrgList.get(position).toString());
         return convertView;
     }
 }
