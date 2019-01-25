@@ -3,8 +3,18 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:layout_margin="0dp"
-    android:background="#dbdde2"
+    android:background="#D4D4D4"
     >
+
+    <TextView
+        android:id="@+id/tv_keyboard_name"
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:textSize="16sp"
+        android:textColor="#666666"
+        android:background="#FAFAFA"
+        android:gravity="center"
+        android:text="@string/emm_secure_keyboard"/>
 
     <android.inputmethodservice.KeyboardView
         android:id="@+id/keyboard_view"
@@ -13,12 +23,13 @@
         android:background="#ebebeb"
         android:focusable="true"
         android:focusableInTouchMode="true"
+        android:layout_below="@id/tv_keyboard_name"
         android:keyBackground="@drawable/keyboard_key"
         android:keyTextColor="#666666"
         android:paddingBottom="10dip"
         android:paddingLeft="8dp"
         android:paddingRight="8dp"
-        android:paddingTop="10dp"
+        android:paddingTop="5dp"
         android:shadowRadius="0.0"
         android:textStyle="normal"
         />
