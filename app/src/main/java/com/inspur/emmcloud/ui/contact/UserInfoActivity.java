@@ -196,9 +196,9 @@ public class UserInfoActivity extends BaseActivity {
                 createDireactChannel();
                 break;
             case R.id.depart_btn_img:
-                Bundle bundle22 = new Bundle();
-                bundle22.putString("uid", parentUid);
-                IntentUtils.startActivity(UserInfoActivity.this, ContactOrgStructureActivity.class, bundle22);
+                Bundle bundle = new Bundle();
+                bundle.putString("uid", parentUid);
+                IntentUtils.startActivity(UserInfoActivity.this, ContactOrgStructureActivity.class, bundle);
                 break;
             case R.id.telephone_iv:
                 AppUtils.call(UserInfoActivity.this, TelephoneNum, 1);
