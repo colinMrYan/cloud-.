@@ -103,7 +103,7 @@ class ImageUtil {
             }
             LogUtils.jasonDebug("inSampleSize="+inSampleSize);
             //当bitmap压缩到最后一次时能用Matrix就用
-            if (inSampleSize>=2 && (height / inSampleSize*2< MyAppConfig.UPLOAD_ORIGIN_IMG_MAX_SIZE) && (width / inSampleSize*2< MyAppConfig.UPLOAD_ORIGIN_IMG_MAX_SIZE)){
+            if (inSampleSize>=2 && (height / inSampleSize*2< MyAppConfig.UPLOAD_ORIGIN_IMG_MAX_SIZE) || (width / inSampleSize*2< MyAppConfig.UPLOAD_ORIGIN_IMG_MAX_SIZE)){
                 inSampleSize = inSampleSize/2;
             }
         }

@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.hardware.Camera;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.Nullable;
@@ -29,7 +30,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.ImageUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
@@ -267,7 +267,8 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
             mCamera.setDisplayOrientation(rotateAngle);
             parameters.setRotation(rotateAngle);
             List<Camera.Size> PictureSizeList = parameters.getSupportedPictureSizes();
-            Camera.Size pictureSize = CameraUtils.getInstance(this).getPictureSize(PictureSizeList, MyAppConfig.UPLOAD_ORIGIN_IMG_MAX_SIZE);
+            int maxPicSize = (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.N)?2600:3600;
+            Camera.Size pictureSize = CameraUtils.getInstance(this).getPictureSize(PictureSizeList, maxPicSize);
             parameters.setPictureSize(pictureSize.width, pictureSize.height);
             LogUtils.jasonDebug("pictureSize.width="+pictureSize.width + "   pictureSize.height="+pictureSize.height);
             List<Camera.Size> previewSizeList = parameters.getSupportedPreviewSizes();
