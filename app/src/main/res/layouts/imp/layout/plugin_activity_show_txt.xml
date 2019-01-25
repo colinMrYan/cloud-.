@@ -6,7 +6,7 @@
     android:orientation="vertical" >
 
     <RelativeLayout
-        android:id="@+id/header_layout"
+        android:id="@+id/rl_header"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:background="#0F7BCA" >
@@ -45,7 +45,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/header_layout"
+        android:layout_below="@id/rl_header"
         android:background="#ffffff" >
         <ScrollView
         android:layout_width="match_parent"

@@ -200,7 +200,7 @@ public class MoreFragment extends Fragment {
         adapter = new MyAdapter();
         expandListView.setAdapter(adapter);
         switchEnterpriseBtn = rootView.findViewById(R.id.bt_switch_enterprise);
-        switchEnterpriseBtn.setVisibility(getMyInfoResult.getEnterpriseList().size()>0?View.VISIBLE:View.INVISIBLE);
+        switchEnterpriseBtn.setVisibility(getMyInfoResult.getEnterpriseList().size()>1?View.VISIBLE:View.INVISIBLE);
         switchEnterpriseBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -509,7 +509,7 @@ public class MoreFragment extends Fragment {
             // TODO Auto-generated method stub
             MoreFragment.this.getMyInfoResult = getMyInfoResult;
             List<Enterprise> enterpriseList = getMyInfoResult.getEnterpriseList();
-            switchEnterpriseBtn.setVisibility(enterpriseList.size()>0?View.VISIBLE:View.INVISIBLE);
+            switchEnterpriseBtn.setVisibility(enterpriseList.size()>1?View.VISIBLE:View.INVISIBLE);
             Enterprise defaultEnterprise = getMyInfoResult.getDefaultEnterprise();
             if (enterpriseList.size() == 0 && defaultEnterprise == null){
                 ToastUtils.show(MyApplication.getInstance(),  R.string.login_user_not_bound_enterprise);

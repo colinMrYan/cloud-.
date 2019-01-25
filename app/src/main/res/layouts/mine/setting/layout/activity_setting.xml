@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clipToPadding="true"
@@ -50,6 +51,7 @@
                 android:onClick="onClick">
 
                 <TextView
+                    android:id="@+id/tv_setting_account_safe"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
@@ -65,17 +67,13 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="16dp"
                     android:src="@drawable/icon_arrow_right" />
-            </RelativeLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="#ffffff"
-                android:orientation="vertical">
                 <View
                     android:layout_width="match_parent"
+                    android:layout_below="@+id/tv_setting_account_safe"
                     android:layout_height="0.5px"
                     android:background="@color/color_list_divider" />
+            </RelativeLayout>
+
                 <RelativeLayout
                     android:id="@+id/rl_setting_language"
                     android:layout_width="match_parent"
@@ -124,11 +122,13 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="16dp"
                         android:src="@drawable/icon_arrow_right" />
+                    <View
+                        android:layout_below="@id/tv_setting_language_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5px"
+                        android:background="@color/color_list_divider" />
                 </RelativeLayout>
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5px"
-                    android:background="@color/color_list_divider" />
+
                 <RelativeLayout
                     android:id="@+id/rl_setting_switch_theme"
                     android:layout_width="match_parent"
@@ -170,11 +170,13 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="16dp"
                         android:src="@drawable/icon_arrow_right" />
+                    <View
+                        android:layout_below="@id/tv_setting_theme_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5px"
+                        android:background="@color/color_list_divider" />
                 </RelativeLayout>
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5px"
-                    android:background="@color/color_list_divider" />
+
 
                 <RelativeLayout
                     android:id="@+id/clear_cache_layout"
@@ -186,7 +188,7 @@
                     android:paddingLeft="16dp">
 
                     <TextView
-                        android:id="@+id/clear_cache_text"
+                        android:id="@+id/tv_setting_clear_cache"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
@@ -197,21 +199,18 @@
 
 
                     <ImageView
-                        android:id="@+id/clear_cache_img"
                         android:layout_width="15dp"
                         android:layout_height="15dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="16dp"
                         android:src="@drawable/icon_arrow_right" />
+                    <View
+                        android:layout_below="@id/tv_setting_clear_cache"
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5px"
+                        android:background="@color/color_list_divider" />
                 </RelativeLayout>
-            </LinearLayout>
-
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5px"
-                android:background="@color/color_list_divider" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -220,6 +219,7 @@
                 android:background="@drawable/text_layout_selector">
 
                 <TextView
+                    android:id="@+id/tv_setting_web_rotate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
@@ -229,17 +229,18 @@
                     android:textSize="16sp" />
 
                 <com.inspur.emmcloud.widget.SwitchView
-                    android:id="@+id/web_auto_rotate_switch"
+                    android:id="@+id/switch_view_setting_web_rotate"
                     android:layout_width="37dp"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="20dp" />
+                <View
+                    android:layout_below="@id/tv_setting_web_rotate"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5px"
+                    android:background="@color/color_list_divider" />
             </RelativeLayout>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5px"
-                android:background="@color/color_list_divider" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -248,6 +249,7 @@
                 android:background="@drawable/text_layout_selector">
 
                 <TextView
+                    android:id="@+id/tv_setting_run_background"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
@@ -257,22 +259,21 @@
                     android:textSize="16sp" />
 
                 <com.inspur.emmcloud.widget.SwitchView
-                    android:id="@+id/background_run_switch"
+                    android:id="@+id/switch_view_setting_run_background"
                     android:layout_width="37dp"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="20dp" />
+                <View
+                    android:layout_below="@id/tv_setting_run_background"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5px"
+                    android:background="@color/color_list_divider" />
             </RelativeLayout>
 
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5px"
-                android:background="@color/color_list_divider" />
-
             <RelativeLayout
-                android:id="@+id/rl_voice_word"
+                android:id="@+id/rl_setting_voice_2_word"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:visibility="gone"
@@ -280,6 +281,7 @@
                 android:background="@drawable/text_layout_selector">
 
                 <TextView
+                    android:id="@+id/tv_setting_voice_2_word"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
@@ -289,23 +291,21 @@
                     android:textSize="16sp" />
 
                 <com.inspur.emmcloud.widget.SwitchView
-                    android:id="@+id/switch_voice_word"
+                    android:id="@+id/switch_view_setting_voice_2_word"
                     android:layout_width="37dp"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="20dp" />
+                <View
+                    android:layout_below="@id/tv_setting_voice_2_word"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5px"
+                    android:background="@color/color_list_divider" />
             </RelativeLayout>
 
-
-            <View
-                android:id="@+id/v_voice_word_line"
-                android:layout_width="match_parent"
-                android:layout_height="0.5px"
-                android:visibility="gone"
-                android:background="@color/color_list_divider" />
             <RelativeLayout
-                android:id="@+id/rl_experience_upgrade"
+                android:id="@+id/rl_setting_experience_upgrade"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:visibility="gone"
@@ -313,7 +313,7 @@
                 android:background="@drawable/text_layout_selector">
 
                 <TextView
-                    android:id="@+id/tv_experience_upgrade"
+                    android:id="@+id/tv_setting_experience_upgrade"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
@@ -323,7 +323,7 @@
                     android:textSize="16sp" />
 
                 <com.inspur.emmcloud.widget.SwitchView
-                    android:id="@+id/sw_experience_upgrade"
+                    android:id="@+id/switch_view_setting_experience_upgrade"
                     android:layout_width="37dp"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
@@ -333,34 +333,30 @@
                     android:id="@+id/v_experience_upgrade"
                     android:layout_width="match_parent"
                     android:layout_height="0.5px"
-                    android:layout_below="@id/tv_experience_upgrade"
+                    android:layout_below="@id/tv_setting_experience_upgrade"
                     android:background="@color/color_list_divider" />
             </RelativeLayout>
 
-
-
         </LinearLayout>
+        
+        <com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton
+            android:id="@+id/bt_setting_signout"
+            android:layout_width="200dp"
+            android:layout_height="40dp"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:text="@string/quit_check"
+            android:textColor="@android:color/white"
+            app:qmui_backgroundColor="#36A5F6"
+            android:textSize="16sp"
+            app:qmui_borderWidth="0dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="40dp"
+            app:qmui_radius="20dp"
+            android:elevation="1dp"
 
-        <RelativeLayout
-            android:id="@+id/rl_setting_logout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/text_layout_selector"
-            android:onClick="onClick">
+            />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="12dp"
-                android:paddingBottom="10dp"
-                android:paddingTop="10dp"
-                android:text="@string/quit_check"
-                android:textColor="@color/set_textColor"
-                android:textSize="16sp" />
-        </RelativeLayout>
     </RelativeLayout>
 
 

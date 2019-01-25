@@ -83,7 +83,7 @@ public class DisplayResFileMsg {
                 .findViewById(R.id.file_download_progressbar);
         fileProgressBar.setTag(target);
         fileProgressBar.setVisibility(View.VISIBLE);
-        cardContentView.findViewById(R.id.header_layout)
+        cardContentView.findViewById(R.id.rl_header)
                 .setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
