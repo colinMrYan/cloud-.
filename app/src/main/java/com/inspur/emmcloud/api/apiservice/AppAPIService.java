@@ -698,7 +698,7 @@ public class AppAPIService {
             registerPushTokenJsonObject.put("type",AppUtils.getPushProvider(context));
             registerPushTokenJsonObject.put("token",AppUtils.getPushId(context));
             registerPushTokenJsonObject.put("inspurId",MyApplication.getInstance().getUid());
-            registerPushTokenJsonObject.put("tenantId",MyApplication.getInstance().getTanent());
+            registerPushTokenJsonObject.put("tenantId",MyApplication.getInstance().getCurrentEnterprise().getId());
             registerPushTokenJsonObject.put("deviceModel",AppUtils.GetChangShang()+"/"+AppUtils.GetModel());
             registerPushTokenJsonObject.put("deviceOS","Android");
             registerPushTokenJsonObject.put("deviceOSVersion",AppUtils.getReleaseVersion());
@@ -751,7 +751,7 @@ public class AppAPIService {
             unregisterPushTokenJsonObject.put("type",AppUtils.getPushProvider(context));
             unregisterPushTokenJsonObject.put("token",AppUtils.getPushId(context));
             unregisterPushTokenJsonObject.put("inspurId", MyApplication.getInstance().getUid());
-            unregisterPushTokenJsonObject.put("tenantId", MyApplication.getInstance().getTanent());
+            unregisterPushTokenJsonObject.put("tenantId", MyApplication.getInstance().getCurrentEnterprise().getId());
             unregisterPushTokenJsonObject.put("deviceModel",AppUtils.GetChangShang()+"/"+AppUtils.GetModel());
             unregisterPushTokenJsonObject.put("deviceOS","Android");
             unregisterPushTokenJsonObject.put("deviceOSVersion",AppUtils.getReleaseVersion());

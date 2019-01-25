@@ -76,7 +76,16 @@ public class FillNewPwdActivity extends BaseActivity{
 			break;
 		}
 	}
-	
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		if(emmSecurityKeyboard != null){
+			emmSecurityKeyboard.dismiss();
+			emmSecurityKeyboard = null;
+		}
+	}
+
 	/**
 	 * 修改密码方法
 	 * @param newPwd

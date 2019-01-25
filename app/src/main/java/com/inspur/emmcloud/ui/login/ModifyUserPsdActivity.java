@@ -125,7 +125,16 @@ public class ModifyUserPsdActivity extends BaseActivity {
 			apiService.changePsd(oldpsd, newpsd);
 		}
 	}
-	
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		if(emmSecurityKeyboard != null){
+			emmSecurityKeyboard.dismiss();
+			emmSecurityKeyboard = null;
+		}
+	}
+
 	class WebService extends APIInterfaceInstance{
 
 		@Override
