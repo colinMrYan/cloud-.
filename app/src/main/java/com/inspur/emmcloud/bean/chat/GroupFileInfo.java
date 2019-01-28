@@ -57,6 +57,10 @@ public class GroupFileInfo {
 	public String getTime(Context context){
 		return TimeUtils.timeLong2YMDString(context,time);
 	}
+
+	public String getTime(){
+		return time + "";
+	}
 	
 	public String getOwner(){
 		return owner;
