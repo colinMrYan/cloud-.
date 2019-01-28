@@ -117,7 +117,9 @@ public class ChannelAdapter extends BaseAdapter {
             }
         } else if(channel.getType().equals("DIRECT") ||channel.getType().equals("SERVICE")){
             ImageDisplayUtils.getInstance().displayImageByTag(channelPhotoImg, channel.getShowIcon(), R.drawable.icon_person_default);
-        }else {
+        } else if(channel.getType().equals("LINK")){
+            ImageDisplayUtils.getInstance().displayImage(channelPhotoImg, channel.getShowIcon(), R.drawable.icon_channel_group_default);
+        } else {
             channelPhotoImg.setTag("");
             channelPhotoImg.setImageResource(R.drawable.icon_channel_group_default);
         }

@@ -1184,6 +1184,7 @@
     <string name="emm_keyboard_number">数字</string>
     <string name="emm_keyboard_symbol">符号</string>
     <string name="emm_keyboard_letter">字母</string>
+    <string name="emm_secure_keyboard">安全键盘</string>
 
 
     <string name="phone_sms">短信</string>
@@ -1195,4 +1196,6 @@
 
     <string name="bracket_with_word">(%1$s)</string>
     <string name="current_month">本月</string>
+
+    <string name="welcome_to">欢迎使用</string>
 </resources>

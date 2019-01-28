@@ -31,7 +31,7 @@ import org.xutils.x;
  */
 
 @ContentView(R.layout.activity_password_modify)
-public class PasswordModifyActivity extends Activity {
+public class PasswordModifyActivity extends Activity implements View.OnTouchListener{
 
     @ViewInject(R.id.bt_save)
     private Button saveBtn;
@@ -60,29 +60,13 @@ public class PasswordModifyActivity extends Activity {
         passwordConfirmEdit.addTextChangedListener(editWatcher);
         loadingDlg = new LoadingDialog(this);
         emmSecurityKeyboard = new EmmSecurityKeyboard(this);
-        EditOnTouchListener editOnTouchListener = new EditOnTouchListener();
-        passwordOriginEdit.setOnTouchListener(editOnTouchListener);
-        passwordNewEdit.setOnTouchListener(editOnTouchListener);
-        passwordConfirmEdit.setOnTouchListener(editOnTouchListener);
+        initListeners();
     }
 
-    class EditOnTouchListener implements View.OnTouchListener{
-
-        @Override
-        public boolean onTouch(View view, MotionEvent motionEvent) {
-            switch (view.getId()){
-                case R.id.et_password_origin:
-                    emmSecurityKeyboard.showSecurityKeyBoard(passwordOriginEdit);
-                    break;
-                case R.id.et_password_new:
-                    emmSecurityKeyboard.showSecurityKeyBoard(passwordNewEdit);
-                    break;
-                case R.id.et_password_confirm:
-                    emmSecurityKeyboard.showSecurityKeyBoard(passwordConfirmEdit);
-                    break;
-            }
-            return false;
-        }
+    private void initListeners() {
+        passwordOriginEdit.setOnTouchListener(this);
+        passwordNewEdit.setOnTouchListener(this);
+        passwordConfirmEdit.setOnTouchListener(this);
     }
 
     public void onClick(View v){
@@ -102,6 +86,22 @@ public class PasswordModifyActivity extends Activity {
                 modifyPassword();
                 break;
         }
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        switch (v.getId()){
+            case R.id.et_password_origin:
+                emmSecurityKeyboard.showSecurityKeyBoard(passwordOriginEdit);
+                break;
+            case R.id.et_password_new:
+                emmSecurityKeyboard.showSecurityKeyBoard(passwordNewEdit);
+                break;
+            case R.id.et_password_confirm:
+                emmSecurityKeyboard.showSecurityKeyBoard(passwordConfirmEdit);
+                break;
+        }
+        return false;
     }
 
     private class EditWatcher implements TextWatcher {

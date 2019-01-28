@@ -93,16 +93,16 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
     }
 
     private void checkNecessaryPermission() {
-        final String[] necessaryPermissionArray = StringUtils.concatAll(Permissions.STORAGE,Permissions.CALL_PHONE_PERMISSION);
+        final String[] necessaryPermissionArray = StringUtils.concatAll(Permissions.STORAGE,Permissions.PHONE_PERMISSION);
         if(!PermissionRequestManagerUtils.getInstance().isHasPermission(this,necessaryPermissionArray)){
             final MyDialog permissionDialog = new MyDialog(this,R.layout.dialog_permisson_tip);
             permissionDialog.setDimAmount(0.2f);
             permissionDialog.setCancelable(false);
             permissionDialog.setCanceledOnTouchOutside(false);
             permissionDialog.findViewById(R.id.ll_permission_storage).setVisibility(!PermissionRequestManagerUtils.getInstance().isHasPermission(this,Permissions.STORAGE)?View.VISIBLE:View.GONE);
-            permissionDialog.findViewById(R.id.ll_permission_phone).setVisibility(!PermissionRequestManagerUtils.getInstance().isHasPermission(this,Permissions.CALL_PHONE_PERMISSION)?View.VISIBLE:View.GONE);
+            permissionDialog.findViewById(R.id.ll_permission_phone).setVisibility(!PermissionRequestManagerUtils.getInstance().isHasPermission(this,Permissions.PHONE_PERMISSION)?View.VISIBLE:View.GONE);
             if(!PermissionRequestManagerUtils.getInstance().isHasPermission(this,Permissions.STORAGE)
-                    && !PermissionRequestManagerUtils.getInstance().isHasPermission(this,Permissions.CALL_PHONE_PERMISSION)){
+                    && !PermissionRequestManagerUtils.getInstance().isHasPermission(this,Permissions.PHONE_PERMISSION)){
                 LinearLayout layout = permissionDialog.findViewById(R.id.ll_permission_storage);
                 LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) layout.getLayoutParams();
                 params.setMargins(DensityUtil.dip2px(this,60.0f),0,0,0);

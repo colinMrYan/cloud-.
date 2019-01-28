@@ -30,7 +30,7 @@ import org.xutils.x;
  */
 
 @ContentView(R.layout.activity_password_reset)
-public class PasswordResetActivity extends BaseActivity {
+public class PasswordResetActivity extends BaseActivity implements View.OnTouchListener{
     public static final String EXTRA_CAPTCHA = "extra_captcha";
     @ViewInject(R.id.bt_ok)
     private Button okBtn;
@@ -56,6 +56,9 @@ public class PasswordResetActivity extends BaseActivity {
         passwordNewEdit.setOnTouchListener(editOnTouchListener);
         passwordConfirmEdit.setOnTouchListener(editOnTouchListener);
         loadingDlg = new LoadingDialog(this);
+        emmSecurityKeyboard = new EmmSecurityKeyboard(this);
+        passwordNewEdit.setOnTouchListener(this);
+        passwordConfirmEdit.setOnTouchListener(this);
     }
 
     class EditOnTouchListener implements View.OnTouchListener{
@@ -88,6 +91,19 @@ public class PasswordResetActivity extends BaseActivity {
                 resetPassword();
                 break;
         }
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        switch (v.getId()){
+            case R.id.et_password_new:
+                emmSecurityKeyboard.showSecurityKeyBoard(passwordNewEdit);
+                break;
+            case R.id.et_password_confirm:
+                emmSecurityKeyboard.showSecurityKeyBoard(passwordConfirmEdit);
+                break;
+        }
+        return false;
     }
 
     private class EditWatcher implements TextWatcher {

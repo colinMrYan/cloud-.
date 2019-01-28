@@ -132,6 +132,7 @@ public class Constant {
     public static final String WEB_FRAGMENT_VERSION = "version";
     public static final String WEB_FRAGMENT_APP_NAME = "appName";
     public static final String WEB_FRAGMENT_MENU = "menuList";
+    public static final String WEB_FRAGMENT_SHOW_HEADER = "show_webview_header";
 
     public static final String INSPUR_HOST_URL = ".inspur.com";
     public static final String INSPURONLINE_HOST_URL = ".inspuronline.com";
@@ -151,7 +152,10 @@ public class Constant {
     public static final String APP_WEB_URI = "uri";
 
     public static final int APP_EXCEPTION_LEVEL = 4;
+
+    //邮箱
     public static final String MAIL_ENCRYPT_IV="inspurcloud+2019";
 
+    public static final String SF_OPEN_URL = "open-url";
 
 }
