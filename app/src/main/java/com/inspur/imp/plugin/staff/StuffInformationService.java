@@ -3,10 +3,13 @@ package com.inspur.imp.plugin.staff;
 import android.content.Intent;
 
 import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.contact.ContactUser;
+import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.imp.plugin.ImpPlugin;
 
@@ -47,13 +50,19 @@ public class StuffInformationService extends ImpPlugin {
         try {
             if (contactUser != null){
                 object = contactUser.contact2JSONObject(getFragmentContext());
-                object.put("tenantId",MyApplication.getInstance().getCurrentEnterprise().getId());
-                LogUtils.jasonDebug("object.toString()="+object.toString());
-                this.jsCallback(successCb, object.toString());
             }else {
-                this.jsCallback(failCb, "error");
+                String myInfo = PreferencesUtils.getString(getFragmentContext(), "myInfo", "");
+                GetMyInfoResult getMyInfoResult = new GetMyInfoResult(myInfo);
+                object.put("id", getMyInfoResult.getID());
+                object.put("name", getMyInfoResult.getName());
+                object.put("nameGlobal", "");
+                object.put("pinyin", "");
+                object.put("mobile", getMyInfoResult.getPhoneNumber());
+                object.put("email", getMyInfoResult.getMail());
+                object.put("head", APIUri.getChannelImgUrl4Imp(getMyInfoResult.getID()));
             }
-
+            object.put("tenantId",MyApplication.getInstance().getCurrentEnterprise().getId());
+            this.jsCallback(successCb, object.toString());
         }catch (Exception e){
             e.printStackTrace();
             this.jsCallback(failCb, "error");
