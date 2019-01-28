@@ -66,6 +66,7 @@ public class PluginMgr {
             IPlugin plugin = getPlugin(serviceName);
             // 将传递过来的参数转换为JSON
             JSONObject jo = null;
+            Log.d("jason", "params=" + params);
             if (StrUtil.strIsNotNull(params)) {
                 try {
                     jo = new JSONObject(params);
