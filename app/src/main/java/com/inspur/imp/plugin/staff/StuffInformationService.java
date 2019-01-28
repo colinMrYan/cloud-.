@@ -50,9 +50,6 @@ public class StuffInformationService  extends ImpPlugin{
         try {
             if (contactUser != null){
                 object = contactUser.contact2JSONObject(getFragmentContext());
-                object.put("tenantId",MyApplication.getInstance().getCurrentEnterprise().getId());
-                LogUtils.jasonDebug("object.toString()="+object.toString());
-                this.jsCallback(successCb, object.toString());
             }else {
                 String myInfo = PreferencesUtils.getString(getFragmentContext(), "myInfo", "");
                 GetMyInfoResult getMyInfoResult = new GetMyInfoResult(myInfo);
@@ -64,6 +61,8 @@ public class StuffInformationService  extends ImpPlugin{
                 object.put("email", getMyInfoResult.getMail());
                 object.put("head", APIUri.getChannelImgUrl4Imp(getMyInfoResult.getID()));
             }
+            object.put("tenantId",MyApplication.getInstance().getCurrentEnterprise().getId());
+            this.jsCallback(successCb, object.toString());
         }catch (Exception e){
             e.printStackTrace();
             this.jsCallback(failCb, "error");
