@@ -353,7 +353,6 @@ public class FileTransferService extends ImpPlugin {
         @SuppressWarnings("synthetic-access")
         @Override
         public void handleMessage(Message msg) {
-            LogUtils.jasonDebug("是否主线程==" + (Looper.myLooper() == Looper.getMainLooper()));
             switch (msg.what) {
                 //下载中
                 case 0:
@@ -463,7 +462,6 @@ public class FileTransferService extends ImpPlugin {
         HttpURLConnection urlConnection = null;
         OutputStream outputStream = null;
         try {
-            LogUtils.jasonDebug("是否主线程==" + (Looper.myLooper() == Looper.getMainLooper()));
             //替换空格
             url = new URL(urlString);
             urlConnection = (HttpURLConnection) url.openConnection();
