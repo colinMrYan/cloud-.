@@ -44,7 +44,7 @@ public class DisplayTxtMarkdownMsg {
                 .findViewById(R.id.tv_content);
         BubbleLayout cardLayout = (BubbleLayout) cardContentView.findViewById(R.id.bl_card);
         cardLayout.setArrowDirection(isMyMsg? ArrowDirection.RIGHT:ArrowDirection.LEFT);
-        cardLayout.setBubbleColor(context.getResources().getColor(isMyMsg ? R.color.bg_my_card : R.color.white));
+        cardLayout.setBubbleColor(context.getResources().getColor(isMyMsg ? R.color.bg_my_card : R.color.bg_other_card));
         cardLayout.setStrokeWidth(isMyMsg ?0: 0.5f);
         titleText.setTextColor(context.getResources().getColor(
                 isMyMsg ? R.color.white : R.color.black));
