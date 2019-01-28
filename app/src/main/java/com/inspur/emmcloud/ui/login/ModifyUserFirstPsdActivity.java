@@ -26,7 +26,7 @@ import com.inspur.emmcloud.widget.keyboardview.EmmSecurityKeyboard;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ModifyUserFirstPsdActivity extends BaseActivity {
+public class ModifyUserFirstPsdActivity extends BaseActivity implements View.OnTouchListener{
 
 
 	private LoginAPIService apiService;
@@ -51,25 +51,21 @@ public class ModifyUserFirstPsdActivity extends BaseActivity {
 		newpsdEdit = findViewById(R.id.modifyuserpsd_new_edit);
 		confirmpsdEdit = findViewById(R.id.modifyuserpsd_confirm_edit);
 		emmSecurityKeyboard = new EmmSecurityKeyboard(this);
-		EditOnTouchListener editOnTouchListener = new EditOnTouchListener();
-		newpsdEdit.setOnTouchListener(editOnTouchListener);
-		confirmpsdEdit.setOnTouchListener(editOnTouchListener);
+		newpsdEdit.setOnTouchListener(this);
+		confirmpsdEdit.setOnTouchListener(this);
 	}
 
-	class EditOnTouchListener implements View.OnTouchListener{
-
-		@Override
-		public boolean onTouch(View view, MotionEvent motionEvent) {
-			switch (view.getId()){
-				case R.id.modifyuserpsd_new_edit:
-					emmSecurityKeyboard.showSecurityKeyBoard(newpsdEdit);
-					break;
-				case R.id.modifyuserpsd_confirm_edit:
-					emmSecurityKeyboard.showSecurityKeyBoard(confirmpsdEdit);
-					break;
-			}
-			return false;
+	@Override
+	public boolean onTouch(View v, MotionEvent event) {
+		switch (v.getId()){
+			case R.id.modifyuserpsd_new_edit:
+				emmSecurityKeyboard.showSecurityKeyBoard(newpsdEdit);
+				break;
+			case R.id.modifyuserpsd_confirm_edit:
+				emmSecurityKeyboard.showSecurityKeyBoard(confirmpsdEdit);
+				break;
 		}
+		return false;
 	}
 
 	public void onClick(View v){
