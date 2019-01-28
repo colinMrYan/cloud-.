@@ -3,6 +3,7 @@ package com.inspur.emmcloud.ui.login;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,6 +19,7 @@ import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
+import com.inspur.emmcloud.widget.keyboardview.EmmSecurityKeyboard;
 
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
@@ -28,7 +30,7 @@ import org.xutils.x;
  */
 
 @ContentView(R.layout.activity_password_reset)
-public class PasswordResetActivity extends BaseActivity {
+public class PasswordResetActivity extends BaseActivity implements View.OnTouchListener{
     public static final String EXTRA_CAPTCHA = "extra_captcha";
     @ViewInject(R.id.bt_ok)
     private Button okBtn;
@@ -39,6 +41,7 @@ public class PasswordResetActivity extends BaseActivity {
     private String passwordNew;
     private String passwordConfirm;
     private LoadingDialog loadingDlg;
+    private EmmSecurityKeyboard emmSecurityKeyboard;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +52,9 @@ public class PasswordResetActivity extends BaseActivity {
         passwordNewEdit.addTextChangedListener(editWatcher);
         passwordConfirmEdit.addTextChangedListener(editWatcher);
         loadingDlg = new LoadingDialog(this);
+        emmSecurityKeyboard = new EmmSecurityKeyboard(this);
+        passwordNewEdit.setOnTouchListener(this);
+        passwordConfirmEdit.setOnTouchListener(this);
     }
 
     public void onClick(View v){
@@ -65,6 +71,19 @@ public class PasswordResetActivity extends BaseActivity {
                 resetPassword();
                 break;
         }
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        switch (v.getId()){
+            case R.id.et_password_new:
+                emmSecurityKeyboard.showSecurityKeyBoard(passwordNewEdit);
+                break;
+            case R.id.et_password_confirm:
+                emmSecurityKeyboard.showSecurityKeyBoard(passwordConfirmEdit);
+                break;
+        }
+        return false;
     }
 
     private class EditWatcher implements TextWatcher {
