@@ -111,7 +111,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
     }
 
     private void registerNetWorkListenerAccordingSysLevel() {
-        if(android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.N){
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.N){
             networkChangeReceiver = new NetworkChangeReceiver();
             registerReceiver(networkChangeReceiver, new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE"));
         }else{
@@ -151,39 +151,40 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
                 for (int i = 0; i < mainTabResultList.size(); i++) {
                     TabBean tabBean = null;
                     MainTabResult mainTabResult = mainTabResultList.get(i);
+                    int localIcon = getIconFromLocalByIco(mainTabResult.getIcon());
                     switch (mainTabResult.getType()) {
                         case Constant.APP_TAB_TYPE_NATIVE:
                             switch (mainTabResult.getUri()) {
                                 case Constant.APP_TAB_BAR_COMMUNACATE:
                                     if (MyApplication.getInstance().isV0VersionChat()) {
-                                        tabBean = new TabBean(getString(R.string.communicate), R.drawable.selector_tab_message_btn + "", CommunicationV0Fragment.class, mainTabResult);
+                                        tabBean = new TabBean(getString(R.string.communicate), localIcon + "", CommunicationV0Fragment.class, mainTabResult);
                                     } else {
-                                        tabBean = new TabBean(getString(R.string.communicate), R.drawable.selector_tab_message_btn + "", CommunicationFragment.class, mainTabResult);
+                                        tabBean = new TabBean(getString(R.string.communicate), localIcon + "", CommunicationFragment.class, mainTabResult);
                                     }
                                     break;
                                 case Constant.APP_TAB_BAR_WORK:
-                                    tabBean = new TabBean(getString(R.string.work), R.drawable.selector_tab_work_btn + "", WorkFragment.class, mainTabResult);
+                                    tabBean = new TabBean(getString(R.string.work), localIcon + "", WorkFragment.class, mainTabResult);
                                     break;
                                 case Constant.APP_TAB_BAR_APPLICATION:
-                                    tabBean = new TabBean(getString(R.string.application), R.drawable.selector_tab_app_btn + "", MyAppFragment.class, mainTabResult);
+                                    tabBean = new TabBean(getString(R.string.application), localIcon + "", MyAppFragment.class, mainTabResult);
                                     break;
                                 case Constant.APP_TAB_BAR_PROFILE:
-                                    tabBean = new TabBean(getString(R.string.mine), R.drawable.selector_tab_more_btn + "", MoreFragment.class, mainTabResult);
+                                    tabBean = new TabBean(getString(R.string.mine), localIcon + "", MoreFragment.class, mainTabResult);
                                     break;
                                 case Constant.APP_TAB_BAR_CONTACT:
-                                    tabBean = new TabBean(getString(R.string.contact), R.drawable.selector_tab_contact_btn + "", ContactSearchFragment.class, mainTabResult);
+                                    tabBean = new TabBean(getString(R.string.contact), localIcon + "", ContactSearchFragment.class, mainTabResult);
                                     break;
                             }
                             break;
                         case Constant.APP_TAB_TYPE_RN:
                             switch (mainTabResult.getUri()) {
                                 case Constant.APP_TAB_BAR_RN_FIND:
-                                    tabBean = new TabBean(getString(R.string.find), R.drawable.selector_tab_find_btn + "", FindFragment.class, mainTabResult);
+                                    tabBean = new TabBean(getString(R.string.find), localIcon + "", FindFragment.class, mainTabResult);
                                     break;
                             }
                             break;
                         case Constant.APP_TAB_TYPE_WEB:
-                            tabBean = new TabBean(getString(R.string.web), R.drawable.selector_tab_cloud_tweet_btn + "", ImpFragment.class, mainTabResult);
+                            tabBean = new TabBean(getString(R.string.web), localIcon + "", ImpFragment.class, mainTabResult);
                             break;
                     }
                     if (tabBean == null) {
@@ -199,6 +200,38 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
             tabBeans = addDefaultTabs();
         }
         showTabs(tabBeans);
+    }
+
+    //显示icon本地映射
+    private int getIconFromLocalByIco(String icon) {
+        int localIcon = R.drawable.selector_tab_unknown_btn;
+        switch (icon){
+            case Constant.APP_TAB_BAR_COMMUNACATE_NAME:
+                localIcon = R.drawable.selector_tab_message_btn;
+                break;
+            case Constant.APP_TAB_BAR_APPLICATION_NAME:
+                localIcon = R.drawable.selector_tab_app_btn;
+                break;
+            case Constant.APP_TAB_BAR_WORK_NAME:
+                localIcon = R.drawable.selector_tab_work_btn;
+                break;
+            case Constant.APP_TAB_BAR_MOMENT_NAME:
+                localIcon = R.drawable.selector_tab_cloud_tweet_btn;
+                break;
+            case Constant.APP_TAB_BAR_ME_NAME:
+                localIcon = R.drawable.selector_tab_more_btn;
+                break;
+            case Constant.APP_TAB_BAR_CONTACT_NAME:
+                localIcon = R.drawable.selector_tab_contact_btn;
+                break;
+            case Constant.APP_TAB_BAR_DISCOVER_NAME:
+                localIcon = R.drawable.selector_tab_find_btn;
+                break;
+            default:
+                localIcon = R.drawable.selector_tab_unknown_btn;
+                break;
+        }
+        return localIcon;
     }
 
     protected void batteryWhiteListRemind(final Context context){
@@ -681,7 +714,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
 
     @Override
     protected void onDestroy() {
-        if(android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.N){
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.N){
             if(networkChangeReceiver != null){
                 unregisterReceiver(networkChangeReceiver);
                 networkChangeReceiver = null;
