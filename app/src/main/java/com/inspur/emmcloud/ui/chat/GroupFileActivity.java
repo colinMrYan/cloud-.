@@ -42,10 +42,8 @@ public class GroupFileActivity extends BaseActivity {
 
     @ViewInject(R.id.lv_file)
     private ListView fileListView;
-
     @ViewInject(R.id.rl_no_channel_file)
     private RelativeLayout noChannelFileLayout;
-
     private String cid;
     private List<GroupFileInfo> fileInfoList = new ArrayList<>();
 

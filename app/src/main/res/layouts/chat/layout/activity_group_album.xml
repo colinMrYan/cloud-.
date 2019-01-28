@@ -47,9 +47,10 @@
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
             android:gravity="center_vertical"
+            android:visibility="gone"
             android:paddingRight="15dp"
             android:onClick="onClick"
-            android:text="选择"
+            android:text="@string/choose"
             android:textColor="?attr/header_text_color"
             android:textSize="@dimen/header_textsize"/>
     </RelativeLayout>

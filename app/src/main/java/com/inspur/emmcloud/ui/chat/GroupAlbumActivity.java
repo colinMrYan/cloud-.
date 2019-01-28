@@ -16,7 +16,6 @@ import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.Msg;
 import com.inspur.emmcloud.util.common.GroupUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
@@ -124,7 +123,6 @@ public class GroupAlbumActivity extends BaseActivity{
                 break;
             case R.id.tv_header_choose:
                 groupAlbumAdapter.setChangeSelectState();
-                LogUtils.YfcDebug("点击了选择按钮");
                 break;
         }
     }
