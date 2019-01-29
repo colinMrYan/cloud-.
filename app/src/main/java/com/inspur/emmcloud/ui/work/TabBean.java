@@ -9,15 +9,13 @@ import com.inspur.emmcloud.bean.system.MainTabResult;
 public class TabBean {
 
     private String tabName = "";
-    private String tabIcon = "";
     private Class<?> clz;
     private String tabId = "";
     private MainTabResult mainTabResult;
 
-    public TabBean(String tabName, String tabIcon, Class<?> clz,MainTabResult mainTabResult) {
+    public TabBean(String tabName, Class<?> clz,MainTabResult mainTabResult) {
         this.clz = clz;
         this.tabName = tabName;
-        this.tabIcon = tabIcon;
         this.mainTabResult = mainTabResult;
     }
 
@@ -27,14 +25,6 @@ public class TabBean {
 
     public void setTabName(String tabName) {
         this.tabName = tabName;
-    }
-
-    public String getTabIcon() {
-        return tabIcon;
-    }
-
-    public void setTabIcon(String tabIcon) {
-        this.tabIcon = tabIcon;
     }
 
     public Class<?> getClz() {

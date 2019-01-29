@@ -50,11 +50,11 @@ import com.inspur.emmcloud.ui.notsupport.NotSupportFragment;
 import com.inspur.emmcloud.ui.work.TabBean;
 import com.inspur.emmcloud.ui.work.WorkFragment;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
+import com.inspur.emmcloud.util.common.SelectorUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.AppTabUtils;
 import com.inspur.emmcloud.util.privates.ECMShortcutBadgeNumberManagerUtils;
-import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.cache.MyAppCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
@@ -151,45 +151,44 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
                 for (int i = 0; i < mainTabResultList.size(); i++) {
                     TabBean tabBean = null;
                     MainTabResult mainTabResult = mainTabResultList.get(i);
-                    int localIcon = getIconFromLocalByIco(mainTabResult.getIcon());
                     switch (mainTabResult.getType()) {
                         case Constant.APP_TAB_TYPE_NATIVE:
                             switch (mainTabResult.getUri()) {
                                 case Constant.APP_TAB_BAR_COMMUNACATE:
                                     if (MyApplication.getInstance().isV0VersionChat()) {
-                                        tabBean = new TabBean(getString(R.string.communicate), localIcon + "", CommunicationV0Fragment.class, mainTabResult);
+                                        tabBean = new TabBean(getString(R.string.communicate), CommunicationV0Fragment.class, mainTabResult);
                                     } else {
-                                        tabBean = new TabBean(getString(R.string.communicate), localIcon + "", CommunicationFragment.class, mainTabResult);
+                                        tabBean = new TabBean(getString(R.string.communicate), CommunicationFragment.class, mainTabResult);
                                     }
                                     break;
                                 case Constant.APP_TAB_BAR_WORK:
-                                    tabBean = new TabBean(getString(R.string.work), localIcon + "", WorkFragment.class, mainTabResult);
+                                    tabBean = new TabBean(getString(R.string.work), WorkFragment.class, mainTabResult);
                                     break;
                                 case Constant.APP_TAB_BAR_APPLICATION:
-                                    tabBean = new TabBean(getString(R.string.application), localIcon + "", MyAppFragment.class, mainTabResult);
+                                    tabBean = new TabBean(getString(R.string.application), MyAppFragment.class, mainTabResult);
                                     break;
                                 case Constant.APP_TAB_BAR_PROFILE:
-                                    tabBean = new TabBean(getString(R.string.mine), localIcon + "", MoreFragment.class, mainTabResult);
+                                    tabBean = new TabBean(getString(R.string.mine), MoreFragment.class, mainTabResult);
                                     break;
                                 case Constant.APP_TAB_BAR_CONTACT:
-                                    tabBean = new TabBean(getString(R.string.contact), localIcon + "", ContactSearchFragment.class, mainTabResult);
+                                    tabBean = new TabBean(getString(R.string.contact), ContactSearchFragment.class, mainTabResult);
                                     break;
                             }
                             break;
                         case Constant.APP_TAB_TYPE_RN:
                             switch (mainTabResult.getUri()) {
                                 case Constant.APP_TAB_BAR_RN_FIND:
-                                    tabBean = new TabBean(getString(R.string.find), localIcon + "", FindFragment.class, mainTabResult);
+                                    tabBean = new TabBean(getString(R.string.find), FindFragment.class, mainTabResult);
                                     break;
                             }
                             break;
                         case Constant.APP_TAB_TYPE_WEB:
-                            tabBean = new TabBean(getString(R.string.web), localIcon + "", ImpFragment.class, mainTabResult);
+                            tabBean = new TabBean(getString(R.string.web), ImpFragment.class, mainTabResult);
                             break;
                     }
                     if (tabBean == null) {
                         String noSupportTabName = mainTabResult.getMainTabTitleResult().getTabTileByLanguage(environmentLanguage);
-                        tabBean = new TabBean(noSupportTabName, R.drawable.selector_tab_unknown_btn + "", NotSupportFragment.class, mainTabResult);
+                        tabBean = new TabBean(noSupportTabName, NotSupportFragment.class, mainTabResult);
                     }
                     tabBean.setTabId(mainTabResultList.get(i).getUri());
                     tabBeans[i] = internationalMainLanguage(mainTabResultList.get(i), environmentLanguage, tabBean);
@@ -285,17 +284,17 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
             TabHost.TabSpec tab = mTabHost.newTabSpec(tabId);
             View tabView = LayoutInflater.from(getApplicationContext())
                     .inflate(R.layout.tab_item_view, null);
-            ImageView tabImg = (ImageView) tabView.findViewById(R.id.imageview);
-            TextView tabText = (TextView) tabView.findViewById(R.id.textview);
+            ImageView tabImg =  tabView.findViewById(R.id.imageview);
+            TextView tabText =  tabView.findViewById(R.id.textview);
             if (tabId.equals(Constant.APP_TAB_BAR_COMMUNACATE)) {
                 handleTipsView(tabView);
                 communicateIndex = i;
             }
             tabText.setText(tabBean.getTabName());
-            if (tabBean.getTabIcon().startsWith("http")) {
-                ImageDisplayUtils.getInstance().displayImage(tabImg, tabBean.getTabIcon(), R.drawable.ic_app_default);
+            if (tabBean.getMainTabResult().getIcon().startsWith("http")) {
+                SelectorUtils.addSelectorFromNet(IndexBaseActivity.this,tabBean.getMainTabResult().getIcon(),tabImg);
             } else {
-                tabImg.setImageResource(Integer.parseInt(tabBean.getTabIcon()));
+                tabImg.setImageResource(getIconFromLocalByIco(tabBean.getMainTabResult().getIcon()));
             }
             tab.setIndicator(tabView);
             tab.setContent(new TabHost.TabContentFactory() {
@@ -493,10 +492,10 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
     private TabBean[] addDefaultTabs() {
         //无数据改为显示两个tab，数组变为2
         TabBean[] tabBeans = new TabBean[2];
-        TabBean tabBeanApp = new TabBean(getString(R.string.application), R.drawable.selector_tab_app_btn + "",
+        TabBean tabBeanApp = new TabBean(getString(R.string.application),
                 MyAppFragment.class, getApplicationMainTab());
         tabBeanApp.setTabId(Constant.APP_TAB_BAR_APPLICATION);
-        TabBean tabBeanMine = new TabBean(getString(R.string.mine), R.drawable.selector_tab_more_btn + "",
+        TabBean tabBeanMine = new TabBean(getString(R.string.mine),
                 MoreFragment.class, getMineTab());
         tabBeanMine.setTabId(Constant.APP_TAB_BAR_PROFILE);
         //无数据改为显示两个tab
