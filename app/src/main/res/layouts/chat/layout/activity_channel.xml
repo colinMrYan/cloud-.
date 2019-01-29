@@ -31,7 +31,7 @@
                 android:background="@null"
                 android:paddingRight="5dp"
                 android:scaleType="centerInside"
-                android:src="@drawable/selector_back_btn" />
+                android:src="@drawable/ic_back_btn_black" />
         </RelativeLayout>
 
         <ImageView
