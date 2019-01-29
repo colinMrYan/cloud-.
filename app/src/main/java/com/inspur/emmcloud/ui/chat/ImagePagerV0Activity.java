@@ -80,8 +80,8 @@ public class ImagePagerV0Activity extends BaseFragmentActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-//		requestWindowFeature(Window.FEATURE_NO_TITLE);//没有标题
-//		getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);//没有标题
+		getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
 			//全屏显示
 			WindowManager.LayoutParams lp = getWindow().getAttributes();

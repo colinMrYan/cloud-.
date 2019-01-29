@@ -9,14 +9,14 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:paddingBottom="4dp"
-        android:paddingTop="7dp">
+        android:paddingTop="2dp"
+        android:paddingBottom="3dp"
+        android:orientation="vertical">
 
         <ImageView
             android:id="@+id/imageview"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
             android:src="@drawable/selector_tab_unknown_btn"
@@ -25,9 +25,9 @@
 
         <TextView
             android:id="@+id/textview"
+            android:layout_marginTop="-2dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="3dp"
             android:textColor="@drawable/seclector_footer_text"
             android:textSize="10sp"/>
     </LinearLayout>
@@ -39,7 +39,7 @@
         android:layout_alignRight="@id/layout"
         android:paddingBottom="4dp"
         android:paddingLeft="5dp"
-        android:paddingRight="3dp"
+        android:paddingRight="10dp"
         android:paddingTop="3dp"
         android:visibility="invisible">
 
@@ -56,12 +56,12 @@
 
     <View
         android:id="@+id/v_badge"
-        android:background="@drawable/bg_tips_new_message"
-        android:layout_alignRight="@id/layout"
-        android:layout_marginTop="4.5dp"
-        android:layout_marginRight="9dp"
         android:layout_width="10dp"
-        android:visibility="gone"
-        android:layout_height="10dp"></View>
+        android:layout_height="10dp"
+        android:layout_alignRight="@id/layout"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/bg_tips_new_message"
+        android:visibility="gone"></View>
 
 </RelativeLayout>
