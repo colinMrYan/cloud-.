@@ -116,6 +116,8 @@ public class Constant {
     public static final String APP_TAB_BAR_APPLICATION_NAME = "application";
     public static final String APP_TAB_BAR_MOMENT_NAME = "moment";
     public static final String APP_TAB_BAR_ME_NAME = "me";
+    public static final String APP_TAB_BAR_CONTACT_NAME = "contact";
+    public static final String APP_TAB_BAR_DISCOVER_NAME = "discover";
 
     public static final String SHARE_LINK = "shareLink";
     public static final String SHARE_FILE_URI_LIST = "fileShareUriList";
