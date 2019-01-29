@@ -14,6 +14,7 @@ import android.os.AsyncTask;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.inspur.emmcloud.R;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -64,7 +65,13 @@ public class SelectorUtils {
             protected Drawable doInBackground(Void... params) {
                 StateListDrawable drawable = new StateListDrawable();
                 Drawable normal = loadImageFromNet(context,getIconByState(iconUrl,NORMAL_STATE));
+                if(normal == null){
+                    normal = context.getResources().getDrawable(R.drawable.icon_updata_tab_noselect);
+                }
                 Drawable press = loadImageFromNet(context, getIconByState(iconUrl,PRESSED_STATE));
+                if(press == null){
+                    press = context.getResources().getDrawable(R.drawable.icon_updata_tab_select);
+                }
                 drawable.addState(new int[]{android.R.attr.state_selected},press);
                 drawable.addState(new int[]{-android.R.attr.state_selected},normal);
                 return drawable;
@@ -73,7 +80,7 @@ public class SelectorUtils {
             @Override
             protected void onPostExecute(Drawable drawable) {
                 super.onPostExecute(drawable);
-                imageView.setBackground(drawable);
+                imageView.setImageDrawable(drawable);
             }
         }.execute();
     }
@@ -143,7 +150,9 @@ public class SelectorUtils {
                     .cacheOnDisk(true)
                     .build();
             Bitmap bitmap = ImageLoader.getInstance().loadImageSync(netUrl, options);
-            drawable =  new BitmapDrawable(context.getResources(),bitmap);
+            if(bitmap != null){
+                drawable =  new BitmapDrawable(context.getResources(),bitmap);
+            }
         } catch (Exception e) {
             LogUtils.YfcDebug("异常："+e.getMessage());
         }
