@@ -200,6 +200,21 @@ public class FileManagerActivity extends BaseActivity {
         new MyTask(rootFile,filterFileTypeList).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "");
     }
 
+    public class FileComparator implements Comparator {
+        @Override
+        public int compare(Object o, Object t1) {
+            File file1 = (File)o;
+            File file2 = (File)t1;
+            if ( file1.isDirectory() && file2.isFile() ){
+                return -1 ;
+            }else if ( file1.isFile() && file2.isDirectory() ){
+                return 1 ;
+            }else {
+                return file1.getName().toLowerCase().compareTo( file2.getName().toString() ) ;
+            }
+        }
+    }
+
     class MyTask extends AsyncTask {
         private File file;
         private ArrayList<String> filterFileTypeList;
@@ -216,7 +231,7 @@ public class FileManagerActivity extends BaseActivity {
                 if (filesArray != null) {
                     List<File> fileList = new ArrayList<>();
                     Collections.addAll(fileList, filesArray);  //把数组转化成list
-                    Collections.sort(fileList, FileUtil.comparator);  //按照名字排序
+                    Collections.sort(fileList, new FileComparator());  //按照名字排序
 
                     for (File f : fileList) {
                         if (f.isHidden()) continue;
@@ -258,6 +273,7 @@ public class FileManagerActivity extends BaseActivity {
         }
 
     }
+
 
     void refreshTitleState(String title, String path) {
         TitlePath filePath = new TitlePath();

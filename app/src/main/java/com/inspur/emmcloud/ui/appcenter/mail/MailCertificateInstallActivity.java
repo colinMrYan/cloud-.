@@ -309,7 +309,7 @@ public class MailCertificateInstallActivity extends BaseActivity {
     private class WebService extends APIInterfaceInstance {
         @Override
         public void returnMailCertificateUploadSuccess(byte[] arg0) {
-            Toast.makeText( getBaseContext(), "上传证书成功", Toast.LENGTH_SHORT ).show();
+            Toast.makeText( getBaseContext(), "证书安装成功", Toast.LENGTH_SHORT ).show();
             PreferencesByUsersUtils.putObject( MailCertificateInstallActivity.this,myCertificate,CERTIFICATER_KEY );
             updataCertificateUI( myCertificate );
             super.returnMailCertificateUploadSuccess( arg0 );
@@ -317,7 +317,7 @@ public class MailCertificateInstallActivity extends BaseActivity {
 
         @Override
         public void returnMailCertificateUploadFail(String error, int errorCode) {
-            Toast.makeText( getBaseContext(), "上传证书失败", Toast.LENGTH_SHORT ).show();
+            Toast.makeText( getBaseContext(), "证书安装失败", Toast.LENGTH_SHORT ).show();
             super.returnMailCertificateUploadFail( error, errorCode );
         }
     }
