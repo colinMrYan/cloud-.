@@ -1129,4 +1129,6 @@
     <string name="emm_secure_keyboard">Secure Keyboard</string>
 
     <string name="welcome_to">Welcome to </string>
+
+    <string name="cloud_plus_update">%1$s update</string>
 </resources>
