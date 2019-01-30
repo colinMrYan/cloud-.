@@ -1129,4 +1129,6 @@
     <string name="emm_secure_keyboard">安全鍵盤</string>
 
     <string name="welcome_to">歡迎使用</string>
+
+    <string name="cloud_plus_update">%1$s更新</string>
 </resources>

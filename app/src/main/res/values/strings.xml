@@ -1181,4 +1181,6 @@
 
     <string name="welcome_to">欢迎使用</string>
 
+    <string name="cloud_plus_update">%1$s更新</string>
+
 </resources>
