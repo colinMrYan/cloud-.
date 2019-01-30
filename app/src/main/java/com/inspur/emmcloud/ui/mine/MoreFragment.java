@@ -18,6 +18,7 @@ import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.chat.Channel;
 import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.system.MainTabProperty;
+import com.inspur.emmcloud.bean.system.MineLayoutItem;
 import com.inspur.emmcloud.bean.system.MineLayoutItemGroup;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.config.Constant;
@@ -75,13 +76,13 @@ public class MoreFragment extends Fragment {
         }
         if (mineLayoutItemGroupList.size() == 0){
             MineLayoutItemGroup mineLayoutItemGroupPersonnalInfo = new MineLayoutItemGroup();
-            mineLayoutItemGroupPersonnalInfo.getMineLayoutItemList().add("my_personalInfo_function");
+            mineLayoutItemGroupPersonnalInfo.getMineLayoutItemList().add(new MineLayoutItem("my_personalInfo_function","","",""));
             MineLayoutItemGroup mineLayoutItemGroupSetting = new MineLayoutItemGroup();
-            mineLayoutItemGroupSetting.getMineLayoutItemList().add("my_setting_function");
+            mineLayoutItemGroupSetting.getMineLayoutItemList().add(new MineLayoutItem("my_setting_function","","",""));
             MineLayoutItemGroup mineLayoutItemGroupCardbox = new MineLayoutItemGroup();
-            mineLayoutItemGroupCardbox.getMineLayoutItemList().add("my_cardbox_function");
+            mineLayoutItemGroupCardbox.getMineLayoutItemList().add(new MineLayoutItem("my_cardbox_function","","",""));
             MineLayoutItemGroup mineLayoutItemGroupAboutUs = new MineLayoutItemGroup();
-            mineLayoutItemGroupAboutUs.getMineLayoutItemList().add("my_aboutUs_function");
+            mineLayoutItemGroupAboutUs.getMineLayoutItemList().add(new MineLayoutItem("my_aboutUs_function","","",""));
             mineLayoutItemGroupList.add(mineLayoutItemGroupPersonnalInfo);
             mineLayoutItemGroupList.add(mineLayoutItemGroupSetting);
             mineLayoutItemGroupList.add(mineLayoutItemGroupCardbox);
@@ -119,8 +120,8 @@ public class MoreFragment extends Fragment {
         expandListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-                String layoutItem = mineLayoutItemGroupList.get(groupPosition).getMineLayoutItemList().get(childPosition);
-                switch (layoutItem){
+                MineLayoutItem layoutItem = mineLayoutItemGroupList.get(groupPosition).getMineLayoutItemList().get(childPosition);
+                switch (layoutItem.getId()){
                     case "my_personalInfo_function":
                         Intent intent = new Intent();
                         intent.setClass(getActivity(), MyInfoActivity.class);

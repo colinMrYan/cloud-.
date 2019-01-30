@@ -1078,4 +1078,13 @@ public class JSONUtils {
         return null;
     }
 
+    public static boolean isJSONObject(String text){
+        try {
+            JSONObject obj = new JSONObject(text);
+            return true;
+        }catch (Exception e){
+            return false;
+        }
+    }
+
 }
