@@ -3,6 +3,7 @@ package com.inspur.emmcloud.util.common.systool.permission;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.os.Build;
 import android.text.TextUtils;
 
 import com.inspur.emmcloud.MyApplication;
@@ -62,7 +63,7 @@ public class PermissionRequestManagerUtils {
         }
         this.callback = callback;
         this.context = context;
-        if(permissionGroup == null || permissionGroup.length == 0){
+        if(permissionGroup == null || permissionGroup.length == 0 || Build.VERSION.SDK_INT < Build.VERSION_CODES.M){
             callback.onPermissionRequestSuccess(new ArrayList<String>());
             return;
         }
