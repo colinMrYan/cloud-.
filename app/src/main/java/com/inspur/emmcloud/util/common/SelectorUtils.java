@@ -66,11 +66,11 @@ public class SelectorUtils {
                 StateListDrawable drawable = new StateListDrawable();
                 Drawable normal = loadImageFromNet(context,getIconByState(iconUrl,NORMAL_STATE));
                 if(normal == null){
-                    normal = context.getResources().getDrawable(R.drawable.icon_updata_tab_noselect);
+                    normal = context.getResources().getDrawable(R.drawable.ic_tab_net_unknown);
                 }
                 Drawable press = loadImageFromNet(context, getIconByState(iconUrl,PRESSED_STATE));
                 if(press == null){
-                    press = context.getResources().getDrawable(R.drawable.icon_updata_tab_select);
+                    press = context.getResources().getDrawable(R.drawable.ic_tab_net_unknown_selected);
                 }
                 drawable.addState(new int[]{android.R.attr.state_selected},press);
                 drawable.addState(new int[]{-android.R.attr.state_selected},normal);
