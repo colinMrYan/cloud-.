@@ -12,7 +12,6 @@ import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Environment;
 import android.os.Parcelable;
-import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
 import android.support.v4.content.LocalBroadcastManager;
 import android.webkit.CookieManager;
@@ -709,7 +708,6 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(LanguageUtils.attachBaseContext(newBase));
-        MultiDex.install(this);
     }
 
     /**
