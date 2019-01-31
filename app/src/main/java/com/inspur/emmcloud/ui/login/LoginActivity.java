@@ -229,6 +229,10 @@ public class LoginActivity extends BaseActivity {
         if (handler != null) {
             handler = null;
         }
+        if(securityKeyboard != null){
+            securityKeyboard.dismiss();
+            securityKeyboard = null;
+        }
     }
 
     /**

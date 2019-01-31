@@ -296,7 +296,7 @@ public class ImpFragment extends ImpBaseFragment {
      */
     private void initWebViewHeaderLayout() {
         impCallBackInterface = getImpCallBackInterface();
-        if (getArguments().getString(Constant.WEB_FRAGMENT_APP_NAME) != null) {
+        if (getArguments().getBoolean(Constant.WEB_FRAGMENT_SHOW_HEADER,true)) {
             String title = getArguments().getString(Constant.WEB_FRAGMENT_APP_NAME);
             headerText.setOnClickListener(new ImpFragmentClickListener());
             webView.setProperty(headerText, loadFailLayout, frameLayout, impCallBackInterface);

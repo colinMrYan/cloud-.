@@ -1130,4 +1130,7 @@
     <string name="emm_keyboard_number">Number</string>
     <string name="emm_keyboard_symbol">Symbol</string>
     <string name="emm_keyboard_letter">Letter</string>
+    <string name="emm_secure_keyboard">Secure Keyboard</string>
+
+    <string name="welcome_to">Welcome to </string>
 </resources>
