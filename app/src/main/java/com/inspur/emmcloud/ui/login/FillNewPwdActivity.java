@@ -7,19 +7,18 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.inspur.emmcloud.BaseActivity;
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.LoginAPIService;
 import com.inspur.emmcloud.bean.login.GetUpdatePwdBySMSCodeBean;
+import com.inspur.emmcloud.util.common.FomatUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.keyboardview.EmmSecurityKeyboard;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * 填写重置密码的新密码
@@ -48,8 +47,6 @@ public class FillNewPwdActivity extends BaseActivity{
 		case R.id.modify_password_confirm_btn:
 			String newPsd = newPwdEdit.getText().toString();
 			String confirmPsd = confirmPwdEdit.getText().toString();
-			Pattern pattern = Pattern.compile("^\\S{6,64}$");
-			Matcher matcher = pattern.matcher(newPsd);
 			if(StringUtils.isBlank(newPsd)){
 				ToastUtils.show(FillNewPwdActivity.this, getString(R.string.modify_input_user_new_password));
 				break;
@@ -62,8 +59,8 @@ public class FillNewPwdActivity extends BaseActivity{
 				ToastUtils.show(FillNewPwdActivity.this, getString(R.string.modify_not_same));
 				break;
 			}
-			if(!matcher.matches()){
-				ToastUtils.show(FillNewPwdActivity.this, getString(R.string.modify_password_invalid));
+			if (newPsd.length()<8 || newPsd.length()>64 ||!FomatUtils.isPasswrodStrong(newPsd) ){
+				ToastUtils.show(MyApplication.getInstance(),R.string.modify_password_invalid);
 				break;
 			}
 			if(StringUtils.isBlank(smsCode)){

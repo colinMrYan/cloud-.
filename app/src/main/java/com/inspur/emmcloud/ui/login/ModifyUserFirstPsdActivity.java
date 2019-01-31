@@ -96,7 +96,7 @@ public class ModifyUserFirstPsdActivity extends BaseActivity {
 			}
 			if (newpsd.length()<8 || newpsd.length()>64 ||!FomatUtils.isPasswrodStrong(newpsd) ){
 				ToastUtils.show(MyApplication.getInstance(),R.string.modify_password_invalid);
-				return;
+				break;
 			}
 			if (NetUtils.isNetworkConnected(MyApplication.getInstance())){
 				apiService.changePsd("", newpsd);
