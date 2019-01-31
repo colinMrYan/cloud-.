@@ -234,12 +234,12 @@ public class MoreFragment extends Fragment {
         public View getChildView(final int groupPosition,
                                  final int childPosition, boolean isLastChild, View convertView,
                                  ViewGroup parent) {
-            String layoutItem = (String) getChild(groupPosition, childPosition);
-            if (layoutItem.equals("my_personalInfo_function")){
+            MineLayoutItem layoutItem = (MineLayoutItem) getChild(groupPosition, childPosition);
+            if (layoutItem.getId().equals("my_personalInfo_function")){
                 convertView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_mine_myinfo_item_view,null);
-                ImageView photoImg = (ImageView)convertView.findViewById(R.id.iv_photo);
-                TextView nameText = (TextView)convertView.findViewById(R.id.tv_name);
-                TextView enterpriseText = (TextView)convertView.findViewById(R.id.tv_enterprise);
+                ImageView photoImg = convertView.findViewById(R.id.iv_photo);
+                TextView nameText = convertView.findViewById(R.id.tv_name);
+                TextView enterpriseText = convertView.findViewById(R.id.tv_enterprise);
                 String photoUri = APIUri.getUserIconUrl(getActivity(), MyApplication.getInstance().getUid());
                 ImageDisplayUtils.getInstance().displayImage(photoImg, photoUri, R.drawable.icon_photo_default);
                 String userName = PreferencesUtils.getString(getActivity(), "userRealName", getString(R.string.not_set));
@@ -254,10 +254,10 @@ public class MoreFragment extends Fragment {
             return convertView;
         }
 
-        private void setViewByLayoutItem(View convertView,String layoutItem){
-            CircleTextImageView iconImg = (CircleTextImageView)convertView.findViewById(R.id.iv_icon);
-            TextView titleText = (TextView)convertView.findViewById(R.id.tv_name_tips);
-            switch (layoutItem){
+        private void setViewByLayoutItem(View convertView,MineLayoutItem layoutItem){
+            CircleTextImageView iconImg = convertView.findViewById(R.id.iv_icon);
+            TextView titleText = convertView.findViewById(R.id.tv_name_tips);
+            switch (layoutItem.getId()){
                 case "my_setting_function":
                     iconImg.setImageResource(R.drawable.icon_set);
                     titleText.setText(R.string.settings);

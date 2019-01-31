@@ -69,7 +69,7 @@ public class MineLayoutItem {
         this.title = title;
     }
 
-    public String getTitleByLanguage(){
-        String  TitleByLanguage = JSONUtils.getString(title,)
-    }
+//    public String getTitleByLanguage(){
+//        String  TitleByLanguage = JSONUtils.getString(title,)
+//    }
 }
