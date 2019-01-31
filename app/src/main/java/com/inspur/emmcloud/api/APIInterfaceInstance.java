@@ -293,9 +293,8 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnUploadMyHeadSuccess(
-            GetUploadMyHeadResult getUploadMyInfoResult) {
+            GetUploadMyHeadResult getUploadMyInfoResult,String filePath) {
         // TODO Auto-generated method stub
-
     }
 
     @Override

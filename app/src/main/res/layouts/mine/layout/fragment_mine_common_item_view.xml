@@ -2,18 +2,18 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:paddingBottom="1dp"
     android:background="@drawable/text_layout_selector">
 
     <com.inspur.emmcloud.widget.CircleTextImageView
         android:id="@+id/iv_icon"
-        android:layout_width="33dp"
-        android:layout_height="33dp"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
         android:layout_centerVertical="true"
         android:layout_marginBottom="5dp"
-        android:layout_marginLeft="12dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="5dp"
-        android:padding="0.5dp" />
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="6dp" />
 
     <TextView
         android:id="@+id/tv_name_tips"
@@ -30,13 +30,14 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginLeft="20dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginRight="15dp"
         android:src="@drawable/icon_arrow_right" />
 
     <View
         android:id="@+id/line"
         android:layout_width="match_parent"
+        android:layout_marginLeft="59dp"
         android:layout_height="0.6dp"
         android:layout_below="@id/iv_icon"
-        android:background="@color/color_list_divider"/>
+        android:background="#dddddd" />
 </RelativeLayout>

@@ -277,7 +277,7 @@ public class MyInfoActivity extends BaseActivity {
     public class WebService extends APIInterfaceInstance {
 
         @Override
-        public void returnUploadMyHeadSuccess(GetUploadMyHeadResult getUploadMyHeadResult) {
+        public void returnUploadMyHeadSuccess(GetUploadMyHeadResult getUploadMyHeadResult,String filePath) {
             // TODO Auto-generated method stub
             LoadingDialog.dimissDlg(loadingDlg);
             saveUpdateHeadTime();

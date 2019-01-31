@@ -28,13 +28,14 @@
 
     </style>
 
+
     <style name="AppTheme_1"  parent="AppTheme">
-        <item name="header_bg_color">@color/header_bg</item>
-        <item name="header_text_color">@android:color/white</item>
-    </style>
-    <style name="AppTheme_2"  parent="AppTheme">
         <item name="header_bg_color">@color/header_bg_white</item>
         <item name="header_text_color">#333333</item>
+    </style>
+    <style name="AppTheme_2"  parent="AppTheme">
+        <item name="header_bg_color">@color/header_bg</item>
+        <item name="header_text_color">@android:color/white</item>
     </style>
 
     <!-- Application theme. -->

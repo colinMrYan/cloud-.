@@ -9,7 +9,6 @@
 package com.inspur.emmcloud.config;
 
 import android.content.Context;
-import android.os.Build;
 import android.os.Environment;
 
 import com.inspur.emmcloud.MyApplication;
@@ -41,7 +40,7 @@ public class MyAppConfig {
     public static final String LOCAL_CACHE_MARKDOWN_PATH = Environment
             .getExternalStorageDirectory() + "/IMP-Cloud/cache/Markdown/";
     public static final String[] clientLanguages = {"zh-CN", "en-US", "zh-TW"};
-    public static final int UPLOAD_ORIGIN_IMG_MAX_SIZE = (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.N)?2600:3600;
+    public static final int UPLOAD_ORIGIN_IMG_MAX_SIZE = 2600;
     public static final int UPLOAD_ORIGIN_IMG_DEFAULT_SIZE = 1280;
     public static final int UPLOAD_THUMBNAIL_IMG_MAX_SIZE = 600;
     public static final int VOLUME_MAX_FILE_NAME_LENGTH = 40;

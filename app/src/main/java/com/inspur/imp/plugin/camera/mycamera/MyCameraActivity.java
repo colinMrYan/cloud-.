@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.hardware.Camera;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.Nullable;
@@ -29,12 +30,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.ImageUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
-import com.inspur.emmcloud.util.common.ResolutionUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
@@ -105,7 +104,6 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
         this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);//拍照过程屏幕一直处于高亮
         setContentView(R.layout.activity_mycamera);
         initData();
-        ResolutionUtils.getResolutionRate(this);
     }
 
     @Override
@@ -269,11 +267,14 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
             mCamera.setDisplayOrientation(rotateAngle);
             parameters.setRotation(rotateAngle);
             List<Camera.Size> PictureSizeList = parameters.getSupportedPictureSizes();
-            Camera.Size pictureSize = CameraUtils.getInstance(this).getPictureSize(PictureSizeList, MyAppConfig.UPLOAD_ORIGIN_IMG_MAX_SIZE);
+            int maxPicSize = (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.N)?2600:3600;
+            Camera.Size pictureSize = CameraUtils.getInstance(this).getPictureSize(PictureSizeList, maxPicSize);
             parameters.setPictureSize(pictureSize.width, pictureSize.height);
+            LogUtils.jasonDebug("pictureSize.width="+pictureSize.width + "   pictureSize.height="+pictureSize.height);
             List<Camera.Size> previewSizeList = parameters.getSupportedPreviewSizes();
             Camera.Size previewSize = CameraUtils.getInstance(this).getPreviewSize(previewSizeList, 2000);
             parameters.setPreviewSize(previewSize.width, previewSize.height);
+            LogUtils.jasonDebug("previewSize.width="+previewSize.width + "   previewSize.height="+previewSize.height);
             List<String> modelList = parameters.getSupportedFlashModes();
             if (modelList != null && modelList.contains(cameraFlashModel)) {
                 parameters.setFlashMode(cameraFlashModel);
@@ -343,6 +344,7 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
                 break;
             case R.id.switch_camera_btn:
                 currentCameraFacing = 1 - currentCameraFacing;
+                cameraLightSwitchBtn.setVisibility((currentCameraFacing ==Camera.CameraInfo.CAMERA_FACING_FRONT)?View.INVISIBLE:View.VISIBLE);
                 releaseCamera();
                 initCamera();
                 setCameraParams();
@@ -403,8 +405,6 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
                 originBitmap = BitmapFactory.decodeByteArray(data, 0, data.length, options);
                 //如果是三星手机需要先旋转90度
                 boolean isSamSungType = originBitmap.getWidth() > originBitmap.getHeight();
-                LogUtils.jasonDebug("originBitmap.getWidth()="+originBitmap.getWidth());
-                LogUtils.jasonDebug("originBitmap.getHeight()="+originBitmap.getHeight());
                 if (isSamSungType) {
                     originBitmap = ImageUtils.rotaingImageView(90, originBitmap);
                 }

@@ -73,10 +73,10 @@ public class CardPackageActivity extends BaseActivity  implements RxCardStackVie
 
     public void onClick(View view){
         switch (view.getId()){
-            case R.id.back_layout:
+            case R.id.ibt_back:
                 finish();
                 break;
-            case R.id.txt_card_package_set:
+            case R.id.tv_set:
                 Intent intent = new Intent();
                 intent.setClass(CardPackageActivity.this,CardPackageSetActivity.class);
                 startActivityForResult(intent,CARD_PACKAGE_SET_REQUEST);

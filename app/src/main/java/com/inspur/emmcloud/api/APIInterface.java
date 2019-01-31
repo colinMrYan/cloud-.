@@ -65,7 +65,6 @@ import com.inspur.emmcloud.bean.login.GetDeviceCheckResult;
 import com.inspur.emmcloud.bean.login.GetLoginResult;
 import com.inspur.emmcloud.bean.login.GetMDMStateResult;
 import com.inspur.emmcloud.bean.login.GetSignoutResult;
-import com.inspur.emmcloud.bean.login.GetUpdatePwdBySMSCodeBean;
 import com.inspur.emmcloud.bean.login.LoginDesktopCloudPlusBean;
 import com.inspur.emmcloud.bean.mine.GetBindingDeviceResult;
 import com.inspur.emmcloud.bean.mine.GetCardPackageResult;
@@ -168,7 +167,7 @@ public interface APIInterface {
 
     void returnMyInfoFail(String error, int errorCode);
 
-    void returnUploadMyHeadSuccess(GetUploadMyHeadResult getUploadMyInfoResult);
+    void returnUploadMyHeadSuccess(GetUploadMyHeadResult getUploadMyInfoResult,String filePath);
 
     void returnUploadMyHeadFail(String error, int errorCode);
 

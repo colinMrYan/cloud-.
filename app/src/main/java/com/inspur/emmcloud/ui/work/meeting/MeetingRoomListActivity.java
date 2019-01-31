@@ -240,7 +240,7 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
 		swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_layout);
 		swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.header_bg), getResources().getColor(R.color.header_bg));
 		swipeRefreshLayout.setOnRefreshListener(MeetingRoomListActivity.this);
-		headLayout = (RelativeLayout) findViewById(R.id.header_layout);
+		headLayout = (RelativeLayout) findViewById(R.id.rl_header);
 		filteImg = (ImageView) findViewById(R.id.filte_img);
 		expandListView = (ExpandableListView) findViewById(R.id.expandable_list);
 		expandListView.setGroupIndicator(null);

@@ -140,6 +140,7 @@ public class IndexActivity extends IndexBaseActivity {
             StateBarUtils.SetStateBarColor(this);
         } else {
             StateBarUtils.translucent(this);
+            StateBarUtils.setStateBarTextColor(this,true);
         }
     }
 
