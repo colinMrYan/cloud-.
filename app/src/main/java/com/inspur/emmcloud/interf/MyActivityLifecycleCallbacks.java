@@ -13,6 +13,7 @@ import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.service.PVCollectService;
 import com.inspur.emmcloud.service.SyncCommonAppService;
+import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.SchemeHandleActivity;
 import com.inspur.emmcloud.ui.mine.setting.CreateGestureActivity;
 import com.inspur.emmcloud.ui.mine.setting.FaceVerifyActivity;
@@ -61,6 +62,10 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
             new AppBadgeUtils(MyApplication.getInstance()).getAppBadgeCountFromServer();
         }
         count++;
+        //防止应用防止时间很久，Application被销毁后isActive变量被置为默认false
+        if (activity instanceof IndexActivity){
+            MyApplication.getInstance().setIsActive(true);
+        }
     }
 
     private boolean isLackNecessaryPermission() {
