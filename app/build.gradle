@@ -42,7 +42,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 27
         versionCode 69
-        versionName "2.7.6-beta.2"
+        versionName "2.7.8-beta.3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             abiFilters "armeabi-v7a", "x86"
@@ -154,7 +154,6 @@ android {
     }
 }
 
-
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
@@ -244,7 +243,7 @@ dependencies {
     compile 'com.github.open-android:RoundedImageView:v1.0.0'
     compile 'com.github.zafarkhaja:java-semver:0.7.2' //版本号包
     compile 'com.github.bmelnychuk:atv:1.2.9'//AndroidTreeView
-    compile 'com.android.support:cardview-v7:25.3.0'
+    compile 'com.android.support:cardview-v7:27.1.1'
 }
 repositories { flatDir { dirs 'aars' } }
 

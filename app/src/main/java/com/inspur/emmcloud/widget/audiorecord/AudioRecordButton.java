@@ -313,6 +313,7 @@ public class AudioRecordButton extends Button {
                     }
                 }
                 break;
+            case MotionEvent.ACTION_CANCEL:
             case MotionEvent.ACTION_UP:
                 voiceRecordToolFinish();
                 // 如果按的时间太短，还没准备好或者时间录制太短，就离开了，则显示这个dialog
@@ -338,11 +339,11 @@ public class AudioRecordButton extends Button {
                 }
                 reset();// 恢复标志位
                 break;
-            case MotionEvent.ACTION_CANCEL:
-                voiceRecordToolFinish();
-                voiceRecordUIFinish();
-                reset();// 恢复标志位
-                break;
+//            case MotionEvent.ACTION_CANCEL:
+//                voiceRecordToolFinish();
+//                voiceRecordUIFinish();
+//                reset();// 恢复标志位
+//                break;
 
         }
         return super.onTouchEvent(event);

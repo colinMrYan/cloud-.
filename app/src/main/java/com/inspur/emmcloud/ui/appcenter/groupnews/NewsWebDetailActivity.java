@@ -780,7 +780,7 @@ public class NewsWebDetailActivity extends BaseActivity {
     private void setHeaderModel(String model) {
         int color = ResourceUtils.getValueOfColorAttr(this,R.attr.header_bg_color);
         StateBarUtils.translucent(NewsWebDetailActivity.this, model.equals(darkMode) ? R.color.app_news_night_color : color);
-        (findViewById(R.id.header_layout)).setBackgroundColor(model.equals(darkMode) ? ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_news_night_color)
+        (findViewById(R.id.rl_header)).setBackgroundColor(model.equals(darkMode) ? ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_news_night_color)
                 :ContextCompat.getColor(NewsWebDetailActivity.this, color) );
     }
 

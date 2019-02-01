@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_centerHorizontal="true"
-        android:layout_below="@id/header_layout">
+        android:layout_below="@id/rl_header">
         <com.inspur.emmcloud.widget.CircleTextImageView
             android:id="@+id/img_user_head"
             android:layout_width="120dp"
@@ -59,7 +59,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="60dp"
-        android:layout_below="@id/header_layout"
+        android:layout_below="@id/rl_header"
         android:layout_centerHorizontal="true"
         android:orientation="vertical">
 

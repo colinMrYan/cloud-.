@@ -1,6 +1,8 @@
 package com.inspur.imp.plugin;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import com.inspur.emmcloud.util.common.LogUtils;
@@ -57,12 +59,28 @@ public class PluginMgr {
      * @param action      操作名
      * @param params      操作参数
      */
-    public void execute(String serviceName, final String action,
+    public void execute(final String serviceName, final String action,
                         final String params) {
+        if (Looper.myLooper() != Looper.getMainLooper()){
+            Handler mainThread = new Handler(Looper.getMainLooper());
+            mainThread.post(new Runnable() {
+                @Override
+                public void run() {
+                    executeOnMainThread(serviceName, action, params);
+                }
+            });
+        }else {
+            executeOnMainThread(serviceName, action, params);
+        }
+
+    }
+
+    private void executeOnMainThread(String serviceName, final String action,
+                                     final String params){
         serviceName = getReallyServiceName(serviceName);
         if (serviceName != null) {
-            Log.d("jason", "serviceName=" + serviceName);
-            Log.d("jason", "action=" + action);
+            LogUtils.jasonDebug("serviceName=" + serviceName);
+            LogUtils.jasonDebug("action=" + action);
             IPlugin plugin = getPlugin(serviceName);
             // 将传递过来的参数转换为JSON
             JSONObject jo = null;
@@ -98,12 +116,29 @@ public class PluginMgr {
      */
     public String executeAndReturn(final String serviceName,
                                    final String action, final String params) {
+        String res = "";
+        if (Looper.myLooper() != Looper.getMainLooper() && !serviceName.endsWith("EMMService")){
+            Handler mainThread = new Handler(Looper.getMainLooper());
+            mainThread.post(new Runnable() {
+                @Override
+                public void run() {
+                    executeAndReturnOnMainThead(serviceName, action, params);
+                }
+            });
+        }else {
+            res = executeAndReturnOnMainThead(serviceName, action, params);
+        }
+        return res;
+    }
+
+
+    private String executeAndReturnOnMainThead(final String serviceName,
+                                               final String action, final String params) {
         String reallyServiceName = getReallyServiceName(serviceName);
         String res = "";
         if (reallyServiceName != null) {
-
-            Log.d("jason", "serviceName=" + reallyServiceName);
-            Log.d("jason", "action=" + action);
+            LogUtils.jasonDebug("serviceName=" + reallyServiceName);
+            LogUtils.jasonDebug("action=" + action);
             IPlugin plugin = getPlugin(reallyServiceName);
             // 将传递过来的参数转换为JSON
             JSONObject jo = null;
@@ -142,7 +177,7 @@ public class PluginMgr {
             } else if (serviceName.endsWith("FileTransferService")) {
                 serviceName = "com.inspur.imp.plugin.filetransfer.FileTransferService";
             } else if (serviceName.endsWith("OCRService")) {
-               // serviceName = "com.inspur.imp.plugin.ocr.OCRService";
+                // serviceName = "com.inspur.imp.plugin.ocr.OCRService";
             } else if (serviceName.endsWith("StartAppService")) {
                 serviceName = "com.inspur.imp.plugin.startapp.StartAppService";
             }else if(serviceName.endsWith("WindowService")){

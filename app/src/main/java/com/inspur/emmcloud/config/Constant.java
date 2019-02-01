@@ -52,13 +52,12 @@ public class Constant {
     public static final String PREF_LOGIN_PASSWORD = "password";
     public static final String PREF_CLOUD_IDM = "cloud_idm";
 
-    public static final String PREF_HAS_SET_SHORT_PASSWORD = "hasPassword";
     public static final String PREF_APP_PREVIOUS_VERSION = "previousVersion";
     public static final String PREF_LOGIN_ENTERPRISE_NAME = "login_enterprise_name";
     public static final String PREF_LOGIN_HAVE_SET_PASSWORD = "hasPassword";
     public static final String PREF_MAIL_ACCOUNT = "mail_account";
     public static final String PREF_MAIL_PASSWORD = "mail_password";
-
+    public static final String PREF_MY_INFO_SHOW_CONFIG = "user_profiles";
 
     public static final String ACTION_MEETING = "com.inspur.meeting";
     public static final String ACTION_TASK = "com.inspur.task";
@@ -125,6 +124,8 @@ public class Constant {
     public static final String APP_TAB_BAR_APPLICATION_NAME = "application";
     public static final String APP_TAB_BAR_MOMENT_NAME = "moment";
     public static final String APP_TAB_BAR_ME_NAME = "me";
+    public static final String APP_TAB_BAR_CONTACT_NAME = "contact";
+    public static final String APP_TAB_BAR_DISCOVER_NAME = "discover";
 
     public static final String SHARE_LINK = "shareLink";
     public static final String SHARE_FILE_URI_LIST = "fileShareUriList";

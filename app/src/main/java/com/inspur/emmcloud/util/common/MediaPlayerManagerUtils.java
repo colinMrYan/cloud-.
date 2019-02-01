@@ -7,6 +7,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
+import android.os.PowerManager;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.interf.CommonCallBack;
@@ -41,7 +42,7 @@ public class MediaPlayerManagerUtils {
 
     private boolean isPause = false;
     private String path;
-    private int currentMode = MODE_HEADSET;
+    private int currentMode = MODE_SPEAKER;
 
     private boolean isLooping = false;
     private AudioManager.OnAudioFocusChangeListener mAudioFocusChangeListener = null;
@@ -108,6 +109,8 @@ public class MediaPlayerManagerUtils {
      */
     private void initMediaPlayer() {
         mediaPlayer = new MediaPlayer();
+        mediaPlayer.setScreenOnWhilePlaying(true);
+        mediaPlayer.setWakeMode(MyApplication.getInstance(), PowerManager.SCREEN_DIM_WAKE_LOCK);
         //保险起见，设置报错监听
         mediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
 
@@ -206,7 +209,6 @@ public class MediaPlayerManagerUtils {
                         mediaPlayer.start();
                         mediaPlayer.setLooping(true);
                     }else {
-                        LogUtils.jasonDebug("resetPlayMode======================000");
                         resetPlayMode();
                         audioManager.abandonAudioFocus(mAudioFocusChangeListener);
                     }
@@ -289,6 +291,7 @@ public class MediaPlayerManagerUtils {
         LogUtils.jasonDebug("changeToHeadsetMode---------------------");
         currentMode = MODE_HEADSET;
         audioManager.setSpeakerphoneOn(false);
+        mediaPlayer.start();
     }
 
     /**

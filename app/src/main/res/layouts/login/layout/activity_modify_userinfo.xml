@@ -7,10 +7,10 @@
     android:fitsSystemWindows="true" >
 
     <RelativeLayout
-        android:id="@+id/header_layout"
+        android:id="@+id/rl_header"
         android:layout_width="match_parent"
         android:layout_height="@dimen/header_height"
-        android:background="?attr/header_bg_color" >
+        android:background="@drawable/shape_header_bg" >
 
         <RelativeLayout
             android:id="@+id/back_layout"
@@ -47,7 +47,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
-        android:layout_below="@+id/header_layout"
+        android:layout_below="@+id/rl_header"
         android:layout_marginTop="10dp" >
 
         <Button

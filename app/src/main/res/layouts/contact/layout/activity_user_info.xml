@@ -8,10 +8,10 @@
     android:orientation="vertical">
 
     <RelativeLayout
-        android:id="@+id/header_layout"
+        android:id="@+id/rl_header"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/header_bg_color"
+        android:background="@drawable/shape_header_bg"
         android:paddingBottom="10dp"
         android:paddingTop="5dp">
 
@@ -170,7 +170,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/header_layout"
+        android:layout_below="@id/rl_header"
         android:background="@color/white"
         android:orientation="vertical"
         android:paddingLeft="20dp">
