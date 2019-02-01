@@ -3,10 +3,12 @@ package com.inspur.imp.plugin.photo;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Environment;
+import android.util.Base64;
 import android.widget.Toast;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.config.MyAppConfig;
+import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
@@ -15,7 +17,6 @@ import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.imp.api.ImpFragment;
 import com.inspur.imp.api.Res;
 import com.inspur.imp.plugin.ImpPlugin;
-import com.inspur.imp.plugin.camera.Bimp;
 import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
 import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
 import com.inspur.imp.plugin.camera.imagepicker.ui.ImageGridActivity;
@@ -221,10 +222,14 @@ public class PhotoService extends ImpPlugin {
                                 JSONObject jsonObject = new JSONObject();
                                 JSONObject contextObj = new JSONObject(result);
                                 jsonObject.put("context", contextObj);
-                               thumbnailBitmap = new Compressor(getFragmentContext()).setMaxHeight(MyAppConfig.UPLOAD_THUMBNAIL_IMG_MAX_SIZE).setMaxWidth(MyAppConfig.UPLOAD_THUMBNAIL_IMG_MAX_SIZE).setQuality(90).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
-                                        .compressToBitmap(new File(originImagefinalPath));
-                                String bitmapBase64 = Bimp.bitmapToBase64(thumbnailBitmap);
-                                jsonObject.put("thumbnailData", bitmapBase64);
+                                String thumbnailName = System.currentTimeMillis()+".jpg";
+                                File thumbnailFile = new Compressor(getFragmentContext()).setMaxHeight(MyAppConfig.UPLOAD_THUMBNAIL_IMG_MAX_SIZE).setMaxWidth(MyAppConfig.UPLOAD_THUMBNAIL_IMG_MAX_SIZE).setQuality(90).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
+                                        .compressToFile(new File(originImagefinalPath),thumbnailName);
+                                String thumbnailFilePath = thumbnailFile.getAbsolutePath();
+                                byte[] thumbnailFileBytes = FileUtils.file2Bytes(thumbnailFilePath);
+                                byte[] thumbnailFileBytesBase64 = Base64.encode(thumbnailFileBytes, Base64.NO_WRAP);
+                                String thumbnailOutput = new String(thumbnailFileBytesBase64);
+                                jsonObject.put("thumbnailData", thumbnailOutput);
                                 String returnData = jsonObject.toString();
                                 LoadingDialog.dimissDlg(loadingDlg);
                                 PhotoService.this.jsCallback(successCb, returnData);
@@ -293,12 +298,15 @@ public class PhotoService extends ImpPlugin {
                                 for (int i = 0; i < originImagePathList.size(); i++) {
                                     String imagePath = originImagePathList.get(i);
                                     File file = new File(imagePath);
+                                    String thumbnailName = System.currentTimeMillis()+".jpg";
+                                    File thumbnailFile = new Compressor(getFragmentContext()).setMaxHeight(MyAppConfig.UPLOAD_THUMBNAIL_IMG_MAX_SIZE).setMaxWidth(MyAppConfig.UPLOAD_THUMBNAIL_IMG_MAX_SIZE).setQuality(90).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
+                                            .compressToFile(new File(imagePath),thumbnailName);
+                                    String thumbnailFilePath = thumbnailFile.getAbsolutePath();
+                                    byte[] thumbnailFileBytes = FileUtils.file2Bytes(thumbnailFilePath);
+                                    byte[] thumbnailFileBytesBase64 = Base64.encode(thumbnailFileBytes, Base64.NO_WRAP);
+                                    String thumbnailOutput = new String(thumbnailFileBytesBase64);
                                     JSONObject obj = new JSONObject();
-                                    Bitmap bitmap = new Compressor(getFragmentContext()).setMaxHeight(MyAppConfig.UPLOAD_THUMBNAIL_IMG_MAX_SIZE).setMaxWidth(MyAppConfig.UPLOAD_THUMBNAIL_IMG_MAX_SIZE).setQuality(90).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
-                                            .compressToBitmap(new File(imagePath));
-                                    thumbnailBitmaps[i] = bitmap;
-                                    String bitmapBase64 = Bimp.bitmapToBase64(bitmap);
-                                    obj.put("data", bitmapBase64);
+                                    obj.put("data", thumbnailOutput);
                                     obj.put("name", file.getName());
                                     dataArray.put(obj);
                                 }

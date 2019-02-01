@@ -195,7 +195,7 @@ public class LoginBySmsActivity extends BaseActivity {
     private void enterApp() {
         boolean isHasSetShortPassword = PreferencesUtils.getBoolean(LoginBySmsActivity.this, Constant.PREF_LOGIN_HAVE_SET_PASSWORD,false);
         if (!isHasSetShortPassword){
-            IntentUtils.startActivity(LoginBySmsActivity.this,ModifyUserFirstPsdActivity.class,true);
+            IntentUtils.startActivity(LoginBySmsActivity.this,PasswordFirstSettingActivity.class,true);
         }else {
             IntentUtils.startActivity(LoginBySmsActivity.this,IndexActivity.class,true);
         }

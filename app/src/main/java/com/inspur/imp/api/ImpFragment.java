@@ -138,7 +138,7 @@ public class ImpFragment extends ImpBaseFragment {
             setArguments(new Bundle());
         }
         appName = getArguments().getString(Constant.WEB_FRAGMENT_APP_NAME);
-        headerLayout = (RelativeLayout) rootView.findViewById(Res.getWidgetID("header_layout"));
+        headerLayout = (RelativeLayout) rootView.findViewById(Res.getWidgetID("rl_header"));
         loadingLayout = (RelativeLayout) rootView.findViewById(Res.getWidgetID("rl_loading"));
         loadingText = (TextView) rootView.findViewById(Res.getWidgetID("tv_loading"));
         frameLayout = (FrameLayout) rootView.findViewById(Res.getWidgetID("videoContainer"));
@@ -148,7 +148,7 @@ public class ImpFragment extends ImpBaseFragment {
         functionLayout = (RelativeLayout) rootView.findViewById(Res.getWidgetID("function_layout"));
         webFunctionLayout = (LinearLayout) rootView.findViewById(Res.getWidgetID("ll_web_function"));
         if (getActivity().getClass().getName().equals(IndexActivity.class.getName())) {
-            rootView.findViewById(R.id.back_layout).setVisibility(View.GONE);
+            rootView.findViewById(R.id.ibt_back).setVisibility(View.GONE);
             rootView.findViewById(R.id.imp_close_btn).setVisibility(View.GONE);
         }
         showLoadingDlg("");
@@ -200,7 +200,7 @@ public class ImpFragment extends ImpBaseFragment {
     private void initListeners() {
         listener = new ImpFragmentClickListener();
         rootView.findViewById(R.id.imp_change_font_size_btn).setOnClickListener(listener);
-        rootView.findViewById(R.id.back_layout).setOnClickListener(listener);
+        rootView.findViewById(R.id.ibt_back).setOnClickListener(listener);
         rootView.findViewById(R.id.imp_close_btn).setOnClickListener(listener);
         rootView.findViewById(R.id.refresh_text).setOnClickListener(listener);
         rootView.findViewById(R.id.load_error_layout).setOnClickListener(listener);
@@ -226,7 +226,7 @@ public class ImpFragment extends ImpBaseFragment {
                 case R.id.app_imp_crm_font_biggest_btn:
                     setNewsFontSize(MyAppWebConfig.CRM_BIGGEST);
                     break;
-                case R.id.back_layout:
+                case R.id.ibt_back:
                     goBack();
                     break;
                 case R.id.imp_close_btn:

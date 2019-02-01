@@ -602,7 +602,7 @@
     <string name="switch_enterprise">切换企业</string>
     <string name="current_enterprise">当前企业</string>
     <string name="auto_select_enterprise">下次自动帮我选择</string>
-    <string name="close_auto_select_enterprise">关闭自动选择登录企业</string>
+    <string name="close_auto_select_enterprise">下次登录默认使用该企业</string>
     <string name="web_app_auto_rotate">Web应用支持旋转</string>
     <string name="turn_off_success">关闭成功</string>
     <string name="run_background">后台运行</string>
@@ -618,6 +618,7 @@
     <string name="modify_input_confirm_passord">请输入确认密码</string>
     <string name="modify_new_old_same">新密码不能和原密码相同</string>
     <string name="modify_not_same">新密码和确认密码不一致</string>
+    <string name="approval_input_password_valiad">请输入6~64位密码</string>
     <string name="modify_password_invalid">所设密码需包含数字、小写字母、大写字母、特殊符号四类字符其中的三类，并且长度最少为8位</string>
     <string name="modify_password_not_correct">密码填写不正确，请确认</string>
     <string name="modify_password_fail">修改密码失败</string>
@@ -1043,6 +1044,7 @@
     <string name="hwpush_ability_value" translatable="false">successRateAnalytics</string>
 
     <!--安全中心-->
+    <string name="setting_safe_gesture_face">面容ID、手势密码</string>
     <string name="setting_safe_center">账号、设备安全</string>
     <string name="safe_center_gesture">手势密码</string>
     <string name="safe_center_finger_print">指纹</string>

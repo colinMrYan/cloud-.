@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingBottom="8dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="2dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="15dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/tv_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:textColor="#FF000000"
+                    android:textSize="24sp" />
+
+                <com.inspur.emmcloud.widget.CircleTextImageView
+                    android:id="@+id/iv_photo"
+                    android:layout_width="46dp"
+                    android:layout_height="46dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/icon_photo_default" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_mail"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/iv_logo_mail"
+                    android:scaleType="fitXY"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_mine_info_mail"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp" />
+
+                <TextView
+                    android:id="@+id/tv_mail"
+                    android:layout_toRightOf="@id/iv_logo_mail"
+                    android:layout_marginLeft="20dp"
+                    android:layout_centerVertical="true"
+                    android:textSize="14sp"
+                    android:textColor="#666666"
+                    android:singleLine="true"
+                    android:ellipsize="end"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/rl_phone"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/iv_logo_phone"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/ic_mine_info_phone"
+                    android:layout_centerVertical="true"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp" />
+
+                <TextView
+                    android:id="@+id/tv_phone"
+                    android:layout_toRightOf="@id/iv_logo_phone"
+                    android:layout_marginLeft="20dp"
+                    android:layout_centerVertical="true"
+                    android:textSize="14sp"
+                    android:textColor="#666666"
+                    android:singleLine="true"
+                    android:ellipsize="end"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </RelativeLayout>
+            <RelativeLayout
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:id="@+id/rl_job_number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/iv_logo_job_number"
+                    android:src="@drawable/ic_mine_info_job_number"
+                    android:scaleType="fitXY"
+                    android:layout_centerVertical="true"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp" />
+
+                <TextView
+                    android:id="@+id/tv_job_number"
+                    android:layout_toRightOf="@id/iv_logo_job_number"
+                    android:layout_marginLeft="20dp"
+                    android:layout_centerVertical="true"
+                    android:textSize="14sp"
+                    android:textColor="#666666"
+                    android:singleLine="true"
+                    android:ellipsize="end"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </RelativeLayout>
+            <RelativeLayout
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:id="@+id/rl_company"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/iv_logo_company"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/ic_mine_info_company"
+                    android:layout_centerVertical="true"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp" />
+
+                <TextView
+                    android:id="@+id/tv_company"
+                    android:layout_toRightOf="@id/iv_logo_company"
+                    android:layout_marginLeft="20dp"
+                    android:layout_centerVertical="true"
+                    android:textSize="14sp"
+                    android:textColor="#666666"
+                    android:singleLine="true"
+                    android:ellipsize="end"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/rl_org"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/iv_logo_org"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/ic_mine_info_org"
+                    android:layout_centerVertical="true"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp" />
+
+                <TextView
+                    android:id="@+id/tv_org"
+                    android:layout_toRightOf="@id/iv_logo_org"
+                    android:layout_marginLeft="20dp"
+                    android:layout_centerVertical="true"
+                    android:textSize="14sp"
+                    android:textColor="#666666"
+                    android:singleLine="true"
+                    android:ellipsize="end"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </RelativeLayout>
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+</RelativeLayout>
+
+
+    <!--<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"--><!--android:layout_width="fill_parent"--><!--android:layout_height="wrap_content"--><!--android:background="@drawable/text_layout_selector">-->
+
+    <!--<com.inspur.emmcloud.widget.CircleTextImageView--><!--android:id="@+id/iv_photo"--><!--android:layout_width="60dp"--><!--android:layout_height="60dp"--><!--android:layout_centerVertical="true"--><!--android:layout_marginBottom="16dp"--><!--android:layout_marginLeft="12dp"--><!--android:layout_marginRight="16dp"--><!--android:layout_marginTop="16dp"--><!--android:src="@drawable/icon_photo_default" />-->
+
+    <!--<LinearLayout--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content"--><!--android:layout_centerVertical="true"--><!--android:layout_marginLeft="5dp"--><!--android:layout_toLeftOf="@+id/iv_arrow"--><!--android:layout_toRightOf="@id/iv_photo"--><!--android:orientation="vertical">-->
+
+    <!--<TextView--><!--android:id="@+id/tv_name"--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content"--><!--android:textSize="@dimen/content_title_textsize" />-->
+
+    <!--<TextView--><!--android:id="@+id/tv_enterprise"--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content"--><!--android:paddingTop="5dp"--><!--android:textColor="#4f89a2" />--><!--</LinearLayout>-->
+
+
+    <!--<ImageView--><!--android:id="@+id/iv_arrow"--><!--style="@style/arrow_right"--><!--android:layout_alignParentRight="true"--><!--android:layout_centerVertical="true"--><!--android:layout_marginLeft="10dp"--><!--android:layout_marginRight="10dp"--><!--android:src="@drawable/icon_arrow_right" />--><!--</RelativeLayout>-->
