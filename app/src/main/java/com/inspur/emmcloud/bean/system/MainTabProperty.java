@@ -24,6 +24,7 @@ public class MainTabProperty {
     private boolean isHaveNavbar = false;
     private List<MainTabMenu> mainTabMenuList = new ArrayList<>();
     private List<MineLayoutItemGroup> mineLayoutItemGroupList = new ArrayList<>();
+    private boolean isHasExtendList = true;
 
     public MainTabProperty(String response) {
         canContact = JSONUtils.getBoolean(response, "canOpenContact", true);
@@ -33,11 +34,20 @@ public class MainTabProperty {
         for (int i = 0; i < (jsonArray.length()>2?2:jsonArray.length()); i++) {
             mainTabMenuList.add(new MainTabMenu(JSONUtils.getJSONObject(jsonArray,i,new JSONObject())));
         }
-        JSONArray mineLayoutItemGroupArray = JSONUtils.getJSONArray(response,"tablist",new JSONArray());
-        for (int i = 0; i < mineLayoutItemGroupArray.length(); i++) {
-            JSONArray mineLayoutItemArray = JSONUtils.getJSONArray(mineLayoutItemGroupArray,i,new JSONArray());
+        JSONArray mineLayoutItemGroupArrayExtend = JSONUtils.getJSONArray(response,"extendList",new JSONArray());
+        for (int i = 0; i < mineLayoutItemGroupArrayExtend.length(); i++) {
+            JSONArray mineLayoutItemArray = JSONUtils.getJSONArray(mineLayoutItemGroupArrayExtend,i,new JSONArray());
             mineLayoutItemGroupList.add(new MineLayoutItemGroup(mineLayoutItemArray));
-
+        }
+        if (mineLayoutItemGroupList.size() == 0){
+            isHasExtendList= false;
+            JSONArray mineLayoutItemGroupArray = JSONUtils.getJSONArray(response,"tablist",new JSONArray());
+            for (int i = 0; i < mineLayoutItemGroupArray.length(); i++) {
+                JSONArray mineLayoutItemArray = JSONUtils.getJSONArray(mineLayoutItemGroupArray,i,new JSONArray());
+                mineLayoutItemGroupList.add(new MineLayoutItemGroup(mineLayoutItemArray));
+            }
+        }else {
+            isHasExtendList = true;
         }
     }
 
@@ -79,5 +89,13 @@ public class MainTabProperty {
 
     public void setMineLayoutItemGroupList(List<MineLayoutItemGroup> mineLayoutItemGroupList) {
         this.mineLayoutItemGroupList = mineLayoutItemGroupList;
+    }
+
+    public boolean isHasExtendList() {
+        return isHasExtendList;
+    }
+
+    public void setHasExtendList(boolean hasExtendList) {
+        isHasExtendList = hasExtendList;
     }
 }

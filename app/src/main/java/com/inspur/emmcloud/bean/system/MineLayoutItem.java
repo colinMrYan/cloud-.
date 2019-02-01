@@ -1,6 +1,10 @@
 package com.inspur.emmcloud.bean.system;
 
+import android.content.res.Configuration;
+
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.StringUtils;
 
 import org.json.JSONObject;
 
@@ -21,6 +25,24 @@ public class MineLayoutItem {
             ico=JSONUtils.getString(object,"ico","");
             uri=JSONUtils.getString(object,"uri","");
             title=JSONUtils.getString(object,"title","");
+            if (!StringUtils.isBlank(title)){
+                Configuration config = MyApplication.getInstance().getResources().getConfiguration();
+                String language = config.locale.getLanguage();
+                language = language.toLowerCase();
+                switch (language){
+                    case "zh-Hant":
+                        title =  JSONUtils.getString(title,"zh-Hans","");
+                        break;
+                    case  "en-US":
+                    case  "en":
+                        title =  JSONUtils.getString(title,"en-US","");
+                        break;
+                    default:
+                        title =  JSONUtils.getString(title,"zh-Hans","");
+                        break;
+
+                }
+            }
         }else {
             id=content;
         }
@@ -69,7 +91,4 @@ public class MineLayoutItem {
         this.title = title;
     }
 
-//    public String getTitleByLanguage(){
-//        String  TitleByLanguage = JSONUtils.getString(title,)
-//    }
 }

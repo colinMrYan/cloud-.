@@ -37,6 +37,7 @@ import com.inspur.emmcloud.util.privates.AppTabUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
+import com.inspur.emmcloud.util.privates.UriUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
@@ -78,16 +79,46 @@ public class MoreFragment extends Fragment {
             MineLayoutItemGroup mineLayoutItemGroupPersonnalInfo = new MineLayoutItemGroup();
             mineLayoutItemGroupPersonnalInfo.getMineLayoutItemList().add(new MineLayoutItem("my_personalInfo_function","","",""));
             MineLayoutItemGroup mineLayoutItemGroupSetting = new MineLayoutItemGroup();
-            mineLayoutItemGroupSetting.getMineLayoutItemList().add(new MineLayoutItem("my_setting_function","","",""));
+            mineLayoutItemGroupSetting.getMineLayoutItemList().add(new MineLayoutItem("my_setting_function","personcenter_setting","",getString(R.string.settings)));
             MineLayoutItemGroup mineLayoutItemGroupCardbox = new MineLayoutItemGroup();
-            mineLayoutItemGroupCardbox.getMineLayoutItemList().add(new MineLayoutItem("my_cardbox_function","","",""));
+            mineLayoutItemGroupCardbox.getMineLayoutItemList().add(new MineLayoutItem("my_cardbox_function","personcenter_cardbox","",getString(R.string.wallet)));
             MineLayoutItemGroup mineLayoutItemGroupAboutUs = new MineLayoutItemGroup();
-            mineLayoutItemGroupAboutUs.getMineLayoutItemList().add(new MineLayoutItem("my_aboutUs_function","","",""));
+            mineLayoutItemGroupAboutUs.getMineLayoutItemList().add(new MineLayoutItem("my_aboutUs_function","personcenter_aboutus","",getString(R.string.about_text)));
             mineLayoutItemGroupList.add(mineLayoutItemGroupPersonnalInfo);
             mineLayoutItemGroupList.add(mineLayoutItemGroupSetting);
             mineLayoutItemGroupList.add(mineLayoutItemGroupCardbox);
             mineLayoutItemGroupList.add(mineLayoutItemGroupAboutUs);
         }
+        if (!mainTabProperty.isHasExtendList()) {
+            for (MineLayoutItemGroup mineLayoutItemGroup:mineLayoutItemGroupList){
+                for (MineLayoutItem mineLayoutItem:mineLayoutItemGroup.getMineLayoutItemList()){
+                    switch (mineLayoutItem.getId()){
+                        case "my_setting_function":
+                            mineLayoutItem.setIco("personcenter_setting");
+                            mineLayoutItem.setTitle(getString(R.string.settings));
+                            break;
+                        case "my_cardbox_function":
+                            mineLayoutItem.setIco("personcenter_cardbox");
+                            mineLayoutItem.setTitle(getString(R.string.wallet));
+                            break;
+                        case "my_feedback_function":
+                            mineLayoutItem.setIco("personcenter_feedback");
+                            mineLayoutItem.setTitle(getString(R.string.more_feedback));
+                            break;
+                        case "my_customerService_function":
+                            mineLayoutItem.setIco("personcenter_customerservice");
+                            mineLayoutItem.setTitle(getString(R.string.app_customer));
+                            break;
+                        case "my_aboutUs_function":
+                            mineLayoutItem.setIco("personcenter_aboutus");
+                            mineLayoutItem.setTitle(getString(R.string.about_text));
+                            break;
+                    }
+                }
+            }
+        }
+
+
     }
 
 
@@ -113,7 +144,7 @@ public class MoreFragment extends Fragment {
         if (!StringUtils.isBlank(appTabs)) {
             ((TextView) rootView.findViewById(R.id.header_text)).setText(AppTabUtils.getTabTitle(getActivity(), getClass().getSimpleName()));
         }
-        ExpandableListView expandListView = (ExpandableListView) rootView.findViewById(R.id.expandable_list);
+        ExpandableListView expandListView = rootView.findViewById(R.id.expandable_list);
         expandListView.setGroupIndicator(null);
         expandListView.setVerticalScrollBarEnabled(false);
         expandListView.setHeaderDividersEnabled(false);
@@ -121,56 +152,70 @@ public class MoreFragment extends Fragment {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
                 MineLayoutItem layoutItem = mineLayoutItemGroupList.get(groupPosition).getMineLayoutItemList().get(childPosition);
-                switch (layoutItem.getId()){
-                    case "my_personalInfo_function":
-                        Intent intent = new Intent();
-                        intent.setClass(getActivity(), MyInfoActivity.class);
-                        startActivityForResult(intent, REQUEST_CODE_UPDATE_USER_PHOTO);
-                        recordUserClick("profile");
-                        break;
-                    case "my_setting_function":
-                        IntentUtils.startActivity(getActivity(), SettingActivity.class);
-                        recordUserClick("setting");
-                        break;
-                    case "my_cardbox_function":
-                        IntentUtils.startActivity(getActivity(), CardPackageActivity.class);
-                        recordUserClick("wallet");
-                        break;
-                    case "my_aboutUs_function":
-                        IntentUtils.startActivity(getActivity(),
-                                AboutActivity.class);
-                        recordUserClick("about");
-                        break;
-                    case "my_feedback_function":
-                        IntentUtils.startActivity(getActivity(), FeedBackActivity.class);
-                        recordUserClick("feedback");
-                        break;
-                    case "my_customerService_function":
-                        if (MyApplication.getInstance().isV0VersionChat()){
-                            Channel customerChannel = ChannelCacheUtils.getCustomerChannel(MyApplication.getInstance());
-                            if (customerChannel != null){
-                                Bundle bundle = new Bundle();
-                                bundle.putString("cid", customerChannel.getCid());
-                                //为区分来自云+客服添加一个from值，在ChannelActivity里使用
-                                bundle.putString("from", "customer");
-                                IntentUtils.startActivity(getActivity(),ChannelV0Activity.class, bundle);
+                String uri = layoutItem.getUri();
+                if (StringUtils.isBlank(uri)){
+                    switch (layoutItem.getId()){
+                        case "my_personalInfo_function":
+                            Intent intent = new Intent();
+                            intent.setClass(getActivity(), MyInfoActivity.class);
+                            startActivityForResult(intent, REQUEST_CODE_UPDATE_USER_PHOTO);
+                            recordUserClick("profile");
+                            break;
+                        case "my_setting_function":
+                            IntentUtils.startActivity(getActivity(), SettingActivity.class);
+                            recordUserClick("setting");
+                            break;
+                        case "my_cardbox_function":
+                            IntentUtils.startActivity(getActivity(), CardPackageActivity.class);
+                            recordUserClick("wallet");
+                            break;
+                        case "my_aboutUs_function":
+                            IntentUtils.startActivity(getActivity(),
+                                    AboutActivity.class);
+                            recordUserClick("about");
+                            break;
+                        case "my_feedback_function":
+                            IntentUtils.startActivity(getActivity(), FeedBackActivity.class);
+                            recordUserClick("feedback");
+                            break;
+                        case "my_customerService_function":
+                            if (MyApplication.getInstance().isV0VersionChat()){
+                                Channel customerChannel = ChannelCacheUtils.getCustomerChannel(MyApplication.getInstance());
+                                if (customerChannel != null){
+                                    Bundle bundle = new Bundle();
+                                    bundle.putString("cid", customerChannel.getCid());
+                                    //为区分来自云+客服添加一个from值，在ChannelActivity里使用
+                                    bundle.putString("from", "customer");
+                                    IntentUtils.startActivity(getActivity(),ChannelV0Activity.class, bundle);
+                                }
+                            }else if(MyApplication.getInstance().isV1xVersionChat()){
+                                Conversation conversation = ConversationCacheUtils.getCustomerConversation(MyApplication.getInstance());
+                                if (conversation != null){
+                                    Bundle bundle = new Bundle();
+                                    bundle.putSerializable(ConversationActivity.EXTRA_CONVERSATION, conversation);
+                                    bundle.putString("from", "customer");
+                                    IntentUtils.startActivity(getActivity(),ConversationActivity.class, bundle);
+                                }
                             }
-                        }else if(MyApplication.getInstance().isV1xVersionChat()){
-                            Conversation conversation = ConversationCacheUtils.getCustomerConversation(MyApplication.getInstance());
-                            if (conversation != null){
-                                Bundle bundle = new Bundle();
-                                bundle.putSerializable(ConversationActivity.EXTRA_CONVERSATION, conversation);
-                                bundle.putString("from", "customer");
-                                IntentUtils.startActivity(getActivity(),ConversationActivity.class, bundle);
-                            }
+
+                            recordUserClick("customservice");
+                            break;
+                        default:
+                            break;
+                    }
+                }else {
+                    if (uri.startsWith("http")){
+                        UriUtils.openUrl(getActivity(),uri);
+                    }else {
+                        try {
+                            Intent intent = Intent.parseUri(uri, Intent.URI_INTENT_SCHEME);
+                            intent.setComponent(null);
+                            getContext().startActivity(intent);
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
-
-                        recordUserClick("customservice");
-                        break;
-                    default:
-                        break;
+                    }
                 }
-
 
                 return false;
             }
@@ -257,30 +302,32 @@ public class MoreFragment extends Fragment {
         private void setViewByLayoutItem(View convertView,MineLayoutItem layoutItem){
             CircleTextImageView iconImg = convertView.findViewById(R.id.iv_icon);
             TextView titleText = convertView.findViewById(R.id.tv_name_tips);
-            switch (layoutItem.getId()){
-                case "my_setting_function":
-                    iconImg.setImageResource(R.drawable.icon_set);
-                    titleText.setText(R.string.settings);
-                    break;
-                case "my_cardbox_function":
-                    iconImg.setImageResource(R.drawable.ic_wallet);
-                    titleText.setText(R.string.wallet);
-                    break;
-                case "my_aboutUs_function":
-                    ImageDisplayUtils.getInstance().displayImage(iconImg,"drawable://"+ AppUtils.getAppIconRes(MyApplication.getInstance()),R.drawable.ic_launcher);
-                    titleText.setText(R.string.about_text);
-                    break;
-                case "my_feedback_function":
-                    iconImg.setImageResource(R.drawable.icon_help);
-                    titleText.setText(R.string.more_feedback);
-                    break;
-                case "my_customerService_function":
-                    iconImg.setImageResource(R.drawable.ic_customer);
-                    titleText.setText(R.string.app_customer);
-                    break;
-                default:
-                    break;
+            titleText.setText(layoutItem.getTitle());
+            String iconUrl = getIconUrl(layoutItem.getIco());
+            ImageDisplayUtils.getInstance().displayImage(iconImg,iconUrl);
+        }
+
+        private String getIconUrl(String icon){
+            if (!icon.startsWith("http")){
+                switch (icon){
+                    case "personcenter_setting":
+                        icon="drawable://"+R.drawable.icon_set;
+                        break;
+                    case "personcenter_cardbox":
+                        icon="drawable://"+R.drawable.ic_wallet;
+                        break;
+                    case "personcenter_feedback":
+                        icon="drawable://"+R.drawable.icon_help;
+                        break;
+                    case "personcenter_customerservice":
+                        icon="drawable://"+R.drawable.ic_customer;
+                        break;
+                    case "personcenter_aboutus":
+                        icon="drawable://"+AppUtils.getAppIconRes(MyApplication.getInstance());
+                        break;
+                }
             }
+            return icon;
         }
 
 
