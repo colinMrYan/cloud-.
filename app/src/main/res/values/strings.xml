@@ -1197,4 +1197,7 @@
     <string name="bracket_with_word">(%1$s)</string>
 
     <string name="welcome_to">欢迎使用</string>
+
+    <string name="cloud_plus_update">%1$s更新</string>
+
 </resources>
