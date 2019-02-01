@@ -8,6 +8,7 @@ import android.os.Message;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.MainActivity;
@@ -60,13 +61,15 @@ public class UpgradeUtils extends APIInterfaceInstance {
      * 记录进度条数量*
      */
     private int progress;
-    private MyDialog mDownloadDialog;
+    private MyDialog progressDownloadDialog;
     private TextView ratioText;
     private String upgradeMsg;
     private String downloadPercent;
     private LoadingDialog loadingDlg;
     private Cancelable cancelable;
     private boolean isManualCheck;
+    private ProgressBar downloadProgressBar;
+    private TextView percentText;
 
     //isManualCheck 是否在关于中手动检查更新
     public UpgradeUtils(Context context, Handler handler, boolean isManualCheck) {
@@ -92,14 +95,21 @@ public class UpgradeUtils extends APIInterfaceInstance {
                         break;
                     case DOWNLOAD:
                         downloadPercent = getPercent(progress);
-                        String text = downloadPercent + "," + "  "
-                                + setFormat(downloadSize) + "/"
+                        String text = setFormat(downloadSize) + "/"
                                 + setFormat(totalSize);
-                        ratioText.setText(text);
+                        if(ratioText != null){
+                            ratioText.setText(text);
+                        }
+                        if(downloadProgressBar != null){
+                            downloadProgressBar.setProgress(progress);
+                        }
+                        if(percentText != null){
+                            percentText.setText(downloadPercent);
+                        }
                         break;
                     case DOWNLOAD_FINISH:
-                        if (mDownloadDialog != null && mDownloadDialog.isShowing()) {
-                            mDownloadDialog.dismiss();
+                        if (progressDownloadDialog != null && progressDownloadDialog.isShowing()) {
+                            progressDownloadDialog.dismiss();
                         }
 //                        AppUtils.installApk(context,DOWNLOAD_PATH, "update.apk");
                         FileUtils.openFile(context,DOWNLOAD_PATH + "update.apk");
@@ -109,8 +119,8 @@ public class UpgradeUtils extends APIInterfaceInstance {
                         break;
 
                     case DOWNLOAD_FAIL:
-                        if (mDownloadDialog != null && mDownloadDialog.isShowing()) {
-                            mDownloadDialog.dismiss();
+                        if (progressDownloadDialog != null && progressDownloadDialog.isShowing()) {
+                            progressDownloadDialog.dismiss();
                         }
                         ToastUtils.show(context,
                                 context.getString(R.string.update_fail));
@@ -123,7 +133,7 @@ public class UpgradeUtils extends APIInterfaceInstance {
                         }
                         break;
                     case SHOW_PEOGRESS_LAODING_DLG:
-                        mDownloadDialog.show();
+                        progressDownloadDialog.show();
                         break;
 
                     default:
@@ -255,16 +265,16 @@ public class UpgradeUtils extends APIInterfaceInstance {
 
     private void showDownloadDialog() {
         cancelUpdate = false;
-        mDownloadDialog = new MyDialog(context,
-                R.layout.dialog_app_update_progress);
-        mDownloadDialog.setCancelable(false);
-        ratioText = (TextView) mDownloadDialog.findViewById(R.id.ratio_text);
-        Button cancelBt = (Button) mDownloadDialog.findViewById(R.id.cancel_bt);
-        cancelBt.setOnClickListener(new View.OnClickListener() {
-
+        progressDownloadDialog = new MyDialog(context, R.layout.dialog_down_progress_one_button);
+        progressDownloadDialog.setDimAmount(0.2f);
+        progressDownloadDialog.setCancelable(false);
+        progressDownloadDialog.setCanceledOnTouchOutside(false);
+        ((TextView) progressDownloadDialog.findViewById(R.id.tv_permission_dialog_title)).
+                setText(context.getString(R.string.cloud_plus_update, AppUtils.getAppName(context)));
+        progressDownloadDialog.findViewById(R.id.tv_cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mDownloadDialog.dismiss();
+                progressDownloadDialog.dismiss();
                 if (cancelable != null) {
                     cancelable.cancel();
                 }
@@ -277,6 +287,9 @@ public class UpgradeUtils extends APIInterfaceInstance {
                 }
             }
         });
+        percentText = progressDownloadDialog.findViewById(R.id.tv_num_percent);
+        ratioText = progressDownloadDialog.findViewById(R.id.tv_num_progress);
+        downloadProgressBar = progressDownloadDialog.findViewById(R.id.progress_bar_apk_download);
         if (context != null) {
             // 下载文件
             downloadApk();
@@ -325,8 +338,8 @@ public class UpgradeUtils extends APIInterfaceInstance {
                             downloadSize = arg1;
                             progress = (int) (((float) arg1 / arg0) * 100);
                             // 更新进度
-                            if (mDownloadDialog != null
-                                    && mDownloadDialog.isShowing()) {
+                            if (progressDownloadDialog != null
+                                    && progressDownloadDialog.isShowing()) {
                                 upgradeHandler.sendEmptyMessage(DOWNLOAD);
                             }
                         }
