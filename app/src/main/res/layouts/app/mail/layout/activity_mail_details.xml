@@ -16,14 +16,13 @@
 
             <ImageButton
                 android:id="@+id/ibt_back"
-                android:layout_width="40dp"
-                android:layout_height="match_parent"
+                android:layout_width="44dp"
+                android:padding="11dp"
+                android:layout_height="44dp"
                 android:layout_centerVertical="true"
                 android:onClick="onClick"
-                android:paddingLeft="15dp"
-                android:paddingRight="13dp"
-                android:scaleType="centerInside"
-                android:src="@drawable/selector_back_btn" />
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_back_btn_black" />
 
 
             <LinearLayout

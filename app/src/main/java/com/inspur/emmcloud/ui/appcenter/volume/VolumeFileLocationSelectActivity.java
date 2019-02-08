@@ -108,7 +108,7 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
 
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.back_layout:
+            case R.id.ibt_back:
                 finish();
                 break;
             case R.id.new_forder_img:
