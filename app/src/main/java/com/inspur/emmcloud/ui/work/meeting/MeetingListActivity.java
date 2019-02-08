@@ -208,7 +208,7 @@ public class MeetingListActivity extends BaseActivity implements
     public void onClick(View v) {
         Intent intent = new Intent();
         switch (v.getId()) {
-            case R.id.back_layout:
+            case R.id.ibt_back:
                 onBackPressed();
                 break;
             case R.id.meeting_list_add_img:

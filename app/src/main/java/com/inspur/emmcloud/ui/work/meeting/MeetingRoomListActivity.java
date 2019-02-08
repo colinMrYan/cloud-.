@@ -252,7 +252,7 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
 	public void onClick(View v) {
 		Intent intent = new Intent();
 		switch (v.getId()) {
-		case R.id.back_layout:
+		case R.id.ibt_back:
 			finish();
 			break;
 		case R.id.meeting_room_office_img:

@@ -68,7 +68,7 @@ public class CalSingleMonthActivity extends BaseActivity implements SimpleMonthV
 	public void onClick(View v) {
 		Intent intent = new Intent();
 		switch (v.getId()) {
-		case R.id.back_layout:
+		case R.id.ibt_back:
 			finish();
 			break;
 

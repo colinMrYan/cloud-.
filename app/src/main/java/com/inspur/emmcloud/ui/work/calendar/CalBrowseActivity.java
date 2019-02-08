@@ -40,7 +40,7 @@ public class CalBrowseActivity extends BaseActivity implements
 	public void onClick(View v) {
 		Intent intent = new Intent();
 		switch (v.getId()) {
-		case R.id.back_layout:
+		case R.id.ibt_back:
 			finish();
 			break;
 

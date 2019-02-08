@@ -348,7 +348,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
     private void initView() {
         // TODO Auto-generated method stub
         if (getActivity().getClass().getSimpleName().equals(IndexActivity.class.getSimpleName())) {
-            rootView.findViewById(R.id.back_layout).setVisibility(View.GONE);
+            rootView.findViewById(R.id.ibt_back).setVisibility(View.GONE);
         }
         ((TextView) rootView.findViewById(R.id.header_text)).setText(title);
         originAllLayout = (RelativeLayout) rootView.findViewById(R.id.origin_all_layout);
@@ -386,7 +386,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
      */
     private void setOnClickListeners() {
         ContactSearchClickListener contactSearchClickListener = new ContactSearchClickListener();
-        rootView.findViewById(R.id.back_layout).setOnClickListener(contactSearchClickListener);
+        rootView.findViewById(R.id.ibt_back).setOnClickListener(contactSearchClickListener);
         rootView.findViewById(R.id.ok_text).setOnClickListener(contactSearchClickListener);
         rootView.findViewById(R.id.struct_layout).setOnClickListener(contactSearchClickListener);
         rootView.findViewById(R.id.channel_group_layout).setOnClickListener(contactSearchClickListener);
@@ -398,7 +398,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
-                case R.id.back_layout:
+                case R.id.ibt_back:
                     InputMethodUtils.hide(getActivity());
                     getActivity().finish();
                     break;
