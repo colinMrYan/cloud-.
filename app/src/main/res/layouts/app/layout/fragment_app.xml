@@ -9,80 +9,19 @@
         android:layout_height="@dimen/header_height"
         android:background="@drawable/shape_header_bg">
 
-        <RelativeLayout
-            android:id="@+id/appcenter_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="28dp"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="7dp"
-            android:background="@drawable/shape_appcenter_btn"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-           >
-
-            <ImageView
-                android:id="@+id/app_center_img"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_centerVertical="true"
-                android:scaleType="fitXY"
-                android:src="@drawable/icon_app_store" />
-
-            <TextView
-                android:id="@+id/app_center_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_toRightOf="@id/app_center_img"
-                android:layout_marginLeft="5dp"
-                android:text="@string/app_center"
-                android:textColor="?attr/header_text_color"
-                android:textSize="13dp" />
-
-        </RelativeLayout>
-
         <TextView
-            android:id="@+id/header_text"
+            android:id="@+id/tv_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="15dp"
             android:layout_centerVertical="true"
-            android:text="@string/application"
+            android:text="@string/app_center"
             android:textColor="?attr/header_text_color"
-            android:textSize="@dimen/header_textsize" />
-
-        <ImageView
-            android:id="@+id/modify_app_btn"
-            android:layout_width="47dp"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:clickable="true"
-            android:paddingLeft="12dp"
-            android:paddingRight="15dp"
-            android:scaleType="centerInside"
-            android:src="@drawable/selector_before_edit_app_btn"
-            android:visibility="gone"/>
-
-        <ImageView
-            android:id="@+id/app_edit_btn"
-            android:layout_width="32dp"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:adjustViewBounds="true"
-            android:clickable="true"
-            android:onClick="onClick"
-            android:layout_marginRight="22dp"
-            android:paddingBottom="13dp"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            android:paddingTop="13dp"
-            android:scaleType="centerInside"
-            android:src="@drawable/ic_config" />
+            android:textSize="24sp" />
 
         <Button
-            android:id="@+id/app_edit_finish"
+            android:id="@+id/bt_sort_finish"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
@@ -93,9 +32,35 @@
             android:paddingLeft="12dp"
             android:paddingRight="15dp"
             android:text="@string/finish"
-            android:textColor="#FFFFFF"
+            android:textColor="?attr/header_text_color"
             android:textSize="@dimen/content_normal_textsize"
             android:visibility="gone" />
+
+        <ImageButton
+            android:id="@+id/ibt_appcenter_enter"
+            android:layout_width="32dp"
+            android:layout_height="match_parent"
+            android:paddingRight="5dp"
+            android:paddingLeft="5dp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="8dp"
+            android:layout_toLeftOf="@+id/ibt_appcenter_config"
+            android:clickable="true"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_appcenter_enter" />
+
+        <ImageButton
+            android:id="@+id/ibt_appcenter_config"
+            android:layout_width="32dp"
+            android:layout_height="match_parent"
+            android:paddingRight="5dp"
+            android:paddingLeft="5dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="16dp"
+            android:clickable="true"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_appcenter_config" />
     </RelativeLayout>
 
 

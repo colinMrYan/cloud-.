@@ -3,9 +3,9 @@
 
     <stroke
         android:width="1px"
-        android:color="#a5a8aa" />
+        android:color="#DEDFE0" />
  <!-- 边框颜色 -->
-    <solid android:color="#fafafa" />
+    <solid android:color="#FCFCFC" />
  <!-- 填充色 -->
 
 </shape>
