@@ -10,28 +10,17 @@
         android:layout_height="@dimen/header_height"
         android:background="@drawable/shape_header_bg">
 
-        <RelativeLayout
-            android:id="@+id/back_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+        <ImageButton
+            android:id="@+id/ibt_back"
+            android:layout_width="44dp"
+            android:padding="11dp"
+            android:layout_height="44dp"
             android:layout_centerVertical="true"
             android:onClick="onClick"
-            android:paddingLeft="12dp"
-            android:paddingRight="12dp">
-
-            <ImageView
-                android:id="@+id/back_btn"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_centerVertical="true"
-                android:background="@null"
-                android:paddingRight="5dp"
-                android:scaleType="centerInside"
-                android:src="@drawable/selector_back_btn" />
-        </RelativeLayout>
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_back_btn_black" />
 
         <TextView
-            android:id="@+id/header_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
@@ -56,14 +45,12 @@
                 android:id="@+id/device_model_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
                 android:background="@color/white"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:paddingBottom="10dp"
-                android:paddingLeft="20dp"
                 android:paddingTop="10dp"
-                android:text="iphone 6 Plus"
+                android:paddingBottom="10dp"
+                android:paddingLeft="16dp"
                 android:textColor="#333333"
                 android:textSize="17sp" />
 
@@ -73,7 +60,7 @@
                 android:layout_marginTop="10dp"
                 android:background="@color/white"
                 android:orientation="vertical"
-                android:paddingLeft="20dp">
+                android:paddingLeft="16dp">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -154,7 +141,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingBottom="10dp"
-                android:paddingLeft="15dp"
+                android:paddingLeft="16dp"
                 android:paddingTop="10dp"
                 android:text="@string/device_history_use"
                 android:textColor="#333333"
@@ -172,17 +159,18 @@
                 android:paddingLeft="20dp"></com.inspur.emmcloud.widget.ScrollViewWithListView>
 
             <Button
-                android:id="@+id/device_unbound_btn"
+                android:id="@+id/bt_device_unbound"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="20dp"
                 android:background="@color/white"
                 android:gravity="center"
                 android:onClick="onClick"
-                android:padding="10dp"
+                android:paddingTop="11dp"
+                android:paddingBottom="11dp"
                 android:text="@string/unbind_this_device"
-                android:layout_marginBottom="50dp"
-                android:textColor="#ff3c3c"
+                android:textSize="16sp"
+                android:textColor="#ff0000"
                 android:visibility="gone" />
 
         </LinearLayout>

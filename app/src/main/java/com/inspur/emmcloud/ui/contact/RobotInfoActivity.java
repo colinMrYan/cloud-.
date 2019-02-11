@@ -133,7 +133,7 @@ public class RobotInfoActivity extends BaseActivity implements OnStateChangedLis
 
 	public void onClick(View v){
 		switch (v.getId()) {
-		case R.id.back_layout:
+		case R.id.ibt_back:
 			finish();
 			break;
 		default:

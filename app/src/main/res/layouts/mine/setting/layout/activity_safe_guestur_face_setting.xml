@@ -51,7 +51,7 @@
                 android:layout_centerVertical="true"
                 android:paddingBottom="11dp"
                 android:paddingTop="11dp"
-                android:text="@string/web_app_auto_rotate"
+                android:text="@string/switch_gesture_unlock"
                 android:textSize="16sp" />
 
             <com.inspur.emmcloud.widget.SwitchView
@@ -73,6 +73,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/text_layout_selector"
+            android:layout_marginBottom="10dp"
             android:paddingLeft="16dp">
 
             <TextView
@@ -82,7 +83,7 @@
                 android:layout_centerVertical="true"
                 android:paddingBottom="11dp"
                 android:paddingTop="11dp"
-                android:text="@string/run_background"
+                android:text="@string/face_enter"
                 android:textSize="16sp" />
 
             <com.inspur.emmcloud.widget.SwitchView
@@ -105,7 +106,6 @@
             android:id="@+id/rl_setting_safe_reset_guesture"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:background="@drawable/text_layout_selector"
             android:onClick="onClick"
             android:paddingLeft="16dp"

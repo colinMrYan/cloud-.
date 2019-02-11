@@ -12,6 +12,7 @@ import android.os.Message;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -65,6 +66,7 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
     private Handler handler;
     private long activitySplashShowTime = 0;
     private Timer timer;
+    private ImageButton skipImageBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +81,7 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
             requestWindowFeature(Window.FEATURE_NO_TITLE);//没有标题
             this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
                 //全屏显示
                 WindowManager.LayoutParams lp = getWindow().getAttributes();
                 lp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
@@ -86,10 +89,9 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
             }
         }
         setContentView(R.layout.activity_main);
+        skipImageBtn = findViewById(R.id.ibt_skip);
         checkNecessaryPermission();
-//        Bundle bundle = new Bundle();
-//        bundle.putString(ConversationGroupInfoActivity.EXTRA_CID,"2");
-//        IntentUtils.startActivity(this, ConversationGroupInfoActivity.class,bundle,true);
+
     }
 
     private void checkNecessaryPermission() {
@@ -215,8 +217,7 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
 
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.splash_skip_layout:
-            case R.id.splash_skip_btn:
+            case R.id.ibt_skip:
                 if (timer != null) {
                     timer.cancel();
                     startApp();
@@ -257,13 +258,6 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
         overridePendingTransition(0, 0);
     }
 
-    /**
-     * 显示跳过按钮
-     */
-    public void showSkipButton() {
-        (findViewById(R.id.splash_skip_btn)).setVisibility(View.VISIBLE);
-        (findViewById(R.id.splash_skip_layout)).setVisibility(View.VISIBLE);
-    }
 
     /**
      * 获取登录需要的一些信息
@@ -306,13 +300,14 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override
                     public void run() {
+                        skipImageBtn.setVisibility(View.INVISIBLE);
                         startApp();
                     }
                 });
             }
         };
         if (new SplashPageUtils(MainActivity.this).checkIfShowSplashPage() && (leftTime > 0)) {
-            showSkipButton();
+            skipImageBtn.setVisibility(View.VISIBLE);
             timer = new Timer();
             timer.schedule(task, leftTime);
         } else {

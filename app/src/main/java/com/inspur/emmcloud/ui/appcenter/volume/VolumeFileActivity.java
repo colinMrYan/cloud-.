@@ -190,7 +190,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
 
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.back_layout:
+            case R.id.ibt_back:
                 onBackPressed();
                 break;
             case R.id.new_forder_img:

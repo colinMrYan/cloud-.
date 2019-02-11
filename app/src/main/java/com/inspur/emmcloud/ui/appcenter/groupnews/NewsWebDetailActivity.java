@@ -600,7 +600,7 @@ public class NewsWebDetailActivity extends BaseActivity {
 
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.back_layout:
+            case R.id.ibt_back:
                 if (webView.canGoBack()) {
                     webView.goBack();// 返回上一页面
                 } else {
