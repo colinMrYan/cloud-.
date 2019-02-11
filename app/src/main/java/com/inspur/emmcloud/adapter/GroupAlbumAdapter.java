@@ -45,10 +45,10 @@ public class GroupAlbumAdapter extends RecyclerView.Adapter<GroupAlbumAdapter.Al
     public GroupAlbumAdapter(Context context,Object map,int type) {
         this.context = context;
         Set<String> keySet = new HashSet<>();
-        if(type == GroupAlbumActivity.GROUP_TYPE_MESSAGE){
+        if(type == GroupAlbumActivity.GROUP_TYPE_MESSAGE && map != null){
             this.messageGroupByDayMap = ((Map<String,List<Message>>)map);
             keySet = ((Map<String,List<Message>>)map).keySet();
-        }else if(type == GroupAlbumActivity.GROUP_TYPE_MSG){
+        }else if(type == GroupAlbumActivity.GROUP_TYPE_MSG && map != null){
             this.msgGroupByDayMap = ((Map<String,List<Msg>>)map);
             keySet = ((Map<String,List<Msg>>)map).keySet();
         }
