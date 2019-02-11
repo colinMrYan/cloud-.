@@ -2,22 +2,21 @@ package com.inspur.emmcloud.ui.chat;
 
 import android.os.Bundle;
 import android.support.v4.util.ArrayMap;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.GridView;
 import android.widget.RelativeLayout;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.adapter.GroupAlbumItemAdapter;
+import com.inspur.emmcloud.adapter.GroupAlbumAdapter;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.Msg;
 import com.inspur.emmcloud.util.common.GroupUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 import com.inspur.emmcloud.util.privates.cache.MsgCacheUtil;
@@ -26,17 +25,19 @@ import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
 @ContentView(R.layout.activity_group_album)
-public class GroupAlbumActivity extends BaseActivity {
+public class GroupAlbumActivity extends BaseActivity{
 
-    private static final int GROUP_TYPE_MSG = 1;
-    private static final int GROUP_TYPE_MESSAGE = 2;
-    @ViewInject(R.id.gv_album)
-    private GridView albumGrid;
+    public static final int GROUP_TYPE_MSG = 1;
+    public static final int GROUP_TYPE_MESSAGE = 2;
+//    @ViewInject(R.id.gv_album)
+//    private GridView albumGrid;
     @ViewInject(R.id.rl_no_channel_album)
     private RelativeLayout noChannelAlbumLayout;
     @ViewInject(R.id.recycler_view_album)
@@ -47,6 +48,7 @@ public class GroupAlbumActivity extends BaseActivity {
     private List<Message> imgTypeMessageList;
     private Map<String, List<Message>> messageGroupByDayMap = new ArrayMap<String, List<Message>>();
     private Map<String, List<Msg>> msgGroupByDayMap = new ArrayMap<String, List<Msg>>();
+    private GroupAlbumAdapter groupAlbumAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,10 +60,18 @@ public class GroupAlbumActivity extends BaseActivity {
         cid = getIntent().getExtras().getString("cid");
         getImgMsgList();
         noChannelAlbumLayout.setVisibility(imgUrlList.size() == 0 ? View.VISIBLE:View.GONE);
-        albumGrid.setAdapter(new GroupAlbumItemAdapter(this,imgUrlList));
-        albumGrid.setOnItemClickListener(new OnItemClickListener() {
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(GroupAlbumActivity.this);
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        albumRecyclerView.setLayoutManager(linearLayoutManager);
+        if(MyApplication.getInstance().isV0VersionChat()){
+            groupAlbumAdapter = new GroupAlbumAdapter(this,msgGroupByDayMap,GROUP_TYPE_MSG);
+        }else {
+            groupAlbumAdapter = new GroupAlbumAdapter(this,messageGroupByDayMap,GROUP_TYPE_MESSAGE);
+        }
+        groupAlbumAdapter.setOnGroupAlbumClickListener(new OnGroupAlbumClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onGroupAlbumClick(View view, String imageUrl) {
+                int position = imgUrlList.indexOf(imageUrl);
                 int[] location = new int[2];
                 view.getLocationOnScreen(location);
                 view.invalidate();
@@ -85,10 +95,7 @@ public class GroupAlbumActivity extends BaseActivity {
                 }
             }
         });
-//        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(GroupAlbumActivity.this);
-//        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-//        albumRecyclerView.setLayoutManager(linearLayoutManager);
-//        albumRecyclerView.setAdapter(new GroupAlbumAdapter(this,));
+        albumRecyclerView.setAdapter(groupAlbumAdapter);
     }
 
     private void getImgMsgList() {
@@ -97,22 +104,27 @@ public class GroupAlbumActivity extends BaseActivity {
             for (Msg msg :imgTypeMsgList){
                 String url = APIUri.getPreviewUrl(msg.getImgTypeMsgImg());
                 imgUrlList.add(url);
-                msg.setGroupDate(TimeUtils.getTime(msg.getTime(),TimeUtils.getFormat(this,TimeUtils.FORMAT_YEAR_MONTH)));
             }
-            Map<String, List<Msg>> messageGroupByDayMap  = GroupUtils.group(imgTypeMsgList,new ImageGroupByDate(GROUP_TYPE_MSG));
+            msgGroupByDayMap  = GroupUtils.group(imgTypeMsgList,new ImageGroupByDate(GROUP_TYPE_MSG));
         }else {
             imgTypeMessageList = MessageCacheUtil.getImgTypeMessageList(MyApplication.getInstance(), cid);
             for (Message message:imgTypeMessageList) {
                 String url = APIUri.getChatFileResouceUrl(message.getChannel(),message.getMsgContentMediaImage().getRawMedia());
                 imgUrlList.add(url);
-                message.setGroupDate(TimeUtils.getTime(message.getCreationDate(),TimeUtils.getFormat(this,TimeUtils.FORMAT_YEAR_MONTH)));
             }
-            Map<String, List<Message>> messageGroupByDayMap = GroupUtils.group(imgTypeMessageList,new ImageGroupByDate(GROUP_TYPE_MESSAGE));
+            messageGroupByDayMap = GroupUtils.group(imgTypeMessageList,new ImageGroupByDate(GROUP_TYPE_MESSAGE));
         }
     }
 
     public void onClick(View v) {
-        finish();
+        switch (v.getId()){
+            case R.id.back_layout:
+                finish();
+                break;
+            case R.id.tv_header_choose:
+                groupAlbumAdapter.setChangeSelectState();
+                break;
+        }
     }
 
     class ImageGroupByDate implements GroupUtils.GroupBy<String> {
@@ -124,15 +136,26 @@ public class GroupAlbumActivity extends BaseActivity {
 
         @Override
         public String groupBy(Object obj) {
+            String from = "";
+            SimpleDateFormat format = new SimpleDateFormat(
+                        getString(R.string.format_year_month));
             if(groupType == GROUP_TYPE_MSG){
-                Msg msg = (Msg) obj;
-                return msg.getGroupDate();
+                Msg msg = (Msg)obj;
+                from = msg.getTime() + "";
             }else if(groupType == GROUP_TYPE_MESSAGE){
                 Message message = (Message)obj;
-                return message.getGroupDate();
+                from = message.getCreationDate() + "";
+            }
+            if(!StringUtils.isBlank(from)){
+                Calendar calendarForm = TimeUtils.timeString2Calendar(from);
+                return TimeUtils.calendar2FormatString(GroupAlbumActivity.this, calendarForm, format);
             }
             return "";
         }
 
+    }
+
+    public interface OnGroupAlbumClickListener{
+        void onGroupAlbumClick(View view,String imageUrl);
     }
 }

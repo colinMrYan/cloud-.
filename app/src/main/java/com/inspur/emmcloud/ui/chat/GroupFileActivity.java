@@ -22,9 +22,12 @@ import com.inspur.emmcloud.bean.chat.Msg;
 import com.inspur.emmcloud.bean.chat.MsgContentRegularFile;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.FileUtils;
+import com.inspur.emmcloud.util.common.GroupUtils;
+import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.DownLoaderUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
+import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 import com.inspur.emmcloud.util.privates.cache.MsgCacheUtil;
@@ -34,20 +37,23 @@ import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @ContentView(R.layout.activity_group_file)
 public class GroupFileActivity extends BaseActivity {
 
     @ViewInject(R.id.lv_file)
     private ListView fileListView;
-
     @ViewInject(R.id.rl_no_channel_file)
     private RelativeLayout noChannelFileLayout;
-
     private String cid;
     private List<GroupFileInfo> fileInfoList = new ArrayList<>();
+    private Map<String,List<GroupFileInfo>> groupFileInfoMap = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +87,23 @@ public class GroupFileActivity extends BaseActivity {
                 GroupFileInfo groupFileInfo = new GroupFileInfo(url, msgContentRegularFile.getName(), msgContentRegularFile.getSize() + "", message.getCreationDate(), ContactUserCacheUtils.getUserName(message.getFromUser()));
                 fileInfoList.add(groupFileInfo);
             }
+        }
+        groupFileInfoMap = GroupUtils.group(fileInfoList,new FileGroupByDate());
+    }
+
+    class FileGroupByDate implements GroupUtils.GroupBy<String> {
+
+        @Override
+        public String groupBy(Object obj) {
+            SimpleDateFormat format = new SimpleDateFormat(
+                    getString(R.string.format_year_month_day));
+            GroupFileInfo groupFileInfo = (GroupFileInfo)obj;
+            String from = groupFileInfo.getTime();
+            if(!StringUtils.isBlank(from)){
+                Calendar calendarForm = TimeUtils.timeString2Calendar(from);
+                return TimeUtils.calendar2FormatString(GroupFileActivity.this, calendarForm, format);
+            }
+            return "";
         }
 
     }
@@ -116,7 +139,6 @@ public class GroupFileActivity extends BaseActivity {
             displayFiles(convertView, position);
             return convertView;
         }
-
     }
 
     /**
