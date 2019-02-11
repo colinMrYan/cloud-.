@@ -52,7 +52,6 @@ public class Message implements Serializable {
     @Column(name = "localPath")
     private String localPath = "";
     private String tmpId = "";
-    private String groupDate = "";
 
     public Message() {
 
@@ -240,14 +239,6 @@ public class Message implements Serializable {
 
     public void setTmpId(String tmpId) {
         this.tmpId = tmpId;
-    }
-
-    public String getGroupDate() {
-        return groupDate;
-    }
-
-    public void setGroupDate(String groupDate) {
-        this.groupDate = groupDate;
     }
 
     /*

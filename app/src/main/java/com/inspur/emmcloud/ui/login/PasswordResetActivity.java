@@ -51,10 +51,30 @@ public class PasswordResetActivity extends BaseActivity implements View.OnTouchL
         EditWatcher editWatcher = new EditWatcher();
         passwordNewEdit.addTextChangedListener(editWatcher);
         passwordConfirmEdit.addTextChangedListener(editWatcher);
+        emmSecurityKeyboard = new EmmSecurityKeyboard(this);
+        EditOnTouchListener editOnTouchListener = new EditOnTouchListener();
+        passwordNewEdit.setOnTouchListener(editOnTouchListener);
+        passwordConfirmEdit.setOnTouchListener(editOnTouchListener);
         loadingDlg = new LoadingDialog(this);
         emmSecurityKeyboard = new EmmSecurityKeyboard(this);
         passwordNewEdit.setOnTouchListener(this);
         passwordConfirmEdit.setOnTouchListener(this);
+    }
+
+    class EditOnTouchListener implements View.OnTouchListener{
+
+        @Override
+        public boolean onTouch(View view, MotionEvent motionEvent) {
+            switch (view.getId()){
+                case R.id.et_password_new:
+                    emmSecurityKeyboard.showSecurityKeyBoard(passwordNewEdit);
+                    break;
+                case R.id.et_password_confirm:
+                    emmSecurityKeyboard.showSecurityKeyBoard(passwordConfirmEdit);
+                    break;
+            }
+            return false;
+        }
     }
 
     public void onClick(View v){
