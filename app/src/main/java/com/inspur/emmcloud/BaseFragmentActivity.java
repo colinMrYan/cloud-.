@@ -27,6 +27,7 @@ public class BaseFragmentActivity extends FragmentActivity {
         String className = this.getClass().getCanonicalName();
         boolean isContain = Arrays.asList(classNames).contains(className);
         if (!isContain){
+            setTheme(R.style.AppTheme_1);
 //            int currentThemeNo = PreferencesUtils.getInt(MyApplication.getInstance(), Constant.PREF_APP_THEME, 0);
 //            if (currentThemeNo == 0){
 //                setTheme(R.style.AppTheme_1);
