@@ -219,7 +219,7 @@ public class WebexScheduleMeetingActivity extends BaseActivity {
                 webexMeeting.setStartDateCalendar(startCalendar);
                 scheduleMeeting();
                 break;
-            case R.id.rl_back:
+            case R.id.ibt_back:
                 finish();
                 break;
             case R.id.tv_start_date:

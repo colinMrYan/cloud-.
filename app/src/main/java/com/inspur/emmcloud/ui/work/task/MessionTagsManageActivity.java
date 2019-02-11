@@ -112,7 +112,7 @@ public class MessionTagsManageActivity extends BaseActivity {
 	public void onClick(View v) {
 		Intent intent = new Intent();
 		switch (v.getId()) {
-		case R.id.back_layout:
+		case R.id.ibt_back:
 			setResult(RESULT_OK);
 			finish();
 			break;

@@ -223,7 +223,7 @@ public class CalEventAddActivity extends BaseActivity {
 		Calendar endCalendar = null;
 		Intent intent = new Intent();
 		switch (v.getId()) {
-		case R.id.back_layout:
+		case R.id.ibt_back:
 			finish();
 			break;
 

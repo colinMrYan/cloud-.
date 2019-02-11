@@ -164,7 +164,7 @@ public class CreateGestureActivity extends BaseActivity {
 		putGestureCodeIsOpenByUser(CreateGestureActivity.this,true);
 		EventBus.getDefault().post(CREATE_GESTURE_CODE_SUCCESS);
 		finish();
-		IntentUtils.startActivity(CreateGestureActivity.this,GestureManagerActivity.class);
+		IntentUtils.startActivity(CreateGestureActivity.this,SafeGustureFaceSettingActivity.class);
 	}
 
 	/**

@@ -206,7 +206,7 @@ public class MeetingBookingActivity extends BaseActivity {
                 meetingEndCalendar.set(Calendar.MILLISECOND, 0);
                 bookMeeting(topic, notice);
                 break;
-            case R.id.back_layout:
+            case R.id.ibt_back:
                 finish();
                 break;
             case R.id.meeting_booking_room_layout:

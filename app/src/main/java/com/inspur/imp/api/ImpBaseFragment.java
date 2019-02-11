@@ -1,5 +1,6 @@
 package com.inspur.imp.api;
 
+import android.graphics.Color;
 import android.support.v4.app.Fragment;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -72,7 +73,7 @@ public class ImpBaseFragment extends Fragment {
                         textView.setText(mainTabMenu.getText());
                         textView.setOnClickListener(onClickListener);
                         textView.setLayoutParams(params);
-                        textView.setTextColor(getContext().getResources().getColor(R.color.white));
+                        textView.setTextColor(Color.parseColor("#333333"));
                         textView.setGravity(Gravity.CENTER_VERTICAL);
                         webFunctionLayout.addView(textView);
                     }

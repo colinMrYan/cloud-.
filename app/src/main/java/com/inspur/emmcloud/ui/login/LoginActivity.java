@@ -146,6 +146,9 @@ public class LoginActivity extends BaseActivity {
                 break;
             case R.id.ll_main:
                 InputMethodUtils.hide(LoginActivity.this);
+                if(securityKeyboard.isShowing()){
+                    securityKeyboard.dismiss();
+                }
                 break;
             default:
                 break;

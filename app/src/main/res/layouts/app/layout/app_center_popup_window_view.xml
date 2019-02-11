@@ -57,7 +57,7 @@
                 android:clickable="false"
                 android:text="@string/app_commonly_use"
                 android:textColor="#ffffff"
-                android:textSize="14sp" />
+                android:textSize="16sp" />
 
             <com.inspur.emmcloud.widget.SwitchView
                 android:id="@+id/app_hide_switch"

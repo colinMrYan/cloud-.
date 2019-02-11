@@ -53,25 +53,21 @@ public class DeviceInfoActivity extends BaseActivity {
         String deviceLastUserTime = TimeUtils.getTime(bindingDevice.getDeviceLastUserTime(), TimeUtils.getFormat(DeviceInfoActivity.this, TimeUtils.FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE));
         ((TextView) findViewById(R.id.device_last_use_time_text)).setText(deviceLastUserTime);
         if (getIntent().getBooleanExtra("isCurrentBind", false)) {
-            findViewById(R.id.device_unbound_btn).setVisibility(View.VISIBLE);
+            findViewById(R.id.bt_device_unbound).setVisibility(View.VISIBLE);
         }
         deviceLogListView = (ScrollViewWithListView) findViewById(R.id.device_log_list);
         apiService = new MineAPIService(this);
         apiService.setAPIInterface(new WebService());
         getDeviceLog();
-
-
-
-
     }
 
 
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.back_layout:
+            case R.id.ibt_back:
                 finish();
                 break;
-            case R.id.device_unbound_btn:
+            case R.id.bt_device_unbound:
                 showUnbindDevicePromptDlg();
                 break;
             case R.id.device_id_text:

@@ -12,14 +12,13 @@
         <RelativeLayout
             android:id="@+id/appcenter_layout"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="28dp"
             android:layout_centerVertical="true"
             android:layout_marginLeft="7dp"
-            android:background="@drawable/bg_appcenter_btn"
-            android:paddingBottom="4.5dp"
+            android:background="@drawable/shape_appcenter_btn"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:paddingTop="4.5dp">
+           >
 
             <ImageView
                 android:id="@+id/app_center_img"
@@ -38,7 +37,7 @@
                 android:paddingLeft="5dp"
                 android:text="@string/app_center"
                 android:textColor="?attr/header_text_color"
-                android:textSize="13sp" />
+                android:textSize="13dp" />
 
         </RelativeLayout>
 

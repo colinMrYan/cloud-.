@@ -213,7 +213,7 @@ public class MeetingDetailActivity extends BaseActivity {
 
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.back_layout:
+            case R.id.ibt_back:
                 finish();
                 break;
             case R.id.meeting_detail_cancel_text:

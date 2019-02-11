@@ -118,7 +118,7 @@ public class MyCommonOfficeActivity extends BaseActivity implements
      */
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.back_layout:
+            case R.id.ibt_back:
                 backActivity();
                 break;
             case R.id.meeting_common_office_create_img:

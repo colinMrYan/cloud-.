@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
     android:background="#ffffff"
     tools:context=".MainActivity" >
 
@@ -25,29 +24,18 @@
         android:scaleType="centerCrop"
         />
 
-    <LinearLayout
-        android:id="@+id/splash_skip_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <ImageButton
+        android:id="@+id/ibt_skip"
         android:layout_alignParentRight="true"
-        android:orientation="vertical"
-        android:layout_marginTop="22dp"
-        android:layout_marginRight="10dp"
-        android:padding="6dp">
-        <Button
-            android:id="@+id/splash_skip_btn"
-            android:layout_width="60dp"
-            android:layout_height="26dp"
-            android:layout_alignParentRight="true"
-            android:visibility="gone"
-            android:paddingTop="22dp"
-            android:paddingBottom="5dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="19dp"
-            android:background="@drawable/icon_splash_skip"
-            android:textColor="#ffffff"
-            android:onClick="onClick"/>
-    </LinearLayout>
+        android:visibility="gone"
+        android:src="@drawable/icon_splash_skip"
+        android:scaleType="fitXY"
+        android:onClick="onClick"
+        android:layout_marginTop="18dp"
+        android:layout_marginRight="8dp"
+        android:padding="10dp"
+        android:layout_width="80dp"
+        android:layout_height="46dp" />
 
     <com.inspur.emmcloud.widget.CircularProgress
         android:layout_width="45dp"
