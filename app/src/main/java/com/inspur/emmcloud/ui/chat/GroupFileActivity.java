@@ -318,13 +318,13 @@ public class GroupFileActivity extends BaseActivity {
         fileNameText.setText(fileName);
         fileSizeText.setText(groupFileInfo.getSize());
         if(sortType.equals(SORT_BY_TIME_DOWN) || sortType.equals(SORT_BY_TIME_UP)){
+            String currentTime = TimeUtils.timeLong2YMString(GroupFileActivity.this, groupFileInfo.getLongTime());
             if(position >= 1){
-                String currentTime = groupFileInfo.getTime(getApplicationContext());
-                String lastTime = groupFileInfoList.get(position - 1).getTime(getApplicationContext());
+                String lastTime = TimeUtils.timeLong2YMString(GroupFileActivity.this, groupFileInfoList.get(position - 1).getLongTime());
                 fileMonthText.setVisibility(!lastTime.equals(currentTime)?View.VISIBLE:View.GONE);
                 fileMonthText.setText(currentTime);
-            }else{
-                fileMonthText.setText(groupFileInfo.getTime(getApplicationContext()));
+            } else{
+                fileMonthText.setText(currentTime.equals(TimeUtils.timeLong2YMString(GroupFileActivity.this,groupFileInfo.getLongTime()))?getString(R.string.current_month):currentTime);
             }
         }else{
             fileMonthText.setVisibility(View.GONE);
