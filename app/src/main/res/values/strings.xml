@@ -62,6 +62,7 @@
     <string name="invite_friends_text">把云+推荐给朋友</string>
     <string name="tab_not_support_tips">%1$s功能已改版，请<Data><![CDATA[<font color=\'#0F7BCA\'>升级到最新版本</font>]]></Data></string>
     <string name="choose">选择</string>
+    <string name="file_type">文件类型</string>
 
 
     <!-- 公共部分 -->
@@ -310,6 +311,7 @@
     <string name="chat_remove_from_top">取消置顶</string>
     <string name="no_chat_content">暂无聊天内容</string>
     <string name="msg_key_search_member">请输入关键字</string>
+    <string name="chat_resend_message">重新发送</string>
 
     <!-- 会议卡片 -->
     <string name="meeting_has_confirmed">已确认</string>

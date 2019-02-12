@@ -66,14 +66,11 @@ import com.inspur.emmcloud.widget.ECMChatInputMenu.ChatInputMenuListener;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.RecycleViewForSizeChange;
 import com.inspur.emmcloud.widget.bubble.BubbleLayout;
-import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
 import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
 import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
 import com.inspur.imp.plugin.camera.mycamera.MyCameraActivity;
 import com.inspur.imp.util.compressor.Compressor;
 import com.qmuiteam.qmui.widget.QMUILoadingView;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -122,6 +119,7 @@ public class ConversationActivity extends ConversationBaseActivity {
     private boolean isSpecialUser = false; //小智机器人进行特殊处理
     private BroadcastReceiver refreshNameReceiver;
     private PopupWindow mediaVoiceReRecognizerPop;
+    private PopupWindow resendMessagePop;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -362,9 +360,9 @@ public class ConversationActivity extends ConversationBaseActivity {
             }
 
             @Override
-            public void onMessageResend(UIMessage uiMessage) {
+            public void onMessageResend(UIMessage uiMessage,View view) {
                 if (uiMessage.getSendStatus() == Message.MESSAGE_SEND_FAIL) {
-                    showResendMessageDlg(uiMessage);
+                    showResendMessageDlg(uiMessage,view);
                 }
             }
 
@@ -390,23 +388,39 @@ public class ConversationActivity extends ConversationBaseActivity {
      *
      * @param uiMessage
      */
-    private void showResendMessageDlg(final UIMessage uiMessage) {
-        new MyQMUIDialog.MessageDialogBuilder(ConversationActivity.this)
-                .setMessage(R.string.sure_to_resend_message)
-                .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        dialog.dismiss();
-                    }
-                })
-                .addAction(R.string.ok, new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        dialog.dismiss();
-                        resendMessage(uiMessage);
-                    }
-                })
-                .show();
+    private void showResendMessageDlg(final UIMessage uiMessage,View view) {
+        View contentView = LayoutInflater.from(this).inflate(R.layout.pop_voice_to_text_view, null);
+        ((TextView)contentView.findViewById(R.id.tv_pop_title)).setText(getString(R.string.chat_resend_message));
+        contentView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+        resendMessagePop = new PopupWindow(contentView,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT, true);
+        resendMessagePop.setTouchable(true);
+        resendMessagePop.setOutsideTouchable(true);
+        resendMessagePop.setTouchInterceptor(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return false;
+            }
+        });
+        int[] location = new int[2];
+        view.getLocationOnScreen(location);
+        int popWidth = resendMessagePop.getContentView().getMeasuredWidth();
+        int popHeight = resendMessagePop.getContentView().getMeasuredHeight();
+        BubbleLayout resendMessageBubbleLayout = contentView.findViewById(R.id.bl_voice_to_text);
+        resendMessageBubbleLayout.setArrowPosition(popWidth / 2 - DensityUtil.dip2px(MyApplication.getInstance(), 9));
+        resendMessagePop.showAtLocation(view, Gravity.NO_GRAVITY, location[0] +
+                view.getWidth() / 2 - popWidth / 2, location[1] -
+                popHeight - DensityUtil.dip2px(MyApplication.getInstance(), 5));
+        resendMessagePop.showAsDropDown(view);
+        resendMessageBubbleLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                resendMessagePop.dismiss();
+                resendMessage(uiMessage);
+            }
+        });
+
     }
 
 

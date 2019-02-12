@@ -164,7 +164,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
 
         public void onMessageResendClick(UIMessage uiMessage){
             if (mListener != null) {
-                mListener.onMessageResend(uiMessage);
+                mListener.onMessageResend(uiMessage,sendFailImg);
             }
 
         }
@@ -201,7 +201,6 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
      * 显示卡片的内容
      *
      * @param holder
-     * @param msg
      */
     private void showCardLayout(ViewHolder holder, final UIMessage uiMessage) {
         // TODO Auto-generated method stub
@@ -265,7 +264,6 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
      * 展示消息发送时间
      *
      * @param holder
-     * @param msg
      * @param position
      */
     private void showMsgSendTime(ViewHolder holder, UIMessage UIMessage, int position) {
@@ -345,7 +343,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
      */
     public interface MyItemClickListener {
         void onItemClick(View view, int position);
-        void onMessageResend(UIMessage uiMessage);
+        void onMessageResend(UIMessage uiMessage,View view);
         void onMediaVoiceReRecognize(UIMessage uiMessage,BubbleLayout bubbleLayout,QMUILoadingView downloadLoadingView);
         void onAdapterDataSizeChange();
     }

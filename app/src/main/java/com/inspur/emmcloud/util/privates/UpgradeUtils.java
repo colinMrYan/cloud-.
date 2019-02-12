@@ -184,6 +184,9 @@ public class UpgradeUtils extends APIInterfaceInstance {
                 break;
 
             default:
+                if (handler != null){
+                    handler.sendEmptyMessage(NO_NEED_UPGRADE);
+                }
                 break;
         }
     }
