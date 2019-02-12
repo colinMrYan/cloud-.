@@ -16,20 +16,18 @@
             android:layout_height="@dimen/header_height">
 
             <ImageView
-                android:id="@+id/work_config_img2"
-                android:layout_width="52dp"
-                android:layout_height="match_parent"
+                android:id="@+id/iv_work_config2"
+                android:layout_width="32dp"
+                android:layout_height="@dimen/header_height"
+                android:paddingRight="5dp"
+                android:paddingLeft="5dp"
                 android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
+                android:layout_marginRight="16dp"
                 android:clickable="true"
-                android:onClick="onClick"
-                android:paddingLeft="12dp"
-                android:paddingRight="15dp"
                 android:scaleType="centerInside"
                 android:src="@drawable/ic_config" />
 
             <TextView
-                android:id="@+id/header_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
@@ -59,20 +57,17 @@
                 android:textColor="?attr/header_text_color"
                 android:textSize="20sp" />
 
-
             <ImageView
-                android:id="@+id/work_config_img"
-                android:layout_width="50dp"
-                android:layout_height="40dp"
+                android:id="@+id/iv_work_config"
+                android:layout_width="32dp"
+                android:layout_height="@dimen/header_height"
+                android:paddingRight="5dp"
+                android:paddingLeft="5dp"
                 android:layout_alignParentRight="true"
+                android:layout_marginRight="16dp"
                 android:clickable="true"
-                android:onClick="onClick"
-                android:paddingBottom="10dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:scaleType="fitXY"
+                android:scaleType="centerInside"
                 android:src="@drawable/ic_config" />
-
             <TextView
                 android:id="@+id/work_chinesedate_text"
                 android:layout_width="wrap_content"

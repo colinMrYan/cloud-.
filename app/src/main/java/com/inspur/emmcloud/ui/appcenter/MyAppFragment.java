@@ -29,7 +29,7 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.ImageView;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
@@ -107,7 +107,7 @@ public class MyAppFragment extends Fragment {
     private View rootView;
     private ListView appListView;
     private AppListAdapter appListAdapter;
-    private ImageView editBtn;
+    private ImageButton configBtn;
     private Button editBtnFinish;
     private MyAppAPIService apiService;
     private MySwipeRefreshLayout swipeRefreshLayout;
@@ -164,7 +164,6 @@ public class MyAppFragment extends Fragment {
         if (ClientConfigUpdateUtils.getInstance().isItemNeedUpdate(ClientConfigItem.CLIENT_CONFIG_MY_APP)){
             getMyApp();
         }
-//        getAppBadgeNum();
         hasRequestBadgeNum = false;
         if(!StringUtils.isBlank(MyAppCacheUtils.getMyAppListJson(getActivity()))){
             new AppBadgeUtils(MyApplication.getInstance()).getAppBadgeCountFromServer();
@@ -201,31 +200,30 @@ public class MyAppFragment extends Fragment {
             }
         };
         initPullRefreshLayout();
-        appListView = (ListView) rootView
-                .findViewById(R.id.my_app_list);
+        appListView = rootView.findViewById(R.id.my_app_list);
         refreshAppListView();
-        editBtn = (ImageView) rootView.findViewById(R.id.app_edit_btn);
-        editBtn.setOnClickListener(new OnClickListener() {
+        configBtn = rootView.findViewById(R.id.ibt_appcenter_config);
+        configBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 showPopupWindow(v);
             }
         });
-        editBtnFinish = (Button) rootView.findViewById(R.id.app_edit_finish);
-        editBtnFinish.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                appListAdapter.setCanEdit(false);
-                appListAdapter.notifyDataSetChanged();
-                editBtn.setVisibility(View.VISIBLE);
-                editBtnFinish.setVisibility(View.GONE);
-                if (popupWindow != null && popupWindow.isShowing()) {
-                    popupWindow.dismiss();
-                }
-            }
-        });
+//        editBtnFinish = (Button) rootView.findViewById(R.id.app_edit_finish);
+//        editBtnFinish.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                appListAdapter.setCanEdit(false);
+//                appListAdapter.notifyDataSetChanged();
+//                configBtn.setVisibility(View.VISIBLE);
+//                editBtnFinish.setVisibility(View.GONE);
+//                if (popupWindow != null && popupWindow.isShowing()) {
+//                    popupWindow.dismiss();
+//                }
+//            }
+//        });
         OnAppCenterClickListener listener = new OnAppCenterClickListener();
-        (rootView.findViewById(R.id.appcenter_layout)).setOnClickListener(listener);
+        (rootView.findViewById(R.id.ibt_appcenter_enter)).setOnClickListener(listener);
         setTabTitle();
         //当Fragment创建时重置时间
         PreferencesByUserAndTanentUtils.putInt(getActivity(), Constant.PREF_MY_APP_RECOMMEND_LASTUPDATE_HOUR, 0);
@@ -347,7 +345,7 @@ public class MyAppFragment extends Fragment {
     private void setTabTitle() {
         String appTabs = PreferencesByUserAndTanentUtils.getString(getActivity(), Constant.PREF_APP_TAB_BAR_INFO_CURRENT, "");
         if (!StringUtils.isBlank(appTabs)) {
-            ((TextView) rootView.findViewById(R.id.header_text)).setText(AppTabUtils.getTabTitle(getActivity(), getClass().getSimpleName()));
+            ((TextView) rootView.findViewById(R.id.tv_header)).setText(AppTabUtils.getTabTitle(getActivity(), getClass().getSimpleName()));
         }
     }
 
@@ -432,8 +430,8 @@ public class MyAppFragment extends Fragment {
                 String action = intent.getAction();
                 if (action.equals(ACTION_NAME)) {
                     getMyApp();
-                    (rootView.findViewById(R.id.app_edit_finish)).setVisibility(View.GONE);
-                    editBtn.setVisibility(View.VISIBLE);
+                    (rootView.findViewById(R.id.bt_sort_finish)).setVisibility(View.GONE);
+                    configBtn.setVisibility(View.VISIBLE);
                     appListAdapter.setCanEdit(false);
                     appListAdapter.notifyDataSetChanged();
                 }
@@ -580,7 +578,7 @@ public class MyAppFragment extends Fragment {
                     if (!canEdit) {
                         appListAdapter.setCanEdit(true);
                         appListAdapter.notifyDataSetChanged();
-                        editBtn.setVisibility(View.GONE);
+                        configBtn.setVisibility(View.GONE);
                         editBtnFinish.setVisibility(View.VISIBLE);
                         canEdit = true;
                         Vibrator mVibrator = (Vibrator) getActivity()
@@ -880,7 +878,7 @@ public class MyAppFragment extends Fragment {
                 if (appListAdapter != null) {
                     appListAdapter.setCanEdit(true);
                     appListAdapter.notifyDataSetChanged();
-                    editBtn.setVisibility(View.GONE);
+                    configBtn.setVisibility(View.GONE);
                     editBtnFinish.setVisibility(View.VISIBLE);
                     popupWindow.dismiss();
                 }
