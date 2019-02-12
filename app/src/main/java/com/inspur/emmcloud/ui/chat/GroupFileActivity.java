@@ -31,6 +31,7 @@ import com.inspur.emmcloud.bean.chat.MsgContentRegularFile;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.FileUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.DownLoaderUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
@@ -63,7 +64,6 @@ public class GroupFileActivity extends BaseActivity {
     private TextView filterByFileTypeText;
     private String cid;
     private List<GroupFileInfo> fileInfoList = new ArrayList<>();
-//    private Map<String,List<GroupFileInfo>> groupFileInfoMap = new HashMap<>();
     private PopupWindow sortOperationPop;
     private GroupFileAdapter adapter;
 
@@ -103,25 +103,7 @@ public class GroupFileActivity extends BaseActivity {
                 fileInfoList.add(groupFileInfo);
             }
         }
-//        groupFileInfoMap = GroupUtils.group(fileInfoList,new FileGroupByDate());
     }
-
-//    class FileGroupByDate implements GroupUtils.GroupBy<String> {
-//
-//        @Override
-//        public String groupBy(Object obj) {
-//            SimpleDateFormat format = new SimpleDateFormat(
-//                    getString(R.string.format_year_month_day));
-//            GroupFileInfo groupFileInfo = (GroupFileInfo)obj;
-//            String from = groupFileInfo.getTime();
-//            if(!StringUtils.isBlank(from)){
-//                Calendar calendarForm = TimeUtils.timeString2Calendar(from);
-//                return TimeUtils.calendar2FormatString(GroupFileActivity.this, calendarForm, format);
-//            }
-//            return "";
-//        }
-//
-//    }
 
     private void showSortOperationPop() {
         View contentView = LayoutInflater.from(GroupFileActivity.this)
@@ -327,16 +309,17 @@ public class GroupFileActivity extends BaseActivity {
         ImageView fileImg = convertView.findViewById(R.id.file_img);
         TextView fileNameText = convertView.findViewById(R.id.tv_file_name);
         TextView fileSizeText = convertView.findViewById(R.id.tv_file_size);
-        TextView fileOwnerText = convertView.findViewById(R.id.file_owner_text);
+//        TextView fileOwnerText = convertView.findViewById(R.id.file_owner_text);
         TextView fileTimeText = convertView.findViewById(R.id.file_time_text);
         TextView fileMonthText = convertView.findViewById(R.id.tv_file_month);
+        convertView.findViewById(R.id.v_line).setVisibility(position == 0 ?View.GONE:View.VISIBLE);
         final HorizontalProgressBarWithNumber progressBar = convertView.findViewById(R.id.file_download_progressbar);
         GroupFileInfo groupFileInfo = groupFileInfoList.get(position);
         final String fileName = groupFileInfo.getName();
         final String source = groupFileInfo.getUrl();
         fileNameText.setText(fileName);
         fileSizeText.setText(groupFileInfo.getSize());
-        fileOwnerText.setText(groupFileInfo.getOwner());
+//        fileOwnerText.setText(groupFileInfo.getOwner());
         if(sortType.equals(SORT_BY_TIME_DOWN) || sortType.equals(SORT_BY_TIME_UP)){
             if(position >= 1){
                 String currentTime = groupFileInfo.getTime(getApplicationContext());
@@ -350,7 +333,8 @@ public class GroupFileActivity extends BaseActivity {
             fileMonthText.setVisibility(View.GONE);
         }
         fileTimeText.setText(groupFileInfo.getTime(getApplicationContext()));
-        ImageDisplayUtils.getInstance().displayImage(fileImg, "drawable://" + FileUtils.getIconResId(fileName));
+        LogUtils.YfcDebug("时间："+groupFileInfo.getTime(getApplicationContext()));
+        ImageDisplayUtils.getInstance().displayImage(fileImg, "drawable://" + FileUtils.getRegularFileIconResId(fileName));
         convertView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
