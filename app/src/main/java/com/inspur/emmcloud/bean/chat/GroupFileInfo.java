@@ -29,7 +29,6 @@ public class GroupFileInfo {
 				url = jsonObject.getString("key");
 				url = APIUri.getPreviewUrl(url);
 			}
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -60,6 +59,10 @@ public class GroupFileInfo {
 
 	public String getTime(){
 		return time + "";
+	}
+
+	public long getLongTime(){
+		return time;
 	}
 	
 	public String getOwner(){

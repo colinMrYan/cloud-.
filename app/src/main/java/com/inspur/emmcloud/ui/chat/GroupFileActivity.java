@@ -1,19 +1,27 @@
 package com.inspur.emmcloud.ui.chat;
 
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.adapter.VolumeFileFilterPopGridAdapter;
 import com.inspur.emmcloud.api.APIDownloadCallBack;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.chat.GroupFileInfo;
@@ -21,13 +29,11 @@ import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.Msg;
 import com.inspur.emmcloud.bean.chat.MsgContentRegularFile;
 import com.inspur.emmcloud.config.MyAppConfig;
+import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.FileUtils;
-import com.inspur.emmcloud.util.common.GroupUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.DownLoaderUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
-import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 import com.inspur.emmcloud.util.privates.cache.MsgCacheUtil;
@@ -37,12 +43,12 @@ import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
+import java.text.Collator;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
+import java.util.Locale;
 
 @ContentView(R.layout.activity_group_file)
 public class GroupFileActivity extends BaseActivity {
@@ -51,9 +57,21 @@ public class GroupFileActivity extends BaseActivity {
     private ListView fileListView;
     @ViewInject(R.id.rl_no_channel_file)
     private RelativeLayout noChannelFileLayout;
+    @ViewInject(R.id.tv_order_by_name_asc)
+    private TextView operationSortText;
+    @ViewInject(R.id.tv_filter_by_file_type)
+    private TextView filterByFileTypeText;
     private String cid;
     private List<GroupFileInfo> fileInfoList = new ArrayList<>();
-    private Map<String,List<GroupFileInfo>> groupFileInfoMap = new HashMap<>();
+//    private Map<String,List<GroupFileInfo>> groupFileInfoMap = new HashMap<>();
+    private PopupWindow sortOperationPop;
+    private GroupFileAdapter adapter;
+
+    protected String sortType = "sort_by_name_up";
+    protected static final String SORT_BY_NAME_UP = "sort_by_name_up";
+    protected static final String SORT_BY_NAME_DOWN = "sort_by_name_down";
+    protected static final String SORT_BY_TIME_UP = "sort_by_time_up";
+    protected static final String SORT_BY_TIME_DOWN = "sort_by_time_down";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,23 +80,20 @@ public class GroupFileActivity extends BaseActivity {
         cid = getIntent().getExtras().getString("cid");
         getFileMsgList();
         noChannelFileLayout.setVisibility(fileInfoList.size() == 0 ? View.VISIBLE:View.GONE);
-        fileListView.setAdapter(new Adapter());
+        Collections.sort(fileInfoList,new FileSortComparable());
+        adapter = new GroupFileAdapter();
+        fileListView.setAdapter(adapter);
+        adapter.setAndReFreshList(fileInfoList);
     }
 
-    /**
-     * 获取图片消息列表
-     */
     private void getFileMsgList() {
-        // TODO Auto-generated method stub
         if (MyApplication.getInstance().isV0VersionChat()) {
             List<Msg> fileTypeMsgList = MsgCacheUtil.getFileTypeMsgList(
                     GroupFileActivity.this, cid);
             for (Msg msg : fileTypeMsgList) {
-                GroupFileInfo groupFileInfo = new GroupFileInfo(
-                        msg);
+                GroupFileInfo groupFileInfo = new GroupFileInfo(msg);
                 fileInfoList.add(groupFileInfo);
             }
-
         } else {
             List<Message> fileTypeMessageList = MessageCacheUtil.getFileTypeMsgList(MyApplication.getInstance(), cid);
             for (Message message : fileTypeMessageList) {
@@ -88,88 +103,257 @@ public class GroupFileActivity extends BaseActivity {
                 fileInfoList.add(groupFileInfo);
             }
         }
-        groupFileInfoMap = GroupUtils.group(fileInfoList,new FileGroupByDate());
+//        groupFileInfoMap = GroupUtils.group(fileInfoList,new FileGroupByDate());
     }
 
-    class FileGroupByDate implements GroupUtils.GroupBy<String> {
+//    class FileGroupByDate implements GroupUtils.GroupBy<String> {
+//
+//        @Override
+//        public String groupBy(Object obj) {
+//            SimpleDateFormat format = new SimpleDateFormat(
+//                    getString(R.string.format_year_month_day));
+//            GroupFileInfo groupFileInfo = (GroupFileInfo)obj;
+//            String from = groupFileInfo.getTime();
+//            if(!StringUtils.isBlank(from)){
+//                Calendar calendarForm = TimeUtils.timeString2Calendar(from);
+//                return TimeUtils.calendar2FormatString(GroupFileActivity.this, calendarForm, format);
+//            }
+//            return "";
+//        }
+//
+//    }
 
-        @Override
-        public String groupBy(Object obj) {
-            SimpleDateFormat format = new SimpleDateFormat(
-                    getString(R.string.format_year_month_day));
-            GroupFileInfo groupFileInfo = (GroupFileInfo)obj;
-            String from = groupFileInfo.getTime();
-            if(!StringUtils.isBlank(from)){
-                Calendar calendarForm = TimeUtils.timeString2Calendar(from);
-                return TimeUtils.calendar2FormatString(GroupFileActivity.this, calendarForm, format);
+    private void showSortOperationPop() {
+        View contentView = LayoutInflater.from(GroupFileActivity.this)
+                .inflate(R.layout.app_volume_file_sort_operation_pop, null);
+        sortOperationPop = new PopupWindow(contentView,
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT, true);
+        ((TextView) contentView.findViewById(R.id.sort_by_time_up_text)).setTextColor(Color.parseColor(sortType.equals(SORT_BY_TIME_UP) ? "#2586CD" : "#666666"));
+        ((TextView) contentView.findViewById(R.id.sort_by_time_down_text)).setTextColor(Color.parseColor(sortType.equals(SORT_BY_TIME_DOWN) ? "#2586CD" : "#666666"));
+        ((TextView) contentView.findViewById(R.id.sort_by_name_up_text)).setTextColor(Color.parseColor(sortType.equals(SORT_BY_NAME_UP) ? "#2586CD" : "#666666"));
+        ((TextView) contentView.findViewById(R.id.sort_by_name_down_text)).setTextColor(Color.parseColor(sortType.equals(SORT_BY_NAME_DOWN) ? "#2586CD" : "#666666"));
+        (contentView.findViewById(R.id.sort_by_time_up_select_img)).setVisibility(sortType.equals(SORT_BY_TIME_UP) ? View.VISIBLE : View.INVISIBLE);
+        (contentView.findViewById(R.id.sort_by_time_down_select_img)).setVisibility(sortType.equals(SORT_BY_TIME_DOWN) ? View.VISIBLE : View.INVISIBLE);
+        (contentView.findViewById(R.id.sort_by_name_up_select_img)).setVisibility(sortType.equals(SORT_BY_NAME_UP) ? View.VISIBLE : View.INVISIBLE);
+        (contentView.findViewById(R.id.sort_by_name_down_select_img)).setVisibility(sortType.equals(SORT_BY_NAME_DOWN) ? View.VISIBLE : View.INVISIBLE);
+        sortOperationPop.setTouchable(true);
+        sortOperationPop.setBackgroundDrawable(ContextCompat.getDrawable(
+                getApplicationContext(), R.drawable.pop_window_view_tran));
+        sortOperationPop.setOutsideTouchable(true);
+        sortOperationPop.showAsDropDown(operationSortText);
+        Drawable drawable = ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_volume_menu_drop_up);
+        drawable.setBounds(0, 0, DensityUtil.dip2px(getApplicationContext(), 14), DensityUtil.dip2px(getApplicationContext(), 14));
+        operationSortText.setCompoundDrawables(null, null, drawable, null);
+        sortOperationPop.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                setOperationSort();
+                adapter.notifyDataSetChanged();
             }
-            return "";
-        }
+        });
+    }
 
+    private void setOperationSort() {
+        Drawable drawableDown = ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_volume_menu_drop_down);
+        drawableDown.setBounds(0, 0, DensityUtil.dip2px(getApplicationContext(), 14), DensityUtil.dip2px(getApplicationContext(), 14));
+        operationSortText.setCompoundDrawables(null, null, drawableDown, null);
+        String sortTypeShowTxt;
+        switch (sortType) {
+            case SORT_BY_NAME_DOWN:
+                sortTypeShowTxt = getString(R.string.clouddriver_sort_by_name_dasc);
+                break;
+            case SORT_BY_TIME_UP:
+                sortTypeShowTxt = getString(R.string.clouddriver_sort_by_time_asc);
+                break;
+            case SORT_BY_TIME_DOWN:
+                sortTypeShowTxt = getString(R.string.clouddriver_sort_by_time_dasc);
+                break;
+            default:
+                sortTypeShowTxt = getString(R.string.clouddriver_sort_by_name_asc);
+                break;
+        }
+        operationSortText.setText(sortTypeShowTxt);
+        Collections.sort(fileInfoList,new FileSortComparable());
+        adapter.setAndReFreshList(fileInfoList);
+    }
+
+    private class FileSortComparable implements Comparator {
+        @Override
+        public int compare(Object o1, Object o2) {
+            GroupFileInfo groupFileInfoA = (GroupFileInfo) o1;
+            GroupFileInfo groupFileInfoB = (GroupFileInfo) o2;
+            int sortResult = 0;
+                switch (sortType) {
+                    case SORT_BY_NAME_UP:
+                        sortResult = Collator.getInstance(Locale.CHINA).compare(groupFileInfoA.getName(), groupFileInfoB.getName());
+                        break;
+                    case SORT_BY_NAME_DOWN:
+                        sortResult = 0 - Collator.getInstance(Locale.CHINA).compare(groupFileInfoA.getName(), groupFileInfoB.getName());
+                        break;
+                    case SORT_BY_TIME_DOWN:
+                        if (groupFileInfoA.getLongTime() == groupFileInfoB.getLongTime()) {
+                            sortResult = 0;
+                        } else if (groupFileInfoA.getLongTime() < groupFileInfoB.getLongTime()) {
+                            sortResult = 1;
+                        } else {
+                            sortResult = -1;
+                        }
+                        break;
+                    case SORT_BY_TIME_UP:
+                        if (groupFileInfoA.getLongTime() == groupFileInfoB.getLongTime()) {
+                            sortResult = 0;
+                        } else if (groupFileInfoA.getLongTime() < groupFileInfoB.getLongTime()) {
+                            sortResult = -1;
+                        } else {
+                            sortResult = 1;
+                        }
+                        break;
+                    default:
+                        sortResult = Collator.getInstance(Locale.CHINA).compare(groupFileInfoA.getName(), groupFileInfoB.getName());
+                        break;
+                }
+            return sortResult;
+        }
     }
 
     public void onClick(View v) {
-        finish();
+        switch (v.getId()){
+            case R.id.back_layout:
+                finish();
+                break;
+            case R.id.tv_order_by_name_asc:
+                showSortOperationPop();
+                break;
+            case R.id.sort_by_time_up_layout:
+                sortType = SORT_BY_TIME_UP;
+                sortOperationPop.dismiss();
+                break;
+            case R.id.sort_by_time_down_layout:
+                sortType = SORT_BY_TIME_DOWN;
+                sortOperationPop.dismiss();
+                break;
+            case R.id.sort_by_name_up_layout:
+                sortType = SORT_BY_NAME_UP;
+                sortOperationPop.dismiss();
+                break;
+            case R.id.sort_by_name_down_layout:
+                sortType = SORT_BY_NAME_DOWN;
+                sortOperationPop.dismiss();
+                break;
+            case R.id.tv_filter_by_file_type:
+                showFileFilterPop(v);
+                break;
+        }
     }
 
-    private class Adapter extends BaseAdapter {
+    private void showFileFilterPop(View v) {
+        View contentView = LayoutInflater.from(GroupFileActivity.this)
+                .inflate(R.layout.app_volume_file_filter_pop, null);
+        final PopupWindow fileFilterPop = new PopupWindow(contentView,
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT, true);
+        GridView fileFilterGrid = contentView.findViewById(R.id.file_filter_type_grid);
+        fileFilterGrid.setAdapter(new VolumeFileFilterPopGridAdapter(GroupFileActivity.this));
+        fileFilterGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String[] fileFilterTypes = {FileUtils.CLOUD_DOCUMENT, FileUtils.CLOUD_PICTURE, FileUtils.CLOUD_AUDIO, FileUtils.CLOUD_VIDEO, FileUtils.CLOUD_UNKNOWN_FILE_TYPE};
+                filterFilesByFileType(fileFilterTypes[position]);
+                fileFilterPop.dismiss();
+            }
+        });
+        fileFilterPop.setTouchable(true);
+        fileFilterPop.setBackgroundDrawable(ContextCompat.getDrawable(
+                getApplicationContext(), R.drawable.pop_window_view_tran));
+        fileFilterPop.setOutsideTouchable(true);
+        fileFilterPop.showAsDropDown(v);
+        Drawable drawableUp = ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_volume_menu_drop_up);
+        drawableUp.setBounds(0, 0, DensityUtil.dip2px(getApplicationContext(), 14), DensityUtil.dip2px(getApplicationContext(), 14));
+        filterByFileTypeText.setCompoundDrawables(null, null, drawableUp, null);
+        fileFilterPop.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                Drawable drawableDown = ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_volume_menu_drop_down);
+                drawableDown.setBounds(0, 0, DensityUtil.dip2px(getApplicationContext(), 14), DensityUtil.dip2px(getApplicationContext(), 14));
+                filterByFileTypeText.setCompoundDrawables(null, null, drawableDown, null);
+            }
+        });
+    }
+
+    private void filterFilesByFileType(String fileFilterType) {
+        List<GroupFileInfo> fileInfoFilterList = new ArrayList<>();
+        fileInfoFilterList.clear();
+        for(GroupFileInfo groupFileInfo:fileInfoList){
+            if(FileUtils.getFileTypeByName(groupFileInfo.getName()).equals(fileFilterType)){
+                fileInfoFilterList.add(groupFileInfo);
+            }
+        }
+        adapter.setAndReFreshList(fileInfoFilterList);
+    }
+
+    private class GroupFileAdapter extends BaseAdapter {
+        private List<GroupFileInfo> groupFileInfoList = new ArrayList<>();
 
         @Override
         public int getCount() {
-            // TODO Auto-generated method stub
-            return fileInfoList.size();
+            return groupFileInfoList.size();
         }
 
         @Override
         public Object getItem(int position) {
-            // TODO Auto-generated method stub
             return null;
         }
 
         @Override
         public long getItemId(int position) {
-            // TODO Auto-generated method stub
             return 0;
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            // TODO Auto-generated method stub
             convertView = LayoutInflater.from(GroupFileActivity.this).inflate(R.layout.group_file_item_view, null);
-            displayFiles(convertView, position);
+            displayFiles(convertView, position,groupFileInfoList);
             return convertView;
+        }
+
+        public void setAndReFreshList(List<GroupFileInfo> groupFileInfoList){
+            this.groupFileInfoList = groupFileInfoList;
+            notifyDataSetChanged();
         }
     }
 
-    /**
-     * 展示文件卡片
-     **/
-    public void displayFiles(View convertView, int position) {
-        // TODO Auto-generated method stub
-        ImageView fileImg = (ImageView) convertView
-                .findViewById(R.id.file_img);
-        TextView fileNameText = (TextView) convertView
-                .findViewById(R.id.tv_file_name);
-        TextView fileSizeText = (TextView) convertView
-                .findViewById(R.id.tv_file_size);
-        TextView fileOwnerText = (TextView) convertView
-                .findViewById(R.id.file_owner_text);
-        TextView fileTimeText = (TextView) convertView
-                .findViewById(R.id.file_time_text);
-        final HorizontalProgressBarWithNumber progressBar = (HorizontalProgressBarWithNumber) convertView
-                .findViewById(R.id.file_download_progressbar);
-        GroupFileInfo groupFileInfo = fileInfoList.get(position);
+    public void displayFiles(View convertView, int position,List<GroupFileInfo> groupFileInfoList) {
+        ImageView fileImg = convertView.findViewById(R.id.file_img);
+        TextView fileNameText = convertView.findViewById(R.id.tv_file_name);
+        TextView fileSizeText = convertView.findViewById(R.id.tv_file_size);
+        TextView fileOwnerText = convertView.findViewById(R.id.file_owner_text);
+        TextView fileTimeText = convertView.findViewById(R.id.file_time_text);
+        TextView fileMonthText = convertView.findViewById(R.id.tv_file_month);
+        final HorizontalProgressBarWithNumber progressBar = convertView.findViewById(R.id.file_download_progressbar);
+        GroupFileInfo groupFileInfo = groupFileInfoList.get(position);
         final String fileName = groupFileInfo.getName();
         final String source = groupFileInfo.getUrl();
         fileNameText.setText(fileName);
         fileSizeText.setText(groupFileInfo.getSize());
         fileOwnerText.setText(groupFileInfo.getOwner());
+        if(sortType.equals(SORT_BY_TIME_DOWN) || sortType.equals(SORT_BY_TIME_UP)){
+            if(position >= 1){
+                String currentTime = groupFileInfo.getTime(getApplicationContext());
+                String lastTime = groupFileInfoList.get(position - 1).getTime(getApplicationContext());
+                fileMonthText.setVisibility(!lastTime.equals(currentTime)?View.VISIBLE:View.GONE);
+                fileMonthText.setText(currentTime);
+            }else{
+                fileMonthText.setText(groupFileInfo.getTime(getApplicationContext()));
+            }
+        }else{
+            fileMonthText.setVisibility(View.GONE);
+        }
         fileTimeText.setText(groupFileInfo.getTime(getApplicationContext()));
         ImageDisplayUtils.getInstance().displayImage(fileImg, "drawable://" + FileUtils.getIconResId(fileName));
         convertView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO Auto-generated method stub
                 // 当文件正在下载中 点击不响应
                 final String fileDownloadPath = MyAppConfig.LOCAL_DOWNLOAD_PATH + fileName;
                 progressBar.setTag(fileDownloadPath);

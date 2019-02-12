@@ -4,11 +4,23 @@
     android:layout_height="wrap_content"
     android:background="@color/white" >
 
+    <TextView
+        android:id="@+id/tv_file_month"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginBottom="15dp"
+        android:textSize="13sp"
+        android:textColor="#999999"
+        android:text="本月"
+        />
+
     <ImageView
         android:id="@+id/file_img"
         android:layout_width="45dp"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
+        android:layout_below="@id/tv_file_month"
         android:layout_marginLeft="18dp"
         android:adjustViewBounds="true"
         android:scaleType="fitXY"
@@ -18,6 +30,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
+        android:layout_below="@id/tv_file_month"
         android:layout_marginLeft="18.5dp"
         android:layout_marginRight="20dp"
         android:layout_toRightOf="@id/file_img"
