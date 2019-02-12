@@ -71,6 +71,11 @@ import java.util.Locale;
 public class FileUtils {
 
     public final static String FILE_EXTENSION_SEPARATOR = ".";
+    public final static String CLOUD_DOCUMENT = "document";
+    public final static String CLOUD_PICTURE = "picture";
+    public final static String CLOUD_AUDIO = "audio";
+    public final static String CLOUD_VIDEO = "video";
+    public final static String CLOUD_UNKNOWN_FILE_TYPE = "unknown_file_type";
 
     private FileUtils() {
         throw new AssertionError();
@@ -975,6 +980,48 @@ public class FileUtils {
             imageIconId = R.drawable.icon_file_photos;
         }
         return imageIconId;
+    }
+
+    /**
+     * 根据文件名得到类型
+     * @param fileName
+     * @return
+     */
+    public static String getFileTypeByName(String fileName){
+        String fileType = CLOUD_UNKNOWN_FILE_TYPE;
+        String suffix = getFileExtension(fileName);
+        switch (suffix){
+            case "doc":
+            case "docx":
+            case "xls":
+            case "xlsx":
+            case "ppt":
+            case "pptx":
+            case "pdf":
+            case "txt":
+                fileType = CLOUD_DOCUMENT;
+                break;
+            case "jpg":
+            case "png":
+                fileType = CLOUD_PICTURE;
+                break;
+            case "mp3":
+            case "amr":
+            case "aac":
+            case "wav":
+                fileType = CLOUD_AUDIO;
+                break;
+            case "mp4":
+            case "rmvb":
+            case "mkv":
+            case "flv":
+                fileType = CLOUD_VIDEO;
+                break;
+            default:
+                fileType = CLOUD_UNKNOWN_FILE_TYPE;
+                break;
+        }
+        return fileType;
     }
 
     /**
