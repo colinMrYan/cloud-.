@@ -33,7 +33,6 @@ import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.DownLoaderUtils;
-import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
@@ -331,7 +330,7 @@ public class GroupFileActivity extends BaseActivity {
             fileMonthText.setVisibility(View.GONE);
         }
         fileTimeText.setText(TimeUtils.getChannelMsgDisplayTime(GroupFileActivity.this,groupFileInfo.getLongTime()));
-        ImageDisplayUtils.getInstance().displayImage(fileImg, "drawable://" + FileUtils.getRegularFileIconResId(fileName));
+        fileImg.setImageResource(FileUtils.getRegularFileIconResId(fileName));
         convertView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
