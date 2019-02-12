@@ -22,12 +22,11 @@
 
         <ImageView
             android:id="@+id/contact_img"
-            android:layout_width="32dp"
+            android:layout_width="40dp"
             android:layout_height="match_parent"
-            android:paddingRight="5dp"
+            android:paddingRight="13dp"
             android:paddingLeft="5dp"
             android:layout_centerVertical="true"
-            android:layout_marginRight="8dp"
             android:layout_toLeftOf="@id/more_function_list_img"
             android:clickable="true"
             android:scaleType="centerInside"
@@ -35,13 +34,12 @@
 
         <ImageView
             android:id="@+id/more_function_list_img"
-            android:layout_width="32dp"
+            android:layout_width="48dp"
             android:layout_height="match_parent"
-            android:paddingRight="5dp"
+            android:paddingRight="21dp"
             android:paddingLeft="5dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="16dp"
             android:clickable="true"
             android:scaleType="centerInside"
             android:src="@drawable/ic_chat_add" />

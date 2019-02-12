@@ -54,6 +54,10 @@ import java.util.Locale;
 @ContentView(R.layout.activity_group_file)
 public class GroupFileActivity extends BaseActivity {
 
+    protected static final String SORT_BY_NAME_UP = "sort_by_name_up";
+    protected static final String SORT_BY_NAME_DOWN = "sort_by_name_down";
+    protected static final String SORT_BY_TIME_UP = "sort_by_time_up";
+    protected static final String SORT_BY_TIME_DOWN = "sort_by_time_down";
     @ViewInject(R.id.lv_file)
     private ListView fileListView;
     @ViewInject(R.id.rl_no_channel_file)
@@ -66,21 +70,17 @@ public class GroupFileActivity extends BaseActivity {
     private List<GroupFileInfo> fileInfoList = new ArrayList<>();
     private PopupWindow sortOperationPop;
     private GroupFileAdapter adapter;
-
     protected String sortType = "sort_by_name_up";
-    protected static final String SORT_BY_NAME_UP = "sort_by_name_up";
-    protected static final String SORT_BY_NAME_DOWN = "sort_by_name_down";
-    protected static final String SORT_BY_TIME_UP = "sort_by_time_up";
-    protected static final String SORT_BY_TIME_DOWN = "sort_by_time_down";
+    private FileSortComparable fileSortComparable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         cid = getIntent().getExtras().getString("cid");
         getFileMsgList();
         noChannelFileLayout.setVisibility(fileInfoList.size() == 0 ? View.VISIBLE:View.GONE);
-        Collections.sort(fileInfoList,new FileSortComparable());
+        fileSortComparable = new FileSortComparable();
+        Collections.sort(fileInfoList,fileSortComparable);
         adapter = new GroupFileAdapter();
         fileListView.setAdapter(adapter);
         adapter.setAndReFreshList(fileInfoList);
@@ -156,7 +156,7 @@ public class GroupFileActivity extends BaseActivity {
                 break;
         }
         operationSortText.setText(sortTypeShowTxt);
-        Collections.sort(fileInfoList,new FileSortComparable());
+        Collections.sort(fileInfoList,fileSortComparable);
         adapter.setAndReFreshList(fileInfoList);
     }
 
@@ -343,9 +343,7 @@ public class GroupFileActivity extends BaseActivity {
                         && (progressBar.getProgress() < 100)) {
                     return;
                 }
-
                 APIDownloadCallBack progressCallback = new APIDownloadCallBack(GroupFileActivity.this, source) {
-
                     @Override
                     public void callbackStart() {
                         if ((progressBar.getTag() != null)
