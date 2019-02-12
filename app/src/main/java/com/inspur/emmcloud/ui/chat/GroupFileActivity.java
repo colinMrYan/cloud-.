@@ -31,10 +31,10 @@ import com.inspur.emmcloud.bean.chat.MsgContentRegularFile;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.FileUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.DownLoaderUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
+import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 import com.inspur.emmcloud.util.privates.cache.MsgCacheUtil;
@@ -309,7 +309,6 @@ public class GroupFileActivity extends BaseActivity {
         ImageView fileImg = convertView.findViewById(R.id.file_img);
         TextView fileNameText = convertView.findViewById(R.id.tv_file_name);
         TextView fileSizeText = convertView.findViewById(R.id.tv_file_size);
-//        TextView fileOwnerText = convertView.findViewById(R.id.file_owner_text);
         TextView fileTimeText = convertView.findViewById(R.id.file_time_text);
         TextView fileMonthText = convertView.findViewById(R.id.tv_file_month);
         convertView.findViewById(R.id.v_line).setVisibility(position == 0 ?View.GONE:View.VISIBLE);
@@ -319,7 +318,6 @@ public class GroupFileActivity extends BaseActivity {
         final String source = groupFileInfo.getUrl();
         fileNameText.setText(fileName);
         fileSizeText.setText(groupFileInfo.getSize());
-//        fileOwnerText.setText(groupFileInfo.getOwner());
         if(sortType.equals(SORT_BY_TIME_DOWN) || sortType.equals(SORT_BY_TIME_UP)){
             if(position >= 1){
                 String currentTime = groupFileInfo.getTime(getApplicationContext());
@@ -332,8 +330,7 @@ public class GroupFileActivity extends BaseActivity {
         }else{
             fileMonthText.setVisibility(View.GONE);
         }
-        fileTimeText.setText(groupFileInfo.getTime(getApplicationContext()));
-        LogUtils.YfcDebug("时间："+groupFileInfo.getTime(getApplicationContext()));
+        fileTimeText.setText(TimeUtils.getChannelMsgDisplayTime(GroupFileActivity.this,groupFileInfo.getLongTime()));
         ImageDisplayUtils.getInstance().displayImage(fileImg, "drawable://" + FileUtils.getRegularFileIconResId(fileName));
         convertView.setOnClickListener(new OnClickListener() {
             @Override
