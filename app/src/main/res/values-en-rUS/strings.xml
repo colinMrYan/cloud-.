@@ -313,6 +313,7 @@
     <string name="meeting_refused">Reject</string>
     <string name="meeting_cancel_confirm">Cancel Confirmation</string>
     <string name="meeting_cancel_reject">Cancel Rejection</string>
+    <string name="chat_resend_message">Resend</string>
 
     <!-- 工作页面部分 -->
     <string name="work">Work</string>

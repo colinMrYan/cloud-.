@@ -315,6 +315,8 @@
     <string name="meeting_cancel_confirm">取消確認</string>
     <string name="meeting_cancel_reject">取消拒絕</string>
 
+    <string name="chat_resend_message">重新發送</string>
+
     <!-- 工作頁面部分 -->
     <string name="work">工作</string>
     <string name="work_new_year_day">距元旦</string>
