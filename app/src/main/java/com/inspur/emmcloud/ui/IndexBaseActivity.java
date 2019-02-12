@@ -48,6 +48,7 @@ import com.inspur.emmcloud.ui.work.TabBean;
 import com.inspur.emmcloud.ui.work.WorkFragment;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.SelectorUtils;
+import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.AppTabUtils;
@@ -658,6 +659,13 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
 
     @Override
     public void onTabChanged(final String tabId) {
+        if(tabId.equals("ecc-app-react-native://discover")) {
+            StateBarUtils.translucent(this ,R.color.header_bg);
+            StateBarUtils.setStateBarTextColor( this,false );
+        } else {
+            StateBarUtils.translucent(this);
+            StateBarUtils.setStateBarTextColor(this,true);
+        }
         this.tabId = tabId;
         tipsView.setCanTouch(tabId.equals(Constant.APP_TAB_BAR_COMMUNACATE));
         if (!isSystemChangeTag) {

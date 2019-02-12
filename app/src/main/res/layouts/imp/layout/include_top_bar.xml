@@ -5,19 +5,15 @@
     android:layout_height="@dimen/header_height"
     android:background="@drawable/shape_header_bg"
     android:clickable="true">
-
-    <ImageView
-        android:id="@+id/btn_back"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:paddingTop="18dp"
-        android:paddingBottom="18dp"
-        android:paddingLeft="12dp"
-        android:paddingRight="12dp"
+    <ImageButton
+        android:id="@+id/ibt_back"
+        android:layout_width="44dp"
+        android:padding="11dp"
+        android:layout_height="44dp"
         android:layout_centerVertical="true"
         android:onClick="onClick"
-        android:src="@drawable/selector_back_btn"/>
-
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_back_btn_black" />
 
     <TextView
         android:id="@+id/tv_des"
@@ -25,7 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:text="@string/select_images"
-        android:textColor="#ffffff"
+        android:textColor="?attr/header_text_color"
         android:textSize="@dimen/header_textsize"/>
     <TextView
         android:id="@+id/tv_ok"
@@ -39,7 +35,7 @@
         android:paddingRight="12dp"
         android:textStyle="normal"
         android:onClick="onClick"
-        android:textColor="#ffffff"
+        android:textColor="?attr/header_text_color"
         android:textSize="17sp"/>
 
     <ImageView
