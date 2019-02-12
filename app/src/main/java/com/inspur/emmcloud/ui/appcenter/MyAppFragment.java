@@ -891,6 +891,7 @@ public class MyAppFragment extends Fragment {
         backgroundAlpha(0.8f);
         // 设置好参数之后再show
         popupWindow.showAsDropDown(view);
+        popupWindow.showAsDropDown(view,0,0-DensityUtil.dip2px(MyApplication.getInstance(),10));
     }
 
     /**
