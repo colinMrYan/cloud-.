@@ -197,14 +197,14 @@ public class WorkFragment extends Fragment {
                 .findViewById(R.id.list);
         adapter = new Adapter();
         listView.setAdapter(adapter);
-        (rootView.findViewById(R.id.work_config_img)).setOnClickListener(new View.OnClickListener() {
+        (rootView.findViewById(R.id.iv_work_config)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), WorkSettingActivity.class);
                 startActivityForResult(intent, WORK_SETTING);
             }
         });
-        (rootView.findViewById(R.id.work_config_img2)).setOnClickListener(new View.OnClickListener() {
+        (rootView.findViewById(R.id.iv_work_config2)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), WorkSettingActivity.class);
