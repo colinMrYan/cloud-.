@@ -106,7 +106,7 @@ public class ImageGridActivity extends ImageBaseActivity implements
             Intent intent = new Intent(ImageGridActivity.this, ImagePreviewActivity.class);
             intent.putExtra(ImagePicker.EXTRA_IMAGE_ITEMS, imagePicker.getSelectedImages());
             startActivityForResult(intent, ImagePicker.REQUEST_CODE_PREVIEW);
-        } else if (id == R.id.btn_back) {
+        } else if (id == R.id.back_layout) {
             // 点击返回按钮
             finish();
         }
