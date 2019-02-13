@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.provider.Settings;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -47,8 +48,8 @@ import com.inspur.emmcloud.ui.notsupport.NotSupportFragment;
 import com.inspur.emmcloud.ui.work.TabBean;
 import com.inspur.emmcloud.ui.work.WorkFragment;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
+import com.inspur.emmcloud.util.common.ResourceUtils;
 import com.inspur.emmcloud.util.common.SelectorUtils;
-import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.AppTabUtils;
@@ -201,31 +202,31 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
 
     //显示icon本地映射
     private int getIconFromLocalByIco(String icon) {
-        int localIcon = R.drawable.selector_tab_unknown_btn;
+        Integer localIcon = null;
         switch (icon){
             case Constant.APP_TAB_BAR_COMMUNACATE_NAME:
-                localIcon = R.drawable.selector_tab_message_btn;
+                localIcon = ResourceUtils.getValueOfAttr(IndexBaseActivity.this,R.attr.bg_tab_communicate);
                 break;
             case Constant.APP_TAB_BAR_APPLICATION_NAME:
-                localIcon = R.drawable.selector_tab_app_btn;
+                localIcon = ResourceUtils.getValueOfAttr(IndexBaseActivity.this,R.attr.bg_tab_app);
                 break;
             case Constant.APP_TAB_BAR_WORK_NAME:
-                localIcon = R.drawable.selector_tab_work_btn;
+                localIcon = ResourceUtils.getValueOfAttr(IndexBaseActivity.this,R.attr.bg_tab_work);
                 break;
             case Constant.APP_TAB_BAR_MOMENT_NAME:
-                localIcon = R.drawable.selector_tab_cloud_tweet_btn;
+                localIcon = ResourceUtils.getValueOfAttr(IndexBaseActivity.this,R.attr.bg_tab_cloud_tweet);
                 break;
             case Constant.APP_TAB_BAR_ME_NAME:
-                localIcon = R.drawable.selector_tab_more_btn;
+                localIcon = ResourceUtils.getValueOfAttr(IndexBaseActivity.this,R.attr.bg_tab_mine);
                 break;
             case Constant.APP_TAB_BAR_CONTACT_NAME:
-                localIcon = R.drawable.selector_tab_contact_btn;
+                localIcon = ResourceUtils.getValueOfAttr(IndexBaseActivity.this,R.attr.bg_tab_contact);
                 break;
             case Constant.APP_TAB_BAR_DISCOVER_NAME:
-                localIcon = R.drawable.selector_tab_find_btn;
+                localIcon = ResourceUtils.getValueOfAttr(IndexBaseActivity.this,R.attr.bg_tab_find);
                 break;
             default:
-                localIcon = R.drawable.selector_tab_unknown_btn;
+                localIcon = ResourceUtils.getValueOfAttr(IndexBaseActivity.this,R.attr.bg_tab_unknown);
                 break;
         }
         return localIcon;
@@ -284,6 +285,13 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
                     .inflate(R.layout.tab_item_view, null);
             ImageView tabImg =  tabView.findViewById(R.id.imageview);
             TextView tabText =  tabView.findViewById(R.id.textview);
+            int currentThemeNo = PreferencesUtils.getInt(MyApplication.getInstance(), Constant.PREF_APP_THEME, 0);
+            if (currentThemeNo == 2){
+                tabText.setTextColor(ContextCompat.getColor(MyApplication.getInstance(),R.color.seclector_footer_text_grey));
+            }else {
+                tabText.setTextColor(ContextCompat.getColor(MyApplication.getInstance(),R.color.seclector_footer_text_white));
+            }
+
             if (tabId.equals(Constant.APP_TAB_BAR_COMMUNACATE)) {
                 handleTipsView(tabView);
                 communicateIndex = i;
@@ -659,13 +667,13 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
 
     @Override
     public void onTabChanged(final String tabId) {
-        if(tabId.equals("ecc-app-react-native://discover")) {
-            StateBarUtils.translucent(this ,R.color.header_bg);
-            StateBarUtils.setStateBarTextColor( this,false );
-        } else {
-            StateBarUtils.translucent(this);
-            StateBarUtils.setStateBarTextColor(this,true);
-        }
+//        if(tabId.equals("ecc-app-react-native://discover")) {
+//            StateBarUtils.translucent(this ,R.color.header_bg);
+//            StateBarUtils.setStateBarTextColor( this,false );
+//        } else {
+//            StateBarUtils.translucent(this);
+//            StateBarUtils.setStateBarTextColor(this,true);
+//        }
         this.tabId = tabId;
         tipsView.setCanTouch(tabId.equals(Constant.APP_TAB_BAR_COMMUNACATE));
         if (!isSystemChangeTag) {

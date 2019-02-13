@@ -2,6 +2,27 @@
 <resources>
     <attr name="header_bg_color" format="reference|color"/>
     <attr name="header_text_color" format="reference|color"/>
+    <attr name="footer_bg_color" format="reference|color"/>
+    <attr name="footer_tab_text_color_nor" format="reference|color"/>
+    <attr name="footer_tab_text_color_select" format="reference|color"/>
+
+    <attr name="footer_tab_text_color" format="reference"/>
+
+    <attr name="bg_tab_app" format="reference"/>
+    <attr name="bg_tab_cloud_tweet" format="reference"/>
+    <attr name="bg_tab_communicate" format="reference"/>
+    <attr name="bg_tab_contact" format="reference"/>
+    <attr name="bg_tab_find" format="reference"/>
+    <attr name="bg_tab_mine" format="reference"/>
+    <attr name="bg_tab_unknown" format="reference"/>
+    <attr name="bg_tab_work" format="reference"/>
+    <attr name="ic_message_header_contact" format="reference"/>
+    <attr name="ic_add" format="reference"/>
+    <attr name="ic_config" format="reference"/>
+    <attr name="ic_appcenter_enter" format="reference"/>
+    <attr name="ic_appcenter_config" format="reference"/>
+
+
 
 
     <declare-styleable name="CircleImageView">

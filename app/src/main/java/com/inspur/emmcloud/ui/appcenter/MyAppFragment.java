@@ -108,7 +108,8 @@ public class MyAppFragment extends Fragment {
     private ListView appListView;
     private AppListAdapter appListAdapter;
     private ImageButton configBtn;
-    private Button editBtnFinish;
+    private ImageButton appcenterEnterBtn;
+    private Button sortFinishBtn;
     private MyAppAPIService apiService;
     private MySwipeRefreshLayout swipeRefreshLayout;
     private BroadcastReceiver mBroadcastReceiver;
@@ -123,6 +124,7 @@ public class MyAppFragment extends Fragment {
     private View    netExceptionView;
     private boolean haveHeader=false;
     private boolean hasRequestBadgeNum = false;
+    private MyOnClickListener myOnClickListener;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -203,32 +205,15 @@ public class MyAppFragment extends Fragment {
         appListView = rootView.findViewById(R.id.my_app_list);
         refreshAppListView();
         configBtn = rootView.findViewById(R.id.ibt_appcenter_config);
-        configBtn.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showPopupWindow(v);
-            }
-        });
-//        editBtnFinish = (Button) rootView.findViewById(R.id.app_edit_finish);
-//        editBtnFinish.setOnClickListener(new OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                appListAdapter.setCanEdit(false);
-//                appListAdapter.notifyDataSetChanged();
-//                configBtn.setVisibility(View.VISIBLE);
-//                editBtnFinish.setVisibility(View.GONE);
-//                if (popupWindow != null && popupWindow.isShowing()) {
-//                    popupWindow.dismiss();
-//                }
-//            }
-//        });
-        OnAppCenterClickListener listener = new OnAppCenterClickListener();
-        (rootView.findViewById(R.id.ibt_appcenter_enter)).setOnClickListener(listener);
+        myOnClickListener = new MyOnClickListener();
+        configBtn.setOnClickListener(myOnClickListener);
+        sortFinishBtn = rootView.findViewById(R.id.bt_sort_finish);
+        sortFinishBtn.setOnClickListener(myOnClickListener);
+        appcenterEnterBtn = rootView.findViewById(R.id.ibt_appcenter_enter);
+        appcenterEnterBtn.setOnClickListener(myOnClickListener);
         setTabTitle();
         //当Fragment创建时重置时间
         PreferencesByUserAndTanentUtils.putInt(getActivity(), Constant.PREF_MY_APP_RECOMMEND_LASTUPDATE_HOUR, 0);
-//        shortCutAppList.add("mobile_checkin_hcm");
-//        shortCutAppList.add("inspur_news_esg");//目前，除在此处添加id还需要为每个需要生成快捷方式的应用配置图标
     }
 
     /**
@@ -310,8 +295,7 @@ public class MyAppFragment extends Fragment {
      * 初始化PullRefreshLayout
      */
     private void initPullRefreshLayout() {
-        swipeRefreshLayout = (MySwipeRefreshLayout) rootView
-                .findViewById(R.id.refresh_layout);
+        swipeRefreshLayout = rootView.findViewById(R.id.refresh_layout);
         swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.header_bg), getResources().getColor(R.color.header_bg));
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -513,40 +497,6 @@ public class MyAppFragment extends Fragment {
                                         int position, long id) {
                     if (!canEdit) {
                         App app = appGroupItemList.get(position);
-                        //可以再定具体出现的时机和是否需要对用户进行提示
-                        //快捷方式逻辑，因不同手机rom定制问题，暂时不打开这个功能
-//                        String appId = app.getIdentifiers();
-//                        if (shortCutAppList.indexOf(appId) != -1) {
-//                            boolean needCreateShortCut = PreferencesByUserAndTanentUtils.getBoolean(getActivity(), "need_create_shortcut" + app.getAppID(), true);
-//                            if (needCreateShortCut && !ShortCutUtils.isShortCutExist(getActivity(), app.getAppName())) {
-//                                //目前只识别的移动签到和集团新闻两个应用，设置了两个图标，以后可以改成可配置的
-//                                if(appId.equals("mobile_checkin_hcm")){
-//                                    //保留指定BItmap的指定方式
-////                                    InputStream is = null;
-////                                    try {
-////                                        is = getActivity().getAssets().open("icon_test1.png");
-////                                        Bitmap bitmap = BitmapFactory.decodeStream(is);
-////                                        showCreateShortCutDialog(app, "ecc-app-web-hcm",
-////                                                ImpActivity.class, 0,bitmap);
-////                                    } catch (IOException e) {
-////                                        e.printStackTrace();
-////                                    }
-//                                    showCreateShortCutDialog(app, "ecc-app-web-hcm", ImpActivity.class,
-//                                            R.drawable.icon_shortcut_register,null);
-//                                }else if(appId.equals("inspur_news_esg")){
-//                                    //暂时保留，这里可以指定新闻
-////                                    showCreateShortCutDialog(app, "ecc-app-native", GroupNewsActivity.class,
-////                                            R.drawable.news_icon,null);
-//                                    UriUtils.openApp(getActivity(),app);
-//                                }
-//                            } else {
-//                                UriUtils.openApp(getActivity(), app);
-//                            }
-//                        }else{
-//                            UriUtils.openApp(getActivity(), app);
-//                        }
-
-
                         if (NetUtils.isNetworkConnected(getActivity()) && !isFastDoubleClick()) {
                             if(app.getSubAppList().size() > 0){
                                 Intent intent = new Intent();
@@ -578,8 +528,7 @@ public class MyAppFragment extends Fragment {
                     if (!canEdit) {
                         appListAdapter.setCanEdit(true);
                         appListAdapter.notifyDataSetChanged();
-                        configBtn.setVisibility(View.GONE);
-                        editBtnFinish.setVisibility(View.VISIBLE);
+                        setAppEditStatus(true);
                         canEdit = true;
                         Vibrator mVibrator = (Vibrator) getActivity()
                                 .getSystemService(Context.VIBRATOR_SERVICE);
@@ -833,7 +782,7 @@ public class MyAppFragment extends Fragment {
         // 一个自定义的布局，作为popwindowivew显示的内容
         View contentView = LayoutInflater.from(getActivity())
                 .inflate(R.layout.app_center_popup_window_view, null);
-        final SwitchView switchView = (SwitchView) contentView.findViewById(R.id.app_hide_switch);
+        final SwitchView switchView = (SwitchView) contentView.findViewById(R.id.switch_view_common_app);
         //为了在打开PopWindow时立刻显示当前状态
         switchView.setOpened(getNeedCommonlyUseApp());
         // 设置按钮的点击事件
@@ -871,27 +820,11 @@ public class MyAppFragment extends Fragment {
                 saveNeedCommonlyUseApp(false);
             }
         });
-        TextView changeOrderLayout = (TextView) contentView.findViewById(R.id.app_change_btn);
-        changeOrderLayout.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (appListAdapter != null) {
-                    appListAdapter.setCanEdit(true);
-                    appListAdapter.notifyDataSetChanged();
-                    configBtn.setVisibility(View.GONE);
-                    editBtnFinish.setVisibility(View.VISIBLE);
-                    popupWindow.dismiss();
-                }
-            }
-        });
-        // 如果不设置PopupWindow的背景，无论是点击外部区域还是Back键都无法dismiss弹框
-        // 这里是API的一个bug
+        (contentView.findViewById(R.id.tv_order)).setOnClickListener(myOnClickListener);
         popupWindow.setBackgroundDrawable(getResources().getDrawable(
                 R.drawable.pop_window_view_tran));
         backgroundAlpha(0.8f);
-        // 设置好参数之后再show
         popupWindow.showAsDropDown(view);
-        popupWindow.showAsDropDown(view,0,0-DensityUtil.dip2px(MyApplication.getInstance(),10));
     }
 
     /**
@@ -1111,15 +1044,43 @@ public class MyAppFragment extends Fragment {
 
     }
 
-    /**
-     * 打开应用中心
-     */
-    class OnAppCenterClickListener implements OnClickListener {
+
+    class MyOnClickListener implements OnClickListener {
         @Override
         public void onClick(View v) {
-            IntentUtils.startActivity(getActivity(), AppCenterActivity.class);
-            recordUserClickAppCenter();
+            switch (v.getId()){
+                case R.id.ibt_appcenter_enter:
+                    IntentUtils.startActivity(getActivity(), AppCenterActivity.class);
+                    recordUserClickAppCenter();
+                    break;
+                case R.id.ibt_appcenter_config:
+                    showPopupWindow(v);
+                    break;
+                case R.id.bt_sort_finish:
+                    appListAdapter.setCanEdit(false);
+                    appListAdapter.notifyDataSetChanged();
+                    setAppEditStatus(false);
+                    if (popupWindow != null && popupWindow.isShowing()) {
+                        popupWindow.dismiss();
+                    }
+                    break;
+                case R.id.tv_order:
+                    if (appListAdapter != null) {
+                        appListAdapter.setCanEdit(true);
+                        appListAdapter.notifyDataSetChanged();
+                        setAppEditStatus(true);
+                        popupWindow.dismiss();
+                    }
+                    break;
+            }
+
         }
+    }
+
+    private void setAppEditStatus(boolean isEditStatus){
+        sortFinishBtn.setVisibility(isEditStatus?View.VISIBLE:View.GONE);
+        configBtn.setVisibility(isEditStatus?View.GONE:View.VISIBLE);
+        appcenterEnterBtn.setVisibility(isEditStatus?View.GONE:View.VISIBLE);
     }
 
 

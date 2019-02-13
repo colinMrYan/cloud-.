@@ -15,10 +15,10 @@
         <ImageButton
             android:id="@+id/ibt_back"
             android:layout_width="44dp"
-            android:padding="11dp"
             android:layout_height="44dp"
             android:layout_centerVertical="true"
             android:onClick="onClick"
+            android:padding="11dp"
             android:scaleType="fitXY"
             android:src="@drawable/ic_back_btn_black" />
 
@@ -31,11 +31,13 @@
             android:textColor="?attr/header_text_color"
             android:textSize="@dimen/header_textsize" />
     </RelativeLayout>
+
     <RelativeLayout
-        android:layout_below="@id/rl_header"
-        android:background="@color/content_bg"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_below="@id/rl_header"
+        android:background="@color/content_bg">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -46,9 +48,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/text_layout_selector"
-                android:paddingRight="16dp"
+                android:onClick="onClick"
                 android:paddingLeft="16dp"
-                android:onClick="onClick">
+                android:paddingRight="16dp">
 
                 <TextView
                     android:id="@+id/tv_setting_account_safe"
@@ -67,156 +69,158 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="16dp"
                     android:src="@drawable/icon_arrow_right" />
+
                 <View
                     android:layout_width="match_parent"
-                    android:layout_below="@+id/tv_setting_account_safe"
                     android:layout_height="0.5px"
+                    android:layout_below="@+id/tv_setting_account_safe"
                     android:background="@color/color_list_divider" />
             </RelativeLayout>
 
-                <RelativeLayout
-                    android:id="@+id/rl_setting_language"
-                    android:layout_width="match_parent"
+            <RelativeLayout
+                android:id="@+id/rl_setting_language"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/text_layout_selector"
+                android:onClick="onClick"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/text_layout_selector"
-                    android:onClick="onClick"
-                    android:paddingRight="16dp"
-                    android:paddingLeft="16dp">
+                    android:layout_centerVertical="true"
+                    android:paddingBottom="11dp"
+                    android:paddingTop="11dp"
+                    android:text="@string/settings_language"
+                    android:textSize="16sp" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:paddingBottom="11dp"
-                        android:paddingTop="11dp"
-                        android:text="@string/settings_language"
-                        android:textSize="16sp" />
+                <ImageView
+                    android:id="@+id/iv_setting_language_flag"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
+                    android:layout_toLeftOf="@+id/tv_setting_language_name"
+                    android:scaleType="fitXY" />
 
-                    <ImageView
-                        android:id="@+id/iv_setting_language_flag"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_centerVertical="true"
-                        android:layout_marginRight="15dp"
-                        android:layout_toLeftOf="@+id/tv_setting_language_name"
-                        android:scaleType="fitXY" />
-
-                    <TextView
-                        android:id="@+id/tv_setting_language_name"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_toLeftOf="@+id/iv_setting_language_arrow"
-                        android:gravity="right"
-                        android:paddingBottom="11dp"
-                        android:paddingTop="11dp"
-                        android:text="@string/follow_system"
-                        android:textColor="#888888"
-                        android:textSize="16sp" />
-
-                    <ImageView
-                        android:id="@+id/iv_setting_language_arrow"
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="16dp"
-                        android:src="@drawable/icon_arrow_right" />
-                    <View
-                        android:layout_below="@id/tv_setting_language_name"
-                        android:layout_width="match_parent"
-                        android:layout_height="0.5px"
-                        android:background="@color/color_list_divider" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:id="@+id/rl_setting_switch_theme"
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/tv_setting_language_name"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    android:background="@drawable/text_layout_selector"
-                    android:onClick="onClick"
-                    android:paddingRight="16dp"
-                    android:paddingLeft="16dp">
+                    android:layout_gravity="center_vertical"
+                    android:layout_toLeftOf="@+id/iv_setting_language_arrow"
+                    android:gravity="right"
+                    android:paddingBottom="11dp"
+                    android:paddingTop="11dp"
+                    android:text="@string/follow_system"
+                    android:textColor="#888888"
+                    android:textSize="16sp" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:paddingBottom="11dp"
-                        android:paddingTop="11dp"
-                        android:text="切换皮肤"
-                        android:textSize="16sp" />
+                <ImageView
+                    android:id="@+id/iv_setting_language_arrow"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="6dp"
+                    android:src="@drawable/icon_arrow_right" />
 
-
-                    <TextView
-                        android:id="@+id/tv_setting_theme_name"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_toLeftOf="@+id/tv_setting_switch_theme_arrow"
-                        android:gravity="right"
-                        android:paddingBottom="11dp"
-                        android:paddingTop="11dp"
-                        android:visibility="gone"
-                        android:textColor="#888888"
-                        android:textSize="16sp" />
-
-                    <ImageView
-                        android:id="@+id/tv_setting_switch_theme_arrow"
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="16dp"
-                        android:src="@drawable/icon_arrow_right" />
-                    <View
-                        android:layout_below="@id/tv_setting_theme_name"
-                        android:layout_width="match_parent"
-                        android:layout_height="0.5px"
-                        android:background="@color/color_list_divider" />
-                </RelativeLayout>
-
-
-                <RelativeLayout
-                    android:id="@+id/clear_cache_layout"
+                <View
                     android:layout_width="match_parent"
+                    android:layout_height="0.5px"
+                    android:layout_below="@id/tv_setting_language_name"
+                    android:background="@color/color_list_divider" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_setting_switch_theme"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/text_layout_selector"
+                android:onClick="onClick"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/text_layout_selector"
-                    android:onClick="onClick"
-                    android:paddingRight="16dp"
-                    android:paddingLeft="16dp">
-
-                    <TextView
-                        android:id="@+id/tv_setting_clear_cache"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:paddingBottom="11dp"
-                        android:paddingTop="11dp"
-                        android:text="@string/settings_clear_cache"
-                        android:textSize="16sp" />
+                    android:layout_centerVertical="true"
+                    android:paddingBottom="11dp"
+                    android:paddingTop="11dp"
+                    android:text="皮肤切换"
+                    android:textSize="16sp" />
 
 
-                    <ImageView
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="16dp"
-                        android:src="@drawable/icon_arrow_right" />
-                    <View
-                        android:layout_below="@id/tv_setting_clear_cache"
-                        android:layout_width="match_parent"
-                        android:layout_height="0.5px"
-                        android:background="@color/color_list_divider" />
-                </RelativeLayout>
+                <TextView
+                    android:id="@+id/tv_setting_theme_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_toLeftOf="@+id/tv_setting_switch_theme_arrow"
+                    android:gravity="right"
+                    android:paddingBottom="11dp"
+                    android:paddingTop="11dp"
+                    android:textColor="#888888"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:id="@+id/tv_setting_switch_theme_arrow"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="6dp"
+                    android:src="@drawable/icon_arrow_right" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5px"
+                    android:layout_below="@id/tv_setting_theme_name"
+                    android:background="@color/color_list_divider" />
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/clear_cache_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/text_layout_selector"
+                android:onClick="onClick"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp">
+
+                <TextView
+                    android:id="@+id/tv_setting_clear_cache"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:paddingBottom="11dp"
+                    android:paddingTop="11dp"
+                    android:text="@string/settings_clear_cache"
+                    android:textSize="16sp" />
+
+
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="16dp"
+                    android:src="@drawable/icon_arrow_right" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5px"
+                    android:layout_below="@id/tv_setting_clear_cache"
+                    android:background="@color/color_list_divider" />
+            </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingLeft="16dp"
-                android:background="@drawable/text_layout_selector">
+                android:background="@drawable/text_layout_selector"
+                android:paddingLeft="16dp">
 
                 <TextView
                     android:id="@+id/tv_setting_web_rotate"
@@ -235,18 +239,19 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="16dp" />
+
                 <View
-                    android:layout_below="@id/tv_setting_web_rotate"
                     android:layout_width="match_parent"
                     android:layout_height="0.5px"
+                    android:layout_below="@id/tv_setting_web_rotate"
                     android:background="@color/color_list_divider" />
             </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingLeft="16dp"
-                android:background="@drawable/text_layout_selector">
+                android:background="@drawable/text_layout_selector"
+                android:paddingLeft="16dp">
 
                 <TextView
                     android:id="@+id/tv_setting_run_background"
@@ -265,10 +270,11 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="16dp" />
+
                 <View
-                    android:layout_below="@id/tv_setting_run_background"
                     android:layout_width="match_parent"
                     android:layout_height="0.5px"
+                    android:layout_below="@id/tv_setting_run_background"
                     android:background="@color/color_list_divider" />
             </RelativeLayout>
 
@@ -276,9 +282,9 @@
                 android:id="@+id/rl_setting_voice_2_word"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
+                android:background="@drawable/text_layout_selector"
                 android:paddingLeft="16dp"
-                android:background="@drawable/text_layout_selector">
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/tv_setting_voice_2_word"
@@ -297,10 +303,11 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="16dp" />
+
                 <View
-                    android:layout_below="@id/tv_setting_voice_2_word"
                     android:layout_width="match_parent"
                     android:layout_height="0.5px"
+                    android:layout_below="@id/tv_setting_voice_2_word"
                     android:background="@color/color_list_divider" />
             </RelativeLayout>
 
@@ -308,9 +315,9 @@
                 android:id="@+id/rl_setting_experience_upgrade"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
+                android:background="@drawable/text_layout_selector"
                 android:paddingLeft="16dp"
-                android:background="@drawable/text_layout_selector">
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/tv_setting_experience_upgrade"
@@ -329,6 +336,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="16dp" />
+
                 <View
                     android:id="@+id/v_experience_upgrade"
                     android:layout_width="match_parent"
@@ -338,29 +346,29 @@
             </RelativeLayout>
 
         </LinearLayout>
-        
+
         <com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton
             android:id="@+id/bt_setting_signout"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:paddingTop="12dp"
-            android:paddingBottom="13dp"
+            android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
+            android:layout_marginBottom="40dp"
+            android:elevation="1dp"
             android:gravity="center"
+            android:onClick="onClick"
+            android:paddingBottom="12dp"
+            android:paddingTop="12dp"
             android:text="@string/quit_check"
             android:textColor="@android:color/white"
-            app:qmui_backgroundColor="#36A5F6"
             android:textSize="16sp"
+            app:qmui_backgroundColor="#36A5F6"
             app:qmui_borderWidth="0dp"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="40dp"
             app:qmui_isRadiusAdjustBounds="true"
-            android:elevation="1dp"
 
             />
 
     </RelativeLayout>
-
 
 
 </RelativeLayout>

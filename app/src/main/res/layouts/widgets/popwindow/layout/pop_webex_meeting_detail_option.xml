@@ -4,20 +4,20 @@
     android:layout_height="wrap_content">
 
     <ImageView
-        android:id="@+id/img_arrow"
+        android:id="@+id/iv_arrow"
         android:layout_width="12dp"
         android:layout_height="8dp"
         android:layout_alignParentRight="true"
         android:layout_marginRight="20dp"
         android:adjustViewBounds="true"
         android:scaleType="fitXY"
-        android:src="@drawable/message_popwindow_list_arrow" />
+        android:src="@drawable/message_popwindow_list_arrow_white" />
 
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_below="@id/img_arrow"
+        android:layout_below="@id/iv_arrow"
         android:layout_marginRight="10dp"
         android:background="@drawable/shape_message_pop_round_blue_layout">
 
@@ -49,7 +49,7 @@
                 android:clickable="false"
                 android:paddingRight="30dp"
                 android:text="@string/webex_participant"
-                android:textColor="#ffffff"
+                android:textColor="?attr/header_text_color"
                 android:textSize="16sp" />
         </RelativeLayout>
 
@@ -62,7 +62,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
-            android:background="#3895D9" />
+            android:background="#e3e3e3" />
 
         <RelativeLayout
             android:id="@+id/rl_share"
@@ -96,7 +96,7 @@
                 android:clickable="false"
                 android:paddingRight="6dp"
                 android:text="@string/share"
-                android:textColor="#ffffff"
+                android:textColor="?attr/header_text_color"
                 android:textSize="16sp" />
         </RelativeLayout>
 
@@ -121,7 +121,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="12dp"
                 android:layout_marginRight="15dp"
-                android:background="#3895D9" />
+                android:background="#e3e3e3" />
 
             <ImageView
                 android:id="@+id/iv_delete"
@@ -144,7 +144,7 @@
                 android:clickable="false"
                 android:paddingRight="6dp"
                 android:text="@string/delete"
-                android:textColor="#ffffff"
+                android:textColor="?attr/header_text_color"
                 android:textSize="16sp" />
         </RelativeLayout>
     </RelativeLayout>

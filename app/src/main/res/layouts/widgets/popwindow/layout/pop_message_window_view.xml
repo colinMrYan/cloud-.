@@ -6,7 +6,7 @@
     android:layout_height="wrap_content">
     <!--android:background="@drawable/message_popwindow_list"-->
     <ImageView
-        android:id="@+id/meesage_popwindow_arrow_img"
+        android:id="@+id/iv_arrow"
         android:layout_width="12dp"
         android:layout_height="8dp"
         android:layout_marginRight="22dp"
@@ -21,7 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_marginRight="10dp"
         android:layout_alignParentRight="true"
-        android:layout_below="@id/meesage_popwindow_arrow_img"
+        android:layout_below="@id/iv_arrow"
         android:background="@drawable/shape_message_pop_round_blue_layout">
 
 

@@ -3,15 +3,39 @@
 
     <color name="progress_grey">#c1c1c1</color>
     <color name="content_border">#c8c7cc</color>
+
+
     <color name="header_bg">#0F7BCA</color>
     <color name="header_bg_white">#FDFDFD</color>
+    <color name="header_bg_grey">#EEEEEE</color>
+
+    <color name="footer_bg">#f8f8f8</color>
+    <color name="footer_bg_white">#FCFCFC</color>
+    <color name="footer_bg_grey">#f8f8f8</color>
+
+    <color name="header_text">#ffffff</color>
+    <color name="header_text_black">#222222</color>
+    <color name="header_text_grey">#222222</color>
+
+
+    <color name="footer_tab_text_nor_white">#979EA3</color>
+    <color name="footer_tab_text_nor_grey">#666666</color>
+    <color name="footer_tab_text_nor_blue">#666666</color>
+
+
+    <color name="footer_tab_text_sel_white">#36A5F6</color>
+    <color name="footer_tab_text_sel_grey">#36A5F6</color>
+    <color name="footer_tab_text_sel_blue">#36A5F6</color>
+
     <color name="contact_header_bg">#EFEFF4</color>
     <color name="bg_my_card">#36A5F6</color>
     <color name="bg_other_card">#ECEEF2</color>
     <color name="bg_my_card_press">#e00F7BCA</color>
     <color name="statebar_color">#0C68AB</color>
     <!-- 导航栏原来色值#1596d2 -->
-    <color name="header_text">#ffffff</color>
+
+
+
     <color name="content_bg">#F8F9FB</color>
     <color name="footer_tab_text_nor">#979EA3</color>
     <!-- 原底部文字颜色#698fa7 -->

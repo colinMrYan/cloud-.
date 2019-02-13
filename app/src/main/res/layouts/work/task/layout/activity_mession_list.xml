@@ -34,18 +34,15 @@
 
         <ImageView
             android:id="@+id/mession_settiing_img"
-            android:layout_width="wrap_content"
+            android:layout_width="32dp"
             android:layout_height="match_parent"
+            android:paddingRight="5dp"
+            android:paddingLeft="5dp"
             android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:adjustViewBounds="true"
+            android:layout_marginRight="11dp"
             android:clickable="true"
             android:onClick="onClick"
-            android:paddingBottom="13dp"
-            android:paddingLeft="12dp"
-            android:paddingRight="15dp"
-            android:paddingTop="13dp"
-            android:scaleType="fitXY"
+            android:scaleType="centerInside"
             android:src="@drawable/ic_config" />
     </RelativeLayout>
 
