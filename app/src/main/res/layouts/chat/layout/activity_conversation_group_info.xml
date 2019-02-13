@@ -75,7 +75,7 @@
                     app:cardPreventCornerOverlap="true"
                     app:cardUseCompatPadding="true"
                     app:cardCornerRadius="8dp"
-                    app:cardElevation="5dp">
+                    app:cardElevation="2.5dp">
 
                     <LinearLayout
                         android:id="@+id/ll_group_info"
