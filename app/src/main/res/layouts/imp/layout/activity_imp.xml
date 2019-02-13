@@ -60,15 +60,29 @@
             android:id="@+id/header_text"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_centerInParent="true"
             android:drawablePadding="5dp"
             android:ellipsize="middle"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="15dp"
+            android:layout_centerVertical="true"
             android:gravity="center_vertical"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            android:singleLine="true"
+            android:layout_toLeftOf="@id/function_layout"
             android:textColor="?attr/header_text_color"
-            android:textSize="@dimen/header_textsize" />
+            android:textSize="24sp"/>
+
+        <!--<TextView-->
+            <!--android:id="@+id/header_text"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_centerInParent="true"-->
+            <!--android:drawablePadding="5dp"-->
+            <!--android:ellipsize="middle"-->
+            <!--android:gravity="center_vertical"-->
+            <!--android:paddingLeft="5dp"-->
+            <!--android:paddingRight="5dp"-->
+            <!--android:singleLine="true"-->
+            <!--android:textColor="?attr/header_text_color"-->
+            <!--android:textSize="@dimen/header_textsize" />-->
         <ImageView
             android:id="@+id/imp_change_font_size_btn"
             android:layout_width="wrap_content"
