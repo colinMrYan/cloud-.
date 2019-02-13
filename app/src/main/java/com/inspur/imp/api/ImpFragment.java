@@ -162,6 +162,16 @@ public class ImpFragment extends ImpBaseFragment {
             appId = getArguments().getString("appId");
         }
         initFragmentViews();
+        RelativeLayout.LayoutParams layoutParams =
+                new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        layoutParams.addRule(getActivity().getClass().getSimpleName().equals(IndexActivity.class.getSimpleName())?
+                (RelativeLayout.ALIGN_PARENT_LEFT|RelativeLayout.CENTER_VERTICAL):RelativeLayout.CENTER_IN_PARENT);
+        headerText.setLayoutParams(layoutParams);
+        if(getActivity().getClass().getSimpleName().equals(IndexActivity.class.getSimpleName())){
+            headerText.setPadding(DensityUtil.dip2px(getActivity(),15),0,0,0);
+        }else{
+            headerText.setTextSize(17);
+        }
         headerText.setText(StringUtils.isBlank(appName)?"":appName);
     }
 
