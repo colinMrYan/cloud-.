@@ -106,9 +106,11 @@ public class ImpBaseFragment extends Fragment {
         webFunctionLayout.post(new Runnable() {
             @Override
             public void run() {
-                functionLayoutWidth = functionLayout.getWidth();
-                webFunctionLayoutWidth = webFunctionLayout.getWidth();
-                headerText.setMaxWidth(ResolutionUtils.getWidth(getActivity()) - getMaxWidth() * 2);
+                if (getActivity() != null){
+                    functionLayoutWidth = functionLayout.getWidth();
+                    webFunctionLayoutWidth = webFunctionLayout.getWidth();
+                    headerText.setMaxWidth(ResolutionUtils.getWidth(getActivity()) - getMaxWidth() * 2);
+                }
             }
         });
     }

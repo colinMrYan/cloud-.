@@ -66,6 +66,8 @@ public class AppAPIService {
         String clientVersion = AppUtils.getVersion(context);
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
+        params.setConnectTimeout(6000);
+        params.setMaxRetryCount(0);
         params.addParameter("clientVersion", clientVersion);
         if (((MyApplication) context.getApplicationContext()).isVersionDev()) {
             params.addParameter("clientType", "dev_android");

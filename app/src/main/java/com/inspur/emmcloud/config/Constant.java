@@ -47,7 +47,7 @@ public class Constant {
 
     public static final String PREF_V_CONFIG_ALL = "v_config_all";
     public static final String PREF_EXPERIENCE_UPGRATE = "experience_upgrade";
-    public static final String PREF_APP_THEME = "app_theme";
+    public static final String PREF_APP_THEME = "app_theme_v1";
     public static final String PREF_MAIL_ACCOUNT = "mail_account";
     public static final String PREF_MAIL_PASSWORD = "mail_password";
 
