@@ -424,9 +424,7 @@ public class SchemeHandleActivity extends BaseActivity {
                 boolean isUriHasTitle = (openMode != null && openMode.equals("1"));
                 Bundle bundle = new Bundle();
                 bundle.putString("uri", webAppUrl);
-                if (isUriHasTitle) {
-                    bundle.putString("appName", "");
-                }
+                bundle.putBoolean(Constant.WEB_FRAGMENT_SHOW_HEADER,isUriHasTitle);
                 IntentUtils.startActivity(SchemeHandleActivity.this, ImpActivity.class, bundle, true);
             }
 
