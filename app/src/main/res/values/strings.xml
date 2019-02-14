@@ -397,6 +397,7 @@
     <string name="no_app">当前没有添加应用</string>
     <string name="app_new_function">新功能</string>
     <string name="app_update_function">当前版本不支持此功能请  立即升级  到最新版本</string>
+    <string name="app_sort_order">调整顺序</string>
 
     <!--云盘 -->
     <string name="clouddriver_my_file">我的文件</string>

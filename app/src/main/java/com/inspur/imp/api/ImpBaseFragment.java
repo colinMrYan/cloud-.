@@ -1,6 +1,5 @@
 package com.inspur.imp.api;
 
-import android.graphics.Color;
 import android.support.v4.app.Fragment;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -22,6 +21,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.system.MainTabMenu;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.ResolutionUtils;
+import com.inspur.emmcloud.util.common.ResourceUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 
@@ -66,14 +66,15 @@ public class ImpBaseFragment extends Fragment {
                         webFunctionLayout.addView(imageView);
                     } else {
                         TextView textView = new TextView(getContext());
-                        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+                        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, getResources().getDimension(R.dimen.header_function_textsize));
                         int paddingLeft = DensityUtil.dip2px(getContext(), 12);
                         textView.setMinWidth(DensityUtil.dip2px(MyApplication.getInstance(), 48));
                         textView.setPadding(paddingLeft, 0, paddingLeft, 0);
                         textView.setText(mainTabMenu.getText());
                         textView.setOnClickListener(onClickListener);
                         textView.setLayoutParams(params);
-                        textView.setTextColor(Color.parseColor("#333333"));
+                        int textColor = ResourceUtils.getValueOfAttr(getActivity(),R.attr.header_text_color);
+                        textView.setTextColor(textColor);
                         textView.setGravity(Gravity.CENTER_VERTICAL);
                         webFunctionLayout.addView(textView);
                     }

@@ -11,11 +11,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingRight="6dp"
+        android:text="@string/corrected_word_input"
         android:textColor="#0F7BCA"
         android:textSize="15sp"
-        android:visibility="gone"
-        android:text="@string/corrected_word_input"
-         />
+        android:visibility="gone" />
 
     <com.qmuiteam.qmui.widget.QMUILoadingView
         android:id="@+id/qlv_downloading_left"
@@ -37,53 +36,53 @@
 
     <com.inspur.emmcloud.widget.bubble.BubbleLayout
         android:id="@+id/bl_voice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         app:bl_arrowDirection="right"
         app:bl_arrowHeight="10dp"
         app:bl_arrowPosition="16dp"
-        app:bl_cornersRadius="8dp"
         app:bl_arrowWidth="4.5dp"
+        app:bl_cornersRadius="8dp"
         app:bl_strokeColor="#AAAAAA"
-        app:bl_strokeWidth="0.5px"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        app:bl_strokeWidth="0.5px">
+
         <RelativeLayout
             android:id="@+id/rl_voice"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity=""
-            >
+            android:layout_height="wrap_content">
 
             <View
                 android:id="@+id/v_voice_anim_left"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:visibility="gone"
-                android:layout_marginTop="11dp"
                 android:layout_marginLeft="8dp"
-                android:background="@drawable/ic_chat_msg_card_voice_left_level_3" />
+                android:layout_marginTop="11dp"
+                android:background="@drawable/ic_chat_msg_card_voice_left_level_3"
+                android:visibility="gone" />
+
             <TextView
                 android:id="@+id/tv_voice_card_word"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/v_voice_anim_left"
+                android:gravity="center_vertical"
                 android:maxWidth="180dp"
                 android:minWidth="55dp"
-                android:paddingTop="10dp"
                 android:paddingBottom="10dp"
+                android:paddingLeft="8dp"
                 android:paddingRight="5dp"
-                android:textSize="16sp"
-                android:gravity="center_vertical"
-                android:layout_toRightOf="@id/v_voice_anim_left"
-                android:paddingLeft="8dp" />
+                android:paddingTop="10dp"
+                android:textSize="16sp" />
 
             <View
                 android:id="@+id/v_voice_anim_right"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:visibility="gone"
-                android:layout_toRightOf="@id/tv_voice_card_word"
-                android:layout_marginTop="11dp"
                 android:layout_marginRight="8dp"
-                android:background="@drawable/ic_chat_msg_card_voice_left_level_3" />
+                android:layout_marginTop="11dp"
+                android:layout_toRightOf="@id/tv_voice_card_word"
+                android:background="@drawable/ic_chat_msg_card_voice_left_level_3"
+                android:visibility="gone" />
         </RelativeLayout>
     </com.inspur.emmcloud.widget.bubble.BubbleLayout>
 

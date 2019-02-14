@@ -79,6 +79,8 @@ public class SettingActivity extends BaseActivity {
     private ImageView languageFlagImg;
     private MineAPIService apiService;
     private LoadingDialog loadingDlg;
+    @ViewInject(R.id.tv_setting_theme_name)
+    private TextView themeNameText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -253,7 +255,12 @@ public class SettingActivity extends BaseActivity {
                 break;
             case R.id.rl_setting_switch_theme:
                 int currentThemeNo = PreferencesUtils.getInt(MyApplication.getInstance(), Constant.PREF_APP_THEME, 0);
-                PreferencesUtils.putInt(MyApplication.getInstance(), Constant.PREF_APP_THEME, (currentThemeNo == 0) ? 1 : 0);
+                currentThemeNo++;
+                if (currentThemeNo > 2){
+                    currentThemeNo = 0;
+                }
+                PreferencesUtils.putInt(MyApplication.getInstance(), Constant.PREF_APP_THEME, currentThemeNo);
+                setTheme();
                 Intent intent = new Intent(SettingActivity.this,
                         IndexActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK

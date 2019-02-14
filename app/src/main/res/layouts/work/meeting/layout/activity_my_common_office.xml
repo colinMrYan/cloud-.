@@ -68,7 +68,7 @@
                 android:paddingTop="18dp"
                 android:paddingBottom="18dp"
                 android:layout_marginRight="4dp"
-                android:src="@drawable/icon_add" />
+                android:src="@drawable/ic_add" />
         </LinearLayout>
         
         <LinearLayout

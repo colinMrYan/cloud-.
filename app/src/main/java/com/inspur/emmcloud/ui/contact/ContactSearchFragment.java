@@ -101,6 +101,8 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
     private int searchContent = -1;
     private FlowLayout flowLayout;
     private EditText searchEdit;
+    private TextView headerText;
+    private TextView tabHeaderText;
     private LinearLayout originLayout; // 进入后看到的页面
     private RelativeLayout originAllLayout;// 进入后看到的界面和打开某项后的list的layout
     private LinearLayout openGroupLayou;// 打开某项后的layout
@@ -274,13 +276,13 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
                 if (openGroupChannelList.size() > 0) {
                     openGroupChannelList = SearchModel.conversationList2SearchModelList(ConversationCacheUtils
                             .getConversationList(MyApplication.getInstance(), Conversation.TYPE_GROUP));
-                    if (openGroupAdapter != null){
+                    if (openGroupAdapter != null) {
                         openGroupAdapter.notifyDataSetChanged();
                     }
                 }
                 if (searchChannelGroupList.size() > 0) {
                     searchChannelGroupList = ConversationCacheUtils.getSearchConversationSearchModelList(MyApplication.getInstance(), searchText);
-                    if (popSecondGroupAdapter != null){
+                    if (popSecondGroupAdapter != null) {
                         popSecondGroupAdapter.notifyDataSetChanged();
                     }
                 }
@@ -347,10 +349,12 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
 
     private void initView() {
         // TODO Auto-generated method stub
-        if (getActivity().getClass().getSimpleName().equals(IndexActivity.class.getSimpleName())) {
-            rootView.findViewById(R.id.ibt_back).setVisibility(View.GONE);
-        }
-        ((TextView) rootView.findViewById(R.id.header_text)).setText(title);
+        headerText = rootView.findViewById(R.id.tv_header);
+        tabHeaderText = rootView.findViewById(R.id.tv_tab_header);
+        boolean isFromTab = getActivity().getClass().getSimpleName().equals(IndexActivity.class.getSimpleName());
+        rootView.findViewById(R.id.ibt_back).setVisibility(isFromTab ? View.GONE : View.VISIBLE);
+        headerText.setVisibility(isFromTab ? View.GONE : View.VISIBLE);
+        tabHeaderText.setVisibility(isFromTab ? View.VISIBLE : View.GONE);
         originAllLayout = (RelativeLayout) rootView.findViewById(R.id.origin_all_layout);
         originLayout = (LinearLayout) rootView.findViewById(R.id.origin_layout);
         openGroupLayou = (LinearLayout) rootView.findViewById(R.id.open_group_layout);
@@ -376,8 +380,10 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
             notifyFlowLayoutDataChange();
         }
         if (StringUtils.isBlank(title)) {
-            ((TextView) rootView.findViewById(R.id.header_text)).setText(AppTabUtils.getTabTitle(getActivity(), ContactSearchFragment.class.getSimpleName()));
+            title = AppTabUtils.getTabTitle(getActivity(), ContactSearchFragment.class.getSimpleName());
         }
+        headerText.setText(title);
+        tabHeaderText.setText(title);
         setOnClickListeners();
     }
 
