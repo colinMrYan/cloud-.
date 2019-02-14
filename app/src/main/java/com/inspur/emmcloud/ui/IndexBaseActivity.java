@@ -9,7 +9,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.provider.Settings;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -287,9 +286,9 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
             TextView tabText =  tabView.findViewById(R.id.textview);
             int currentThemeNo = PreferencesUtils.getInt(MyApplication.getInstance(), Constant.PREF_APP_THEME, 0);
             if (currentThemeNo == 2){
-                tabText.setTextColor(ContextCompat.getColor(MyApplication.getInstance(),R.color.seclector_footer_text_grey));
+                tabText.setTextColor(getResources().getColorStateList(R.color.seclector_footer_text_grey));
             }else {
-                tabText.setTextColor(ContextCompat.getColor(MyApplication.getInstance(),R.color.seclector_footer_text_white));
+                tabText.setTextColor(getResources().getColorStateList(R.color.seclector_footer_text_white));
             }
 
             if (tabId.equals(Constant.APP_TAB_BAR_COMMUNACATE)) {
