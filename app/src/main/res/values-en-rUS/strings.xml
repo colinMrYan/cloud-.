@@ -387,6 +387,7 @@
     <string name="detail">Details</string>
     <string name="search">Enter Keywords</string>
     <string name="delete">Delete</string>
+    <string name="app_sort_order">调整顺序</string>
 
     <!--云盘 Cloud Driver-->
     <string name="clouddriver_my_file">My Files</string>

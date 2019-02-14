@@ -166,7 +166,7 @@ public class ImpWebViewClient extends WebViewClient {
             mHandler.removeCallbacks(runnable);
             runnable = null;
         }
-        if (!filterUrl(request.getUrl().toString())) {
+        if (!filterUrl(request.getUrl().toString(),view)) {
             WebResourceRequest newRequest = new WebResourceRequest() {
                 @Override
                 public Uri getUrl() {
@@ -218,7 +218,7 @@ public class ImpWebViewClient extends WebViewClient {
             mHandler.removeCallbacks(runnable);
             runnable = null;
         }
-        if (!filterUrl(url)) {
+        if (!filterUrl(url,view)) {
             view.loadUrl(url, getWebViewHeaders(url));
         }
         return true;
@@ -229,16 +229,16 @@ public class ImpWebViewClient extends WebViewClient {
      *
      * @return 是否被过滤掉
      */
-    private boolean filterUrl(String url) {
+    private boolean filterUrl(String url,WebView webView) {
         if (url.startsWith(APIUri.getWebLoginUrl()) || url.startsWith("https://id.inspur.com/oauth2.0/authorize")) {
-            handleReDirectURL(url, myWebView);
+            handleReDirectURL(url, webView);
             return true;
         }
         if (!url.startsWith("http") && !url.startsWith("ftp")) {
             try {
                 Intent intent = Intent.parseUri(url, Intent.URI_INTENT_SCHEME);
                 intent.setComponent(null);
-                myWebView.getContext().startActivity(intent);
+                webView.getContext().startActivity(intent);
                 MyApplication.getInstance().setEnterSystemUI(true);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -270,9 +270,9 @@ public class ImpWebViewClient extends WebViewClient {
             e.printStackTrace();
         }
         String requestUrl = urlWithParams.getProtocol() + "://" + urlWithParams.getHost();
-        MyAppAPIService appAPIService = new MyAppAPIService(view.getContext());
+        MyAppAPIService appAPIService = new MyAppAPIService(MyApplication.getInstance());
         appAPIService.setAPIInterface(new WebService(view));
-        if (NetUtils.isNetworkConnected(view.getContext())) {
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
             appAPIService.getAuthCode(requestUrl, urlWithParams.getQuery());
         }
 
@@ -287,7 +287,7 @@ public class ImpWebViewClient extends WebViewClient {
 
         @Override
         public void returnGetAppAuthCodeResultSuccess(AppRedirectResult appRedirectResult) {
-            if (NetUtils.isNetworkConnected(webView.getContext())) {
+            if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
                 String redirectUri = appRedirectResult.getRedirect_uri();
                 webView.loadUrl(redirectUri, getWebViewHeaders(redirectUri));
             }

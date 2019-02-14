@@ -45,7 +45,7 @@
             android:paddingRight="15dp"
              android:onClick="onClick"
             android:scaleType="centerInside"
-            android:src="@drawable/icon_add" />
+            android:src="@drawable/ic_add" />
          <ImageView
             android:id="@+id/meeting_list_history_img"
            android:layout_width="47dp"

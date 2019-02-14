@@ -11,7 +11,7 @@
         android:layout_marginRight="18dp"
         android:adjustViewBounds="true"
         android:scaleType="fitXY"
-        android:src="@drawable/message_popwindow_list_arrow" />
+        android:src="@drawable/message_popwindow_list_arrow_white" />
     <ListView
         android:id="@+id/lv_menu"
         android:background="@drawable/shape_message_pop_round_blue_layout"

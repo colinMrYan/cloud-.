@@ -9,6 +9,7 @@
 
 
     <dimen name="header_textsize">17sp</dimen>
+    <dimen name="header_function_textsize">15sp</dimen>
     <dimen name="content_title_textsize">17sp</dimen>
     <dimen name="content_normal_textsize">15sp</dimen>
     <dimen name="content_small_textsize">14sp</dimen>

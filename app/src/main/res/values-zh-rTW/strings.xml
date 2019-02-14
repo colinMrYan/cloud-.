@@ -390,6 +390,7 @@
     <string name="no_app">當前沒有添加應用</string>
     <string name="app_new_function">新功能</string>
     <string name="app_update_function">当前版本不支持此功能请立即升级到最新版本</string>
+    <string name="app_sort_order">調整順序</string>
 
 
     <!--云盘 -->

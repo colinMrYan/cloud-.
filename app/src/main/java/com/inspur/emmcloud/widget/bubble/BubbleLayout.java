@@ -78,18 +78,25 @@ public class BubbleLayout extends FrameLayout {
         if (right < left || bottom < top) return;
 
         RectF rectF = new RectF(left, top, right, bottom);
+        float realArrowPosition = mArrowPosition;
         switch(mArrowDirection) {
             case LEFT_CENTER:
             case RIGHT_CENTER:
                 mArrowPosition = (bottom - top) / 2 - mArrowHeight / 2;
+                realArrowPosition = mArrowPosition;
                 break;
             case TOP_CENTER:
             case BOTTOM_CENTER:
                 mArrowPosition = (right - left) / 2 - mArrowWidth / 2;
+                realArrowPosition = mArrowPosition;
+                break;
+            case TOP_RIGHT:
+                realArrowPosition =right - left-mArrowPosition;
+                break;
             default:
                 break;
         }
-        mBubble = new Bubble(rectF, mArrowWidth, mCornersRadius, mArrowHeight, mArrowPosition,
+        mBubble = new Bubble(rectF, mArrowWidth, mCornersRadius, mArrowHeight, realArrowPosition,
                 mStrokeWidth, mStrokeColor, mBubbleColor, mArrowDirection);
     }
 
@@ -109,6 +116,7 @@ public class BubbleLayout extends FrameLayout {
                 break;
             case TOP:
             case TOP_CENTER:
+            case TOP_RIGHT:
                 paddingTop += mArrowHeight;
                 break;
             case BOTTOM:
@@ -141,6 +149,7 @@ public class BubbleLayout extends FrameLayout {
                 break;
             case TOP:
             case TOP_CENTER:
+            case TOP_RIGHT:
                 paddingTop -= mArrowHeight;
                 break;
             case BOTTOM:

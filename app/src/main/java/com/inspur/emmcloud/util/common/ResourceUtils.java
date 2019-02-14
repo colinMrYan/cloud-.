@@ -141,7 +141,7 @@ public class ResourceUtils {
      * @param attr
      * @return
      */
-    public static int getValueOfColorAttr(Activity activity, int attr) {
+    public static int getValueOfAttr(Activity activity, int attr) {
         TypedValue tv = new TypedValue();
         activity.getTheme().resolveAttribute(attr, tv, true);
         return tv.resourceId;

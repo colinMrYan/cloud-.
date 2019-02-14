@@ -29,13 +29,107 @@
     </style>
 
 
-    <style name="AppTheme_1"  parent="AppTheme">
+    <style name="AppTheme_0"  parent="AppTheme">
         <item name="header_bg_color">@color/header_bg_white</item>
-        <item name="header_text_color">#333333</item>
+        <item name="footer_bg_color">@color/footer_bg_white</item>
+        <item name="header_text_color">@color/header_text_black</item>
+
+        <item name="footer_tab_text_color">@drawable/seclector_footer_text_white</item>
+        <item name="footer_tab_text_color_nor">@color/footer_tab_text_nor_white</item>
+        <item name="footer_tab_text_color_select">@color/footer_tab_text_sel_white</item>
+        <item name="bg_tab_app">@drawable/selector_tab_app_btn</item>
+        <item name="bg_tab_cloud_tweet">@drawable/selector_tab_cloud_tweet_btn</item>
+        <item name="bg_tab_communicate">@drawable/selector_tab_message_btn</item>
+        <item name="bg_tab_contact">@drawable/selector_tab_contact_btn</item>
+        <item name="bg_tab_find">@drawable/selector_tab_find_btn</item>
+        <item name="bg_tab_mine">@drawable/selector_tab_more_btn</item>
+        <item name="bg_tab_unknown">@drawable/selector_tab_unknown_btn</item>
+        <item name="bg_tab_work">@drawable/selector_tab_work_btn</item>
+
+        <item name="ic_message_header_contact">@drawable/ic_message_header_contact</item>
+        <item name="ic_add">@drawable/ic_add</item>
+        <item name="ic_config">@drawable/ic_config</item>
+        <item name="ic_appcenter_enter">@drawable/ic_appcenter_enter</item>
+        <item name="ic_appcenter_config">@drawable/ic_appcenter_config</item>
+
+
+    </style>
+    <style name="AppTheme_1"  parent="AppTheme">
+        <item name="header_bg_color">@color/header_bg</item>
+        <item name="footer_bg_color">@color/footer_bg</item>
+        <item name="header_text_color">@color/header_text</item>
+        <item name="footer_tab_text_color">@drawable/seclector_footer_text_blue</item>
+        <item name="footer_tab_text_color_nor">@color/footer_tab_text_nor_blue</item>
+        <item name="footer_tab_text_color_select">@color/footer_tab_text_sel_blue</item>
+        <item name="bg_tab_app">@drawable/selector_tab_app_btn_grey</item>
+        <item name="bg_tab_cloud_tweet">@drawable/selector_tab_cloud_tweet_btn_grey</item>
+        <item name="bg_tab_communicate">@drawable/selector_tab_message_btn_grey</item>
+        <item name="bg_tab_contact">@drawable/selector_tab_contact_btn_grey</item>
+        <item name="bg_tab_find">@drawable/selector_tab_find_btn_grey</item>
+        <item name="bg_tab_mine">@drawable/selector_tab_more_btn_grey</item>
+        <item name="bg_tab_unknown">@drawable/selector_tab_unknown_btn_grey</item>
+        <item name="bg_tab_work">@drawable/selector_tab_work_btn_grey</item>
+
+        <item name="ic_message_header_contact">@drawable/ic_message_header_contact_blue</item>
+        <item name="ic_add">@drawable/ic_add_blue</item>
+        <item name="ic_config">@drawable/ic_config_blue</item>
+        <item name="ic_appcenter_enter">@drawable/ic_appcenter_enter_blue</item>
+        <item name="ic_appcenter_config">@drawable/ic_appcenter_config_blue</item>
+
+        <!--<item name="ic_tab_app">@drawable/ic_tab_app</item>-->
+        <!--<item name="ic_tab_app_selected">@drawable/ic_tab_app_selected</item>-->
+        <!--<item name="ic_tab_cloud_tweet">@drawable/ic_tab_cloud_tweet</item>-->
+        <!--<item name="ic_tab_cloud_tweet_selected">@drawable/ic_tab_cloud_tweet_selected</item>-->
+        <!--<item name="ic_tab_communicate">@drawable/ic_tab_communicate</item>-->
+        <!--<item name="ic_tab_communicate_selected">@drawable/ic_tab_communicate_selected</item>-->
+        <!--<item name="ic_tab_contact">@drawable/ic_tab_contact</item>-->
+        <!--<item name="ic_tab_contact_selected">@drawable/ic_tab_contact_selected</item>-->
+        <!--<item name="ic_tab_find">@drawable/ic_tab_find</item>-->
+        <!--<item name="ic_tab_find_selected">@drawable/ic_tab_find_selected</item>-->
+        <!--<item name="ic_tab_mine">@drawable/ic_tab_mine</item>-->
+        <!--<item name="ic_tab_mine_selected">@drawable/ic_tab_mine_selected</item>-->
+        <!--<item name="ic_tab_unknown">@drawable/ic_tab_unknown</item>-->
+        <!--<item name="ic_tab_unknown_selected">@drawable/ic_tab_unknown_selected</item>-->
+        <!--<item name="ic_tab_work">@drawable/ic_tab_work</item>-->
+        <!--<item name="ic_tab_work_selected">@drawable/ic_tab_work_selected</item>-->
     </style>
     <style name="AppTheme_2"  parent="AppTheme">
-        <item name="header_bg_color">@color/header_bg</item>
-        <item name="header_text_color">@android:color/white</item>
+        <item name="header_bg_color">@color/header_bg_grey</item>
+        <item name="footer_bg_color">@color/footer_bg_grey</item>
+        <item name="header_text_color">@color/header_text_grey</item>
+        <item name="footer_tab_text_color">@drawable/seclector_footer_text_grey</item>
+        <item name="footer_tab_text_color_nor">@color/footer_tab_text_nor_grey</item>
+        <item name="footer_tab_text_color_select">@color/footer_tab_text_sel_grey</item>
+        <item name="bg_tab_app">@drawable/selector_tab_app_btn_grey</item>
+        <item name="bg_tab_cloud_tweet">@drawable/selector_tab_cloud_tweet_btn_grey</item>
+        <item name="bg_tab_communicate">@drawable/selector_tab_message_btn_grey</item>
+        <item name="bg_tab_contact">@drawable/selector_tab_contact_btn_grey</item>
+        <item name="bg_tab_find">@drawable/selector_tab_find_btn_grey</item>
+        <item name="bg_tab_mine">@drawable/selector_tab_more_btn_grey</item>
+        <item name="bg_tab_unknown">@drawable/selector_tab_unknown_btn_grey</item>
+        <item name="bg_tab_work">@drawable/selector_tab_work_btn_grey</item>
+
+        <item name="ic_message_header_contact">@drawable/ic_message_header_contact_grey</item>
+        <item name="ic_add">@drawable/ic_add_grey</item>
+        <item name="ic_config">@drawable/ic_config_grey</item>
+        <item name="ic_appcenter_enter">@drawable/ic_appcenter_enter_grey</item>
+        <item name="ic_appcenter_config">@drawable/ic_appcenter_config_grey</item>
+        <!--<item name="ic_tab_app">@drawable/ic_tab_app</item>-->
+        <!--<item name="ic_tab_app_selected">@drawable/ic_tab_app_selected</item>-->
+        <!--<item name="ic_tab_cloud_tweet">@drawable/ic_tab_cloud_tweet</item>-->
+        <!--<item name="ic_tab_cloud_tweet_selected">@drawable/ic_tab_cloud_tweet_selected</item>-->
+        <!--<item name="ic_tab_communicate">@drawable/ic_tab_communicate</item>-->
+        <!--<item name="ic_tab_communicate_selected">@drawable/ic_tab_communicate_selected</item>-->
+        <!--<item name="ic_tab_contact">@drawable/ic_tab_contact</item>-->
+        <!--<item name="ic_tab_contact_selected">@drawable/ic_tab_contact_selected</item>-->
+        <!--<item name="ic_tab_find">@drawable/ic_tab_find</item>-->
+        <!--<item name="ic_tab_find_selected">@drawable/ic_tab_find_selected</item>-->
+        <!--<item name="ic_tab_mine">@drawable/ic_tab_mine</item>-->
+        <!--<item name="ic_tab_mine_selected">@drawable/ic_tab_mine_selected</item>-->
+        <!--<item name="ic_tab_unknown">@drawable/ic_tab_unknown</item>-->
+        <!--<item name="ic_tab_unknown_selected">@drawable/ic_tab_unknown_selected</item>-->
+        <!--<item name="ic_tab_work">@drawable/ic_tab_work</item>-->
+        <!--<item name="ic_tab_work_selected">@drawable/ic_tab_work_selected</item>-->
     </style>
 
     <!-- Application theme. -->

@@ -31,36 +31,34 @@
             android:onClick="onClick"
             android:paddingLeft="12dp"
             android:paddingRight="15dp"
+            android:minWidth="0dp"
             android:text="@string/finish"
             android:textColor="?attr/header_text_color"
-            android:textSize="@dimen/content_normal_textsize"
+            android:textSize="@dimen/header_function_textsize"
             android:visibility="gone" />
 
         <ImageButton
             android:id="@+id/ibt_appcenter_enter"
-            android:layout_width="32dp"
+            android:layout_width="38dp"
             android:layout_height="match_parent"
-            android:paddingRight="5dp"
-            android:paddingLeft="5dp"
+            android:paddingRight="8dp"
+            android:paddingLeft="8dp"
             android:layout_centerVertical="true"
-            android:layout_marginRight="8dp"
+            android:layout_marginRight="4dp"
             android:layout_toLeftOf="@+id/ibt_appcenter_config"
-            android:clickable="true"
             android:scaleType="centerInside"
-            android:src="@drawable/ic_appcenter_enter" />
+            android:src="?attr/ic_appcenter_enter" />
 
         <ImageButton
             android:id="@+id/ibt_appcenter_config"
-            android:layout_width="32dp"
+            android:layout_width="46dp"
             android:layout_height="match_parent"
-            android:paddingRight="5dp"
-            android:paddingLeft="5dp"
+            android:paddingRight="16dp"
+            android:paddingLeft="8dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="16dp"
-            android:clickable="true"
             android:scaleType="centerInside"
-            android:src="@drawable/ic_appcenter_config" />
+            android:src="?attr/ic_appcenter_config" />
     </RelativeLayout>
 
 

@@ -194,7 +194,7 @@ public class ConversationGroupInfoActivity extends BaseActivity {
     public void onClick(View v) {
         Bundle bundle = new Bundle();
         switch (v.getId()) {
-            case R.id.back_layout:
+            case R.id.ibt_back:
                 finish();
                 break;
             case R.id.ll_group_image:

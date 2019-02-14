@@ -22,10 +22,10 @@
                 android:paddingRight="5dp"
                 android:paddingLeft="5dp"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="16dp"
+                android:layout_marginRight="11dp"
                 android:clickable="true"
                 android:scaleType="centerInside"
-                android:src="@drawable/ic_config" />
+                android:src="?attr/ic_config" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -64,10 +64,10 @@
                 android:paddingRight="5dp"
                 android:paddingLeft="5dp"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="16dp"
+                android:layout_marginRight="11dp"
                 android:clickable="true"
                 android:scaleType="centerInside"
-                android:src="@drawable/ic_config" />
+                android:src="?attr/ic_config" />
             <TextView
                 android:id="@+id/work_chinesedate_text"
                 android:layout_width="wrap_content"

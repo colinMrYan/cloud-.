@@ -50,7 +50,7 @@ public abstract class ImagePreviewBaseActivity extends ImageBaseActivity {
             topBar.setLayoutParams(params);
         }
         topBar.findViewById(R.id.tv_ok).setVisibility(View.GONE);
-        topBar.findViewById(R.id.btn_back).setOnClickListener(new View.OnClickListener() {
+        topBar.findViewById(R.id.ibt_back).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();

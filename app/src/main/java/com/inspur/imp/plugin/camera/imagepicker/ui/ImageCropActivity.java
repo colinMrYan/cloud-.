@@ -37,7 +37,7 @@ public class ImageCropActivity extends ImageBaseActivity implements View.OnClick
         imagePicker = ImagePicker.getInstance();
 
         //初始化View
-        findViewById(R.id.btn_back).setOnClickListener(this);
+        findViewById(R.id.ibt_back).setOnClickListener(this);
         TextView OkText = (TextView) findViewById(R.id.tv_ok);
         OkText.setText(getString(R.string.complete));
         OkText.setOnClickListener(this);
@@ -96,7 +96,7 @@ public class ImageCropActivity extends ImageBaseActivity implements View.OnClick
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        if (id == R.id.btn_back) {
+        if (id == R.id.ibt_back) {
             setResult(RESULT_CANCELED);
             finish();
         } else if (id == R.id.tv_ok) {

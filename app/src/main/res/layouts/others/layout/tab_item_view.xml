@@ -19,7 +19,7 @@
             android:layout_height="36dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
-            android:src="@drawable/selector_tab_net_unknown_btn"
+            android:src="@drawable/selector_tab_unknown_btn"
             android:focusable="false"
             android:scaleType="fitXY"/>
 
@@ -28,7 +28,6 @@
             android:layout_marginTop="-2dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@drawable/seclector_footer_text"
             android:textSize="10sp"/>
     </LinearLayout>
 
