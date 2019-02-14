@@ -40,7 +40,7 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
 
     private int count = 0;
     private Activity currentActivity;
-    private WebService webService;
+    private WebService webService = new WebService();
 
     @Override
     public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
