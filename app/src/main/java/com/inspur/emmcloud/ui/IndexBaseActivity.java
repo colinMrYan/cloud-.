@@ -43,9 +43,11 @@ import com.inspur.emmcloud.ui.chat.CommunicationV0Fragment;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.ui.find.FindFragment;
 import com.inspur.emmcloud.ui.mine.MoreFragment;
+import com.inspur.emmcloud.ui.mine.setting.CreateGestureActivity;
 import com.inspur.emmcloud.ui.notsupport.NotSupportFragment;
 import com.inspur.emmcloud.ui.work.TabBean;
 import com.inspur.emmcloud.ui.work.WorkFragment;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.SelectorUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -77,7 +79,7 @@ import java.util.Map;
 public class IndexBaseActivity extends BaseFragmentActivity implements
         OnTabChangeListener, OnTouchListener {
     private long lastBackTime;
-
+    private static final int REQUEST_CREATE_GUESTURE = 1;
     @ViewInject(android.R.id.tabhost)
     public MyFragmentTabHost mTabHost;
     @ViewInject(R.id.preload_webview)
@@ -107,6 +109,12 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
         initTabs();
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        checkForceGuesture();
+    }
+
     private void registerNetWorkListenerAccordingSysLevel() {
 //        if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
             networkChangeReceiver = new NetworkChangeReceiver();
@@ -118,6 +126,19 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
 //            connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 //            connectivityManager.registerNetworkCallback(request, networkCallback);
 //        }
+    }
+
+    /**
+     * 检测配置是否强制开启手势验证码
+     */
+    private void checkForceGuesture(){
+        int doubleValidation = PreferencesByUserAndTanentUtils.getInt(MyApplication.getInstance(), Constant.PREF_MNM_DOUBLE_VALIADATION,-1);
+        if (doubleValidation == 1 && !CreateGestureActivity.getGestureCodeIsOpenByUser(MyApplication.getInstance())){
+            Intent intent = new Intent(this,CreateGestureActivity.class);
+            intent.putExtra(CreateGestureActivity.EXTRA_FORCE_SET,true);
+            startActivityForResult(intent,REQUEST_CREATE_GUESTURE);
+        }
+
     }
 
     /**
@@ -676,6 +697,15 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
                 }
             }).start();
             isSystemChangeTag = true;
+        }
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CREATE_GUESTURE && resultCode != RESULT_OK){
+            LogUtils.jasonDebug("11111111111111111111");
+            MyApplication.getInstance().exit();
         }
     }
 

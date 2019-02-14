@@ -113,7 +113,6 @@ public class IndexActivity extends IndexBaseActivity {
         updateReactNative();  //从服务端获取显示tab
         getMyAppRecommendWidgets();
     }
-
     /**
      * 获取我的应用推荐小部件数据,如果到了更新时间才请求
      */

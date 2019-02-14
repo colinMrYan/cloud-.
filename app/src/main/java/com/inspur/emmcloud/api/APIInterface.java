@@ -67,6 +67,7 @@ import com.inspur.emmcloud.bean.login.GetMDMStateResult;
 import com.inspur.emmcloud.bean.login.GetSignoutResult;
 import com.inspur.emmcloud.bean.login.GetUpdatePwdBySMSCodeBean;
 import com.inspur.emmcloud.bean.login.LoginDesktopCloudPlusBean;
+import com.inspur.emmcloud.bean.login.UploadMDMInfoResult;
 import com.inspur.emmcloud.bean.mine.GetBindingDeviceResult;
 import com.inspur.emmcloud.bean.mine.GetCardPackageResult;
 import com.inspur.emmcloud.bean.mine.GetDeviceLogResult;
@@ -511,13 +512,13 @@ public interface APIInterface {
     void returnBindingDeviceListFail(String error, int errorCode);
 
     void returnUnBindDeviceSuccess();
-
     void returnUnBindDeviceFail(String error, int errorCode);
 
     void returnMDMStateSuccess(GetMDMStateResult getMDMStateResult);
-
     void returnMDMStateFail(String error, int errorCode);
 
+    void returnUploadMDMInfoSuccess(UploadMDMInfoResult uploadMDMInfoResult);
+    void returnUploadMDMInfoFail();
 
     void returnSplashPageInfoSuccess(SplashPageBean splashPageBean);
 

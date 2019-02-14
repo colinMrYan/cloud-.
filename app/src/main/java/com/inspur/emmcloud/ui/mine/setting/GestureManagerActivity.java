@@ -5,9 +5,13 @@ import android.support.annotation.Nullable;
 import android.view.View;
 
 import com.inspur.emmcloud.BaseActivity;
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.widget.SwitchView;
 
 /**
@@ -16,6 +20,7 @@ import com.inspur.emmcloud.widget.SwitchView;
 
 public class GestureManagerActivity extends BaseActivity {
 
+    private SwitchView switchView;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +48,7 @@ public class GestureManagerActivity extends BaseActivity {
      * 初始化Views
      */
     private void init() {
-        SwitchView switchView = ((SwitchView) findViewById(R.id.switch_gesture_switchview));
+        switchView = findViewById(R.id.switch_gesture_switchview);
         if (getHasGesturePassword() && getGestureCodeIsOpen()) {
             switchView.setOpened(true);
         } else {
@@ -58,10 +63,16 @@ public class GestureManagerActivity extends BaseActivity {
 
             @Override
             public void toggleToOff(View view) {
-//                ((SwitchView)view).setOpened(false);
-                Bundle bundle = new Bundle();
-                bundle.putString("gesture_code_change", "close");
-                IntentUtils.startActivity(GestureManagerActivity.this, GestureLoginActivity.class, bundle);
+                int doubleValidation = PreferencesByUserAndTanentUtils.getInt(MyApplication.getInstance(), Constant.PREF_MNM_DOUBLE_VALIADATION, -1);
+                if (doubleValidation != 1) {
+                    Bundle bundle = new Bundle();
+                    bundle.putString("gesture_code_change", "close");
+                    IntentUtils.startActivity(GestureManagerActivity.this, GestureLoginActivity.class, bundle);
+                } else {
+                    switchView.setOpened(true);
+                    ToastUtils.show(GestureManagerActivity.this, R.string.setting_gesture_force_open);
+                }
+
             }
         });
         findViewById(R.id.switch_gesture_change_code_layout).setVisibility(getGestureCodeIsOpen() ? View.VISIBLE : View.GONE);
@@ -83,8 +94,11 @@ public class GestureManagerActivity extends BaseActivity {
      */
     private void initShowResetGesturePassWord(boolean isHasGesturePassword) {
         findViewById(R.id.switch_gesture_change_code_layout).setVisibility(isHasGesturePassword ? View.VISIBLE : View.GONE);
-        SwitchView switchView = ((SwitchView) findViewById(R.id.switch_gesture_switchview));
-        switchView.setOpened(getHasGesturePassword() && getGestureCodeIsOpen());
+        boolean isGestureOpen = getHasGesturePassword() && getGestureCodeIsOpen();
+        if (switchView.isOpened() != isGestureOpen){
+            switchView.setOpened(isGestureOpen);
+        }
+
     }
 
     public void onClick(View view) {
