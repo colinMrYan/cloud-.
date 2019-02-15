@@ -612,7 +612,8 @@
     <string name="run_background">后台运行</string>
     <string name="signout_fail">注销失败，请确保网络连接正常</string>
     <string name="setting_join_experience_plan">加入升级体验计划</string>
-
+    <string name="setting_gesture_force_set">According to the enterprise security policy, you need to set a gesture password</string>
+    <string name="setting_gesture_force_open">You can\'t turn off the gesture password according to the enterprise security policy</string>
 
     <string name="contact">通讯录</string>
     <string name="web">web</string>
