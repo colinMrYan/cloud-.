@@ -63,7 +63,7 @@
     <color name="onekey_username_textcolor">#359fdd</color>
     <color name="onekey_line_view">#cfd3d6</color>
     <color name="onekey_content_text">#4f87a2</color>
-    <color name="hightlight_in_blue_bg">#31EEFF</color>
+    <color name="hightlight_in_blue_bg">#4CFFFD</color>
 
     <!--新闻导航栏-->
     <color name="app_news_head_color">#323C49</color>
