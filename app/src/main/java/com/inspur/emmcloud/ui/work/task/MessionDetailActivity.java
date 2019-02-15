@@ -385,7 +385,7 @@ public class MessionDetailActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
+        if (resultCode == RESULT_OK && (data != null)) {
             switch (requestCode) {
                 case TAG_TYPE:
                     handleMessionTags(data);
