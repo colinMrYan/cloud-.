@@ -67,6 +67,7 @@ import com.inspur.emmcloud.bean.login.GetMDMStateResult;
 import com.inspur.emmcloud.bean.login.GetSignoutResult;
 import com.inspur.emmcloud.bean.login.GetUpdatePwdBySMSCodeBean;
 import com.inspur.emmcloud.bean.login.LoginDesktopCloudPlusBean;
+import com.inspur.emmcloud.bean.login.UploadMDMInfoResult;
 import com.inspur.emmcloud.bean.mine.GetBindingDeviceResult;
 import com.inspur.emmcloud.bean.mine.GetCardPackageResult;
 import com.inspur.emmcloud.bean.mine.GetDeviceLogResult;
@@ -1303,6 +1304,16 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnMDMStateSuccess(GetMDMStateResult getMDMStateResult) {
+
+    }
+
+    @Override
+    public void returnUploadMDMInfoSuccess(UploadMDMInfoResult uploadMDMInfoResult) {
+
+    }
+
+    @Override
+    public void returnUploadMDMInfoFail() {
 
     }
 

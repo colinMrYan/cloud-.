@@ -89,7 +89,7 @@ public class MoreFragment extends Fragment {
             mineLayoutItemGroupList.add(mineLayoutItemGroupCardbox);
             mineLayoutItemGroupList.add(mineLayoutItemGroupAboutUs);
         }
-        if (!mainTabProperty.isHasExtendList()) {
+        if (mainTabProperty == null || !mainTabProperty.isHasExtendList()) {
             for (MineLayoutItemGroup mineLayoutItemGroup:mineLayoutItemGroupList){
                 for (MineLayoutItem mineLayoutItem:mineLayoutItemGroup.getMineLayoutItemList()){
                     switch (mineLayoutItem.getId()){

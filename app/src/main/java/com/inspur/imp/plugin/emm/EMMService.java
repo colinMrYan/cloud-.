@@ -91,7 +91,7 @@ public class EMMService extends ImpPlugin {
 				String userCode = PreferencesUtils.getString(getFragmentContext(), "userID", "");
 				MDM mdm = new MDM(getActivity(), MyApplication.getInstance().getTanent(), userCode,
 						userName, getDeviceCheckResult);
-				mdm.handCheckResult(getDeviceCheckResult.getState());
+				mdm.handCheckResult(getDeviceCheckResult);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
