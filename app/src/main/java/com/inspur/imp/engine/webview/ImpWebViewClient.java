@@ -57,7 +57,12 @@ public class ImpWebViewClient extends WebViewClient {
             public void handleMessage(Message msg) {
                 switch (msg.what) {
                     case 1:
-                        myWebView.reload();
+                        //防止webview被强行关闭
+                        try {
+                            myWebView.reload();
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
                         break;
                     default:
                         break;

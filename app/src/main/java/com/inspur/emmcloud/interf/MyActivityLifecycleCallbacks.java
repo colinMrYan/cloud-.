@@ -192,10 +192,10 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
     }
 
 
-    private class WebService extends APIInterfaceInstance{
+    private class WebService extends APIInterfaceInstance {
         @Override
         public void returnUploadMDMInfoSuccess(UploadMDMInfoResult uploadMDMInfoResult) {
-            PreferencesByUserAndTanentUtils.putInt(MyApplication.getInstance(), Constant.PREF_MNM_DOUBLE_VALIADATION,uploadMDMInfoResult.getDoubleValidation());
+            PreferencesByUserAndTanentUtils.putInt(MyApplication.getInstance(), Constant.PREF_MNM_DOUBLE_VALIADATION, uploadMDMInfoResult.getDoubleValidation());
         }
     }
 }

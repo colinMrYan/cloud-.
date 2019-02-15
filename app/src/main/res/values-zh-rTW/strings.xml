@@ -596,8 +596,8 @@
     <string name="run_background">後臺運行</string>
     <string name="signout_fail">註銷登錄失敗，請確保網絡連接正常</string>
     <string name="setting_join_experience_plan">加入升級體驗計劃</string>
-    <string name="setting_gesture_force_set">根据企业安全策略，您需要设置手势密码</string>
-    <string name="setting_gesture_force_open">根据企业安全策略，您需要开启手势密码</string>
+    <string name="setting_gesture_force_set">根據企業安全性原則，需要您設置手勢密碼</string>
+    <string name="setting_gesture_force_open">根據企業安全性原則，您不可以關閉手勢密碼</string>
 
     <string name="contact">通訊錄</string>
     <string name="web">web</string>
