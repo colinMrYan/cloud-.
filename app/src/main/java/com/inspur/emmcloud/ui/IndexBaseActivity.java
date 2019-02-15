@@ -47,7 +47,6 @@ import com.inspur.emmcloud.ui.mine.setting.CreateGestureActivity;
 import com.inspur.emmcloud.ui.notsupport.NotSupportFragment;
 import com.inspur.emmcloud.ui.work.TabBean;
 import com.inspur.emmcloud.ui.work.WorkFragment;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.SelectorUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -703,8 +702,8 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CREATE_GUESTURE && resultCode != RESULT_OK){
-            LogUtils.jasonDebug("11111111111111111111");
             MyApplication.getInstance().exit();
         }
     }
