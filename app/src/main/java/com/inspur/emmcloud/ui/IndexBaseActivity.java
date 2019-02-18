@@ -1,17 +1,26 @@
 package com.inspur.emmcloud.ui;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-import org.xutils.x;
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.res.Configuration;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.PowerManager;
+import android.provider.Settings;
+import android.support.v4.content.LocalBroadcastManager;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.View.OnTouchListener;
+import android.webkit.WebView;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TabHost;
+import android.widget.TabHost.OnTabChangeListener;
+import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseFragmentActivity;
 import com.inspur.emmcloud.MyApplication;
@@ -53,27 +62,18 @@ import com.inspur.emmcloud.widget.dialogs.BatteryWhiteListDialog;
 import com.inspur.emmcloud.widget.tipsview.TipsView;
 import com.inspur.imp.api.ImpFragment;
 
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.res.Configuration;
-import android.net.Uri;
-import android.os.Build;
-import android.os.Bundle;
-import android.os.PowerManager;
-import android.provider.Settings;
-import android.support.v4.content.LocalBroadcastManager;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.View.OnTouchListener;
-import android.webkit.WebView;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TabHost;
-import android.widget.TabHost.OnTabChangeListener;
-import android.widget.TextView;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+import org.xutils.view.annotation.ContentView;
+import org.xutils.view.annotation.ViewInject;
+import org.xutils.x;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @ContentView(R.layout.activity_index)
 public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChangeListener, OnTouchListener {
@@ -724,6 +724,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CREATE_GUESTURE && resultCode != RESULT_OK) {
             MyApplication.getInstance().exit();
         }

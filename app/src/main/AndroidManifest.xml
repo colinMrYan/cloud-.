@@ -693,12 +693,12 @@
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".ui.chat.ImagePagerV0Activity"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"
             android:resizeableActivity="true"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".ui.chat.ImagePagerActivity"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"
             android:resizeableActivity="true"
             android:windowSoftInputMode="adjustPan" />
 
