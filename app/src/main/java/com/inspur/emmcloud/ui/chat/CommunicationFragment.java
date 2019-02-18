@@ -138,9 +138,9 @@ public class CommunicationFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if(NetworkInfo.State.CONNECTED==NetUtils.getNetworkMobileState(getContext())||NetworkInfo.State.CONNECTING==NetUtils.getNetworkMobileState(getContext())){
+         if(NetworkInfo.State.CONNECTED==NetUtils.getNetworkMobileState(getContext())||NetworkInfo.State.CONNECTING==NetUtils.getNetworkMobileState(getContext())||NetUtils.isVpnConnected()){
             conversationAdapter.setNetExceptionView(true);
-        }else{
+         }else{
             NetUtils.PingThreadStart(NetUtils.pingUrls,5,Constant.EVENTBUS_TAG__NET_EXCEPTION_HINT);
         }
     }

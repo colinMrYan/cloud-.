@@ -171,7 +171,7 @@ public class MyAppFragment extends Fragment {
             hasRequestBadgeNum = true;
         }
         refreshRecommendAppWidgetView();
-        if(NetworkInfo.State.CONNECTED==NetUtils.getNetworkMobileState(getContext())||NetworkInfo.State.CONNECTING==NetUtils.getNetworkMobileState(getContext())){
+        if(NetworkInfo.State.CONNECTED==NetUtils.getNetworkMobileState(getContext())||NetworkInfo.State.CONNECTING==NetUtils.getNetworkMobileState(getContext())||NetUtils.isVpnConnected()){
             DeleteHeaderView();
         }else {
             NetUtils.PingThreadStart(NetUtils.pingUrls,5,Constant.EVENTBUS_TAG__NET_EXCEPTION_HINT);

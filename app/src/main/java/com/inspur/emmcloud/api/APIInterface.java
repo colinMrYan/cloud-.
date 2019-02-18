@@ -761,8 +761,8 @@ public interface APIInterface {
     void returnDeleteConversationSuccess(String cid);
     void returnDeleteConversationFail(String error,int errorCode);
 
-    void returnCheckCloudPluseConnectionSuccess(byte[] arg0);
-    void returnCheckCloudPluseConnectionError(String error, int responseCode);
+    void returnCheckCloudPluseConnectionSuccess(byte[] arg0,String url);
+    void returnCheckCloudPluseConnectionError(String error, int responseCode,String url);
 
     void returnMailFolderSuccess(GetMailFolderResult getMailForderResult);
     void returnMailFolderFail(String error, int errorCode);

@@ -832,23 +832,23 @@ public class AppAPIService {
 
     /**
      * 获取网络连通状态
-     * @param uri
+     * @param url
      */
-    public void getCloudConnectStateUrl(final String uri){
+    public void getCloudConnectStateUrl(final String url){
         final String completeUrl = APIUri.getReactNativeInstallUrl();
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
-        params.addParameter("uri",uri);
+        params.addParameter("uri",url);
         params.setConnectTimeout( 5000 );
         HttpUtils.request(context,CloudHttpMethod.POST,params, new APICallback(context,completeUrl) {
             @Override
             public void callbackSuccess(byte[] arg0) {
-                apiInterface.returnCheckCloudPluseConnectionSuccess(arg0);
+                apiInterface.returnCheckCloudPluseConnectionSuccess(arg0,url);
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                apiInterface.returnCheckCloudPluseConnectionError(error,responseCode);
+                apiInterface.returnCheckCloudPluseConnectionError(error,responseCode,url);
             }
 
             @Override
@@ -856,7 +856,7 @@ public class AppAPIService {
                 OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        getCloudConnectStateUrl(uri);
+                        getCloudConnectStateUrl(url);
                     }
 
                     @Override
