@@ -155,7 +155,7 @@ public class BarCodeService extends ImpPlugin {
 		qrCodeDlg.setContentView(Res.getLayoutID("plugin_barcode_show_qrcode"));
 		qrCodeDlg.setCanceledOnTouchOutside(false);
 //		qrCodeDlg.setCancelable(false);
-		qrCodeDlg.findViewById(Res.getWidgetID("back_layout")).setOnClickListener(new OnClickListener() {
+		qrCodeDlg.findViewById(Res.getWidgetID("ibt_back")).setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {

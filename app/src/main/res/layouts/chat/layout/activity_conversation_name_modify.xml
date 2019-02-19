@@ -10,29 +10,15 @@
         android:layout_height="@dimen/header_height"
         android:background="@drawable/shape_header_bg">
 
-        <RelativeLayout
-            android:id="@+id/back_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+        <ImageButton
+            android:id="@+id/ibt_back"
+            android:layout_width="44dp"
+            android:padding="11dp"
+            android:layout_height="44dp"
             android:layout_centerVertical="true"
             android:onClick="onClick"
-            android:paddingLeft="12dp"
-            android:paddingRight="12dp" >
-
-            <TextView
-                android:id="@+id/back_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:background="@null"
-                android:paddingRight="5dp"
-                android:gravity="center"
-                android:paddingLeft="12dp"
-                android:text="@string/cancel"
-                android:textColor="?attr/header_text_color"
-                android:textSize="@dimen/header_textsize" />
-
-        </RelativeLayout>
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_back_btn_black" />
 
         <TextView
             android:id="@+id/header_text"
@@ -56,8 +42,8 @@
             android:paddingLeft="12dp"
             android:paddingRight="12dp"
             android:text="@string/save"
-            android:textColor="#3BF1F8"
-            android:textSize="@dimen/header_textsize" />
+            android:textColor="?attr/header_text_color"
+            android:textSize="@dimen/header_function_textsize" />
     </RelativeLayout>
 
     <RelativeLayout

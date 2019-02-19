@@ -187,7 +187,7 @@ public class UserInfoActivity extends BaseActivity {
             case R.id.ll_mobile_sms:
                 AppUtils.sendSMS(UserInfoActivity.this, phoneNum, USER_INFO_ACTIVITY_REQUEST_CODE);
                 break;
-            case R.id.back_layout:
+            case R.id.ibt_back:
                 finish();
                 break;
             case R.id.iv_user_photo:

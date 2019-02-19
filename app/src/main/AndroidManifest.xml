@@ -133,6 +133,9 @@
             android:exported="true"
             android:resizeableActivity="true"
             android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.notch_support"
+                android:value="true" />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>

@@ -50,7 +50,7 @@ public class CardPackageSetActivity extends BaseActivity {
 
     public void onClick(View view){
         switch (view.getId()){
-            case R.id.back_layout:
+            case R.id.ibt_back:
                 setResult(RESULT_OK);
                 finish();
                 break;

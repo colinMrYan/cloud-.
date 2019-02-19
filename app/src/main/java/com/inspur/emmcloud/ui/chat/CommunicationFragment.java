@@ -8,7 +8,6 @@ import android.content.IntentFilter;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -24,6 +23,7 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.inspur.emmcloud.BaseFragment;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.ConversationAdapter;
@@ -95,7 +95,7 @@ import static android.app.Activity.RESULT_OK;
 /**
  * 沟通页面
  */
-public class CommunicationFragment extends Fragment {
+public class CommunicationFragment extends BaseFragment {
 
     private static final int CREAT_CHANNEL_GROUP = 1;
     private static final int RERESH_GROUP_ICON = 2;
@@ -353,6 +353,7 @@ public class CommunicationFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        setFragmentStatusBarCommon();
         if (rootView == null) {
             rootView = inflater.inflate(R.layout.fragment_message, container,
                     false);

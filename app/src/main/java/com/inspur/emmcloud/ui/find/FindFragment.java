@@ -1,7 +1,6 @@
 package com.inspur.emmcloud.ui.find;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +13,7 @@ import com.facebook.react.common.LifecycleState;
 import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler;
 import com.facebook.react.shell.MainReactPackage;
 import com.horcrux.svg.SvgPackage;
+import com.inspur.emmcloud.BaseFragment;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.bean.mine.Enterprise;
 import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
@@ -32,7 +32,7 @@ import com.reactnativenavigation.bridge.NavigationReactPackage;
 /**
  * com.inspur.emmcloud.ui.FindFragment create at 2016年8月29日 下午3:27:26
  */
-public class FindFragment extends Fragment implements DefaultHardwareBackBtnHandler {
+public class FindFragment extends BaseFragment implements DefaultHardwareBackBtnHandler {
     private ReactRootView mReactRootView;
     private ReactInstanceManager mReactInstanceManager;
     private String reactCurrentFilePath;

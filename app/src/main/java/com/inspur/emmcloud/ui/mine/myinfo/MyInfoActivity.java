@@ -23,7 +23,6 @@ import com.inspur.emmcloud.bean.mine.GetUploadMyHeadResult;
 import com.inspur.emmcloud.bean.mine.UserProfileInfoBean;
 import com.inspur.emmcloud.ui.login.LoginBySmsActivity;
 import com.inspur.emmcloud.ui.login.PasswordModifyActivity;
-import com.inspur.emmcloud.ui.mine.setting.SwitchEnterpriseActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
@@ -39,56 +38,68 @@ import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
 import com.inspur.imp.plugin.camera.imagepicker.ui.ImageGridActivity;
 import com.inspur.imp.plugin.camera.imagepicker.view.CropImageView;
 
+import org.xutils.view.annotation.ContentView;
+import org.xutils.view.annotation.ViewInject;
+
 import java.util.ArrayList;
 import java.util.List;
 
-
+@ContentView(R.layout.activity_my_info)
 public class MyInfoActivity extends BaseActivity {
 
     private static final int REQUEST_CODE_SELECT_IMG = 1;
     private static final int USER_INFO_CHANGE = 10;
 
-    private ImageView userHeadImg;
-    private TextView userMailText;
+    @ViewInject(R.id.iv_photo)
+    private ImageView photoImg;
+    @ViewInject(R.id.tv_name)
+    private TextView nameText;
+    @ViewInject(R.id.rl_employee_no)
+    private RelativeLayout employeeNOLayout;
+    @ViewInject(R.id.rl_office_phone)
+    private RelativeLayout officePhoneLayout;
+    @ViewInject(R.id.rl_phone)
+    private RelativeLayout phoneLayout;
+    @ViewInject(R.id.rl_enterprise)
+    private RelativeLayout enterpriseLayout;
+    @ViewInject(R.id.rl_mail)
+    private RelativeLayout mailLayout;
+    @ViewInject(R.id.rl_photo)
+    private RelativeLayout photoLayout;
+    @ViewInject(R.id.tv_employee_no)
+    private TextView employeeNOText;
+    @ViewInject(R.id.tv_office_phone)
+    private TextView officePhoneText;
+    @ViewInject(R.id.tv_phone)
+    private TextView phoneText;
+    @ViewInject(R.id.tv_enterprise)
+    private TextView enterpriseText;
+    @ViewInject(R.id.tv_mail)
+    private TextView mailText;
+    @ViewInject(R.id.tv_department)
+    private TextView departmentText;
+    @ViewInject(R.id.rl_password_modify)
+    private RelativeLayout passwordModifyLayout;
+    @ViewInject(R.id.rl_password_reset)
+    private RelativeLayout passwordResetLayout;
+
     private MineAPIService apiService;
     private LoadingDialog loadingDlg;
-    private RelativeLayout resetLayout;
     private String photoLocalPath;
     private GetMyInfoResult getMyInfoResult;
-    private boolean isUpdateUserPhoto = false; //标记是否更改了头像
-
-    private  TextView userNameText;
-    private  TextView mobileText;
-    private  TextView empNumText;
-    private  TextView telPhoneText;
-    private  TextView userdepartText;
+    private boolean isUpdateUserPhoto = false; // 标记是否更改了头像
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_my_info);
-        initView();
+        loadingDlg = new LoadingDialog(this);
+        apiService = new MineAPIService(MyInfoActivity.this);
+        apiService.setAPIInterface(new WebService());
         getUserProfile();
         getUserInfoConfig();
         showMyInfo();
 
-    }
-
-    private void initView() {
-        // TODO Auto-generated method stub
-        loadingDlg = new LoadingDialog(MyInfoActivity.this);
-        userHeadImg = (ImageView) findViewById(R.id.myinfo_userheadimg_img);
-        userMailText = (TextView) findViewById(R.id.myinfo_usermail_text);
-        resetLayout = (RelativeLayout) findViewById(R.id.myinfo_reset_layout);
-        apiService = new MineAPIService(MyInfoActivity.this);
-        apiService.setAPIInterface(new WebService());
-
-        empNumText = (TextView)findViewById(R.id.tv_myinfo_worknum_rewrite);
-        mobileText = (TextView)findViewById(R.id.myinfo_userphone_text);
-        telPhoneText = (TextView)findViewById(R.id.tv_myinfo_telphone_rewrite);
-        userNameText = (TextView)findViewById(R.id.myinfo_username_text);
-        userdepartText = (TextView)findViewById(R.id.myinfo_userdepart_text);
     }
 
     /**
@@ -99,65 +110,59 @@ public class MyInfoActivity extends BaseActivity {
             String myInfo = PreferencesUtils.getString(this, "myInfo", "");
             getMyInfoResult = new GetMyInfoResult(myInfo);
         }
-        String photoUri = APIUri
-                .getChannelImgUrl(MyInfoActivity.this, getMyInfoResult.getID());
-        ImageDisplayUtils.getInstance().displayImage(userHeadImg, photoUri, R.drawable.icon_photo_default);
-        userNameText.setText(((!StringUtils.isBlank(getMyInfoResult.getName()))?getMyInfoResult.getName():getString(R.string.not_set)));
-        mobileText.setText(((!StringUtils.isBlank(getMyInfoResult.getPhoneNumber()))?getMyInfoResult.getPhoneNumber():getString(R.string.not_set)));
-        userMailText.setText(((!StringUtils.isBlank(getMyInfoResult.getMail()))?getMyInfoResult.getMail():getString(R.string.not_set)));
-        ((TextView) findViewById(R.id.myinfo_usercompanytext_text)).setText(MyApplication.getInstance().getCurrentEnterprise().getName());
-        List<Enterprise> enterpriseList = getMyInfoResult.getEnterpriseList();
-        findViewById(R.id.switch_enterprese_text).setVisibility((enterpriseList.size() > 1)?View.VISIBLE:View.GONE);
+        String photoUri = APIUri.getChannelImgUrl(MyInfoActivity.this, getMyInfoResult.getID());
+        ImageDisplayUtils.getInstance().displayImage(photoImg, photoUri, R.drawable.icon_photo_default);
+        if (!StringUtils.isBlank(getMyInfoResult.getName())) {
+            nameText.setText(getMyInfoResult.getName());
+        }
+        if (!StringUtils.isBlank(getMyInfoResult.getPhoneNumber())) {
+            phoneText.setText(getMyInfoResult.getPhoneNumber());
+        }
+        if (!StringUtils.isBlank(getMyInfoResult.getMail())) {
+            mailText.setText(getMyInfoResult.getMail());
+        }
+        enterpriseText.setText(MyApplication.getInstance().getCurrentEnterprise().getName());
     }
 
     public void onClick(View v) {
         // TODO Auto-generated method stub
         switch (v.getId()) {
-            case R.id.myinfo_userhead_layout:
-                if (Environment.getExternalStorageState().equals(
-                        Environment.MEDIA_MOUNTED)) {
-                    initImagePicker();
-                    Intent intent = new Intent(getApplicationContext(),
-                            ImageGridActivity.class);
-                    startActivityForResult(intent, REQUEST_CODE_SELECT_IMG);
-
-                } else {
-                    ToastUtils.show(MyInfoActivity.this,
-                            getString(R.string.user_no_storage));
-                }
-                break;
-            case R.id.back_layout:
-                finishActivity();
-                break;
-            case R.id.myinfo_modifypsd_layout:
-                IntentUtils.startActivity(MyInfoActivity.this,PasswordModifyActivity.class);
-                break;
-            case R.id.myinfo_reset_layout:
-                Bundle bundle = new Bundle();
-                bundle.putInt(LoginBySmsActivity.EXTRA_MODE, LoginBySmsActivity.MODE_FORGET_PASSWORD);
-                bundle.putString(LoginBySmsActivity.EXTRA_PHONE, getMyInfoResult.getPhoneNumber());
-                IntentUtils.startActivity(MyInfoActivity.this,
-                        LoginBySmsActivity.class, bundle);
-                break;
-            case R.id.switch_enterprese_text:
-                IntentUtils.startActivity(MyInfoActivity.this, SwitchEnterpriseActivity.class);
-                break;
-            default:
-                break;
+        case R.id.iv_photo:
+            if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+                initImagePicker();
+                Intent intent = new Intent(getApplicationContext(), ImageGridActivity.class);
+                startActivityForResult(intent, REQUEST_CODE_SELECT_IMG);
+            } else {
+                ToastUtils.show(MyInfoActivity.this, getString(R.string.user_no_storage));
+            }
+            break;
+        case R.id.ibt_back:
+            finishActivity();
+            break;
+        case R.id.rl_password_modify:
+            IntentUtils.startActivity(MyInfoActivity.this, PasswordModifyActivity.class);
+            break;
+        case R.id.rl_password_reset:
+            Bundle bundle = new Bundle();
+            bundle.putInt(LoginBySmsActivity.EXTRA_MODE, LoginBySmsActivity.MODE_FORGET_PASSWORD);
+            bundle.putString(LoginBySmsActivity.EXTRA_PHONE, getMyInfoResult.getPhoneNumber());
+            IntentUtils.startActivity(MyInfoActivity.this, LoginBySmsActivity.class, bundle);
+            break;
+        default:
+            break;
         }
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode,
-                                    Intent intent) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
         if (resultCode == RESULT_OK && requestCode == USER_INFO_CHANGE) {
             String userName = intent.getExtras().getString("newname", "");
-            userMailText.setText(userName);
+            mailText.setText(userName);
         } else if (resultCode == ImagePicker.RESULT_CODE_ITEMS) {
             if (intent != null && requestCode == REQUEST_CODE_SELECT_IMG) {
-                ArrayList<ImageItem> imageItemList = (ArrayList<ImageItem>) intent
-                        .getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
+                ArrayList<ImageItem> imageItemList =
+                        (ArrayList<ImageItem>) intent.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
                 uploadUserHead(imageItemList.get(0).path);
             }
         }
@@ -174,7 +179,6 @@ public class MyInfoActivity extends BaseActivity {
         }
         finish();
     }
-
 
     /**
      * 初始化图片选择控件
@@ -198,7 +202,7 @@ public class MyInfoActivity extends BaseActivity {
      */
     private void saveUpdateHeadTime() {
         ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(MyApplication.getInstance().getUid());
-        contactUser.setLastQueryTime(System.currentTimeMillis()+"");
+        contactUser.setLastQueryTime(System.currentTimeMillis() + "");
         contactUser.setHasHead(1);
         ContactUserCacheUtils.saveContactUser(contactUser);
         MyApplication.getInstance().clearUserPhotoUrl(MyApplication.getInstance().getUid());
@@ -217,23 +221,20 @@ public class MyInfoActivity extends BaseActivity {
             }
         }
         if (userProfileInfoBean != null) {
-
-            if (userProfileInfoBean.getShowEpInfo() == 0) {
-                (findViewById(R.id.myinfo_usercompany_layout)).setVisibility(View.GONE);
-            }
-            if (userProfileInfoBean.getShowModifyPsd() == 1) {
-                (findViewById(R.id.myinfo_modifypsd_layout)).setVisibility(View.VISIBLE);
-            }
-            if (userProfileInfoBean.getShowResetPsd() == 1) {
-                resetLayout.setVisibility(View.VISIBLE);
-            }
-            //这里手机号格式的正确性由服务端保证，客户端只关心是否为空
-            (findViewById(R.id.rl_userphone_all)).setVisibility((0==userProfileInfoBean.getShowUserPhone())?View.GONE:View.VISIBLE);
-            (findViewById(R.id.rl_usermail_all)).setVisibility(0==userProfileInfoBean.getShowUserMail()?View.GONE:View.VISIBLE);
-            (findViewById(R.id.rl_usertelephone_all)).setVisibility((!StringUtils.isBlank(userProfileInfoBean.getTelePhone()))?View.VISIBLE:View.GONE);
-            telPhoneText.setText(userProfileInfoBean.getTelePhone());
-            (findViewById(R.id.rl_worknum_all)).setVisibility((!StringUtils.isBlank(userProfileInfoBean.getEmpNum()))?View.VISIBLE:View.GONE);
-            empNumText.setText(userProfileInfoBean.getEmpNum());
+            enterpriseLayout.setVisibility((userProfileInfoBean.getShowEpInfo() == 0) ? View.GONE : View.VISIBLE);
+            photoLayout.setVisibility((userProfileInfoBean.getShowHead() == 0)?View.GONE:View.VISIBLE);
+            nameText.setVisibility((userProfileInfoBean.getShowUserName() == 0)?View.GONE:View.VISIBLE);
+            passwordModifyLayout.setVisibility((userProfileInfoBean.getShowModifyPsd() == 0) ? View.GONE : View.VISIBLE);
+            passwordResetLayout.setVisibility((userProfileInfoBean.getShowResetPsd() == 0) ? View.GONE : View.VISIBLE);
+            phoneLayout.setVisibility((0 == userProfileInfoBean.getShowUserPhone()) ? View.GONE : View.VISIBLE);
+            mailLayout.setVisibility(0 == userProfileInfoBean.getShowUserMail() ? View.GONE : View.VISIBLE);
+            officePhoneLayout.setVisibility(
+                    (!StringUtils.isBlank(userProfileInfoBean.getTelePhone())) ? View.VISIBLE : View.GONE);
+            officePhoneText.setText(userProfileInfoBean.getTelePhone());
+            employeeNOLayout
+                    .setVisibility((!StringUtils.isBlank(userProfileInfoBean.getEmpNum())) ? View.VISIBLE : View.GONE);
+            employeeNOText.setText(userProfileInfoBean.getEmpNum());
+            departmentText.setText(userProfileInfoBean.getOrgName());
         }
     }
 
@@ -273,16 +274,15 @@ public class MyInfoActivity extends BaseActivity {
         }
     }
 
-
     public class WebService extends APIInterfaceInstance {
 
         @Override
-        public void returnUploadMyHeadSuccess(GetUploadMyHeadResult getUploadMyHeadResult,String filePath) {
+        public void returnUploadMyHeadSuccess(GetUploadMyHeadResult getUploadMyHeadResult, String filePath) {
             // TODO Auto-generated method stub
             LoadingDialog.dimissDlg(loadingDlg);
             saveUpdateHeadTime();
             isUpdateUserPhoto = true;
-            ImageDisplayUtils.getInstance().displayImage(userHeadImg, photoLocalPath);
+            ImageDisplayUtils.getInstance().displayImage(photoImg, photoLocalPath);
             // 通知消息页面重新创建群组头像
             Intent intent = new Intent("message_notify");
             intent.putExtra("command", "creat_group_icon");
@@ -299,7 +299,8 @@ public class MyInfoActivity extends BaseActivity {
         @Override
         public void returnUserProfileConfigSuccess(UserProfileInfoBean userProfileInfoBean) {
             setUserInfoConfig(userProfileInfoBean);
-            PreferencesByUserAndTanentUtils.putString(getApplicationContext(), "user_profiles", userProfileInfoBean.getResponse());
+            PreferencesByUserAndTanentUtils.putString(getApplicationContext(), "user_profiles",
+                    userProfileInfoBean.getResponse());
         }
 
         @Override
@@ -313,10 +314,10 @@ public class MyInfoActivity extends BaseActivity {
             MyInfoActivity.this.getMyInfoResult = getMyInfoResult;
             List<Enterprise> enterpriseList = getMyInfoResult.getEnterpriseList();
             Enterprise defaultEnterprise = getMyInfoResult.getDefaultEnterprise();
-            if (enterpriseList.size() == 0 && defaultEnterprise == null){
-                ToastUtils.show(MyApplication.getInstance(),  R.string.login_user_not_bound_enterprise);
+            if (enterpriseList.size() == 0 && defaultEnterprise == null) {
+                ToastUtils.show(MyApplication.getInstance(), R.string.login_user_not_bound_enterprise);
                 MyApplication.getInstance().signout();
-            }else {
+            } else {
                 PreferencesUtils.putString(MyInfoActivity.this, "myInfo", getMyInfoResult.getResponse());
                 showMyInfo();
             }

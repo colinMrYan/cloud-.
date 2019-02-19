@@ -247,9 +247,6 @@ public class SettingActivity extends BaseActivity {
             case R.id.clear_cache_layout:
                 showClearCacheDlg();
                 break;
-            case R.id.switch_enterprese_text:
-                IntentUtils.startActivity(SettingActivity.this, SwitchEnterpriseActivity.class);
-                break;
             case R.id.rl_setting_account_safe:
                 IntentUtils.startActivity(SettingActivity.this, SafeCenterActivity.class);
                 break;

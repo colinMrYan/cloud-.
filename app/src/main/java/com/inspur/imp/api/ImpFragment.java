@@ -115,6 +115,11 @@ public class ImpFragment extends ImpBaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        if (headerLayout.getVisibility() == View.VISIBLE){
+            setFragmentStatusBarCommon();
+        }else {
+            setFragmentStatusBarWhite();
+        }
         if (rootView == null) {
             rootView = inflater.inflate(Res.getLayoutID("activity_imp"), container,
                     false);

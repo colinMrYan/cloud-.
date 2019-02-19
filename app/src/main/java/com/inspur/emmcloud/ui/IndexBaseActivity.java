@@ -307,15 +307,15 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
             TabBean tabBean = tabs[i];
             String tabId = tabBean.getTabId();
             TabHost.TabSpec tab = mTabHost.newTabSpec(tabId);
-            View tabView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.tab_item_view, null);
+            View tabView = LayoutInflater.from(this).inflate(R.layout.tab_item_view, null);
             ImageView tabImg = tabView.findViewById(R.id.imageview);
             TextView tabText = tabView.findViewById(R.id.textview);
-            int currentThemeNo = PreferencesUtils.getInt(MyApplication.getInstance(), Constant.PREF_APP_THEME, 0);
-            if (currentThemeNo == 2) {
-                tabText.setTextColor(getResources().getColorStateList(R.color.seclector_footer_text_grey));
-            } else {
-                tabText.setTextColor(getResources().getColorStateList(R.color.seclector_footer_text_white));
-            }
+//            int currentThemeNo = PreferencesUtils.getInt(MyApplication.getInstance(), Constant.PREF_APP_THEME, 0);
+//            if (currentThemeNo == 2) {
+//                tabText.setTextColor(getResources().getColorStateList(R.color.seclector_footer_text_grey));
+//            } else {
+//                tabText.setTextColor(getResources().getColorStateList(R.color.seclector_footer_text_white));
+//            }
 
             if (tabId.equals(Constant.APP_TAB_BAR_COMMUNACATE)) {
                 handleTipsView(tabView);
@@ -699,13 +699,6 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
 
     @Override
     public void onTabChanged(final String tabId) {
-        // if(tabId.equals("ecc-app-react-native://discover")) {
-        // StateBarUtils.translucent(this ,R.color.header_bg);
-        // StateBarUtils.setStateBarTextColor( this,false );
-        // } else {
-        // StateBarUtils.translucent(this);
-        // StateBarUtils.setStateBarTextColor(this,true);
-        // }
         this.tabId = tabId;
         tipsView.setCanTouch(tabId.equals(Constant.APP_TAB_BAR_COMMUNACATE));
         if (!isSystemChangeTag) {

@@ -27,7 +27,7 @@ public class DeviceRegisterFailDetailActivity extends BaseActivity {
 	}
 
 	public void onClick(View v) {
-		if (v.getId() == Res.getWidgetID("back_layout")) {
+		if (v.getId() == Res.getWidgetID("ibt_back")) {
 			onBackPressed();
 		} else if (v.getId() == Res.getWidgetID("register_btn")) {
 			Intent intent = new Intent();
