@@ -184,6 +184,7 @@ public class NetWorkStateDetailActivity extends BaseActivity {
 
     /**
      * 加载ViewGONE，改为状态view VISIABLE
+     *
      * @param iniState true 初始化时loading显示状态imageview消失，false 相反
      */
     private void setShowDnsconnctstateUI(Boolean iniState) {
@@ -227,8 +228,6 @@ public class NetWorkStateDetailActivity extends BaseActivity {
                             int responcode = httpURLConnection.getResponseCode();
                             if (responcode > 300 && responcode < 310) {
                                 PortalUrl = httpURLConnection.getURL().toString();
-                              //  PortalUrl = "http://www.baidu.com";
-                                LogUtils.LbcDebug( "URL"+PortalUrl );
                             }
                             resultData = false;
                         }
