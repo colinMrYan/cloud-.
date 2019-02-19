@@ -160,6 +160,7 @@ public class CalendarLayout extends LinearLayout {
     private int mItemHeight;
 
     private CalendarViewDelegate mDelegate;
+    private CalendarExpandListener listener;
 
     public CalendarLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -238,6 +239,10 @@ public class CalendarLayout extends LinearLayout {
                 return;
             mContentView.setTranslationY(-mContentViewTranslateY);
         }
+    }
+
+    public void setExpandListener(CalendarExpandListener listener){
+        this.listener = listener;
     }
 
     /**
@@ -611,6 +616,9 @@ public class CalendarLayout extends LinearLayout {
             }
         });
         objectAnimator.start();
+        if(listener != null){
+            listener.isExpand(true);
+        }
         return true;
     }
 
@@ -652,6 +660,9 @@ public class CalendarLayout extends LinearLayout {
             }
         });
         objectAnimator.start();
+        if(listener != null){
+            listener.isExpand(false);
+        }
         return true;
     }
 
@@ -834,5 +845,12 @@ public class CalendarLayout extends LinearLayout {
          * @return 是否滚动到顶部
          */
         boolean isScrollToTop();
+    }
+
+    /**
+     * 日历是否展开的监听
+     */
+    public interface CalendarExpandListener{
+        void isExpand(boolean isExpand);
     }
 }

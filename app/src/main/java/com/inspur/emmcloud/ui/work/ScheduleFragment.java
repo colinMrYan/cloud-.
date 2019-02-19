@@ -24,7 +24,7 @@ import java.util.Map;
 public class ScheduleFragment extends Fragment implements
         CalendarView.OnCalendarSelectListener,
         CalendarView.OnYearChangeListener,
-        View.OnClickListener {
+        View.OnClickListener,CalendarLayout.CalendarExpandListener{
 
 //    private TextView mTextMonthDay;
 //    private TextView mTextYear;
@@ -88,6 +88,7 @@ public class ScheduleFragment extends Fragment implements
 //            }
 //        });
         mCalendarLayout =  rootView.findViewById(R.id.calendarLayout);
+        mCalendarLayout.setExpandListener(this);
         mCalendarView.setOnCalendarSelectListener(this);
         mCalendarView.setOnYearChangeListener(this);
 //        mTextYear.setText(String.valueOf(mCalendarView.getCurYear()));
@@ -161,5 +162,10 @@ public class ScheduleFragment extends Fragment implements
 
     @Override
     public void onCalendarSelect(Calendar calendar, boolean isClick) {
+    }
+
+    @Override
+    public void isExpand(boolean isExpand) {
+//        rootView.findViewById(R.id.ll_date_and_arrow).setVisibility(isExpand?View.VISIBLE:View.GONE);
     }
 }

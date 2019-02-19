@@ -39,78 +39,6 @@
             android:paddingRight="16dp"
             android:scaleType="centerInside"
             android:src="?attr/ic_add" />
-
-        <!--<TextView-->
-            <!--android:id="@+id/tv_month_day"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:gravity="center_vertical"-->
-            <!--android:paddingLeft="16dp"-->
-            <!--android:textColor="#000000"-->
-            <!--android:textSize="26sp"-->
-            <!--android:textStyle="bold"-->
-            <!--tools:ignore="RtlSymmetry" />-->
-
-        <!--<LinearLayout-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:layout_toRightOf="@+id/tv_month_day"-->
-            <!--android:orientation="vertical"-->
-            <!--android:paddingBottom="12dp"-->
-            <!--android:paddingLeft="6dp"-->
-            <!--android:paddingRight="6dp"-->
-            <!--android:paddingTop="12dp"-->
-            <!--tools:ignore="RelativeOverlap">-->
-
-            <!--<TextView-->
-                <!--android:id="@+id/tv_year"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="0dp"-->
-                <!--android:layout_weight="1"-->
-                <!--android:gravity="center"-->
-                <!--android:textColor="#000000"-->
-                <!--android:textSize="10sp" />-->
-
-            <!--<TextView-->
-                <!--android:id="@+id/tv_lunar"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="0dp"-->
-                <!--android:layout_weight="1"-->
-                <!--android:gravity="center"-->
-                <!--android:textColor="#000000"-->
-                <!--android:textSize="10sp"-->
-                <!--tools:ignore="SmallSp" />-->
-        <!--</LinearLayout>-->
-
-        <!--<FrameLayout-->
-            <!--android:id="@+id/fl_current"-->
-            <!--android:layout_width="32dp"-->
-            <!--android:layout_height="32dp"-->
-            <!--android:layout_alignParentRight="true"-->
-            <!--android:layout_centerVertical="true"-->
-            <!--android:layout_marginRight="12dp"-->
-            <!--&gt;-->
-
-            <!--&lt;!&ndash;<ImageView&ndash;&gt;-->
-                <!--&lt;!&ndash;android:id="@+id/ib_calendar"&ndash;&gt;-->
-                <!--&lt;!&ndash;android:layout_width="match_parent"&ndash;&gt;-->
-                <!--&lt;!&ndash;android:layout_height="match_parent"&ndash;&gt;-->
-                <!--&lt;!&ndash;android:tint="#000000"&ndash;&gt;-->
-                <!--&lt;!&ndash;android:contentDescription="@string/app_name"&ndash;&gt;-->
-                <!--&lt;!&ndash;android:scaleType="centerInside"&ndash;&gt;-->
-                <!--&lt;!&ndash;android:src="@mipmap/ic_calendar" />&ndash;&gt;-->
-
-            <!--<TextView-->
-                <!--android:id="@+id/tv_current_day"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_gravity="center"-->
-                <!--android:layout_marginTop="2dp"-->
-                <!--android:gravity="center"-->
-                <!--android:text="13"-->
-                <!--android:textColor="#000000"-->
-                <!--android:textSize="12sp" />-->
-        <!--</FrameLayout>-->
     </RelativeLayout>
 
     <com.inspur.emmcloud.widget.calendarview.CalendarLayout
@@ -120,7 +48,7 @@
         android:orientation="vertical"
         android:background="#ffffff"
         app:default_status="shrink"
-        app:calendar_content_view_id="@+id/recyclerView">
+        app:calendar_content_view_id="@+id/ll_date_and_arrow">
 
         <com.inspur.emmcloud.widget.calendarview.CalendarView
             android:id="@+id/calendarView"
@@ -153,21 +81,38 @@
             app:year_view_scheme_color="#f17706"
             app:calendar_height="36dp"
             />
-
-        <com.inspur.emmcloud.widget.calendarview.group.GroupRecyclerView
-            android:id="@+id/recyclerView"
-            app:group_background="@color/content_background"
-            app:group_center="false"
-            app:group_height="42dp"
-            app:group_has_header="false"
-            app:group_padding_left="16dp"
-            app:group_padding_right="16dp"
-            app:group_text_size="14sp"
-            app:group_text_color="#555555"
+        <LinearLayout
+            android:id="@+id/ll_date_and_arrow"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/content_background" />
-
+            android:orientation="vertical">
+            <ImageView
+                android:layout_width="18.4dp"
+                android:layout_height="18.4dp"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/ic_schedule_up"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="13sp"
+                android:textColor="#333333"
+                android:paddingLeft="15dp"
+                android:paddingBottom="11dp"
+                android:text="今天·2018-5-17·星期四"/>
+            <com.inspur.emmcloud.widget.calendarview.group.GroupRecyclerView
+                android:id="@+id/recyclerView"
+                app:group_background="@color/content_background"
+                app:group_center="false"
+                app:group_height="42dp"
+                app:group_has_header="false"
+                app:group_padding_left="16dp"
+                app:group_padding_right="16dp"
+                app:group_text_size="14sp"
+                app:group_text_color="#555555"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/content_background" />
+        </LinearLayout>
     </com.inspur.emmcloud.widget.calendarview.CalendarLayout>
 
 
