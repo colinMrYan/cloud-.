@@ -30,9 +30,11 @@ public class CheckingNetStateUtils {
         @Override
         public void handleMessage(Message msg) {
               List<Object> pingIdAndData = (List<Object>)msg.obj;
-              LogUtils.LbcDebug( "Ip"+pingIdAndData.get( 0 )+"data"+pingIdAndData.get( 1 ) );
-            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG__NET_PING_CONNECTION, pingIdAndData));
-            super.handleMessage( msg );
+              String actionTip = (String)pingIdAndData.get( 0 );
+              pingIdAndData.remove(0);
+              LogUtils.LbcDebug( "action:"+pingIdAndData.get(0)+"data"+pingIdAndData.get(1));
+              EventBus.getDefault().post(new SimpleEventMessage(actionTip, pingIdAndData));
+              super.handleMessage( msg );
         }
     };
 
@@ -42,34 +44,20 @@ public class CheckingNetStateUtils {
     public   void CheckNetPingThreadStart(final  String[]  StrUrl, final int WaiteTime, final String eventBusAction) {
         for(int i=0;i<StrUrl.length;i++){
             final int finalI = i;
-
             new Thread( new Runnable() {
                 @Override
                 public void run() {
                     try {
-                            LogUtils.LbcDebug( "3333333333333333333333333333333333333" );
                             PingNetEntity pingNetEntity=new PingNetEntity(StrUrl[finalI],1,WaiteTime,new StringBuffer());
-                            pingNetEntity=NetUtils.ping(pingNetEntity, (long) 4500);
-                            LogUtils.LbcDebug( "444444444444444444444444444" );
+                            pingNetEntity=NetUtils.ping(pingNetEntity, (long)WaiteTime);
                             final List<Object> pingIdAndData = new ArrayList<>();
-
+                            pingIdAndData.add( eventBusAction );
                             pingIdAndData.add(StrUrl[finalI]);
-                        LogUtils.LbcDebug( "55555555555555555555555555" );
                             pingIdAndData.add(pingNetEntity.isResult());
                             Message  message = new Message();
                             message.obj = pingIdAndData;
                             handler.sendMessage( message );
-                           LogUtils.LbcDebug( "666666666666666666666666" );
-//                            new Handler( Looper.getMainLooper()).post( new Runnable() {
-//                                @Override
-//                                public void run() {
-//                                    LogUtils.LbcDebug( "CheckNetPingThreadStart" );
-//                                    EventBus.getDefault().post(new SimpleEventMessage(eventBusAction, pingIdAndData));
-//                                }
-//                            });
-
                     } catch (Exception e){
-                        LogUtils.LbcDebug( "22222222222222222222222222222222" );
                         e.printStackTrace();
                     }
                 }
@@ -77,7 +65,7 @@ public class CheckingNetStateUtils {
         }
     }
 
-    public   void CheckNetHttpThreadStart(final  String[]  StrUrl, final int WaiteTime, final String eventBusAction) {
+    public   void CheckNetHttpThreadStart(final  String[]  StrUrl) {
         for(int i=0;i<StrUrl.length;i++){
             AppAPIService apiService = new AppAPIService(context);
             apiService.setAPIInterface( new WebHttpService() );

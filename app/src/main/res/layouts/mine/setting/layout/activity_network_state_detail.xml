@@ -242,7 +242,7 @@
                 </RelativeLayout>
                 <RelativeLayout
                     android:id="@+id/rl_portal_tip"
-                    android:visibility="gone"
+                    android:layout_marginTop="11dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tv_checking_portal_content"
@@ -251,11 +251,17 @@
                         android:id="@+id/tv_portal_click_tip"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="11dp"
                         android:textSize="15sp"
                         android:layout_marginLeft="4dp"
                         android:textColor="#FFF54949"
                         android:text="@string/net_diagnosis_portal_to_set"/>
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toRightOf="@id/tv_portal_click_tip"
+                        android:layout_marginLeft="4dp"
+                        android:src="@drawable/ic_fix_right_arrow"/>
                 </RelativeLayout>
 
                 <View

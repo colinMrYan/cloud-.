@@ -53,6 +53,7 @@ import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.ui.mine.setting.NetWorkStateDetailActivity;
+import com.inspur.emmcloud.util.common.CheckingNetStateUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
@@ -119,12 +120,16 @@ public class CommunicationFragment extends Fragment {
     private LoadingDialog loadingDlg;
     private ImageView headerFunctionOptionImg;
     private ImageView contactImg;
+    private CheckingNetStateUtils checkingNetStateUtils;
+
+    private int connectedUrlNum=0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
+        checkingNetStateUtils=new CheckingNetStateUtils( getContext() );
         initView();
         sortConversationList();// 对Channel 进行排序
         registerMessageFragmentReceiver();
@@ -138,10 +143,13 @@ public class CommunicationFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-         if(NetworkInfo.State.CONNECTED==NetUtils.getNetworkMobileState(getContext())||NetworkInfo.State.CONNECTING==NetUtils.getNetworkMobileState(getContext())||NetUtils.isVpnConnected()){
+        if(NetworkInfo.State.CONNECTED==NetUtils.getNetworkMobileState(getContext())
+                ||NetworkInfo.State.CONNECTING==NetUtils.getNetworkMobileState(getContext())
+                ||NetUtils.isVpnConnected()){
             conversationAdapter.setNetExceptionView(true);
-         }else{
-            NetUtils.PingThreadStart(NetUtils.pingUrls,5,Constant.EVENTBUS_TAG__NET_EXCEPTION_HINT);
+        }else{
+            connectedUrlNum=0;
+            checkingNetStateUtils.CheckNetPingThreadStart(NetUtils.pingUrls,5,Constant.EVENTBUS_TAG__NET_EXCEPTION_HINT);
         }
     }
 
@@ -317,18 +325,23 @@ public class CommunicationFragment extends Fragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void netWorkStateTip(SimpleEventMessage netState) {
         if(netState.getAction().equals(Constant.EVENTBUS_TAG__NET_STATE_CHANGE)){
-            if(((String)netState.getMessageObj()).equals(NetWorkStateChangeUtils.NET_WIFI_STATE_OK)){
-                NetUtils.PingThreadStart(NetUtils.pingUrls,5,Constant.EVENTBUS_TAG__NET_EXCEPTION_HINT);
+            if(((String)netState.getMessageObj()).equals(NetWorkStateChangeUtils.NET_WIFI_STATE_OK)&&(!NetUtils.isVpnConnected())){
+                connectedUrlNum=0;
+                checkingNetStateUtils.CheckNetPingThreadStart(NetUtils.pingUrls,5,Constant.EVENTBUS_TAG__NET_EXCEPTION_HINT);
             } else if(((String)netState.getMessageObj()).equals(NetWorkStateChangeUtils.NET_STATE_ERROR)) {
                 conversationAdapter.setNetExceptionView(false);
             } else if (((String)netState.getMessageObj()).equals(NetWorkStateChangeUtils.NET_GPRS_STATE_OK)) {
+                conversationAdapter.setNetExceptionView(true);
+            }else {
                 conversationAdapter.setNetExceptionView(true);
             }
         } else if (netState.getAction().equals(Constant.EVENTBUS_TAG__NET_EXCEPTION_HINT)) {   //网络异常提示
             if(!NetUtils.isNetworkConnected(getContext(),false)) {
                 conversationAdapter.setNetExceptionView(false);
             } else {
-                conversationAdapter.setNetExceptionView((Boolean)netState.getMessageObj());
+                List<Object> pingIdAndData = (List<Object>)netState.getMessageObj();
+                connectedUrlNum=(boolean)pingIdAndData.get(1)?connectedUrlNum+1:connectedUrlNum;
+                conversationAdapter.setNetExceptionView(connectedUrlNum>0?true:false);
             }
             if ((Boolean)netState.getMessageObj()){
                 WebSocketPush.getInstance().startWebSocket();

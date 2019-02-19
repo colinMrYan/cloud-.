@@ -34,7 +34,7 @@ public class NetUtils {
 	public static final String NETWORK_TYPE_VPN = "vpn";
 	public static final String NETWORK_TYPE_4G = "4g";
 	public static final String NETWORK_TYPE_MOBILE = "mobile";
-	public static final  String[] pingUrls={"www.baidu.com","www.aliyun.com"};
+	public static final  String[] pingUrls={"www.baidu.com"};
 	private static final String TAG = "PingNet";
 
 	/**
@@ -487,8 +487,4 @@ public class NetUtils {
 			}
 		}).start();
 	}
-
-
-
-
 }

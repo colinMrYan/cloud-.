@@ -118,14 +118,18 @@ public class NetWorkStateDetailActivity extends BaseActivity {
             } else {
                 checkPortalLayout.setVisibility( View.GONE );
             }
-            checkUrlsConnectionLayout.setVisibility( View.VISIBLE );
+            if(NetUtils.isVpnConnected()){
+                checkUrlsConnectionLayout.setVisibility( View.GONE);
+                return;
+            }
+            checkUrlsConnectionLayout.setVisibility(View.VISIBLE);
             checkingNetConnectState();
         } else {
             checkUrlsConnectionLayout.setVisibility( View.GONE );
             checkPortalLayout.setVisibility( View.GONE );
             qmulWifiLoadingView.setVisibility( View.GONE );
             portalImageView.setVisibility( View.VISIBLE );
-            portalImageView.setBackground( drawableError );
+            portalImageView.setImageResource( R.drawable.ic_fix_left_arrow );
             ping1UrlImageView.setBackground( drawableDomainError );
             ping2UrlImageView.setBackground( drawableDomainError );
             ping3UrlImageView.setBackground( drawableDomainError );
@@ -171,16 +175,15 @@ public class NetWorkStateDetailActivity extends BaseActivity {
     }
 
     /**
-     * 通过三个Url检测网络状态
+     * 通过个Url检测网络状态
      */
     private void checkingNetConnectState() {
-        checkingNetStateUtils.CheckNetPingThreadStart(  subUrls,4500,Constant.EVENTBUS_TAG__NET_PING_CONNECTION);
-        checkingNetStateUtils.CheckNetHttpThreadStart(  CheckHttpUrls,4500,Constant.EVENTBUS_TAG__NET_HTTP_POST_CONNECTION);
+        checkingNetStateUtils.CheckNetPingThreadStart(subUrls,5,Constant.EVENTBUS_TAG__NET_PING_CONNECTION);
+        checkingNetStateUtils.CheckNetHttpThreadStart(CheckHttpUrls);
     }
 
     /**
      * 加载ViewGONE，改为状态view VISIABLE
-     *
      * @param iniState true 初始化时loading显示状态imageview消失，false 相反
      */
     private void setShowDnsconnctstateUI(Boolean iniState) {
@@ -224,6 +227,8 @@ public class NetWorkStateDetailActivity extends BaseActivity {
                             int responcode = httpURLConnection.getResponseCode();
                             if (responcode > 300 && responcode < 310) {
                                 PortalUrl = httpURLConnection.getURL().toString();
+                              //  PortalUrl = "http://www.baidu.com";
+                                LogUtils.LbcDebug( "URL"+PortalUrl );
                             }
                             resultData = false;
                         }
@@ -274,7 +279,6 @@ public class NetWorkStateDetailActivity extends BaseActivity {
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void dealCheckingPingUrls(SimpleEventMessage netState) {
-        LogUtils.LbcDebug( "111111111111111111111111"+netState.getAction() );
         if (netState.getAction().equals( Constant.EVENTBUS_TAG__NET_PING_CONNECTION )) {
             List<Object> idAndData = (List<Object>) netState.getMessageObj();
             LogUtils.LbcDebug("data:"+ idAndData.get( 0 )+idAndData.get( 1 ) );
@@ -296,7 +300,7 @@ public class NetWorkStateDetailActivity extends BaseActivity {
                 portalCheckTipLayout.setVisibility( View.GONE );
             } else {
                 qmulWifiLoadingView.setVisibility( View.GONE );
-                portalImageView.setBackground( drawableError );
+                portalImageView.setImageResource( R.drawable.ic_fix_left_arrow );
                 portalImageView.setVisibility( View.VISIBLE );
                 portalCheckTipLayout.setVisibility( View.VISIBLE );
             }
