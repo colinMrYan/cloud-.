@@ -9,8 +9,6 @@
     android:fitsSystemWindows="true"
     tools:context="com.inspur.emmcloud.MainActivity"
     tools:ignore="RtlHardcoded,HardcodedText,RtlSymmetry,SmallSp">
-
-
     <RelativeLayout
         android:id="@+id/rl_tool"
         android:layout_width="match_parent"
@@ -29,12 +27,13 @@
             android:textSize="24sp" />
 
         <ImageView
-            android:id="@+id/more_function_list_img"
+            android:id="@+id/schedule_function_list_img"
             android:layout_width="46dp"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:clickable="true"
+            android:onClick="onClick"
             android:paddingLeft="8dp"
             android:paddingRight="16dp"
             android:scaleType="centerInside"
@@ -85,6 +84,7 @@
             android:id="@+id/ll_date_and_arrow"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/white"
             android:orientation="vertical">
             <ImageView
                 android:layout_width="18.4dp"
@@ -114,6 +114,4 @@
                 android:background="@color/content_background" />
         </LinearLayout>
     </com.inspur.emmcloud.widget.calendarview.CalendarLayout>
-
-
 </LinearLayout>

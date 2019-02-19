@@ -4,11 +4,20 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.bean.system.PVCollectModel;
+import com.inspur.emmcloud.ui.work.calendar.CalActivity;
+import com.inspur.emmcloud.ui.work.meeting.MeetingListActivity;
+import com.inspur.emmcloud.ui.work.task.MessionListActivity;
+import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.privates.AppUtils;
+import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.widget.calendarview.Calendar;
 import com.inspur.emmcloud.widget.calendarview.CalendarLayout;
 import com.inspur.emmcloud.widget.calendarview.CalendarView;
@@ -24,18 +33,13 @@ import java.util.Map;
 public class ScheduleFragment extends Fragment implements
         CalendarView.OnCalendarSelectListener,
         CalendarView.OnYearChangeListener,
-        View.OnClickListener,CalendarLayout.CalendarExpandListener{
-
-//    private TextView mTextMonthDay;
-//    private TextView mTextYear;
-//    private TextView mTextLunar;
-//    private TextView mTextCurrentDay;
+        CalendarLayout.CalendarExpandListener{
     private CalendarView mCalendarView;
-    private RelativeLayout mRelativeTool;
     private int mYear;
     private CalendarLayout mCalendarLayout;
     private GroupRecyclerView mRecyclerView;
     private View rootView;
+    private PopupWindow popupWindow;
 
 
     @Override
@@ -65,7 +69,6 @@ public class ScheduleFragment extends Fragment implements
 //        mTextMonthDay =  rootView.findViewById(R.id.tv_month_day);
 //        mTextYear =  rootView.findViewById(R.id.tv_year);
 //        mTextLunar =  rootView.findViewById(R.id.tv_lunar);
-        mRelativeTool = rootView.findViewById(R.id.rl_tool);
         mCalendarView =  rootView.findViewById(R.id.calendarView);
 //        mTextCurrentDay = rootView.findViewById(R.id.tv_current_day);
 //        mTextMonthDay.setOnClickListener(new View.OnClickListener() {
@@ -96,6 +99,16 @@ public class ScheduleFragment extends Fragment implements
 //        mTextMonthDay.setText(mCalendarView.getCurMonth() + "月" + mCalendarView.getCurDay() + "日");
 //        mTextLunar.setText("今日");
 //        mTextCurrentDay.setText(String.valueOf(mCalendarView.getCurDay()));
+        rootView.findViewById(R.id.schedule_function_list_img).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (v.getId()){
+                    case R.id.schedule_function_list_img:
+                        showPopupWindow(v);
+                        break;
+                }
+            }
+        });
     }
 
     private void initData() {
@@ -145,9 +158,79 @@ public class ScheduleFragment extends Fragment implements
         return calendar;
     }
 
-    @Override
-    public void onClick(View v) {
+    /**
+     * 通讯录和创建群组，扫一扫合并
+     *
+     * @param view
+     */
+    private void showPopupWindow(View view) {
+        View contentView = LayoutInflater.from(getActivity())
+                .inflate(R.layout.pop_schedule_window_view, null);
 
+        popupWindow = new PopupWindow(contentView,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT, true);
+        popupWindow.setTouchable(true);
+        popupWindow.setTouchInterceptor(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return false;
+            }
+        });
+        popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                AppUtils.setWindowBackgroundAlpha(getActivity(), 1.0f);
+            }
+        });
+        contentView.findViewById(R.id.rl_schedule_calendar).setOnClickListener(onViewClickListener);
+        contentView.findViewById(R.id.rl_schedule_mission).setOnClickListener(onViewClickListener);
+        contentView.findViewById(R.id.rl_schedule_meeting).setOnClickListener(onViewClickListener);
+        popupWindow.setBackgroundDrawable(getResources().getDrawable(
+                R.drawable.pop_window_view_tran));
+        AppUtils.setWindowBackgroundAlpha(getActivity(), 0.8f);
+        // 设置好参数之后再show
+        popupWindow.showAsDropDown(view);
+    }
+
+    private View.OnClickListener onViewClickListener = new View.OnClickListener() {
+
+        @Override
+        public void onClick(View v) {
+            popupWindow.dismiss();
+            switch (v.getId()){
+                case R.id.rl_schedule_calendar:
+                    recordUserClickWorkFunction("calendar");
+                    IntentUtils.startActivity(getActivity(), CalActivity.class);
+                    break;
+                case R.id.rl_schedule_meeting:
+                    recordUserClickWorkFunction("meeting");
+                    IntentUtils.startActivity(getActivity(), MeetingListActivity.class);
+                    break;
+                case R.id.rl_schedule_mission:
+                    recordUserClickWorkFunction("task");
+                    IntentUtils.startActivity(getActivity(), MessionListActivity.class);
+                    break;
+            }
+        }
+    };
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (popupWindow != null && popupWindow.isShowing()) {
+            popupWindow.dismiss();
+        }
+    }
+
+    /**
+     * 记录用户点击
+     *
+     * @param functionId
+     */
+    private void recordUserClickWorkFunction(String functionId) {
+        PVCollectModel pvCollectModel = new PVCollectModel(functionId, "work");
+        PVCollectModelCacheUtils.saveCollectModel(getActivity(), pvCollectModel);
     }
 
     @Override
@@ -166,6 +249,5 @@ public class ScheduleFragment extends Fragment implements
 
     @Override
     public void isExpand(boolean isExpand) {
-//        rootView.findViewById(R.id.ll_date_and_arrow).setVisibility(isExpand?View.VISIBLE:View.GONE);
     }
 }
