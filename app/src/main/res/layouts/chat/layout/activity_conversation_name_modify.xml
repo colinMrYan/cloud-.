@@ -56,7 +56,7 @@
             android:paddingLeft="12dp"
             android:paddingRight="12dp"
             android:text="@string/save"
-            android:textColor="#3BF1F8"
+            android:textColor="#36A5F6"
             android:textSize="@dimen/header_textsize" />
     </RelativeLayout>
 

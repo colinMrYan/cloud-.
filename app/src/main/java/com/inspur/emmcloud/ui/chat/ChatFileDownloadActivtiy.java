@@ -86,7 +86,7 @@ public class ChatFileDownloadActivtiy extends BaseActivity {
 
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.back_layout:
+            case R.id.ibt_back:
                 finish();
                 break;
             case R.id.download_btn:
