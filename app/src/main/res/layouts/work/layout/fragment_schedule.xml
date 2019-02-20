@@ -101,20 +101,66 @@
                 android:textColor="#333333"
                 android:paddingLeft="15dp"
                 android:paddingBottom="11dp"
-                android:text="今天·2018-5-17·星期四"/>
-            <com.inspur.emmcloud.widget.calendarview.group.GroupRecyclerView
-                android:id="@+id/recycler_view"
-                app:group_background="@color/content_background"
-                app:group_center="false"
-                app:group_height="42dp"
-                app:group_has_header="false"
-                app:group_padding_left="16dp"
-                app:group_padding_right="16dp"
-                app:group_text_size="14sp"
-                app:group_text_color="#555555"
+                />
+            <!--<com.inspur.emmcloud.widget.calendarview.group.GroupRecyclerView-->
+                <!--android:id="@+id/recycler_view"-->
+                <!--app:group_background="@color/content_background"-->
+                <!--app:group_center="false"-->
+                <!--app:group_height="42dp"-->
+                <!--app:group_has_header="false"-->
+                <!--app:group_padding_left="16dp"-->
+                <!--app:group_padding_right="16dp"-->
+                <!--app:group_text_size="14sp"-->
+                <!--app:group_text_color="#555555"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:background="@color/content_background" />-->
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/content_background" />
+                android:background="@color/content_background">
+                <ListView
+                    android:id="@+id/list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:divider="#00000000"
+                    android:dividerHeight="0dp"
+                    android:listSelector="#00000000"
+                    android:fadingEdge="none"
+                    android:overScrollMode="never"
+
+                    android:background="@color/content_background"
+                    android:scrollbars="none" />
+                <RelativeLayout
+                    android:id="@+id/rl_no_work_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@id/rl_header"
+                    android:layout_centerInParent="true"
+                    android:background="#00000000"
+                    android:gravity="center"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:id="@+id/iv_no_work_content"
+                        android:layout_width="60dp"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:adjustViewBounds="true"
+                        android:src="@drawable/ic_no_work_content" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/iv_no_work_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginBottom="30dp"
+                        android:layout_marginTop="18dp"
+                        android:text="@string/no_work_content"
+                        android:textColor="#999999"
+                        android:textSize="16sp" />
+                </RelativeLayout>
+            </RelativeLayout>
         </LinearLayout>
     </com.inspur.emmcloud.widget.calendarview.CalendarLayout>
 </LinearLayout>
