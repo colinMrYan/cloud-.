@@ -26,7 +26,7 @@ public class Constant {
     public static final String PREF_MY_APP_RECOMMEND_DATE = "my_app_recommend_date";
     public static final String PREF_MY_APP_RECOMMEND_EXPIREDDATE = "my_app_recommend_expired_date";
     public static final String PREF_MY_APP_RECOMMEND_LASTUPDATE_HOUR = "my_app_recommend_lastupdate_hour";
-    public static final String PREF_SOFT_INPUT_HEIGHT = "soft_input_height";
+    public static final String PREF_SOFT_INPUT_HEIGHT = "soft_keybord_height";
     public static final String PREF_SELECT_LOGIN_ENTERPRISE_ID = "select_login_tenent_id";
     public static final String PREF_CURRENT_ENTERPRISE_ID = "current_enterprise_id";
     public static final String PREF_CONTACT_USER_LASTQUERYTIME = "contact_user_lastquerytime";
@@ -44,6 +44,7 @@ public class Constant {
     public static final String PREF_BADGE_NUM_COMMUNICATION = "badge_num_communication";
     public static final String PREF_BADGE_NUM_APPSTORE = "badge_num_appstore";
     public static final String PREF_BADGE_NUM_SNS = "badge_num_sns";
+    public static final String PREF_MNM_DOUBLE_VALIADATION = "mdm_double_validation";//是否强制开启手势密码
 
     public static final String PREF_V_CONFIG_ALL = "v_config_all";
     public static final String PREF_EXPERIENCE_UPGRATE = "experience_upgrade";
@@ -58,6 +59,7 @@ public class Constant {
     public static final String PREF_MAIL_ACCOUNT = "mail_account";
     public static final String PREF_MAIL_PASSWORD = "mail_password";
     public static final String PREF_MY_INFO_SHOW_CONFIG = "user_profiles";
+    public static final String PREF_MINE_USER_MENUS = "mine_user_menus";
 
     public static final String ACTION_MEETING = "com.inspur.meeting";
     public static final String ACTION_TASK = "com.inspur.task";

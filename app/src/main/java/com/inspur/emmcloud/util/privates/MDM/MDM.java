@@ -35,6 +35,7 @@ public class MDM extends APIInterfaceInstance {
 	private String userName;
 	private ArrayList<String> requireFieldList;
 	private static MDMListener mdmListener;
+
 	public MDM() {
 
 	}
@@ -60,51 +61,53 @@ public class MDM extends APIInterfaceInstance {
 		MDM.mdmListener = mdmListener;
 	}
 
-	public void destroyOnMDMListener(){
-        mdmListener = null;
-    }
+	public void destroyOnMDMListener() {
+		mdmListener = null;
+	}
 
 	public MDMListener getMDMListener() {
 		return mdmListener;
 	}
 
-	/** 处理设备检查结果 **/
-	public void handCheckResult(int deviceStatus) {
+	/**
+	 * 处理设备检查结果
+	 **/
+	public void handCheckResult(GetDeviceCheckResult getDeviceCheckResult) {
 		// TODO Auto-generated method stub
+		int deviceStatus = getDeviceCheckResult.getState();
 		switch (deviceStatus) {
-		case STATUS_NORMAL:
-			if (mdmListener != null) {
-				mdmListener.MDMStatusPass();
-			}
-			if (context instanceof ImpActivity) {
-				context.finish();
-			}
-			break;
-		case STATUS_DISABLE:
-			showWraningDlg(STATUS_DISABLE);
-			break;
-		case STATUS_WAITING_VERIFY:
-			showWraningDlg(STATUS_WAITING_VERIFY);
-			break;
-		case STATUS_NOT_REGISTERED:
-			goDeviceRegister();
-			Toast.makeText(context, Res.getStringID("device_not_register"),
-					Toast.LENGTH_SHORT).show();
-			break;
-		case STATUS_IN_BLACKLIST:
-			showWraningDlg(STATUS_IN_BLACKLIST);
-			break;
-		case STATUS_REVIEW_REJECT:
-			goDeviceRegisterFailDetail();
-			break;
-		default:
-			break;
+			case STATUS_NORMAL:
+				if (mdmListener != null) {
+					mdmListener.MDMStatusPass(getDeviceCheckResult.getDoubleValidation());
+				}
+				if (context instanceof ImpActivity) {
+					context.finish();
+				}
+				break;
+			case STATUS_DISABLE:
+				showWraningDlg(STATUS_DISABLE);
+				break;
+			case STATUS_WAITING_VERIFY:
+				showWraningDlg(STATUS_WAITING_VERIFY);
+				break;
+			case STATUS_NOT_REGISTERED:
+				goDeviceRegister();
+				Toast.makeText(context, Res.getStringID("device_not_register"),
+						Toast.LENGTH_SHORT).show();
+				break;
+			case STATUS_IN_BLACKLIST:
+				showWraningDlg(STATUS_IN_BLACKLIST);
+				break;
+			case STATUS_REVIEW_REJECT:
+				goDeviceRegisterFailDetail();
+				break;
+			default:
+				break;
 		}
 	}
 
 	/**
 	 * 跳转到设备注册页面
-	 * 
 	 */
 	private void goDeviceRegister() {
 		// TODO Auto-generated method stub
@@ -115,7 +118,7 @@ public class MDM extends APIInterfaceInstance {
 		intent.setClass(context, ImpActivity.class);
 		Bundle bundle = new Bundle();
 		bundle.putString("appName", context.getString(Res.getStringID("device_registe")));
-		bundle.putString("function","mdm");
+		bundle.putString("function", "mdm");
 		bundle.putString("uri", APIUri.getDeviceRegisterUrl(context));
 		intent.putExtras(bundle);
 		context.startActivity(intent);
@@ -143,7 +146,7 @@ public class MDM extends APIInterfaceInstance {
 
 	/**
 	 * 弹出提示框（设备被禁用或设备正在审核中）
-	 * 
+	 *
 	 * @param status
 	 */
 	private void showWraningDlg(final int status) {
@@ -197,7 +200,7 @@ public class MDM extends APIInterfaceInstance {
 			AppAPIService apiServices = new AppAPIService(context);
 			apiServices.setAPIInterface(MDM.this);
 			apiServices.deviceCheck(tanentId, userCode);
-		}else if (mdmListener != null) {
+		} else if (mdmListener != null) {
 			mdmListener.MDMStatusNoPass();
 		}
 	}
@@ -207,22 +210,17 @@ public class MDM extends APIInterfaceInstance {
 			GetDeviceCheckResult getDeviceCheckResult) {
 		// TODO Auto-generated method stub
 		this.getDeviceCheckResult = getDeviceCheckResult;
-//		if (!TextUtils.isEmpty(getDeviceCheckResult.getError())) {
-//			showRegisterFailDlg(getDeviceCheckResult.getError());
-//		} else {
-			requireFieldList = getDeviceCheckResult.getRequiredFieldList();
-			handCheckResult(getDeviceCheckResult.getState());
-//		}
-
+		requireFieldList = getDeviceCheckResult.getRequiredFieldList();
+		handCheckResult(getDeviceCheckResult);
 	}
 
 	@Override
-	public void returnDeviceCheckFail(String error,int errorCode) {
+	public void returnDeviceCheckFail(String error, int errorCode) {
 		// TODO Auto-generated method stub
 		if (mdmListener != null) {
 			mdmListener.MDMStatusNoPass();
 		}
-		WebServiceMiddleUtils.hand(context,error,errorCode);
+		WebServiceMiddleUtils.hand(context, error, errorCode);
 	}
 
 }

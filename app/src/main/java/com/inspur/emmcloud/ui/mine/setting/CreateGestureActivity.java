@@ -9,7 +9,6 @@ import android.widget.Toast;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
 import com.inspur.emmcloud.util.privates.ninelock.LockPatternIndicator;
@@ -36,14 +35,17 @@ public class CreateGestureActivity extends BaseActivity {
 	public static final String GESTURE_CODE = "gesture_code";
 	public static final String GESTURE_CODE_ISOPEN = "gesture_code_isopen";
 	public static final String CREATE_GESTURE_CODE_SUCCESS = "create_gesture_code_success";
+	public static final String EXTRA_FORCE_SET = "extra_force_set";
 	@ViewInject(R.id.lockPatterIndicator)
-	LockPatternIndicator lockPatternIndicator;
+	private LockPatternIndicator lockPatternIndicator;
 	@ViewInject(R.id.lockPatternView)
-	LockPatternView lockPatternView;
+	private LockPatternView lockPatternView;
 	@ViewInject(R.id.gesture_reset_btn)
-	Button resetBtn;
+	private Button resetBtn;
 	@ViewInject(R.id.gesture_message_text)
-	TextView gestrueMessage;
+	private TextView gestrueMessage;
+	@ViewInject(R.id.tv_force_gesture_create)
+	private TextView forceGestureCreate;
 	private List<LockPatternView.Cell> mChosenPattern = null;
 	private static final long DELAYTIME = 600L;
 
@@ -60,6 +62,11 @@ public class CreateGestureActivity extends BaseActivity {
 	 */
 	private void init() {
 		lockPatternView.setOnPatternListener(patternListener);
+		if (getIntent().getBooleanExtra(EXTRA_FORCE_SET,false)){
+			forceGestureCreate.setVisibility(View.VISIBLE);
+		}else {
+			forceGestureCreate.setVisibility(View.INVISIBLE);
+		}
 	}
 
 	/**
@@ -96,7 +103,7 @@ public class CreateGestureActivity extends BaseActivity {
 	 * 更新状态
 	 * @param status
 	 * @param pattern
-     */
+	 */
 	private void updateStatus(Status status, List<LockPatternView.Cell> pattern) {
 		gestrueMessage.setTextColor(getResources().getColor(status.colorId));
 		gestrueMessage.setText(status.strId);
@@ -150,7 +157,7 @@ public class CreateGestureActivity extends BaseActivity {
 
 	public void onClick(View view){
 		switch (view.getId()){
-			case R.id.back_layout:
+			case R.id.ibt_back:
 				finish();
 				break;
 		}
@@ -158,13 +165,13 @@ public class CreateGestureActivity extends BaseActivity {
 
 	/**
 	 * 成功设置了手势密码(跳到首页)
-     */
+	 */
 	private void setLockPatternSuccess() {
 		Toast.makeText(this, getString(R.string.create_gesture_confirm_correct), Toast.LENGTH_SHORT).show();
 		putGestureCodeIsOpenByUser(CreateGestureActivity.this,true);
 		EventBus.getDefault().post(CREATE_GESTURE_CODE_SUCCESS);
+		setResult(RESULT_OK);
 		finish();
-		IntentUtils.startActivity(CreateGestureActivity.this,SafeGustureFaceSettingActivity.class);
 	}
 
 	/**

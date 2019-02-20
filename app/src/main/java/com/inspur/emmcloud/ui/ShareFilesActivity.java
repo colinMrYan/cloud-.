@@ -129,7 +129,7 @@ public class ShareFilesActivity extends BaseActivity {
 
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.back_layout:
+            case R.id.ibt_back:
                 finish();
                 break;
             case R.id.rl_channel_share:

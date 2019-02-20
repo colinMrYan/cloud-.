@@ -187,8 +187,8 @@ public class AppDetailActivity extends BaseActivity {
                     }
                 }
                 break;
-        }
 
+        }
     }
 
     /**
@@ -220,9 +220,6 @@ public class AppDetailActivity extends BaseActivity {
         }
     }
 
-    public void onBack(View v) {
-        finish();
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

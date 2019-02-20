@@ -5,9 +5,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 
+import com.inspur.emmcloud.BaseFragment;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ContactAPIService;
@@ -29,7 +29,7 @@ import java.util.List;
  * 通讯录页面的基类，进入应用当通讯录获取不成功，再进入通讯录页面会进行重新获取
  */
 
-public class ContactSearchBaseFragment extends Fragment {
+public class ContactSearchBaseFragment extends BaseFragment {
     protected static final int REFRESH_DATA = 6;
     private static final int DATA_READY = 7;
     private LoadingDialog loadingDlg;

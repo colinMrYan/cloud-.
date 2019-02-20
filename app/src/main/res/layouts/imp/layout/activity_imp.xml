@@ -83,12 +83,12 @@
             android:clickable="true"
             android:onClick="onClick"
             android:paddingLeft="13dp"
-            android:paddingRight="13dp"
+            android:paddingRight="16dp"
             android:paddingTop="17dp"
             android:paddingBottom="17dp"
             android:adjustViewBounds="true"
             android:scaleType="fitXY"
-            android:src="@drawable/ic_header_option"
+            android:src="?attr/ic_header_option"
             android:visibility="gone" />
         <LinearLayout
             android:id="@+id/ll_web_function"

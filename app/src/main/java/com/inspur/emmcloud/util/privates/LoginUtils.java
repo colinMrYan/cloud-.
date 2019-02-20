@@ -101,15 +101,17 @@ public class LoginUtils extends APIInterfaceInstance {
         String userCode = MyApplication.getInstance().getUid();
         final MDM mdm = new MDM(activity, tanentId, userCode, userName);
         mdm.addOnMDMListener(new MDMListener() {
-
             @Override
-            public void MDMStatusPass() {
+            public void MDMStatusPass(int doubleValidation) {
                 // TODO Auto-generated method stub
+                PreferencesByUserAndTanentUtils.putInt(MyApplication.getInstance(), Constant.PREF_MNM_DOUBLE_VALIADATION,doubleValidation);
                 PreferencesUtils.putBoolean(activity, "isMDMStatusPass", true);
                 saveLoginInfo();
                 loginUtilsHandler.sendEmptyMessage(LOGIN_SUCCESS);
                 mdm.destroyOnMDMListener();
             }
+
+
 
             @Override
             public void MDMStatusNoPass() {

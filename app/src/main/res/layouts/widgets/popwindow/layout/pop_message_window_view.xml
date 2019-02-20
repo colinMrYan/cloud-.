@@ -51,7 +51,7 @@
                 android:background="@color/transparent"
                 android:clickable="false"
                 android:text="@string/message_create_group"
-                android:textColor="?attr/header_text_color"
+                android:textColor="@color/header_text_black"
                 android:textSize="16sp" />
         </RelativeLayout>
 
@@ -93,7 +93,7 @@
                 android:background="@color/transparent"
                 android:clickable="false"
                 android:text="@string/sweep"
-                android:textColor="?attr/header_text_color"
+                android:textColor="@color/header_text_black"
                 android:textSize="16sp" />
         </RelativeLayout>
     </RelativeLayout>

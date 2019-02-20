@@ -1,16 +1,20 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
+import org.xutils.view.annotation.ContentView;
+import org.xutils.view.annotation.ViewInject;
+
+import com.inspur.emmcloud.BaseActivity;
+import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
+import com.inspur.emmcloud.widget.SwitchView;
+
 import android.os.Bundle;
 import android.view.View;
 import android.widget.RelativeLayout;
-
-import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.widget.SwitchView;
-
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
 
 /**
  * Created by chenmch on 2019/1/25.
@@ -43,9 +47,17 @@ public class SafeGustureFaceSettingActivity extends BaseActivity {
 
             @Override
             public void toggleToOff(View view) {
-                Bundle bundle = new Bundle();
-                bundle.putString("gesture_code_change", "close");
-                IntentUtils.startActivity(SafeGustureFaceSettingActivity.this, GestureLoginActivity.class, bundle);
+                int doubleValidation = PreferencesByUserAndTanentUtils.getInt(MyApplication.getInstance(), Constant.PREF_MNM_DOUBLE_VALIADATION, -1);
+                if (doubleValidation != 1) {
+                    Bundle bundle = new Bundle();
+                    bundle.putString("gesture_code_change", "close");
+                    IntentUtils.startActivity(SafeGustureFaceSettingActivity.this, GestureLoginActivity.class, bundle);
+                } else {
+                    guestureSwitchView.setOpened(true);
+                    ToastUtils.show(SafeGustureFaceSettingActivity.this, R.string.setting_gesture_force_open);
+                }
+
+
             }
         });
         faceSwitchView.setOnStateChangedListener(new SwitchView.OnStateChangedListener() {
@@ -64,8 +76,12 @@ public class SafeGustureFaceSettingActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        guestureSwitchView.setOpened(isGestureOpen());
+        boolean isGestureOpen = isGestureOpen();
+        if (guestureSwitchView.isOpened() != isGestureOpen){
+            guestureSwitchView.setOpened(isGestureOpen);
+        }
         resetGuestureLayout.setVisibility(isGestureOpen()?View.VISIBLE:View.GONE);
+
         faceSwitchView.setOpened(FaceVerifyActivity.getFaceVerifyIsOpenByUser(this));
         resetFaceLayout.setVisibility(FaceVerifyActivity.getFaceVerifyIsOpenByUser(this)?View.VISIBLE:View.GONE);
     }

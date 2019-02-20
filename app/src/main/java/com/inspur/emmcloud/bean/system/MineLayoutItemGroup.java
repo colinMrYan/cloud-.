@@ -12,10 +12,11 @@ import java.util.List;
  */
 
 public class MineLayoutItemGroup {
-    private List<String> mineLayoutItemList = new ArrayList<>();
+    private List<MineLayoutItem> mineLayoutItemList = new ArrayList<>();
     public MineLayoutItemGroup(JSONArray array){
         for (int i =0;i<array.length();i++){
-            mineLayoutItemList.add(JSONUtils.getString(array,i,""));
+            String content = JSONUtils.getString(array,i,"");
+            mineLayoutItemList.add(new MineLayoutItem(content));
         }
     }
 
@@ -23,11 +24,11 @@ public class MineLayoutItemGroup {
 
     }
 
-    public List<String> getMineLayoutItemList() {
+    public List<MineLayoutItem> getMineLayoutItemList() {
         return mineLayoutItemList;
     }
 
-    public void setMineLayoutItemList(List<String> mineLayoutItemList) {
+    public void setMineLayoutItemList(List<MineLayoutItem> mineLayoutItemList) {
         this.mineLayoutItemList = mineLayoutItemList;
     }
 }

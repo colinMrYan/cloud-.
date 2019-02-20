@@ -11,7 +11,6 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Vibrator;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -35,6 +34,7 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.inspur.emmcloud.BaseFragment;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.DragAdapter;
@@ -100,7 +100,7 @@ import java.util.Map;
  * classes : com.inspur.emmcloud.ui.app.MyAppFragment Create at 2016年12月13日
  * 上午11:10:20
  */
-public class MyAppFragment extends Fragment {
+public class MyAppFragment extends BaseFragment {
 
     private static final String ACTION_NAME = "add_app";
     private long lastOnItemClickTime = 0;//防止多次点击
@@ -138,6 +138,7 @@ public class MyAppFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        setFragmentStatusBarCommon();
         if (rootView == null) {
             rootView = inflater
                     .inflate(R.layout.fragment_app, container, false);

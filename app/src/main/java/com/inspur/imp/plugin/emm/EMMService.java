@@ -10,7 +10,6 @@ import com.inspur.emmcloud.util.common.ResolutionUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.MDM.MDM;
-import com.inspur.imp.api.ImpActivity;
 import com.inspur.imp.plugin.ImpPlugin;
 
 import org.json.JSONObject;
@@ -91,7 +90,7 @@ public class EMMService extends ImpPlugin {
 				String userCode = PreferencesUtils.getString(getFragmentContext(), "userID", "");
 				MDM mdm = new MDM(getActivity(), MyApplication.getInstance().getTanent(), userCode,
 						userName, getDeviceCheckResult);
-				mdm.handCheckResult(getDeviceCheckResult.getState());
+				mdm.handCheckResult(getDeviceCheckResult);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
