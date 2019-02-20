@@ -151,8 +151,7 @@ public class NetWorkStateDetailActivity extends BaseActivity {
      * @return 反馈为硬件连接状态
      */
     private boolean checkingHardState() {
-        NetStateintegerData = NetUtils.getNetWrokState( this );
-        if (-1 == NetStateintegerData.get( 0 )) {
+        if (!NetUtils.isNetworkConnected( this,false )) {
             hardImageView.setVisibility( View.GONE );
             qmulHardLoadingView.setVisibility( View.GONE );
             findViewById( R.id.rl_to_fix ).setVisibility( View.VISIBLE );
