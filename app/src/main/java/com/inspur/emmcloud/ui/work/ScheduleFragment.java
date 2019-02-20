@@ -45,6 +45,7 @@ import com.inspur.emmcloud.ui.work.task.MessionListActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
@@ -802,39 +803,38 @@ public class ScheduleFragment extends Fragment implements
     class WebService extends APIInterfaceInstance {
         @Override
         public void returnMeetingsSuccess(GetMeetingsResult getMeetingsResult) {
-//            swipeRefreshLayout.setRefreshing(false);
             ScheduleFragment.this.meetingList = getMeetingsResult.getMeetingsList();
+            LogUtils.YfcDebug("会议数据获取成功："+meetingList.size());
             Collections.sort(ScheduleFragment.this.meetingList, new Meeting());
             if (meetingChildAdapter != null){
+                LogUtils.YfcDebug("会议数据刷新");
                 meetingChildAdapter.notifyDataSetChanged();
             }
         }
 
         @Override
         public void returnMeetingsFail(String error, int errorCode) {
-//            swipeRefreshLayout.setRefreshing(false);
             WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
         }
 
         @Override
         public void returnRecentTasksSuccess(GetTaskListResult getTaskListResult) {
-//            swipeRefreshLayout.setRefreshing(false);
             taskList = getTaskListResult.getTaskList();
+            LogUtils.YfcDebug("任务数据获取成功："+taskList.size());
             if (taskChildAdapter != null){
+                LogUtils.YfcDebug("任务数据刷新");
                 taskChildAdapter.notifyDataSetChanged();
             }
         }
 
         @Override
         public void returnRecentTasksFail(String error, int errorCode) {
-//            swipeRefreshLayout.setRefreshing(false);
             WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
         }
 
         @Override
         public void returnMyCalendarSuccess(
                 GetMyCalendarResult getMyCalendarResult) {
-//            swipeRefreshLayout.setRefreshing(false);
             List<MyCalendar> calendarList = getMyCalendarResult
                     .getCalendarList();
             MyCalendarCacheUtils
@@ -853,7 +853,6 @@ public class ScheduleFragment extends Fragment implements
 
         @Override
         public void returnMyCalendarFail(String error, int errorCode) {
-//            swipeRefreshLayout.setRefreshing(false);
             WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
         }
 
