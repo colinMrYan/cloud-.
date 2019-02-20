@@ -63,12 +63,15 @@ import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ShortCutUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.AppBadgeUtils;
 import com.inspur.emmcloud.util.privates.AppTabUtils;
+import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ClientConfigUpdateUtils;
 import com.inspur.emmcloud.util.privates.MyAppWidgetUtils;
 import com.inspur.emmcloud.util.privates.NetWorkStateChangeUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
+import com.inspur.emmcloud.util.privates.ScanQrCodeUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.UriUtils;
 import com.inspur.emmcloud.util.privates.cache.AppCacheUtils;
@@ -95,6 +98,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import static android.app.Activity.RESULT_OK;
+
 
 /**
  * classes : com.inspur.emmcloud.ui.app.MyAppFragment Create at 2016年12月13日
@@ -102,6 +107,7 @@ import java.util.Map;
  */
 public class MyAppFragment extends BaseFragment {
 
+    private static final int REQUEST_SCAN_LOGIN_QRCODE_RESULT = 5;
     private static final String ACTION_NAME = "add_app";
     private long lastOnItemClickTime = 0;//防止多次点击
     private View rootView;
@@ -234,6 +240,22 @@ public class MyAppFragment extends BaseFragment {
         if(haveHeader){
             appListView.removeHeaderView(netExceptionView);
             haveHeader=false;
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if ((resultCode == RESULT_OK) && (requestCode == REQUEST_SCAN_LOGIN_QRCODE_RESULT)) {
+            if (data.hasExtra("isDecodeSuccess")) {
+                boolean isDecodeSuccess = data.getBooleanExtra("isDecodeSuccess", false);
+                if (isDecodeSuccess) {
+                    String msg = data.getStringExtra("msg");
+                    ScanQrCodeUtils.getScanQrCodeUtilsInstance(getActivity()).handleActionWithMsg(msg);
+                } else {
+                    ToastUtils.show(getActivity(), getString(R.string.qr_code_analysis_fail));
+                }
+            }
         }
     }
 
@@ -821,7 +843,9 @@ public class MyAppFragment extends BaseFragment {
                 saveNeedCommonlyUseApp(false);
             }
         });
-        (contentView.findViewById(R.id.tv_order)).setOnClickListener(myOnClickListener);
+        (contentView.findViewById(R.id.ll_app_order)).setOnClickListener(myOnClickListener);
+        (contentView.findViewById(R.id.ll_common_app_switch)).setOnClickListener(myOnClickListener);
+        (contentView.findViewById(R.id.ll_app_scan)).setOnClickListener(myOnClickListener);
         popupWindow.setBackgroundDrawable(getResources().getDrawable(
                 R.drawable.pop_window_view_tran));
         backgroundAlpha(0.8f);
@@ -1065,13 +1089,28 @@ public class MyAppFragment extends BaseFragment {
                         popupWindow.dismiss();
                     }
                     break;
-                case R.id.tv_order:
+                case R.id.ll_app_order:
                     if (appListAdapter != null) {
                         appListAdapter.setCanEdit(true);
                         appListAdapter.notifyDataSetChanged();
                         setAppEditStatus(true);
                         popupWindow.dismiss();
                     }
+                    break;
+                case R.id.ll_common_app_switch:
+                    if(!getNeedCommonlyUseApp()){
+                        saveNeedCommonlyUseApp(true);
+                        handCommonlyUseAppData(appListAdapter.getAppAdapterList(), true);
+                    }else{
+                        if (getNeedCommonlyUseApp() && AppCacheUtils.getCommonlyUseNeedShowList(getActivity()).size() > 0) {
+                            appListAdapter.getAppAdapterList().remove(0);
+                            appListAdapter.notifyDataSetChanged();
+                        }
+                        saveNeedCommonlyUseApp(false);
+                    }
+                    break;
+                case R.id.ll_app_scan:
+                    AppUtils.openScanCode(MyAppFragment.this,REQUEST_SCAN_LOGIN_QRCODE_RESULT);
                     break;
             }
 

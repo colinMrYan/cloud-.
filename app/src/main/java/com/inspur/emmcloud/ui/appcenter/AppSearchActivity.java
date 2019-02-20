@@ -89,6 +89,14 @@ public class AppSearchActivity extends BaseActivity {
         registerReceiver();
     }
 
+    public void onClick(View view){
+        switch (view.getId()){
+            case R.id.ibt_back:
+                finish();
+                break;
+        }
+    }
+
 
     private void registerReceiver() {
         // TODO Auto-generated method stub
