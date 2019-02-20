@@ -117,7 +117,7 @@ public class PluginMgr {
     public String executeAndReturn(final String serviceName,
                                    final String action, final String params) {
         String res = "";
-        if (Looper.myLooper() != Looper.getMainLooper() && !serviceName.endsWith("EMMService")){
+        if (Looper.myLooper() != Looper.getMainLooper() && !serviceName.endsWith("EMMService")&& !serviceName.endsWith("DeviceService")){
             Handler mainThread = new Handler(Looper.getMainLooper());
             mainThread.post(new Runnable() {
                 @Override
