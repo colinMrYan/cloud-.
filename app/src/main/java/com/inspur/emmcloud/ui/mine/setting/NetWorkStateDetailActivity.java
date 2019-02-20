@@ -55,6 +55,7 @@ public class NetWorkStateDetailActivity extends BaseActivity {
     private QMUILoadingView ping3UrlQMUIView;
     private Drawable drawableError;
     private Drawable drawableSuccess;
+    private Drawable drawableRightArrow;
     private Drawable drawableDomainError;
     private Drawable drawableDomainSuccess;
     private List<Integer> NetStateintegerData;
@@ -89,6 +90,7 @@ public class NetWorkStateDetailActivity extends BaseActivity {
         hardImageView = (ImageView) findViewById( R.id.iv_hard_state_log );
         portalImageView = (ImageView) findViewById( R.id.iv_portal_state_log );
         drawableError = getBaseContext().getResources().getDrawable( R.drawable.ic_netchecking_error );
+        drawableRightArrow= getBaseContext().getResources().getDrawable( R.drawable.ic_fix_left_arrow );
         drawableSuccess = getBaseContext().getResources().getDrawable( R.drawable.ic_netchecking_ok );
         drawableDomainError = getBaseContext().getResources().getDrawable( R.drawable.ic_checking_domain_error );
         drawableDomainSuccess = getBaseContext().getResources().getDrawable( R.drawable.ic_checking_domain_success );
@@ -130,7 +132,7 @@ public class NetWorkStateDetailActivity extends BaseActivity {
             checkPortalLayout.setVisibility( View.GONE );
             qmulWifiLoadingView.setVisibility( View.GONE );
             portalImageView.setVisibility( View.VISIBLE );
-            portalImageView.setImageResource( R.drawable.ic_fix_left_arrow );
+            portalImageView.setBackground( drawableError );
             ping1UrlImageView.setBackground( drawableDomainError );
             ping2UrlImageView.setBackground( drawableDomainError );
             ping3UrlImageView.setBackground( drawableDomainError );
@@ -305,7 +307,7 @@ public class NetWorkStateDetailActivity extends BaseActivity {
                     portalImageView.setBackground( drawableError);
                     portalCheckTipLayout.setVisibility( View.GONE );
                 }else{
-                    portalImageView.setImageResource( R.drawable.ic_fix_left_arrow );
+                    portalImageView.setBackground( drawableRightArrow );
                     portalCheckTipLayout.setVisibility( View.VISIBLE );
                 }
             }
