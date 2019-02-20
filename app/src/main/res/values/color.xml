@@ -212,4 +212,9 @@
     <color name="voice_communication_function_select">#3CA6F7</color>
     <color name="voice_communication_function_default">#333333</color>
     <color name="voice_communication_function_unavailiable_text">#CBCCCE</color>
+
+    <color name="line_color">#e7e7e7</color>
+    <color name="content_background">#f2f2f2</color>
+
+    <color name="schedule_week_bg_color">#F8F9FB</color>
 </resources>
