@@ -18,6 +18,7 @@ import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PingNetEntity;
+import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.UriUtils;
 import com.qmuiteam.qmui.widget.QMUILoadingView;
 
@@ -54,6 +55,7 @@ public class NetWorkStateDetailActivity extends BaseActivity {
     private QMUILoadingView ping3UrlQMUIView;
     private Drawable drawableError;
     private Drawable drawableSuccess;
+    private Drawable drawableRightArrow;
     private Drawable drawableDomainError;
     private Drawable drawableDomainSuccess;
     private List<Integer> NetStateintegerData;
@@ -88,6 +90,7 @@ public class NetWorkStateDetailActivity extends BaseActivity {
         hardImageView = (ImageView) findViewById( R.id.iv_hard_state_log );
         portalImageView = (ImageView) findViewById( R.id.iv_portal_state_log );
         drawableError = getBaseContext().getResources().getDrawable( R.drawable.ic_netchecking_error );
+        drawableRightArrow= getBaseContext().getResources().getDrawable( R.drawable.ic_fix_left_arrow );
         drawableSuccess = getBaseContext().getResources().getDrawable( R.drawable.ic_netchecking_ok );
         drawableDomainError = getBaseContext().getResources().getDrawable( R.drawable.ic_checking_domain_error );
         drawableDomainSuccess = getBaseContext().getResources().getDrawable( R.drawable.ic_checking_domain_success );
@@ -119,17 +122,17 @@ public class NetWorkStateDetailActivity extends BaseActivity {
                 checkPortalLayout.setVisibility( View.GONE );
             }
             if(NetUtils.isVpnConnected()){
-                checkUrlsConnectionLayout.setVisibility( View.GONE);
-                return;
+                checkUrlsConnectionLayout.setVisibility(View.GONE);
+            }else {
+                checkUrlsConnectionLayout.setVisibility(View.VISIBLE);
             }
-            checkUrlsConnectionLayout.setVisibility(View.VISIBLE);
             checkingNetConnectState();
         } else {
             checkUrlsConnectionLayout.setVisibility( View.GONE );
             checkPortalLayout.setVisibility( View.GONE );
             qmulWifiLoadingView.setVisibility( View.GONE );
             portalImageView.setVisibility( View.VISIBLE );
-            portalImageView.setImageResource( R.drawable.ic_fix_left_arrow );
+            portalImageView.setBackground( drawableError );
             ping1UrlImageView.setBackground( drawableDomainError );
             ping2UrlImageView.setBackground( drawableDomainError );
             ping3UrlImageView.setBackground( drawableDomainError );
@@ -148,8 +151,7 @@ public class NetWorkStateDetailActivity extends BaseActivity {
      * @return 反馈为硬件连接状态
      */
     private boolean checkingHardState() {
-        NetStateintegerData = NetUtils.getNetWrokState( this );
-        if (-1 == NetStateintegerData.get( 0 )) {
+        if (!NetUtils.isNetworkConnected( this,false )) {
             hardImageView.setVisibility( View.GONE );
             qmulHardLoadingView.setVisibility( View.GONE );
             findViewById( R.id.rl_to_fix ).setVisibility( View.VISIBLE );
@@ -258,7 +260,7 @@ public class NetWorkStateDetailActivity extends BaseActivity {
             case R.id.rl_net_error_fix:
                 IntentUtils.startActivity( this, NetHardConnectCheckActivity.class );
                 break;
-            case R.id.rl_checking_portal_state:
+            case R.id.rl_portal_tip:
                 String activityName = getResources().getString( R.string.net_network_authentication );
                 if (PortalUrl != null && PortalUrl != "") {
                     UriUtils.openUrl( this, PortalUrl, activityName );
@@ -299,9 +301,14 @@ public class NetWorkStateDetailActivity extends BaseActivity {
                 portalCheckTipLayout.setVisibility( View.GONE );
             } else {
                 qmulWifiLoadingView.setVisibility( View.GONE );
-                portalImageView.setImageResource( R.drawable.ic_fix_left_arrow );
                 portalImageView.setVisibility( View.VISIBLE );
-                portalCheckTipLayout.setVisibility( View.VISIBLE );
+                if(StringUtils.isBlank(PortalUrl)){
+                    portalImageView.setBackground( drawableError);
+                    portalCheckTipLayout.setVisibility( View.GONE );
+                }else{
+                    portalImageView.setBackground( drawableRightArrow );
+                    portalCheckTipLayout.setVisibility( View.VISIBLE );
+                }
             }
         } else if (netState.getAction().equals( Constant.EVENTBUS_TAG__NET_HTTP_POST_CONNECTION )) {
             List<Object> idAndData = (List<Object>) netState.getMessageObj();
