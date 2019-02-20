@@ -22,6 +22,7 @@ import com.inspur.emmcloud.bean.mine.GetExperienceUpgradeFlagResult;
 import com.inspur.emmcloud.bean.mine.GetFaceSettingResult;
 import com.inspur.emmcloud.bean.mine.GetLanguageResult;
 import com.inspur.emmcloud.bean.mine.GetUploadMyHeadResult;
+import com.inspur.emmcloud.bean.mine.GetUserCardMenusResult;
 import com.inspur.emmcloud.bean.mine.UserProfileInfoBean;
 import com.inspur.emmcloud.bean.system.GetBoolenResult;
 import com.inspur.emmcloud.interf.OauthCallBack;
@@ -666,12 +667,12 @@ public class MineAPIService {
 
             @Override
             public void callbackSuccess(byte[] arg0) {
-                apiInterface.returnUpdateExperienceUpgradeFlagSuccess();
+                apiInterface.returnUserCardMenusSuccess(new GetUserCardMenusResult(new String(arg0)));
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                apiInterface.returnUpdateExperienceUpgradeFlagFail(error,responseCode);
+                apiInterface.returnUserCardMenusFail(error,responseCode);
             }
 
         });

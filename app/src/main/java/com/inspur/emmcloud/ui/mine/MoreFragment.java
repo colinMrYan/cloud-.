@@ -8,10 +8,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -163,77 +163,79 @@ public class MoreFragment extends BaseFragment {
                     long id) {
                 MineLayoutItem layoutItem =
                         mineLayoutItemGroupList.get(groupPosition).getMineLayoutItemList().get(childPosition);
-                String uri = layoutItem.getUri();
-                LogUtils.jasonDebug("uri=" + uri);
-                if (StringUtils.isBlank(uri)) {
-                    switch (layoutItem.getId()) {
-                    // case "my_personalInfo_function":
-                    // Intent intent = new Intent();
-                    // intent.setClass(getActivity(), MyInfoActivity.class);
-                    // startActivityForResult(intent, REQUEST_CODE_UPDATE_USER_PHOTO);
-                    // recordUserClick("profile");
-                    // break;
-                    case "my_setting_function":
-                        IntentUtils.startActivity(getActivity(), SettingActivity.class);
-                        recordUserClick("setting");
-                        break;
-                    case "my_cardbox_function":
-                        IntentUtils.startActivity(getActivity(), CardPackageActivity.class);
-                        recordUserClick("wallet");
-                        break;
-                    case "my_aboutUs_function":
-                        IntentUtils.startActivity(getActivity(), AboutActivity.class);
-                        recordUserClick("about");
-                        break;
-                    case "my_feedback_function":
-                        IntentUtils.startActivity(getActivity(), FeedBackActivity.class);
-                        recordUserClick("feedback");
-                        break;
-                    case "my_customerService_function":
-                        if (MyApplication.getInstance().isV0VersionChat()) {
-                            Channel customerChannel = ChannelCacheUtils.getCustomerChannel(MyApplication.getInstance());
-                            if (customerChannel != null) {
-                                Bundle bundle = new Bundle();
-                                bundle.putString("cid", customerChannel.getCid());
-                                // 为区分来自云+客服添加一个from值，在ChannelActivity里使用
-                                bundle.putString("from", "customer");
-                                IntentUtils.startActivity(getActivity(), ChannelV0Activity.class, bundle);
-                            }
-                        } else if (MyApplication.getInstance().isV1xVersionChat()) {
-                            Conversation conversation =
-                                    ConversationCacheUtils.getCustomerConversation(MyApplication.getInstance());
-                            if (conversation != null) {
-                                Bundle bundle = new Bundle();
-                                bundle.putSerializable(ConversationActivity.EXTRA_CONVERSATION, conversation);
-                                bundle.putString("from", "customer");
-                                IntentUtils.startActivity(getActivity(), ConversationActivity.class, bundle);
-                            }
-                        }
-
-                        recordUserClick("customservice");
-                        break;
-                    default:
-                        break;
-                    }
-                } else {
-                    if (uri.startsWith("http")) {
-                        UriUtils.openUrl(getActivity(), uri);
-                    } else {
-                        try {
-                            Intent intent = Intent.parseUri(uri, Intent.URI_INTENT_SCHEME);
-                            intent.setComponent(null);
-                            getContext().startActivity(intent);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-
+                openMineLayoutItem(layoutItem);
                 return false;
             }
         });
         adapter = new MyAdapter();
         expandListView.setAdapter(adapter);
+    }
+
+    private void openMineLayoutItem(MineLayoutItem layoutItem){
+        String uri = layoutItem.getUri();
+        if (StringUtils.isBlank(uri)) {
+            switch (layoutItem.getId()) {
+               //  case "my_personalInfo_function":
+                // Intent intent = new Intent();
+                // intent.setClass(getActivity(), MyInfoActivity.class);
+                // startActivityForResult(intent, REQUEST_CODE_UPDATE_USER_PHOTO);
+                // recordUserClick("profile");
+                 //break;
+                case "my_setting_function":
+                    IntentUtils.startActivity(getActivity(), SettingActivity.class);
+                    recordUserClick("setting");
+                    break;
+                case "my_cardbox_function":
+                    IntentUtils.startActivity(getActivity(), CardPackageActivity.class);
+                    recordUserClick("wallet");
+                    break;
+                case "my_aboutUs_function":
+                    IntentUtils.startActivity(getActivity(), AboutActivity.class);
+                    recordUserClick("about");
+                    break;
+                case "my_feedback_function":
+                    IntentUtils.startActivity(getActivity(), FeedBackActivity.class);
+                    recordUserClick("feedback");
+                    break;
+                case "my_customerService_function":
+                    if (MyApplication.getInstance().isV0VersionChat()) {
+                        Channel customerChannel = ChannelCacheUtils.getCustomerChannel(MyApplication.getInstance());
+                        if (customerChannel != null) {
+                            Bundle bundle = new Bundle();
+                            bundle.putString("cid", customerChannel.getCid());
+                            // 为区分来自云+客服添加一个from值，在ChannelActivity里使用
+                            bundle.putString("from", "customer");
+                            IntentUtils.startActivity(getActivity(), ChannelV0Activity.class, bundle);
+                        }
+                    } else if (MyApplication.getInstance().isV1xVersionChat()) {
+                        Conversation conversation =
+                                ConversationCacheUtils.getCustomerConversation(MyApplication.getInstance());
+                        if (conversation != null) {
+                            Bundle bundle = new Bundle();
+                            bundle.putSerializable(ConversationActivity.EXTRA_CONVERSATION, conversation);
+                            bundle.putString("from", "customer");
+                            IntentUtils.startActivity(getActivity(), ConversationActivity.class, bundle);
+                        }
+                    }
+
+                    recordUserClick("customservice");
+                    break;
+                default:
+                    break;
+            }
+        } else {
+            if (uri.startsWith("http")) {
+                UriUtils.openUrl(getActivity(), uri);
+            } else {
+                try {
+                    Intent intent = Intent.parseUri(uri, Intent.URI_INTENT_SCHEME);
+                    intent.setComponent(null);
+                    getContext().startActivity(intent);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     /**
@@ -304,16 +306,22 @@ public class MoreFragment extends BaseFragment {
                 enterpriseText.setText(MyApplication.getInstance().getCurrentEnterprise().getName());
                 String UserCardMenus = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_MINE_USER_MENUS,"");
                 GetUserCardMenusResult getUserCardMenusResult = new GetUserCardMenusResult(UserCardMenus);
-                List<MineLayoutItem> mineLayoutItemList=getUserCardMenusResult.getMineLayoutItemList();
+                final List<MineLayoutItem> mineLayoutItemList=getUserCardMenusResult.getMineLayoutItemList();
                 ListView userCardMenuListView = convertView.findViewById(R.id.lv_user_card_menu);
                 userCardMenuListView.setAdapter(new UserCardMenuAdapter(mineLayoutItemList));
                 int paddintTop = mineLayoutItemList.size()>0?DensityUtil.dip2px(MyApplication.getInstance(),10):0;
                 userCardMenuListView.setPadding(0,paddintTop,0,0);
+                userCardMenuListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                        LogUtils.jasonDebug("00000000000000000000000000");
+                        openMineLayoutItem(mineLayoutItemList.get(i));
+                    }
+                });
                 // convertView.findViewById(R.id.ibt_business_card).setOnClickListener(myClickListener);
                 // convertView.findViewById(R.id.ibt_employee_no).setOnClickListener(myClickListener);
                 // convertView.findViewById(R.id.ibt_qrcode).setOnClickListener(myClickListener);
                 convertView.findViewById(R.id.card_view_my_info).setOnClickListener(myClickListener);
-
                 enterpriseText.setOnClickListener(myClickListener);
 
                 String myInfo = PreferencesUtils.getString(MyApplication.getInstance(), "myInfo", "");
@@ -398,18 +406,18 @@ public class MoreFragment extends BaseFragment {
 
             @Override
             public View getView(int i, View view, ViewGroup viewGroup) {
-                ImageButton imageButton = new ImageButton(getActivity());
+                ImageView imageView = new ImageView(getActivity());
                 int height = DensityUtil.dip2px(MyApplication.getInstance(),38);
                 int width = DensityUtil.dip2px(MyApplication.getInstance(),37);
                 int paddingLeft = DensityUtil.dip2px(MyApplication.getInstance(),3);
                 int paddingTop = DensityUtil.dip2px(MyApplication.getInstance(),10);
                 int paddingRight = DensityUtil.dip2px(MyApplication.getInstance(),6);
                 ListView.LayoutParams layoutParams = new ListView.LayoutParams(width,height);
-                imageButton.setScaleType(ImageView.ScaleType.FIT_XY);
-                imageButton.setLayoutParams(layoutParams);
-                imageButton.setPadding(paddingLeft,paddingTop,paddingRight,0);
-                ImageDisplayUtils.getInstance().displayImage(imageButton, getIconUrl(mineLayoutItemList.get(i).getIco()), R.drawable.ic_mine_item_default);
-                return imageButton;
+                imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+                imageView.setLayoutParams(layoutParams);
+                imageView.setPadding(paddingLeft,paddingTop,paddingRight,0);
+                ImageDisplayUtils.getInstance().displayImage(imageView, getIconUrl(mineLayoutItemList.get(i).getIco()), R.drawable.ic_mine_item_default);
+                return imageView;
             }
         }
 
@@ -419,13 +427,6 @@ public class MoreFragment extends BaseFragment {
         @Override
         public void onClick(View view) {
             switch (view.getId()) {
-            case R.id.ibt_business_card:
-                break;
-            case R.id.ibt_employee_no:
-                break;
-            case R.id.ibt_qrcode:
-
-                break;
             case R.id.tv_enterprise:
                 IntentUtils.startActivity(getActivity(), SwitchEnterpriseActivity.class);
                 break;

@@ -63,55 +63,55 @@
             <ListView
                 android:id="@+id/lv_user_card_menu"
                 android:divider="@android:color/transparent"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
             </ListView>
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:orientation="horizontal">
+            <!--<LinearLayout-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:visibility="gone"-->
+                <!--android:orientation="horizontal">-->
 
-                <ImageButton
-                    android:id="@+id/ibt_business_card"
-                    android:layout_width="37dp"
-                    android:layout_height="38dp"
-                    android:paddingLeft="3dp"
-                    android:paddingRight="6dp"
-                    android:paddingTop="10dp"
-                    android:layout_marginTop="10dp"
-                    android:scaleType="fitXY"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"
-                    android:src="@drawable/ic_mine_buiness_card" />
+                <!--<ImageButton-->
+                    <!--android:id="@+id/ibt_business_card"-->
+                    <!--android:layout_width="37dp"-->
+                    <!--android:layout_height="38dp"-->
+                    <!--android:paddingLeft="3dp"-->
+                    <!--android:paddingRight="6dp"-->
+                    <!--android:paddingTop="10dp"-->
+                    <!--android:layout_marginTop="10dp"-->
+                    <!--android:scaleType="fitXY"-->
+                    <!--android:focusable="false"-->
+                    <!--android:focusableInTouchMode="false"-->
+                    <!--android:src="@drawable/ic_mine_buiness_card" />-->
 
-                <ImageButton
-                    android:id="@+id/ibt_employee_no"
-                    android:layout_width="37dp"
-                    android:layout_height="38dp"
-                    android:paddingLeft="3dp"
-                    android:paddingRight="6dp"
-                    android:paddingTop="10dp"
-                    android:layout_marginTop="10dp"
-                    android:scaleType="fitXY"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"
-                    android:src="@drawable/ic_mine_employee_no" />
+                <!--<ImageButton-->
+                    <!--android:id="@+id/ibt_employee_no"-->
+                    <!--android:layout_width="37dp"-->
+                    <!--android:layout_height="38dp"-->
+                    <!--android:paddingLeft="3dp"-->
+                    <!--android:paddingRight="6dp"-->
+                    <!--android:paddingTop="10dp"-->
+                    <!--android:layout_marginTop="10dp"-->
+                    <!--android:scaleType="fitXY"-->
+                    <!--android:focusable="false"-->
+                    <!--android:focusableInTouchMode="false"-->
+                    <!--android:src="@drawable/ic_mine_employee_no" />-->
 
-                <ImageButton
-                    android:id="@+id/ibt_qrcode"
-                    android:layout_width="37dp"
-                    android:layout_height="38dp"
-                    android:paddingLeft="3dp"
-                    android:paddingRight="6dp"
-                    android:paddingTop="10dp"
-                    android:layout_marginTop="10dp"
-                    android:scaleType="fitXY"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"
-                    android:src="@drawable/ic_mine_qrcode" />
-            </LinearLayout>
+                <!--<ImageButton-->
+                    <!--android:id="@+id/ibt_qrcode"-->
+                    <!--android:layout_width="37dp"-->
+                    <!--android:layout_height="38dp"-->
+                    <!--android:paddingLeft="3dp"-->
+                    <!--android:paddingRight="6dp"-->
+                    <!--android:paddingTop="10dp"-->
+                    <!--android:layout_marginTop="10dp"-->
+                    <!--android:scaleType="fitXY"-->
+                    <!--android:focusable="false"-->
+                    <!--android:focusableInTouchMode="false"-->
+                    <!--android:src="@drawable/ic_mine_qrcode" />-->
+            <!--</LinearLayout>-->
         </LinearLayout>
     </android.support.v7.widget.CardView>
 </RelativeLayout>

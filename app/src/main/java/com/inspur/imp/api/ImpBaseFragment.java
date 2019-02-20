@@ -57,7 +57,7 @@ public class ImpBaseFragment extends BaseFragment {
                         ImageView imageView = new ImageView(getContext());
                         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
                         imageView.setAdjustViewBounds(true);
-                        int paddingLeft = DensityUtil.dip2px(getContext(), 13);
+                        int paddingLeft = DensityUtil.dip2px(getContext(), 16);
                         int paddingTop = DensityUtil.dip2px(getContext(), 17);
                         imageView.setPadding(paddingLeft, paddingTop, paddingLeft, paddingTop);
                         imageView.setOnClickListener(onClickListener);
@@ -67,7 +67,7 @@ public class ImpBaseFragment extends BaseFragment {
                     } else {
                         TextView textView = new TextView(getContext());
                         textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimensionPixelSize(R.dimen.header_function_textsize));
-                        int paddingLeft = DensityUtil.dip2px(getContext(), 12);
+                        int paddingLeft = DensityUtil.dip2px(getContext(), 16);
                         textView.setMinWidth(DensityUtil.dip2px(MyApplication.getInstance(), 48));
                         textView.setPadding(paddingLeft, 0, paddingLeft, 0);
                         textView.setText(mainTabMenu.getText());
@@ -83,7 +83,7 @@ public class ImpBaseFragment extends BaseFragment {
                 final ImageView imageView = new ImageView(getContext());
                 imageView.setScaleType(ImageView.ScaleType.FIT_XY);
                 imageView.setAdjustViewBounds(true);
-                int paddingLeft = DensityUtil.dip2px(getContext(), 13);
+                int paddingLeft = DensityUtil.dip2px(getContext(), 16);
                 int paddingTop = DensityUtil.dip2px(getContext(), 17);
                 imageView.setPadding(paddingLeft, paddingTop, paddingLeft, paddingTop);
                 imageView.setOnClickListener(new View.OnClickListener() {
