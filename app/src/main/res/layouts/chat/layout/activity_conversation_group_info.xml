@@ -126,7 +126,6 @@
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
-                            android:visibility="gone"
                             android:onClick="onClick"
                             android:gravity="center_horizontal"
                             android:orientation="vertical">
@@ -343,7 +342,7 @@
                 android:paddingBottom="10dp"
                 android:paddingTop="10dp"
                 android:text="@string/quit_group"
-                android:textColor="#FF333333"
+                android:textColor="#FF4242"
                 android:textSize="16sp" />
 
         </LinearLayout>
