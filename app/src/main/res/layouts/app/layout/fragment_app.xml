@@ -58,7 +58,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:scaleType="centerInside"
-            android:src="?attr/ic_appcenter_config" />
+            android:src="?attr/ic_add" />
     </RelativeLayout>
 
 
