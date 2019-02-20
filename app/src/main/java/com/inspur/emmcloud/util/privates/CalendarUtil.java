@@ -1,5 +1,8 @@
 package com.inspur.emmcloud.util.privates;
 
+import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.R;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -458,34 +461,34 @@ public class CalendarUtil {
 	// System.out.println(oneDay(1989, 9, 10));
 	// }
 
-	private static String getWeekDay(Calendar c) {
+	public static String getWeekDay(Calendar c) {
 		if (c == null) {
-			return "星期一";
+			return MyApplication.getInstance().getString(R.string.monday);
 		}
 
 		if (Calendar.MONDAY == c.get(Calendar.DAY_OF_WEEK)) {
-			return "星期一";
+			return MyApplication.getInstance().getString(R.string.monday);
 		}
 		if (Calendar.TUESDAY == c.get(Calendar.DAY_OF_WEEK)) {
-			return "星期二";
+			return MyApplication.getInstance().getString(R.string.tuesday);
 		}
 		if (Calendar.WEDNESDAY == c.get(Calendar.DAY_OF_WEEK)) {
-			return "星期三";
+			return MyApplication.getInstance().getString(R.string.wednesday);
 		}
 		if (Calendar.THURSDAY == c.get(Calendar.DAY_OF_WEEK)) {
-			return "星期四";
+			return MyApplication.getInstance().getString(R.string.thursday);
 		}
 		if (Calendar.FRIDAY == c.get(Calendar.DAY_OF_WEEK)) {
-			return "星期五";
+			return MyApplication.getInstance().getString(R.string.friday);
 		}
 		if (Calendar.SATURDAY == c.get(Calendar.DAY_OF_WEEK)) {
-			return "星期六";
+			return MyApplication.getInstance().getString(R.string.saturday);
 		}
 		if (Calendar.SUNDAY == c.get(Calendar.DAY_OF_WEEK)) {
-			return "星期日";
+			return MyApplication.getInstance().getString(R.string.sunday);
 		}
 
-		return "星期一";
+		return MyApplication.getInstance().getString(R.string.monday);
 	}
 
 //	public static String getDateOfToday() {

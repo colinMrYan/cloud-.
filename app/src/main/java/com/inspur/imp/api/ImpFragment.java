@@ -2,7 +2,6 @@ package com.inspur.imp.api;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -39,12 +38,12 @@ import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.MDM.MDM;
 import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
 import com.inspur.emmcloud.widget.MaxHightListView;
-import com.inspur.emmcloud.widget.dialogs.EasyDialog;
 import com.inspur.imp.engine.webview.ImpWebView;
 import com.inspur.imp.plugin.IPlugin;
 import com.inspur.imp.plugin.PluginMgr;
@@ -670,15 +669,16 @@ public class ImpFragment extends ImpBaseFragment {
      * 弹出提示框
      */
     public void showImpDialog() {
-        DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        };
-        EasyDialog.showDialog(getActivity(), getString(R.string.prompt),
-                getString(R.string.imp_function_error),
-                getString(R.string.ok), listener, false);
+//        DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                dialog.dismiss();
+//            }
+//        };
+//        EasyDialog.showDialog(getActivity(), getString(R.string.prompt),
+//                getString(R.string.imp_function_error),
+//                getString(R.string.ok), listener, false);
+        ToastUtils.show(getActivity(),R.string.imp_function_error);
     }
 
     @Override

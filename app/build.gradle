@@ -42,7 +42,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 27
         versionCode 72
-        versionName "2.7.11"
+        versionName "3.0.0-beta.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             abiFilters "armeabi-v7a", "x86"
@@ -265,5 +265,5 @@ protobuf {
         }
     }
 
-    //  generatedFilesBaseDir = "$projectDir/src/generated"
+  //  generatedFilesBaseDir = "$projectDir/src/generated"
 }

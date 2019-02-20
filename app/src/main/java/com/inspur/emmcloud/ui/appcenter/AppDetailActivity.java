@@ -189,7 +189,6 @@ public class AppDetailActivity extends BaseActivity {
                 break;
 
         }
-
     }
 
     /**

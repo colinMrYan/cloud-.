@@ -63,7 +63,7 @@
     <color name="onekey_username_textcolor">#359fdd</color>
     <color name="onekey_line_view">#cfd3d6</color>
     <color name="onekey_content_text">#4f87a2</color>
-    <color name="hightlight_in_blue_bg">#31EEFF</color>
+    <color name="hightlight_in_blue_bg">#4CFFFD</color>
 
     <!--新闻导航栏-->
     <color name="app_news_head_color">#323C49</color>
@@ -212,4 +212,9 @@
     <color name="voice_communication_function_select">#3CA6F7</color>
     <color name="voice_communication_function_default">#333333</color>
     <color name="voice_communication_function_unavailiable_text">#CBCCCE</color>
+
+    <color name="line_color">#e7e7e7</color>
+    <color name="content_background">#f2f2f2</color>
+
+    <color name="schedule_week_bg_color">#F8F9FB</color>
 </resources>
