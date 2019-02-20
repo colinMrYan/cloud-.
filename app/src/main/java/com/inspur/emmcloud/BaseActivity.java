@@ -8,6 +8,7 @@ import android.os.Bundle;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.SchemeHandleActivity;
 import com.inspur.emmcloud.ui.appcenter.ReactNativeAppActivity;
+import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.ui.login.ScanQrCodeLoginGSActivity;
 import com.inspur.emmcloud.ui.mine.setting.FaceVerifyActivity;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
@@ -25,6 +26,7 @@ public class BaseActivity extends Activity {
     private static final String[] classNames = {
             MainActivity.class.getName(),
             SchemeHandleActivity.class.getName(),
+            LoginActivity.class.getName(),
             CaptureActivity.class.getName(),
             FaceVerifyActivity.class.getName(),
             ReactNativeAppActivity.class.getName(),

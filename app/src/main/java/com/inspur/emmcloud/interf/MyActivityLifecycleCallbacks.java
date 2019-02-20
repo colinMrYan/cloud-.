@@ -9,6 +9,7 @@ import android.os.Handler;
 
 import com.inspur.emmcloud.MainActivity;
 import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.service.PVCollectService;
@@ -36,6 +37,7 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
 
     private int count = 0;
     private Activity currentActivity;
+    private WebService webService = new WebService();
 
     @Override
     public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
@@ -46,13 +48,13 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
     public void onActivityStarted(Activity activity) {
         MyApplication.getInstance().setEnterSystemUI(false);
         currentActivity = activity;
+        count++;
         //检查是否有必要权限，如果有则继续下面逻辑，如果没有则转到MainActivity
-        if(isLackNecessaryPermission()){
+        if (isLackNecessaryPermission()) {
             return;
         }
         //此处不能用（count == 0）判断，由于Activity跳转生命周期因素导致，已登录账号进入应用不会打开手势解锁
-        if (!MyApplication.getInstance().getIsActive() && MyApplication.getInstance()
-                .isIndexActivityRunning()) {
+        if (!MyApplication.getInstance().getIsActive() && MyApplication.getInstance().isIndexActivityRunning()) {
             MyApplication.getInstance().setIsActive(true);
             //当用通知打开特定Activity或者第一个打开的是SchemeActivity时，此处不作处理，交由SchemeActivity处理
             if (!MyApplication.getInstance().getOPenNotification() && !(activity instanceof SchemeHandleActivity)) {
@@ -61,19 +63,18 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
             uploadMDMInfo(activity);
             new AppBadgeUtils(MyApplication.getInstance()).getAppBadgeCountFromServer();
         }
-        count++;
         //防止应用防止时间很久，Application被销毁后isActive变量被置为默认false
-        if (activity instanceof IndexActivity){
+        if (activity instanceof IndexActivity) {
             MyApplication.getInstance().setIsActive(true);
         }
     }
 
     private boolean isLackNecessaryPermission() {
         //如果没有存储权限则跳转到MainActivity进行处理
-        String[] necessaryPermissionArray = StringUtils.concatAll(Permissions.STORAGE,Permissions.PHONE_PERMISSION);
-        if(!PermissionRequestManagerUtils.getInstance().isHasPermission(MyApplication.getInstance(), necessaryPermissionArray)){
-            if(!(currentActivity instanceof MainActivity || currentActivity instanceof PermissionActivity)){
-                Intent intent = new Intent(currentActivity,MainActivity.class);
+        String[] necessaryPermissionArray = StringUtils.concatAll(Permissions.STORAGE, Permissions.PHONE_PERMISSION);
+        if (!PermissionRequestManagerUtils.getInstance().isHasPermission(MyApplication.getInstance(), necessaryPermissionArray)) {
+            if (!(currentActivity instanceof MainActivity || currentActivity instanceof PermissionActivity)) {
+                Intent intent = new Intent(currentActivity, MainActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 currentActivity.startActivity(intent);
             }
@@ -117,13 +118,12 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
         return count;
     }
 
-    public Activity getCurrentActivity(){
+    public Activity getCurrentActivity() {
         return currentActivity;
     }
 
     /**
      * 弹出进入app安全验证界面
-     *
      */
     private void showSafeVerificationPage() {
         new Handler().postDelayed(new Runnable() {
@@ -131,7 +131,7 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
             public void run() {
                 if (FaceVerifyActivity.getFaceVerifyIsOpenByUser(MyApplication.getInstance())) {
                     Intent intent = new Intent(currentActivity, FaceVerifyActivity.class);
-                    intent.putExtra("isFaceVerifyExperience",false);
+                    intent.putExtra("isFaceVerifyExperience", false);
                     currentActivity.startActivity(intent);
                 } else if (getIsNeedGestureCode(MyApplication.getInstance())) {
                     Intent intent = new Intent(currentActivity, GestureLoginActivity.class);
@@ -139,7 +139,7 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
                     currentActivity.startActivity(intent);
                 }
             }
-        },200);
+        }, 200);
     }
 
     /**
@@ -155,8 +155,10 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
      * 上传MDM需要的设备信息
      */
     private void uploadMDMInfo(Context context) {
-        if (NetUtils.isNetworkConnected(context, false)) {
-            new AppAPIService(context).uploadMDMInfo();
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance(), false)) {
+            AppAPIService appAPIService = new AppAPIService(context);
+            appAPIService.setAPIInterface(webService);
+            appAPIService.uploadMDMInfo();
         }
 
     }
@@ -184,5 +186,14 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
             intent.setClass(context, SyncCommonAppService.class);
             context.startService(intent);
         }
+    }
+
+
+    private class WebService extends APIInterfaceInstance {
+
+//        @Override
+//        public void returnUploadMDMInfoSuccess(UploadMDMInfoResult uploadMDMInfoResult) {
+//            PreferencesByUserAndTanentUtils.putInt(MyApplication.getInstance(), Constant.PREF_MNM_DOUBLE_VALIADATION, uploadMDMInfoResult.getDoubleValidation());
+//        }
     }
 }

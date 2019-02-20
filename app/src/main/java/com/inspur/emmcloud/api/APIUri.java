@@ -1602,6 +1602,14 @@ public class APIUri {
     }
 
     /**
+     * 获取我的页面个人信息卡片的menu配置
+     * @return
+     */
+    public static String getUserCardMenusUrl() {
+        return MyApplication.getInstance().getClusterEmm() + "api/sys/v6.0/config/UserCardMenus";
+    }
+
+    /**
      * 获取声网参数Url
      *
      * @return

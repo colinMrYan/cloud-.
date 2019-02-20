@@ -29,7 +29,7 @@ public class CreateGestureCodeGuidActivity extends BaseActivity{
 
     public void onClick(View view){
        switch (view.getId()){
-           case R.id.back_layout:
+           case R.id.ibt_back:
                finish();
                break;
            default:

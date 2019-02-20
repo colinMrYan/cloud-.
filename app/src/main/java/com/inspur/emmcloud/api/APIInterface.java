@@ -1,6 +1,5 @@
 package com.inspur.emmcloud.api;
 
-
 import com.inspur.emmcloud.bean.appcenter.App;
 import com.inspur.emmcloud.bean.appcenter.AppRedirectResult;
 import com.inspur.emmcloud.bean.appcenter.GetAddAppResult;
@@ -66,6 +65,7 @@ import com.inspur.emmcloud.bean.login.GetLoginResult;
 import com.inspur.emmcloud.bean.login.GetMDMStateResult;
 import com.inspur.emmcloud.bean.login.GetSignoutResult;
 import com.inspur.emmcloud.bean.login.LoginDesktopCloudPlusBean;
+import com.inspur.emmcloud.bean.login.UploadMDMInfoResult;
 import com.inspur.emmcloud.bean.mine.GetBindingDeviceResult;
 import com.inspur.emmcloud.bean.mine.GetCardPackageResult;
 import com.inspur.emmcloud.bean.mine.GetDeviceLogResult;
@@ -74,6 +74,7 @@ import com.inspur.emmcloud.bean.mine.GetFaceSettingResult;
 import com.inspur.emmcloud.bean.mine.GetLanguageResult;
 import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
 import com.inspur.emmcloud.bean.mine.GetUploadMyHeadResult;
+import com.inspur.emmcloud.bean.mine.GetUserCardMenusResult;
 import com.inspur.emmcloud.bean.mine.GetUserHeadUploadResult;
 import com.inspur.emmcloud.bean.mine.UserProfileInfoBean;
 import com.inspur.emmcloud.bean.system.AppException;
@@ -102,7 +103,6 @@ import com.inspur.emmcloud.bean.work.GetTaskListResult;
 import com.inspur.emmcloud.bean.work.TaskResult;
 
 import java.util.List;
-
 
 public interface APIInterface {
 
@@ -154,7 +154,6 @@ public interface APIInterface {
 
     void returnLoginSMSCaptchaFail(String error, int errorCode);
 
-
     void returnRegisterSMSSuccess(GetRegisterResult getRegisterResult);
 
     void returnRegisterSMSFail(String error, int errorCode);
@@ -167,7 +166,7 @@ public interface APIInterface {
 
     void returnMyInfoFail(String error, int errorCode);
 
-    void returnUploadMyHeadSuccess(GetUploadMyHeadResult getUploadMyInfoResult,String filePath);
+    void returnUploadMyHeadSuccess(GetUploadMyHeadResult getUploadMyInfoResult, String filePath);
 
     void returnUploadMyHeadFail(String error, int errorCode);
 
@@ -176,8 +175,11 @@ public interface APIInterface {
     void returnChannelListFail(String error, int errorCode);
 
     void returnNewMsgsSuccess(GetNewMsgsResult getNewMsgsResult);
+
     void returnNewMessagesSuccess(GetChannelMessagesResult getChannelMessagesResult);
+
     void returnNewMsgsFail(String error, int errorCode);
+
     void returnNewMessagesFail(String error, int errorCode);
 
     void returnMsgCommentSuccess(GetMsgCommentResult getMsgCommentResult, String mid);
@@ -420,7 +422,6 @@ public interface APIInterface {
 
     void returnChangeMessionTagFail(String error, int errorCode);
 
-
     void returnDeleteOfficeSuccess(int position);
 
     void returnDeleteOfficeFail(String error, int errorCode);
@@ -437,9 +438,7 @@ public interface APIInterface {
 
     void returnLanguageFail(String error, int errorCode);
 
-
     void returnFindSearchFail(String error, int errorCode);
-
 
     void returnFindMixSearchFail(String error, int errorCode);
 
@@ -459,13 +458,13 @@ public interface APIInterface {
 
     void returnGetAppTabsFail(String error, int errorCode);
 
-    void returnUserAppsSuccess(GetAppGroupResult getAppGroupResult,String clientConfigMyAppVersion);
+    void returnUserAppsSuccess(GetAppGroupResult getAppGroupResult, String clientConfigMyAppVersion);
 
     void returnUserAppsFail(String error, int errorCode);
 
     void returnUploadCollectSuccess();
 
-    void returnUploadCollectSuccess( final List<PVCollectModel> collectModelList);
+    void returnUploadCollectSuccess(final List<PVCollectModel> collectModelList);
 
     void returnUploadCollectFail(String error, int errorCode);
 
@@ -497,7 +496,7 @@ public interface APIInterface {
 
     void returnNewsInstructionFail(String error, int errorCode);
 
-    void returnAppTabAutoSuccess(GetAppMainTabResult getAppMainTabResult,String mainTabSaveConfigVersion);
+    void returnAppTabAutoSuccess(GetAppMainTabResult getAppMainTabResult, String mainTabSaveConfigVersion);
 
     void returnAppTabAutoFail(String error, int errorCode);
 
@@ -517,6 +516,9 @@ public interface APIInterface {
 
     void returnMDMStateFail(String error, int errorCode);
 
+    void returnUploadMDMInfoSuccess(UploadMDMInfoResult uploadMDMInfoResult);
+
+    void returnUploadMDMInfoFail();
 
     void returnSplashPageInfoSuccess(SplashPageBean splashPageBean);
 
@@ -526,9 +528,7 @@ public interface APIInterface {
 
     void returnLoginDesktopCloudPlusFail(String error, int errorCode);
 
-
-    void returnDeviceCheckSuccess(
-            GetDeviceCheckResult getDeviceCheckResult);
+    void returnDeviceCheckSuccess(GetDeviceCheckResult getDeviceCheckResult);
 
     void returnDeviceCheckFail(String error, int errorCode);
 
@@ -548,7 +548,6 @@ public interface APIInterface {
 
     void returnSaveWebAutoRotateConfigFail(String error, int errorCode);
 
-
     void returnUploadPositionSuccess();
 
     void returnWebAppRealUrlSuccess(GetWebAppRealUrlResult getWebAppRealUrlResult);
@@ -567,13 +566,14 @@ public interface APIInterface {
 
     void returnVolumeFileListFail(String error, int errorCode);
 
-    void returnVolumeFileUploadTokenSuccess(GetVolumeFileUploadTokenResult getVolumeFileUploadTokenResult, String fileLocalPath, VolumeFile mockVolumeFile);
+    void returnVolumeFileUploadTokenSuccess(GetVolumeFileUploadTokenResult getVolumeFileUploadTokenResult,
+            String fileLocalPath, VolumeFile mockVolumeFile);
 
     void returnVolumeFileUploadTokenFail(VolumeFile mockVolumeFile, String error, int errorCode, String filePath);
+
     void returnChatFileUploadTokenSuccess(GetVolumeFileUploadTokenResult getVolumeFileUploadTokenResult);
 
     void returnChatFileUploadTokenFail(String error, int errorCode);
-
 
     void returnCreateForderSuccess(VolumeFile volumeFile);
 
@@ -582,7 +582,6 @@ public interface APIInterface {
     void returnVolumeFileDeleteSuccess(List<VolumeFile> deleteVolumeFileList);
 
     void returnVolumeFileDeleteFail(String error, int errorCode);
-
 
     void returnVolumeFileRenameSuccess(VolumeFile oldVolumeFile, String fileNewName);
 
@@ -611,7 +610,6 @@ public interface APIInterface {
     void retrunRemoveShareVolumeSuccess(Volume volume);
 
     void returnRemoveShareVolumeFail(String error, int errorCode);
-
 
     void returnFaceSettingSuccess(GetFaceSettingResult getFaceSettingResult);
 
@@ -669,117 +667,162 @@ public interface APIInterface {
 
     void returnFaceLoginGSFail(String error, int errorCode);
 
-    void returnContactUserListSuccess(byte[] bytes,String saveConfigVersion);
+    void returnContactUserListSuccess(byte[] bytes, String saveConfigVersion);
+
     void returnContactUserListFail(String error, int errorCode);
 
-    void returnContactOrgListSuccess(byte[] bytes,String saveConfigVersion);
+    void returnContactOrgListSuccess(byte[] bytes, String saveConfigVersion);
+
     void returnContactOrgListFail(String error, int errorCode);
 
-    void returnContactUserListUpdateSuccess(GetContactUserListUpateResult getContactUserListUpateResult,String saveConfigVersion);
+    void returnContactUserListUpdateSuccess(GetContactUserListUpateResult getContactUserListUpateResult,
+            String saveConfigVersion);
+
     void returnContactUserListUpdateFail(String error, int errorCode);
 
-    void returnContactOrgListUpdateSuccess(GetContactOrgListUpateResult getContactOrgListUpateResult,String saveConfigVersion);
+    void returnContactOrgListUpdateSuccess(GetContactOrgListUpateResult getContactOrgListUpateResult,
+            String saveConfigVersion);
+
     void returnContactOrgListUpdateFail(String error, int errorCode);
 
     void returnCardPackageListSuccess(GetCardPackageResult getCardPackageResult);
-    void returnCardPackageListFail(String error,int errorCode);
+
+    void returnCardPackageListFail(String error, int errorCode);
 
     void returnAllConfigVersionSuccess(GetAllConfigVersionResult getAllConfigVersionResult);
+
     void returnAllConfigVersionFail(String error, int errorCode);
 
     void returnGetVoiceCommunicationResultSuccess(GetVoiceCommunicationResult getVoiceCommunicationResult);
-    void returnGetVoiceCommunicationResultFail(String error,int errorCode);
+
+    void returnGetVoiceCommunicationResultFail(String error, int errorCode);
 
     void returnGetVoiceCommunicationChannelInfoSuccess(GetVoiceCommunicationResult getVoiceCommunicationResult);
-    void returnGetVoiceCommunicationChannelInfoFail(String error,int errorCode);
+
+    void returnGetVoiceCommunicationChannelInfoFail(String error, int errorCode);
 
     void returnJoinVoiceCommunicationChannelSuccess(GetBoolenResult getBoolenResult);
-    void returnJoinVoiceCommunicationChannelFail(String error,int errorCode);
+
+    void returnJoinVoiceCommunicationChannelFail(String error, int errorCode);
 
     void returnRefuseVoiceCommunicationChannelSuccess(GetBoolenResult getBoolenResult);
-    void returnRefuseVoiceCommunicationChannelFail(String error,int errorCode);
+
+    void returnRefuseVoiceCommunicationChannelFail(String error, int errorCode);
 
     void returnLeaveVoiceCommunicationChannelSuccess(GetBoolenResult getBoolenResult);
-    void returnLeaveVoiceCommunicationChannelFail(String error,int errorCode);
+
+    void returnLeaveVoiceCommunicationChannelFail(String error, int errorCode);
 
     void returnQuitChannelGroupSuccess();
-    void returnQuitChannelGroupSuccessFail(String error,int errorCode);
+
+    void returnQuitChannelGroupSuccessFail(String error, int errorCode);
 
     void returnConversationListSuccess(GetConversationListResult getConversationListResult);
-    void returnConversationListFail(String error,int errorCode);
 
-    void returnSetConversationStickSuccess(String id,boolean isStick);
-    void returnSetConversationStickFail(String error,int errorCode);
+    void returnConversationListFail(String error, int errorCode);
 
-    void returnSetConversationHideSuccess(String id,boolean isHide);
-    void returnSetConversationHideFail(String error,int errorCode);
+    void returnSetConversationStickSuccess(String id, boolean isStick);
+
+    void returnSetConversationStickFail(String error, int errorCode);
+
+    void returnSetConversationHideSuccess(String id, boolean isHide);
+
+    void returnSetConversationHideFail(String error, int errorCode);
 
     void returnAddConversationGroupMemberSuccess(List<String> uidList);
-    void returnAddConversationGroupMemberFail(String error,int errorCode);
+
+    void returnAddConversationGroupMemberFail(String error, int errorCode);
 
     void returnDelConversationGroupMemberSuccess(List<String> uidList);
-    void returnDelConversationGroupMemberFail(String error,int errorCode);
+
+    void returnDelConversationGroupMemberFail(String error, int errorCode);
+
     void returnWebexMeetingListSuccess(GetWebexMeetingListResult getWebexMeetingListResult);
-    void returnWebexMeetingListFail(String error,int errorCode);
+
+    void returnWebexMeetingListFail(String error, int errorCode);
 
     void returnScheduleWebexMeetingSuccess(GetScheduleWebexMeetingSuccess getScheduleWebexMeetingSuccess);
-    void returnScheduleWebexMeetingFail(String error,int errorCode);
+
+    void returnScheduleWebexMeetingFail(String error, int errorCode);
 
     void returnWebexMeetingSuccess(WebexMeeting webexMeeting);
-    void returnWebexMeetingFail(String error,int errorCode);
+
+    void returnWebexMeetingFail(String error, int errorCode);
 
     void returnWebexTKSuccess(GetWebexTKResult getWebexTKResult);
-    void returnWebexTKFail(String error,int errorCode);
+
+    void returnWebexTKFail(String error, int errorCode);
 
     void returnRemoveWebexMeetingSuccess();
-    void returnRemoveWebexMeetingFail(String error,int errorCode);
+
+    void returnRemoveWebexMeetingFail(String error, int errorCode);
 
     void returnConversationInfoSuccess(Conversation conversation);
-    void returnConversationInfoFail(String error,int errorCode);
+
+    void returnConversationInfoFail(String error, int errorCode);
 
     void returnUpdateConversationNameSuccess();
-    void returnUpdateConversationNameFail(String error,int errorCode);
+
+    void returnUpdateConversationNameFail(String error, int errorCode);
 
     void returnExperienceUpgradeFlagSuccess(GetExperienceUpgradeFlagResult getExperienceUpgradeFlagResult);
-    void returnExperienceUpgradeFlagFail(String error,int errorCode);
+
+    void returnExperienceUpgradeFlagFail(String error, int errorCode);
 
     void returnUpdateExperienceUpgradeFlagSuccess();
-    void returnUpdateExperienceUpgradeFlagFail(String error,int errorCode);
+
+    void returnUpdateExperienceUpgradeFlagFail(String error, int errorCode);
 
     void returnCreateDirectConversationSuccess(Conversation conversation);
-    void returnCreateDirectConversationFail(String error,int errorCode);
+
+    void returnCreateDirectConversationFail(String error, int errorCode);
 
     void returnCreateGroupConversationSuccess(Conversation conversation);
-    void returnCreateGroupConversationFail(String error,int errorCode);
+
+    void returnCreateGroupConversationFail(String error, int errorCode);
 
     void returnBadgeCountSuccess(BadgeBodyModel badgeBodyModel);
+
     void returnBadgeCountFail(String error, int errorCode);
 
-
     void returnDeleteConversationSuccess(String cid);
-    void returnDeleteConversationFail(String error,int errorCode);
+
+    void returnDeleteConversationFail(String error, int errorCode);
 
     void returnCheckCloudPluseConnectionSuccess(byte[] arg0);
+
     void returnCheckCloudPluseConnectionError(String error, int responseCode);
 
     void returnMailFolderSuccess(GetMailFolderResult getMailForderResult);
+
     void returnMailFolderFail(String error, int errorCode);
 
     void returnMailListSuccess(String folderId, int pageSize, int offset, GetMailListResult getMailListResult);
+
     void returnMailListFail(String folderId, int pageSize, int offset, String error, int errorCode);
 
     void returnMailDetailSuccess(GetMailDetailResult getMailDetailResult);
+
     void returnMailDetailSuccess(byte[] arg0);
+
     void returnMailDetailFail(String error, int errorCode);
+
     void returnMailLoginSuccess();
+
     void returnMailLoginFail(String error, int errorCode);
 
     void returnMailCertificateUploadSuccess(byte[] arg0);
+
     void returnMailCertificateUploadFail(String error, int errorCode);
 
     void returnSendMailSuccess();
+
     void returnSendMailFail(String error, int errorCode);
 
     void returnRemoveMailSuccess();
+
     void returnRemoveMailFail(String error, int errorCode);
+
+    void returnUserCardMenusSuccess(GetUserCardMenusResult getUserCardMenusResult);
+    void returnUserCardMenusFail(String error, int errorCode);
 }

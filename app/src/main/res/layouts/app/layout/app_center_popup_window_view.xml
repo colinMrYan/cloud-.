@@ -33,7 +33,7 @@
             android:paddingTop="11dp"
             android:clickable="true"
             android:text="@string/app_sort_order"
-            android:textColor="?attr/header_text_color"
+            android:textColor="@color/header_text_black"
             android:textSize="16sp" />
 
         <LinearLayout
@@ -54,7 +54,7 @@
                 android:paddingTop="11dp"
                 android:clickable="false"
                 android:text="@string/app_commonly_use"
-                android:textColor="?attr/header_text_color"
+                android:textColor="@color/header_text_black"
                 android:textSize="16sp" />
 
             <com.inspur.emmcloud.widget.SwitchView

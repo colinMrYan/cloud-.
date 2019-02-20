@@ -36,7 +36,7 @@
 
 
 
-    <color name="content_bg">#F8F9FB</color>
+    <color name="content_bg">#f6f6f6</color>
     <color name="footer_tab_text_nor">#979EA3</color>
     <!-- 原底部文字颜色#698fa7 -->
     <color name="footer_tab_text_sel">#36A5F6</color>
@@ -212,4 +212,9 @@
     <color name="voice_communication_function_select">#3CA6F7</color>
     <color name="voice_communication_function_default">#333333</color>
     <color name="voice_communication_function_unavailiable_text">#CBCCCE</color>
+
+    <color name="line_color">#e7e7e7</color>
+    <color name="content_background">#f2f2f2</color>
+
+    <color name="schedule_week_bg_color">#F8F9FB</color>
 </resources>

@@ -133,6 +133,9 @@
             android:exported="true"
             android:resizeableActivity="true"
             android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.notch_support"
+                android:value="true" />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
@@ -693,12 +696,12 @@
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".ui.chat.ImagePagerV0Activity"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"
             android:resizeableActivity="true"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".ui.chat.ImagePagerActivity"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"
             android:resizeableActivity="true"
             android:windowSoftInputMode="adjustPan" />
 

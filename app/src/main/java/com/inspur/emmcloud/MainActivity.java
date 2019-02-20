@@ -330,6 +330,7 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
                 public void run() {
                     String accessToken = PreferencesUtils.getString(MainActivity.this,
                             "accessToken", "");
+                    MainActivity.this.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
                     IntentUtils.startActivity(MainActivity.this, (!StringUtils.isBlank(accessToken)) ?
                             IndexActivity.class : LoginActivity.class, true);
                 }

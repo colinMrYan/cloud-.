@@ -66,6 +66,7 @@ import com.inspur.emmcloud.bean.login.GetLoginResult;
 import com.inspur.emmcloud.bean.login.GetMDMStateResult;
 import com.inspur.emmcloud.bean.login.GetSignoutResult;
 import com.inspur.emmcloud.bean.login.LoginDesktopCloudPlusBean;
+import com.inspur.emmcloud.bean.login.UploadMDMInfoResult;
 import com.inspur.emmcloud.bean.mine.GetBindingDeviceResult;
 import com.inspur.emmcloud.bean.mine.GetCardPackageResult;
 import com.inspur.emmcloud.bean.mine.GetDeviceLogResult;
@@ -74,6 +75,7 @@ import com.inspur.emmcloud.bean.mine.GetFaceSettingResult;
 import com.inspur.emmcloud.bean.mine.GetLanguageResult;
 import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
 import com.inspur.emmcloud.bean.mine.GetUploadMyHeadResult;
+import com.inspur.emmcloud.bean.mine.GetUserCardMenusResult;
 import com.inspur.emmcloud.bean.mine.GetUserHeadUploadResult;
 import com.inspur.emmcloud.bean.mine.UserProfileInfoBean;
 import com.inspur.emmcloud.bean.system.AppException;
@@ -1310,6 +1312,16 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
+    public void returnUploadMDMInfoSuccess(UploadMDMInfoResult uploadMDMInfoResult) {
+
+    }
+
+    @Override
+    public void returnUploadMDMInfoFail() {
+
+    }
+
+    @Override
     public void returnLoginDesktopCloudPlusSuccess(LoginDesktopCloudPlusBean loginDesktopCloudPlusBean) {
 
     }
@@ -1927,5 +1939,13 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnRemoveMailFail(String error, int errorCode) {
+    }
+
+    @Override
+    public void returnUserCardMenusSuccess(GetUserCardMenusResult getUserCardMenusResult) {
+    }
+
+    @Override
+    public void returnUserCardMenusFail(String error, int errorCode) {
     }
 }

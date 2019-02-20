@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.RelativeLayout;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
@@ -23,7 +22,6 @@ public class ModifyUserInfoActivity extends BaseActivity {
 	private Button modifyButton;
 	private String modifyText;
 	private MineAPIService apiService;
-	private RelativeLayout backLayout;
 	private LoadingDialog loadingDialog;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -32,14 +30,6 @@ public class ModifyUserInfoActivity extends BaseActivity {
 		setContentView(R.layout.activity_modify_userinfo);
 		modifyEditText = (ClearEditText) findViewById(R.id.modifyinfo_edit);
 		modifyButton = (Button) findViewById(R.id.get_modifyinfo_btn);
-		backLayout = (RelativeLayout) findViewById(R.id.back_layout);
-		backLayout.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				finish();
-			}
-		});
 		loadingDialog = new LoadingDialog(ModifyUserInfoActivity.this);
 		Intent intent;
 		intent = getIntent();
@@ -64,6 +54,10 @@ public class ModifyUserInfoActivity extends BaseActivity {
 				finish();
 			}
 		});
+	}
+
+	public void onClick(View v){
+		finish();
 	}
 	
 	class WebService extends APIInterfaceInstance{

@@ -100,9 +100,10 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
         new ProfileUtils(FaceVerifyActivity.this, new CommonCallBack() {
             @Override
             public void execute() {
-                init();
+
             }
-        }).initProfile();
+        }).initProfile(false);
+        init();
     }
 
     private void init() {

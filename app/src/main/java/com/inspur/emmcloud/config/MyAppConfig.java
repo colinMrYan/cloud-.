@@ -70,15 +70,8 @@ public class MyAppConfig {
      * 获取聊天语音存储目录
      * @return
      */
-    public static String getCacheVoiceDirPath(){
-        return Environment.getExternalStorageDirectory() + "/IMP-Cloud/"+MyApplication.getInstance().getUid()+"/"+MyApplication.getInstance().getTanent()+"/voice/";
-    }
-
-    /**
-     * 获取聊天语音存储目录
-     * @return
-     */
     public static String getCacheVoiceFilePath(String cid,String messageId){
+        cid = cid.replaceAll(":","_");
         return Environment.getExternalStorageDirectory() + "/IMP-Cloud/"+MyApplication.getInstance().getUid()+"/"+MyApplication.getInstance().getTanent()+"/voice/"+cid+"/"+messageId+".amr";
     }
 
@@ -87,6 +80,7 @@ public class MyAppConfig {
      * @return
      */
     public static String getCacheVoicePCMFilePath(String cid, String messageId){
+        cid = cid.replaceAll(":","_");
         return Environment.getExternalStorageDirectory() + "/IMP-Cloud/"+MyApplication.getInstance().getUid()+"/"+MyApplication.getInstance().getTanent()+"/voice/"+cid+"/"+messageId+".pcm";
     }
     /**

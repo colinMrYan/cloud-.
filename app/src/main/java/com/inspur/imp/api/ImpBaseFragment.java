@@ -1,6 +1,5 @@
 package com.inspur.imp.api;
 
-import android.support.v4.app.Fragment;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -16,6 +15,7 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.inspur.emmcloud.BaseFragment;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.system.MainTabMenu;
@@ -31,7 +31,7 @@ import java.util.List;
  * Created by chenmch on 2018/11/27.
  */
 
-public class ImpBaseFragment extends Fragment {
+public class ImpBaseFragment extends BaseFragment {
     protected RelativeLayout functionLayout;
     protected LinearLayout webFunctionLayout;
     protected List<MainTabMenu> optionMenuList;
@@ -57,7 +57,7 @@ public class ImpBaseFragment extends Fragment {
                         ImageView imageView = new ImageView(getContext());
                         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
                         imageView.setAdjustViewBounds(true);
-                        int paddingLeft = DensityUtil.dip2px(getContext(), 13);
+                        int paddingLeft = DensityUtil.dip2px(getContext(), 16);
                         int paddingTop = DensityUtil.dip2px(getContext(), 17);
                         imageView.setPadding(paddingLeft, paddingTop, paddingLeft, paddingTop);
                         imageView.setOnClickListener(onClickListener);
@@ -66,15 +66,15 @@ public class ImpBaseFragment extends Fragment {
                         webFunctionLayout.addView(imageView);
                     } else {
                         TextView textView = new TextView(getContext());
-                        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, getResources().getDimension(R.dimen.header_function_textsize));
-                        int paddingLeft = DensityUtil.dip2px(getContext(), 12);
+                        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimensionPixelSize(R.dimen.header_function_textsize));
+                        int paddingLeft = DensityUtil.dip2px(getContext(), 16);
                         textView.setMinWidth(DensityUtil.dip2px(MyApplication.getInstance(), 48));
                         textView.setPadding(paddingLeft, 0, paddingLeft, 0);
                         textView.setText(mainTabMenu.getText());
                         textView.setOnClickListener(onClickListener);
                         textView.setLayoutParams(params);
                         int textColor = ResourceUtils.getValueOfAttr(getActivity(),R.attr.header_text_color);
-                        textView.setTextColor(textColor);
+                        textView.setTextColor(getContext().getResources().getColor(textColor));
                         textView.setGravity(Gravity.CENTER_VERTICAL);
                         webFunctionLayout.addView(textView);
                     }
@@ -83,7 +83,7 @@ public class ImpBaseFragment extends Fragment {
                 final ImageView imageView = new ImageView(getContext());
                 imageView.setScaleType(ImageView.ScaleType.FIT_XY);
                 imageView.setAdjustViewBounds(true);
-                int paddingLeft = DensityUtil.dip2px(getContext(), 13);
+                int paddingLeft = DensityUtil.dip2px(getContext(), 16);
                 int paddingTop = DensityUtil.dip2px(getContext(), 17);
                 imageView.setPadding(paddingLeft, paddingTop, paddingLeft, paddingTop);
                 imageView.setOnClickListener(new View.OnClickListener() {
@@ -93,7 +93,9 @@ public class ImpBaseFragment extends Fragment {
                     }
                 });
                 imageView.setLayoutParams(params);
-                ImageDisplayUtils.getInstance().displayImage(imageView, "drawable://" + R.drawable.ic_header_option);
+                int drawableResId= ResourceUtils.getValueOfAttr(getActivity(),R.attr.ic_header_option);
+                imageView.setImageResource(drawableResId);
+                //ImageDisplayUtils.getInstance().displayImage(imageView, "drawable://" + drawableResId);
                 webFunctionLayout.addView(imageView);
             }
             setHeaderTextWidth();

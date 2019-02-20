@@ -10,7 +10,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Html;
@@ -29,6 +28,7 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.inspur.emmcloud.BaseFragment;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
@@ -110,7 +110,7 @@ import static android.app.Activity.RESULT_OK;
  *
  * @author Jason Chen; create at 2016年8月23日 下午2:59:39
  */
-public class CommunicationV0Fragment extends Fragment {
+public class CommunicationV0Fragment extends BaseFragment {
 
     private static final int RECEIVE_MSG = 1;
     private static final int CREAT_CHANNEL_GROUP = 1;
@@ -161,6 +161,7 @@ public class CommunicationV0Fragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        setFragmentStatusBarCommon();
         if (rootView == null) {
             rootView = inflater.inflate(R.layout.fragment_message, container,
                     false);
