@@ -59,6 +59,7 @@ public class Constant {
     public static final String PREF_MAIL_ACCOUNT = "mail_account";
     public static final String PREF_MAIL_PASSWORD = "mail_password";
     public static final String PREF_MY_INFO_SHOW_CONFIG = "user_profiles";
+    public static final String PREF_MINE_USER_MENUS = "mine_user_menus";
 
     public static final String ACTION_MEETING = "com.inspur.meeting";
     public static final String ACTION_TASK = "com.inspur.task";

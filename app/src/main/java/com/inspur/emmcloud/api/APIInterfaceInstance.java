@@ -75,6 +75,7 @@ import com.inspur.emmcloud.bean.mine.GetFaceSettingResult;
 import com.inspur.emmcloud.bean.mine.GetLanguageResult;
 import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
 import com.inspur.emmcloud.bean.mine.GetUploadMyHeadResult;
+import com.inspur.emmcloud.bean.mine.GetUserCardMenusResult;
 import com.inspur.emmcloud.bean.mine.GetUserHeadUploadResult;
 import com.inspur.emmcloud.bean.mine.UserProfileInfoBean;
 import com.inspur.emmcloud.bean.system.AppException;
@@ -1938,5 +1939,13 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnRemoveMailFail(String error, int errorCode) {
+    }
+
+    @Override
+    public void returnUserCardMenusSuccess(GetUserCardMenusResult getUserCardMenusResult) {
+    }
+
+    @Override
+    public void returnUserCardMenusFail(String error, int errorCode) {
     }
 }

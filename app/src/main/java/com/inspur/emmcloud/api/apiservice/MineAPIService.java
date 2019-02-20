@@ -638,4 +638,42 @@ public class MineAPIService {
         });
     }
 
+
+    /**
+     * 获取个人信息卡片的menu
+     */
+    public void getUserCardMenus(){
+        final String completeUrl = APIUri.getUserCardMenusUrl();
+        RequestParams params =MyApplication.getInstance().getHttpRequestParams(completeUrl);
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        getUserCardMenus();
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnUpdateExperienceUpgradeFlagSuccess();
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnUpdateExperienceUpgradeFlagFail(error,responseCode);
+            }
+
+        });
+    }
 }

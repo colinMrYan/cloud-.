@@ -60,9 +60,17 @@
                     android:src="@drawable/icon_photo_default" />
             </RelativeLayout>
 
+            <ListView
+                android:id="@+id/lv_user_card_menu"
+                android:divider="@android:color/transparent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            </ListView>
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:orientation="horizontal">
 
                 <ImageButton

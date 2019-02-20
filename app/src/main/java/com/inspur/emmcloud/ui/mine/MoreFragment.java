@@ -8,22 +8,29 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.BaseAdapter;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseFragment;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.api.apiservice.MineAPIService;
 import com.inspur.emmcloud.bean.chat.Channel;
 import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
+import com.inspur.emmcloud.bean.mine.GetUserCardMenusResult;
 import com.inspur.emmcloud.bean.system.MainTabProperty;
 import com.inspur.emmcloud.bean.system.MineLayoutItem;
 import com.inspur.emmcloud.bean.system.MineLayoutItemGroup;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
 import com.inspur.emmcloud.ui.chat.ConversationActivity;
 import com.inspur.emmcloud.ui.mine.card.CardPackageActivity;
@@ -35,10 +42,12 @@ import com.inspur.emmcloud.ui.mine.setting.SwitchEnterpriseActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppTabUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
+import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.UriUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
@@ -124,7 +133,7 @@ public class MoreFragment extends BaseFragment {
                 }
             }
         }
-
+        getUserCardMenu();
     }
 
     @Override
@@ -293,11 +302,17 @@ public class MoreFragment extends BaseFragment {
                         PreferencesUtils.getString(getActivity(), "userRealName", getString(R.string.not_set));
                 nameText.setText(userName);
                 enterpriseText.setText(MyApplication.getInstance().getCurrentEnterprise().getName());
-                convertView.findViewById(R.id.ibt_business_card).setOnClickListener(myClickListener);
-                convertView.findViewById(R.id.ibt_employee_no).setOnClickListener(myClickListener);
-                convertView.findViewById(R.id.ibt_qrcode).setOnClickListener(myClickListener);
+                String UserCardMenus = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_MINE_USER_MENUS,"");
+                GetUserCardMenusResult getUserCardMenusResult = new GetUserCardMenusResult(UserCardMenus);
+                List<MineLayoutItem> mineLayoutItemList=getUserCardMenusResult.getMineLayoutItemList();
+                ListView userCardMenuListView = convertView.findViewById(R.id.lv_user_card_menu);
+                userCardMenuListView.setAdapter(new UserCardMenuAdapter(mineLayoutItemList));
+                int paddintTop = mineLayoutItemList.size()>0?DensityUtil.dip2px(MyApplication.getInstance(),10):0;
+                userCardMenuListView.setPadding(0,paddintTop,0,0);
+                // convertView.findViewById(R.id.ibt_business_card).setOnClickListener(myClickListener);
+                // convertView.findViewById(R.id.ibt_employee_no).setOnClickListener(myClickListener);
+                // convertView.findViewById(R.id.ibt_qrcode).setOnClickListener(myClickListener);
                 convertView.findViewById(R.id.card_view_my_info).setOnClickListener(myClickListener);
-                convertView.findViewById(R.id.ibt_qrcode).setOnClickListener(myClickListener);
 
                 enterpriseText.setOnClickListener(myClickListener);
 
@@ -358,6 +373,46 @@ public class MoreFragment extends BaseFragment {
             return true;
         }
 
+        private class UserCardMenuAdapter extends BaseAdapter {
+            private List<MineLayoutItem> mineLayoutItemList = null;
+
+            public UserCardMenuAdapter(List<MineLayoutItem> mineLayoutItemList) {
+                this.mineLayoutItemList = mineLayoutItemList;
+
+            }
+
+            @Override
+            public int getCount() {
+                return mineLayoutItemList.size();
+            }
+
+            @Override
+            public Object getItem(int i) {
+                return null;
+            }
+
+            @Override
+            public long getItemId(int i) {
+                return 0;
+            }
+
+            @Override
+            public View getView(int i, View view, ViewGroup viewGroup) {
+                ImageButton imageButton = new ImageButton(getActivity());
+                int height = DensityUtil.dip2px(MyApplication.getInstance(),38);
+                int width = DensityUtil.dip2px(MyApplication.getInstance(),37);
+                int paddingLeft = DensityUtil.dip2px(MyApplication.getInstance(),3);
+                int paddingTop = DensityUtil.dip2px(MyApplication.getInstance(),10);
+                int paddingRight = DensityUtil.dip2px(MyApplication.getInstance(),6);
+                ListView.LayoutParams layoutParams = new ListView.LayoutParams(width,height);
+                imageButton.setScaleType(ImageView.ScaleType.FIT_XY);
+                imageButton.setLayoutParams(layoutParams);
+                imageButton.setPadding(paddingLeft,paddingTop,paddingRight,0);
+                ImageDisplayUtils.getInstance().displayImage(imageButton, getIconUrl(mineLayoutItemList.get(i).getIco()), R.drawable.ic_mine_item_default);
+                return imageButton;
+            }
+        }
+
     }
 
     private class MyClickListener implements View.OnClickListener {
@@ -400,5 +455,26 @@ public class MoreFragment extends BaseFragment {
     private void recordUserClick(String functionId) {
         PVCollectModel pvCollectModel = new PVCollectModel(functionId, "mine");
         PVCollectModelCacheUtils.saveCollectModel(getActivity(), pvCollectModel);
+    }
+
+    private void getUserCardMenu() {
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
+            MineAPIService apiService = new MineAPIService(getActivity());
+            apiService.setAPIInterface(new WebService());
+            apiService.getUserCardMenus();
+        }
+    }
+
+    private class WebService extends APIInterfaceInstance {
+        @Override
+        public void returnUserCardMenusSuccess(GetUserCardMenusResult getUserCardMenusResult) {
+            PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), Constant.PREF_MINE_USER_MENUS,
+                    getUserCardMenusResult.getResponse());
+            adapter.notifyDataSetChanged();
+        }
+
+        @Override
+        public void returnUserCardMenusFail(String error, int errorCode) {
+        }
     }
 }
