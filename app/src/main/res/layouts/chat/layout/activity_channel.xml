@@ -24,7 +24,7 @@
             android:src="@drawable/ic_back_btn_black" />
         <ImageView
             android:id="@+id/channel_info_img"
-            android:layout_width="54dp"
+            android:layout_width="43dp"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
@@ -32,7 +32,7 @@
             android:clickable="true"
             android:onClick="onClick"
             android:paddingLeft="5dp"
-            android:paddingRight="27dp"
+            android:paddingRight="16dp"
             android:paddingBottom="13dp"
             android:paddingTop="13dp"
             android:scaleType="centerInside"
