@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -122,14 +121,12 @@ public class CommunicationFragment extends Fragment {
     private ImageView contactImg;
     private CheckingNetStateUtils checkingNetStateUtils;
 
-    private int connectedUrlNum=0;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
-        checkingNetStateUtils=new CheckingNetStateUtils( getContext() );
+        checkingNetStateUtils=new CheckingNetStateUtils( getContext(),NetUtils.pingUrls );
         initView();
         sortConversationList();// 对Channel 进行排序
         registerMessageFragmentReceiver();
@@ -143,12 +140,9 @@ public class CommunicationFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if(NetworkInfo.State.CONNECTED==NetUtils.getNetworkMobileState(getContext())
-                ||NetworkInfo.State.CONNECTING==NetUtils.getNetworkMobileState(getContext())
-                ||NetUtils.isVpnConnected()){
+        if(checkingNetStateUtils.isConnectedNet()){
             conversationAdapter.setNetExceptionView(true);
         }else{
-            connectedUrlNum=0;
             checkingNetStateUtils.CheckNetPingThreadStart(NetUtils.pingUrls,5,Constant.EVENTBUS_TAG__NET_EXCEPTION_HINT);
         }
     }
@@ -326,7 +320,7 @@ public class CommunicationFragment extends Fragment {
     public void netWorkStateTip(SimpleEventMessage netState) {
         if(netState.getAction().equals(Constant.EVENTBUS_TAG__NET_STATE_CHANGE)){
             if(((String)netState.getMessageObj()).equals(NetWorkStateChangeUtils.NET_WIFI_STATE_OK)&&(!NetUtils.isVpnConnected())){
-                connectedUrlNum=0;
+                checkingNetStateUtils.clearUrlsStates();
                 checkingNetStateUtils.CheckNetPingThreadStart(NetUtils.pingUrls,5,Constant.EVENTBUS_TAG__NET_EXCEPTION_HINT);
             } else if(((String)netState.getMessageObj()).equals(NetWorkStateChangeUtils.NET_STATE_ERROR)) {
                 conversationAdapter.setNetExceptionView(false);
@@ -340,8 +334,8 @@ public class CommunicationFragment extends Fragment {
                 conversationAdapter.setNetExceptionView(false);
             } else {
                 List<Object> pingIdAndData = (List<Object>)netState.getMessageObj();
-                connectedUrlNum=(boolean)pingIdAndData.get(1)?connectedUrlNum+1:connectedUrlNum;
-                conversationAdapter.setNetExceptionView(connectedUrlNum>0?true:false);
+                Boolean pingConnectedResult=checkingNetStateUtils.isPingConnectedNet( (String)pingIdAndData.get( 0 ),(boolean)pingIdAndData.get( 1 ) );
+                conversationAdapter.setNetExceptionView(pingConnectedResult);
             }
             if ((Boolean)netState.getMessageObj()){
                 WebSocketPush.getInstance().startWebSocket();

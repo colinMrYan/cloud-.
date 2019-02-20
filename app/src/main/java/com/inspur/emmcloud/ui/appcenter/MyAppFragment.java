@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.DataSetObserver;
 import android.graphics.Bitmap;
-import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Vibrator;
@@ -126,12 +125,11 @@ public class MyAppFragment extends Fragment {
     private boolean hasRequestBadgeNum = false;
 
     private CheckingNetStateUtils checkingNetStateUtils;
-    private int connectedUrlNum=0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        checkingNetStateUtils = new CheckingNetStateUtils( getContext() );
+        checkingNetStateUtils = new CheckingNetStateUtils( getContext(),NetUtils.pingUrls );
         rootView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_app, null);
         initViews();
         registerReceiver();
@@ -176,12 +174,10 @@ public class MyAppFragment extends Fragment {
             hasRequestBadgeNum = true;
         }
         refreshRecommendAppWidgetView();
-        if(NetworkInfo.State.CONNECTED==NetUtils.getNetworkMobileState(getContext())
-                ||NetworkInfo.State.CONNECTING==NetUtils.getNetworkMobileState(getContext())
-                ||NetUtils.isVpnConnected()){
+        if(checkingNetStateUtils.isConnectedNet()){
             DeleteHeaderView();
         }else {
-            connectedUrlNum=0;
+            checkingNetStateUtils.clearUrlsStates();
             checkingNetStateUtils.CheckNetPingThreadStart(NetUtils.pingUrls,5,Constant.EVENTBUS_TAG__NET_EXCEPTION_HINT);
         }
     }
@@ -403,8 +399,8 @@ public class MyAppFragment extends Fragment {
     public void netWorkStateHint(SimpleEventMessage netState) {
         if(netState.getAction().equals(Constant.EVENTBUS_TAG__NET_STATE_CHANGE)){
             if(((String)netState.getMessageObj()).equals(NetWorkStateChangeUtils.NET_WIFI_STATE_OK)&&(!NetUtils.isVpnConnected())){
-                connectedUrlNum=0;
-                NetUtils.PingThreadStart(NetUtils.pingUrls,5,Constant.EVENTBUS_TAG__NET_EXCEPTION_HINT);
+                checkingNetStateUtils.clearUrlsStates();
+                checkingNetStateUtils.CheckNetPingThreadStart(NetUtils.pingUrls,5,Constant.EVENTBUS_TAG__NET_EXCEPTION_HINT);
             } else if(((String)netState.getMessageObj()).equals(NetWorkStateChangeUtils.NET_STATE_ERROR)) {
                 AddHeaderView();
             } else if (((String)netState.getMessageObj()).equals(NetWorkStateChangeUtils.NET_GPRS_STATE_OK)) {
@@ -414,8 +410,8 @@ public class MyAppFragment extends Fragment {
             }
         } else if (netState.getAction().equals(Constant.EVENTBUS_TAG__NET_EXCEPTION_HINT)) {   //网络异常提示
             List<Object> pingIdAndData = (List<Object>)netState.getMessageObj();
-            connectedUrlNum=(boolean)pingIdAndData.get(1)?connectedUrlNum+1:connectedUrlNum;
-            if(connectedUrlNum>0){
+            Boolean pingConnectedResult=checkingNetStateUtils.isPingConnectedNet( (String)pingIdAndData.get( 0 ),(boolean)pingIdAndData.get( 1 ) );
+            if(pingConnectedResult){
                 DeleteHeaderView();
             }else{
                 AddHeaderView();

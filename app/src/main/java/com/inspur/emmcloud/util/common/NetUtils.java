@@ -4,16 +4,11 @@ package com.inspur.emmcloud.util.common;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.Handler;
-import android.os.Looper;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.bean.system.SimpleEventMessage;
-
-import org.greenrobot.eventbus.EventBus;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -34,7 +29,7 @@ public class NetUtils {
 	public static final String NETWORK_TYPE_VPN = "vpn";
 	public static final String NETWORK_TYPE_4G = "4g";
 	public static final String NETWORK_TYPE_MOBILE = "mobile";
-	public static final  String[] pingUrls={"www.baidu.com"};
+	public static final  String[] pingUrls={"114.114.114.114","8.8.8.8"};
 	private static final String TAG = "PingNet";
 
 	/**
@@ -430,61 +425,4 @@ public class NetUtils {
 	 return ConnectedNetNames;
 	}
 
-	/**
-	 *Ping  网络通断状态检测（用于显示网络状态异常框）
-	 * */
-	public static void PingThreadStart(final  String[]  StrUrl,final int WaiteTime,final String eventBusAction) {
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					final PingNetEntity finalPingNetEntity;
-					PingNetEntity pingNetEntity=new PingNetEntity(StrUrl[0],1,WaiteTime,new StringBuffer());
-					pingNetEntity=NetUtils.ping(pingNetEntity, (long) 4500);
-					if(!pingNetEntity.isResult()) {
-						PingNetEntity pingSecondNetEntity=new PingNetEntity(StrUrl[1],1,WaiteTime,new StringBuffer());
-						pingSecondNetEntity=NetUtils.ping(pingSecondNetEntity, (long) 4500);
-						finalPingNetEntity = pingSecondNetEntity;
-					} else {
-						finalPingNetEntity = pingNetEntity;
-					}
-
-					new Handler(Looper.getMainLooper()).post(new Runnable() {
-						@Override
-						public void run() {
-							EventBus.getDefault().post(new SimpleEventMessage(eventBusAction,  finalPingNetEntity.isResult()));
-						}
-					});
-				} catch (Exception e){
-					e.printStackTrace();
-				}
-			}
-		}).start();
-	}
-
-	/**
-	 *Ping网络状态详细检测中网络通断检测（ping 多个地址）
-	 * */
-	public static void PingThreadStart(final  String  StrUrl, final int WaiteTime, final String eventBusAction, final String id) {
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					PingNetEntity pingNetEntity=new PingNetEntity(StrUrl,1,WaiteTime,new StringBuffer());
-					pingNetEntity=NetUtils.ping(pingNetEntity, (long) 4500);
-					final List<Object> pingIdAndData = new ArrayList<>();
-					pingIdAndData.add(id);
-					pingIdAndData.add(pingNetEntity.isResult());
-					new Handler(Looper.getMainLooper()).post(new Runnable() {
-                            @Override
-                            public void run() {
-								EventBus.getDefault().post(new SimpleEventMessage(eventBusAction, pingIdAndData));
-                            }
-                        });
-				} catch (Exception e){
-					e.printStackTrace();
-				}
-			}
-		}).start();
-	}
 }
