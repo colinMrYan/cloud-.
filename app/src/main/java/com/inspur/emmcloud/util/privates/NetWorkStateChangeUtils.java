@@ -5,12 +5,10 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.util.common.LogUtils;
-import com.inspur.emmcloud.util.common.ToastUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -54,20 +52,20 @@ public class NetWorkStateChangeUtils {
             if (mobile == NetworkInfo.State.CONNECTED || mobile == NetworkInfo.State.CONNECTING) {
                 if (isAppOnForeground) {
                     EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG__NET_STATE_CHANGE,NET_GPRS_STATE_OK));
-                    ToastUtils.show(context, R.string.Network_Mobile);
+//                    ToastUtils.show(context, R.string.Network_Mobile);
                     getBadgeFromServer(context);
                 }
                 WebSocketPush.getInstance().startWebSocket();
             } else if (wifi == NetworkInfo.State.CONNECTED || wifi == NetworkInfo.State.CONNECTING) {
                 if (isAppOnForeground) {
                     EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG__NET_STATE_CHANGE,NET_WIFI_STATE_OK));
-                    ToastUtils.show(context, R.string.Network_WIFI);
+//                    ToastUtils.show(context, R.string.Network_WIFI);
                     getBadgeFromServer(context);
                 }
                 WebSocketPush.getInstance().startWebSocket();
             } else if (isAppOnForeground) {
                 EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG__NET_STATE_CHANGE,NET_STATE_ERROR));
-                ToastUtils.show(context, R.string.network_exception);
+//                ToastUtils.show(context, R.string.network_exception);
             }
         } catch (Exception e) {
             LogUtils.debug("NetWorkStateChangeUtils", e.getMessage());
