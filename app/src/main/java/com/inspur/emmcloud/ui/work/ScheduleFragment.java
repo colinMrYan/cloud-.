@@ -7,8 +7,10 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
@@ -17,11 +19,12 @@ import com.inspur.emmcloud.ui.work.meeting.MeetingListActivity;
 import com.inspur.emmcloud.ui.work.task.MessionListActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
+import com.inspur.emmcloud.util.privates.CalendarUtil;
+import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.widget.calendarview.Calendar;
 import com.inspur.emmcloud.widget.calendarview.CalendarLayout;
 import com.inspur.emmcloud.widget.calendarview.CalendarView;
-import com.inspur.emmcloud.widget.calendarview.group.GroupRecyclerView;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,12 +37,14 @@ public class ScheduleFragment extends Fragment implements
         CalendarView.OnCalendarSelectListener,
         CalendarView.OnYearChangeListener,
         CalendarLayout.CalendarExpandListener{
-    private CalendarView mCalendarView;
-    private int mYear;
-    private CalendarLayout mCalendarLayout;
-    private GroupRecyclerView mRecyclerView;
+    private static final String PV_COLLECTION_CAL = "calendar";
+    private static final String PV_COLLECTION_MISSION = "task";
+    private static final String PV_COLLECTION_MEETING = "meeting";
+    private CalendarView calendarView;
+    private CalendarLayout calendarLayout;
     private View rootView;
     private PopupWindow popupWindow;
+    private TextView scheduleDataText;
 
 
     @Override
@@ -65,84 +70,39 @@ public class ScheduleFragment extends Fragment implements
     }
 
     private void initView() {
-//        setStatusBarDarkMode();
-//        mTextMonthDay =  rootView.findViewById(R.id.tv_month_day);
-//        mTextYear =  rootView.findViewById(R.id.tv_year);
-//        mTextLunar =  rootView.findViewById(R.id.tv_lunar);
-        mCalendarView =  rootView.findViewById(R.id.calendarView);
-//        mTextCurrentDay = rootView.findViewById(R.id.tv_current_day);
-//        mTextMonthDay.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (!mCalendarLayout.isExpand()) {
-//                    mCalendarLayout.expand();
-//                    return;
-//                }
-//                mCalendarView.showYearSelectLayout(mYear);
-//                mTextLunar.setVisibility(View.GONE);
-//                mTextYear.setVisibility(View.GONE);
-//                mTextMonthDay.setText(String.valueOf(mYear));
-//            }
-//        });
-//        rootView.findViewById(R.id.fl_current).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                mCalendarView.scrollToCurrent();
-//            }
-//        });
-        mCalendarLayout =  rootView.findViewById(R.id.calendarLayout);
-        mCalendarLayout.setExpandListener(this);
-        mCalendarView.setOnCalendarSelectListener(this);
-        mCalendarView.setOnYearChangeListener(this);
-//        mTextYear.setText(String.valueOf(mCalendarView.getCurYear()));
-        mYear = mCalendarView.getCurYear();
-//        mTextMonthDay.setText(mCalendarView.getCurMonth() + "月" + mCalendarView.getCurDay() + "日");
-//        mTextLunar.setText("今日");
-//        mTextCurrentDay.setText(String.valueOf(mCalendarView.getCurDay()));
-        rootView.findViewById(R.id.schedule_function_list_img).setOnClickListener(new View.OnClickListener() {
+        calendarView =  rootView.findViewById(R.id.calendar_view_schedule);
+        calendarLayout =  rootView.findViewById(R.id.calendar_layout_schedule);
+        calendarLayout.setExpandListener(this);
+        calendarView.setOnCalendarSelectListener(this);
+        calendarView.setOnYearChangeListener(this);
+        scheduleDataText = rootView.findViewById(R.id.tv_schedule_date);
+        setCalendarTime(System.currentTimeMillis());
+        rootView.findViewById(R.id.iv_schedule_function_list).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 switch (v.getId()){
-                    case R.id.schedule_function_list_img:
+                    case R.id.iv_schedule_function_list:
                         showPopupWindow(v);
                         break;
                 }
             }
         });
+        rootView.findViewById(R.id.iv_schedule_arrow).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                calendarLayout.switchStatus();
+            }
+        });
     }
 
     private void initData() {
-        int year = mCalendarView.getCurYear();
-        int month = mCalendarView.getCurMonth();
-
+        int year = calendarView.getCurYear();
+        int month = calendarView.getCurMonth();
         Map<String, Calendar> map = new HashMap<>();
         map.put(getSchemeCalendar(year, month, 3, 0xFF40db25, "假").toString(),
                 getSchemeCalendar(year, month, 3, 0xFF40db25, "假"));
-//        map.put(getSchemeCalendar(year, month, 6, 0xFFe69138, "事").toString(),
-//                getSchemeCalendar(year, month, 6, 0xFFe69138, "事"));
-//        map.put(getSchemeCalendar(year, month, 9, 0xFFdf1356, "议").toString(),
-//                getSchemeCalendar(year, month, 9, 0xFFdf1356, "议"));
-//        map.put(getSchemeCalendar(year, month, 13, 0xFFedc56d, "记").toString(),
-//                getSchemeCalendar(year, month, 13, 0xFFedc56d, "记"));
-//        map.put(getSchemeCalendar(year, month, 14, 0xFFedc56d, "记").toString(),
-//                getSchemeCalendar(year, month, 14, 0xFFedc56d, "记"));
-//        map.put(getSchemeCalendar(year, month, 15, 0xFFaacc44, "假").toString(),
-//                getSchemeCalendar(year, month, 15, 0xFFaacc44, "假"));
-//        map.put(getSchemeCalendar(year, month, 18, 0xFFbc13f0, "记").toString(),
-//                getSchemeCalendar(year, month, 18, 0xFFbc13f0, "记"));
-//        map.put(getSchemeCalendar(year, month, 25, 0xFF13acf0, "假").toString(),
-//                getSchemeCalendar(year, month, 25, 0xFF13acf0, "假"));
-//        map.put(getSchemeCalendar(year, month, 27, 0xFF13acf0, "多").toString(),
-//                getSchemeCalendar(year, month, 27, 0xFF13acf0, "多"));
         //此方法在巨大的数据量上不影响遍历性能，推荐使用
-        mCalendarView.setSchemeDate(map);
-
-
-//        mRecyclerView = (GroupRecyclerView) rootView.findViewById(R.id.recyclerView);
-//        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-//        mRecyclerView.addItemDecoration(new GroupItemDecoration<String, Article>());
-//        mRecyclerView.setAdapter(new ArticleAdapter(getActivity()));
-//        mRecyclerView.notifyDataSetChanged();
+        calendarView.setSchemeDate(map);
     }
 
     private Calendar getSchemeCalendar(int year, int month, int day, int color, String text) {
@@ -200,15 +160,15 @@ public class ScheduleFragment extends Fragment implements
             popupWindow.dismiss();
             switch (v.getId()){
                 case R.id.rl_schedule_calendar:
-                    recordUserClickWorkFunction("calendar");
+                    recordUserClickWorkFunction(PV_COLLECTION_CAL);
                     IntentUtils.startActivity(getActivity(), CalActivity.class);
                     break;
                 case R.id.rl_schedule_meeting:
-                    recordUserClickWorkFunction("meeting");
+                    recordUserClickWorkFunction(PV_COLLECTION_MEETING);
                     IntentUtils.startActivity(getActivity(), MeetingListActivity.class);
                     break;
                 case R.id.rl_schedule_mission:
-                    recordUserClickWorkFunction("task");
+                    recordUserClickWorkFunction(PV_COLLECTION_MISSION);
                     IntentUtils.startActivity(getActivity(), MessionListActivity.class);
                     break;
             }
@@ -245,9 +205,23 @@ public class ScheduleFragment extends Fragment implements
 
     @Override
     public void onCalendarSelect(Calendar calendar, boolean isClick) {
+        setCalendarTime(calendar.getTimeInMillis());
+    }
+
+    private void setCalendarTime(long timeInMillis) {
+        java.util.Calendar calendar1 = TimeUtils.
+                timeLong2Calendar(timeInMillis);
+        String time = TimeUtils.calendar2FormatString(getActivity(),calendar1,TimeUtils.FORMAT_YEAR_MONTH_DAY_BY_DASH)+"·"+
+                CalendarUtil.getWeekDay(calendar1);
+        boolean isToday = TimeUtils.isCalendarToday(calendar1);
+        if(isToday){
+            time = getString(R.string.today)+"·"+time;
+        }
+        scheduleDataText.setText(time);
     }
 
     @Override
     public void isExpand(boolean isExpand) {
+        ((ImageView)rootView.findViewById(R.id.iv_schedule_arrow)).setImageResource(isExpand?R.drawable.ic_schedule_up:R.drawable.ic_schedule_down);
     }
 }

@@ -27,7 +27,7 @@
             android:textSize="24sp" />
 
         <ImageView
-            android:id="@+id/schedule_function_list_img"
+            android:id="@+id/iv_schedule_function_list"
             android:layout_width="46dp"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
@@ -41,7 +41,7 @@
     </RelativeLayout>
 
     <com.inspur.emmcloud.widget.calendarview.CalendarLayout
-        android:id="@+id/calendarLayout"
+        android:id="@+id/calendar_layout_schedule"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -50,7 +50,7 @@
         app:calendar_content_view_id="@+id/ll_date_and_arrow">
 
         <com.inspur.emmcloud.widget.calendarview.CalendarView
-            android:id="@+id/calendarView"
+            android:id="@+id/calendar_view_schedule"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#ffffff"
@@ -87,11 +87,14 @@
             android:background="@color/white"
             android:orientation="vertical">
             <ImageView
-                android:layout_width="18.4dp"
-                android:layout_height="18.4dp"
+                android:id="@+id/iv_schedule_arrow"
+                android:layout_width="28.4dp"
+                android:layout_height="28.4dp"
+                android:padding="5dp"
                 android:layout_gravity="center_horizontal"
-                android:src="@drawable/ic_schedule_up"/>
+                android:src="@drawable/ic_schedule_down"/>
             <TextView
+                android:id="@+id/tv_schedule_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="13sp"
@@ -100,7 +103,7 @@
                 android:paddingBottom="11dp"
                 android:text="今天·2018-5-17·星期四"/>
             <com.inspur.emmcloud.widget.calendarview.group.GroupRecyclerView
-                android:id="@+id/recyclerView"
+                android:id="@+id/recycler_view"
                 app:group_background="@color/content_background"
                 app:group_center="false"
                 app:group_height="42dp"

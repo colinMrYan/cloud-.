@@ -567,6 +567,14 @@ public class CalendarLayout extends LinearLayout {
         return mContentView == null || mMonthView.getVisibility() == VISIBLE;
     }
 
+    public void switchStatus(){
+        if(isExpand()){
+            shrink();
+        }else{
+            expand();
+        }
+    }
+
 
     public boolean expand() {
         return expand(240);

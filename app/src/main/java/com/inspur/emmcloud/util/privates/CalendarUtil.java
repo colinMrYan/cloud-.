@@ -458,7 +458,7 @@ public class CalendarUtil {
 	// System.out.println(oneDay(1989, 9, 10));
 	// }
 
-	private static String getWeekDay(Calendar c) {
+	public static String getWeekDay(Calendar c) {
 		if (c == null) {
 			return "星期一";
 		}
