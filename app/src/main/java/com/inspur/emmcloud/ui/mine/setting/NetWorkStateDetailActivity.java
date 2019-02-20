@@ -18,6 +18,7 @@ import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PingNetEntity;
+import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.UriUtils;
 import com.qmuiteam.qmui.widget.QMUILoadingView;
 
@@ -119,10 +120,10 @@ public class NetWorkStateDetailActivity extends BaseActivity {
                 checkPortalLayout.setVisibility( View.GONE );
             }
             if(NetUtils.isVpnConnected()){
-                checkUrlsConnectionLayout.setVisibility( View.GONE);
-                return;
+                checkUrlsConnectionLayout.setVisibility(View.GONE);
+            }else {
+                checkUrlsConnectionLayout.setVisibility(View.VISIBLE);
             }
-            checkUrlsConnectionLayout.setVisibility(View.VISIBLE);
             checkingNetConnectState();
         } else {
             checkUrlsConnectionLayout.setVisibility( View.GONE );
@@ -258,7 +259,7 @@ public class NetWorkStateDetailActivity extends BaseActivity {
             case R.id.rl_net_error_fix:
                 IntentUtils.startActivity( this, NetHardConnectCheckActivity.class );
                 break;
-            case R.id.rl_checking_portal_state:
+            case R.id.rl_portal_tip:
                 String activityName = getResources().getString( R.string.net_network_authentication );
                 if (PortalUrl != null && PortalUrl != "") {
                     UriUtils.openUrl( this, PortalUrl, activityName );
@@ -299,9 +300,14 @@ public class NetWorkStateDetailActivity extends BaseActivity {
                 portalCheckTipLayout.setVisibility( View.GONE );
             } else {
                 qmulWifiLoadingView.setVisibility( View.GONE );
-                portalImageView.setImageResource( R.drawable.ic_fix_left_arrow );
                 portalImageView.setVisibility( View.VISIBLE );
-                portalCheckTipLayout.setVisibility( View.VISIBLE );
+                if(StringUtils.isBlank(PortalUrl)){
+                    portalImageView.setBackground( drawableError);
+                    portalCheckTipLayout.setVisibility( View.GONE );
+                }else{
+                    portalImageView.setImageResource( R.drawable.ic_fix_left_arrow );
+                    portalCheckTipLayout.setVisibility( View.VISIBLE );
+                }
             }
         } else if (netState.getAction().equals( Constant.EVENTBUS_TAG__NET_HTTP_POST_CONNECTION )) {
             List<Object> idAndData = (List<Object>) netState.getMessageObj();

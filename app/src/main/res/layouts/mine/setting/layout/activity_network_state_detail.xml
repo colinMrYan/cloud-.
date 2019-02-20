@@ -173,8 +173,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/rl_checking_portal_state"
-            android:layout_below="@+id/rl_checking_hard_state"
-            android:onClick="onClick">
+            android:layout_below="@+id/rl_checking_hard_state">
 
             <RelativeLayout
                 android:id="@+id/rl_checking_portal_logs"
@@ -245,6 +244,7 @@
                     android:layout_marginTop="11dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:onClick="onClick"
                     android:layout_below="@id/tv_checking_portal_content"
                     android:layout_toRightOf="@id/rl_wifi_checking_img">
                     <TextView
