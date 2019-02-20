@@ -41,7 +41,6 @@ import com.inspur.emmcloud.ui.mine.setting.SettingActivity;
 import com.inspur.emmcloud.ui.mine.setting.SwitchEnterpriseActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -314,7 +313,6 @@ public class MoreFragment extends BaseFragment {
                 userCardMenuListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                        LogUtils.jasonDebug("00000000000000000000000000");
                         openMineLayoutItem(mineLayoutItemList.get(i));
                     }
                 });

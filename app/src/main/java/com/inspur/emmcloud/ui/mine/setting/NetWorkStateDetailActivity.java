@@ -249,7 +249,7 @@ public class NetWorkStateDetailActivity extends BaseActivity {
 
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.rl_back_net_detail:
+            case R.id.ibt_back:
                 finish();
                 break;
             case R.id.rl_net_error_fix:
