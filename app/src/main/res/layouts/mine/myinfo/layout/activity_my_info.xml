@@ -43,8 +43,8 @@
                 android:onClick="onClick" />
 
             <ImageView
-                android:layout_width="14dp"
-                android:layout_height="14dp"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
                 android:layout_alignBottom="@id/iv_photo"
                 android:layout_centerHorizontal="true"
                 android:src="@drawable/ic_mine_photo_edit" />
@@ -59,6 +59,7 @@
             android:background="@android:color/white"
             android:gravity="center_horizontal"
             android:paddingBottom="18dp"
+            android:layout_marginBottom="10dp"
             android:text="@string/not_set"
             android:textColor="#333333"
             android:textSize="17sp" />
