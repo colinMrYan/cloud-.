@@ -26,6 +26,7 @@ import com.inspur.emmcloud.ui.login.PasswordModifyActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
+import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
@@ -93,6 +94,8 @@ public class MyInfoActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
+        StateBarUtils.translucent(this,R.color.white);
+        StateBarUtils.setStateBarTextColor(this,true);
         loadingDlg = new LoadingDialog(this);
         apiService = new MineAPIService(MyInfoActivity.this);
         apiService.setAPIInterface(new WebService());
