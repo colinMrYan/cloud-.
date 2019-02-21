@@ -13,13 +13,13 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="8dp"
         android:layout_marginTop="12dp"
-        android:background="@drawable/shape_chat_msg_time"
+        android:background="@color/transparent"
         android:gravity="center"
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
         android:singleLine="true"
-        android:textColor="#ffffff"
-        android:textSize="@dimen/content_smaller_textsize" />
+        android:textColor="#97A3B4"
+        android:textSize="@dimen/content_mini_textsize" />
 
     <RelativeLayout
         android:layout_width="match_parent"
