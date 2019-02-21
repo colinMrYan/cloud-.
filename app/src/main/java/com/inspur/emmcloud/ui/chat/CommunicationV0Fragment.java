@@ -54,6 +54,7 @@ import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.mine.setting.NetWorkStateDetailActivity;
+import com.inspur.emmcloud.util.common.CheckingNetStateUtils;
 import com.inspur.emmcloud.util.common.ImageUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
@@ -135,6 +136,7 @@ public class CommunicationV0Fragment extends BaseFragment {
     private boolean isFirstConnectWebsockt = true;//判断是否第一次连上websockt
     private boolean haveHeader=false;
     private View    netExceptionView;
+    private CheckingNetStateUtils checkingNetStateUtils;
 
     /**
      * 记录用户点击的频道
@@ -177,6 +179,7 @@ public class CommunicationV0Fragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
+        checkingNetStateUtils = new CheckingNetStateUtils(getContext(),NetUtils.pingUrls);
         initView();
         sortChannelList();// 对Channel 进行排序
         registerMessageFragmentReceiver();
@@ -187,7 +190,12 @@ public class CommunicationV0Fragment extends BaseFragment {
 
     @Override
     public void onResume() {
-        NetUtils.PingThreadStart(NetUtils.pingUrls,5,Constant.EVENTBUS_TAG__NET_EXCEPTION_HINT);
+        if(checkingNetStateUtils.isConnectedNet()){
+            DeleteHeaderView();
+        }else{
+            checkingNetStateUtils.clearUrlsStates();
+            checkingNetStateUtils.CheckNetPingThreadStart(NetUtils.pingUrls,5,Constant.EVENTBUS_TAG__NET_EXCEPTION_HINT);
+        }
         super.onResume();
     }
 
@@ -380,19 +388,31 @@ public class CommunicationV0Fragment extends BaseFragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void netWorkStateHint(SimpleEventMessage netState) {
         if(netState.getAction().equals(Constant.EVENTBUS_TAG__NET_STATE_CHANGE)){
-            if(((String)netState.getMessageObj()).equals(NetWorkStateChangeUtils.NET_WIFI_STATE_OK)){
-                NetUtils.PingThreadStart(NetUtils.pingUrls,5,Constant.EVENTBUS_TAG__NET_EXCEPTION_HINT);
+            if(((String)netState.getMessageObj()).equals( NetWorkStateChangeUtils.NET_WIFI_STATE_OK)&&(!NetUtils.isVpnConnected())){
+                checkingNetStateUtils.clearUrlsStates();
+                checkingNetStateUtils.CheckNetPingThreadStart(NetUtils.pingUrls,5,Constant.EVENTBUS_TAG__NET_EXCEPTION_HINT);
             } else if(((String)netState.getMessageObj()).equals(NetWorkStateChangeUtils.NET_STATE_ERROR)) {
                 AddHeaderView();
             } else if (((String)netState.getMessageObj()).equals(NetWorkStateChangeUtils.NET_GPRS_STATE_OK)) {
                 DeleteHeaderView();
+            }else {
+                DeleteHeaderView();
             }
         } else if (netState.getAction().equals(Constant.EVENTBUS_TAG__NET_EXCEPTION_HINT)) {   //网络异常提示
-               if(!(Boolean)netState.getMessageObj()||(!NetUtils.isNetworkConnected(getContext(),false))) {
-                   AddHeaderView();
-               } else {
-                   DeleteHeaderView();
-               }
+            if(!NetUtils.isNetworkConnected(getContext(),false)) {
+                AddHeaderView();
+            } else {
+                List<Object> pingIdAndData = (List<Object>)netState.getMessageObj();
+                Boolean pingConnectedResult=checkingNetStateUtils.isPingConnectedNet( (String)pingIdAndData.get( 0 ),(boolean)pingIdAndData.get( 1 ) );
+                if(pingConnectedResult){
+                    DeleteHeaderView();
+                }else{
+                    AddHeaderView();
+                }
+            }
+            if ((Boolean)netState.getMessageObj()){
+                WebSocketPush.getInstance().startWebSocket();
+            }
         }
     }
 

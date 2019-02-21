@@ -235,12 +235,12 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnCheckCloudPluseConnectionSuccess(byte[] arg0) {
+    public void returnCheckCloudPluseConnectionSuccess(byte[] arg0, String url) {
 
     }
 
     @Override
-    public void returnCheckCloudPluseConnectionError(String error, int responseCode) {
+    public void returnCheckCloudPluseConnectionError(String error, int responseCode, String url) {
 
     }
 

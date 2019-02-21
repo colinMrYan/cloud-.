@@ -11,14 +11,14 @@ import android.widget.RelativeLayout;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.api.APIInterfaceInstance;
-import com.inspur.emmcloud.api.APIUri;
-import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.util.common.CheckingNetStateUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PingNetEntity;
+import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.UriUtils;
 import com.qmuiteam.qmui.widget.QMUILoadingView;
 
@@ -38,6 +38,7 @@ import java.util.List;
 public class NetWorkStateDetailActivity extends BaseActivity {
     public static String[] subUrls = {"www.baidu.com", "www.aliyun.com"};
     private String PortalCheckingUrls = "http://www.inspuronline.com/#/auth/0\\(arc4random() % 100000)";
+    private String[] CheckHttpUrls = {"http://www.inspuronline.com/#/auth/0\\(arc4random() % 100000)"};
     private ImageView hardImageView;
     private ImageView portalImageView;
     private ImageView ping1UrlImageView;
@@ -54,6 +55,7 @@ public class NetWorkStateDetailActivity extends BaseActivity {
     private QMUILoadingView ping3UrlQMUIView;
     private Drawable drawableError;
     private Drawable drawableSuccess;
+    private Drawable drawableRightArrow;
     private Drawable drawableDomainError;
     private Drawable drawableDomainSuccess;
     private List<Integer> NetStateintegerData;
@@ -61,11 +63,14 @@ public class NetWorkStateDetailActivity extends BaseActivity {
     private boolean netHardConnectState = true;
     private Handler handler;
 
+    CheckingNetStateUtils checkingNetStateUtils;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate( savedInstanceState );
         setContentView( R.layout.activity_network_state_detail );
+        checkingNetStateUtils = new CheckingNetStateUtils( this );
         iniView();
         EventBus.getDefault().register( this );
     }
@@ -85,6 +90,7 @@ public class NetWorkStateDetailActivity extends BaseActivity {
         hardImageView = (ImageView) findViewById( R.id.iv_hard_state_log );
         portalImageView = (ImageView) findViewById( R.id.iv_portal_state_log );
         drawableError = getBaseContext().getResources().getDrawable( R.drawable.ic_netchecking_error );
+        drawableRightArrow= getBaseContext().getResources().getDrawable( R.drawable.ic_fix_left_arrow );
         drawableSuccess = getBaseContext().getResources().getDrawable( R.drawable.ic_netchecking_ok );
         drawableDomainError = getBaseContext().getResources().getDrawable( R.drawable.ic_checking_domain_error );
         drawableDomainSuccess = getBaseContext().getResources().getDrawable( R.drawable.ic_checking_domain_success );
@@ -115,8 +121,12 @@ public class NetWorkStateDetailActivity extends BaseActivity {
             } else {
                 checkPortalLayout.setVisibility( View.GONE );
             }
-            checkUrlsConnectionLayout.setVisibility( View.VISIBLE );
-            checkingDNSConnectState();
+            if(NetUtils.isVpnConnected()){
+                checkUrlsConnectionLayout.setVisibility(View.GONE);
+            }else {
+                checkUrlsConnectionLayout.setVisibility(View.VISIBLE);
+            }
+            checkingNetConnectState();
         } else {
             checkUrlsConnectionLayout.setVisibility( View.GONE );
             checkPortalLayout.setVisibility( View.GONE );
@@ -141,8 +151,7 @@ public class NetWorkStateDetailActivity extends BaseActivity {
      * @return 反馈为硬件连接状态
      */
     private boolean checkingHardState() {
-        NetStateintegerData = NetUtils.getNetWrokState( this );
-        if (-1 == NetStateintegerData.get( 0 )) {
+        if (!NetUtils.isNetworkConnected( this,false )) {
             hardImageView.setVisibility( View.GONE );
             qmulHardLoadingView.setVisibility( View.GONE );
             findViewById( R.id.rl_to_fix ).setVisibility( View.VISIBLE );
@@ -168,15 +177,11 @@ public class NetWorkStateDetailActivity extends BaseActivity {
     }
 
     /**
-     * 检测DNS服务器状态
+     * 通过个Url检测网络状态
      */
-    private void checkingDNSConnectState() {
-        for (int i = 0; i < subUrls.length; i++) {
-            NetUtils.PingThreadStart( subUrls[i], 5, Constant.EVENTBUS_TAG__NET_PING_CONNECTION, subUrls[i] );
-        }
-        AppAPIService apiService = new AppAPIService( this );
-        apiService.setAPIInterface( new WebService() );
-        apiService.getCloudConnectStateUrl( APIUri.getCheckCloudPluseConnectUrl() );
+    private void checkingNetConnectState() {
+        checkingNetStateUtils.CheckNetPingThreadStart(subUrls,5,Constant.EVENTBUS_TAG__NET_PING_CONNECTION);
+        checkingNetStateUtils.CheckNetHttpThreadStart(CheckHttpUrls);
     }
 
     /**
@@ -249,13 +254,13 @@ public class NetWorkStateDetailActivity extends BaseActivity {
 
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.ibt_back:
+            case R.id.rl_back:
                 finish();
                 break;
             case R.id.rl_net_error_fix:
                 IntentUtils.startActivity( this, NetHardConnectCheckActivity.class );
                 break;
-            case R.id.rl_checking_portal_state:
+            case R.id.rl_portal_tip:
                 String activityName = getResources().getString( R.string.net_network_authentication );
                 if (PortalUrl != null && PortalUrl != "") {
                     UriUtils.openUrl( this, PortalUrl, activityName );
@@ -277,6 +282,7 @@ public class NetWorkStateDetailActivity extends BaseActivity {
     public void dealCheckingPingUrls(SimpleEventMessage netState) {
         if (netState.getAction().equals( Constant.EVENTBUS_TAG__NET_PING_CONNECTION )) {
             List<Object> idAndData = (List<Object>) netState.getMessageObj();
+            LogUtils.LbcDebug("data:"+ idAndData.get( 0 )+idAndData.get( 1 ) );
             if (((String) idAndData.get( 0 )).equals( subUrls[0] )) {
                 ping1UrlImageView.setBackground( (boolean) idAndData.get( 1 ) ? drawableDomainSuccess : drawableDomainError );
                 ping1UrlImageView.setVisibility( View.VISIBLE );
@@ -295,9 +301,21 @@ public class NetWorkStateDetailActivity extends BaseActivity {
                 portalCheckTipLayout.setVisibility( View.GONE );
             } else {
                 qmulWifiLoadingView.setVisibility( View.GONE );
-                portalImageView.setBackground( drawableError );
                 portalImageView.setVisibility( View.VISIBLE );
-                portalCheckTipLayout.setVisibility( View.VISIBLE );
+                if(StringUtils.isBlank(PortalUrl)){
+                    portalImageView.setBackground( drawableError);
+                    portalCheckTipLayout.setVisibility( View.GONE );
+                }else{
+                    portalImageView.setBackground( drawableRightArrow );
+                    portalCheckTipLayout.setVisibility( View.VISIBLE );
+                }
+            }
+        } else if (netState.getAction().equals( Constant.EVENTBUS_TAG__NET_HTTP_POST_CONNECTION )) {
+            List<Object> idAndData = (List<Object>) netState.getMessageObj();
+            if (((String) idAndData.get( 0 )).equals( CheckHttpUrls[0] )) {
+                ping2UrlImageView.setBackground( (boolean) idAndData.get( 1 ) ? drawableDomainSuccess : drawableDomainError );
+                ping2UrlImageView.setVisibility( View.VISIBLE );
+                ping2UrlQMUIView.setVisibility( View.GONE );
             }
         }
     }
@@ -311,19 +329,4 @@ public class NetWorkStateDetailActivity extends BaseActivity {
         EventBus.getDefault().unregister( this );
     }
 
-    public class WebService extends APIInterfaceInstance {
-        @Override
-        public void returnCheckCloudPluseConnectionSuccess(byte[] arg0) {
-            ping2UrlImageView.setBackground( drawableDomainSuccess );
-            ping2UrlImageView.setVisibility( View.VISIBLE );
-            ping2UrlQMUIView.setVisibility( View.GONE );
-        }
-
-        @Override
-        public void returnCheckCloudPluseConnectionError(String error, int responseCode) {
-            ping2UrlImageView.setBackground( drawableDomainError );
-            ping2UrlImageView.setVisibility( View.VISIBLE );
-            ping2UrlQMUIView.setVisibility( View.GONE );
-        }
-    }
 }
