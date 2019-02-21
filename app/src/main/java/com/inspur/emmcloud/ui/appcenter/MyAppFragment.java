@@ -29,6 +29,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
@@ -81,7 +82,6 @@ import com.inspur.emmcloud.widget.ECMRecyclerViewLinearLayoutManager;
 import com.inspur.emmcloud.widget.ECMSpaceItemDecoration;
 import com.inspur.emmcloud.widget.MySwipeRefreshLayout;
 import com.inspur.emmcloud.widget.SwitchView;
-import com.inspur.emmcloud.widget.SwitchView.OnStateChangedListener;
 import com.inspur.emmcloud.widget.draggrid.DragGridView;
 import com.inspur.emmcloud.widget.draggrid.DragGridView.OnChanageListener;
 
@@ -131,6 +131,7 @@ public class MyAppFragment extends BaseFragment {
     private boolean haveHeader=false;
     private boolean hasRequestBadgeNum = false;
     private MyOnClickListener myOnClickListener;
+    private LinearLayout commonlyUseLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -805,7 +806,8 @@ public class MyAppFragment extends BaseFragment {
         // 一个自定义的布局，作为popwindowivew显示的内容
         View contentView = LayoutInflater.from(getActivity())
                 .inflate(R.layout.app_center_popup_window_view, null);
-        final SwitchView switchView = (SwitchView) contentView.findViewById(R.id.switch_view_common_app);
+        final SwitchView switchView = contentView.findViewById(R.id.switch_view_common_app);
+        commonlyUseLayout = contentView.findViewById(R.id.ll_common_app_switch);
         //为了在打开PopWindow时立刻显示当前状态
         switchView.setOpened(getNeedCommonlyUseApp());
         // 设置按钮的点击事件
@@ -819,30 +821,31 @@ public class MyAppFragment extends BaseFragment {
                 backgroundAlpha(1.0f);
             }
         });
-        switchView.setOnStateChangedListener(new OnStateChangedListener() {
-            @Override
-            public void toggleToOn(View view) {
-                if (view == null || switchView == null) {
-                    return;
-                }
-                switchView.toggleSwitch(true);
-                saveNeedCommonlyUseApp(true);
-                handCommonlyUseAppData(appListAdapter.getAppAdapterList(), true);
-            }
-
-            @Override
-            public void toggleToOff(View view) {
-                if (view == null || switchView == null) {
-                    return;
-                }
-                switchView.toggleSwitch(false);
-                if (getNeedCommonlyUseApp() && AppCacheUtils.getCommonlyUseNeedShowList(getActivity()).size() > 0) {
-                    appListAdapter.getAppAdapterList().remove(0);
-                    appListAdapter.notifyDataSetChanged();
-                }
-                saveNeedCommonlyUseApp(false);
-            }
-        });
+//        switchView.setOnStateChangedListener(new OnStateChangedListener() {
+//            @Override
+//            public void toggleToOn(View view) {
+//                if (view == null || switchView == null) {
+//                    return;
+//                }
+//                switchView.toggleSwitch(true);
+//                saveNeedCommonlyUseApp(true);
+//                handCommonlyUseAppData(appListAdapter.getAppAdapterList(), true);
+//            }
+//
+//            @Override
+//            public void toggleToOff(View view) {
+//                if (view == null || switchView == null) {
+//                    return;
+//                }
+//                switchView.toggleSwitch(false);
+//                if (getNeedCommonlyUseApp() && AppCacheUtils.getCommonlyUseNeedShowList(getActivity()).size() > 0) {
+//                    appListAdapter.getAppAdapterList().remove(0);
+//                    appListAdapter.notifyDataSetChanged();
+//                }
+//                saveNeedCommonlyUseApp(false);
+//            }
+//        });
+        setCommonlyUseIconAndText();
         (contentView.findViewById(R.id.ll_app_order)).setOnClickListener(myOnClickListener);
         (contentView.findViewById(R.id.ll_common_app_switch)).setOnClickListener(myOnClickListener);
         (contentView.findViewById(R.id.ll_app_scan)).setOnClickListener(myOnClickListener);
@@ -1090,7 +1093,7 @@ public class MyAppFragment extends BaseFragment {
                     }
                     break;
                 case R.id.ll_app_order:
-                    if (appListAdapter != null) {
+                    if (popupWindow != null && appListAdapter != null) {
                         appListAdapter.setCanEdit(true);
                         appListAdapter.notifyDataSetChanged();
                         setAppEditStatus(true);
@@ -1098,15 +1101,20 @@ public class MyAppFragment extends BaseFragment {
                     }
                     break;
                 case R.id.ll_common_app_switch:
+                    if(popupWindow != null){
+                        popupWindow.dismiss();
+                    }
                     if(!getNeedCommonlyUseApp()){
                         saveNeedCommonlyUseApp(true);
                         handCommonlyUseAppData(appListAdapter.getAppAdapterList(), true);
+                        setCommonlyUseIconAndText();
                     }else{
                         if (getNeedCommonlyUseApp() && AppCacheUtils.getCommonlyUseNeedShowList(getActivity()).size() > 0) {
                             appListAdapter.getAppAdapterList().remove(0);
                             appListAdapter.notifyDataSetChanged();
                         }
                         saveNeedCommonlyUseApp(false);
+                        setCommonlyUseIconAndText();
                     }
                     break;
                 case R.id.ll_app_scan:
@@ -1114,6 +1122,15 @@ public class MyAppFragment extends BaseFragment {
                     break;
             }
 
+        }
+    }
+
+    private void setCommonlyUseIconAndText() {
+        if(popupWindow != null && commonlyUseLayout != null){
+            ImageView imageView = commonlyUseLayout.findViewById(R.id.iv_app_commonly_use);
+            TextView textView = commonlyUseLayout.findViewById(R.id.tv_app_commonly_use);
+            imageView.setImageResource(getNeedCommonlyUseApp()?R.drawable.ic_commonly_use_open:R.drawable.ic_commonly_use_close);
+            textView.setText(getNeedCommonlyUseApp()?R.string.app_commonly_use:R.string.app_commonly_use_close);
         }
     }
 
