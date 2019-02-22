@@ -162,6 +162,11 @@
                     android:layout_below="@id/iv_group_photo"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="8dp"
+                    android:gravity="center"
+                    android:layout_alignLeft="@id/card_view_group_summary"
+                    android:layout_alignRight="@id/card_view_group_summary"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
                     android:elevation="10dp"
                     android:textColor="@color/black"
                     android:textSize="17sp" />
