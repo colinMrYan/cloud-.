@@ -325,6 +325,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         params.addHeader("X-Device-ID",
                 AppUtils.getMyUUID(getInstance()));
         params.addHeader("Accept", "application/json");
+        params.addHeader("Connection", "close");
         if (getToken() != null) {
             params.addHeader("Authorization", getToken());
         }
