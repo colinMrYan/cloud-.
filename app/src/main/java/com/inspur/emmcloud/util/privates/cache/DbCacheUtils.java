@@ -128,6 +128,11 @@ public class DbCacheUtils {
                                     db.execNonQuery("ALTER TABLE Conversation ADD COLUMN action TEXT DEFAULT ''");
                                 }
                             }
+                            if(oldVersion<18){
+                                if(tableIsExist(db,"Conversation")){
+                                    db.execNonQuery("ALTER TABLE Conversation ADD COLUMN pyfull TEXT DEFAULT ''");
+                                }
+                            }
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

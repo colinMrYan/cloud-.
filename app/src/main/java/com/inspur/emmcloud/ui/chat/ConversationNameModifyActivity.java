@@ -13,6 +13,7 @@ import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.EditTextUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.common.PinyinUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
@@ -89,6 +90,8 @@ public class ConversationNameModifyActivity extends BaseActivity {
 			LoadingDialog.dimissDlg(loadingDlg);
 			conversation.setName(name);
 			ConversationCacheUtils.updateConversationName(MyApplication.getInstance(),conversation.getId(),name);
+			String pinYin =	PinyinUtils.getPingYin( name );
+			ConversationCacheUtils.updateConversationPyFull(MyApplication.getInstance(),conversation.getId(),pinYin);
 			EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_UPDATE_CHANNEL_NAME,conversation));
 			finish();
 		}
