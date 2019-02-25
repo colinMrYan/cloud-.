@@ -11,7 +11,7 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:textSize="16sp"
-            android:textColor="#8E8E8E"
+            android:textColor="#eeeeee"
             android:background="#212121"
             android:gravity="center"
             android:text="@string/emm_secure_keyboard"/>
@@ -22,8 +22,13 @@
             android:scaleType="centerInside"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
-            android:paddingRight="20dp"
-            android:src="@drawable/ic_schedule_down"/>
+            android:paddingRight="8dp"
+            android:src="@drawable/ic_emm_keyboard_view_arrow_down"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.4dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/color_list_divider"/>
     </RelativeLayout>
 
     <android.inputmethodservice.KeyboardView
