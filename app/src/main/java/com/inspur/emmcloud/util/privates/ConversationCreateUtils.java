@@ -14,7 +14,6 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.util.common.LogUtils;
-import com.inspur.emmcloud.util.common.PinyinUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
@@ -132,7 +131,6 @@ public class ConversationCreateUtils {
 
         @Override
         public void returnCreateGroupConversationSuccess(Conversation conversation) {
-            conversation.setpyFull(PinyinUtils.getPingYin(conversation.getName()));
             ConversationCacheUtils.saveConversation(MyApplication.getInstance(),conversation);
             LoadingDialog.dimissDlg(loadingDlg);
             if (onCreateGroupConversationListener != null) {

@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.bean.chat;
 
 import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.PinyinUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 
 import org.json.JSONObject;
@@ -81,7 +82,7 @@ public class Conversation implements Serializable{
         this.stick = JSONUtils.getBoolean(obj,"stick",false);
         this.hide = JSONUtils.getBoolean(obj,"hide",false);
         this.action = JSONUtils.getString(obj,"action","");
-        this.pyfull = JSONUtils.getString( obj,"pyfull","");
+        this.pyfull = PinyinUtils.getPingYin(name);
     }
 
     public String getId() {
