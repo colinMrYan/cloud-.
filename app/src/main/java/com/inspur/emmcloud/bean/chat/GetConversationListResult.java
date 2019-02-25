@@ -1,7 +1,6 @@
 package com.inspur.emmcloud.bean.chat;
 
 import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.PinyinUtils;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -17,8 +16,6 @@ public class GetConversationListResult {
 		for (int i = 0; i < array.length(); i++){
 			JSONObject obj = JSONUtils.getJSONObject(array,i,new JSONObject());
 			Conversation conversation = new Conversation(obj);
-			String pinYin = PinyinUtils.getPingYin(conversation.getName());
-			conversation.setpyFull(pinYin);
 			conversationList.add(conversation);
 		}
 	}

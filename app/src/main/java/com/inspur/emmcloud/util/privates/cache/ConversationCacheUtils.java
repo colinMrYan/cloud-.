@@ -128,7 +128,7 @@ public class ConversationCacheUtils {
      *
      * @param context
      * @param id
-     * @param isHide
+     * @param name
      */
     public static void updateConversationHide(Context context, String id, boolean isHide) {
         try {
@@ -144,7 +144,7 @@ public class ConversationCacheUtils {
      *
      * @param context
      * @param id
-     * @param isDnd
+     * @param name
      */
     public static void updateConversationDnd(Context context, String id, boolean isDnd) {
         try {
@@ -300,8 +300,6 @@ public class ConversationCacheUtils {
                         searchStr += "%" + searchText.charAt(i) + "%";
                     }
                 }
-//                conversationList = DbCacheUtils.getDb(context).selector(Conversation.class)
-//                        .where("name", "like", searchStr).and("type","=",Conversation.TYPE_GROUP).findAll();
                 conversationList = DbCacheUtils.getDb(context).selector(Conversation.class)
                         .where(WhereBuilder.b("name", "like", searchStr).or("pyfull", "like", searchStr)).and("type","=",Conversation.TYPE_GROUP).findAll();
             } catch (Exception e) {
