@@ -124,6 +124,20 @@
         android:theme="@style/AppTheme_0"
         android:networkSecurityConfig="@xml/network_security_config"
         tools:replace="android:allowBackup,label">
+
+        <!-- 适配全面屏 -->
+        <meta-data
+            android:name="android.max_aspect"
+            android:value="2.4" />
+        <!-- 适配华为(hua wei)刘海屏 -->
+        <meta-data
+            android:name="android.notch_support"
+            android:value="true" />
+        <!-- 适配小米(xiao mi)刘海屏 -->
+        <meta-data
+            android:name="notch.config"
+            android:value="portrait|landscape" />
+
         <!--custom-->
         <meta-data
             android:name="FLAG_APP_VERSION_TYPE"
@@ -696,12 +710,12 @@
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".ui.chat.ImagePagerV0Activity"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"
+            android:theme="@style/AppTheme.Transparent"
             android:resizeableActivity="true"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".ui.chat.ImagePagerActivity"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"
+            android:theme="@style/AppTheme.Transparent"
             android:resizeableActivity="true"
             android:windowSoftInputMode="adjustPan" />
 

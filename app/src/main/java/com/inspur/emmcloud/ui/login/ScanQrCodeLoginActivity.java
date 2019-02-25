@@ -8,6 +8,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
@@ -15,7 +16,6 @@ import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.bean.login.LoginDesktopCloudPlusBean;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
@@ -38,9 +38,8 @@ public class ScanQrCodeLoginActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        StateBarUtils.translucent( this,R.color.scan_result_color);
-        setMiuiStatusBarDarkMode(this,true);
         setContentView(R.layout.activity_scan_qrcode_login_result);
+        ImmersionBar.with(this).statusBarColor(android.R.color.white).statusBarDarkFont(true).init();
         initViews();
     }
 

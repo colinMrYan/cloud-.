@@ -38,6 +38,7 @@ public class ImagePreviewDelActivity extends ImagePreviewBaseActivity implements
                 mTitleCount.setText(getString(R.string.preview_image_count, mCurrentPosition + 1, mImageItems.size()));
             }
         });
+        setStatus();
     }
 
     @Override

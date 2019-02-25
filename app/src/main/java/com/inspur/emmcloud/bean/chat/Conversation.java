@@ -79,7 +79,7 @@ public class Conversation implements Serializable{
         this.stick = JSONUtils.getBoolean(obj,"stick",false);
         this.hide = JSONUtils.getBoolean(obj,"hide",false);
         this.action = JSONUtils.getString(obj,"action","");
-    }
+}
 
     public String getId() {
         return id;

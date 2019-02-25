@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.CardStackAdapter;
@@ -12,7 +13,6 @@ import com.inspur.emmcloud.api.apiservice.MineAPIService;
 import com.inspur.emmcloud.bean.mine.CardPackageBean;
 import com.inspur.emmcloud.bean.mine.GetCardPackageResult;
 import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.CardPackageCacheUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
@@ -38,8 +38,7 @@ public class CardPackageActivity extends BaseActivity  implements RxCardStackVie
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        StateBarUtils.translucent(this,R.color.content_bg);
-        StateBarUtils.setStateBarTextColor( this,true );
+        ImmersionBar.with(this).statusBarColor(android.R.color.white).statusBarDarkFont(true).init();
         initViews();
         getCardPackageListFromNet();
     }

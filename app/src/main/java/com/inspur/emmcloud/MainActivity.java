@@ -4,18 +4,17 @@ import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.bean.system.SplashDefaultBean;
 import com.inspur.emmcloud.bean.system.SplashPageBean;
 import com.inspur.emmcloud.config.Constant;
@@ -76,19 +75,20 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
             finish();
             return;
         }
-        //当Android版本在4.4以下时不全屏显示，否则在进入IndexActivity时状态栏过度不美观
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            requestWindowFeature(Window.FEATURE_NO_TITLE);//没有标题
-            this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-                //全屏显示
-                WindowManager.LayoutParams lp = getWindow().getAttributes();
-                lp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
-                getWindow().setAttributes(lp);
-            }
-        }
+//        //当Android版本在4.4以下时不全屏显示，否则在进入IndexActivity时状态栏过度不美观
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+//            requestWindowFeature(Window.FEATURE_NO_TITLE);//没有标题
+//            this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+//                getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+//                //全屏显示
+//                WindowManager.LayoutParams lp = getWindow().getAttributes();
+//                lp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+//                getWindow().setAttributes(lp);
+//            }
+//        }
         setContentView(R.layout.activity_main);
+        ImmersionBar.with(this).init();
         skipImageBtn = findViewById(R.id.ibt_skip);
         checkNecessaryPermission();
 

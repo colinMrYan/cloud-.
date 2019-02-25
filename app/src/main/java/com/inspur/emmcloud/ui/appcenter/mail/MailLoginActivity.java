@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -20,7 +21,6 @@ import com.inspur.emmcloud.util.common.EncryptUtils;
 import com.inspur.emmcloud.util.common.FomatUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
@@ -53,8 +53,7 @@ public class MailLoginActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        StateBarUtils.translucent(this,R.color.white);
-        StateBarUtils.setStateBarTextColor(this,true);
+        ImmersionBar.with(this).statusBarColor(android.R.color.white).statusBarDarkFont(true).init();
         loadingDlg = new LoadingDialog(this);
         apiService = new MailApiService(this);
         apiService.setAPIInterface(new WebServie());

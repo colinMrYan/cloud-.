@@ -43,6 +43,7 @@ public class MailHomeBaseActivity extends BaseFragmentActivity implements AllInt
         x.view().inject(this);
         loadingDlg = new LoadingDialog(this);
         addMailLeftMenyu();
+        setStatus();
     }
 
 //    private void loginMail(){

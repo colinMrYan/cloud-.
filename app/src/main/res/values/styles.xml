@@ -53,6 +53,7 @@
         <item name="ic_appcenter_enter">@drawable/ic_appcenter_enter</item>
         <item name="ic_appcenter_config">@drawable/ic_appcenter_config</item>
         <item name="ic_header_option">@drawable/ic_header_option_white</item>
+        <item name="status_bar_dark_font">true</item>
 
 
     </style>
@@ -79,6 +80,7 @@
         <item name="ic_appcenter_enter">@drawable/ic_appcenter_enter_blue</item>
         <item name="ic_appcenter_config">@drawable/ic_appcenter_config_blue</item>
         <item name="ic_header_option">@drawable/ic_header_option_blue</item>
+        <item name="status_bar_dark_font">false</item>
     </style>
     <style name="AppTheme_2"  parent="AppTheme">
         <item name="header_bg_color">@color/header_bg_grey</item>
@@ -103,6 +105,7 @@
         <item name="ic_appcenter_enter">@drawable/ic_appcenter_enter_grey</item>
         <item name="ic_appcenter_config">@drawable/ic_appcenter_config_grey</item>
         <item name="ic_header_option">@drawable/ic_header_option_white</item>
+        <item name="status_bar_dark_font">true</item>
     </style>
 
     <!-- Application theme. -->
@@ -111,7 +114,7 @@
         <item name="android:windowAnimationStyle">@null</item>
         <!--设置窗口的背景为透明，设置透明背景必须要设置此项-->
         <item name="android:windowBackground">@android:color/transparent</item>
-        <!--设置窗口的背景是否为半透明，设置透明背景必须要设置此项-->
+        <!--&lt;!&ndash;设置窗口的背景是否为半透明，设置透明背景必须要设置此项&ndash;&gt;-->
         <item name="android:windowIsTranslucent">true</item>
     </style>
 

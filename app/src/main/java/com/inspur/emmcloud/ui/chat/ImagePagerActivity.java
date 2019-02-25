@@ -17,6 +17,7 @@ import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.BaseFragmentActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -89,6 +90,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
             getWindow().setAttributes(lp);
         }
         setContentView(R.layout.activity_image_pager);
+        ImmersionBar.with(this).init();
         EventBus.getDefault().register(this);
         init();
     }

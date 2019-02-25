@@ -29,6 +29,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -55,7 +56,6 @@ import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ResourceUtils;
-import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
@@ -778,10 +778,11 @@ public class NewsWebDetailActivity extends BaseActivity {
      * 改变原生导航栏
      */
     private void setHeaderModel(String model) {
+        boolean isDarkMode = model.equals(darkMode);
         int color = ResourceUtils.getValueOfAttr(this,R.attr.header_bg_color);
-        StateBarUtils.translucent(NewsWebDetailActivity.this, model.equals(darkMode) ? R.color.app_news_night_color : color);
-        (findViewById(R.id.rl_header)).setBackgroundColor(model.equals(darkMode) ? ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_news_night_color)
-                :ContextCompat.getColor(NewsWebDetailActivity.this, color) );
+        int statusBarColor = isDarkMode?R.color.app_news_night_color : color;
+        ImmersionBar.with(this).statusBarColor(statusBarColor).init();
+        (findViewById(R.id.rl_header)).setBackgroundColor(ContextCompat.getColor(MyApplication.getInstance(),statusBarColor));
     }
 
     /**
