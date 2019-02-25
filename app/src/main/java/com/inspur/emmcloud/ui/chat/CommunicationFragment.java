@@ -143,7 +143,7 @@ public class CommunicationFragment extends BaseFragment {
         if(checkingNetStateUtils.isConnectedNet()){
             conversationAdapter.setNetExceptionView(true);
         }else{
-            checkingNetStateUtils.CheckNetPingThreadStart(NetUtils.pingUrls,5,Constant.EVENTBUS_TAG__NET_EXCEPTION_HINT);
+            checkingNetStateUtils.CheckNetPingThreadStart(NetUtils.pingUrls,5,Constant.EVENTBUS_TAG_NET_EXCEPTION_HINT);
         }
     }
 
@@ -318,10 +318,10 @@ public class CommunicationFragment extends BaseFragment {
      * */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void netWorkStateTip(SimpleEventMessage netState) {
-        if(netState.getAction().equals(Constant.EVENTBUS_TAG__NET_STATE_CHANGE)){
+        if(netState.getAction().equals(Constant.EVENTBUS_TAG_NET_STATE_CHANGE)){
             if(((String)netState.getMessageObj()).equals(NetWorkStateChangeUtils.NET_WIFI_STATE_OK)&&(!NetUtils.isVpnConnected())){
                 checkingNetStateUtils.clearUrlsStates();
-                checkingNetStateUtils.CheckNetPingThreadStart(NetUtils.pingUrls,5,Constant.EVENTBUS_TAG__NET_EXCEPTION_HINT);
+                checkingNetStateUtils.CheckNetPingThreadStart(NetUtils.pingUrls,5,Constant.EVENTBUS_TAG_NET_EXCEPTION_HINT);
             } else if(((String)netState.getMessageObj()).equals(NetWorkStateChangeUtils.NET_STATE_ERROR)) {
                 conversationAdapter.setNetExceptionView(false);
             } else if (((String)netState.getMessageObj()).equals(NetWorkStateChangeUtils.NET_GPRS_STATE_OK)) {
@@ -329,7 +329,7 @@ public class CommunicationFragment extends BaseFragment {
             }else {
                 conversationAdapter.setNetExceptionView(true);
             }
-        } else if (netState.getAction().equals(Constant.EVENTBUS_TAG__NET_EXCEPTION_HINT)) {   //网络异常提示
+        } else if (netState.getAction().equals(Constant.EVENTBUS_TAG_NET_EXCEPTION_HINT)) {   //网络异常提示
             if(!NetUtils.isNetworkConnected(getContext(),false)) {
                 conversationAdapter.setNetExceptionView(false);
             } else {

@@ -15,7 +15,6 @@ import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.CheckingNetStateUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PingNetEntity;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -58,7 +57,6 @@ public class NetWorkStateDetailActivity extends BaseActivity {
     private Drawable drawableRightArrow;
     private Drawable drawableDomainError;
     private Drawable drawableDomainSuccess;
-    private List<Integer> NetStateintegerData;
     private String PortalUrl = "";
     private boolean netHardConnectState = true;
     private Handler handler;
@@ -180,7 +178,7 @@ public class NetWorkStateDetailActivity extends BaseActivity {
      * 通过个Url检测网络状态
      */
     private void checkingNetConnectState() {
-        checkingNetStateUtils.CheckNetPingThreadStart(subUrls,5,Constant.EVENTBUS_TAG__NET_PING_CONNECTION);
+        checkingNetStateUtils.CheckNetPingThreadStart(subUrls,5,Constant.EVENTBUS_TAG_NET_PING_CONNECTION);
         checkingNetStateUtils.CheckNetHttpThreadStart(CheckHttpUrls);
     }
 
@@ -228,10 +226,14 @@ public class NetWorkStateDetailActivity extends BaseActivity {
                             httpURLConnection.setRequestMethod( "POST" );
                             httpURLConnection.setReadTimeout( 10000 );
                             int responcode = httpURLConnection.getResponseCode();
-                            if (responcode > 300 && responcode < 310) {
-                                PortalUrl = httpURLConnection.getURL().toString();
+                            if((responcode>=200) && (responcode < 300)){
+                                resultData=true;
+                            }else{
+                                if (responcode > 300 && responcode < 310) {
+                                    PortalUrl = httpURLConnection.getURL().toString();
+                                }
+                                resultData=false;
                             }
-                            resultData = false;
                         }
                     }
                 } catch (Exception e) {
@@ -241,7 +243,7 @@ public class NetWorkStateDetailActivity extends BaseActivity {
                     new Handler( Looper.getMainLooper() ).post( new Runnable() {
                         @Override
                         public void run() {
-                            EventBus.getDefault().post( new SimpleEventMessage( Constant.EVENTBUS_TAG__NET_PORTAL_HTTP_POST, finalResultData ) );
+                            EventBus.getDefault().post( new SimpleEventMessage( Constant.EVENTBUS_TAG_NET_PORTAL_HTTP_POST, finalResultData ) );
                         }
                     } );
                     if (httpURLConnection != null) {
@@ -254,7 +256,7 @@ public class NetWorkStateDetailActivity extends BaseActivity {
 
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.rl_back:
+            case R.id.ibt_back:
                 finish();
                 break;
             case R.id.rl_net_error_fix:
@@ -280,9 +282,8 @@ public class NetWorkStateDetailActivity extends BaseActivity {
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void dealCheckingPingUrls(SimpleEventMessage netState) {
-        if (netState.getAction().equals( Constant.EVENTBUS_TAG__NET_PING_CONNECTION )) {
+        if (netState.getAction().equals( Constant.EVENTBUS_TAG_NET_PING_CONNECTION )) {
             List<Object> idAndData = (List<Object>) netState.getMessageObj();
-            LogUtils.LbcDebug("data:"+ idAndData.get( 0 )+idAndData.get( 1 ) );
             if (((String) idAndData.get( 0 )).equals( subUrls[0] )) {
                 ping1UrlImageView.setBackground( (boolean) idAndData.get( 1 ) ? drawableDomainSuccess : drawableDomainError );
                 ping1UrlImageView.setVisibility( View.VISIBLE );
@@ -293,7 +294,7 @@ public class NetWorkStateDetailActivity extends BaseActivity {
                 ping3UrlImageView.setVisibility( View.VISIBLE );
                 ping3UrlQMUIView.setVisibility( View.GONE );
             }
-        } else if (netState.getAction().equals( Constant.EVENTBUS_TAG__NET_PORTAL_HTTP_POST )) {
+        } else if (netState.getAction().equals( Constant.EVENTBUS_TAG_NET_PORTAL_HTTP_POST )) {
             if ((boolean) netState.getMessageObj()) {
                 qmulWifiLoadingView.setVisibility( View.GONE );
                 portalImageView.setBackground( drawableSuccess );
@@ -310,7 +311,7 @@ public class NetWorkStateDetailActivity extends BaseActivity {
                     portalCheckTipLayout.setVisibility( View.VISIBLE );
                 }
             }
-        } else if (netState.getAction().equals( Constant.EVENTBUS_TAG__NET_HTTP_POST_CONNECTION )) {
+        } else if (netState.getAction().equals( Constant.EVENTBUS_TAG_NET_HTTP_POST_CONNECTION )) {
             List<Object> idAndData = (List<Object>) netState.getMessageObj();
             if (((String) idAndData.get( 0 )).equals( CheckHttpUrls[0] )) {
                 ping2UrlImageView.setBackground( (boolean) idAndData.get( 1 ) ? drawableDomainSuccess : drawableDomainError );

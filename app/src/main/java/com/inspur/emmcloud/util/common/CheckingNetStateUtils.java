@@ -132,7 +132,7 @@ public class CheckingNetStateUtils {
                     List<Object> pingIdAndData = new ArrayList<>();//PingThreadStart
                     pingIdAndData.add( url );
                     pingIdAndData.add( true );
-                    EventBus.getDefault().post( new SimpleEventMessage( Constant.EVENTBUS_TAG__NET_HTTP_POST_CONNECTION, pingIdAndData ) );
+                    EventBus.getDefault().post( new SimpleEventMessage( Constant.EVENTBUS_TAG_NET_HTTP_POST_CONNECTION, pingIdAndData ) );
                 }
             } );
         }
@@ -146,7 +146,7 @@ public class CheckingNetStateUtils {
                     List<Object> pingIdAndData = new ArrayList<>();//PingThreadStart
                     pingIdAndData.add( url );
                     pingIdAndData.add( false );
-                    EventBus.getDefault().post( new SimpleEventMessage( Constant.EVENTBUS_TAG__NET_HTTP_POST_CONNECTION, pingIdAndData ) );
+                    EventBus.getDefault().post( new SimpleEventMessage( Constant.EVENTBUS_TAG_NET_HTTP_POST_CONNECTION, pingIdAndData ) );
                 }
             } );
         }

@@ -194,7 +194,7 @@ public class CommunicationV0Fragment extends BaseFragment {
             DeleteHeaderView();
         }else{
             checkingNetStateUtils.clearUrlsStates();
-            checkingNetStateUtils.CheckNetPingThreadStart(NetUtils.pingUrls,5,Constant.EVENTBUS_TAG__NET_EXCEPTION_HINT);
+            checkingNetStateUtils.CheckNetPingThreadStart(NetUtils.pingUrls,5,Constant.EVENTBUS_TAG_NET_EXCEPTION_HINT);
         }
         super.onResume();
     }
@@ -387,10 +387,10 @@ public class CommunicationV0Fragment extends BaseFragment {
      * */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void netWorkStateHint(SimpleEventMessage netState) {
-        if(netState.getAction().equals(Constant.EVENTBUS_TAG__NET_STATE_CHANGE)){
+        if(netState.getAction().equals(Constant.EVENTBUS_TAG_NET_STATE_CHANGE)){
             if(((String)netState.getMessageObj()).equals( NetWorkStateChangeUtils.NET_WIFI_STATE_OK)&&(!NetUtils.isVpnConnected())){
                 checkingNetStateUtils.clearUrlsStates();
-                checkingNetStateUtils.CheckNetPingThreadStart(NetUtils.pingUrls,5,Constant.EVENTBUS_TAG__NET_EXCEPTION_HINT);
+                checkingNetStateUtils.CheckNetPingThreadStart(NetUtils.pingUrls,5,Constant.EVENTBUS_TAG_NET_EXCEPTION_HINT);
             } else if(((String)netState.getMessageObj()).equals(NetWorkStateChangeUtils.NET_STATE_ERROR)) {
                 AddHeaderView();
             } else if (((String)netState.getMessageObj()).equals(NetWorkStateChangeUtils.NET_GPRS_STATE_OK)) {
@@ -398,7 +398,7 @@ public class CommunicationV0Fragment extends BaseFragment {
             }else {
                 DeleteHeaderView();
             }
-        } else if (netState.getAction().equals(Constant.EVENTBUS_TAG__NET_EXCEPTION_HINT)) {   //网络异常提示
+        } else if (netState.getAction().equals(Constant.EVENTBUS_TAG_NET_EXCEPTION_HINT)) {   //网络异常提示
             if(!NetUtils.isNetworkConnected(getContext(),false)) {
                 AddHeaderView();
             } else {
