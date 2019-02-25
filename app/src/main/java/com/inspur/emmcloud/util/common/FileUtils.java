@@ -1,24 +1,5 @@
 package com.inspur.emmcloud.util.common;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.res.AssetManager;
-import android.database.Cursor;
-import android.net.Uri;
-import android.os.Build;
-import android.os.Bundle;
-import android.provider.MediaStore;
-import android.support.v4.content.FileProvider;
-import android.text.TextUtils;
-import android.util.Base64;
-import android.webkit.MimeTypeMap;
-
-import com.inspur.emmcloud.BuildConfig;
-import com.inspur.emmcloud.R;
-import com.inspur.imp.api.ImpActivity;
-
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -37,6 +18,26 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
+import com.inspur.emmcloud.BuildConfig;
+import com.inspur.emmcloud.R;
+import com.inspur.imp.api.ImpActivity;
+
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.res.AssetManager;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.v4.content.FileProvider;
+import android.text.TextUtils;
+import android.util.Base64;
+import android.webkit.MimeTypeMap;
+import android.widget.Toast;
 
 /**
  * File Utils
@@ -898,6 +899,8 @@ public class FileUtils {
             }else{
                 context.startActivity(intent);
             }
+        }else{
+            ToastUtils.show(context,"没有找到对应的程序");
         }
     }
 

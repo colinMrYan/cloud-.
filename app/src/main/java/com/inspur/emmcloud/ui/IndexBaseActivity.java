@@ -45,8 +45,8 @@ import com.inspur.emmcloud.ui.find.FindFragment;
 import com.inspur.emmcloud.ui.mine.MoreFragment;
 import com.inspur.emmcloud.ui.mine.setting.CreateGestureActivity;
 import com.inspur.emmcloud.ui.notsupport.NotSupportFragment;
+import com.inspur.emmcloud.ui.work.ScheduleFragment;
 import com.inspur.emmcloud.ui.work.TabBean;
-import com.inspur.emmcloud.ui.work.WorkFragment;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ResourceUtils;
 import com.inspur.emmcloud.util.common.SelectorUtils;
@@ -183,7 +183,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
                             }
                             break;
                         case Constant.APP_TAB_BAR_WORK:
-                            tabBean = new TabBean(getString(R.string.work), WorkFragment.class, mainTabResult);
+                            tabBean = new TabBean(getString(R.string.work), ScheduleFragment.class, mainTabResult);
                             break;
                         case Constant.APP_TAB_BAR_APPLICATION:
                             tabBean = new TabBean(getString(R.string.application), MyAppFragment.class, mainTabResult);
