@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.MyViewPagerAdapter;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.interf.CommonCallBack;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.util.common.FileUtils;
@@ -112,6 +113,14 @@ public class GuideActivity extends Activity {
                         if (getIntent().getExtras() != null && getIntent().getExtras().getString("from", "").equals("about")) {
                             finish();
                         } else {
+                            try {
+                                String appFirstLoadAlis = PreferencesUtils.getString(MyApplication.getInstance(), Constant.PREF_APP_LOAD_ALIAS);
+                                if (appFirstLoadAlis != null && appFirstLoadAlis.equals("huaxiayinhang")) {
+                                    ImageDisplayUtils.getInstance().clearAllCache();
+                                }
+                            }catch (Exception e){
+                                e.printStackTrace();
+                            }
                             // 将首次进入应用的标志位置为false
                             PreferencesUtils.putBoolean(getApplicationContext(),
                                     "isFirst", false);
