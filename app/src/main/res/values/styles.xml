@@ -54,7 +54,7 @@
         <item name="ic_appcenter_config">@drawable/ic_appcenter_config</item>
         <item name="ic_header_option">@drawable/ic_header_option_white</item>
         <item name="status_bar_dark_font">true</item>
-        <item name="ic_back_btn">@drawable/ic_back_btn_black</item>
+        <item name="ic_back_btn">@drawable/ic_back_btn_white</item>
 
 
     </style>
@@ -108,7 +108,7 @@
         <item name="ic_appcenter_config">@drawable/ic_appcenter_config_grey</item>
         <item name="ic_header_option">@drawable/ic_header_option_white</item>
         <item name="status_bar_dark_font">true</item>
-        <item name="ic_back_btn">@drawable/ic_back_btn_black</item>
+        <item name="ic_back_btn">@drawable/ic_back_btn_white</item>
     </style>
 
     <!-- Application theme. -->

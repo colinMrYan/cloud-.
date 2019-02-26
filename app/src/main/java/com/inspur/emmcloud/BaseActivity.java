@@ -9,6 +9,7 @@ import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.SchemeHandleActivity;
 import com.inspur.emmcloud.ui.appcenter.ReactNativeAppActivity;
+import com.inspur.emmcloud.ui.chat.ConversationGroupInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.ui.login.ScanQrCodeLoginGSActivity;
@@ -42,6 +43,7 @@ public class BaseActivity extends Activity {
             GuideActivity.class.getName(),
             UserInfoActivity.class.getName(),
             GestureLoginActivity.class.getName(),
+            ConversationGroupInfoActivity.class.getName(),
 
     };
 

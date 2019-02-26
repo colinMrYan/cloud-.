@@ -715,7 +715,7 @@
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".ui.chat.ImagePagerActivity"
-            android:theme="@style/AppTheme.Transparent"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"
             android:resizeableActivity="true"
             android:windowSoftInputMode="adjustPan" />
 
