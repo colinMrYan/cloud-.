@@ -801,7 +801,7 @@ public class ChannelV0Activity extends BaseActivity {
                 finishActivity();
                 break;
 
-            case R.id.channel_info_img:
+            case R.id.iv_config:
                 showChannelInfo();
                 break;
             default:

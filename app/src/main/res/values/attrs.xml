@@ -24,6 +24,7 @@
     <attr name="ic_appcenter_config" format="reference"/>
     <attr name="ic_header_option" format="reference"/>
     <attr name="status_bar_dark_font" format="boolean"/>
+    <attr name="ic_back_btn" format="reference"/>
 
 
     <declare-styleable name="CircleImageView">

@@ -38,7 +38,7 @@ public class CardPackageActivity extends BaseActivity  implements RxCardStackVie
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ImmersionBar.with(this).statusBarColor(android.R.color.white).statusBarDarkFont(true).init();
+        ImmersionBar.with(this).statusBarColor(R.color.content_bg).statusBarDarkFont(true).init();
         initViews();
         getCardPackageListFromNet();
     }
