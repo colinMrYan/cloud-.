@@ -1,34 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@color/white"
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
-    <RelativeLayout
-        android:id="@+id/rl_header"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/header_height"
-        android:background="@color/header_bg_white">
-
-        <ImageButton
-            android:id="@+id/ibt_back"
-            android:layout_width="44dp"
-            android:padding="11dp"
-            android:layout_height="44dp"
-            android:layout_centerVertical="true"
-            android:onClick="onClick"
-            android:scaleType="fitXY"
-            android:src="@drawable/ic_back_btn_black" />
-    </RelativeLayout>
-
+    <ImageButton
+        android:id="@+id/ibt_back"
+        android:layout_width="44dp"
+        android:layout_height="56dp"
+        android:onClick="onClick"
+        android:padding="11dp"
+        android:elevation="15dp"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_back_btn_black" />
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/rl_header"
         android:background="@color/content_bg"
         android:gravity="center"
         android:orientation="vertical">
@@ -38,7 +29,8 @@
             android:layout_height="wrap_content"
             android:background="@color/white"
             android:fitsSystemWindows="true"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingTop="56dp">
 
             <android.support.v7.widget.CardView
                 android:id="@+id/card_view_user_summary"
@@ -47,7 +39,7 @@
                 android:layout_marginBottom="5dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
-                android:layout_marginTop="35dp"
+                android:layout_marginTop="23dp"
                 app:cardCornerRadius="8dp"
                 app:cardElevation="1dp"
                 app:cardPreventCornerOverlap="true"
@@ -81,7 +73,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/phone_number"
                             android:textColor="#36A5F6"
-                            android:textSize="15sp" />
+                            android:textSize="14sp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -103,7 +95,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/phone_sms"
                             android:textColor="#36A5F6"
-                            android:textSize="15sp" />
+                            android:textSize="14sp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -125,7 +117,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/phone_email"
                             android:textColor="#36A5F6"
-                            android:textSize="15sp" />
+                            android:textSize="14sp" />
                     </LinearLayout>
                 </LinearLayout>
             </android.support.v7.widget.CardView>
@@ -173,6 +165,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/card_view_user_summary"
+                android:layout_marginTop="25dp"
                 android:background="@color/white"
                 android:orientation="vertical"
                 android:paddingLeft="20dp">
