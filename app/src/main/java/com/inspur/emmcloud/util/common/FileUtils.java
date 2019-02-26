@@ -900,7 +900,7 @@ public class FileUtils {
                 context.startActivity(intent);
             }
         }else{
-            ToastUtils.show(context,"没有找到对应的程序");
+            ToastUtils.show(context,context.getString(R.string.chat_file_open_fail_tip));
         }
     }
 
@@ -941,6 +941,14 @@ public class FileUtils {
         }
         if (context.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY) != null) {
             context.startActivity(intent);
+        }else{
+            Uri contentUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID+".fileprovider",file);
+            intent.setDataAndType(contentUri,"text/plain");
+            if(context.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY) != null){
+                context.startActivity(intent);
+            }else{
+                ToastUtils.show(context,context.getString(R.string.chat_file_open_fail_tip));
+            }
         }
     }
 
