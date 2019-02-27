@@ -46,7 +46,6 @@
         <item name="bg_tab_mine">@drawable/selector_tab_more_btn</item>
         <item name="bg_tab_unknown">@drawable/selector_tab_unknown_btn</item>
         <item name="bg_tab_work">@drawable/selector_tab_work_btn</item>
-
         <item name="ic_message_header_contact">@drawable/ic_message_header_contact</item>
         <item name="ic_add">@drawable/ic_add</item>
         <item name="ic_config">@drawable/ic_config</item>
@@ -55,9 +54,9 @@
         <item name="ic_header_option">@drawable/ic_header_option_white</item>
         <item name="status_bar_dark_font">true</item>
         <item name="ic_back_btn">@drawable/ic_back_btn_white</item>
-
-
+        <item name="ic_appcenter_search">@drawable/ic_appcenter_search_white</item>
     </style>
+
     <style name="AppTheme_1"  parent="AppTheme">
         <item name="header_bg_color">@color/header_bg</item>
         <item name="header_bg">@drawable/shape_header_bg_blue</item>
@@ -74,7 +73,6 @@
         <item name="bg_tab_mine">@drawable/selector_tab_more_btn_grey</item>
         <item name="bg_tab_unknown">@drawable/selector_tab_unknown_btn_grey</item>
         <item name="bg_tab_work">@drawable/selector_tab_work_btn_grey</item>
-
         <item name="ic_message_header_contact">@drawable/ic_message_header_contact_blue</item>
         <item name="ic_add">@drawable/ic_add_blue</item>
         <item name="ic_config">@drawable/ic_config_blue</item>
@@ -83,7 +81,9 @@
         <item name="ic_header_option">@drawable/ic_header_option_blue</item>
         <item name="status_bar_dark_font">false</item>
         <item name="ic_back_btn">@drawable/ic_back_btn_blue</item>
+        <item name="ic_appcenter_search">@drawable/ic_appcenter_search_blue</item>
     </style>
+
     <style name="AppTheme_2"  parent="AppTheme">
         <item name="header_bg_color">@color/header_bg_grey</item>
         <item name="header_bg">@drawable/shape_header_bg_grey</item>
@@ -100,7 +100,6 @@
         <item name="bg_tab_mine">@drawable/selector_tab_more_btn_grey</item>
         <item name="bg_tab_unknown">@drawable/selector_tab_unknown_btn_grey</item>
         <item name="bg_tab_work">@drawable/selector_tab_work_btn_grey</item>
-
         <item name="ic_message_header_contact">@drawable/ic_message_header_contact_grey</item>
         <item name="ic_add">@drawable/ic_add_grey</item>
         <item name="ic_config">@drawable/ic_config_grey</item>
@@ -109,6 +108,7 @@
         <item name="ic_header_option">@drawable/ic_header_option_white</item>
         <item name="status_bar_dark_font">true</item>
         <item name="ic_back_btn">@drawable/ic_back_btn_white</item>
+        <item name="ic_appcenter_search">@drawable/ic_appcenter_search_white</item>
     </style>
 
     <!-- Application theme. -->

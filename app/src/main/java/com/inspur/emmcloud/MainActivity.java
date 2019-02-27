@@ -91,27 +91,26 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
         ImmersionBar.with(this).init();
         skipImageBtn = findViewById(R.id.ibt_skip);
         checkNecessaryPermission();
-
     }
 
     private void checkNecessaryPermission() {
-        final String[] necessaryPermissionArray = StringUtils.concatAll(Permissions.STORAGE,Permissions.PHONE_PERMISSION);
-        if(!PermissionRequestManagerUtils.getInstance().isHasPermission(this,necessaryPermissionArray)){
-            final MyDialog permissionDialog = new MyDialog(this,R.layout.dialog_permisson_tip);
+        final String[] necessaryPermissionArray = StringUtils.concatAll(Permissions.STORAGE, Permissions.PHONE_PERMISSION);
+        if (!PermissionRequestManagerUtils.getInstance().isHasPermission(this, necessaryPermissionArray)) {
+            final MyDialog permissionDialog = new MyDialog(this, R.layout.dialog_permisson_tip);
             permissionDialog.setDimAmount(0.2f);
             permissionDialog.setCancelable(false);
             permissionDialog.setCanceledOnTouchOutside(false);
-            permissionDialog.findViewById(R.id.ll_permission_storage).setVisibility(!PermissionRequestManagerUtils.getInstance().isHasPermission(this,Permissions.STORAGE)?View.VISIBLE:View.GONE);
-            permissionDialog.findViewById(R.id.ll_permission_phone).setVisibility(!PermissionRequestManagerUtils.getInstance().isHasPermission(this,Permissions.PHONE_PERMISSION)?View.VISIBLE:View.GONE);
-            if(!PermissionRequestManagerUtils.getInstance().isHasPermission(this,Permissions.STORAGE)
-                    && !PermissionRequestManagerUtils.getInstance().isHasPermission(this,Permissions.PHONE_PERMISSION)){
+            permissionDialog.findViewById(R.id.ll_permission_storage).setVisibility(!PermissionRequestManagerUtils.getInstance().isHasPermission(this, Permissions.STORAGE) ? View.VISIBLE : View.GONE);
+            permissionDialog.findViewById(R.id.ll_permission_phone).setVisibility(!PermissionRequestManagerUtils.getInstance().isHasPermission(this, Permissions.PHONE_PERMISSION) ? View.VISIBLE : View.GONE);
+            if (!PermissionRequestManagerUtils.getInstance().isHasPermission(this, Permissions.STORAGE)
+                    && !PermissionRequestManagerUtils.getInstance().isHasPermission(this, Permissions.PHONE_PERMISSION)) {
                 LinearLayout layout = permissionDialog.findViewById(R.id.ll_permission_storage);
                 LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) layout.getLayoutParams();
-                params.setMargins(DensityUtil.dip2px(this,60.0f),0,0,0);
+                params.setMargins(DensityUtil.dip2px(this, 60.0f), 0, 0, 0);
                 layout.setLayoutParams(params);
             }
-            ((TextView)permissionDialog.findViewById(R.id.tv_permission_dialog_title)).setText(getString(R.string.permission_open_cloud_plus, AppUtils.getAppName(MainActivity.this)));
-            ((TextView)permissionDialog.findViewById(R.id.tv_permission_dialog_summary)).setText(getString(R.string.permission_necessary_permission, AppUtils.getAppName(MainActivity.this)));
+            ((TextView) permissionDialog.findViewById(R.id.tv_permission_dialog_title)).setText(getString(R.string.permission_open_cloud_plus, AppUtils.getAppName(MainActivity.this)));
+            ((TextView) permissionDialog.findViewById(R.id.tv_permission_dialog_summary)).setText(getString(R.string.permission_necessary_permission, AppUtils.getAppName(MainActivity.this)));
             permissionDialog.findViewById(R.id.tv_next_step).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -124,14 +123,14 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
 
                         @Override
                         public void onPermissionRequestFail(List<String> permissions) {
-                            ToastUtils.show(MainActivity.this, PermissionRequestManagerUtils.getInstance().getPermissionToast(MainActivity.this,permissions));
+                            ToastUtils.show(MainActivity.this, PermissionRequestManagerUtils.getInstance().getPermissionToast(MainActivity.this, permissions));
                             MyApplication.getInstance().exit();
                         }
                     });
                 }
             });
             permissionDialog.show();
-        }else{
+        } else {
             init();
         }
     }

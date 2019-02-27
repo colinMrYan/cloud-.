@@ -618,6 +618,10 @@
 
     <string name="contact">通讯录</string>
     <string name="web">web</string>
+    <string name="mine_theme_switch">换肤</string>
+    <string name="mine_theme_white">清新白</string>
+    <string name="mine_theme_grey">优雅灰</string>
+    <string name="mine_theme_blue">商务蓝</string>
 
     <!-- 修改密码部分 -->
     <string name="modify_input_user_new_password">请输入新密码</string>

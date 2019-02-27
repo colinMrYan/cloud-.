@@ -49,7 +49,7 @@ public class EnterpriseAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup viewGroup) {
         if(convertView==null){
-            convertView=LayoutInflater.from(context).inflate(R.layout.mine_setting_enterprise_item_view, null);
+            convertView=LayoutInflater.from(context).inflate(R.layout.mine_setting_enterprise_list_item, null);
             holder=new Holder();
             x.view().inject(holder,convertView);//注解绑定
             convertView.setTag(holder);

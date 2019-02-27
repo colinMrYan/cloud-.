@@ -214,10 +214,16 @@
             android:screenOrientation="portrait"
             android:theme="@style/dialog_activity" />
         <activity
-            android:name=".ui.mine.setting.SwitchEnterpriseActivity"
+            android:name=".ui.mine.setting.EnterpriseSwitchActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.mine.setting.ThemeSwitchActivity"
+            android:launchMode="singleTask"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait"></activity>
+
 
         <activity
             android:name=".ui.mine.setting.SafeGustureFaceSettingActivity"
@@ -635,7 +641,7 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".ui.mine.setting.LanguageChangeActivity"
+            android:name=".ui.mine.setting.LanguageSwitchActivity"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
