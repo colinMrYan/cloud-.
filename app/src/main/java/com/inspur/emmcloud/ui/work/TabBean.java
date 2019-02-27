@@ -13,7 +13,7 @@ public class TabBean {
     private String tabId = "";
     private MainTabResult mainTabResult;
 
-    public TabBean(String tabName, Class<?> clz,MainTabResult mainTabResult) {
+    public TabBean(String tabName, Class<?> clz, MainTabResult mainTabResult) {
         this.clz = clz;
         this.tabName = tabName;
         this.mainTabResult = mainTabResult;

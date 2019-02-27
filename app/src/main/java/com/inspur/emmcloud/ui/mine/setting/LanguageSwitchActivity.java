@@ -34,15 +34,14 @@ import java.util.Locale;
 
 public class LanguageSwitchActivity extends BaseActivity {
 
+    public static final String LANGUAGE_CHANGE = "change_language";
     private static final int GET_LANGUAGE_SUCCESS = 3;
     private ListView listView;
     private ListViewAdapter adapter;
-
     private LanguageUtils languageUtils;
     private Handler handler;
     private List<Language> commonLanguageList = new ArrayList<Language>();
     private LoadingDialog loadingDlg;
-    public static final String LANGUAGE_CHANGE = "change_language";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -181,13 +180,6 @@ public class LanguageSwitchActivity extends BaseActivity {
         // 用于记录每个RadioButton的状态，并保证只可选一个
         HashMap<String, Boolean> states = new HashMap<String, Boolean>();
 
-        class ViewHolder {
-
-            TextView nameText;
-            ImageView selectImg;
-            ImageView flagImg;
-        }
-
         @Override
         public int getCount() {
             // TODO Auto-generated method stub
@@ -270,6 +262,13 @@ public class LanguageSwitchActivity extends BaseActivity {
             }
 
             return convertView;
+        }
+
+        class ViewHolder {
+
+            TextView nameText;
+            ImageView selectImg;
+            ImageView flagImg;
         }
     }
 }

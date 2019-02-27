@@ -25,6 +25,7 @@ public class SmoothImageView extends ImageView {
     private static final int STATE_NORMAL = 0;
     private static final int STATE_TRANSFORM_IN = 1;
     private static final int STATE_TRANSFORM_OUT = 2;
+    private final int mBgColor = 0xFF000000;
     private int mOriginalWidth;
     private int mOriginalHeight;
     private int mOriginalLocationX;
@@ -34,9 +35,9 @@ public class SmoothImageView extends ImageView {
     private Bitmap mBitmap;
     private boolean mTransformStart = false;
     private Transfrom mTransfrom;
-    private final int mBgColor = 0xFF000000;
     private int mBgAlpha = 0;
     private Paint mPaint;
+    private TransformListener mTransformListener;
 
     public SmoothImageView(Context context) {
         super(context);
@@ -51,21 +52,6 @@ public class SmoothImageView extends ImageView {
     public SmoothImageView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init();
-    }
-
-    private void init() {
-        mSmoothMatrix = new Matrix();
-        mPaint = new Paint();
-        mPaint.setColor(mBgColor);
-        mPaint.setStyle(Paint.Style.FILL);
-    }
-
-    public void setOriginalInfo(int width, int height, int locationX, int locationY) {
-        mOriginalWidth = width;
-        mOriginalHeight = height;
-        mOriginalLocationX = locationX;
-        mOriginalLocationY = locationY;
-//        mOriginalLocationY = mOriginalLocationY - getStatusBarHeight(getContext());
     }
 
     public static int getStatusBarHeight(Context context) {
@@ -87,8 +73,23 @@ public class SmoothImageView extends ImageView {
         return statusBarHeight;
     }
 
+    private void init() {
+        mSmoothMatrix = new Matrix();
+        mPaint = new Paint();
+        mPaint.setColor(mBgColor);
+        mPaint.setStyle(Paint.Style.FILL);
+    }
+
+    public void setOriginalInfo(int width, int height, int locationX, int locationY) {
+        mOriginalWidth = width;
+        mOriginalHeight = height;
+        mOriginalLocationX = locationX;
+        mOriginalLocationY = locationY;
+//        mOriginalLocationY = mOriginalLocationY - getStatusBarHeight(getContext());
+    }
+
     public void transformIn() {
-        if (mOriginalLocationX != 0 || mOriginalWidth != 0){
+        if (mOriginalLocationX != 0 || mOriginalWidth != 0) {
             mState = STATE_TRANSFORM_IN;
             mTransformStart = true;
             invalidate();
@@ -97,39 +98,11 @@ public class SmoothImageView extends ImageView {
     }
 
     public void transformOut() {
-            if (mState != STATE_TRANSFORM_OUT){
-                mState = STATE_TRANSFORM_OUT;
-                mTransformStart = true;
-                invalidate();
-            }
-    }
-
-    private class Transfrom {
-        float startScale;
-        float endScale;
-        float scale;
-        LocationSizeF startRect;
-        LocationSizeF endRect;
-        LocationSizeF rect;
-
-        void initStartIn() {
-            scale = startScale;
-            try {
-                rect = (LocationSizeF) startRect.clone();
-            } catch (CloneNotSupportedException e) {
-                e.printStackTrace();
-            }
+        if (mState != STATE_TRANSFORM_OUT) {
+            mState = STATE_TRANSFORM_OUT;
+            mTransformStart = true;
+            invalidate();
         }
-
-        void initStartOut() {
-            scale = endScale;
-            try {
-                rect = (LocationSizeF) endRect.clone();
-            } catch (CloneNotSupportedException e) {
-                e.printStackTrace();
-            }
-        }
-
     }
 
     private void initTransform() {
@@ -142,7 +115,7 @@ public class SmoothImageView extends ImageView {
         if (mBitmap == null || mBitmap.isRecycled()) {
             if (getDrawable() instanceof BitmapDrawable) {
                 mBitmap = ((BitmapDrawable) getDrawable()).getBitmap();
-            }else {
+            } else {
                 return;
             }
         }
@@ -180,24 +153,6 @@ public class SmoothImageView extends ImageView {
         mTransfrom.endRect.height = bitmapEndHeight;
 
         mTransfrom.rect = new LocationSizeF();
-    }
-
-    private class LocationSizeF implements Cloneable {
-        float left;
-        float top;
-        float width;
-        float height;
-
-        @Override
-        public String toString() {
-            return "[left:" + left + " top:" + top + " width:" + width + " height:" + height + "]";
-        }
-
-        @Override
-        public Object clone() throws CloneNotSupportedException {
-            return super.clone();
-        }
-
     }
 
     private void getBmpMatrix() {
@@ -342,11 +297,55 @@ public class SmoothImageView extends ImageView {
         mTransformListener = listener;
     }
 
-    private TransformListener mTransformListener;
-
     public interface TransformListener {
         //mode STATE_TRANSFORM_IN 1 ,STATE_TRANSFORM_OUT 2
         void onTransformComplete(int mode);// mode 1
+    }
+
+    private class Transfrom {
+        float startScale;
+        float endScale;
+        float scale;
+        LocationSizeF startRect;
+        LocationSizeF endRect;
+        LocationSizeF rect;
+
+        void initStartIn() {
+            scale = startScale;
+            try {
+                rect = (LocationSizeF) startRect.clone();
+            } catch (CloneNotSupportedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        void initStartOut() {
+            scale = endScale;
+            try {
+                rect = (LocationSizeF) endRect.clone();
+            } catch (CloneNotSupportedException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+    private class LocationSizeF implements Cloneable {
+        float left;
+        float top;
+        float width;
+        float height;
+
+        @Override
+        public String toString() {
+            return "[left:" + left + " top:" + top + " width:" + width + " height:" + height + "]";
+        }
+
+        @Override
+        public Object clone() throws CloneNotSupportedException {
+            return super.clone();
+        }
+
     }
 
 }

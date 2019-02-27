@@ -59,12 +59,12 @@ public class WebexAddAttendeesActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         webexAttendeesList = (List<WebexAttendees>) getIntent().getSerializableExtra(EXTRA_ATTENDEES_LIST);
-        numText.setText(getString(R.string.webex_add_invitee_num,webexAttendeesList.size() , 20 - webexAttendeesList.size()));
+        numText.setText(getString(R.string.webex_add_invitee_num, webexAttendeesList.size(), 20 - webexAttendeesList.size()));
         adapter = new Adapter();
         adapter.registerDataSetObserver(new DataSetObserver() {
             @Override
             public void onChanged() {
-                numText.setText(getString(R.string.webex_add_invitee_num,  webexAttendeesList.size(), 20 - webexAttendeesList.size()));
+                numText.setText(getString(R.string.webex_add_invitee_num, webexAttendeesList.size(), 20 - webexAttendeesList.size()));
             }
         });
         attendeesListView.setAdapter(adapter);
@@ -83,8 +83,8 @@ public class WebexAddAttendeesActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.rl_add_external_attendees:
-                intent.setClass(WebexAddAttendeesActivity.this,WebexAddExternalAttendeesActivity.class);
-                intent.putExtra(WebexAddAttendeesActivity.EXTRA_ATTENDEES_LIST, (Serializable)webexAttendeesList);
+                intent.setClass(WebexAddAttendeesActivity.this, WebexAddExternalAttendeesActivity.class);
+                intent.putExtra(WebexAddAttendeesActivity.EXTRA_ATTENDEES_LIST, (Serializable) webexAttendeesList);
                 startActivityForResult(intent, REQUEST_ADD_EXTERNAL_ATTENDEES);
                 break;
             case R.id.rl_add_internal_attendees:
@@ -93,7 +93,7 @@ public class WebexAddAttendeesActivity extends BaseActivity {
                 intent.putExtra(ContactSearchFragment.EXTRA_CONTAIN_ME, true);
                 intent.putExtra(ContactSearchFragment.EXTRA_TITLE, getString(R.string.meeting_invating_members));
                 intent.setClass(getApplicationContext(), ContactSearchActivity.class);
-                intent.putExtra(ContactSearchFragment.EXTRA_LIMIT,20- getExternalAttendeeList().size());
+                intent.putExtra(ContactSearchFragment.EXTRA_LIMIT, 20 - getExternalAttendeeList().size());
                 intent.putExtra(ContactSearchFragment.EXTRA_HAS_SELECT, (Serializable) getInternalAttendeesSearchModelLsit());
                 startActivityForResult(intent, REQUEST_ADD_INTERNAL_ATTENDEES);
                 break;
@@ -108,8 +108,8 @@ public class WebexAddAttendeesActivity extends BaseActivity {
                 if (data.getExtras().containsKey("selectMemList")) {
                     List<SearchModel> selectMemList = (List<SearchModel>) data.getExtras()
                             .getSerializable("selectMemList");
-                    for (SearchModel searchModel:selectMemList){
-                        if (StringUtils.isBlank(searchModel.getEmail())){
+                    for (SearchModel searchModel : selectMemList) {
+                        if (StringUtils.isBlank(searchModel.getEmail())) {
                             ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(searchModel.getId());
                             searchModel.setEmail(contactUser.getEmail());
                         }
@@ -127,8 +127,8 @@ public class WebexAddAttendeesActivity extends BaseActivity {
                         }
                     });
                 }
-            }else if (requestCode == REQUEST_ADD_EXTERNAL_ATTENDEES){
-                List<WebexAttendees> selectWebexAttendeesList = (List<WebexAttendees>)data.getExtras().getSerializable(EXTRA_ATTENDEES_LIST);
+            } else if (requestCode == REQUEST_ADD_EXTERNAL_ATTENDEES) {
+                List<WebexAttendees> selectWebexAttendeesList = (List<WebexAttendees>) data.getExtras().getSerializable(EXTRA_ATTENDEES_LIST);
                 webexAttendeesList.clear();
                 webexAttendeesList.addAll(selectWebexAttendeesList);
                 adapter.notifyDataSetChanged();
@@ -146,7 +146,7 @@ public class WebexAddAttendeesActivity extends BaseActivity {
         for (WebexAttendees webexAttendees : webexAttendeesList) {
             if (webexAttendees.getSearchModel() == null) {
                 ContactUser contactUser = ContactUserCacheUtils.getContactUserByEmail(webexAttendees.getEmail());
-                if (contactUser == null){
+                if (contactUser == null) {
                     targetWebexAttendeesList.add(webexAttendees);
                 }
 
@@ -160,9 +160,9 @@ public class WebexAddAttendeesActivity extends BaseActivity {
         for (WebexAttendees webexAttendees : webexAttendeesList) {
             if (webexAttendees.getSearchModel() != null) {
                 internalAttendeesSearchModelLsit.add(webexAttendees.getSearchModel());
-            }else {
+            } else {
                 ContactUser contactUser = ContactUserCacheUtils.getContactUserByEmail(webexAttendees.getEmail());
-                if (contactUser != null){
+                if (contactUser != null) {
                     internalAttendeesSearchModelLsit.add(new SearchModel(contactUser));
                 }
             }
@@ -192,10 +192,10 @@ public class WebexAddAttendeesActivity extends BaseActivity {
             convertView = LayoutInflater.from(WebexAddAttendeesActivity.this).inflate(R.layout.item_view_webex_add_attendees, null);
             TextView emailText = (TextView) convertView.findViewById(R.id.tv_attendees);
             ImageView deleteImg = (ImageView) convertView.findViewById(R.id.iv_delete);
-            CircleTextImageView photoImg = (CircleTextImageView)convertView.findViewById(R.id.iv_photo);
+            CircleTextImageView photoImg = (CircleTextImageView) convertView.findViewById(R.id.iv_photo);
             emailText.setText(webexAttendees.getEmail());
-            if (webexAttendees.getSearchModel() != null){
-                ImageDisplayUtils.getInstance().displayImage(photoImg, APIUri.getUserIconUrl(MyApplication.getInstance(),webexAttendees.getSearchModel().getId()),R.drawable.icon_person_default);
+            if (webexAttendees.getSearchModel() != null) {
+                ImageDisplayUtils.getInstance().displayImage(photoImg, APIUri.getUserIconUrl(MyApplication.getInstance(), webexAttendees.getSearchModel().getId()), R.drawable.icon_person_default);
                 emailText.setText(webexAttendees.getSearchModel().getName());
             }
             deleteImg.setOnClickListener(new View.OnClickListener() {

@@ -12,9 +12,15 @@ public interface IMGViewPortrait {
 
     float getScaleX();
 
+    void setScaleX(float scaleX);
+
     float getScaleY();
 
+    void setScaleY(float scaleY);
+
     float getRotation();
+
+    void setRotation(float rotate);
 
     float getPivotX();
 
@@ -22,17 +28,11 @@ public interface IMGViewPortrait {
 
     float getX();
 
-    float getY();
-
     void setX(float x);
 
+    float getY();
+
     void setY(float y);
-
-    void setRotation(float rotate);
-
-    void setScaleX(float scaleX);
-
-    void setScaleY(float scaleY);
 
     float getScale();
 

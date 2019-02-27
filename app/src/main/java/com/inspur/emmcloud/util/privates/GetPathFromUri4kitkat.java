@@ -27,7 +27,7 @@ public class GetPathFromUri4kitkat {
             // 低版本兼容方法
             filePath = GetPathFromUri4kitkat.getRealPathFromURI(context, uri);
         }
-        return (filePath == null ? "":filePath);
+        return (filePath == null ? "" : filePath);
     }
 
     /**
@@ -55,7 +55,7 @@ public class GetPathFromUri4kitkat {
             // DownloadsProvider
             else if (isDownloadsDocument(uri)) {
                 final String id = DocumentsContract.getDocumentId(uri);
-                if(!StringUtils.isNumeric(id)){
+                if (!StringUtils.isNumeric(id)) {
                     return getFilePath(id);
                 }
                 final Uri contentUri = ContentUris.withAppendedId(
@@ -105,18 +105,17 @@ public class GetPathFromUri4kitkat {
      */
     private static String getFilePath(String filePath) {
         String filePathExceptRaw = "";
-        if(filePath.startsWith("raw:")){
+        if (filePath.startsWith("raw:")) {
             filePathExceptRaw = filePath.split(":")[1];
         }
-        if(FileUtils.isFileExist(filePathExceptRaw)){
+        if (FileUtils.isFileExist(filePathExceptRaw)) {
             return filePathExceptRaw;
         }
         return "";
     }
 
     /**
-     * @param uri
-     *            The Uri to check.
+     * @param uri The Uri to check.
      * @return Whether the Uri authority is Google Photos.
      */
     public static boolean isGooglePhotosUri(Uri uri) {
@@ -152,8 +151,8 @@ public class GetPathFromUri4kitkat {
                 if (cursor != null)
                     cursor.close();
             }
-        }else {
-            return  uri.getPath();
+        } else {
+            return uri.getPath();
         }
 
         return null;

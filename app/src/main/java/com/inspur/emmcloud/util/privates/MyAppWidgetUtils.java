@@ -23,8 +23,17 @@ import java.util.List;
  */
 
 public class MyAppWidgetUtils {
-    private Context context;
     private static MyAppWidgetUtils myAppWidgetUtils;
+    private Context context;
+
+    /**
+     * 需要展示Dialog的
+     *
+     * @param context
+     */
+    private MyAppWidgetUtils(Context context) {
+        this.context = context;
+    }
 
     /**
      * 我的应用推荐应用小部件单例模式
@@ -41,26 +50,6 @@ public class MyAppWidgetUtils {
             }
         }
         return myAppWidgetUtils;
-    }
-
-    /**
-     * 需要展示Dialog的
-     *
-     * @param context
-     */
-    private MyAppWidgetUtils(Context context) {
-        this.context = context;
-    }
-
-    /**
-     * 获取我的应用推荐小部件
-     */
-    public void getMyAppWidgetsFromNet() {
-        if (NetUtils.isNetworkConnected(context, false)) {
-            MyAppAPIService appAPIService = new MyAppAPIService(context);
-            appAPIService.setAPIInterface(new WebService());
-            appAPIService.getRecommendAppWidgetList();
-        }
     }
 
     /**
@@ -141,6 +130,17 @@ public class MyAppWidgetUtils {
      */
     public static boolean isEffective(long expiredDate) {
         return expiredDate > System.currentTimeMillis();
+    }
+
+    /**
+     * 获取我的应用推荐小部件
+     */
+    public void getMyAppWidgetsFromNet() {
+        if (NetUtils.isNetworkConnected(context, false)) {
+            MyAppAPIService appAPIService = new MyAppAPIService(context);
+            appAPIService.setAPIInterface(new WebService());
+            appAPIService.getRecommendAppWidgetList();
+        }
     }
 
     class WebService extends APIInterfaceInstance {

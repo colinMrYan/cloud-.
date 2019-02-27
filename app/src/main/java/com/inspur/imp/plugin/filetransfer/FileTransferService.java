@@ -58,6 +58,14 @@ import static android.app.Activity.RESULT_OK;
 import static com.inspur.imp.util.StrUtil.strIsNotNull;
 
 public class FileTransferService extends ImpPlugin {
+    public static final String SUCCESS = "1";
+    public static final String FAILURE = "0";
+    // 上传成功回传参数
+    private static final String TAG = "uploadFile";
+    private static final int TIME_OUT = 10 * 10000000; // 超时时间
+    private static final String CHARSET = "utf-8"; // 设置编码
+    private static double MBDATA = 1048576.0;
+    private static double KBDATA = 1024.0;
     // 文件
     private File file;
     private String loadUrl = "", filepath = "", fileName = "", fileType = "",
@@ -82,14 +90,6 @@ public class FileTransferService extends ImpPlugin {
     private int notificationId;
     private NotificationManager nManager;
     private PendingIntent pendingIntent;
-    // 上传成功回传参数
-    private static final String TAG = "uploadFile";
-    private static final int TIME_OUT = 10 * 10000000; // 超时时间
-    private static final String CHARSET = "utf-8"; // 设置编码
-    public static final String SUCCESS = "1";
-    public static final String FAILURE = "0";
-    private static double MBDATA = 1048576.0;
-    private static double KBDATA = 1024.0;
     // 停止下载
     private boolean stopConn = false;
     private AlertDialog fileDownloadDlg;
@@ -101,6 +101,82 @@ public class FileTransferService extends ImpPlugin {
      */
     private int progress;
     private ProgressBar progressBar;
+    // 回传下载结果
+    Handler handler = new Handler() {
+
+        @SuppressLint("ShowToast")
+        @SuppressWarnings("synthetic-access")
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                //下载中
+                case 0:
+                    progressBar.setProgress(progress);
+                    if (totalSize <= 0) {
+                        ratioText.setText(getFragmentContext().getString(Res.getStringID("has_downloaded"))
+                                + setFormat(downloadSize));
+                    } else {
+                        String text = progress + "%" + "," + "  "
+                                + setFormat(downloadSize) + "/"
+                                + setFormat(totalSize);
+                        ratioText.setText(text);
+                    }
+                    break;
+                // 下载失败
+                case 1:
+                    if (fileDownloadDlg != null && fileDownloadDlg.isShowing()) {
+                        fileDownloadDlg.dismiss();
+                    }
+                    Toast.makeText(getFragmentContext(), Res.getStringID("filetransfer_download_failed"), Toast.LENGTH_LONG).show();
+                    getActivity().runOnUiThread(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            if (strIsNotNull(downloadFailCB)) {
+                                jsCallback(downloadFailCB, fileName);
+                            }
+
+                        }
+
+                    });
+
+                    break;
+                // 下载文件成功
+                case 2:
+                    if (fileDownloadDlg != null && fileDownloadDlg.isShowing()) {
+                        fileDownloadDlg.dismiss();
+                    }
+                    new FileOpen(getActivity(), reallyPath, fileType).showOpenDialog();
+                    fileInfo = (String) msg.obj;
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (strIsNotNull(downloadSucCB)) {
+                                String[] return_param = {fileInfo, fileName};
+                                jsCallback(downloadSucCB, return_param);
+                            }
+                        }
+                    });
+                    break;
+                // 上传进度
+                case 3:
+                    int pro = (Integer) msg.obj;
+                    jsCallback(uploadProgress, pro + "");
+                    break;
+                // 上传成功
+                case 4:
+                    String fileName = (String) msg.obj;
+                    jsCallback(uploadSucCB, fileName);
+                    break;
+                // 上传失败
+                case 5:
+                    String filename = (String) msg.obj;
+                    jsCallback(uploadFailCB, filename);
+                    break;
+            }
+        }
+
+    };
     private String successCb, failCb;
 
     @Override
@@ -241,7 +317,6 @@ public class FileTransferService extends ImpPlugin {
         }
     }
 
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -274,7 +349,6 @@ public class FileTransferService extends ImpPlugin {
         }
 
     }
-
 
     private void callbackSuccess(String result) {
         if (!StringUtils.isBlank(successCb)) {
@@ -344,105 +418,6 @@ public class FileTransferService extends ImpPlugin {
         // 下载文件
         Thread thread = new Thread(new updateRunnable());
         thread.start();
-    }
-
-    // 回传下载结果
-    Handler handler = new Handler() {
-
-        @SuppressLint("ShowToast")
-        @SuppressWarnings("synthetic-access")
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                //下载中
-                case 0:
-                    progressBar.setProgress(progress);
-                    if (totalSize <= 0) {
-                        ratioText.setText(getFragmentContext().getString(Res.getStringID("has_downloaded"))
-                                + setFormat(downloadSize));
-                    } else {
-                        String text = progress + "%" + "," + "  "
-                                + setFormat(downloadSize) + "/"
-                                + setFormat(totalSize);
-                        ratioText.setText(text);
-                    }
-                    break;
-                // 下载失败
-                case 1:
-                    if (fileDownloadDlg != null && fileDownloadDlg.isShowing()) {
-                        fileDownloadDlg.dismiss();
-                    }
-                    Toast.makeText(getFragmentContext(), Res.getStringID("filetransfer_download_failed"), Toast.LENGTH_LONG).show();
-                    getActivity().runOnUiThread(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            if (strIsNotNull(downloadFailCB)) {
-                                jsCallback(downloadFailCB, fileName);
-                            }
-
-                        }
-
-                    });
-
-                    break;
-                // 下载文件成功
-                case 2:
-                    if (fileDownloadDlg != null && fileDownloadDlg.isShowing()) {
-                        fileDownloadDlg.dismiss();
-                    }
-                    new FileOpen(getActivity(), reallyPath, fileType).showOpenDialog();
-                    fileInfo = (String) msg.obj;
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (strIsNotNull(downloadSucCB)) {
-                                String[] return_param = {fileInfo, fileName};
-                                jsCallback(downloadSucCB, return_param);
-                            }
-                        }
-                    });
-                    break;
-                // 上传进度
-                case 3:
-                    int pro = (Integer) msg.obj;
-                    jsCallback(uploadProgress, pro + "");
-                    break;
-                // 上传成功
-                case 4:
-                    String fileName = (String) msg.obj;
-                    jsCallback(uploadSucCB, fileName);
-                    break;
-                // 上传失败
-                case 5:
-                    String filename = (String) msg.obj;
-                    jsCallback(uploadFailCB, filename);
-                    break;
-            }
-        }
-
-    };
-
-    /**
-     * 下载文件线程
-     */
-    class updateRunnable implements Runnable {
-        // 已下载的大小
-        int downnum = 0;
-        // 下载百分比
-        int downcount = 0;
-
-        @Override
-        public void run() {
-            Looper.prepare();
-            try {
-                downLoadFile(loadUrl);
-            } catch (Exception e) {
-                e.printStackTrace();
-                handler.sendEmptyMessage(1);
-            }
-            Looper.loop();
-        }
     }
 
     /**
@@ -740,10 +715,31 @@ public class FileTransferService extends ImpPlugin {
         }
     }
 
-
     @Override
     public void onDestroy() {
 
+    }
+
+    /**
+     * 下载文件线程
+     */
+    class updateRunnable implements Runnable {
+        // 已下载的大小
+        int downnum = 0;
+        // 下载百分比
+        int downcount = 0;
+
+        @Override
+        public void run() {
+            Looper.prepare();
+            try {
+                downLoadFile(loadUrl);
+            } catch (Exception e) {
+                e.printStackTrace();
+                handler.sendEmptyMessage(1);
+            }
+            Looper.loop();
+        }
     }
 
 }

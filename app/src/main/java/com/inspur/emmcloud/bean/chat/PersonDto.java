@@ -51,24 +51,25 @@ public class PersonDto {
     }
 
 
-	public String getUid() {
-		return uid;
-	}
+    public String getUid() {
+        return uid;
+    }
 
-	public void setUid(String uid) {
-		this.uid = uid;
-	}
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
 
-	public String getPinyinFull() {
-		return pinyinFull;
-	}
+    public String getPinyinFull() {
+        return pinyinFull;
+    }
 
-	public void setPinyinFull(String pinyinFull) {
-		this.pinyinFull = pinyinFull;
-	}
+    public void setPinyinFull(String pinyinFull) {
+        this.pinyinFull = pinyinFull;
+    }
 
     /**
      * 复写equals方法
+     *
      * @param other
      * @return
      */

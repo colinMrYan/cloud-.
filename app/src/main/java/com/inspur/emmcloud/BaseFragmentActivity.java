@@ -44,12 +44,12 @@ public class BaseFragmentActivity extends FragmentActivity {
         super.attachBaseContext(LanguageUtils.attachBaseContext(newBase));
     }
 
-    protected void setTheme(){
+    protected void setTheme() {
         String className = this.getClass().getCanonicalName();
         boolean isContain = Arrays.asList(classNames).contains(className);
-        if (!isContain){
+        if (!isContain) {
             int currentThemeNo = PreferencesUtils.getInt(MyApplication.getInstance(), Constant.PREF_APP_THEME, 0);
-            switch (currentThemeNo){
+            switch (currentThemeNo) {
                 case 1:
                     setTheme(R.style.AppTheme_1);
 //                    StateBarUtils.translucent(this);
@@ -73,22 +73,22 @@ public class BaseFragmentActivity extends FragmentActivity {
         }
     }
 
-    protected void setStatus(){
+    protected void setStatus() {
         String className = this.getClass().getCanonicalName();
         boolean isContain = Arrays.asList(classNames).contains(className);
         if (!isContain) {
-            int color = ResourceUtils.getValueOfAttr(BaseFragmentActivity.this,R.attr.header_bg_color);
+            int color = ResourceUtils.getValueOfAttr(BaseFragmentActivity.this, R.attr.header_bg_color);
             boolean isStatusFontDark = true;
             int currentThemeNo = PreferencesUtils.getInt(MyApplication.getInstance(), Constant.PREF_APP_THEME, 0);
-            switch (currentThemeNo){
+            switch (currentThemeNo) {
                 case 1:
-                    isStatusFontDark =false;
+                    isStatusFontDark = false;
                     break;
                 case 2:
-                    isStatusFontDark =true;
+                    isStatusFontDark = true;
                     break;
                 default:
-                    isStatusFontDark =true;
+                    isStatusFontDark = true;
                     break;
             }
             ImmersionBar.with(this).statusBarColor(color).statusBarDarkFont(isStatusFontDark).init();

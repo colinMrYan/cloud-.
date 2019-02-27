@@ -55,9 +55,10 @@ public class ChannelMemberListAdapter extends BaseAdapter implements SectionInde
 
     /**
      * 更新选中的list
+     *
      * @param selectedUserList
      */
-    public void updateSelectListViewData(List<PersonDto> selectedUserList){
+    public void updateSelectListViewData(List<PersonDto> selectedUserList) {
         this.selectedUserList = selectedUserList;
     }
 
@@ -108,25 +109,16 @@ public class ChannelMemberListAdapter extends BaseAdapter implements SectionInde
                 holder.line.setVisibility(View.GONE);
             }
             holder.userNameTv.setText(dto.getName());
-            String photoUrl = APIUri.getUserIconUrl(MyApplication.getInstance(),dto.getUid());
+            String photoUrl = APIUri.getUserIconUrl(MyApplication.getInstance(), dto.getUid());
             ImageDisplayUtils.getInstance().displayImage(holder.userHeadImg, photoUrl, R.drawable.icon_person_default);
         }
-        if(selectedUserList.contains(dto)){
+        if (selectedUserList.contains(dto)) {
             holder.selectedImg.setVisibility(View.VISIBLE);
-            holder.selectedImg.setImageResource(lastSelectUserList.contains(dto)?R.drawable.icon_self_selected:R.drawable.icon_other_selected);
-        }else {
+            holder.selectedImg.setImageResource(lastSelectUserList.contains(dto) ? R.drawable.icon_self_selected : R.drawable.icon_other_selected);
+        } else {
             holder.selectedImg.setVisibility(View.INVISIBLE);
         }
         return convertView;
-    }
-
-    class ViewHolder {
-        ImageView userHeadImg;
-        TextView sideBarLetterTv;
-        TextView userNameTv;
-        View line;
-        ImageView selectedImg;
-        RelativeLayout contentRl;
     }
 
     /**
@@ -153,6 +145,15 @@ public class ChannelMemberListAdapter extends BaseAdapter implements SectionInde
     @Override
     public Object[] getSections() {
         return null;
+    }
+
+    class ViewHolder {
+        ImageView userHeadImg;
+        TextView sideBarLetterTv;
+        TextView userNameTv;
+        View line;
+        ImageView selectedImg;
+        RelativeLayout contentRl;
     }
 
 }

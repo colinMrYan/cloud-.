@@ -54,6 +54,11 @@ public class ChannelMemActivity extends BaseActivity {
         finish();
     }
 
+    public static class ViewHolder {
+        CircleTextImageView memberHeadImg;
+        TextView nameText;
+    }
+
     private class Adapter extends BaseAdapter {
 
         @Override
@@ -98,11 +103,6 @@ public class ChannelMemActivity extends BaseActivity {
             viewHolder.nameText.setText("");
             return convertView;
         }
-    }
-
-    public static class ViewHolder {
-        CircleTextImageView memberHeadImg;
-        TextView nameText;
     }
 
 }

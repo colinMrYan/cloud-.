@@ -62,7 +62,8 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
         this.msgList.clear();
         this.msgList.addAll(msgList);
     }
-    public Msg getItemData(int position){
+
+    public Msg getItemData(int position) {
         return this.msgList.get(position);
     }
 
@@ -101,61 +102,6 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
     public int getItemCount() {
         return msgList.size();
     }
-
-
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        private MyItemClickListener mListener;
-        public RelativeLayout cardLayout;
-        public TextView senderNameText;
-        public ImageView senderPhotoImgLeft;
-        public ImageView senderPhotoImgRight;
-        public RelativeLayout sendStatusLayout;
-        private ImageView sendFailImg;
-        private QMUILoadingView sendingLoadingView;
-        public TextView sendTimeText;
-        public RelativeLayout cardParentLayout;
-
-        public ViewHolder(View view, MyItemClickListener myItemClickListener) {
-            super(view);
-            //将全局的监听赋值给接口
-            this.mListener = myItemClickListener;
-            itemView.setOnClickListener(this);
-            cardLayout = (RelativeLayout) view
-                    .findViewById(R.id.bll_card);
-            senderNameText = (TextView) view
-                    .findViewById(R.id.sender_name_text);
-            senderPhotoImgLeft = (ImageView) view
-                    .findViewById(R.id.iv_sender_photo_left);
-            senderPhotoImgRight = (ImageView) view
-                    .findViewById(R.id.iv_sender_photo_right);
-            sendStatusLayout = (RelativeLayout) view.findViewById(R.id.rl_send_status);
-            sendFailImg = (ImageView) view.findViewById(R.id.iv_send_fail);
-            sendingLoadingView = (QMUILoadingView) view.findViewById(R.id.qlv_sending);
-            sendTimeText = (TextView) view
-                    .findViewById(R.id.send_time_text);
-            cardParentLayout = (RelativeLayout) view.findViewById(R.id.card_parent_layout);
-        }
-
-        /**
-         * 实现OnClickListener接口重写的方法
-         *
-         * @param v
-         */
-        @Override
-        public void onClick(View v) {
-            if (mListener != null) {
-                mListener.onItemClick(v, getAdapterPosition());
-            }
-        }
-
-        public void onMessageResendClick(Msg msg) {
-            if (mListener != null) {
-                mListener.onMessageResend(msg);
-            }
-
-        }
-    }
-
 
     /**
      * 显示正在发送的标志
@@ -225,7 +171,7 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
                 cardContentView = DisplayResLinkMsg.displayResLinkMsg(context, msg);
                 break;
             case "res_file":
-                cardContentView = DisplayResFileMsg.displayResFileMsg(context, msg,false);
+                cardContentView = DisplayResFileMsg.displayResFileMsg(context, msg, false);
                 break;
             case "txt_rich":
                 cardContentView = DisplayTxtRichMsg.displayRichTextMsg(context, msg);
@@ -241,7 +187,7 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
                 break;
             case "attachment/file":
                 cardContentView = DisplayRegularFileMsg.getView(context,
-                        message, 1,false);
+                        message, 1, false);
                 break;
             case "attachment/card":
                 cardContentView = DisplayAttachmentCardMsg.getView(context,
@@ -268,7 +214,6 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
         params.addRule(isMyMsg ? RelativeLayout.ALIGN_PARENT_RIGHT : RelativeLayout.ALIGN_LEFT);
         holder.cardParentLayout.setLayoutParams(params);
     }
-
 
     /**
      * 展示消息发送时间
@@ -370,5 +315,58 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
         void onItemClick(View view, int position);
 
         void onMessageResend(Msg msg);
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        public RelativeLayout cardLayout;
+        public TextView senderNameText;
+        public ImageView senderPhotoImgLeft;
+        public ImageView senderPhotoImgRight;
+        public RelativeLayout sendStatusLayout;
+        public TextView sendTimeText;
+        public RelativeLayout cardParentLayout;
+        private MyItemClickListener mListener;
+        private ImageView sendFailImg;
+        private QMUILoadingView sendingLoadingView;
+
+        public ViewHolder(View view, MyItemClickListener myItemClickListener) {
+            super(view);
+            //将全局的监听赋值给接口
+            this.mListener = myItemClickListener;
+            itemView.setOnClickListener(this);
+            cardLayout = (RelativeLayout) view
+                    .findViewById(R.id.bll_card);
+            senderNameText = (TextView) view
+                    .findViewById(R.id.sender_name_text);
+            senderPhotoImgLeft = (ImageView) view
+                    .findViewById(R.id.iv_sender_photo_left);
+            senderPhotoImgRight = (ImageView) view
+                    .findViewById(R.id.iv_sender_photo_right);
+            sendStatusLayout = (RelativeLayout) view.findViewById(R.id.rl_send_status);
+            sendFailImg = (ImageView) view.findViewById(R.id.iv_send_fail);
+            sendingLoadingView = (QMUILoadingView) view.findViewById(R.id.qlv_sending);
+            sendTimeText = (TextView) view
+                    .findViewById(R.id.send_time_text);
+            cardParentLayout = (RelativeLayout) view.findViewById(R.id.card_parent_layout);
+        }
+
+        /**
+         * 实现OnClickListener接口重写的方法
+         *
+         * @param v
+         */
+        @Override
+        public void onClick(View v) {
+            if (mListener != null) {
+                mListener.onItemClick(v, getAdapterPosition());
+            }
+        }
+
+        public void onMessageResendClick(Msg msg) {
+            if (mListener != null) {
+                mListener.onMessageResend(msg);
+            }
+
+        }
     }
 }

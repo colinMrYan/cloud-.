@@ -1,7 +1,6 @@
 package com.inspur.emmcloud.bean.appcenter.volume;
 
 import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -13,7 +12,7 @@ import java.util.ArrayList;
  * Created by chenmch on 2018/1/20.
  */
 
-public class Group implements Serializable{
+public class Group implements Serializable {
     private String id;
     private String name;
     private String enterprise;
@@ -23,23 +22,24 @@ public class Group implements Serializable{
     private String owner;
     private int privilege;
     private String type;
-    private ArrayList<String>  memberUidList = new ArrayList<>();
+    private ArrayList<String> memberUidList = new ArrayList<>();
 
-    public Group(){}
+    public Group() {
+    }
 
-    public Group(JSONObject obj){
-        id = JSONUtils.getString(obj,"id","");
-        name = JSONUtils.getString(obj,"name","");
-        owner = JSONUtils.getString(obj,"owner","");
-        privilege = JSONUtils.getInt(obj,"privilege",0);
-        type = JSONUtils.getString(obj,"type","");
-        enterprise = JSONUtils.getString(obj,"enterprise","");
-        creationDate = JSONUtils.getLong(obj,"creationDate",0);
-        lastUpdate = JSONUtils.getLong(obj,"lastUpdate",0);
-        volume = JSONUtils.getString(obj,"volume","");
-        JSONArray array = JSONUtils.getJSONArray(obj,"members",new JSONArray());
-        for (int i=0;i<array.length();i++){
-            String uid = JSONUtils.getString(array,i,"");
+    public Group(JSONObject obj) {
+        id = JSONUtils.getString(obj, "id", "");
+        name = JSONUtils.getString(obj, "name", "");
+        owner = JSONUtils.getString(obj, "owner", "");
+        privilege = JSONUtils.getInt(obj, "privilege", 0);
+        type = JSONUtils.getString(obj, "type", "");
+        enterprise = JSONUtils.getString(obj, "enterprise", "");
+        creationDate = JSONUtils.getLong(obj, "creationDate", 0);
+        lastUpdate = JSONUtils.getLong(obj, "lastUpdate", 0);
+        volume = JSONUtils.getString(obj, "volume", "");
+        JSONArray array = JSONUtils.getJSONArray(obj, "members", new JSONArray());
+        for (int i = 0; i < array.length(); i++) {
+            String uid = JSONUtils.getString(array, i, "");
             memberUidList.add(uid);
         }
     }
@@ -70,6 +70,10 @@ public class Group implements Serializable{
 
     public int getPrivilege() {
         return privilege;
+    }
+
+    public void setPrivilege(int privilege) {
+        this.privilege = privilege;
     }
 
     public String getType() {
@@ -110,10 +114,6 @@ public class Group implements Serializable{
 
     public void setVolume(String volume) {
         this.volume = volume;
-    }
-
-    public void setPrivilege(int privilege) {
-        this.privilege = privilege;
     }
 
     public ArrayList<String> getMemberUidList() {

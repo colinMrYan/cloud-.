@@ -31,6 +31,20 @@ public class MatheSet {
         this.end = start;
     }
 
+    /**
+     * 判断两个集合是否有交集
+     *
+     * @param one
+     * @param other
+     * @return
+     */
+    public static boolean isIntersection(MatheSet one, MatheSet other) {
+        if (one == null || other == null) {
+            return false;
+        }
+        return one.isInMatheSet(other.start) || one.isInMatheSet(other.end);
+    }
+
     @Override
     public String toString() {
         return "{" + start + ":" + end + "}";
@@ -40,24 +54,24 @@ public class MatheSet {
         this.start = Long.valueOf(start);
     }
 
-    public void setStart(Long start) {
-        this.start = start;
-    }
-
     public void setEnd(String end) {
         this.end = Long.valueOf(end);
-    }
-
-    public void setEnd(long end) {
-        this.end = end;
     }
 
     public long getStart() {
         return start;
     }
 
+    public void setStart(Long start) {
+        this.start = start;
+    }
+
     public long getEnd() {
         return end;
+    }
+
+    public void setEnd(long end) {
+        this.end = end;
     }
 
     /**
@@ -72,20 +86,6 @@ public class MatheSet {
         other.start = 0;
         other.end = 0;
 
-    }
-
-    /**
-     * 判断两个集合是否有交集
-     *
-     * @param one
-     * @param other
-     * @return
-     */
-    public static boolean isIntersection(MatheSet one, MatheSet other) {
-        if (one == null || other == null) {
-            return false;
-        }
-        return one.isInMatheSet(other.start) || one.isInMatheSet(other.end);
     }
 
     /**

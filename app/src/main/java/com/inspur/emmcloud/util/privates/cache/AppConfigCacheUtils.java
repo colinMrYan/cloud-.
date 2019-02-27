@@ -33,10 +33,11 @@ public class AppConfigCacheUtils {
 
     /**
      * 存储单个配置
+     *
      * @param context
      * @param appConfig
      */
-    public static void saveAppConfig(Context context, AppConfig appConfig){
+    public static void saveAppConfig(Context context, AppConfig appConfig) {
         try {
             DbCacheUtils.getDb(context).saveOrUpdate(appConfig);
         } catch (Exception e) {
@@ -47,13 +48,14 @@ public class AppConfigCacheUtils {
 
     /**
      * 先清空所有的配置列表再进行存储
+     *
      * @param context
      * @param appConfigList
      */
     public static void clearAndSaveAppConfigList(Context context, List<AppConfig> appConfigList) {
         try {
             DbCacheUtils.getDb(context).delete(AppConfig.class);
-            saveAppConfigList(context,appConfigList);
+            saveAppConfigList(context, appConfigList);
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();

@@ -10,11 +10,16 @@ public class MainTabTitleResult {
     private String zhHans;
     private String zhHant;
     private String enUS;
-    public MainTabTitleResult(){};
-    public MainTabTitleResult(String response){
-        this.zhHans = JSONUtils.getString(response,"zh-Hans","");
-        this.zhHant = JSONUtils.getString(response,"zh-Hant","");
-        this.enUS = JSONUtils.getString(response,"en-US","");
+
+    public MainTabTitleResult() {
+    }
+
+    ;
+
+    public MainTabTitleResult(String response) {
+        this.zhHans = JSONUtils.getString(response, "zh-Hans", "");
+        this.zhHant = JSONUtils.getString(response, "zh-Hant", "");
+        this.enUS = JSONUtils.getString(response, "en-US", "");
     }
 
     public String getZhHans() {
@@ -41,7 +46,7 @@ public class MainTabTitleResult {
         this.enUS = enUS;
     }
 
-    public String getTabTileByLanguage(String language){
+    public String getTabTileByLanguage(String language) {
         String title = null;
         switch (language.toLowerCase()) {
             case "zh-hant":

@@ -21,6 +21,32 @@ public class MailCertificateDetail implements Serializable {
     private boolean isEncryptedMail;
     private boolean isSignedMail;
 
+    public MailCertificateDetail(String cName, String cIssuerDN, String cSubjectDN, String cPassword, String cStartTime, String cFinalTime, String pubKey, String priKey) {
+        certificateName = cName;
+        certificateIssuerDN = cIssuerDN;
+        certificateSubjectDN = cSubjectDN;
+        certificatePassword = cPassword;
+        certificateStartDate = cStartTime;
+        certificateFinalDate = cFinalTime;
+        certificatePublicKey = pubKey;
+        certificatePrivateKey = priKey;
+        isEncryptedMail = true;
+        isSignedMail = true;
+    }
+
+    public MailCertificateDetail() {
+        isEncryptedMail = true;
+        isSignedMail = true;
+        certificateName = "";     //证书文件名称
+        certificateIssuerDN = ""; //颁发者
+        certificateSubjectDN = "";//颁发给
+        certificatePassword = ""; //证书密码
+        certificateStartDate = "";//证书有效期Start
+        certificateFinalDate = "";//证书截止日期
+        certificatePublicKey = "";//证书公钥
+        certificatePrivateKey = "";//证书私钥
+    }
+
     public String getCertificateName() {
         return certificateName;
     }
@@ -99,32 +125,6 @@ public class MailCertificateDetail implements Serializable {
 
     public void setSignedMail(boolean signedMail) {
         this.isSignedMail = signedMail;
-    }
-
-    public MailCertificateDetail(String cName,String cIssuerDN,String cSubjectDN,String cPassword,String cStartTime,String cFinalTime,String pubKey,String priKey){
-        certificateName=cName;
-        certificateIssuerDN=cIssuerDN;
-        certificateSubjectDN=cSubjectDN;
-        certificatePassword  =cPassword ;
-        certificateStartDate=cStartTime;
-        certificateFinalDate=cFinalTime;
-        certificatePublicKey=pubKey;
-        certificatePrivateKey=priKey;
-        isEncryptedMail=true;
-        isSignedMail=true;
-    }
-
-    public MailCertificateDetail(){
-        isEncryptedMail=true;
-        isSignedMail=true;
-        certificateName="";     //证书文件名称
-        certificateIssuerDN=""; //颁发者
-        certificateSubjectDN="";//颁发给
-        certificatePassword=""; //证书密码
-        certificateStartDate="";//证书有效期Start
-        certificateFinalDate="";//证书截止日期
-        certificatePublicKey="";//证书公钥
-        certificatePrivateKey="";//证书私钥
     }
 
 }

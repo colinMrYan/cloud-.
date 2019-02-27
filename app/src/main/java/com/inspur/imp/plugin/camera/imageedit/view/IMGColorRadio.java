@@ -20,22 +20,14 @@ import com.inspur.emmcloud.R;
 public class IMGColorRadio extends RadioButton implements ValueAnimator.AnimatorUpdateListener {
 
     private static final String TAG = "IMGColorRadio";
-
-    private int mColor = Color.WHITE;
-
-    private int mStrokeColor = Color.WHITE;
-
-    private float mRadiusRatio = 0f;
-
-    private ValueAnimator mAnimator;
-
-    private Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-
     private static final float RADIUS_BASE = 0.6f;
-
     private static final float RADIUS_RING = 0.9f;
-
     private static final float RADIUS_BALL = 0.72f;
+    private int mColor = Color.WHITE;
+    private int mStrokeColor = Color.WHITE;
+    private float mRadiusRatio = 0f;
+    private ValueAnimator mAnimator;
+    private Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
     public IMGColorRadio(Context context) {
         this(context, null, 0);
@@ -74,13 +66,13 @@ public class IMGColorRadio extends RadioButton implements ValueAnimator.Animator
         return mAnimator;
     }
 
+    public int getColor() {
+        return mColor;
+    }
+
     public void setColor(int color) {
         mColor = color;
         mPaint.setColor(mColor);
-    }
-
-    public int getColor() {
-        return mColor;
     }
 
     @Override

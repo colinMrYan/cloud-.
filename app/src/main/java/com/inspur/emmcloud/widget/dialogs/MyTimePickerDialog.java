@@ -6,84 +6,85 @@ import android.widget.TimePicker;
 
 import java.util.Calendar;
 
-public class MyTimePickerDialog extends TimePickerDialog{
+public class MyTimePickerDialog extends TimePickerDialog {
 
-	private int myHourOfDay,myMinute;
-	private int myYear,myMonth,myDay;
-	private int nowYear,nowMonth,nowDay,nowHour,nowMin;
-	private boolean isEndTime,isBeginTime;
-	private int beginTimeHour,beginTimeMin,endTimeHour,endTimeMin;
-	private int initBeginTimeHour = -1,initBeginTimeMinute=-1,initEndTimeHour=-1,initEndTimeMinute=-1;
-	public MyTimePickerDialog(Context context, int theme, OnTimeSetListener callBack,
-			int hourOfDay, int minute, boolean is24HourView) {
-		super(context, theme, callBack, hourOfDay, minute, is24HourView);
-		// TODO Auto-generated constructor stub
-		myHourOfDay = hourOfDay;
-		myMinute = minute;
-		
-		Calendar now = Calendar.getInstance();  
-		        nowYear = now.get(Calendar.YEAR);  
-		        nowMonth = now.get(Calendar.MONTH)+1;  
-		        nowDay = now.get(Calendar.DAY_OF_MONTH);  
-		        
-		        nowHour = now.get(Calendar.HOUR_OF_DAY);
-				nowMin = now.get(Calendar.MINUTE);
-				this.setCancelable(false);
+    private int myHourOfDay, myMinute;
+    private int myYear, myMonth, myDay;
+    private int nowYear, nowMonth, nowDay, nowHour, nowMin;
+    private boolean isEndTime, isBeginTime;
+    private int beginTimeHour, beginTimeMin, endTimeHour, endTimeMin;
+    private int initBeginTimeHour = -1, initBeginTimeMinute = -1, initEndTimeHour = -1, initEndTimeMinute = -1;
 
-	}
+    public MyTimePickerDialog(Context context, int theme, OnTimeSetListener callBack,
+                              int hourOfDay, int minute, boolean is24HourView) {
+        super(context, theme, callBack, hourOfDay, minute, is24HourView);
+        // TODO Auto-generated constructor stub
+        myHourOfDay = hourOfDay;
+        myMinute = minute;
 
-	@Override
-	public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
-		// TODO Auto-generated method stub
-		super.onTimeChanged(view, hourOfDay, minute);
+        Calendar now = Calendar.getInstance();
+        nowYear = now.get(Calendar.YEAR);
+        nowMonth = now.get(Calendar.MONTH) + 1;
+        nowDay = now.get(Calendar.DAY_OF_MONTH);
 
-		if(isBeginTime){
-			if(hourOfDay<initBeginTimeHour){
-				this.updateTime(initBeginTimeHour, initBeginTimeMinute);
-			}
-			if((hourOfDay<=initBeginTimeHour)&&(minute<initBeginTimeMinute)){
-				this.updateTime(initBeginTimeHour, initBeginTimeMinute);
-			}
-			if(hourOfDay>initEndTimeHour){
-				this.updateTime(initBeginTimeHour, initBeginTimeMinute);
-			}
-			if((hourOfDay>=initEndTimeHour)&&(minute>initEndTimeMinute)){
+        nowHour = now.get(Calendar.HOUR_OF_DAY);
+        nowMin = now.get(Calendar.MINUTE);
+        this.setCancelable(false);
 
-				this.updateTime(initBeginTimeHour, initBeginTimeMinute);
-			}
-			if(hourOfDay>endTimeHour){
-				this.updateTime(initBeginTimeHour, initBeginTimeMinute);
-			}
-			if((hourOfDay>=endTimeHour)&&(minute>=endTimeMin)){
-				this.updateTime(initBeginTimeHour, initBeginTimeMinute);
-			}
+    }
 
-		}
-		if(isEndTime){
+    @Override
+    public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
+        // TODO Auto-generated method stub
+        super.onTimeChanged(view, hourOfDay, minute);
+
+        if (isBeginTime) {
+            if (hourOfDay < initBeginTimeHour) {
+                this.updateTime(initBeginTimeHour, initBeginTimeMinute);
+            }
+            if ((hourOfDay <= initBeginTimeHour) && (minute < initBeginTimeMinute)) {
+                this.updateTime(initBeginTimeHour, initBeginTimeMinute);
+            }
+            if (hourOfDay > initEndTimeHour) {
+                this.updateTime(initBeginTimeHour, initBeginTimeMinute);
+            }
+            if ((hourOfDay >= initEndTimeHour) && (minute > initEndTimeMinute)) {
+
+                this.updateTime(initBeginTimeHour, initBeginTimeMinute);
+            }
+            if (hourOfDay > endTimeHour) {
+                this.updateTime(initBeginTimeHour, initBeginTimeMinute);
+            }
+            if ((hourOfDay >= endTimeHour) && (minute >= endTimeMin)) {
+                this.updateTime(initBeginTimeHour, initBeginTimeMinute);
+            }
+
+        }
+        if (isEndTime) {
 
 
-			if(hourOfDay<initBeginTimeHour){
-				this.updateTime(initEndTimeHour, initEndTimeMinute);
-			}
-			if((hourOfDay<=initBeginTimeHour)&&(minute<initBeginTimeMinute)){
+            if (hourOfDay < initBeginTimeHour) {
+                this.updateTime(initEndTimeHour, initEndTimeMinute);
+            }
+            if ((hourOfDay <= initBeginTimeHour) && (minute < initBeginTimeMinute)) {
 
-				this.updateTime(initEndTimeHour, initEndTimeMinute);
-			}
-			if(hourOfDay>initEndTimeHour){
+                this.updateTime(initEndTimeHour, initEndTimeMinute);
+            }
+            if (hourOfDay > initEndTimeHour) {
 
-				this.updateTime(initEndTimeHour, initEndTimeMinute);
-			}
-			if((hourOfDay>=initEndTimeHour)&&(minute>initEndTimeMinute)){
+                this.updateTime(initEndTimeHour, initEndTimeMinute);
+            }
+            if ((hourOfDay >= initEndTimeHour) && (minute > initEndTimeMinute)) {
 
-				this.updateTime(initEndTimeHour, initEndTimeMinute);
-			}
-			if(hourOfDay<beginTimeHour){
-				this.updateTime(initEndTimeHour, initEndTimeMinute);
-			}
-			if((hourOfDay<=beginTimeHour)&&(minute<=beginTimeMin)){
-				this.updateTime(initEndTimeHour, initEndTimeMinute);
-			}
-		}
+                this.updateTime(initEndTimeHour, initEndTimeMinute);
+            }
+            if (hourOfDay < beginTimeHour) {
+                this.updateTime(initEndTimeHour, initEndTimeMinute);
+            }
+            if ((hourOfDay <= beginTimeHour) && (minute <= beginTimeMin)) {
+                this.updateTime(initEndTimeHour, initEndTimeMinute);
+            }
+        }
 //		int between= 0;
 //		try {
 //			between = CalendarUtil.daysBetween(nowYear+"-"+nowMonth+"-"+nowDay, myYear+"-"+(myMonth+1)+"-"+myDay);
@@ -153,61 +154,60 @@ public class MyTimePickerDialog extends TimePickerDialog{
 //			}
 //			
 //		}
-			
-	}
-	
-	
 
-	public void setEndTime(boolean isEndTime) {
-		this.isEndTime = isEndTime;
-	}
+    }
 
-	public void setMyYear(int myYear) {
-		this.myYear = myYear;
-	}
 
-	public void setMyMonth(int myMonth) {
-		this.myMonth = myMonth;
-	}
+    public void setEndTime(boolean isEndTime) {
+        this.isEndTime = isEndTime;
+    }
 
-	public void setMyDay(int myDay) {
-		this.myDay = myDay;
-	}
+    public void setMyYear(int myYear) {
+        this.myYear = myYear;
+    }
 
-	public void setBeginTime(boolean isBeginTime) {
-		this.isBeginTime = isBeginTime;
-	}
+    public void setMyMonth(int myMonth) {
+        this.myMonth = myMonth;
+    }
 
-	public void setBeginTimeHour(int beginTimeHour) {
-		this.beginTimeHour = beginTimeHour;
-	}
+    public void setMyDay(int myDay) {
+        this.myDay = myDay;
+    }
 
-	public void setBeginTimeMin(int beginTimeMin) {
-		this.beginTimeMin = beginTimeMin;
-	}
+    public void setBeginTime(boolean isBeginTime) {
+        this.isBeginTime = isBeginTime;
+    }
 
-	public void setEndTimeHour(int endTimeHour) {
-		this.endTimeHour = endTimeHour;
-	}
+    public void setBeginTimeHour(int beginTimeHour) {
+        this.beginTimeHour = beginTimeHour;
+    }
 
-	public void setEndTimeMin(int endTimeMin) {
-		this.endTimeMin = endTimeMin;
-	}
+    public void setBeginTimeMin(int beginTimeMin) {
+        this.beginTimeMin = beginTimeMin;
+    }
 
-	public void setInitBeginTimeHour(int initBeginTimeHour) {
-		this.initBeginTimeHour = initBeginTimeHour;
-	}
+    public void setEndTimeHour(int endTimeHour) {
+        this.endTimeHour = endTimeHour;
+    }
 
-	public void setInitBeginTimeMinute(int initBeginTimeMinute) {
-		this.initBeginTimeMinute = initBeginTimeMinute;
-	}
+    public void setEndTimeMin(int endTimeMin) {
+        this.endTimeMin = endTimeMin;
+    }
 
-	public void setInitEndTimeHour(int initEndTimeHour) {
-		this.initEndTimeHour = initEndTimeHour;
-	}
+    public void setInitBeginTimeHour(int initBeginTimeHour) {
+        this.initBeginTimeHour = initBeginTimeHour;
+    }
 
-	public void setInitEndTimeMinute(int initEndTimeMinute) {
-		this.initEndTimeMinute = initEndTimeMinute;
-	}
-	
+    public void setInitBeginTimeMinute(int initBeginTimeMinute) {
+        this.initBeginTimeMinute = initBeginTimeMinute;
+    }
+
+    public void setInitEndTimeHour(int initEndTimeHour) {
+        this.initEndTimeHour = initEndTimeHour;
+    }
+
+    public void setInitEndTimeMinute(int initEndTimeMinute) {
+        this.initEndTimeMinute = initEndTimeMinute;
+    }
+
 }

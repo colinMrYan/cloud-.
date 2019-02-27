@@ -29,24 +29,24 @@ public class MainTabProperty {
     public MainTabProperty(String response) {
         canContact = JSONUtils.getBoolean(response, "canOpenContact", true);
         canCreate = JSONUtils.getBoolean(response, "canCreateChannel", true);
-        isHaveNavbar = JSONUtils.getBoolean(response,"isHaveNavbar",false);
-        JSONArray jsonArray = JSONUtils.getJSONArray(response,"menus",new JSONArray());
-        for (int i = 0; i < (jsonArray.length()>2?2:jsonArray.length()); i++) {
-            mainTabMenuList.add(new MainTabMenu(JSONUtils.getJSONObject(jsonArray,i,new JSONObject())));
+        isHaveNavbar = JSONUtils.getBoolean(response, "isHaveNavbar", false);
+        JSONArray jsonArray = JSONUtils.getJSONArray(response, "menus", new JSONArray());
+        for (int i = 0; i < (jsonArray.length() > 2 ? 2 : jsonArray.length()); i++) {
+            mainTabMenuList.add(new MainTabMenu(JSONUtils.getJSONObject(jsonArray, i, new JSONObject())));
         }
-        JSONArray mineLayoutItemGroupArrayExtend = JSONUtils.getJSONArray(response,"extendList",new JSONArray());
+        JSONArray mineLayoutItemGroupArrayExtend = JSONUtils.getJSONArray(response, "extendList", new JSONArray());
         for (int i = 0; i < mineLayoutItemGroupArrayExtend.length(); i++) {
-            JSONArray mineLayoutItemArray = JSONUtils.getJSONArray(mineLayoutItemGroupArrayExtend,i,new JSONArray());
+            JSONArray mineLayoutItemArray = JSONUtils.getJSONArray(mineLayoutItemGroupArrayExtend, i, new JSONArray());
             mineLayoutItemGroupList.add(new MineLayoutItemGroup(mineLayoutItemArray));
         }
-        if (mineLayoutItemGroupList.size() == 0){
-            isHasExtendList= false;
-        JSONArray mineLayoutItemGroupArray = JSONUtils.getJSONArray(response,"tablist",new JSONArray());
-        for (int i = 0; i < mineLayoutItemGroupArray.length(); i++) {
-            JSONArray mineLayoutItemArray = JSONUtils.getJSONArray(mineLayoutItemGroupArray,i,new JSONArray());
-            mineLayoutItemGroupList.add(new MineLayoutItemGroup(mineLayoutItemArray));
+        if (mineLayoutItemGroupList.size() == 0) {
+            isHasExtendList = false;
+            JSONArray mineLayoutItemGroupArray = JSONUtils.getJSONArray(response, "tablist", new JSONArray());
+            for (int i = 0; i < mineLayoutItemGroupArray.length(); i++) {
+                JSONArray mineLayoutItemArray = JSONUtils.getJSONArray(mineLayoutItemGroupArray, i, new JSONArray());
+                mineLayoutItemGroupList.add(new MineLayoutItemGroup(mineLayoutItemArray));
             }
-        }else {
+        } else {
             isHasExtendList = true;
         }
     }

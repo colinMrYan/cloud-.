@@ -14,14 +14,24 @@ import java.util.Map;
 
 public interface ImpCallBackInterface {
     void onLoadingDlgDimiss();
+
     void onShowImpDialog();
+
     Map<String, String> onGetWebViewHeaders(String url);
+
     void onInitWebViewGoBackOrClose();
+
     void onSetTitle(String title);
+
     void onFinishActivity();
+
     void onLoadingDlgShow(String content);
-    void onStartActivityForResult(Intent intent,int requestCode);
+
+    void onStartActivityForResult(Intent intent, int requestCode);
+
     void onSetDropTitles(List<DropItemTitle> dropItemTitleList);
+
     void onProgressChanged(int newProgress);
+
     void onSetOptionMenu(List<MainTabMenu> optionMenuList);
 }

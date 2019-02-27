@@ -39,17 +39,18 @@ public class MsgReadCreationDateCacheUtils {
 
     /**
      * 存储多个频道的已读到的消息创建时间
+     *
      * @param context
      * @param cid
      * @param messageReadCreationDateList
      */
-    public static void saveMessageReadCreationDateList(Context context, List<MessageReadCreationDate> messageReadCreationDateList){
-        if (messageReadCreationDateList == null || messageReadCreationDateList.size() == 0){
+    public static void saveMessageReadCreationDateList(Context context, List<MessageReadCreationDate> messageReadCreationDateList) {
+        if (messageReadCreationDateList == null || messageReadCreationDateList.size() == 0) {
             return;
         }
         try {
             DbCacheUtils.getDb(context).saveOrUpdate(messageReadCreationDateList);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

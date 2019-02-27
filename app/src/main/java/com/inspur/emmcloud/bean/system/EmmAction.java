@@ -19,10 +19,10 @@ public class EmmAction {
     private String type;
     private String url;
 
-    public EmmAction(String action){
+    public EmmAction(String action) {
         this.action = action;
-        type = JSONUtils.getString(action,"type","");
-        url = JSONUtils.getString(action,"url","");
+        type = JSONUtils.getString(action, "type", "");
+        url = JSONUtils.getString(action, "url", "");
     }
 
     public String getType() {
@@ -41,8 +41,8 @@ public class EmmAction {
         this.url = url;
     }
 
-    public boolean getCanOpenAction(){
-        if(!StringUtils.isBlank(action)&&getType().equals(Constant.SF_OPEN_URL)){
+    public boolean getCanOpenAction() {
+        if (!StringUtils.isBlank(action) && getType().equals(Constant.SF_OPEN_URL)) {
             return true;
         }
         return false;

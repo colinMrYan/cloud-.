@@ -37,12 +37,12 @@ import static com.iflytek.cloud.ErrorCode.ERROR_AUDIO_RECORD;
  */
 
 public class Voice2StringMessageUtils {
-    private static final int VOICE_FROM_XUNFEI = 0;
-    private static final int VOICE_FROM_LOCAL_FILE = 1;
     public static final int MSG_FROM_XUNFEI = 1;
     public static final int MSG_FROM_CUSTOM = 2;
     public static final int MSG_XUNFEI_PERMISSION_ERROR = 3;
     public static final int MSG_XUNFEI_ERROR = 4;
+    private static final int VOICE_FROM_XUNFEI = 0;
+    private static final int VOICE_FROM_LOCAL_FILE = 1;
     // 语音听写对象
     private SpeechRecognizer speechRecognizer;
     // 用HashMap存储听写结果
@@ -144,7 +144,7 @@ public class Voice2StringMessageUtils {
                 break;
         }
         //来自本地录音文件时，前后端时间都设置为60s，其他情况使用默认值
-        if(type == VOICE_FROM_LOCAL_FILE){
+        if (type == VOICE_FROM_LOCAL_FILE) {
             // 设置语音前端点:静音超时时间，即用户多长时间不说话则当做超时处理
             speechRecognizer.setParameter(SpeechConstant.VAD_BOS, "60000");
             // 设置语音后端点:后端点静音检测时间，即用户停止说话多长时间内即认为不再输入， 自动停止录音
@@ -154,7 +154,7 @@ public class Voice2StringMessageUtils {
         speechRecognizer.setParameter(SpeechConstant.ASR_PTT, "0");
         //根据IOS参数新加参数
         speechRecognizer.setParameter(SpeechConstant.KEY_SPEECH_TIMEOUT, "-1");
-        speechRecognizer.setParameter(SpeechConstant.SAMPLE_RATE, audioSimpleRate+"");
+        speechRecognizer.setParameter(SpeechConstant.SAMPLE_RATE, audioSimpleRate + "");
         speechRecognizer.setParameter(SpeechConstant.DOMAIN, "iat");
         speechRecognizer.setParameter(SpeechConstant.PARAMS, "0");
 

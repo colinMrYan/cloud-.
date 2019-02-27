@@ -31,7 +31,7 @@ import java.util.List;
 
 public class FileManagerActivity extends BaseActivity {
     public static final String EXTRA_MAXIMUM = "extra_maximum";
-    public static final String EXTRA_FILTER_FILE_TYPE="extra_filter_file_type";
+    public static final String EXTRA_FILTER_FILE_TYPE = "extra_filter_file_type";
     private RecyclerView titleRecyclerview;
     private RecyclerView fileRecyclerView;
     private TextView okText;
@@ -43,7 +43,7 @@ public class FileManagerActivity extends BaseActivity {
     private String rootPath;
     private boolean isStatusSelect = true;
     private int maximum = 1;
-    private ArrayList<String> filterFileTypeList=new ArrayList<>();
+    private ArrayList<String> filterFileTypeList = new ArrayList<>();
     private TitleAdapter titleAdapter;
     private List<FileBean> selectFileBeanList = new ArrayList<>();
 
@@ -58,7 +58,7 @@ public class FileManagerActivity extends BaseActivity {
         titleRecyclerview.setLayoutManager(layoutManager);
         titleAdapter = new TitleAdapter(FileManagerActivity.this, new ArrayList<TitlePath>());
         titleRecyclerview.setAdapter(titleAdapter);
-        okText = (TextView)findViewById(R.id.tv_ok);
+        okText = (TextView) findViewById(R.id.tv_ok);
         setOKTextStatus();
         fileRecyclerView = (RecyclerView) findViewById(R.id.rcv_file);
 
@@ -77,9 +77,9 @@ public class FileManagerActivity extends BaseActivity {
                     getFile(file.getPath());
 
                     refreshTitleState(file.getName(), file.getPath());
-                }else {
+                } else {
                     if (isStatusSelect) {
-                        if (maximum ==  1){
+                        if (maximum == 1) {
                             selectFileBeanList.add(file);
                             returnSelectResult();
                             return;
@@ -88,16 +88,16 @@ public class FileManagerActivity extends BaseActivity {
                             selectFileBeanList.remove(file);
                             setOKTextStatus();
                             fileAdapter.notifyItemChanged(position);
-                        } else if(selectFileBeanList.size() == maximum){
-                            ToastUtils.show(FileManagerActivity.this,R.string.file_select_limit_warning);
-                        }else {
+                        } else if (selectFileBeanList.size() == maximum) {
+                            ToastUtils.show(FileManagerActivity.this, R.string.file_select_limit_warning);
+                        } else {
                             selectFileBeanList.add(file);
                             setOKTextStatus();
                             fileAdapter.notifyItemChanged(position);
                         }
 
                     } else {
-                        FileUtils.openFile(FileManagerActivity.this,file.getPath());
+                        FileUtils.openFile(FileManagerActivity.this, file.getPath());
                     }
                 }
 
@@ -156,27 +156,27 @@ public class FileManagerActivity extends BaseActivity {
 //        }
     }
 
-    private void getIntentParam(){
-        maximum = getIntent().getIntExtra(EXTRA_MAXIMUM,1);
+    private void getIntentParam() {
+        maximum = getIntent().getIntExtra(EXTRA_MAXIMUM, 1);
         filterFileTypeList = getIntent().getStringArrayListExtra(EXTRA_FILTER_FILE_TYPE);
-        if (filterFileTypeList == null){
+        if (filterFileTypeList == null) {
             filterFileTypeList = new ArrayList<>();
         }
     }
 
-    private void setOKTextStatus(){
-        if (selectFileBeanList.size() == 0){
+    private void setOKTextStatus() {
+        if (selectFileBeanList.size() == 0) {
             okText.setClickable(false);
             okText.setText(R.string.complete);
-        }else {
+        } else {
             okText.setClickable(true);
-            okText.setText(getString(R.string.complete)+"("+selectFileBeanList.size()+")");
+            okText.setText(getString(R.string.complete) + "(" + selectFileBeanList.size() + ")");
         }
     }
 
-    public void onClick(View v){
-        switch (v.getId()){
-            case  R.id.ibt_back:
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.ibt_back:
                 finish();
                 break;
             case R.id.tv_ok:
@@ -185,33 +185,58 @@ public class FileManagerActivity extends BaseActivity {
         }
     }
 
-    private void returnSelectResult(){
+    private void returnSelectResult() {
         ArrayList<String> pathList = new ArrayList<>();
-        for (FileBean fileBean:selectFileBeanList){
+        for (FileBean fileBean : selectFileBeanList) {
             pathList.add(fileBean.getPath());
         }
         Intent intent = new Intent();
-        intent.putStringArrayListExtra("pathList",pathList);
-        setResult(RESULT_OK,intent);
+        intent.putStringArrayListExtra("pathList", pathList);
+        setResult(RESULT_OK, intent);
         finish();
     }
 
     public void getFile(String path) {
         rootFile = new File(path + File.separator);
-        new MyTask(rootFile,filterFileTypeList).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "");
+        new MyTask(rootFile, filterFileTypeList).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "");
+    }
+
+    void refreshTitleState(String title, String path) {
+        TitlePath filePath = new TitlePath();
+        filePath.setNameState(title + " /");
+        filePath.setPath(path);
+        titleAdapter.addItem(filePath);
+        titleRecyclerview.smoothScrollToPosition(titleAdapter.getItemCount());
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK
+                && event.getRepeatCount() == 0) {
+
+            List<TitlePath> titlePathList = (List<TitlePath>) titleAdapter.getAdapterData();
+            if (titlePathList.size() == 1) {
+                finish();
+            } else {
+                titleAdapter.removeItem(titlePathList.size() - 1);
+                getFile(titlePathList.get(titlePathList.size() - 1).getPath());
+            }
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     public class FileComparator implements Comparator {
         @Override
         public int compare(Object o, Object t1) {
-            File file1 = (File)o;
-            File file2 = (File)t1;
-            if ( file1.isDirectory() && file2.isFile() ){
-                return -1 ;
-            }else if ( file1.isFile() && file2.isDirectory() ){
-                return 1 ;
-            }else {
-                return file1.getName().toLowerCase().compareTo( file2.getName().toString() ) ;
+            File file1 = (File) o;
+            File file2 = (File) t1;
+            if (file1.isDirectory() && file2.isFile()) {
+                return -1;
+            } else if (file1.isFile() && file2.isDirectory()) {
+                return 1;
+            } else {
+                return file1.getName().toLowerCase().compareTo(file2.getName().toString());
             }
         }
     }
@@ -219,7 +244,8 @@ public class FileManagerActivity extends BaseActivity {
     class MyTask extends AsyncTask {
         private File file;
         private ArrayList<String> filterFileTypeList;
-        MyTask(File file,ArrayList<String> filterFileTypeList) {
+
+        MyTask(File file, ArrayList<String> filterFileTypeList) {
             this.file = file;
             this.filterFileTypeList = filterFileTypeList;
         }
@@ -236,15 +262,15 @@ public class FileManagerActivity extends BaseActivity {
 
                     for (File f : fileList) {
                         if (f.isHidden()) continue;
-                        if (filterFileTypeList.size()>0 && !f.isDirectory()){
+                        if (filterFileTypeList.size() > 0 && !f.isDirectory()) {
                             boolean isFileFileType = false;
-                            for (String fileType:filterFileTypeList){
-                                if ( f.getName().endsWith(fileType)){
+                            for (String fileType : filterFileTypeList) {
+                                if (f.getName().endsWith(fileType)) {
                                     isFileFileType = true;
                                     break;
                                 }
                             }
-                            if (!isFileFileType){
+                            if (!isFileFileType) {
                                 continue;
                             }
                         }
@@ -273,32 +299,6 @@ public class FileManagerActivity extends BaseActivity {
             fileAdapter.refresh(beanList);
         }
 
-    }
-
-
-    void refreshTitleState(String title, String path) {
-        TitlePath filePath = new TitlePath();
-        filePath.setNameState(title + " /");
-        filePath.setPath(path);
-        titleAdapter.addItem(filePath);
-        titleRecyclerview.smoothScrollToPosition(titleAdapter.getItemCount());
-    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK
-                && event.getRepeatCount() == 0) {
-
-            List<TitlePath> titlePathList = (List<TitlePath>) titleAdapter.getAdapterData();
-            if (titlePathList.size() == 1) {
-                finish();
-            } else {
-                titleAdapter.removeItem(titlePathList.size() - 1);
-                getFile(titlePathList.get(titlePathList.size() - 1).getPath());
-            }
-            return true;
-        }
-        return super.onKeyDown(keyCode, event);
     }
 
 //    @Override

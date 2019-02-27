@@ -433,36 +433,6 @@ public class WebexMeetingDetailActivity extends BaseActivity {
 
     }
 
-
-    private static class CustomShareListener implements UMShareListener {
-
-        private WeakReference<RecommendAppActivity> mActivity;
-
-        private CustomShareListener(WebexMeetingDetailActivity activity) {
-            mActivity = new WeakReference(activity);
-        }
-
-        @Override
-        public void onStart(SHARE_MEDIA platform) {
-
-        }
-
-        @Override
-        public void onResult(SHARE_MEDIA platform) {
-            // ToastUtils.show(mActivity.get(), R.string.news_share_success);
-        }
-
-        @Override
-        public void onError(SHARE_MEDIA platform, Throwable t) {
-            ToastUtils.show(mActivity.get(), R.string.news_share_fail);
-        }
-
-        @Override
-        public void onCancel(SHARE_MEDIA platform) {
-
-        }
-    }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -515,7 +485,6 @@ public class WebexMeetingDetailActivity extends BaseActivity {
 
     }
 
-
     private void getWebexMeeting() {
         if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
             loadingDialog.show();
@@ -534,6 +503,35 @@ public class WebexMeetingDetailActivity extends BaseActivity {
         if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
             loadingDialog.show();
             apiService.removeMeeting(webexMeeting.getMeetingID());
+        }
+    }
+
+    private static class CustomShareListener implements UMShareListener {
+
+        private WeakReference<RecommendAppActivity> mActivity;
+
+        private CustomShareListener(WebexMeetingDetailActivity activity) {
+            mActivity = new WeakReference(activity);
+        }
+
+        @Override
+        public void onStart(SHARE_MEDIA platform) {
+
+        }
+
+        @Override
+        public void onResult(SHARE_MEDIA platform) {
+            // ToastUtils.show(mActivity.get(), R.string.news_share_success);
+        }
+
+        @Override
+        public void onError(SHARE_MEDIA platform, Throwable t) {
+            ToastUtils.show(mActivity.get(), R.string.news_share_fail);
+        }
+
+        @Override
+        public void onCancel(SHARE_MEDIA platform) {
+
         }
     }
 

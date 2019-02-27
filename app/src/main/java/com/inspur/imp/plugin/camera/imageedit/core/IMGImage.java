@@ -29,104 +29,76 @@ import java.util.List;
 public class IMGImage {
 
     private static final String TAG = "IMGImage";
-
-    private Bitmap mImage, mMosaicImage;
-
-    /**
-     * 完整图片边框
-     */
-    private RectF mFrame = new RectF();
-
-    /**
-     * 裁剪图片边框（显示的图片区域）
-     */
-    private RectF mClipFrame = new RectF();
-
-    private RectF mTempClipFrame = new RectF();
-
-    /**
-     * 裁剪模式前状态备份
-     */
-    private RectF mBackupClipFrame = new RectF();
-
-    private float mBackupClipRotate = 0;
-
-    private float mRotate = 0, mTargetRotate = 0;
-
-    private boolean isRequestToBaseFitting = false;
-
-    private boolean isAnimCanceled = false;
-
-    /**
-     * 裁剪模式时当前触摸锚点
-     */
-    private IMGClip.Anchor mAnchor;
-
-    private boolean isSteady = true;
-
-    private Path mShade = new Path();
-
-    /**
-     * 裁剪窗口
-     */
-    private IMGClipWindow mClipWin = new IMGClipWindow();
-
-    private boolean isDrawClip = false;
-
-    /**
-     * 编辑模式
-     */
-    private IMGMode mMode = IMGMode.NONE;
-
-    private boolean isFreezing = mMode == IMGMode.CLIP;
-
-    /**
-     * 可视区域，无Scroll 偏移区域
-     */
-    private RectF mWindow = new RectF();
-
-    /**
-     * 是否初始位置
-     */
-    private boolean isInitialHoming = false;
-
-    /**
-     * 当前选中贴片
-     */
-    private IMGSticker mForeSticker;
-
-    /**
-     * 为被选中贴片
-     */
-    private List<IMGSticker> mBackStickers = new ArrayList<>();
-
-    /**
-     * 涂鸦路径
-     */
-    private List<IMGPath> mDoodles = new ArrayList<>();
-
-    /**
-     * 马赛克路径
-     */
-    private List<IMGPath> mMosaics = new ArrayList<>();
-
     private static final int MIN_SIZE = 500;
-
     private static final int MAX_SIZE = 10000;
-
-    private Paint mPaint, mMosaicPaint, mShadePaint;
-
-    private Matrix M = new Matrix();
-
     private static final boolean DEBUG = false;
-
     private static final Bitmap DEFAULT_IMAGE;
-
     private static final int COLOR_SHADE = 0xCC000000;
 
     static {
         DEFAULT_IMAGE = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888);
     }
+
+    private Bitmap mImage, mMosaicImage;
+    /**
+     * 完整图片边框
+     */
+    private RectF mFrame = new RectF();
+    /**
+     * 裁剪图片边框（显示的图片区域）
+     */
+    private RectF mClipFrame = new RectF();
+    private RectF mTempClipFrame = new RectF();
+    /**
+     * 裁剪模式前状态备份
+     */
+    private RectF mBackupClipFrame = new RectF();
+    private float mBackupClipRotate = 0;
+    private float mRotate = 0, mTargetRotate = 0;
+    private boolean isRequestToBaseFitting = false;
+    private boolean isAnimCanceled = false;
+    /**
+     * 裁剪模式时当前触摸锚点
+     */
+    private IMGClip.Anchor mAnchor;
+    private boolean isSteady = true;
+    private Path mShade = new Path();
+    /**
+     * 裁剪窗口
+     */
+    private IMGClipWindow mClipWin = new IMGClipWindow();
+    private boolean isDrawClip = false;
+    /**
+     * 编辑模式
+     */
+    private IMGMode mMode = IMGMode.NONE;
+    private boolean isFreezing = mMode == IMGMode.CLIP;
+    /**
+     * 可视区域，无Scroll 偏移区域
+     */
+    private RectF mWindow = new RectF();
+    /**
+     * 是否初始位置
+     */
+    private boolean isInitialHoming = false;
+    /**
+     * 当前选中贴片
+     */
+    private IMGSticker mForeSticker;
+    /**
+     * 为被选中贴片
+     */
+    private List<IMGSticker> mBackStickers = new ArrayList<>();
+    /**
+     * 涂鸦路径
+     */
+    private List<IMGPath> mDoodles = new ArrayList<>();
+    /**
+     * 马赛克路径
+     */
+    private List<IMGPath> mMosaics = new ArrayList<>();
+    private Paint mPaint, mMosaicPaint, mShadePaint;
+    private Matrix M = new Matrix();
 
     {
         mShade.setFillType(Path.FillType.WINDING);

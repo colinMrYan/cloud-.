@@ -23,6 +23,60 @@ public class FeedBackActivity extends BaseActivity {
     private EditText contentEdit;
     private CheckBox anonymouscheck;
     private TextView textCountText;
+    TextWatcher mTextWatcher = new TextWatcher() {
+        private CharSequence temp;
+        private int editStart;
+        private int editEnd;
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int arg1, int arg2,
+                                      int arg3) {
+            temp = s;
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int arg1, int arg2, int arg3) {
+            Editable editable = contentEdit.getText();
+            int len = editable.length();
+
+            if (len > 200) {
+                Toast.makeText(FeedBackActivity.this, getString(R.string.feed_back_out_of_length),
+                        Toast.LENGTH_SHORT).show();
+                int selEndIndex = Selection.getSelectionEnd(editable);
+                String str = editable.toString();
+                //截取新字符串
+                String newStr = str.substring(0, 200);
+                contentEdit.setText(newStr);
+                editable = contentEdit.getText();
+
+                //新字符串的长度
+                int newLen = editable.length();
+                //旧光标位置超过字符串长度
+                if (selEndIndex > newLen) {
+                    selEndIndex = editable.length();
+                }
+                //设置新光标所在的位置
+                Selection.setSelection(editable, selEndIndex);
+
+            }
+            textCountText.setText("(" + contentEdit.getText().length() + "/200)");
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+//			editStart = contentEdit.getSelectionStart();
+//			editEnd = contentEdit.getSelectionEnd();
+//			textCountText.setText("(" + temp.length() + "/200)");
+//			if (temp.length() > 200) {
+//				Toast.makeText(FeedBackActivity.this, "你输入的字数已经超过了限制！",
+//						Toast.LENGTH_SHORT).show();
+//				s.delete(editStart-1, editEnd);
+//				int tempSelection = s.length();
+//				contentEdit.setText(s);
+//				contentEdit.setSelection(tempSelection);
+//			}
+        }
+    };
     private EditText contactEdit;
 
     @Override
@@ -78,60 +132,5 @@ public class FeedBackActivity extends BaseActivity {
         textCountText.setText("(0/200)");
         anonymouscheck.setChecked(false);
     }
-
-    TextWatcher mTextWatcher = new TextWatcher() {
-        private CharSequence temp;
-        private int editStart;
-        private int editEnd;
-
-        @Override
-        public void beforeTextChanged(CharSequence s, int arg1, int arg2,
-                                      int arg3) {
-            temp = s;
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int arg1, int arg2, int arg3) {
-            Editable editable = contentEdit.getText();
-            int len = editable.length();
-
-            if (len > 200) {
-                Toast.makeText(FeedBackActivity.this, getString(R.string.feed_back_out_of_length),
-                        Toast.LENGTH_SHORT).show();
-                int selEndIndex = Selection.getSelectionEnd(editable);
-                String str = editable.toString();
-                //截取新字符串
-                String newStr = str.substring(0, 200);
-                contentEdit.setText(newStr);
-                editable = contentEdit.getText();
-
-                //新字符串的长度
-                int newLen = editable.length();
-                //旧光标位置超过字符串长度
-                if (selEndIndex > newLen) {
-                    selEndIndex = editable.length();
-                }
-                //设置新光标所在的位置
-                Selection.setSelection(editable, selEndIndex);
-
-            }
-            textCountText.setText("(" + contentEdit.getText().length() + "/200)");
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-//			editStart = contentEdit.getSelectionStart();
-//			editEnd = contentEdit.getSelectionEnd();
-//			textCountText.setText("(" + temp.length() + "/200)");
-//			if (temp.length() > 200) {
-//				Toast.makeText(FeedBackActivity.this, "你输入的字数已经超过了限制！",
-//						Toast.LENGTH_SHORT).show();
-//				s.delete(editStart-1, editEnd);
-//				int tempSelection = s.length();
-//				contentEdit.setText(s);
-//				contentEdit.setSelection(tempSelection);
-//			}
-        }
-    };
 
 }

@@ -27,6 +27,15 @@ public class HuaWeiPushMangerUtils implements ConnectionCallbacks, OnConnectionF
     private HuaweiApiClient client;
     private Context contextLocal;
 
+    private HuaWeiPushMangerUtils(final Context context) {
+        contextLocal = context;
+        client = new HuaweiApiClient.Builder(context)
+                .addApi(HuaweiPush.PUSH_API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
+    }
+
     public static HuaWeiPushMangerUtils getInstance(Context context) {
         if (huaWeiPushMangerUtils == null) {
             synchronized (HuaWeiPushMangerUtils.class) {
@@ -38,15 +47,6 @@ public class HuaWeiPushMangerUtils implements ConnectionCallbacks, OnConnectionF
         return huaWeiPushMangerUtils;
     }
 
-    private HuaWeiPushMangerUtils(final Context context) {
-        contextLocal = context;
-        client = new HuaweiApiClient.Builder(context)
-                .addApi(HuaweiPush.PUSH_API)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .build();
-    }
-
     /**
      * 华为建立连接方法
      */
@@ -56,7 +56,7 @@ public class HuaWeiPushMangerUtils implements ConnectionCallbacks, OnConnectionF
 
     @Override
     public void onConnected() {
-        AppUtils.setPushFlag(contextLocal,Constant.HUAWEI_FLAG);
+        AppUtils.setPushFlag(contextLocal, Constant.HUAWEI_FLAG);
         getToken();
         setPassByMsg(true);
     }
@@ -120,10 +120,10 @@ public class HuaWeiPushMangerUtils implements ConnectionCallbacks, OnConnectionF
                     PendingResult<TokenResult> token = HuaweiPush.HuaweiPushApi.getToken(client);
                     TokenResult tokenResult = token.await();
                     //处理connect成功，获取token失败的情况
-                    if(tokenResult.getTokenRes().getRetCode() != 0){
+                    if (tokenResult.getTokenRes().getRetCode() != 0) {
                         startJpushInMainThread();
                     }
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                     startJpushInMainThread();
                 }
@@ -135,7 +135,7 @@ public class HuaWeiPushMangerUtils implements ConnectionCallbacks, OnConnectionF
     /**
      * 从主线程启动Jpush
      */
-    private void startJpushInMainThread(){
+    private void startJpushInMainThread() {
         new Handler(getMainLooper()).post(new Runnable() {
             @Override
             public void run() {

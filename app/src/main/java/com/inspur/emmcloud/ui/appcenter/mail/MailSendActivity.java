@@ -58,6 +58,14 @@ import java.util.List;
  */
 @ContentView(R.layout.activity_mail_send)
 public class MailSendActivity extends BaseActivity {
+    public static final String MODE_NEW = "mail_new";
+    public static final String MODE_REPLY = "mail_replay";
+    public static final String MODE_REPLY_ALL = "mail_replay_all";
+    public static final String MODE_FORWARD = "mail_forward";
+    public static final String EXTRA_MAIL_ID = "extra_mail_id";
+    public static final String EXTRA_MAIL_MODE = "extra_mail_mode";
+    private static final int QEQUEST_ADD_MEMBER = 2;
+    private static final int QEQUEST_CC_MEMBER = 3;
     @ViewInject(R.id.rich_edit_recipients)
     private RichEdit recipientRichEdit;
     @ViewInject(R.id.rich_edit_cc_recipient)
@@ -82,24 +90,13 @@ public class MailSendActivity extends BaseActivity {
     private NoScrollWebView bodyWebView;
     @ViewInject(R.id.tv_header_title)
     private TextView headerTitleText;
-
     @ViewInject(R.id.iv_recipients)
     private ImageView recipientsImageView;
     @ViewInject(R.id.iv_cc_recipients)
     private ImageView ccRecipientsImageView;
-
     private ArrayList<String> memberUidList = new ArrayList<>();
     private ArrayList<MailRecipientModel> recipientList = new ArrayList<>();
     private ArrayList<MailRecipientModel> ccRecipientList = new ArrayList<>();
-    public static final String MODE_NEW = "mail_new";
-    public static final String MODE_REPLY = "mail_replay";
-    public static final String MODE_REPLY_ALL = "mail_replay_all";
-    public static final String MODE_FORWARD = "mail_forward";
-    public static final String EXTRA_MAIL_ID = "extra_mail_id";
-    public static final String EXTRA_MAIL_MODE = "extra_mail_mode";
-    private static final int QEQUEST_ADD_MEMBER = 2;
-    private static final int QEQUEST_CC_MEMBER = 3;
-
     private MailCertificateDetail myCertificate;
     private Mail originMail;
     private LoadingDialog loadingDlg;
@@ -116,9 +113,9 @@ public class MailSendActivity extends BaseActivity {
      */
     private void init() {
         String username = PreferencesUtils.getString(this, "userRealName", "");
-        String content = "\n\n\n\n"+username+"\n\t"+"---发自我的云+移动端";
+        String content = "\n\n\n\n" + username + "\n\t" + "---发自我的云+移动端";
         contentSendEditText.setText(content);
-        loadingDlg= new LoadingDialog(this);
+        loadingDlg = new LoadingDialog(this);
         recipientRichEdit.setInputWatcher(new RichEdit.InputWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
@@ -259,7 +256,7 @@ public class MailSendActivity extends BaseActivity {
             myCertificate = (MailCertificateDetail) object;
         }
 
-        includeOriginLayout.setVisibility(mailMode.equals(MODE_NEW)?View.GONE:View.VISIBLE);
+        includeOriginLayout.setVisibility(mailMode.equals(MODE_NEW) ? View.GONE : View.VISIBLE);
     }
 
     /**
@@ -283,8 +280,8 @@ public class MailSendActivity extends BaseActivity {
      */
     private MailSend prepareSendData() {
         MailSend mail = new MailSend();
-        SpannableString spanString= new SpannableString(contentSendEditText.getText().toString());
-        String html= Html.toHtml(spanString);
+        SpannableString spanString = new SpannableString(contentSendEditText.getText().toString());
+        String html = Html.toHtml(spanString);
         mail.setBody(html);
         mail.setToRecipients(recipientList);
         mail.setCcRecipients(ccRecipientList);
@@ -293,7 +290,7 @@ public class MailSendActivity extends BaseActivity {
         mail.setFrom(new MailRecipientModel(contactUser.getName(), contactUser.getEmail()));
         mail.setNeedEncrypt(myCertificate.isEncryptedMail());
         mail.setNeedSign(myCertificate.isSignedMail());
-        mail.setOriginalMail((originMail != null && fwBodyCheckBox.isChecked())?originMail.getBodyText():"");
+        mail.setOriginalMail((originMail != null && fwBodyCheckBox.isChecked()) ? originMail.getBodyText() : "");
         mail.setSubject(StringUtils.isBlank(sendThemeEditText.getText().toString()) ? "" : sendThemeEditText.getText().toString());
         mail.setIsForward(mailMode.equals(MODE_FORWARD));
         mail.setIsReply(mailMode.equals(MODE_REPLY) || mailMode.equals(MODE_REPLY_ALL));
@@ -341,7 +338,7 @@ public class MailSendActivity extends BaseActivity {
     private void sendMail() throws Exception {
         MailSend mailSend = prepareSendData();
         String jsonMail = JSON.toJSONString(mailSend);
-        LogUtils.jasonDebug("jsonMail="+jsonMail);
+        LogUtils.jasonDebug("jsonMail=" + jsonMail);
         String key = EncryptUtils.stringToMD5(mailSend.getFrom().getAddress().toString());
         byte[] mailContent = EncryptUtils.encodeNoBase64(jsonMail, key, Constant.MAIL_ENCRYPT_IV);
         if (NetUtils.isNetworkConnected(this)) {

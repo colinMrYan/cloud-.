@@ -44,8 +44,8 @@ public class RecommendAppActivity extends BaseActivity {
         x.view().inject(this);
         webView.loadUrl(RECOMMAND_APP_URL);
 
-        UMConfigure.init(this,"59aa1f8f76661373290010d3"
-                ,"umeng",UMConfigure.DEVICE_TYPE_PHONE,"");
+        UMConfigure.init(this, "59aa1f8f76661373290010d3"
+                , "umeng", UMConfigure.DEVICE_TYPE_PHONE, "");
 //        QueuedWork.isUseThreadPool = false;
 //        UMShareAPI.get(this);
         PlatformConfig.setWeixin("wx4eb8727ea9c26495", "56a0426315f1d0985a1cc1e75e96130d");
@@ -78,17 +78,17 @@ public class RecommendAppActivity extends BaseActivity {
         mShareListener = new CustomShareListener(this);
         new ShareAction(RecommendAppActivity.this).setDisplayList(
                 SHARE_MEDIA.WEIXIN, SHARE_MEDIA.WEIXIN_CIRCLE,
-                 SHARE_MEDIA.QQ, SHARE_MEDIA.QZONE,SHARE_MEDIA.SMS
+                SHARE_MEDIA.QQ, SHARE_MEDIA.QZONE, SHARE_MEDIA.SMS
         )
                 .setShareboardclickCallback(new ShareBoardlistener() {
                     @Override
                     public void onclick(SnsPlatform snsPlatform, SHARE_MEDIA share_media) {
-                        if(share_media == SHARE_MEDIA.SMS) {
-                            new ShareAction(RecommendAppActivity.this).withText("欢迎使用【云+】  "+"https://www.inspuronline.com/yjapp/")
+                        if (share_media == SHARE_MEDIA.SMS) {
+                            new ShareAction(RecommendAppActivity.this).withText("欢迎使用【云+】  " + "https://www.inspuronline.com/yjapp/")
                                     .setPlatform(share_media)
                                     .setCallback(mShareListener)
                                     .share();
-                        }else {
+                        } else {
                             UMImage thumb = new UMImage(RecommendAppActivity.this, R.drawable.ic_launcher_share);
                             UMWeb web = new UMWeb("https://www.inspuronline.com/yjapp/");
                             web.setThumb(thumb);
@@ -101,7 +101,7 @@ public class RecommendAppActivity extends BaseActivity {
                         }
                     }
                 })
-               .open();
+                .open();
 
     }
 
@@ -121,12 +121,12 @@ public class RecommendAppActivity extends BaseActivity {
 
         @Override
         public void onResult(SHARE_MEDIA platform) {
-            ToastUtils.show(mActivity.get(),R.string.news_share_success);
+            ToastUtils.show(mActivity.get(), R.string.news_share_success);
         }
 
         @Override
         public void onError(SHARE_MEDIA platform, Throwable t) {
-            ToastUtils.show(mActivity.get(),R.string.news_share_fail);
+            ToastUtils.show(mActivity.get(), R.string.news_share_fail);
             if (t != null) {
                 LogUtils.jasonDebug("throw:" + t.getMessage());
             }

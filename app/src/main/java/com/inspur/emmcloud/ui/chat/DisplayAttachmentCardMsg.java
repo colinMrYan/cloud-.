@@ -36,18 +36,18 @@ public class DisplayAttachmentCardMsg {
         View convertView = LayoutInflater.from(context).inflate(
                 R.layout.chat_msg_card_child_attachment_card_view, null);
         boolean isMyMsg = message.getFromUser().equals(MyApplication.getInstance().getUid());
-        ((BubbleLayout)convertView.findViewById(R.id.bl_card)).setArrowDirection(isMyMsg? ArrowDirection.RIGHT:ArrowDirection.LEFT);
+        ((BubbleLayout) convertView.findViewById(R.id.bl_card)).setArrowDirection(isMyMsg ? ArrowDirection.RIGHT : ArrowDirection.LEFT);
         ImageView cardPhotoImg = (ImageView) convertView.findViewById(R.id.img_photo);
         TextView cardNameText = (TextView) convertView.findViewById(R.id.tv_name);
         TextView cardEmailText = (TextView) convertView.findViewById(R.id.tv_mail);
         MsgContentAttachmentCard msgContentCard = message.getMsgContentAttachmentCard();
-        ImageDisplayUtils.getInstance().displayImage(cardPhotoImg,msgContentCard.getAvatar(), R.drawable.icon_person_default);
-        cardNameText.setText(msgContentCard.getFirstName()+msgContentCard.getLastName());
-       List<Email> emailList = msgContentCard.getEmailList();
-       if (emailList.size()>0){
-           cardEmailText.setText(emailList.get(0).getAddress());
-       }
-       return convertView;
+        ImageDisplayUtils.getInstance().displayImage(cardPhotoImg, msgContentCard.getAvatar(), R.drawable.icon_person_default);
+        cardNameText.setText(msgContentCard.getFirstName() + msgContentCard.getLastName());
+        List<Email> emailList = msgContentCard.getEmailList();
+        if (emailList.size() > 0) {
+            cardEmailText.setText(emailList.get(0).getAddress());
+        }
+        return convertView;
     }
 
 }

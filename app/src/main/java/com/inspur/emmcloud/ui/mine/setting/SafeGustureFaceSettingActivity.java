@@ -1,7 +1,8 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.RelativeLayout;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
@@ -12,9 +13,8 @@ import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.widget.SwitchView;
 
-import android.os.Bundle;
-import android.view.View;
-import android.widget.RelativeLayout;
+import org.xutils.view.annotation.ContentView;
+import org.xutils.view.annotation.ViewInject;
 
 /**
  * Created by chenmch on 2019/1/25.
@@ -77,13 +77,13 @@ public class SafeGustureFaceSettingActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         boolean isGestureOpen = isGestureOpen();
-        if (guestureSwitchView.isOpened() != isGestureOpen){
+        if (guestureSwitchView.isOpened() != isGestureOpen) {
             guestureSwitchView.setOpened(isGestureOpen);
         }
-        resetGuestureLayout.setVisibility(isGestureOpen()?View.VISIBLE:View.GONE);
+        resetGuestureLayout.setVisibility(isGestureOpen() ? View.VISIBLE : View.GONE);
 
         faceSwitchView.setOpened(FaceVerifyActivity.getFaceVerifyIsOpenByUser(this));
-        resetFaceLayout.setVisibility(FaceVerifyActivity.getFaceVerifyIsOpenByUser(this)?View.VISIBLE:View.GONE);
+        resetFaceLayout.setVisibility(FaceVerifyActivity.getFaceVerifyIsOpenByUser(this) ? View.VISIBLE : View.GONE);
     }
 
     public boolean isGestureOpen() {
@@ -106,9 +106,9 @@ public class SafeGustureFaceSettingActivity extends BaseActivity {
         }
     }
 
-    private void intentFaceVerifyActivity(boolean isFaceSettingOpen){
+    private void intentFaceVerifyActivity(boolean isFaceSettingOpen) {
         Bundle bundle = new Bundle();
         bundle.putBoolean("isFaceSettingOpen", isFaceSettingOpen);
-        IntentUtils.startActivity(SafeGustureFaceSettingActivity.this,FaceVerifyActivity.class,bundle);
+        IntentUtils.startActivity(SafeGustureFaceSettingActivity.this, FaceVerifyActivity.class, bundle);
     }
 }

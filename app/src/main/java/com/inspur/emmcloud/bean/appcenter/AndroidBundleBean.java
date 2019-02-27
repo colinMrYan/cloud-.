@@ -21,16 +21,16 @@ public class AndroidBundleBean {
 
     /**
      * {
-     "source": "eac3eddd31f11e9327c443b9fcae731787a1cbf2",
-     "namespace": "com.inspur.ecc.core.apps",
-     "domain": "10000",
-     "version": "v0.1.0",
-     "mainComponent": "WhoseCar",
-     "creationDate": 1490691586492,
-     "platform": "ANDROID",
-     "update": "https://ecm.inspur.com/inspur_esg/api/v0/app/10000/latest",
-     "type": "ZIP"
-     }
+     * "source": "eac3eddd31f11e9327c443b9fcae731787a1cbf2",
+     * "namespace": "com.inspur.ecc.core.apps",
+     * "domain": "10000",
+     * "version": "v0.1.0",
+     * "mainComponent": "WhoseCar",
+     * "creationDate": 1490691586492,
+     * "platform": "ANDROID",
+     * "update": "https://ecm.inspur.com/inspur_esg/api/v0/app/10000/latest",
+     * "type": "ZIP"
+     * }
      */
 
     private String domain = "";
@@ -44,18 +44,18 @@ public class AndroidBundleBean {
     private String update = "";
 
 
-    public AndroidBundleBean(String androidBundleBean){
+    public AndroidBundleBean(String androidBundleBean) {
         try {
-            JSONObject jsonAndroid = StringUtils.isBlank(androidBundleBean)? new JSONObject(): new JSONObject(androidBundleBean);
-            this.domain = JSONUtils.getString(jsonAndroid,"domain","");
-            this.version = JSONUtils.getString(jsonAndroid,"version","");
-            this.creationDate = JSONUtils.getLong(jsonAndroid,"creationDate",0);
-            this.platform = JSONUtils.getString(jsonAndroid,"platform","");
-            this.type = JSONUtils.getString(jsonAndroid,"type","");
-            this.source = JSONUtils.getString(jsonAndroid,"source","");
-            this.namespace = JSONUtils.getString(jsonAndroid,"namespace","");
-            this.mainComponent = JSONUtils.getString(jsonAndroid,"mainComponent","");
-            this.update = JSONUtils.getString(jsonAndroid,"update","");
+            JSONObject jsonAndroid = StringUtils.isBlank(androidBundleBean) ? new JSONObject() : new JSONObject(androidBundleBean);
+            this.domain = JSONUtils.getString(jsonAndroid, "domain", "");
+            this.version = JSONUtils.getString(jsonAndroid, "version", "");
+            this.creationDate = JSONUtils.getLong(jsonAndroid, "creationDate", 0);
+            this.platform = JSONUtils.getString(jsonAndroid, "platform", "");
+            this.type = JSONUtils.getString(jsonAndroid, "type", "");
+            this.source = JSONUtils.getString(jsonAndroid, "source", "");
+            this.namespace = JSONUtils.getString(jsonAndroid, "namespace", "");
+            this.mainComponent = JSONUtils.getString(jsonAndroid, "mainComponent", "");
+            this.update = JSONUtils.getString(jsonAndroid, "update", "");
         } catch (Exception e) {
             e.printStackTrace();
         }

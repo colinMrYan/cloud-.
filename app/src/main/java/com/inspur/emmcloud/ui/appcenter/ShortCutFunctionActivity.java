@@ -6,7 +6,7 @@ import com.inspur.emmcloud.BaseActivity;
  * Created by yufuchang on 2017/5/13.
  */
 
-public class ShortCutFunctionActivity extends BaseActivity{
+public class ShortCutFunctionActivity extends BaseActivity {
 
 //    private LoadingDialog loadingDialog;
 //    private Context context;

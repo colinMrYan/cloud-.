@@ -444,7 +444,7 @@ public class ZipUtils {
             gzip = new GZIPOutputStream(out);
             gzip.write(str.getBytes(encoding));
             gzip.close();
-        } catch ( Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return out.toByteArray();

@@ -52,9 +52,9 @@ public class MailFolderCacheUtils {
         return mailFolderList;
     }
 
-    public static MailFolder getMailFolderById(String forderId){
+    public static MailFolder getMailFolderById(String forderId) {
         try {
-            MailFolder mailFolder = DbCacheUtils.getDb().findById(MailFolder.class,forderId);
+            MailFolder mailFolder = DbCacheUtils.getDb().findById(MailFolder.class, forderId);
             return mailFolder;
         } catch (Exception e) {
             // TODO Auto-generated catch block

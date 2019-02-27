@@ -53,14 +53,20 @@ public class PauseableUploadTask {
     }
 
     public synchronized void pause() {
-        isPaused  = true;
+        isPaused = true;
     }
+
     public synchronized boolean isPause() {
         return isPaused;
     }
 
-    public synchronized void setComplete() { isComplete = true; }
-    public synchronized boolean isComplete() { return isComplete; }
+    public synchronized void setComplete() {
+        isComplete = true;
+    }
+
+    public synchronized boolean isComplete() {
+        return isComplete;
+    }
 
     //使用指定的uploadId进行上传
     public void upload(String uploadId) throws ClientException, ServiceException, IOException {
@@ -150,21 +156,18 @@ public class PauseableUploadTask {
             Log.d("multipartUpload", "multipart upload success! Location: " + completeResult.getLocation());
 
             callback.onSuccess(request, result);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             ClientException clientException = new ClientException(e.toString(), e);
             callback.onFailure(request, clientException, null);
             throw e;
-        }
-        catch (ServiceException e) {
+        } catch (ServiceException e) {
             Log.e("ErrorCode", e.getErrorCode());
             Log.e("RequestId", e.getRequestId());
             Log.e("HostId", e.getHostId());
             Log.e("RawMessage", e.getRawMessage());
             callback.onFailure(request, null, e);
             throw e;
-        }
-        catch (ClientException e) {
+        } catch (ClientException e) {
             callback.onFailure(request, e, null);
             throw e;
         }
@@ -181,16 +184,14 @@ public class PauseableUploadTask {
             InitiateMultipartUploadRequest init = new InitiateMultipartUploadRequest(bucket, object);
             InitiateMultipartUploadResult initResult = oss.initMultipartUpload(init);
             return initResult.getUploadId();
-        }
-        catch (ServiceException e) {
+        } catch (ServiceException e) {
             Log.e("ErrorCode", e.getErrorCode());
             Log.e("RequestId", e.getRequestId());
             Log.e("HostId", e.getHostId());
             Log.e("RawMessage", e.getRawMessage());
             callback.onFailure(request, null, e);
             throw e;
-        }
-        catch (ClientException e) {
+        } catch (ClientException e) {
             callback.onFailure(request, e, null);
             throw e;
         }

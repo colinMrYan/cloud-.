@@ -134,15 +134,15 @@ public class WebexMeetingAdapter extends BaseExpandableListAdapter {
         holder.titleText.setText(webexMeeting.getConfName());
         String email = webexMeeting.getHostWebExID();
         boolean isOwner = email.equals(myEmail);
-        holder.ownerText.setText(isOwner?context.getString(R.string.mine):webexMeeting.getHostUserName());
+        holder.ownerText.setText(isOwner ? context.getString(R.string.mine) : webexMeeting.getHostUserName());
         if (TimeUtils.isCalendarToday(startCalendar) && !isMeetingEnd(webexMeeting) && (isOwner || webexMeeting.isInProgress())) {
-            holder.functionBtn.setText(email.equals(myEmail)?context.getString(R.string.webex_start) : context.getString(R.string.join));
+            holder.functionBtn.setText(email.equals(myEmail) ? context.getString(R.string.webex_start) : context.getString(R.string.join));
             holder.functionBtn.setVisibility(View.VISIBLE);
             holder.functionBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (onFunctionBtnClickListener != null) {
-                        onFunctionBtnClickListener.onFunctionClick((Button) v,groupPosition, childPosition);
+                        onFunctionBtnClickListener.onFunctionClick((Button) v, groupPosition, childPosition);
                     }
                 }
             });
@@ -159,6 +159,14 @@ public class WebexMeetingAdapter extends BaseExpandableListAdapter {
         return webexMeeting.getStartDateCalendar().getTimeInMillis() + webexMeeting.getDuration() * 60000 <= System.currentTimeMillis();
     }
 
+    @Override
+    public boolean isChildSelectable(int groupPosition, int childPosition) {
+        return true;
+    }
+
+    public interface OnFunctionBtnClickListener {
+        void onFunctionClick(Button button, int groupPosition, int childPosition);
+    }
 
     class ExpandViewHolder {
         CircleTextImageView photoImg;
@@ -167,15 +175,6 @@ public class WebexMeetingAdapter extends BaseExpandableListAdapter {
         TextView ownerText;
         View line;
         Button functionBtn;
-    }
-
-    @Override
-    public boolean isChildSelectable(int groupPosition, int childPosition) {
-        return true;
-    }
-
-    public interface OnFunctionBtnClickListener {
-        void onFunctionClick(Button button,int groupPosition, int childPosition);
     }
 
     ;

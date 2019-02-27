@@ -23,19 +23,19 @@ public class RecycleViewForSizeChange extends RecyclerView {
     }
 
     @Override
-    protected void onSizeChanged(int w,final int h, int oldw, final int oldh) {
+    protected void onSizeChanged(int w, final int h, int oldw, final int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
         this.postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (getAdapter() != null){
-                   if (Math.abs(h-oldh) >= 100){
-                       MoveToPosition(getAdapter().getItemCount()-1);
-                   }
+                if (getAdapter() != null) {
+                    if (Math.abs(h - oldh) >= 100) {
+                        MoveToPosition(getAdapter().getItemCount() - 1);
+                    }
 
                 }
             }
-        },50);
+        }, 50);
     }
 
     public void MoveToPosition(int position) {

@@ -2,6 +2,10 @@ package com.inspur.imp.plugin.photo.view;
 
 import android.view.MotionEvent;
 
+interface OnRotateListener {
+    void onRotate(float degrees, float focusX, float focusY);
+}
+
 public class RotateGestureDetector {
 
     private static final int MAX_DEGREES_STEP = 120;
@@ -56,8 +60,4 @@ public class RotateGestureDetector {
         y2 = event.getY(1);
         return (y2 - y1) / (x2 - x1);
     }
-}
-
-interface OnRotateListener {
-    void onRotate(float degrees, float focusX, float focusY);
 }

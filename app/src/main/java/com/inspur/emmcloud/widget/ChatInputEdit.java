@@ -35,13 +35,14 @@ import java.util.regex.Pattern;
  */
 public class ChatInputEdit extends EditText {
 
+    private static final int BACKGROUND_COLOR = Color.parseColor("#FFDEAD"); // 默认,话题背景高亮颜色
     private int size;
     private int maxLength = 2000;
     private List<InsertModel> insertModelList = new ArrayList<>();
-    private static final int BACKGROUND_COLOR = Color.parseColor("#FFDEAD"); // 默认,话题背景高亮颜色
     private Context mContext;
     private InputWatcher inputWatcher;
     private InsertModelListWatcher insertModelListWatcher;
+    private boolean isRequest = false;
 
     public ChatInputEdit(Context context) {
         super(context);
@@ -171,7 +172,7 @@ public class ChatInputEdit extends EditText {
      */
     @Override
     protected void onSelectionChanged(int selStart, int selEnd) {
-        if (insertModelList == null || insertModelList.size() == 0){
+        if (insertModelList == null || insertModelList.size() == 0) {
             super.onSelectionChanged(selStart, selEnd);
             return;
         }
@@ -193,21 +194,21 @@ public class ChatInputEdit extends EditText {
                 break;
             }
         }
-        if (selInSpan != null){
+        if (selInSpan != null) {
             int spanStartPos = spannableStringBuilder.getSpanStart(selInSpan);
             int spanEndPos = spannableStringBuilder.getSpanEnd(selInSpan);
-            if (selStart == selEnd){
-                setSelection(spanEndPos,spanEndPos);
-            }else {
-                if (selStart > spanStartPos){
+            if (selStart == selEnd) {
+                setSelection(spanEndPos, spanEndPos);
+            } else {
+                if (selStart > spanStartPos) {
                     selStart = spanStartPos;
                 }
-                if (selEnd <spanEndPos){
+                if (selEnd < spanEndPos) {
                     selEnd = spanEndPos;
                 }
-                setSelection(selStart,selEnd);
+                setSelection(selStart, selEnd);
             }
-        }else {
+        } else {
             super.onSelectionChanged(selStart, selEnd);
         }
 
@@ -229,7 +230,7 @@ public class ChatInputEdit extends EditText {
             int spanEndPos = spannableStringBuilder.getSpanEnd(span);
             //光标起始和结束在同一位置
             if (selectionStart == selectionEnd) {
-                if ( selectionStart == spanEndPos) {
+                if (selectionStart == spanEndPos) {
                     // 选中话题
                     LogUtils.jasonDebug("000000000000");
                     setSelection(spanStartPos, spanEndPos);
@@ -299,17 +300,18 @@ public class ChatInputEdit extends EditText {
         setText(spannableStringBuilder);
         setSelection(index + insertContent.length() + 1);
     }
-    public Map<String, String> getMentionsMap(){
-        Map<String,String> mentionsMap = new HashMap<>();
+
+    public Map<String, String> getMentionsMap() {
+        Map<String, String> mentionsMap = new HashMap<>();
         try {
-            if (insertModelList.size()>0){
-                for (InsertModel insertModel:insertModelList){
-                    if (insertModel.getInsertRule().equals("@")){
-                        mentionsMap.put(insertModel.getInsertId(),insertModel.getInsertContentId());
+            if (insertModelList.size() > 0) {
+                for (InsertModel insertModel : insertModelList) {
+                    if (insertModel.getInsertRule().equals("@")) {
+                        mentionsMap.put(insertModel.getInsertId(), insertModel.getInsertContentId());
                     }
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return mentionsMap;
@@ -327,10 +329,10 @@ public class ChatInputEdit extends EditText {
             if (keyword.startsWith("@")) {
                 InsertModel insertModel = getInsertModel(span.getId());
                 if (insertModel != null) {
-                    if (isIdentifyUrl){
+                    if (isIdentifyUrl) {
                         spannableStringBuilder.replace(spanStartPos, spanEndPos, "[" + insertModel.getInsertContent() + "]" + getMentionProtoUtils(insertModel.getInsertId()));
-                    }else {
-                        spannableStringBuilder.replace(spanStartPos+1, spanEndPos,insertModel.getInsertId()+" ");
+                    } else {
+                        spannableStringBuilder.replace(spanStartPos + 1, spanEndPos, insertModel.getInsertId() + " ");
                     }
 
                 }
@@ -384,12 +386,11 @@ public class ChatInputEdit extends EditText {
      */
     private InsertModel getInsertModel(String insertId) {
         int index = insertModelList.indexOf(new InsertModel(insertId));
-        if (index != -1){
-            return  insertModelList.get(index);
+        if (index != -1) {
+            return insertModelList.get(index);
         }
         return null;
     }
-
 
     /**
      * 获取特殊字符列表
@@ -398,9 +399,6 @@ public class ChatInputEdit extends EditText {
 
         return insertModelList;
     }
-
-
-    private boolean isRequest = false;
 
     public boolean isRequest() {
         return isRequest;
@@ -421,11 +419,6 @@ public class ChatInputEdit extends EditText {
         this.maxLength = maxLength;
     }
 
-    public interface InputWatcher {
-        void onTextChanged(CharSequence s, int start, int before,
-                           int count);
-    }
-
     /**
      * 通知inserModelList数据发生变化
      */
@@ -433,6 +426,11 @@ public class ChatInputEdit extends EditText {
         if (insertModelListWatcher != null) {
             insertModelListWatcher.onDataChanged(insertModelList);
         }
+    }
+
+    public interface InputWatcher {
+        void onTextChanged(CharSequence s, int start, int before,
+                           int count);
     }
 
     public interface InsertModelListWatcher {

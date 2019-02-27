@@ -118,7 +118,7 @@ public class WorkFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (!isWorkPortletConfigUploadSuccess){
+        if (!isWorkPortletConfigUploadSuccess) {
             uploadWorkPortletConfig();
         }
     }
@@ -152,8 +152,8 @@ public class WorkFragment extends BaseFragment {
      * 初始化工作页面ui配置
      */
     private void initWorkSetting() {
-        isWorkPortletConfigUploadSuccess = PreferencesUtils.getBoolean(getActivity(),Constant.PREF_WORK_PORTLET_CONFIG_UPLOAD,true);
-        String WorkPortletConfigJson = AppConfigCacheUtils.getAppConfigValue(getActivity(),"WorkPortlet",null);
+        isWorkPortletConfigUploadSuccess = PreferencesUtils.getBoolean(getActivity(), Constant.PREF_WORK_PORTLET_CONFIG_UPLOAD, true);
+        String WorkPortletConfigJson = AppConfigCacheUtils.getAppConfigValue(getActivity(), "WorkPortlet", null);
         List<WorkSetting> allWorkSettingList = WorkSettingCacheUtils.getAllWorkSettingList(getActivity());
         if (allWorkSettingList.size() == 0) { //本地没有缓存
             if (WorkPortletConfigJson == null || WorkPortletConfigJson.equals("null")) {   //服务端没有配置
@@ -167,10 +167,10 @@ public class WorkFragment extends BaseFragment {
                     JSONObject object = JSONUtils.getJSONObject(array, i, new JSONObject());
                     String id = JSONUtils.getString(object, "id", "");
                     boolean isOpen = JSONUtils.getBoolean(object, "isOpen", true);
-                    if (i==0){
+                    if (i == 0) {
                         PreferencesByUserAndTanentUtils.putBoolean(getContext(), Constant.PREF_WORK_INFO_BAR_OPEN, isOpen);
-                    }else {
-                        workSettingList.add(new WorkSetting(id, "", isOpen, i-1));
+                    } else {
+                        workSettingList.add(new WorkSetting(id, "", isOpen, i - 1));
                     }
 
                 }
@@ -179,12 +179,12 @@ public class WorkFragment extends BaseFragment {
         }
         workSettingList = WorkSettingCacheUtils.getOpenWorkSettingList(getActivity());
         //当服务端还没有保存过配置信息时需要上传
-        if (WorkPortletConfigJson == null || WorkPortletConfigJson.equals("null")){
+        if (WorkPortletConfigJson == null || WorkPortletConfigJson.equals("null")) {
             uploadWorkPortletConfig();
         }
         //判断此页面如果没有内容则显示空白页
-        boolean isHaveContent = isContainWork(TYPE_MEETING) || isContainWork(TYPE_APPROVAL)  || isContainWork(TYPE_CALENDAR) || isContainWork(TYPE_TASK);
-        rootView.findViewById(R.id.rl_no_work_content).setVisibility(isHaveContent?View.GONE:View.VISIBLE);
+        boolean isHaveContent = isContainWork(TYPE_MEETING) || isContainWork(TYPE_APPROVAL) || isContainWork(TYPE_CALENDAR) || isContainWork(TYPE_TASK);
+        rootView.findViewById(R.id.rl_no_work_content).setVisibility(isHaveContent ? View.GONE : View.VISIBLE);
     }
 
     /**
@@ -279,14 +279,6 @@ public class WorkFragment extends BaseFragment {
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(meetingAndTaskReceiver, myIntentFilter);
     }
 
-    static class ViewHolder {
-        ImageView groupIconImg;
-        TextView groupTitleText, workAddText;
-        RelativeLayout groupHeaderlayout;
-        ScrollViewWithListView GroupListView;
-        RelativeLayout wordAddLayout;
-    }
-
     /**
      * 更新附件信息
      *
@@ -303,6 +295,247 @@ public class WorkFragment extends BaseFragment {
                 taskChildAdapter.notifyDataSetChanged();
             }
         }
+    }
+
+    /**
+     * 获取会议时间
+     *
+     * @param meeting
+     * @return
+     */
+    private String getMeetingTime(Meeting meeting) {
+        String from = meeting.getFrom();
+        String meetingFromTime = TimeUtils.calendar2FormatString(
+                getActivity(), TimeUtils.timeString2Calendar(from),
+                TimeUtils.FORMAT_HOUR_MINUTE);
+        String to = meeting.getTo();
+        String meetingToTime = TimeUtils.calendar2FormatString(
+                getActivity(), TimeUtils.timeString2Calendar(to),
+                TimeUtils.FORMAT_HOUR_MINUTE);
+        return meetingFromTime + " - " + meetingToTime;
+    }
+
+    /**
+     * 设置头部节假日等信息
+     */
+    private void handHeaderDate() {
+        FestivalDate festivalDate = initFestivalDate();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(festivalDate.getFestivalTime());
+        int betweenQM = 0;
+        betweenQM = TimeUtils.getCountdownNum(calendar);
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        String date = TimeUtils.calendar2FormatString(getActivity(), calendar, TimeUtils.FORMAT_MONTH_DAY);
+        if (date.startsWith("0")) {
+            date = date.substring(1, date.length());
+        }
+        ((TextView) (rootView.findViewById(R.id.work_date_text)))
+                .setText(date);
+        String appLanguageObj = PreferencesUtils.getString(
+                getActivity(), MyApplication.getInstance().getTanent() + "appLanguageObj", "");
+        Language language = new Language(appLanguageObj);
+        if (language.getIso().equals("zh-CN")
+                || language.equals("zh-TW")
+                || language.equals("followSys")) {
+            ((TextView) (rootView.findViewById(R.id.work_chinesedate_text)))
+                    .setText(CalendarUtil.getChineseToday()
+                            + TimeUtils.getWeekDay(getContext(), calendar));
+        } else if (language.getIso().equals("en-US")) {
+            ((TextView) (rootView.findViewById(R.id.work_chinesedate_text)))
+                    .setText(TimeUtils.calendar2FormatString(getActivity(),
+                            calendar, TimeUtils.FORMAT_MONTH_DAY)
+                            + "  "
+                            + TimeUtils.getWeekDay(getContext(), calendar));
+        }
+
+        String festivalDateTips = FestivalCacheUtils.getFestivalTips(getActivity(), festivalDate.getFestivalKey());
+        ((TextView) (rootView.findViewById(R.id.work_festvaldate_text)))
+                .setText(festivalDateTips + "  " + betweenQM
+                        + " " + getString(R.string.work_day));
+        if (betweenQM < 0) {
+            ((TextView) (rootView.findViewById(R.id.work_festvaldate_text)))
+                    .setText(festivalDateTips + 0
+                            + getString(R.string.work_day));
+        }
+    }
+
+    /**
+     * 初始化节日
+     *
+     * @return
+     */
+    private FestivalDate initFestivalDate() {
+        FestivalDate festivalDate = null;
+        try {
+            if (!DbCacheUtils.tableIsExist(null, "com_inspur_emmcloud_bean_FestivalDate") || FestivalCacheUtils.isNeedUpdateFestivalTable(getActivity())) {
+                FestivalCacheUtils.saveFestivalList(getActivity());
+            }
+            festivalDate = FestivalCacheUtils.getFestival(getActivity());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return festivalDate;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == getActivity().RESULT_OK) {
+            if (requestCode == WORK_SETTING) {
+                refreshWorkLayout();
+                uploadWorkPortletConfig();
+            }
+        }
+    }
+
+    /**
+     * 获取三条Event
+     */
+    private void getCalEventsFor3() {
+        if (NetUtils.isNetworkConnected(getActivity()) && calendarIdList.size() > 0) {
+            Calendar afterCalendar = Calendar.getInstance();
+            Calendar beforeCalendar = Calendar.getInstance();
+            beforeCalendar.set(beforeCalendar.get(Calendar.YEAR) + 1,
+                    beforeCalendar.get(Calendar.MONTH),
+                    beforeCalendar.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
+            afterCalendar.set(afterCalendar.get(Calendar.YEAR),
+                    afterCalendar.get(Calendar.MONTH),
+                    afterCalendar.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
+            afterCalendar = TimeUtils.localCalendar2UTCCalendar(afterCalendar);
+            beforeCalendar = TimeUtils.localCalendar2UTCCalendar(beforeCalendar);
+            apiService.getAllCalEvents(calendarIdList, afterCalendar,
+                    beforeCalendar, 3, 0, false);
+        }
+
+    }
+
+    /**
+     * 获取今明两天所有日历的所有event
+     */
+    private void getCalEventsForTwoDays() {
+        if (calendarIdList.size() > 0) {
+            if (NetUtils.isNetworkConnected(getActivity())) {
+                Calendar afterCalendar = Calendar.getInstance();
+                Calendar beforeCalendar = Calendar.getInstance();
+                beforeCalendar.set(beforeCalendar.get(Calendar.YEAR),
+                        beforeCalendar.get(Calendar.MONTH),
+                        beforeCalendar.get(Calendar.DAY_OF_MONTH) + 2, 0, 0, 0);
+                afterCalendar.set(afterCalendar.get(Calendar.YEAR),
+                        afterCalendar.get(Calendar.MONTH),
+                        afterCalendar.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
+                afterCalendar = TimeUtils.localCalendar2UTCCalendar(afterCalendar);
+                beforeCalendar = TimeUtils.localCalendar2UTCCalendar(beforeCalendar);
+                apiService.getAllCalEvents(calendarIdList, afterCalendar,
+                        beforeCalendar, 5, 0, true);
+            }
+        } else {
+            calEventList.clear();
+            calendarChildAdapter.notifyDataSetChanged();
+        }
+
+    }
+
+    /**
+     * 获取工作页面ui配置
+     *
+     * @return
+     */
+    private String getWorkPortletConfigJson() {
+        List<WorkSetting> allWorkSettingList = WorkSettingCacheUtils.getAllWorkSettingList(getActivity());
+        JSONArray array = new JSONArray();
+        try {
+            JSONObject infoBarObj = new JSONObject();
+            boolean isInfoBarOpen = PreferencesByUserAndTanentUtils.getBoolean(getActivity(), Constant.PREF_WORK_INFO_BAR_OPEN, true);
+            infoBarObj.put("id", "infoBar");
+            infoBarObj.put("isOpen", isInfoBarOpen);
+            array.put(infoBarObj);
+            for (int i = 0; i < allWorkSettingList.size(); i++) {
+                WorkSetting workSetting = allWorkSettingList.get(i);
+                JSONObject obj = new JSONObject();
+                obj.put("id", workSetting.getId());
+                obj.put("isOpen", workSetting.isOpen());
+                array.put(obj);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return array.toString();
+    }
+
+    /**
+     * 记录用户点击
+     *
+     * @param functionId
+     */
+    private void recordUserClickWorkFunction(String functionId) {
+        PVCollectModel pvCollectModel = new PVCollectModel(functionId, "work");
+        PVCollectModelCacheUtils.saveCollectModel(getActivity(), pvCollectModel);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (calEventReceiver != null) {
+            LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(calEventReceiver);
+            calEventReceiver = null;
+        }
+        if (meetingAndTaskReceiver != null) {
+            LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(meetingAndTaskReceiver);
+            meetingAndTaskReceiver = null;
+        }
+        EventBus.getDefault().unregister(this);
+        PreferencesUtils.putBoolean(getActivity(), Constant.PREF_WORK_PORTLET_CONFIG_UPLOAD, isWorkPortletConfigUploadSuccess);
+    }
+
+    /**
+     * 获取日历中Event
+     */
+    private void getMyCalendar() {
+        if (NetUtils.isNetworkConnected(getActivity()) && isContainWork(TYPE_CALENDAR)) {
+            apiService.getMyCalendar(0, 30);
+        }
+    }
+
+    /**
+     * 获取任务
+     */
+    private void getTasks() {
+        if (NetUtils.isNetworkConnected(getActivity()) && isContainWork(TYPE_TASK)) {
+            String orderBy = PreferencesUtils.getString(getActivity(),
+                    "order_by", "PRIORITY");
+            String orderType = PreferencesUtils.getString(getActivity(),
+                    "order_type", "DESC");
+            apiService.getRecentTasks(orderBy, orderType);
+        }
+    }
+
+    /**
+     * 获取会议
+     */
+    private void getMeetings() {
+        if (NetUtils.isNetworkConnected(getActivity()) && isContainWork(TYPE_MEETING)) {
+            apiService.getMeetings(7);
+        }
+    }
+
+    /**
+     * 上传工作页面配置信息
+     */
+    private void uploadWorkPortletConfig() {
+        if (NetUtils.isNetworkConnected(getActivity(), false)) {
+            isWorkPortletConfigUploadSuccess = true;
+            apiService.saveWorkPortletConfig(getWorkPortletConfigJson());
+        } else {
+            isWorkPortletConfigUploadSuccess = false;
+        }
+    }
+
+    static class ViewHolder {
+        ImageView groupIconImg;
+        TextView groupTitleText, workAddText;
+        RelativeLayout groupHeaderlayout;
+        ScrollViewWithListView GroupListView;
+        RelativeLayout wordAddLayout;
     }
 
     private class Adapter extends BaseAdapter {
@@ -506,252 +739,13 @@ public class WorkFragment extends BaseFragment {
 
     }
 
-    /**
-     * 获取会议时间
-     *
-     * @param meeting
-     * @return
-     */
-    private String getMeetingTime(Meeting meeting) {
-        String from = meeting.getFrom();
-        String meetingFromTime = TimeUtils.calendar2FormatString(
-                getActivity(), TimeUtils.timeString2Calendar(from),
-                TimeUtils.FORMAT_HOUR_MINUTE);
-        String to = meeting.getTo();
-        String meetingToTime = TimeUtils.calendar2FormatString(
-                getActivity(), TimeUtils.timeString2Calendar(to),
-                TimeUtils.FORMAT_HOUR_MINUTE);
-        return meetingFromTime + " - " + meetingToTime;
-    }
-
-    /**
-     * 设置头部节假日等信息
-     */
-    private void handHeaderDate() {
-        FestivalDate festivalDate = initFestivalDate();
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(festivalDate.getFestivalTime());
-        int betweenQM = 0;
-        betweenQM = TimeUtils.getCountdownNum(calendar);
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        String date = TimeUtils.calendar2FormatString(getActivity(), calendar, TimeUtils.FORMAT_MONTH_DAY);
-        if (date.startsWith("0")) {
-            date = date.substring(1, date.length());
-        }
-        ((TextView) (rootView.findViewById(R.id.work_date_text)))
-                .setText(date);
-        String appLanguageObj = PreferencesUtils.getString(
-                getActivity(), MyApplication.getInstance().getTanent() + "appLanguageObj", "");
-        Language language = new Language(appLanguageObj);
-        if (language.getIso().equals("zh-CN")
-                || language.equals("zh-TW")
-                || language.equals("followSys")) {
-            ((TextView) (rootView.findViewById(R.id.work_chinesedate_text)))
-                    .setText(CalendarUtil.getChineseToday()
-                            + TimeUtils.getWeekDay(getContext(), calendar));
-        } else if (language.getIso().equals("en-US")) {
-            ((TextView) (rootView.findViewById(R.id.work_chinesedate_text)))
-                    .setText(TimeUtils.calendar2FormatString(getActivity(),
-                            calendar, TimeUtils.FORMAT_MONTH_DAY)
-                            + "  "
-                            + TimeUtils.getWeekDay(getContext(), calendar));
-        }
-
-        String festivalDateTips = FestivalCacheUtils.getFestivalTips(getActivity(), festivalDate.getFestivalKey());
-        ((TextView) (rootView.findViewById(R.id.work_festvaldate_text)))
-                .setText(festivalDateTips + "  " + betweenQM
-                        + " " + getString(R.string.work_day));
-        if (betweenQM < 0) {
-            ((TextView) (rootView.findViewById(R.id.work_festvaldate_text)))
-                    .setText(festivalDateTips + 0
-                            + getString(R.string.work_day));
-        }
-    }
-
-    /**
-     * 初始化节日
-     *
-     * @return
-     */
-    private FestivalDate initFestivalDate() {
-        FestivalDate festivalDate = null;
-        try {
-            if (!DbCacheUtils.tableIsExist(null,"com_inspur_emmcloud_bean_FestivalDate") || FestivalCacheUtils.isNeedUpdateFestivalTable(getActivity())) {
-                FestivalCacheUtils.saveFestivalList(getActivity());
-            }
-            festivalDate = FestivalCacheUtils.getFestival(getActivity());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return festivalDate;
-    }
-
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == getActivity().RESULT_OK) {
-            if (requestCode == WORK_SETTING) {
-                refreshWorkLayout();
-                uploadWorkPortletConfig();
-            }
-        }
-    }
-
-
-    /**
-     * 获取三条Event
-     */
-    private void getCalEventsFor3() {
-        if (NetUtils.isNetworkConnected(getActivity()) && calendarIdList.size() > 0) {
-            Calendar afterCalendar = Calendar.getInstance();
-            Calendar beforeCalendar = Calendar.getInstance();
-            beforeCalendar.set(beforeCalendar.get(Calendar.YEAR) + 1,
-                    beforeCalendar.get(Calendar.MONTH),
-                    beforeCalendar.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
-            afterCalendar.set(afterCalendar.get(Calendar.YEAR),
-                    afterCalendar.get(Calendar.MONTH),
-                    afterCalendar.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
-            afterCalendar = TimeUtils.localCalendar2UTCCalendar(afterCalendar);
-            beforeCalendar = TimeUtils.localCalendar2UTCCalendar(beforeCalendar);
-            apiService.getAllCalEvents(calendarIdList, afterCalendar,
-                    beforeCalendar, 3, 0, false);
-        }
-
-    }
-
-
-    /**
-     * 获取今明两天所有日历的所有event
-     */
-    private void getCalEventsForTwoDays() {
-        if (calendarIdList.size() > 0) {
-            if (NetUtils.isNetworkConnected(getActivity())) {
-                Calendar afterCalendar = Calendar.getInstance();
-                Calendar beforeCalendar = Calendar.getInstance();
-                beforeCalendar.set(beforeCalendar.get(Calendar.YEAR),
-                        beforeCalendar.get(Calendar.MONTH),
-                        beforeCalendar.get(Calendar.DAY_OF_MONTH) + 2, 0, 0, 0);
-                afterCalendar.set(afterCalendar.get(Calendar.YEAR),
-                        afterCalendar.get(Calendar.MONTH),
-                        afterCalendar.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
-                afterCalendar = TimeUtils.localCalendar2UTCCalendar(afterCalendar);
-                beforeCalendar = TimeUtils.localCalendar2UTCCalendar(beforeCalendar);
-                apiService.getAllCalEvents(calendarIdList, afterCalendar,
-                        beforeCalendar, 5, 0, true);
-            }
-        } else {
-            calEventList.clear();
-            calendarChildAdapter.notifyDataSetChanged();
-        }
-
-    }
-
-    /**
-     * 获取工作页面ui配置
-     * @return
-     */
-    private String getWorkPortletConfigJson(){
-        List<WorkSetting> allWorkSettingList = WorkSettingCacheUtils.getAllWorkSettingList(getActivity());
-        JSONArray array = new JSONArray();
-        try {
-            JSONObject infoBarObj = new JSONObject();
-            boolean isInfoBarOpen = PreferencesByUserAndTanentUtils.getBoolean(getActivity(), Constant.PREF_WORK_INFO_BAR_OPEN, true);
-            infoBarObj.put("id","infoBar");
-            infoBarObj.put("isOpen",isInfoBarOpen);
-            array.put(infoBarObj);
-            for (int i=0;i<allWorkSettingList.size();i++){
-                WorkSetting workSetting = allWorkSettingList.get(i);
-                JSONObject obj = new JSONObject();
-                obj.put("id",workSetting.getId());
-                obj.put("isOpen",workSetting.isOpen());
-                array.put(obj);
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-       return array.toString();
-    }
-
-
-    /**
-     * 记录用户点击
-     *
-     * @param functionId
-     */
-    private void recordUserClickWorkFunction(String functionId) {
-        PVCollectModel pvCollectModel = new PVCollectModel(functionId, "work");
-        PVCollectModelCacheUtils.saveCollectModel(getActivity(), pvCollectModel);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (calEventReceiver != null) {
-            LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(calEventReceiver);
-            calEventReceiver = null;
-        }
-        if (meetingAndTaskReceiver != null) {
-            LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(meetingAndTaskReceiver);
-            meetingAndTaskReceiver = null;
-        }
-        EventBus.getDefault().unregister(this);
-        PreferencesUtils.putBoolean(getActivity(),Constant.PREF_WORK_PORTLET_CONFIG_UPLOAD,isWorkPortletConfigUploadSuccess);
-    }
-
-
-    /**
-     * 获取日历中Event
-     */
-    private void getMyCalendar() {
-        if (NetUtils.isNetworkConnected(getActivity()) && isContainWork(TYPE_CALENDAR)) {
-            apiService.getMyCalendar(0, 30);
-        }
-    }
-
-
-    /**
-     * 获取任务
-     */
-    private void getTasks() {
-        if (NetUtils.isNetworkConnected(getActivity()) && isContainWork(TYPE_TASK)) {
-            String orderBy = PreferencesUtils.getString(getActivity(),
-                    "order_by", "PRIORITY");
-            String orderType = PreferencesUtils.getString(getActivity(),
-                    "order_type", "DESC");
-            apiService.getRecentTasks(orderBy, orderType);
-        }
-    }
-
-
-    /**
-     * 获取会议
-     */
-    private void getMeetings() {
-        if (NetUtils.isNetworkConnected(getActivity()) && isContainWork(TYPE_MEETING)) {
-            apiService.getMeetings(7);
-        }
-    }
-
-    /**
-     * 上传工作页面配置信息
-     */
-    private void uploadWorkPortletConfig() {
-        if (NetUtils.isNetworkConnected(getActivity(), false)) {
-            isWorkPortletConfigUploadSuccess = true;
-            apiService.saveWorkPortletConfig(getWorkPortletConfigJson());
-        }else {
-            isWorkPortletConfigUploadSuccess = false;
-        }
-    }
-
     class WebService extends APIInterfaceInstance {
         @Override
         public void returnMeetingsSuccess(GetMeetingsResult getMeetingsResult) {
             swipeRefreshLayout.setRefreshing(false);
             WorkFragment.this.meetingList = getMeetingsResult.getMeetingsList();
             Collections.sort(WorkFragment.this.meetingList, new Meeting());
-            if (meetingChildAdapter != null){
+            if (meetingChildAdapter != null) {
                 meetingChildAdapter.notifyDataSetChanged();
             }
         }
@@ -766,7 +760,7 @@ public class WorkFragment extends BaseFragment {
         public void returnRecentTasksSuccess(GetTaskListResult getTaskListResult) {
             swipeRefreshLayout.setRefreshing(false);
             taskList = getTaskListResult.getTaskList();
-            if (taskChildAdapter != null){
+            if (taskChildAdapter != null) {
                 taskChildAdapter.notifyDataSetChanged();
             }
         }
@@ -811,7 +805,7 @@ public class WorkFragment extends BaseFragment {
             CalEventNotificationUtils.setCalEventNotification(getActivity().getApplicationContext(), calEventList);
             if (isRefresh && (calEventList.size() < 3)) { // 获取今明两天的日历不足3条
                 getCalEventsFor3();
-            } else if(calendarChildAdapter != null){
+            } else if (calendarChildAdapter != null) {
                 calendarChildAdapter.notifyDataSetChanged();
             }
 
@@ -825,7 +819,7 @@ public class WorkFragment extends BaseFragment {
 
         @Override
         public void returnSaveConfigSuccess() {
-           isWorkPortletConfigUploadSuccess = true;
+            isWorkPortletConfigUploadSuccess = true;
         }
 
         @Override
@@ -833,7 +827,6 @@ public class WorkFragment extends BaseFragment {
             isWorkPortletConfigUploadSuccess = false;
         }
     }
-
 
 
 }

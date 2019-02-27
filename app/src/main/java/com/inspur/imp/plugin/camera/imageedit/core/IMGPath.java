@@ -12,17 +12,12 @@ import android.graphics.Path;
 
 public class IMGPath {
 
-    protected Path path;
-
-    private int color = Color.RED;
-
-    private float width = BASE_MOSAIC_WIDTH;
-
-    private IMGMode mode = IMGMode.DOODLE;
-
     public static final float BASE_DOODLE_WIDTH = 8f;
-
     public static final float BASE_MOSAIC_WIDTH = 72f;
+    protected Path path;
+    private int color = Color.RED;
+    private float width = BASE_MOSAIC_WIDTH;
+    private IMGMode mode = IMGMode.DOODLE;
 
     public IMGPath() {
         this(new Path());
@@ -74,12 +69,12 @@ public class IMGPath {
         this.mode = mode;
     }
 
-    public void setWidth(float width) {
-        this.width = width;
-    }
-
     public float getWidth() {
         return width;
+    }
+
+    public void setWidth(float width) {
+        this.width = width;
     }
 
     public void onDrawDoodle(Canvas canvas, Paint paint) {

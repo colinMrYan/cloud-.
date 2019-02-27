@@ -7,30 +7,30 @@ package com.inspur.emmcloud.bean.system;
 public class EventMessage {
     public static final int RESULT_OK = 200;
     private String id;
-    private String tag="";
-    private String content="";
+    private String tag = "";
+    private String content = "";
     private int status = 200;
-    private Object extra="";
-    private int startQuestTime =0;
+    private Object extra = "";
+    private int startQuestTime = 0;
 
-    public EventMessage(String id){
+    public EventMessage(String id) {
         this.id = id;
     }
 
-    public EventMessage(String id,String tag, String content) {
+    public EventMessage(String id, String tag, String content) {
         this.id = id;
         this.tag = tag;
         this.content = content;
     }
 
-    public EventMessage(String id,String tag, String content, String extra) {
+    public EventMessage(String id, String tag, String content, String extra) {
         this.id = id;
         this.tag = tag;
         this.content = content;
         this.extra = extra;
     }
 
-    public EventMessage(String id,String tag) {
+    public EventMessage(String id, String tag) {
         this.id = id;
         this.tag = tag;
     }

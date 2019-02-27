@@ -124,7 +124,7 @@ public class ImageGridAdapter extends BaseAdapter {
                 holder.checkImg.setVisibility(View.VISIBLE);
                 boolean checked = mSelectedImages.contains(imageItem);
                 holder.mask.setBackgroundColor(checked ? Color.parseColor("#88000000") : Color.parseColor("#11000000"));
-                holder.checkImg.setImageResource(checked ?R.drawable.plugin_camera_gellery_img_checked : R.drawable.plugin_camera_gellery_img_normal);
+                holder.checkImg.setImageResource(checked ? R.drawable.plugin_camera_gellery_img_checked : R.drawable.plugin_camera_gellery_img_normal);
             } else {
                 holder.checkImg.setVisibility(View.GONE);
             }
@@ -132,6 +132,14 @@ public class ImageGridAdapter extends BaseAdapter {
             imagePicker.getImageLoader().displayImage(mActivity, imageItem.path, ivThumb, mImageSize, mImageSize); //显示图片
         }
         return convertView;
+    }
+
+    public void setOnImageItemClickListener(OnImageItemClickListener listener) {
+        this.listener = listener;
+    }
+
+    public interface OnImageItemClickListener {
+        void onImageItemClick(View view, ImageItem imageItem, int position);
     }
 
     private class ViewHolder {
@@ -146,13 +154,5 @@ public class ImageGridAdapter extends BaseAdapter {
             mask = view.findViewById(R.id.mask);
             checkImg = (ImageView) view.findViewById(R.id.check_img);
         }
-    }
-
-    public void setOnImageItemClickListener(OnImageItemClickListener listener) {
-        this.listener = listener;
-    }
-
-    public interface OnImageItemClickListener {
-        void onImageItemClick(View view, ImageItem imageItem, int position);
     }
 }

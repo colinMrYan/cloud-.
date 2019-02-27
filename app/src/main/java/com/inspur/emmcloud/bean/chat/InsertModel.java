@@ -6,13 +6,13 @@ package com.inspur.emmcloud.bean.chat;
  */
 
 public class InsertModel {
-    private String insertRule="";
-    private String insertId="";
-    private String insertContent="";
-    private String insertColor="#0f7bca";
-    private String insertContentId="";
+    private String insertRule = "";
+    private String insertId = "";
+    private String insertContent = "";
+    private String insertColor = "#0f7bca";
+    private String insertContentId = "";
 
-    public InsertModel(String insertId){
+    public InsertModel(String insertId) {
         this.insertId = insertId;
     }
 
@@ -22,7 +22,7 @@ public class InsertModel {
         this.insertId = insertId;
     }
 
-    public InsertModel(String insertRule, String insertId, String insertContent,String insertContentId) {
+    public InsertModel(String insertRule, String insertId, String insertContent, String insertContentId) {
         this.insertRule = insertRule;
         this.insertContent = insertContent;
         this.insertId = insertId;
@@ -68,8 +68,6 @@ public class InsertModel {
     public void setInsertId(String insertId) {
         this.insertId = insertId;
     }
-
-
 
 
     @Override

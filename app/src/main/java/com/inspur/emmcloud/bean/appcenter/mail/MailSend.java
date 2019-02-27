@@ -11,12 +11,12 @@ import java.util.List;
 public class MailSend implements Serializable {
     private String Subject;
     private String Body;
-    private List<MailAttachment> MailAttachments =new ArrayList<>();
+    private List<MailAttachment> MailAttachments = new ArrayList<>();
     private MailRecipientModel From;
-    private List<MailRecipientModel>   ToRecipients= new ArrayList<>();
-    private List<MailRecipientModel>   CcRecipients=new ArrayList<>();
-    private List<MailRecipientModel>   BccRecipients= new ArrayList<>();
-    private String OriginalMail   ;
+    private List<MailRecipientModel> ToRecipients = new ArrayList<>();
+    private List<MailRecipientModel> CcRecipients = new ArrayList<>();
+    private List<MailRecipientModel> BccRecipients = new ArrayList<>();
+    private String OriginalMail;
     private boolean IsReply;
     private boolean IsForward;
     private boolean NeedEncrypt;

@@ -13,32 +13,21 @@ import android.view.MotionEvent;
 
 public class IMGStickerX {
 
-    private float mBaseScale = 1f, mScale = 1f;
-
-    private float mBaseRotate = 0f, mRotate = 0f;
-
-    private float mX = 0f, mY = 0f;
-
+    private final static float SIZE_ANCHOR = 60;
+    private final static float STROKE_FRAME = 6f;
     protected float[] mPivotXY = {0, 0};
-
-    private StickerEvent mTouchEvent;
-
-    private boolean isActivated = true;
-
     /**
      * isActivated 为true时，其坐标相对于屏幕左上角
      * isActivated 为false时，其坐标相对Image，切为单位坐标
      */
     protected RectF mFrame = new RectF();
-
+    private float mBaseScale = 1f, mScale = 1f;
+    private float mBaseRotate = 0f, mRotate = 0f;
+    private float mX = 0f, mY = 0f;
+    private StickerEvent mTouchEvent;
+    private boolean isActivated = true;
     private RectF mRemoveFrame = new RectF();
-
     private RectF mAdjustFrame = new RectF();
-
-    private final static float SIZE_ANCHOR = 60;
-
-    private final static float STROKE_FRAME = 6f;
-
     private Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
     {

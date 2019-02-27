@@ -10,18 +10,18 @@ import java.io.Serializable;
  * Created by yufuchang on 2018/7/26.
  */
 
-public class MainTabMenu implements Serializable{
+public class MainTabMenu implements Serializable {
     private String ico;
     private String action;
     private String text;
 
-    public MainTabMenu(JSONObject jsonObject){
-        this.ico = JSONUtils.getString(jsonObject,"ico","");
-        this.action = JSONUtils.getString(jsonObject,"action","");
-        if (jsonObject.has("callback")){
-            this.action = JSONUtils.getString(jsonObject,"callback","");
+    public MainTabMenu(JSONObject jsonObject) {
+        this.ico = JSONUtils.getString(jsonObject, "ico", "");
+        this.action = JSONUtils.getString(jsonObject, "action", "");
+        if (jsonObject.has("callback")) {
+            this.action = JSONUtils.getString(jsonObject, "callback", "");
         }
-        this.text = JSONUtils.getString(jsonObject,"text","");
+        this.text = JSONUtils.getString(jsonObject, "text", "");
     }
 
     public String getIco() {

@@ -23,7 +23,8 @@ public class VolumeInfoMemberAdapter extends BaseAdapter {
     private Context context;
     private List<String> memberList;
     private boolean isOwner;
-    public VolumeInfoMemberAdapter(Context context, List<String> memberList,boolean isOwner){
+
+    public VolumeInfoMemberAdapter(Context context, List<String> memberList, boolean isOwner) {
         this.context = context;
         this.memberList = memberList;
         this.isOwner = isOwner;
@@ -50,12 +51,12 @@ public class VolumeInfoMemberAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        convertView = LayoutInflater.from(context).inflate(R.layout.channel_member_item_view,null);
+        convertView = LayoutInflater.from(context).inflate(R.layout.channel_member_item_view, null);
         CircleTextImageView memberHeadImg = (CircleTextImageView) convertView
                 .findViewById(R.id.member_head_img);
         TextView nameText = (TextView) convertView
                 .findViewById(R.id.tv_name);
-        String userPhotoUrl= null;
+        String userPhotoUrl = null;
         String userName = null;
         if ((position == getCount() - 1) && isOwner) {
             userPhotoUrl = "drawable://" + R.drawable.icon_group_delete;

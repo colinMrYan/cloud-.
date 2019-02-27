@@ -22,22 +22,37 @@ public class ChannelInfoUtils {
     private GetChannelInfoCallBack getChannelInfoCallBack;
     private LoadingDialog loadingDlg;
     private String cid;
-    public void getChannelInfo(Context context, String cid, LoadingDialog loadingDlg,GetChannelInfoCallBack getChannelInfoCallBack){
+
+    public void getChannelInfo(Context context, String cid, LoadingDialog loadingDlg, GetChannelInfoCallBack getChannelInfoCallBack) {
         this.getChannelInfoCallBack = getChannelInfoCallBack;
-       Channel channel =  ChannelCacheUtils.getChannel(context, cid);
-       if (channel != null){
-           callbackSuccess(channel);
-       }else if(NetUtils.isNetworkConnected(context)){
-           loadingDlg.show();
-           this.loadingDlg = loadingDlg;
-           this.cid = cid;
-           ChatAPIService apiService = new ChatAPIService(context);
-           apiService.setAPIInterface(new WebService());
-           String[] cidArray = {cid};
-           apiService.getChannelGroupList(cidArray);
-       }else {
-           callbackFail("",-1);
-       }
+        Channel channel = ChannelCacheUtils.getChannel(context, cid);
+        if (channel != null) {
+            callbackSuccess(channel);
+        } else if (NetUtils.isNetworkConnected(context)) {
+            loadingDlg.show();
+            this.loadingDlg = loadingDlg;
+            this.cid = cid;
+            ChatAPIService apiService = new ChatAPIService(context);
+            apiService.setAPIInterface(new WebService());
+            String[] cidArray = {cid};
+            apiService.getChannelGroupList(cidArray);
+        } else {
+            callbackFail("", -1);
+        }
+    }
+
+    private void callbackSuccess(Channel channel) {
+        LoadingDialog.dimissDlg(loadingDlg);
+        if (getChannelInfoCallBack != null) {
+            getChannelInfoCallBack.getChannelInfoSuccess(channel);
+        }
+    }
+
+    private void callbackFail(String error, int errorCode) {
+        LoadingDialog.dimissDlg(loadingDlg);
+        if (getChannelInfoCallBack != null) {
+            getChannelInfoCallBack.getChannelInfoFail(error, errorCode);
+        }
     }
 
     public interface GetChannelInfoCallBack {
@@ -46,21 +61,7 @@ public class ChannelInfoUtils {
         void getChannelInfoFail(String error, int errorCode);
     }
 
-    private void callbackSuccess(Channel channel){
-        LoadingDialog.dimissDlg(loadingDlg);
-        if (getChannelInfoCallBack != null){
-            getChannelInfoCallBack.getChannelInfoSuccess(channel);
-        }
-    }
-
-    private void callbackFail(String error, int errorCode){
-        LoadingDialog.dimissDlg(loadingDlg);
-        if (getChannelInfoCallBack != null){
-            getChannelInfoCallBack.getChannelInfoFail(error, errorCode);
-        }
-    }
-
-    private class  WebService extends APIInterfaceInstance{
+    private class WebService extends APIInterfaceInstance {
         @Override
         public void returnSearchChannelGroupSuccess(
                 GetSearchChannelGroupResult getSearchChannelGroupResult) {
@@ -80,7 +81,7 @@ public class ChannelInfoUtils {
             if (channel == null) {
                 callbackFail(error, errorCode);
             } else {
-               callbackSuccess(channel);
+                callbackSuccess(channel);
             }
         }
     }

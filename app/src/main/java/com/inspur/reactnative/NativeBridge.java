@@ -180,7 +180,7 @@ public class NativeBridge extends ReactContextBaseJavaModule implements Activity
                     List<ContactUser> contactUserList = ContactUserCacheUtils.getSoreUserList(uidList);
                     if (multi) {
                         WritableNativeArray writableNativeArray = new WritableNativeArray();
-                        for (ContactUser contactUser:contactUserList) {
+                        for (ContactUser contactUser : contactUserList) {
                             WritableNativeMap map = contactUser2Map(contactUser);
                             writableNativeArray.pushMap(map);
                         }
@@ -229,13 +229,13 @@ public class NativeBridge extends ReactContextBaseJavaModule implements Activity
         WritableNativeMap map = new WritableNativeMap();
         try {
             map.putString("inspur_id", contactUser.getId());
-         //   map.putString("code", code);
+            //   map.putString("code", code);
             map.putString("real_name", contactUser.getName());
             map.putString("pinyin", contactUser.getPinyin());
             map.putString("mobile", contactUser.getMobile());
             map.putString("email", contactUser.getEmail());
-         //   map.putString("org_name", orgName);
-          //  map.putString("type", type);
+            //   map.putString("org_name", orgName);
+            //  map.putString("type", type);
             map.putString("head", APIUri.getUserIconUrl(MyApplication.getInstance(), contactUser.getId()));
         } catch (Exception e) {
             e.printStackTrace();

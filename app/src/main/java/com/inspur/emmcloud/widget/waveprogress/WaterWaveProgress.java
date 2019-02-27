@@ -22,25 +22,22 @@ import java.lang.ref.WeakReference;
  * @author Administrator
  */
 public class WaterWaveProgress extends View {
+    // 进度 //浪峰个数
+    float crestCount = 1.5f;
+    int mProgress = 10, mMaxProgress = 100;
+    WaterWaveAttrInit attrInit;
     // 水的画笔 // 画圆环的画笔// 进度百分比的画笔
     private Paint mPaintWater = null, mRingPaint = null, mTextPaint = null;
-
     // 圆环颜色 // 圆环背景颜色 // 当前进度 //水波颜色 // 水波背景色 //进度条和水波之间的距离 //进度百分比字体大小
     // //进度百分比字体颜色
     private int mRingColor, mRingBgColor, mWaterColor, mWaterBgColor,
             mFontSize, mTextColor;
-    // 进度 //浪峰个数
-    float crestCount = 1.5f;
-
-    int mProgress = 10, mMaxProgress = 100;
-
     // 画布中心点
     private Point mCenterPoint;
     // 圆环宽度
     private float mRingWidth, mProgress2WaterWidth;
     // 是否显示进度条 //是否显示进度百分比
     private boolean mShowProgress = false, mShowNumerical = true;
-
     /**
      * 产生波浪效果的因子
      */
@@ -61,28 +58,7 @@ public class WaterWaveProgress extends View {
      * 水的透明度
      */
     private int mWaterAlpha = 255; // 255
-    WaterWaveAttrInit attrInit;
-
     private MyHandler mHandler = null;
-
-    private static class MyHandler extends Handler {
-        private WeakReference<WaterWaveProgress> mWeakRef = null;
-
-        private int refreshPeriod = 100;
-
-        public MyHandler(WaterWaveProgress host) {
-            mWeakRef = new WeakReference<WaterWaveProgress>(host);
-        }
-
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            if (mWeakRef.get() != null) {
-                mWeakRef.get().invalidate();
-                sendEmptyMessageDelayed(0, refreshPeriod);
-            }
-        }
-    }
 
     public WaterWaveProgress(Context paramContext) {
         super(paramContext);
@@ -318,19 +294,19 @@ public class WaterWaveProgress extends View {
     }
 
     /**
+     * 获取进度 动画时会用到
+     */
+    public int getProgress() {
+        return mProgress;
+    }
+
+    /**
      * 设置当前进度
      */
     public void setProgress(int progress) {
         progress = progress > 100 ? 100 : progress < 0 ? 0 : progress;
         mProgress = progress;
         invalidate();
-    }
-
-    /**
-     * 获取进度 动画时会用到
-     */
-    public int getProgress() {
-        return mProgress;
     }
 
     /**
@@ -446,6 +422,25 @@ public class WaterWaveProgress extends View {
      */
     public void setProgress2WaterWidth(float mProgress2WaterWidth) {
         this.mProgress2WaterWidth = mProgress2WaterWidth;
+    }
+
+    private static class MyHandler extends Handler {
+        private WeakReference<WaterWaveProgress> mWeakRef = null;
+
+        private int refreshPeriod = 100;
+
+        public MyHandler(WaterWaveProgress host) {
+            mWeakRef = new WeakReference<WaterWaveProgress>(host);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if (mWeakRef.get() != null) {
+                mWeakRef.get().invalidate();
+                sendEmptyMessageDelayed(0, refreshPeriod);
+            }
+        }
     }
 
 }

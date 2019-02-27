@@ -3,83 +3,83 @@ package com.inspur.emmcloud.widget.tag;
 import java.io.Serializable;
 
 public class Tag implements Serializable {
-	
 
-	private static final long serialVersionUID = 2684657309332033242L;
-	
-	private int backgroundResId;
-	private int id;
-	private boolean isChecked;
-	private int leftDrawableResId;
-	private int rightDrawableResId;
-	private String title;
-	private String tagId;
 
-	public Tag() {
-		
-	}
+    private static final long serialVersionUID = 2684657309332033242L;
 
-	public Tag(int paramInt, String paramString,String tagId) {
-		this.id = paramInt;
-		this.title = paramString;
-		this.tagId = tagId;
-	}
+    private int backgroundResId;
+    private int id;
+    private boolean isChecked;
+    private int leftDrawableResId;
+    private int rightDrawableResId;
+    private String title;
+    private String tagId;
 
-	public int getBackgroundResId() {
-		return this.backgroundResId;
-	}
+    public Tag() {
 
-	public int getId() {
-		return this.id;
-	}
+    }
 
-	public int getLeftDrawableResId() {
-		return this.leftDrawableResId;
-	}
+    public Tag(int paramInt, String paramString, String tagId) {
+        this.id = paramInt;
+        this.title = paramString;
+        this.tagId = tagId;
+    }
 
-	public int getRightDrawableResId() {
-		return this.rightDrawableResId;
-	}
+    public int getBackgroundResId() {
+        return this.backgroundResId;
+    }
 
-	public String getTitle() {
-		return this.title;
-	}
+    public void setBackgroundResId(int paramInt) {
+        this.backgroundResId = paramInt;
+    }
 
-	public boolean isChecked() {
-		return this.isChecked;
-	}
+    public int getId() {
+        return this.id;
+    }
 
-	public void setBackgroundResId(int paramInt) {
-		this.backgroundResId = paramInt;
-	}
+    public void setId(int paramInt) {
+        this.id = paramInt;
+    }
 
-	public void setChecked(boolean paramBoolean) {
-		this.isChecked = paramBoolean;
-	}
+    public int getLeftDrawableResId() {
+        return this.leftDrawableResId;
+    }
 
-	public void setId(int paramInt) {
-		this.id = paramInt;
-	}
+    public void setLeftDrawableResId(int paramInt) {
+        this.leftDrawableResId = paramInt;
+    }
 
-	public void setLeftDrawableResId(int paramInt) {
-		this.leftDrawableResId = paramInt;
-	}
+    public int getRightDrawableResId() {
+        return this.rightDrawableResId;
+    }
 
-	public void setRightDrawableResId(int paramInt) {
-		this.rightDrawableResId = paramInt;
-	}
+    public void setRightDrawableResId(int paramInt) {
+        this.rightDrawableResId = paramInt;
+    }
 
-	public void setTitle(String paramString) {
-		this.title = paramString;
-	}
+    public String getTitle() {
+        return this.title;
+    }
 
-	public String getTagId() {
-		return tagId;
-	}
+    public void setTitle(String paramString) {
+        this.title = paramString;
+    }
 
-	public void setTagId(String tagId) {
-		this.tagId = tagId;
-	}
-	
-	
+    public boolean isChecked() {
+        return this.isChecked;
+    }
+
+    public void setChecked(boolean paramBoolean) {
+        this.isChecked = paramBoolean;
+    }
+
+    public String getTagId() {
+        return tagId;
+    }
+
+    public void setTagId(String tagId) {
+        this.tagId = tagId;
+    }
+
+
 }

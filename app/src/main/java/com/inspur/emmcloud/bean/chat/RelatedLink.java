@@ -12,11 +12,13 @@ public class RelatedLink {
     private String poster;
     private String title;
     private String url;
-    public RelatedLink(JSONObject obj){
+
+    public RelatedLink(JSONObject obj) {
         poster = JSONUtils.getString(obj, "poster", "");
         title = JSONUtils.getString(obj, "title", "");
         url = JSONUtils.getString(obj, "url", "");
     }
+
     public String getPoster() {
         return poster;
     }
@@ -41,13 +43,13 @@ public class RelatedLink {
         this.url = url;
     }
 
-    public JSONObject toJSonObject(){
+    public JSONObject toJSonObject() {
         JSONObject object = new JSONObject();
-        try{
-            object.put("poster",poster);
-            object.put("title",title);
-            object.put("url",url);
-        }catch (Exception e){
+        try {
+            object.put("poster", poster);
+            object.put("title", title);
+            object.put("url", url);
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return object;

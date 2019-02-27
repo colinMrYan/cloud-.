@@ -17,56 +17,37 @@ import com.inspur.imp.plugin.camera.imageedit.core.util.IMGUtils;
 public class IMGClipWindow implements IMGClip {
 
     /**
+     * 垂直窗口比例
+     */
+    private static final float VERTICAL_RATIO = 0.8f;
+    private static final int COLOR_CELL = 0x80FFFFFF;
+    private static final int COLOR_FRAME = Color.WHITE;
+    private static final int COLOR_CORNER = Color.WHITE;
+    private static final int COLOR_SHADE = 0xCC000000;
+    /**
      * 裁剪区域
      */
     private RectF mFrame = new RectF();
-
     private RectF mBaseFrame = new RectF();
-
     private RectF mTargetFrame = new RectF();
-
     /**
      * 裁剪窗口
      */
     private RectF mWinFrame = new RectF();
-
     private RectF mWin = new RectF();
-
     private float[] mCells = new float[16];
-
     private float[] mCorners = new float[32];
-
     private float[][] mBaseSizes = new float[2][4];
-
     /**
      * 是否在裁剪中
      */
     private boolean isClipping = false;
-
     private boolean isResetting = true;
-
     private boolean isShowShade = false;
-
     private boolean isHoming = false;
-
     private Matrix M = new Matrix();
-
     private Path mShadePath = new Path();
-
     private Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-
-    /**
-     * 垂直窗口比例
-     */
-    private static final float VERTICAL_RATIO = 0.8f;
-
-    private static final int COLOR_CELL = 0x80FFFFFF;
-
-    private static final int COLOR_FRAME = Color.WHITE;
-
-    private static final int COLOR_CORNER = Color.WHITE;
-
-    private static final int COLOR_SHADE = 0xCC000000;
 
     {
         mPaint.setStyle(Paint.Style.STROKE);

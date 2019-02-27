@@ -46,13 +46,13 @@ import org.xutils.view.annotation.ViewInject;
 @ContentView(R.layout.activity_login_by_sms)
 public class LoginBySmsActivity extends BaseActivity {
 
-    private static final int LOGIN_SUCCESS = 0;
-    private static final int LOGIN_FAIL = 1;
-    private static final int GET_SMS_CAPTCHA = 2;
     public static final int MODE_LOGIN = 1;
     public static final int MODE_FORGET_PASSWORD = 2;
     public static final String EXTRA_MODE = "extra_mode";
     public static final String EXTRA_PHONE = "extra_phone";
+    private static final int LOGIN_SUCCESS = 0;
+    private static final int LOGIN_FAIL = 1;
+    private static final int GET_SMS_CAPTCHA = 2;
     private int mode = MODE_LOGIN;
     @ViewInject(R.id.tv_title)
     private TextView titleText;
@@ -88,18 +88,18 @@ public class LoginBySmsActivity extends BaseActivity {
         EditWatcher watcher = new EditWatcher();
         phoneEdit.addTextChangedListener(watcher);
         captchaEdit.addTextChangedListener(watcher);
-        mode = getIntent().getExtras().getInt(EXTRA_MODE,MODE_LOGIN);
-        loginBtn.setText((mode == MODE_LOGIN)?R.string.login:R.string.next_step);
-        titleText.setText((mode == MODE_LOGIN)?R.string.login_code_login_text:R.string.login_find_password);
-        loginByAccountText.setVisibility((mode == MODE_LOGIN)?View.VISIBLE:View.INVISIBLE);
+        mode = getIntent().getExtras().getInt(EXTRA_MODE, MODE_LOGIN);
+        loginBtn.setText((mode == MODE_LOGIN) ? R.string.login : R.string.next_step);
+        titleText.setText((mode == MODE_LOGIN) ? R.string.login_code_login_text : R.string.login_find_password);
+        loginByAccountText.setVisibility((mode == MODE_LOGIN) ? View.VISIBLE : View.INVISIBLE);
         handMessage();
-        if (getIntent().hasExtra(EXTRA_PHONE)){
-            phone = getIntent().getExtras().getString(EXTRA_PHONE,"");
-            if (!StringUtils.isBlank(phone)){
+        if (getIntent().hasExtra(EXTRA_PHONE)) {
+            phone = getIntent().getExtras().getString(EXTRA_PHONE, "");
+            if (!StringUtils.isBlank(phone)) {
                 EditTextUtils.setText(phoneEdit, phone);
             }
         }
-        if (StringUtils.isBlank(phone)){
+        if (StringUtils.isBlank(phone)) {
             //当用户使用手机号和密码登录后，将记录的手机号填入
             String username = PreferencesUtils.getString(this, Constant.PREF_LOGIN_USERNAME, "");
             boolean isPhoneNum = FomatUtils.isPhoneNum(username);
@@ -114,11 +114,11 @@ public class LoginBySmsActivity extends BaseActivity {
         switch (v.getId()) {
             case R.id.ll_main:
                 InputMethodUtils.hide(LoginBySmsActivity.this);
-                    break;
+                break;
             case R.id.bt_get_captcha:
                 phone = phoneEdit.getText().toString();
                 if (StringUtils.isBlank(phone)) {
-                    ToastUtils.show(MyApplication.getInstance(),R.string.login_please_input_phone_num);
+                    ToastUtils.show(MyApplication.getInstance(), R.string.login_please_input_phone_num);
                     return;
                 }
                 if (!FomatUtils.isPhoneNum(phone)) {
@@ -140,6 +140,96 @@ public class LoginBySmsActivity extends BaseActivity {
                 finish();
                 break;
 
+        }
+    }
+
+    private void registerSMSReceiver() {
+        // TODO Auto-generated method stub
+        SmsCaptchasReceiver receiver = new SmsCaptchasReceiver(
+                LoginBySmsActivity.this, handler);
+        // 注册短信变化监听
+        this.getContentResolver().registerContentObserver(
+                Uri.parse("content://sms/"), true, receiver);
+    }
+
+    private void unRegisterSMSReceiver() {
+        // TODO Auto-generated method stub
+        if (smsCaptchasReceiver != null) {
+            this.getContentResolver().unregisterContentObserver(smsCaptchasReceiver);
+            smsCaptchasReceiver = null;
+        }
+    }
+
+    private void enterApp() {
+        boolean isHasSetShortPassword = PreferencesUtils.getBoolean(LoginBySmsActivity.this, Constant.PREF_LOGIN_HAVE_SET_PASSWORD, false);
+        if (!isHasSetShortPassword) {
+            IntentUtils.startActivity(LoginBySmsActivity.this, PasswordFirstSettingActivity.class, true);
+        } else {
+            IntentUtils.startActivity(LoginBySmsActivity.this, IndexActivity.class, true);
+        }
+    }
+
+    private void handMessage() {
+        handler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                switch (msg.what) {
+                    case LOGIN_SUCCESS:
+                        if (mode == MODE_LOGIN) {
+                            myCountDownTimer.cancel();
+                            //存储手机号作为登录用户名
+                            PreferencesUtils.putString(MyApplication.getInstance(), Constant.PREF_LOGIN_USERNAME, phone);
+                            PreferencesUtils.putString(getApplicationContext(), Constant.PREF_LOGIN_PASSWORD, "");
+                            enterApp();
+                        } else {
+                            Bundle bundle = new Bundle();
+                            bundle.putString(PasswordResetActivity.EXTRA_CAPTCHA, captcha);
+                            IntentUtils.startActivity(LoginBySmsActivity.this, PasswordResetActivity.class, bundle, true);
+                        }
+                        break;
+                    case LOGIN_FAIL:
+                        phoneEdit.setEnabled(true);
+                        break;
+                    case GET_SMS_CAPTCHA:
+                        String captchas = (String) msg.obj;
+                        unRegisterSMSReceiver();
+                        EditTextUtils.setText(captchaEdit, AppUtils.getDynamicPassword(captchas));
+                        break;
+                }
+            }
+
+        };
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (handler != null) {
+            handler = null;
+        }
+        if (myCountDownTimer != null) {
+            myCountDownTimer.cancel();
+            myCountDownTimer = null;
+        }
+        unRegisterSMSReceiver();
+    }
+
+    private void login() {
+        if (NetUtils.isNetworkConnected(this)) {
+            LoginUtils loginUtils = new LoginUtils(
+                    LoginBySmsActivity.this, handler);
+            loginUtils.login(phone, captcha, true);
+        }
+
+    }
+
+    private void getSMSCaptcha() {
+        if (NetUtils.isNetworkConnected(this)) {
+            loadingDlg.show();
+            LoginAPIService apiService = new LoginAPIService(LoginBySmsActivity.this);
+            apiService.setAPIInterface(new WebService());
+            apiService.getLoginSMSCaptcha(phone);
+            registerSMSReceiver();
         }
     }
 
@@ -174,63 +264,6 @@ public class LoginBySmsActivity extends BaseActivity {
 
     }
 
-    private void registerSMSReceiver() {
-        // TODO Auto-generated method stub
-        SmsCaptchasReceiver receiver = new SmsCaptchasReceiver(
-                LoginBySmsActivity.this, handler);
-        // 注册短信变化监听
-        this.getContentResolver().registerContentObserver(
-                Uri.parse("content://sms/"), true, receiver);
-    }
-
-    private void unRegisterSMSReceiver() {
-        // TODO Auto-generated method stub
-        if (smsCaptchasReceiver != null) {
-            this.getContentResolver().unregisterContentObserver(smsCaptchasReceiver);
-            smsCaptchasReceiver = null;
-        }
-    }
-
-    private void enterApp() {
-        boolean isHasSetShortPassword = PreferencesUtils.getBoolean(LoginBySmsActivity.this, Constant.PREF_LOGIN_HAVE_SET_PASSWORD,false);
-        if (!isHasSetShortPassword){
-            IntentUtils.startActivity(LoginBySmsActivity.this,PasswordFirstSettingActivity.class,true);
-        }else {
-            IntentUtils.startActivity(LoginBySmsActivity.this,IndexActivity.class,true);
-        }
-    }
-    private void handMessage(){
-        handler = new Handler(){
-            @Override
-            public void handleMessage(Message msg) {
-                switch (msg.what){
-                    case  LOGIN_SUCCESS:
-                        if (mode == MODE_LOGIN){
-                            myCountDownTimer.cancel();
-                            //存储手机号作为登录用户名
-                            PreferencesUtils.putString(MyApplication.getInstance(),Constant.PREF_LOGIN_USERNAME, phone);
-                            PreferencesUtils.putString(getApplicationContext(),Constant.PREF_LOGIN_PASSWORD, "");
-                            enterApp();
-                        }else {
-                            Bundle bundle = new Bundle();
-                            bundle.putString(PasswordResetActivity.EXTRA_CAPTCHA,captcha);
-                            IntentUtils.startActivity(LoginBySmsActivity.this, PasswordResetActivity.class, bundle, true);
-                        }
-                        break;
-                    case LOGIN_FAIL:
-                        phoneEdit.setEnabled(true);
-                        break;
-                    case GET_SMS_CAPTCHA:
-                        String captchas = (String) msg.obj;
-                        unRegisterSMSReceiver();
-                        EditTextUtils.setText(captchaEdit,AppUtils.getDynamicPassword(captchas));
-                        break;
-                }
-            }
-
-        };
-    }
-
     class MyCountDownTimer extends CountDownTimer {
         public MyCountDownTimer(long millisInFuture, long countDownInterval) {
             super(millisInFuture, countDownInterval);// 参数依次为总时长,和计时的时间间隔
@@ -250,46 +283,14 @@ public class LoginBySmsActivity extends BaseActivity {
         }
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (handler != null){
-            handler = null;
-        }
-        if (myCountDownTimer != null){
-            myCountDownTimer.cancel();
-            myCountDownTimer = null;
-        }
-        unRegisterSMSReceiver();
-    }
-
-    private void login(){
-        if (NetUtils.isNetworkConnected(this)){
-            LoginUtils loginUtils = new LoginUtils(
-                    LoginBySmsActivity.this, handler);
-            loginUtils.login(phone, captcha, true);
-        }
-
-    }
-
-    private void getSMSCaptcha(){
-        if (NetUtils.isNetworkConnected(this)){
-            loadingDlg.show();
-            LoginAPIService apiService = new LoginAPIService(LoginBySmsActivity.this);
-            apiService.setAPIInterface(new WebService());
-            apiService.getLoginSMSCaptcha(phone);
-            registerSMSReceiver();
-        }
-    }
-
-    private class WebService extends APIInterfaceInstance{
-                @Override
+    private class WebService extends APIInterfaceInstance {
+        @Override
         public void returnLoginSMSCaptchaSuccess() {
             // TODO Auto-generated method stub
             LoadingDialog.dimissDlg(loadingDlg);
             phoneEdit.setEnabled(false);
             captchaEdit.setEnabled(true);
-            ToastUtils.show(LoginBySmsActivity.this,R.string.login_captchas_getcode_success);
+            ToastUtils.show(LoginBySmsActivity.this, R.string.login_captchas_getcode_success);
             myCountDownTimer.start();
         }
 
@@ -301,7 +302,7 @@ public class LoginBySmsActivity extends BaseActivity {
             if (errorCode == 400 && code.equals("10901")) {
                 ToastUtils.show(LoginBySmsActivity.this, R.string.login_cant_login_with_sms);
             } else {
-                WebServiceMiddleUtils.hand(LoginBySmsActivity.this, error,errorCode);
+                WebServiceMiddleUtils.hand(LoginBySmsActivity.this, error, errorCode);
             }
             unRegisterSMSReceiver();
         }

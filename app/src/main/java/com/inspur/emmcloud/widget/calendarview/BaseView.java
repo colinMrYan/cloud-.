@@ -34,8 +34,10 @@ import java.util.List;
 
 public abstract class BaseView extends View implements View.OnClickListener, View.OnLongClickListener {
 
-    CalendarViewDelegate mDelegate;
-
+    /**
+     * 字体大小
+     */
+    static final int TEXT_SIZE = 14;
     /**
      * 当前月份日期的笔
      */
@@ -95,47 +97,35 @@ public abstract class BaseView extends View implements View.OnClickListener, Vie
      * 当前日期文本颜色画笔
      */
     protected Paint mCurDayLunarTextPaint = new Paint();
-
-    /**
-     * 日历布局，需要在日历下方放自己的布局
-     */
-    CalendarLayout mParentLayout;
-
-    /**
-     * 日历项
-     */
-    List<Calendar> mItems;
-
     /**
      * 每一项的高度
      */
     protected int mItemHeight;
-
     /**
      * 每一项的宽度
      */
     protected int mItemWidth;
-
     /**
      * Text的基线
      */
     protected float mTextBaseLine;
-
+    CalendarViewDelegate mDelegate;
+    /**
+     * 日历布局，需要在日历下方放自己的布局
+     */
+    CalendarLayout mParentLayout;
+    /**
+     * 日历项
+     */
+    List<Calendar> mItems;
     /**
      * 点击的x、y坐标
      */
     float mX, mY;
-
     /**
      * 是否点击
      */
     boolean isClick = true;
-
-    /**
-     * 字体大小
-     */
-    static final int TEXT_SIZE = 14;
-
     /**
      * 当前点击项
      */

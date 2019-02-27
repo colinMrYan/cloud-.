@@ -81,7 +81,7 @@ public abstract class APICallback implements CommonCallback<byte[]> {
                 callbackTokenExpire(requestTime);
             } else {
                 callbackFail(error, responseCode);
-                AppExceptionCacheUtils.saveAppException(MyApplication.getInstance(),errorLevel,url,error,responseCode);
+                AppExceptionCacheUtils.saveAppException(MyApplication.getInstance(), errorLevel, url, error, responseCode);
             }
         } catch (Exception e) {
             // TODO: handle exception
@@ -105,8 +105,8 @@ public abstract class APICallback implements CommonCallback<byte[]> {
     public void onSuccess(byte[] arg0) {
         // TODO Auto-generated method stub
         LogUtils.debug("HttpUtil", "url=" + url);
-        if (arg0 == null){
-            arg0 ="".getBytes();
+        if (arg0 == null) {
+            arg0 = "".getBytes();
         }
         LogUtils.debug("HttpUtil", "result=" + new String(arg0));
         //Callback回调到回调处，出异常，则可能既调onSuccess又调OnError，加try为了将异常在此处捕获防止异常被吞，无法查找

@@ -37,8 +37,8 @@ import com.inspur.emmcloud.ui.mine.card.CardPackageActivity;
 import com.inspur.emmcloud.ui.mine.feedback.FeedBackActivity;
 import com.inspur.emmcloud.ui.mine.myinfo.MyInfoActivity;
 import com.inspur.emmcloud.ui.mine.setting.AboutActivity;
-import com.inspur.emmcloud.ui.mine.setting.SettingActivity;
 import com.inspur.emmcloud.ui.mine.setting.EnterpriseSwitchActivity;
+import com.inspur.emmcloud.ui.mine.setting.SettingActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
@@ -108,26 +108,26 @@ public class MoreFragment extends BaseFragment {
             for (MineLayoutItemGroup mineLayoutItemGroup : mineLayoutItemGroupList) {
                 for (MineLayoutItem mineLayoutItem : mineLayoutItemGroup.getMineLayoutItemList()) {
                     switch (mineLayoutItem.getId()) {
-                    case "my_setting_function":
-                        mineLayoutItem.setIco("personcenter_setting");
-                        mineLayoutItem.setTitle(getString(R.string.settings));
-                        break;
-                    case "my_cardbox_function":
-                        mineLayoutItem.setIco("personcenter_cardbox");
-                        mineLayoutItem.setTitle(getString(R.string.wallet));
-                        break;
-                    case "my_feedback_function":
-                        mineLayoutItem.setIco("personcenter_feedback");
-                        mineLayoutItem.setTitle(getString(R.string.more_feedback));
-                        break;
-                    case "my_customerService_function":
-                        mineLayoutItem.setIco("personcenter_customerservice");
-                        mineLayoutItem.setTitle(getString(R.string.app_customer));
-                        break;
-                    case "my_aboutUs_function":
-                        mineLayoutItem.setIco("personcenter_aboutus");
-                        mineLayoutItem.setTitle(getString(R.string.about_text));
-                        break;
+                        case "my_setting_function":
+                            mineLayoutItem.setIco("personcenter_setting");
+                            mineLayoutItem.setTitle(getString(R.string.settings));
+                            break;
+                        case "my_cardbox_function":
+                            mineLayoutItem.setIco("personcenter_cardbox");
+                            mineLayoutItem.setTitle(getString(R.string.wallet));
+                            break;
+                        case "my_feedback_function":
+                            mineLayoutItem.setIco("personcenter_feedback");
+                            mineLayoutItem.setTitle(getString(R.string.more_feedback));
+                            break;
+                        case "my_customerService_function":
+                            mineLayoutItem.setIco("personcenter_customerservice");
+                            mineLayoutItem.setTitle(getString(R.string.app_customer));
+                            break;
+                        case "my_aboutUs_function":
+                            mineLayoutItem.setIco("personcenter_aboutus");
+                            mineLayoutItem.setTitle(getString(R.string.about_text));
+                            break;
                     }
                 }
             }
@@ -159,7 +159,7 @@ public class MoreFragment extends BaseFragment {
         expandListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition,
-                    long id) {
+                                        long id) {
                 MineLayoutItem layoutItem =
                         mineLayoutItemGroupList.get(groupPosition).getMineLayoutItemList().get(childPosition);
                 openMineLayoutItem(layoutItem);
@@ -170,16 +170,16 @@ public class MoreFragment extends BaseFragment {
         expandListView.setAdapter(adapter);
     }
 
-    private void openMineLayoutItem(MineLayoutItem layoutItem){
+    private void openMineLayoutItem(MineLayoutItem layoutItem) {
         String uri = layoutItem.getUri();
         if (StringUtils.isBlank(uri)) {
             switch (layoutItem.getId()) {
-               //  case "my_personalInfo_function":
+                //  case "my_personalInfo_function":
                 // Intent intent = new Intent();
                 // intent.setClass(getActivity(), MyInfoActivity.class);
                 // startActivityForResult(intent, REQUEST_CODE_UPDATE_USER_PHOTO);
                 // recordUserClick("profile");
-                 //break;
+                //break;
                 case "my_setting_function":
                     IntentUtils.startActivity(getActivity(), SettingActivity.class);
                     recordUserClick("setting");
@@ -237,6 +237,32 @@ public class MoreFragment extends BaseFragment {
         }
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_UPDATE_USER_PHOTO) {
+            adapter.notifyDataSetChanged();
+        }
+    }
+
+    /**
+     * 记录用户点击的functionId
+     *
+     * @param functionId
+     */
+    private void recordUserClick(String functionId) {
+        PVCollectModel pvCollectModel = new PVCollectModel(functionId, "mine");
+        PVCollectModelCacheUtils.saveCollectModel(getActivity(), pvCollectModel);
+    }
+
+    private void getUserCardMenu() {
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
+            MineAPIService apiService = new MineAPIService(getActivity());
+            apiService.setAPIInterface(new WebService());
+            apiService.getUserCardMenus();
+        }
+    }
+
     /**
      * expandableListView适配器
      */
@@ -290,7 +316,7 @@ public class MoreFragment extends BaseFragment {
 
         @Override
         public View getChildView(final int groupPosition, final int childPosition, boolean isLastChild,
-                View convertView, ViewGroup parent) {
+                                 View convertView, ViewGroup parent) {
             MineLayoutItem layoutItem = (MineLayoutItem) getChild(groupPosition, childPosition);
             if (layoutItem.getId().equals("my_personalInfo_function")) {
                 convertView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_mine_my_info_card, null);
@@ -303,13 +329,13 @@ public class MoreFragment extends BaseFragment {
                         PreferencesUtils.getString(getActivity(), "userRealName", getString(R.string.not_set));
                 nameText.setText(userName);
                 enterpriseText.setText(MyApplication.getInstance().getCurrentEnterprise().getName());
-                String UserCardMenus = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_MINE_USER_MENUS,"");
+                String UserCardMenus = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_MINE_USER_MENUS, "");
                 GetUserCardMenusResult getUserCardMenusResult = new GetUserCardMenusResult(UserCardMenus);
-                final List<MineLayoutItem> mineLayoutItemList=getUserCardMenusResult.getMineLayoutItemList();
+                final List<MineLayoutItem> mineLayoutItemList = getUserCardMenusResult.getMineLayoutItemList();
                 ListView userCardMenuListView = convertView.findViewById(R.id.lv_user_card_menu);
                 userCardMenuListView.setAdapter(new UserCardMenuAdapter(mineLayoutItemList));
-                int paddintTop = mineLayoutItemList.size()>0?DensityUtil.dip2px(MyApplication.getInstance(),10):0;
-                userCardMenuListView.setPadding(0,paddintTop,0,0);
+                int paddintTop = mineLayoutItemList.size() > 0 ? DensityUtil.dip2px(MyApplication.getInstance(), 10) : 0;
+                userCardMenuListView.setPadding(0, paddintTop, 0, 0);
                 userCardMenuListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -353,22 +379,22 @@ public class MoreFragment extends BaseFragment {
         private String getIconUrl(String icon) {
             if (!icon.startsWith("http")) {
                 switch (icon) {
-                case "personcenter_setting":
-                    icon = "drawable://" + R.drawable.ic_mine_setting;
-                    break;
-                case "personcenter_cardbox":
-                    icon = "drawable://" + R.drawable.ic_mine_wallet;
-                    break;
-                case "personcenter_feedback":
-                    icon = "drawable://" + R.drawable.ic_mine_feedback;
-                    break;
-                case "personcenter_customerservice":
-                    icon = "drawable://" + R.drawable.ic_mine_customer;
-                    break;
-                case "personcenter_aboutus":
-                    icon = "drawable://" + R.drawable.ic_mine_about;
-                    // icon="drawable://"+AppUtils.getAppIconRes(MyApplication.getInstance());
-                    break;
+                    case "personcenter_setting":
+                        icon = "drawable://" + R.drawable.ic_mine_setting;
+                        break;
+                    case "personcenter_cardbox":
+                        icon = "drawable://" + R.drawable.ic_mine_wallet;
+                        break;
+                    case "personcenter_feedback":
+                        icon = "drawable://" + R.drawable.ic_mine_feedback;
+                        break;
+                    case "personcenter_customerservice":
+                        icon = "drawable://" + R.drawable.ic_mine_customer;
+                        break;
+                    case "personcenter_aboutus":
+                        icon = "drawable://" + R.drawable.ic_mine_about;
+                        // icon="drawable://"+AppUtils.getAppIconRes(MyApplication.getInstance());
+                        break;
                 }
             }
             return icon;
@@ -405,15 +431,15 @@ public class MoreFragment extends BaseFragment {
             @Override
             public View getView(int i, View view, ViewGroup viewGroup) {
                 ImageView imageView = new ImageView(getActivity());
-                int height = DensityUtil.dip2px(MyApplication.getInstance(),38);
-                int width = DensityUtil.dip2px(MyApplication.getInstance(),37);
-                int paddingLeft = DensityUtil.dip2px(MyApplication.getInstance(),3);
-                int paddingTop = DensityUtil.dip2px(MyApplication.getInstance(),10);
-                int paddingRight = DensityUtil.dip2px(MyApplication.getInstance(),6);
-                ListView.LayoutParams layoutParams = new ListView.LayoutParams(width,height);
+                int height = DensityUtil.dip2px(MyApplication.getInstance(), 38);
+                int width = DensityUtil.dip2px(MyApplication.getInstance(), 37);
+                int paddingLeft = DensityUtil.dip2px(MyApplication.getInstance(), 3);
+                int paddingTop = DensityUtil.dip2px(MyApplication.getInstance(), 10);
+                int paddingRight = DensityUtil.dip2px(MyApplication.getInstance(), 6);
+                ListView.LayoutParams layoutParams = new ListView.LayoutParams(width, height);
                 imageView.setScaleType(ImageView.ScaleType.FIT_XY);
                 imageView.setLayoutParams(layoutParams);
-                imageView.setPadding(paddingLeft,paddingTop,paddingRight,0);
+                imageView.setPadding(paddingLeft, paddingTop, paddingRight, 0);
                 ImageDisplayUtils.getInstance().displayImage(imageView, getIconUrl(mineLayoutItemList.get(i).getIco()), R.drawable.ic_mine_item_default);
                 return imageView;
             }
@@ -425,42 +451,16 @@ public class MoreFragment extends BaseFragment {
         @Override
         public void onClick(View view) {
             switch (view.getId()) {
-            case R.id.tv_enterprise:
-                IntentUtils.startActivity(getActivity(), EnterpriseSwitchActivity.class);
-                break;
-            case R.id.card_view_my_info:
-                Intent intent = new Intent();
-                intent.setClass(getActivity(), MyInfoActivity.class);
-                startActivityForResult(intent, REQUEST_CODE_UPDATE_USER_PHOTO);
-                recordUserClick("profile");
-                break;
+                case R.id.tv_enterprise:
+                    IntentUtils.startActivity(getActivity(), EnterpriseSwitchActivity.class);
+                    break;
+                case R.id.card_view_my_info:
+                    Intent intent = new Intent();
+                    intent.setClass(getActivity(), MyInfoActivity.class);
+                    startActivityForResult(intent, REQUEST_CODE_UPDATE_USER_PHOTO);
+                    recordUserClick("profile");
+                    break;
             }
-        }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_UPDATE_USER_PHOTO) {
-            adapter.notifyDataSetChanged();
-        }
-    }
-
-    /**
-     * 记录用户点击的functionId
-     *
-     * @param functionId
-     */
-    private void recordUserClick(String functionId) {
-        PVCollectModel pvCollectModel = new PVCollectModel(functionId, "mine");
-        PVCollectModelCacheUtils.saveCollectModel(getActivity(), pvCollectModel);
-    }
-
-    private void getUserCardMenu() {
-        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
-            MineAPIService apiService = new MineAPIService(getActivity());
-            apiService.setAPIInterface(new WebService());
-            apiService.getUserCardMenus();
         }
     }
 

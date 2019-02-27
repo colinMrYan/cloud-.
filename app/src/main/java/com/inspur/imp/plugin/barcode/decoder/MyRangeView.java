@@ -29,14 +29,12 @@ public class MyRangeView extends ImageView {
 
     }
 
-    public MyRangeView(Context context, AttributeSet attrs, int defStyle)
-    {
+    public MyRangeView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         setUp();
     }
 
-    private void setUp()
-    {
+    private void setUp() {
         int x = 0;
         int y = 0;
         int sideLength = 100;
@@ -58,12 +56,11 @@ public class MyRangeView extends ImageView {
         canvas.drawRect(rectangle, paint);
     }
 
-    public void setRectangle(Rect r)
-    {
-        rectangle.left=r.left;
-        rectangle.top=r.top;
-        rectangle.right=r.right;
-        rectangle.bottom=r.bottom;
+    public void setRectangle(Rect r) {
+        rectangle.left = r.left;
+        rectangle.top = r.top;
+        rectangle.right = r.right;
+        rectangle.bottom = r.bottom;
     }
 
 

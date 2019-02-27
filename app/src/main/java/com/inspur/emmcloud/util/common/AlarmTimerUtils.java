@@ -14,10 +14,9 @@ public class AlarmTimerUtils {
      * @param firstTime
      * @param cycTime
      * @param action
-     * @param AlarmManagerType
-     *            闹钟的类型，常用的有5个值：AlarmManager.ELAPSED_REALTIME、
-     *            AlarmManager.ELAPSED_REALTIME_WAKEUP、AlarmManager.RTC、
-     *            AlarmManager.RTC_WAKEUP、AlarmManager.POWER_OFF_WAKEUP
+     * @param AlarmManagerType 闹钟的类型，常用的有5个值：AlarmManager.ELAPSED_REALTIME、
+     *                         AlarmManager.ELAPSED_REALTIME_WAKEUP、AlarmManager.RTC、
+     *                         AlarmManager.RTC_WAKEUP、AlarmManager.POWER_OFF_WAKEUP
      */
     public static void setRepeatingAlarmTimer(Context context, long firstTime,
                                               long cycTime, String action, int AlarmManagerType) {
@@ -27,7 +26,7 @@ public class AlarmTimerUtils {
                 0);
         AlarmManager alarm = (AlarmManager) context
                 .getSystemService(Context.ALARM_SERVICE);
-            alarm.setRepeating(AlarmManagerType, firstTime, cycTime, sender);
+        alarm.setRepeating(AlarmManagerType, firstTime, cycTime, sender);
     }
 
     /**
@@ -36,10 +35,9 @@ public class AlarmTimerUtils {
      * @param context
      * @param cycTime
      * @param action
-     * @param AlarmManagerType
-     *            闹钟的类型，常用的有5个值：AlarmManager.ELAPSED_REALTIME、
-     *            AlarmManager.ELAPSED_REALTIME_WAKEUP、AlarmManager.RTC、
-     *            AlarmManager.RTC_WAKEUP、AlarmManager.POWER_OFF_WAKEUP
+     * @param AlarmManagerType 闹钟的类型，常用的有5个值：AlarmManager.ELAPSED_REALTIME、
+     *                         AlarmManager.ELAPSED_REALTIME_WAKEUP、AlarmManager.RTC、
+     *                         AlarmManager.RTC_WAKEUP、AlarmManager.POWER_OFF_WAKEUP
      */
     public static void setAlarmTimer(Context context, long cycTime,
                                      String action, int AlarmManagerType) {

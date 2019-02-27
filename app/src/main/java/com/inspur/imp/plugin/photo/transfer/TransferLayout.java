@@ -222,7 +222,7 @@ public class TransferLayout extends FrameLayout {
     public void show() {
         createTransferViewPager();
 
- //       int nowThumbnailIndex = transConfig.getNowThumbnailIndex();
+        //       int nowThumbnailIndex = transConfig.getNowThumbnailIndex();
 
         addIndexIndicator();
         transViewPager.setVisibility(View.VISIBLE);
@@ -291,7 +291,7 @@ public class TransferLayout extends FrameLayout {
                 == TransferImage.STATE_TRANS_OUT) // 防止双击
             return;
 
-            transViewPager.setVisibility(View.INVISIBLE);
+        transViewPager.setVisibility(View.INVISIBLE);
 
         hideIndexIndicator();
 

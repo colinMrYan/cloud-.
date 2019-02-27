@@ -9,14 +9,14 @@ import java.util.regex.Pattern;
  */
 
 public class MailboxAddress {
-    private String  name;
-    private String  address;
-    private  boolean emailFormat;   //邮箱格式
+    private String name;
+    private String address;
+    private boolean emailFormat;   //邮箱格式
 
-    public MailboxAddress(String Name ,String Address ){
+    public MailboxAddress(String Name, String Address) {
         this.name = Name;
-        this.address =Address;
-        this.emailFormat=false;
+        this.address = Address;
+        this.emailFormat = false;
         emailFormat = emailCheckoutFormat(Address);
     }
 
@@ -33,7 +33,7 @@ public class MailboxAddress {
     }
 
     public void setAddress(String address) {
-        emailFormat= emailCheckoutFormat(address);
+        emailFormat = emailCheckoutFormat(address);
         this.address = address;
     }
 
@@ -46,11 +46,10 @@ public class MailboxAddress {
     }
 
 
-
     //校验邮箱格式
-    private boolean emailCheckoutFormat(String s){
+    private boolean emailCheckoutFormat(String s) {
         // 判断邮箱
-        if(!StringUtils.isBlank(s)){
+        if (!StringUtils.isBlank(s)) {
             return Pattern.compile("\\w+@{1}\\w+\\.{1}\\w+").matcher(s).matches();
         }
         return false;

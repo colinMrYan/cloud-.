@@ -47,8 +47,8 @@ public class MailLoginActivity extends BaseActivity {
     private TextInputLayout usernameTextInputLayout;
     private LoadingDialog loadingDlg;
     private MailApiService apiService;
-    private String mail ="";
-    private String password="";
+    private String mail = "";
+    private String password = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,11 +58,11 @@ public class MailLoginActivity extends BaseActivity {
         apiService = new MailApiService(this);
         apiService.setAPIInterface(new WebServie());
         TextWatcher watcher = new TextWatcher();
-        mail = PreferencesByUsersUtils.getString(MyApplication.getInstance(),Constant.PREF_MAIL_ACCOUNT,"");
-        if (StringUtils.isBlank(mail)){
+        mail = PreferencesByUsersUtils.getString(MyApplication.getInstance(), Constant.PREF_MAIL_ACCOUNT, "");
+        if (StringUtils.isBlank(mail)) {
             mail = ContactUserCacheUtils.getUserMail(MyApplication.getInstance().getUid());
         }
-        EditTextUtils.setText(mailEdit,mail);
+        EditTextUtils.setText(mailEdit, mail);
         mailEdit.addTextChangedListener(watcher);
         passwordEdit.addTextChangedListener(watcher);
         passwordEdit.setTransformationMethod(PasswordTransformationMethod.getInstance());
@@ -72,39 +72,12 @@ public class MailLoginActivity extends BaseActivity {
         switch (v.getId()) {
             case R.id.bt_login:
                 mail = mailEdit.getText().toString();
-                password= passwordEdit.getText().toString();
+                password = passwordEdit.getText().toString();
                 login(mail, password);
                 break;
             case R.id.ibt_back:
                 finish();
                 break;
-        }
-    }
-
-
-    private class TextWatcher implements android.text.TextWatcher{
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-            String mail = mailEdit.getText().toString();
-            String password= passwordEdit.getText().toString();
-            if (!StringUtils.isBlank(mail) && !FomatUtils.isValiadEmail(mail)){
-                usernameTextInputLayout.setError(getString(R.string.webex_input_correct_invitee_emails));
-            }else {
-                usernameTextInputLayout.setError("");
-            }
-            boolean isInputValaid = password.length() >= 6 && !StringUtils.isBlank(mail) && FomatUtils.isValiadEmail(mail);
-            loginBtn.setEnabled(isInputValaid);
-            loginBtn.setBackgroundResource(isInputValaid ? R.drawable.selector_login_btn : R.drawable.bg_login_btn_unable);
         }
     }
 
@@ -122,13 +95,39 @@ public class MailLoginActivity extends BaseActivity {
         }
     }
 
+    private class TextWatcher implements android.text.TextWatcher {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            String mail = mailEdit.getText().toString();
+            String password = passwordEdit.getText().toString();
+            if (!StringUtils.isBlank(mail) && !FomatUtils.isValiadEmail(mail)) {
+                usernameTextInputLayout.setError(getString(R.string.webex_input_correct_invitee_emails));
+            } else {
+                usernameTextInputLayout.setError("");
+            }
+            boolean isInputValaid = password.length() >= 6 && !StringUtils.isBlank(mail) && FomatUtils.isValiadEmail(mail);
+            loginBtn.setEnabled(isInputValaid);
+            loginBtn.setBackgroundResource(isInputValaid ? R.drawable.selector_login_btn : R.drawable.bg_login_btn_unable);
+        }
+    }
+
     private class WebServie extends APIInterfaceInstance {
         @Override
         public void returnMailLoginSuccess() {
             LoadingDialog.dimissDlg(loadingDlg);
-            PreferencesByUsersUtils.putString(MyApplication.getInstance(),Constant.PREF_MAIL_ACCOUNT,mail);
-            PreferencesByUsersUtils.putString(MyApplication.getInstance(),Constant.PREF_MAIL_PASSWORD,password);
-            IntentUtils.startActivity(MailLoginActivity.this,MailHomeActivity.class,true);
+            PreferencesByUsersUtils.putString(MyApplication.getInstance(), Constant.PREF_MAIL_ACCOUNT, mail);
+            PreferencesByUsersUtils.putString(MyApplication.getInstance(), Constant.PREF_MAIL_PASSWORD, password);
+            IntentUtils.startActivity(MailLoginActivity.this, MailHomeActivity.class, true);
         }
 
         @Override

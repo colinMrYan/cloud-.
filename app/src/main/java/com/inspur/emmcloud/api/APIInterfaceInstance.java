@@ -295,7 +295,7 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnUploadMyHeadSuccess(
-            GetUploadMyHeadResult getUploadMyInfoResult,String filePath) {
+            GetUploadMyHeadResult getUploadMyInfoResult, String filePath) {
         // TODO Auto-generated method stub
     }
 
@@ -1104,6 +1104,7 @@ public class APIInterfaceInstance implements APIInterface {
     @Override
     public void returnFindMixSearchFail(String error, int errorCode) {
     }
+
     @Override
     public void returnMeetingListSuccess(
             GetMeetingListResult getMeetingListResult, String date) {
@@ -1146,7 +1147,7 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnUserAppsSuccess(GetAppGroupResult getAppGroupResult,String clientConfigMyAppVersion) {
+    public void returnUserAppsSuccess(GetAppGroupResult getAppGroupResult, String clientConfigMyAppVersion) {
         // TODO Auto-generated method stub
 
     }
@@ -1615,7 +1616,7 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnContactUserListSuccess(byte[] bytes,String saveConfigVersion) {
+    public void returnContactUserListSuccess(byte[] bytes, String saveConfigVersion) {
 
     }
 
@@ -1625,7 +1626,7 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnContactOrgListSuccess(byte[] bytes,String saveConfigVersion) {
+    public void returnContactOrgListSuccess(byte[] bytes, String saveConfigVersion) {
 
     }
 
@@ -1635,7 +1636,7 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnContactUserListUpdateSuccess(GetContactUserListUpateResult getContactUserListUpateResult,String saveConfigVersion) {
+    public void returnContactUserListUpdateSuccess(GetContactUserListUpateResult getContactUserListUpateResult, String saveConfigVersion) {
 
     }
 
@@ -1645,7 +1646,7 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnContactOrgListUpdateSuccess(GetContactOrgListUpateResult getContactOrgListUpateResult,String saveConfigVersion) {
+    public void returnContactOrgListUpdateSuccess(GetContactOrgListUpateResult getContactOrgListUpateResult, String saveConfigVersion) {
 
     }
 
@@ -1700,7 +1701,7 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnJoinVoiceCommunicationChannelFail(String error,int errorCode) {
+    public void returnJoinVoiceCommunicationChannelFail(String error, int errorCode) {
 
     }
 
@@ -1749,7 +1750,7 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnSetConversationHideSuccess(String id,boolean isHide) {
+    public void returnSetConversationHideSuccess(String id, boolean isHide) {
     }
 
     @Override
@@ -1839,6 +1840,7 @@ public class APIInterfaceInstance implements APIInterface {
     @Override
     public void returnExperienceUpgradeFlagFail(String error, int errorCode) {
     }
+
     @Override
     public void returnUpdateExperienceUpgradeFlagSuccess() {
     }

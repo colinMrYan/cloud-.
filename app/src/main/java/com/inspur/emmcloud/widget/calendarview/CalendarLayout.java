@@ -48,88 +48,70 @@ import com.inspur.emmcloud.R;
 @SuppressWarnings("unused")
 public class CalendarLayout extends LinearLayout {
 
-    /**
-     * 多点触控支持
-     */
-    private int mActivePointerId;
-
     private static final int ACTIVE_POINTER = 1;
-
     private static final int INVALID_POINTER = -1;
-
     /**
      * 周月视图
      */
     private static final int CALENDAR_SHOW_MODE_BOTH_MONTH_WEEK_VIEW = 0;
-
-
     /**
      * 仅周视图
      */
     private static final int CALENDAR_SHOW_MODE_ONLY_WEEK_VIEW = 1;
-
     /**
      * 仅月视图
      */
     private static final int CALENDAR_SHOW_MODE_ONLY_MONTH_VIEW = 2;
-
     /**
      * 默认展开
      */
     private static final int STATUS_EXPAND = 0;
-
     /**
      * 默认收缩
      */
     private static final int STATUS_SHRINK = 1;
-
+    /**
+     * 默认手势
+     */
+    private static final int GESTURE_MODE_DEFAULT = 0;
+    /**
+     * 禁用手势
+     */
+    private static final int GESTURE_MODE_DISABLED = 2;
+    /**
+     * 星期栏
+     */
+    WeekBar mWeekBar;
+    /**
+     * 自定义ViewPager，月视图
+     */
+    MonthViewPager mMonthView;
+    /**
+     * 自定义的周视图
+     */
+    WeekViewPager mWeekPager;
+    /**
+     * 年视图
+     */
+    YearViewPager mYearView;
+    /**
+     * ContentView
+     */
+    ViewGroup mContentView;
+    /**
+     * 多点触控支持
+     */
+    private int mActivePointerId;
     /**
      * 默认状态
      */
     private int mDefaultStatus;
 
-    private boolean isWeekView;
-
-    /**
-     * 星期栏
-     */
-    WeekBar mWeekBar;
-
-    /**
-     * 自定义ViewPager，月视图
-     */
-    MonthViewPager mMonthView;
-
-    /**
-     * 自定义的周视图
-     */
-    WeekViewPager mWeekPager;
-
-    /**
-     * 年视图
-     */
-    YearViewPager mYearView;
-
-    /**
-     * ContentView
-     */
-    ViewGroup mContentView;
-
-    /**
-     * 默认手势
-     */
-    private static final int GESTURE_MODE_DEFAULT = 0;
-
 //       /**
     //     * 仅日历有效
     //     */
 //    private static final int GESTURE_MODE_ONLY_CALENDAR = 1;
-
-    /**
-     * 禁用手势
-     */
-    private static final int GESTURE_MODE_DISABLED = 2;
-
+    private boolean isWeekView;
     /**
      * 手势模式
      */
@@ -242,7 +224,7 @@ public class CalendarLayout extends LinearLayout {
         }
     }
 
-    public void setExpandListener(CalendarExpandListener listener){
+    public void setExpandListener(CalendarExpandListener listener) {
         this.listener = listener;
     }
 
@@ -419,10 +401,10 @@ public class CalendarLayout extends LinearLayout {
 //                if(!getIsFirstItemZero(mContentView)){
 //                    return false;
 //                }
-                if(!isViewTopShow){
+                if (!isViewTopShow) {
                     return false;
                 }
-                if ((dy < 0 && mContentView.getTranslationY() == -mContentViewTranslateY) ) {
+                if ((dy < 0 && mContentView.getTranslationY() == -mContentViewTranslateY)) {
                     return false;
                 }
                 /*
@@ -454,28 +436,28 @@ public class CalendarLayout extends LinearLayout {
     }
 
 
-    private void setListViewListener(View view){
+    private void setListViewListener(View view) {
         boolean isFirstItemShow = false;
-        if(view instanceof ViewGroup){
+        if (view instanceof ViewGroup) {
             ViewGroup vp = (ViewGroup) view;
-            for (int i = 0;i < vp.getChildCount();i++){
+            for (int i = 0; i < vp.getChildCount(); i++) {
                 View viewChild = vp.getChildAt(i);
-                if(viewChild instanceof AbsListView){
-                   viewChild.setOnTouchListener(new OnTouchListener() {
-                       @Override
-                       public boolean onTouch(View v, MotionEvent event) {
-                           getIsFirstItemZero((AbsListView) v);
-                           return false;
-                       }
-                   });
-                }else{
+                if (viewChild instanceof AbsListView) {
+                    viewChild.setOnTouchListener(new OnTouchListener() {
+                        @Override
+                        public boolean onTouch(View v, MotionEvent event) {
+                            getIsFirstItemZero((AbsListView) v);
+                            return false;
+                        }
+                    });
+                } else {
                     setListViewListener(viewChild);
                 }
             }
         }
     }
 
-    private boolean getIsFirstItemZero(AbsListView view){
+    private boolean getIsFirstItemZero(AbsListView view) {
         boolean isFirstItemShow = false;
 //        if(view instanceof ViewGroup){
 //            ViewGroup vp = (ViewGroup) view;
@@ -621,10 +603,10 @@ public class CalendarLayout extends LinearLayout {
         return mContentView == null || mMonthView.getVisibility() == VISIBLE;
     }
 
-    public void switchStatus(){
-        if(isExpand()){
+    public void switchStatus() {
+        if (isExpand()) {
             shrink();
-        }else{
+        } else {
             expand();
         }
     }
@@ -678,7 +660,7 @@ public class CalendarLayout extends LinearLayout {
             }
         });
         objectAnimator.start();
-        if(listener != null){
+        if (listener != null) {
             listener.isExpand(true);
         }
         return true;
@@ -722,7 +704,7 @@ public class CalendarLayout extends LinearLayout {
             }
         });
         objectAnimator.start();
-        if(listener != null){
+        if (listener != null) {
             listener.isExpand(false);
         }
         return true;
@@ -912,7 +894,7 @@ public class CalendarLayout extends LinearLayout {
     /**
      * 日历是否展开的监听
      */
-    public interface CalendarExpandListener{
+    public interface CalendarExpandListener {
         void isExpand(boolean isExpand);
     }
 }

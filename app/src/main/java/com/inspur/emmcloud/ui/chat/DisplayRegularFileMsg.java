@@ -31,7 +31,7 @@ public class DisplayRegularFileMsg {
      * @param msg
      */
     public static View getView(final Context context,
-                               final Message message,final int sendStauts,boolean isMsgDetial) {
+                               final Message message, final int sendStauts, boolean isMsgDetial) {
         boolean isMyMsg = message.getFromUser().equals(MyApplication.getInstance().getUid());
         View convertView = LayoutInflater.from(context).inflate(
                 R.layout.chat_msg_card_child_attachment_file_view, null);
@@ -40,14 +40,14 @@ public class DisplayRegularFileMsg {
         TextView fileSizeText = (TextView) convertView
                 .findViewById(R.id.tv_file_size);
         BubbleLayout cardLayout = (BubbleLayout) convertView.findViewById(R.id.bl_card);
-        if (!isMsgDetial){
-            cardLayout.setArrowDirection(isMyMsg? ArrowDirection.RIGHT:ArrowDirection.LEFT);
-        }else {
+        if (!isMsgDetial) {
+            cardLayout.setArrowDirection(isMyMsg ? ArrowDirection.RIGHT : ArrowDirection.LEFT);
+        } else {
             cardLayout.setArrowHeight(0);
             cardLayout.setArrowWidth(0);
             cardLayout.setCornersRadius(0);
         }
-        ImageView img = (ImageView)convertView.findViewById(R.id.iv_file_icon);
+        ImageView img = (ImageView) convertView.findViewById(R.id.iv_file_icon);
         final MsgContentRegularFile msgContentFile = message.getMsgContentAttachmentFile();
         ImageDisplayUtils.getInstance().displayImage(img, "drawable://" + FileUtils.getRegularFileIconResId(msgContentFile.getName()));
         fileNameText.setText(msgContentFile.getName());
@@ -56,14 +56,14 @@ public class DisplayRegularFileMsg {
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (sendStauts != 1){
+                if (sendStauts != 1) {
                     return;
                 }
                 if (FileUtils.isFileExist(fileDownloadPath)) {
                     FileUtils.openFile(context, fileDownloadPath);
                 } else {
-                    Intent intent = new Intent(context,ChatFileDownloadActivtiy.class);
-                    intent.putExtra("message",message);
+                    Intent intent = new Intent(context, ChatFileDownloadActivtiy.class);
+                    intent.putExtra("message", message);
                     context.startActivity(intent);
                 }
             }

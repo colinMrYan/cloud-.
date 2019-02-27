@@ -17,26 +17,18 @@ public class LeftDrawerLayout extends ViewGroup {
      * Minimum velocity that will be detected as a fling
      */
     private static final int MIN_FLING_VELOCITY = 400; // dips per second
-
+    public AllInterface.OnMenuSlideListener onMenuSlideListener;
     /**
      * drawer离父容器右边的最小外边距
      */
     private int mMinDrawerMargin;
-
     private View mLeftMenuView;
     private View mContentView;
-
     private ViewDragHelper mHelper;
     /**
      * drawer显示出来的占自身的百分比
      */
     private float mLeftMenuOnScrren;
-    public AllInterface.OnMenuSlideListener onMenuSlideListener;
-
-    public void setOnMenuSlideListener(AllInterface.OnMenuSlideListener onMenuSlideListener){
-        this.onMenuSlideListener=onMenuSlideListener;
-    }
-
 
     public LeftDrawerLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -90,6 +82,10 @@ public class LeftDrawerLayout extends ViewGroup {
         mHelper.setEdgeTrackingEnabled(ViewDragHelper.EDGE_LEFT);
         //设置minVelocity
         mHelper.setMinVelocity(minVel);
+    }
+
+    public void setOnMenuSlideListener(AllInterface.OnMenuSlideListener onMenuSlideListener) {
+        this.onMenuSlideListener = onMenuSlideListener;
     }
 
     @Override
@@ -164,8 +160,8 @@ public class LeftDrawerLayout extends ViewGroup {
         }
     }
 
-    public boolean isDrawerOpen(){
-        return  mLeftMenuOnScrren == 1;
+    public boolean isDrawerOpen() {
+        return mLeftMenuOnScrren == 1;
     }
 
     public void closeDrawer() {

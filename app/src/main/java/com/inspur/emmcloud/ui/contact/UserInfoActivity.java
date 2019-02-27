@@ -169,11 +169,11 @@ public class UserInfoActivity extends BaseActivity {
             dutyText.setVisibility(View.GONE);
         }
         ImageDisplayUtils.getInstance().displayImage(photoImg, headUrl, R.drawable.icon_person_default);
-        startChatImg.setVisibility(contactUser.getId().equals(MyApplication.getInstance().getUid())?View.GONE:View.VISIBLE);
-        mobilePhoneLayout.setVisibility((StringUtils.isBlank(phoneNum) && StringUtils.isBlank(telStr))?View.GONE:View.VISIBLE);
-        mobileSMSLayout.setVisibility(StringUtils.isBlank(phoneNum)?View.GONE:View.VISIBLE);
-        mobileEmailLayout.setVisibility(StringUtils.isBlank(mail)?View.GONE:View.VISIBLE);
-        mobileContactInfoLayout.setVisibility((StringUtils.isBlank(phoneNum) && StringUtils.isBlank(telStr) && StringUtils.isBlank(mail))?View.GONE:View.VISIBLE);
+        startChatImg.setVisibility(contactUser.getId().equals(MyApplication.getInstance().getUid()) ? View.GONE : View.VISIBLE);
+        mobilePhoneLayout.setVisibility((StringUtils.isBlank(phoneNum) && StringUtils.isBlank(telStr)) ? View.GONE : View.VISIBLE);
+        mobileSMSLayout.setVisibility(StringUtils.isBlank(phoneNum) ? View.GONE : View.VISIBLE);
+        mobileEmailLayout.setVisibility(StringUtils.isBlank(mail) ? View.GONE : View.VISIBLE);
+        mobileContactInfoLayout.setVisibility((StringUtils.isBlank(phoneNum) && StringUtils.isBlank(telStr) && StringUtils.isBlank(mail)) ? View.GONE : View.VISIBLE);
     }
 
     public void onClick(View v) {
@@ -219,14 +219,14 @@ public class UserInfoActivity extends BaseActivity {
         final String phoneNum = contactUser.getMobile();
         final String officePhoneNum = contactUser.getTel();
         new ActionSheetDialog.ActionListSheetBuilder(UserInfoActivity.this)
-                .setTitle(getString(R.string.user_call)+contactUser.getName())
-                .addItem(getString(R.string.user_info_phone_number)+":"+phoneNum)
-                .addItem(getString(R.string.user_office_phone)+":"+officePhoneNum)
+                .setTitle(getString(R.string.user_call) + contactUser.getName())
+                .addItem(getString(R.string.user_info_phone_number) + ":" + phoneNum)
+                .addItem(getString(R.string.user_office_phone) + ":" + officePhoneNum)
                 .setOnSheetItemClickListener(new ActionSheetDialog.ActionListSheetBuilder.OnSheetItemClickListener() {
                     @Override
                     public void onClick(ActionSheetDialog dialog, View itemView, int position) {
                         dialog.dismiss();
-                        switch (position){
+                        switch (position) {
                             case 0:
                                 AppUtils.call(UserInfoActivity.this, phoneNum, USER_INFO_ACTIVITY_REQUEST_CODE);
                                 break;

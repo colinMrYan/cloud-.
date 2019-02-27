@@ -50,8 +50,6 @@ import java.util.Map;
  * 图片查看器
  */
 public class ImagePagerActivity extends BaseFragmentActivity {
-    private static final int RESULT_MENTIONS = 5;
-    private static final int CHECK_IMG_COMMENT = 1;
     public static final String EXTRA_IMAGE_INDEX = "image_index";
     public static final String EXTRA_IMAGE_URLS = "image_urls";
     public static final String EXTRA_CURRENT_IMAGE_MSG = "channel_current_image_msg";
@@ -60,7 +58,8 @@ public class ImagePagerActivity extends BaseFragmentActivity {
     public static final String PHOTO_SELECT_Y_TAG = "PHOTO_SELECT_Y_TAG";
     public static final String PHOTO_SELECT_W_TAG = "PHOTO_SELECT_W_TAG";
     public static final String PHOTO_SELECT_H_TAG = "PHOTO_SELECT_H_TAG";
-
+    private static final int RESULT_MENTIONS = 5;
+    private static final int CHECK_IMG_COMMENT = 1;
     private ECMChatInputMenuImgComment ecmChatInputMenu;
     private HackyViewPager mPager;
     private int pagerPosition;
@@ -299,8 +298,8 @@ public class ImagePagerActivity extends BaseFragmentActivity {
             urlList = new ArrayList<>();
             cid = currentMsg.getChannel();
             imgTypeMessageList = (List<Message>) getIntent().getSerializableExtra(EXTRA_IMAGE_MSG_LIST);
-            for(Message message:imgTypeMessageList){
-                String url = APIUri.getChatFileResouceUrl(message.getChannel(),message.getMsgContentMediaImage().getRawMedia());
+            for (Message message : imgTypeMessageList) {
+                String url = APIUri.getChatFileResouceUrl(message.getChannel(), message.getMsgContentMediaImage().getRawMedia());
                 urlList.add(url);
             }
             pageStartPosition = imgTypeMessageList.indexOf(currentMsg);
@@ -313,7 +312,6 @@ public class ImagePagerActivity extends BaseFragmentActivity {
         locationW = getIntent().getIntExtra(PHOTO_SELECT_W_TAG, 0);
         locationH = getIntent().getIntExtra(PHOTO_SELECT_H_TAG, 0);
     }
-
 
 
     public void setPhotoTap() {
@@ -345,6 +343,59 @@ public class ImagePagerActivity extends BaseFragmentActivity {
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+    }
+
+    private void getImgCommentCount(String mid) {
+        if (NetUtils.isNetworkConnected(getApplicationContext())) {
+            WSAPIService.getInstance().getMessageCommentCount(mid);
+        }
+    }
+
+    private void sendComment(String content, Map<String, String> mentionsMap) {
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
+            Message message = CommunicationUtils.combinLocalCommentTextPlainMessage(cid, imgTypeMessageList.get(pagerPosition).getId(), content, mentionsMap);
+            WSAPIService.getInstance().sendChatCommentTextPlainMsg(message);
+            Integer commentCount = commentCountMap.get(imgTypeMessageList.get(pagerPosition).getId());
+            if (commentCount == null) {
+                commentCount = 0;
+            }
+            commentCountMap.put(imgTypeMessageList.get(pagerPosition).getId(), (commentCount + 1));
+            commentCountText.setText((commentCount + 1) + "");
+        }
+    }
+
+    //接收到websocket发过来的获取评论消息数
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiveMessageCommemtCount(EventMessage eventMessage) {
+        if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_GET_MESSAGE_COMMENT_COUNT)) {
+            if (eventMessage.getStatus() == 200) {
+                String content = eventMessage.getContent();
+                GetMessageCommentCountResult getMessageCommentCountResult = new GetMessageCommentCountResult(content);
+                int number = getMessageCommentCountResult.getNumber();
+                String mid = String.valueOf(eventMessage.getExtra());
+                if (mid != null) {
+                    commentCountMap.put(mid, number);
+                    String currentMid = imgTypeMessageList.get(pagerPosition).getId();
+                    if (mid.equals(currentMid)) {
+                        commentCountText.setText(number + "");
+                    }
+                }
+            }
+        }
+
+    }
+
+    //当包含的fragment发来OnPhotoTap信号
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onPhotoTab(EventMessage eventMessage) {
+        if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_ON_PHOTO_TAB)) {
+            setPhotoTap();
+        } else if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_ON_PHOTO_CLOSE)) {
+            if (functionLayout.getVisibility() == View.VISIBLE) {
+                functionLayout.setVisibility(View.GONE);
+            }
+        }
+
     }
 
     private class ImagePagerAdapter extends FragmentStatePagerAdapter {
@@ -383,62 +434,6 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 
         public ImageDetailFragment getCurrentFragment() {
             return currentFragment;
-        }
-
-    }
-
-
-    private void getImgCommentCount(String mid) {
-        if (NetUtils.isNetworkConnected(getApplicationContext())) {
-            WSAPIService.getInstance().getMessageCommentCount(mid);
-        }
-    }
-
-
-    private void sendComment(String content, Map<String, String> mentionsMap) {
-        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
-            Message message = CommunicationUtils.combinLocalCommentTextPlainMessage(cid, imgTypeMessageList.get(pagerPosition).getId(), content, mentionsMap);
-            WSAPIService.getInstance().sendChatCommentTextPlainMsg(message);
-            Integer commentCount = commentCountMap.get(imgTypeMessageList.get(pagerPosition).getId());
-            if (commentCount == null) {
-                commentCount = 0;
-            }
-            commentCountMap.put(imgTypeMessageList.get(pagerPosition).getId(), (commentCount + 1));
-            commentCountText.setText((commentCount + 1) + "");
-        }
-    }
-
-
-    //接收到websocket发过来的获取评论消息数
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReceiveMessageCommemtCount(EventMessage eventMessage) {
-        if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_GET_MESSAGE_COMMENT_COUNT)) {
-            if (eventMessage.getStatus() == 200){
-                String content = eventMessage.getContent();
-                GetMessageCommentCountResult getMessageCommentCountResult = new GetMessageCommentCountResult(content);
-                int number = getMessageCommentCountResult.getNumber();
-                String mid = String.valueOf(eventMessage.getExtra());
-                if (mid != null) {
-                    commentCountMap.put(mid, number);
-                    String currentMid = imgTypeMessageList.get(pagerPosition).getId();
-                    if (mid.equals(currentMid)) {
-                        commentCountText.setText(number + "");
-                    }
-                }
-            }
-        }
-
-    }
-
-    //当包含的fragment发来OnPhotoTap信号
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onPhotoTab(EventMessage eventMessage) {
-        if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_ON_PHOTO_TAB)) {
-            setPhotoTap();
-        }else if(eventMessage.getTag().equals(Constant.EVENTBUS_TAG_ON_PHOTO_CLOSE)){
-            if (functionLayout.getVisibility() == View.VISIBLE) {
-                functionLayout.setVisibility(View.GONE);
-            }
         }
 
     }

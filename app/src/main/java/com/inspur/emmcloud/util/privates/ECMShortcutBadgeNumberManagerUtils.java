@@ -46,15 +46,16 @@ public class ECMShortcutBadgeNumberManagerUtils {
 
     /**
      * 判断byte里是否含有badge
+     *
      * @param msg
      * @return
      */
-    public static boolean isHasBadge(byte[] msg){
-        if(msg == null){
+    public static boolean isHasBadge(byte[] msg) {
+        if (msg == null) {
             return false;
         }
         try {
-            String message = new String(msg,"UTF-8");
+            String message = new String(msg, "UTF-8");
             JSONObject jsonObject = new JSONObject(message);
             return jsonObject.has("badge");
         } catch (Exception e) {
@@ -65,11 +66,12 @@ public class ECMShortcutBadgeNumberManagerUtils {
 
     /**
      * 判断字符串是否含有badge
+     *
      * @param msg
      * @return
      */
-    public static boolean isHasBadge(String msg){
-        if(StringUtils.isBlank(msg)){
+    public static boolean isHasBadge(String msg) {
+        if (StringUtils.isBlank(msg)) {
             return false;
         }
         try {
@@ -83,14 +85,15 @@ public class ECMShortcutBadgeNumberManagerUtils {
 
     /**
      * 设置桌面角标
+     *
      * @param context
      */
-    public static void setDesktopBadgeNumber(Context context,int count) {
-        if(!AppUtils.GetChangShang().toLowerCase().startsWith(Constant.XIAOMI_FLAG)){
+    public static void setDesktopBadgeNumber(Context context, int count) {
+        if (!AppUtils.GetChangShang().toLowerCase().startsWith(Constant.XIAOMI_FLAG)) {
             try {
-                ShortcutBadger.applyCount(context,count);
-            }catch (Exception e){
-                AppExceptionCacheUtils.saveAppException(context,Constant.APP_EXCEPTION_LEVEL,"Desktop badge count",e.getMessage(),-1);
+                ShortcutBadger.applyCount(context, count);
+            } catch (Exception e) {
+                AppExceptionCacheUtils.saveAppException(context, Constant.APP_EXCEPTION_LEVEL, "Desktop badge count", e.getMessage(), -1);
                 e.printStackTrace();
             }
         }
@@ -98,6 +101,7 @@ public class ECMShortcutBadgeNumberManagerUtils {
 
     /**
      * 获取系统配置
+     *
      * @param propName
      * @return
      */
@@ -125,10 +129,11 @@ public class ECMShortcutBadgeNumberManagerUtils {
 
     /**
      * 设置小米MIUI6以及以上的桌面角标
+     *
      * @param context
      * @param mCount
      */
-    private static void setMIUIV6PlusBadge(Context context, int mCount,Intent intent){
+    private static void setMIUIV6PlusBadge(Context context, int mCount, Intent intent) {
         NotificationManager notificationManager = (NotificationManager) context
                 .getSystemService(Context.NOTIFICATION_SERVICE);
         Notification.Builder builder = new Notification.Builder(context)
@@ -151,17 +156,18 @@ public class ECMShortcutBadgeNumberManagerUtils {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        notificationManager.notify(mCount,notification);
+        notificationManager.notify(mCount, notification);
     }
 
     /**
      * 创建并展示一个通知
+     *
      * @param context
      * @param notifyId
      * @param title
      * @param content
      */
-    public static void createAndShowNotification(Context context,int notifyId,String title,String content) {
+    public static void createAndShowNotification(Context context, int notifyId, String title, String content) {
         //全局通知管理者，通过获取系统服务获取
         NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         //通知栏构造器,创建通知栏样式

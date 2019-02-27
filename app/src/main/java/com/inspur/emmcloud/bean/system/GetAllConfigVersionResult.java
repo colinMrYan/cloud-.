@@ -11,56 +11,56 @@ import java.util.Iterator;
  */
 
 public class GetAllConfigVersionResult {
-    private JSONObject allConfigVersionObj=new JSONObject();
+    private JSONObject allConfigVersionObj = new JSONObject();
 
-    public GetAllConfigVersionResult(String response,JSONObject localVersionObj){
+    public GetAllConfigVersionResult(String response, JSONObject localVersionObj) {
         JSONObject object = JSONUtils.getJSONObject(response);
         Iterator iterator = object.keys();
-        while(iterator.hasNext()){
+        while (iterator.hasNext()) {
             String key = (String) iterator.next();
-            String value =JSONUtils.getString(object,key,"");
+            String value = JSONUtils.getString(object, key, "");
             try {
-                localVersionObj.put(key,value);
-            }catch (Exception e){
+                localVersionObj.put(key, value);
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
         allConfigVersionObj = localVersionObj;
     }
 
-    public GetAllConfigVersionResult(String response){
+    public GetAllConfigVersionResult(String response) {
         allConfigVersionObj = JSONUtils.getJSONObject(response);
     }
 
-    public String getItemVersion(ClientConfigItem clientConfigItem){
+    public String getItemVersion(ClientConfigItem clientConfigItem) {
         String itemVersion = "";
         switch (clientConfigItem) {
             case CLIENT_CONFIG_ROUTER:
-                itemVersion = JSONUtils.getString(allConfigVersionObj,"router","");
+                itemVersion = JSONUtils.getString(allConfigVersionObj, "router", "");
                 break;
             case CLIENT_CONFIG_MAINTAB:
-                itemVersion = JSONUtils.getString(allConfigVersionObj,"maintab","");
+                itemVersion = JSONUtils.getString(allConfigVersionObj, "maintab", "");
                 break;
             case CLIENT_CONFIG_SPLASH:
-                itemVersion = JSONUtils.getString(allConfigVersionObj,"ad","");
+                itemVersion = JSONUtils.getString(allConfigVersionObj, "ad", "");
                 break;
             case CLIENT_CONFIG_LANGUAGE:
-                itemVersion = JSONUtils.getString(allConfigVersionObj,"lang","");
+                itemVersion = JSONUtils.getString(allConfigVersionObj, "lang", "");
                 break;
             case CLIENT_CONFIG_MY_APP:
-                itemVersion = JSONUtils.getString(allConfigVersionObj,"app","");
+                itemVersion = JSONUtils.getString(allConfigVersionObj, "app", "");
                 break;
             case CLIENT_CONFIG_CONTACT_USER:
-                itemVersion = JSONUtils.getString(allConfigVersionObj,"contact_user","");
+                itemVersion = JSONUtils.getString(allConfigVersionObj, "contact_user", "");
                 break;
             case CLIENT_CONFIG_CONTACT_ORG:
-                itemVersion = JSONUtils.getString(allConfigVersionObj,"contact_org","");
+                itemVersion = JSONUtils.getString(allConfigVersionObj, "contact_org", "");
                 break;
             default:
                 break;
         }
-        return  itemVersion;
-        
+        return itemVersion;
+
     }
 
 

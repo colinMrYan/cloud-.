@@ -20,7 +20,8 @@ public class VolumeInfoGroupAdapter extends BaseAdapter {
 
     private Context context;
     private List<Group> groupList;
-    public VolumeInfoGroupAdapter(Context context, List<Group> groupList){
+
+    public VolumeInfoGroupAdapter(Context context, List<Group> groupList) {
         this.context = context;
         this.groupList = groupList;
     }
@@ -43,11 +44,11 @@ public class VolumeInfoGroupAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         Group group = groupList.get(position);
-        convertView = LayoutInflater.from(context).inflate(R.layout.app_volume_info_group_item_view,null);
-        TextView nameText = (TextView)convertView.findViewById(R.id.tv_name);
-        TextView numText = (TextView)convertView.findViewById(R.id.num_text);
+        convertView = LayoutInflater.from(context).inflate(R.layout.app_volume_info_group_item_view, null);
+        TextView nameText = (TextView) convertView.findViewById(R.id.tv_name);
+        TextView numText = (TextView) convertView.findViewById(R.id.num_text);
         nameText.setText(group.getName());
-        numText.setText(group.getMemberUidList().size()+"人");
+        numText.setText(group.getMemberUidList().size() + "人");
         return convertView;
     }
 }

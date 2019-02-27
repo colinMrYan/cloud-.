@@ -18,16 +18,17 @@ public class ReactNativeClientIdErrorBean {
     private int code;
     private String error;
     private String error_description;
-    public ReactNativeClientIdErrorBean(String reactNativeClientIdErrorBean){
+
+    public ReactNativeClientIdErrorBean(String reactNativeClientIdErrorBean) {
         try {
             JSONObject jsonCientIdErrorBean = new JSONObject(reactNativeClientIdErrorBean);
-            if(jsonCientIdErrorBean.has("code")){
+            if (jsonCientIdErrorBean.has("code")) {
                 this.code = jsonCientIdErrorBean.getInt("code");
             }
-            if(jsonCientIdErrorBean.has("error")){
+            if (jsonCientIdErrorBean.has("error")) {
                 this.error = jsonCientIdErrorBean.getString("error");
             }
-            if(jsonCientIdErrorBean.has("")){
+            if (jsonCientIdErrorBean.has("")) {
                 this.error_description = jsonCientIdErrorBean.getString("error_description");
             }
 

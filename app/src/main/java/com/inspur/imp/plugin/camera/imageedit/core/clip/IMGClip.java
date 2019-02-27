@@ -72,8 +72,6 @@ public interface IMGClip {
         LEFT_BOTTOM(9),
         RIGHT_BOTTOM(10);
 
-        int v;
-
         /**
          * LEFT: 0
          * TOP: 2
@@ -82,32 +80,12 @@ public interface IMGClip {
          */
 
         final static int P = 0, N = 1;
-
         final static int H = 0, V = 2;
-
         final static int[] PN = {1, -1};
+        int v;
 
         Anchor(int v) {
             this.v = v;
-        }
-
-        public void move(RectF win, RectF frame, float dx, float dy) {
-            float[] maxFrame = cohesion(win, CLIP_MARGIN);
-            float[] minFrame = cohesion(frame, CLIP_FRAME_MIN);
-            float[] theFrame = cohesion(frame, 0);
-
-            float[] dxy = {dx, 0, dy};
-            for (int i = 0; i < 4; i++) {
-                if (((1 << i) & v) != 0) {
-
-                    int pn = PN[i & 1];
-
-                    theFrame[i] = pn * revise(pn * (theFrame[i] + dxy[i & 2]),
-                            pn * maxFrame[i], pn * minFrame[i + PN[i & 1]]);
-                }
-            }
-
-            frame.set(theFrame[0], theFrame[2], theFrame[1], theFrame[3]);
         }
 
         public static float revise(float v, float min, float max) {
@@ -134,6 +112,25 @@ public interface IMGClip {
                 }
             }
             return null;
+        }
+
+        public void move(RectF win, RectF frame, float dx, float dy) {
+            float[] maxFrame = cohesion(win, CLIP_MARGIN);
+            float[] minFrame = cohesion(frame, CLIP_FRAME_MIN);
+            float[] theFrame = cohesion(frame, 0);
+
+            float[] dxy = {dx, 0, dy};
+            for (int i = 0; i < 4; i++) {
+                if (((1 << i) & v) != 0) {
+
+                    int pn = PN[i & 1];
+
+                    theFrame[i] = pn * revise(pn * (theFrame[i] + dxy[i & 2]),
+                            pn * maxFrame[i], pn * minFrame[i + PN[i & 1]]);
+                }
+            }
+
+            frame.set(theFrame[0], theFrame[2], theFrame[1], theFrame[3]);
         }
     }
 }

@@ -6,14 +6,17 @@ package com.inspur.emmcloud.widget.sildemenu;
 
 public class AllInterface {
 
-    public  interface OnMenuSlideListener{
+    public interface OnMenuSlideListener {
         void onMenuSlide(float offset);
     }
-    public  interface IUnlock{
+
+    public interface IUnlock {
         void onUnlock();
     }
-    public  interface IUpdateLocation{
+
+    public interface IUpdateLocation {
         void updateLocation(String totalTime, String totalDistance);
+
         void endLocation();
     }
 }

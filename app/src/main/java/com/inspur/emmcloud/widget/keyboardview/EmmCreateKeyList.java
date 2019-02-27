@@ -10,6 +10,7 @@ public class EmmCreateKeyList {
 
     /**
      * 生成数字列表
+     *
      * @param numberList
      */
     public static void initNumbers(List<String> numberList) {
@@ -28,9 +29,10 @@ public class EmmCreateKeyList {
 
     /**
      * 生成字母列表
+     *
      * @param letterList
      */
-    public static void initLetters(List<String> letterList){
+    public static void initLetters(List<String> letterList) {
         letterList.clear();
         letterList.add("97#a");
         letterList.add("98#b");

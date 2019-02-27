@@ -301,7 +301,7 @@ public class ConversationCacheUtils {
                     }
                 }
                 conversationList = DbCacheUtils.getDb(context).selector(Conversation.class)
-                        .where(WhereBuilder.b("name", "like", searchStr).or("pyfull", "like", searchStr)).and("type","=",Conversation.TYPE_GROUP).findAll();
+                        .where(WhereBuilder.b("name", "like", searchStr).or("pyfull", "like", searchStr)).and("type", "=", Conversation.TYPE_GROUP).findAll();
             } catch (Exception e) {
                 // TODO: handle exception
                 e.printStackTrace();
@@ -375,8 +375,8 @@ public class ConversationCacheUtils {
      */
     public static void updateConversationPyFull(Context context, String id, String name) {
         try {
-            String pyFull = PinyinUtils.getPingYin( name );
-            DbCacheUtils.getDb(context).update(Conversation.class, WhereBuilder.b("id", "=", id), new KeyValue("pyfull",pyFull ));
+            String pyFull = PinyinUtils.getPingYin(name);
+            DbCacheUtils.getDb(context).update(Conversation.class, WhereBuilder.b("id", "=", id), new KeyValue("pyfull", pyFull));
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();

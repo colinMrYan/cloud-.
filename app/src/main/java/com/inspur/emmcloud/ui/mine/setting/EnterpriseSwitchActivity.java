@@ -57,11 +57,11 @@ public class EnterpriseSwitchActivity extends BaseActivity {
     }
 
     private void initView() {
-        String selectLoginEnterpriseId= PreferencesByUsersUtils.getString(this, Constant.PREF_SELECT_LOGIN_ENTERPRISE_ID,"");
-        if(!StringUtils.isBlank(selectLoginEnterpriseId)){
+        String selectLoginEnterpriseId = PreferencesByUsersUtils.getString(this, Constant.PREF_SELECT_LOGIN_ENTERPRISE_ID, "");
+        if (!StringUtils.isBlank(selectLoginEnterpriseId)) {
             closeAutoSelectLayout.setVisibility(View.VISIBLE);
         }
-        enterpriseListView.setAdapter(new EnterpriseAdapter(this,enterpriseList));
+        enterpriseListView.setAdapter(new EnterpriseAdapter(this, enterpriseList));
         enterpriseListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -126,8 +126,8 @@ public class EnterpriseSwitchActivity extends BaseActivity {
                 break;
             case R.id.rl_setting_close_auto_select:
                 v.setVisibility(View.GONE);
-                PreferencesByUsersUtils.putString(this, Constant.PREF_SELECT_LOGIN_ENTERPRISE_ID,"");
-                ToastUtils.show(MyApplication.getInstance(),R.string.turn_off_success);
+                PreferencesByUsersUtils.putString(this, Constant.PREF_SELECT_LOGIN_ENTERPRISE_ID, "");
+                ToastUtils.show(MyApplication.getInstance(), R.string.turn_off_success);
                 break;
             default:
                 break;

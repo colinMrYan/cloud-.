@@ -8,8 +8,9 @@ import com.inspur.emmcloud.util.common.JSONUtils;
 
 public class GetUploadPushInfoResult {
     private String chatClientId;
-    public GetUploadPushInfoResult(String response){
-        chatClientId = JSONUtils.getString(response,"id","");
+
+    public GetUploadPushInfoResult(String response) {
+        chatClientId = JSONUtils.getString(response, "id", "");
     }
 
     public String getChatClientId() {

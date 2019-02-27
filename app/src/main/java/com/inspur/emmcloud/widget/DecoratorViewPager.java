@@ -3,6 +3,7 @@ package com.inspur.emmcloud.widget;
 /**
  * Created by yufuchang on 2017/4/6.
  */
+
 import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;

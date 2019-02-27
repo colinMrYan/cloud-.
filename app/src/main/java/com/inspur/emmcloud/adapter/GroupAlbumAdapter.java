@@ -37,30 +37,30 @@ public class GroupAlbumAdapter extends RecyclerView.Adapter<GroupAlbumAdapter.Al
     private Context context;
     private LayoutInflater inflater;
     private Map<String, List<Message>> messageGroupByDayMap = new HashMap<>();
-    private Map<String,List<Msg>> msgGroupByDayMap = new HashMap<>();
+    private Map<String, List<Msg>> msgGroupByDayMap = new HashMap<>();
     private ArrayList<String> arrayList = null;
     private GroupAlbumActivity.OnGroupAlbumClickListener listener;
     private boolean isSelectState = false;
 
-    public GroupAlbumAdapter(Context context,Object map,int type) {
+    public GroupAlbumAdapter(Context context, Object map, int type) {
         this.context = context;
         Set<String> keySet = new HashSet<>();
-        if(type == GroupAlbumActivity.GROUP_TYPE_MESSAGE && map != null){
-            this.messageGroupByDayMap = ((Map<String,List<Message>>)map);
-            keySet = ((Map<String,List<Message>>)map).keySet();
-        }else if(type == GroupAlbumActivity.GROUP_TYPE_MSG && map != null){
-            this.msgGroupByDayMap = ((Map<String,List<Msg>>)map);
-            keySet = ((Map<String,List<Msg>>)map).keySet();
+        if (type == GroupAlbumActivity.GROUP_TYPE_MESSAGE && map != null) {
+            this.messageGroupByDayMap = ((Map<String, List<Message>>) map);
+            keySet = ((Map<String, List<Message>>) map).keySet();
+        } else if (type == GroupAlbumActivity.GROUP_TYPE_MSG && map != null) {
+            this.msgGroupByDayMap = ((Map<String, List<Msg>>) map);
+            keySet = ((Map<String, List<Msg>>) map).keySet();
         }
         init(keySet);
     }
 
-    public void setOnGroupAlbumClickListener(GroupAlbumActivity.OnGroupAlbumClickListener listener){
+    public void setOnGroupAlbumClickListener(GroupAlbumActivity.OnGroupAlbumClickListener listener) {
         this.listener = listener;
     }
 
-    public void setChangeSelectState(){
-        this.isSelectState = isSelectState?false:true;
+    public void setChangeSelectState() {
+        this.isSelectState = isSelectState ? false : true;
         notifyDataSetChanged();
     }
 
@@ -97,14 +97,14 @@ public class GroupAlbumAdapter extends RecyclerView.Adapter<GroupAlbumAdapter.Al
                 context.getString(R.string.format_year_month));
         Calendar calendar = TimeUtils.timeString2Calendar(System.currentTimeMillis() + "");
         String yearAndMonth = TimeUtils.calendar2FormatString(context, calendar, format);
-        holder.imageGroupTitleText.setText(yearAndMonth.equals(itemName)?context.getString(R.string.current_month):itemName);
+        holder.imageGroupTitleText.setText(yearAndMonth.equals(itemName) ? context.getString(R.string.current_month) : itemName);
         final ArrayList<String> imgUrlList = new ArrayList<>();
-        if(messageGroupByDayMap.size()>0){
+        if (messageGroupByDayMap.size() > 0) {
             for (Message message : messageGroupByDayMap.get(itemName)) {
                 String url = APIUri.getChatFileResouceUrl(message.getChannel(), message.getMsgContentMediaImage().getRawMedia());
                 imgUrlList.add(url);
             }
-        }else if(msgGroupByDayMap.size() > 0){
+        } else if (msgGroupByDayMap.size() > 0) {
             for (Msg msg : msgGroupByDayMap.get(itemName)) {
                 String url = APIUri.getPreviewUrl(msg.getImgTypeMsgImg());
                 imgUrlList.add(url);
@@ -116,16 +116,16 @@ public class GroupAlbumAdapter extends RecyclerView.Adapter<GroupAlbumAdapter.Al
         holder.imageGroupGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                listener.onGroupAlbumClick(view,imgUrlList.get(position));
+                listener.onGroupAlbumClick(view, imgUrlList.get(position));
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        if(messageGroupByDayMap != null && messageGroupByDayMap.size() > 0){
+        if (messageGroupByDayMap != null && messageGroupByDayMap.size() > 0) {
             return messageGroupByDayMap.size();
-        }else if(msgGroupByDayMap != null && msgGroupByDayMap.size() > 0){
+        } else if (msgGroupByDayMap != null && msgGroupByDayMap.size() > 0) {
             return msgGroupByDayMap.size();
         }
         return 0;
@@ -134,6 +134,7 @@ public class GroupAlbumAdapter extends RecyclerView.Adapter<GroupAlbumAdapter.Al
     public class AlbumViewHolder extends RecyclerView.ViewHolder {
         TextView imageGroupTitleText;
         GridView imageGroupGridView;
+
         public AlbumViewHolder(View itemView) {
             super(itemView);
         }

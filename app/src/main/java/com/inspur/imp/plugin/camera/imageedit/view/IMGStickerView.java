@@ -27,37 +27,22 @@ import com.inspur.imp.plugin.camera.imageedit.core.sticker.IMGStickerMoveHelper;
 public abstract class IMGStickerView extends ViewGroup implements IMGSticker, View.OnClickListener {
 
     private static final String TAG = "IMGStickerView";
-
+    private static final float MAX_SCALE_VALUE = 4f;
+    private static final int ANCHOR_SIZE = 48;
+    private static final int ANCHOR_SIZE_HALF = ANCHOR_SIZE >> 1;
+    private static final float STROKE_WIDTH = 3f;
     private View mContentView;
-
     private float mScale = 1f;
-
     // TODO
     private int mDownShowing = 0;
-
     private IMGStickerMoveHelper mMoveHelper;
-
     private IMGStickerHelper<IMGStickerView> mStickerHelper;
-
     private ImageView mRemoveView, mAdjustView;
-
     private float mMaxScaleValue = MAX_SCALE_VALUE;
-
     private Paint PAINT;
-
     private Matrix mMatrix = new Matrix();
-
     private RectF mFrame = new RectF();
-
     private Rect mTempFrame = new Rect();
-
-    private static final float MAX_SCALE_VALUE = 4f;
-
-    private static final int ANCHOR_SIZE = 48;
-
-    private static final int ANCHOR_SIZE_HALF = ANCHOR_SIZE >> 1;
-
-    private static final float STROKE_WIDTH = 3f;
 
     {
         PAINT = new Paint(Paint.ANTI_ALIAS_FLAG);

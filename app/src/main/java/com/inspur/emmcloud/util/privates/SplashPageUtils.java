@@ -28,7 +28,7 @@ import java.util.List;
 
 public class SplashPageUtils {
     private Activity context;
-    private String saveConfigVersion="";
+    private String saveConfigVersion = "";
 
     public SplashPageUtils(Activity context) {
         this.context = context;
@@ -68,7 +68,7 @@ public class SplashPageUtils {
             String screenType = AppUtils.getScreenType(context);
             SplashDefaultBean defaultBean = splashPageBean.getPayload()
                     .getResource().getDefaultX();
-            switch (screenType){
+            switch (screenType) {
                 case "2k":
                     downloadSplashPage(APIUri.getPreviewUrl(defaultBean.getXxxhdpi()), defaultBean.getXxxhdpi(), splashPageBean);
                     break;
@@ -82,8 +82,8 @@ public class SplashPageUtils {
                     downloadSplashPage(APIUri.getPreviewUrl(defaultBean.getHdpi()), defaultBean.getHdpi(), splashPageBean);
                     break;
             }
-        }else {
-            ClientConfigUpdateUtils.getInstance().saveItemLocalVersion(ClientConfigItem.CLIENT_CONFIG_SPLASH,saveConfigVersion);
+        } else {
+            ClientConfigUpdateUtils.getInstance().saveItemLocalVersion(ClientConfigItem.CLIENT_CONFIG_SPLASH, saveConfigVersion);
         }
     }
 
@@ -112,7 +112,7 @@ public class SplashPageUtils {
                     String filelSha256 = FileSafeCode.getFileSHA256(file);
                     String screenType = AppUtils.getScreenType(context);
                     String sha256Code = "";
-                    switch (screenType){
+                    switch (screenType) {
                         case "2k":
                             sha256Code = splashPageBean.getPayload().getXxxhdpiHash().split(":")[1];
                             break;
@@ -137,10 +137,10 @@ public class SplashPageUtils {
                         List<String> protectedFileNameList = new ArrayList<String>();
                         protectedFileNameList.add(getCurrentSplashFileName(splashPageBean.getPayload().getResource().getDefaultX()));
                         FileUtils.delFilesExceptNameList(MyAppConfig.getSplashPageImageShowPath(context,
-                                ((MyApplication) context.getApplicationContext()).getUid(), "splash/"),protectedFileNameList);
-                        ClientConfigUpdateUtils.getInstance().saveItemLocalVersion(ClientConfigItem.CLIENT_CONFIG_SPLASH,saveConfigVersion);
+                                ((MyApplication) context.getApplicationContext()).getUid(), "splash/"), protectedFileNameList);
+                        ClientConfigUpdateUtils.getInstance().saveItemLocalVersion(ClientConfigItem.CLIENT_CONFIG_SPLASH, saveConfigVersion);
                     } else {
-                        AppExceptionCacheUtils.saveAppException(context,2,url,"splash sha256 Error",0);
+                        AppExceptionCacheUtils.saveAppException(context, 2, url, "splash sha256 Error", 0);
                     }
                 }
             }
@@ -164,7 +164,7 @@ public class SplashPageUtils {
     private String getCurrentSplashFileName(SplashDefaultBean defaultBean) {
         String screenType = AppUtils.getScreenType(context);
         String name = "";
-        switch (screenType){
+        switch (screenType) {
             case "2k":
                 name = defaultBean.getXxxhdpi();
                 break;
@@ -186,7 +186,7 @@ public class SplashPageUtils {
      *
      * @param s
      */
-    private void writeBackSplashPageLog(String s,  String currentVersion) {
+    private void writeBackSplashPageLog(String s, String currentVersion) {
         if (NetUtils.isNetworkConnected(context, false)) {
             String splashInfoOld = PreferencesByUserAndTanentUtils.getString(context, "splash_page_info_old", "");
             SplashPageBean splashPageBeanLocalOld = new SplashPageBean(splashInfoOld);

@@ -23,7 +23,7 @@ public class CustomImageDownloader extends BaseImageDownloader {
     protected HttpURLConnection createConnection(String url, Object extra)
             throws IOException {
         HttpURLConnection connection = super.createConnection(url, extra);
-        if (MyApplication.getInstance().getToken() != null){
+        if (MyApplication.getInstance().getToken() != null) {
             connection.setRequestProperty("Authorization", MyApplication.getInstance().getToken());
         }
         connection.setRequestProperty(
@@ -35,7 +35,7 @@ public class CustomImageDownloader extends BaseImageDownloader {
         connection.setRequestProperty("X-Device-ID",
                 AppUtils.getMyUUID(MyApplication.getInstance()));
         if (MyApplication.getInstance().getCurrentEnterprise() != null) {
-            connection.setRequestProperty("X-ECC-Current-Enterprise", MyApplication.getInstance().getCurrentEnterprise() .getId());
+            connection.setRequestProperty("X-ECC-Current-Enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
         }
         return connection;
     }

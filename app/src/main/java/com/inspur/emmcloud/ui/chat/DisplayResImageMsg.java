@@ -53,28 +53,28 @@ public class DisplayResImageMsg {
                 .bitmapConfig(Bitmap.Config.RGB_565).cacheInMemory(true)
                 .cacheOnDisk(true).build();
         if (!imageUri.startsWith("http") && !imageUri.startsWith("file:") && !imageUri.startsWith("content:") && !imageUri.startsWith("assets:") && !imageUri.startsWith("drawable:")) {
-            if (msg.getSendStatus() == 1){
+            if (msg.getSendStatus() == 1) {
                 imageUri = APIUri.getPreviewUrl(imageUri);
-            }else {
+            } else {
                 imageUri = "file://" + imageUri;
             }
         }
         String body = msg.getBody();
         int w = JSONUtils.getInt(body, "width", 0);
         int h = JSONUtils.getInt(body, "height", 0);
-        final boolean isHasSetImageViewSize = setImgViewSize(context, imageView, longImgText, w,h);
-		ImageLoader.getInstance().displayImage(imageUri, imageView, options, new SimpleImageLoadingListener(){
-			@Override
-			public void onLoadingComplete(String imageUri, View view,
-					Bitmap loadedImage) {
-				FadeInBitmapDisplayer.animate(imageView, 800);
-                if (!isHasSetImageViewSize){
+        final boolean isHasSetImageViewSize = setImgViewSize(context, imageView, longImgText, w, h);
+        ImageLoader.getInstance().displayImage(imageUri, imageView, options, new SimpleImageLoadingListener() {
+            @Override
+            public void onLoadingComplete(String imageUri, View view,
+                                          Bitmap loadedImage) {
+                FadeInBitmapDisplayer.animate(imageView, 800);
+                if (!isHasSetImageViewSize) {
                     int w = loadedImage.getWidth();
                     int h = loadedImage.getHeight();
-                    setImgViewSize(context, imageView, longImgText, w,h);
+                    setImgViewSize(context, imageView, longImgText, w, h);
                 }
-			}
-		});
+            }
+        });
 
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,6 +105,7 @@ public class DisplayResImageMsg {
 
     /**
      * 设置imageView的尺寸
+     *
      * @param context
      * @param imageView
      * @param longImgText
@@ -112,7 +113,7 @@ public class DisplayResImageMsg {
      * @param h
      * @return
      */
-    private static boolean setImgViewSize(Activity context, ImageView imageView, TextView longImgText, int w,int h) {
+    private static boolean setImgViewSize(Activity context, ImageView imageView, TextView longImgText, int w, int h) {
         if (w == 0 || h == 0) {
             return false;
         }

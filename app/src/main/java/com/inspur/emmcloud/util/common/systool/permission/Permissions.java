@@ -43,26 +43,14 @@ public final class Permissions {
 
     public static final String READ_EXTERNAL_STORAGE = "android.permission.READ_EXTERNAL_STORAGE";
     public static final String WRITE_EXTERNAL_STORAGE = "android.permission.WRITE_EXTERNAL_STORAGE";
-
-    public static final class Group {
-        public static final String[] CALENDAR = new String[]{
-                Permissions.READ_CALENDAR,
-                Permissions.WRITE_CALENDAR};
-
-        public static final String[] CAMERA = new String[]{Permissions.CAMERA};
-    }
-
     public static final String[] CONTACTS = new String[]{
             Permissions.READ_CONTACTS,
             Permissions.WRITE_CONTACTS,
             Permissions.GET_ACCOUNTS};
-
     public static final String[] LOCATION = new String[]{
             Permissions.ACCESS_FINE_LOCATION,
             Permissions.ACCESS_COARSE_LOCATION};
-
     public static final String[] MICROPHONE = new String[]{Permissions.RECORD_AUDIO};
-
     public static final String[] PHONE = new String[]{
             Permissions.READ_PHONE_STATE,
             Permissions.CALL_PHONE,
@@ -71,20 +59,24 @@ public final class Permissions {
             Permissions.ADD_VOICEMAIL,
             Permissions.USE_SIP,
             Permissions.PROCESS_OUTGOING_CALLS};
-
     public static final String[] SENSORS = new String[]{Permissions.BODY_SENSORS};
-
     public static final String[] SMS = new String[]{
             Permissions.SEND_SMS,
             Permissions.RECEIVE_SMS,
             Permissions.READ_SMS,
             Permissions.RECEIVE_WAP_PUSH,
             Permissions.RECEIVE_MMS};
-
     public static final String[] STORAGE = new String[]{
             Permissions.READ_EXTERNAL_STORAGE,
             Permissions.WRITE_EXTERNAL_STORAGE};
-
     public static final String[] PHONE_PERMISSION = new String[]{
             Permissions.READ_PHONE_STATE};
+
+    public static final class Group {
+        public static final String[] CALENDAR = new String[]{
+                Permissions.READ_CALENDAR,
+                Permissions.WRITE_CALENDAR};
+
+        public static final String[] CAMERA = new String[]{Permissions.CAMERA};
+    }
 }

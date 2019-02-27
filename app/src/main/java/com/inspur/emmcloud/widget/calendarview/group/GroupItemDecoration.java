@@ -220,7 +220,7 @@ public class GroupItemDecoration<Group, Child> extends RecyclerView.ItemDecorati
         }
     }
 
-    public void setChildItemOffset(int childItemOffset){
+    public void setChildItemOffset(int childItemOffset) {
         this.mChildItemOffset = childItemOffset;
     }
 
@@ -271,6 +271,7 @@ public class GroupItemDecoration<Group, Child> extends RecyclerView.ItemDecorati
 
     /**
      * 获取文本的长度像素
+     *
      * @param str 文本
      * @return px
      */

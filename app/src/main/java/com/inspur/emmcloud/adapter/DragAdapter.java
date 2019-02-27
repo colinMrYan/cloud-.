@@ -39,7 +39,7 @@ public class DragAdapter extends BaseAdapter {
     private boolean canEdit = false;//表示排序和删除两个状态
     private LoadingDialog loadingDialog;
     private int deletePosition = -1;
-    private Map<String,Integer> appStoreBadgeMap;
+    private Map<String, Integer> appStoreBadgeMap;
 
     public DragAdapter(Context context, List<App> appList, int position, Map<String, Integer> appStoreBadgeMap) {
         this.context = context;
@@ -241,19 +241,19 @@ public class DragAdapter extends BaseAdapter {
     }
 
     /**
-     * 刷新常用的接口
-     */
-    public interface NotifyCommonlyUseListener {
-        void onNotifyCommonlyUseApp(App app);
-    }
-
-    /**
      * 设置刷新常用的接口
      *
      * @param l
      */
     public void setNotifyCommonlyUseListener(NotifyCommonlyUseListener l) {
         this.commonlyUseListener = l;
+    }
+
+    /**
+     * 刷新常用的接口
+     */
+    public interface NotifyCommonlyUseListener {
+        void onNotifyCommonlyUseApp(App app);
     }
 
     class WebService extends APIInterfaceInstance {

@@ -19,13 +19,15 @@ import java.text.DecimalFormat;
  */
 public class AudioRecorderManager {
 
-    //录音音频的放大倍数
-    private final static int VOICE_ENLARGE_TIMES = 1;
     //音频输入-麦克风
     public final static int AUDIO_INPUT = MediaRecorder.AudioSource.MIC;
     //采用频率
     //44100是目前的标准，但是某些设备仍然支持22050，16000，11025，16000所有Android设备都支持
     public final static int AUDIO_SAMPLE_RATE = 16000;  //44.1KHz,普遍使用的频率
+    //录音音频的放大倍数
+    private final static int VOICE_ENLARGE_TIMES = 1;
+    //管理类的引用
+    private static AudioRecorderManager mInstance;
     // 缓冲区字节大小
     private int bufferSizeInBytes = 0;
     //rawAudioFilePath ，麦克风
@@ -42,10 +44,10 @@ public class AudioRecorderManager {
     private long duration = 0;
     //开始时间
     private long beginTime = 0;
-    //管理类的引用
-    private static AudioRecorderManager mInstance;
-
     private AudioDataCallBack callBack;
+
+    private AudioRecorderManager() {
+    }
 
     public static AudioRecorderManager getInstance() {
         if (mInstance == null) {
@@ -58,9 +60,6 @@ public class AudioRecorderManager {
         return mInstance;
     }
 
-    private AudioRecorderManager() {
-    }
-
     /**
      * 开始录制
      *
@@ -68,7 +67,7 @@ public class AudioRecorderManager {
      */
     public void startRecord() {
         try {
-            if(audioRecord != null){
+            if (audioRecord != null) {
                 audioRecord.startRecording();
                 // 让录制状态为true
                 isRecording = true;
@@ -175,18 +174,6 @@ public class AudioRecorderManager {
     }
 
     /**
-     * 准备一个线程执行数据操作
-     */
-    class AudioRecordThread implements Runnable {
-        @Override
-        public void run() {
-            writeData2File();//往文件中写入裸数据
-            copyWaveFile(rawAudioFilePath, wavAudioFilePath);//给裸数据加上头文件
-        }
-    }
-
-
-    /**
      * 这里将数据写入文件，但是并不能播放，因为AudioRecord获得的音频是原始的裸音频，
      * 如果需要播放就必须加入一些格式或者编码的头信息。但是这样的好处就是你可以对音频的 裸数据进行处理，比如你要做一个爱说话的TOM
      * 猫在这里就进行音频的处理，然后重新封装 所以说这样得到的音频比较容易做一些音频的处理。
@@ -208,14 +195,14 @@ public class AudioRecorderManager {
             fos = new FileOutputStream(file);// 建立一个可存取字节的文件
             boolean isHasData = false;
             while (isRecording == true) {
-                if(audioRecord == null){
+                if (audioRecord == null) {
                     callBack.onWavAudioPrepareState(AudioRecordErrorCode.E_ERROR);
                     return;
                 }
                 readSize = audioRecord.read(audioData, 0, bufferSizeInBytes);
                 volume = getVolumeLevel(audioData);
-                for(int i=0;i<audioData.length;i++) {
-                    audioData[i]= (byte) (audioData[i]*VOICE_ENLARGE_TIMES);
+                for (int i = 0; i < audioData.length; i++) {
+                    audioData[i] = (byte) (audioData[i] * VOICE_ENLARGE_TIMES);
                 }
                 if (AudioRecord.ERROR_INVALID_OPERATION != readSize && fos != null) {
                     isHasData = true;
@@ -251,12 +238,13 @@ public class AudioRecorderManager {
 
     /**
      * 获取音量的等级非分贝分级算法
+     *
      * @param audioData
      * @return
      */
     private int getVolumeLevel(byte[] audioData) {
         int voiceLevel = 0;
-        if (audioData != null &&  audioData.length > 0){
+        if (audioData != null && audioData.length > 0) {
             voiceLevel = calculateVolume(audioData);
         }
         voiceLevel = voiceLevel / 3;
@@ -270,14 +258,15 @@ public class AudioRecorderManager {
 
     /**
      * 计算音量
+     *
      * @param buffer
      * @return
      */
-    private int calculateVolume(byte[] buffer){
+    private int calculateVolume(byte[] buffer) {
         double sumVolume = 0.0;
         double avgVolume = 0.0;
         int volume = 0;
-        for(int i = 0; i < buffer.length; i+=2){
+        for (int i = 0; i < buffer.length; i += 2) {
             int v1 = buffer[i] & 0xFF;
             int v2 = buffer[i + 1] & 0xFF;
             int temp = v1 + (v2 << 8);// 小端
@@ -287,7 +276,7 @@ public class AudioRecorderManager {
             sumVolume += Math.abs(temp);
         }
         avgVolume = sumVolume / buffer.length / 2;
-        volume = (int)Math.log10(1 + avgVolume) * 10;
+        volume = (int) Math.log10(1 + avgVolume) * 10;
         return volume;
     }
 
@@ -439,5 +428,16 @@ public class AudioRecorderManager {
         void onDataChange(int volume, float duration);
 
         void onWavAudioPrepareState(int state);
+    }
+
+    /**
+     * 准备一个线程执行数据操作
+     */
+    class AudioRecordThread implements Runnable {
+        @Override
+        public void run() {
+            writeData2File();//往文件中写入裸数据
+            copyWaveFile(rawAudioFilePath, wavAudioFilePath);//给裸数据加上头文件
+        }
     }
 }

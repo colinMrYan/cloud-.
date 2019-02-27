@@ -241,17 +241,17 @@ public class MailHomeActivity extends MailHomeBaseActivity implements MySwipeRef
 
     }
 
-    private void removeMail(){
+    private void removeMail() {
         if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
             loadingDlg.show();
             JSONObject object = new JSONObject();
             object.put("Email", ContactUserCacheUtils.getUserMail(MyApplication.getInstance().getUid()));
-            object.put("DeleteMode",2);
+            object.put("DeleteMode", 2);
             JSONArray array = new JSONArray();
-            for(Mail mail:mailSelectList){
+            for (Mail mail : mailSelectList) {
                 array.add(mail.getId());
             }
-            object.put("ItemIds",array);
+            object.put("ItemIds", array);
             apiService.removeMail(object.toJSONString());
         }
     }
@@ -281,14 +281,14 @@ public class MailHomeActivity extends MailHomeBaseActivity implements MySwipeRef
         @Override
         public void returnRemoveMailSuccess() {
             LoadingDialog.dimissDlg(loadingDlg);
-            ToastUtils.show(MailHomeActivity.this,"邮件删除成功");
+            ToastUtils.show(MailHomeActivity.this, "邮件删除成功");
             removeMailListFromLocal(mailSelectList);
         }
 
         @Override
         public void returnRemoveMailFail(String error, int errorCode) {
             LoadingDialog.dimissDlg(loadingDlg);
-            WebServiceMiddleUtils.hand(MailHomeActivity.this,error,errorCode);
+            WebServiceMiddleUtils.hand(MailHomeActivity.this, error, errorCode);
         }
     }
 }

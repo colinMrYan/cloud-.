@@ -43,12 +43,12 @@ public class UpgradeUtils extends APIInterfaceInstance {
     private static final int NO_NEED_UPGRADE = 10;
     private static final int UPGRADE_FAIL = 11;
     private static final int DONOT_UPGRADE = 12;
+    private static final String TAG = "UpgradeUtils";
     private static double MBDATA = 1048576.0;
     private static double KBDATA = 1024.0;
-    private Boolean cancelUpdate = false;
     private static String DOWNLOAD_PATH = Environment
             .getExternalStorageDirectory() + "/IMP-Cloud/download/";
-    private static final String TAG = "UpgradeUtils";
+    private Boolean cancelUpdate = false;
     private GetUpgradeResult getUpgradeResult;
     private Context context;
     private Handler upgradeHandler;
@@ -97,13 +97,13 @@ public class UpgradeUtils extends APIInterfaceInstance {
                         downloadPercent = getPercent(progress);
                         String text = setFormat(downloadSize) + "/"
                                 + setFormat(totalSize);
-                        if(ratioText != null){
+                        if (ratioText != null) {
                             ratioText.setText(text);
                         }
-                        if(downloadProgressBar != null){
+                        if (downloadProgressBar != null) {
                             downloadProgressBar.setProgress(progress);
                         }
-                        if(percentText != null){
+                        if (percentText != null) {
                             percentText.setText(downloadPercent);
                         }
                         break;
@@ -112,7 +112,7 @@ public class UpgradeUtils extends APIInterfaceInstance {
                             progressDownloadDialog.dismiss();
                         }
 //                        AppUtils.installApk(context,DOWNLOAD_PATH, "update.apk");
-                        FileUtils.openFile(context,DOWNLOAD_PATH + "update.apk");
+                        FileUtils.openFile(context, DOWNLOAD_PATH + "update.apk");
                         if (context instanceof MainActivity) {
                             ((Activity) context).finish();
                         }
@@ -166,7 +166,7 @@ public class UpgradeUtils extends APIInterfaceInstance {
         upgradeUrl = getUpgradeResult.getUpgradeUrl();
         switch (upgradeCode) {
             case 0: // 无须升级
-                if (handler != null){
+                if (handler != null) {
                     handler.sendEmptyMessage(NO_NEED_UPGRADE);
                 }
                 break;
@@ -174,7 +174,7 @@ public class UpgradeUtils extends APIInterfaceInstance {
                 long appNotUpdateTime = PreferencesUtils.getLong(context, "appNotUpdateTime");
                 if (isManualCheck || System.currentTimeMillis() - appNotUpdateTime > notUpdateInterval) {
                     showSelectUpgradeDlg();
-                } else if (handler != null){
+                } else if (handler != null) {
                     handler.sendEmptyMessage(NO_NEED_UPGRADE);
                 }
 
@@ -184,7 +184,7 @@ public class UpgradeUtils extends APIInterfaceInstance {
                 break;
 
             default:
-                if (handler != null){
+                if (handler != null) {
                     handler.sendEmptyMessage(NO_NEED_UPGRADE);
                 }
                 break;
@@ -200,8 +200,8 @@ public class UpgradeUtils extends APIInterfaceInstance {
         TextView appUpdateContentText = dialog.findViewById(R.id.text);
         appUpdateContentText.setMovementMethod(ScrollingMovementMethod.getInstance());
         appUpdateContentText.setText(upgradeMsg);
-        TextView appUpdateTitle =  dialog.findViewById(R.id.app_update_title);
-        TextView appUpdateVersion =  dialog.findViewById(R.id.app_update_version);
+        TextView appUpdateTitle = dialog.findViewById(R.id.app_update_title);
+        TextView appUpdateVersion = dialog.findViewById(R.id.app_update_version);
         appUpdateTitle.setText(context.getString(R.string.app_update_remind));
         appUpdateVersion.setText(context.getString(R.string.app_last_version) + "(" + getUpgradeResult.getLatestVersion() + ")");
         okBtn.setOnClickListener(new View.OnClickListener() {
@@ -211,7 +211,7 @@ public class UpgradeUtils extends APIInterfaceInstance {
                 showDownloadDialog();
             }
         });
-        Button cancelBt =  dialog.findViewById(R.id.cancel_btn);
+        Button cancelBt = dialog.findViewById(R.id.cancel_btn);
         cancelBt.setText(context.getString(R.string.not_upgrade));
         cancelBt.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -236,12 +236,12 @@ public class UpgradeUtils extends APIInterfaceInstance {
         dialog.setCancelable(false);
         Button okBtn = dialog.findViewById(R.id.ok_btn);
         okBtn.setText(context.getString(R.string.upgrade));
-        TextView appUpdateContentText =  dialog.findViewById(R.id.text);
+        TextView appUpdateContentText = dialog.findViewById(R.id.text);
         appUpdateContentText.setMovementMethod(ScrollingMovementMethod.getInstance());
         appUpdateContentText.setText(upgradeMsg);
-        TextView appUpdateTitle =  dialog.findViewById(R.id.app_update_title);
+        TextView appUpdateTitle = dialog.findViewById(R.id.app_update_title);
         appUpdateTitle.setText(context.getString(R.string.app_update_remind));
-        TextView appUpdateVersion =  dialog.findViewById(R.id.app_update_version);
+        TextView appUpdateVersion = dialog.findViewById(R.id.app_update_version);
         appUpdateVersion.setText(context.getString(R.string.app_last_version) + "(" + getUpgradeResult.getLatestVersion() + ")");
         okBtn.setOnClickListener(new View.OnClickListener() {
 
@@ -251,7 +251,7 @@ public class UpgradeUtils extends APIInterfaceInstance {
                 showDownloadDialog();
             }
         });
-        Button cancelBt =  dialog.findViewById(R.id.cancel_btn);
+        Button cancelBt = dialog.findViewById(R.id.cancel_btn);
         cancelBt.setText(context.getString(R.string.exit));
         cancelBt.setOnClickListener(new View.OnClickListener() {
 

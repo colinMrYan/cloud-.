@@ -23,8 +23,8 @@ public class LoginSelectEnterpriseAdapter extends BaseAdapter {
     private Context context;
     private List<Enterprise> enterpriseList;
 
-    public LoginSelectEnterpriseAdapter(Context context,List<Enterprise> enterpriseList){
-        this.context =context;
+    public LoginSelectEnterpriseAdapter(Context context, List<Enterprise> enterpriseList) {
+        this.context = context;
         this.enterpriseList = enterpriseList;
     }
 
@@ -48,10 +48,10 @@ public class LoginSelectEnterpriseAdapter extends BaseAdapter {
         TextView enterpriseText = new TextView(context);
         enterpriseText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
         enterpriseText.setSingleLine();
-        int paddingLeft = DensityUtil.dip2px(MyApplication.getInstance(),36);
-        int paddingRight = DensityUtil.dip2px(MyApplication.getInstance(),21);
-        int paddingTop = DensityUtil.dip2px(MyApplication.getInstance(),12);
-        enterpriseText.setPadding(paddingLeft,paddingTop,paddingRight,paddingTop);
+        int paddingLeft = DensityUtil.dip2px(MyApplication.getInstance(), 36);
+        int paddingRight = DensityUtil.dip2px(MyApplication.getInstance(), 21);
+        int paddingTop = DensityUtil.dip2px(MyApplication.getInstance(), 12);
+        enterpriseText.setPadding(paddingLeft, paddingTop, paddingRight, paddingTop);
         enterpriseText.setTextColor(Color.parseColor("#333333"));
         Enterprise enterprise = enterpriseList.get(position);
         enterpriseText.setText(enterprise.getName());

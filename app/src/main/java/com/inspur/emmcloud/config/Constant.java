@@ -141,7 +141,7 @@ public class Constant {
     public static final String INSPUR_HOST_URL = ".inspur.com";
     public static final String INSPURONLINE_HOST_URL = ".inspuronline.com";
 
-    public static final String BATTERY_WHITE_LIST_STATE="battery_white_list_state";
+    public static final String BATTERY_WHITE_LIST_STATE = "battery_white_list_state";
 
     //推送相关配置
     public static final String PUSH_FLAG = "pushFlag";
@@ -158,7 +158,7 @@ public class Constant {
     public static final int APP_EXCEPTION_LEVEL = 4;
 
     //邮箱
-    public static final String MAIL_ENCRYPT_IV="inspurcloud+2019";
+    public static final String MAIL_ENCRYPT_IV = "inspurcloud+2019";
 
     public static final String SF_OPEN_URL = "open-url";
 

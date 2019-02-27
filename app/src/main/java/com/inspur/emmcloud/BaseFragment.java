@@ -12,7 +12,7 @@ import com.inspur.emmcloud.util.common.ResourceUtils;
  */
 
 public class BaseFragment extends Fragment {
-    protected void setFragmentStatusBarCommon(){
+    protected void setFragmentStatusBarCommon() {
 //        int currentThemeNo = PreferencesUtils.getInt(MyApplication.getInstance(), Constant.PREF_APP_THEME, 0);
 //        switch (currentThemeNo){
 //            case 1:
@@ -29,25 +29,25 @@ public class BaseFragment extends Fragment {
 //                break;
 //        }
 
-        int color = ResourceUtils.getValueOfAttr(getActivity(),R.attr.header_bg_color);
+        int color = ResourceUtils.getValueOfAttr(getActivity(), R.attr.header_bg_color);
         boolean isStatusFontDark = true;
         int currentThemeNo = PreferencesUtils.getInt(MyApplication.getInstance(), Constant.PREF_APP_THEME, 0);
-        switch (currentThemeNo){
+        switch (currentThemeNo) {
             case 1:
-                isStatusFontDark =false;
+                isStatusFontDark = false;
                 break;
             case 2:
-                isStatusFontDark =true;
+                isStatusFontDark = true;
                 break;
             default:
-                isStatusFontDark =true;
+                isStatusFontDark = true;
                 break;
         }
         ImmersionBar.with(getActivity()).statusBarColor(color).statusBarDarkFont(isStatusFontDark).init();
 
     }
 
-    protected void setFragmentStatusBarWhite(){
+    protected void setFragmentStatusBarWhite() {
 //        StateBarUtils.translucent(getActivity(),R.color.white);
 //        StateBarUtils.setStateBarTextColor(getActivity(),true);
         ImmersionBar.with(getActivity()).statusBarColor(R.color.white).statusBarDarkFont(true).init();

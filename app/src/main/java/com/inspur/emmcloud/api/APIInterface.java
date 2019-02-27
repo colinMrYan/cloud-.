@@ -567,7 +567,7 @@ public interface APIInterface {
     void returnVolumeFileListFail(String error, int errorCode);
 
     void returnVolumeFileUploadTokenSuccess(GetVolumeFileUploadTokenResult getVolumeFileUploadTokenResult,
-            String fileLocalPath, VolumeFile mockVolumeFile);
+                                            String fileLocalPath, VolumeFile mockVolumeFile);
 
     void returnVolumeFileUploadTokenFail(VolumeFile mockVolumeFile, String error, int errorCode, String filePath);
 
@@ -676,12 +676,12 @@ public interface APIInterface {
     void returnContactOrgListFail(String error, int errorCode);
 
     void returnContactUserListUpdateSuccess(GetContactUserListUpateResult getContactUserListUpateResult,
-            String saveConfigVersion);
+                                            String saveConfigVersion);
 
     void returnContactUserListUpdateFail(String error, int errorCode);
 
     void returnContactOrgListUpdateSuccess(GetContactOrgListUpateResult getContactOrgListUpateResult,
-            String saveConfigVersion);
+                                           String saveConfigVersion);
 
     void returnContactOrgListUpdateFail(String error, int errorCode);
 
@@ -789,7 +789,7 @@ public interface APIInterface {
 
     void returnDeleteConversationFail(String error, int errorCode);
 
-    void returnCheckCloudPluseConnectionSuccess(byte[] arg0,  String url);
+    void returnCheckCloudPluseConnectionSuccess(byte[] arg0, String url);
 
     void returnCheckCloudPluseConnectionError(String error, int responseCode, String url);
 
@@ -824,5 +824,6 @@ public interface APIInterface {
     void returnRemoveMailFail(String error, int errorCode);
 
     void returnUserCardMenusSuccess(GetUserCardMenusResult getUserCardMenusResult);
+
     void returnUserCardMenusFail(String error, int errorCode);
 }

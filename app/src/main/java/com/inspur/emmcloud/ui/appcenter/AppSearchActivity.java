@@ -50,6 +50,19 @@ public class AppSearchActivity extends BaseActivity {
     private AppCenterAdapter searchAdapter;
     private MyAppAPIService apiService;
     private BroadcastReceiver mBroadcastReceiver;
+    private OnEditorActionListener onEditorActionListener = new OnEditorActionListener() {
+
+        @Override
+        public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+            // TODO Auto-generated method stub
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                InputMethodUtils.hide(AppSearchActivity.this);
+                onSearch(findViewById(R.id.search_btn));
+                return true;
+            }
+            return false;
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,14 +102,13 @@ public class AppSearchActivity extends BaseActivity {
         registerReceiver();
     }
 
-    public void onClick(View view){
-        switch (view.getId()){
+    public void onClick(View view) {
+        switch (view.getId()) {
             case R.id.ibt_back:
                 finish();
                 break;
         }
     }
-
 
     private void registerReceiver() {
         // TODO Auto-generated method stub
@@ -132,21 +144,6 @@ public class AppSearchActivity extends BaseActivity {
         searchApp(keyword);
     }
 
-    private OnEditorActionListener onEditorActionListener = new OnEditorActionListener() {
-
-        @Override
-        public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-            // TODO Auto-generated method stub
-            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                InputMethodUtils.hide(AppSearchActivity.this);
-                onSearch(findViewById(R.id.search_btn));
-                return true;
-            }
-            return false;
-        }
-    };
-
-
     @Override
     public void onDestroy() {
         // TODO Auto-generated method stub
@@ -154,24 +151,6 @@ public class AppSearchActivity extends BaseActivity {
         if (mBroadcastReceiver != null) {
             LocalBroadcastManager.getInstance(this).unregisterReceiver(mBroadcastReceiver);
             mBroadcastReceiver = null;
-        }
-    }
-
-    class SearchWatcher implements TextWatcher {
-
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-            handleSearchApp(s);
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-
         }
     }
 
@@ -203,7 +182,6 @@ public class AppSearchActivity extends BaseActivity {
 //		searchAdapter.notifyDataSetChanged();
     }
 
-
     /**
      * 搜索app
      *
@@ -218,6 +196,23 @@ public class AppSearchActivity extends BaseActivity {
         }
     }
 
+    class SearchWatcher implements TextWatcher {
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            handleSearchApp(s);
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+        }
+    }
 
     private class WebService extends APIInterfaceInstance {
 

@@ -39,18 +39,18 @@ public class ImageDisplayUtils implements ImagePickerLoader {
     }
 
 
-    public  void displayRoundedImage(final ImageView imageView, String uri, Integer defaultDrawableId, Context context,float dp) {
+    public void displayRoundedImage(final ImageView imageView, String uri, Integer defaultDrawableId, Context context, float dp) {
 
         if (!StringUtils.isBlank(uri) && !uri.startsWith("http") && !uri.startsWith("file:") && !uri.startsWith("content:") && !uri.startsWith("assets:") && !uri.startsWith("drawable:")) {
             uri = "file://" + uri;
         }
-        DisplayImageOptions  options = new DisplayImageOptions.Builder()
+        DisplayImageOptions options = new DisplayImageOptions.Builder()
                 .showImageForEmptyUri(defaultDrawableId)
                 .showImageOnFail(defaultDrawableId)
                 .showImageOnLoading(defaultDrawableId)
                 .cacheInMemory(true)
                 .bitmapConfig(Bitmap.Config.ARGB_8888)   //设置图片的解码类型
-                .displayer(new RoundedBitmapDisplayer(DensityUtil.dip2px(context,dp)))
+                .displayer(new RoundedBitmapDisplayer(DensityUtil.dip2px(context, dp)))
                 .build();
         ImageLoader.getInstance().displayImage(uri, imageView, options);
     }
@@ -73,17 +73,18 @@ public class ImageDisplayUtils implements ImagePickerLoader {
                 .cacheInMemory(true)
                 .cacheOnDisk(true)
                 .build();
-        ImageLoader.getInstance().displayImage(uri, imageView,options);
+        ImageLoader.getInstance().displayImage(uri, imageView, options);
     }
 
     /**
      * 消息页面头像展示使用此方法，为了刷新时不闪烁
+     *
      * @param imageView
      * @param uri
      * @param defaultDrawableId
      */
     public void displayImageByTag(final ImageView imageView, String uri, final Integer defaultDrawableId) {
-        if (StringUtils.isBlank(uri)){
+        if (StringUtils.isBlank(uri)) {
             imageView.setTag("");
             imageView.setImageResource(defaultDrawableId);
             return;
@@ -94,7 +95,7 @@ public class ImageDisplayUtils implements ImagePickerLoader {
         }
         final String finalUri = uri;
         imageView.setTag(finalUri);
-        ImageLoader.getInstance().loadImage(uri,options, new ImageLoadingListener() {
+        ImageLoader.getInstance().loadImage(uri, options, new ImageLoadingListener() {
             @Override
             public void onLoadingStarted(String imageUri, View view) {
                 String tagUri = (String) imageView.getTag();
@@ -123,7 +124,7 @@ public class ImageDisplayUtils implements ImagePickerLoader {
             public void onLoadingCancelled(String imageUri, View view) {
                 String tagUri = (String) imageView.getTag();
                 if (tagUri != null && tagUri.equals(finalUri)) {
-                    displayImageByTag(imageView,finalUri,defaultDrawableId);
+                    displayImageByTag(imageView, finalUri, defaultDrawableId);
                 }
             }
         });
@@ -132,6 +133,7 @@ public class ImageDisplayUtils implements ImagePickerLoader {
 
     /**
      * 展示不缓存的图片
+     *
      * @param imageView
      * @param uri
      * @param defaultDrawableId
@@ -144,6 +146,7 @@ public class ImageDisplayUtils implements ImagePickerLoader {
 
     /**
      * 展示不缓存的图片
+     *
      * @param imageView
      * @param uri
      * @param defaultDrawableId
@@ -156,8 +159,10 @@ public class ImageDisplayUtils implements ImagePickerLoader {
                 .build();
         ImageLoader.getInstance().displayImage(uri, imageView, options);
     }
+
     /**
      * 展示固定大小的图片
+     *
      * @param activity
      * @param uri
      * @param imageView
@@ -226,8 +231,8 @@ public class ImageDisplayUtils implements ImagePickerLoader {
         ImageLoader.getInstance().clearDiscCache();
     }
 
-    public void clearCache(String url){
-        DiskCacheUtils.removeFromCache(url,ImageLoader.getInstance().getDiskCache());
+    public void clearCache(String url) {
+        DiskCacheUtils.removeFromCache(url, ImageLoader.getInstance().getDiskCache());
         MemoryCacheUtils.removeFromCache(url, ImageLoader.getInstance().getMemoryCache());
     }
 }

@@ -15,11 +15,12 @@ import java.util.List;
 public class GetUserCardMenusResult {
     private String response;
     private List<MineLayoutItem> mineLayoutItemList = new ArrayList<>();
-    public GetUserCardMenusResult(String response){
+
+    public GetUserCardMenusResult(String response) {
         this.response = response;
-        JSONArray userCardArray = JSONUtils.getJSONArray(response,"userCard",new JSONArray());
-        for (int i=0;i<userCardArray.length();i++){
-            MineLayoutItem mineLayoutItem = new MineLayoutItem(JSONUtils.getString(userCardArray,i,""));
+        JSONArray userCardArray = JSONUtils.getJSONArray(response, "userCard", new JSONArray());
+        for (int i = 0; i < userCardArray.length(); i++) {
+            MineLayoutItem mineLayoutItem = new MineLayoutItem(JSONUtils.getString(userCardArray, i, ""));
             mineLayoutItemList.add(mineLayoutItem);
         }
     }

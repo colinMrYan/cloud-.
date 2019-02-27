@@ -133,7 +133,7 @@ public class ReactNativeFlow {
             }
         };
         String source = APIUri.getZipUrl() + reactNativeUpdateBean.getBundle().getAndroidUri();
-        new DownLoaderUtils().startDownLoad(source,reactZipFilePath,progressCallback);
+        new DownLoaderUtils().startDownLoad(source, reactZipFilePath, progressCallback);
     }
 
     /**
@@ -162,7 +162,7 @@ public class ReactNativeFlow {
             Intent intent = new Intent("com.inspur.react.success");
             LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
         } else {
-            AppExceptionCacheUtils.saveAppException(context,3,reactZipFilePath,"discover download not compelete error",0);
+            AppExceptionCacheUtils.saveAppException(context, 3, reactZipFilePath, "discover download not compelete error", 0);
         }
     }
 

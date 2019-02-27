@@ -43,23 +43,23 @@ public class SplashDefaultBean {
     private String xhdpiHash = "";
     private String xxxhdpiHash = "";
 
-    public SplashDefaultBean(String defaultBean){
-        this.res1xHash = JSONUtils.getString(defaultBean,"res1xHash","");
-        this.mdpi = JSONUtils.getString(defaultBean,"mdpi","");
-        this.xxhdpi = JSONUtils.getString(defaultBean,"xxhdpi","");
-        this.hdpi = JSONUtils.getString(defaultBean,"hdpi","");
-        this.xhdpi = JSONUtils.getString(defaultBean,"xhdpi","");
-        this.mdpiHash = JSONUtils.getString(defaultBean,"mdpiHash","");
-        this.res2x = JSONUtils.getString(defaultBean,"res2x","");
-        this.xxhdpiHash = JSONUtils.getString(defaultBean,"xxhdpiHash","");
-        this.xxxhdpi = JSONUtils.getString(defaultBean,"xxxhdpi","");
-        this.res1x = JSONUtils.getString(defaultBean,"res1x","");
-        this.res3xHash = JSONUtils.getString(defaultBean,"res3xHash","");
-        this.hdpiHash = JSONUtils.getString(defaultBean,"hdpiHash","");
-        this.res3x = JSONUtils.getString(defaultBean,"res3x","");
-        this.res2xHash = JSONUtils.getString(defaultBean,"res2xHash","");
-        this.xhdpiHash = JSONUtils.getString(defaultBean,"xhdpiHash","");
-        this.xxxhdpiHash = JSONUtils.getString(defaultBean,"xxxhdpiHash","");
+    public SplashDefaultBean(String defaultBean) {
+        this.res1xHash = JSONUtils.getString(defaultBean, "res1xHash", "");
+        this.mdpi = JSONUtils.getString(defaultBean, "mdpi", "");
+        this.xxhdpi = JSONUtils.getString(defaultBean, "xxhdpi", "");
+        this.hdpi = JSONUtils.getString(defaultBean, "hdpi", "");
+        this.xhdpi = JSONUtils.getString(defaultBean, "xhdpi", "");
+        this.mdpiHash = JSONUtils.getString(defaultBean, "mdpiHash", "");
+        this.res2x = JSONUtils.getString(defaultBean, "res2x", "");
+        this.xxhdpiHash = JSONUtils.getString(defaultBean, "xxhdpiHash", "");
+        this.xxxhdpi = JSONUtils.getString(defaultBean, "xxxhdpi", "");
+        this.res1x = JSONUtils.getString(defaultBean, "res1x", "");
+        this.res3xHash = JSONUtils.getString(defaultBean, "res3xHash", "");
+        this.hdpiHash = JSONUtils.getString(defaultBean, "hdpiHash", "");
+        this.res3x = JSONUtils.getString(defaultBean, "res3x", "");
+        this.res2xHash = JSONUtils.getString(defaultBean, "res2xHash", "");
+        this.xhdpiHash = JSONUtils.getString(defaultBean, "xhdpiHash", "");
+        this.xxxhdpiHash = JSONUtils.getString(defaultBean, "xxxhdpiHash", "");
     }
 
     public String getRes1xHash() {

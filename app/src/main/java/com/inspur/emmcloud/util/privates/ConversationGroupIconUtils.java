@@ -39,6 +39,11 @@ public class ConversationGroupIconUtils {
     private int rangetWidth;
     private int padding;
 
+    private ConversationGroupIconUtils() {
+        rangetWidth = DensityUtil.dip2px(MyApplication.getInstance(), 45);
+        padding = DensityUtil.dip2px(MyApplication.getInstance(), 1);
+    }
+
     public static ConversationGroupIconUtils getInstance() {
         if (instance == null) {
             synchronized (ConversationGroupIconUtils.class) {
@@ -50,11 +55,6 @@ public class ConversationGroupIconUtils {
         return instance;
     }
 
-    private ConversationGroupIconUtils(){
-        rangetWidth = DensityUtil.dip2px(MyApplication.getInstance(), 45);
-        padding = DensityUtil.dip2px(MyApplication.getInstance(), 1);
-    }
-
     public void create(List<Conversation> conversationList) {
         if (!Environment.getExternalStorageState().equals(
                 Environment.MEDIA_MOUNTED) || !NetUtils.isNetworkConnected(MyApplication.getInstance(), false)) {
@@ -62,64 +62,6 @@ public class ConversationGroupIconUtils {
         }
         new CreateIconTask(conversationList).execute();
     }
-
-    private class CreateIconTask extends AsyncTask<Void, Integer, Boolean> {
-        private List<Conversation> conversationList;
-
-        private CreateIconTask(List<Conversation> conversationList) {
-            this.conversationList = conversationList;
-        }
-
-        @Override
-        protected void onPostExecute(Boolean isCreateGroupIcon) {
-            if(isCreateGroupIcon){
-                EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_REFRESH_CONVERSATION_ADAPTER));
-            }
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... voids) {
-            if (conversationList == null) {
-                conversationList = ConversationCacheUtils.getConversationList(MyApplication.getInstance(), Conversation.TYPE_GROUP);
-            }
-            if (conversationList.size() == 0) {
-                return false;
-            }
-            File iconDir = new File(MyAppConfig.LOCAL_CACHE_PHOTO_PATH);
-            if (!iconDir.exists()) {
-                iconDir.mkdirs();
-            }
-            DisplayImageOptions options = ImageDisplayUtils.getInstance().getDefaultOptions(R.drawable.icon_person_default);
-            for (Conversation conversation : conversationList) {
-                List<Bitmap> bitmapList = new ArrayList<>();
-                List<String> memberUidList = conversation.getMemberList();
-                for (String uid : memberUidList) {
-                    String iconUrl = APIUri.getChannelImgUrl(MyApplication.getInstance(), uid);
-                    if (!StringUtils.isBlank(iconUrl)) {
-                        Bitmap bitmap = ImageLoader.getInstance().loadImageSync(iconUrl, options);
-                        if (bitmap == null) {
-                            bitmap = BitmapFactory.decodeResource(MyApplication.getInstance().getResources(), R.drawable.icon_person_default);
-                        }
-                        bitmapList.add(bitmap);
-                    }
-                    if (bitmapList.size() == 4) {
-                        break;
-                    }
-                }
-                Bitmap groupBitmap = createGroupIcon(bitmapList);
-                if (groupBitmap != null) {
-                    saveBitmap(conversation.getId(), groupBitmap);
-//                    String iconUrl = saveBitmap(conversation.getId(), groupBitmap);
-//                    if (iconUrl != null){
-//                        //清空原来的缓存
-//                        ImageDisplayUtils.getInstance().clearCache(iconUrl);
-//                    }
-                }
-            }
-            return true;
-        }
-    }
-
 
     private Bitmap createGroupIcon(List<Bitmap> bitmapList) {
         if (bitmapList == null || bitmapList.size() == 0) {
@@ -143,7 +85,7 @@ public class ConversationGroupIconUtils {
      * @param context
      * @return
      */
-    private  Bitmap createOneBit(List<Bitmap> paramList) {
+    private Bitmap createOneBit(List<Bitmap> paramList) {
         Bitmap bit1 = paramList.get(0);
         bit1 = zoomImage(bit1, rangetWidth, rangetWidth);
         return bit1;
@@ -157,7 +99,7 @@ public class ConversationGroupIconUtils {
      * @param context
      * @return
      */
-    private  Bitmap createTwoBit(List<Bitmap> paramList) {
+    private Bitmap createTwoBit(List<Bitmap> paramList) {
 
         // 创建一个空格的bitmap
         Bitmap canvasBitmap = Bitmap.createBitmap(rangetWidth, rangetWidth,
@@ -266,8 +208,6 @@ public class ConversationGroupIconUtils {
         return bitmap;
     }
 
-
-
     /***
      * 图片的缩放方法
      *
@@ -279,8 +219,8 @@ public class ConversationGroupIconUtils {
      *            ：缩放后高度
      * @return
      */
-    private  Bitmap zoomImage(Bitmap bgimage, double newWidth,
-                                   double newHeight) {
+    private Bitmap zoomImage(Bitmap bgimage, double newWidth,
+                             double newHeight) {
         // 获取这个图片的宽和高
         float width = bgimage.getWidth();
         float height = bgimage.getHeight();
@@ -314,7 +254,7 @@ public class ConversationGroupIconUtils {
             bitmap.compress(Bitmap.CompressFormat.PNG, 50, out);
             out.flush();
             out.close();
-            return "file://"+file.getAbsolutePath();
+            return "file://" + file.getAbsolutePath();
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -322,7 +262,7 @@ public class ConversationGroupIconUtils {
                 file.delete();
             }
         } finally {
-            if (out != null){
+            if (out != null) {
                 try {
                     out.close();
                 } catch (IOException e) {
@@ -330,11 +270,68 @@ public class ConversationGroupIconUtils {
                     e.printStackTrace();
                 }
             }
-            if (!bitmap.isRecycled()){
+            if (!bitmap.isRecycled()) {
                 bitmap.recycle();
                 bitmap = null;
             }
         }
         return null;
+    }
+
+    private class CreateIconTask extends AsyncTask<Void, Integer, Boolean> {
+        private List<Conversation> conversationList;
+
+        private CreateIconTask(List<Conversation> conversationList) {
+            this.conversationList = conversationList;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean isCreateGroupIcon) {
+            if (isCreateGroupIcon) {
+                EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_REFRESH_CONVERSATION_ADAPTER));
+            }
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            if (conversationList == null) {
+                conversationList = ConversationCacheUtils.getConversationList(MyApplication.getInstance(), Conversation.TYPE_GROUP);
+            }
+            if (conversationList.size() == 0) {
+                return false;
+            }
+            File iconDir = new File(MyAppConfig.LOCAL_CACHE_PHOTO_PATH);
+            if (!iconDir.exists()) {
+                iconDir.mkdirs();
+            }
+            DisplayImageOptions options = ImageDisplayUtils.getInstance().getDefaultOptions(R.drawable.icon_person_default);
+            for (Conversation conversation : conversationList) {
+                List<Bitmap> bitmapList = new ArrayList<>();
+                List<String> memberUidList = conversation.getMemberList();
+                for (String uid : memberUidList) {
+                    String iconUrl = APIUri.getChannelImgUrl(MyApplication.getInstance(), uid);
+                    if (!StringUtils.isBlank(iconUrl)) {
+                        Bitmap bitmap = ImageLoader.getInstance().loadImageSync(iconUrl, options);
+                        if (bitmap == null) {
+                            bitmap = BitmapFactory.decodeResource(MyApplication.getInstance().getResources(), R.drawable.icon_person_default);
+                        }
+                        bitmapList.add(bitmap);
+                    }
+                    if (bitmapList.size() == 4) {
+                        break;
+                    }
+                }
+                Bitmap groupBitmap = createGroupIcon(bitmapList);
+                if (groupBitmap != null) {
+                    saveBitmap(conversation.getId(), groupBitmap);
+//                    String iconUrl = saveBitmap(conversation.getId(), groupBitmap);
+//                    if (iconUrl != null){
+//                        //清空原来的缓存
+//                        ImageDisplayUtils.getInstance().clearCache(iconUrl);
+//                    }
+                }
+            }
+            return true;
+        }
     }
 }

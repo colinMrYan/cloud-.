@@ -26,6 +26,9 @@ import java.util.Map;
 public class WSAPIService {
     private static WSAPIService apiService = null;
 
+    public WSAPIService() {
+    }
+
     public static WSAPIService getInstance() {
         if (apiService == null) {
             synchronized (WebSocketPush.class) {
@@ -37,10 +40,7 @@ public class WSAPIService {
         return apiService;
     }
 
-    public WSAPIService() {
-    }
-
-    public void sendChatTextPlainMsg(Message fakeMessage){
+    public void sendChatTextPlainMsg(Message fakeMessage) {
         try {
             JSONObject object = new JSONObject();
             JSONObject actionObj = new JSONObject();
@@ -60,9 +60,9 @@ public class WSAPIService {
                 JSONObject mentionsObj = JSONUtils.map2Json(mentionsMap);
                 bodyObj.put("mentions", mentionsObj);
             }
-            bodyObj.put("tmpId",fakeMessage.getId());
+            bodyObj.put("tmpId", fakeMessage.getId());
             object.put("body", bodyObj);
-            EventMessage eventMessage = new EventMessage(fakeMessage.getId(),Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE,"",fakeMessage.getId());
+            EventMessage eventMessage = new EventMessage(fakeMessage.getId(), Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE, "", fakeMessage.getId());
             WebSocketPush.getInstance().sendEventMessage(eventMessage, object, fakeMessage.getId());
         } catch (Exception e) {
             e.printStackTrace();
@@ -85,15 +85,15 @@ public class WSAPIService {
             MsgContentComment msgContentComment = fakeMessage.getMsgContentComment();
             bodyObj.put("text", msgContentComment.getText());
             bodyObj.put("message", msgContentComment.getMessage());
-            Map<String,String> mentionsMap = msgContentComment.getMentionsMap();
+            Map<String, String> mentionsMap = msgContentComment.getMentionsMap();
             if (mentionsMap != null && mentionsMap.size() > 0) {
                 JSONObject mentionsObj = JSONUtils.map2Json(mentionsMap);
                 bodyObj.put("mentions", mentionsObj);
             }
-            bodyObj.put("tmpId",fakeMessage.getId());
+            bodyObj.put("tmpId", fakeMessage.getId());
             object.put("body", bodyObj);
-            EventMessage eventMessage = new EventMessage(fakeMessage.getId(),Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE,"",fakeMessage.getId());
-            WebSocketPush.getInstance().sendEventMessage(eventMessage, object,fakeMessage.getId());
+            EventMessage eventMessage = new EventMessage(fakeMessage.getId(), Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE, "", fakeMessage.getId());
+            WebSocketPush.getInstance().sendEventMessage(eventMessage, object, fakeMessage.getId());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -117,10 +117,10 @@ public class WSAPIService {
             bodyObj.put("name", fakeMessage.getMsgContentAttachmentFile().getName());
             bodyObj.put("size", fakeMessage.getMsgContentAttachmentFile().getSize());
             bodyObj.put("media", fakeMessage.getMsgContentAttachmentFile().getMedia());
-            bodyObj.put("tmpId",fakeMessage.getId());
+            bodyObj.put("tmpId", fakeMessage.getId());
             object.put("body", bodyObj);
-            EventMessage eventMessage = new EventMessage(fakeMessage.getId(),Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE,"",fakeMessage.getId());
-            WebSocketPush.getInstance().sendEventMessage(eventMessage, object,fakeMessage.getId());
+            EventMessage eventMessage = new EventMessage(fakeMessage.getId(), Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE, "", fakeMessage.getId());
+            WebSocketPush.getInstance().sendEventMessage(eventMessage, object, fakeMessage.getId());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -143,22 +143,22 @@ public class WSAPIService {
             bodyObj.put("media", message.getMsgContentMediaVoice().getMedia());
             JSONObject subTitleObj = new JSONObject();
             String language = AppUtils.getCurrentAppLanguage(MyApplication.getInstance());
-            switch (language){
+            switch (language) {
                 case "zh-Hans":
-                    subTitleObj.put("zh-cn",message.getMsgContentMediaVoice().getResult());
+                    subTitleObj.put("zh-cn", message.getMsgContentMediaVoice().getResult());
                     break;
                 case "en":
-                    subTitleObj.put("en-us",message.getMsgContentMediaVoice().getResult());
+                    subTitleObj.put("en-us", message.getMsgContentMediaVoice().getResult());
                     break;
                 default:
-                    subTitleObj.put("zh-cn",message.getMsgContentMediaVoice().getResult());
+                    subTitleObj.put("zh-cn", message.getMsgContentMediaVoice().getResult());
                     break;
             }
-            bodyObj.put("subtitles",subTitleObj);
-            bodyObj.put("tmpId",message.getId());
+            bodyObj.put("subtitles", subTitleObj);
+            bodyObj.put("tmpId", message.getId());
             object.put("body", bodyObj);
-            EventMessage eventMessage = new EventMessage(message.getId(),Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE,"",message.getId());
-            WebSocketPush.getInstance().sendEventMessage(eventMessage, object,message.getId());
+            EventMessage eventMessage = new EventMessage(message.getId(), Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE, "", message.getId());
+            WebSocketPush.getInstance().sendEventMessage(eventMessage, object, message.getId());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -178,25 +178,25 @@ public class WSAPIService {
             JSONObject bodyObj = new JSONObject();
             bodyObj.put("type", "extended/links");
             MsgContentExtendedLinks msgContentExtendedLinks = message.getMsgContentExtendedLinks();
-            bodyObj.put("poster",msgContentExtendedLinks.getPoster() );
+            bodyObj.put("poster", msgContentExtendedLinks.getPoster());
             bodyObj.put("title", msgContentExtendedLinks.getTitle());
             bodyObj.put("subtitle", msgContentExtendedLinks.getSubtitle());
             bodyObj.put("url", msgContentExtendedLinks.getUrl());
-            bodyObj.put("tmpId",message.getId());
+            bodyObj.put("tmpId", message.getId());
             JSONArray array = new JSONArray();
-            for (RelatedLink relatedLink:msgContentExtendedLinks.getRelatedLinkList()){
+            for (RelatedLink relatedLink : msgContentExtendedLinks.getRelatedLinkList()) {
                 array.put(relatedLink.toJSonObject());
             }
             bodyObj.put("relatedLinks", array);
             object.put("body", bodyObj);
-            EventMessage eventMessage = new EventMessage(message.getId(),Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE,"",message.getId());
-            WebSocketPush.getInstance().sendEventMessage(eventMessage, object,message.getId());
+            EventMessage eventMessage = new EventMessage(message.getId(), Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE, "", message.getId());
+            WebSocketPush.getInstance().sendEventMessage(eventMessage, object, message.getId());
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void sendChatMediaImageMsg( Message fakeMessage) {
+    public void sendChatMediaImageMsg(Message fakeMessage) {
         try {
             JSONObject object = new JSONObject();
             JSONObject actionObj = new JSONObject();
@@ -228,10 +228,10 @@ public class WSAPIService {
             bodyObj.put("preview", previewObj);
             bodyObj.put("thumbnail", thumbnailObj);
             bodyObj.put("raw", rawObj);
-            bodyObj.put("tmpId",fakeMessage.getId());
+            bodyObj.put("tmpId", fakeMessage.getId());
             object.put("body", bodyObj);
-            EventMessage eventMessage = new EventMessage(fakeMessage.getId(),Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE,"",fakeMessage.getId());
-            WebSocketPush.getInstance().sendEventMessage( eventMessage, object,fakeMessage.getId());
+            EventMessage eventMessage = new EventMessage(fakeMessage.getId(), Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE, "", fakeMessage.getId());
+            WebSocketPush.getInstance().sendEventMessage(eventMessage, object, fakeMessage.getId());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -244,7 +244,7 @@ public class WSAPIService {
             JSONObject actionObj = new JSONObject();
             actionObj.put("method", "get");
             actionObj.put("path", "/message");
-            if (lastMessageId != null){
+            if (lastMessageId != null) {
                 JSONObject queryObj = new JSONObject();
                 queryObj.put("cursor", lastMessageId);
                 actionObj.put("query", queryObj);
@@ -254,14 +254,14 @@ public class WSAPIService {
             headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
             headerObj.put("tracer", tracer);
             object.put("headers", headerObj);
-            EventMessage eventMessage = new EventMessage(tracer,Constant.EVENTBUS_TAG_GET_OFFLINE_WS_MESSAGE);
-            WebSocketPush.getInstance().sendEventMessage(eventMessage, object,tracer);
+            EventMessage eventMessage = new EventMessage(tracer, Constant.EVENTBUS_TAG_GET_OFFLINE_WS_MESSAGE);
+            WebSocketPush.getInstance().sendEventMessage(eventMessage, object, tracer);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void getChannelRecentMessage(){
+    public void getChannelRecentMessage() {
         try {
             String tracer = CommunicationUtils.getTracer();
             JSONObject object = new JSONObject();
@@ -276,8 +276,8 @@ public class WSAPIService {
             headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
             headerObj.put("tracer", tracer);
             object.put("headers", headerObj);
-            EventMessage eventMessage = new EventMessage(tracer,Constant.EVENTBUS_TAG_GET_CHANNEL_RECENT_MESSAGE);
-            WebSocketPush.getInstance().sendEventMessage(eventMessage, object,tracer);
+            EventMessage eventMessage = new EventMessage(tracer, Constant.EVENTBUS_TAG_GET_CHANNEL_RECENT_MESSAGE);
+            WebSocketPush.getInstance().sendEventMessage(eventMessage, object, tracer);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -295,93 +295,93 @@ public class WSAPIService {
             headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
             headerObj.put("tracer", tracer);
             object.put("headers", headerObj);
-            EventMessage eventMessage = new EventMessage(tracer,Constant.EVENTBUS_TAG_GET_MESSAGE_BY_ID);
-            WebSocketPush.getInstance().sendEventMessage(eventMessage, object,tracer);
+            EventMessage eventMessage = new EventMessage(tracer, Constant.EVENTBUS_TAG_GET_MESSAGE_BY_ID);
+            WebSocketPush.getInstance().sendEventMessage(eventMessage, object, tracer);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
 
-    public void getMessageComment(String mid){
+    public void getMessageComment(String mid) {
         try {
             String tracer = CommunicationUtils.getTracer();
             JSONObject object = new JSONObject();
             JSONObject actionObj = new JSONObject();
             actionObj.put("method", "get");
-            actionObj.put("path", "/message/" + mid+"/comment");
+            actionObj.put("path", "/message/" + mid + "/comment");
             object.put("action", actionObj);
             JSONObject headerObj = new JSONObject();
             headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
             headerObj.put("tracer", tracer);
             object.put("headers", headerObj);
-            EventMessage eventMessage = new EventMessage(tracer,Constant.EVENTBUS_TAG_GET_MESSAGE_COMMENT);
-            WebSocketPush.getInstance().sendEventMessage( eventMessage, object,tracer);
+            EventMessage eventMessage = new EventMessage(tracer, Constant.EVENTBUS_TAG_GET_MESSAGE_COMMENT);
+            WebSocketPush.getInstance().sendEventMessage(eventMessage, object, tracer);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void getMessageCommentCount(String mid){
+    public void getMessageCommentCount(String mid) {
         try {
             String tracer = CommunicationUtils.getTracer();
             JSONObject object = new JSONObject();
             JSONObject actionObj = new JSONObject();
             actionObj.put("method", "get");
-            actionObj.put("path", "/message/" + mid+"/comment/count");
+            actionObj.put("path", "/message/" + mid + "/comment/count");
             object.put("action", actionObj);
             JSONObject headerObj = new JSONObject();
             headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
             headerObj.put("tracer", tracer);
             object.put("headers", headerObj);
-            EventMessage eventMessage = new EventMessage(tracer,Constant.EVENTBUS_TAG_GET_MESSAGE_COMMENT_COUNT,"",mid);
-            WebSocketPush.getInstance().sendEventMessage(eventMessage, object,tracer);
+            EventMessage eventMessage = new EventMessage(tracer, Constant.EVENTBUS_TAG_GET_MESSAGE_COMMENT_COUNT, "", mid);
+            WebSocketPush.getInstance().sendEventMessage(eventMessage, object, tracer);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void getHistoryMessage(String cid,String mid){
+    public void getHistoryMessage(String cid, String mid) {
         try {
             String tracer = CommunicationUtils.getTracer();
             JSONObject object = new JSONObject();
             JSONObject actionObj = new JSONObject();
             actionObj.put("method", "get");
-            actionObj.put("path", "/channel/" + cid+"/message");
+            actionObj.put("path", "/channel/" + cid + "/message");
             JSONObject queryObj = new JSONObject();
-            queryObj.put("before",mid);
-            queryObj.put("limit",15);
-            actionObj.put("query",queryObj);
+            queryObj.put("before", mid);
+            queryObj.put("limit", 15);
+            actionObj.put("query", queryObj);
             object.put("action", actionObj);
             JSONObject headerObj = new JSONObject();
             headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
             headerObj.put("tracer", tracer);
             object.put("headers", headerObj);
-            EventMessage eventMessage = new EventMessage(tracer,Constant.EVENTBUS_TAG_GET_HISTORY_MESSAGE,"",cid);
-            WebSocketPush.getInstance().sendEventMessage(eventMessage, object,tracer);
+            EventMessage eventMessage = new EventMessage(tracer, Constant.EVENTBUS_TAG_GET_HISTORY_MESSAGE, "", cid);
+            WebSocketPush.getInstance().sendEventMessage(eventMessage, object, tracer);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void getChannelNewMessage(String cid){
+    public void getChannelNewMessage(String cid) {
         try {
             String tracer = CommunicationUtils.getTracer();
             JSONObject object = new JSONObject();
             JSONObject actionObj = new JSONObject();
             actionObj.put("method", "get");
-            actionObj.put("path", "/channel/" + cid+"/message");
+            actionObj.put("path", "/channel/" + cid + "/message");
             JSONObject queryObj = new JSONObject();
-            queryObj.put("before","");
-            queryObj.put("limit",15);
-            actionObj.put("query",queryObj);
+            queryObj.put("before", "");
+            queryObj.put("limit", 15);
+            actionObj.put("query", queryObj);
             object.put("action", actionObj);
             JSONObject headerObj = new JSONObject();
             headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
             headerObj.put("tracer", tracer);
             object.put("headers", headerObj);
-            EventMessage eventMessage = new EventMessage(tracer,Constant.EVENTBUS_TAG_GET_NEW_MESSAGE,"",cid);
-            WebSocketPush.getInstance().sendEventMessage(eventMessage, object,tracer);
+            EventMessage eventMessage = new EventMessage(tracer, Constant.EVENTBUS_TAG_GET_NEW_MESSAGE, "", cid);
+            WebSocketPush.getInstance().sendEventMessage(eventMessage, object, tracer);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -397,19 +397,19 @@ public class WSAPIService {
                 String tracer = CommunicationUtils.getTracer();
                 JSONObject actionObj = new JSONObject();
                 actionObj.put("method", "put");
-                actionObj.put("path", "/client/"+clientId+"/state");
+                actionObj.put("path", "/client/" + clientId + "/state");
                 object.put("action", actionObj);
                 JSONObject headerObj = new JSONObject();
                 headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
-                headerObj.put("tracer",  tracer);
+                headerObj.put("tracer", tracer);
                 object.put("headers", headerObj);
                 JSONObject bodyObject = new JSONObject();
-                bodyObject.put("state",state);
+                bodyObject.put("state", state);
                 object.put("body", bodyObject);
-                if (state.equals("REMOVED")){
-                    EventMessage eventMessage = new EventMessage(tracer,Constant.EVENTBUS_TAG_WEBSOCKET_STATUS_REMOVE,"","");
-                    WebSocketPush.getInstance().sendEventMessage(eventMessage, object,tracer);
-                }else {
+                if (state.equals("REMOVED")) {
+                    EventMessage eventMessage = new EventMessage(tracer, Constant.EVENTBUS_TAG_WEBSOCKET_STATUS_REMOVE, "", "");
+                    WebSocketPush.getInstance().sendEventMessage(eventMessage, object, tracer);
+                } else {
                     WebSocketPush.getInstance().sendContent(object);
                 }
             } catch (Exception e) {
@@ -422,6 +422,7 @@ public class WSAPIService {
 
     /**
      * 将频道消息置为已读状态
+     *
      * @param cid
      */
     public void setChannelMessgeStateRead(String cid) {
@@ -438,7 +439,7 @@ public class WSAPIService {
                 headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
                 headerObj.put("tracer", tracer);
                 object.put("headers", headerObj);
-                EventMessage eventMessage = new EventMessage(tracer,Constant.EVENTBUS_TAG_SET_CHANNEL_MESSAGE_READ, "", "");
+                EventMessage eventMessage = new EventMessage(tracer, Constant.EVENTBUS_TAG_SET_CHANNEL_MESSAGE_READ, "", "");
                 WebSocketPush.getInstance().sendEventMessage(eventMessage, object, tracer);
             } catch (Exception e) {
                 e.printStackTrace();

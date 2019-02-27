@@ -7,22 +7,22 @@ import java.util.List;
 public class Contact implements Serializable {
     public static final String TYPE_USER = "USER";
     public static final String TYPE_STRUCT = "STRUCT";
-    private String id="";
+    private String id = "";
     private String name = "";
     private String nameGlobal = "";
     private String pinyin = "";
-    private String parentId= "";
-    private int sortOrder= 0;
-    private String mobile="";
-    private String email="";
+    private String parentId = "";
+    private int sortOrder = 0;
+    private String mobile = "";
+    private String email = "";
     private int hasHead = 0;
-    private String type="USER";
+    private String type = "USER";
 
     public Contact() {
 
     }
 
-    public Contact(ContactUser contactUser){
+    public Contact(ContactUser contactUser) {
         this.id = contactUser.getId();
         this.name = contactUser.getName();
         this.nameGlobal = contactUser.getNameGlobal();
@@ -35,7 +35,7 @@ public class Contact implements Serializable {
         this.type = TYPE_USER;
     }
 
-    public Contact(ContactOrg contactOrg){
+    public Contact(ContactOrg contactOrg) {
         this.id = contactOrg.getId();
         this.name = contactOrg.getName();
         this.nameGlobal = contactOrg.getNameGlobal();
@@ -45,17 +45,17 @@ public class Contact implements Serializable {
         this.type = TYPE_STRUCT;
     }
 
-    public static List<Contact> contactUserList2ContactList(List<ContactUser> contactUserList){
+    public static List<Contact> contactUserList2ContactList(List<ContactUser> contactUserList) {
         List<Contact> contactList = new ArrayList<>();
-        for (ContactUser contactUser:contactUserList){
+        for (ContactUser contactUser : contactUserList) {
             contactList.add(new Contact(contactUser));
         }
         return contactList;
     }
 
-    public static List<Contact> contactOrgList2ContactList(List<ContactOrg> contactOrgList){
+    public static List<Contact> contactOrgList2ContactList(List<ContactOrg> contactOrgList) {
         List<Contact> contactList = new ArrayList<>();
-        for (ContactOrg contactOrg:contactOrgList){
+        for (ContactOrg contactOrg : contactOrgList) {
             contactList.add(new Contact(contactOrg));
         }
         return contactList;

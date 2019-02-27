@@ -32,6 +32,16 @@ public class UIMessage implements Serializable {
         this.id = id;
     }
 
+    public static List<UIMessage> MessageList2UIMessageList(List<Message> messageList) {
+        List<UIMessage> UIMessageList = new ArrayList<>();
+        if (messageList != null && messageList.size() > 0) {
+            for (Message message : messageList) {
+                UIMessageList.add(new UIMessage(message));
+            }
+        }
+        return UIMessageList;
+
+    }
 
     public String getSenderName() {
         return senderName;
@@ -69,27 +79,16 @@ public class UIMessage implements Serializable {
         return message;
     }
 
+    public void setMessage(Message message) {
+        this.message = message;
+    }
+
     public String getSenderPhotoUrl() {
         return senderPhotoUrl;
     }
 
     public void setSenderPhotoUrl(String senderPhotoUrl) {
         this.senderPhotoUrl = senderPhotoUrl;
-    }
-
-    public void setMessage(Message message) {
-        this.message = message;
-    }
-
-    public static List<UIMessage> MessageList2UIMessageList(List<Message> messageList) {
-        List<UIMessage> UIMessageList = new ArrayList<>();
-        if (messageList != null && messageList.size() > 0) {
-            for (Message message : messageList) {
-                UIMessageList.add(new UIMessage(message));
-            }
-        }
-        return UIMessageList;
-
     }
 
     public boolean equals(Object other) { // 重写equals方法，后面最好重写hashCode方法

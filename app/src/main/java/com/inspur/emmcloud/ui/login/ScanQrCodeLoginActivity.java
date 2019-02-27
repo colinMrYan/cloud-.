@@ -30,10 +30,26 @@ import java.lang.reflect.Method;
  */
 
 public class ScanQrCodeLoginActivity extends BaseActivity {
+    private static final int SCAN_LOGIN_QRCODE_RESULT = 5;
     private LoadingDialog loadingDialog;
     private TextView scanLoginSysType;
     private boolean isLogin = true;
-    private static final int SCAN_LOGIN_QRCODE_RESULT = 5;
+
+    public static boolean setMiuiStatusBarDarkMode(Activity activity, boolean darkmode) {
+        Class<? extends Window> clazz = activity.getWindow().getClass();
+        try {
+            int darkModeFlag = 0;
+            Class<?> layoutParams = Class.forName("android.view.MiuiWindowManager$LayoutParams");
+            Field field = layoutParams.getField("EXTRA_FLAG_STATUS_BAR_DARK_MODE");
+            darkModeFlag = field.getInt(layoutParams);
+            Method extraFlagField = clazz.getMethod("setExtraFlags", int.class, int.class);
+            extraFlagField.invoke(activity.getWindow(), darkmode ? darkModeFlag : 0, darkModeFlag);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,20 +83,19 @@ public class ScanQrCodeLoginActivity extends BaseActivity {
             Method method = cls.getDeclaredMethod("setStatusBarIconDark", boolean.class);
             method.invoke(win, dark);
         } catch (Exception e) {
-            LogUtils.YfcDebug( "statusBarIconDark,e=" + e);
+            LogUtils.YfcDebug("statusBarIconDark,e=" + e);
         }
     }
 
     /**
      * 登录云+桌面版
-     *
      */
     private void loginDesktopCloudPlus() {
         String msg = "";
-        if(getIntent().hasExtra("scanMsg")){
+        if (getIntent().hasExtra("scanMsg")) {
             msg = getIntent().getStringExtra("scanMsg");
         }
-        LogUtils.YfcDebug("msg:"+msg);
+        LogUtils.YfcDebug("msg:" + msg);
         AppAPIService appAPIService = new AppAPIService(ScanQrCodeLoginActivity.this);
         appAPIService.setAPIInterface(new WebService());
         if (NetUtils.isNetworkConnected(ScanQrCodeLoginActivity.this)) {
@@ -92,17 +107,17 @@ public class ScanQrCodeLoginActivity extends BaseActivity {
     /**
      * 登录失败修改ui
      */
-    private void loginFailUI(){
+    private void loginFailUI() {
         scanLoginSysType.setText("登录请求已过期，请尝试重新扫码");
-        ((Button)findViewById(R.id.scan_login_desktop_button)).setText("重新登录");
+        ((Button) findViewById(R.id.scan_login_desktop_button)).setText("重新登录");
     }
 
     /**
      * 扫描成功修改
      */
-    private void scanSuccess(){
+    private void scanSuccess() {
         scanLoginSysType.setText("Windows云＋登录确认");
-        ((Button)findViewById(R.id.scan_login_desktop_button)).setText("登录");
+        ((Button) findViewById(R.id.scan_login_desktop_button)).setText("登录");
     }
 
     public void onClick(View view) {
@@ -112,8 +127,8 @@ public class ScanQrCodeLoginActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.scan_login_desktop_button:
-                if(!isLogin){
-                    AppUtils.openScanCode(ScanQrCodeLoginActivity.this,SCAN_LOGIN_QRCODE_RESULT);
+                if (!isLogin) {
+                    AppUtils.openScanCode(ScanQrCodeLoginActivity.this, SCAN_LOGIN_QRCODE_RESULT);
                     return;
                 }
                 loginDesktopCloudPlus();
@@ -139,22 +154,6 @@ public class ScanQrCodeLoginActivity extends BaseActivity {
                 }
             }
         }
-    }
-
-    public static boolean setMiuiStatusBarDarkMode(Activity activity, boolean darkmode) {
-        Class<? extends Window> clazz = activity.getWindow().getClass();
-        try {
-            int darkModeFlag = 0;
-            Class<?> layoutParams = Class.forName("android.view.MiuiWindowManager$LayoutParams");
-            Field field = layoutParams.getField("EXTRA_FLAG_STATUS_BAR_DARK_MODE");
-            darkModeFlag = field.getInt(layoutParams);
-            Method extraFlagField = clazz.getMethod("setExtraFlags", int.class, int.class);
-            extraFlagField.invoke(activity.getWindow(), darkmode ? darkModeFlag : 0, darkModeFlag);
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
     }
 
     class WebService extends APIInterfaceInstance {

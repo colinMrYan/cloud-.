@@ -13,49 +13,50 @@ import org.json.JSONObject;
  */
 
 public class MineLayoutItem {
-    private String id="";
+    private String id = "";
     private String ico = "";
-    private String uri="";
-    private String title="";
-    public MineLayoutItem(String content){
+    private String uri = "";
+    private String title = "";
+
+    public MineLayoutItem(String content) {
         boolean isJSonObject = JSONUtils.isJSONObject(content);
-        if (isJSonObject){
+        if (isJSonObject) {
             JSONObject object = JSONUtils.getJSONObject(content);
-            id=JSONUtils.getString(object,"id","");
-            ico=JSONUtils.getString(object,"ico","");
-            uri=JSONUtils.getString(object,"uri","");
-            title=JSONUtils.getString(object,"title","");
-            if (!StringUtils.isBlank(title)){
+            id = JSONUtils.getString(object, "id", "");
+            ico = JSONUtils.getString(object, "ico", "");
+            uri = JSONUtils.getString(object, "uri", "");
+            title = JSONUtils.getString(object, "title", "");
+            if (!StringUtils.isBlank(title)) {
                 Configuration config = MyApplication.getInstance().getResources().getConfiguration();
                 String language = config.locale.getLanguage();
                 language = language.toLowerCase();
-                switch (language){
+                switch (language) {
                     case "zh-Hant":
-                        title =  JSONUtils.getString(title,"zh-Hans","");
+                        title = JSONUtils.getString(title, "zh-Hans", "");
                         break;
-                    case  "en-US":
-                    case  "en":
-                        title =  JSONUtils.getString(title,"en-US","");
+                    case "en-US":
+                    case "en":
+                        title = JSONUtils.getString(title, "en-US", "");
                         break;
                     default:
-                        title =  JSONUtils.getString(title,"zh-Hans","");
+                        title = JSONUtils.getString(title, "zh-Hans", "");
                         break;
 
                 }
             }
-        }else {
-            id=content;
+        } else {
+            id = content;
         }
     }
 
-    public MineLayoutItem(String id,String ico,String uri,String title){
-        this.id=id;
+    public MineLayoutItem(String id, String ico, String uri, String title) {
+        this.id = id;
         this.ico = ico;
         this.uri = uri;
         this.title = title;
     }
 
-    public MineLayoutItem(){
+    public MineLayoutItem() {
 
     }
 

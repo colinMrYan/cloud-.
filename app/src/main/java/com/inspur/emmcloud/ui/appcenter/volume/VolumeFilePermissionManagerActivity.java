@@ -26,24 +26,23 @@ import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 
 /**
- *
  * 2018/03/01数据
  * {
-    "id": "61786f76-4b15-4f2f-9bf1-f5df9121745f",
-    "name": "拥有上传/查看权限",
-    "enterprise": "10000",
-    "creationDate": 1519696313994,
-    "lastUpdate": 1519696313994,
-    "volume": "1f401063-a36e-40ed-8186-5afeae716908",
-    "owner": "99999",
-    "privilege": 6,
-    "type": "default",
-    "members": ["12240", "233825", "66666", "99999"]
-   }
+ * "id": "61786f76-4b15-4f2f-9bf1-f5df9121745f",
+ * "name": "拥有上传/查看权限",
+ * "enterprise": "10000",
+ * "creationDate": 1519696313994,
+ * "lastUpdate": 1519696313994,
+ * "volume": "1f401063-a36e-40ed-8186-5afeae716908",
+ * "owner": "99999",
+ * "privilege": 6,
+ * "type": "default",
+ * "members": ["12240", "233825", "66666", "99999"]
+ * }
  * Created by yufuchang on 2018/2/28.
  */
 @ContentView(R.layout.activity_volume_file_permission_manager)
-public class VolumeFilePermissionManagerActivity extends BaseActivity{
+public class VolumeFilePermissionManagerActivity extends BaseActivity {
 
     @ViewInject(R.id.rv_volume_file_permission)
     protected RecyclerView groupRecyclerView;
@@ -72,9 +71,9 @@ public class VolumeFilePermissionManagerActivity extends BaseActivity{
             @Override
             public void onVolumeGroupClickListener(Group group) {
                 Intent intent = new Intent();
-                intent.setClass(VolumeFilePermissionManagerActivity.this,VolumeGroupChangePermissionActivity.class);
-                intent.putExtra("volumeGroup",group);
-                intent.putExtra("volumeFilePath",getIntent().getStringExtra("currentDirAbsolutePath"));
+                intent.setClass(VolumeFilePermissionManagerActivity.this, VolumeGroupChangePermissionActivity.class);
+                intent.putExtra("volumeGroup", group);
+                intent.putExtra("volumeFilePath", getIntent().getStringExtra("currentDirAbsolutePath"));
                 startActivity(intent);
             }
         });
@@ -83,8 +82,8 @@ public class VolumeFilePermissionManagerActivity extends BaseActivity{
         loadingDialog = new LoadingDialog(this);
     }
 
-    public void onClick(View view){
-        switch (view.getId()){
+    public void onClick(View view) {
+        switch (view.getId()) {
             case R.id.ibt_back:
                 finish();
                 break;
@@ -93,6 +92,7 @@ public class VolumeFilePermissionManagerActivity extends BaseActivity{
 
     /**
      * 来自VolumeGroupChangePermissionActivity
+     *
      * @param getVolumeGroupPermissionResult
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -104,14 +104,14 @@ public class VolumeFilePermissionManagerActivity extends BaseActivity{
     /**
      * 获取文件夹对应的群组及权限
      */
-    private void getVolumeFileGroup(){
-        if(NetUtils.isNetworkConnected(VolumeFilePermissionManagerActivity.this)){
+    private void getVolumeFileGroup() {
+        if (NetUtils.isNetworkConnected(VolumeFilePermissionManagerActivity.this)) {
             loadingDialog.show();
             String volumeId = getIntent().getStringExtra("volume");
             String volumeFilePath = getIntent().getStringExtra("currentDirAbsolutePath");
             MyAppAPIService myAppAPIService = new MyAppAPIService(VolumeFilePermissionManagerActivity.this);
             myAppAPIService.setAPIInterface(new WebService());
-            myAppAPIService.getVolumeFileGroup(volumeId,volumeFilePath);
+            myAppAPIService.getVolumeFileGroup(volumeId, volumeFilePath);
         }
     }
 
@@ -121,7 +121,7 @@ public class VolumeFilePermissionManagerActivity extends BaseActivity{
         EventBus.getDefault().unregister(this);
     }
 
-    class WebService extends APIInterfaceInstance{
+    class WebService extends APIInterfaceInstance {
         @Override
         public void returnVolumeGroupSuccess(GetVolumeResultWithPermissionResult getVolumeResultWithPermissionResult) {
             super.returnVolumeGroupSuccess(getVolumeResultWithPermissionResult);

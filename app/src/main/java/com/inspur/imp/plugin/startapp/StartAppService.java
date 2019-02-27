@@ -56,12 +56,47 @@ public class StartAppService extends ImpPlugin {
     private int progressSize;
     private MyDialog downloadingDialog;
     private TextView progressTv;
+    Handler downloadWeBexHandler = new Handler() {
+
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case DOWNLOAD:
+                    if (progressTv != null) {
+                        progressTv.setText(progressSize + "%," + "  " + AppUtils.getKBOrMBFormatString(downloadSize) + "/"
+                                + AppUtils.getKBOrMBFormatString(totalSize));
+                    }
+                    break;
+                case DOWNLOAD_FINISH:
+                    if (downloadingDialog != null && downloadingDialog.isShowing()) {
+                        downloadingDialog.dismiss();
+                    }
+//                    AppUtils.installApk(getActivity(),MyAppConfig.LOCAL_DOWNLOAD_PATH,"impInstall.apk");
+                    FileUtils.openFile(getActivity(), MyAppConfig.LOCAL_DOWNLOAD_PATH + "impInstall.apk");
+                    break;
+                case DOWNLOAD_FAIL:
+                    if (downloadingDialog != null && downloadingDialog.isShowing()) {
+                        downloadingDialog.dismiss();
+                    }
+                    ToastUtils.show(getActivity(), getActivity().getString(R.string.download_fail));
+                    break;
+                case SHOW_PEOGRESS_LAODING_DLG:
+                    if (downloadingDialog != null && !downloadingDialog.isShowing()) {
+                        downloadingDialog.show();
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
     private Callback.Cancelable cancelableDownloadRequest;
+
     @Override
     public void execute(String action, JSONObject paramsObject) {
         if ("open".equals(action)) {
             startApp(paramsObject);
-        }else{
+        } else {
             showCallIMPMethodErrorDlg();
         }
     }
@@ -103,9 +138,9 @@ public class StartAppService extends ImpPlugin {
         String dataUri = JSONUtils.getString(paramsObject, "dataUri", null);
         String intentUri = JSONUtils.getString(paramsObject, "intentUri", null);
         JSONObject intentParamsObj = JSONUtils.getJSONObject(paramsObject, "intentParam", null);
-        String appUrl = JSONUtils.getString(paramsObject,"appUrl","");
-        String appInstallTips = JSONUtils.getString(paramsObject,"appInstallTips","");
-        JSONArray jsonArray = JSONUtils.getJSONArray(paramsObject,"category",new JSONArray());
+        String appUrl = JSONUtils.getString(paramsObject, "appUrl", "");
+        String appInstallTips = JSONUtils.getString(paramsObject, "appInstallTips", "");
+        JSONArray jsonArray = JSONUtils.getJSONArray(paramsObject, "category", new JSONArray());
         try {
             if (intentParamsObj != null) {
                 Iterator<String> keys = intentParamsObj.keys();
@@ -116,7 +151,7 @@ public class StartAppService extends ImpPlugin {
             }
             if (!StringUtils.isBlank(packageName)) {
                 if (!isAppInstall(packageName)) {
-                    showInstallDialog(appUrl,appInstallTips);
+                    showInstallDialog(appUrl, appInstallTips);
                     return;
                 }
                 if (!StringUtils.isBlank(targetActivity)) {
@@ -144,7 +179,7 @@ public class StartAppService extends ImpPlugin {
             getActivity().startActivity(intent);
         } catch (Exception e) {
             e.printStackTrace();
-            ToastUtils.show(getFragmentContext(),R.string.react_native_app_open_failed);
+            ToastUtils.show(getFragmentContext(), R.string.react_native_app_open_failed);
         }
     }
 
@@ -175,6 +210,7 @@ public class StartAppService extends ImpPlugin {
 
     /**
      * 展示下载Dialog
+     *
      * @param appUrl
      */
     private void showDownloadDialog(String appUrl) {
@@ -185,10 +221,10 @@ public class StartAppService extends ImpPlugin {
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(cancelableDownloadRequest != null){
+                if (cancelableDownloadRequest != null) {
                     cancelableDownloadRequest.cancel();
                 }
-                if(downloadingDialog != null && downloadingDialog.isShowing()){
+                if (downloadingDialog != null && downloadingDialog.isShowing()) {
                     downloadingDialog.dismiss();
                 }
             }
@@ -196,41 +232,6 @@ public class StartAppService extends ImpPlugin {
         // 下载apk文件
         downloadWeBexApk(appUrl);
     }
-
-    Handler downloadWeBexHandler = new Handler() {
-
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case DOWNLOAD:
-                    if(progressTv != null){
-                        progressTv.setText(progressSize + "%," + "  " + AppUtils.getKBOrMBFormatString(downloadSize) + "/"
-                                + AppUtils.getKBOrMBFormatString(totalSize));
-                    }
-                    break;
-                case DOWNLOAD_FINISH:
-                    if (downloadingDialog != null && downloadingDialog.isShowing()) {
-                        downloadingDialog.dismiss();
-                    }
-//                    AppUtils.installApk(getActivity(),MyAppConfig.LOCAL_DOWNLOAD_PATH,"impInstall.apk");
-                    FileUtils.openFile(getActivity(),MyAppConfig.LOCAL_DOWNLOAD_PATH + "impInstall.apk");
-                    break;
-                case DOWNLOAD_FAIL:
-                    if (downloadingDialog != null && downloadingDialog.isShowing()) {
-                        downloadingDialog.dismiss();
-                    }
-                    ToastUtils.show(getActivity(), getActivity().getString(R.string.download_fail));
-                    break;
-                case SHOW_PEOGRESS_LAODING_DLG:
-                    if (downloadingDialog != null && !downloadingDialog.isShowing()) {
-                        downloadingDialog.show();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-    };
 
     /**
      * 下载安装包
@@ -289,10 +290,11 @@ public class StartAppService extends ImpPlugin {
 
     /**
      * 发送回调消息给主线程
+     *
      * @param downloadState
      */
     private void sendCallBackMessage(int downloadState) {
-        if(downloadWeBexHandler != null){
+        if (downloadWeBexHandler != null) {
             downloadWeBexHandler.sendEmptyMessage(downloadState);
         }
     }

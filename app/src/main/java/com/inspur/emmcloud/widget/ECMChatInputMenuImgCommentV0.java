@@ -73,7 +73,7 @@ public class ECMChatInputMenuImgCommentV0 extends LinearLayout {
 
     private void initView(final Context context) {
         // TODO Auto-generated method stub
-        View view = LayoutInflater.from(context).inflate(R.layout.ecm_widget_chat_input_menu_img_commentv0,this,true);
+        View view = LayoutInflater.from(context).inflate(R.layout.ecm_widget_chat_input_menu_img_commentv0, this, true);
         x.view().inject(view);
         initInputEdit();
     }
@@ -98,7 +98,7 @@ public class ECMChatInputMenuImgCommentV0 extends LinearLayout {
         });
     }
 
-    public ChatInputEdit getChatInputEdit(){
+    public ChatInputEdit getChatInputEdit() {
         return inputEdit;
     }
 
@@ -121,6 +121,7 @@ public class ECMChatInputMenuImgCommentV0 extends LinearLayout {
                 MENTIONS_RESULT);
 
     }
+
     public void setChatInputMenuListener(
             ChatInputMenuListener chatInputMenuListener) {
         this.chatInputMenuListener = chatInputMenuListener;
@@ -172,7 +173,7 @@ public class ECMChatInputMenuImgCommentV0 extends LinearLayout {
     public void addMentions(String uid, String name, boolean isInputKeyWord) {
         if (uid != null && name != null) {
             InsertModel insertModel;
-            insertModel= new InsertModel("@", uid, name);
+            insertModel = new InsertModel("@", uid, name);
             inputEdit.insertSpecialStr(isInputKeyWord, insertModel);
         }
     }
@@ -182,15 +183,15 @@ public class ECMChatInputMenuImgCommentV0 extends LinearLayout {
         switch (view.getId()) {
             case R.id.send_msg_btn:
                 if (NetUtils.isNetworkConnected(getContext())) {
-                    List<String> urlList= null;
+                    List<String> urlList = null;
                     String content = inputEdit.getRichContent(isMessageV0);
-                    Map<String,String> mentionsMap = null;
-                    if (isMessageV0){
+                    Map<String, String> mentionsMap = null;
+                    if (isMessageV0) {
                         urlList = getContentUrlList(inputEdit.getText().toString());
-                    }else {
+                    } else {
                         mentionsMap = inputEdit.getMentionsMap();
                     }
-                    chatInputMenuListener.onSendMsg(content, getContentMentionUidList(), urlList,mentionsMap);
+                    chatInputMenuListener.onSendMsg(content, getContentMentionUidList(), urlList, mentionsMap);
 
                     inputEdit.setText("");
                 }
@@ -231,7 +232,6 @@ public class ECMChatInputMenuImgCommentV0 extends LinearLayout {
         }
         return mentionsUidList;
     }
-
 
 
     public interface ChatInputMenuListener {

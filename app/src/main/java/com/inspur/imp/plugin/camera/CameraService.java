@@ -46,9 +46,6 @@ import java.util.ArrayList;
  * @author 浪潮移动应用平台(IMP)产品组
  */
 public class CameraService extends ImpPlugin {
-    private Bitmap photo;
-    private String saveDir = Environment.getExternalStorageDirectory()
-            .getPath() + "/DCIM";
     private static final String LOG_TAG = "PhotoService";
     private static final int PHOTOLIBRARY = 0; // Choose image from picture
     // library (same as
@@ -62,11 +59,11 @@ public class CameraService extends ImpPlugin {
     // (content://media/external/images/media/2
     // for Android)
     private static final int NATIVE_URI = 2; // On Android, this is the same as
-    // FILE_URI
-
     private static final int JPEG = 0; // Take a picture of type JPEG
     private static final int PNG = 1; // Take a picture of type PNG
-
+    // FILE_URI
+    private static final int maxResolution = 1400;
+    public static int num = 9;// 可以选择的图片数目
     private static int destType;
     private static int mQuality = 100; // Compression quality hint (0-100: 0=low
     // quality &
@@ -78,31 +75,77 @@ public class CameraService extends ImpPlugin {
     private static boolean saveToPhotoAlbum = false; // Should the picture be
     // saved to the
     // device's photo album
-
+    private Bitmap photo;
+    private String saveDir = Environment.getExternalStorageDirectory()
+            .getPath() + "/DCIM";
     private int numPics;
-
     private Uri scanMe; // Uri of image to be added to content store
-
     private ArrayList<String> dataList = new ArrayList<String>();
-
     private String successCb, failCb;
-    private static final int maxResolution = 1400;
-
-    public static int num = 9;// 可以选择的图片数目
     private int uploadOriginMaxSize = MyAppConfig.UPLOAD_ORIGIN_IMG_MAX_SIZE;
     private int uploadThumbnailMaxSize = MyAppConfig.UPLOAD_THUMBNAIL_IMG_MAX_SIZE;
-    private String watermarkContent,color,background, align,valign;
+    private String watermarkContent, color, background, align, valign;
     private int fontSize;
     private File cameraFile;
+
+    /**
+     * 读取图片属性：旋转的角度
+     *
+     * @param path 图片绝对路径
+     * @return degree旋转的角度
+     */
+    public static int readPictureDegree(String path) {
+        int degree = 0;
+        try {
+            ExifInterface exifInterface = new ExifInterface(path);
+            int orientation = exifInterface.getAttributeInt(
+                    ExifInterface.TAG_ORIENTATION,
+                    ExifInterface.ORIENTATION_NORMAL);
+            switch (orientation) {
+                case ExifInterface.ORIENTATION_ROTATE_90:
+                    degree = 90;
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_180:
+                    degree = 180;
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_270:
+                    degree = 270;
+                    break;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return degree;
+    }
+
+    /*
+     * 旋转图片
+     *
+     * @param angle
+     *
+     * @param bitmap
+     *
+     * @return Bitmap
+     */
+    public static Bitmap rotaingImageView(int angle, Bitmap bitmap) {
+        // 旋转图片 动作
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        System.out.println("angle2=" + angle);
+        // 创建新的图片
+        Bitmap resizedBitmap = Bitmap.createBitmap(bitmap, 0, 0,
+                bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+        return resizedBitmap;
+    }
 
     @Override
     public void execute(String action, JSONObject paramsObject) {
         LogUtils.jasonDebug("paramsObject=" + paramsObject);
         if ("open".equals(action)) {
             open(paramsObject);
-        }else if ("getPicture".equals(action)) {
+        } else if ("getPicture".equals(action)) {
             getPicture(paramsObject);
-        }else{
+        } else {
             showCallIMPMethodErrorDlg();
         }
     }
@@ -119,7 +162,7 @@ public class CameraService extends ImpPlugin {
     private void open(JSONObject jsonObject) {
         try {
             if (!jsonObject.isNull("options")) {
-                JSONObject optionsObj =  jsonObject.getJSONObject("options");
+                JSONObject optionsObj = jsonObject.getJSONObject("options");
                 destType = optionsObj.getInt(
                         "destinationType");
                 mQuality = optionsObj.getInt(
@@ -130,15 +173,15 @@ public class CameraService extends ImpPlugin {
                         "targetHeight");
                 encodingType = optionsObj.getInt(
                         "encodingType");
-                if (!optionsObj.isNull("watermark")){
+                if (!optionsObj.isNull("watermark")) {
                     JSONObject watermarkObj = optionsObj.getJSONObject("watermark");
-                    watermarkContent = JSONUtils.getString(watermarkObj,"content","");
-                    LogUtils.jasonDebug("watermarkContent="+watermarkContent);
-                    fontSize = JSONUtils.getInt(watermarkObj,"fontSize",14);
-                    color = JSONUtils.getString(watermarkObj,"color","#ffffff");
-                    background = JSONUtils.getString(watermarkObj,"background","#00000000");
-                    align = JSONUtils.getString(watermarkObj,"align","left");
-                    valign = JSONUtils.getString(watermarkObj,"valign","top");
+                    watermarkContent = JSONUtils.getString(watermarkObj, "content", "");
+                    LogUtils.jasonDebug("watermarkContent=" + watermarkContent);
+                    fontSize = JSONUtils.getInt(watermarkObj, "fontSize", 14);
+                    color = JSONUtils.getString(watermarkObj, "color", "#ffffff");
+                    background = JSONUtils.getString(watermarkObj, "background", "#00000000");
+                    align = JSONUtils.getString(watermarkObj, "align", "left");
+                    valign = JSONUtils.getString(watermarkObj, "valign", "top");
                 }
             }
             if (!jsonObject.isNull("success"))
@@ -160,12 +203,12 @@ public class CameraService extends ImpPlugin {
         if (state.equals(Environment.MEDIA_MOUNTED)) {
             cameraFile = createCaptureFile(encodingType);
             Intent intent = new Intent();
-            intent.putExtra(MyCameraActivity.EXTRA_PHOTO_DIRECTORY_PATH,cameraFile.getParent());
-            intent.putExtra(MyCameraActivity.EXTRA_PHOTO_NAME,cameraFile.getName());
-            intent.putExtra(MyCameraActivity.EXTRA_ENCODING_TYPE,encodingType);
-            intent.putExtra(MyCameraActivity.EXTRA_RECT_SCALE_JSON,jsonObject.toString());
-            intent.setClass(getFragmentContext(),MyCameraActivity.class);
-            if (getImpCallBackInterface() != null){
+            intent.putExtra(MyCameraActivity.EXTRA_PHOTO_DIRECTORY_PATH, cameraFile.getParent());
+            intent.putExtra(MyCameraActivity.EXTRA_PHOTO_NAME, cameraFile.getName());
+            intent.putExtra(MyCameraActivity.EXTRA_ENCODING_TYPE, encodingType);
+            intent.putExtra(MyCameraActivity.EXTRA_RECT_SCALE_JSON, jsonObject.toString());
+            intent.setClass(getFragmentContext(), MyCameraActivity.class);
+            if (getImpCallBackInterface() != null) {
                 getImpCallBackInterface().onStartActivityForResult(intent, ImpFragment.CAMERA_SERVICE_CAMERA_REQUEST);
             }
         } else {
@@ -184,7 +227,7 @@ public class CameraService extends ImpPlugin {
     private void getPicture(JSONObject jsonObject) {
         try {
             if (!jsonObject.isNull("options")) {
-                JSONObject optionsObj =  jsonObject.getJSONObject("options");
+                JSONObject optionsObj = jsonObject.getJSONObject("options");
                 destType = optionsObj.getInt(
                         "destinationType");
                 mQuality = optionsObj.getInt(
@@ -202,14 +245,14 @@ public class CameraService extends ImpPlugin {
                 if (num < 0 || num > 15) {
                     num = 9;
                 }
-                if (!optionsObj.isNull("watermark")){
+                if (!optionsObj.isNull("watermark")) {
                     JSONObject watermarkObj = optionsObj.getJSONObject("watermark");
-                    watermarkContent = JSONUtils.getString(watermarkObj,"content","");
-                    fontSize = JSONUtils.getInt(watermarkObj,"fontSize",14);
-                    color = JSONUtils.getString(watermarkObj,"color","#ffffff");
-                    background = JSONUtils.getString(watermarkObj,"background","#00000000");
-                    align = JSONUtils.getString(watermarkObj,"align","left");
-                    valign = JSONUtils.getString(watermarkObj,"valign","top");
+                    watermarkContent = JSONUtils.getString(watermarkObj, "content", "");
+                    fontSize = JSONUtils.getInt(watermarkObj, "fontSize", 14);
+                    color = JSONUtils.getString(watermarkObj, "color", "#ffffff");
+                    background = JSONUtils.getString(watermarkObj, "background", "#00000000");
+                    align = JSONUtils.getString(watermarkObj, "align", "left");
+                    valign = JSONUtils.getString(watermarkObj, "valign", "top");
                 }
             }
             if (!jsonObject.isNull("success"))
@@ -228,7 +271,7 @@ public class CameraService extends ImpPlugin {
         initImagePicker();
         Intent intent = new Intent(getFragmentContext(),
                 ImageGridActivity.class);
-        if (getImpCallBackInterface() != null){
+        if (getImpCallBackInterface() != null) {
             getImpCallBackInterface().onStartActivityForResult(intent, ImpFragment.CAMERA_SERVICE_GALLERY_REQUEST);
         }
     }
@@ -249,7 +292,6 @@ public class CameraService extends ImpPlugin {
         imagePicker.setOutPutX(1000); // 保存文件的宽度。单位像素
         imagePicker.setOutPutY(1000); // 保存文件的高度。单位像素
     }
-
 
     private String getTempDirectoryPath() {
         File cache = null;
@@ -299,7 +341,7 @@ public class CameraService extends ImpPlugin {
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         int mOriginHeightSize = targetHeight < uploadOriginMaxSize ? targetHeight : uploadOriginMaxSize;
         int mOriginWidthtSize = targetWidth < uploadOriginMaxSize ? targetWidth : uploadOriginMaxSize;
-        Bitmap.CompressFormat format = (encodingType == JPEG )? Bitmap.CompressFormat.JPEG:Bitmap.CompressFormat.PNG;
+        Bitmap.CompressFormat format = (encodingType == JPEG) ? Bitmap.CompressFormat.JPEG : Bitmap.CompressFormat.PNG;
         // 照相取得图片
         if (requestCode == ImpFragment.CAMERA_SERVICE_CAMERA_REQUEST) {
             if (resultCode == Activity.RESULT_OK) {
@@ -307,27 +349,27 @@ public class CameraService extends ImpPlugin {
                     try {
                         String originImgFileName = PhotoNameUtils.getFileName(getFragmentContext(), encodingType);
                         String thumbnailImgFileName = PhotoNameUtils.getThumbnailFileName(getFragmentContext(), 0, encodingType);
-                        LogUtils.jasonDebug("mOriginHeightSize="+mOriginHeightSize);
+                        LogUtils.jasonDebug("mOriginHeightSize=" + mOriginHeightSize);
                         File originImgFile = new Compressor(getFragmentContext()).setMaxHeight(mOriginHeightSize).setMaxWidth(mOriginWidthtSize).setQuality(mQuality).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
                                 .setCompressFormat(format).compressToFile(cameraFile, originImgFileName);
                         String originImgPath = originImgFile.getAbsolutePath();
-                        if (!StringUtils.isBlank(watermarkContent)){
-                            ImageUtils.createWaterMask(getFragmentContext(),originImgPath,watermarkContent,color,background, align,valign,fontSize);
+                        if (!StringUtils.isBlank(watermarkContent)) {
+                            ImageUtils.createWaterMask(getFragmentContext(), originImgPath, watermarkContent, color, background, align, valign, fontSize);
                         }
                         File thumbnailImgFile = new Compressor(getFragmentContext()).setMaxHeight(uploadThumbnailMaxSize).setMaxWidth(uploadThumbnailMaxSize).setQuality(mQuality).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
-                                .setCompressFormat(format) .compressToFile(originImgFile, thumbnailImgFileName);
+                                .setCompressFormat(format).compressToFile(originImgFile, thumbnailImgFileName);
                         String thumbnailImgPath = thumbnailImgFile.getAbsolutePath();
-                        callbackData(originImgPath,thumbnailImgPath);
+                        callbackData(originImgPath, thumbnailImgPath);
                     } catch (Exception e) {
                         e.printStackTrace();
-                        saveNetException("CameraService.camera",e.toString());
+                        saveNetException("CameraService.camera", e.toString());
                         this.failPicture(Res.getString("camera_error"));
                     }
                 }
             } else if (resultCode == Activity.RESULT_CANCELED) {
                 this.failPicture(Res.getString("cancel_camera"));
             } else {
-                saveNetException("CameraService.camera","system_camera_error");
+                saveNetException("CameraService.camera", "system_camera_error");
                 this.failPicture(Res.getString("camera_error"));
             }
         } else if (requestCode == ImpFragment.CAMERA_SERVICE_GALLERY_REQUEST) {  // 从相册取图片
@@ -354,8 +396,8 @@ public class CameraService extends ImpPlugin {
                             File originImgFile = new Compressor(getFragmentContext()).setMaxHeight(mOriginHeightSize).setMaxWidth(mOriginWidthtSize).setQuality(mQuality).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
                                     .setCompressFormat(format).compressToFile(new File(imgFilePath), originImgFileName);
                             String originImgPath = originImgFile.getAbsolutePath();
-                            if (!StringUtils.isBlank(watermarkContent)){
-                                ImageUtils.createWaterMask(getFragmentContext(),originImgPath,watermarkContent,color,background, align,valign,fontSize);
+                            if (!StringUtils.isBlank(watermarkContent)) {
+                                ImageUtils.createWaterMask(getFragmentContext(), originImgPath, watermarkContent, color, background, align, valign, fontSize);
                             }
                             File thumbnailImgFile = new Compressor(getFragmentContext()).setMaxHeight(uploadThumbnailMaxSize).setMaxWidth(mOriginWidthtSize).setQuality(mQuality).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
                                     .setCompressFormat(format).compressToFile(originImgFile, thumbnailImgFileName);
@@ -366,7 +408,7 @@ public class CameraService extends ImpPlugin {
                         callbackDatas(originImgPaths, thumbnailImgPaths);
                     } catch (Exception e) {
                         e.printStackTrace();
-                        saveNetException("CameraService.gallery",e.toString());
+                        saveNetException("CameraService.gallery", e.toString());
                         this.failPicture(Res.getString("capture_error"));
                     }
 
@@ -378,7 +420,7 @@ public class CameraService extends ImpPlugin {
                 this.failPicture(Res.getString("cancel_select"));
             } else {
                 this.failPicture(Res.getString("select_error"));
-                saveNetException("CameraService.gallery","system_gallry_error");
+                saveNetException("CameraService.gallery", "system_gallry_error");
             }
         }
     }
@@ -502,7 +544,6 @@ public class CameraService extends ImpPlugin {
         }
     }
 
-
     /**
      * IMP代码修改处
      *
@@ -540,57 +581,6 @@ public class CameraService extends ImpPlugin {
         }
     }
 
-
-    /**
-     * 读取图片属性：旋转的角度
-     *
-     * @param path 图片绝对路径
-     * @return degree旋转的角度
-     */
-    public static int readPictureDegree(String path) {
-        int degree = 0;
-        try {
-            ExifInterface exifInterface = new ExifInterface(path);
-            int orientation = exifInterface.getAttributeInt(
-                    ExifInterface.TAG_ORIENTATION,
-                    ExifInterface.ORIENTATION_NORMAL);
-            switch (orientation) {
-                case ExifInterface.ORIENTATION_ROTATE_90:
-                    degree = 90;
-                    break;
-                case ExifInterface.ORIENTATION_ROTATE_180:
-                    degree = 180;
-                    break;
-                case ExifInterface.ORIENTATION_ROTATE_270:
-                    degree = 270;
-                    break;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return degree;
-    }
-
-    /*
-     * 旋转图片
-     *
-     * @param angle
-     *
-     * @param bitmap
-     *
-     * @return Bitmap
-     */
-    public static Bitmap rotaingImageView(int angle, Bitmap bitmap) {
-        // 旋转图片 动作
-        Matrix matrix = new Matrix();
-        matrix.postRotate(angle);
-        System.out.println("angle2=" + angle);
-        // 创建新的图片
-        Bitmap resizedBitmap = Bitmap.createBitmap(bitmap, 0, 0,
-                bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-        return resizedBitmap;
-    }
-
     /**
      * Send error message to JavaScript.
      *
@@ -606,8 +596,8 @@ public class CameraService extends ImpPlugin {
      * @param error
      * @param responseCode
      */
-    private void saveNetException( String function,String error) {
-        AppExceptionCacheUtils.saveAppException(getFragmentContext(),4,function,error,0);
+    private void saveNetException(String function, String error) {
+        AppExceptionCacheUtils.saveAppException(getFragmentContext(), 4, function, error, 0);
     }
 
     @Override

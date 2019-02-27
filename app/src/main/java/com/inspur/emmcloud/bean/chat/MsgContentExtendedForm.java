@@ -7,6 +7,4 @@ package com.inspur.emmcloud.bean.chat;
 public class MsgContentExtendedForm {
 
 
-
-
 }

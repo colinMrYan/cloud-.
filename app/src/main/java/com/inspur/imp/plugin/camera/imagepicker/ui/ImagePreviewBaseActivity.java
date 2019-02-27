@@ -81,6 +81,8 @@ public abstract class ImagePreviewBaseActivity extends ImageBaseActivity {
         mTitleCount.setText(getString(R.string.preview_image_count, mCurrentPosition + 1, mImageItems.size()));
     }
 
-    /** 单击时，隐藏头和尾 */
+    /**
+     * 单击时，隐藏头和尾
+     */
     public abstract void onImageSingleTap();
 }

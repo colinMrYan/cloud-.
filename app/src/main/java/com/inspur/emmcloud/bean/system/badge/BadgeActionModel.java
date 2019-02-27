@@ -9,7 +9,6 @@ import com.inspur.emmcloud.util.common.JSONUtils;
 public class BadgeActionModel {
 
 
-
     /**
      * method : put
      * path : /unread-count
@@ -18,10 +17,11 @@ public class BadgeActionModel {
     private String method;
     private String path;
 
-    public BadgeActionModel(String action){
-        method = JSONUtils.getString(action,"method","");
-        path = JSONUtils.getString(action,"path","");
+    public BadgeActionModel(String action) {
+        method = JSONUtils.getString(action, "method", "");
+        path = JSONUtils.getString(action, "path", "");
     }
+
     public String getMethod() {
         return method;
     }

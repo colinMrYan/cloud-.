@@ -64,9 +64,9 @@ import java.util.TimerTask;
 
 @ContentView(R.layout.activity_webex_my_meeting)
 public class WebexMyMeetingActivity extends BaseActivity {
-    private final String webexAppPackageName = "com.cisco.webex.meetings";
     private static final int REQUEST_SCHEDULE_WEBEX_MEETING = 1;
     private static final int REQUEST_REMOVE_WEBEX_MEETING = 1;
+    private final String webexAppPackageName = "com.cisco.webex.meetings";
     @ViewInject(R.id.srl)
     private MySwipeRefreshLayout swipeRefreshLayout;
     @ViewInject(R.id.elv_meeting)
@@ -325,6 +325,30 @@ public class WebexMyMeetingActivity extends BaseActivity {
         }
     }
 
+    public void getWxMeetingList(boolean isShowRefresh) {
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
+            if (isShowRefresh) {
+                swipeRefreshLayout.setRefreshing(true);
+            }
+            apiService.getWebexMeetingList();
+        }
+    }
+
+    private void getWebexMeeting() {
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
+            loadingDlg.show();
+            apiService.getWebexMeeting(webexMeetingOpen.getMeetingID());
+        }
+    }
+
+    private void getWebexTK() {
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
+            apiService.getWebexTK();
+        } else {
+            LoadingDialog.dimissDlg(loadingDlg);
+        }
+    }
+
     /**
      * 分类接口实现
      */
@@ -360,32 +384,6 @@ public class WebexMyMeetingActivity extends BaseActivity {
             }
         }
     }
-
-
-    public void getWxMeetingList(boolean isShowRefresh) {
-        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
-            if (isShowRefresh) {
-                swipeRefreshLayout.setRefreshing(true);
-            }
-            apiService.getWebexMeetingList();
-        }
-    }
-
-    private void getWebexMeeting() {
-        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
-            loadingDlg.show();
-            apiService.getWebexMeeting(webexMeetingOpen.getMeetingID());
-        }
-    }
-
-    private void getWebexTK() {
-        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
-            apiService.getWebexTK();
-        } else {
-            LoadingDialog.dimissDlg(loadingDlg);
-        }
-    }
-
 
     private class WebService extends APIInterfaceInstance {
         @Override

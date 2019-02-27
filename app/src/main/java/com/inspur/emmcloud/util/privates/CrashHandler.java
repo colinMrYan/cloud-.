@@ -18,37 +18,37 @@ import java.lang.Thread.UncaughtExceptionHandler;
  */
 public class CrashHandler implements UncaughtExceptionHandler {
 
-	private static final String TAG = "CrashHandler";
-	private UncaughtExceptionHandler mDefaultHandler;
-	private static CrashHandler mInstance;
-	private Context mContext;
+    private static final String TAG = "CrashHandler";
+    private static CrashHandler mInstance;
+    private UncaughtExceptionHandler mDefaultHandler;
+    private Context mContext;
 
-	private CrashHandler() {
-	}
+    private CrashHandler() {
+    }
 
-	/**
-	 * 获取CrashHandler实例 ,单例模式
-	 */
-	public static CrashHandler getInstance() {
-		if (mInstance == null)
-			mInstance = new CrashHandler();
-		return mInstance;
-	}
+    /**
+     * 获取CrashHandler实例 ,单例模式
+     */
+    public static CrashHandler getInstance() {
+        if (mInstance == null)
+            mInstance = new CrashHandler();
+        return mInstance;
+    }
 
-	@Override
-	public void uncaughtException(Thread thread, Throwable throwable) {
-		// 把错误的堆栈信息 获取出来
-		String errorInfo = getErrorInfo(throwable);
-		Log.d("jason","errorInfo="+errorInfo);
-		Log.e("AndroidRuntime", errorInfo);
-		AppExceptionCacheUtils.saveAppException(mContext,1,"",errorInfo,0);
+    @Override
+    public void uncaughtException(Thread thread, Throwable throwable) {
+        // 把错误的堆栈信息 获取出来
+        String errorInfo = getErrorInfo(throwable);
+        Log.d("jason", "errorInfo=" + errorInfo);
+        Log.e("AndroidRuntime", errorInfo);
+        AppExceptionCacheUtils.saveAppException(mContext, 1, "", errorInfo, 0);
         //如果系统提供了默认的异常处理器，则交给系统去结束我们的程序，否则就由我们自己结束自己
         if (mDefaultHandler != null) {
             mDefaultHandler.uncaughtException(thread, throwable);
         } else {
             try {
                 Thread.sleep(2000);
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             MyApplication.getInstance().exit();
@@ -58,19 +58,19 @@ public class CrashHandler implements UncaughtExceptionHandler {
         }
     }
 
-	private String getErrorInfo(Throwable arg1) {
-		Writer writer = new StringWriter();
-		PrintWriter pw = new PrintWriter(writer);
-		arg1.printStackTrace(pw);
-		pw.close();
-		String error = writer.toString();
-		return error;
-	}
+    private String getErrorInfo(Throwable arg1) {
+        Writer writer = new StringWriter();
+        PrintWriter pw = new PrintWriter(writer);
+        arg1.printStackTrace(pw);
+        pw.close();
+        String error = writer.toString();
+        return error;
+    }
 
-	public void init(Context context) {
-		mContext = context;
-		mDefaultHandler = Thread.getDefaultUncaughtExceptionHandler();
-		Thread.setDefaultUncaughtExceptionHandler(this);
-	}
+    public void init(Context context) {
+        mContext = context;
+        mDefaultHandler = Thread.getDefaultUncaughtExceptionHandler();
+        Thread.setDefaultUncaughtExceptionHandler(this);
+    }
 
 }

@@ -40,8 +40,8 @@ import static org.xutils.common.util.IOUtil.copy;
  */
 public class QrCodeUtils {
 
-    private static int IMAGE_HALF_WIDTH = 50;//宽度值，影响中间图片大小
     private static final int IO_BUFFER_SIZE = 1024;
+    private static int IMAGE_HALF_WIDTH = 50;//宽度值，影响中间图片大小
 
     /**
      * 生成二维码，默认大小为500*500
@@ -84,7 +84,7 @@ public class QrCodeUtils {
             saveBitmap(bitmap);
             return bitmap;
         } catch (Exception e) {
-            LogUtils.YfcDebug("异常："+e.getMessage());
+            LogUtils.YfcDebug("异常：" + e.getMessage());
             e.printStackTrace();
             return null;
         }
@@ -103,22 +103,23 @@ public class QrCodeUtils {
 
     /**
      * 根据uri获取带logo的二维码图片
+     *
      * @param qrcodeContent
      * @param size
      * @param pathUri
      * @return
      */
-    public static Bitmap createQRCodeWithLogo(String qrcodeContent, int size, String pathUri){
+    public static Bitmap createQRCodeWithLogo(String qrcodeContent, int size, String pathUri) {
         Bitmap bitmap = getLocalOrNetBitmap(pathUri);
-        return createQRCodeWithLogo(qrcodeContent,size,bitmap);
+        return createQRCodeWithLogo(qrcodeContent, size, bitmap);
     }
 
     /**
      * 生成带logo的二维码，logo默认为二维码的1/5
      *
-     * @param qrcodeContent    需要生成二维码的文字、网址等
-     * @param size    需要生成二维码的大小（）
-     * @param mBitmap logo文件
+     * @param qrcodeContent 需要生成二维码的文字、网址等
+     * @param size          需要生成二维码的大小（）
+     * @param mBitmap       logo文件
      * @return bitmap
      */
     public static Bitmap createQRCodeWithLogo(String qrcodeContent, int size, Bitmap mBitmap) {
@@ -279,6 +280,7 @@ public class QrCodeUtils {
 
     /**
      * 从网络或本地路径读取bitmap
+     *
      * @param url
      * @return
      */
@@ -305,7 +307,7 @@ public class QrCodeUtils {
     /**
      * 保存方法
      */
-    private static String saveBitmap( Bitmap bitmap) {
+    private static String saveBitmap(Bitmap bitmap) {
         File dir = new File(MyAppConfig.LOCAL_IMG_CREATE_PATH);
         if (!dir.exists()) {
             dir.mkdirs();
@@ -320,7 +322,7 @@ public class QrCodeUtils {
             bitmap.compress(Bitmap.CompressFormat.PNG, 50, out);
             out.flush();
             out.close();
-            return "file://"+file.getAbsolutePath();
+            return "file://" + file.getAbsolutePath();
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -328,7 +330,7 @@ public class QrCodeUtils {
                 file.delete();
             }
         } finally {
-            if (out != null){
+            if (out != null) {
                 try {
                     out.close();
                 } catch (IOException e) {
@@ -336,7 +338,7 @@ public class QrCodeUtils {
                     e.printStackTrace();
                 }
             }
-            if (!bitmap.isRecycled()){
+            if (!bitmap.isRecycled()) {
                 bitmap.recycle();
                 bitmap = null;
             }

@@ -33,10 +33,9 @@ import java.util.List;
  * 设置GPS类
  *
  * @author 浪潮移动应用平台(IMP)产品组
- *
  */
 public class GpsService extends ImpPlugin implements
-        AMapLocationListener{
+        AMapLocationListener {
 
     // 设置回调函数
     private String functName;
@@ -47,7 +46,8 @@ public class GpsService extends ImpPlugin implements
     private String coordinateType = "";
     private List<AMapLocation> aMapLocationList = new ArrayList<>();
     private int locationCount = 0;
-    private  AlertDialog dialog;
+    private AlertDialog dialog;
+
     @Override
     public void execute(String action, JSONObject paramsObject) {
         // 开启GPS监控
@@ -61,7 +61,7 @@ public class GpsService extends ImpPlugin implements
         // 获取经纬度地址
         else if ("getInfo".equals(action)) {
             getInfo(paramsObject);
-        }else{
+        } else {
             showCallIMPMethodErrorDlg();
         }
     }
@@ -95,8 +95,6 @@ public class GpsService extends ImpPlugin implements
     }
 
 
-
-
     /**
      * 获得位置信息
      *
@@ -121,7 +119,7 @@ public class GpsService extends ImpPlugin implements
 
             @Override
             public void onPermissionRequestFail(List<String> permissions) {
-                ToastUtils.show(getFragmentContext(), PermissionRequestManagerUtils.getInstance().getPermissionToast(getFragmentContext(),permissions));
+                ToastUtils.show(getFragmentContext(), PermissionRequestManagerUtils.getInstance().getPermissionToast(getFragmentContext(), permissions));
             }
 
         });
@@ -172,7 +170,7 @@ public class GpsService extends ImpPlugin implements
         if (amapLocation != null && (amapLocation.getErrorCode() == 0)) {
             aMapLocationList.add(amapLocation);
         }
-        if (locationCount > 2 || (amapLocation != null && (amapLocation.getErrorCode() == 0) && amapLocation.getAccuracy()<60)) {
+        if (locationCount > 2 || (amapLocation != null && (amapLocation.getErrorCode() == 0) && amapLocation.getAccuracy() < 60)) {
             mlocationClient.stopLocation();
             String latitude = "0.0", longtitude = "0.0";
             if (aMapLocationList.size() > 0) {
@@ -208,19 +206,20 @@ public class GpsService extends ImpPlugin implements
 
     /**
      * 坐标类型转化
+     *
      * @param amapLocation
      * @return
      */
     private double[] coordinateTrans(AMapLocation amapLocation) {
-        double[] location = {0,0};
+        double[] location = {0, 0};
         double longitudeD = amapLocation.getLongitude();
         double latitudeD = amapLocation.getLatitude();
         coordinateType = coordinateType.toUpperCase();
-        if(coordinateType.equals("WGS84")){
+        if (coordinateType.equals("WGS84")) {
             location = ECMLoactionTransformUtils.gcj02towgs84(longitudeD, latitudeD);
-        }else if(coordinateType.equals("BD09")){
+        } else if (coordinateType.equals("BD09")) {
             location = ECMLoactionTransformUtils.gcj02tobd09(longitudeD, latitudeD);
-        }else{
+        } else {
             location[0] = amapLocation.getLongitude();
             location[1] = amapLocation.getLatitude();
         }
@@ -247,6 +246,7 @@ public class GpsService extends ImpPlugin implements
             Toast.makeText(this.getFragmentContext(), "GPS已经关闭", Toast.LENGTH_LONG).show();
         }
     }
+
     private class ComparatorValues implements Comparator<AMapLocation> {
         @Override
         public int compare(AMapLocation o1, AMapLocation o2) {

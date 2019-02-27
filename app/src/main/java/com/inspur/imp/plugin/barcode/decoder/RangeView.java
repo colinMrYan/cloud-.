@@ -52,9 +52,9 @@ public final class RangeView extends View {
     private static final int MAX_RESULT_POINTS = 20;
     private static final long ANIMATION_DELAY = 80L;
     private final Paint paint;
-    private Bitmap resultBitmap;
     private final int maskColor;
     private final int resultColor;
+    private Bitmap resultBitmap;
     private int scannerAlpha;
     private List<ResultPoint> possibleResultPoints;
 
@@ -86,7 +86,7 @@ public final class RangeView extends View {
         possibleResultPoints = new ArrayList<ResultPoint>(5);
     }
 
-    public void setRange(Rect frame){
+    public void setRange(Rect frame) {
         this.frame = frame;
     }
 

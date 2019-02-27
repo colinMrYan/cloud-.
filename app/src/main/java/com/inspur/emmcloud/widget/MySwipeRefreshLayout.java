@@ -32,6 +32,10 @@ public class MySwipeRefreshLayout extends SwipeRefreshLayout {
      * 正在加载状态
      */
     private boolean isLoading;
+    /**
+     * 在分发事件的时候处理子控件的触摸事件
+     */
+    private float mDownY, mUpY;
 
     public MySwipeRefreshLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -61,7 +65,6 @@ public class MySwipeRefreshLayout extends SwipeRefreshLayout {
             }
         }
     }
-
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
@@ -101,12 +104,6 @@ public class MySwipeRefreshLayout extends SwipeRefreshLayout {
         // 如果是Y轴位移大于X轴，事件交给swipeRefreshLayout处理。
         return super.onInterceptTouchEvent(ev);
     }
-
-
-    /**
-     * 在分发事件的时候处理子控件的触摸事件
-     */
-    private float mDownY, mUpY;
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
@@ -229,15 +226,15 @@ public class MySwipeRefreshLayout extends SwipeRefreshLayout {
         });
     }
 
+    public void setOnLoadListener(OnLoadListener listener) {
+        this.mOnLoadListener = listener;
+    }
+
     /**
      * 上拉加载的接口回调
      */
     public interface OnLoadListener {
         void onLoadMore();
-    }
-
-    public void setOnLoadListener(OnLoadListener listener) {
-        this.mOnLoadListener = listener;
     }
 
 }

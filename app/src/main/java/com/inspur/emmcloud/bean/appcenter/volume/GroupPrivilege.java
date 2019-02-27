@@ -10,10 +10,11 @@ public class GroupPrivilege {
     private String groupId;
     private int privilege;
 
-    public GroupPrivilege(){
+    public GroupPrivilege() {
 
     }
-    public GroupPrivilege(JSONObject obj){
+
+    public GroupPrivilege(JSONObject obj) {
         groupId = "";
     }
 }

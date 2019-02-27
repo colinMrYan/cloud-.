@@ -18,13 +18,15 @@ public class VolumeGroupContainMe {
     @Column(name = "volumeId", isId = true)
     private String volumeId;
 
-    @Column(name="groupIds")
+    @Column(name = "groupIds")
     private String groupIds;
 
     private List<String> groupIdList = new ArrayList<>();
 
-    public VolumeGroupContainMe(){}
-    public VolumeGroupContainMe(String volumeId,List<String> groupIdList){
+    public VolumeGroupContainMe() {
+    }
+
+    public VolumeGroupContainMe(String volumeId, List<String> groupIdList) {
         this.groupIds = JSONUtils.toJSONString(groupIdList);
         this.volumeId = volumeId;
     }
@@ -46,7 +48,7 @@ public class VolumeGroupContainMe {
     }
 
     public List<String> getGroupIdList() {
-        groupIdList = JSONUtils.JSONArray2List(groupIds,new ArrayList<String>());
+        groupIdList = JSONUtils.JSONArray2List(groupIds, new ArrayList<String>());
         return groupIdList;
     }
 

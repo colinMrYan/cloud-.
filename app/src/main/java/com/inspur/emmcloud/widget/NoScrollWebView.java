@@ -24,6 +24,6 @@ public class NoScrollWebView extends WebView {
     @Override
     protected void onScrollChanged(int l, int t, int oldl, int oldt) {
         super.onScrollChanged(l, t, oldl, oldt);
-        scrollTo(l,0);
+        scrollTo(l, 0);
     }
 }

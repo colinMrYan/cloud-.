@@ -101,7 +101,7 @@ public class FileUtil {
      * @return
      */
     public static String formetFileSize(long fileSize) {
-        NumberFormat nf=NumberFormat.getInstance();
+        NumberFormat nf = NumberFormat.getInstance();
         nf.setMaximumFractionDigits(1);
         String formatFileSize = "";
         if (fileSize < 1024) {
@@ -123,7 +123,7 @@ public class FileUtil {
      * @return
      */
     public static String formetFileSizeMinM(long fileSize) {
-        NumberFormat nf=NumberFormat.getInstance();
+        NumberFormat nf = NumberFormat.getInstance();
         nf.setMaximumFractionDigits(1);
         String formatFileSize = "";
         if (fileSize < 1024 * 1024 * 1024) {

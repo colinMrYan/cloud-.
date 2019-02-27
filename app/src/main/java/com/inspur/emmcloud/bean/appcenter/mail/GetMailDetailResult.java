@@ -6,7 +6,8 @@ package com.inspur.emmcloud.bean.appcenter.mail;
 
 public class GetMailDetailResult {
     private Mail mail;
-    public GetMailDetailResult(byte[] response){
+
+    public GetMailDetailResult(byte[] response) {
 
     }
 

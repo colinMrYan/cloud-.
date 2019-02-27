@@ -41,6 +41,28 @@ public class CircularProgress extends View {
     private int[] mColors;
     private int mCurrentColorIndex;
     private int mNextColorIndex;
+    private Property<CircularProgress, Float> mAngleProperty = new Property<CircularProgress, Float>(Float.class, "angle") {
+        @Override
+        public Float get(CircularProgress object) {
+            return object.getCurrentGlobalAngle();
+        }
+
+        @Override
+        public void set(CircularProgress object, Float value) {
+            object.setCurrentGlobalAngle(value);
+        }
+    };
+    private Property<CircularProgress, Float> mSweepProperty = new Property<CircularProgress, Float>(Float.class, "arc") {
+        @Override
+        public Float get(CircularProgress object) {
+            return object.getCurrentSweepAngle();
+        }
+
+        @Override
+        public void set(CircularProgress object, Float value) {
+            object.setCurrentSweepAngle(value);
+        }
+    };
 
     public CircularProgress(Context context) {
         this(context, null);
@@ -54,10 +76,10 @@ public class CircularProgress extends View {
         super(context, attrs, defStyleAttr);
 
         float density = context.getResources().getDisplayMetrics().density;
- //       TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.MDMCircularProgress, defStyleAttr, 0);
+        //       TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.MDMCircularProgress, defStyleAttr, 0);
 //        mBorderWidth = a.getDimension(R.styleable.MDMCircularProgress_borderWidth,
 //                DEFAULT_BORDER_WIDTH * density);
-        mBorderWidth = DensityUtil.dip2px(context,3);
+        mBorderWidth = DensityUtil.dip2px(context, 3);
 //        a.recycle();
         mColors = new int[1];
         mColors[0] = context.getResources().getColor(R.color.progress_grey);
@@ -72,6 +94,19 @@ public class CircularProgress extends View {
         mPaint.setColor(mColors[mCurrentColorIndex]);
 
         setupAnimations();
+    }
+
+    private static int gradient(int color1, int color2, float p) {
+        int r1 = (color1 & 0xff0000) >> 16;
+        int g1 = (color1 & 0xff00) >> 8;
+        int b1 = color1 & 0xff;
+        int r2 = (color2 & 0xff0000) >> 16;
+        int g2 = (color2 & 0xff00) >> 8;
+        int b2 = color2 & 0xff;
+        int newr = (int) (r2 * p + r1 * (1 - p));
+        int newg = (int) (g2 * p + g1 * (1 - p));
+        int newb = (int) (b2 * p + b1 * (1 - p));
+        return Color.argb(255, newr, newg, newb);
     }
 
     private void start() {
@@ -119,6 +154,7 @@ public class CircularProgress extends View {
         stop();
         super.onDetachedFromWindow();
     }
+
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
@@ -127,6 +163,8 @@ public class CircularProgress extends View {
         fBounds.top = mBorderWidth / 2f + .5f;
         fBounds.bottom = h - mBorderWidth / 2f - .5f;
     }
+    // ////////////////////////////////////////////////////////////////////////////
+    // ////////////// Animation
 
     @Override
     public void draw(Canvas canvas) {
@@ -144,19 +182,6 @@ public class CircularProgress extends View {
         canvas.drawArc(fBounds, startAngle, sweepAngle, false, mPaint);
     }
 
-    private static int gradient(int color1, int color2, float p) {
-        int r1 = (color1 & 0xff0000) >> 16;
-        int g1 = (color1 & 0xff00) >> 8;
-        int b1 = color1 & 0xff;
-        int r2 = (color2 & 0xff0000) >> 16;
-        int g2 = (color2 & 0xff00) >> 8;
-        int b2 = color2 & 0xff;
-        int newr = (int) (r2 * p + r1 * (1 - p));
-        int newg = (int) (g2 * p + g1 * (1 - p));
-        int newb = (int) (b2 * p + b1 * (1 - p));
-        return Color.argb(255, newr, newg, newb);
-    }
-
     private void toggleAppearingMode() {
         mModeAppearing = !mModeAppearing;
         if (mModeAppearing) {
@@ -165,32 +190,6 @@ public class CircularProgress extends View {
             mCurrentGlobalAngleOffset = (mCurrentGlobalAngleOffset + MIN_SWEEP_ANGLE * 2) % 360;
         }
     }
-    // ////////////////////////////////////////////////////////////////////////////
-    // ////////////// Animation
-
-    private Property<CircularProgress, Float> mAngleProperty = new Property<CircularProgress, Float>(Float.class, "angle") {
-        @Override
-        public Float get(CircularProgress object) {
-            return object.getCurrentGlobalAngle();
-        }
-
-        @Override
-        public void set(CircularProgress object, Float value) {
-            object.setCurrentGlobalAngle(value);
-        }
-    };
-
-    private Property<CircularProgress, Float> mSweepProperty = new Property<CircularProgress, Float>(Float.class, "arc") {
-        @Override
-        public Float get(CircularProgress object) {
-            return object.getCurrentSweepAngle();
-        }
-
-        @Override
-        public void set(CircularProgress object, Float value) {
-            object.setCurrentSweepAngle(value);
-        }
-    };
 
     private void setupAnimations() {
         mObjectAnimatorAngle = ObjectAnimator.ofFloat(this, mAngleProperty, 360f);
@@ -227,21 +226,21 @@ public class CircularProgress extends View {
         });
     }
 
+    public float getCurrentGlobalAngle() {
+        return mCurrentGlobalAngle;
+    }
+
     public void setCurrentGlobalAngle(float currentGlobalAngle) {
         mCurrentGlobalAngle = currentGlobalAngle;
         invalidate();
     }
 
-    public float getCurrentGlobalAngle() {
-        return mCurrentGlobalAngle;
+    public float getCurrentSweepAngle() {
+        return mCurrentSweepAngle;
     }
 
     public void setCurrentSweepAngle(float currentSweepAngle) {
         mCurrentSweepAngle = currentSweepAngle;
         invalidate();
-    }
-
-    public float getCurrentSweepAngle() {
-        return mCurrentSweepAngle;
     }
 }

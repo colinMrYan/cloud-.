@@ -18,11 +18,11 @@ public class SplashPageBean {
     private SplashPayloadBean payload;
     private String response = "";
 
-    public SplashPageBean(String response){
+    public SplashPageBean(String response) {
         this.response = response;
-        this.command = JSONUtils.getString(response,"command","");
-        String idBean = JSONUtils.getString(response,"id","");
-        String payLoadBean = JSONUtils.getString(response,"payload","");
+        this.command = JSONUtils.getString(response, "command", "");
+        String idBean = JSONUtils.getString(response, "id", "");
+        String payLoadBean = JSONUtils.getString(response, "payload", "");
         this.id = new SplashIdBean(idBean);
         this.payload = new SplashPayloadBean(payLoadBean);
     }

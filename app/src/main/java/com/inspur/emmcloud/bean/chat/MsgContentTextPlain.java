@@ -19,7 +19,7 @@ public class MsgContentTextPlain {
     public MsgContentTextPlain(String Json) {
         JSONObject object = JSONUtils.getJSONObject(Json);
         text = JSONUtils.getString(object, "text", "");
-        tmpId = JSONUtils.getString(object,"tmpId","");
+        tmpId = JSONUtils.getString(object, "tmpId", "");
         JSONObject mentionObj = JSONUtils.getJSONObject(object, "mentions", null);
         if (mentionObj != null) {
             mentionsMap = JSONUtils.parseKeyAndValueToMap(mentionObj);

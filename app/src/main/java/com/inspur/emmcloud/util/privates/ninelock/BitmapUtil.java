@@ -10,9 +10,10 @@ public class BitmapUtil {
 
     /**
      * 调整图片的大小 (先将图片缩小或者放大，然后对图片进行裁剪，让不同的图片都能占满不同的手机尺寸的屏幕)
+     *
      * @param boxWidth
      * @param boxHeight
-     * @param bitmap 原图
+     * @param bitmap    原图
      * @return
      */
     public static Bitmap resizeBitmap(int boxWidth, int boxHeight, Bitmap bitmap) {

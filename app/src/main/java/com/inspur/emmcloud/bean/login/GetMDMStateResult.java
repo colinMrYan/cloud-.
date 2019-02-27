@@ -7,12 +7,13 @@ import com.inspur.emmcloud.util.common.JSONUtils;
  */
 
 public class GetMDMStateResult {
-	private int mdmState;
-	public GetMDMStateResult(String response){
-		mdmState = JSONUtils.getInt(response,"mdmState",0);
-	}
+    private int mdmState;
 
-	public int getMdmState(){
-		return  mdmState;
-	}
+    public GetMDMStateResult(String response) {
+        mdmState = JSONUtils.getInt(response, "mdmState", 0);
+    }
+
+    public int getMdmState() {
+        return mdmState;
+    }
 }
