@@ -21,6 +21,7 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
+import com.qmuiteam.qmui.widget.QMUILoadingView;
 
 import java.io.Serializable;
 import java.util.List;
@@ -44,12 +45,13 @@ public class DisplayMediaImageMsg {
         final RoundedImageView imageView = (RoundedImageView) cardContentView
                 .findViewById(R.id.content_img);
         final TextView longImgText = (TextView) cardContentView.findViewById(R.id.long_img_text);
+        final QMUILoadingView loadingView = cardContentView.findViewById(R.id.qlv_downloading_left);
         MsgContentMediaImage msgContentMediaImage = message.getMsgContentMediaImage();
         String imageUri = msgContentMediaImage.getRawMedia();
         DisplayImageOptions options = new DisplayImageOptions.Builder()
-                .showImageForEmptyUri(R.drawable.icon_photo_default)
-                .showImageOnFail(R.drawable.icon_photo_default)
-                .showImageOnLoading(R.drawable.icon_photo_default)
+                .showImageForEmptyUri(R.drawable.ic_chat_img_bg)
+                .showImageOnFail(R.drawable.ic_chat_img_bg)
+                .showImageOnLoading(R.drawable.ic_chat_img_bg)
                 // 设置图片的解码类型
                 .bitmapConfig(Bitmap.Config.RGB_565).cacheInMemory(true)
                 .cacheOnDisk(true).build();
@@ -65,15 +67,22 @@ public class DisplayMediaImageMsg {
         int h = msgContentMediaImage.getRawHeight();
         final boolean isHasSetImageViewSize = setImgViewSize(context, imageView, longImgText, w,h);
 		ImageLoader.getInstance().displayImage(imageUri, imageView, options, new SimpleImageLoadingListener(){
-			@Override
+            @Override
+            public void onLoadingStarted(String imageUri, View view) {
+                super.onLoadingStarted(imageUri, view);
+                loadingView.setVisibility(View.VISIBLE);
+            }
+
+            @Override
 			public void onLoadingComplete(String imageUri, View view,
 					Bitmap loadedImage) {
 				FadeInBitmapDisplayer.animate(imageView, 800);
+                int w = loadedImage.getWidth();
+                int h = loadedImage.getHeight();
                 if (!isHasSetImageViewSize){
-                    int w = loadedImage.getWidth();
-                    int h = loadedImage.getHeight();
                     setImgViewSize(context, imageView, longImgText, w,h);
                 }
+                loadingView.setVisibility(View.GONE);
 			}
 		});
 
@@ -133,7 +142,7 @@ public class DisplayMediaImageMsg {
                 longImgText.setVisibility(View.VISIBLE);
                 params.height = maxH;
             }
-            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
         } else {
             params.width = maxW;
             params.height = (int) (maxW * 1.0 * h / w);
@@ -141,9 +150,10 @@ public class DisplayMediaImageMsg {
                 params.height = minH;
                 longImgText.setVisibility(View.VISIBLE);
             }
-            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
         }
         imageView.setLayoutParams(params);
         return true;
     }
+
 }
