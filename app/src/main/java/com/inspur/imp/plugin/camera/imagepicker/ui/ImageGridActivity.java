@@ -71,6 +71,7 @@ public class ImageGridActivity extends ImageBaseActivity implements
         onImageSelected(0, null, false);
         imageDataSource = new ImageDataSource(this, null, this);
         encodingType = getIntent().getIntExtra(EXTRA_ENCODING_TYPE, 0);
+        setStatus();
     }
 
 

@@ -17,12 +17,11 @@
 
             <ImageView
                 android:id="@+id/iv_work_config2"
-                android:layout_width="32dp"
+                android:layout_width="43dp"
                 android:layout_height="@dimen/header_height"
-                android:paddingRight="5dp"
+                android:paddingRight="16dp"
                 android:paddingLeft="5dp"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="11dp"
                 android:clickable="true"
                 android:scaleType="centerInside"
                 android:src="?attr/ic_config" />
@@ -59,12 +58,11 @@
 
             <ImageView
                 android:id="@+id/iv_work_config"
-                android:layout_width="32dp"
+                android:layout_width="43dp"
                 android:layout_height="@dimen/header_height"
-                android:paddingRight="5dp"
+                android:paddingRight="16dp"
                 android:paddingLeft="5dp"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="11dp"
                 android:clickable="true"
                 android:scaleType="centerInside"
                 android:src="?attr/ic_config" />

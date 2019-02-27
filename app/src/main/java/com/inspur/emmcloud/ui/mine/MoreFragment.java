@@ -38,7 +38,7 @@ import com.inspur.emmcloud.ui.mine.feedback.FeedBackActivity;
 import com.inspur.emmcloud.ui.mine.myinfo.MyInfoActivity;
 import com.inspur.emmcloud.ui.mine.setting.AboutActivity;
 import com.inspur.emmcloud.ui.mine.setting.SettingActivity;
-import com.inspur.emmcloud.ui.mine.setting.SwitchEnterpriseActivity;
+import com.inspur.emmcloud.ui.mine.setting.EnterpriseSwitchActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
@@ -426,7 +426,7 @@ public class MoreFragment extends BaseFragment {
         public void onClick(View view) {
             switch (view.getId()) {
             case R.id.tv_enterprise:
-                IntentUtils.startActivity(getActivity(), SwitchEnterpriseActivity.class);
+                IntentUtils.startActivity(getActivity(), EnterpriseSwitchActivity.class);
                 break;
             case R.id.card_view_my_info:
                 Intent intent = new Intent();

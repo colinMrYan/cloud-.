@@ -40,6 +40,7 @@ import com.inspur.emmcloud.bean.mine.GetFaceSettingResult;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.interf.CommonCallBack;
 import com.inspur.emmcloud.ui.login.ScanQrCodeLoginGSActivity;
+import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.ImageUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
@@ -108,10 +109,11 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
 
     private void init() {
         previewSFV = (FocusSurfaceView) findViewById(R.id.preview_sv);
-        int previewSFVWidth = (int) (ResolutionUtils.getWidth(FaceVerifyActivity.this) * 0.7);
-        int previewSFVHeight = (int) (ResolutionUtils.getHeight(FaceVerifyActivity.this) * 0.7);
+        int previewSFVWidth = (int) (ResolutionUtils.getWidth(FaceVerifyActivity.this) * 0.65);
+        int previewSFVHeight = (int) (previewSFVWidth*4/3);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(previewSFVWidth, previewSFVHeight);
         params.addRule(RelativeLayout.CENTER_HORIZONTAL);
+        params.setMargins(0, DensityUtil.dip2px(MyApplication.getInstance(),60),0,0);
         previewSFV.setLayoutParams(params);
         previewSFV.setEnabled(false);
         if (detectScreenOrientation == null) {

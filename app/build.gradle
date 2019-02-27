@@ -42,7 +42,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 27
         versionCode 74
-        versionName "3.0.0-beta.1"
+        versionName "3.0.0-beta.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             abiFilters "armeabi-v7a", "x86"
@@ -244,6 +244,7 @@ dependencies {
     compile 'com.github.zafarkhaja:java-semver:0.7.2' //版本号包
     compile 'com.github.bmelnychuk:atv:1.2.9'//AndroidTreeView
     compile 'com.android.support:cardview-v7:27.1.1'
+    implementation 'com.gyf.immersionbar:immersionbar:2.3.3-beta15'
 }
 repositories { flatDir { dirs 'aars' } }
 

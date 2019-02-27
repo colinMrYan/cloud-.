@@ -12,7 +12,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
@@ -33,7 +32,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
-public class LanguageChangeActivity extends BaseActivity {
+public class LanguageSwitchActivity extends BaseActivity {
 
     private static final int GET_LANGUAGE_SUCCESS = 3;
     private ListView listView;
@@ -49,8 +48,8 @@ public class LanguageChangeActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_language_change);
-        listView = (ListView) findViewById(R.id.list);
+        setContentView(R.layout.activity_mine_language_switch);
+        listView = (ListView) findViewById(R.id.lv);
         loadingDlg = new LoadingDialog(this);
         handMessage();
         getLanguageList();
@@ -86,7 +85,7 @@ public class LanguageChangeActivity extends BaseActivity {
     private void getLanguageList() {
         // TODO Auto-generated method stub
         loadingDlg.show();
-        languageUtils = new LanguageUtils(LanguageChangeActivity.this, handler);
+        languageUtils = new LanguageUtils(LanguageSwitchActivity.this, handler);
         languageUtils.getServerSupportLanguage();
     }
 
@@ -134,7 +133,7 @@ public class LanguageChangeActivity extends BaseActivity {
     private void showChangeLanguageDlg(final int position) {
         // TODO Auto-generated method stub
 
-        new MyQMUIDialog.MessageDialogBuilder(LanguageChangeActivity.this)
+        new MyQMUIDialog.MessageDialogBuilder(LanguageSwitchActivity.this)
                 .setMessage(getString(R.string.confirm_modify_language))
                 .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
                     @Override
@@ -162,7 +161,7 @@ public class LanguageChangeActivity extends BaseActivity {
                                 language.toString());
                         ((MyApplication) getApplicationContext())
                                 .setAppLanguageAndFontScale();
-                        Intent intentLog = new Intent(LanguageChangeActivity.this,
+                        Intent intentLog = new Intent(LanguageSwitchActivity.this,
                                 IndexActivity.class);
                         intentLog.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
                                 | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -184,9 +183,8 @@ public class LanguageChangeActivity extends BaseActivity {
 
         class ViewHolder {
 
-            TextView tvName;
-            RadioButton languageRadioButton;
-            ImageView imageView;
+            TextView nameText;
+            ImageView selectImg;
             ImageView flagImg;
         }
 
@@ -219,14 +217,14 @@ public class LanguageChangeActivity extends BaseActivity {
                     .from(getApplicationContext());
             if (convertView == null) {
                 convertView = inflater.inflate(
-                        R.layout.languagechange_list_item, null);
+                        R.layout.mine_setting_language_list_item, null);
                 holder = new ViewHolder();
-                holder.tvName = (TextView) convertView
-                        .findViewById(R.id.language_name_text);
-                holder.imageView = (ImageView) convertView
-                        .findViewById(R.id.language_set_img);
+                holder.nameText = (TextView) convertView
+                        .findViewById(R.id.tv_language_name);
+                holder.selectImg = (ImageView) convertView
+                        .findViewById(R.id.iv_select);
                 holder.flagImg = (ImageView) convertView
-                        .findViewById(R.id.flag_img);
+                        .findViewById(R.id.iv_language_flag);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
@@ -236,12 +234,12 @@ public class LanguageChangeActivity extends BaseActivity {
                     getApplicationContext(), MyApplication.getInstance().getTanent() + "language", "");
             if (position == 0) {
                 holder.flagImg.setVisibility(View.VISIBLE);
-                holder.flagImg.setImageResource(R.drawable.ic_follow_system_log);
-                holder.tvName.setText(getString(R.string.follow_system));
+                holder.flagImg.setImageResource(R.drawable.ic_mine_language_follow_system);
+                holder.nameText.setText(getString(R.string.follow_system));
                 if (languageName.equals("followSys")) {
-                    holder.imageView.setVisibility(View.VISIBLE);
+                    holder.selectImg.setVisibility(View.VISIBLE);
                 } else {
-                    holder.imageView.setVisibility(View.INVISIBLE);
+                    holder.selectImg.setVisibility(View.INVISIBLE);
                 }
             } else {
                 String iso = commonLanguageList.get(position).getIso();
@@ -251,24 +249,24 @@ public class LanguageChangeActivity extends BaseActivity {
                         getApplicationContext().getPackageName());
                 holder.flagImg.setVisibility(View.VISIBLE);
                 holder.flagImg.setImageResource(id);
-                holder.tvName.setText(language.getLabel());
+                holder.nameText.setText(language.getLabel());
                 if (languageName.equals(language.getIso())) {
-                    holder.imageView.setVisibility(View.VISIBLE);
+                    holder.selectImg.setVisibility(View.VISIBLE);
                 } else {
-                    holder.imageView.setVisibility(View.INVISIBLE);
+                    holder.selectImg.setVisibility(View.INVISIBLE);
                 }
             }
 
             if (position == 0) {
                 if (languageName.equals("followSys")) {
-                    holder.imageView.setVisibility(View.VISIBLE);
+                    holder.selectImg.setVisibility(View.VISIBLE);
                 } else {
-                    holder.imageView.setVisibility(View.INVISIBLE);
+                    holder.selectImg.setVisibility(View.INVISIBLE);
                 }
             } else if (languageName.equals(language.getIso())) {
-                holder.imageView.setVisibility(View.VISIBLE);
+                holder.selectImg.setVisibility(View.VISIBLE);
             } else {
-                holder.imageView.setVisibility(View.INVISIBLE);
+                holder.selectImg.setVisibility(View.INVISIBLE);
             }
 
             return convertView;

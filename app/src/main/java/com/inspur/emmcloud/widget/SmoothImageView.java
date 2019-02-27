@@ -65,8 +65,7 @@ public class SmoothImageView extends ImageView {
         mOriginalHeight = height;
         mOriginalLocationX = locationX;
         mOriginalLocationY = locationY;
-        //当不注释此句时位置信息不准确
-       // mOriginalLocationY = mOriginalLocationY - getStatusBarHeight(getContext());
+//        mOriginalLocationY = mOriginalLocationY - getStatusBarHeight(getContext());
     }
 
     public static int getStatusBarHeight(Context context) {
@@ -277,7 +276,7 @@ public class SmoothImageView extends ImageView {
             return;
         }
         ValueAnimator valueAnimator = new ValueAnimator();
-        valueAnimator.setDuration(400);
+        valueAnimator.setDuration(300);
         valueAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
         if (state == STATE_TRANSFORM_IN) {
             PropertyValuesHolder scaleHolder = PropertyValuesHolder.ofFloat("scale", mTransfrom.startScale, mTransfrom.endScale);

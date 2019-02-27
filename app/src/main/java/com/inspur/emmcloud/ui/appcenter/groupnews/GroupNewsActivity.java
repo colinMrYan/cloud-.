@@ -41,6 +41,7 @@ public class GroupNewsActivity extends BaseFragmentActivity implements
 		loadingDlg = new LoadingDialog(GroupNewsActivity.this);
 		getNewTitles();
 		this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
+		setStatus();
 	}
 
 	/**

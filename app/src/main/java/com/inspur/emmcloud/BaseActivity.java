@@ -5,15 +5,20 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.SchemeHandleActivity;
 import com.inspur.emmcloud.ui.appcenter.ReactNativeAppActivity;
+import com.inspur.emmcloud.ui.chat.ConversationGroupInfoActivity;
+import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.ui.login.ScanQrCodeLoginGSActivity;
 import com.inspur.emmcloud.ui.mine.myinfo.MyInfoActivity;
 import com.inspur.emmcloud.ui.mine.setting.FaceVerifyActivity;
+import com.inspur.emmcloud.ui.mine.setting.GestureLoginActivity;
+import com.inspur.emmcloud.ui.mine.setting.GuideActivity;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.common.StateBarUtils;
+import com.inspur.emmcloud.util.common.ResourceUtils;
 import com.inspur.emmcloud.util.privates.LanguageUtils;
 import com.inspur.imp.plugin.barcode.scan.CaptureActivity;
 import com.inspur.imp.plugin.camera.imageedit.IMGEditActivity;
@@ -35,14 +40,20 @@ public class BaseActivity extends Activity {
             IMGEditActivity.class.getName(),
             ImageGalleryActivity.class.getName(),
             MyInfoActivity.class.getName(),
+            GuideActivity.class.getName(),
+            UserInfoActivity.class.getName(),
+            GestureLoginActivity.class.getName(),
+            ConversationGroupInfoActivity.class.getName(),
+
     };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
-      setTheme();
+        setTheme();
         super.onCreate(savedInstanceState);
         x.view().inject(this);
+        setStatus();
     }
 
     //解决调用系统应用后会弹出手势解锁的问题
@@ -65,20 +76,61 @@ public class BaseActivity extends Activity {
             switch (currentThemeNo){
                 case 1:
                     setTheme(R.style.AppTheme_1);
-                    StateBarUtils.translucent(this);
-                    StateBarUtils.setStateBarTextColor(this,false);
                     break;
                 case 2:
                     setTheme(R.style.AppTheme_2);
-                    StateBarUtils.translucent(this);
-                    StateBarUtils.setStateBarTextColor(this,true);
                     break;
                 default:
                     setTheme(R.style.AppTheme_0);
-                    StateBarUtils.translucent(this);
-                    StateBarUtils.setStateBarTextColor(this,true);
                     break;
             }
         }
+    }
+
+    private void setStatus(){
+        String className = this.getClass().getCanonicalName();
+        boolean isContain = Arrays.asList(classNames).contains(className);
+        if (!isContain) {
+            int color = ResourceUtils.getValueOfAttr(BaseActivity.this,R.attr.header_bg_color);
+            boolean isStatusFontDark = true;
+            int currentThemeNo = PreferencesUtils.getInt(MyApplication.getInstance(), Constant.PREF_APP_THEME, 0);
+            switch (currentThemeNo){
+                case 1:
+                    isStatusFontDark =false;
+                    break;
+                case 2:
+                    isStatusFontDark =true;
+                    break;
+                default:
+                    isStatusFontDark =true;
+                    break;
+            }
+            ImmersionBar.with(this).statusBarColor(color).statusBarDarkFont(isStatusFontDark).init();
+        }
+    }
+
+    protected void setTransparentStatus(){
+        int color = ResourceUtils.getValueOfAttr(BaseActivity.this,R.attr.header_bg_color);
+        boolean isStatusFontDark = true;
+        int currentThemeNo = PreferencesUtils.getInt(MyApplication.getInstance(), Constant.PREF_APP_THEME, 0);
+        switch (currentThemeNo){
+            case 1:
+                isStatusFontDark =false;
+                break;
+            case 2:
+                isStatusFontDark =true;
+                break;
+            default:
+                isStatusFontDark =true;
+                break;
+        }
+        ImmersionBar.with(this) .transparentStatusBar().statusBarDarkFont(isStatusFontDark).init();
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ImmersionBar.with(this).destroy();
     }
 }

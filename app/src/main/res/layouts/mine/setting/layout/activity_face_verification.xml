@@ -20,9 +20,9 @@
         app:focus_handle_color="@android:color/white"
         app:focus_handle_show_mode="show_always"
         app:focus_handle_size="0dp"
-        app:focus_initial_frame_scale="0.85"
+        app:focus_initial_frame_scale="0.9"
         app:focus_min_frame_size="50dp"
-        app:focus_overlay_color="#ffffff"
+        app:focus_overlay_color="@android:color/white"
         app:focus_touch_padding="8dp" />
 
 
@@ -42,7 +42,7 @@
                 android:id="@+id/square_layout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="85.5">
+                android:layout_weight="90.5">
 
                 <TextView
                     android:id="@+id/tip_text"
