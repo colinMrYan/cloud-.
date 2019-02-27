@@ -302,6 +302,8 @@
     <string name="chat_remove_from_top">取消置頂</string>
     <string name="no_chat_content">暫無聊天內容</string>
     <string name="msg_key_search_member">請輸入關鍵字</string>
+    <string name="chat_file_open_fail_tip">沒有找到對應的程式</string>
+    <string name="chat_conversation_unread_count">%1$d條新消息</string>
 
 
     <!-- 會議卡片 -->
@@ -376,7 +378,8 @@
     <string name="app_center">應用中心</string>
     <string name="detail">詳情</string>
     <string name="search">請輸入關鍵字</string>
-    <string name="app_commonly_use">常用應用</string>
+    <string name="app_commonly_use">開啟常用模式</string>
+    <string name="app_commonly_use_close">結束常用模式</string>
     <string name="app_center_more_apps">更多應用</string>
     <string name="app_input_mail_password">請輸入公司郵箱密碼</string>
     <string name="app_need_input_mail_password">第一次使用或密碼修改後需要輸入</string>

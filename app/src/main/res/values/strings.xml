@@ -314,6 +314,8 @@
     <string name="no_chat_content">暂无聊天内容</string>
     <string name="msg_key_search_member">请输入关键字</string>
     <string name="chat_resend_message">重新发送</string>
+    <string name="chat_file_open_fail_tip">没有找到对应的程序</string>
+    <string name="chat_conversation_unread_count">%1$d条新消息</string>
 
     <!-- 会议卡片 -->
     <string name="meeting_has_confirmed">已确认</string>
@@ -385,7 +387,8 @@
     <string name="app_center">应用中心</string>
     <string name="detail">详情</string>
     <string name="search">请输入关键字</string>
-    <string name="app_commonly_use">常用应用</string>
+    <string name="app_commonly_use">开启常用模式</string>
+    <string name="app_commonly_use_close">结束常用模式</string>
     <string name="app_center_more_apps">更多应用</string>
     <string name="app_input_mail_password">请输入公司邮箱密码</string>
     <string name="app_need_input_mail_password">第一次使用或密码修改后需要输入</string>
@@ -671,6 +674,7 @@
     <string name="user_employee_num">员工编号</string>
     <string name="user_worker_num">工号</string>
     <string name="user_new_chat">发起会话</string>
+    <string name="user_send_message">发消息</string>
 
     <!-- 集团新闻 部分 -->
     <string name="news_group_news">集团新闻</string>

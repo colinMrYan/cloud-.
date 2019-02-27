@@ -71,6 +71,7 @@ import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
 import com.inspur.imp.plugin.camera.mycamera.MyCameraActivity;
 import com.inspur.imp.util.compressor.Compressor;
 import com.qmuiteam.qmui.widget.QMUILoadingView;
+import com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -98,6 +99,7 @@ public class ConversationActivity extends ConversationBaseActivity {
     private static final int REFRESH_HISTORY_MESSAGE = 6;
     private static final int REFRESH_PUSH_MESSAGE = 7;
     private static final int REFRESH_OFFLINE_MESSAGE = 8;
+    private static final int UNREAD_NUMBER_BORDER = 20;
     @ViewInject(R.id.msg_list)
     private RecycleViewForSizeChange msgListView;
 
@@ -111,6 +113,8 @@ public class ConversationActivity extends ConversationBaseActivity {
 
     @ViewInject(R.id.robot_photo_img)
     private ImageView robotPhotoImg;
+    @ViewInject(R.id.btn_conversation_unread)
+    private QMUIRoundButton unreadQMUIRoundBtn;
     private LinearLayoutManager linearLayoutManager;
     private String robotUid = "BOT6004";
     private List<UIMessage> uiMessageList = new ArrayList<>();
@@ -225,7 +229,30 @@ public class ConversationActivity extends ConversationBaseActivity {
         setChannelTitle();
         initMsgListView();
         sendMsgFromShare();
+        setUnReadMessageCount();
     }
+
+    private void setUnReadMessageCount() {
+        if(getIntent().hasExtra(EXTRA_UNREAD_MESSAGE)){
+            final List<Message> unReadMessageList = (List<Message>) getIntent().getSerializableExtra(EXTRA_UNREAD_MESSAGE);
+            unreadQMUIRoundBtn.setVisibility(unReadMessageList.size()>UNREAD_NUMBER_BORDER?View.VISIBLE:View.GONE);
+            unreadQMUIRoundBtn.setText(getString(R.string.chat_conversation_unread_count,unReadMessageList.size()));
+            unreadQMUIRoundBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    List<UIMessage> unReadMessageUIList = UIMessage.MessageList2UIMessageList(unReadMessageList);
+                    uiMessageList.clear();
+                    uiMessageList.addAll(unReadMessageUIList);
+                    adapter.setMessageList(uiMessageList);
+                    adapter.notifyDataSetChanged();
+                    msgListView.MoveToPosition(0);
+                    unreadQMUIRoundBtn.setVisibility(View.GONE);
+                    msgListView.scrollToPosition(0);
+                }
+            });
+        }
+    }
+
 
     /**
      * 初始化下拉刷新UI

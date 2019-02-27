@@ -161,6 +161,7 @@ public class CalendarLayout extends LinearLayout {
 
     private CalendarViewDelegate mDelegate;
     private CalendarExpandListener listener;
+    private boolean isViewTopShow = false;
 
     public CalendarLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -414,7 +415,14 @@ public class CalendarLayout extends LinearLayout {
                  /*
                    如果向上滚动，且ViewPager已经收缩，不拦截事件
                  */
-                if (dy < 0 && mContentView.getTranslationY() == -mContentViewTranslateY) {
+//                LogUtils.YfcDebug("isContentViewShowFirstItem:"+ getIsFirstItemZero(mContentView));
+//                if(!getIsFirstItemZero(mContentView)){
+//                    return false;
+//                }
+                if(!isViewTopShow){
+                    return false;
+                }
+                if ((dy < 0 && mContentView.getTranslationY() == -mContentViewTranslateY) ) {
                     return false;
                 }
                 /*
@@ -443,6 +451,51 @@ public class CalendarLayout extends LinearLayout {
                 break;
         }
         return super.onInterceptTouchEvent(ev);
+    }
+
+
+    private void setListViewListener(View view){
+        boolean isFirstItemShow = false;
+        if(view instanceof ViewGroup){
+            ViewGroup vp = (ViewGroup) view;
+            for (int i = 0;i < vp.getChildCount();i++){
+                View viewChild = vp.getChildAt(i);
+                if(viewChild instanceof AbsListView){
+                   viewChild.setOnTouchListener(new OnTouchListener() {
+                       @Override
+                       public boolean onTouch(View v, MotionEvent event) {
+                           getIsFirstItemZero((AbsListView) v);
+                           return false;
+                       }
+                   });
+                }else{
+                    setListViewListener(viewChild);
+                }
+            }
+        }
+    }
+
+    private boolean getIsFirstItemZero(AbsListView view){
+        boolean isFirstItemShow = false;
+//        if(view instanceof ViewGroup){
+//            ViewGroup vp = (ViewGroup) view;
+//            for (int i = 0;i < vp.getChildCount();i++){
+//                View viewChild = vp.getChildAt(i);
+//                if(viewChild instanceof AbsListView){
+//                    AbsListView absListView = ((AbsListView)viewChild);
+//                    LogUtils.YfcDebug("item:"+absListView.getFirstVisiblePosition());
+//                    LogUtils.YfcDebug("top:"+absListView.getChildAt(0).getY());
+//                    isFirstItemShow = (absListView.getFirstVisiblePosition() == 0) && (absListView.getChildAt(0).getY() == 0f);
+//                    break;
+//                }else{
+//                    getIsFirstItemZero(viewChild);
+//                }
+//            }
+//        }
+//        LogUtils.YfcDebug("isFirstItemShow:"+isFirstItemShow);
+//        return isFirstItemShow;
+        isViewTopShow = ((view.getFirstVisiblePosition() == 0) && (view.getChildAt(0).getY() == 0f));
+        return (view.getFirstVisiblePosition() == 0) && (view.getChildAt(0).getY() == 0f);
     }
 
 
@@ -499,6 +552,7 @@ public class CalendarLayout extends LinearLayout {
         if (mContentView != null) {
             mContentView.setOverScrollMode(View.OVER_SCROLL_NEVER);
         }
+        setListViewListener(mContentView);
     }
 
 

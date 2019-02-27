@@ -201,6 +201,7 @@ public class UserInfoActivity extends BaseActivity {
                 intent.putStringArrayListExtra(ImagePagerV0Activity.EXTRA_IMAGE_URLS, urls);
                 startActivity(intent);
                 break;
+            case R.id.ll_mobile_chat:
             case R.id.iv_start_chat:
                 createDirectChannel();
                 break;

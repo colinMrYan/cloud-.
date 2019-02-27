@@ -30,8 +30,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingBottom="12dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="26dp"
             android:paddingTop="11dp">
 
             <ImageView
@@ -46,7 +46,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="11dp"
+                android:layout_marginLeft="16dp"
                 android:layout_toRightOf="@id/message_create_group_img"
                 android:background="@color/transparent"
                 android:clickable="false"
@@ -71,7 +71,7 @@
             android:layout_below="@id/message_create_group_layout"
             android:orientation="horizontal"
             android:paddingBottom="12dp"
-            android:paddingLeft="10dp"
+            android:paddingLeft="15dp"
             android:paddingRight="10dp"
             android:paddingTop="11dp">
 
@@ -88,7 +88,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="11dp"
+                android:layout_marginLeft="16dp"
                 android:layout_toRightOf="@id/message_scan_img"
                 android:background="@color/transparent"
                 android:clickable="false"

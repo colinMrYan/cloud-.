@@ -160,6 +160,19 @@ public class MessageCacheUtil {
         return unreadCount;
     }
 
+    public static List<Message> getAllUnReadMessage(Context context,String cid){
+        List<Message> unReadMessageList = new ArrayList<>();
+        try {
+            Message lastReadMessage = DbCacheUtils.getDb(context).selector(Message.class).where("read", "=", 1)
+                    .and("channel", "=", cid).orderBy("creationDate", true).findFirst();
+            unReadMessageList.addAll(DbCacheUtils.getDb(context).selector(Message.class).
+                    where("creationDate",">",lastReadMessage.getCreationDate()).and("channel", "=", cid).findAll());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return unReadMessageList;
+    }
+
     /**
      * 设置消息已读
      *
