@@ -23,6 +23,7 @@ public class ConversationBaseActivity extends MediaPlayBaseActivity{
     public static final String EXTRA_CID= "cid";
     public static final String EXTRA_CONVERSATION= "conversation";
     public static final String EXTRA_NEED_GET_NEW_MESSAGE = "get_new_msg";
+    public static final String EXTRA_UNREAD_MESSAGE = "unread_count";
     protected String cid;
     protected LoadingDialog loadingDlg;
     protected Conversation conversation;
