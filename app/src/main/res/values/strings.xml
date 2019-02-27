@@ -669,6 +669,7 @@
     <string name="user_employee_num">员工编号</string>
     <string name="user_worker_num">工号</string>
     <string name="user_new_chat">发起会话</string>
+    <string name="user_send_message">发消息</string>
 
     <!-- 集团新闻 部分 -->
     <string name="news_group_news">集团新闻</string>
