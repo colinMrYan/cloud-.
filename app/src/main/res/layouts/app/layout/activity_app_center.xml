@@ -18,21 +18,20 @@
             android:layout_centerVertical="true"
             android:onClick="onClick"
             android:scaleType="fitXY"
-            android:src="@drawable/ic_back_btn_black" />
+            android:src="?attr/ic_back_btn" />
 
         <ImageView
             android:id="@+id/search_img"
-            android:layout_width="44dp"
+            android:layout_width="52dp"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="5dp"
             android:clickable="true"
             android:onClick="onClick"
-            android:paddingLeft="12dp"
-            android:paddingRight="12dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
             android:scaleType="centerInside"
-            android:src="@drawable/selector_search_btn" >
+            android:src="?attr/ic_appcenter_search" >
         </ImageView>
 
         <TextView

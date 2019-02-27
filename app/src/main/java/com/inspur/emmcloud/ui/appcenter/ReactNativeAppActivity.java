@@ -10,6 +10,7 @@ import com.facebook.react.ReactRootView;
 import com.facebook.react.common.LifecycleState;
 import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler;
 import com.facebook.react.shell.MainReactPackage;
+import com.gyf.barlibrary.ImmersionBar;
 import com.horcrux.svg.SvgPackage;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
@@ -28,7 +29,6 @@ import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.common.ZipUtils;
@@ -68,8 +68,7 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
         init();
         checkSource();
         initReactNativeApp();
-        StateBarUtils.translucent( this ,R.color.white);
-        StateBarUtils.setStateBarTextColor( this,true );
+        ImmersionBar.with(this).statusBarColor(android.R.color.white).statusBarDarkFont(true).init();
     }
 
     /**

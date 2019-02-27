@@ -75,6 +75,7 @@ public class ImageCropActivity extends ImageBaseActivity implements View.OnClick
 				mCropImageView.RotateImage();
 			}
 		});
+        setStatus();
 
 //        mCropImageView.setImageURI(Uri.fromFile(new File(imagePath)));
     }

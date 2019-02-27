@@ -113,7 +113,7 @@ public class SettingActivity extends BaseActivity {
             experienceUpgradeSwitch.setOpened(isExperienceUpgradeFlag);
             experienceUpgradeSwitch.setOnStateChangedListener(onStateChangedListener);
         }
-
+        themeNameText.setText(ThemeSwitchActivity.getThemeName());
     }
 
     private void setWebAutoRotateState() {
@@ -242,7 +242,7 @@ public class SettingActivity extends BaseActivity {
                 break;
             case R.id.rl_setting_language:
                 IntentUtils.startActivity(SettingActivity.this,
-                        LanguageChangeActivity.class);
+                        LanguageSwitchActivity.class);
                 break;
             case R.id.clear_cache_layout:
                 showClearCacheDlg();
@@ -251,18 +251,7 @@ public class SettingActivity extends BaseActivity {
                 IntentUtils.startActivity(SettingActivity.this, SafeCenterActivity.class);
                 break;
             case R.id.rl_setting_switch_theme:
-                int currentThemeNo = PreferencesUtils.getInt(MyApplication.getInstance(), Constant.PREF_APP_THEME, 0);
-                currentThemeNo++;
-                if (currentThemeNo > 2){
-                    currentThemeNo = 0;
-                }
-                PreferencesUtils.putInt(MyApplication.getInstance(), Constant.PREF_APP_THEME, currentThemeNo);
-                setTheme();
-                Intent intent = new Intent(SettingActivity.this,
-                        IndexActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                        | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
+                IntentUtils.startActivity(SettingActivity.this, ThemeSwitchActivity.class);
                 break;
             default:
                 break;

@@ -101,8 +101,10 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         clearOldMainTabData();
         x.view().inject(this);
+        setStatus();
         mTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
         registerNetWorkListenerAccordingSysLevel();
         initTabs();
