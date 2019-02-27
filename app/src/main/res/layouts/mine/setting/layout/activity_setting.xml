@@ -358,8 +358,6 @@
             android:layout_marginRight="25dp"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginRight="25dp"
-            android:layout_marginLeft="25dp"
             android:layout_marginBottom="40dp"
             android:elevation="1dp"
             android:gravity="center"
