@@ -93,10 +93,11 @@ public class Constant {
     public static final String EVENTBUS_TAG_UPDATE_CHANNEL_FOCUS = "tag_update_channel_focus";
     public static final String EVENTBUS_TAG_UPDATE_CHANNEL_DND = "tag_update_channel_dnd";
     public static final String EVENTBUS_TAG_CURRENT_CHANNEL_OFFLINE_MESSAGE = "tag_current_channel_offline_message";
-    public static final String EVENTBUS_TAG__NET_STATE_CHANGE = "tag_net_state_change";
-    public static final String EVENTBUS_TAG__NET_EXCEPTION_HINT = "tag_net_exception_hint";
-    public static final String EVENTBUS_TAG__NET_PING_CONNECTION = "tag_net_ping_connection";
-    public static final String EVENTBUS_TAG__NET_PORTAL_HTTP_POST = "tag_net_portal_http_post";
+    public static final String EVENTBUS_TAG_NET_STATE_CHANGE = "tag_net_state_change";
+    public static final String EVENTBUS_TAG_NET_EXCEPTION_HINT = "tag_net_exception_hint";
+    public static final String EVENTBUS_TAG_NET_PING_CONNECTION = "tag_net_ping_connection";
+    public static final String EVENTBUS_TAG_NET_PORTAL_HTTP_POST = "tag_net_portal_http_post";
+    public static final String EVENTBUS_TAG_NET_HTTP_POST_CONNECTION = "tag_net_http_post_connection";
     public static final String EVENTBUS_TAG_COMMENT_MESSAGE = "tag_comment_message";
     public static final String EVENTBUS_TAG_GET_MAIL_BY_FOLDER = "tag_get_mail_by_folder";
     public static final String EVENTBUS_TAG_MAIL_ACCOUNT_DELETE = "tag_mail_account_delelte";
