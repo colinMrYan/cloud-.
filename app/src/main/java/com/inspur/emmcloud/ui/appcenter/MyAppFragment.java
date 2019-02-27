@@ -81,7 +81,6 @@ import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.widget.ECMRecyclerViewLinearLayoutManager;
 import com.inspur.emmcloud.widget.ECMSpaceItemDecoration;
 import com.inspur.emmcloud.widget.MySwipeRefreshLayout;
-import com.inspur.emmcloud.widget.SwitchView;
 import com.inspur.emmcloud.widget.draggrid.DragGridView;
 import com.inspur.emmcloud.widget.draggrid.DragGridView.OnChanageListener;
 
@@ -814,10 +813,10 @@ public class MyAppFragment extends BaseFragment {
         // 一个自定义的布局，作为popwindowivew显示的内容
         View contentView = LayoutInflater.from(getActivity())
                 .inflate(R.layout.app_center_popup_window_view, null);
-        final SwitchView switchView = contentView.findViewById(R.id.switch_view_common_app);
+//        final SwitchView switchView = contentView.findViewById(R.id.switch_view_common_app);
         commonlyUseLayout = contentView.findViewById(R.id.ll_common_app_switch);
         //为了在打开PopWindow时立刻显示当前状态
-        switchView.setOpened(getNeedCommonlyUseApp());
+//        switchView.setOpened(getNeedCommonlyUseApp());
         // 设置按钮的点击事件
         popupWindow = new PopupWindow(contentView,
                 LinearLayout.LayoutParams.WRAP_CONTENT,

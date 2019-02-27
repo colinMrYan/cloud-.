@@ -116,13 +116,6 @@
                 android:textColor="@color/header_text_black"
                 android:textSize="16sp" />
 
-            <com.inspur.emmcloud.widget.SwitchView
-                android:id="@+id/switch_view_common_app"
-                android:layout_width="42dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:visibility="gone"
-                 />
         </LinearLayout>
 
 
