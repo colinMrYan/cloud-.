@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
-import android.view.Window;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MainActivity;
@@ -44,7 +43,6 @@ import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
@@ -76,9 +74,6 @@ public class SchemeHandleActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);//没有标题
-        StateBarUtils.translucent(this,getResources().getColor(R.color.transparent));
-//        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
         if(isLackNecessaryPermission()){
             return;
         }
@@ -102,6 +97,7 @@ public class SchemeHandleActivity extends BaseActivity {
                 openScheme();
             }
         }).initProfile();
+        setTransparentStatus();
     }
 
     private boolean isLackNecessaryPermission() {

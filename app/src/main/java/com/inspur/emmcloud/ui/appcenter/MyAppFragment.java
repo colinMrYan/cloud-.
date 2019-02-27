@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.DataSetObserver;
 import android.graphics.Bitmap;
-import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Vibrator;
@@ -58,6 +57,7 @@ import com.inspur.emmcloud.bean.system.badge.BadgeBodyModuleModel;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.interf.OnRecommendAppWidgetItemClickListener;
 import com.inspur.emmcloud.ui.mine.setting.NetWorkStateDetailActivity;
+import com.inspur.emmcloud.util.common.CheckingNetStateUtils;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
@@ -133,9 +133,11 @@ public class MyAppFragment extends BaseFragment {
     private MyOnClickListener myOnClickListener;
     private LinearLayout commonlyUseLayout;
 
+    private CheckingNetStateUtils checkingNetStateUtils;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        checkingNetStateUtils = new CheckingNetStateUtils( getContext(),NetUtils.pingUrls );
         rootView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_app, null);
         initViews();
         registerReceiver();
@@ -180,10 +182,11 @@ public class MyAppFragment extends BaseFragment {
             hasRequestBadgeNum = true;
         }
         refreshRecommendAppWidgetView();
-        if(NetworkInfo.State.CONNECTED==NetUtils.getNetworkMobileState(getContext())||NetworkInfo.State.CONNECTING==NetUtils.getNetworkMobileState(getContext())){
+        if(checkingNetStateUtils.isConnectedNet()){
             DeleteHeaderView();
         }else {
-            NetUtils.PingThreadStart(NetUtils.pingUrls,5,Constant.EVENTBUS_TAG__NET_EXCEPTION_HINT);
+            checkingNetStateUtils.clearUrlsStates();
+            checkingNetStateUtils.CheckNetPingThreadStart(NetUtils.pingUrls,5,Constant.EVENTBUS_TAG_NET_EXCEPTION_HINT);
         }
     }
 
@@ -399,19 +402,24 @@ public class MyAppFragment extends BaseFragment {
      * */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void netWorkStateHint(SimpleEventMessage netState) {
-        if(netState.getAction().equals(Constant.EVENTBUS_TAG__NET_STATE_CHANGE)){
-            if(((String)netState.getMessageObj()).equals(NetWorkStateChangeUtils.NET_WIFI_STATE_OK)){
-                NetUtils.PingThreadStart(NetUtils.pingUrls,5,Constant.EVENTBUS_TAG__NET_EXCEPTION_HINT);
+        if(netState.getAction().equals(Constant.EVENTBUS_TAG_NET_STATE_CHANGE)){
+            if(((String)netState.getMessageObj()).equals(NetWorkStateChangeUtils.NET_WIFI_STATE_OK)&&(!NetUtils.isVpnConnected())){
+                checkingNetStateUtils.clearUrlsStates();
+                checkingNetStateUtils.CheckNetPingThreadStart(NetUtils.pingUrls,5,Constant.EVENTBUS_TAG_NET_EXCEPTION_HINT);
             } else if(((String)netState.getMessageObj()).equals(NetWorkStateChangeUtils.NET_STATE_ERROR)) {
                 AddHeaderView();
             } else if (((String)netState.getMessageObj()).equals(NetWorkStateChangeUtils.NET_GPRS_STATE_OK)) {
                 DeleteHeaderView();
-            }
-        } else if (netState.getAction().equals(Constant.EVENTBUS_TAG__NET_EXCEPTION_HINT)) {   //网络异常提示
-            if(!(Boolean)netState.getMessageObj()||(!NetUtils.isNetworkConnected(getContext(),false))) {
-                AddHeaderView();
-            } else {
+            }else{
                 DeleteHeaderView();
+            }
+        } else if (netState.getAction().equals(Constant.EVENTBUS_TAG_NET_EXCEPTION_HINT)) {   //网络异常提示
+            List<Object> pingIdAndData = (List<Object>)netState.getMessageObj();
+            Boolean pingConnectedResult=checkingNetStateUtils.isPingConnectedNet( (String)pingIdAndData.get( 0 ),(boolean)pingIdAndData.get( 1 ) );
+            if(pingConnectedResult){
+                DeleteHeaderView();
+            }else{
+                AddHeaderView();
             }
         }
     }

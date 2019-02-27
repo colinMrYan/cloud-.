@@ -130,7 +130,7 @@ public class DeviceManagerActivity extends BaseActivity {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             BindingDevice bindingDevice = isCurrent?currentBindingDeviceList.get(position):historyBindingDeviceList.get(position);
-            convertView = LayoutInflater.from(DeviceManagerActivity.this).inflate(R.layout.mine_setting_binding_devcie_item_view, null);
+            convertView = LayoutInflater.from(DeviceManagerActivity.this).inflate(R.layout.mine_setting_binding_devcie_list_item, null);
             ((TextView) convertView.findViewById(R.id.device_text)).setText(bindingDevice.getDeviceModel());
             String deviceLastUserTime = TimeUtils.getTime(bindingDevice.getDeviceLastUserTime(), TimeUtils.getFormat(DeviceManagerActivity.this, TimeUtils.FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE));
 

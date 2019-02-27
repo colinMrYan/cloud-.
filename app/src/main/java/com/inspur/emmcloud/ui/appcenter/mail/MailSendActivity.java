@@ -390,7 +390,7 @@ public class MailSendActivity extends BaseActivity {
                 fwTipImageView.setVisibility(View.GONE);
                 fwBodyLayout.setVisibility(View.VISIBLE);
                 break;
-            case R.id.rl_back:
+            case R.id.ibt_back:
                 finish();
                 break;
             case R.id.tv_recipients_show:

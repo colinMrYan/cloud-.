@@ -22,22 +22,19 @@
             android:layout_centerVertical="true"
             android:onClick="onClick"
             android:scaleType="fitXY"
-            android:src="@drawable/ic_back_btn_black" />
+            android:src="?attr/ic_back_btn" />
+
         <ImageView
-            android:id="@+id/channel_info_img"
+            android:id="@+id/iv_config"
             android:layout_width="43dp"
             android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:adjustViewBounds="true"
-            android:clickable="true"
-            android:onClick="onClick"
-            android:paddingLeft="5dp"
             android:paddingRight="16dp"
-            android:paddingBottom="13dp"
-            android:paddingTop="13dp"
+            android:paddingLeft="5dp"
+            android:onClick="onClick"
+            android:layout_alignParentRight="true"
+            android:clickable="true"
             android:scaleType="centerInside"
-            android:src="@drawable/ic_config" />
+            android:src="?attr/ic_config" />
 
         <TextView
             android:id="@+id/header_text"
@@ -46,7 +43,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="25dp"
             android:layout_marginRight="25dp"
-            android:layout_toLeftOf="@id/channel_info_img"
+            android:layout_toLeftOf="@id/iv_config"
             android:layout_toRightOf="@id/ibt_back"
             android:ellipsize="end"
             android:gravity="center"

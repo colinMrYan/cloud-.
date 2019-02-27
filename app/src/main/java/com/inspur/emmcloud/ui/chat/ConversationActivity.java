@@ -919,7 +919,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 finishActivity();
                 break;
 
-            case R.id.channel_info_img:
+            case R.id.iv_config:
                 showConversationInfo();
                 break;
             default:

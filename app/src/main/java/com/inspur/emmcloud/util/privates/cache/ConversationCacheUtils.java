@@ -5,6 +5,7 @@ import android.content.Context;
 import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.contact.SearchModel;
 import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.PinyinUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 
 import org.json.JSONArray;
@@ -300,7 +301,7 @@ public class ConversationCacheUtils {
                     }
                 }
                 conversationList = DbCacheUtils.getDb(context).selector(Conversation.class)
-                        .where("name", "like", searchStr).and("type","=",Conversation.TYPE_GROUP).findAll();
+                        .where(WhereBuilder.b("name", "like", searchStr).or("pyfull", "like", searchStr)).and("type","=",Conversation.TYPE_GROUP).findAll();
             } catch (Exception e) {
                 // TODO: handle exception
                 e.printStackTrace();
@@ -363,5 +364,22 @@ public class ConversationCacheUtils {
             e.printStackTrace();
         }
         return null;
+    }
+
+    /**
+     * Conversation 修改拼音字段
+     *
+     * @param context
+     * @param id
+     * @param name
+     */
+    public static void updateConversationPyFull(Context context, String id, String name) {
+        try {
+            String pyFull = PinyinUtils.getPingYin( name );
+            DbCacheUtils.getDb(context).update(Conversation.class, WhereBuilder.b("id", "=", id), new KeyValue("pyfull",pyFull ));
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
     }
 }

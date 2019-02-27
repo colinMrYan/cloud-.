@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.hardware.Camera;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.Nullable;
@@ -30,10 +29,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.ImageUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.emmcloud.util.common.ResolutionUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
@@ -156,8 +157,11 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
 
     private void initView() {
         previewSFV = (FocusSurfaceView) findViewById(R.id.preview_sv);
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)previewSFV.getLayoutParams();
+        int screenWidth = ResolutionUtils.getWidth(this);
+        params.height = (int)(screenWidth*4.0/3);
         //为了使取景框居中（下部的内容较多），上调取景框
-        previewSFV.setTopMove(DensityUtil.dip2px(getApplicationContext(), (rectScaleList.size()) > 0 ? 28 : 16));
+//        previewSFV.setTopMove(DensityUtil.dip2px(getApplicationContext(), (rectScaleList.size()) > 0 ? 28 : 16));
         mHolder = previewSFV.getHolder();
         mHolder.addCallback(MyCameraActivity.this);
         switchCameraBtn = (ImageButton) findViewById(R.id.switch_camera_btn);
@@ -267,8 +271,7 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
             mCamera.setDisplayOrientation(rotateAngle);
             parameters.setRotation(rotateAngle);
             List<Camera.Size> PictureSizeList = parameters.getSupportedPictureSizes();
-            int maxPicSize = (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.N)?2600:3600;
-            Camera.Size pictureSize = CameraUtils.getInstance(this).getPictureSize(PictureSizeList, maxPicSize);
+            Camera.Size pictureSize = CameraUtils.getInstance(this).getPictureSize(PictureSizeList, MyAppConfig.UPLOAD_ORIGIN_IMG_MAX_SIZE);
             parameters.setPictureSize(pictureSize.width, pictureSize.height);
             LogUtils.jasonDebug("pictureSize.width="+pictureSize.width + "   pictureSize.height="+pictureSize.height);
             List<Camera.Size> previewSizeList = parameters.getSupportedPreviewSizes();
@@ -550,7 +553,7 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
         public ViewHolder onCreateViewHolder(ViewGroup viewGroup, final int i) {
             TextView textView = new TextView(MyCameraActivity.this);
             textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
-            textView.setPadding(DensityUtil.dip2px(MyCameraActivity.this, 20), DensityUtil.dip2px(MyCameraActivity.this, 4), DensityUtil.dip2px(MyCameraActivity.this, 20), DensityUtil.dip2px(MyCameraActivity.this, 4));
+            textView.setPadding(DensityUtil.dip2px(MyCameraActivity.this, 20), DensityUtil.dip2px(MyCameraActivity.this, 10), DensityUtil.dip2px(MyCameraActivity.this, 20), DensityUtil.dip2px(MyCameraActivity.this, 10));
             textView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             ViewHolder viewHolder = new ViewHolder(textView);
             viewHolder.textView = textView;

@@ -29,7 +29,7 @@
                 android:layout_centerVertical="true"
                 android:onClick="onClick"
                 android:scaleType="fitXY"
-                android:src="@drawable/ic_back_btn_black" />
+                android:src="?attr/ic_back_btn" />
 
             <TextView
                 android:id="@+id/imp_close_btn"
@@ -56,6 +56,7 @@
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="15dp"
             android:layout_centerVertical="true"
+            android:singleLine="true"
             android:gravity="center_vertical"
             android:layout_toLeftOf="@id/function_layout"
             android:textColor="?attr/header_text_color"

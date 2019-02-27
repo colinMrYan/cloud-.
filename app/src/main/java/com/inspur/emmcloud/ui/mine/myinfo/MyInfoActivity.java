@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -93,6 +94,7 @@ public class MyInfoActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
+        ImmersionBar.with(this).statusBarColor(android.R.color.white).statusBarDarkFont(true).init();
         loadingDlg = new LoadingDialog(this);
         apiService = new MineAPIService(MyInfoActivity.this);
         apiService.setAPIInterface(new WebService());

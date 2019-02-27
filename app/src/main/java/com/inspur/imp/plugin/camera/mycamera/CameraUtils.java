@@ -3,7 +3,7 @@ package com.inspur.imp.plugin.camera.mycamera;
 import android.app.Activity;
 import android.hardware.Camera.Size;
 
-import com.inspur.emmcloud.util.common.ResolutionUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -16,14 +16,14 @@ import java.util.List;
 public class CameraUtils {
     private CameraSizeComparator sizeComparator = new CameraSizeComparator();
     private static CameraUtils myCamPara = null;
-    private static float rate = 1.78f;
+    private static float rate = 1.33333333f;
     private CameraUtils(){
 
     }
     public static CameraUtils getInstance(Activity context){
         if(myCamPara == null){
             myCamPara = new CameraUtils();
-            rate = ResolutionUtils.getResolutionRate(context);
+//            rate = ResolutionUtils.getResolutionRate(context);
             return myCamPara;
         }
         else{
@@ -39,6 +39,9 @@ public class CameraUtils {
      */
     public  Size getPreviewSize(List<Size> list, int th){
         Collections.sort(list, sizeComparator);
+        for(Size s:list){
+            LogUtils.jasonDebug(s.width+"*"+s.height);
+        }
         Size size = null;
         for(Size s:list){
             if((s.width < th) && (s.height < th) && equalRateLevel0(s, rate)){
@@ -77,6 +80,9 @@ public class CameraUtils {
      */
     public Size getPictureSize(List<Size> list, int th){
         Collections.sort(list, sizeComparator);
+        for(Size s:list){
+            LogUtils.jasonDebug(s.width+"*"+s.height);
+        }
         Size size = null;
         for(Size s:list){
             if((s.width < th) && (s.height < th) && equalRateLevel0(s, rate)){

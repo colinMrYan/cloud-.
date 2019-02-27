@@ -176,7 +176,7 @@ public class FileManagerActivity extends BaseActivity {
 
     public void onClick(View v){
         switch (v.getId()){
-            case  R.id.rl_back:
+            case  R.id.ibt_back:
                 finish();
                 break;
             case R.id.tv_ok:
