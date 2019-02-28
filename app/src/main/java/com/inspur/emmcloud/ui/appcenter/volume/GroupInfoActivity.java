@@ -76,7 +76,6 @@ public class GroupInfoActivity extends BaseActivity {
     }
 
 
-
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ibt_back:
@@ -91,9 +90,9 @@ public class GroupInfoActivity extends BaseActivity {
                         MembersActivity.class, bundle);
                 break;
             case R.id.volume_name_layout:
-                    Intent intent = new Intent(GroupInfoActivity.this, ShareVolumeNameModifyActivity.class);
-                    intent.putExtra("group", group);
-                    startActivityForResult(intent, UPDATE_GROUP_NAME);
+                Intent intent = new Intent(GroupInfoActivity.this, ShareVolumeNameModifyActivity.class);
+                intent.putExtra("group", group);
+                startActivityForResult(intent, UPDATE_GROUP_NAME);
                 break;
             default:
                 break;
@@ -114,7 +113,7 @@ public class GroupInfoActivity extends BaseActivity {
                     groupAddMemList.addAll(volumeMemList);
                     groupAddMemList.removeAll(group.getMemberUidList());
                     intent.putExtra("memberUidList", groupAddMemList);
-                    intent.putExtra("isRemoveMyself",false);
+                    intent.putExtra("isRemoveMyself", false);
                     intent.setClass(getApplicationContext(),
                             ChannelMembersDelActivity.class);
                     intent.putExtra("title", getString(R.string.clouddriver_add_volume_group_member));
@@ -138,9 +137,8 @@ public class GroupInfoActivity extends BaseActivity {
     }
 
     private void updateGroupMemNum() {
-        groupMemberText.setText(getString(R.string.clouddriver_all_group_member_size,group.getMemberUidList().size()));
+        groupMemberText.setText(getString(R.string.clouddriver_all_group_member_size, group.getMemberUidList().size()));
     }
-
 
 
     @Override
@@ -171,7 +169,6 @@ public class GroupInfoActivity extends BaseActivity {
     }
 
 
-
     /**
      * 添加组成员
      *
@@ -180,7 +177,7 @@ public class GroupInfoActivity extends BaseActivity {
     private void groupMemAdd(List<String> uidList) {
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
             loadingDlg.show();
-            apiService.groupMemAdd(group.getId(),uidList);
+            apiService.groupMemAdd(group.getId(), uidList);
         }
 
     }
@@ -193,7 +190,7 @@ public class GroupInfoActivity extends BaseActivity {
     private void groupMemDel(List<String> uidList) {
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
             loadingDlg.show();
-            apiService.groupMemDel(group.getId(),uidList);
+            apiService.groupMemDel(group.getId(), uidList);
         }
 
     }
@@ -212,7 +209,7 @@ public class GroupInfoActivity extends BaseActivity {
         @Override
         public void returnGroupMemAddFail(String error, int errorCode) {
             LoadingDialog.dimissDlg(loadingDlg);
-            WebServiceMiddleUtils.hand(getApplicationContext(),error,errorCode);
+            WebServiceMiddleUtils.hand(getApplicationContext(), error, errorCode);
         }
 
         @Override
@@ -227,7 +224,7 @@ public class GroupInfoActivity extends BaseActivity {
         @Override
         public void returnGroupMemDelFail(String error, int errorCode) {
             LoadingDialog.dimissDlg(loadingDlg);
-            WebServiceMiddleUtils.hand(getApplicationContext(),error,errorCode);
+            WebServiceMiddleUtils.hand(getApplicationContext(), error, errorCode);
         }
     }
 }

@@ -45,14 +45,14 @@ public class PhotoService extends ImpPlugin {
     public void execute(String action, JSONObject paramsObject) {
         // TODO Auto-generated method stub
         this.paramsObject = paramsObject;
-        LogUtils.jasonDebug("paramsObject="+paramsObject.toString());
+        LogUtils.jasonDebug("paramsObject=" + paramsObject.toString());
         if ("selectAndUpload".equals(action)) {
             selectAndUpload();
-        }else if ("takePhotoAndUpload".equals(action)) {
+        } else if ("takePhotoAndUpload".equals(action)) {
             takePhotoAndUpload();
-        }else if("viewImage".equals(action)){
+        } else if ("viewImage".equals(action)) {
             viewImage();
-        }else{
+        } else {
             showCallIMPMethodErrorDlg();
         }
         loadingDlg = new LoadingDialog(getActivity());
@@ -69,28 +69,29 @@ public class PhotoService extends ImpPlugin {
      */
     private void viewImage() {
         ArrayList<String> imageOriginUrlList = new ArrayList<>();
-        ArrayList<String> imageThumbnailUrlList =  new ArrayList<>();
-        JSONArray jsonParamArray = JSONUtils.getJSONArray(paramsObject, "img",new JSONArray());
-        int imageIndex = JSONUtils.getInt(paramsObject,"index",0);
+        ArrayList<String> imageThumbnailUrlList = new ArrayList<>();
+        JSONArray jsonParamArray = JSONUtils.getJSONArray(paramsObject, "img", new JSONArray());
+        int imageIndex = JSONUtils.getInt(paramsObject, "index", 0);
         for (int i = 0; i < jsonParamArray.length(); i++) {
-            imageThumbnailUrlList.add(JSONUtils.getString(JSONUtils.getJSONObject(jsonParamArray,i,new JSONObject()),"imgUrl",""));
-            imageOriginUrlList.add(JSONUtils.getString(JSONUtils.getJSONObject(jsonParamArray,i,new JSONObject()),"originImgUrl",""));
+            imageThumbnailUrlList.add(JSONUtils.getString(JSONUtils.getJSONObject(jsonParamArray, i, new JSONObject()), "imgUrl", ""));
+            imageOriginUrlList.add(JSONUtils.getString(JSONUtils.getJSONObject(jsonParamArray, i, new JSONObject()), "originImgUrl", ""));
         }
-        if(imageOriginUrlList.size() > 0){
-            startImagePagerActivity(imageOriginUrlList,imageThumbnailUrlList,imageIndex);
+        if (imageOriginUrlList.size() > 0) {
+            startImagePagerActivity(imageOriginUrlList, imageThumbnailUrlList, imageIndex);
         }
     }
 
     /**
      * 调起ImagePager
+     *
      * @param imagePathList
      */
-    private void startImagePagerActivity(ArrayList<String> imagePathList,ArrayList<String> imageThumbnailUrlList,int imageIndex) {
+    private void startImagePagerActivity(ArrayList<String> imagePathList, ArrayList<String> imageThumbnailUrlList, int imageIndex) {
         Intent intent = new Intent();
         intent.setClass(getActivity(), ImageGalleryActivity.class);
         intent.putStringArrayListExtra(ImageGalleryActivity.EXTRA_IMAGE_SOURCE_URLS, imagePathList);
         intent.putStringArrayListExtra(ImageGalleryActivity.EXTRA_IMAGE_THUMB_URLS, imageThumbnailUrlList);
-        intent.putExtra(ImageGalleryActivity.EXTRA_IMAGE_INDEX,imageIndex);
+        intent.putExtra(ImageGalleryActivity.EXTRA_IMAGE_INDEX, imageIndex);
         getActivity().startActivity(intent);
     }
 
@@ -136,6 +137,7 @@ public class PhotoService extends ImpPlugin {
             getImpCallBackInterface().onStartActivityForResult(intent, ImpFragment.PHOTO_SERVICE_GALLERY_REQUEST);
         }
     }
+
     /**
      * 初始化图片选择控件
      */
@@ -209,7 +211,7 @@ public class PhotoService extends ImpPlugin {
                 loadingDlg.show();
                 String originImagePath = intent.getStringExtra(MyCameraActivity.OUT_FILE_PATH);
                 try {
-                    File originImgFile =  new Compressor(getFragmentContext()).setMaxHeight(parm_resolution).setMaxWidth(parm_resolution).setQuality(parm_qualtity).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
+                    File originImgFile = new Compressor(getFragmentContext()).setMaxHeight(parm_resolution).setMaxWidth(parm_resolution).setQuality(parm_qualtity).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
                             .compressToFile(new File(originImagePath));
                     final String originImagefinalPath = originImgFile.getAbsolutePath();
                     new UploadPhoto(getActivity(), new UploadPhoto.OnUploadPhotoListener() {
@@ -222,9 +224,9 @@ public class PhotoService extends ImpPlugin {
                                 JSONObject jsonObject = new JSONObject();
                                 JSONObject contextObj = new JSONObject(result);
                                 jsonObject.put("context", contextObj);
-                                String thumbnailName = System.currentTimeMillis()+".jpg";
+                                String thumbnailName = System.currentTimeMillis() + ".jpg";
                                 File thumbnailFile = new Compressor(getFragmentContext()).setMaxHeight(MyAppConfig.UPLOAD_THUMBNAIL_IMG_MAX_SIZE).setMaxWidth(MyAppConfig.UPLOAD_THUMBNAIL_IMG_MAX_SIZE).setQuality(90).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
-                                        .compressToFile(new File(originImagefinalPath),thumbnailName);
+                                        .compressToFile(new File(originImagefinalPath), thumbnailName);
                                 String thumbnailFilePath = thumbnailFile.getAbsolutePath();
                                 byte[] thumbnailFileBytes = FileUtils.file2Bytes(thumbnailFilePath);
                                 byte[] thumbnailFileBytesBase64 = Base64.encode(thumbnailFileBytes, Base64.NO_WRAP);
@@ -290,7 +292,7 @@ public class PhotoService extends ImpPlugin {
                                 try {
                                     JSONObject contextObj = new JSONObject(result);
                                     jsonObject.put("context", contextObj);
-                                }catch (Exception e){
+                                } catch (Exception e) {
                                     e.printStackTrace();
                                     jsonObject.put("context", result);
                                 }
@@ -298,9 +300,9 @@ public class PhotoService extends ImpPlugin {
                                 for (int i = 0; i < originImagePathList.size(); i++) {
                                     String imagePath = originImagePathList.get(i);
                                     File file = new File(imagePath);
-                                    String thumbnailName = System.currentTimeMillis()+".jpg";
+                                    String thumbnailName = System.currentTimeMillis() + ".jpg";
                                     File thumbnailFile = new Compressor(getFragmentContext()).setMaxHeight(MyAppConfig.UPLOAD_THUMBNAIL_IMG_MAX_SIZE).setMaxWidth(MyAppConfig.UPLOAD_THUMBNAIL_IMG_MAX_SIZE).setQuality(90).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
-                                            .compressToFile(new File(imagePath),thumbnailName);
+                                            .compressToFile(new File(imagePath), thumbnailName);
                                     String thumbnailFilePath = thumbnailFile.getAbsolutePath();
                                     byte[] thumbnailFileBytes = FileUtils.file2Bytes(thumbnailFilePath);
                                     byte[] thumbnailFileBytesBase64 = Base64.encode(thumbnailFileBytes, Base64.NO_WRAP);
@@ -314,7 +316,7 @@ public class PhotoService extends ImpPlugin {
                                 String returnData = jsonObject.toString();
                                 LogUtils.jasonDebug("returnData=" + returnData);
                                 PhotoService.this.jsCallback(successCb, returnData);
-                            }catch (Exception e) {
+                            } catch (Exception e) {
                                 // TODO Auto-generated catch block
                                 LoadingDialog.dimissDlg(loadingDlg);
                                 e.printStackTrace();

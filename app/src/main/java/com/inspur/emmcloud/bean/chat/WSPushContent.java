@@ -15,15 +15,16 @@ public class WSPushContent {
     private String path;
     private String action;
     private int status;
-    public WSPushContent(String content){
-        body = JSONUtils.getString(content,"body","");
-        JSONObject headerObj = JSONUtils.getJSONObject(content,"headers",new JSONObject());
-        tracer = JSONUtils.getString(headerObj,"tracer","");
-        String action = JSONUtils.getString(content,"action","");
-        status = JSONUtils.getInt(action,"status",200);
-        JSONObject actionObj = JSONUtils.getJSONObject(content,"action",new JSONObject());
-        method = JSONUtils.getString(actionObj,"method","");
-        path = JSONUtils.getString(actionObj,"path","");
+
+    public WSPushContent(String content) {
+        body = JSONUtils.getString(content, "body", "");
+        JSONObject headerObj = JSONUtils.getJSONObject(content, "headers", new JSONObject());
+        tracer = JSONUtils.getString(headerObj, "tracer", "");
+        String action = JSONUtils.getString(content, "action", "");
+        status = JSONUtils.getInt(action, "status", 200);
+        JSONObject actionObj = JSONUtils.getJSONObject(content, "action", new JSONObject());
+        method = JSONUtils.getString(actionObj, "method", "");
+        path = JSONUtils.getString(actionObj, "path", "");
     }
 
     public String getBody() {

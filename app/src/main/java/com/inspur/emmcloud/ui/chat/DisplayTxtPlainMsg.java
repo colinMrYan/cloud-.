@@ -39,9 +39,9 @@ public class DisplayTxtPlainMsg {
         final boolean isMyMsg = message.getFromUser().equals(
                 MyApplication.getInstance().getUid());
         BubbleLayout cardLayout = (BubbleLayout) cardContentView.findViewById(R.id.bl_card);
-        cardLayout.setArrowDirection(isMyMsg? ArrowDirection.RIGHT:ArrowDirection.LEFT);
+        cardLayout.setArrowDirection(isMyMsg ? ArrowDirection.RIGHT : ArrowDirection.LEFT);
         cardLayout.setBubbleColor(context.getResources().getColor(isMyMsg ? R.color.bg_my_card : R.color.bg_other_card));
-        cardLayout.setStrokeWidth(isMyMsg ?0: 0.5f);
+        cardLayout.setStrokeWidth(isMyMsg ? 0 : 0.5f);
         final TextView contentText = (TextView) cardContentView
                 .findViewById(R.id.tv_content);
         contentText.setTextColor(context.getResources().getColor(
@@ -51,7 +51,7 @@ public class DisplayTxtPlainMsg {
         SpannableString spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(context, text, message.getMsgContentTextPlain().getMentionsMap());
         contentText.setText(spannableString);
         TransHtmlToTextUtils.stripUnderlines(
-                contentText,context.getResources().getColor(isMyMsg ? R.color.hightlight_in_blue_bg
+                contentText, context.getResources().getColor(isMyMsg ? R.color.hightlight_in_blue_bg
                         : R.color.header_bg));
         contentText.setOnLongClickListener(new View.OnLongClickListener() {
             @Override

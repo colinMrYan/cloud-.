@@ -19,11 +19,11 @@ import java.util.List;
  */
 public class ClickableImageSpan extends ImageSpan implements LongClickableSpan {
 
-    private float x;
     private final int position;
     private final List<String> imageUrls;
     private final WeakReference<OnImageLongClickListener> onImageLongClickListenerWeakReference;
     private final WeakReference<OnImageClickListener> onImageClickListenerWeakReference;
+    private float x;
 
     public ClickableImageSpan(Drawable drawable, ClickableImageSpan clickableImageSpan, OnImageClickListener onImageClickListener, OnImageLongClickListener onImageLongClickListener) {
         super(drawable, clickableImageSpan.getSource());

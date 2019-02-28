@@ -27,12 +27,17 @@ import org.xutils.view.annotation.ViewInject;
 
 @ContentView(R.layout.activity_mine_language_switch)
 public class ThemeSwitchActivity extends BaseActivity {
-    private static final int[] THEME_FLAG = {R.drawable.ic_mine_theme_white,R.drawable.ic_mine_theme_blue,R.drawable.ic_mine_theme_grey};
-    private static final int[] THEME_NAME = {R.string.mine_theme_white,R.string.mine_theme_blue,R.string.mine_theme_grey};
+    private static final int[] THEME_FLAG = {R.drawable.ic_mine_theme_white, R.drawable.ic_mine_theme_grey, R.drawable.ic_mine_theme_blue};
+    private static final int[] THEME_NAME = {R.string.mine_theme_white, R.string.mine_theme_grey, R.string.mine_theme_blue};
     @ViewInject(R.id.tv_header)
     private TextView headerText;
     @ViewInject(R.id.lv)
     private ListView listView;
+
+    public static String getThemeName() {
+        int currentThemeNo = PreferencesUtils.getInt(MyApplication.getInstance(), Constant.PREF_APP_THEME, 0);
+        return MyApplication.getInstance().getString(THEME_NAME[currentThemeNo]);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +48,7 @@ public class ThemeSwitchActivity extends BaseActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 int currentThemeNo = PreferencesUtils.getInt(MyApplication.getInstance(), Constant.PREF_APP_THEME, 0);
-                if (currentThemeNo != i){
+                if (currentThemeNo != i) {
                     PreferencesUtils.putInt(MyApplication.getInstance(), Constant.PREF_APP_THEME, i);
                     setTheme();
                     Intent intent = new Intent(ThemeSwitchActivity.this,
@@ -57,16 +62,11 @@ public class ThemeSwitchActivity extends BaseActivity {
         });
     }
 
-    public static String getThemeName(){
-        int currentThemeNo = PreferencesUtils.getInt(MyApplication.getInstance(), Constant.PREF_APP_THEME, 0);
-        return MyApplication.getInstance().getString(THEME_NAME[currentThemeNo]);
-    }
-
     public void onClick(View v) {
         finish();
     }
 
-    private class Adapter extends BaseAdapter{
+    private class Adapter extends BaseAdapter {
         @Override
         public int getCount() {
             return THEME_FLAG.length;
@@ -84,14 +84,14 @@ public class ThemeSwitchActivity extends BaseActivity {
 
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
-            view = LayoutInflater.from(ThemeSwitchActivity.this).inflate(R.layout.mine_setting_theme_list_item,null);
+            view = LayoutInflater.from(ThemeSwitchActivity.this).inflate(R.layout.mine_setting_theme_list_item, null);
             ImageView themeFlagImg = view.findViewById(R.id.iv_theme_flag);
             TextView themeNameText = view.findViewById(R.id.tv_theme_name);
-            ImageView selectImg =  view.findViewById(R.id.iv_select);
+            ImageView selectImg = view.findViewById(R.id.iv_select);
             themeFlagImg.setImageResource(THEME_FLAG[i]);
             themeNameText.setText(THEME_NAME[i]);
             int currentThemeNo = PreferencesUtils.getInt(MyApplication.getInstance(), Constant.PREF_APP_THEME, 0);
-            selectImg.setVisibility((currentThemeNo == i)?View.VISIBLE:View.INVISIBLE);
+            selectImg.setVisibility((currentThemeNo == i) ? View.VISIBLE : View.INVISIBLE);
             return view;
         }
     }

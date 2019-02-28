@@ -33,20 +33,13 @@ import java.util.List;
  */
 public final class MonthViewPager extends ViewPager {
 
-    private boolean isUpdateMonthView;
-
-    private int mMonthCount;
-
-    private CalendarViewDelegate mDelegate;
-
-    private int mNextViewHeight, mPreViewHeight, mCurrentViewHeight;
-
     CalendarLayout mParentLayout;
-
     WeekViewPager mWeekPager;
-
     WeekBar mWeekBar;
-
+    private boolean isUpdateMonthView;
+    private int mMonthCount;
+    private CalendarViewDelegate mDelegate;
+    private int mNextViewHeight, mPreViewHeight, mCurrentViewHeight;
     /**
      * 是否使用滚动到某一天
      */

@@ -31,14 +31,15 @@ public class ShareLinkActivity extends BaseActivity {
 
     private static final int SHARE_LINK = 1;
     private String shareLink = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         shareLink = getIntent().getExtras().getString(Constant.SHARE_LINK);
-        if(!StringUtils.isBlank(shareLink) ){
+        if (!StringUtils.isBlank(shareLink)) {
             shareLinkToFriends();
-        }else{
-            ToastUtils.show(ShareLinkActivity.this,getString(R.string.news_share_fail));
+        } else {
+            ToastUtils.show(ShareLinkActivity.this, getString(R.string.news_share_fail));
             finish();
         }
     }
@@ -85,10 +86,10 @@ public class ShareLinkActivity extends BaseActivity {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                ToastUtils.show(MyApplication.getInstance(),getString(R.string.news_share_fail));
+                ToastUtils.show(MyApplication.getInstance(), getString(R.string.news_share_fail));
                 finish();
             }
-        }else{
+        } else {
             finish();
         }
     }
@@ -133,26 +134,27 @@ public class ShareLinkActivity extends BaseActivity {
     /**
      * 打开channel
      */
-    private void startChannelActivity(String cid){
+    private void startChannelActivity(String cid) {
         Bundle bundle = new Bundle();
-        bundle.putString("cid",cid);
-        bundle.putString("share_type","link");
+        bundle.putString("cid", cid);
+        bundle.putString("share_type", "link");
         bundle.putSerializable(Constant.SHARE_LINK, conbineGroupNewsContent());
-        IntentUtils.startActivity(ShareLinkActivity.this, MyApplication.getInstance().isV0VersionChat()?
-                ChannelV0Activity.class: ConversationActivity.class,bundle,true);
+        IntentUtils.startActivity(ShareLinkActivity.this, MyApplication.getInstance().isV0VersionChat() ?
+                ChannelV0Activity.class : ConversationActivity.class, bundle, true);
     }
 
     /**
      * 组装集团新闻内容
+     *
      * @return
      */
     private String conbineGroupNewsContent() {
         JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("url", JSONUtils.getString(shareLink,"url",""));
+            jsonObject.put("url", JSONUtils.getString(shareLink, "url", ""));
             jsonObject.put("poster", "");
-            jsonObject.put("digest", JSONUtils.getString(shareLink,"digest",""));
-            jsonObject.put("title", JSONUtils.getString(shareLink,"title",""));
+            jsonObject.put("digest", JSONUtils.getString(shareLink, "digest", ""));
+            jsonObject.put("title", JSONUtils.getString(shareLink, "title", ""));
         } catch (Exception e) {
             e.printStackTrace();
         }

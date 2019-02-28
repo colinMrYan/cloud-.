@@ -47,11 +47,9 @@ public class XFJsonParser {
             JSONArray words = joResult.getJSONArray("ws");
             for (int i = 0; i < words.length(); i++) {
                 JSONArray items = words.getJSONObject(i).getJSONArray("cw");
-                for(int j = 0; j < items.length(); j++)
-                {
+                for (int j = 0; j < items.length(); j++) {
                     JSONObject obj = items.getJSONObject(j);
-                    if(obj.getString("w").contains("nomatch"))
-                    {
+                    if (obj.getString("w").contains("nomatch")) {
                         ret.append("没有匹配结果.");
                         return ret.toString();
                     }
@@ -76,11 +74,9 @@ public class XFJsonParser {
             JSONArray words = joResult.getJSONArray("ws");
             for (int i = 0; i < words.length(); i++) {
                 JSONArray items = words.getJSONObject(i).getJSONArray("cw");
-                for(int j = 0; j < items.length(); j++)
-                {
+                for (int j = 0; j < items.length(); j++) {
                     JSONObject obj = items.getJSONObject(j);
-                    if(obj.getString("w").contains("nomatch"))
-                    {
+                    if (obj.getString("w").contains("nomatch")) {
                         ret.append("没有匹配结果.");
                         return ret.toString();
                     }
@@ -97,18 +93,18 @@ public class XFJsonParser {
         return ret.toString();
     }
 
-    public static String parseTransResult(String json,String key) {
+    public static String parseTransResult(String json, String key) {
         StringBuffer ret = new StringBuffer();
         try {
             JSONTokener tokener = new JSONTokener(json);
             JSONObject joResult = new JSONObject(tokener);
             String errorCode = joResult.optString("ret");
-            if(!errorCode.equals("0")) {
+            if (!errorCode.equals("0")) {
                 return joResult.optString("errmsg");
             }
             JSONObject transResult = joResult.optJSONObject("trans_result");
             ret.append(transResult.optString(key));
-			/*JSONArray words = joResult.getJSONArray("results");
+            /*JSONArray words = joResult.getJSONArray("results");
 			for (int i = 0; i < words.length(); i++) {
 				JSONObject obj = words.getJSONObject(i);
 				ret.append(obj.getString(key));

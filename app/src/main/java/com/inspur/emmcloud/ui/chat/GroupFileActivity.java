@@ -57,6 +57,7 @@ public class GroupFileActivity extends BaseActivity {
     protected static final String SORT_BY_NAME_DOWN = "sort_by_name_down";
     protected static final String SORT_BY_TIME_UP = "sort_by_time_up";
     protected static final String SORT_BY_TIME_DOWN = "sort_by_time_down";
+    protected String sortType = "sort_by_name_up";
     @ViewInject(R.id.lv_file)
     private ListView fileListView;
     @ViewInject(R.id.rl_no_channel_file)
@@ -69,7 +70,6 @@ public class GroupFileActivity extends BaseActivity {
     private List<GroupFileInfo> fileInfoList = new ArrayList<>();
     private PopupWindow sortOperationPop;
     private GroupFileAdapter adapter;
-    protected String sortType = "sort_by_name_up";
     private FileSortComparable fileSortComparable;
 
     @Override
@@ -77,9 +77,9 @@ public class GroupFileActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         cid = getIntent().getExtras().getString("cid");
         getFileMsgList();
-        noChannelFileLayout.setVisibility(fileInfoList.size() == 0 ? View.VISIBLE:View.GONE);
+        noChannelFileLayout.setVisibility(fileInfoList.size() == 0 ? View.VISIBLE : View.GONE);
         fileSortComparable = new FileSortComparable();
-        Collections.sort(fileInfoList,fileSortComparable);
+        Collections.sort(fileInfoList, fileSortComparable);
         adapter = new GroupFileAdapter();
         fileListView.setAdapter(adapter);
         adapter.setAndReFreshList(fileInfoList);
@@ -97,7 +97,7 @@ public class GroupFileActivity extends BaseActivity {
             List<Message> fileTypeMessageList = MessageCacheUtil.getFileTypeMsgList(MyApplication.getInstance(), cid);
             for (Message message : fileTypeMessageList) {
                 MsgContentRegularFile msgContentRegularFile = message.getMsgContentAttachmentFile();
-                String url = APIUri.getChatFileResouceUrl(message.getChannel(),msgContentRegularFile.getMedia());
+                String url = APIUri.getChatFileResouceUrl(message.getChannel(), msgContentRegularFile.getMedia());
                 GroupFileInfo groupFileInfo = new GroupFileInfo(url, msgContentRegularFile.getName(), msgContentRegularFile.getSize() + "", message.getCreationDate(), ContactUserCacheUtils.getUserName(message.getFromUser()));
                 fileInfoList.add(groupFileInfo);
             }
@@ -155,51 +155,12 @@ public class GroupFileActivity extends BaseActivity {
                 break;
         }
         operationSortText.setText(sortTypeShowTxt);
-        Collections.sort(fileInfoList,fileSortComparable);
+        Collections.sort(fileInfoList, fileSortComparable);
         adapter.setAndReFreshList(fileInfoList);
     }
 
-    private class FileSortComparable implements Comparator {
-        @Override
-        public int compare(Object o1, Object o2) {
-            GroupFileInfo groupFileInfoA = (GroupFileInfo) o1;
-            GroupFileInfo groupFileInfoB = (GroupFileInfo) o2;
-            int sortResult = 0;
-                switch (sortType) {
-                    case SORT_BY_NAME_UP:
-                        sortResult = Collator.getInstance(Locale.CHINA).compare(groupFileInfoA.getName(), groupFileInfoB.getName());
-                        break;
-                    case SORT_BY_NAME_DOWN:
-                        sortResult = 0 - Collator.getInstance(Locale.CHINA).compare(groupFileInfoA.getName(), groupFileInfoB.getName());
-                        break;
-                    case SORT_BY_TIME_DOWN:
-                        if (groupFileInfoA.getLongTime() == groupFileInfoB.getLongTime()) {
-                            sortResult = 0;
-                        } else if (groupFileInfoA.getLongTime() < groupFileInfoB.getLongTime()) {
-                            sortResult = 1;
-                        } else {
-                            sortResult = -1;
-                        }
-                        break;
-                    case SORT_BY_TIME_UP:
-                        if (groupFileInfoA.getLongTime() == groupFileInfoB.getLongTime()) {
-                            sortResult = 0;
-                        } else if (groupFileInfoA.getLongTime() < groupFileInfoB.getLongTime()) {
-                            sortResult = -1;
-                        } else {
-                            sortResult = 1;
-                        }
-                        break;
-                    default:
-                        sortResult = Collator.getInstance(Locale.CHINA).compare(groupFileInfoA.getName(), groupFileInfoB.getName());
-                        break;
-                }
-            return sortResult;
-        }
-    }
-
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.ibt_back:
                 finish();
                 break;
@@ -265,71 +226,40 @@ public class GroupFileActivity extends BaseActivity {
     private void filterFilesByFileType(String fileFilterType) {
         List<GroupFileInfo> fileInfoFilterList = new ArrayList<>();
         fileInfoFilterList.clear();
-        for(GroupFileInfo groupFileInfo:fileInfoList){
-            if(FileUtils.getFileTypeByName(groupFileInfo.getName()).equals(fileFilterType)){
+        for (GroupFileInfo groupFileInfo : fileInfoList) {
+            if (FileUtils.getFileTypeByName(groupFileInfo.getName()).equals(fileFilterType)) {
                 fileInfoFilterList.add(groupFileInfo);
             }
         }
         adapter.setAndReFreshList(fileInfoFilterList);
     }
 
-    private class GroupFileAdapter extends BaseAdapter {
-        private List<GroupFileInfo> groupFileInfoList = new ArrayList<>();
-
-        @Override
-        public int getCount() {
-            return groupFileInfoList.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return null;
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return 0;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            convertView = LayoutInflater.from(GroupFileActivity.this).inflate(R.layout.group_file_item_view, null);
-            displayFiles(convertView, position,groupFileInfoList);
-            return convertView;
-        }
-
-        public void setAndReFreshList(List<GroupFileInfo> groupFileInfoList){
-            this.groupFileInfoList = groupFileInfoList;
-            notifyDataSetChanged();
-        }
-    }
-
-    public void displayFiles(View convertView, int position,List<GroupFileInfo> groupFileInfoList) {
+    public void displayFiles(View convertView, int position, List<GroupFileInfo> groupFileInfoList) {
         ImageView fileImg = convertView.findViewById(R.id.file_img);
         TextView fileNameText = convertView.findViewById(R.id.tv_file_name);
         TextView fileSizeText = convertView.findViewById(R.id.tv_file_size);
         TextView fileTimeText = convertView.findViewById(R.id.file_time_text);
         TextView fileMonthText = convertView.findViewById(R.id.tv_file_month);
-        convertView.findViewById(R.id.v_line).setVisibility(position == 0 ?View.GONE:View.VISIBLE);
+        convertView.findViewById(R.id.v_line).setVisibility(position == 0 ? View.GONE : View.VISIBLE);
         final HorizontalProgressBarWithNumber progressBar = convertView.findViewById(R.id.file_download_progressbar);
         GroupFileInfo groupFileInfo = groupFileInfoList.get(position);
         final String fileName = groupFileInfo.getName();
         final String source = groupFileInfo.getUrl();
         fileNameText.setText(fileName);
         fileSizeText.setText(groupFileInfo.getSize());
-        if(sortType.equals(SORT_BY_TIME_DOWN) || sortType.equals(SORT_BY_TIME_UP)){
+        if (sortType.equals(SORT_BY_TIME_DOWN) || sortType.equals(SORT_BY_TIME_UP)) {
             String currentTime = TimeUtils.timeLong2YMString(GroupFileActivity.this, groupFileInfo.getLongTime());
-            if(position >= 1){
+            if (position >= 1) {
                 String lastTime = TimeUtils.timeLong2YMString(GroupFileActivity.this, groupFileInfoList.get(position - 1).getLongTime());
-                fileMonthText.setVisibility(!lastTime.equals(currentTime)?View.VISIBLE:View.GONE);
+                fileMonthText.setVisibility(!lastTime.equals(currentTime) ? View.VISIBLE : View.GONE);
                 fileMonthText.setText(currentTime);
-            } else{
-                fileMonthText.setText(currentTime.equals(TimeUtils.timeLong2YMString(GroupFileActivity.this,groupFileInfo.getLongTime()))?getString(R.string.current_month):currentTime);
+            } else {
+                fileMonthText.setText(currentTime.equals(TimeUtils.timeLong2YMString(GroupFileActivity.this, groupFileInfo.getLongTime())) ? getString(R.string.current_month) : currentTime);
             }
-        }else{
+        } else {
             fileMonthText.setVisibility(View.GONE);
         }
-        fileTimeText.setText(TimeUtils.getChannelMsgDisplayTime(GroupFileActivity.this,groupFileInfo.getLongTime()));
+        fileTimeText.setText(TimeUtils.getChannelMsgDisplayTime(GroupFileActivity.this, groupFileInfo.getLongTime()));
         fileImg.setImageResource(FileUtils.getRegularFileIconResId(fileName));
         convertView.setOnClickListener(new OnClickListener() {
             @Override
@@ -387,9 +317,79 @@ public class GroupFileActivity extends BaseActivity {
                 if (FileUtils.isFileExist(fileDownloadPath)) {
                     FileUtils.openFile(getApplicationContext(), fileDownloadPath);
                 } else {
-                    new DownLoaderUtils().startDownLoad(source,fileDownloadPath,progressCallback);
+                    new DownLoaderUtils().startDownLoad(source, fileDownloadPath, progressCallback);
                 }
             }
         });
+    }
+
+    private class FileSortComparable implements Comparator {
+        @Override
+        public int compare(Object o1, Object o2) {
+            GroupFileInfo groupFileInfoA = (GroupFileInfo) o1;
+            GroupFileInfo groupFileInfoB = (GroupFileInfo) o2;
+            int sortResult = 0;
+            switch (sortType) {
+                case SORT_BY_NAME_UP:
+                    sortResult = Collator.getInstance(Locale.CHINA).compare(groupFileInfoA.getName(), groupFileInfoB.getName());
+                    break;
+                case SORT_BY_NAME_DOWN:
+                    sortResult = 0 - Collator.getInstance(Locale.CHINA).compare(groupFileInfoA.getName(), groupFileInfoB.getName());
+                    break;
+                case SORT_BY_TIME_DOWN:
+                    if (groupFileInfoA.getLongTime() == groupFileInfoB.getLongTime()) {
+                        sortResult = 0;
+                    } else if (groupFileInfoA.getLongTime() < groupFileInfoB.getLongTime()) {
+                        sortResult = 1;
+                    } else {
+                        sortResult = -1;
+                    }
+                    break;
+                case SORT_BY_TIME_UP:
+                    if (groupFileInfoA.getLongTime() == groupFileInfoB.getLongTime()) {
+                        sortResult = 0;
+                    } else if (groupFileInfoA.getLongTime() < groupFileInfoB.getLongTime()) {
+                        sortResult = -1;
+                    } else {
+                        sortResult = 1;
+                    }
+                    break;
+                default:
+                    sortResult = Collator.getInstance(Locale.CHINA).compare(groupFileInfoA.getName(), groupFileInfoB.getName());
+                    break;
+            }
+            return sortResult;
+        }
+    }
+
+    private class GroupFileAdapter extends BaseAdapter {
+        private List<GroupFileInfo> groupFileInfoList = new ArrayList<>();
+
+        @Override
+        public int getCount() {
+            return groupFileInfoList.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            convertView = LayoutInflater.from(GroupFileActivity.this).inflate(R.layout.group_file_item_view, null);
+            displayFiles(convertView, position, groupFileInfoList);
+            return convertView;
+        }
+
+        public void setAndReFreshList(List<GroupFileInfo> groupFileInfoList) {
+            this.groupFileInfoList = groupFileInfoList;
+            notifyDataSetChanged();
+        }
     }
 }

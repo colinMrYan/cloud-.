@@ -38,21 +38,16 @@ import java.util.List;
 
 public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
 
-    @ViewInject(R.id.header_operation_layout)
-    private RelativeLayout headerOperationLayout;
-
-    @ViewInject(R.id.location_select_cancel_text)
-    private TextView locationSelectCancelText;
-
     @ViewInject(R.id.location_select_bar_layout)
     protected RelativeLayout locationSelectBarLayout;
-
     @ViewInject(R.id.location_select_to_text)
     protected TextView locationSelectToText;
-
     @ViewInject(R.id.tv_location_select_upload_to)
     protected TextView locationSelectUploadToText;
-
+    @ViewInject(R.id.header_operation_layout)
+    private RelativeLayout headerOperationLayout;
+    @ViewInject(R.id.location_select_cancel_text)
+    private TextView locationSelectCancelText;
     @ViewInject(R.id.path_text)
     private TextView pathText;
 
@@ -81,13 +76,13 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
             @Override
             public void onItemClick(View view, int position) {
                 VolumeFile volumeFile = volumeFileList.get(position);
-                if (volumeFile.getType().equals(VolumeFile.FILE_TYPE_DIRECTORY)){
+                if (volumeFile.getType().equals(VolumeFile.FILE_TYPE_DIRECTORY)) {
                     Intent intent = new Intent(getApplicationContext(), VolumeFileLocationSelectActivity.class);
                     Bundle bundle = getIntent().getExtras();
                     bundle.putString("currentDirAbsolutePath", currentDirAbsolutePath + volumeFile.getName() + "/");
-                    bundle.putString("title",volumeFile.getName() );
+                    bundle.putString("title", volumeFile.getName());
                     intent.putExtras(bundle);
-                    startActivityForResult(intent, isFunctionCopy?REQUEST_COPY_FILE:REQUEST_MOVE_FILE);
+                    startActivityForResult(intent, isFunctionCopy ? REQUEST_COPY_FILE : REQUEST_MOVE_FILE);
                 }
             }
 
@@ -97,13 +92,13 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
             }
         });
         pathText.setVisibility(View.VISIBLE);
-        pathText.setText(getString(R.string.clouddriver_current_directory_hint,currentDirAbsolutePath));
-        List<Uri> fileShareUriList = (List<Uri>)getIntent().getSerializableExtra(Constant.SHARE_FILE_URI_LIST);
-        if(fileShareUriList != null){
+        pathText.setText(getString(R.string.clouddriver_current_directory_hint, currentDirAbsolutePath));
+        List<Uri> fileShareUriList = (List<Uri>) getIntent().getSerializableExtra(Constant.SHARE_FILE_URI_LIST);
+        if (fileShareUriList != null) {
             shareUriList.addAll(fileShareUriList);
         }
-        locationSelectUploadToText.setVisibility(shareUriList.size()>0?View.VISIBLE:View.GONE);
-        locationSelectToText.setVisibility(shareUriList.size()>0?View.GONE:View.VISIBLE);
+        locationSelectUploadToText.setVisibility(shareUriList.size() > 0 ? View.VISIBLE : View.GONE);
+        locationSelectToText.setVisibility(shareUriList.size() > 0 ? View.GONE : View.VISIBLE);
     }
 
     public void onClick(View v) {
@@ -132,10 +127,10 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
                 }
 
                 List<VolumeFile> operationFileList = (List<VolumeFile>) getIntent().getSerializableExtra("volumeFileList");
-                for (int i = 0;i<operationFileList.size();i++){
-                    String volumeFilePath = operationFileAbsolutePath+operationFileList.get(i).getName();
-                    if (currentDirAbsolutePath.startsWith(volumeFilePath)){
-                        ToastUtils.show(getApplicationContext(), isFunctionCopy?R.string.file_cannot_copy_here:R.string.file_cannot_move_here);
+                for (int i = 0; i < operationFileList.size(); i++) {
+                    String volumeFilePath = operationFileAbsolutePath + operationFileList.get(i).getName();
+                    if (currentDirAbsolutePath.startsWith(volumeFilePath)) {
+                        ToastUtils.show(getApplicationContext(), isFunctionCopy ? R.string.file_cannot_copy_here : R.string.file_cannot_move_here);
                         return;
                     }
                 }
@@ -157,7 +152,7 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
      * 返回上传页面
      */
     private void goUploadPage() {
-        if(NetUtils.isNetworkConnected(this)){
+        if (NetUtils.isNetworkConnected(this)) {
             //发送到ShareVolume页面和VolumeHomePage页面
             EventBus.getDefault().post(new ClearShareDataBean());
             Bundle bundle = new Bundle();
@@ -175,7 +170,7 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
      */
     @Override
     protected void setCurrentDirectoryLayoutByPrivilege() {
-        boolean isCurrentDirectoryWriteable = VolumeFilePrivilegeUtils.getVolumeFileWriteable(getApplicationContext(),getVolumeFileListResult);
+        boolean isCurrentDirectoryWriteable = VolumeFilePrivilegeUtils.getVolumeFileWriteable(getApplicationContext(), getVolumeFileListResult);
         locationSelectBarLayout.setVisibility(isCurrentDirectoryWriteable ? View.VISIBLE : View.GONE);
     }
 

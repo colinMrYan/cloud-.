@@ -10,29 +10,41 @@ import com.inspur.emmcloud.interf.OnVoiceCommunicationCallbacks;
 
 public abstract class OnVoiceCommunicationCallbacksImpl implements OnVoiceCommunicationCallbacks {
     public abstract void onUserOffline(int uid, int reason);
+
     public abstract void onUserJoined(int uid, int elapsed);
+
     public abstract void onJoinChannelSuccess(String channel, int uid, int elapsed);
+
     public abstract void onRejoinChannelSuccess(String channel, int uid, int elapsed);
+
     @Override
-    public void onRtcStats(VoiceCommunicationRtcStats stats){
+    public void onRtcStats(VoiceCommunicationRtcStats stats) {
 
     }
+
     public abstract void onUserMuteAudio(int uid, boolean muted);
+
     @Override
     public void onWarning(int warn) {
 
     }
+
     public abstract void onError(int err);
+
     public abstract void onConnectionLost();
+
     public abstract void onNetworkQuality(int uid, int txQuality, int rxQuality);
+
     @Override
     public void onConnectionBanned() {
 
     }
+
     @Override
-    public void onLastmileQuality(int quality){
+    public void onLastmileQuality(int quality) {
 
     }
+
     @Override
     public void onAudioVolumeIndication(VoiceCommunicationAudioVolumeInfo[] speakers, int totalVolume) {
 

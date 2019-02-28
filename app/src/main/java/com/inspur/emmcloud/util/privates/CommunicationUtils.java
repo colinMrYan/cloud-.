@@ -63,7 +63,7 @@ public class CommunicationUtils {
      * @param title
      * @return
      */
-    public static String getDirctChannelOtherUid(Context context,String title) {
+    public static String getDirctChannelOtherUid(Context context, String title) {
         String otherUid = "";
         try {
             String[] uidArray = title.split("-");
@@ -87,9 +87,9 @@ public class CommunicationUtils {
     */
     public static String getConversationTitle(Conversation conversation) {
         String title = conversation.getName();
-        if (conversation.getType().equals(Conversation.TYPE_DIRECT)){
-            title = DirectChannelUtils.getDirectChannelTitle(MyApplication.getInstance(),title);
-        }else if(conversation.getType().equals(Conversation.TYPE_CAST)){
+        if (conversation.getType().equals(Conversation.TYPE_DIRECT)) {
+            title = DirectChannelUtils.getDirectChannelTitle(MyApplication.getInstance(), title);
+        } else if (conversation.getType().equals(Conversation.TYPE_CAST)) {
             title = DirectChannelUtils.getRobotInfo(MyApplication.getInstance(), title).getName();
         }
         return title;
@@ -114,6 +114,7 @@ public class CommunicationUtils {
 
     /**
      * 拼装草稿箱消息
+     *
      * @param text
      * @param cid
      * @return
@@ -168,7 +169,6 @@ public class CommunicationUtils {
         message.setContent(msgContentRegularFile.toString());
         return message;
     }
-
 
 
     public static Message combinLocalMediaVoiceMessage(String cid, String localFilePath, int duration, String results) {

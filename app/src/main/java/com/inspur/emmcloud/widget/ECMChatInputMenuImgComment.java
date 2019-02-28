@@ -74,7 +74,7 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
 
     private void initView(final Context context) {
         // TODO Auto-generated method stub
-        View view = LayoutInflater.from(context).inflate(R.layout.ecm_widget_chat_input_menu_img_comment,this,true);
+        View view = LayoutInflater.from(context).inflate(R.layout.ecm_widget_chat_input_menu_img_comment, this, true);
         x.view().inject(view);
         initInputEdit();
     }
@@ -88,7 +88,7 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 boolean isContentBlank = (s.length() == 0);
                 sendBtn.setEnabled(!isContentBlank);
-                sendBtn.setTextColor(isContentBlank? Color.parseColor("#999999"): Color.parseColor("#000000"));
+                sendBtn.setTextColor(isContentBlank ? Color.parseColor("#999999") : Color.parseColor("#000000"));
                 if (canMentions && count == 1) {
                     String inputWord = s.toString().substring(start, start + count);
                     if (inputWord.equals("@")) {
@@ -99,7 +99,7 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
         });
     }
 
-    public ChatInputEdit getChatInputEdit(){
+    public ChatInputEdit getChatInputEdit() {
         return inputEdit;
     }
 
@@ -122,6 +122,7 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
                 MENTIONS_RESULT);
 
     }
+
     public void setChatInputMenuListener(
             ChatInputMenuListener chatInputMenuListener) {
         this.chatInputMenuListener = chatInputMenuListener;
@@ -178,21 +179,21 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
         }
     }
 
-    @Event({R.id.bt_send,R.id.bt_cancel})
+    @Event({R.id.bt_send, R.id.bt_cancel})
     private void onClick(View view) {
         switch (view.getId()) {
             case R.id.bt_send:
                 if (NetUtils.isNetworkConnected(getContext())) {
-                    List<String> urlList= null;
+                    List<String> urlList = null;
                     String content = inputEdit.getRichContent(false);
-                    Map<String,String> mentionsMap = null;
+                    Map<String, String> mentionsMap = null;
                     mentionsMap = inputEdit.getMentionsMap();
-                    chatInputMenuListener.onSendMsg(content, getContentMentionUidList(), urlList,mentionsMap);
+                    chatInputMenuListener.onSendMsg(content, getContentMentionUidList(), urlList, mentionsMap);
                     inputEdit.setText("");
                 }
                 break;
             case R.id.bt_cancel:
-                if (chatInputMenuListener != null){
+                if (chatInputMenuListener != null) {
                     chatInputMenuListener.hideChatInputMenu();
                 }
                 break;
@@ -234,9 +235,9 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
     }
 
 
-
     public interface ChatInputMenuListener {
-        void onSendMsg(String content, List<String> mentionsUidList, List<String> urlList, Map<String,String> mentionsMap);
+        void onSendMsg(String content, List<String> mentionsUidList, List<String> urlList, Map<String, String> mentionsMap);
+
         void hideChatInputMenu();
     }
 

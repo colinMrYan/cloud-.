@@ -18,23 +18,23 @@ public class VolumeFileIconUtils {
         } else {
             String format = volumeFile.getFormat();
             resId = getResourceIdByFormat(format);
-            if (resId == null){
+            if (resId == null) {
                 format = FileUtils.getMimeType(volumeFile.getName());
-                if (!StringUtils.isBlank(format)){
+                if (!StringUtils.isBlank(format)) {
                     resId = getResourceIdByFormat(format);
                 }
             }
 
-            if (resId == null){
+            if (resId == null) {
                 resId = R.drawable.ic_volume_file_typ_unknown;
             }
         }
         return resId;
     }
 
-    private static Integer getResourceIdByFormat(String format){
+    private static Integer getResourceIdByFormat(String format) {
         Integer resId = null;
-        switch (format){
+        switch (format) {
             case "application/zip":
                 resId = R.drawable.ic_volume_file_typ_zip;
                 break;
@@ -66,6 +66,6 @@ public class VolumeFileIconUtils {
                 }
                 break;
         }
-        return  resId;
+        return resId;
     }
 }

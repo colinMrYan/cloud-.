@@ -29,16 +29,6 @@ public class BatteryWhiteListDialog extends Dialog {
     private CheckBox hideCheckBox;
     private boolean isHide = false;
 
-    public interface ClickListenerInterface {
-        public void doConfirm();
-
-        public void doCancel();
-    }
-
-    public boolean getIsHide() {
-        return isHide;
-    }
-
     /**
      * @param context
      * @param cacelButtonTextId
@@ -47,7 +37,7 @@ public class BatteryWhiteListDialog extends Dialog {
      * @param tipHideHintId
      */
     public BatteryWhiteListDialog(Context context, int tipContentId, int tipHideHintId, int confirmButtonTextId, int cacelButtonTextId) {
-        super( context );
+        super(context);
         this.context = context;
         this.tipContentId = tipContentId;
         this.tipHideHintId = tipHideHintId;
@@ -55,17 +45,21 @@ public class BatteryWhiteListDialog extends Dialog {
         this.cancelButtonTextId = cacelButtonTextId;
     }
 
+    public boolean getIsHide() {
+        return isHide;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
-        super.onCreate( savedInstanceState );
+        super.onCreate(savedInstanceState);
         init();
     }
 
     public void init() {
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.dialog_battery_white_list, null);
-        setContentView( view );
+        setContentView(view);
 
         TextView tipContentText = (TextView) view.findViewById(R.id.tv_tip_content);
         TextView cancelText = (TextView) view.findViewById(R.id.tv_cancel);
@@ -76,7 +70,7 @@ public class BatteryWhiteListDialog extends Dialog {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 isHide = isChecked;
             }
-        } );
+        });
 
         tipContentText.setText(tipContentId);
         hideCheckBox.setText(tipHideHintId);
@@ -87,12 +81,18 @@ public class BatteryWhiteListDialog extends Dialog {
         Window dialogWindow = getWindow();
         WindowManager.LayoutParams lp = dialogWindow.getAttributes();
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics(); // 获取屏幕宽、高用
-        lp.width = (int)(displayMetrics.widthPixels * 0.9); // 高度设置为屏幕的0.6
+        lp.width = (int) (displayMetrics.widthPixels * 0.9); // 高度设置为屏幕的0.6
         dialogWindow.setAttributes(lp);
     }
 
     public void setClicklistener(ClickListenerInterface clickListenerInterface) {
         this.clickListenerInterface = clickListenerInterface;
+    }
+
+    public interface ClickListenerInterface {
+        public void doConfirm();
+
+        public void doCancel();
     }
 
     private class ClickListener implements View.OnClickListener {

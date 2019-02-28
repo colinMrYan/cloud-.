@@ -18,6 +18,11 @@ public class ScanQrCodeUtils {
     private Context context;
     private LoadingDialog loadingDialog;
 
+    private ScanQrCodeUtils(Context context) {
+        this.context = context;
+        loadingDialog = new LoadingDialog(context);
+    }
+
     public static ScanQrCodeUtils getScanQrCodeUtilsInstance(Context context) {
         if (scanQrCodeUtils == null) {
             synchronized (ScanQrCodeUtils.class) {
@@ -27,11 +32,6 @@ public class ScanQrCodeUtils {
             }
         }
         return scanQrCodeUtils;
-    }
-
-    private ScanQrCodeUtils(Context context) {
-        this.context = context;
-        loadingDialog = new LoadingDialog(context);
     }
 
     /**
@@ -49,7 +49,7 @@ public class ScanQrCodeUtils {
             Intent intent = new Intent();
             intent.setClass(context, ImpActivity.class);
             intent.putExtra("uri", msg);
-            intent.putExtra("appName","    ");
+            intent.putExtra("appName", "    ");
             context.startActivity(intent);
         } else {
             showUnKnownMsg(msg);

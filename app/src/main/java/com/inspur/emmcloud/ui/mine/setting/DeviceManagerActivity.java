@@ -16,8 +16,8 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MineAPIService;
 import com.inspur.emmcloud.bean.mine.BindingDevice;
 import com.inspur.emmcloud.bean.mine.GetBindingDeviceResult;
-import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
@@ -32,8 +32,8 @@ import java.util.List;
 public class DeviceManagerActivity extends BaseActivity {
 
     private final static int UNBIND_DEVICE = 1;
-    private ListView currentDeviceListView,historyDeviceListView;
-    private  Adapter currentDeviceAdapter,historyDeviceAdapter;
+    private ListView currentDeviceListView, historyDeviceListView;
+    private Adapter currentDeviceAdapter, historyDeviceAdapter;
     private LoadingDialog loadingDlg;
     private List<BindingDevice> currentBindingDeviceList = new ArrayList<>();
     private List<BindingDevice> historyBindingDeviceList = new ArrayList<>();
@@ -49,7 +49,7 @@ public class DeviceManagerActivity extends BaseActivity {
     private void initView() {
         loadingDlg = new LoadingDialog(this);
         currentDeviceListView = (ListView) findViewById(R.id.current_device_list);
-       historyDeviceListView = (ListView) findViewById(R.id.history_device_list);
+        historyDeviceListView = (ListView) findViewById(R.id.history_device_list);
         currentDeviceAdapter = new Adapter(true);
         historyDeviceAdapter = new Adapter(false);
         currentDeviceListView.setAdapter(currentDeviceAdapter);
@@ -59,7 +59,7 @@ public class DeviceManagerActivity extends BaseActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getApplicationContext(), DeviceInfoActivity.class);
                 intent.putExtra("binding_device", currentBindingDeviceList.get(position));
-                intent.putExtra("isCurrentBind",true);
+                intent.putExtra("isCurrentBind", true);
                 startActivityForResult(intent, UNBIND_DEVICE);
             }
         });
@@ -68,7 +68,7 @@ public class DeviceManagerActivity extends BaseActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getApplicationContext(), DeviceInfoActivity.class);
                 intent.putExtra("binding_device", historyBindingDeviceList.get(position));
-                intent.putExtra("isCurrentBind",false);
+                intent.putExtra("isCurrentBind", false);
                 startActivityForResult(intent, UNBIND_DEVICE);
             }
         });
@@ -109,12 +109,14 @@ public class DeviceManagerActivity extends BaseActivity {
 
     private class Adapter extends BaseAdapter {
         private boolean isCurrent;
-        public Adapter(boolean isCurrent){
+
+        public Adapter(boolean isCurrent) {
             this.isCurrent = isCurrent;
         }
+
         @Override
         public int getCount() {
-            return isCurrent?currentBindingDeviceList.size():historyBindingDeviceList.size();
+            return isCurrent ? currentBindingDeviceList.size() : historyBindingDeviceList.size();
         }
 
         @Override
@@ -129,7 +131,7 @@ public class DeviceManagerActivity extends BaseActivity {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            BindingDevice bindingDevice = isCurrent?currentBindingDeviceList.get(position):historyBindingDeviceList.get(position);
+            BindingDevice bindingDevice = isCurrent ? currentBindingDeviceList.get(position) : historyBindingDeviceList.get(position);
             convertView = LayoutInflater.from(DeviceManagerActivity.this).inflate(R.layout.mine_setting_binding_devcie_list_item, null);
             ((TextView) convertView.findViewById(R.id.device_text)).setText(bindingDevice.getDeviceModel());
             String deviceLastUserTime = TimeUtils.getTime(bindingDevice.getDeviceLastUserTime(), TimeUtils.getFormat(DeviceManagerActivity.this, TimeUtils.FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE));
@@ -150,12 +152,12 @@ public class DeviceManagerActivity extends BaseActivity {
             }
             currentBindingDeviceList = getBindingDeviceResult.getCurrentDeviceList();
             historyBindingDeviceList = getBindingDeviceResult.getHistoryDeviceList();
-            if (currentBindingDeviceList.size()>0){
+            if (currentBindingDeviceList.size() > 0) {
                 findViewById(R.id.current_text).setVisibility(View.VISIBLE);
             }
-           if (historyBindingDeviceList.size()>0){
-               findViewById(R.id.history_text).setVisibility(View.VISIBLE);
-           }
+            if (historyBindingDeviceList.size() > 0) {
+                findViewById(R.id.history_text).setVisibility(View.VISIBLE);
+            }
             currentDeviceAdapter.notifyDataSetChanged();
             historyDeviceAdapter.notifyDataSetChanged();
         }

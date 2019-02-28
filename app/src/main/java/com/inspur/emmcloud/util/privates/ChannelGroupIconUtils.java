@@ -46,110 +46,6 @@ public class ChannelGroupIconUtils {
     private Handler handler;
     private List<Channel> channelTypeGroupList = new ArrayList<>();
 
-
-    public boolean create(Context context, List<Channel> channelList,
-                       Handler handler) {
-        // TODO Auto-generated method stub
-        if (!Environment.getExternalStorageState().equals(
-                Environment.MEDIA_MOUNTED) || !NetUtils.isNetworkConnected(context, false)) {
-            return false;
-        }
-        if (channelList == null) {
-            channelTypeGroupList = ChannelCacheUtils.getChannelList(context, "GROUP");
-        } else {
-            channelTypeGroupList.clear();
-            for (Channel channel : channelList) {
-                if (channel.getType().equals("GROUP")) {
-                    channelTypeGroupList.add(channel);
-                }
-            }
-
-        }
-        if (channelTypeGroupList.size() == 0) {
-            return false;
-        }
-        this.context = context;
-        this.handler = handler;
-        List<ChannelGroup> currentChannelGroupList = new ArrayList<>();
-        for (int i = 0; i < channelTypeGroupList.size(); i++) {
-            Channel channel = channelTypeGroupList.get(i);
-            ChannelGroup channelGroup = new ChannelGroup(channel);
-            currentChannelGroupList.add(channelGroup);
-        }
-        List<ChannelGroup> cacheChannelGroupList = ChannelGroupCacheUtils
-                .getAllChannelGroupList(context);
-        currentChannelGroupList.removeAll(cacheChannelGroupList);
-        if (currentChannelGroupList.size() > 0) {
-            getChannelGroups(currentChannelGroupList);
-        } else {
-            new ChannelGroupIconCreateTask().execute();
-        }
-        return true;
-    }
-
-    private void getChannelGroups(List<ChannelGroup> currentChannelGroupList) {
-        // TODO Auto-generated method stub
-        String[] cidArray = new String[currentChannelGroupList.size()];
-        for (int i = 0; i < currentChannelGroupList.size(); i++) {
-            cidArray[i] = currentChannelGroupList.get(i).getCid();
-        }
-        ChatAPIService apiService = new ChatAPIService(context);
-        apiService.setAPIInterface(new WebService());
-        apiService.getChannelGroupList(cidArray);
-    }
-
-    class ChannelGroupIconCreateTask extends AsyncTask<Void, Integer, Boolean> {
-        @Override
-        protected Boolean doInBackground(Void... voids) {
-            boolean isCreateNewGroupIcon = false;
-            synchronized (this) {
-                File dir = new File(MyAppConfig.LOCAL_CACHE_PHOTO_PATH);
-                if (!dir.exists()) {
-                    dir.mkdirs();
-                }
-                DisplayImageOptions options = new DisplayImageOptions.Builder()
-                        // 设置图片的解码类型
-                        .bitmapConfig(Bitmap.Config.RGB_565)
-                        .cacheInMemory(true)
-                        .cacheOnDisk(true)
-                        .build();
-                isCreateNewGroupIcon = (channelTypeGroupList.size() >0);
-                for (int i = 0; i < channelTypeGroupList.size(); i++) {
-                    Channel channel = channelTypeGroupList.get(i);
-                    List<String> memberUidList = ChannelGroupCacheUtils.getExistMemberUidList(context, channel.getCid(), 4);
-                    List<Bitmap> bitmapList = new ArrayList<Bitmap>();
-                    for (int j = 0; j < memberUidList.size(); j++) {
-                        String pid = memberUidList.get(j);
-                        Bitmap bitmap = null;
-                        if (!StringUtils.isBlank(pid) && !pid.equals("null")) {
-                            bitmap = ImageLoader.getInstance().loadImageSync(APIUri.getChannelImgUrl(context, pid), options);
-                        }
-                        if (bitmap == null) {
-                            bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.icon_person_default);
-                        }
-                        bitmapList.add(bitmap);
-                    }
-                    Bitmap combineBitmap = createGroupFace(context, bitmapList);
-                    if (combineBitmap != null) {
-                        saveBitmap(channel.getCid(), combineBitmap);
-                    }
-                }
-
-            }
-            return isCreateNewGroupIcon;
-        }
-
-        @Override
-        protected void onPostExecute(Boolean isCreateNewGroupIcon) {
-            if (handler != null) {
-                Message msg = new Message();
-                msg.what = RERESH_GROUP_ICON;
-                msg.obj = isCreateNewGroupIcon;
-                handler.sendMessage(msg);
-            }
-        }
-    }
-
     public static Bitmap createGroupFace(Context context,
                                          List<Bitmap> bitmapList) {
         if (bitmapList == null || bitmapList.size() == 0) {
@@ -336,6 +232,57 @@ public class ChannelGroupIconUtils {
         return bitmap;
     }
 
+    public boolean create(Context context, List<Channel> channelList,
+                          Handler handler) {
+        // TODO Auto-generated method stub
+        if (!Environment.getExternalStorageState().equals(
+                Environment.MEDIA_MOUNTED) || !NetUtils.isNetworkConnected(context, false)) {
+            return false;
+        }
+        if (channelList == null) {
+            channelTypeGroupList = ChannelCacheUtils.getChannelList(context, "GROUP");
+        } else {
+            channelTypeGroupList.clear();
+            for (Channel channel : channelList) {
+                if (channel.getType().equals("GROUP")) {
+                    channelTypeGroupList.add(channel);
+                }
+            }
+
+        }
+        if (channelTypeGroupList.size() == 0) {
+            return false;
+        }
+        this.context = context;
+        this.handler = handler;
+        List<ChannelGroup> currentChannelGroupList = new ArrayList<>();
+        for (int i = 0; i < channelTypeGroupList.size(); i++) {
+            Channel channel = channelTypeGroupList.get(i);
+            ChannelGroup channelGroup = new ChannelGroup(channel);
+            currentChannelGroupList.add(channelGroup);
+        }
+        List<ChannelGroup> cacheChannelGroupList = ChannelGroupCacheUtils
+                .getAllChannelGroupList(context);
+        currentChannelGroupList.removeAll(cacheChannelGroupList);
+        if (currentChannelGroupList.size() > 0) {
+            getChannelGroups(currentChannelGroupList);
+        } else {
+            new ChannelGroupIconCreateTask().execute();
+        }
+        return true;
+    }
+
+    private void getChannelGroups(List<ChannelGroup> currentChannelGroupList) {
+        // TODO Auto-generated method stub
+        String[] cidArray = new String[currentChannelGroupList.size()];
+        for (int i = 0; i < currentChannelGroupList.size(); i++) {
+            cidArray[i] = currentChannelGroupList.get(i).getCid();
+        }
+        ChatAPIService apiService = new ChatAPIService(context);
+        apiService.setAPIInterface(new WebService());
+        apiService.getChannelGroupList(cidArray);
+    }
+
     /**
      * 保存方法
      */
@@ -377,6 +324,58 @@ public class ChannelGroupIconUtils {
         }
         return null;
 
+    }
+
+    class ChannelGroupIconCreateTask extends AsyncTask<Void, Integer, Boolean> {
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            boolean isCreateNewGroupIcon = false;
+            synchronized (this) {
+                File dir = new File(MyAppConfig.LOCAL_CACHE_PHOTO_PATH);
+                if (!dir.exists()) {
+                    dir.mkdirs();
+                }
+                DisplayImageOptions options = new DisplayImageOptions.Builder()
+                        // 设置图片的解码类型
+                        .bitmapConfig(Bitmap.Config.RGB_565)
+                        .cacheInMemory(true)
+                        .cacheOnDisk(true)
+                        .build();
+                isCreateNewGroupIcon = (channelTypeGroupList.size() > 0);
+                for (int i = 0; i < channelTypeGroupList.size(); i++) {
+                    Channel channel = channelTypeGroupList.get(i);
+                    List<String> memberUidList = ChannelGroupCacheUtils.getExistMemberUidList(context, channel.getCid(), 4);
+                    List<Bitmap> bitmapList = new ArrayList<Bitmap>();
+                    for (int j = 0; j < memberUidList.size(); j++) {
+                        String pid = memberUidList.get(j);
+                        Bitmap bitmap = null;
+                        if (!StringUtils.isBlank(pid) && !pid.equals("null")) {
+                            bitmap = ImageLoader.getInstance().loadImageSync(APIUri.getChannelImgUrl(context, pid), options);
+                        }
+                        if (bitmap == null) {
+                            bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.icon_person_default);
+                        }
+                        bitmapList.add(bitmap);
+                    }
+                    Bitmap combineBitmap = createGroupFace(context, bitmapList);
+                    if (combineBitmap != null) {
+                        saveBitmap(channel.getCid(), combineBitmap);
+                    }
+                }
+
+            }
+            return isCreateNewGroupIcon;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean isCreateNewGroupIcon) {
+            if (handler != null) {
+                Message msg = new Message();
+                msg.what = RERESH_GROUP_ICON;
+                msg.obj = isCreateNewGroupIcon;
+                handler.sendMessage(msg);
+            }
+        }
     }
 
     private class WebService extends APIInterfaceInstance {

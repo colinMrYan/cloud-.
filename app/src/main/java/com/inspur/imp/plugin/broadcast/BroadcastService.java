@@ -20,7 +20,7 @@ import org.json.JSONObject;
 
 public class BroadcastService extends ImpPlugin {
     private BroadcastReceiver receiver;
-    private boolean isRunInBackgroud =false;
+    private boolean isRunInBackgroud = false;
     private JSONObject paramsObject;
 
 
@@ -31,7 +31,7 @@ public class BroadcastService extends ImpPlugin {
         } else if ("receive".equals(action)) {
             this.paramsObject = paramsObject;
             registerReceiver(paramsObject);
-        }else{
+        } else {
             showCallIMPMethodErrorDlg();
         }
     }
@@ -64,14 +64,14 @@ public class BroadcastService extends ImpPlugin {
      */
     private void registerReceiver(JSONObject paramsObject) {
         String action = JSONUtils.getString(paramsObject, "action", "");
-        isRunInBackgroud = JSONUtils.getBoolean(paramsObject,"isRunInBackgroud",false);
-        final String callback = JSONUtils.getString(paramsObject,"callback",null);
-        if (StringUtils.isBlank(callback) && StringUtils.isBlank(action)){
+        isRunInBackgroud = JSONUtils.getBoolean(paramsObject, "isRunInBackgroud", false);
+        final String callback = JSONUtils.getString(paramsObject, "callback", null);
+        if (StringUtils.isBlank(callback) && StringUtils.isBlank(action)) {
             return;
         }
-        if (receiver != null){
+        if (receiver != null) {
             getFragmentContext().unregisterReceiver(receiver);
-            receiver= null;
+            receiver = null;
         }
         receiver = new BroadcastReceiver() {
             @Override
@@ -85,9 +85,9 @@ public class BroadcastService extends ImpPlugin {
                         e.printStackTrace();
                     }
                 }
-                String result =object.toString();
-                LogUtils.YfcDebug("result="+result);
-                BroadcastService.this.jsCallback(callback,result);
+                String result = object.toString();
+                LogUtils.YfcDebug("result=" + result);
+                BroadcastService.this.jsCallback(callback, result);
                 getFragmentContext().unregisterReceiver(receiver);
                 receiver = null;
 
@@ -106,14 +106,14 @@ public class BroadcastService extends ImpPlugin {
 
     @Override
     public void onActivityResume() {
-        if (receiver != null && !isRunInBackgroud && paramsObject != null){
+        if (receiver != null && !isRunInBackgroud && paramsObject != null) {
             registerReceiver(paramsObject);
         }
     }
 
     @Override
     public void onActivityPause() {
-        if (receiver != null && !isRunInBackgroud){
+        if (receiver != null && !isRunInBackgroud) {
             getFragmentContext().unregisterReceiver(receiver);
         }
 
@@ -121,7 +121,7 @@ public class BroadcastService extends ImpPlugin {
 
     @Override
     public void onDestroy() {
-        if (receiver != null){
+        if (receiver != null) {
             getFragmentContext().unregisterReceiver(receiver);
             receiver = null;
         }

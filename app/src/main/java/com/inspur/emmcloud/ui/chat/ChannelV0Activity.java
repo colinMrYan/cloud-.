@@ -358,7 +358,7 @@ public class ChannelV0Activity extends BaseActivity {
     //接收Action卡片的Action点击事件
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveSendAcitionContentMessage(SimpleEventMessage eventMessage) {
-        if (eventMessage.getAction() == Constant.EVENTBUS_TAG_SEND_ACTION_CONTENT_MESSAGE){
+        if (eventMessage.getAction() == Constant.EVENTBUS_TAG_SEND_ACTION_CONTENT_MESSAGE) {
             String actionContent = (String) eventMessage.getMessageObj();
             sendTextMessage(actionContent, null, null, true);
         }
@@ -571,7 +571,7 @@ public class ChannelV0Activity extends BaseActivity {
                 String name = JSONUtils.getString(result, "name", null);
                 boolean isInputKeyWord = data.getBooleanExtra("isInputKeyWord", false);
                 chatInputMenu.addMentions(uid, name, isInputKeyWord);
-            }else if(requestCode == REQUEST_QUIT_CHANNELGROUP){
+            } else if (requestCode == REQUEST_QUIT_CHANNELGROUP) {
                 finish();
             }
         } else {
@@ -734,10 +734,10 @@ public class ChannelV0Activity extends BaseActivity {
             } else {
                 msgList.add(index, realMsg);
                 //如果是图片类型消息的话不再重新刷新消息体，防止图片重新加载
-                if (realMsg.getType().equals("res_image")){
-                    setMessageSendSuccess(index,realMsg);
+                if (realMsg.getType().equals("res_image")) {
+                    setMessageSendSuccess(index, realMsg);
                     adapter.setMsgList(msgList);
-                }else {
+                } else {
                     adapter.setMsgList(msgList);
                     adapter.notifyItemChanged(index);
                 }
@@ -772,7 +772,7 @@ public class ChannelV0Activity extends BaseActivity {
      *
      * @param index
      */
-    private void setMessageSendSuccess(int index,Msg realMsg) {
+    private void setMessageSendSuccess(int index, Msg realMsg) {
         Msg msg = adapter.getItemData(index);
         msg.setBody(realMsg.getBody());
         msg.setSendStatus(1);
@@ -845,7 +845,7 @@ public class ChannelV0Activity extends BaseActivity {
         Bundle bundle = new Bundle();
         bundle.putString("cid", cid);
         if (channel.getType().equals("GROUP")) {
-            Intent intent = new Intent(this,ChannelInfoActivity.class);
+            Intent intent = new Intent(this, ChannelInfoActivity.class);
             intent.putExtras(bundle);
             startActivityForResult(intent, REQUEST_QUIT_CHANNELGROUP);
         } else if (channel.getType().equals("SERVICE")) {
@@ -1045,9 +1045,10 @@ public class ChannelV0Activity extends BaseActivity {
 
     /**
      * 设置频道是否置顶
+     *
      * @param isFoucus
      */
-    public void setChannelFoucs(boolean isFoucus){
+    public void setChannelFoucs(boolean isFoucus) {
 
     }
 

@@ -42,7 +42,7 @@ public class LoginMoreActivity extends BaseActivity {
                 .getString(LoginMoreActivity.this, Constant.PREF_LOGIN_ENTERPRISE_NAME, "");
         findViewById(R.id.login_more_reset_layout).setVisibility(StringUtils.isBlank(enterpriseName)
                 ? View.GONE : View.VISIBLE);
-        ((TextView)findViewById(R.id.login_more_enterprise_text)).setText(StringUtils.isBlank(enterpriseName)?"":getString(R.string.login_more_current_enterprise)+enterpriseName);
+        ((TextView) findViewById(R.id.login_more_enterprise_text)).setText(StringUtils.isBlank(enterpriseName) ? "" : getString(R.string.login_more_current_enterprise) + enterpriseName);
     }
 
     /**
@@ -60,7 +60,7 @@ public class LoginMoreActivity extends BaseActivity {
 //                intent.setClass(LoginMoreActivity.this, PreviewDecodeActivity.class);
 //                intent.putExtra("from", "loginMore");
 //                startActivityForResult(intent, SCAN_LOGIN_ENTERPRISE_INFO);
-                AppUtils.openScanCode(this,SCAN_LOGIN_ENTERPRISE_INFO);
+                AppUtils.openScanCode(this, SCAN_LOGIN_ENTERPRISE_INFO);
                 break;
             case R.id.login_more_reset_layout:
                 showConfirmClearDialog();
@@ -85,7 +85,7 @@ public class LoginMoreActivity extends BaseActivity {
                     public void onClick(QMUIDialog dialog, int index) {
                         dialog.dismiss();
                         PreferencesUtils.putString(LoginMoreActivity.this, Constant.PREF_LOGIN_ENTERPRISE_NAME, "");
-                        PreferencesUtils.putString(LoginMoreActivity.this,Constant.PREF_CLOUD_IDM,Constant.DEFAULT_CLUSTER_ID);
+                        PreferencesUtils.putString(LoginMoreActivity.this, Constant.PREF_CLOUD_IDM, Constant.DEFAULT_CLUSTER_ID);
                         PreferencesByUsersUtils.putString(getApplicationContext(), Constant.PREF_SELECT_LOGIN_ENTERPRISE_ID, "");
                         finish();
                     }
@@ -116,12 +116,13 @@ public class LoginMoreActivity extends BaseActivity {
 
     /**
      * 确认，取消dialog
+     *
      * @param msg
      */
     private void showConfirmDialog(String msg) {
         final LoginMoreBean loginMoreBean = new LoginMoreBean(msg);
         new MyQMUIDialog.MessageDialogBuilder(LoginMoreActivity.this)
-                .setMessage(getString(R.string.login_more_scan_find_left)+loginMoreBean.getName()+getString(R.string.login_more_scan_find_right))
+                .setMessage(getString(R.string.login_more_scan_find_left) + loginMoreBean.getName() + getString(R.string.login_more_scan_find_right))
                 .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
                     @Override
                     public void onClick(QMUIDialog dialog, int index) {
@@ -135,7 +136,7 @@ public class LoginMoreActivity extends BaseActivity {
                         Intent intent = new Intent();
                         intent.putExtra("loginEnterprise", loginMoreBean.getName());
                         setResult(RESULT_OK, intent);
-                        PreferencesUtils.putString(LoginMoreActivity.this,Constant.PREF_CLOUD_IDM,StringUtils.isBlank(loginMoreBean.getUrl()) ? Constant.DEFAULT_CLUSTER_ID : (loginMoreBean.getUrl()+"/"));
+                        PreferencesUtils.putString(LoginMoreActivity.this, Constant.PREF_CLOUD_IDM, StringUtils.isBlank(loginMoreBean.getUrl()) ? Constant.DEFAULT_CLUSTER_ID : (loginMoreBean.getUrl() + "/"));
                         findViewById(R.id.login_more_reset_btn).setVisibility(View.VISIBLE);
                         PreferencesUtils.putString(LoginMoreActivity.this, Constant.PREF_LOGIN_ENTERPRISE_NAME, loginMoreBean.getName());
                         PreferencesByUsersUtils.putString(getApplicationContext(), Constant.PREF_SELECT_LOGIN_ENTERPRISE_ID, "");

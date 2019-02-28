@@ -24,27 +24,17 @@ abstract class IMGEditBaseActivity extends ImpBaseActivity implements View.OnCli
         IMGTextEditDialog.Callback, RadioGroup.OnCheckedChangeListener,
         DialogInterface.OnShowListener, DialogInterface.OnDismissListener {
 
-    protected IMGView mImgView;
-
-    private RadioGroup mModeGroup;
-
-    private IMGColorGroup mColorGroup;
-
-    private IMGTextEditDialog mTextDialog;
-
-    private View mLayoutOpSub;
-
-    private ViewSwitcher mOpSwitcher, mOpSubSwitcher;
-
     public static final int OP_HIDE = -1;
-
     public static final int OP_NORMAL = 0;
-
     public static final int OP_CLIP = 1;
-
     public static final int OP_SUB_DOODLE = 0;
-
     public static final int OP_SUB_MOSAIC = 1;
+    protected IMGView mImgView;
+    private RadioGroup mModeGroup;
+    private IMGColorGroup mColorGroup;
+    private IMGTextEditDialog mTextDialog;
+    private View mLayoutOpSub;
+    private ViewSwitcher mOpSwitcher, mOpSubSwitcher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,12 +57,12 @@ abstract class IMGEditBaseActivity extends ImpBaseActivity implements View.OnCli
 
     private void initViews() {
         mImgView = (IMGView) findViewById(R.id.image_canvas);
-        mModeGroup = (RadioGroup)findViewById(R.id.rg_modes);
+        mModeGroup = (RadioGroup) findViewById(R.id.rg_modes);
 
-        mOpSwitcher = (ViewSwitcher)findViewById(R.id.vs_op);
-        mOpSubSwitcher = (ViewSwitcher)findViewById(R.id.vs_op_sub);
+        mOpSwitcher = (ViewSwitcher) findViewById(R.id.vs_op);
+        mOpSubSwitcher = (ViewSwitcher) findViewById(R.id.vs_op_sub);
 
-        mColorGroup = (IMGColorGroup)findViewById(R.id.cg_colors);
+        mColorGroup = (IMGColorGroup) findViewById(R.id.cg_colors);
         mColorGroup.setOnCheckedChangeListener(this);
 
         mLayoutOpSub = findViewById(R.id.layout_op_sub);

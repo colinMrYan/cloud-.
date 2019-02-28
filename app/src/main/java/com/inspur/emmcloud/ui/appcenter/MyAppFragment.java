@@ -126,17 +126,18 @@ public class MyAppFragment extends BaseFragment {
     private RecommendAppWidgetListAdapter recommendAppWidgetListAdapter = null;
     private int appListSizeExceptCommonlyUse = 0;
     private DataSetObserver dataSetObserver;
-    private View    netExceptionView;
-    private boolean haveHeader=false;
+    private View netExceptionView;
+    private boolean haveHeader = false;
     private boolean hasRequestBadgeNum = false;
     private MyOnClickListener myOnClickListener;
     private LinearLayout commonlyUseLayout;
 
     private CheckingNetStateUtils checkingNetStateUtils;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        checkingNetStateUtils = new CheckingNetStateUtils( getContext(),NetUtils.pingUrls );
+        checkingNetStateUtils = new CheckingNetStateUtils(getContext(), NetUtils.pingUrls);
         rootView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_app, null);
         initViews();
         registerReceiver();
@@ -172,20 +173,20 @@ public class MyAppFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (ClientConfigUpdateUtils.getInstance().isItemNeedUpdate(ClientConfigItem.CLIENT_CONFIG_MY_APP)){
+        if (ClientConfigUpdateUtils.getInstance().isItemNeedUpdate(ClientConfigItem.CLIENT_CONFIG_MY_APP)) {
             getMyApp();
         }
         hasRequestBadgeNum = false;
-        if(!StringUtils.isBlank(MyAppCacheUtils.getMyAppListJson(getActivity()))){
+        if (!StringUtils.isBlank(MyAppCacheUtils.getMyAppListJson(getActivity()))) {
             new AppBadgeUtils(MyApplication.getInstance()).getAppBadgeCountFromServer();
             hasRequestBadgeNum = true;
         }
         refreshRecommendAppWidgetView();
-        if(checkingNetStateUtils.isConnectedNet()){
+        if (checkingNetStateUtils.isConnectedNet()) {
             DeleteHeaderView();
-        }else {
+        } else {
             checkingNetStateUtils.clearUrlsStates();
-            checkingNetStateUtils.CheckNetPingThreadStart(NetUtils.pingUrls,5,Constant.EVENTBUS_TAG_NET_EXCEPTION_HINT);
+            checkingNetStateUtils.CheckNetPingThreadStart(NetUtils.pingUrls, 5, Constant.EVENTBUS_TAG_NET_EXCEPTION_HINT);
         }
     }
 
@@ -193,7 +194,7 @@ public class MyAppFragment extends BaseFragment {
      * 初始化Views
      */
     private void initViews() {
-        netExceptionView  = LayoutInflater.from(getContext()).inflate(R.layout.recycleview_header_item,null);
+        netExceptionView = LayoutInflater.from(getContext()).inflate(R.layout.recycleview_header_item, null);
         netExceptionView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -228,21 +229,21 @@ public class MyAppFragment extends BaseFragment {
 
     /**
      * 添加LIstView 的HeaderView
-     * */
+     */
     private void AddHeaderView() {
-        if(!haveHeader){
+        if (!haveHeader) {
             appListView.addHeaderView(netExceptionView);
-            haveHeader=true;
+            haveHeader = true;
         }
     }
 
     /**
      * 删除ListView 的HeaderView
-     * */
+     */
     private void DeleteHeaderView() {
-        if(haveHeader){
+        if (haveHeader) {
             appListView.removeHeaderView(netExceptionView);
-            haveHeader=false;
+            haveHeader = false;
         }
     }
 
@@ -390,34 +391,35 @@ public class MyAppFragment extends BaseFragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onClientConfigVersionUpdate(final GetAllConfigVersionResult getAllConfigVersionResult) {
         boolean isMyAppUpdate = ClientConfigUpdateUtils.getInstance().isItemNeedUpdate(ClientConfigItem.CLIENT_CONFIG_MY_APP, getAllConfigVersionResult);
-        if (isMyAppUpdate){
+        if (isMyAppUpdate) {
             getMyApp();
         }
     }
 
     /**
      * app页网络异常提示框
-     * @param netState  通过Action获取操作类型
-     * */
+     *
+     * @param netState 通过Action获取操作类型
+     */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void netWorkStateHint(SimpleEventMessage netState) {
-        if(netState.getAction().equals(Constant.EVENTBUS_TAG_NET_STATE_CHANGE)){
-            if(((String)netState.getMessageObj()).equals(NetWorkStateChangeUtils.NET_WIFI_STATE_OK)&&(!NetUtils.isVpnConnected())){
+        if (netState.getAction().equals(Constant.EVENTBUS_TAG_NET_STATE_CHANGE)) {
+            if (((String) netState.getMessageObj()).equals(NetWorkStateChangeUtils.NET_WIFI_STATE_OK) && (!NetUtils.isVpnConnected())) {
                 checkingNetStateUtils.clearUrlsStates();
-                checkingNetStateUtils.CheckNetPingThreadStart(NetUtils.pingUrls,5,Constant.EVENTBUS_TAG_NET_EXCEPTION_HINT);
-            } else if(((String)netState.getMessageObj()).equals(NetWorkStateChangeUtils.NET_STATE_ERROR)) {
+                checkingNetStateUtils.CheckNetPingThreadStart(NetUtils.pingUrls, 5, Constant.EVENTBUS_TAG_NET_EXCEPTION_HINT);
+            } else if (((String) netState.getMessageObj()).equals(NetWorkStateChangeUtils.NET_STATE_ERROR)) {
                 AddHeaderView();
-            } else if (((String)netState.getMessageObj()).equals(NetWorkStateChangeUtils.NET_GPRS_STATE_OK)) {
+            } else if (((String) netState.getMessageObj()).equals(NetWorkStateChangeUtils.NET_GPRS_STATE_OK)) {
                 DeleteHeaderView();
-            }else{
+            } else {
                 DeleteHeaderView();
             }
         } else if (netState.getAction().equals(Constant.EVENTBUS_TAG_NET_EXCEPTION_HINT)) {   //网络异常提示
-            List<Object> pingIdAndData = (List<Object>)netState.getMessageObj();
-            Boolean pingConnectedResult=checkingNetStateUtils.isPingConnectedNet( (String)pingIdAndData.get( 0 ),(boolean)pingIdAndData.get( 1 ) );
-            if(pingConnectedResult){
+            List<Object> pingIdAndData = (List<Object>) netState.getMessageObj();
+            Boolean pingConnectedResult = checkingNetStateUtils.isPingConnectedNet((String) pingIdAndData.get(0), (boolean) pingIdAndData.get(1));
+            if (pingConnectedResult) {
                 DeleteHeaderView();
-            }else{
+            } else {
                 AddHeaderView();
             }
         }
@@ -466,170 +468,6 @@ public class MyAppFragment extends BaseFragment {
         PVCollectModelCacheUtils.saveCollectModel(getActivity(), pvCollectModel);
     }
 
-
-    /**
-     * App组列表Adapter
-     */
-    public class AppListAdapter extends BaseAdapter {
-        private List<AppGroupBean> appAdapterList = new ArrayList<AppGroupBean>();
-        private boolean canEdit = false;
-
-        public AppListAdapter(List<AppGroupBean> appAdapterList) {
-            this.appAdapterList = appAdapterList;
-        }
-
-        @Override
-        public int getCount() {
-            return appAdapterList == null ? 0 : appAdapterList.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return null;
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return 0;
-        }
-
-        @Override
-        public View getView(final int listPosition, View convertView,
-                            ViewGroup parent) {
-            convertView = LayoutInflater.from(getActivity()).inflate(R.layout.app_drag_item, null);
-            if(listPosition==(getCount()-1)){
-                View dividerView  =  (View)convertView.findViewById(R.id.v_applist_devid);
-                dividerView.setVisibility(View.GONE);
-            }
-            ((TextView) convertView.findViewById(R.id.app_title_text))
-                    .setText(appAdapterList.get(listPosition).getCategoryName());
-            DragGridView dragGridView = (DragGridView) convertView
-                    .findViewById(R.id.app_list_draggrid);
-            final List<App> appGroupItemList = appAdapterList.get(
-                    listPosition).getAppItemList();
-            final DragAdapter dragGridViewAdapter = new DragAdapter(
-                    getActivity(), appGroupItemList, listPosition, appStoreBadgeMap);
-            dragGridView.setCanScroll(false);
-            dragGridView.setPosition(listPosition);
-            dragGridView.setPullRefreshLayout(swipeRefreshLayout);
-            dragGridViewAdapter.setGroupPosition(listPosition);
-            dragGridView.setOnChangeListener(new OnChanageListener() {
-                @Override
-                public void onChange(int listPosition, int from, int to) {
-                    handAppOrderChange(appGroupItemList, from, to);
-                    dragGridViewAdapter.notifyDataSetChanged();
-                    //去掉在排序完成之后的刷新，这里不影响删除应用相关的逻辑
-                    saveAppChangeOrder(listPosition);
-                }
-            });
-            dragGridView.setOnItemClickListener(new OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view,
-                                        int position, long id) {
-                    if (!canEdit) {
-                        App app = appGroupItemList.get(position);
-                        if (NetUtils.isNetworkConnected(getActivity()) && !isFastDoubleClick()) {
-                            if(app.getSubAppList().size() > 0){
-                                Intent intent = new Intent();
-                                intent.setClass(getActivity(),AppGroupActivity.class);
-                                intent.putExtra("categoryName",app.getAppName());
-                                intent.putExtra("appGroupList", (Serializable) app.getSubAppList());
-                                startActivity(intent);
-                            }else{
-                                if ((listPosition == 0) && getNeedCommonlyUseApp() && AppCacheUtils.getCommonlyUseNeedShowList(getActivity()).size() > 0) {
-                                    UriUtils.openApp(getActivity(), app, "commonapplications");
-                                } else {
-                                    UriUtils.openApp(getActivity(), app, "application");
-                                }
-                            }
-
-                        }
-                        if (getNeedCommonlyUseApp()) {
-                            saveOrChangeCommonlyUseAppList(app, appAdapterList);
-                            MyAppCacheUtils.saveMyAppList(getContext(), appAdapterList);
-                        }
-                    }
-                }
-            });
-            dragGridView.setOnItemLongClickListener(new OnItemLongClickListener() {
-
-                @Override
-                public boolean onItemLongClick(AdapterView<?> parent,
-                                               View view, int position, long id) {
-                    if (!canEdit) {
-                        appListAdapter.setCanEdit(true);
-                        appListAdapter.notifyDataSetChanged();
-                        setAppEditStatus(true);
-                        canEdit = true;
-                        Vibrator mVibrator = (Vibrator) getActivity()
-                                .getSystemService(Context.VIBRATOR_SERVICE);
-                        mVibrator.vibrate(50);
-                    }
-                    return false;
-                }
-            });
-            dragGridViewAdapter
-                    .setNotifyCommonlyUseListener(new DragAdapter.NotifyCommonlyUseListener() {
-                        @Override
-                        public void onNotifyCommonlyUseApp(App app) {
-                            handCommonlyUseAppChange(appAdapterList, app);
-                            new AppBadgeUtils(MyApplication.getInstance()).getAppBadgeCountFromServer();
-                            appListAdapter.notifyDataSetChanged();
-                            dragGridViewAdapter.notifyDataSetChanged();
-                            MyAppCacheUtils.saveMyAppList(getActivity(), appListAdapter.getAppAdapterList());
-                        }
-                    });
-            if (canEdit) {
-                if ((listPosition == 0) && getNeedCommonlyUseApp() && AppCacheUtils.getCommonlyUseNeedShowList(getActivity()).size() > 0) {
-                    //如果应用列表可以编辑，并且有常用应用分组，则把常用应用的可编辑属性设置false（也就是第0行设为false）
-                    dragGridViewAdapter.setCanEdit(false);
-                } else {
-                    //如果应用列表可以编辑，不是常用应用分组
-                    dragGridViewAdapter.setCanEdit(true);
-                    dragGridView.setCanEdit(true);
-                }
-            } else {
-                //如果不能编辑则把adapter和View的属性都设置为false
-                dragGridViewAdapter.setCanEdit(false);
-                dragGridView.setCanEdit(false);
-            }
-            dragGridView.setAdapter(dragGridViewAdapter);
-            return convertView;
-        }
-
-        /**
-         * 获取当前listview中的的list
-         *
-         * @return
-         */
-        public List<AppGroupBean> getAppAdapterList() {
-            return appAdapterList;
-        }
-
-        /**
-         * 设置AppAdapter
-         */
-        public void setAppAdapterList(List<AppGroupBean> list) {
-            appAdapterList = list;
-            notifyDataSetChanged();
-        }
-
-        /**
-         * 设置是否可以删除
-         */
-        public void setCanEdit(boolean canDelete) {
-            this.canEdit = canDelete;
-        }
-
-        /**
-         * 获取是否可以删除
-         */
-        public boolean getCanEdit() {
-            return this.canEdit;
-        }
-    }
-
-
     /**
      * 点击应用后处理常用应用
      *
@@ -668,7 +506,6 @@ public class MyAppFragment extends BaseFragment {
         }
 
     }
-
 
     /**
      * 根据前面计算出的点击次数和当前位置计算权重
@@ -764,7 +601,6 @@ public class MyAppFragment extends BaseFragment {
         }
         appGroupItemList.set(to, temp);
     }
-
 
     //接收从AppBadgeUtils里发回的角标数字
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -873,7 +709,6 @@ public class MyAppFragment extends BaseFragment {
         getActivity().getWindow().setAttributes(lp);
     }
 
-
     /**
      * 存储是否需要显示常用app
      *
@@ -892,7 +727,7 @@ public class MyAppFragment extends BaseFragment {
      * @return
      */
     private boolean getNeedCommonlyUseApp() {
-        String userId =MyApplication.getInstance().getUid();
+        String userId = MyApplication.getInstance().getUid();
         isNeedCommonlyUseApp = PreferencesUtils.getBoolean(getActivity(), MyApplication.getInstance().getTanent()
                 + userId + "needCommonlyUseApp", true);
         return isNeedCommonlyUseApp;
@@ -1001,6 +836,252 @@ public class MyAppFragment extends BaseFragment {
     }
 
     /**
+     * 判断是否连点
+     *
+     * @return
+     */
+    private boolean isFastDoubleClick() {
+        long time = System.currentTimeMillis();
+        long timeD = time - lastOnItemClickTime;
+        if (0 < timeD && timeD < 800) {
+            return true;
+        }
+        lastOnItemClickTime = time;
+        return false;
+
+    }
+
+    private void setCommonlyUseIconAndText() {
+        if (popupWindow != null && commonlyUseLayout != null) {
+            ImageView imageView = commonlyUseLayout.findViewById(R.id.iv_app_commonly_use);
+            TextView textView = commonlyUseLayout.findViewById(R.id.tv_app_commonly_use);
+            imageView.setImageResource(getNeedCommonlyUseApp() ? R.drawable.ic_commonly_use_open : R.drawable.ic_commonly_use_close);
+            textView.setText(getNeedCommonlyUseApp() ? R.string.app_commonly_use : R.string.app_commonly_use_close);
+        }
+    }
+
+    private void setAppEditStatus(boolean isEditStatus) {
+        sortFinishBtn.setVisibility(isEditStatus ? View.VISIBLE : View.GONE);
+        configBtn.setVisibility(isEditStatus ? View.GONE : View.VISIBLE);
+        appcenterEnterBtn.setVisibility(isEditStatus ? View.GONE : View.VISIBLE);
+    }
+
+    /**
+     * 创建快捷方式的Dialog
+     *
+     * @param app
+     * @param appType
+     * @param clz
+     * @param icon
+     */
+    private void showCreateShortCutDialog(final App app, final String appType, final Class clz, final int icon, final Bitmap bitmap) {
+        final Dialog hasIntrcutionDialog = new Dialog(getActivity(),
+                R.style.transparentFrameWindowStyle);
+        hasIntrcutionDialog.setCanceledOnTouchOutside(true);
+        View view = getActivity().getLayoutInflater().inflate(R.layout.app_create_shortcut_dialog, null);
+        hasIntrcutionDialog.setContentView(view);
+        final TextView textView = (TextView) view.findViewById(R.id.news_has_instrcution_text);
+        final CheckBox checkBox = (CheckBox) view.findViewById(R.id.shortcut_dialog_checkbox);
+        textView.setMovementMethod(ScrollingMovementMethod.getInstance());
+        textView.setText(getString(R.string.app_commonly_use_app));
+        Button okBtn = (Button) view.findViewById(R.id.ok_btn);
+        okBtn.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (icon == 0) {
+                    ShortCutUtils.createShortCut(getActivity(), clz,
+                            app.getAppName(), app.getUri(), appType, bitmap);
+                }
+                if (bitmap == null) {
+                    ShortCutUtils.createShortCut(getActivity(), clz,
+                            app.getAppName(), app.getUri(), appType, icon);
+                }
+                UriUtils.openApp(getActivity(), app, "application");
+                hasIntrcutionDialog.dismiss();
+            }
+        });
+        Button cancelBtn = (Button) view.findViewById(R.id.cancel_btn);
+        cancelBtn.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (checkBox.isChecked()) {
+                    PreferencesByUserAndTanentUtils.putBoolean(getActivity(), "need_create_shortcut" + app.getAppID(), false);
+                }
+                UriUtils.openApp(getActivity(), app, "application");
+                hasIntrcutionDialog.dismiss();
+            }
+        });
+        Window window = hasIntrcutionDialog.getWindow();
+        WindowManager.LayoutParams wl = window.getAttributes();
+        wl.dimAmount = 0.31f;
+        hasIntrcutionDialog.getWindow().setAttributes(wl);
+        hasIntrcutionDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+        hasIntrcutionDialog.show();
+    }
+
+    /**
+     * App组列表Adapter
+     */
+    public class AppListAdapter extends BaseAdapter {
+        private List<AppGroupBean> appAdapterList = new ArrayList<AppGroupBean>();
+        private boolean canEdit = false;
+
+        public AppListAdapter(List<AppGroupBean> appAdapterList) {
+            this.appAdapterList = appAdapterList;
+        }
+
+        @Override
+        public int getCount() {
+            return appAdapterList == null ? 0 : appAdapterList.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return 0;
+        }
+
+        @Override
+        public View getView(final int listPosition, View convertView,
+                            ViewGroup parent) {
+            convertView = LayoutInflater.from(getActivity()).inflate(R.layout.app_drag_item, null);
+            if (listPosition == (getCount() - 1)) {
+                View dividerView = (View) convertView.findViewById(R.id.v_applist_devid);
+                dividerView.setVisibility(View.GONE);
+            }
+            ((TextView) convertView.findViewById(R.id.app_title_text))
+                    .setText(appAdapterList.get(listPosition).getCategoryName());
+            DragGridView dragGridView = (DragGridView) convertView
+                    .findViewById(R.id.app_list_draggrid);
+            final List<App> appGroupItemList = appAdapterList.get(
+                    listPosition).getAppItemList();
+            final DragAdapter dragGridViewAdapter = new DragAdapter(
+                    getActivity(), appGroupItemList, listPosition, appStoreBadgeMap);
+            dragGridView.setCanScroll(false);
+            dragGridView.setPosition(listPosition);
+            dragGridView.setPullRefreshLayout(swipeRefreshLayout);
+            dragGridViewAdapter.setGroupPosition(listPosition);
+            dragGridView.setOnChangeListener(new OnChanageListener() {
+                @Override
+                public void onChange(int listPosition, int from, int to) {
+                    handAppOrderChange(appGroupItemList, from, to);
+                    dragGridViewAdapter.notifyDataSetChanged();
+                    //去掉在排序完成之后的刷新，这里不影响删除应用相关的逻辑
+                    saveAppChangeOrder(listPosition);
+                }
+            });
+            dragGridView.setOnItemClickListener(new OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view,
+                                        int position, long id) {
+                    if (!canEdit) {
+                        App app = appGroupItemList.get(position);
+                        if (NetUtils.isNetworkConnected(getActivity()) && !isFastDoubleClick()) {
+                            if (app.getSubAppList().size() > 0) {
+                                Intent intent = new Intent();
+                                intent.setClass(getActivity(), AppGroupActivity.class);
+                                intent.putExtra("categoryName", app.getAppName());
+                                intent.putExtra("appGroupList", (Serializable) app.getSubAppList());
+                                startActivity(intent);
+                            } else {
+                                if ((listPosition == 0) && getNeedCommonlyUseApp() && AppCacheUtils.getCommonlyUseNeedShowList(getActivity()).size() > 0) {
+                                    UriUtils.openApp(getActivity(), app, "commonapplications");
+                                } else {
+                                    UriUtils.openApp(getActivity(), app, "application");
+                                }
+                            }
+
+                        }
+                        if (getNeedCommonlyUseApp()) {
+                            saveOrChangeCommonlyUseAppList(app, appAdapterList);
+                            MyAppCacheUtils.saveMyAppList(getContext(), appAdapterList);
+                        }
+                    }
+                }
+            });
+            dragGridView.setOnItemLongClickListener(new OnItemLongClickListener() {
+
+                @Override
+                public boolean onItemLongClick(AdapterView<?> parent,
+                                               View view, int position, long id) {
+                    if (!canEdit) {
+                        appListAdapter.setCanEdit(true);
+                        appListAdapter.notifyDataSetChanged();
+                        setAppEditStatus(true);
+                        canEdit = true;
+                        Vibrator mVibrator = (Vibrator) getActivity()
+                                .getSystemService(Context.VIBRATOR_SERVICE);
+                        mVibrator.vibrate(50);
+                    }
+                    return false;
+                }
+            });
+            dragGridViewAdapter
+                    .setNotifyCommonlyUseListener(new DragAdapter.NotifyCommonlyUseListener() {
+                        @Override
+                        public void onNotifyCommonlyUseApp(App app) {
+                            handCommonlyUseAppChange(appAdapterList, app);
+                            new AppBadgeUtils(MyApplication.getInstance()).getAppBadgeCountFromServer();
+                            appListAdapter.notifyDataSetChanged();
+                            dragGridViewAdapter.notifyDataSetChanged();
+                            MyAppCacheUtils.saveMyAppList(getActivity(), appListAdapter.getAppAdapterList());
+                        }
+                    });
+            if (canEdit) {
+                if ((listPosition == 0) && getNeedCommonlyUseApp() && AppCacheUtils.getCommonlyUseNeedShowList(getActivity()).size() > 0) {
+                    //如果应用列表可以编辑，并且有常用应用分组，则把常用应用的可编辑属性设置false（也就是第0行设为false）
+                    dragGridViewAdapter.setCanEdit(false);
+                } else {
+                    //如果应用列表可以编辑，不是常用应用分组
+                    dragGridViewAdapter.setCanEdit(true);
+                    dragGridView.setCanEdit(true);
+                }
+            } else {
+                //如果不能编辑则把adapter和View的属性都设置为false
+                dragGridViewAdapter.setCanEdit(false);
+                dragGridView.setCanEdit(false);
+            }
+            dragGridView.setAdapter(dragGridViewAdapter);
+            return convertView;
+        }
+
+        /**
+         * 获取当前listview中的的list
+         *
+         * @return
+         */
+        public List<AppGroupBean> getAppAdapterList() {
+            return appAdapterList;
+        }
+
+        /**
+         * 设置AppAdapter
+         */
+        public void setAppAdapterList(List<AppGroupBean> list) {
+            appAdapterList = list;
+            notifyDataSetChanged();
+        }
+
+        /**
+         * 获取是否可以删除
+         */
+        public boolean getCanEdit() {
+            return this.canEdit;
+        }
+
+        /**
+         * 设置是否可以删除
+         */
+        public void setCanEdit(boolean canDelete) {
+            this.canEdit = canDelete;
+        }
+    }
+
+    /**
      * 应用顺序排序接口，比较orderId
      */
     public class SortAppClass implements Comparator {
@@ -1063,27 +1144,10 @@ public class MyAppFragment extends BaseFragment {
         }
     }
 
-    /**
-     * 判断是否连点
-     *
-     * @return
-     */
-    private boolean isFastDoubleClick() {
-        long time = System.currentTimeMillis();
-        long timeD = time - lastOnItemClickTime;
-        if (0 < timeD && timeD < 800) {
-            return true;
-        }
-        lastOnItemClickTime = time;
-        return false;
-
-    }
-
-
     class MyOnClickListener implements OnClickListener {
         @Override
         public void onClick(View v) {
-            switch (v.getId()){
+            switch (v.getId()) {
                 case R.id.ibt_appcenter_enter:
                     IntentUtils.startActivity(getActivity(), AppCenterActivity.class);
                     recordUserClickAppCenter();
@@ -1108,14 +1172,14 @@ public class MyAppFragment extends BaseFragment {
                     }
                     break;
                 case R.id.ll_common_app_switch:
-                    if(popupWindow != null){
+                    if (popupWindow != null) {
                         popupWindow.dismiss();
                     }
-                    if(!getNeedCommonlyUseApp()){
+                    if (!getNeedCommonlyUseApp()) {
                         saveNeedCommonlyUseApp(true);
                         handCommonlyUseAppData(appListAdapter.getAppAdapterList(), true);
                         setCommonlyUseIconAndText();
-                    }else{
+                    } else {
                         if (getNeedCommonlyUseApp() && AppCacheUtils.getCommonlyUseNeedShowList(getActivity()).size() > 0) {
                             appListAdapter.getAppAdapterList().remove(0);
                             appListAdapter.notifyDataSetChanged();
@@ -1125,87 +1189,17 @@ public class MyAppFragment extends BaseFragment {
                     }
                     break;
                 case R.id.ll_app_scan:
-                    AppUtils.openScanCode(MyAppFragment.this,REQUEST_SCAN_LOGIN_QRCODE_RESULT);
+                    AppUtils.openScanCode(MyAppFragment.this, REQUEST_SCAN_LOGIN_QRCODE_RESULT);
                     break;
             }
 
         }
     }
 
-    private void setCommonlyUseIconAndText() {
-        if(popupWindow != null && commonlyUseLayout != null){
-            ImageView imageView = commonlyUseLayout.findViewById(R.id.iv_app_commonly_use);
-            TextView textView = commonlyUseLayout.findViewById(R.id.tv_app_commonly_use);
-            imageView.setImageResource(getNeedCommonlyUseApp()?R.drawable.ic_commonly_use_open:R.drawable.ic_commonly_use_close);
-            textView.setText(getNeedCommonlyUseApp()?R.string.app_commonly_use:R.string.app_commonly_use_close);
-        }
-    }
-
-    private void setAppEditStatus(boolean isEditStatus){
-        sortFinishBtn.setVisibility(isEditStatus?View.VISIBLE:View.GONE);
-        configBtn.setVisibility(isEditStatus?View.GONE:View.VISIBLE);
-        appcenterEnterBtn.setVisibility(isEditStatus?View.GONE:View.VISIBLE);
-    }
-
-
-    /**
-     * 创建快捷方式的Dialog
-     *
-     * @param app
-     * @param appType
-     * @param clz
-     * @param icon
-     */
-    private void showCreateShortCutDialog(final App app, final String appType, final Class clz, final int icon, final Bitmap bitmap) {
-        final Dialog hasIntrcutionDialog = new Dialog(getActivity(),
-                R.style.transparentFrameWindowStyle);
-        hasIntrcutionDialog.setCanceledOnTouchOutside(true);
-        View view = getActivity().getLayoutInflater().inflate(R.layout.app_create_shortcut_dialog, null);
-        hasIntrcutionDialog.setContentView(view);
-        final TextView textView = (TextView) view.findViewById(R.id.news_has_instrcution_text);
-        final CheckBox checkBox = (CheckBox) view.findViewById(R.id.shortcut_dialog_checkbox);
-        textView.setMovementMethod(ScrollingMovementMethod.getInstance());
-        textView.setText(getString(R.string.app_commonly_use_app));
-        Button okBtn = (Button) view.findViewById(R.id.ok_btn);
-        okBtn.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (icon == 0) {
-                    ShortCutUtils.createShortCut(getActivity(), clz,
-                            app.getAppName(), app.getUri(), appType, bitmap);
-                }
-                if (bitmap == null) {
-                    ShortCutUtils.createShortCut(getActivity(), clz,
-                            app.getAppName(), app.getUri(), appType, icon);
-                }
-                UriUtils.openApp(getActivity(), app, "application");
-                hasIntrcutionDialog.dismiss();
-            }
-        });
-        Button cancelBtn = (Button) view.findViewById(R.id.cancel_btn);
-        cancelBtn.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (checkBox.isChecked()) {
-                    PreferencesByUserAndTanentUtils.putBoolean(getActivity(), "need_create_shortcut" + app.getAppID(), false);
-                }
-                UriUtils.openApp(getActivity(), app, "application");
-                hasIntrcutionDialog.dismiss();
-            }
-        });
-        Window window = hasIntrcutionDialog.getWindow();
-        WindowManager.LayoutParams wl = window.getAttributes();
-        wl.dimAmount = 0.31f;
-        hasIntrcutionDialog.getWindow().setAttributes(wl);
-        hasIntrcutionDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-        hasIntrcutionDialog.show();
-    }
-
-
     class MyAppSaveTask extends AsyncTask<GetAppGroupResult, Void, List<AppGroupBean>> {
         private String clientConfigMyAppVersion;
 
-        public MyAppSaveTask(String clientConfigMyAppVersion){
+        public MyAppSaveTask(String clientConfigMyAppVersion) {
             this.clientConfigMyAppVersion = clientConfigMyAppVersion;
         }
 
@@ -1215,7 +1209,7 @@ public class MyAppFragment extends BaseFragment {
                 List<AppGroupBean> appGroupList = handleAppList((params[0])
                         .getAppGroupBeanList());
                 MyAppCacheUtils.saveMyAppList(getActivity(), appGroupList);
-                ClientConfigUpdateUtils.getInstance().saveItemLocalVersion(ClientConfigItem.CLIENT_CONFIG_MY_APP,clientConfigMyAppVersion);
+                ClientConfigUpdateUtils.getInstance().saveItemLocalVersion(ClientConfigItem.CLIENT_CONFIG_MY_APP, clientConfigMyAppVersion);
                 return appGroupList;
             } catch (Exception e) {
                 e.printStackTrace();
@@ -1227,7 +1221,7 @@ public class MyAppFragment extends BaseFragment {
         @Override
         protected void onPostExecute(List<AppGroupBean> appGroupList) {
             super.onPostExecute(appGroupList);
-            if(!hasRequestBadgeNum){
+            if (!hasRequestBadgeNum) {
                 new AppBadgeUtils(MyApplication.getInstance()).getAppBadgeCountFromServer();
             }
             appListAdapter.setAppAdapterList(appGroupList);
@@ -1237,12 +1231,9 @@ public class MyAppFragment extends BaseFragment {
     }
 
 
-
-
-
     class WebService extends APIInterfaceInstance {
         @Override
-        public void returnUserAppsSuccess(final GetAppGroupResult getAppGroupResult,String clientConfigMyAppVersion) {
+        public void returnUserAppsSuccess(final GetAppGroupResult getAppGroupResult, String clientConfigMyAppVersion) {
             swipeRefreshLayout.setRefreshing(false);
             myAppSaveTask = new MyAppSaveTask(clientConfigMyAppVersion);
             myAppSaveTask.execute(getAppGroupResult);
@@ -1252,7 +1243,7 @@ public class MyAppFragment extends BaseFragment {
         @Override
         public void returnUserAppsFail(String error, int errorCode) {
             swipeRefreshLayout.setRefreshing(false);
-  //          WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
+            //          WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
         }
 
 

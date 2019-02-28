@@ -95,7 +95,7 @@ class MarkDownParser {
         }
         //boolean notBlock;// 当前Line不是CodeBlock
         do {
-                //jason修改处
+            //jason修改处
 //            notBlock = queue.prevLine() != null && (queue.prevLine().getType() == Line.LINE_TYPE_OL || queue.prevLine().getType() == Line.LINE_TYPE_UL)
 //                    && (tagHandler.find(Tag.UL, queue.currLine()) || tagHandler.find(Tag.OL, queue.currLine()));
 //            // 处理CodeBlock
@@ -111,8 +111,8 @@ class MarkDownParser {
             } else {
                 while (queue.nextLine() != null && !removeNextBlankLine(queue)) {
                     //jason修改处
-                    if ( tagHandler.find(Tag.GAP, queue.nextLine()) || tagHandler.find(Tag.UL, queue.nextLine()) ||
-                                    tagHandler.find(Tag.OL, queue.nextLine()) || tagHandler.find(Tag.H, queue.nextLine())) {
+                    if (tagHandler.find(Tag.GAP, queue.nextLine()) || tagHandler.find(Tag.UL, queue.nextLine()) ||
+                            tagHandler.find(Tag.OL, queue.nextLine()) || tagHandler.find(Tag.H, queue.nextLine())) {
                         break;
                     }
                     if (handleQuotaRelevant(queue, false)) break;

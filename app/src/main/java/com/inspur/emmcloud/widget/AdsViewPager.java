@@ -60,6 +60,4 @@ public class AdsViewPager extends ViewPager {
     }
 
 
-
-
 }

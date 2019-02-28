@@ -232,14 +232,14 @@ public class UserInfoActivity extends BaseActivity {
         final String phoneNum = contactUser.getMobile();
         final String officePhoneNum = contactUser.getTel();
         new ActionSheetDialog.ActionListSheetBuilder(UserInfoActivity.this)
-                .setTitle(getString(R.string.user_call)+contactUser.getName())
-                .addItem(getString(R.string.user_info_phone_number)+":"+phoneNum)
-                .addItem(getString(R.string.user_office_phone)+":"+officePhoneNum)
+                .setTitle(getString(R.string.user_call) + contactUser.getName())
+                .addItem(getString(R.string.user_info_phone_number) + ":" + phoneNum)
+                .addItem(getString(R.string.user_office_phone) + ":" + officePhoneNum)
                 .setOnSheetItemClickListener(new ActionSheetDialog.ActionListSheetBuilder.OnSheetItemClickListener() {
                     @Override
                     public void onClick(ActionSheetDialog dialog, View itemView, int position) {
                         dialog.dismiss();
-                        switch (position){
+                        switch (position) {
                             case 0:
                                 AppUtils.call(UserInfoActivity.this, phoneNum, USER_INFO_ACTIVITY_REQUEST_CODE);
                                 break;

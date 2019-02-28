@@ -31,7 +31,7 @@ public class MailListAdapter extends BaseAdapter {
         this.context = context;
     }
 
-    public void setMailList(List<Mail> mailList, MailFolder currentRootMailFolder,List<Mail> mailSelectList) {
+    public void setMailList(List<Mail> mailList, MailFolder currentRootMailFolder, List<Mail> mailSelectList) {
         this.mailList = mailList;
         this.currentRootMailFolder = currentRootMailFolder;
         this.mailSelectList = mailSelectList;
@@ -42,13 +42,12 @@ public class MailListAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
-
-    public void setSelectMode(boolean isSelectModel){
-        this.isSelectMode = isSelectModel;
+    public boolean getSelectMode() {
+        return isSelectMode;
     }
 
-    public boolean getSelectMode(){
-        return isSelectMode;
+    public void setSelectMode(boolean isSelectModel) {
+        this.isSelectMode = isSelectModel;
     }
 
     @Override

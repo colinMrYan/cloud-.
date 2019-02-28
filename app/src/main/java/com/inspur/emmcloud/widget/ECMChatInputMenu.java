@@ -113,7 +113,7 @@ public class ECMChatInputMenu extends LinearLayout {
     private int delayTimes = 0;
     private List<VoiceResult> voiceResultList = new ArrayList<>();
     private List<String> mp3FilePathList = new ArrayList<>();
-    private Map<String,Boolean> voiceBooleanMap = new HashMap<>();
+    private Map<String, Boolean> voiceBooleanMap = new HashMap<>();
     private AudioDialogManager audioDialogManager;
 
     public ECMChatInputMenu(Context context) {
@@ -139,7 +139,8 @@ public class ECMChatInputMenu extends LinearLayout {
         initVoiceInput();
         initAudioRecord();
     }
-  //initVoiceInput
+
+    //initVoiceInput
     private void initInputEdit() {
         inputEdit.setOnTouchListener(new OnTouchListener() {
             @Override
@@ -157,7 +158,7 @@ public class ECMChatInputMenu extends LinearLayout {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 boolean isContentBlank = (s.length() == 0);
-                if (isContentBlank){
+                if (isContentBlank) {
                     chatInputMenuListener.onChatDraftsClear();
                 }
                 sendMsgBtn.setVisibility(isContentBlank ? GONE : VISIBLE);
@@ -184,42 +185,42 @@ public class ECMChatInputMenu extends LinearLayout {
             @Override
             public void onFinished(final float seconds, String filePath) {
                 // TODO Auto-generated method stub
-                if(AppUtils.getIsVoiceWordOpen()){
-                    if(FileUtils.getFileSize(filePath) <= 0){
-                        if(audioDialogManager != null){
+                if (AppUtils.getIsVoiceWordOpen()) {
+                    if (FileUtils.getFileSize(filePath) <= 0) {
+                        if (audioDialogManager != null) {
                             audioDialogManager.dismissVoice2WordProgressDialog();
                         }
                         return;
                     }
-                        audioDialogManager = new AudioDialogManager(getContext());
-                        audioDialogManager.showVoice2WordProgressDialog();
-                        //转写和转文件格式同时进行
-                        voice2StringMessageUtils.startVoiceListeningByVoiceFile(seconds,filePath);
-                        AndroidMp3ConvertUtils.with(getContext()).setCallBack(new AndroidMp3ConvertUtils.AndroidMp3ConvertCallback() {
-                            @Override
-                            public void onSuccess(String mp3FilePath) {
-                                String fileName = FileUtils.getFileNameWithoutExtension(mp3FilePath);
-                                mp3FilePathList.add(mp3FilePath);
-                                if(voiceBooleanMap.get(fileName) == null || !voiceBooleanMap.get(fileName)){
-                                    voiceBooleanMap.put(fileName,true);
-                                }else{
-                                    callBackVoiceMessage(fileName);
-                                }
+                    audioDialogManager = new AudioDialogManager(getContext());
+                    audioDialogManager.showVoice2WordProgressDialog();
+                    //转写和转文件格式同时进行
+                    voice2StringMessageUtils.startVoiceListeningByVoiceFile(seconds, filePath);
+                    AndroidMp3ConvertUtils.with(getContext()).setCallBack(new AndroidMp3ConvertUtils.AndroidMp3ConvertCallback() {
+                        @Override
+                        public void onSuccess(String mp3FilePath) {
+                            String fileName = FileUtils.getFileNameWithoutExtension(mp3FilePath);
+                            mp3FilePathList.add(mp3FilePath);
+                            if (voiceBooleanMap.get(fileName) == null || !voiceBooleanMap.get(fileName)) {
+                                voiceBooleanMap.put(fileName, true);
+                            } else {
+                                callBackVoiceMessage(fileName);
                             }
+                        }
 
-                            @Override
-                            public void onFailure(Exception e) {
-                                if(audioDialogManager != null){
-                                    audioDialogManager.dismissVoice2WordProgressDialog();
-                                }
+                        @Override
+                        public void onFailure(Exception e) {
+                            if (audioDialogManager != null) {
+                                audioDialogManager.dismissVoice2WordProgressDialog();
                             }
-                        }).setRawPathAndMp3Path(filePath.replace(".wav",".raw"), filePath.replace(".wav",".mp3")).startConvert();
-                }else {
+                        }
+                    }).setRawPathAndMp3Path(filePath.replace(".wav", ".raw"), filePath.replace(".wav", ".mp3")).startConvert();
+                } else {
                     AndroidMp3ConvertUtils.with(getContext()).setCallBack(new AndroidMp3ConvertUtils.AndroidMp3ConvertCallback() {
                         @Override
                         public void onSuccess(String mp3FilePath) {
                             if (chatInputMenuListener != null) {
-                                chatInputMenuListener.onSendVoiceRecordMsg("",seconds, mp3FilePath);
+                                chatInputMenuListener.onSendVoiceRecordMsg("", seconds, mp3FilePath);
                             }
                         }
 
@@ -227,15 +228,15 @@ public class ECMChatInputMenu extends LinearLayout {
                         public void onFailure(Exception e) {
 
                         }
-                    }).setRawPathAndMp3Path(filePath.replace(".wav",".raw"), filePath.replace(".wav",".mp3")).startConvert();
+                    }).setRawPathAndMp3Path(filePath.replace(".wav", ".raw"), filePath.replace(".wav", ".mp3")).startConvert();
 
                 }
             }
 
             @Override
             public void onErrorRecordingVoice(int errorType) {
-                if(errorType == MP3Recorder.ERROR_TYPE){
-                    ToastUtils.show(MyApplication.getInstance(),getContext().getString(R.string.voice_audio_record_unavailiable));
+                if (errorType == MP3Recorder.ERROR_TYPE) {
+                    ToastUtils.show(MyApplication.getInstance(), getContext().getString(R.string.voice_audio_record_unavailiable));
                 }
                 voice2StringMessageUtils.stopListening();
                 return;
@@ -251,7 +252,7 @@ public class ECMChatInputMenu extends LinearLayout {
         waterWaveProgress.setShowNumerical(false);
         waterWaveProgress.setWaveSpeed(0.02F);
         waterWaveProgress.setAmplitude(5.0F);
-        lastVolumeLevel=0;
+        lastVolumeLevel = 0;
         mediaPlayerUtils = new MediaPlayerUtils(getContext());
         voice2StringMessageUtils = new Voice2StringMessageUtils(getContext());
         voice2StringMessageUtils.setOnVoiceResultCallback(new OnVoiceResultCallback() {
@@ -283,25 +284,26 @@ public class ECMChatInputMenu extends LinearLayout {
 
     /**
      * 处理返回结果
+     *
      * @param voiceResult
      */
     private void handleVoiceResult(VoiceResult voiceResult) {
-        if(voiceResult.getMsgState() == Voice2StringMessageUtils.MSG_FROM_CUSTOM){
+        if (voiceResult.getMsgState() == Voice2StringMessageUtils.MSG_FROM_CUSTOM) {
             String fileName = FileUtils.getFileNameWithoutExtension(voiceResult.getFilePath());
             voiceResultList.add(voiceResult);
-            if(voiceBooleanMap.get(fileName) == null || !voiceBooleanMap.get(fileName)){
-                voiceBooleanMap.put(fileName,new Boolean(true));
-            }else{
+            if (voiceBooleanMap.get(fileName) == null || !voiceBooleanMap.get(fileName)) {
+                voiceBooleanMap.put(fileName, new Boolean(true));
+            } else {
                 callBackVoiceMessage(fileName);
             }
-        }else{
-            if(voiceResult.getXunFeiError() == Voice2StringMessageUtils.MSG_XUNFEI_ERROR){
+        } else {
+            if (voiceResult.getXunFeiError() == Voice2StringMessageUtils.MSG_XUNFEI_ERROR) {
                 stopVoiceInput();
-                if(audioDialogManager != null){
+                if (audioDialogManager != null) {
                     audioDialogManager.dismissVoice2WordProgressDialog();
                 }
-                if(voiceResult.getXunFeiPermissionError() == Voice2StringMessageUtils.MSG_XUNFEI_PERMISSION_ERROR){
-                    ToastUtils.show(MyApplication.getInstance(),getContext().getString(R.string.voice_audio_record_unavailiable));
+                if (voiceResult.getXunFeiPermissionError() == Voice2StringMessageUtils.MSG_XUNFEI_PERMISSION_ERROR) {
+                    ToastUtils.show(MyApplication.getInstance(), getContext().getString(R.string.voice_audio_record_unavailiable));
                 }
                 return;
             }
@@ -368,7 +370,7 @@ public class ECMChatInputMenu extends LinearLayout {
      *
      * @param inputs
      */
-    public void setInputLayout(String inputs,boolean isChannelTypeService) {
+    public void setInputLayout(String inputs, boolean isChannelTypeService) {
         //每一位（bit）分别代表：（高位）video voice command file photo text （低位）
         inputTypeBeanList.clear();
         inputEdit.clearInsertModelList();
@@ -379,11 +381,11 @@ public class ECMChatInputMenu extends LinearLayout {
             //功能组的图标，名称
             int[] functionIconArray = {R.drawable.ic_chat_input_add_gallery,
                     R.drawable.ic_chat_input_add_camera, R.drawable.ic_chat_input_add_file, R.drawable.ic_chat_input_add_voice_2_word,
-                    R.drawable.ic_chat_input_add_mention,R.drawable.ic_chat_input_add_voice_call};
+                    R.drawable.ic_chat_input_add_mention, R.drawable.ic_chat_input_add_voice_call};
             String[] functionNameArray = {getContext().getString(R.string.album),
                     getContext().getString(R.string.take_photo),
-                    getContext().getString(R.string.file), getContext().getString(R.string.voice_input), getContext().getString(R.string.mention),getContext().getString(R.string.voice_call)};
-            String[] functionActionArray = {"gallery", "camera", "file", "voice_input", "mention","voice_call"};
+                    getContext().getString(R.string.file), getContext().getString(R.string.voice_input), getContext().getString(R.string.mention), getContext().getString(R.string.voice_call)};
+            String[] functionActionArray = {"gallery", "camera", "file", "voice_input", "mention", "voice_call"};
             String inputControl = "-1";
             if (!StringUtils.isBlank(inputs)) {
                 try {
@@ -422,7 +424,7 @@ public class ECMChatInputMenu extends LinearLayout {
                         break;
                 }
             }
-            if (isChannelTypeService){
+            if (isChannelTypeService) {
                 isInputVoiceEnable = false;
             }
 
@@ -435,7 +437,7 @@ public class ECMChatInputMenu extends LinearLayout {
             }
             if (isInputVoiceEnable) {
                 voiceBtn.setVisibility(VISIBLE);
-            }else {
+            } else {
                 voiceBtn.setVisibility(GONE);
             }
             if (isInputTextEnable) {
@@ -474,7 +476,7 @@ public class ECMChatInputMenu extends LinearLayout {
                             openMentionPage(false);
                             break;
                         case "voice_input":
-                            if(NetUtils.isNetworkConnected(MyApplication.getInstance())){
+                            if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
                                 PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getContext(), Permissions.RECORD_AUDIO, new PermissionRequestCallback() {
                                     @Override
                                     public void onPermissionRequestSuccess(List<String> permissions) {
@@ -483,13 +485,13 @@ public class ECMChatInputMenu extends LinearLayout {
 
                                     @Override
                                     public void onPermissionRequestFail(List<String> permissions) {
-                                        ToastUtils.show(getContext(), PermissionRequestManagerUtils.getInstance().getPermissionToast(getContext(),permissions));
+                                        ToastUtils.show(getContext(), PermissionRequestManagerUtils.getInstance().getPermissionToast(getContext(), permissions));
                                     }
                                 });
                             }
                             break;
                         case "voice_call":
-                            if(NetUtils.isNetworkConnected(MyApplication.getInstance())){
+                            if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
                                 PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getContext(), Permissions.RECORD_AUDIO, new PermissionRequestCallback() {
                                     @Override
                                     public void onPermissionRequestSuccess(List<String> permissions) {
@@ -498,7 +500,7 @@ public class ECMChatInputMenu extends LinearLayout {
 
                                     @Override
                                     public void onPermissionRequestFail(List<String> permissions) {
-                                        ToastUtils.show(getContext(), PermissionRequestManagerUtils.getInstance().getPermissionToast(getContext(),permissions));
+                                        ToastUtils.show(getContext(), PermissionRequestManagerUtils.getInstance().getPermissionToast(getContext(), permissions));
                                     }
 
                                 });
@@ -515,23 +517,23 @@ public class ECMChatInputMenu extends LinearLayout {
 
     private void startVoiceCall() {
         //语音通话
-        if(!canMentions){
+        if (!canMentions) {
             chatInputMenuListener.onVoiceCommucaiton();
-        }else{
-            AppUtils.openChannelMemeberSelect((Activity)getContext(),cid,6);
+        } else {
+            AppUtils.openChannelMemeberSelect((Activity) getContext(), cid, 6);
         }
     }
 
     private void startVoice2Word() {
         addMenuLayout.setVisibility(GONE);
         voiceInputLayout.setVisibility(View.VISIBLE);
-        lastVolumeLevel=0;
+        lastVolumeLevel = 0;
         waterWaveProgress.setProgress(0);
         mediaPlayerUtils.playVoiceOn();
         voice2StringMessageUtils.startVoiceListening();
     }
 
-    public void setChatDrafts(String drafts){
+    public void setChatDrafts(String drafts) {
         inputEdit.setText(drafts);
     }
 
@@ -557,15 +559,16 @@ public class ECMChatInputMenu extends LinearLayout {
 
     /**
      * 发送语音消息
+     *
      * @param fileNameWithoutExtension
      */
     private void callBackVoiceMessage(String fileNameWithoutExtension) {
         VoiceResult voiceResult = getVoiceResult(fileNameWithoutExtension);
         String mp3VoiceFilePath = getVoiceFilePath(fileNameWithoutExtension);
         if (chatInputMenuListener != null) {
-            chatInputMenuListener.onSendVoiceRecordMsg(voiceResult.getResults(),voiceResult.getSeconds(), mp3VoiceFilePath);
+            chatInputMenuListener.onSendVoiceRecordMsg(voiceResult.getResults(), voiceResult.getSeconds(), mp3VoiceFilePath);
         }
-        if(audioDialogManager != null){
+        if (audioDialogManager != null) {
             audioDialogManager.dismissVoice2WordProgressDialog();
         }
         removeDataFromList(fileNameWithoutExtension);
@@ -573,6 +576,7 @@ public class ECMChatInputMenu extends LinearLayout {
 
     /**
      * 查找转写内容
+     *
      * @param fileNameWithoutExtension
      * @return
      */
@@ -580,7 +584,7 @@ public class ECMChatInputMenu extends LinearLayout {
         VoiceResult voiceResult = new VoiceResult();
         voiceResult.setResults("");
         for (int i = 0; i < voiceResultList.size(); i++) {
-            if(fileNameWithoutExtension.equals(FileUtils.getFileNameWithoutExtension(voiceResultList.get(i).getFilePath()))){
+            if (fileNameWithoutExtension.equals(FileUtils.getFileNameWithoutExtension(voiceResultList.get(i).getFilePath()))) {
                 voiceResult = voiceResultList.get(i);
                 break;
             }
@@ -590,12 +594,13 @@ public class ECMChatInputMenu extends LinearLayout {
 
     /**
      * 查找文件路径
+     *
      * @param fileNameWithoutExtension
      * @return
      */
-    private String getVoiceFilePath(String fileNameWithoutExtension){
+    private String getVoiceFilePath(String fileNameWithoutExtension) {
         for (int i = 0; i < mp3FilePathList.size(); i++) {
-            if(fileNameWithoutExtension.equals(FileUtils.getFileNameWithoutExtension(mp3FilePathList.get(i)))){
+            if (fileNameWithoutExtension.equals(FileUtils.getFileNameWithoutExtension(mp3FilePathList.get(i)))) {
                 return mp3FilePathList.get(i);
             }
         }
@@ -604,6 +609,7 @@ public class ECMChatInputMenu extends LinearLayout {
 
     /**
      * 根据名称删除list里的数据
+     *
      * @param fileNameWithoutExtension
      */
     private void removeDataFromList(String fileNameWithoutExtension) {
@@ -611,18 +617,18 @@ public class ECMChatInputMenu extends LinearLayout {
         voiceBooleanMap.remove(fileNameWithoutExtension);
         //移除voice转写结果
         Iterator<VoiceResult> voiceResultIterator = voiceResultList.iterator();
-        while (voiceResultIterator.hasNext()){
+        while (voiceResultIterator.hasNext()) {
             VoiceResult voiceResult = voiceResultIterator.next();
-            if(fileNameWithoutExtension.equals(FileUtils.getFileNameWithoutExtension(voiceResult.getFilePath()))){
-               voiceResultIterator.remove();
-               break;
+            if (fileNameWithoutExtension.equals(FileUtils.getFileNameWithoutExtension(voiceResult.getFilePath()))) {
+                voiceResultIterator.remove();
+                break;
             }
         }
         //移除mp3文件路径
         Iterator<String> mp3FilePathIterator = mp3FilePathList.iterator();
-        while (mp3FilePathIterator.hasNext()){
+        while (mp3FilePathIterator.hasNext()) {
             String mp3FilePath = mp3FilePathIterator.next();
-            if(fileNameWithoutExtension.equals(FileUtils.getFileNameWithoutExtension(mp3FilePath))){
+            if (fileNameWithoutExtension.equals(FileUtils.getFileNameWithoutExtension(mp3FilePath))) {
                 mp3FilePathIterator.remove();
                 break;
             }
@@ -656,15 +662,15 @@ public class ECMChatInputMenu extends LinearLayout {
                 }
                 break;
             case R.id.send_msg_btn:
-                    List<String> urlList = null;
-                    String content = inputEdit.getRichContent(false);
-                    Map<String, String> mentionsMap = null;
-                    mentionsMap = inputEdit.getMentionsMap();
-                    if (chatInputMenuListener != null) {
-                        chatInputMenuListener.onSendMsg(content, getContentMentionUidList(), urlList, mentionsMap);
-                    }
-                    inputEdit.clearInsertModelList();
-                    inputEdit.setText("");
+                List<String> urlList = null;
+                String content = inputEdit.getRichContent(false);
+                Map<String, String> mentionsMap = null;
+                mentionsMap = inputEdit.getMentionsMap();
+                if (chatInputMenuListener != null) {
+                    chatInputMenuListener.onSendMsg(content, getContentMentionUidList(), urlList, mentionsMap);
+                }
+                inputEdit.clearInsertModelList();
+                inputEdit.setText("");
                 break;
             case R.id.add_btn:
                 if (addMenuLayout.isShown()) {
@@ -756,6 +762,10 @@ public class ECMChatInputMenu extends LinearLayout {
         }
     }
 
+    public boolean isAddMenuLayoutShow() {
+        return addMenuLayout.isShown();
+    }
+
     public void setAddMenuLayoutShow(boolean isShow) {
         if (isShow) {
             int softInputHeight = InputMethodUtils.getSupportSoftInputHeight((Activity) getContext());
@@ -768,15 +778,10 @@ public class ECMChatInputMenu extends LinearLayout {
             addMenuLayout.setVisibility(View.VISIBLE);
         } else if (addMenuLayout.isShown()) {
             addMenuLayout.setVisibility(View.GONE);
-             InputMethodUtils.display((Activity) getContext(), inputEdit, 0);
+            InputMethodUtils.display((Activity) getContext(), inputEdit, 0);
         }
 
     }
-
-    public boolean isAddMenuLayoutShow() {
-        return addMenuLayout.isShown();
-    }
-
 
     public void hideAddMenuLayout() {
         addMenuLayout.setVisibility(View.GONE);
@@ -798,35 +803,36 @@ public class ECMChatInputMenu extends LinearLayout {
      * 功能描述：采用十级，新采样数据比当前数据小时，
      * 延迟预定周期以一定速度下降，
      * 下降过程中新采样数据大于下降当前值时继续上升
+     *
      * @param volume
      */
     public void setVoiceImageViewLevel(int volume) {
         //回调函数30多毫秒执行一次
-        LogUtils.LbcDebug("30+毫秒回调函数  ：："+volume);
+        LogUtils.LbcDebug("30+毫秒回调函数  ：：" + volume);
         int currentLevel = 0;
-        if(0==volume) {
-            currentLevel=0;
+        if (0 == volume) {
+            currentLevel = 0;
         } else {
-            currentLevel = volume/3+1;
+            currentLevel = volume / 3 + 1;
         }
-        int showLevel=(currentLevel+lastVolumeLevel)/2;
-        if(currentLevel>=lastVolumeLevel) {
-                delayTimes=TOPDELY_TIMES ;
-            if((showLevel<4)&&(showLevel>0)) {
+        int showLevel = (currentLevel + lastVolumeLevel) / 2;
+        if (currentLevel >= lastVolumeLevel) {
+            delayTimes = TOPDELY_TIMES;
+            if ((showLevel < 4) && (showLevel > 0)) {
                 waterWaveProgress.setProgress(4);
             }
             waterWaveProgress.setProgress(showLevel);
-            lastVolumeLevel=currentLevel;
+            lastVolumeLevel = currentLevel;
         } else {
             //判断延时时间
-            if (delayTimes>0) {
-                delayTimes=delayTimes-1;
+            if (delayTimes > 0) {
+                delayTimes = delayTimes - 1;
             } else {
-                lastVolumeLevel = lastVolumeLevel-1;
+                lastVolumeLevel = lastVolumeLevel - 1;
             }
             waterWaveProgress.setProgress(lastVolumeLevel);
         }
-        }
+    }
 
     /**
      * 停止识别，并播放停止提示音
@@ -837,16 +843,18 @@ public class ECMChatInputMenu extends LinearLayout {
         mediaPlayerUtils.playVoiceOff();
     }
 
-    public String getInputContent(){
+    public String getInputContent() {
         return inputEdit.getText().toString().trim();
     }
+
     public interface ChatInputMenuListener {
         void onSendMsg(String content, List<String> mentionsUidList, List<String> urlList, Map<String, String> mentionsMap);
 
-        void onSendVoiceRecordMsg(String results,float seconds, String filePath);
+        void onSendVoiceRecordMsg(String results, float seconds, String filePath);
 
 
         void onVoiceCommucaiton();
+
         void onChatDraftsClear();
     }
 

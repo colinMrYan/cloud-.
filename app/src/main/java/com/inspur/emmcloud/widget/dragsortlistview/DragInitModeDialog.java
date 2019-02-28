@@ -34,10 +34,6 @@ public class DragInitModeDialog extends DialogFragment {
         mDragInitMode = dragStartMode;
     }
 
-    public interface DragOkListener {
-        void onDragOkClick(int removeMode);
-    }
-
     public void setDragOkListener(DragOkListener l) {
         mListener = l;
     }
@@ -68,7 +64,11 @@ public class DragInitModeDialog extends DialogFragment {
                     public void onClick(DialogInterface dialog, int id) {
                     }
                 });
-    
+
         return builder.create();
+    }
+
+    public interface DragOkListener {
+        void onDragOkClick(int removeMode);
     }
 }

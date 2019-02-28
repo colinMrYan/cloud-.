@@ -137,6 +137,7 @@ public class ResourceUtils {
 
     /**
      * 获取attr中的值,等同于//?attr/xxx
+     *
      * @param activity
      * @param attr
      * @return

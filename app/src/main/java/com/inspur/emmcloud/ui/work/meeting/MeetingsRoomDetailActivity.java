@@ -240,128 +240,6 @@ public class MeetingsRoomDetailActivity extends BaseActivity {
 
     }
 
-    public class MeetingAdapter extends BaseAdapter {
-        private List<MeetingSchedule> meetingScheduleList = new ArrayList<MeetingSchedule>();
-
-        public MeetingAdapter(List<MeetingSchedule> meetingScheduleList) {
-            this.meetingScheduleList = meetingScheduleList;
-        }
-
-        @Override
-        public int getCount() {
-            // TODO Auto-generated method stub
-            return meetingScheduleList.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            // TODO Auto-generated method stub
-            return null;
-        }
-
-        @Override
-        public long getItemId(int position) {
-            // TODO Auto-generated method stub
-            return 0;
-        }
-
-        @Override
-        public View getView(final int position, View convertView,
-                            ViewGroup parent) {
-            // TODO Auto-generated method stub
-            LayoutInflater vi = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-            final MeetingSchedule meetingSchedule = meetingScheduleList
-                    .get(position);
-            SimpleDateFormat format = TimeUtils.getFormat(
-                    MeetingsRoomDetailActivity.this, TimeUtils.FORMAT_HOUR_MINUTE);
-            long beginTimeLong = meetingSchedule.getFrom();
-            long endTimeLong = meetingSchedule.getTo();
-            String beginTimeString = TimeUtils.getTime(beginTimeLong, format);
-            String endTimeString = TimeUtils.getTime(endTimeLong, format);
-            String timeSegment = beginTimeString + "-" + endTimeString;
-            if (meetingSchedule.getMeeting() == null) {
-                convertView = vi.inflate(
-                        R.layout.meeting_no_schedule_item_view, null);
-                ((TextView) convertView.findViewById(R.id.time_text))
-                        .setText(timeSegment + " " + getString(R.string.meeting_free));
-                convertView.findViewById(R.id.meeting_layout)
-                        .setOnClickListener(new OnClickListener() {
-
-                            @Override
-                            public void onClick(View v) {
-                                // TODO Auto-generated method stub
-                                Intent intent = new Intent();
-                                intent.putExtra("flour", shortname);
-                                intent.putExtra("room", roomName);
-                                intent.putExtra("roomid", bid);
-                                intent.putExtra("beginTime",
-                                        meetingSchedule.getFrom());
-                                intent.putExtra("endTime",
-                                        meetingSchedule.getTo());
-                                intent.putExtra("maxAhead", getIntent()
-                                        .getStringExtra("maxAhead"));
-                                intent.putExtra("maxDuration", getIntent()
-                                        .getStringExtra("maxDuration"));
-                                setResult(RESULT_OK, intent);
-                                finish();
-                            }
-                        });
-            } else {
-                final Meeting meeting = meetingSchedule.getMeeting();
-                convertView = vi.inflate(R.layout.meeting_schedule_item_view,
-                        null);
-                ((TextView) convertView.findViewById(R.id.meeting_time_text))
-                        .setText(timeSegment);
-                String organizer = ContactUserCacheUtils.getUserName(meeting.getOrganizer());
-                ((TextView) convertView
-                        .findViewById(R.id.meeting_order_name_text))
-                        .setText(organizer);
-                ((TextView) convertView.findViewById(R.id.meeting_title_text))
-                        .setText(meeting.getTopic());
-
-                convertView.findViewById(R.id.meeting_layout)
-                        .setOnClickListener(new OnClickListener() {
-
-                            @Override
-                            public void onClick(View v) {
-                                // TODO Auto-generated method stub
-                                // Bundle bundle = new Bundle();
-                                // bundle.putSerializable("meeting", meeting);
-                                // startActivityForResult(intent, requestCode);
-                                // IntentUtils.startActivity(
-                                // MeettingsRoomDetailActivity.this,
-                                // MeettingDetailActivity.class, bundle);
-                                startMeetingDetailAcitivity(meeting);
-                            }
-                        });
-
-                convertView.findViewById(R.id.meeting_layout)
-                        .setOnLongClickListener(new OnLongClickListener() {
-
-                            @Override
-                            public boolean onLongClick(View v) {
-                                uid = ((MyApplication) getApplicationContext())
-                                        .getUid();
-                                boolean isAdmin = PreferencesUtils.getBoolean(
-                                        getApplicationContext(),
-                                        MyApplication.getInstance().getTanent() + uid + "isAdmin",
-                                        false);
-                                if (isAdmin
-                                        || meetingSchedule.getMeeting()
-                                        .getOrganizer().equals(uid)) {
-                                    showDeleteMeetingDlg(meetingSchedule);
-                                }
-
-                                return true;
-                            }
-
-                        });
-            }
-            return convertView;
-        }
-
-    }
-
     /**
      * 启动详情
      *
@@ -573,6 +451,128 @@ public class MeetingsRoomDetailActivity extends BaseActivity {
         }
     }
 
+    public class MeetingAdapter extends BaseAdapter {
+        private List<MeetingSchedule> meetingScheduleList = new ArrayList<MeetingSchedule>();
+
+        public MeetingAdapter(List<MeetingSchedule> meetingScheduleList) {
+            this.meetingScheduleList = meetingScheduleList;
+        }
+
+        @Override
+        public int getCount() {
+            // TODO Auto-generated method stub
+            return meetingScheduleList.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            // TODO Auto-generated method stub
+            return 0;
+        }
+
+        @Override
+        public View getView(final int position, View convertView,
+                            ViewGroup parent) {
+            // TODO Auto-generated method stub
+            LayoutInflater vi = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+            final MeetingSchedule meetingSchedule = meetingScheduleList
+                    .get(position);
+            SimpleDateFormat format = TimeUtils.getFormat(
+                    MeetingsRoomDetailActivity.this, TimeUtils.FORMAT_HOUR_MINUTE);
+            long beginTimeLong = meetingSchedule.getFrom();
+            long endTimeLong = meetingSchedule.getTo();
+            String beginTimeString = TimeUtils.getTime(beginTimeLong, format);
+            String endTimeString = TimeUtils.getTime(endTimeLong, format);
+            String timeSegment = beginTimeString + "-" + endTimeString;
+            if (meetingSchedule.getMeeting() == null) {
+                convertView = vi.inflate(
+                        R.layout.meeting_no_schedule_item_view, null);
+                ((TextView) convertView.findViewById(R.id.time_text))
+                        .setText(timeSegment + " " + getString(R.string.meeting_free));
+                convertView.findViewById(R.id.meeting_layout)
+                        .setOnClickListener(new OnClickListener() {
+
+                            @Override
+                            public void onClick(View v) {
+                                // TODO Auto-generated method stub
+                                Intent intent = new Intent();
+                                intent.putExtra("flour", shortname);
+                                intent.putExtra("room", roomName);
+                                intent.putExtra("roomid", bid);
+                                intent.putExtra("beginTime",
+                                        meetingSchedule.getFrom());
+                                intent.putExtra("endTime",
+                                        meetingSchedule.getTo());
+                                intent.putExtra("maxAhead", getIntent()
+                                        .getStringExtra("maxAhead"));
+                                intent.putExtra("maxDuration", getIntent()
+                                        .getStringExtra("maxDuration"));
+                                setResult(RESULT_OK, intent);
+                                finish();
+                            }
+                        });
+            } else {
+                final Meeting meeting = meetingSchedule.getMeeting();
+                convertView = vi.inflate(R.layout.meeting_schedule_item_view,
+                        null);
+                ((TextView) convertView.findViewById(R.id.meeting_time_text))
+                        .setText(timeSegment);
+                String organizer = ContactUserCacheUtils.getUserName(meeting.getOrganizer());
+                ((TextView) convertView
+                        .findViewById(R.id.meeting_order_name_text))
+                        .setText(organizer);
+                ((TextView) convertView.findViewById(R.id.meeting_title_text))
+                        .setText(meeting.getTopic());
+
+                convertView.findViewById(R.id.meeting_layout)
+                        .setOnClickListener(new OnClickListener() {
+
+                            @Override
+                            public void onClick(View v) {
+                                // TODO Auto-generated method stub
+                                // Bundle bundle = new Bundle();
+                                // bundle.putSerializable("meeting", meeting);
+                                // startActivityForResult(intent, requestCode);
+                                // IntentUtils.startActivity(
+                                // MeettingsRoomDetailActivity.this,
+                                // MeettingDetailActivity.class, bundle);
+                                startMeetingDetailAcitivity(meeting);
+                            }
+                        });
+
+                convertView.findViewById(R.id.meeting_layout)
+                        .setOnLongClickListener(new OnLongClickListener() {
+
+                            @Override
+                            public boolean onLongClick(View v) {
+                                uid = ((MyApplication) getApplicationContext())
+                                        .getUid();
+                                boolean isAdmin = PreferencesUtils.getBoolean(
+                                        getApplicationContext(),
+                                        MyApplication.getInstance().getTanent() + uid + "isAdmin",
+                                        false);
+                                if (isAdmin
+                                        || meetingSchedule.getMeeting()
+                                        .getOrganizer().equals(uid)) {
+                                    showDeleteMeetingDlg(meetingSchedule);
+                                }
+
+                                return true;
+                            }
+
+                        });
+            }
+            return convertView;
+        }
+
+    }
+
     class WebService extends APIInterfaceInstance {
 
         @Override
@@ -608,7 +608,7 @@ public class MeetingsRoomDetailActivity extends BaseActivity {
             Intent intent = new Intent();
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.setAction(Constant.ACTION_MEETING);
-            intent.putExtra("refreshMeeting",true);
+            intent.putExtra("refreshMeeting", true);
             LocalBroadcastManager.getInstance(MeetingsRoomDetailActivity.this).sendBroadcast(intent);
             ToastUtils.show(MeetingsRoomDetailActivity.this,
                     getString(R.string.meeting_list_cancel_success));

@@ -41,7 +41,7 @@ public class DisplayResFileMsg {
      * @param msg
      */
     public static View displayResFileMsg(final Context context,
-                                          final Msg msg,boolean isMsgDetial) {
+                                         final Msg msg, boolean isMsgDetial) {
         View cardContentView = LayoutInflater.from(context).inflate(
                 R.layout.chat_msg_card_child_res_file_view, null);
         TextView fileTitleText = (TextView) cardContentView
@@ -52,9 +52,9 @@ public class DisplayResFileMsg {
                 .findViewById(R.id.filecard_download_img);
         boolean isMyMsg = msg.getUid().equals(MyApplication.getInstance().getUid());
         BubbleLayout cardLayout = (BubbleLayout) cardContentView.findViewById(R.id.bl_card);
-        if (!isMsgDetial){
-            cardLayout.setArrowDirection(isMyMsg? ArrowDirection.RIGHT:ArrowDirection.LEFT);
-        }else {
+        if (!isMsgDetial) {
+            cardLayout.setArrowDirection(isMyMsg ? ArrowDirection.RIGHT : ArrowDirection.LEFT);
+        } else {
             cardLayout.setArrowHeight(0);
             cardLayout.setArrowWidth(0);
             cardLayout.setCornersRadius(0);
@@ -87,7 +87,7 @@ public class DisplayResFileMsg {
                 .setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (msg.getSendStatus() != 1){
+                        if (msg.getSendStatus() != 1) {
                             return;
                         }
                         if ((0 < fileProgressBar.getProgress())

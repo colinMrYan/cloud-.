@@ -45,11 +45,11 @@ public class WindowService extends ImpPlugin {
         }
     }
 
-    private void showMenus(JSONObject paramsObject){
+    private void showMenus(JSONObject paramsObject) {
         List<MainTabMenu> optionMenuList = new ArrayList<>();
-        JSONArray array = JSONUtils.getJSONArray(paramsObject,"menus",new JSONArray());
-        for (int i=0;i<array.length();i++){
-            optionMenuList.add(new MainTabMenu(JSONUtils.getJSONObject(array,i,new JSONObject())));
+        JSONArray array = JSONUtils.getJSONArray(paramsObject, "menus", new JSONArray());
+        for (int i = 0; i < array.length(); i++) {
+            optionMenuList.add(new MainTabMenu(JSONUtils.getJSONObject(array, i, new JSONObject())));
         }
         if (optionMenuList.size() > 0 && getImpCallBackInterface() != null) {
             getImpCallBackInterface().onSetOptionMenu(optionMenuList);

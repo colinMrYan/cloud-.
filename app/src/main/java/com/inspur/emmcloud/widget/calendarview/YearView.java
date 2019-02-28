@@ -34,132 +34,107 @@ import java.util.List;
 @SuppressWarnings("unused")
 public abstract class YearView extends View {
 
-    CalendarViewDelegate mDelegate;
-
     /**
      * 当前月份日期的笔
      */
     protected Paint mCurMonthTextPaint = new Paint();
-
     /**
      * 其它月份日期颜色
      */
     protected Paint mOtherMonthTextPaint = new Paint();
-
     /**
      * 当前月份农历文本颜色
      */
     protected Paint mCurMonthLunarTextPaint = new Paint();
-
     /**
      * 当前月份农历文本颜色
      */
     protected Paint mSelectedLunarTextPaint = new Paint();
-
     /**
      * 其它月份农历文本颜色
      */
     protected Paint mOtherMonthLunarTextPaint = new Paint();
-
     /**
      * 其它月份农历文本颜色
      */
     protected Paint mSchemeLunarTextPaint = new Paint();
-
     /**
      * 标记的日期背景颜色画笔
      */
     protected Paint mSchemePaint = new Paint();
-
     /**
      * 被选择的日期背景色
      */
     protected Paint mSelectedPaint = new Paint();
-
     /**
      * 标记的文本画笔
      */
     protected Paint mSchemeTextPaint = new Paint();
-
     /**
      * 选中的文本画笔
      */
     protected Paint mSelectTextPaint = new Paint();
-
     /**
      * 当前日期文本颜色画笔
      */
     protected Paint mCurDayTextPaint = new Paint();
-
     /**
      * 当前日期文本颜色画笔
      */
     protected Paint mCurDayLunarTextPaint = new Paint();
-
     /**
      * 月份画笔
      */
     protected Paint mMonthTextPaint = new Paint();
-
     /**
      * 周栏画笔
      */
     protected Paint mWeekTextPaint = new Paint();
-
-    /**
-     * 日历项
-     */
-    List<Calendar> mItems;
-
     /**
      * 每一项的高度
      */
     protected int mItemHeight;
-
     /**
      * 每一项的宽度
      */
     protected int mItemWidth;
-
     /**
      * Text的基线
      */
     protected float mTextBaseLine;
-
     /**
      * Text的基线
      */
     protected float mMonthTextBaseLine;
-
     /**
      * Text的基线
      */
     protected float mWeekTextBaseLine;
-
     /**
      * 当前日历卡年份
      */
     protected int mYear;
-
     /**
      * 当前日历卡月份
      */
     protected int mMonth;
-
     /**
      * 下个月偏移的数量
      */
     protected int mNextDiff;
-
     /**
      * 周起始
      */
     protected int mWeekStart;
-
     /**
      * 日历的行数
      */
     protected int mLineCount;
+    CalendarViewDelegate mDelegate;
+    /**
+     * 日历项
+     */
+    List<Calendar> mItems;
 
     public YearView(Context context) {
         this(context, null);

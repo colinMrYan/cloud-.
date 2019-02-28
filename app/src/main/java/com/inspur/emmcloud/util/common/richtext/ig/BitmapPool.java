@@ -11,10 +11,9 @@ import java.io.File;
 public class BitmapPool {
 
     private static final int bitmapCacheSize = (int) (Runtime.getRuntime().maxMemory() / 4);
-
-    private LruCache<String, BitmapWrapper> bitmapLruCache;
-    private static File cacheDir;
     private static final int version = 1;
+    private static File cacheDir;
+    private LruCache<String, BitmapWrapper> bitmapLruCache;
 
     private BitmapPool() {
         bitmapLruCache = new LruCache<String, BitmapWrapper>(bitmapCacheSize) {
@@ -31,6 +30,23 @@ public class BitmapPool {
                 }
             }
         };
+    }
+
+    public static BitmapPool getPool() {
+        return BitmapPoolHolder.BITMAP_POOL;
+    }
+
+    static File getCacheDir() {
+        return cacheDir;
+    }
+
+    public static void setCacheDir(File cacheDir) {
+        if (BitmapPool.cacheDir == null)
+            BitmapPool.cacheDir = cacheDir;
+    }
+
+    public static int getVersion() {
+        return version;
     }
 
     void put(String key, BitmapWrapper bitmapWrapper) {
@@ -74,28 +90,6 @@ public class BitmapPool {
         return cacheDir == null ? -1 : BitmapWrapper.exist(key);
     }
 
-
-    private static class BitmapPoolHolder {
-        private static final BitmapPool BITMAP_POOL = new BitmapPool();
-    }
-
-    public static BitmapPool getPool() {
-        return BitmapPoolHolder.BITMAP_POOL;
-    }
-
-    public static void setCacheDir(File cacheDir) {
-        if (BitmapPool.cacheDir == null)
-            BitmapPool.cacheDir = cacheDir;
-    }
-
-    static File getCacheDir() {
-        return cacheDir;
-    }
-
-    public static int getVersion() {
-        return version;
-    }
-
     public void clear() {
         bitmapLruCache.evictAll();
     }
@@ -103,5 +97,9 @@ public class BitmapPool {
     @SuppressWarnings("unused")
     public void clearLocalDiskCache() {
         BitmapWrapper.clearCache();
+    }
+
+    private static class BitmapPoolHolder {
+        private static final BitmapPool BITMAP_POOL = new BitmapPool();
     }
 }

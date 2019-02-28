@@ -33,7 +33,7 @@ public class AppCenterApprovalUtils {
     /**
      * 打开Web行政审批
      */
-    public void openApprovalApp(Activity context,App app){
+    public void openApprovalApp(Activity context, App app) {
         this.context = context;
         this.app = app;
         getApprovalPassword();
@@ -56,7 +56,7 @@ public class AppCenterApprovalUtils {
      */
     private void showPasswordInputDlg() {
         passwordInputDlg = new MyDialog(context,
-                R.layout.dialog_my_app_approval_password_input,R.style.userhead_dialog_bg);
+                R.layout.dialog_my_app_approval_password_input, R.style.userhead_dialog_bg);
         passwordInputDlg.setCancelable(false);
         final EditText inputEdit = (EditText) passwordInputDlg.findViewById(R.id.edit);
         (passwordInputDlg.findViewById(R.id.ok_btn)).setOnClickListener(new View.OnClickListener() {
@@ -65,9 +65,9 @@ public class AppCenterApprovalUtils {
                 String password = inputEdit.getText().toString();
                 if (StringUtils.isBlank(password)) {
                     ToastUtils.show(context, R.string.login_please_input_password);
-                }else if(password.length()<6){
+                } else if (password.length() < 6) {
                     ToastUtils.show(context, R.string.approval_input_password_valiad);
-                }else{
+                } else {
                     try {
                         String encodePassword = EncryptUtils.encodeApprovalPassword(password);
                         veriryPassword(encodePassword);
@@ -90,6 +90,7 @@ public class AppCenterApprovalUtils {
 
     /**
      * 验证密码
+     *
      * @param password
      */
     private void veriryPassword(String password) {
@@ -112,13 +113,13 @@ public class AppCenterApprovalUtils {
         GetMyInfoResult getMyInfoResult = new GetMyInfoResult(myInfo);
         String password = PreferencesByUserAndTanentUtils.getString(context, "approvalPassword");
         try {
-            password = URLEncoder.encode(password,"UTF-8");
-        }catch (Exception e){
+            password = URLEncoder.encode(password, "UTF-8");
+        } catch (Exception e) {
             e.printStackTrace();
-            password= PreferencesByUserAndTanentUtils.getString(context, "approvalPassword");
+            password = PreferencesByUserAndTanentUtils.getString(context, "approvalPassword");
         }
-        String url = app.getUri() + "?username="+getMyInfoResult.getCode()+"&md5pw="+password;
-        UriUtils.openUrl(context,url);
+        String url = app.getUri() + "?username=" + getMyInfoResult.getCode() + "&md5pw=" + password;
+        UriUtils.openUrl(context, url);
     }
 
     private class WebService extends APIInterfaceInstance {
@@ -135,7 +136,7 @@ public class AppCenterApprovalUtils {
         }
 
         @Override
-        public void returnVeriryApprovalPasswordFail(String error,int errorCode) {
+        public void returnVeriryApprovalPasswordFail(String error, int errorCode) {
             if (loadingDlg != null && loadingDlg.isShowing()) {
                 loadingDlg.dismiss();
             }

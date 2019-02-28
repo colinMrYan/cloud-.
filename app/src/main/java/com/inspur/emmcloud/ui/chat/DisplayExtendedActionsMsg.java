@@ -68,7 +68,7 @@ public class DisplayExtendedActionsMsg extends APIInterfaceInstance {
                 R.layout.chat_msg_card_child_extended_actions_view, null);
         final boolean isMyMsg = msg.getFromUser().equals(MyApplication.getInstance().getUid());
         BubbleLayout cardLayout = (BubbleLayout) convertView.findViewById(R.id.bl_card);
-        cardLayout.setArrowDirection(isMyMsg? ArrowDirection.RIGHT:ArrowDirection.LEFT);
+        cardLayout.setArrowDirection(isMyMsg ? ArrowDirection.RIGHT : ArrowDirection.LEFT);
         ImageView posterImg = (ImageView) convertView.findViewById(R.id.poster_img);
         final MsgContentExtendedActions msgContentActions = msg.getMsgContentExtendedActions();
         RelativeLayout singleActionLayout = (RelativeLayout) convertView.findViewById(R.id.single_action_layout);
@@ -126,8 +126,8 @@ public class DisplayExtendedActionsMsg extends APIInterfaceInstance {
 
 
     private void openAction(Context context, String actionContent) {
-        if (!StringUtils.isBlank(actionContent) && NetUtils.isNetworkConnected(context)){
-            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SEND_ACTION_CONTENT_MESSAGE,actionContent));
+        if (!StringUtils.isBlank(actionContent) && NetUtils.isNetworkConnected(context)) {
+            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SEND_ACTION_CONTENT_MESSAGE, actionContent));
         }
 
     }

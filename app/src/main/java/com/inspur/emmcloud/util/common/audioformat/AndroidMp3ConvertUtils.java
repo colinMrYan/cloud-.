@@ -21,10 +21,28 @@ public class AndroidMp3ConvertUtils {
     private static final int MODE = 0;//模式，默认0
     private static final int OUT_BIT_RATE = 32;//输入比特率
     private static final int QUALITY = 5;//音频质量0~9,0质量最好体积最大，9质量最差体积最小
+    Handler handler = new Handler();
     private Context context;
     private String rawPath = "", mp3Path = "";
     private long rawFileSize = 0;
     private AndroidMp3ConvertCallback callback;
+    Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            long bytes = Mp3Converter.getConvertBytes();
+            float progress = (100f * bytes / rawFileSize);
+            if (bytes == -1) {
+                progress = 100;
+            }
+            //解决部分手机（如mi6）在有些情况下回调有问题导致dialog不消失的问题
+            if (progress == 100) {
+                callback.onSuccess(mp3Path);
+            }
+            if (handler != null && progress != 100) {
+                handler.postDelayed(this, 20);
+            }
+        }
+    };
 
     private AndroidMp3ConvertUtils(Context context) {
         this.context = context;
@@ -78,7 +96,7 @@ public class AndroidMp3ConvertUtils {
             return;
         }
         //检查raw，mp3路径是否正确
-        if(!checkRawAndMp3PathCorrect()){
+        if (!checkRawAndMp3PathCorrect()) {
             Exception e = new Exception("raw or mp3 filePath not correct exception");
             callback.onFailure(e);
             return;
@@ -105,7 +123,7 @@ public class AndroidMp3ConvertUtils {
     private void keepMp3FilePathExist() {
         String mp3FileSavePath = FileUtils.getFolderName(mp3Path);
         File dir = new File(mp3FileSavePath);
-        if(!dir.exists()){
+        if (!dir.exists()) {
             dir.mkdirs();
         }
     }
@@ -114,30 +132,11 @@ public class AndroidMp3ConvertUtils {
      * 检查传入raw，mp3文件名称是否正确
      */
     private boolean checkRawAndMp3PathCorrect() {
-        if(!rawPath.endsWith(".raw") || !mp3Path.endsWith(".mp3")){
+        if (!rawPath.endsWith(".raw") || !mp3Path.endsWith(".mp3")) {
             return false;
         }
         return true;
     }
-
-    Handler handler = new Handler();
-    Runnable runnable = new Runnable() {
-        @Override
-        public void run() {
-            long bytes = Mp3Converter.getConvertBytes();
-            float progress = (100f * bytes / rawFileSize);
-            if (bytes == -1) {
-                progress = 100;
-            }
-            //解决部分手机（如mi6）在有些情况下回调有问题导致dialog不消失的问题
-            if(progress == 100){
-                callback.onSuccess(mp3Path);
-            }
-            if (handler != null && progress != 100) {
-                handler.postDelayed(this, 20);
-            }
-        }
-    };
 
     public interface AndroidMp3ConvertCallback {
         void onSuccess(String mp3FilePath);

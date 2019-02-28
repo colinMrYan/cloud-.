@@ -64,7 +64,7 @@ public class ECMChatInputMenuViewpageLayout extends LinearLayout {
         initViews();
     }
 
-    public void setOnGridItemClickListener(AdapterView.OnItemClickListener onItemClickListener){
+    public void setOnGridItemClickListener(AdapterView.OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
     }
 
@@ -75,7 +75,7 @@ public class ECMChatInputMenuViewpageLayout extends LinearLayout {
             views.add(getGridChildView(i));
         }
         pageNumImgs = new ImageView[views.size()];
-        if (views.size()>1){
+        if (views.size() > 1) {
             int pageNumSize = DensityUtil.dip2px(getContext(), 6);
             int margin = DensityUtil.dip2px(getContext(), 6);
             for (int i = 0; i < views.size(); i++) {
@@ -108,7 +108,7 @@ public class ECMChatInputMenuViewpageLayout extends LinearLayout {
         }
         MsgInputAddItemAdapter adapter = new MsgInputAddItemAdapter(getContext(), pageInputTypeBeanList);
         gridView.setAdapter(adapter);
-        if (onItemClickListener != null){
+        if (onItemClickListener != null) {
             gridView.setOnItemClickListener(onItemClickListener);
         }
         return view;

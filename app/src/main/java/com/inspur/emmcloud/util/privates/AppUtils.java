@@ -23,7 +23,6 @@ import android.os.Build;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.FileProvider;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -31,7 +30,6 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.github.zafarkhaja.semver.Version;
-import com.inspur.emmcloud.BuildConfig;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.mine.Language;
@@ -48,7 +46,6 @@ import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
 import com.inspur.emmcloud.util.common.systool.permission.Permissions;
-import com.inspur.imp.api.ImpActivity;
 import com.inspur.imp.api.Res;
 import com.inspur.imp.plugin.barcode.decoder.PreviewDecodeActivity;
 import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
@@ -79,14 +76,16 @@ public class AppUtils {
 
     /**
      * 获取当前App网速
+     *
      * @param uid
      * @return
      */
     public static String getNetSpeed(int uid) {
-        long nowTotalRxBytes = TrafficStats.getUidRxBytes(uid) == TrafficStats.UNSUPPORTED ? 0 : (TrafficStats.getTotalRxBytes() / 1024);;
+        long nowTotalRxBytes = TrafficStats.getUidRxBytes(uid) == TrafficStats.UNSUPPORTED ? 0 : (TrafficStats.getTotalRxBytes() / 1024);
+        ;
         long nowTimeStamp = System.currentTimeMillis();
         long divide = nowTimeStamp - lastTimeStamp;
-        long speed = ((nowTotalRxBytes - lastTotalRxBytes) * 1000 / (divide == 0? 1:divide));//毫秒转换
+        long speed = ((nowTotalRxBytes - lastTotalRxBytes) * 1000 / (divide == 0 ? 1 : divide));//毫秒转换
         lastTimeStamp = nowTimeStamp;
         return String.valueOf(speed) + " kb/s";
     }
@@ -124,10 +123,11 @@ public class AppUtils {
 
     /**
      * 获取当前应用语言
+     *
      * @param context
      * @return
      */
-    public static String getCurrentAppLanguage(Context context){
+    public static String getCurrentAppLanguage(Context context) {
         String languageJson = PreferencesUtils.getString(
                 context, MyApplication.getInstance().getTanent() + "appLanguageObj");
         if (languageJson != null) {
@@ -199,10 +199,11 @@ public class AppUtils {
 
     /**
      * 获取应用包名
+     *
      * @param context
      * @return
      */
-    public static String getPackageName(Context context){
+    public static String getPackageName(Context context) {
         return context.getPackageName();
     }
 
@@ -236,21 +237,21 @@ public class AppUtils {
                 Version currentVersion = Version.valueOf(currentVersionValue);
                 return currentVersion.greaterThan(previousVersion);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return false;
     }
 
-    public static boolean isPreviousLitterThan(Context context,String version){
-        String previousVersionValue = PreferencesUtils.getString(context,Constant.PREF_APP_PREVIOUS_VERSION, "");
+    public static boolean isPreviousLitterThan(Context context, String version) {
+        String previousVersionValue = PreferencesUtils.getString(context, Constant.PREF_APP_PREVIOUS_VERSION, "");
         try {
             if (!StringUtils.isBlank(previousVersionValue)) {
                 Version previousVersion = Version.valueOf(previousVersionValue);
                 Version targetVersion = Version.valueOf(version);
                 return targetVersion.greaterThan(previousVersion);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return false;
@@ -310,6 +311,7 @@ public class AppUtils {
 
     /**
      * 获取随机数
+     *
      * @param length
      * @return
      */
@@ -418,7 +420,7 @@ public class AppUtils {
     }
 
 
-    public static boolean getIsXiaoMi(){
+    public static boolean getIsXiaoMi() {
         return AppUtils.GetChangShang().toLowerCase().startsWith(Constant.XIAOMI_FLAG);
     }
 
@@ -625,15 +627,16 @@ public class AppUtils {
 
     /**
      * 根据channelId打开相应的频道
+     *
      * @param activity
      * @param channelId
      */
-    public static void openChannelMemeberSelect(Activity activity,String channelId,int requestCode){
+    public static void openChannelMemeberSelect(Activity activity, String channelId, int requestCode) {
         Intent intent = new Intent();
         intent.setClass(activity, MembersActivity.class);
-        intent.putExtra("title",activity.getString(R.string.voice_communication_choice_members));
+        intent.putExtra("title", activity.getString(R.string.voice_communication_choice_members));
         intent.putExtra(MembersActivity.MEMBER_PAGE_STATE, MembersActivity.SELECT_STATE);
-        intent.putExtra("cid",channelId);
+        intent.putExtra("cid", channelId);
         activity.startActivity(intent);
     }
 
@@ -651,12 +654,12 @@ public class AppUtils {
             PermissionRequestManagerUtils.getInstance().requestRuntimePermission(activity, Permission.CAMERA, new PermissionRequestCallback() {
                 @Override
                 public void onPermissionRequestSuccess(List<String> permissions) {
-                    openCameraAfterCheckPermission(activity,fileName,requestCode);
+                    openCameraAfterCheckPermission(activity, fileName, requestCode);
                 }
 
                 @Override
                 public void onPermissionRequestFail(List<String> permissions) {
-                    ToastUtils.show(activity, PermissionRequestManagerUtils.getInstance().getPermissionToast(activity,permissions));
+                    ToastUtils.show(activity, PermissionRequestManagerUtils.getInstance().getPermissionToast(activity, permissions));
                 }
             });
         } else {
@@ -673,60 +676,61 @@ public class AppUtils {
         }
         Intent intent = new Intent();
         intent.putExtra(MyCameraActivity.EXTRA_PHOTO_DIRECTORY_PATH, appDir.getAbsolutePath());
-        intent.putExtra(MyCameraActivity.EXTRA_PHOTO_NAME,fileName);
-        intent.setClass(activity,MyCameraActivity.class);
+        intent.putExtra(MyCameraActivity.EXTRA_PHOTO_NAME, fileName);
+        intent.setClass(activity, MyCameraActivity.class);
         activity.startActivityForResult(intent, requestCode);
     }
 
-    public static void openScanCode(final Activity activity, final int requestCode){
+    public static void openScanCode(final Activity activity, final int requestCode) {
         PermissionRequestManagerUtils.getInstance().requestRuntimePermission(activity, Permissions.CAMERA, new PermissionRequestCallback() {
             @Override
             public void onPermissionRequestSuccess(List<String> permissions) {
-                openScanCodeAfterCheckPermission(activity,requestCode);
+                openScanCodeAfterCheckPermission(activity, requestCode);
             }
 
             @Override
             public void onPermissionRequestFail(List<String> permissions) {
-                ToastUtils.show(activity, PermissionRequestManagerUtils.getInstance().getPermissionToast(activity,permissions));
+                ToastUtils.show(activity, PermissionRequestManagerUtils.getInstance().getPermissionToast(activity, permissions));
             }
 
 
         });
     }
 
-    private static void openScanCodeAfterCheckPermission(Activity activity,int requestCode) {
+    private static void openScanCodeAfterCheckPermission(Activity activity, int requestCode) {
         Intent intent = new Intent();
         intent.setClass(activity, PreviewDecodeActivity.class);
-        activity.startActivityForResult(intent,requestCode);
+        activity.startActivityForResult(intent, requestCode);
     }
 
-    public static void openScanCode(final Fragment fragment, final int requestCode){
+    public static void openScanCode(final Fragment fragment, final int requestCode) {
         PermissionRequestManagerUtils.getInstance().requestRuntimePermission(fragment.getActivity(), Permissions.CAMERA, new PermissionRequestCallback() {
             @Override
             public void onPermissionRequestSuccess(List<String> permissions) {
-                openScanCodeAfterCheckPermission(fragment,requestCode);
+                openScanCodeAfterCheckPermission(fragment, requestCode);
             }
 
             @Override
             public void onPermissionRequestFail(List<String> permissions) {
-                ToastUtils.show(fragment.getActivity(), PermissionRequestManagerUtils.getInstance().getPermissionToast(fragment.getActivity(),permissions));
+                ToastUtils.show(fragment.getActivity(), PermissionRequestManagerUtils.getInstance().getPermissionToast(fragment.getActivity(), permissions));
             }
         });
     }
 
-    private static void openScanCodeAfterCheckPermission(Fragment fragment,int requestCode) {
+    private static void openScanCodeAfterCheckPermission(Fragment fragment, int requestCode) {
         Intent intent = new Intent();
         intent.setClass(fragment.getActivity(), PreviewDecodeActivity.class);
-        fragment.startActivityForResult(intent,requestCode);
+        fragment.startActivityForResult(intent, requestCode);
     }
 
     /**
      * 发短信
+     *
      * @param activity
      * @param phoneNum
      * @param requestCode
      */
-    public static void sendSMS(Activity activity,String phoneNum,int requestCode){
+    public static void sendSMS(Activity activity, String phoneNum, int requestCode) {
         MyApplication.getInstance().setEnterSystemUI(true);
         Uri smsToUri = Uri.parse("smsto:" + phoneNum);
         Intent intent = new Intent(Intent.ACTION_SENDTO, smsToUri);
@@ -736,23 +740,24 @@ public class AppUtils {
 
     /**
      * 打电话
+     *
      * @param activity
      * @param phoneNum
      * @param requestCode
      */
-    public static void call(final Activity activity, final String phoneNum, final int requestCode){
+    public static void call(final Activity activity, final String phoneNum, final int requestCode) {
         PermissionRequestManagerUtils.getInstance().requestRuntimePermission(activity, Permissions.CALL_PHONE, new PermissionRequestCallback() {
             @Override
             public void onPermissionRequestSuccess(List<String> permissions) {
                 MyApplication.getInstance().setEnterSystemUI(true);
                 Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:"
-                    + phoneNum));
+                        + phoneNum));
                 activity.startActivityForResult(intent, requestCode);
             }
 
             @Override
             public void onPermissionRequestFail(List<String> permissions) {
-                ToastUtils.show(activity, PermissionRequestManagerUtils.getInstance().getPermissionToast(activity,permissions));
+                ToastUtils.show(activity, PermissionRequestManagerUtils.getInstance().getPermissionToast(activity, permissions));
                 activity.finish();
             }
         });
@@ -760,17 +765,19 @@ public class AppUtils {
 
     /**
      * 发邮件
+     *
      * @param activity
      * @param mail
      * @param requestCode
      */
-    public static void sendMail(Activity activity,String mail,int requestCode){
+    public static void sendMail(Activity activity, String mail, int requestCode) {
         MyApplication.getInstance().setEnterSystemUI(true);
         Uri uri = Uri.parse("mailto:" + mail);
         Intent intent = new Intent(Intent.ACTION_SENDTO, uri);
         activity.startActivityForResult(Intent.createChooser(intent,
                 activity.getString(R.string.please_select_app_of_mail)), 1);
     }
+
     /**
      * 初始化图片选择控件
      */
@@ -837,7 +844,7 @@ public class AppUtils {
             @Override
             public void onPermissionRequestFail(List<String> permissions) {
                 uniqueId[0] = "";
-                ToastUtils.show(context, PermissionRequestManagerUtils.getInstance().getPermissionToast(context,permissions));
+                ToastUtils.show(context, PermissionRequestManagerUtils.getInstance().getPermissionToast(context, permissions));
             }
         });
         return uniqueId[0];
@@ -884,17 +891,17 @@ public class AppUtils {
             String hwtoken = PreferencesUtils.getString(context, Constant.HUAWEI_PUSH_TOKEN, "");
             if (!StringUtils.isBlank(hwtoken)) {
                 pushId = hwtoken + Constant.PUSH_HUAWEI_COM;
-            }else {
+            } else {
                 String jpushPushId = PreferencesUtils.getString(context, Constant.JPUSH_REG_ID, "");
-                if(!StringUtils.isBlank(jpushPushId)){
-                    AppUtils.setPushFlag(context,Constant.JPUSH_FLAG);
+                if (!StringUtils.isBlank(jpushPushId)) {
+                    AppUtils.setPushFlag(context, Constant.JPUSH_FLAG);
                     pushId = jpushPushId;
                 }
             }
         } else {
             pushId = PreferencesUtils.getString(context, Constant.JPUSH_REG_ID, "");
         }
-        if (StringUtils.isBlank(pushId)){
+        if (StringUtils.isBlank(pushId)) {
             pushId = "UNKNOWN";
         }
         return pushId;
@@ -932,19 +939,21 @@ public class AppUtils {
 
     /**
      * 获取PUSH_FLAG
+     *
      * @param context
      * @return
      */
-    public static String getPushFlag(Context context){
+    public static String getPushFlag(Context context) {
         return PreferencesUtils.getString(context, Constant.PUSH_FLAG, "");
     }
 
     /**
      * 设置pushFlag
+     *
      * @param context
      * @param pushFlag
      */
-    public static void setPushFlag(Context context,String pushFlag){
+    public static void setPushFlag(Context context, String pushFlag) {
         PreferencesUtils.putString(context, Constant.PUSH_FLAG, pushFlag);
     }
 
@@ -979,7 +988,7 @@ public class AppUtils {
     public static boolean isAppVersionStandard() {
         boolean isAppVersionStandard = true;
         String appFirstLoadAlis = PreferencesUtils.getString(MyApplication.getInstance(), Constant.PREF_APP_LOAD_ALIAS);
-        if (appFirstLoadAlis != null && !appFirstLoadAlis.equals("Standard")){
+        if (appFirstLoadAlis != null && !appFirstLoadAlis.equals("Standard")) {
             isAppVersionStandard = false;
         }
         return isAppVersionStandard;
@@ -988,20 +997,22 @@ public class AppUtils {
 
     /**
      * 获取版本名
+     *
      * @param context
      * @return
      */
-    public static String getManifestAppVersionFlag(Context context){
-        return getManifestMetadata(context,"FLAG_APP_VERSION_TYPE");
+    public static String getManifestAppVersionFlag(Context context) {
+        return getManifestMetadata(context, "FLAG_APP_VERSION_TYPE");
     }
 
     /**
      * 获取manifest中的metadata值
+     *
      * @param context
      * @param key
      * @return
      */
-    public static String getManifestMetadata(Context context,String key){
+    public static String getManifestMetadata(Context context, String key) {
         try {
             ApplicationInfo appInfo = context.getPackageManager().getApplicationInfo(
                     context.getPackageName(), PackageManager.GET_META_DATA);
@@ -1016,20 +1027,17 @@ public class AppUtils {
     /**
      * 获取应用程序名称
      */
-    public static String getAppName(Context context)
-    {
-        try
-        {
+    public static String getAppName(Context context) {
+        try {
             int appNameRes = -1;
-            if (isAppVersionStandard()){
+            if (isAppVersionStandard()) {
                 appNameRes = R.string.app_name;
-            }else {
+            } else {
                 String appFirstLoadAlis = PreferencesUtils.getString(MyApplication.getInstance(), Constant.PREF_APP_LOAD_ALIAS);
-                appNameRes = Res.getStringID("app_name_"+appFirstLoadAlis);
+                appNameRes = Res.getStringID("app_name_" + appFirstLoadAlis);
             }
             return context.getResources().getString(appNameRes);
-        } catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return context.getResources().getString(R.string.app_name);
@@ -1037,16 +1045,17 @@ public class AppUtils {
 
     /**
      * 获取app图标
+     *
      * @param context
      * @return
      */
-    public static int getAppIconRes(Context context){
+    public static int getAppIconRes(Context context) {
         int appIconRes = -1;
-        if (isAppVersionStandard()){
+        if (isAppVersionStandard()) {
             appIconRes = R.drawable.ic_launcher;
-        }else {
+        } else {
             String appFirstLoadAlis = PreferencesUtils.getString(MyApplication.getInstance(), Constant.PREF_APP_LOAD_ALIAS);
-            appIconRes = Res.getDrawableID("ic_launcher_"+appFirstLoadAlis);
+            appIconRes = Res.getDrawableID("ic_launcher_" + appFirstLoadAlis);
         }
         return appIconRes;
     }
@@ -1056,9 +1065,9 @@ public class AppUtils {
      * permissions 权限数组
      * return true-表示没有改权限  false-表示权限已开启
      */
-    public static boolean lacksPermissions(Context context,String[] permissions) {
+    public static boolean lacksPermissions(Context context, String[] permissions) {
         for (String permission : permissions) {
-            if (lacksPermission(context,permission)) {
+            if (lacksPermission(context, permission)) {
                 return true;
             }
         }
@@ -1075,10 +1084,11 @@ public class AppUtils {
 
     /**
      * 获取是否开启语音转字
+     *
      * @return
      */
-    public static boolean getIsVoiceWordOpen(){
-        return PreferencesByUserAndTanentUtils.getBoolean(MyApplication.getInstance(), Constant.PREF_APP_OPEN_VOICE_WORD_SWITCH,DisplayMediaVoiceMsg.IS_VOICE_WORD_OPEN) == DisplayMediaVoiceMsg.IS_VOICE_WORD_OPEN;
+    public static boolean getIsVoiceWordOpen() {
+        return PreferencesByUserAndTanentUtils.getBoolean(MyApplication.getInstance(), Constant.PREF_APP_OPEN_VOICE_WORD_SWITCH, DisplayMediaVoiceMsg.IS_VOICE_WORD_OPEN) == DisplayMediaVoiceMsg.IS_VOICE_WORD_OPEN;
     }
 
     /**
@@ -1119,7 +1129,7 @@ public class AppUtils {
             int m = ((Integer) method.invoke(object, arrayOfObject1)).intValue();
             return m == AppOpsManager.MODE_ALLOWED;
         } catch (Exception e) {
-            LogUtils.YfcDebug("判断悬浮窗权限异常："+e.getMessage());
+            LogUtils.YfcDebug("判断悬浮窗权限异常：" + e.getMessage());
         }
         return false;
     }
@@ -1152,10 +1162,11 @@ public class AppUtils {
 
     /**
      * 获取kb或者mb格式的数字
+     *
      * @param data
      * @return
      */
-    public static String getKBOrMBFormatString(long data){
+    public static String getKBOrMBFormatString(long data) {
         double MBDATA = 1048576.0;
         double KBDATA = 1024.0;
         if (data < KBDATA) {
@@ -1169,6 +1180,7 @@ public class AppUtils {
 
     /**
      * copy到剪切板
+     *
      * @param context
      * @param textView
      */
@@ -1178,7 +1190,7 @@ public class AppUtils {
         ToastUtils.show(context, R.string.copyed_to_paste_board);
     }
 
-    public static void copyContentToPasteBoard(Context context,String content){
+    public static void copyContentToPasteBoard(Context context, String content) {
         ClipboardManager cmb = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
         cmb.setPrimaryClip(ClipData.newPlainText(null, content));
         ToastUtils.show(context, R.string.copyed_to_paste_board);

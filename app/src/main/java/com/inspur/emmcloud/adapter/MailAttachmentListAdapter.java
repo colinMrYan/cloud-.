@@ -19,7 +19,8 @@ import java.util.List;
 public class MailAttachmentListAdapter extends BaseAdapter {
     private List<MailAttachment> mailAttachmentList;
     private Context context;
-    public MailAttachmentListAdapter(Context context, List<MailAttachment> mailAttachmentList){
+
+    public MailAttachmentListAdapter(Context context, List<MailAttachment> mailAttachmentList) {
         this.context = context;
         this.mailAttachmentList = mailAttachmentList;
     }
@@ -42,7 +43,7 @@ public class MailAttachmentListAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         MailAttachment mailAttachment = mailAttachmentList.get(position);
-        convertView = LayoutInflater.from(context).inflate(R.layout.mail_attachment_item_view,null);
+        convertView = LayoutInflater.from(context).inflate(R.layout.mail_attachment_item_view, null);
         TextView attachmentNameText = convertView.findViewById(R.id.tv_name);
         attachmentNameText.setText(mailAttachment.getName());
         return convertView;

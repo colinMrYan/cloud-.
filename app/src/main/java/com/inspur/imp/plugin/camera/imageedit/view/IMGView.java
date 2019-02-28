@@ -39,26 +39,16 @@ public class IMGView extends FrameLayout implements Runnable, ScaleGestureDetect
         ValueAnimator.AnimatorUpdateListener, IMGStickerPortrait.Callback, Animator.AnimatorListener {
 
     private static final String TAG = "IMGView";
-
-    private IMGMode mPreMode = IMGMode.NONE;
-
-    private IMGImage mImage = new IMGImage();
-
-    private GestureDetector mGDetector;
-
-    private ScaleGestureDetector mSGDetector;
-
-    private IMGHomingAnimator mHomingAnimator;
-
-    private Pen mPen = new Pen();
-
-    private int mPointerCount = 0;
-
-    private Paint mDoodlePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-
-    private Paint mMosaicPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-
     private static final boolean DEBUG = true;
+    private IMGMode mPreMode = IMGMode.NONE;
+    private IMGImage mImage = new IMGImage();
+    private GestureDetector mGDetector;
+    private ScaleGestureDetector mSGDetector;
+    private IMGHomingAnimator mHomingAnimator;
+    private Pen mPen = new Pen();
+    private int mPointerCount = 0;
+    private Paint mDoodlePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private Paint mMosaicPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
     {
         // 涂鸦画刷
@@ -100,18 +90,6 @@ public class IMGView extends FrameLayout implements Runnable, ScaleGestureDetect
     public void setImageBitmap(Bitmap image) {
         mImage.setBitmap(image);
         invalidate();
-    }
-
-    public void setMode(IMGMode mode) {
-        // 保存现在的编辑模式
-        mPreMode = mImage.getMode();
-
-        // 设置新的编辑模式
-        mImage.setMode(mode);
-        mPen.setMode(mode);
-
-        // 矫正区域
-        onHoming();
     }
 
     /**
@@ -192,6 +170,18 @@ public class IMGView extends FrameLayout implements Runnable, ScaleGestureDetect
 
     public IMGMode getMode() {
         return mImage.getMode();
+    }
+
+    public void setMode(IMGMode mode) {
+        // 保存现在的编辑模式
+        mPreMode = mImage.getMode();
+
+        // 设置新的编辑模式
+        mImage.setMode(mode);
+        mPen.setMode(mode);
+
+        // 矫正区域
+        onHoming();
     }
 
     @Override
@@ -582,25 +572,6 @@ public class IMGView extends FrameLayout implements Runnable, ScaleGestureDetect
         return onScrollTo(getScrollX() + Math.round(dx), getScrollY() + Math.round(dy));
     }
 
-    private class MoveAdapter extends GestureDetector.SimpleOnGestureListener {
-
-        @Override
-        public boolean onDown(MotionEvent e) {
-            return true;
-        }
-
-        @Override
-        public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-            return IMGView.this.onScroll(distanceX, distanceY);
-        }
-
-        @Override
-        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-            // TODO
-            return super.onFling(e1, e2, velocityX, velocityY);
-        }
-    }
-
     private static class Pen extends IMGPath {
 
         private int identity = Integer.MIN_VALUE;
@@ -634,6 +605,25 @@ public class IMGView extends FrameLayout implements Runnable, ScaleGestureDetect
 
         IMGPath toPath() {
             return new IMGPath(new Path(this.path), getMode(), getColor(), getWidth());
+        }
+    }
+
+    private class MoveAdapter extends GestureDetector.SimpleOnGestureListener {
+
+        @Override
+        public boolean onDown(MotionEvent e) {
+            return true;
+        }
+
+        @Override
+        public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+            return IMGView.this.onScroll(distanceX, distanceY);
+        }
+
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            // TODO
+            return super.onFling(e1, e2, velocityX, velocityY);
         }
     }
 }

@@ -57,17 +57,6 @@ public class WebSocketPush {
     private boolean isWebsocketConnecting = false;
     private boolean isWSStatusConnectedV1 = false;
 
-    public static WebSocketPush getInstance() {
-        if (webSocketPush == null) {
-            synchronized (WebSocketPush.class) {
-                if (webSocketPush == null) {
-                    webSocketPush = new WebSocketPush();
-                }
-            }
-        }
-        return webSocketPush;
-    }
-
     public WebSocketPush() {
         handler = new Handler() {
             @Override
@@ -90,6 +79,17 @@ public class WebSocketPush {
                 }
             }
         };
+    }
+
+    public static WebSocketPush getInstance() {
+        if (webSocketPush == null) {
+            synchronized (WebSocketPush.class) {
+                if (webSocketPush == null) {
+                    webSocketPush = new WebSocketPush();
+                }
+            }
+        }
+        return webSocketPush;
     }
 
     private void startTimeCount() {
@@ -122,7 +122,7 @@ public class WebSocketPush {
         if (!MyApplication.getInstance().isHaveLogin()) {
             return;
         }
-        if(MyApplication.getInstance().getCurrentEnterprise() == null){
+        if (MyApplication.getInstance().getCurrentEnterprise() == null) {
             return;
         }
         //App在后台时不启动websocket
@@ -174,13 +174,13 @@ public class WebSocketPush {
                     query.put("device.id", uuid);
                     query.put("device.name", deviceName);
                     query.put("device.push", pushId);
-                    query.put("messageVer","0");
-                    query.put("channelVer","0");
+                    query.put("messageVer", "0");
+                    query.put("channelVer", "0");
                 } else {
                     String clientId = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_CLIENTID, "");
                     query.put("client", clientId);
-                    query.put("messageVer","1");
-                    query.put("channelVer","1");
+                    query.put("messageVer", "1");
+                    query.put("channelVer", "1");
                 }
                 query.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
                 opts.path = path;
@@ -263,7 +263,7 @@ public class WebSocketPush {
                 WSAPIService.getInstance().sendAppStatus(isActive ? "ACTIVED" : "SUSPEND");
                 LogUtils.debug(TAG, "发送App状态：" + (isActive ? "ACTIVED" : "SUSPEND"));
             }
-        } else if(isActive){
+        } else if (isActive) {
             startWebSocket();
         }
     }
@@ -367,7 +367,7 @@ public class WebSocketPush {
                     sendWebSocketStatusBroadcast(Socket.EVENT_CONNECT);
                     // 当第一次连接成功后发送App目前的状态消息
                     sendAppStatus();
-                }else if(code == 401){
+                } else if (code == 401) {
                     closeWebsocket();
                     sendWebSocketStatusBroadcast(Socket.EVENT_CONNECT_ERROR);
                     OauthUtils.getInstance().refreshToken(null, System.currentTimeMillis());
@@ -429,7 +429,7 @@ public class WebSocketPush {
                                 }
                                 break;
                             case "/unread-count":
-                                if(wsPushContent.getMethod().equals("put")){
+                                if (wsPushContent.getMethod().equals("put")) {
                                     GetWebSocketBadgeResult getWebSocketBadgeResult = new GetWebSocketBadgeResult(wsPushContent.getBody());
                                     BadgeBodyModel badgeBodyModel = getWebSocketBadgeResult.getBadgeBodyModel();
                                     EventBus.getDefault().post(badgeBodyModel);

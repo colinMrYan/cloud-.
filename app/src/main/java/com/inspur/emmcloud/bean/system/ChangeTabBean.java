@@ -6,7 +6,8 @@ package com.inspur.emmcloud.bean.system;
 
 public class ChangeTabBean {
     private String tabId = "";
-    public ChangeTabBean(String tabId){
+
+    public ChangeTabBean(String tabId) {
         this.tabId = tabId;
     }
 

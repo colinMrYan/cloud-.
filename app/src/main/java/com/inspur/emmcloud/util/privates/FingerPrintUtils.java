@@ -22,6 +22,7 @@ public class FingerPrintUtils {
     private CancellationSignal mCancellationSignal;
     private FingerprintManagerCompat mFingerprintManager;
     private Context context;
+
     public FingerPrintUtils(Activity activity) {
         this.context = activity;
 //        setFingerPrintListener();
@@ -83,11 +84,12 @@ public class FingerPrintUtils {
         boolean isHasFingerPrintHardware = checkFingerPrintHardware();
         boolean isOpenUnlockCode = checkHasUnlockCode();
         boolean isHasFingerprint = checkHasFingerPrint();
-        return (isHasFingerPrintPermission&&isHasFingerPrintHardware&&isOpenUnlockCode&&isHasFingerprint);
+        return (isHasFingerPrintPermission && isHasFingerPrintHardware && isOpenUnlockCode && isHasFingerprint);
     }
 
     /**
      * 检查是否录入指纹
+     *
      * @return
      */
     private boolean checkHasFingerPrint() {
@@ -101,6 +103,7 @@ public class FingerPrintUtils {
 
     /**
      * 检查是否设置手势密码
+     *
      * @return
      */
     private boolean checkHasUnlockCode() {
@@ -110,6 +113,7 @@ public class FingerPrintUtils {
 
     /**
      * 检查硬件是否支持
+     *
      * @return
      */
     private boolean checkFingerPrintHardware() {
@@ -123,6 +127,7 @@ public class FingerPrintUtils {
 
     /**
      * 检查权限
+     *
      * @return
      */
     private boolean checkFingerPrintPermission() {

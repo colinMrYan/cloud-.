@@ -16,7 +16,7 @@ public class AudioRecordErrorCode {
     public final static int E_ERROR = 1004;
 
 
-    public static String getErrorInfo(Context vContext, int vType){
+    public static String getErrorInfo(Context vContext, int vType) {
         switch (vType) {
             case SUCCESS:
                 return "success";

@@ -25,9 +25,6 @@ import java.util.ArrayList;
 
 public class CachedSpannedParser {
 
-    public static class Cached {
-    }
-
     public int parse(SpannableStringBuilder ssb, ImageGetterWrapper imageGetter, RichTextConfig config) {
         boolean cached = isCached(ssb);
         handleClick(ssb, config, cached);
@@ -143,5 +140,8 @@ public class CachedSpannedParser {
                 ssb.removeSpan(c);
             }
         }
+    }
+
+    public static class Cached {
     }
 }

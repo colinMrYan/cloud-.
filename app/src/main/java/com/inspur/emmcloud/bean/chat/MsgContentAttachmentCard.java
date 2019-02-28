@@ -35,7 +35,7 @@ public class MsgContentAttachmentCard {
         organization = JSONUtils.getString(object, "organization", "");
         title = JSONUtils.getString(object, "title", "");
         uid = JSONUtils.getString(object, "uid", "");
-        tmpId = JSONUtils.getString(object,"tmpId","");
+        tmpId = JSONUtils.getString(object, "tmpId", "");
         JSONArray emailArray = JSONUtils.getJSONArray(object, "email", new JSONArray());
         for (int i = 0; i < emailArray.length(); i++) {
             emailList.add(new Email(JSONUtils.getJSONObject(emailArray, i, new JSONObject())));
@@ -122,30 +122,30 @@ public class MsgContentAttachmentCard {
     public String toString() {
         JSONObject obj = new JSONObject();
         try {
-            obj.put("firstName",firstName);
-            obj.put("lastName",lastName);
-            obj.put("avatar",avatar);
-            obj.put("organization",organization);
-            obj.put("title",title);
-            obj.put("uid",uid);
+            obj.put("firstName", firstName);
+            obj.put("lastName", lastName);
+            obj.put("avatar", avatar);
+            obj.put("organization", organization);
+            obj.put("title", title);
+            obj.put("uid", uid);
             JSONArray emailArray = new JSONArray();
-            for(int i=0;i<emailList.size();i++){
-                emailArray.put(i,emailList.get(i).toJSONObject());
+            for (int i = 0; i < emailList.size(); i++) {
+                emailArray.put(i, emailList.get(i).toJSONObject());
             }
-            if (emailArray.length()>0){
-                obj.put("email",emailArray);
+            if (emailArray.length() > 0) {
+                obj.put("email", emailArray);
             }
 
             JSONArray phoneArray = new JSONArray();
-            for(int i=0;i<phoneList.size();i++){
-                phoneArray.put(i,phoneList.get(i).toJSONObject());
+            for (int i = 0; i < phoneList.size(); i++) {
+                phoneArray.put(i, phoneList.get(i).toJSONObject());
             }
-            if (phoneArray.length()>0){
-                obj.put("phone",phoneArray);
+            if (phoneArray.length() > 0) {
+                obj.put("phone", phoneArray);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return  obj.toString();
+        return obj.toString();
     }
 }

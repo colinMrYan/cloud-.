@@ -12,7 +12,7 @@ public class Email {
     private String category;
     private String address;
 
-    public Email(String category,String address){
+    public Email(String category, String address) {
         this.category = category;
         this.address = address;
     }
@@ -37,12 +37,13 @@ public class Email {
     public void setAddress(String address) {
         this.address = address;
     }
-    public JSONObject toJSONObject(){
+
+    public JSONObject toJSONObject() {
         JSONObject obj = new JSONObject();
         try {
-            obj.put("category",category);
-            obj.put("address",address);
-        }catch (Exception e){
+            obj.put("category", category);
+            obj.put("address", address);
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return obj;

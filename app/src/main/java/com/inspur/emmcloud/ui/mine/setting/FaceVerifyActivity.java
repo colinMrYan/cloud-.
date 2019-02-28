@@ -65,8 +65,8 @@ import static android.Manifest.permission.CAMERA;
 
 public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Callback {
 
-    private static final int TIMEOUT_TIME = 20000;
     public static final String FACE_VERIFT_IS_OPEN = "face_verify_isopen";
+    private static final int TIMEOUT_TIME = 20000;
     private FocusSurfaceView previewSFV;
     private Camera mCamera;
     private SurfaceHolder mHolder;
@@ -84,7 +84,17 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
     private Runnable keepBodyRunnable;
     private long startTime;
     private boolean isFaceLogin = false;
-    private String token="";
+    private String token = "";
+
+    /**
+     * 根据用户获取是否打开了gesturecode
+     *
+     * @param context
+     * @return
+     */
+    public static boolean getFaceVerifyIsOpenByUser(Context context) {
+        return PreferencesByUsersUtils.getBoolean(context, FaceVerifyActivity.FACE_VERIFT_IS_OPEN, false);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,10 +120,10 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
     private void init() {
         previewSFV = (FocusSurfaceView) findViewById(R.id.preview_sv);
         int previewSFVWidth = (int) (ResolutionUtils.getWidth(FaceVerifyActivity.this) * 0.65);
-        int previewSFVHeight = (int) (previewSFVWidth*4/3);
+        int previewSFVHeight = (int) (previewSFVWidth * 4 / 3);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(previewSFVWidth, previewSFVHeight);
         params.addRule(RelativeLayout.CENTER_HORIZONTAL);
-        params.setMargins(0, DensityUtil.dip2px(MyApplication.getInstance(),60),0,0);
+        params.setMargins(0, DensityUtil.dip2px(MyApplication.getInstance(), 60), 0, 0);
         previewSFV.setLayoutParams(params);
         previewSFV.setEnabled(false);
         if (detectScreenOrientation == null) {
@@ -130,7 +140,7 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
             isFaceSettingOpen = getIntent().getBooleanExtra("isFaceSettingOpen", true);
         }
         isFaceLogin = getIntent().getBooleanExtra("isFaceLogin", false);
-        if (isFaceLogin){
+        if (isFaceLogin) {
             token = getIntent().getStringExtra("token");
         }
         takePhotoRunnable = new Runnable() {
@@ -148,7 +158,6 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
         };
         startTime = System.currentTimeMillis();
     }
-
 
     @Override
     protected void onResume() {
@@ -296,35 +305,6 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
 
     }
 
-
-    /**
-     * 用来监测左横屏和右横屏切换时旋转摄像头的角度
-     */
-    private class DetectScreenOrientation extends OrientationEventListener {
-        DetectScreenOrientation(Context context) {
-            super(context);
-        }
-
-        @Override
-        public void onOrientationChanged(int orientation) {
-            if (orientation > 350 || orientation < 10) { //0度
-                currentOrientation = 0;
-            } else if (orientation > 80 && orientation < 100) { //90度
-                currentOrientation = 90;
-            } else if (orientation > 170 && orientation < 190) { //180度
-                currentOrientation = 180;
-            } else if (orientation > 260 && orientation < 280) { //270度
-                currentOrientation = 270;
-            }
-
-            if (260 < orientation && orientation < 280 && currentOrientation != 270) {
-                setCameraParams();
-            } else if (80 < orientation && orientation < 100 && currentOrientation != 90) {
-                setCameraParams();
-            }
-        }
-    }
-
     private void delayToNotifyKeepBody() {
         handler.postDelayed(keepBodyRunnable, 1500);
     }
@@ -368,8 +348,8 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
                         originBitmap = ImageUtils.rotaingImageView(90, originBitmap);
                         //通过各种旋转和镜面操作，使originBitmap显示出preview界面
                         Bitmap cropBitmap = previewSFV.getPicture(originBitmap);
-                       // String filePath = MyAppConfig.LOCAL_DOWNLOAD_PATH + System.currentTimeMillis() + ".png";
-                      //  ImageUtils.saveImageToSD(getApplicationContext(),filePath, cropBitmap, 100);
+                        // String filePath = MyAppConfig.LOCAL_DOWNLOAD_PATH + System.currentTimeMillis() + ".png";
+                        //  ImageUtils.saveImageToSD(getApplicationContext(),filePath, cropBitmap, 100);
                         cropBitmap = ImageUtils.scaleBitmap(cropBitmap, 250);
                         //ImageUtils.saveImageToSD(getApplicationContext(), MyAppConfig.LOCAL_DOWNLOAD_PATH + System.currentTimeMillis() + ".png", cropBitmap, 100);
                         FaceDetector faceDetector = new FaceDetector(cropBitmap.getWidth(), cropBitmap.getHeight(), 1);
@@ -379,8 +359,8 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
                         if (faceNum < 1) {
                             handResultCode(201);
                         } else {
-                            if (isFaceLogin){
-                                ImageUtils.saveImage(getApplicationContext(),"face_unlock.png",cropBitmap);
+                            if (isFaceLogin) {
+                                ImageUtils.saveImage(getApplicationContext(), "face_unlock.png", cropBitmap);
                             }
                             tipText.setVisibility(View.VISIBLE);
                             tipText.setText(R.string.face_verifying);
@@ -397,16 +377,6 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
                 }
             }
         });
-    }
-
-    /**
-     * 根据用户获取是否打开了gesturecode
-     *
-     * @param context
-     * @return
-     */
-    public static boolean getFaceVerifyIsOpenByUser(Context context) {
-        return PreferencesByUsersUtils.getBoolean(context, FaceVerifyActivity.FACE_VERIFT_IS_OPEN, false);
     }
 
     public void onClick(View v) {
@@ -449,8 +419,8 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
                 ToastUtils.show(getApplicationContext(), getString(R.string.face_verify_success));
                 if (isFaceLogin) {
                     Bundle bundle = new Bundle();
-                    bundle.putString("token",token);
-                    IntentUtils.startActivity(FaceVerifyActivity.this, ScanQrCodeLoginGSActivity.class,bundle);
+                    bundle.putString("token", token);
+                    IntentUtils.startActivity(FaceVerifyActivity.this, ScanQrCodeLoginGSActivity.class, bundle);
                 } else if (isFaceSetting) {
                     PreferencesByUsersUtils.putBoolean(FaceVerifyActivity.this, FaceVerifyActivity.FACE_VERIFT_IS_OPEN, isFaceSettingOpen);
                 } else if (!isFaceVerityTest) {
@@ -573,7 +543,6 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
 
     }
 
-
     /**
      * 设置脸部图像
      *
@@ -613,6 +582,34 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
             tipText.setVisibility(View.GONE);
         }
 
+    }
+
+    /**
+     * 用来监测左横屏和右横屏切换时旋转摄像头的角度
+     */
+    private class DetectScreenOrientation extends OrientationEventListener {
+        DetectScreenOrientation(Context context) {
+            super(context);
+        }
+
+        @Override
+        public void onOrientationChanged(int orientation) {
+            if (orientation > 350 || orientation < 10) { //0度
+                currentOrientation = 0;
+            } else if (orientation > 80 && orientation < 100) { //90度
+                currentOrientation = 90;
+            } else if (orientation > 170 && orientation < 190) { //180度
+                currentOrientation = 180;
+            } else if (orientation > 260 && orientation < 280) { //270度
+                currentOrientation = 270;
+            }
+
+            if (260 < orientation && orientation < 280 && currentOrientation != 270) {
+                setCameraParams();
+            } else if (80 < orientation && orientation < 100 && currentOrientation != 90) {
+                setCameraParams();
+            }
+        }
     }
 
     private class WebService extends APIInterfaceInstance {

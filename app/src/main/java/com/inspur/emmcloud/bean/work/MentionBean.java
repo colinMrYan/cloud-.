@@ -6,6 +6,8 @@ package com.inspur.emmcloud.bean.work;
 
 public class MentionBean {
     private int mentionStart = 0;
+    private int mentioinEnd = 0;
+    private String mentionName = "";
 
     public int getMentioinEnd() {
         return mentioinEnd;
@@ -22,9 +24,6 @@ public class MentionBean {
     public void setMentionName(String mentionName) {
         this.mentionName = mentionName;
     }
-
-    private int mentioinEnd = 0;
-    private String mentionName = "";
 
     public int getMentionStart() {
         return mentionStart;

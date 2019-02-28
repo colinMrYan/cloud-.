@@ -26,6 +26,13 @@ class AssetsImageLoader extends AbstractImageLoader<InputStream> implements Runn
         super(holder, config, textView, drawableWrapper, iln, SourceDecode.REMOTE_SOURCE_DECODE, sizeCacheHolder);
     }
 
+    private static String getAssetFileName(String path) {
+        if (path != null && path.startsWith(ASSETS_PREFIX)) {
+            return path.replace(ASSETS_PREFIX, "");
+        }
+        return null;
+    }
+
     @Override
     public void run() {
         onLoading();
@@ -51,13 +58,6 @@ class AssetsImageLoader extends AbstractImageLoader<InputStream> implements Runn
         } catch (IOException e) {
             onFailure(new ImageDecodeException(e));
         }
-    }
-
-    private static String getAssetFileName(String path) {
-        if (path != null && path.startsWith(ASSETS_PREFIX)) {
-            return path.replace(ASSETS_PREFIX, "");
-        }
-        return null;
     }
 
 }

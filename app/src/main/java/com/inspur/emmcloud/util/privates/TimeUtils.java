@@ -1,7 +1,6 @@
 package com.inspur.emmcloud.util.privates;
 
 import android.content.Context;
-import android.text.TextUtils;
 import android.widget.Chronometer;
 
 import com.inspur.emmcloud.R;
@@ -158,7 +157,7 @@ public class TimeUtils {
      * @return
      */
     public static Calendar timeString2Calendar(String timeLong) {
-        if (StringUtils.isBlank(timeLong)){
+        if (StringUtils.isBlank(timeLong)) {
             return null;
         }
         long time = Long.parseLong(timeLong);
@@ -351,9 +350,9 @@ public class TimeUtils {
         return dateFormat.format(new Date(timeInMillis));
     }
 
-    public static String getTime(Context context,long timeInMillis, int type){
-        SimpleDateFormat format = getFormat(context,type);
-        return  getTime(timeInMillis,format);
+    public static String getTime(Context context, long timeInMillis, int type) {
+        SimpleDateFormat format = getFormat(context, type);
+        return getTime(timeInMillis, format);
     }
 
     public static String getTime(String timeInMills) {
@@ -459,13 +458,14 @@ public class TimeUtils {
 
     /**
      * 获取系统时间今天年月日，形式如20171116，八位
+     *
      * @return
      */
-    public static String getFormatYearMonthDay(){
+    public static String getFormatYearMonthDay() {
         Calendar today = Calendar.getInstance();
-        String month = (today.get(Calendar.MONTH) < 10)?("0"+(today.get(Calendar.MONTH)+1)):(""+(today.get(Calendar.MONTH)+1));
-        String day = (today.get(Calendar.DAY_OF_MONTH) < 10)?("0"+today.get(Calendar.DAY_OF_MONTH)):(""+today.get(Calendar.DAY_OF_MONTH));
-        return today.get(Calendar.YEAR)+month+day;
+        String month = (today.get(Calendar.MONTH) < 10) ? ("0" + (today.get(Calendar.MONTH) + 1)) : ("" + (today.get(Calendar.MONTH) + 1));
+        String day = (today.get(Calendar.DAY_OF_MONTH) < 10) ? ("0" + today.get(Calendar.DAY_OF_MONTH)) : ("" + today.get(Calendar.DAY_OF_MONTH));
+        return today.get(Calendar.YEAR) + month + day;
     }
 
     /**
@@ -574,7 +574,7 @@ public class TimeUtils {
         return time;
     }
 
-    public static String timeLong2YMDString(Context context, long timeLong){
+    public static String timeLong2YMDString(Context context, long timeLong) {
         String time = "";
         try {
             Calendar calendar = Calendar.getInstance();
@@ -590,7 +590,7 @@ public class TimeUtils {
     }
 
 
-    public static String timeLong2YMString(Context context, long timeLong){
+    public static String timeLong2YMString(Context context, long timeLong) {
         String time = "";
         try {
             Calendar calendar = Calendar.getInstance();
@@ -701,23 +701,25 @@ public class TimeUtils {
 
     /**
      * 获取工作相关倒计时text
+     *
      * @param context
      * @param calendarString
      * @return
      */
-    public static String getCountdown(Context context, String calendarString){
+    public static String getCountdown(Context context, String calendarString) {
         Calendar calendar = timeString2Calendar(calendarString);
-        return getCountdown(context,calendar);
+        return getCountdown(context, calendar);
     }
 
     /**
      * 获取工作相关倒计时text
+     *
      * @param context
      * @param calendar
      * @return
      */
     public static String getCountdown(Context context, Calendar calendar) {
-        if (calendar == null){
+        if (calendar == null) {
             return "";
         }
         String countdown = "";
@@ -736,21 +738,21 @@ public class TimeUtils {
         long targetSec = targetCalendar.getTimeInMillis();
         int dayCount = (int) ((targetSec - currentSec) / 1000 / 60 / 60 / 24);
         if (dayCount == -1) {
-            countdown =  context.getString(R.string.cutdown_yestoday);
+            countdown = context.getString(R.string.cutdown_yestoday);
         } else if (dayCount == 0) {
             countdown = context.getString(R.string.cutdown_now);
         } else if (dayCount == 1) {
             countdown = context.getString(R.string.cutdown_tomorrow);
-        }else {
+        } else {
             SimpleDateFormat format = new SimpleDateFormat(
                     context.getString(R.string.format_task_month_day));
             countdown = calendar2FormatString(context,
                     targetCalendar.getTime(), format);
-            if (countdown.startsWith("0")){
-                countdown = countdown.substring(1,countdown.length());
+            if (countdown.startsWith("0")) {
+                countdown = countdown.substring(1, countdown.length());
             }
         }
-        return  countdown;
+        return countdown;
     }
 
     /**
@@ -759,9 +761,9 @@ public class TimeUtils {
      * @param calendarString
      * @return
      */
-    public static  int getCountdownNum(String calendarString){
+    public static int getCountdownNum(String calendarString) {
         Calendar calendar = timeString2Calendar(calendarString);
-        return  getCountdownNum(calendar);
+        return getCountdownNum(calendar);
     }
 
     /**
@@ -865,7 +867,7 @@ public class TimeUtils {
         long timeLong = UTCString2Long(UTCStringTime);
         Calendar displayCalendar = Calendar.getInstance();
         displayCalendar.setTimeInMillis(timeLong);
-        String time= getDisplayTime(context, displayCalendar);
+        String time = getDisplayTime(context, displayCalendar);
         return time;
 
     }
@@ -891,11 +893,11 @@ public class TimeUtils {
      */
     public static String getChannelMsgDisplayTime(Context context, String UTCStringTime) {
         long timeLong = UTCString2Long(UTCStringTime);
-        return getChannelMsgDisplayTime(context,timeLong);
+        return getChannelMsgDisplayTime(context, timeLong);
 
     }
 
-    public static String getChannelMsgDisplayTime(Context context,long timeLong){
+    public static String getChannelMsgDisplayTime(Context context, long timeLong) {
         Calendar displayCalendar = Calendar.getInstance();
         displayCalendar.setTimeInMillis(timeLong);
         String displayTime = "";
@@ -1093,41 +1095,41 @@ public class TimeUtils {
 
     /**
      * 上取整时间
+     *
      * @param calendar
      * @param calendarOther
      * @return
      */
-    public static int getCeil(Calendar calendar,Calendar calendarOther){
-        return (int)Math.ceil((calendar.getTimeInMillis() - calendarOther.getTimeInMillis())/(60*60)/1000.0);
+    public static int getCeil(Calendar calendar, Calendar calendarOther) {
+        return (int) Math.ceil((calendar.getTimeInMillis() - calendarOther.getTimeInMillis()) / (60 * 60) / 1000.0);
     }
 
     /**
-     *
-     * @param cmt  Chronometer控件
+     * @param cmt Chronometer控件
      * @return 小时+分钟+秒数  的所有秒数
      */
-    public  static String getChronometerSeconds(Chronometer cmt) {
+    public static String getChronometerSeconds(Chronometer cmt) {
         int totalss = 0;
         String string = cmt.getText().toString();
-        if(string.length()==7){
+        if (string.length() == 7) {
             String[] split = string.split(":");
             String string2 = split[0];
             int hour = Integer.parseInt(string2);
-            int Hours =hour*3600;
+            int Hours = hour * 3600;
             String string3 = split[1];
             int min = Integer.parseInt(string3);
-            int Mins =min*60;
-            int  SS =Integer.parseInt(split[2]);
-            totalss = Hours+Mins+SS;
+            int Mins = min * 60;
+            int SS = Integer.parseInt(split[2]);
+            totalss = Hours + Mins + SS;
             return String.valueOf(totalss);
         }
-        if(string.length()==5){
+        if (string.length() == 5) {
             String[] split = string.split(":");
             String string3 = split[0];
             int min = Integer.parseInt(string3);
-            int Mins =min*60;
-            int SS =Integer.parseInt(split[1]);
-            totalss =Mins+SS;
+            int Mins = min * 60;
+            int SS = Integer.parseInt(split[1]);
+            totalss = Mins + SS;
             return String.valueOf(totalss);
         }
         return String.valueOf(totalss);

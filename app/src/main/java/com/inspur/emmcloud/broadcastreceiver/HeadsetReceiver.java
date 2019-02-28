@@ -18,13 +18,13 @@ public class HeadsetReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
-        switch (action){
+        switch (action) {
             //插入和拔出耳机会触发此广播
             case Intent.ACTION_HEADSET_PLUG:
                 int state = intent.getIntExtra("state", 0);
-                if (state == 1){
+                if (state == 1) {
                     MediaPlayerManagerUtils.getManager().changeToHeadsetMode();
-                } else if (state == 0){
+                } else if (state == 0) {
                     MediaPlayerManagerUtils.getManager().resume();
                 }
                 break;
@@ -33,11 +33,11 @@ public class HeadsetReceiver extends BroadcastReceiver {
                 MediaPlayerManagerUtils.getManager().pause();
                 MediaPlayerManagerUtils.getManager().changeToSpeakerMode();
                 break;
-            case  BluetoothHeadset.ACTION_CONNECTION_STATE_CHANGED:
+            case BluetoothHeadset.ACTION_CONNECTION_STATE_CHANGED:
                 BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
-                if(BluetoothProfile.STATE_DISCONNECTED == adapter.getProfileConnectionState(BluetoothProfile.HEADSET)) {
+                if (BluetoothProfile.STATE_DISCONNECTED == adapter.getProfileConnectionState(BluetoothProfile.HEADSET)) {
                     MediaPlayerManagerUtils.getManager().changeToSpeakerMode();
-                }else {
+                } else {
                     MediaPlayerManagerUtils.getManager().changeToHeadsetMode();
                 }
                 break;

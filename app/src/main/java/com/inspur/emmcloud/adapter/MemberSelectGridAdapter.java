@@ -21,19 +21,21 @@ import java.util.List;
  * Created by yufuchang on 2018/8/21.
  */
 
-public class MemberSelectGridAdapter extends RecyclerView.Adapter<MemberSelectGridAdapter.MemberSelectedGridHold>{
+public class MemberSelectGridAdapter extends RecyclerView.Adapter<MemberSelectGridAdapter.MemberSelectedGridHold> {
 
     private Context context;
     private List<PersonDto> contactUserList;
     private LayoutInflater inflater;
-    public MemberSelectGridAdapter(Context context,List<PersonDto> contactUserList){
+
+    public MemberSelectGridAdapter(Context context, List<PersonDto> contactUserList) {
         this.context = context;
         this.contactUserList = contactUserList;
         inflater = LayoutInflater.from(context);
     }
+
     @Override
     public MemberSelectedGridHold onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.voice_communication_memeber_item,null);
+        View view = inflater.inflate(R.layout.voice_communication_memeber_item, null);
         MemberSelectedGridHold holder = new MemberSelectedGridHold(view);
         holder.userHeadImg = (ImageView) view.findViewById(R.id.img_voice_communication_member_head);
         return holder;
@@ -43,15 +45,16 @@ public class MemberSelectGridAdapter extends RecyclerView.Adapter<MemberSelectGr
     public void onBindViewHolder(MemberSelectedGridHold holder, int position) {
         setImgSize(holder.userHeadImg);
         ImageDisplayUtils.getInstance().displayImage(holder.userHeadImg, APIUri.getChannelImgUrl(MyApplication.getInstance(),
-                contactUserList.get(position).getUid()),R.drawable.icon_person_default);
+                contactUserList.get(position).getUid()), R.drawable.icon_person_default);
     }
 
     /**
      * 设置头像padding
+     *
      * @param headImg
      */
     private void setImgSize(ImageView headImg) {
-        int size = DensityUtil.dip2px(context,55);
+        int size = DensityUtil.dip2px(context, 55);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(size,
                 size);//两个400分别为添加图片的大小
         headImg.setLayoutParams(params);
@@ -64,15 +67,17 @@ public class MemberSelectGridAdapter extends RecyclerView.Adapter<MemberSelectGr
 
     /**
      * 设置并刷新数据
+     *
      * @param contactUserList
      */
-    public void setAndRefreshSelectMemberData(List<PersonDto> contactUserList){
+    public void setAndRefreshSelectMemberData(List<PersonDto> contactUserList) {
         this.contactUserList = contactUserList;
         notifyDataSetChanged();
     }
 
-    class MemberSelectedGridHold extends RecyclerView.ViewHolder{
+    class MemberSelectedGridHold extends RecyclerView.ViewHolder {
         private ImageView userHeadImg;
+
         public MemberSelectedGridHold(View itemView) {
             super(itemView);
         }

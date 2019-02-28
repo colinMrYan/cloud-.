@@ -39,7 +39,7 @@ class RemoteThumState extends TransferState {
         TransferConfig config = transfer.getTransConfig();
 
         TransferImage transImage = createTransferImage(
-                0,0,0,0);
+                0, 0, 0, 0);
         transformThumbnail(config.getThumbnailImageList().get(position), transImage, true);
         transfer.addView(transImage, 1);
 
@@ -62,7 +62,7 @@ class RemoteThumState extends TransferState {
             loadSourceImage(targetImage.getDrawable(), position, targetImage, progressIndicator);
         } else {
             String thumUrl = config.getThumbnailImageList().get(position);
-            String sourceUrl= config.getSourceImageList().get(position);
+            String sourceUrl = config.getSourceImageList().get(position);
 
             if (imageLoader.isLoaded(sourceUrl)) {
                 loadSourceImage(config.getMissDrawable(context), position, targetImage, progressIndicator);

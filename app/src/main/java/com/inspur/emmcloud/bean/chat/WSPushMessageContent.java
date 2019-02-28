@@ -12,12 +12,13 @@ import org.json.JSONObject;
 public class WSPushMessageContent {
     private Message message;
     private String tracer;
-    public WSPushMessageContent(String content){
-        JSONObject messageObj = JSONUtils.getJSONObject(content,"body",new JSONObject());
+
+    public WSPushMessageContent(String content) {
+        JSONObject messageObj = JSONUtils.getJSONObject(content, "body", new JSONObject());
         message = new Message(messageObj);
-        JSONObject headerObj = JSONUtils.getJSONObject(content,"header",new JSONObject());
-        LogUtils.jasonDebug("headerObj="+headerObj);
-        tracer = JSONUtils.getString(headerObj,"tracer","");
+        JSONObject headerObj = JSONUtils.getJSONObject(content, "header", new JSONObject());
+        LogUtils.jasonDebug("headerObj=" + headerObj);
+        tracer = JSONUtils.getString(headerObj, "tracer", "");
     }
 
     public Message getMessage() {

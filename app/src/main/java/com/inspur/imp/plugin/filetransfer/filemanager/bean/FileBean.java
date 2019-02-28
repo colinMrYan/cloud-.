@@ -5,15 +5,17 @@ public class FileBean {
     private String name;
     private String path;
     private FileType fileType;
-    private int childCount ;
-    private long size ;
-    private int holderType ;
+    private int childCount;
+    private long size;
+    private int holderType;
 
-    public FileBean(String path){
+    public FileBean(String path) {
         this.path = path;
     }
-    public FileBean(){
+
+    public FileBean() {
     }
+
     public String getName() {
         return name;
     }
@@ -61,6 +63,7 @@ public class FileBean {
     public void setHolderType(int holderType) {
         this.holderType = holderType;
     }
+
     public boolean equals(Object other) { // 重写equals方法，后面最好重写hashCode方法
 
         if (this == other) // 先检查是否其自反性，后比较other是否为空。这样效率高

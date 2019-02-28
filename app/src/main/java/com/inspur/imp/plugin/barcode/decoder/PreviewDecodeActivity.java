@@ -57,7 +57,7 @@ public class PreviewDecodeActivity extends Activity implements FunDecodeHandler 
 
             @Override
             public void onPermissionRequestFail(List<String> permissions) {
-                ToastUtils.show(PreviewDecodeActivity.this, PermissionRequestManagerUtils.getInstance().getPermissionToast(PreviewDecodeActivity.this,permissions));
+                ToastUtils.show(PreviewDecodeActivity.this, PermissionRequestManagerUtils.getInstance().getPermissionToast(PreviewDecodeActivity.this, permissions));
                 finish();
             }
 
@@ -82,7 +82,7 @@ public class PreviewDecodeActivity extends Activity implements FunDecodeHandler 
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int screenWidth = displayMetrics.widthPixels;
         int screenHeight = displayMetrics.heightPixels;
-        int screenLittleSize = screenWidth<screenHeight?screenWidth:screenHeight;
+        int screenLittleSize = screenWidth < screenHeight ? screenWidth : screenHeight;
         int frameRectWidth = (int) (screenLittleSize * 0.6);
 //        //长和宽必须是4的倍数
 //        frameRectWidth = frameRectWidth - frameRectWidth % 4;
@@ -119,10 +119,10 @@ public class PreviewDecodeActivity extends Activity implements FunDecodeHandler 
         ToneGenerator toneGenerator = new ToneGenerator(AudioManager.STREAM_SYSTEM, ToneGenerator.MAX_VOLUME);
         toneGenerator.startTone(ToneGenerator.TONE_PROP_BEEP);
         Intent intent = new Intent();
-        if (StringUtils.isBlank(result)){
+        if (StringUtils.isBlank(result)) {
             result = getString(Res.getStringID("can_not_recognize"));
             intent.putExtra("isDecodeSuccess", false);
-        }else {
+        } else {
             intent.putExtra("isDecodeSuccess", true);
         }
         intent.putExtra("msg", result);
@@ -136,7 +136,7 @@ public class PreviewDecodeActivity extends Activity implements FunDecodeHandler 
         //mDecode.setFlash("torch");
         mDecode.setZoomLevel(0.1);
         mDecodeView.startScan();
-        mDecodeView.setRange(new Rect(0,0,0,0));
+        mDecodeView.setRange(new Rect(0, 0, 0, 0));
         //Set Zoom Component visible/invisible. 1: visible, 0: invisible
         //mDecode.ZoomShow(0);
 

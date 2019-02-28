@@ -41,17 +41,18 @@ public class CardPackageBean {
     @Column(name = "state")
     private int state = 0;
 
-    public CardPackageBean(){}
+    public CardPackageBean() {
+    }
 
-    public CardPackageBean(JSONObject jsonObject){
-        this.id = JSONUtils.getString(jsonObject,"id","");
-        this.company = JSONUtils.getString(jsonObject,"company","");
-        this.taxpayer = JSONUtils.getString(jsonObject,"taxpayer","");
-        this.address = JSONUtils.getString(jsonObject,"address","");
-        this.phone = JSONUtils.getString(jsonObject,"phone","");
-        this.bank = JSONUtils.getString(jsonObject,"bank","");
-        this.bankAccount = JSONUtils.getString(jsonObject,"bankAccount","");
-        this.color = JSONUtils.getString(jsonObject,"color","");
+    public CardPackageBean(JSONObject jsonObject) {
+        this.id = JSONUtils.getString(jsonObject, "id", "");
+        this.company = JSONUtils.getString(jsonObject, "company", "");
+        this.taxpayer = JSONUtils.getString(jsonObject, "taxpayer", "");
+        this.address = JSONUtils.getString(jsonObject, "address", "");
+        this.phone = JSONUtils.getString(jsonObject, "phone", "");
+        this.bank = JSONUtils.getString(jsonObject, "bank", "");
+        this.bankAccount = JSONUtils.getString(jsonObject, "bankAccount", "");
+        this.color = JSONUtils.getString(jsonObject, "color", "");
     }
 
     public String getId() {
@@ -128,13 +129,13 @@ public class CardPackageBean {
 
     @Override
     public boolean equals(Object other) {
-        if(this == other){
+        if (this == other) {
             return true;
         }
-        if(other == null){
+        if (other == null) {
             return false;
         }
-        if(!(other instanceof CardPackageBean)){
+        if (!(other instanceof CardPackageBean)) {
             return false;
         }
         CardPackageBean cardPackageBean = (CardPackageBean) other;

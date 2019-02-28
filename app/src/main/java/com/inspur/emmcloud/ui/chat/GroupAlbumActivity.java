@@ -32,11 +32,11 @@ import java.util.List;
 import java.util.Map;
 
 @ContentView(R.layout.activity_group_album)
-public class GroupAlbumActivity extends BaseActivity{
+public class GroupAlbumActivity extends BaseActivity {
 
     public static final int GROUP_TYPE_MSG = 1;
     public static final int GROUP_TYPE_MESSAGE = 2;
-//    @ViewInject(R.id.gv_album)
+    //    @ViewInject(R.id.gv_album)
 //    private GridView albumGrid;
     @ViewInject(R.id.rl_no_channel_album)
     private RelativeLayout noChannelAlbumLayout;
@@ -59,14 +59,14 @@ public class GroupAlbumActivity extends BaseActivity{
     private void init() {
         cid = getIntent().getExtras().getString("cid");
         getImgMsgList();
-        noChannelAlbumLayout.setVisibility(imgUrlList.size() == 0 ? View.VISIBLE:View.GONE);
+        noChannelAlbumLayout.setVisibility(imgUrlList.size() == 0 ? View.VISIBLE : View.GONE);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(GroupAlbumActivity.this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         albumRecyclerView.setLayoutManager(linearLayoutManager);
-        if(MyApplication.getInstance().isV0VersionChat()){
-            groupAlbumAdapter = new GroupAlbumAdapter(this,msgGroupByDayMap,GROUP_TYPE_MSG);
-        }else {
-            groupAlbumAdapter = new GroupAlbumAdapter(this,messageGroupByDayMap,GROUP_TYPE_MESSAGE);
+        if (MyApplication.getInstance().isV0VersionChat()) {
+            groupAlbumAdapter = new GroupAlbumAdapter(this, msgGroupByDayMap, GROUP_TYPE_MSG);
+        } else {
+            groupAlbumAdapter = new GroupAlbumAdapter(this, messageGroupByDayMap, GROUP_TYPE_MESSAGE);
         }
         groupAlbumAdapter.setOnGroupAlbumClickListener(new OnGroupAlbumClickListener() {
             @Override
@@ -84,14 +84,14 @@ public class GroupAlbumActivity extends BaseActivity{
                 bundle.putInt(ImagePagerV0Activity.PHOTO_SELECT_H_TAG, height);
                 bundle.putInt(ImagePagerActivity.EXTRA_IMAGE_INDEX, position);
                 bundle.putStringArrayList(ImagePagerActivity.EXTRA_IMAGE_URLS, imgUrlList);
-                if (MyApplication.getInstance().isV0VersionChat()){
+                if (MyApplication.getInstance().isV0VersionChat()) {
                     bundle.putSerializable(ImagePagerV0Activity.EXTRA_IMAGE_MSG_LIST, (Serializable) imgTypeMsgList);
                     bundle.putSerializable(ImagePagerV0Activity.EXTRA_CURRENT_IMAGE_MSG, imgTypeMsgList.get(position));
-                    IntentUtils.startActivity(GroupAlbumActivity.this,ImagePagerV0Activity.class,bundle);
-                }else {
+                    IntentUtils.startActivity(GroupAlbumActivity.this, ImagePagerV0Activity.class, bundle);
+                } else {
                     bundle.putSerializable(ImagePagerV0Activity.EXTRA_IMAGE_MSG_LIST, (Serializable) imgTypeMessageList);
                     bundle.putSerializable(ImagePagerV0Activity.EXTRA_CURRENT_IMAGE_MSG, imgTypeMessageList.get(position));
-                    IntentUtils.startActivity(GroupAlbumActivity.this,ImagePagerActivity.class,bundle);
+                    IntentUtils.startActivity(GroupAlbumActivity.this, ImagePagerActivity.class, bundle);
                 }
             }
         });
@@ -99,25 +99,25 @@ public class GroupAlbumActivity extends BaseActivity{
     }
 
     private void getImgMsgList() {
-        if (MyApplication.getInstance().isV0VersionChat()){
+        if (MyApplication.getInstance().isV0VersionChat()) {
             imgTypeMsgList = MsgCacheUtil.getImgTypeMsgList(MyApplication.getInstance(), cid);
-            for (Msg msg :imgTypeMsgList){
+            for (Msg msg : imgTypeMsgList) {
                 String url = APIUri.getPreviewUrl(msg.getImgTypeMsgImg());
                 imgUrlList.add(url);
             }
-            msgGroupByDayMap  = GroupUtils.group(imgTypeMsgList,new ImageGroupByDate(GROUP_TYPE_MSG));
-        }else {
+            msgGroupByDayMap = GroupUtils.group(imgTypeMsgList, new ImageGroupByDate(GROUP_TYPE_MSG));
+        } else {
             imgTypeMessageList = MessageCacheUtil.getImgTypeMessageList(MyApplication.getInstance(), cid);
-            for (Message message:imgTypeMessageList) {
-                String url = APIUri.getChatFileResouceUrl(message.getChannel(),message.getMsgContentMediaImage().getRawMedia());
+            for (Message message : imgTypeMessageList) {
+                String url = APIUri.getChatFileResouceUrl(message.getChannel(), message.getMsgContentMediaImage().getRawMedia());
                 imgUrlList.add(url);
             }
-            messageGroupByDayMap = GroupUtils.group(imgTypeMessageList,new ImageGroupByDate(GROUP_TYPE_MESSAGE));
+            messageGroupByDayMap = GroupUtils.group(imgTypeMessageList, new ImageGroupByDate(GROUP_TYPE_MESSAGE));
         }
     }
 
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.ibt_back:
                 finish();
                 break;
@@ -127,10 +127,15 @@ public class GroupAlbumActivity extends BaseActivity{
         }
     }
 
+    public interface OnGroupAlbumClickListener {
+        void onGroupAlbumClick(View view, String imageUrl);
+    }
+
     class ImageGroupByDate implements GroupUtils.GroupBy<String> {
 
         private int groupType = -1;
-        public ImageGroupByDate(int groupType){
+
+        public ImageGroupByDate(int groupType) {
             this.groupType = groupType;
         }
 
@@ -138,24 +143,20 @@ public class GroupAlbumActivity extends BaseActivity{
         public String groupBy(Object obj) {
             String from = "";
             SimpleDateFormat format = new SimpleDateFormat(
-                        getString(R.string.format_year_month));
-            if(groupType == GROUP_TYPE_MSG){
-                Msg msg = (Msg)obj;
+                    getString(R.string.format_year_month));
+            if (groupType == GROUP_TYPE_MSG) {
+                Msg msg = (Msg) obj;
                 from = msg.getTime() + "";
-            }else if(groupType == GROUP_TYPE_MESSAGE){
-                Message message = (Message)obj;
+            } else if (groupType == GROUP_TYPE_MESSAGE) {
+                Message message = (Message) obj;
                 from = message.getCreationDate() + "";
             }
-            if(!StringUtils.isBlank(from)){
+            if (!StringUtils.isBlank(from)) {
                 Calendar calendarForm = TimeUtils.timeString2Calendar(from);
                 return TimeUtils.calendar2FormatString(GroupAlbumActivity.this, calendarForm, format);
             }
             return "";
         }
 
-    }
-
-    public interface OnGroupAlbumClickListener{
-        void onGroupAlbumClick(View view,String imageUrl);
     }
 }

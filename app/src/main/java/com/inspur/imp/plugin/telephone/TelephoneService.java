@@ -13,78 +13,77 @@ import org.json.JSONObject;
 
 /**
  * 拨打电话服务
- * 
+ *
  * @author 浪潮移动应用平台(IMP)产品组
- * 
  */
 public class TelephoneService extends ImpPlugin {
 
-	private String tel;
+    private String tel;
 
-	@Override
-	public void execute(String action, JSONObject paramsObject) {
-		// 打开手机拨号界面
-		if ("dial".equals(action)) {
-			dial(paramsObject);
-		}
-		// 直接拨打电话
-		else if ("call".equals(action)) {
-			call(paramsObject);
-		}else{
-			showCallIMPMethodErrorDlg();
-		}
-	}
+    @Override
+    public void execute(String action, JSONObject paramsObject) {
+        // 打开手机拨号界面
+        if ("dial".equals(action)) {
+            dial(paramsObject);
+        }
+        // 直接拨打电话
+        else if ("call".equals(action)) {
+            call(paramsObject);
+        } else {
+            showCallIMPMethodErrorDlg();
+        }
+    }
 
-	@Override
-	public String executeAndReturn(String action, JSONObject paramsObject) {
-		showCallIMPMethodErrorDlg();
-		return "";
-	}
+    @Override
+    public String executeAndReturn(String action, JSONObject paramsObject) {
+        showCallIMPMethodErrorDlg();
+        return "";
+    }
 
-	/**
-	 * 跳转到拨号界面
-	 * 
-	 * @param paramsObject
-	 */
-	private void dial(JSONObject paramsObject) {
-		// 解析json串获取到传递过来的参数和回调函数
-		try {
-			if (!paramsObject.isNull("tel"))
-				tel = paramsObject.getString("tel");
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		if (!StrUtil.strIsNotNull(tel)) {
-			Toast.makeText(getFragmentContext(), "电话号码不能为空！", Toast.LENGTH_SHORT).show();
-			return;
-		}
-		Intent intent = new Intent("android.intent.action.DIAL",
-				Uri.parse("tel:" + tel));
-		getActivity().startActivity(intent);
-	}
+    /**
+     * 跳转到拨号界面
+     *
+     * @param paramsObject
+     */
+    private void dial(JSONObject paramsObject) {
+        // 解析json串获取到传递过来的参数和回调函数
+        try {
+            if (!paramsObject.isNull("tel"))
+                tel = paramsObject.getString("tel");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        if (!StrUtil.strIsNotNull(tel)) {
+            Toast.makeText(getFragmentContext(), "电话号码不能为空！", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Intent intent = new Intent("android.intent.action.DIAL",
+                Uri.parse("tel:" + tel));
+        getActivity().startActivity(intent);
+    }
 
-	/**
-	 * 直接拨打电话
-	 * 
-	 * @param paramsObject
-	 */
-	private void call(JSONObject paramsObject) {
-		// 解析json串获取到传递过来的参数和回调函数
-		try {
-			if (!paramsObject.isNull("tel"))
-				tel = paramsObject.getString("tel");
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		if (!StrUtil.strIsNotNull(tel)) {
-			Toast.makeText(getFragmentContext(), "电话号码不能为空！", Toast.LENGTH_SHORT).show();
-			return;
-		}
-		AppUtils.call(getActivity(),tel,1);
-	}
+    /**
+     * 直接拨打电话
+     *
+     * @param paramsObject
+     */
+    private void call(JSONObject paramsObject) {
+        // 解析json串获取到传递过来的参数和回调函数
+        try {
+            if (!paramsObject.isNull("tel"))
+                tel = paramsObject.getString("tel");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        if (!StrUtil.strIsNotNull(tel)) {
+            Toast.makeText(getFragmentContext(), "电话号码不能为空！", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        AppUtils.call(getActivity(), tel, 1);
+    }
 
-	@Override
-	public void onDestroy() {
+    @Override
+    public void onDestroy() {
 
-	}
+    }
 }

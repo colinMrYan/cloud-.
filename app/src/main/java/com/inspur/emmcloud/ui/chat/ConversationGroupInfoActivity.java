@@ -57,9 +57,9 @@ import java.util.List;
 @ContentView(R.layout.activity_conversation_group_info)
 public class ConversationGroupInfoActivity extends BaseActivity {
 
+    public static final String EXTRA_CID = "cid";
     private static final int QEQUEST_ADD_MEMBER = 2;
     private static final int QEQUEST_DEL_MEMBER = 3;
-    public static final String EXTRA_CID= "cid";
     @ViewInject(R.id.gv_member)
     private NoScrollGridView memberGrid;
     @ViewInject(R.id.tv_member)
@@ -86,56 +86,6 @@ public class ConversationGroupInfoActivity extends BaseActivity {
     private LoadingDialog loadingDlg;
     private Conversation conversation;
     private boolean isOwner;
-
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
-        super.onCreate(savedInstanceState);
-        EventBus.getDefault().register(this);
-        ImmersionBar.with(this).statusBarColor(android.R.color.white).statusBarDarkFont(true).init();
-        String cid = getIntent().getExtras().getString(EXTRA_CID);
-        conversation = ConversationCacheUtils.getConversation(MyApplication.getInstance(),cid);
-        isOwner = conversation.getOwner().equals(MyApplication.getInstance().getUid());
-        apiService = new ChatAPIService(ConversationGroupInfoActivity.this);
-        apiService.setAPIInterface(new WebService());
-        initView();
-    }
-
-    /**
-     * 数据取出后显示ui
-     */
-    @SuppressLint("StringFormatInvalid")
-    private void initView() {
-        loadingDlg = new LoadingDialog(ConversationGroupInfoActivity.this);
-        memberUidList = conversation.getMemberList();
-        int memberSize = ContactUserCacheUtils.getContactUserListById(memberUidList).size();
-        memberText.setText(getString(R.string.all_group_member,memberSize));
-        nameText.setText(conversation.getName());
-        groupMembersText.setText(conversation.getName()+getString(R.string.bracket_with_word,(memberSize + "")));
-        filterGroupMember(memberUidList);
-        adapter = new ConversationMemberAdapter(this,uiMemberUidList,isOwner);
-        memberGrid.setAdapter(adapter);
-        memberGrid.setOnItemClickListener(onItemClickListener);
-        dndSwitch.setOpened(conversation.isDnd());
-        dndSwitch.setOnStateChangedListener(onStateChangedListener);
-        stickSwitch.setOpened(conversation.isStick());
-        stickSwitch.setOnStateChangedListener(onStateChangedListener);
-        exitBtn.setVisibility(View.VISIBLE);
-        exitBtn.setText(conversation.getOwner().equals(MyApplication.getInstance().getUid())?getString(R.string.dismiss_group):getString(R.string.quit_group));
-        memberSizeText.setText(getString(R.string.people_num,memberSize));
-        showGroupLogo();
-    }
-
-    private void showGroupLogo(){
-        File file = new File(MyAppConfig.LOCAL_CACHE_PHOTO_PATH + "/" + MyApplication.getInstance().getTanent() + conversation.getId() + "_100.png1");
-        if (file.exists()) {
-            circleTextImageView.setImageBitmap(ImageUtils.getBitmapByFile(file));
-        }else {
-            circleTextImageView.setImageResource(R.drawable.icon_channel_group_default);
-        }
-    }
-
     private OnItemClickListener onItemClickListener = new OnItemClickListener() {
 
         @Override
@@ -149,7 +99,7 @@ public class ConversationGroupInfoActivity extends BaseActivity {
                         ChannelMembersDelActivity.class);
                 startActivityForResult(intent, QEQUEST_DEL_MEMBER);
 
-            } else if (((position == adapter.getCount() - 2) &&isOwner)
+            } else if (((position == adapter.getCount() - 2) && isOwner)
                     || ((position == adapter.getCount() - 1) && !isOwner)) {
                 intent.putExtra(ContactSearchFragment.EXTRA_TYPE, 2);
                 intent.putExtra(ContactSearchFragment.EXTRA_EXCLUDE_SELECT, memberUidList);
@@ -162,12 +112,11 @@ public class ConversationGroupInfoActivity extends BaseActivity {
                 String uid = uiMemberUidList.get(position);
                 Bundle bundle = new Bundle();
                 bundle.putString("uid", uid);
-                IntentUtils.startActivity(ConversationGroupInfoActivity.this,uid.startsWith("BOT")?
-                        RobotInfoActivity.class:UserInfoActivity.class, bundle);
+                IntentUtils.startActivity(ConversationGroupInfoActivity.this, uid.startsWith("BOT") ?
+                        RobotInfoActivity.class : UserInfoActivity.class, bundle);
             }
         }
     };
-
     private OnStateChangedListener onStateChangedListener = new OnStateChangedListener() {
 
         @Override
@@ -190,6 +139,54 @@ public class ConversationGroupInfoActivity extends BaseActivity {
             }
         }
     };
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        // TODO Auto-generated method stub
+        super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
+        ImmersionBar.with(this).statusBarColor(android.R.color.white).statusBarDarkFont(true).init();
+        String cid = getIntent().getExtras().getString(EXTRA_CID);
+        conversation = ConversationCacheUtils.getConversation(MyApplication.getInstance(), cid);
+        isOwner = conversation.getOwner().equals(MyApplication.getInstance().getUid());
+        apiService = new ChatAPIService(ConversationGroupInfoActivity.this);
+        apiService.setAPIInterface(new WebService());
+        initView();
+    }
+
+    /**
+     * 数据取出后显示ui
+     */
+    @SuppressLint("StringFormatInvalid")
+    private void initView() {
+        loadingDlg = new LoadingDialog(ConversationGroupInfoActivity.this);
+        memberUidList = conversation.getMemberList();
+        int memberSize = ContactUserCacheUtils.getContactUserListById(memberUidList).size();
+        memberText.setText(getString(R.string.all_group_member, memberSize));
+        nameText.setText(conversation.getName());
+        groupMembersText.setText(conversation.getName() + getString(R.string.bracket_with_word, (memberSize + "")));
+        filterGroupMember(memberUidList);
+        adapter = new ConversationMemberAdapter(this, uiMemberUidList, isOwner);
+        memberGrid.setAdapter(adapter);
+        memberGrid.setOnItemClickListener(onItemClickListener);
+        dndSwitch.setOpened(conversation.isDnd());
+        dndSwitch.setOnStateChangedListener(onStateChangedListener);
+        stickSwitch.setOpened(conversation.isStick());
+        stickSwitch.setOnStateChangedListener(onStateChangedListener);
+        exitBtn.setVisibility(View.VISIBLE);
+        exitBtn.setText(conversation.getOwner().equals(MyApplication.getInstance().getUid()) ? getString(R.string.dismiss_group) : getString(R.string.quit_group));
+        memberSizeText.setText(getString(R.string.people_num, memberSize));
+        showGroupLogo();
+    }
+
+    private void showGroupLogo() {
+        File file = new File(MyAppConfig.LOCAL_CACHE_PHOTO_PATH + "/" + MyApplication.getInstance().getTanent() + conversation.getId() + "_100.png1");
+        if (file.exists()) {
+            circleTextImageView.setImageBitmap(ImageUtils.getBitmapByFile(file));
+        } else {
+            circleTextImageView.setImageResource(R.drawable.icon_channel_group_default);
+        }
+    }
 
     public void onClick(View v) {
         Bundle bundle = new Bundle();
@@ -214,15 +211,15 @@ public class ConversationGroupInfoActivity extends BaseActivity {
                 break;
             case R.id.rl_member:
                 bundle.putString("title", getString(R.string.group_member));
-                bundle.putInt(MembersActivity.MEMBER_PAGE_STATE,MembersActivity.CHECK_STATE);
-                bundle.putStringArrayList("uidList",memberUidList);
+                bundle.putInt(MembersActivity.MEMBER_PAGE_STATE, MembersActivity.CHECK_STATE);
+                bundle.putStringArrayList("uidList", memberUidList);
                 IntentUtils.startActivity(ConversationGroupInfoActivity.this,
                         MembersActivity.class, bundle);
                 break;
             case R.id.bt_exit:
-                if (conversation.getOwner().equals(MyApplication.getInstance().getUid())){
+                if (conversation.getOwner().equals(MyApplication.getInstance().getUid())) {
                     showDimissGroupWarningDlg();
-                }else {
+                } else {
                     showQuitGroupWarningDlg();
                 }
 
@@ -232,7 +229,7 @@ public class ConversationGroupInfoActivity extends BaseActivity {
         }
     }
 
-    private void showQuitGroupWarningDlg(){
+    private void showQuitGroupWarningDlg() {
         new MyQMUIDialog.MessageDialogBuilder(ConversationGroupInfoActivity.this)
                 .setMessage(getString(R.string.quit_group_warning_text))
                 .addAction(getString(R.string.cancel), new QMUIDialogAction.ActionListener() {
@@ -251,7 +248,7 @@ public class ConversationGroupInfoActivity extends BaseActivity {
                 .show();
     }
 
-    private void showDimissGroupWarningDlg(){
+    private void showDimissGroupWarningDlg() {
         new MyQMUIDialog.MessageDialogBuilder(ConversationGroupInfoActivity.this)
                 .setMessage(getString(R.string.dismiss_group_warning_text))
                 .addAction(getString(R.string.cancel), new QMUIDialogAction.ActionListener() {
@@ -277,7 +274,7 @@ public class ConversationGroupInfoActivity extends BaseActivity {
             switch (requestCode) {
                 case QEQUEST_DEL_MEMBER:
                     ArrayList<String> delUidList = (ArrayList<String>) data.getSerializableExtra("selectMemList");
-                    if (delUidList.size()>0){
+                    if (delUidList.size() > 0) {
                         delConversationGroupMember(delUidList);
                     }
                     break;
@@ -285,7 +282,7 @@ public class ConversationGroupInfoActivity extends BaseActivity {
                     ArrayList<String> addUidList = new ArrayList<>();
                     List<SearchModel> addMemberList = (List<SearchModel>) data
                             .getSerializableExtra("selectMemList");
-                    if (addMemberList.size()>0){
+                    if (addMemberList.size() > 0) {
                         for (int i = 0; i < addMemberList.size(); i++) {
                             addUidList.add(addMemberList.get(i).getId());
                         }
@@ -306,9 +303,9 @@ public class ConversationGroupInfoActivity extends BaseActivity {
      */
     private void filterGroupMember(List<String> memberList) {
         //查三十人，如果不满三十人则查实际人数保证查到的人都是存在的群成员
-        List<ContactUser> contactUserList = ContactUserCacheUtils.getContactUserListByIdListOrderBy(memberList,isOwner?5:6);
+        List<ContactUser> contactUserList = ContactUserCacheUtils.getContactUserListByIdListOrderBy(memberList, isOwner ? 5 : 6);
         ArrayList<String> contactUserIdList = new ArrayList<>();
-        for (ContactUser contactUser:contactUserList) {
+        for (ContactUser contactUser : contactUserList) {
             contactUserIdList.add(contactUser.getId());
         }
         uiMemberUidList.clear();
@@ -323,12 +320,13 @@ public class ConversationGroupInfoActivity extends BaseActivity {
 
     /**
      * 修改群组名称
+     *
      * @param eventMessage
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReciverConversationNameUpdate(SimpleEventMessage eventMessage) {
-        if (eventMessage.getAction().equals(Constant.EVENTBUS_TAG_UPDATE_CHANNEL_NAME)){
-            String name = ((Conversation)eventMessage.getMessageObj()).getName();
+        if (eventMessage.getAction().equals(Constant.EVENTBUS_TAG_UPDATE_CHANNEL_NAME)) {
+            String name = ((Conversation) eventMessage.getMessageObj()).getName();
             nameText.setText(name);
             conversation.setName(name);
         }
@@ -336,7 +334,6 @@ public class ConversationGroupInfoActivity extends BaseActivity {
 
     /**
      * 更改是否频道消息免打扰
-     *
      */
     private void updateConversationDnd() {
         // TODO Auto-generated method stub
@@ -350,13 +347,12 @@ public class ConversationGroupInfoActivity extends BaseActivity {
 
     /**
      * 设置频道是否置顶
-     *
      */
     private void setConversationStick() {
         if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
             loadingDlg.show();
             apiService.setConversationStick(conversation.getId(), !conversation.isStick());
-        }else {
+        } else {
             stickSwitch.setOpened(conversation.isStick());
         }
     }
@@ -370,7 +366,7 @@ public class ConversationGroupInfoActivity extends BaseActivity {
     private void addConversationGroupMember(ArrayList<String> uidList) {
         if (NetUtils.isNetworkConnected(ConversationGroupInfoActivity.this)) {
             loadingDlg.show();
-            apiService.addConversationGroupMember(conversation.getId(),uidList);
+            apiService.addConversationGroupMember(conversation.getId(), uidList);
         }
     }
 
@@ -382,7 +378,7 @@ public class ConversationGroupInfoActivity extends BaseActivity {
     public void delConversationGroupMember(ArrayList<String> uidList) {
         if (NetUtils.isNetworkConnected(ConversationGroupInfoActivity.this)) {
             loadingDlg.show();
-            apiService.delConversationGroupMember(conversation.getId(),uidList);
+            apiService.delConversationGroupMember(conversation.getId(), uidList);
         }
     }
 
@@ -390,7 +386,7 @@ public class ConversationGroupInfoActivity extends BaseActivity {
     /**
      * 退出群聊
      */
-    public void quitChannelGroup(){
+    public void quitChannelGroup() {
         if (NetUtils.isNetworkConnected(ConversationGroupInfoActivity.this)) {
             loadingDlg.show();
             apiService.quitChannelGroup(conversation.getId());
@@ -400,7 +396,7 @@ public class ConversationGroupInfoActivity extends BaseActivity {
     /**
      * 解散群聊
      */
-    public void deleteConversation(){
+    public void deleteConversation() {
         if (NetUtils.isNetworkConnected(ConversationGroupInfoActivity.this)) {
             loadingDlg.show();
             apiService.deleteConversation(conversation.getId());
@@ -415,8 +411,8 @@ public class ConversationGroupInfoActivity extends BaseActivity {
             LoadingDialog.dimissDlg(loadingDlg);
             conversation.setDnd(!conversation.isDnd());
             dndSwitch.setOpened(conversation.isDnd());
-            ConversationCacheUtils.updateConversationDnd(MyApplication.getInstance(),conversation.getId(),conversation.isDnd());
-            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_UPDATE_CHANNEL_DND,conversation));
+            ConversationCacheUtils.updateConversationDnd(MyApplication.getInstance(), conversation.getId(), conversation.isDnd());
+            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_UPDATE_CHANNEL_DND, conversation));
 
         }
 
@@ -434,7 +430,7 @@ public class ConversationGroupInfoActivity extends BaseActivity {
             conversation.setStick(isStick);
             stickSwitch.setOpened(isStick);
             ConversationCacheUtils.setConversationStick(MyApplication.getInstance(), id, isStick);
-            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_UPDATE_CHANNEL_FOCUS,conversation));
+            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_UPDATE_CHANNEL_FOCUS, conversation));
         }
 
         @Override
@@ -449,8 +445,8 @@ public class ConversationGroupInfoActivity extends BaseActivity {
             LoadingDialog.dimissDlg(loadingDlg);
             memberUidList.addAll(uidList);
             ConversationCacheUtils.setConversationMember(MyApplication.getInstance(), conversation.getId(), memberUidList);
-            memberText.setText(getString(R.string.all_group_member,memberUidList.size()));
-            if (adapter.getCount() < 10){
+            memberText.setText(getString(R.string.all_group_member, memberUidList.size()));
+            if (adapter.getCount() < 10) {
                 uiMemberUidList.addAll(uidList);
                 adapter.notifyDataSetChanged();
             }
@@ -468,7 +464,7 @@ public class ConversationGroupInfoActivity extends BaseActivity {
             LoadingDialog.dimissDlg(loadingDlg);
             memberUidList.removeAll(uidList);
             ConversationCacheUtils.setConversationMember(MyApplication.getInstance(), conversation.getId(), memberUidList);
-            memberText.setText(getString(R.string.all_group_member,memberUidList.size()));
+            memberText.setText(getString(R.string.all_group_member, memberUidList.size()));
             filterGroupMember(memberUidList);
             adapter.notifyDataSetChanged();
         }
@@ -481,8 +477,8 @@ public class ConversationGroupInfoActivity extends BaseActivity {
 
         @Override
         public void returnQuitChannelGroupSuccess() {
-            ConversationCacheUtils.deleteConversation(MyApplication.getInstance(),conversation.getId());
-            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_QUIT_CHANNEL_GROUP,conversation));
+            ConversationCacheUtils.deleteConversation(MyApplication.getInstance(), conversation.getId());
+            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_QUIT_CHANNEL_GROUP, conversation));
             LoadingDialog.dimissDlg(loadingDlg);
             setResult(RESULT_OK);
             finish();
@@ -496,8 +492,8 @@ public class ConversationGroupInfoActivity extends BaseActivity {
 
         @Override
         public void returnDeleteConversationSuccess(String cid) {
-            ConversationCacheUtils.deleteConversation(MyApplication.getInstance(),conversation.getId());
-            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_QUIT_CHANNEL_GROUP,conversation));
+            ConversationCacheUtils.deleteConversation(MyApplication.getInstance(), conversation.getId());
+            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_QUIT_CHANNEL_GROUP, conversation));
             LoadingDialog.dimissDlg(loadingDlg);
             setResult(RESULT_OK);
             finish();

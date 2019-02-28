@@ -458,7 +458,7 @@ public class JSONUtils {
         }
         try {
             JSONArray statusArray = jsonObject.getJSONArray(key);
-            return JSONArray2List(statusArray,defaultValue);
+            return JSONArray2List(statusArray, defaultValue);
         } catch (Exception e) {
             if (isPrintException) {
                 e.printStackTrace();
@@ -468,7 +468,8 @@ public class JSONUtils {
     }
 
     /**
-     *JSONArray转list<String>
+     * JSONArray转list<String>
+     *
      * @param json
      * @param defaultValue
      * @return
@@ -488,6 +489,7 @@ public class JSONUtils {
 
     /**
      * JSONArray转list<String>
+     *
      * @param array
      * @param defaultValue
      * @return
@@ -1043,7 +1045,7 @@ public class JSONUtils {
     public static String toJSONString(Object object) {
         try {
             return JSON.toJSONString(object);
-        }catch (Exception e){
+        } catch (Exception e) {
             if (isPrintException) {
                 e.printStackTrace();
             }
@@ -1051,17 +1053,17 @@ public class JSONUtils {
         return "";
     }
 
-    public static <T> List<T> parseArray(String text, Class<T> clazz){
+    public static <T> List<T> parseArray(String text, Class<T> clazz) {
         List<T> list = null;
         try {
-            list =  JSON.parseArray(text,clazz);
-        }catch (Exception e){
+            list = JSON.parseArray(text, clazz);
+        } catch (Exception e) {
             if (isPrintException) {
                 e.printStackTrace();
             }
         }
-        if (list == null){
-            list= new ArrayList<>();
+        if (list == null) {
+            list = new ArrayList<>();
         }
         return list;
     }
@@ -1069,8 +1071,8 @@ public class JSONUtils {
     @SuppressWarnings("unchecked")
     public static <T> T parseObject(String text, TypeReference<T> type, Feature... features) {
         try {
-            return (T) JSON.parseObject(text,type,features);
-        }catch (Exception e){
+            return (T) JSON.parseObject(text, type, features);
+        } catch (Exception e) {
             if (isPrintException) {
                 e.printStackTrace();
             }
@@ -1078,11 +1080,11 @@ public class JSONUtils {
         return null;
     }
 
-    public static boolean isJSONObject(String text){
+    public static boolean isJSONObject(String text) {
         try {
             JSONObject obj = new JSONObject(text);
             return true;
-        }catch (Exception e){
+        } catch (Exception e) {
             return false;
         }
     }

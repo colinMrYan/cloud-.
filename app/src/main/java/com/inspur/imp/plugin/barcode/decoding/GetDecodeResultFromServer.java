@@ -11,12 +11,13 @@ import org.json.JSONObject;
 
 public class GetDecodeResultFromServer {
     private String data;
-    public GetDecodeResultFromServer(String response){
-        JSONArray dataArray = JSONUtils.getJSONArray(response,"data",null);
-        if (dataArray != null && dataArray.length()>0){
-            JSONObject object = JSONUtils.getJSONObject(dataArray,0,null);
-            if (object != null){
-                data = JSONUtils.getString(object,"data",null);
+
+    public GetDecodeResultFromServer(String response) {
+        JSONArray dataArray = JSONUtils.getJSONArray(response, "data", null);
+        if (dataArray != null && dataArray.length() > 0) {
+            JSONObject object = JSONUtils.getJSONObject(dataArray, 0, null);
+            if (object != null) {
+                data = JSONUtils.getString(object, "data", null);
             }
 
         }

@@ -182,7 +182,7 @@ public class WebexAPIService {
         });
     }
 
-    public void removeMeeting(final String meetingID){
+    public void removeMeeting(final String meetingID) {
         final String url = APIUri.getRemoveWebexMeetingUrl(meetingID);
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(url);
         params.setReadTimeout(30000);

@@ -1,6 +1,5 @@
 package com.inspur.emmcloud.bean.mine;
 
-import com.inspur.emmcloud.bean.mine.BindingDevice;
 import com.inspur.emmcloud.util.common.JSONUtils;
 
 import org.json.JSONArray;

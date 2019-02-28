@@ -14,6 +14,7 @@ import com.inspur.emmcloud.R;
 public class ContactSearchActivity extends BaseFragmentActivity {
 
     private ContactSearchFragment fragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,12 +26,12 @@ public class ContactSearchActivity extends BaseFragmentActivity {
 
     @Override
     public void onBackPressed() {
-        if (!fragment.onBackPressedConsumeByUI()){
+        if (!fragment.onBackPressedConsumeByUI()) {
             super.onBackPressed();
         }
     }
 
-    public void onClick(View view){
+    public void onClick(View view) {
         fragment.onClick(view);
     }
 }

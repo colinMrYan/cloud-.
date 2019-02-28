@@ -10,22 +10,23 @@ import java.io.Serializable;
  * Created by chenmch on 2018/12/26.
  */
 
-public class MailRecipient implements Serializable{
+public class MailRecipient implements Serializable {
     private String name;
     private String address;
     private String routingType;
     private String mailboxType;
     private String id;
 
-    public MailRecipient(){
+    public MailRecipient() {
 
     }
-    public MailRecipient(JSONObject object){
-        name = JSONUtils.getString(object,"name","");
-        address = JSONUtils.getString(object,"address","");
-        routingType = JSONUtils.getString(object,"routingType","");
-        mailboxType = JSONUtils.getString(object,"mailboxType","");
-        id = JSONUtils.getString(object,"id","");
+
+    public MailRecipient(JSONObject object) {
+        name = JSONUtils.getString(object, "name", "");
+        address = JSONUtils.getString(object, "address", "");
+        routingType = JSONUtils.getString(object, "routingType", "");
+        mailboxType = JSONUtils.getString(object, "mailboxType", "");
+        id = JSONUtils.getString(object, "id", "");
     }
 
     public String getName() {

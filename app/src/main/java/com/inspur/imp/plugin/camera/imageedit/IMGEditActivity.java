@@ -22,7 +22,6 @@ import java.io.IOException;
 public class IMGEditActivity extends IMGEditBaseActivity {
 
 
-
     public static final String EXTRA_IMAGE_PATH = "IMAGE_PATH";
 
     public static final String EXTRA_IMAGE_SAVE_DIR_PATH = "IMAGE_SAVE_DIR_PATH";
@@ -50,11 +49,11 @@ public class IMGEditActivity extends IMGEditBaseActivity {
             return null;
         }
         try {
-            encodingType = getIntent().getIntExtra(EXTRA_ENCODING_TYPE,0);
-             Bitmap bitmap = new Compressor(IMGEditActivity.this).setMaxHeight(MyAppConfig.UPLOAD_ORIGIN_IMG_MAX_SIZE).setMaxWidth(MyAppConfig.UPLOAD_ORIGIN_IMG_MAX_SIZE).setCompressFormat((encodingType == 0)? Bitmap.CompressFormat.JPEG:Bitmap.CompressFormat.PNG).setQuality(100).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
+            encodingType = getIntent().getIntExtra(EXTRA_ENCODING_TYPE, 0);
+            Bitmap bitmap = new Compressor(IMGEditActivity.this).setMaxHeight(MyAppConfig.UPLOAD_ORIGIN_IMG_MAX_SIZE).setMaxWidth(MyAppConfig.UPLOAD_ORIGIN_IMG_MAX_SIZE).setCompressFormat((encodingType == 0) ? Bitmap.CompressFormat.JPEG : Bitmap.CompressFormat.PNG).setQuality(100).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
                     .compressToBitmap(file);
             return bitmap;
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -97,14 +96,14 @@ public class IMGEditActivity extends IMGEditBaseActivity {
 
     @Override
     public void onDoneClick() {
-        String path = getIntent().getExtras().getString(EXTRA_IMAGE_SAVE_DIR_PATH,MyAppConfig.LOCAL_IMG_CREATE_PATH);
+        String path = getIntent().getExtras().getString(EXTRA_IMAGE_SAVE_DIR_PATH, MyAppConfig.LOCAL_IMG_CREATE_PATH);
         if (!TextUtils.isEmpty(path)) {
             File dir = new File(path);
-            if (!dir.exists()){
+            if (!dir.exists()) {
                 dir.mkdirs();
             }
-            File saveFile = new File(path,System.currentTimeMillis()+".png");
-            if (saveFile.exists()){
+            File saveFile = new File(path, System.currentTimeMillis() + ".png");
+            if (saveFile.exists()) {
                 saveFile.delete();
             }
             Bitmap bitmap = mImgView.saveBitmap();
@@ -112,7 +111,7 @@ public class IMGEditActivity extends IMGEditBaseActivity {
                 FileOutputStream fout = null;
                 try {
                     fout = new FileOutputStream(saveFile.getAbsolutePath());
-                    bitmap.compress((encodingType == 0)? Bitmap.CompressFormat.JPEG:Bitmap.CompressFormat.PNG, 100, fout);
+                    bitmap.compress((encodingType == 0) ? Bitmap.CompressFormat.JPEG : Bitmap.CompressFormat.PNG, 100, fout);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 } finally {
@@ -125,8 +124,8 @@ public class IMGEditActivity extends IMGEditBaseActivity {
                     }
                 }
                 Intent intent = new Intent();
-                intent.putExtra(OUT_FILE_PATH,saveFile.getAbsolutePath());
-                setResult(RESULT_OK,intent);
+                intent.putExtra(OUT_FILE_PATH, saveFile.getAbsolutePath());
+                setResult(RESULT_OK, intent);
                 finish();
                 return;
             }

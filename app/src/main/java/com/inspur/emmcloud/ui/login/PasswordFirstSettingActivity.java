@@ -77,16 +77,43 @@ public class PasswordFirstSettingActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.bt_skip:
-                IntentUtils.startActivity(this,IndexActivity.class,true);
+                IntentUtils.startActivity(this, IndexActivity.class, true);
                 break;
         }
     }
 
-    class EditOnTouchListener implements View.OnTouchListener{
+    private void showPasswordSettingFailDlg() {
+        DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // TODO Auto-generated method stub
+                if (which == -2) {
+                    IntentUtils.startActivity(PasswordFirstSettingActivity.this, IndexActivity.class, true);
+                }
+            }
+        };
+
+        EasyDialog.showDialog(PasswordFirstSettingActivity.this, getString(R.string.prompt),
+                getString(R.string.modify_user_password_fail),
+                getString(R.string.ok),
+                getString(R.string.cancel), listener, false);
+    }
+
+    private void modifyPassword() {
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
+            loadingDlg.show();
+            LoginAPIService apiService = new LoginAPIService(this);
+            apiService.setAPIInterface(new WebService());
+            apiService.modifyPassword("", passwordNew);
+        }
+    }
+
+    class EditOnTouchListener implements View.OnTouchListener {
 
         @Override
         public boolean onTouch(View view, MotionEvent motionEvent) {
-            switch (view.getId()){
+            switch (view.getId()) {
                 case R.id.et_password_new:
                     emmSecurityKeyboard.showSecurityKeyBoard(passwordNewEdit);
                     break;
@@ -123,33 +150,6 @@ public class PasswordFirstSettingActivity extends BaseActivity {
             boolean isInputValaid = passwordNew.length() > 7 && passwordConfirm.length() > 7;
             saveBtn.setEnabled(isInputValaid);
             saveBtn.setBackgroundResource(isInputValaid ? R.drawable.selector_login_btn : R.drawable.bg_login_btn_unable);
-        }
-    }
-
-    private void showPasswordSettingFailDlg() {
-        DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
-
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // TODO Auto-generated method stub
-                if (which == -2) {
-                    IntentUtils.startActivity(PasswordFirstSettingActivity.this, IndexActivity.class, true);
-                }
-            }
-        };
-
-        EasyDialog.showDialog(PasswordFirstSettingActivity.this, getString(R.string.prompt),
-                getString(R.string.modify_user_password_fail),
-                getString(R.string.ok),
-                getString(R.string.cancel), listener, false);
-    }
-
-    private void modifyPassword() {
-        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
-            loadingDlg.show();
-            LoginAPIService apiService = new LoginAPIService(this);
-            apiService.setAPIInterface(new WebService());
-            apiService.modifyPassword("", passwordNew);
         }
     }
 

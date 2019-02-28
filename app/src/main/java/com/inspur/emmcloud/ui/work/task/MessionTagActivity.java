@@ -122,7 +122,7 @@ public class MessionTagActivity extends BaseActivity {
     private void initData() {
         deleteTagName = getIntent().getStringExtra("title");
         String userId = ((MyApplication) getApplicationContext()).getUid();
-        messionTagList = JSONUtils.JSONArray2List(PreferencesUtils.getString(MessionTagActivity.this, MyApplication.getInstance().getTanent() + userId + "messionTags", ""),new ArrayList<String>());
+        messionTagList = JSONUtils.JSONArray2List(PreferencesUtils.getString(MessionTagActivity.this, MyApplication.getInstance().getTanent() + userId + "messionTags", ""), new ArrayList<String>());
         if (getIntent().hasExtra("color")) {
             color = getIntent().getStringExtra("color");
         }
@@ -249,6 +249,79 @@ public class MessionTagActivity extends BaseActivity {
         }
     }
 
+    /**
+     * 保存标签,如果是个选中的标签要把它选中列表中清除
+     */
+    public void saveTagsAfterDelete() {
+        String userId = ((MyApplication) getApplicationContext()).getUid();
+        String choosenTags = PreferencesUtils.getString(MessionTagActivity.this,
+                MyApplication.getInstance().getTanent() + userId + "chooseTags", "");
+        ArrayList<String> afterDeleteList = JSONUtils.JSONArray2List(choosenTags, new ArrayList<String>());
+        if (afterDeleteList.size() > 0) {
+            Iterator<String> afterIteror = afterDeleteList.iterator();
+            while (afterIteror.hasNext()) {
+                String deleteName = afterIteror.next();
+                if (deleteName.equals(deleteTagName)) {
+                    afterIteror.remove();
+                }
+            }
+            PreferencesUtils
+                    .putString(MessionTagActivity.this, MyApplication.getInstance().getTanent()
+                                    + userId + "chooseTags",
+                            JSONUtils.toJSONString(afterDeleteList));
+        } else {
+            PreferencesUtils
+                    .putString(MessionTagActivity.this, MyApplication.getInstance().getTanent()
+                                    + userId + "chooseTags",
+                            "");
+        }
+    }
+
+    /**
+     * 设置是否选择
+     *
+     * @param selectImg
+     * @param positionChoose
+     * @param position
+     */
+    public void handleSelectImg(ImageView selectImg, int positionChoose,
+                                int position) {
+        if ((positionChoose == -1) && (position == 0)
+                && StringUtils.isBlank(color)) {
+            selectImg.setVisibility(View.VISIBLE);
+        }
+        if ((positionChoose == -1) && (!(StringUtils.isBlank(color)))
+                && (color.equals(tagColorBeans.get(position).getColor()))) {
+            selectImg.setVisibility(View.VISIBLE);
+        } else if (position == positionChoose) {
+            selectImg.setVisibility(View.VISIBLE);
+        } else {
+            selectImg.setVisibility(View.GONE);
+        }
+    }
+
+    // /**
+    // * 显示颜色标签
+    // * @param imageView
+    // * @param position
+    // */
+    // public void handleColorImg(ImageView imageView, int position) {
+    // String tagColor = tagColorBeans.get(position).getColor();
+    // if (tagColor.equals("PINK")) {
+    // imageView.setImageResource(R.drawable.icon_mession_red);
+    // } else if (tagColor.equals("ORANGE")) {
+    // imageView.setImageResource(R.drawable.icon_mession_orange);
+    // } else if (tagColor.equals("YELLOW")) {
+    // imageView.setImageResource(R.drawable.icon_mession_yellow);
+    // } else if (tagColor.equals("GREEN")) {
+    // imageView.setImageResource(R.drawable.icon_mession_green);
+    // } else if (tagColor.equals("BLUE")) {
+    // imageView.setImageResource(R.drawable.icon_mession_blue);
+    // } else if (tagColor.equals("PURPLE")) {
+    // imageView.setImageResource(R.drawable.icon_mession_purple);
+    // }
+    // }
+
     class TagAdapter extends BaseAdapter {
         @Override
         public int getCount() {
@@ -320,79 +393,6 @@ public class MessionTagActivity extends BaseActivity {
             WebServiceMiddleUtils.hand(MessionTagActivity.this, error, errorCode);
         }
 
-    }
-
-    // /**
-    // * 显示颜色标签
-    // * @param imageView
-    // * @param position
-    // */
-    // public void handleColorImg(ImageView imageView, int position) {
-    // String tagColor = tagColorBeans.get(position).getColor();
-    // if (tagColor.equals("PINK")) {
-    // imageView.setImageResource(R.drawable.icon_mession_red);
-    // } else if (tagColor.equals("ORANGE")) {
-    // imageView.setImageResource(R.drawable.icon_mession_orange);
-    // } else if (tagColor.equals("YELLOW")) {
-    // imageView.setImageResource(R.drawable.icon_mession_yellow);
-    // } else if (tagColor.equals("GREEN")) {
-    // imageView.setImageResource(R.drawable.icon_mession_green);
-    // } else if (tagColor.equals("BLUE")) {
-    // imageView.setImageResource(R.drawable.icon_mession_blue);
-    // } else if (tagColor.equals("PURPLE")) {
-    // imageView.setImageResource(R.drawable.icon_mession_purple);
-    // }
-    // }
-
-    /**
-     * 保存标签,如果是个选中的标签要把它选中列表中清除
-     */
-    public void saveTagsAfterDelete() {
-        String userId = ((MyApplication) getApplicationContext()).getUid();
-        String choosenTags = PreferencesUtils.getString(MessionTagActivity.this,
-                MyApplication.getInstance().getTanent() + userId + "chooseTags", "");
-        ArrayList<String> afterDeleteList = JSONUtils.JSONArray2List(choosenTags,new ArrayList<String>());
-        if (afterDeleteList.size() > 0) {
-            Iterator<String> afterIteror = afterDeleteList.iterator();
-            while (afterIteror.hasNext()) {
-                String deleteName = afterIteror.next();
-                if (deleteName.equals(deleteTagName)) {
-                    afterIteror.remove();
-                }
-            }
-            PreferencesUtils
-                    .putString(MessionTagActivity.this, MyApplication.getInstance().getTanent()
-                                    + userId + "chooseTags",
-                            JSONUtils.toJSONString(afterDeleteList));
-        } else {
-            PreferencesUtils
-                    .putString(MessionTagActivity.this, MyApplication.getInstance().getTanent()
-                                    + userId + "chooseTags",
-                            "");
-        }
-    }
-
-    /**
-     * 设置是否选择
-     *
-     * @param selectImg
-     * @param positionChoose
-     * @param position
-     */
-    public void handleSelectImg(ImageView selectImg, int positionChoose,
-                                int position) {
-        if ((positionChoose == -1) && (position == 0)
-                && StringUtils.isBlank(color)) {
-            selectImg.setVisibility(View.VISIBLE);
-        }
-        if ((positionChoose == -1) && (!(StringUtils.isBlank(color)))
-                && (color.equals(tagColorBeans.get(position).getColor()))) {
-            selectImg.setVisibility(View.VISIBLE);
-        } else if (position == positionChoose) {
-            selectImg.setVisibility(View.VISIBLE);
-        } else {
-            selectImg.setVisibility(View.GONE);
-        }
     }
 
 }

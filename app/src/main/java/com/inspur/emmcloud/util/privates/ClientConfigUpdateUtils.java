@@ -32,7 +32,7 @@ public class ClientConfigUpdateUtils extends APIInterfaceInstance {
     }
 
     public void getAllConfigUpdate() {
-        isCheckClientConfigUpdate= true;
+        isCheckClientConfigUpdate = true;
         if (NetUtils.isNetworkConnected(MyApplication.getInstance(), false)) {
             AppAPIService apiService = new AppAPIService(MyApplication.getInstance());
             apiService.setAPIInterface(this);
@@ -56,13 +56,13 @@ public class ClientConfigUpdateUtils extends APIInterfaceInstance {
                 e.printStackTrace();
             }
             apiService.getAllConfigVersion(clientConfigVersionObj);
-        }else {
+        } else {
             getAllConfigVersionFail();
         }
 
     }
 
-    public boolean isCheckClientConfigUpdate(){
+    public boolean isCheckClientConfigUpdate() {
         return isCheckClientConfigUpdate;
     }
 
@@ -71,7 +71,7 @@ public class ClientConfigUpdateUtils extends APIInterfaceInstance {
     }
 
     public boolean isItemNeedUpdate(ClientConfigItem clientConfigItem, GetAllConfigVersionResult getAllConfigVersionResult) {
-        if (getAllConfigVersionResult == null){
+        if (getAllConfigVersionResult == null) {
             return true;
         }
         String itemLocalVersion = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), clientConfigItem.getValue(), "");
@@ -79,24 +79,24 @@ public class ClientConfigUpdateUtils extends APIInterfaceInstance {
         return StringUtils.isBlank(itemLocalVersion) || StringUtils.isBlank(itemNewVersion) || !itemLocalVersion.equals(itemNewVersion);
     }
 
-    public  String getItemNewVersion(ClientConfigItem clientConfigItem){
-        String  itemNewVersion = "";
-        if (getCacheAllConfigVersionResult() != null){
+    public String getItemNewVersion(ClientConfigItem clientConfigItem) {
+        String itemNewVersion = "";
+        if (getCacheAllConfigVersionResult() != null) {
             itemNewVersion = getCacheAllConfigVersionResult().getItemVersion(clientConfigItem);
         }
-        return  itemNewVersion;
+        return itemNewVersion;
     }
 
-    public  void saveItemLocalVersion(ClientConfigItem clientConfigItem,String version) {
-            if (!StringUtils.isBlank(version)){
-                PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), clientConfigItem.getValue(), version);
-            }
+    public void saveItemLocalVersion(ClientConfigItem clientConfigItem, String version) {
+        if (!StringUtils.isBlank(version)) {
+            PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), clientConfigItem.getValue(), version);
+        }
     }
 
 
-    private  GetAllConfigVersionResult getCacheAllConfigVersionResult() {
+    private GetAllConfigVersionResult getCacheAllConfigVersionResult() {
         String commonNewVersion = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_V_CONFIG_ALL, "");
-        if (!StringUtils.isBlank(commonNewVersion)){
+        if (!StringUtils.isBlank(commonNewVersion)) {
             return new GetAllConfigVersionResult(commonNewVersion);
         }
         return null;
@@ -106,13 +106,13 @@ public class ClientConfigUpdateUtils extends APIInterfaceInstance {
     /**
      * 当清除所有缓存的时候清空以db形式存储数据的configVersion
      */
-    public void clearDbDataConfigWithClearAllCache(){
-       PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), ClientConfigItem.CLIENT_CONFIG_CONTACT_USER.getValue(), "");
-       PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), ClientConfigItem.CLIENT_CONFIG_CONTACT_ORG.getValue(), "");
-       PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), ClientConfigItem.CLIENT_CONFIG_MY_APP.getValue(), "");
+    public void clearDbDataConfigWithClearAllCache() {
+        PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), ClientConfigItem.CLIENT_CONFIG_CONTACT_USER.getValue(), "");
+        PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), ClientConfigItem.CLIENT_CONFIG_CONTACT_ORG.getValue(), "");
+        PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), ClientConfigItem.CLIENT_CONFIG_MY_APP.getValue(), "");
     }
 
-    public void clearDbDataConfigWithMyApp(){
+    public void clearDbDataConfigWithMyApp() {
         PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), ClientConfigItem.CLIENT_CONFIG_MY_APP.getValue(), "");
     }
 
@@ -128,7 +128,7 @@ public class ClientConfigUpdateUtils extends APIInterfaceInstance {
         getAllConfigVersionFail();
     }
 
-    private void getAllConfigVersionFail(){
+    private void getAllConfigVersionFail() {
         PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), ClientConfigItem.CLIENT_CONFIG_CONTACT_USER.getValue(), "");
         PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), ClientConfigItem.CLIENT_CONFIG_CONTACT_ORG.getValue(), "");
         PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), ClientConfigItem.CLIENT_CONFIG_MY_APP.getValue(), "");
@@ -136,8 +136,8 @@ public class ClientConfigUpdateUtils extends APIInterfaceInstance {
         PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), ClientConfigItem.CLIENT_CONFIG_LANGUAGE.getValue(), "");
         PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), ClientConfigItem.CLIENT_CONFIG_SPLASH.getValue(), "");
         PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), ClientConfigItem.CLIENT_CONFIG_ROUTER.getValue(), "");
-        GetAllConfigVersionResult allConfigVersionResult =  getCacheAllConfigVersionResult();
-        if (allConfigVersionResult == null){
+        GetAllConfigVersionResult allConfigVersionResult = getCacheAllConfigVersionResult();
+        if (allConfigVersionResult == null) {
             allConfigVersionResult = new GetAllConfigVersionResult("");
         }
         sendClientConfigUpdateInfo(allConfigVersionResult);
@@ -146,9 +146,10 @@ public class ClientConfigUpdateUtils extends APIInterfaceInstance {
 
     /**
      * 发送客户端统一更新信息，各个功能分别以eventbus接收处理
+     *
      * @param getAllConfigVersionResult
      */
-    private void sendClientConfigUpdateInfo(GetAllConfigVersionResult getAllConfigVersionResult){
+    private void sendClientConfigUpdateInfo(GetAllConfigVersionResult getAllConfigVersionResult) {
         isCheckClientConfigUpdate = false;
         EventBus.getDefault().post(getAllConfigVersionResult);
     }

@@ -15,11 +15,11 @@ import com.inspur.emmcloud.api.APIDownloadCallBack;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.privates.AppUtils;
+import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.VolumeFileIconUtils;
 import com.inspur.imp.plugin.file.FileUtil;
 
@@ -80,9 +80,9 @@ public class VolumeFileDownloadActivtiy extends BaseActivity {
         if (FileUtils.isFileExist(fileSavePath)) {
             downloadBtn.setText(R.string.open);
         } else {
-            downloadBtn.setText(getString(R.string.clouddriver_download_size,FileUtils.formatFileSize(volumeFile.getSize())));
-            boolean isStartDownload = getIntent().getBooleanExtra("isStartDownload",false);
-            if (isStartDownload){
+            downloadBtn.setText(getString(R.string.clouddriver_download_size, FileUtils.formatFileSize(volumeFile.getSize())));
+            boolean isStartDownload = getIntent().getBooleanExtra("isStartDownload", false);
+            if (isStartDownload) {
                 downloadFile();
             }
         }
@@ -138,7 +138,7 @@ public class VolumeFileDownloadActivtiy extends BaseActivity {
                 progressBar.setProgress(progress);
                 String totleSize = FileUtil.formetFileSize(total);
                 String currentSize = FileUtil.formetFileSize(current);
-                progressText.setText(getString(R.string.clouddriver_downloading_status,currentSize,totleSize));
+                progressText.setText(getString(R.string.clouddriver_downloading_status, currentSize, totleSize));
 
             }
 

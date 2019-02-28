@@ -50,8 +50,8 @@ public class MsgCacheUtil {
             DbCacheUtils.getDb(context).saveOrUpdate(msgList);
             MatheSet matheSet = new MatheSet();
             matheSet.setStart(msgList.get(0).getMid());
-            matheSet.setEnd((targetMsgCreationDate == null)?msgList.get(msgList.size() - 1)
-                    .getTime():targetMsgCreationDate);
+            matheSet.setEnd((targetMsgCreationDate == null) ? msgList.get(msgList.size() - 1)
+                    .getTime() : targetMsgCreationDate);
             MessageMatheSetCacheUtils.add(context, msgList.get(0).getCid(),
                     matheSet);
         } catch (Exception e) {
@@ -60,7 +60,6 @@ public class MsgCacheUtil {
         }
 
     }
-
 
 
     /**
@@ -141,7 +140,7 @@ public class MsgCacheUtil {
             long continuousCount = DbCacheUtils.getDb(context).selector
                     (Msg.class)
                     .where("time", "between",
-                            new String[]{mathSetStart + "", targetCreateDate+""})
+                            new String[]{mathSetStart + "", targetCreateDate + ""})
                     .and("time", "!=", targetCreateDate).and("cid", "=", channelID).count();
 
 

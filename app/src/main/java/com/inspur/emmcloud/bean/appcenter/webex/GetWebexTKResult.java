@@ -8,8 +8,9 @@ import com.inspur.emmcloud.util.common.JSONUtils;
 
 public class GetWebexTKResult {
     private String tk;
-    public GetWebexTKResult(String response){
-        tk = JSONUtils.getString(response,"tk","");
+
+    public GetWebexTKResult(String response) {
+        tk = JSONUtils.getString(response, "tk", "");
     }
 
     public String getTk() {

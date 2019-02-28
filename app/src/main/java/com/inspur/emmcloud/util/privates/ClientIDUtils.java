@@ -29,7 +29,7 @@ public class ClientIDUtils {
 
 
     public void upload() {
-        if (!MyApplication.getInstance().isHaveLogin()){
+        if (!MyApplication.getInstance().isHaveLogin()) {
             return;
         }
         String pushTracer = AppUtils.getPushId(context);
@@ -40,7 +40,7 @@ public class ClientIDUtils {
             String deviceName = AppUtils.getDeviceName(context);
             String pushProvider = AppUtils.getPushProvider(context);
             apiService.uploadPushInfo(deviceId, deviceName, pushProvider, pushTracer);
-        }else {
+        } else {
             callbackClientIdFail();
         }
     }

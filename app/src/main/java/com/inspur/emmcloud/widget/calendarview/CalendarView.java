@@ -48,36 +48,30 @@ public class CalendarView extends FrameLayout {
      * 抽取自定义属性
      */
     private final CalendarViewDelegate mDelegate;
-
-    /**
-     * 自定义自适应高度的ViewPager
-     */
-    private MonthViewPager mMonthPager;
-
-    /**
-     * 日历周视图
-     */
-    private WeekViewPager mWeekPager;
-
-    /**
-     * 星期栏的线
-     */
-    private View mWeekLine;
-
-    /**
-     * 月份快速选取
-     */
-    private YearViewPager mYearViewPager;
-
-    /**
-     * 星期栏
-     */
-    private WeekBar mWeekBar;
-
     /**
      * 日历外部收缩布局
      */
     CalendarLayout mParentLayout;
+    /**
+     * 自定义自适应高度的ViewPager
+     */
+    private MonthViewPager mMonthPager;
+    /**
+     * 日历周视图
+     */
+    private WeekViewPager mWeekPager;
+    /**
+     * 星期栏的线
+     */
+    private View mWeekLine;
+    /**
+     * 月份快速选取
+     */
+    private YearViewPager mYearViewPager;
+    /**
+     * 星期栏
+     */
+    private WeekBar mWeekBar;
 
 
     public CalendarView(@NonNull Context context) {

@@ -7,9 +7,10 @@ package com.inspur.emmcloud.bean.chat;
 public class ChannelMessageSet {
     private String cid;
     private MatheSet matheSet;
-    public ChannelMessageSet(String cid, MatheSet matheSet){
-        this.cid =cid;
-        this.matheSet=matheSet;
+
+    public ChannelMessageSet(String cid, MatheSet matheSet) {
+        this.cid = cid;
+        this.matheSet = matheSet;
     }
 
     public String getCid() {

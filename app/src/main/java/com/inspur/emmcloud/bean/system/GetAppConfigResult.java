@@ -1,6 +1,5 @@
 package com.inspur.emmcloud.bean.system;
 
-import com.inspur.emmcloud.bean.system.AppConfig;
 import com.inspur.emmcloud.util.common.JSONUtils;
 
 import org.json.JSONArray;
@@ -15,16 +14,17 @@ import java.util.List;
 
 public class GetAppConfigResult {
     private List<AppConfig> appConfigList = new ArrayList<>();
-    public GetAppConfigResult(String response){
+
+    public GetAppConfigResult(String response) {
 //        isWebAutoRotate = JSONUtils.getBoolean(obj,"WebAutoRotate",false);
 //        commonFunctionAppIDList = JSONUtils.getStringList(obj,"CommonFunctions",new ArrayList<String>());
-        JSONArray array = JSONUtils.getJSONArray(response,new JSONArray());
-        for (int i=0;i<array.length();i++){
-            JSONObject obj = JSONUtils.getJSONObject(array,i,new JSONObject());
-            String key = JSONUtils.getString(obj,"key",null);
-            String value = JSONUtils.getString(obj,"value",null);
-            if (key != null && value != null){
-                appConfigList.add(new AppConfig(key,value));
+        JSONArray array = JSONUtils.getJSONArray(response, new JSONArray());
+        for (int i = 0; i < array.length(); i++) {
+            JSONObject obj = JSONUtils.getJSONObject(array, i, new JSONObject());
+            String key = JSONUtils.getString(obj, "key", null);
+            String value = JSONUtils.getString(obj, "value", null);
+            if (key != null && value != null) {
+                appConfigList.add(new AppConfig(key, value));
             }
         }
     }

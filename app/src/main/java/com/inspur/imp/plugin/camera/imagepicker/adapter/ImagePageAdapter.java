@@ -18,12 +18,12 @@ import uk.co.senab.photoview.PhotoViewAttacher;
 
 public class ImagePageAdapter extends PagerAdapter {
 
+    public PhotoViewClickListener listener;
     private int screenWidth;
     private int screenHeight;
     private ImagePicker imagePicker;
     private ArrayList<ImageItem> images = new ArrayList<ImageItem>();
     private Activity mActivity;
-    public PhotoViewClickListener listener;
 
     public ImagePageAdapter(Activity activity, ArrayList<ImageItem> images) {
         this.mActivity = activity;
@@ -53,6 +53,7 @@ public class ImagePageAdapter extends PagerAdapter {
             public void onPhotoTap(View view, float x, float y) {
                 if (listener != null) listener.OnPhotoTapListener(view, x, y);
             }
+
             @Override
             public void onOutsidePhotoTap() {
 

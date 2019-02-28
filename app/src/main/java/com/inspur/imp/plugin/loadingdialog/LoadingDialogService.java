@@ -20,7 +20,7 @@ public class LoadingDialogService extends ImpPlugin {
             showDlg(paramsObject);
         } else if ("hide".equals(action)) {
             hideDlg();
-        }else{
+        } else {
             showCallIMPMethodErrorDlg();
         }
     }
@@ -34,13 +34,13 @@ public class LoadingDialogService extends ImpPlugin {
     private void showDlg(JSONObject paramsObject) {
         String content = null;
         content = JSONUtils.getString(paramsObject, "content", "");
-        if (getImpCallBackInterface() != null){
+        if (getImpCallBackInterface() != null) {
             getImpCallBackInterface().onLoadingDlgShow(content);
         }
     }
 
     private void hideDlg() {
-        if (getImpCallBackInterface() != null){
+        if (getImpCallBackInterface() != null) {
             getImpCallBackInterface().onLoadingDlgDimiss();
         }
     }

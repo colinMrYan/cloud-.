@@ -14,29 +14,21 @@ import android.graphics.drawable.Drawable;
 public class RadiusDrawable extends Drawable {
 
 
+    private final Paint paint;
+    private final boolean isStroke;
     private int topLeftRadius;
     private int topRightRadius;
     private int bottomLeftRadius;
     private int bottomRightRadius;
-
-
     private int left;
     private int top;
     private int right;
     private int bottom;
-
-
     private int width;
     private int height;
-
-
     private int centerX;
     private int centerY;
-
-
-    private final Paint paint;
     private int color;
-    private final boolean isStroke;
     private int strokeWidth = 0;
     private int strokeColor;
 
@@ -82,17 +74,17 @@ public class RadiusDrawable extends Drawable {
     }
 
 
-    public void setColor(int color){
+    public void setColor(int color) {
         this.color = color;
     }
 
 
-    public void setRadius(int radius){
+    public void setRadius(int radius) {
         this.topLeftRadius = this.topRightRadius = this.bottomLeftRadius = this.bottomRightRadius = radius;
     }
 
 
-    public void setRadiuses(int topLeftRadius, int topRightRadius, int bottomLeftRadius, int bottomRightRadius){
+    public void setRadiuses(int topLeftRadius, int topRightRadius, int bottomLeftRadius, int bottomRightRadius) {
         this.topLeftRadius = topLeftRadius;
         this.topRightRadius = topRightRadius;
         this.bottomLeftRadius = bottomLeftRadius;

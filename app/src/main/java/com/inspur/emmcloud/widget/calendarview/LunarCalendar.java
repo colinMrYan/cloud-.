@@ -27,112 +27,16 @@ import java.util.Map;
 final class LunarCalendar {
 
 
-    static void init(Context context) {
-        if (MONTH_STR != null) {
-            return;
-        }
-        TrunkBranchAnnals.init(context);
-        SolarTermUtil.init(context);
-        MONTH_STR = context.getResources().getStringArray(R.array.lunar_first_of_month);
-        TRADITION_FESTIVAL_STR = context.getResources().getStringArray(R.array.tradition_festival);
-        DAY_STR = context.getResources().getStringArray(R.array.lunar_str);
-        SPECIAL_FESTIVAL_STR = context.getResources().getStringArray(R.array.special_festivals);
-        SOLAR_CALENDAR = context.getResources().getStringArray(R.array.solar_festival);
-    }
-
-    /**
-     * 农历月份第一天转写
-     */
-    private static String[] MONTH_STR = null;
-
-    /**
-     * 传统农历节日
-     */
-    private static String[] TRADITION_FESTIVAL_STR = null;
-
-    /**
-     * 农历大写
-     */
-    private static String[] DAY_STR = null;
-
-    /**
-     * 特殊节日的数组
-     */
-    private static String[] SPECIAL_FESTIVAL_STR = null;
-
     /**
      * 特殊节日、母亲节和父亲节,感恩节等
      */
     @SuppressLint("UseSparseArrays")
     private static final Map<Integer, String[]> SPECIAL_FESTIVAL = new HashMap<>();
-
-    /**
-     * 公历节日
-     */
-    private static String[] SOLAR_CALENDAR = null;
-
     /**
      * 保存每年24节气
      */
     @SuppressLint("UseSparseArrays")
     private static final Map<Integer, String[]> SOLAR_TERMS = new HashMap<>();
-
-    /**
-     * 返回传统农历节日
-     *
-     * @param year  农历年
-     * @param month 农历月
-     * @param day   农历日
-     * @return 返回传统农历节日
-     */
-    private static String getTraditionFestival(int year, int month, int day) {
-        if (month == 12) {
-            int count = daysInLunarMonth(year, month);
-            if (day == count) {
-                return TRADITION_FESTIVAL_STR[0];//除夕
-            }
-        }
-        String text = getString(month, day);
-        String festivalStr = "";
-        for (String festival : TRADITION_FESTIVAL_STR) {
-            if (festival.contains(text)) {
-                festivalStr = festival.replace(text, "");
-                break;
-            }
-        }
-        return festivalStr;
-    }
-
-
-    /**
-     * 数字转换为汉字月份
-     *
-     * @param month 月
-     * @param leap  1==闰月
-     * @return 数字转换为汉字月份
-     */
-    private static String numToChineseMonth(int month, int leap) {
-        if (leap == 1) {
-            return String.format("闰%s", MONTH_STR[month - 1]);
-        }
-        return MONTH_STR[month - 1];
-    }
-
-    /**
-     * 数字转换为农历节日或者日期
-     *
-     * @param month 月
-     * @param day   日
-     * @param leap  1==闰月
-     * @return 数字转换为汉字日
-     */
-    private static String numToChinese(int month, int day, int leap) {
-        if (day == 1) {
-            return numToChineseMonth(month, leap);
-        }
-        return DAY_STR[day - 1];
-    }
-
     /**
      * 用来表示1900年到2099年间农历年份的相关信息，共24位bit的16进制表示，其中：
      * 1. 前4位表示该年闰哪个月；
@@ -166,7 +70,94 @@ final class LunarCalendar {
             0x069349, 0x7729BD, 0x06AA51, 0x0AD546, 0x54DABA, 0x04B64E, 0x0A5743, 0x452738, 0x0D264A, 0x8E933E,/*2081-2090*/
             0x0D5252, 0x0DAA47, 0x66B53B, 0x056D4F, 0x04AE45, 0x4A4EB9, 0x0A4D4C, 0x0D1541, 0x2D92B5          /*2091-2099*/
     };
+    /**
+     * 农历月份第一天转写
+     */
+    private static String[] MONTH_STR = null;
+    /**
+     * 传统农历节日
+     */
+    private static String[] TRADITION_FESTIVAL_STR = null;
+    /**
+     * 农历大写
+     */
+    private static String[] DAY_STR = null;
+    /**
+     * 特殊节日的数组
+     */
+    private static String[] SPECIAL_FESTIVAL_STR = null;
+    /**
+     * 公历节日
+     */
+    private static String[] SOLAR_CALENDAR = null;
 
+    static void init(Context context) {
+        if (MONTH_STR != null) {
+            return;
+        }
+        TrunkBranchAnnals.init(context);
+        SolarTermUtil.init(context);
+        MONTH_STR = context.getResources().getStringArray(R.array.lunar_first_of_month);
+        TRADITION_FESTIVAL_STR = context.getResources().getStringArray(R.array.tradition_festival);
+        DAY_STR = context.getResources().getStringArray(R.array.lunar_str);
+        SPECIAL_FESTIVAL_STR = context.getResources().getStringArray(R.array.special_festivals);
+        SOLAR_CALENDAR = context.getResources().getStringArray(R.array.solar_festival);
+    }
+
+    /**
+     * 返回传统农历节日
+     *
+     * @param year  农历年
+     * @param month 农历月
+     * @param day   农历日
+     * @return 返回传统农历节日
+     */
+    private static String getTraditionFestival(int year, int month, int day) {
+        if (month == 12) {
+            int count = daysInLunarMonth(year, month);
+            if (day == count) {
+                return TRADITION_FESTIVAL_STR[0];//除夕
+            }
+        }
+        String text = getString(month, day);
+        String festivalStr = "";
+        for (String festival : TRADITION_FESTIVAL_STR) {
+            if (festival.contains(text)) {
+                festivalStr = festival.replace(text, "");
+                break;
+            }
+        }
+        return festivalStr;
+    }
+
+    /**
+     * 数字转换为汉字月份
+     *
+     * @param month 月
+     * @param leap  1==闰月
+     * @return 数字转换为汉字月份
+     */
+    private static String numToChineseMonth(int month, int leap) {
+        if (leap == 1) {
+            return String.format("闰%s", MONTH_STR[month - 1]);
+        }
+        return MONTH_STR[month - 1];
+    }
+
+    /**
+     * 数字转换为农历节日或者日期
+     *
+     * @param month 月
+     * @param day   日
+     * @param leap  1==闰月
+     * @return 数字转换为汉字日
+     */
+    private static String numToChinese(int month, int day, int leap) {
+        if (day == 1) {
+            return numToChineseMonth(month, leap);
+        }
+        return DAY_STR[day - 1];
+    }
 
     /**
      * 传回农历 year年month月的总天数，总共有13个月包括闰月

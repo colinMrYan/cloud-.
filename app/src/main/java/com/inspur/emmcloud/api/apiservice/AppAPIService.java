@@ -499,7 +499,7 @@ public class AppAPIService {
      * 获取应用的配置信息
      */
     public void getAppConfig(final boolean isGetCommonAppConfig, final boolean isGetWorkPortletAppConfig,
-            final boolean isGetWebAutoRotate) {
+                             final boolean isGetWebAutoRotate) {
         final String url = APIUri.getAppConfigUrl(isGetCommonAppConfig, isGetWorkPortletAppConfig, isGetWebAutoRotate);
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
         HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, url) {
@@ -802,23 +802,24 @@ public class AppAPIService {
 
     /**
      * 获取网络连通状态
+     *
      * @param url
      */
-    public void getCloudConnectStateUrl(final String url){
+    public void getCloudConnectStateUrl(final String url) {
         final String completeUrl = APIUri.getReactNativeInstallUrl();
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
-        params.addParameter("uri",url);
-        params.setConnectTimeout( 5000 );
-        HttpUtils.request(context,CloudHttpMethod.POST,params, new APICallback(context,completeUrl) {
+        params.addParameter("uri", url);
+        params.setConnectTimeout(5000);
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
             @Override
             public void callbackSuccess(byte[] arg0) {
-                apiInterface.returnCheckCloudPluseConnectionSuccess(arg0,url);
+                apiInterface.returnCheckCloudPluseConnectionSuccess(arg0, url);
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                apiInterface.returnCheckCloudPluseConnectionError(error,responseCode,url);
+                apiInterface.returnCheckCloudPluseConnectionError(error, responseCode, url);
             }
 
             @Override

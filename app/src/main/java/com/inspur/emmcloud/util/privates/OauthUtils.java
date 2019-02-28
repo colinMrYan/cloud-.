@@ -39,21 +39,21 @@ public class OauthUtils {
     public void refreshToken(OauthCallBack callBack, long requestTime) {
         //当请求时间小于新token的获取时间时，代表token已经更新，重新执行该请求
         if (requestTime < tokenGetTime) {
-            if (callBack != null){
+            if (callBack != null) {
                 callBack.reExecute();
             }
         } else {
-            if (callBack != null){
+            if (callBack != null) {
                 callBackList.add(callBack);
             }
             // 防止多次刷新token
-            synchronized (this){
-                    if (!isTokenRefreshing){
-                        isTokenRefreshing = true;
-                        LoginAPIService apiService = new LoginAPIService(MyApplication.getInstance());
-                        apiService.setAPIInterface(new WebService());
-                        apiService.refreshToken();
-                    }
+            synchronized (this) {
+                if (!isTokenRefreshing) {
+                    isTokenRefreshing = true;
+                    LoginAPIService apiService = new LoginAPIService(MyApplication.getInstance());
+                    apiService.setAPIInterface(new WebService());
+                    apiService.refreshToken();
+                }
             }
         }
     }

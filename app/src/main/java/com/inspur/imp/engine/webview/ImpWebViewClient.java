@@ -166,7 +166,7 @@ public class ImpWebViewClient extends WebViewClient {
             mHandler.removeCallbacks(runnable);
             runnable = null;
         }
-        if (!filterUrl(request.getUrl().toString(),view)) {
+        if (!filterUrl(request.getUrl().toString(), view)) {
             WebResourceRequest newRequest = new WebResourceRequest() {
                 @Override
                 public Uri getUrl() {
@@ -218,7 +218,7 @@ public class ImpWebViewClient extends WebViewClient {
             mHandler.removeCallbacks(runnable);
             runnable = null;
         }
-        if (!filterUrl(url,view)) {
+        if (!filterUrl(url, view)) {
             view.loadUrl(url, getWebViewHeaders(url));
         }
         return true;
@@ -229,7 +229,7 @@ public class ImpWebViewClient extends WebViewClient {
      *
      * @return 是否被过滤掉
      */
-    private boolean filterUrl(String url,WebView webView) {
+    private boolean filterUrl(String url, WebView webView) {
         if (url.startsWith(APIUri.getWebLoginUrl()) || url.startsWith("https://id.inspur.com/oauth2.0/authorize")) {
             handleReDirectURL(url, webView);
             return true;

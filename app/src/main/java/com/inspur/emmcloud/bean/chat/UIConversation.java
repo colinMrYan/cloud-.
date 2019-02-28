@@ -21,7 +21,7 @@ import java.util.List;
  * Created by chenmch on 2018/9/22.
  */
 
-public class UIConversation implements Serializable{
+public class UIConversation implements Serializable {
     private String id;
     private Conversation conversation;
     private List<Message> messageList;
@@ -54,6 +54,16 @@ public class UIConversation implements Serializable{
 
     }
 
+    public static List<UIConversation> conversationList2UIConversationList(List<Conversation> conversationList) {
+        List<UIConversation> uiConversationList = new ArrayList<>();
+        if (conversationList != null && conversationList.size() > 0) {
+            for (Conversation conversation : conversationList) {
+                uiConversationList.add(new UIConversation(conversation));
+            }
+        }
+        return uiConversationList;
+    }
+
     private void setUIConversationIcon() {
         switch (conversation.getType()) {
             case Conversation.TYPE_DIRECT:
@@ -66,11 +76,10 @@ public class UIConversation implements Serializable{
                 icon = conversation.getAvatar();
                 break;
             default:
-                icon="drawable//"+R.drawable.icon_channel_group_default;
+                icon = "drawable//" + R.drawable.icon_channel_group_default;
                 break;
         }
     }
-
 
     private void setUIConversationContent() {
         String type = conversation.getType();
@@ -121,22 +130,13 @@ public class UIConversation implements Serializable{
                 content = MyApplication.getInstance().getString(R.string.welcome_to_attention) + " " + title;
             } else if (type.equals(Conversation.TYPE_GROUP)) {
                 content = MyApplication.getInstance().getString(R.string.group_no_message);
-            } else if(type.equals(Conversation.TYPE_LINK)){
-                content = MyApplication.getInstance().getString(R.string.welcome_to)+" "+title;;
+            } else if (type.equals(Conversation.TYPE_LINK)) {
+                content = MyApplication.getInstance().getString(R.string.welcome_to) + " " + title;
+                ;
             } else {
                 content = MyApplication.getInstance().getString(R.string.direct_no_message);
             }
         }
-    }
-
-    public static List<UIConversation> conversationList2UIConversationList(List<Conversation> conversationList) {
-        List<UIConversation> uiConversationList = new ArrayList<>();
-        if (conversationList != null && conversationList.size() > 0) {
-            for (Conversation conversation : conversationList) {
-                uiConversationList.add(new UIConversation(conversation));
-            }
-        }
-        return uiConversationList;
     }
 
     public String getId() {

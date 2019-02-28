@@ -9,7 +9,7 @@ import org.xutils.db.annotation.Table;
  */
 @Table(name = "WorkSetting")
 public class WorkSetting {
-    @Column(name = "id" ,isId = true)
+    @Column(name = "id", isId = true)
     private String id;
     @Column(name = "isOpen")
     private boolean isOpen;

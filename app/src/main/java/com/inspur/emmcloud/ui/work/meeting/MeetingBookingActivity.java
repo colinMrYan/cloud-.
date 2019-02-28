@@ -277,7 +277,7 @@ public class MeetingBookingActivity extends BaseActivity {
         Locale locale = getResources().getConfiguration().locale;
         Locale.setDefault(locale);
         MyDatePickerDialog datePickerDialog = new MyDatePickerDialog(
-                MeetingBookingActivity.this, android.R.style.Theme_Material_Light_Dialog_Alert ,
+                MeetingBookingActivity.this, android.R.style.Theme_Material_Light_Dialog_Alert,
                 new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year,
@@ -385,7 +385,7 @@ public class MeetingBookingActivity extends BaseActivity {
         for (int i = 0; i < count; i++) {
             circleHeadImageView[i].setVisibility(View.VISIBLE);
             SearchModel searchModel = selectMemList.get(i);
-            String icon = APIUri.getChannelImgUrl(MeetingBookingActivity.this,searchModel.getId());
+            String icon = APIUri.getChannelImgUrl(MeetingBookingActivity.this, searchModel.getId());
             int defaultIcon = -1;
             if (searchModel.getType().equals("GROUP")) {
                 File file = new File(MyAppConfig.LOCAL_CACHE_PATH, MyApplication.getInstance().getTanent()
@@ -455,6 +455,17 @@ public class MeetingBookingActivity extends BaseActivity {
         }
     }
 
+    /**
+     * 发送广播
+     */
+    public void setBroadCast() {
+        Intent mIntent = new Intent(Constant.ACTION_MEETING);
+        mIntent.putExtra("refreshMeeting", "refreshMeeting");
+        // 发送广播
+        LocalBroadcastManager.getInstance(this).sendBroadcast(mIntent);
+        setResult(RESULT_OK);
+    }
+
     class WebService extends APIInterfaceInstance {
         @Override
         public void returnBookingRoomSuccess() {
@@ -495,17 +506,6 @@ public class MeetingBookingActivity extends BaseActivity {
             WebServiceMiddleUtils.hand(MeetingBookingActivity.this, error, errorCode);
         }
 
-    }
-
-    /**
-     * 发送广播
-     */
-    public void setBroadCast() {
-        Intent mIntent = new Intent(Constant.ACTION_MEETING);
-        mIntent.putExtra("refreshMeeting", "refreshMeeting");
-        // 发送广播
-        LocalBroadcastManager.getInstance(this).sendBroadcast(mIntent);
-        setResult(RESULT_OK);
     }
 
 }

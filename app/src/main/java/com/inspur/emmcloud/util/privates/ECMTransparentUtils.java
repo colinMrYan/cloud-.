@@ -29,7 +29,7 @@ public class ECMTransparentUtils {
             //如果符合条件则等服务器返回再改变桌面角标
             if (MyApplication.getInstance().getIsActive() && !(WebSocketPush.getInstance().isSocketConnect() && MyApplication.getInstance().isV1xVersionChat())) {
                 new AppBadgeUtils(context).getAppBadgeCountFromServer();
-            }else{
+            } else {
                 ECMShortcutBadgeNumberManagerUtils.setDesktopBadgeNumber(context, transparentBean.getBadgeNumber());
             }
         }

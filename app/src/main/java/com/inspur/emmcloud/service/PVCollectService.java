@@ -22,6 +22,7 @@ import java.util.List;
 public class PVCollectService extends Service {
 
     private AppAPIService apiService;
+
     @Override
     public IBinder onBind(Intent intent) {
         return null;
@@ -40,15 +41,15 @@ public class PVCollectService extends Service {
             apiService.setAPIInterface(new WebService());
         }
         if (NetUtils.isNetworkConnected(getApplicationContext(), false)) {
-             collectModelList = PVCollectModelCacheUtils.getCollectModelList(getApplicationContext(), 50);
+            collectModelList = PVCollectModelCacheUtils.getCollectModelList(getApplicationContext(), 50);
             if (collectModelList.size() > 0) {
-                JSONArray collectInfos = PVCollectModelCacheUtils.getCollectModelListJson(getApplicationContext(),collectModelList);
+                JSONArray collectInfos = PVCollectModelCacheUtils.getCollectModelListJson(getApplicationContext(), collectModelList);
                 JSONObject jsonObject = new JSONObject();
                 try {
                     jsonObject.put("userContent", collectInfos);
                     jsonObject.put("userID", MyApplication.getInstance().getUid());
-                    jsonObject.put("clientType","Android");
-                    jsonObject.put("appVersion",AppUtils.getVersion(this)) ;
+                    jsonObject.put("clientType", "Android");
+                    jsonObject.put("appVersion", AppUtils.getVersion(this));
                     if (MyApplication.getInstance().getCurrentEnterprise() != null) {
                         jsonObject.put("enterpriseID", MyApplication.getInstance().getCurrentEnterprise().getId());
                     } else {
@@ -58,7 +59,7 @@ public class PVCollectService extends Service {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                apiService.uploadPVCollect(jsonObject.toString(),collectModelList);
+                apiService.uploadPVCollect(jsonObject.toString(), collectModelList);
                 return;
             }
             stopSelf();
@@ -66,16 +67,15 @@ public class PVCollectService extends Service {
     }
 
 
-
     private class WebService extends APIInterfaceInstance {
         @Override
-        public void returnUploadCollectSuccess( List<PVCollectModel> collectModelList ) {
-           PVCollectModelCacheUtils.deleteCollectModel(getApplicationContext(),collectModelList);
-                           if(collectModelList.size()<50) {
-                               stopSelf();
-                           } else {
-                               uploadPV();
-                           }
+        public void returnUploadCollectSuccess(List<PVCollectModel> collectModelList) {
+            PVCollectModelCacheUtils.deleteCollectModel(getApplicationContext(), collectModelList);
+            if (collectModelList.size() < 50) {
+                stopSelf();
+            } else {
+                uploadPV();
+            }
         }
 
         @Override

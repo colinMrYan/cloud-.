@@ -17,7 +17,7 @@ public class VolumeRecentUseAdapter extends BaseAdapter {
 
     private Context context;
 
-    public VolumeRecentUseAdapter(Context context){
+    public VolumeRecentUseAdapter(Context context) {
         this.context = context;
 
     }
@@ -39,8 +39,8 @@ public class VolumeRecentUseAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        convertView = LayoutInflater.from(context).inflate(R.layout.app_volume_recent_use_item_view,null);
-        TextView textView = (TextView)convertView.findViewById(R.id.volume_name_text);
+        convertView = LayoutInflater.from(context).inflate(R.layout.app_volume_recent_use_item_view, null);
+        TextView textView = (TextView) convertView.findViewById(R.id.volume_name_text);
         (convertView.findViewById(R.id.volume_capacity_text)).setVisibility(View.GONE);
         return convertView;
     }

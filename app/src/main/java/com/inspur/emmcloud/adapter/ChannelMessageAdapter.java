@@ -55,7 +55,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
             @Override
             public void onChanged() {
                 super.onChanged();
-                if (mItemClickListener != null){
+                if (mItemClickListener != null) {
                     mItemClickListener.onAdapterDataSizeChange();
                 }
             }
@@ -63,7 +63,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
             @Override
             public void onItemRangeInserted(int positionStart, int itemCount) {
                 super.onItemRangeInserted(positionStart, itemCount);
-                if (mItemClickListener != null){
+                if (mItemClickListener != null) {
                     mItemClickListener.onAdapterDataSizeChange();
                 }
             }
@@ -75,12 +75,12 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         this.UIMessageList.addAll(UImessageList);
     }
 
-    public void setChannelData(String channelType, ECMChatInputMenu chatInputMenu){
+    public void setChannelData(String channelType, ECMChatInputMenu chatInputMenu) {
         this.channelType = channelType;
         this.chatInputMenu = chatInputMenu;
     }
 
-    public UIMessage getItemData(int position){
+    public UIMessage getItemData(int position) {
         return this.UIMessageList.get(position);
     }
 
@@ -115,62 +115,6 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         return UIMessageList.size();
     }
 
-
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        private MyItemClickListener mListener;
-        public RelativeLayout cardLayout;
-        public TextView senderNameText;
-        public ImageView senderPhotoImgLeft;
-        public ImageView senderPhotoImgRight;
-        public RelativeLayout sendStatusLayout;
-        public ImageView sendFailImg;
-        public QMUILoadingView sendingLoadingView;
-        public TextView sendTimeText;
-        public RelativeLayout cardParentLayout;
-
-        public ViewHolder(View view, MyItemClickListener myItemClickListener) {
-            super(view);
-            //将全局的监听赋值给接口
-            this.mListener = myItemClickListener;
-            itemView.setOnClickListener(this);
-            cardLayout = (RelativeLayout) view
-                    .findViewById(R.id.bll_card);
-            senderNameText = (TextView) view
-                    .findViewById(R.id.sender_name_text);
-            senderPhotoImgLeft = (ImageView) view
-                    .findViewById(R.id.iv_sender_photo_left);
-            senderPhotoImgRight = (ImageView) view
-                    .findViewById(R.id.iv_sender_photo_right);
-            sendStatusLayout = (RelativeLayout) view.findViewById(R.id.rl_send_status);
-            sendFailImg = (ImageView) view.findViewById(R.id.iv_send_fail);
-            sendingLoadingView = (QMUILoadingView) view.findViewById(R.id.qlv_sending);
-            sendTimeText = (TextView) view
-                    .findViewById(R.id.send_time_text);
-            cardParentLayout = (RelativeLayout) view.findViewById(R.id.card_parent_layout);
-        }
-
-        /**
-         * 实现OnClickListener接口重写的方法
-         *
-         * @param v
-         */
-        @Override
-        public void onClick(View v) {
-            if (mListener != null) {
-                mListener.onItemClick(v, getAdapterPosition());
-            }
-
-        }
-
-        public void onMessageResendClick(UIMessage uiMessage){
-            if (mListener != null) {
-                mListener.onMessageResend(uiMessage,sendFailImg);
-            }
-
-        }
-    }
-
-
     /**
      * 显示正在发送的标志
      *
@@ -192,7 +136,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         holder.sendStatusLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    holder.onMessageResendClick(uiMessage);
+                holder.onMessageResendClick(uiMessage);
             }
         });
     }
@@ -229,7 +173,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
                 break;
             case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
                 cardContentView = DisplayRegularFileMsg.getView(context,
-                        message,uiMessage.getSendStatus(),false);
+                        message, uiMessage.getSendStatus(), false);
                 break;
             case Message.MESSAGE_TYPE_EXTENDED_CONTACT_CARD:
                 cardContentView = DisplayAttachmentCardMsg.getView(context,
@@ -239,16 +183,16 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
                 cardContentView = DisplayExtendedActionsMsg.getInstance(context).getView(message);
                 break;
             case Message.MESSAGE_TYPE_MEDIA_IMAGE:
-                cardContentView = DisplayMediaImageMsg.getView(context,uiMessage);
+                cardContentView = DisplayMediaImageMsg.getView(context, uiMessage);
                 break;
             case Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN:
-                cardContentView = DisplayCommentTextPlainMsg.getView(context,message);
+                cardContentView = DisplayCommentTextPlainMsg.getView(context, message);
                 break;
             case Message.MESSAGE_TYPE_EXTENDED_LINKS:
-                cardContentView = DisplayExtendedLinksMsg.getView(context,message);
+                cardContentView = DisplayExtendedLinksMsg.getView(context, message);
                 break;
             case Message.MESSAGE_TYPE_MEDIA_VOICE:
-                cardContentView = DisplayMediaVoiceMsg.getView(context,uiMessage,mItemClickListener);
+                cardContentView = DisplayMediaVoiceMsg.getView(context, uiMessage, mItemClickListener);
                 break;
             default:
                 cardContentView = DisplayResUnknownMsg.getView(context, isMyMsg);
@@ -258,7 +202,6 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
 
         holder.cardLayout.addView(cardContentView);
     }
-
 
     /**
      * 展示消息发送时间
@@ -290,10 +233,10 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
     private void showUserName(ViewHolder holder, UIMessage UIMessage) {
         // TODO Auto-generated method stub
         if (channelType.equals("GROUP") && !UIMessage.getMessage().getFromUser().equals(
-                MyApplication.getInstance().getUid())){
+                MyApplication.getInstance().getUid())) {
             holder.senderNameText.setVisibility(View.VISIBLE);
             holder.senderNameText.setText(UIMessage.getSenderName());
-        }else {
+        } else {
             holder.senderNameText.setVisibility(View.GONE);
         }
     }
@@ -307,9 +250,9 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         // TODO Auto-generated method stub
         final String fromUser = UImessage.getMessage().getFromUser();
         boolean isMyMsg = MyApplication.getInstance().getUid().equals(fromUser);
-        holder.senderPhotoImgRight.setVisibility(isMyMsg?View.VISIBLE:View.INVISIBLE);
-        holder.senderPhotoImgLeft.setVisibility(isMyMsg?View.GONE:View.VISIBLE);
-        ImageView senderPhotoImg = isMyMsg?holder.senderPhotoImgRight:holder.senderPhotoImgLeft;
+        holder.senderPhotoImgRight.setVisibility(isMyMsg ? View.VISIBLE : View.INVISIBLE);
+        holder.senderPhotoImgLeft.setVisibility(isMyMsg ? View.GONE : View.VISIBLE);
+        ImageView senderPhotoImg = isMyMsg ? holder.senderPhotoImgRight : holder.senderPhotoImgLeft;
         ImageDisplayUtils.getInstance().displayImage(senderPhotoImg,
                 UImessage.getSenderPhotoUrl(), R.drawable.icon_person_default);
         senderPhotoImg.setOnClickListener(new View.OnClickListener() {
@@ -336,15 +279,72 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
                 return true;
             }
         });
-        }
+    }
 
     /**
      * 创建一个回调接口
      */
     public interface MyItemClickListener {
         void onItemClick(View view, int position);
-        void onMessageResend(UIMessage uiMessage,View view);
-        void onMediaVoiceReRecognize(UIMessage uiMessage,BubbleLayout bubbleLayout,QMUILoadingView downloadLoadingView);
+
+        void onMessageResend(UIMessage uiMessage, View view);
+
+        void onMediaVoiceReRecognize(UIMessage uiMessage, BubbleLayout bubbleLayout, QMUILoadingView downloadLoadingView);
+
         void onAdapterDataSizeChange();
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        public RelativeLayout cardLayout;
+        public TextView senderNameText;
+        public ImageView senderPhotoImgLeft;
+        public ImageView senderPhotoImgRight;
+        public RelativeLayout sendStatusLayout;
+        public ImageView sendFailImg;
+        public QMUILoadingView sendingLoadingView;
+        public TextView sendTimeText;
+        public RelativeLayout cardParentLayout;
+        private MyItemClickListener mListener;
+
+        public ViewHolder(View view, MyItemClickListener myItemClickListener) {
+            super(view);
+            //将全局的监听赋值给接口
+            this.mListener = myItemClickListener;
+            itemView.setOnClickListener(this);
+            cardLayout = (RelativeLayout) view
+                    .findViewById(R.id.bll_card);
+            senderNameText = (TextView) view
+                    .findViewById(R.id.sender_name_text);
+            senderPhotoImgLeft = (ImageView) view
+                    .findViewById(R.id.iv_sender_photo_left);
+            senderPhotoImgRight = (ImageView) view
+                    .findViewById(R.id.iv_sender_photo_right);
+            sendStatusLayout = (RelativeLayout) view.findViewById(R.id.rl_send_status);
+            sendFailImg = (ImageView) view.findViewById(R.id.iv_send_fail);
+            sendingLoadingView = (QMUILoadingView) view.findViewById(R.id.qlv_sending);
+            sendTimeText = (TextView) view
+                    .findViewById(R.id.send_time_text);
+            cardParentLayout = (RelativeLayout) view.findViewById(R.id.card_parent_layout);
+        }
+
+        /**
+         * 实现OnClickListener接口重写的方法
+         *
+         * @param v
+         */
+        @Override
+        public void onClick(View v) {
+            if (mListener != null) {
+                mListener.onItemClick(v, getAdapterPosition());
+            }
+
+        }
+
+        public void onMessageResendClick(UIMessage uiMessage) {
+            if (mListener != null) {
+                mListener.onMessageResend(uiMessage, sendFailImg);
+            }
+
+        }
     }
 }

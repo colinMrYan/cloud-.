@@ -14,12 +14,13 @@ import java.util.List;
 
 public class ChannelMessageReadStateResult {
     private List<String> messageReadIdList = new ArrayList<>();
-    public ChannelMessageReadStateResult(String response){
+
+    public ChannelMessageReadStateResult(String response) {
         JSONObject messagesObj = JSONUtils.getJSONObject(response);
         Iterator<String> messageIdKeys = messagesObj.keys();
-        while(messageIdKeys.hasNext()) {
+        while (messageIdKeys.hasNext()) {
             String key = messageIdKeys.next();
-            List<String> channelMessageReadIdList = JSONUtils.getStringList(messagesObj,key,new ArrayList<String>());
+            List<String> channelMessageReadIdList = JSONUtils.getStringList(messagesObj, key, new ArrayList<String>());
             messageReadIdList.addAll(channelMessageReadIdList);
         }
     }

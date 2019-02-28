@@ -43,7 +43,7 @@ public class AmapLocateService extends ImpPlugin implements
     private String coordinateType = "";
     private List<AMapLocation> aMapLocationList = new ArrayList<>();
     private int locationCount = 0;
-    private  AlertDialog dialog;
+    private AlertDialog dialog;
 
     @Override
     public void execute(String action, JSONObject paramsObject) {
@@ -52,7 +52,7 @@ public class AmapLocateService extends ImpPlugin implements
         // 获取经纬度地址
         if ("getInfo".equals(action)) {
             getInfo(paramsObject);
-        }else{
+        } else {
             showCallIMPMethodErrorDlg();
         }
     }
@@ -87,7 +87,7 @@ public class AmapLocateService extends ImpPlugin implements
 
             @Override
             public void onPermissionRequestFail(List<String> permissions) {
-                ToastUtils.show(getFragmentContext(),PermissionRequestManagerUtils.getInstance().getPermissionToast(getFragmentContext(),permissions));
+                ToastUtils.show(getFragmentContext(), PermissionRequestManagerUtils.getInstance().getPermissionToast(getFragmentContext(), permissions));
             }
         });
     }
@@ -137,7 +137,7 @@ public class AmapLocateService extends ImpPlugin implements
         if (amapLocation != null && (amapLocation.getErrorCode() == 0)) {
             aMapLocationList.add(amapLocation);
         }
-        if (locationCount > 2 || (amapLocation != null && (amapLocation.getErrorCode() == 0) && amapLocation.getAccuracy()<60)) {
+        if (locationCount > 2 || (amapLocation != null && (amapLocation.getErrorCode() == 0) && amapLocation.getAccuracy() < 60)) {
             mlocationClient.stopLocation();
             String latitude = "0.0", longtitude = "0.0";
             if (aMapLocationList.size() > 0) {
@@ -171,22 +171,6 @@ public class AmapLocateService extends ImpPlugin implements
         }
     }
 
-
-    private class ComparatorValues implements Comparator<AMapLocation> {
-        @Override
-        public int compare(AMapLocation o1, AMapLocation o2) {
-            float locationAccuracy1 = o1.getAccuracy();
-            float locationAccuracy2 = o2.getAccuracy();
-            int result = 0;
-            if (locationAccuracy1 > locationAccuracy2) {
-                result = 1;
-            } else if (locationAccuracy1 < locationAccuracy2) {
-                result = -1;
-            }
-            return result;
-        }
-    }
-
     /**
      * 坐标类型转化
      *
@@ -207,5 +191,20 @@ public class AmapLocateService extends ImpPlugin implements
             location[1] = amapLocation.getLatitude();
         }
         return location;
+    }
+
+    private class ComparatorValues implements Comparator<AMapLocation> {
+        @Override
+        public int compare(AMapLocation o1, AMapLocation o2) {
+            float locationAccuracy1 = o1.getAccuracy();
+            float locationAccuracy2 = o2.getAccuracy();
+            int result = 0;
+            if (locationAccuracy1 > locationAccuracy2) {
+                result = 1;
+            } else if (locationAccuracy1 < locationAccuracy2) {
+                result = -1;
+            }
+            return result;
+        }
     }
 }

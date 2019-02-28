@@ -9,28 +9,27 @@ import org.json.JSONObject;
 
 public class AppRedirectResult {
 
+    private String code;
+    private String redirect_uri;
     /**
      * code : OC-1-7cRqHyFGz5WOUceqU7gR5REsvwiY9mseO6h
      * redirect_uri : http://thinklancer.com/index.php/Phone/Oauth/auth?code=OC-1-7cRqHyFGz5WOUceqU7gR5REsvwiY9mseO6h
      */
 
-    public AppRedirectResult(String response){
+    public AppRedirectResult(String response) {
         JSONObject jsonObject;
         try {
             jsonObject = new JSONObject(response);
-            if(jsonObject.has("code")){
+            if (jsonObject.has("code")) {
                 this.code = jsonObject.getString("code");
             }
-            if(jsonObject.has("redirect_uri")){
+            if (jsonObject.has("redirect_uri")) {
                 this.redirect_uri = jsonObject.getString("redirect_uri");
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
-
-    private String code;
-    private String redirect_uri;
 
     public String getCode() {
         return code;

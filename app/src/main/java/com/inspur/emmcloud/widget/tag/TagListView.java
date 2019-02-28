@@ -21,12 +21,12 @@ import java.util.List;
  */
 public class TagListView extends MyFlowLayout implements OnClickListener {
 
+    private final List<Tag> mTags = new ArrayList<Tag>();
     private boolean mIsDeleteMode;
     private OnTagCheckedChangedListener mOnTagCheckedChangedListener;
     private OnTagClickListener mOnTagClickListener;
     private int mTagViewBackgroundResId;
     private int mTagViewTextColorResId;
-    private final List<Tag> mTags = new ArrayList<Tag>();
 
     /**
      * @param context
@@ -157,6 +157,10 @@ public class TagListView extends MyFlowLayout implements OnClickListener {
         return mTags;
     }
 
+    public void setTags(List<? extends Tag> lists) {
+        setTags(lists, false);
+    }
+
     public TagView getViewByTag(Tag tag) {
         return (TagView) findViewWithTag(tag);
     }
@@ -185,10 +189,6 @@ public class TagListView extends MyFlowLayout implements OnClickListener {
 
     public void setTagViewTextColorRes(int res) {
         mTagViewTextColorResId = res;
-    }
-
-    public void setTags(List<? extends Tag> lists) {
-        setTags(lists, false);
     }
 
     public void setTags(List<? extends Tag> lists, boolean b) {

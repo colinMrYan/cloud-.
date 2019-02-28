@@ -13,10 +13,11 @@ import java.util.ArrayList;
 
 public class GetCardPackageResult {
     private ArrayList<CardPackageBean> cardPackageBeanList = new ArrayList<>();
-    public GetCardPackageResult(String response){
-        JSONArray jsonArray = JSONUtils.getJSONArray(response,new JSONArray());
+
+    public GetCardPackageResult(String response) {
+        JSONArray jsonArray = JSONUtils.getJSONArray(response, new JSONArray());
         for (int i = 0; i < jsonArray.length(); i++) {
-            cardPackageBeanList.add(new CardPackageBean(JSONUtils.getJSONObject(jsonArray,i,new JSONObject())));
+            cardPackageBeanList.add(new CardPackageBean(JSONUtils.getJSONObject(jsonArray, i, new JSONObject())));
         }
     }
 

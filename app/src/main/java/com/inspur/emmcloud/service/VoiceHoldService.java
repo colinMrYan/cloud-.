@@ -31,6 +31,7 @@ public class VoiceHoldService extends Service {
     private LayoutInflater inflater;
     private long baseTime = 0;
     private int screenSize;
+
     @Override
     public IBinder onBind(Intent intent) {
         return null;
@@ -45,7 +46,7 @@ public class VoiceHoldService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         baseTime = intent.getLongExtra(ChannelVoiceCommunicationActivity.VOICE_TIME, 0);
-        screenSize = intent.getIntExtra(ChannelVoiceCommunicationActivity.SCREEN_SIZE,0);
+        screenSize = intent.getIntExtra(ChannelVoiceCommunicationActivity.SCREEN_SIZE, 0);
         initViews();
         createToucher();
         return super.onStartCommand(intent, flags, startId);
@@ -79,11 +80,11 @@ public class VoiceHoldService extends Service {
         params.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
         //设置窗口初始停靠位置.
         params.gravity = Gravity.LEFT | Gravity.TOP;
-        params.x = screenSize - DensityUtil.dip2px(this,74);
-        params.y = DensityUtil.dip2px(this,4);
+        params.x = screenSize - DensityUtil.dip2px(this, 74);
+        params.y = DensityUtil.dip2px(this, 4);
         //设置悬浮窗口长宽数据.
-        params.width = DensityUtil.dip2px(this,64);
-        params.height = DensityUtil.dip2px(this,84);
+        params.width = DensityUtil.dip2px(this, 64);
+        params.height = DensityUtil.dip2px(this, 84);
     }
 
     /**
@@ -108,6 +109,7 @@ public class VoiceHoldService extends Service {
     private void initLinsters() {
         View.OnClickListener listener = new View.OnClickListener() {
             long[] hints = new long[2];
+
             @Override
             public void onClick(View v) {
                 System.arraycopy(hints, 1, hints, 0, hints.length - 1);
@@ -131,8 +133,8 @@ public class VoiceHoldService extends Service {
         View.OnTouchListener touchListener = new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                params.x = (int) event.getRawX() - DensityUtil.dip2px(VoiceHoldService.this,32);
-                params.y = (int) event.getRawY() - DensityUtil.dip2px(VoiceHoldService.this,42) - statusBarHeight;
+                params.x = (int) event.getRawX() - DensityUtil.dip2px(VoiceHoldService.this, 32);
+                params.y = (int) event.getRawY() - DensityUtil.dip2px(VoiceHoldService.this, 42) - statusBarHeight;
                 windowManager.updateViewLayout(relativeLayoutVoiceHold, params);
                 return false;
             }
@@ -147,7 +149,7 @@ public class VoiceHoldService extends Service {
     private void goBackVoiceCommunicationActivity() {
         Intent intent = new Intent(getBaseContext(), ChannelVoiceCommunicationActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE,ChannelVoiceCommunicationActivity.COME_BACK_FROM_SERVICE);
+        intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE, ChannelVoiceCommunicationActivity.COME_BACK_FROM_SERVICE);
         intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_TIME, Long.parseLong(TimeUtils.getChronometerSeconds(chronometer)));
         getApplication().startActivity(intent);
         stopSelf();

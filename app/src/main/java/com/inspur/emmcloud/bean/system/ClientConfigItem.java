@@ -13,6 +13,7 @@ public enum ClientConfigItem {
     CLIENT_CONFIG_CONTACT_USER("client_config_contact_user"),
     CLIENT_CONFIG_CONTACT_ORG("client_config_contact_org");
     private final String value;
+
     ClientConfigItem(String value) {
         this.value = value;
     }

@@ -64,6 +64,7 @@ public class MeetingDetailActivity extends BaseActivity {
     private static final int MEETTING_CHOOSE_MEM = 1;
     private static final int MEETING_BEGIN_TIME = 3;
     private static final int MEETING_END_TIME = 4;
+    int lineCount = 0;
     private String id = "";
     private CircleTextImageView[] circleImg = new CircleTextImageView[5];
     private ImageView meetingChangeImg;
@@ -86,7 +87,6 @@ public class MeetingDetailActivity extends BaseActivity {
     private ArrayList<String> participantList = new ArrayList<String>();
     private int maxAhead = 2, maxDuration = 12;
     private boolean isAdmin = false;
-    int lineCount = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -517,7 +517,7 @@ public class MeetingDetailActivity extends BaseActivity {
      */
     private void getUidsInfoList() {
         selectMemList.clear();
-        for (String uid:participantList){
+        for (String uid : participantList) {
             ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(uid);
             SearchModel searchModel = new SearchModel(contactUser);
             selectMemList.add(searchModel);
@@ -552,7 +552,7 @@ public class MeetingDetailActivity extends BaseActivity {
         for (int i = 0; i < memberCount; i++) {
             circleImg[i].setVisibility(View.VISIBLE);
             ImageDisplayUtils.getInstance().displayImage(circleImg[i],
-                    APIUri.getChannelImgUrl(MeetingDetailActivity.this,selectMemList.get(selectMemList.size() - i - 1).getId()), R.drawable.icon_person_default);
+                    APIUri.getChannelImgUrl(MeetingDetailActivity.this, selectMemList.get(selectMemList.size() - i - 1).getId()), R.drawable.icon_person_default);
         }
     }
 
@@ -682,7 +682,7 @@ public class MeetingDetailActivity extends BaseActivity {
      */
     private void showTimeDialog(int hour, int minute, final int beginOrEnd) {
         TimePickerDialog beginTimePickerDialog = new TimePickerDialog(
-                MeetingDetailActivity.this, TimePickerDialog.THEME_HOLO_LIGHT,new OnTimeSetListener() {
+                MeetingDetailActivity.this, TimePickerDialog.THEME_HOLO_LIGHT, new OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay,
                                   int minute) {
@@ -734,7 +734,7 @@ public class MeetingDetailActivity extends BaseActivity {
         Locale locale = getResources().getConfiguration().locale;
         Locale.setDefault(locale);
         MyDatePickerDialog datePickerDialog = new MyDatePickerDialog(
-                MeetingDetailActivity.this,DatePickerDialog.THEME_HOLO_LIGHT,
+                MeetingDetailActivity.this, DatePickerDialog.THEME_HOLO_LIGHT,
                 new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year,
@@ -751,6 +751,19 @@ public class MeetingDetailActivity extends BaseActivity {
                 }, year, month, day);
         datePickerDialog.setHideYear();
         datePickerDialog.show();
+    }
+
+    /**
+     * 向会议室详情界面返回数据
+     *
+     * @param type
+     */
+    public void callBackActivity(String type) {
+        Intent intent = new Intent();
+        if (meeting != null) {
+            intent.putExtra(type, meeting);
+        }
+        setResult(RESULT_OK, intent);
     }
 
     class WebService extends APIInterfaceInstance {
@@ -794,19 +807,6 @@ public class MeetingDetailActivity extends BaseActivity {
             }
             WebServiceMiddleUtils.hand(MeetingDetailActivity.this, error, errorCode);
         }
-    }
-
-    /**
-     * 向会议室详情界面返回数据
-     *
-     * @param type
-     */
-    public void callBackActivity(String type) {
-        Intent intent = new Intent();
-        if (meeting != null) {
-            intent.putExtra(type, meeting);
-        }
-        setResult(RESULT_OK, intent);
     }
 
 }

@@ -11,12 +11,9 @@ import android.view.View;
 public class IMGStickerMoveHelper {
 
     private static final String TAG = "IMGStickerMoveHelper";
-
-    private View mView;
-
-    private float mX, mY;
-
     private static final Matrix M = new Matrix();
+    private View mView;
+    private float mX, mY;
 
     public IMGStickerMoveHelper(View view) {
         mView = view;

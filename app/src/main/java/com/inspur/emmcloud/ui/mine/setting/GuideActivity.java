@@ -34,7 +34,6 @@ import java.util.List;
 
 /**
  * 功能介绍页面 com.inspur.emmcloud.ui.GuideActivity
- *
  */
 @ContentView(R.layout.activity_guide)
 public class GuideActivity extends BaseActivity {
@@ -66,11 +65,11 @@ public class GuideActivity extends BaseActivity {
      */
     private void deleteReactNativeResource() {
         try {
-            String reactNativeResourceFolderPath = getDir("ReactResource",MODE_PRIVATE).getPath();
-            if(FileUtils.isFolderExist((reactNativeResourceFolderPath))){
+            String reactNativeResourceFolderPath = getDir("ReactResource", MODE_PRIVATE).getPath();
+            if (FileUtils.isFolderExist((reactNativeResourceFolderPath))) {
                 FileUtils.deleteFile(reactNativeResourceFolderPath);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -80,14 +79,14 @@ public class GuideActivity extends BaseActivity {
         // TODO Auto-generated method stub
         List<Integer> splashResIdList = new ArrayList<>();
         //刚安装App初次进入
-        if (PreferencesUtils.getBoolean(getApplicationContext(),"isFirst", true) && AppUtils.isAppVersionStandard()){
+        if (PreferencesUtils.getBoolean(getApplicationContext(), "isFirst", true) && AppUtils.isAppVersionStandard()) {
             splashResIdList.add(R.drawable.guide_page_1);
             splashResIdList.add(R.drawable.guide_page_2);
             splashResIdList.add(R.drawable.guide_page_3);
             splashResIdList.add(R.drawable.guide_page_4);
             splashResIdList.add(R.drawable.guide_page_5);
             splashResIdList.add(R.drawable.guide_page_6);
-        }else {//版本升级进入
+        } else {//版本升级进入
             splashResIdList.add(R.drawable.guide_page_new_1);
             splashResIdList.add(R.drawable.guide_page_new_2);
             splashResIdList.add(R.drawable.guide_page_new_3);
@@ -96,7 +95,7 @@ public class GuideActivity extends BaseActivity {
         for (int i = 0; i < splashResIdList.size(); i++) {
             View guideView = LayoutInflater.from(this).inflate(R.layout.view_pager_guide, null);
             ImageView img = (ImageView) guideView.findViewById(R.id.img);
-            ImageDisplayUtils.getInstance().displayImageNoCache(img,"drawable://"+splashResIdList.get(i));
+            ImageDisplayUtils.getInstance().displayImageNoCache(img, "drawable://" + splashResIdList.get(i));
             if (i == splashResIdList.size() - 1) {
                 Button enterButton = ((Button) guideView
                         .findViewById(R.id.enter_app_btn));
@@ -116,8 +115,8 @@ public class GuideActivity extends BaseActivity {
                                     "isFirst", false);
                             String accessToken = PreferencesUtils.getString(
                                     GuideActivity.this, "accessToken", "");
-                            if(!StringUtils.isBlank(accessToken)){
-                                if (AppUtils.isAppHasUpgraded(GuideActivity.this) && NetUtils.isNetworkConnected(GuideActivity.this)){
+                            if (!StringUtils.isBlank(accessToken)) {
+                                if (AppUtils.isAppHasUpgraded(GuideActivity.this) && NetUtils.isNetworkConnected(GuideActivity.this)) {
                                     new ProfileUtils(GuideActivity.this, new CommonCallBack() {
                                         @Override
                                         public void execute() {
@@ -126,7 +125,7 @@ public class GuideActivity extends BaseActivity {
                                         }
                                     }).initProfile();
                                 }
-                            }else{
+                            } else {
                                 MyApplication.getInstance().signout();
                             }
                         }

@@ -9,10 +9,11 @@ import org.json.JSONObject;
 
 public class ReactNativeInstallUriBean {
     private String installUri = "";
-    public ReactNativeInstallUriBean(String response){
+
+    public ReactNativeInstallUriBean(String response) {
         try {
             JSONObject jsonObject = new JSONObject(response);
-            if(jsonObject.has("install_uri")){
+            if (jsonObject.has("install_uri")) {
                 this.installUri = jsonObject.getString("install_uri");
             }
         } catch (Exception e) {

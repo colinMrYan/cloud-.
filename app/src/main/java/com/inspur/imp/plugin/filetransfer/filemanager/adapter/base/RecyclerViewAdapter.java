@@ -13,14 +13,6 @@ import com.inspur.imp.plugin.filetransfer.filemanager.adapter.FileAdapter;
 public abstract class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
 
-    public interface OnItemClickListener {
-        void onItemClick(View view, RecyclerView.ViewHolder viewHolder, int position);
-    }
-
-    public interface OnItemLongClickListener{
-        boolean onItemLongClick(View view, RecyclerView.ViewHolder viewHolder, int position);
-    }
-
     public FileAdapter.OnItemClickListener onItemClickListener;
     public FileAdapter.OnItemLongClickListener onItemLongClickListener;
 
@@ -28,7 +20,7 @@ public abstract class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
         onItemClickListener = listener;
     }
 
-    public void setOnItemLongClickListener( FileAdapter.OnItemLongClickListener listener) {
+    public void setOnItemLongClickListener(FileAdapter.OnItemLongClickListener listener) {
         onItemLongClickListener = listener;
     }
 
@@ -38,8 +30,8 @@ public abstract class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
             @Override
             public void onClick(View v) {
                 if (onItemClickListener != null) {
-                    int pos = holder.getLayoutPosition() ;
-                    onItemClickListener.onItemClick( v , holder , pos);
+                    int pos = holder.getLayoutPosition();
+                    onItemClickListener.onItemClick(v, holder, pos);
                 }
             }
         });
@@ -47,21 +39,29 @@ public abstract class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                if ( onItemLongClickListener != null ){
-                    int pos = holder.getLayoutPosition() ;
-                    return onItemLongClickListener.onItemLongClick( v , holder , pos  );
+                if (onItemLongClickListener != null) {
+                    int pos = holder.getLayoutPosition();
+                    return onItemLongClickListener.onItemLongClick(v, holder, pos);
                 }
                 return false;
             }
         });
 
-        onBindViewHolders( holder , position );
+        onBindViewHolders(holder, position);
     }
 
-    public abstract void onBindViewHolders( RecyclerView.ViewHolder holder, int position ) ;
+    public abstract void onBindViewHolders(RecyclerView.ViewHolder holder, int position);
 
-    public abstract Object getAdapterData() ;
+    public abstract Object getAdapterData();
 
-    public abstract Object getItem( int positon );
+    public abstract Object getItem(int positon);
+
+    public interface OnItemClickListener {
+        void onItemClick(View view, RecyclerView.ViewHolder viewHolder, int position);
+    }
+
+    public interface OnItemLongClickListener {
+        boolean onItemLongClick(View view, RecyclerView.ViewHolder viewHolder, int position);
+    }
 
 }

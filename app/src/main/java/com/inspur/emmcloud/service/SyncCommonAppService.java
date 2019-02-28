@@ -32,18 +32,18 @@ public class SyncCommonAppService extends Service {
         return super.onStartCommand(intent, flags, startId);
     }
 
-    private void syncCommonApp(){
-        if (!NetUtils.isNetworkConnected(getApplicationContext(),false) || StringUtils.isBlank(MyApplication.getInstance().getAccessToken())){
+    private void syncCommonApp() {
+        if (!NetUtils.isNetworkConnected(getApplicationContext(), false) || StringUtils.isBlank(MyApplication.getInstance().getAccessToken())) {
             stopSelf();
         }
 
         List<AppCommonlyUse> commonAppList = AppCacheUtils.getUploadCommonlyUseAppList(MyApplication.getInstance());
-        if (commonAppList.size()>0){
+        if (commonAppList.size() > 0) {
             String commonAppListJson = JSONUtils.toJSONString(commonAppList);
             MyAppAPIService apiService = new MyAppAPIService(getApplicationContext());
             apiService.setAPIInterface(new WebService());
             apiService.syncCommonApp(commonAppListJson);
-        }else {
+        } else {
             stopSelf();
         }
 
@@ -51,7 +51,7 @@ public class SyncCommonAppService extends Service {
     }
 
 
-    private class WebService extends APIInterfaceInstance{
+    private class WebService extends APIInterfaceInstance {
         @Override
         public void returnSaveConfigSuccess() {
             stopSelf();

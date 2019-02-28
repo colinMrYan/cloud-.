@@ -10,7 +10,7 @@ import java.io.Serializable;
  * Created by yufuchang on 2018/8/16.
  */
 
-public class VoiceCommunicationJoinChannelInfoBean implements Serializable{
+public class VoiceCommunicationJoinChannelInfoBean implements Serializable {
     private String userId;
     private String headImageUrl;
     private int agoraUid;
@@ -20,19 +20,20 @@ public class VoiceCommunicationJoinChannelInfoBean implements Serializable{
     private int volume = -1;
     private int userState = -1;
 
-    public VoiceCommunicationJoinChannelInfoBean(){}
+    public VoiceCommunicationJoinChannelInfoBean() {
+    }
 
-    public VoiceCommunicationJoinChannelInfoBean(JSONObject jsonObject){
+    public VoiceCommunicationJoinChannelInfoBean(JSONObject jsonObject) {
         this(jsonObject.toString());
     }
 
-    public VoiceCommunicationJoinChannelInfoBean(String info){
-        this.userId = JSONUtils.getString(info,"id","");
-        this.headImageUrl = JSONUtils.getString(info,"headImgUrl","");
-        this.token = JSONUtils.getString(info,"token","");
-        this.agoraUid = JSONUtils.getInt(info,"agoraUid",0);
-        this.connectState = JSONUtils.getInt(info,"connectState",-1);
-        this.userName = JSONUtils.getString(info,"name","");
+    public VoiceCommunicationJoinChannelInfoBean(String info) {
+        this.userId = JSONUtils.getString(info, "id", "");
+        this.headImageUrl = JSONUtils.getString(info, "headImgUrl", "");
+        this.token = JSONUtils.getString(info, "token", "");
+        this.agoraUid = JSONUtils.getInt(info, "agoraUid", 0);
+        this.connectState = JSONUtils.getInt(info, "connectState", -1);
+        this.userName = JSONUtils.getString(info, "name", "");
     }
 
     public String getUserId() {

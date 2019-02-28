@@ -22,6 +22,7 @@ import io.agora.rtc.RtcEngine;
 
 public class VoiceCommunicationUtils {
 
+    private static VoiceCommunicationUtils voiceCommunicationUtils;
     private Context context;
     private RtcEngine mRtcEngine;
     private OnVoiceCommunicationCallbacks onVoiceCommunicationCallbacks;
@@ -31,48 +32,30 @@ public class VoiceCommunicationUtils {
     private VoiceCommunicationJoinChannelInfoBean inviteeInfoBean;
     private int userCount = 1;
     private int state = -1;
-    private static VoiceCommunicationUtils voiceCommunicationUtils;
-
-    /**
-     * 获得声网控制工具类
-     * @return
-     */
-    public static VoiceCommunicationUtils getVoiceCommunicationUtils(Context context) {
-        if(voiceCommunicationUtils == null){
-            synchronized (VoiceCommunicationUtils.class){
-                if(voiceCommunicationUtils == null){
-                    voiceCommunicationUtils = new VoiceCommunicationUtils(context);
-                }
-            }
-        }
-        voiceCommunicationUtils.initializeAgoraEngine();
-        return voiceCommunicationUtils;
-    }
-
     private IRtcEngineEventHandler mRtcEventHandler = new IRtcEngineEventHandler() {
         //其他用户离线回调
         @Override
         public void onUserOffline(int uid, int reason) {
-            onVoiceCommunicationCallbacks.onUserOffline(uid,reason);
+            onVoiceCommunicationCallbacks.onUserOffline(uid, reason);
         }
 
         //用户加入频道回调
         @Override
         public void onUserJoined(int uid, int elapsed) {
-            onVoiceCommunicationCallbacks.onUserJoined(uid,elapsed);
+            onVoiceCommunicationCallbacks.onUserJoined(uid, elapsed);
         }
 
         //加入频道成功
         @Override
         public void onJoinChannelSuccess(String channel, int uid, int elapsed) {
 //            userCount = userCount + 1;
-            onVoiceCommunicationCallbacks.onJoinChannelSuccess(channel,uid,elapsed);
+            onVoiceCommunicationCallbacks.onJoinChannelSuccess(channel, uid, elapsed);
         }
 
         //断开重连，重新加入频道成功
         @Override
         public void onRejoinChannelSuccess(String channel, int uid, int elapsed) {
-            onVoiceCommunicationCallbacks.onRejoinChannelSuccess(channel,uid,elapsed);
+            onVoiceCommunicationCallbacks.onRejoinChannelSuccess(channel, uid, elapsed);
         }
 
         //每隔两秒钟返回一次频道内的状态信息
@@ -86,7 +69,7 @@ public class VoiceCommunicationUtils {
         //静音监听
         @Override
         public void onUserMuteAudio(int uid, boolean muted) {
-            onVoiceCommunicationCallbacks.onUserMuteAudio(uid,muted);
+            onVoiceCommunicationCallbacks.onUserMuteAudio(uid, muted);
         }
 
         //warning信息
@@ -134,18 +117,35 @@ public class VoiceCommunicationUtils {
                 info.volume = speakers[i].volume;
                 voiceCommunicationAudioVolumeInfos[i] = info;
             }
-            onVoiceCommunicationCallbacks.onAudioVolumeIndication(voiceCommunicationAudioVolumeInfos,totalVolume);
+            onVoiceCommunicationCallbacks.onAudioVolumeIndication(voiceCommunicationAudioVolumeInfos, totalVolume);
         }
 
         @Override
         public void onNetworkQuality(int uid, int txQuality, int rxQuality) {
             super.onNetworkQuality(uid, txQuality, rxQuality);
-            onVoiceCommunicationCallbacks.onNetworkQuality(uid,txQuality,rxQuality);
+            onVoiceCommunicationCallbacks.onNetworkQuality(uid, txQuality, rxQuality);
         }
     };
 
-    public VoiceCommunicationUtils(Context context){
+    public VoiceCommunicationUtils(Context context) {
         this.context = context;
+    }
+
+    /**
+     * 获得声网控制工具类
+     *
+     * @return
+     */
+    public static VoiceCommunicationUtils getVoiceCommunicationUtils(Context context) {
+        if (voiceCommunicationUtils == null) {
+            synchronized (VoiceCommunicationUtils.class) {
+                if (voiceCommunicationUtils == null) {
+                    voiceCommunicationUtils = new VoiceCommunicationUtils(context);
+                }
+            }
+        }
+        voiceCommunicationUtils.initializeAgoraEngine();
+        return voiceCommunicationUtils;
     }
 
     /**
@@ -155,59 +155,63 @@ public class VoiceCommunicationUtils {
         try {
             mRtcEngine = RtcEngine.create(context, context.getString(R.string.agora_app_id), mRtcEventHandler);
         } catch (Exception e) {
-            LogUtils.YfcDebug("初始化声网异常："+e.getMessage());
+            LogUtils.YfcDebug("初始化声网异常：" + e.getMessage());
         }
-        if(mRtcEngine != null){
-            mRtcEngine.enableAudioVolumeIndication(1000,3);
+        if (mRtcEngine != null) {
+            mRtcEngine.enableAudioVolumeIndication(1000, 3);
         }
     }
 
     /**
      * 加入频道
+     *
      * @param token
      * @param channelName
      * @param optionalInfo
      * @param optionalUid
      * @return
      */
-    public int joinChannel(String  token, String  channelName, String  optionalInfo, int  optionalUid) {
+    public int joinChannel(String token, String channelName, String optionalInfo, int optionalUid) {
         // 如果不指定optionalUid将自动生成一个
-        return (mRtcEngine != null)?mRtcEngine.joinChannel(token, channelName, optionalInfo, optionalUid):-1;
+        return (mRtcEngine != null) ? mRtcEngine.joinChannel(token, channelName, optionalInfo, optionalUid) : -1;
     }
 
     /**
      * 离开频道，不让外部主动调用，外部可以主动调用destroy方法
      */
     private void leaveChannel() {
-        if(mRtcEngine != null){
+        if (mRtcEngine != null) {
             mRtcEngine.leaveChannel();
         }
     }
 
     /**
      * 设置加密密码
+     *
      * @param secret
      */
-    public void setEncryptionSecret(String secret){
+    public void setEncryptionSecret(String secret) {
         mRtcEngine.setEncryptionSecret(secret);
     }
 
     /**
      * 设置频道模式
+     *
      * @param profile
      */
-    public void setChannelProfile(int profile){
-        if(mRtcEngine != null){
+    public void setChannelProfile(int profile) {
+        if (mRtcEngine != null) {
             mRtcEngine.setChannelProfile(profile);
         }
     }
 
     /**
      * 打开外放
+     *
      * @param isSpakerphoneOpen
      */
     public void onSwitchSpeakerphoneClicked(boolean isSpakerphoneOpen) {
-        if(mRtcEngine != null){
+        if (mRtcEngine != null) {
             mRtcEngine.setEnableSpeakerphone(isSpakerphoneOpen);
         }
     }
@@ -215,52 +219,56 @@ public class VoiceCommunicationUtils {
     /**
      * 静音本地
      * 该方法用于允许/禁止往网络发送本地音频流。
+     *
      * @param isMute
      */
-    public void muteLocalAudioStream(boolean isMute){
-        if(mRtcEngine != null){
+    public void muteLocalAudioStream(boolean isMute) {
+        if (mRtcEngine != null) {
             mRtcEngine.muteLocalAudioStream(isMute);
         }
     }
 
     /**
      * 静音远端所有用户
+     *
      * @param isMuteAllUser
      */
-    public void muteAllRemoteAudioStreams(boolean isMuteAllUser){
-        if(mRtcEngine != null){
+    public void muteAllRemoteAudioStreams(boolean isMuteAllUser) {
+        if (mRtcEngine != null) {
             mRtcEngine.muteAllRemoteAudioStreams(isMuteAllUser);
         }
     }
 
     /**
      * 刷新token
+     *
      * @param token
      * @return
      */
-    public int renewToken(String token){
-        return mRtcEngine != null?mRtcEngine.renewToken(token):-1;
+    public int renewToken(String token) {
+        return mRtcEngine != null ? mRtcEngine.renewToken(token) : -1;
     }
 
     /**
      * 离开频道销毁资源
      */
-    public void destroy(){
+    public void destroy() {
         leaveChannel();
         RtcEngine.destroy();
         mRtcEngine = null;
     }
 
-    /**
-     * 设置回调
-     * @param l
-     */
-    public void setOnVoiceCommunicationCallbacks(OnVoiceCommunicationCallbacks l){
-        this.onVoiceCommunicationCallbacks = l;
-    }
-
     public OnVoiceCommunicationCallbacks getOnVoiceCommunicationCallbacks() {
         return onVoiceCommunicationCallbacks;
+    }
+
+    /**
+     * 设置回调
+     *
+     * @param l
+     */
+    public void setOnVoiceCommunicationCallbacks(OnVoiceCommunicationCallbacks l) {
+        this.onVoiceCommunicationCallbacks = l;
     }
 
     public List<VoiceCommunicationJoinChannelInfoBean> getVoiceCommunicationUserInfoBeanList() {

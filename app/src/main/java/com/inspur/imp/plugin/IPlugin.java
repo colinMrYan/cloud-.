@@ -74,5 +74,6 @@ public interface IPlugin {
     void onActivityResume();
 
     void onActivityPause();
+
     void onActivityResult(int requestCode, int resultCode, Intent data);
 }

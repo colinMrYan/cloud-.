@@ -176,24 +176,6 @@ public class NewsWebDetailActivity extends BaseActivity {
         return super.onKeyDown(keyCode, event);
     }
 
-
-    private class FileDownloadListener implements DownloadListener {
-        @Override
-        public void onDownloadStart(String url, String userAgent, String contentDisposition, final String mimetype, long contentLength) {
-            if (NetUtils.isNetworkConnected(NewsWebDetailActivity.this)) {
-                JSONObject object = new JSONObject();
-                try {
-                    object.put("url", url);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                PluginMgr pluginMgr = new PluginMgr(NewsWebDetailActivity.this, null);
-                pluginMgr.execute("FileTransferService", "download", object.toString());
-                pluginMgr.onDestroy();
-            }
-        }
-    }
-
     /**
      * 初始化WebView的Settings
      */
@@ -346,70 +328,6 @@ public class NewsWebDetailActivity extends BaseActivity {
         settings.setSaveFormData(false);
         // 是否保存密码
         settings.setSavePassword(false);
-    }
-
-    /**
-     * 支持html5数据库和使用缓存的功能
-     */
-    private class Html5Apis {
-        void invoke(WebSettings settings) {
-            try {
-                // 数据库路径
-                String databasePath = NewsWebDetailActivity.this.getDir("database", 0).getPath();
-                // 使用localStorage则必须打开
-                settings.setDomStorageEnabled(true);
-                // 是否允许数据库存储的api
-                settings.setDatabaseEnabled(true);
-                // 设置数据库路径
-                settings.setDatabasePath(databasePath);
-
-                // webview加载 服务端的网页，为了减少访问压力，用html5缓存技术
-                settings.setAppCacheEnabled(true);
-                // 设置加载cache的方式，
-                settings.setCacheMode(WebSettings.LOAD_DEFAULT);
-                // 设置缓存路径
-                settings.setAppCachePath(databasePath);
-                // 设置缓冲大小,此处设置为缓存最大为8m
-                settings.setAppCacheMaxSize(1024 * 1024 * 8);
-
-            } catch (Exception e) {
-                iLog.w("yfcLog", e.getMessage() + "");
-            }
-        }
-    }
-
-    /**
-     * API为16的方法访问
-     */
-    @TargetApi(16)
-    private static class Level16Apis {
-        static void invoke(WebSettings settings) {
-            try {
-                Method method = WebSettings.class.getMethod(
-                        "setAllowFileAccessFromFileURLs",
-                        boolean.class);
-                method.invoke(settings, true);
-            } catch (Exception e) {
-                iLog.w("yfcLog", "设备api不支持：" + e.getMessage());
-            }
-        }
-    }
-
-    /**
-     * API为16或以上，允许ajax执行web请求
-     */
-    @TargetApi(16)
-    private static class Level4Apis {
-        static void invoke(WebSettings settings) {
-            try {
-                Method method = WebSettings.class.getMethod(
-                        "setAllowUniversalAccessFromFileURLs",
-                        boolean.class);
-                method.invoke(settings, true);
-            } catch (Exception e) {
-                iLog.w("yfcLog", e.getMessage() + "");
-            }
-        }
     }
 
     /**
@@ -779,10 +697,10 @@ public class NewsWebDetailActivity extends BaseActivity {
      */
     private void setHeaderModel(String model) {
         boolean isDarkMode = model.equals(darkMode);
-        int color = ResourceUtils.getValueOfAttr(this,R.attr.header_bg_color);
-        int statusBarColor = isDarkMode?R.color.app_news_night_color : color;
+        int color = ResourceUtils.getValueOfAttr(this, R.attr.header_bg_color);
+        int statusBarColor = isDarkMode ? R.color.app_news_night_color : color;
         ImmersionBar.with(this).statusBarColor(statusBarColor).init();
-        (findViewById(R.id.rl_header)).setBackgroundColor(ContextCompat.getColor(MyApplication.getInstance(),statusBarColor));
+        (findViewById(R.id.rl_header)).setBackgroundColor(ContextCompat.getColor(MyApplication.getInstance(), statusBarColor));
     }
 
     /**
@@ -951,8 +869,8 @@ public class NewsWebDetailActivity extends BaseActivity {
                 }
                 apiService.sendMsg(cid, jsonObject.toString(), "res_link", System.currentTimeMillis() + "");
             } else {
-                String poster = StringUtils.isBlank(groupNews.getPoster())?"":APIUri.getPreviewUrl(groupNews.getPoster());
-                Message message = CommunicationUtils.combinLocalExtendedLinksMessage(cid,poster, groupNews.getTitle(), groupNews.getSummary(), url);
+                String poster = StringUtils.isBlank(groupNews.getPoster()) ? "" : APIUri.getPreviewUrl(groupNews.getPoster());
+                Message message = CommunicationUtils.combinLocalExtendedLinksMessage(cid, poster, groupNews.getTitle(), groupNews.getSummary(), url);
                 fakeMessageId = message.getId();
                 WSAPIService.getInstance().sendChatExtendedLinksMsg(message);
             }
@@ -960,7 +878,6 @@ public class NewsWebDetailActivity extends BaseActivity {
         }
 
     }
-
 
     /**
      * 弹出分享失败toast
@@ -1041,6 +958,87 @@ public class NewsWebDetailActivity extends BaseActivity {
 
         }
 
+    }
+
+    /**
+     * API为16的方法访问
+     */
+    @TargetApi(16)
+    private static class Level16Apis {
+        static void invoke(WebSettings settings) {
+            try {
+                Method method = WebSettings.class.getMethod(
+                        "setAllowFileAccessFromFileURLs",
+                        boolean.class);
+                method.invoke(settings, true);
+            } catch (Exception e) {
+                iLog.w("yfcLog", "设备api不支持：" + e.getMessage());
+            }
+        }
+    }
+
+    /**
+     * API为16或以上，允许ajax执行web请求
+     */
+    @TargetApi(16)
+    private static class Level4Apis {
+        static void invoke(WebSettings settings) {
+            try {
+                Method method = WebSettings.class.getMethod(
+                        "setAllowUniversalAccessFromFileURLs",
+                        boolean.class);
+                method.invoke(settings, true);
+            } catch (Exception e) {
+                iLog.w("yfcLog", e.getMessage() + "");
+            }
+        }
+    }
+
+    private class FileDownloadListener implements DownloadListener {
+        @Override
+        public void onDownloadStart(String url, String userAgent, String contentDisposition, final String mimetype, long contentLength) {
+            if (NetUtils.isNetworkConnected(NewsWebDetailActivity.this)) {
+                JSONObject object = new JSONObject();
+                try {
+                    object.put("url", url);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                PluginMgr pluginMgr = new PluginMgr(NewsWebDetailActivity.this, null);
+                pluginMgr.execute("FileTransferService", "download", object.toString());
+                pluginMgr.onDestroy();
+            }
+        }
+    }
+
+    /**
+     * 支持html5数据库和使用缓存的功能
+     */
+    private class Html5Apis {
+        void invoke(WebSettings settings) {
+            try {
+                // 数据库路径
+                String databasePath = NewsWebDetailActivity.this.getDir("database", 0).getPath();
+                // 使用localStorage则必须打开
+                settings.setDomStorageEnabled(true);
+                // 是否允许数据库存储的api
+                settings.setDatabaseEnabled(true);
+                // 设置数据库路径
+                settings.setDatabasePath(databasePath);
+
+                // webview加载 服务端的网页，为了减少访问压力，用html5缓存技术
+                settings.setAppCacheEnabled(true);
+                // 设置加载cache的方式，
+                settings.setCacheMode(WebSettings.LOAD_DEFAULT);
+                // 设置缓存路径
+                settings.setAppCachePath(databasePath);
+                // 设置缓冲大小,此处设置为缓存最大为8m
+                settings.setAppCacheMaxSize(1024 * 1024 * 8);
+
+            } catch (Exception e) {
+                iLog.w("yfcLog", e.getMessage() + "");
+            }
+        }
     }
 
     class WebService extends APIInterfaceInstance {

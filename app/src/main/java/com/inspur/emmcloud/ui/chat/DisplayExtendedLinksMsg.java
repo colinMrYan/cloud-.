@@ -34,7 +34,7 @@ public class DisplayExtendedLinksMsg {
                 R.layout.chat_msg_card_child_res_link_view, null);
         boolean isMyMsg = message.getFromUser().equals(MyApplication.getInstance().getUid());
         BubbleLayout cardLayout = (BubbleLayout) cardContentView.findViewById(R.id.bl_card);
-        cardLayout.setArrowDirection(isMyMsg? ArrowDirection.RIGHT:ArrowDirection.LEFT);
+        cardLayout.setArrowDirection(isMyMsg ? ArrowDirection.RIGHT : ArrowDirection.LEFT);
         MsgContentExtendedLinks msgContentExtendedLinks = message.getMsgContentExtendedLinks();
         String title = msgContentExtendedLinks.getTitle();
         String subTitle = msgContentExtendedLinks.getSubtitle();
@@ -43,7 +43,7 @@ public class DisplayExtendedLinksMsg {
                 .findViewById(R.id.tv_news_card_title);
         TextView linkDigestText = (TextView) cardContentView
                 .findViewById(R.id.tv_news_card_digest);
-        linkTitleText.setText(StringUtils.isBlank(title)?context.getString(R.string.share_default_title):title);
+        linkTitleText.setText(StringUtils.isBlank(title) ? context.getString(R.string.share_default_title) : title);
 
         ImageView linkImg = (ImageView) cardContentView
                 .findViewById(R.id.img_news_card);

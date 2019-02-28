@@ -16,7 +16,8 @@ import com.inspur.emmcloud.util.privates.NetWorkStateChangeUtils;
 @TargetApi(Build.VERSION_CODES.N)
 public class NetworkCallbackImpl extends ConnectivityManager.NetworkCallback {
     private Context context;
-    public NetworkCallbackImpl(Context context){
+
+    public NetworkCallbackImpl(Context context) {
         this.context = context;
     }
 

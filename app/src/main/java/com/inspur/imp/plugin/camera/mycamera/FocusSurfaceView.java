@@ -22,9 +22,9 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.common.DensityUtil;
 
 /**
  * Created by moubiao on 2016/11/2.
@@ -43,7 +43,7 @@ public class FocusSurfaceView extends SurfaceView {
     private static final int TRANSLUCENT_WHITE = 0xBBFFFFFF;
     private static final int WHITE = 0xFFFFFFFF;
     private static final int TRANSLUCENT_BLACK = 0xBB000000;
-
+    private final Interpolator DEFAULT_INTERPOLATOR = new DecelerateInterpolator();
     private boolean mIsInitialized = false;
     private float mBoundaryWidth = 0;//裁剪框可移动的范围的宽
     private float mBoundaryHeight = 0;//裁剪框可移动的范围的高
@@ -53,12 +53,10 @@ public class FocusSurfaceView extends SurfaceView {
     private int mCropHeight;
     private RectF mFrameRect;//裁剪框的rect
     private Paint mPaintTranslucent;
-
     private float mLastX, mLastY;
     private boolean mIsRotating = false;
     private boolean mIsAnimating = false;
     private SimpleValueAnimator mAnimator = null;
-    private final Interpolator DEFAULT_INTERPOLATOR = new DecelerateInterpolator();
     private Interpolator mInterpolator = DEFAULT_INTERPOLATOR;
 
     private TouchArea mTouchArea = TouchArea.OUT_OF_BOUNDS;
@@ -161,7 +159,7 @@ public class FocusSurfaceView extends SurfaceView {
             mIsCropEnabled = ta.getBoolean(R.styleable.FocusSurfaceView_focus_crop_enabled, false);
             mInitialFrameScale = constrain(ta.getFloat(R.styleable.FocusSurfaceView_focus_initial_frame_scale, DEFAULT_INITIAL_FRAME_SCALE),
                     0.01f, 1.0f, DEFAULT_INITIAL_FRAME_SCALE);
-            isSetMaxInitialFrameScale = ta.getBoolean(R.styleable.FocusSurfaceView_focus_set_max_initial_frame_scale,false);
+            isSetMaxInitialFrameScale = ta.getBoolean(R.styleable.FocusSurfaceView_focus_set_max_initial_frame_scale, false);
             mIsAnimationEnabled = ta.getBoolean(R.styleable.FocusSurfaceView_focus_animation_enabled, true);
             mAnimationDurationMillis = ta.getInt(R.styleable.FocusSurfaceView_focus_animation_duration, DEFAULT_ANIMATION_DURATION_MILLIS);
             mIsHandleShadowEnabled = ta.getBoolean(R.styleable.FocusSurfaceView_focus_handle_shadow_enabled, true);
@@ -349,18 +347,18 @@ public class FocusSurfaceView extends SurfaceView {
         float h = b - t;
         float cx = l + w / 2;
         float cy = t + h / 2;
-        if(isSetMaxInitialFrameScale){
-            float maxInitialFrameWidth = imageRect.width()- DensityUtil.dip2px(getContext(),10);
-            float maxInitialFrameHeight = imageRect.height()-2*topMove-2* DensityUtil.dip2px(getContext(),58);
-            float maxInitialFrameWidthScale = maxInitialFrameWidth/w;
-            float maxInitialFrameHeightScale = maxInitialFrameHeight/h;
-            mInitialFrameScale = (maxInitialFrameWidthScale < maxInitialFrameHeightScale)?maxInitialFrameWidthScale:maxInitialFrameHeightScale;
+        if (isSetMaxInitialFrameScale) {
+            float maxInitialFrameWidth = imageRect.width() - DensityUtil.dip2px(getContext(), 10);
+            float maxInitialFrameHeight = imageRect.height() - 2 * topMove - 2 * DensityUtil.dip2px(getContext(), 58);
+            float maxInitialFrameWidthScale = maxInitialFrameWidth / w;
+            float maxInitialFrameHeightScale = maxInitialFrameHeight / h;
+            mInitialFrameScale = (maxInitialFrameWidthScale < maxInitialFrameHeightScale) ? maxInitialFrameWidthScale : maxInitialFrameHeightScale;
         }
-        float scale = (mCropMode == CropMode.FIT_IMAGE)?1:mInitialFrameScale;
+        float scale = (mCropMode == CropMode.FIT_IMAGE) ? 1 : mInitialFrameScale;
         float sw = w * scale;
         float sh = h * scale;
-        int reallyTopMove = (mCropMode == CropMode.FIT_IMAGE)?0:topMove;
-        return new RectF(cx - sw / 2, cy - sh / 2-reallyTopMove, cx + sw / 2, cy + sh / 2-reallyTopMove);
+        int reallyTopMove = (mCropMode == CropMode.FIT_IMAGE) ? 0 : topMove;
+        return new RectF(cx - sw / 2, cy - sh / 2 - reallyTopMove, cx + sw / 2, cy + sh / 2 - reallyTopMove);
     }
 
     @Override
@@ -970,33 +968,33 @@ public class FocusSurfaceView extends SurfaceView {
      */
     public void setCustomRatio(int ratioX, int ratioY, int durationMillis) {
         if (ratioX == 0 || ratioY == 0) return;
-        int ratio0 =ratioX;
+        int ratio0 = ratioX;
         int ratio1 = ratioY;
-        ratioX = ratio0<=ratio1?ratio0:ratio1;
-        ratioY = ratio0>ratio1?ratio0:ratio1;
+        ratioX = ratio0 <= ratio1 ? ratio0 : ratio1;
+        ratioY = ratio0 > ratio1 ? ratio0 : ratio1;
         setCropEnabled(true);
         mCropMode = CropMode.CUSTOM;
         mCustomRatio.set(ratioX, ratioY);
         recalculateFrameRect(durationMillis);
     }
 
-    public void setCustomRectScale(String rectScale){
-        LogUtils.jasonDebug("rectScale="+rectScale);
-        if (!StringUtils.isBlank(rectScale) && !rectScale.equals("null")){
-            if (rectScale.equals("custom")){
+    public void setCustomRectScale(String rectScale) {
+        LogUtils.jasonDebug("rectScale=" + rectScale);
+        if (!StringUtils.isBlank(rectScale) && !rectScale.equals("null")) {
+            if (rectScale.equals("custom")) {
                 setCropMode(CropMode.FREE);
-            }else {
+            } else {
                 String[] ratios = rectScale.split(":");
-                if (ratios.length == 2){
+                if (ratios.length == 2) {
                     int ratio0 = Integer.parseInt(ratios[0]);
                     int ratio1 = Integer.parseInt(ratios[1]);
-                    int ratioX = ratio0<=ratio1?ratio0:ratio1;
-                    int ratioY = ratio0>ratio1?ratio0:ratio1;
-                    setCustomRatio(ratioX,ratioY);
+                    int ratioX = ratio0 <= ratio1 ? ratio0 : ratio1;
+                    int ratioY = ratio0 > ratio1 ? ratio0 : ratio1;
+                    setCustomRatio(ratioX, ratioY);
                 }
             }
 
-        }else {
+        } else {
             setCropMode(CropMode.FIT_IMAGE);
             setCropEnabled(false);
         }
@@ -1178,9 +1176,10 @@ public class FocusSurfaceView extends SurfaceView {
 
     /**
      * 设置取景框上移，保证取景框在中央
+     *
      * @param topMove
      */
-    public void setTopMove(int topMove){
+    public void setTopMove(int topMove) {
         this.topMove = topMove;
     }
 
@@ -1196,6 +1195,119 @@ public class FocusSurfaceView extends SurfaceView {
      */
     private float getFrameHeight() {
         return (mFrameRect.bottom - mFrameRect.top);
+    }
+
+    /**
+     * 获取裁剪框
+     */
+    public RectF getFrameRect() {
+        return mFrameRect;
+    }
+
+    /**
+     * 获取照片
+     *
+     * @param data 从camera返回的数据
+     * @return 裁剪后的bitmap
+     */
+    public Bitmap getPicture(byte[] data) {
+        //原始照片
+        Bitmap originBitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+        //原始照片的宽高
+        float picWidth = originBitmap.getWidth();
+        float picHeight = originBitmap.getHeight();
+        //预览界面的宽高
+        float preWidth = getWidth();
+        float preHeight = getHeight();
+        //预览界面和照片的比例
+        float preRW = picWidth / preWidth;
+        float preRH = picHeight / preHeight;
+        //裁剪框的位置和宽高
+        RectF frameRect = getFrameRect();
+        float frameLeft = frameRect.left;
+        float frameTop = frameRect.top;
+        float frameWidth = frameRect.width();
+        float frameHeight = frameRect.height();
+        int cropLeft = (int) (frameLeft * preRW);
+        int cropTop = (int) (frameTop * preRH);
+        int cropWidth = (int) (frameWidth * preRW);
+        int cropHeight = (int) (frameHeight * preRH);
+        //当没有裁剪框时裁剪bitmap返回原图
+        if (cropHeight == 0 || cropWidth == 0) {
+            return originBitmap;
+        }
+        Bitmap cropBitmap = Bitmap.createBitmap(originBitmap, cropLeft, cropTop, cropWidth, cropHeight);
+
+        if (mCropMode == CropMode.CIRCLE) {
+            cropBitmap = getCircularBitmap(cropBitmap);
+        }
+        return cropBitmap;
+    }
+
+    /**
+     * 获取照片
+     *
+     * @param originBitmap
+     * @return
+     */
+    public Bitmap getPicture(Bitmap originBitmap) {
+        //原始照片的宽高
+        float picWidth = originBitmap.getWidth();
+        float picHeight = originBitmap.getHeight();
+        //预览界面的宽高
+        float preWidth = getWidth();
+        float preHeight = getHeight();
+        //预览界面和照片的比例
+        float preRW = picWidth / preWidth;
+        float preRH = picHeight / preHeight;
+        //裁剪框的位置和宽高
+        RectF frameRect = getFrameRect();
+        float frameLeft = frameRect.left;
+        float frameTop = frameRect.top;
+        float frameWidth = frameRect.width();
+        float frameHeight = frameRect.height();
+        int cropLeft = (int) (frameLeft * preRW);
+        int cropTop = (int) (frameTop * preRH);
+        int cropWidth = (int) (frameWidth * preRW);
+        int cropHeight = (int) (frameHeight * preRH);
+        //当没有裁剪框时裁剪bitmap返回原图
+        if (cropHeight == 0 || cropWidth == 0) {
+            return originBitmap;
+        }
+        Bitmap cropBitmap = Bitmap.createBitmap(originBitmap, cropLeft, cropTop, cropWidth, cropHeight);
+
+        if (mCropMode == CropMode.CIRCLE) {
+            cropBitmap = getCircularBitmap(cropBitmap);
+        }
+        return cropBitmap;
+    }
+
+    /**
+     * 获取圆形图片
+     */
+    public Bitmap getCircularBitmap(Bitmap square) {
+        if (square == null) return null;
+        Bitmap output = Bitmap.createBitmap(square.getWidth(), square.getHeight(), Bitmap.Config.ARGB_8888);
+
+        final Rect rect = new Rect(0, 0, square.getWidth(), square.getHeight());
+        Canvas canvas = new Canvas(output);
+
+        int halfWidth = square.getWidth() / 2;
+        int halfHeight = square.getHeight() / 2;
+
+        final Paint paint = new Paint();
+        paint.setAntiAlias(true);
+        paint.setFilterBitmap(true);
+
+        canvas.drawCircle(halfWidth, halfHeight, Math.min(halfWidth, halfHeight), paint);
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        canvas.drawBitmap(square, rect, rect, paint);
+        return output;
+    }
+
+    private int dip2px(Context context, float dipValue) {
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (dipValue * scale + 0.5f);
     }
 
     /**
@@ -1236,116 +1348,5 @@ public class FocusSurfaceView extends SurfaceView {
         public int getId() {
             return ID;
         }
-    }
-
-    /**
-     * 获取裁剪框
-     */
-    public RectF getFrameRect() {
-        return mFrameRect;
-    }
-
-    /**
-     * 获取照片
-     *
-     * @param data 从camera返回的数据
-     * @return 裁剪后的bitmap
-     */
-    public Bitmap getPicture(byte[] data) {
-        //原始照片
-        Bitmap originBitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-        //原始照片的宽高
-        float picWidth = originBitmap.getWidth();
-        float picHeight = originBitmap.getHeight();
-        //预览界面的宽高
-        float preWidth = getWidth();
-        float preHeight = getHeight();
-        //预览界面和照片的比例
-        float preRW = picWidth / preWidth;
-        float preRH = picHeight / preHeight;
-        //裁剪框的位置和宽高
-        RectF frameRect = getFrameRect();
-        float frameLeft = frameRect.left;
-        float frameTop = frameRect.top;
-        float frameWidth = frameRect.width();
-        float frameHeight = frameRect.height();
-        int cropLeft = (int) (frameLeft * preRW);
-        int cropTop = (int) (frameTop * preRH);
-        int cropWidth = (int) (frameWidth * preRW);
-        int cropHeight = (int) (frameHeight * preRH);
-        //当没有裁剪框时裁剪bitmap返回原图
-       if (cropHeight ==0 || cropWidth == 0){
-           return  originBitmap;
-       }
-        Bitmap cropBitmap = Bitmap.createBitmap(originBitmap, cropLeft, cropTop, cropWidth, cropHeight);
-
-        if (mCropMode == CropMode.CIRCLE) {
-            cropBitmap = getCircularBitmap(cropBitmap);
-        }
-        return cropBitmap;
-    }
-
-    /**
-     * 获取照片
-     * @param originBitmap
-     * @return
-     */
-    public Bitmap getPicture(Bitmap originBitmap) {
-        //原始照片的宽高
-        float picWidth = originBitmap.getWidth();
-        float picHeight = originBitmap.getHeight();
-        //预览界面的宽高
-        float preWidth = getWidth();
-        float preHeight = getHeight();
-        //预览界面和照片的比例
-        float preRW = picWidth / preWidth;
-        float preRH = picHeight / preHeight;
-        //裁剪框的位置和宽高
-        RectF frameRect = getFrameRect();
-        float frameLeft = frameRect.left;
-        float frameTop = frameRect.top;
-        float frameWidth = frameRect.width();
-        float frameHeight = frameRect.height();
-        int cropLeft = (int) (frameLeft * preRW);
-        int cropTop = (int) (frameTop * preRH);
-        int cropWidth = (int) (frameWidth * preRW);
-        int cropHeight = (int) (frameHeight * preRH);
-        //当没有裁剪框时裁剪bitmap返回原图
-        if (cropHeight ==0 || cropWidth == 0){
-            return  originBitmap;
-        }
-        Bitmap cropBitmap = Bitmap.createBitmap(originBitmap, cropLeft, cropTop, cropWidth, cropHeight);
-
-        if (mCropMode == CropMode.CIRCLE) {
-            cropBitmap = getCircularBitmap(cropBitmap);
-        }
-        return cropBitmap;
-    }
-    /**
-     * 获取圆形图片
-     */
-    public Bitmap getCircularBitmap(Bitmap square) {
-        if (square == null) return null;
-        Bitmap output = Bitmap.createBitmap(square.getWidth(), square.getHeight(), Bitmap.Config.ARGB_8888);
-
-        final Rect rect = new Rect(0, 0, square.getWidth(), square.getHeight());
-        Canvas canvas = new Canvas(output);
-
-        int halfWidth = square.getWidth() / 2;
-        int halfHeight = square.getHeight() / 2;
-
-        final Paint paint = new Paint();
-        paint.setAntiAlias(true);
-        paint.setFilterBitmap(true);
-
-        canvas.drawCircle(halfWidth, halfHeight, Math.min(halfWidth, halfHeight), paint);
-        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
-        canvas.drawBitmap(square, rect, rect, paint);
-        return output;
-    }
-
-    private int dip2px(Context context, float dipValue) {
-        final float scale = context.getResources().getDisplayMetrics().density;
-        return (int) (dipValue * scale + 0.5f);
     }
 }

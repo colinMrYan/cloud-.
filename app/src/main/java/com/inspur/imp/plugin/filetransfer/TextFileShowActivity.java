@@ -12,18 +12,19 @@ import com.inspur.imp.api.Res;
 
 public class TextFileShowActivity extends ImpBaseActivity {
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
-		super.onCreate(savedInstanceState);
-		setContentView(Res.getLayoutID("plugin_activity_show_txt"));
-		Intent intent = getIntent();
-		String content = intent.getExtras().getString("text");
-		TextView contentText = (TextView)findViewById(Res.getWidgetID("content_text"));
-		contentText.setText(content);
-	}
-	public void onClick(View v){
-		finish();
-	}
-	
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        // TODO Auto-generated method stub
+        super.onCreate(savedInstanceState);
+        setContentView(Res.getLayoutID("plugin_activity_show_txt"));
+        Intent intent = getIntent();
+        String content = intent.getExtras().getString("text");
+        TextView contentText = (TextView) findViewById(Res.getWidgetID("content_text"));
+        contentText.setText(content);
+    }
+
+    public void onClick(View v) {
+        finish();
+    }
+
 }

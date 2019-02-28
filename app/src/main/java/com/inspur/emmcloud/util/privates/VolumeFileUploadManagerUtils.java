@@ -23,6 +23,11 @@ public class VolumeFileUploadManagerUtils {
     private List<VolumeFileUploadInfo> volumeFileUploadInfoList = new ArrayList<>();
     private MyAppAPIService apiService;
 
+    public VolumeFileUploadManagerUtils() {
+        apiService = new MyAppAPIService(MyApplication.getInstance());
+        apiService.setAPIInterface(new WebService());
+    }
+
     public static VolumeFileUploadManagerUtils getInstance() {
         if (instance == null) {
             synchronized (VolumeFileUploadManagerUtils.class) {
@@ -32,11 +37,6 @@ public class VolumeFileUploadManagerUtils {
             }
         }
         return instance;
-    }
-
-    public VolumeFileUploadManagerUtils() {
-        apiService = new MyAppAPIService(MyApplication.getInstance());
-        apiService.setAPIInterface(new WebService());
     }
 
     /**

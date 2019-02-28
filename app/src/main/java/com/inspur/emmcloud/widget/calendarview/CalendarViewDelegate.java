@@ -50,13 +50,6 @@ final class CalendarViewDelegate {
      * 周起始：周六
      */
     static final int WEEK_START_WITH_SAT = 7;
-
-
-    /**
-     * 周起始
-     */
-    private int mWeekStart;
-
     /**
      * 全部显示
      */
@@ -65,44 +58,26 @@ final class CalendarViewDelegate {
      * 仅显示当前月份
      */
     static final int MODE_ONLY_CURRENT_MONTH = 1;
-
     /**
      * 自适应显示，不会多出一行，但是会自动填充
      */
     static final int MODE_FIT_MONTH = 2;
-
-    /**
-     * 月份显示模式
-     */
-    private int mMonthViewShowMode;
-
-
     /**
      * 默认选择模式
      */
     static final int SELECT_MODE_DEFAULT = 0;
-
     /**
      * 单选模式
      */
     static final int SELECT_MODE_SINGLE = 1;
-
     /**
      * 范围选择模式
      */
     static final int SELECT_MODE_RANGE = 2;
-
     /**
      * 多选模式
      */
     static final int SELECT_MODE_MULTI = 3;
-
-    /**
-     * 选择模式
-     */
-    private int mSelectMode;
-
-
     /**
      * 支持转换的最小农历年份
      */
@@ -111,7 +86,90 @@ final class CalendarViewDelegate {
      * 支持转换的最大农历年份
      */
     private static final int MAX_YEAR = 2099;
-
+    /**
+     * 年月视图是否打开
+     */
+    boolean isShowYearSelectedLayout;
+    /**
+     * 当前月份和周视图的item位置
+     */
+    int mCurrentMonthViewItem;
+    /**
+     * 标记的日期,数量巨大，请使用这个
+     */
+    Map<String, Calendar> mSchemeDatesMap;
+    /**
+     * 日期拦截事件
+     */
+    CalendarView.OnCalendarInterceptListener mCalendarInterceptListener;
+    /**
+     * 日期选中监听
+     */
+    CalendarView.OnCalendarSelectListener mCalendarSelectListener;
+    /**
+     * 范围选择
+     */
+    CalendarView.OnCalendarRangeSelectListener mCalendarRangeSelectListener;
+    /**
+     * 多选选择事件
+     */
+    CalendarView.OnCalendarMultiSelectListener mCalendarMultiSelectListener;
+    /**
+     * 外部日期长按事件
+     */
+    CalendarView.OnCalendarLongClickListener mCalendarLongClickListener;
+    /**
+     * 内部日期切换监听，用于内部更新计算
+     */
+    CalendarView.OnInnerDateSelectedListener mInnerListener;
+    /**
+     * 快速年份切换
+     */
+    CalendarView.OnYearChangeListener mYearChangeListener;
+    /**
+     * 月份切换事件
+     */
+    CalendarView.OnMonthChangeListener mMonthChangeListener;
+    /**
+     * 周视图改变事件
+     */
+    CalendarView.OnWeekChangeListener mWeekChangeListener;
+    /**
+     * 视图改变事件
+     */
+    CalendarView.OnViewChangeListener mViewChangeListener;
+    /**
+     * 年视图改变事件
+     */
+    CalendarView.OnYearViewChangeListener mYearViewChangeListener;
+    /**
+     * 保存选中的日期
+     */
+    Calendar mSelectedCalendar;
+    /**
+     * 保存标记位置
+     */
+    Calendar mIndexCalendar;
+    /**
+     * 多选日历
+     */
+    Map<String, Calendar> mSelectedCalendars = new HashMap<>();
+    /**
+     * 选择范围日历
+     */
+    Calendar mSelectedStartRangeCalendar, mSelectedEndRangeCalendar;
+    /**
+     * 周起始
+     */
+    private int mWeekStart;
+    /**
+     * 月份显示模式
+     */
+    private int mMonthViewShowMode;
+    /**
+     * 选择模式
+     */
+    private int mSelectMode;
     /**
      * 各种字体颜色，看名字知道对应的地方
      */
@@ -126,34 +184,28 @@ final class CalendarViewDelegate {
             mSelectedLunarTextColor,
             mCurMonthLunarTextColor,
             mOtherMonthLunarTextColor;
-
     private boolean preventLongPressedSelected;
-
     /**
      * 日历内部左右padding
      */
     private int mCalendarPadding;
-
     /**
      * 年视图字体大小
      */
     private int mYearViewMonthTextSize,
             mYearViewDayTextSize,
             mYearViewWeekTextSize;
-
     /**
      * 年视图月份高度和周的高度
      */
     private int mYearViewMonthHeight,
             mYearViewWeekHeight;
-
     /**
      * 年视图一些margin和padding
      */
     private int mYearViewPadding,
             mYearViewMonthMarginTop,
             mYearViewMonthMarginBottom;
-
     /**
      * 年视图字体和标记颜色
      */
@@ -163,212 +215,94 @@ final class CalendarViewDelegate {
             mYearViewSelectTextColor,
             mYearViewCurDayTextColor,
             mYearViewWeekTextColor;
-
     /**
      * 星期栏的背景、线的背景、年份背景
      */
     private int mWeekLineBackground,
             mYearViewBackground,
             mWeekBackground;
-
     /**
      * 星期栏Line margin
      */
     private int mWeekLineMargin;
-
     /**
      * 星期栏字体大小
      */
     private int mWeekTextSize;
-
     /**
      * 标记的主题色和选中的主题色
      */
     private int mSchemeThemeColor, mSelectedThemeColor;
-
-
     /**
      * 自定义的日历路径
      */
     private String mMonthViewClassPath;
-
     /**
      * 月视图类
      */
     private Class<?> mMonthViewClass;
-
     /**
      * 自定义周视图路径
      */
     private String mWeekViewClassPath;
-
     /**
      * 周视图类
      */
     private Class<?> mWeekViewClass;
-
     /**
      * 自定义年视图路径
      */
     private String mYearViewClassPath;
-
     /**
      * 周视图类
      */
     private Class<?> mYearViewClass;
-
     /**
      * 自定义周栏路径
      */
     private String mWeekBarClassPath;
-
     /**
      * 自定义周栏
      */
     private Class<?> mWeekBarClass;
-
-    /**
-     * 年月视图是否打开
-     */
-    boolean isShowYearSelectedLayout;
-
     /**
      * 标记文本
      */
     private String mSchemeText;
-
     /**
      * 最小年份和最大年份
      */
     private int mMinYear, mMaxYear;
-
     /**
      * 最小年份和最大年份对应最小月份和最大月份
      * when you want set 2015-07 to 2017-08
      */
     private int mMinYearMonth, mMaxYearMonth;
-
     /**
      * 最小年份和最大年份对应最小天和最大天数
      * when you want set like 2015-07-08 to 2017-08-30
      */
     private int mMinYearDay, mMaxYearDay;
-
     /**
      * 日期和农历文本大小
      */
     private int mDayTextSize, mLunarTextSize;
-
     /**
      * 日历卡的项高度
      */
     private int mCalendarItemHeight;
-
     /**
      * 星期栏的高度
      */
     private int mWeekBarHeight;
-
     /**
      * 今天的日子
      */
     private Calendar mCurrentDate;
-
-
     private boolean mMonthViewScrollable,
             mWeekViewScrollable,
             mYearViewScrollable;
-
-    /**
-     * 当前月份和周视图的item位置
-     */
-    int mCurrentMonthViewItem;
-
-    /**
-     * 标记的日期,数量巨大，请使用这个
-     */
-    Map<String, Calendar> mSchemeDatesMap;
-
-    /**
-     * 日期拦截事件
-     */
-    CalendarView.OnCalendarInterceptListener mCalendarInterceptListener;
-
-    /**
-     * 日期选中监听
-     */
-    CalendarView.OnCalendarSelectListener mCalendarSelectListener;
-
-    /**
-     * 范围选择
-     */
-    CalendarView.OnCalendarRangeSelectListener mCalendarRangeSelectListener;
-
-
-    /**
-     * 多选选择事件
-     */
-    CalendarView.OnCalendarMultiSelectListener mCalendarMultiSelectListener;
-
-    /**
-     * 外部日期长按事件
-     */
-    CalendarView.OnCalendarLongClickListener mCalendarLongClickListener;
-
-    /**
-     * 内部日期切换监听，用于内部更新计算
-     */
-    CalendarView.OnInnerDateSelectedListener mInnerListener;
-
-    /**
-     * 快速年份切换
-     */
-    CalendarView.OnYearChangeListener mYearChangeListener;
-
-
-    /**
-     * 月份切换事件
-     */
-    CalendarView.OnMonthChangeListener mMonthChangeListener;
-
-    /**
-     * 周视图改变事件
-     */
-    CalendarView.OnWeekChangeListener mWeekChangeListener;
-
-    /**
-     * 视图改变事件
-     */
-    CalendarView.OnViewChangeListener mViewChangeListener;
-
-
-    /**
-     * 年视图改变事件
-     */
-    CalendarView.OnYearViewChangeListener mYearViewChangeListener;
-
-    /**
-     * 保存选中的日期
-     */
-    Calendar mSelectedCalendar;
-
-    /**
-     * 保存标记位置
-     */
-    Calendar mIndexCalendar;
-
-    /**
-     * 多选日历
-     */
-    Map<String, Calendar> mSelectedCalendars = new HashMap<>();
-
     private int mMaxMultiSelectSize;
-
-    /**
-     * 选择范围日历
-     */
-    Calendar mSelectedStartRangeCalendar, mSelectedEndRangeCalendar;
-
     private int mMinSelectRange, mMaxSelectRange;
 
     CalendarViewDelegate(Context context, @Nullable AttributeSet attrs) {
@@ -619,12 +553,24 @@ final class CalendarViewDelegate {
         return mMonthViewClass;
     }
 
+    void setMonthViewClass(Class<?> monthViewClass) {
+        this.mMonthViewClass = monthViewClass;
+    }
+
     Class<?> getWeekViewClass() {
         return mWeekViewClass;
     }
 
+    void setWeekViewClass(Class<?> weekViewClass) {
+        this.mWeekViewClass = weekViewClass;
+    }
+
     Class<?> getWeekBarClass() {
         return mWeekBarClass;
+    }
+
+    void setWeekBarClass(Class<?> weekBarClass) {
+        this.mWeekBarClass = weekBarClass;
     }
 
     Class<?> getYearViewClass() {
@@ -670,7 +616,6 @@ final class CalendarViewDelegate {
     int getMaxYearMonth() {
         return mMaxYearMonth;
     }
-
 
     int getYearViewMonthTextSize() {
         return mYearViewMonthTextSize;
@@ -771,20 +716,20 @@ final class CalendarViewDelegate {
         return mMonthViewScrollable;
     }
 
-    boolean isWeekViewScrollable() {
-        return mWeekViewScrollable;
-    }
-
-    boolean isYearViewScrollable() {
-        return mYearViewScrollable;
-    }
-
     void setMonthViewScrollable(boolean monthViewScrollable) {
         this.mMonthViewScrollable = monthViewScrollable;
     }
 
+    boolean isWeekViewScrollable() {
+        return mWeekViewScrollable;
+    }
+
     void setWeekViewScrollable(boolean weekViewScrollable) {
         this.mWeekViewScrollable = weekViewScrollable;
+    }
+
+    boolean isYearViewScrollable() {
+        return mYearViewScrollable;
     }
 
     void setYearViewScrollable(boolean yearViewScrollable) {
@@ -871,25 +816,12 @@ final class CalendarViewDelegate {
         return mCalendarPadding;
     }
 
+    boolean isPreventLongPressedSelected() {
+        return preventLongPressedSelected;
+    }
 
     void setPreventLongPressedSelected(boolean preventLongPressedSelected) {
         this.preventLongPressedSelected = preventLongPressedSelected;
-    }
-
-    void setMonthViewClass(Class<?> monthViewClass) {
-        this.mMonthViewClass = monthViewClass;
-    }
-
-    void setWeekBarClass(Class<?> weekBarClass) {
-        this.mWeekBarClass = weekBarClass;
-    }
-
-    void setWeekViewClass(Class<?> weekViewClass) {
-        this.mWeekViewClass = weekViewClass;
-    }
-
-    boolean isPreventLongPressedSelected() {
-        return preventLongPressedSelected;
     }
 
     void clearSelectedScheme() {

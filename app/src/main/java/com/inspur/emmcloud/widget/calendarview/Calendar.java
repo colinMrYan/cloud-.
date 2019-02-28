@@ -350,7 +350,7 @@ public final class Calendar implements Serializable, Comparable<Calendar> {
      * @return 日期是否可用
      */
     public boolean isAvailable() {
-        return year > 0 & month > 0 & day > 0 & day <=31 & month <= 12 & year >= 1900 & year <= 2099;
+        return year > 0 & month > 0 & day > 0 & day <= 31 & month <= 12 & year >= 1900 & year <= 2099;
     }
 
     /**

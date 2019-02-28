@@ -20,18 +20,20 @@ import java.util.List;
  * Created by yufuchang on 2017/11/13.
  */
 
-public class RecommendAppWidgetListAdapter extends RecyclerView.Adapter<RecommendAppWidgetListAdapter.RecommendAppAdapterHolder>{
+public class RecommendAppWidgetListAdapter extends RecyclerView.Adapter<RecommendAppWidgetListAdapter.RecommendAppAdapterHolder> {
     private OnRecommendAppWidgetItemClickListener onRecommendAppWidgetItemClickListener;
     private LayoutInflater inflater;
     private List<App> recommendList = new ArrayList<>();
     private Context context;
-    public RecommendAppWidgetListAdapter(Context context){
+
+    public RecommendAppWidgetListAdapter(Context context) {
         inflater = LayoutInflater.from(context);
         this.context = context;
     }
+
     @Override
     public RecommendAppWidgetListAdapter.RecommendAppAdapterHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.app_recommand_widget_app_item,null);
+        View view = inflater.inflate(R.layout.app_recommand_widget_app_item, null);
         RecommendAppAdapterHolder recommendAppAdapterHolder = new RecommendAppAdapterHolder(view);
         recommendAppAdapterHolder.recommendAppImg = (ImageView) view.findViewById(R.id.my_app_recommend_app_widget_img);
         return recommendAppAdapterHolder;
@@ -39,8 +41,8 @@ public class RecommendAppWidgetListAdapter extends RecyclerView.Adapter<Recommen
 
     @Override
     public void onBindViewHolder(final RecommendAppWidgetListAdapter.RecommendAppAdapterHolder holder, final int position) {
-        ImageDisplayUtils.getInstance().displayImage(holder.recommendAppImg,recommendList.get(position).getAppIcon(),R.drawable.ic_app_default);
-        if(onRecommendAppWidgetItemClickListener != null){
+        ImageDisplayUtils.getInstance().displayImage(holder.recommendAppImg, recommendList.get(position).getAppIcon(), R.drawable.ic_app_default);
+        if (onRecommendAppWidgetItemClickListener != null) {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -55,15 +57,9 @@ public class RecommendAppWidgetListAdapter extends RecyclerView.Adapter<Recommen
         return recommendList.size();
     }
 
-    public class RecommendAppAdapterHolder extends RecyclerView.ViewHolder {
-        ImageView recommendAppImg;
-        public RecommendAppAdapterHolder(View itemView) {
-            super(itemView);
-        }
-    }
-
     /**
      * 设置监听器
+     *
      * @param l
      */
     public void setOnRecommendAppWidgetItemClickListener(OnRecommendAppWidgetItemClickListener l) {
@@ -72,10 +68,19 @@ public class RecommendAppWidgetListAdapter extends RecyclerView.Adapter<Recommen
 
     /**
      * 更新数据并刷新
+     *
      * @param recommendList
      */
-    public void setAndReFreshRecommendList(List<App> recommendList){
+    public void setAndReFreshRecommendList(List<App> recommendList) {
         this.recommendList = recommendList;
         notifyDataSetChanged();
+    }
+
+    public class RecommendAppAdapterHolder extends RecyclerView.ViewHolder {
+        ImageView recommendAppImg;
+
+        public RecommendAppAdapterHolder(View itemView) {
+            super(itemView);
+        }
     }
 }
