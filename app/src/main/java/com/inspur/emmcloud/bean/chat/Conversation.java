@@ -80,7 +80,7 @@ public class Conversation implements Serializable {
         this.input = JSONUtils.getString(obj, "input", "");
         this.dnd = JSONUtils.getBoolean(obj, "dnd", false);
         this.stick = JSONUtils.getBoolean(obj, "stick", false);
-        this.hide = JSONUtils.getBoolean(obj, "hide", false);
+        this.hide = false;
         this.action = JSONUtils.getString(obj, "action", "");
         this.pyFull = PinyinUtils.getPingYin(name);
     }

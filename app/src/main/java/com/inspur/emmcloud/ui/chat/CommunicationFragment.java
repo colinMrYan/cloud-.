@@ -323,7 +323,7 @@ public class CommunicationFragment extends BaseFragment {
                         if (which == 0) {
                             setConversationStick(uiConversation.getId(), !uiConversation.getConversation().isStick());
                         } else {
-                            setConversationHide(uiConversation.getId());
+                            setConversationHide(uiConversation);
                         }
                     }
                 })
@@ -973,11 +973,28 @@ public class CommunicationFragment extends BaseFragment {
      *
      * @param id
      */
-    private void setConversationHide(String id) {
-        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
-            loadingDlg.show();
-            apiService.setConversationHide(id, true);
+    private void setConversationHide(final UIConversation uiConversation) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                ConversationCacheUtils.updateConversationHide(MyApplication.getInstance(), uiConversation.getId(), true);
+                MessageCacheUtil.setChannelMessageRead(MyApplication.getInstance(), uiConversation.getId());
+            }
+        }).start();
+        int index = displayUIConversationList.indexOf(uiConversation);
+        if (index != -1) {
+            long unReadCount = displayUIConversationList.get(index).getUnReadCount();
+            displayUIConversationList.remove(index);
+            conversationAdapter.setData(displayUIConversationList);
+            conversationAdapter.notifyRealItemRemoved(index);
+            if (unReadCount > 0) {
+                WSAPIService.getInstance().setChannelMessgeStateRead(uiConversation.getId());
+            }
         }
+//        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
+//            loadingDlg.show();
+//            apiService.setConversationHide(id, true);
+//        }
     }
 
     class CacheConversationThread extends Thread {
@@ -991,6 +1008,13 @@ public class CommunicationFragment extends BaseFragment {
         public void run() {
             List<Conversation> conversationList = getConversationListResult.getConversationList();
             List<Conversation> cacheConversationList = ConversationCacheUtils.getConversationList(MyApplication.getInstance());
+            //将数据库中Conversation隐藏状态赋值给从网络拉取的最新数据
+            for (Conversation conversation:conversationList){
+                int index = cacheConversationList.indexOf(conversation);
+                if (index != -1){
+                    conversation.setHide(cacheConversationList.get(index).isHide());
+                }
+            }
             ConversationCacheUtils.saveConversationList(MyApplication.getInstance(), conversationList);
             //服务端和本地数据取交集
             List<Conversation> intersectionConversationList = new ArrayList<>();
@@ -1106,33 +1130,33 @@ public class CommunicationFragment extends BaseFragment {
             WebServiceMiddleUtils.hand(MyApplication.getInstance(), error, errorCode);
         }
 
-        @Override
-        public void returnSetConversationHideSuccess(final String id, boolean isHide) {
-            LoadingDialog.dimissDlg(loadingDlg);
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    ConversationCacheUtils.updateConversationHide(MyApplication.getInstance(), id, true);
-                    MessageCacheUtil.setChannelMessageRead(MyApplication.getInstance(), id);
-                }
-            }).start();
-            int index = displayUIConversationList.indexOf(new UIConversation(id));
-            if (index != -1) {
-                long unReadCount = displayUIConversationList.get(index).getUnReadCount();
-                displayUIConversationList.remove(index);
-                conversationAdapter.setData(displayUIConversationList);
-                conversationAdapter.notifyRealItemRemoved(index);
-                if (unReadCount > 0) {
-                    WSAPIService.getInstance().setChannelMessgeStateRead(id);
-                }
-            }
-        }
-
-        @Override
-        public void returnSetConversationHideFail(String error, int errorCode) {
-            LoadingDialog.dimissDlg(loadingDlg);
-            WebServiceMiddleUtils.hand(MyApplication.getInstance(), error, errorCode);
-        }
+//        @Override
+//        public void returnSetConversationHideSuccess(final String id, boolean isHide) {
+//            LoadingDialog.dimissDlg(loadingDlg);
+//            new Thread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    ConversationCacheUtils.updateConversationHide(MyApplication.getInstance(), id, true);
+//                    MessageCacheUtil.setChannelMessageRead(MyApplication.getInstance(), id);
+//                }
+//            }).start();
+//            int index = displayUIConversationList.indexOf(new UIConversation(id));
+//            if (index != -1) {
+//                long unReadCount = displayUIConversationList.get(index).getUnReadCount();
+//                displayUIConversationList.remove(index);
+//                conversationAdapter.setData(displayUIConversationList);
+//                conversationAdapter.notifyRealItemRemoved(index);
+//                if (unReadCount > 0) {
+//                    WSAPIService.getInstance().setChannelMessgeStateRead(id);
+//                }
+//            }
+//        }
+//
+//        @Override
+//        public void returnSetConversationHideFail(String error, int errorCode) {
+//            LoadingDialog.dimissDlg(loadingDlg);
+//            WebServiceMiddleUtils.hand(MyApplication.getInstance(), error, errorCode);
+//        }
     }
 
 
