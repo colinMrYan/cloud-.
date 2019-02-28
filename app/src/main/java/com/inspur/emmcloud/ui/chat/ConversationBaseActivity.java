@@ -34,6 +34,7 @@ public class ConversationBaseActivity extends MediaPlayBaseActivity {
         loadingDlg = new LoadingDialog(this);
         initConversationInfo();
         recordUserClickChannel();
+        setConversationUnHide();
     }
 
     protected void initConversationInfo() {
@@ -53,6 +54,19 @@ public class ConversationBaseActivity extends MediaPlayBaseActivity {
     }
 
     protected void initChannelMessage() {
+
+    }
+
+    /**
+     * 当进入这个聊天时将取消这个聊天的隐藏状态
+     */
+    private void setConversationUnHide(){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                ConversationCacheUtils.updateConversationHide(MyApplication.getInstance(),cid,false);
+            }
+        }).start();
 
     }
 

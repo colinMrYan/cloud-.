@@ -80,7 +80,7 @@ public class Conversation implements Serializable {
         this.input = JSONUtils.getString(obj, "input", "");
         this.dnd = JSONUtils.getBoolean(obj, "dnd", false);
         this.stick = JSONUtils.getBoolean(obj, "stick", false);
-        this.hide = JSONUtils.getBoolean(obj, "hide", false);
+        this.hide = false;
         this.action = JSONUtils.getString(obj, "action", "");
         this.pyfull = PinyinUtils.getPingYin(name);
     }
@@ -218,14 +218,13 @@ public class Conversation implements Serializable {
         this.action = action;
     }
 
-    public String getpyFull() {
+    public String getPyfull() {
         return pyfull;
     }
 
-    public void setpyFull(String pinyin) {
-        this.pyfull = pinyin;
+    public void setPyfull(String pyfull) {
+        this.pyfull = pyfull;
     }
-
 
     public boolean equals(Object other) { // 重写equals方法，后面最好重写hashCode方法
 
