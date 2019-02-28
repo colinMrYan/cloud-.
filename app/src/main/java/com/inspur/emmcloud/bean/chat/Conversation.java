@@ -51,8 +51,8 @@ public class Conversation implements Serializable {
     private String action = "";
     @Column(name = "avatar")
     private String avatar = "";
-    @Column(name = "pyfull")
-    private String pyfull = "";
+    @Column(name = "pyFull")
+    private String pyFull = "";
 
     private String draft = "";
 
@@ -82,7 +82,7 @@ public class Conversation implements Serializable {
         this.stick = JSONUtils.getBoolean(obj, "stick", false);
         this.hide = false;
         this.action = JSONUtils.getString(obj, "action", "");
-        this.pyfull = PinyinUtils.getPingYin(name);
+        this.pyFull = PinyinUtils.getPingYin(name);
     }
 
     public String getId() {
@@ -218,13 +218,15 @@ public class Conversation implements Serializable {
         this.action = action;
     }
 
-    public String getPyfull() {
-        return pyfull;
+    public String getPyFull() {
+        return pyFull;
     }
 
-    public void setPyfull(String pyfull) {
-        this.pyfull = pyfull;
+    public void setPyFull(String pyFull) {
+        this.pyFull = pyFull;
     }
+
+
 
     public boolean equals(Object other) { // 重写equals方法，后面最好重写hashCode方法
 
