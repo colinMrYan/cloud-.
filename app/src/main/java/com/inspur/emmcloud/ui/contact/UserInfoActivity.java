@@ -184,7 +184,6 @@ public class UserInfoActivity extends BaseActivity {
         mobileSMSLayout.setVisibility(StringUtils.isBlank(phoneNum)?View.GONE:View.VISIBLE);
         mobileEmailLayout.setVisibility(StringUtils.isBlank(mail)?View.GONE:View.VISIBLE);
         boolean isNoContactWay = StringUtils.isBlank(phoneNum) && StringUtils.isBlank(telStr) && StringUtils.isBlank(mail);
-//        isNoContactWay = true;
         mobileContactInfoLayout.setVisibility(isNoContactWay?View.GONE:View.VISIBLE);
         mobileStartChatLayout.setVisibility(isNoContactWay?View.VISIBLE:View.GONE);
         userContactWayLayout.setVisibility(contactUser.getId().equals(MyApplication.getInstance().getUid())?View.GONE:View.VISIBLE);
