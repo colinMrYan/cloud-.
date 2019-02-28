@@ -226,11 +226,13 @@ public class NetWorkStateDetailActivity extends BaseActivity {
                             int responcode = httpURLConnection.getResponseCode();
                             if ((responcode >= 200) && (responcode < 300)) {
                                 resultData = true;
-                            } else {
-                                if (responcode > 300 && responcode < 310) {
+                            } else if(302==responcode) {
                                     PortalUrl = httpURLConnection.getURL().toString();
-                                }
-                                resultData = false;
+                                   resultData = false;
+                            }else if (301 == responcode){
+                                 resultData=true;
+                            }else {
+                                resultData=false;
                             }
                         }
                     }
