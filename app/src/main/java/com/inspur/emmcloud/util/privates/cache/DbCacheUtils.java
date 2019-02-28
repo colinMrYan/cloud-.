@@ -38,7 +38,7 @@ public class DbCacheUtils {
                 .setDbName("emm.db")
                 // 不设置dbDir时, 默认存储在app的私有目录.
                 .setDbDir(new File(dbCachePath))
-                .setDbVersion(17)
+                .setDbVersion(18)
                 .setAllowTransaction(true)
                 .setDbOpenListener(new DbManager.DbOpenListener() {
                     @Override
@@ -130,7 +130,7 @@ public class DbCacheUtils {
                             }
                             if(oldVersion<18){
                                 if(tableIsExist(db,"Conversation")){
-                                    db.execNonQuery("ALTER TABLE Conversation ADD COLUMN pyfull TEXT DEFAULT ''");
+                                    db.execNonQuery("ALTER TABLE Conversation ADD COLUMN pyFull TEXT DEFAULT ''");
                                 }
                             }
                         } catch (Exception e) {
