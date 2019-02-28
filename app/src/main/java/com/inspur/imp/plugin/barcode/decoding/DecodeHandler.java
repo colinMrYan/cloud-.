@@ -56,6 +56,46 @@ final class DecodeHandler extends Handler {
         scanCount = 0;
     }
 
+    /**
+     * 转为二值图像
+     *
+     * @param bmp 原图bitmap
+     * @return
+     */
+    public static Bitmap getBinaryBitmap(Bitmap bmp, int tmp) {
+        int width = bmp.getWidth(); // 获取位图的宽
+        int height = bmp.getHeight(); // 获取位图的高
+        int[] pixels = new int[width * height]; // 通过位图的大小创建像素点数组
+        // 设定二值化的域值，默认值为100
+        bmp.getPixels(pixels, 0, width, 0, 0, width, height);
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                int col = pixels[width * i + j];
+                // 分离三原色
+                int alpha = (col & 0xFF000000);
+                int red = ((col & 0x00FF0000) >> 16);
+                int green = ((col & 0x0000FF00) >> 8);
+                int blue = (col & 0x000000FF);
+                // 用公式X = 0.3×R+0.59×G+0.11×B计算出X代替原来的RGB
+                int gray = (int) ((float) red * 0.2125 + (float) green * 0.7154 +
+                        (float) blue * 0.0721);
+                //对图像进行二值化处理
+                if (gray <= tmp) {
+                    gray = 0;
+                } else {
+                    gray = 255;
+                }
+                // 新的ARGB
+                pixels[width * i + j] = alpha | (gray << 16) | (gray << 8) | gray;
+            }
+        }
+        // 新建图片
+        Bitmap newBmp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        // 设置图片数据
+        newBmp.setPixels(pixels, 0, width, 0, 0, width, height);
+        return newBmp;
+    }
+
     @Override
     public void handleMessage(Message message) {
         if (Res.getWidgetID("decode") == message.what) {
@@ -95,23 +135,23 @@ final class DecodeHandler extends Handler {
             Bitmap cropBitmap = source.getCropBitmap();
             if (scanCount > 7) {
                 sendDecodeFailHandlerMessage(cropBitmap);
-            }else {
+            } else {
                 sendDecodeFailHandlerMessage(null);
             }
-                rawResult = handleImgAndDecode(cropBitmap, 140);
+            rawResult = handleImgAndDecode(cropBitmap, 140);
+            if (rawResult != null) {
+                sendDecodeSuccessHandlerMessage(rawResult);
+            } else {
+                rawResult = handleImgAndDecode(cropBitmap, 160);
                 if (rawResult != null) {
                     sendDecodeSuccessHandlerMessage(rawResult);
                 } else {
-                    rawResult = handleImgAndDecode(cropBitmap, 160);
+                    rawResult = handleImgAndDecode(cropBitmap, 180);
                     if (rawResult != null) {
                         sendDecodeSuccessHandlerMessage(rawResult);
-                    } else {
-                        rawResult = handleImgAndDecode(cropBitmap, 180);
-                        if (rawResult != null) {
-                            sendDecodeSuccessHandlerMessage(rawResult);
-                        }
                     }
                 }
+            }
 
         }
     }
@@ -174,45 +214,5 @@ final class DecodeHandler extends Handler {
             }
         }
         return yuv;
-    }
-
-    /**
-     * 转为二值图像
-     *
-     * @param bmp 原图bitmap
-     * @return
-     */
-    public static Bitmap getBinaryBitmap(Bitmap bmp, int tmp) {
-        int width = bmp.getWidth(); // 获取位图的宽
-        int height = bmp.getHeight(); // 获取位图的高
-        int[] pixels = new int[width * height]; // 通过位图的大小创建像素点数组
-        // 设定二值化的域值，默认值为100
-        bmp.getPixels(pixels, 0, width, 0, 0, width, height);
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
-                int col = pixels[width * i + j];
-                // 分离三原色
-                int alpha = (col & 0xFF000000);
-                int red = ((col & 0x00FF0000) >> 16);
-                int green = ((col & 0x0000FF00) >> 8);
-                int blue = (col & 0x000000FF);
-                // 用公式X = 0.3×R+0.59×G+0.11×B计算出X代替原来的RGB
-                int gray = (int) ((float) red * 0.2125 + (float) green * 0.7154 +
-                        (float) blue * 0.0721);
-                //对图像进行二值化处理
-                if (gray <= tmp) {
-                    gray = 0;
-                } else {
-                    gray = 255;
-                }
-                // 新的ARGB
-                pixels[width * i + j] = alpha | (gray << 16) | (gray << 8) | gray;
-            }
-        }
-        // 新建图片
-        Bitmap newBmp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        // 设置图片数据
-        newBmp.setPixels(pixels, 0, width, 0, 0, width, height);
-        return newBmp;
     }
 }

@@ -60,7 +60,7 @@ public class ContactUserCacheUtils {
         }
     }
 
-    public static String getUserMail(String uid){
+    public static String getUserMail(String uid) {
         String mail = "";
         try {
             ContactUser contactUser = DbCacheUtils.getDb().findById(ContactUser.class, uid);
@@ -73,12 +73,12 @@ public class ContactUserCacheUtils {
         return mail;
     }
 
-    public static void setLastQueryTime(long lastQueryTime) {
-        PreferencesByUserAndTanentUtils.putLong(MyApplication.getInstance(), Constant.PREF_CONTACT_USER_LASTQUERYTIME, lastQueryTime);
-    }
-
     public static Long getLastQueryTime() {
         return PreferencesByUserAndTanentUtils.getLong(MyApplication.getInstance(), Constant.PREF_CONTACT_USER_LASTQUERYTIME, 0L);
+    }
+
+    public static void setLastQueryTime(long lastQueryTime) {
+        PreferencesByUserAndTanentUtils.putLong(MyApplication.getInstance(), Constant.PREF_CONTACT_USER_LASTQUERYTIME, lastQueryTime);
     }
 
     /**
@@ -132,25 +132,26 @@ public class ContactUserCacheUtils {
      * uidList为需要查询的完整列表
      * limit为返回个数
      * limit*3为每次查询的步长
+     *
      * @param uidList
      * @param limit
      * @return
      */
-    public static List<ContactUser> getContactUserListByIdListOrderBy(final List<String> uidList,int limit) {
+    public static List<ContactUser> getContactUserListByIdListOrderBy(final List<String> uidList, int limit) {
         List<ContactUser> contactUserList = new ArrayList<>();
         List<ContactUser> searchResultContactUserList = new ArrayList<>();
         int listSize = uidList.size();
         int stepSize = limit * 3;
         int toIndex = stepSize;
         //三十个一组查询直到查完列表或者查到多于九个
-        for(int i = 0;i < uidList.size();i += stepSize){
-            if(i + stepSize > listSize){
+        for (int i = 0; i < uidList.size(); i += stepSize) {
+            if (i + stepSize > listSize) {
                 toIndex = listSize - i;
             }
-            List newList = uidList.subList(i,i+toIndex);
+            List newList = uidList.subList(i, i + toIndex);
             List<ContactUser> contactUserInList = ContactUserCacheUtils.getContactUserListById(newList);
             searchResultContactUserList.addAll(contactUserInList);
-            if(contactUserInList.size() >= limit){
+            if (contactUserInList.size() >= limit) {
                 break;
             }
         }
@@ -159,10 +160,10 @@ public class ContactUserCacheUtils {
             ContactUser contactUser = new ContactUser();
             contactUser.setId(uidList.get(i));
             int index = searchResultContactUserList.indexOf(contactUser);
-            if(index != -1){
+            if (index != -1) {
                 contactUserList.add(searchResultContactUserList.get(index));
             }
-            if(contactUserList.size() >= limit){
+            if (contactUserList.size() >= limit) {
                 break;
             }
         }

@@ -4,18 +4,17 @@ import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.bean.system.SplashDefaultBean;
 import com.inspur.emmcloud.bean.system.SplashPageBean;
 import com.inspur.emmcloud.config.Constant;
@@ -76,42 +75,42 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
             finish();
             return;
         }
-        //当Android版本在4.4以下时不全屏显示，否则在进入IndexActivity时状态栏过度不美观
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            requestWindowFeature(Window.FEATURE_NO_TITLE);//没有标题
-            this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-                //全屏显示
-                WindowManager.LayoutParams lp = getWindow().getAttributes();
-                lp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
-                getWindow().setAttributes(lp);
-            }
-        }
+//        //当Android版本在4.4以下时不全屏显示，否则在进入IndexActivity时状态栏过度不美观
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+//            requestWindowFeature(Window.FEATURE_NO_TITLE);//没有标题
+//            this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+//                getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+//                //全屏显示
+//                WindowManager.LayoutParams lp = getWindow().getAttributes();
+//                lp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+//                getWindow().setAttributes(lp);
+//            }
+//        }
         setContentView(R.layout.activity_main);
+        ImmersionBar.with(this).init();
         skipImageBtn = findViewById(R.id.ibt_skip);
         checkNecessaryPermission();
-
     }
 
     private void checkNecessaryPermission() {
-        final String[] necessaryPermissionArray = StringUtils.concatAll(Permissions.STORAGE,Permissions.PHONE_PERMISSION);
-        if(!PermissionRequestManagerUtils.getInstance().isHasPermission(this,necessaryPermissionArray)){
-            final MyDialog permissionDialog = new MyDialog(this,R.layout.dialog_permisson_tip);
+        final String[] necessaryPermissionArray = StringUtils.concatAll(Permissions.STORAGE, Permissions.PHONE_PERMISSION);
+        if (!PermissionRequestManagerUtils.getInstance().isHasPermission(this, necessaryPermissionArray)) {
+            final MyDialog permissionDialog = new MyDialog(this, R.layout.dialog_permisson_tip);
             permissionDialog.setDimAmount(0.2f);
             permissionDialog.setCancelable(false);
             permissionDialog.setCanceledOnTouchOutside(false);
-            permissionDialog.findViewById(R.id.ll_permission_storage).setVisibility(!PermissionRequestManagerUtils.getInstance().isHasPermission(this,Permissions.STORAGE)?View.VISIBLE:View.GONE);
-            permissionDialog.findViewById(R.id.ll_permission_phone).setVisibility(!PermissionRequestManagerUtils.getInstance().isHasPermission(this,Permissions.PHONE_PERMISSION)?View.VISIBLE:View.GONE);
-            if(!PermissionRequestManagerUtils.getInstance().isHasPermission(this,Permissions.STORAGE)
-                    && !PermissionRequestManagerUtils.getInstance().isHasPermission(this,Permissions.PHONE_PERMISSION)){
+            permissionDialog.findViewById(R.id.ll_permission_storage).setVisibility(!PermissionRequestManagerUtils.getInstance().isHasPermission(this, Permissions.STORAGE) ? View.VISIBLE : View.GONE);
+            permissionDialog.findViewById(R.id.ll_permission_phone).setVisibility(!PermissionRequestManagerUtils.getInstance().isHasPermission(this, Permissions.PHONE_PERMISSION) ? View.VISIBLE : View.GONE);
+            if (!PermissionRequestManagerUtils.getInstance().isHasPermission(this, Permissions.STORAGE)
+                    && !PermissionRequestManagerUtils.getInstance().isHasPermission(this, Permissions.PHONE_PERMISSION)) {
                 LinearLayout layout = permissionDialog.findViewById(R.id.ll_permission_storage);
                 LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) layout.getLayoutParams();
-                params.setMargins(DensityUtil.dip2px(this,60.0f),0,0,0);
+                params.setMargins(DensityUtil.dip2px(this, 60.0f), 0, 0, 0);
                 layout.setLayoutParams(params);
             }
-            ((TextView)permissionDialog.findViewById(R.id.tv_permission_dialog_title)).setText(getString(R.string.permission_open_cloud_plus, AppUtils.getAppName(MainActivity.this)));
-            ((TextView)permissionDialog.findViewById(R.id.tv_permission_dialog_summary)).setText(getString(R.string.permission_necessary_permission, AppUtils.getAppName(MainActivity.this)));
+            ((TextView) permissionDialog.findViewById(R.id.tv_permission_dialog_title)).setText(getString(R.string.permission_open_cloud_plus, AppUtils.getAppName(MainActivity.this)));
+            ((TextView) permissionDialog.findViewById(R.id.tv_permission_dialog_summary)).setText(getString(R.string.permission_necessary_permission, AppUtils.getAppName(MainActivity.this)));
             permissionDialog.findViewById(R.id.tv_next_step).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -124,14 +123,14 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
 
                         @Override
                         public void onPermissionRequestFail(List<String> permissions) {
-                            ToastUtils.show(MainActivity.this, PermissionRequestManagerUtils.getInstance().getPermissionToast(MainActivity.this,permissions));
+                            ToastUtils.show(MainActivity.this, PermissionRequestManagerUtils.getInstance().getPermissionToast(MainActivity.this, permissions));
                             MyApplication.getInstance().exit();
                         }
                     });
                 }
             });
             permissionDialog.show();
-        }else{
+        } else {
             init();
         }
     }

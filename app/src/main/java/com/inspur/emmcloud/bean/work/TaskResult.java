@@ -348,13 +348,13 @@ public class TaskResult implements Serializable {
 
     @Override
     public boolean equals(Object other) {
-        if(this == other){
+        if (this == other) {
             return true;
         }
-        if(other == null){
+        if (other == null) {
             return false;
         }
-        if(!(other instanceof TaskResult)){
+        if (!(other instanceof TaskResult)) {
             return false;
         }
         TaskResult taskResult = (TaskResult) other;

@@ -5,11 +5,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
+import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.chat.ImagePagerActivity;
 import com.inspur.emmcloud.ui.chat.ImagePagerV0Activity;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.common.StateBarUtils;
+import com.inspur.emmcloud.util.common.ResourceUtils;
 import com.inspur.emmcloud.util.privates.LanguageUtils;
 import com.inspur.imp.plugin.camera.imageedit.IMGEditActivity;
 import com.inspur.imp.plugin.camera.mycamera.MyCameraActivity;
@@ -43,29 +44,60 @@ public class BaseFragmentActivity extends FragmentActivity {
         super.attachBaseContext(LanguageUtils.attachBaseContext(newBase));
     }
 
-    protected void setTheme(){
+    protected void setTheme() {
         String className = this.getClass().getCanonicalName();
         boolean isContain = Arrays.asList(classNames).contains(className);
-        if (!isContain){
+        if (!isContain) {
             int currentThemeNo = PreferencesUtils.getInt(MyApplication.getInstance(), Constant.PREF_APP_THEME, 0);
-            switch (currentThemeNo){
+            switch (currentThemeNo) {
                 case 1:
                     setTheme(R.style.AppTheme_1);
-                    StateBarUtils.translucent(this);
-                    StateBarUtils.setStateBarTextColor(this,false);
+//                    StateBarUtils.translucent(this);
+//                    StateBarUtils.setStateBarTextColor(this,false);
                     break;
                 case 2:
                     setTheme(R.style.AppTheme_2);
-                    StateBarUtils.translucent(this);
-                    StateBarUtils.setStateBarTextColor(this,true);
+//                    StateBarUtils.translucent(this);
+//                    StateBarUtils.setStateBarTextColor(this,true);
                     break;
                 default:
                     setTheme(R.style.AppTheme_0);
-                    StateBarUtils.translucent(this);
-                    StateBarUtils.setStateBarTextColor(this,true);
+
+//                    ImmersionBar.with(this)
+//                            .statusBarDarkFont(true, 0.2f)
+//                            .navigationBarDarkIcon(true, 0.2f)
+//                            .init();
                     break;
             }
 
         }
+    }
+
+    protected void setStatus() {
+        String className = this.getClass().getCanonicalName();
+        boolean isContain = Arrays.asList(classNames).contains(className);
+        if (!isContain) {
+            int color = ResourceUtils.getValueOfAttr(BaseFragmentActivity.this, R.attr.header_bg_color);
+            boolean isStatusFontDark = true;
+            int currentThemeNo = PreferencesUtils.getInt(MyApplication.getInstance(), Constant.PREF_APP_THEME, 0);
+            switch (currentThemeNo) {
+                case 1:
+                    isStatusFontDark = false;
+                    break;
+                case 2:
+                    isStatusFontDark = true;
+                    break;
+                default:
+                    isStatusFontDark = true;
+                    break;
+            }
+            ImmersionBar.with(this).statusBarColor(color).statusBarDarkFont(isStatusFontDark).init();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ImmersionBar.with(this).destroy();
     }
 }

@@ -30,10 +30,10 @@ import java.util.List;
 abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter {
 
     LayoutInflater mInflater;
+    Context mContext;
     private List<T> mItems;
     private OnItemClickListener onItemClickListener;
     private OnClickListener onClickListener;
-    Context mContext;
 
     BaseRecyclerAdapter(Context context) {
         mContext = context;
@@ -104,6 +104,10 @@ abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter {
         return mItems.get(position);
     }
 
+    interface OnItemClickListener {
+        void onItemClick(int position, long itemId);
+    }
+
     static abstract class OnClickListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
@@ -112,10 +116,5 @@ abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter {
         }
 
         public abstract void onClick(int position, long itemId);
-    }
-
-
-    interface OnItemClickListener {
-        void onItemClick(int position, long itemId);
     }
 }

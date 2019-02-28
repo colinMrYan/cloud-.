@@ -99,7 +99,7 @@ class EmptyThumState extends TransferState {
      */
     private Drawable getPlacHolder(int position) {
         TransferConfig config = transfer.getTransConfig();
-        Drawable placeHolder= config.getMissDrawable(context);
+        Drawable placeHolder = config.getMissDrawable(context);
         return placeHolder;
     }
 

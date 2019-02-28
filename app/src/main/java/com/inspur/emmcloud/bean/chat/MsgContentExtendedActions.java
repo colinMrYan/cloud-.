@@ -24,19 +24,19 @@ public class MsgContentExtendedActions {
 
     public MsgContentExtendedActions(String content) {
         JSONObject obj = JSONUtils.getJSONObject(content);
-        title = JSONUtils.getString(obj,"title","");
-        description = JSONUtils.getString(obj,"description","");
-        poster = JSONUtils.getString(obj,"poster","");
-        tmpId = JSONUtils.getString(obj,"tmpId","");
-        edgeToEdge = JSONUtils.getBoolean(obj,"edgeToEdge",false);
+        title = JSONUtils.getString(obj, "title", "");
+        description = JSONUtils.getString(obj, "description", "");
+        poster = JSONUtils.getString(obj, "poster", "");
+        tmpId = JSONUtils.getString(obj, "tmpId", "");
+        edgeToEdge = JSONUtils.getBoolean(obj, "edgeToEdge", false);
 
-        if (obj.has("singleAction")){
-            singleAction = new Action(JSONUtils.getJSONObject(obj,"singleAction",new JSONObject()));
-        }else {
+        if (obj.has("singleAction")) {
+            singleAction = new Action(JSONUtils.getJSONObject(obj, "singleAction", new JSONObject()));
+        } else {
             arrangement = "vertical";
-            JSONArray array = JSONUtils.getJSONArray(obj,"actions",new JSONArray());
-            for (int i = 0;i<array.length();i++){
-                Action action = new Action(JSONUtils.getJSONObject(array,i,new JSONObject()));
+            JSONArray array = JSONUtils.getJSONArray(obj, "actions", new JSONArray());
+            for (int i = 0; i < array.length(); i++) {
+                Action action = new Action(JSONUtils.getJSONObject(array, i, new JSONObject()));
                 actionList.add(action);
             }
         }

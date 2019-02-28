@@ -26,48 +26,49 @@ import java.util.List;
 public class AppConfigUtils {
     private Context context;
     private CommonCallBack callBack;
-    private Handler  handler;
-    public AppConfigUtils(Context context, CommonCallBack callBack){
+    private Handler handler;
+
+    public AppConfigUtils(Context context, CommonCallBack callBack) {
         this.context = context;
         this.callBack = callBack;
         handMessage();
     }
 
-    private void handMessage(){
-        handler = new Handler(){
+    private void handMessage() {
+        handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
-                if (callBack != null){
+                if (callBack != null) {
                     callBack.execute();
                 }
             }
         };
     }
 
-    public void getAppConfig(){
-        if (NetUtils.isNetworkConnected(context,false)){
+    public void getAppConfig() {
+        if (NetUtils.isNetworkConnected(context, false)) {
             AppAPIService apiService = new AppAPIService(context);
             apiService.setAPIInterface(new WebService());
-            String commonAppListJson = AppConfigCacheUtils.getAppConfigValue(context, Constant.CONCIG_COMMON_FUNCTIONS,"null");
+            String commonAppListJson = AppConfigCacheUtils.getAppConfigValue(context, Constant.CONCIG_COMMON_FUNCTIONS, "null");
             boolean isGetCommonAppConfig = commonAppListJson.equals("null");
-            String WorkPortletConfigJson = AppConfigCacheUtils.getAppConfigValue(context,"WorkPortlet","null");
+            String WorkPortletConfigJson = AppConfigCacheUtils.getAppConfigValue(context, "WorkPortlet", "null");
             boolean isGetWorkPortletAppConfig = WorkPortletConfigJson.equals("null");
             String webAutoRotateJson = AppConfigCacheUtils.getAppConfigValue(context, Constant.CONCIG_WEB_AUTO_ROTATE, "null");
             boolean isGetWebAutoRotate = webAutoRotateJson.equals("null");
-            apiService.getAppConfig(isGetCommonAppConfig,isGetWorkPortletAppConfig,isGetWebAutoRotate);
+            apiService.getAppConfig(isGetCommonAppConfig, isGetWorkPortletAppConfig, isGetWebAutoRotate);
         }
     }
 
     /**
      * 当获取到服务端常用应用后，查看本地是否有常用应用记录，如果没有的话把数据存到本地
      */
-    private void syncCommonAppToLocalDb(){
-        String commonAppListJson = AppConfigCacheUtils.getAppConfigValue(context, Constant.CONCIG_COMMON_FUNCTIONS,"null");
-        if (!commonAppListJson.equals("null") && !StringUtils.isBlank(commonAppListJson)){
+    private void syncCommonAppToLocalDb() {
+        String commonAppListJson = AppConfigCacheUtils.getAppConfigValue(context, Constant.CONCIG_COMMON_FUNCTIONS, "null");
+        if (!commonAppListJson.equals("null") && !StringUtils.isBlank(commonAppListJson)) {
             List<AppCommonlyUse> commonAppList = AppCacheUtils.getCommonlyUseList(context);
-            if (commonAppList.size() == 0){
-                commonAppList = JSONUtils.parseArray(commonAppListJson,AppCommonlyUse.class);
-                AppCacheUtils.saveAppCommonlyUseList(context,commonAppList);
+            if (commonAppList.size() == 0) {
+                commonAppList = JSONUtils.parseArray(commonAppListJson, AppCommonlyUse.class);
+                AppCacheUtils.saveAppCommonlyUseList(context, commonAppList);
             }
         }
     }
@@ -83,9 +84,9 @@ public class AppConfigUtils {
         public void run() {
             try {
                 List<AppConfig> appConfigList = getAppConfigResult.getAppConfigList();
-                AppConfigCacheUtils.saveAppConfigList(context,appConfigList);
+                AppConfigCacheUtils.saveAppConfigList(context, appConfigList);
                 syncCommonAppToLocalDb();
-                if (handler != null){
+                if (handler != null) {
                     handler.sendEmptyMessage(1);
                 }
             } catch (Exception e) {
@@ -94,7 +95,7 @@ public class AppConfigUtils {
         }
     }
 
-    private class WebService extends APIInterfaceInstance{
+    private class WebService extends APIInterfaceInstance {
         @Override
         public void returnAppConfigSuccess(GetAppConfigResult getAppConfigResult) {
             new SyncAppConfigThread(getAppConfigResult).start();
@@ -102,7 +103,7 @@ public class AppConfigUtils {
 
         @Override
         public void returnAppConfigFail(String error, int errorCode) {
-           // WebServiceMiddleUtils.hand(context,error,errorCode);
+            // WebServiceMiddleUtils.hand(context,error,errorCode);
         }
     }
 }

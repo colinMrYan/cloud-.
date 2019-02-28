@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -18,7 +19,6 @@ import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.util.common.FomatUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.dialogs.EasyDialog;
@@ -49,8 +49,7 @@ public class PasswordFirstSettingActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         x.view().inject(this);
-        StateBarUtils.translucent(this, R.color.white);
-        StateBarUtils.setStateBarTextColor(this, true);
+        ImmersionBar.with(this).statusBarColor(android.R.color.white).statusBarDarkFont(true).init();
         EditWatcher editWatcher = new EditWatcher();
         passwordNewEdit.addTextChangedListener(editWatcher);
         passwordConfirmEdit.addTextChangedListener(editWatcher);
@@ -78,16 +77,43 @@ public class PasswordFirstSettingActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.bt_skip:
-                IntentUtils.startActivity(this,IndexActivity.class,true);
+                IntentUtils.startActivity(this, IndexActivity.class, true);
                 break;
         }
     }
 
-    class EditOnTouchListener implements View.OnTouchListener{
+    private void showPasswordSettingFailDlg() {
+        DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // TODO Auto-generated method stub
+                if (which == -2) {
+                    IntentUtils.startActivity(PasswordFirstSettingActivity.this, IndexActivity.class, true);
+                }
+            }
+        };
+
+        EasyDialog.showDialog(PasswordFirstSettingActivity.this, getString(R.string.prompt),
+                getString(R.string.modify_user_password_fail),
+                getString(R.string.ok),
+                getString(R.string.cancel), listener, false);
+    }
+
+    private void modifyPassword() {
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
+            loadingDlg.show();
+            LoginAPIService apiService = new LoginAPIService(this);
+            apiService.setAPIInterface(new WebService());
+            apiService.modifyPassword("", passwordNew);
+        }
+    }
+
+    class EditOnTouchListener implements View.OnTouchListener {
 
         @Override
         public boolean onTouch(View view, MotionEvent motionEvent) {
-            switch (view.getId()){
+            switch (view.getId()) {
                 case R.id.et_password_new:
                     emmSecurityKeyboard.showSecurityKeyBoard(passwordNewEdit);
                     break;
@@ -124,33 +150,6 @@ public class PasswordFirstSettingActivity extends BaseActivity {
             boolean isInputValaid = passwordNew.length() > 7 && passwordConfirm.length() > 7;
             saveBtn.setEnabled(isInputValaid);
             saveBtn.setBackgroundResource(isInputValaid ? R.drawable.selector_login_btn : R.drawable.bg_login_btn_unable);
-        }
-    }
-
-    private void showPasswordSettingFailDlg() {
-        DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
-
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // TODO Auto-generated method stub
-                if (which == -2) {
-                    IntentUtils.startActivity(PasswordFirstSettingActivity.this, IndexActivity.class, true);
-                }
-            }
-        };
-
-        EasyDialog.showDialog(PasswordFirstSettingActivity.this, getString(R.string.prompt),
-                getString(R.string.modify_user_password_fail),
-                getString(R.string.ok),
-                getString(R.string.cancel), listener, false);
-    }
-
-    private void modifyPassword() {
-        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
-            loadingDlg.show();
-            LoginAPIService apiService = new LoginAPIService(this);
-            apiService.setAPIInterface(new WebService());
-            apiService.modifyPassword("", passwordNew);
         }
     }
 

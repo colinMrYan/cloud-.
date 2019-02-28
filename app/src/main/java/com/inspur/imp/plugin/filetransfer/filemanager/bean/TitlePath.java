@@ -6,8 +6,8 @@ package com.inspur.imp.plugin.filetransfer.filemanager.bean;
 
 public class TitlePath {
 
-    private String nameState ;
-    private String path ;
+    private String nameState;
+    private String path;
 
     public String getNameState() {
         return nameState;

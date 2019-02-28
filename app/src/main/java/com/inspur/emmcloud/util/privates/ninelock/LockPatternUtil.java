@@ -33,8 +33,7 @@ public class LockPatternUtil {
         } else if (value.contains("@")) {
             float px = context.getResources().getDimension(Integer.valueOf(value.replace("@", "")));
             return (int) px;
-        }
-        else {
+        } else {
             throw new IllegalArgumentException("can not use wrap_content " +
                     "or match_parent or fill_parent or others' illegal parameter");
         }
@@ -126,7 +125,7 @@ public class LockPatternUtil {
             for (int i = 0; i < size; i++) {
                 LockPatternView.Cell cell = pattern.get(i);
                 res[i] = (byte) cell.getIndex();
-                LogUtils.YfcDebug("index:"+cell.getIndex());
+                LogUtils.YfcDebug("index:" + cell.getIndex());
             }
             MessageDigest md = null;
             try {
@@ -157,12 +156,11 @@ public class LockPatternUtil {
             for (int i = 0; i < size; i++) {
                 LockPatternView.Cell cell = pattern.get(i);
                 res[i] = (byte) cell.getIndex();
-                gestureCode = gestureCode+cell.getIndex();
+                gestureCode = gestureCode + cell.getIndex();
             }
             return gestureCode;
         }
     }
-
 
 
     /**
@@ -178,8 +176,8 @@ public class LockPatternUtil {
             return false;
         } else {
             byte[] bytes2 = patternToHash(pattern);
-            LogUtils.YfcDebug("bytes2:"+bytes2.toString());
-            LogUtils.YfcDebug("bytes:"+bytes.toString());
+            LogUtils.YfcDebug("bytes2:" + bytes2.toString());
+            LogUtils.YfcDebug("bytes:" + bytes.toString());
             return Arrays.equals(bytes, bytes2);
         }
     }

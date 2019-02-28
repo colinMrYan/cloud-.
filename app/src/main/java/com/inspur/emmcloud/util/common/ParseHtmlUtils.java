@@ -12,11 +12,12 @@ public class ParseHtmlUtils {
 
     /**
      * 解析html内容获取指定标签
+     *
      * @param html
      * @param metaLable
      * @return
      */
-    public static Elements getDataFromHtml(String html,String metaLable){
+    public static Elements getDataFromHtml(String html, String metaLable) {
         Document doc = Jsoup.parse(html);
         Elements metas = doc.select(metaLable);
         return metas;

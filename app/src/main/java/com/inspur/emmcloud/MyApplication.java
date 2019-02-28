@@ -84,16 +84,36 @@ import static com.inspur.emmcloud.config.MyAppConfig.LOCAL_CACHE_MARKDOWN_PATH;
  */
 public class MyApplication extends MultiDexApplication implements ReactApplication {
     private static final String TAG = "MyApplication";
+    private static boolean isContactReady = false;
+    private static MyApplication instance;
+    /**
+     * ReactNative相关代码
+     */
+    private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
+        @Override
+        public boolean getUseDeveloperSupport() {
+            return com.facebook.react.BuildConfig.DEBUG;
+        }
+
+        @Override
+        protected List<ReactPackage> getPackages() {
+            return Arrays.asList(
+                    new MainReactPackage(),
+                    new AuthorizationManagerPackage(),
+                    new PickerViewPackage(),
+                    new SvgPackage(),
+                    new VectorIconsPackage()
+            );
+        }
+    };
     private List<Activity> activityList = new LinkedList<Activity>();
     private boolean isIndexActivityRunning = false;
     private boolean isActive = false;
-    private static boolean isContactReady = false;
     private String uid;
     private String accessToken;
     private String refreshToken;
     private Enterprise currentEnterprise;
     private Map<String, String> userPhotoUrlMap;
-    private static MyApplication instance;
     private MyActivityLifecycleCallbacks myActivityLifecycleCallbacks;
     private boolean isOpenNotification = false;
     private String tanent;
@@ -111,8 +131,17 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     private String clusterClientRegistry = "";
     private String clusterScheduleVersion = "";//仅标识Schedule
     private String clusterBot = "";
-    private String currentChannelCid= "";
-    private boolean isEnterSystemUI= false;  //是否进入第三方系统界面，判断app前后台
+    private String currentChannelCid = "";
+    private boolean isEnterSystemUI = false;  //是否进入第三方系统界面，判断app前后台
+
+    /**
+     * 单例获取application实例
+     *
+     * @return MyApplication
+     */
+    public static MyApplication getInstance() {
+        return instance;
+    }
 
     public void onCreate() {
         super.onCreate();
@@ -130,7 +159,6 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         String clusterId = PreferencesUtils.getString(this, Constant.PREF_CLOUD_IDM, Constant.DEFAULT_CLUSTER_ID);
         return StringUtils.isBlank(clusterId) ? Constant.DEFAULT_CLUSTER_ID : clusterId;
     }
-
 
     private void init() {
         // TODO Auto-generated method stub
@@ -152,7 +180,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
 
             }
         };
-        AppUtils.setPushFlag(this,"");
+        AppUtils.setPushFlag(this, "");
         isActive = false;
         isContactReady = PreferencesUtils.getBoolean(getInstance(),
                 "isContactReady", false);
@@ -163,23 +191,14 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         SpeechUtility.createUtility(this, SpeechConstant.APPID + "=5a6001bf");
     }
 
-    /**
-     * 单例获取application实例
-     *
-     * @return MyApplication
-     */
-    public static MyApplication getInstance() {
-        return instance;
-    }
-
-
     /**************************************登出逻辑相关********************************************************/
-    public void signout(){
+    public void signout() {
         signout(true);
     }
 
     /**
      * 注销
+     *
      * @param isWebSocketSignout 是否在此处处理websocket的注销
      */
     public void signout(boolean isWebSocketSignout) {
@@ -203,6 +222,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         WebSocketPush.getInstance().webSocketSignout();
         ECMShortcutBadgeNumberManagerUtils.setDesktopBadgeNumber(getInstance(), 0);
     }
+/****************************通知相关（极光和华为推送）******************************************/
 
     /**
      * 退出登录时注销token
@@ -212,7 +232,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         AppAPIService appAPIService = new AppAPIService(this);
         appAPIService.cancelToken();
     }
-/****************************通知相关（极光和华为推送）******************************************/
+
     /**
      * 初始化推送，以后如需定制小米等厂家的推送服务可从这里定制
      * 目前使用的位置有ActionReceiver，IndexActivity 截止到181030
@@ -248,6 +268,9 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         return (StringUtils.isBlank(pushFlag) || pushFlag.equals(Constant.HUAWEI_FLAG));
     }
 
+
+/************************ Cookie相关 *****************************/
+
     /**
      * 关闭推送
      */
@@ -261,8 +284,6 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         CalEventNotificationUtils.cancelAllCalEventNotification(getInstance());
     }
 
-
-/************************ Cookie相关 *****************************/
     /**
      * 清除所有的SessionCookie
      */
@@ -293,12 +314,12 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         return uid;
     }
 
+
+    /*************************** http相关 **************************************/
+
     public void setUid(String uid) {
         this.uid = uid;
     }
-
-
-    /*************************** http相关 **************************************/
 
     /**
      * 获取http RequestParams
@@ -312,7 +333,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         try {
             Version version = Version.valueOf(versionValue);
             versionValue = version.getNormalVersion();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -325,7 +346,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         params.addHeader("X-Device-ID",
                 AppUtils.getMyUUID(getInstance()));
         params.addHeader("Accept", "application/json");
-        params.addHeader("Connection", "close");
+        params.addHeader("Connect", "close");
         if (getToken() != null) {
             params.addHeader("Authorization", getToken());
         }
@@ -341,6 +362,10 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         return params;
     }
 
+    public boolean getIsContactReady() {
+        return isContactReady;
+    }
+
     /******************************通讯录相关***************************************/
 
     public void setIsContactReady(boolean isContactReady) {
@@ -349,8 +374,8 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
                 isContactReady);
     }
 
-    public boolean getIsContactReady() {
-        return isContactReady;
+    public boolean getIsActive() {
+        return isActive;
     }
 
     /***
@@ -364,10 +389,6 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         clearNotification();
     }
 
-    public boolean getIsActive() {
-        return isActive;
-    }
-
     /*************************** Oauth认证 **************************************/
 
     public String getToken() {
@@ -377,25 +398,24 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         return "Bearer" + " " + accessToken;
     }
 
-
     public String getAccessToken() {
         return accessToken;
+    }
+
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
     }
 
     public String getRefreshToken() {
         return refreshToken;
     }
 
+    /***************************** db相关 *******************************************/
+
     public void setRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
     }
 
-
-    public void setAccessToken(String accessToken) {
-        this.accessToken = accessToken;
-    }
-
-    /***************************** db相关 *******************************************/
     /**
      * 重启所有的数据库
      */
@@ -403,13 +423,6 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         // TODO Auto-generated method stub
         DbCacheUtils.closeDb(getInstance());
         DbCacheUtils.initDb(getInstance());
-    }
-
-    /**
-     * 删除此用户在此实例的所有db
-     */
-    public void deleteAllDb() {
-        DbCacheUtils.deleteDb(getInstance());
     }
 
 //    /******************************Websocket********************************************/
@@ -423,6 +436,12 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
 //        }
 //    }
 
+    /**
+     * 删除此用户在此实例的所有db
+     */
+    public void deleteAllDb() {
+        DbCacheUtils.deleteDb(getInstance());
+    }
 
     /******************************租户信息*******************************************/
 
@@ -430,7 +449,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         // TODO Auto-generated method stub
         // UriUtils.res = "res_dev";
         currentEnterprise = null;
-        String myInfo = PreferencesUtils.getString(getInstance(),"myInfo");
+        String myInfo = PreferencesUtils.getString(getInstance(), "myInfo");
         if (!StringUtils.isBlank(myInfo)) {
             GetMyInfoResult getMyInfoResult = new GetMyInfoResult(myInfo);
             String currentEnterpriseId = PreferencesByUsersUtils.getString(getInstance(), "current_enterprise_id");
@@ -447,7 +466,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
             if (currentEnterprise == null) {
                 currentEnterprise = getMyInfoResult.getDefaultEnterprise();
             }
-            if (currentEnterprise == null && enterpriseList.size()>0 ) {
+            if (currentEnterprise == null && enterpriseList.size() > 0) {
                 currentEnterprise = enterpriseList.get(0);
             }
             MutilClusterUtils.setClusterBaseUrl(currentEnterprise);
@@ -493,6 +512,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
 
     /**
      * 沟通相关
+     *
      * @return
      */
     public String getClusterChat() {
@@ -599,7 +619,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         this.clusterBot = clusterBot;
     }
 
-    public boolean isV0VersionChat(){
+    public boolean isV0VersionChat() {
         return getClusterChatVersion().toLowerCase().startsWith(Constant.SERVICE_VERSION_CHAT_V0);
     }
 
@@ -607,12 +627,13 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
      * namespace
      * v1版及v1.x版返回/api/v1
      * v0版返回/
+     *
      * @return
      */
-    public String getChatSocketNameSpace(){
-        if(getClusterChatVersion().toLowerCase().startsWith("v0")){
+    public String getChatSocketNameSpace() {
+        if (getClusterChatVersion().toLowerCase().startsWith("v0")) {
             return "/";
-        }else if(getClusterChatVersion().toLowerCase().startsWith("v1")){
+        } else if (getClusterChatVersion().toLowerCase().startsWith("v1")) {
             return "/api/v1";
         }
         return "";
@@ -620,9 +641,10 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
 
     /**
      * 判断是v1.x版本
+     *
      * @return
      */
-    public  boolean isV1xVersionChat(){
+    public boolean isV1xVersionChat() {
         return getClusterChatVersion().toLowerCase().startsWith(Constant.SERVICE_VERSION_CHAT_V1);
     }
 
@@ -652,13 +674,15 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         userPhotoUrlMap.clear();
     }
 
+    /*************************************************************************/
+
     public void clearUserPhotoUrl(String uid) {
         if (!StringUtils.isBlank(uid) && userPhotoUrlMap.containsKey(uid)) {
             userPhotoUrlMap.remove(uid);
         }
     }
 
-    /*************************************************************************/
+/**************************************************************************/
 
     /***
      * 判断当前版本是否是开发版
@@ -682,7 +706,6 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
 
     }
 
-/**************************************************************************/
     /**
      * 判断是否已登录
      *
@@ -755,7 +778,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
                 }
 
             }
-            PreferencesUtils.putString(getInstance(),Constant.PREF_LAST_LANGUAGE,languageJson);
+            PreferencesUtils.putString(getInstance(), Constant.PREF_LAST_LANGUAGE, languageJson);
             // 将iso字符串分割成系统的设置语言
             String[] array = new Language(languageJson).getIso().split("-");
             String country = "";
@@ -784,7 +807,6 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     public MyActivityLifecycleCallbacks getActivityLifecycleCallbacks() {
         return myActivityLifecycleCallbacks;
     }
-
 
     /**
      * startWebSocket ImageLoaderCommon
@@ -825,7 +847,6 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
 
     }
 
-
     /**
      * 添加桌面快捷方式
      **/
@@ -857,7 +878,6 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         LocalBroadcastManager.getInstance(context).sendBroadcast(shortcutIntent);
     }
 
-
     // 判断IndexActivity是否存在的标志
     public boolean isIndexActivityRunning() {
         return isIndexActivityRunning;
@@ -866,7 +886,6 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     public void setIndexActvityRunning(boolean running) {
         isIndexActivityRunning = running;
     }
-
 
     public void addActivity(Activity activity) {
         activityList.add(activity);
@@ -933,12 +952,11 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
 
     /**
      * 清除除了指定名称之外的Activity
-     *
      */
     public void closeOtherActivity(String activityName) {
         try {
             for (Activity activity : activityList) {
-                if(!activity.getClass().getSimpleName().equals(activityName)){
+                if (!activity.getClass().getSimpleName().equals(activityName)) {
                     activity.finish();
                 }
             }
@@ -960,28 +978,6 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         NotificationManager manager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
         manager.cancelAll();
     }
-
-
-    /**
-     * ReactNative相关代码
-     */
-    private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
-        @Override
-        public boolean getUseDeveloperSupport() {
-            return com.facebook.react.BuildConfig.DEBUG;
-        }
-
-        @Override
-        protected List<ReactPackage> getPackages() {
-            return Arrays.asList(
-                    new MainReactPackage(),
-                    new AuthorizationManagerPackage(),
-                    new PickerViewPackage(),
-                    new SvgPackage(),
-                    new VectorIconsPackage()
-            );
-        }
-    };
 
     /**
      * ReactNative相关代码

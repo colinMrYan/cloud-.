@@ -124,12 +124,13 @@ public class MyQMUIDialog extends Dialog {
             }
         }
 
-        public QMUIDialog show(boolean canCancel){
+        public QMUIDialog show(boolean canCancel) {
             QMUIDialog dialog = this.create();
             dialog.setCancelable(canCancel);
             dialog.show();
             return dialog;
         }
+
         public TextView getTextView() {
             return mTextView;
         }
@@ -595,7 +596,6 @@ public class MyQMUIDialog extends Dialog {
     }
 
 
-
     /**
      * 单选类型的对话框 Builder
      */
@@ -661,8 +661,6 @@ public class MyQMUIDialog extends Dialog {
             return this;
         }
     }
-
-
 
 
     /**

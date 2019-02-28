@@ -302,6 +302,8 @@
     <string name="chat_remove_from_top">Remove from Top</string>
     <string name="no_chat_content">No chat content</string>
     <string name="msg_key_search_member"> Please enter key words</string>
+    <string name="chat_file_open_fail_tip">No corresponding program was found.</string>
+    <string name="chat_conversation_unread_count">%1$d new messages</string>
 
     <!-- 会议卡片 -->
     <string name="meeting_has_confirmed">Confirmed</string>
@@ -370,7 +372,8 @@
     <string name="app_input_search_key"> Please input the key words</string>
     <string name="app_must_be_app_cannot_edit">All applications are necessary and non-editable</string>
     <string name="app_center">APP Center</string>
-    <string name="app_commonly_use">Common Application</string>
+    <string name="app_commonly_use">Common mode</string>
+    <string name="app_commonly_use_close">Common off</string>
     <string name="app_center_more_apps">More Apps</string>
     <string name="app_input_mail_password">Enter the company email password</string>
     <string name="app_need_input_mail_password">The first time you use or password changed need to be entered</string>
@@ -387,7 +390,7 @@
     <string name="detail">Details</string>
     <string name="search">Enter Keywords</string>
     <string name="delete">Delete</string>
-    <string name="app_sort_order">调整顺序</string>
+    <string name="app_sort_order">Edit</string>
 
     <!--云盘 Cloud Driver-->
     <string name="clouddriver_my_file">My Files</string>
@@ -605,6 +608,10 @@
 
     <string name="contact">Contact</string>
     <string name="web">web</string>
+    <string name="mine_theme_switch">换肤</string>
+    <string name="mine_theme_white">清新白</string>
+    <string name="mine_theme_grey">优雅灰</string>
+    <string name="mine_theme_blue">商务蓝</string>
 
     <!-- 修改密码部分 -->
     <string name="modify_input_user_new_password">Enter a new password</string>

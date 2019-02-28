@@ -47,7 +47,7 @@ public class ChannelCacheUtils {
     }
 
 
-    public static void deleteChannelList(final  Context context,final List<Channel> channelList){
+    public static void deleteChannelList(final Context context, final List<Channel> channelList) {
         // TODO Auto-generated method stub
         try {
             if (channelList == null || channelList.size() == 0) {
@@ -59,6 +59,7 @@ public class ChannelCacheUtils {
             e.printStackTrace();
         }
     }
+
     /**
      * 清除Channel表信息
      *
@@ -93,12 +94,13 @@ public class ChannelCacheUtils {
 
     /**
      * 删除频道
+     *
      * @param context
      * @param cid
      */
-    public static void deleteChannel(Context context,String cid){
+    public static void deleteChannel(Context context, String cid) {
         try {
-            DbCacheUtils.getDb(context).delete(Channel.class,WhereBuilder.b("cid","=",cid));
+            DbCacheUtils.getDb(context).delete(Channel.class, WhereBuilder.b("cid", "=", cid));
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
@@ -118,7 +120,7 @@ public class ChannelCacheUtils {
         try {
             if (!StringUtils.isBlank(cid)) {
                 Channel channel = DbCacheUtils.getDb(context).findById(Channel.class, cid);
-                if (channel != null){
+                if (channel != null) {
                     type = channel.getType();
                 }
             }

@@ -10,10 +10,10 @@ import org.xutils.db.annotation.Table;
 
 import java.io.Serializable;
 
-@Table(name = "Msg",onCreated = "CREATE INDEX msgindex ON Msg(cid)")
+@Table(name = "Msg", onCreated = "CREATE INDEX msgindex ON Msg(cid)")
 public class Msg implements Serializable {
     private static final String TAG = "Msg";
-    @Column(name = "mid",isId = true)
+    @Column(name = "mid", isId = true)
     private String mid = "";
     @Column(name = "time")
     private Long time = 0L;
@@ -72,7 +72,7 @@ public class Msg implements Serializable {
                     }
                 }
                 JSONObject bodyObj = new JSONObject(body);
-                if (bodyObj.has("tmpId")){
+                if (bodyObj.has("tmpId")) {
                     this.tmpId = bodyObj.getString("tmpId");
                 }
 
@@ -103,37 +103,69 @@ public class Msg implements Serializable {
         return mid;
     }
 
+    public void setMid(String mid) {
+        this.mid = mid;
+    }
+
     public Long getTime() {
         return time;
+    }
+
+    public void setTime(Long time) {
+        this.time = time;
     }
 
     public String getType() {
         return type;
     }
 
+    public void setType(String type) {
+        this.type = type;
+    }
+
     public String getBody() {
         return body;
     }
 
+    public void setBody(String body) {
+        this.body = body;
+    }
+
+//    public String getCommentContent() {
+//        return commentContent;
+//    }
+
     public String getUid() {
         return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
     public String getCid() {
         return cid;
     }
 
+    public void setCid(String cid) {
+        this.cid = cid;
+    }
+
     public String getTitle() {
         return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getAvatar() {
         return avatar;
     }
 
-//    public String getCommentContent() {
-//        return commentContent;
-//    }
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
 
     public int getSendStatus() {
         return sendStatus;
@@ -151,46 +183,14 @@ public class Msg implements Serializable {
         this.nTitle = nTitle;
     }
 
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public void setBody(String body) {
-        this.body = body;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setMid(String mid) {
-        this.mid = mid;
-    }
-
-    public void setTime(Long time) {
-        this.time = time;
-    }
-
-    public void setUid(String uid) {
-        this.uid = uid;
-    }
-
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
-    }
-
-    public void setCid(String cid){
-        this.cid = cid;
-    }
-
     public void setCommentContent(String commentContent) {
         this.commentContent = commentContent;
     }
 
 
-    public String getTmpId(){
-		return  tmpId;
-	}
+    public String getTmpId() {
+        return tmpId;
+    }
 
     public String getCommentMid() {
         JSONObject bodyJsonObject;

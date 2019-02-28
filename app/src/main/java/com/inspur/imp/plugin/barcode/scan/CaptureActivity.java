@@ -47,6 +47,16 @@ import java.util.Vector;
 
 public class CaptureActivity extends Activity implements Callback {
 
+    private static final float BEEP_VOLUME = 0.10f;
+    private static final long VIBRATE_DURATION = 200L;
+    /**
+     * When the beep has finished playing, rewind to queue up another one.
+     */
+    private final OnCompletionListener beepListener = new OnCompletionListener() {
+        public void onCompletion(MediaPlayer mediaPlayer) {
+            mediaPlayer.seekTo(0);
+        }
+    };
     private CaptureActivityHandler handler;
     private ViewfinderView viewfinderView;
     private boolean hasSurface;
@@ -55,7 +65,6 @@ public class CaptureActivity extends Activity implements Callback {
     private InactivityTimer inactivityTimer;
     private MediaPlayer mediaPlayer;
     private boolean playBeep;
-    private static final float BEEP_VOLUME = 0.10f;
     private boolean vibrate;
     private SurfaceView surfaceView;
     private Button btn_torch;
@@ -130,7 +139,6 @@ public class CaptureActivity extends Activity implements Callback {
         vibrate = true;
     }
 
-
     @Override
     protected void onPause() {
         super.onPause();
@@ -144,7 +152,7 @@ public class CaptureActivity extends Activity implements Callback {
     @Override
     protected void onDestroy() {
         inactivityTimer.shutdown();
-        if (handler != null){
+        if (handler != null) {
             handler = null;
         }
         super.onDestroy();
@@ -197,7 +205,7 @@ public class CaptureActivity extends Activity implements Callback {
 
                 @Override
                 public void onPermissionRequestFail(List<String> permissions) {
-                    ToastUtils.show(CaptureActivity.this, PermissionRequestManagerUtils.getInstance().getPermissionToast(CaptureActivity.this,permissions));
+                    ToastUtils.show(CaptureActivity.this, PermissionRequestManagerUtils.getInstance().getPermissionToast(CaptureActivity.this, permissions));
                     finish();
                 }
             });
@@ -226,7 +234,6 @@ public class CaptureActivity extends Activity implements Callback {
         inactivityTimer.onActivity();
     }
 
-
     private void initBeepSound() {
         if (playBeep && mediaPlayer == null) {
             // The volume on STREAM_SYSTEM is not adjustable, and users found it
@@ -251,8 +258,6 @@ public class CaptureActivity extends Activity implements Callback {
         }
     }
 
-    private static final long VIBRATE_DURATION = 200L;
-
     private void playBeepSoundAndVibrate() {
         if (playBeep && mediaPlayer != null) {
             mediaPlayer.start();
@@ -262,15 +267,6 @@ public class CaptureActivity extends Activity implements Callback {
             vibrator.vibrate(VIBRATE_DURATION);
         }
     }
-
-    /**
-     * When the beep has finished playing, rewind to queue up another one.
-     */
-    private final OnCompletionListener beepListener = new OnCompletionListener() {
-        public void onCompletion(MediaPlayer mediaPlayer) {
-            mediaPlayer.seekTo(0);
-        }
-    };
 
     public void uploadImgToDecodeByServer(Bitmap cropBitmap) {
         if (isDecodeingFromServer) return;

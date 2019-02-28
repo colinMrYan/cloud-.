@@ -160,6 +160,19 @@ public class MessageCacheUtil {
         return unreadCount;
     }
 
+    public static List<Message> getAllUnReadMessage(Context context, String cid) {
+        List<Message> unReadMessageList = new ArrayList<>();
+        try {
+            Message lastReadMessage = DbCacheUtils.getDb(context).selector(Message.class).where("read", "=", 1)
+                    .and("channel", "=", cid).orderBy("creationDate", true).findFirst();
+            unReadMessageList.addAll(DbCacheUtils.getDb(context).selector(Message.class).
+                    where("creationDate", ">", lastReadMessage.getCreationDate()).and("channel", "=", cid).findAll());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return unReadMessageList;
+    }
+
     /**
      * 设置消息已读
      *
@@ -168,7 +181,7 @@ public class MessageCacheUtil {
      */
     public static void setMessageStateRead(Context context, List<String> messageIdList) {
         try {
-            if (messageIdList == null || messageIdList.size()==0){
+            if (messageIdList == null || messageIdList.size() == 0) {
                 return;
             }
             DbCacheUtils.getDb(context).update(Message.class, WhereBuilder.b("id", "in", messageIdList), new KeyValue("read", 1));
@@ -572,7 +585,7 @@ public class MessageCacheUtil {
             //更新本地假消息，把id改成真消息的id，并把发送状态改为发送成功，creationDate保持假消息的时间即可
             try {
                 DbCacheUtils.getDb(context).update(Message.class, WhereBuilder.b("id", "=", message.getTmpId())
-                        , new KeyValue("id", message.getId()), new KeyValue("sendStatus", Message.MESSAGE_SEND_SUCCESS),new KeyValue("creationDate",message.getCreationDate()));
+                        , new KeyValue("id", message.getId()), new KeyValue("sendStatus", Message.MESSAGE_SEND_SUCCESS), new KeyValue("creationDate", message.getCreationDate()));
             } catch (Exception e) {
                 e.printStackTrace();
             }

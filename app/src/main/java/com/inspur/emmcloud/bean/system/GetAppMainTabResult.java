@@ -13,13 +13,14 @@ public class GetAppMainTabResult {
     private String response;
     private String command;
     private MainTabPayLoad mainTabPayLoad;
-    public GetAppMainTabResult(String response){
-        this.command = JSONUtils.getString(response,"command","");
+
+    public GetAppMainTabResult(String response) {
+        this.command = JSONUtils.getString(response, "command", "");
         this.response = response;
-        this.mainTabPayLoad = new MainTabPayLoad(JSONUtils.getJSONObject(response,"payload",new JSONObject()));
+        this.mainTabPayLoad = new MainTabPayLoad(JSONUtils.getJSONObject(response, "payload", new JSONObject()));
     }
 
-    public String getAppTabInfo(){
+    public String getAppTabInfo() {
         return response;
     }
 

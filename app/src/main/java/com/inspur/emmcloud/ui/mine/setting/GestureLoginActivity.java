@@ -9,6 +9,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -16,7 +17,6 @@ import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
-import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
@@ -29,7 +29,6 @@ import com.wei.android.lib.fingerprintidentify.base.BaseFingerprint;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
-import org.xutils.x;
 
 import java.util.List;
 
@@ -41,25 +40,60 @@ import java.util.List;
 public class GestureLoginActivity extends BaseActivity {
 
     private static final int GESTURE_CODE_TIMES = 5;
+    private static final long DELAYTIME = 600l;
     @ViewInject(R.id.lockPatternView)
     LockPatternView lockPatternView;
     @ViewInject(R.id.gestrue_message_text)
     TextView gestureMessage;
     @ViewInject(R.id.forget_gesture_btn)
     Button forgetGestureBtn;
-    private static final long DELAYTIME = 600l;
     private String gesturePassword;
     private boolean isLogin = false;
     private int errorTime = 0;
+    private LockPatternView.OnPatternListener patternListener = new LockPatternView.OnPatternListener() {
 
+        @Override
+        public void onPatternStart() {
+            lockPatternView.removePostClearPatternRunnable();
+        }
+
+        @Override
+        public void onPatternComplete(List<LockPatternView.Cell> pattern) {
+            if (pattern != null) {
+                if (LockPatternUtil.checkPattern(pattern, gesturePassword)) {
+                    updateStatus(Status.CORRECT);
+                    if (getIntent().hasExtra("gesture_code_change")) {
+                        String command = getIntent().getStringExtra("gesture_code_change");
+                        if (command.equals("reset")) {
+                            IntentUtils.startActivity(GestureLoginActivity.this, CreateGestureActivity.class);
+                            finish();
+                        } else if (command.equals("login")) {
+                            isLogin = true;
+                            //发送解锁广播是，SchemeHandleActivity中接收处理
+                            Intent intent = new Intent();
+                            intent.setAction(Constant.ACTION_SAFE_UNLOCK);
+                            MyApplication.getInstance().setIsActive(true);
+                            LocalBroadcastManager.getInstance(GestureLoginActivity.this).sendBroadcast(intent);
+                            finish();
+                        } else if (command.equals("close")) {
+                            clearGestureInfo();
+                            finish();
+                        }
+                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                    }
+                } else {
+                    errorTime = errorTime + 1;
+                    updateStatus(Status.ERROR);
+                }
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        StateBarUtils.translucent( this,R.color.grey_f6f6f6 );
-        x.view().inject(this);
         init();
-//        EventBus.getDefault().register(this);
+        ImmersionBar.with(this).statusBarColor(R.color.grey_f6f6f6).statusBarDarkFont(true).init();
     }
 
     private void init() {
@@ -152,15 +186,6 @@ public class GestureLoginActivity extends BaseActivity {
         return cloudFingerprintIdentify.isFingerprintEnable();
     }
 
-    /**
-     * 硬件是否可用
-     *
-     * @return
-     */
-    private boolean getIsHardwareEnable(FingerprintIdentify cloudFingerprintIdentify) {
-        return cloudFingerprintIdentify.isHardwareEnable();
-    }
-
 
 //    /**
 //     * 判断指纹识别成功，识别成功后关闭锁屏Activity
@@ -172,44 +197,14 @@ public class GestureLoginActivity extends BaseActivity {
 //        }
 //    }
 
-    private LockPatternView.OnPatternListener patternListener = new LockPatternView.OnPatternListener() {
-
-        @Override
-        public void onPatternStart() {
-            lockPatternView.removePostClearPatternRunnable();
-        }
-
-        @Override
-        public void onPatternComplete(List<LockPatternView.Cell> pattern) {
-            if (pattern != null) {
-                if (LockPatternUtil.checkPattern(pattern, gesturePassword)) {
-                    updateStatus(Status.CORRECT);
-                    if (getIntent().hasExtra("gesture_code_change")) {
-                        String command = getIntent().getStringExtra("gesture_code_change");
-                        if (command.equals("reset")) {
-                            IntentUtils.startActivity(GestureLoginActivity.this, CreateGestureActivity.class);
-                            finish();
-                        } else if (command.equals("login")) {
-                            isLogin = true;
-                            //发送解锁广播是，SchemeHandleActivity中接收处理
-                            Intent intent = new  Intent();
-                            intent.setAction(Constant.ACTION_SAFE_UNLOCK);
-                            MyApplication.getInstance().setIsActive(true);
-                            LocalBroadcastManager.getInstance(GestureLoginActivity.this).sendBroadcast(intent);
-                            finish();
-                        } else if (command.equals("close")) {
-                            clearGestureInfo();
-                            finish();
-                        }
-                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                    }
-                } else {
-                    errorTime = errorTime + 1;
-                    updateStatus(Status.ERROR);
-                }
-            }
-        }
-    };
+    /**
+     * 硬件是否可用
+     *
+     * @return
+     */
+    private boolean getIsHardwareEnable(FingerprintIdentify cloudFingerprintIdentify) {
+        return cloudFingerprintIdentify.isHardwareEnable();
+    }
 
     /**
      * 更新状态
@@ -225,7 +220,7 @@ public class GestureLoginActivity extends BaseActivity {
                 break;
             case ERROR:
                 gestureMessage.setText(getString(R.string.gesture_code_error) + " " +
-                        ((GESTURE_CODE_TIMES - errorTime) < 0 ? 0:(GESTURE_CODE_TIMES - errorTime)) + " " + getString(R.string.gesture_code_time));
+                        ((GESTURE_CODE_TIMES - errorTime) < 0 ? 0 : (GESTURE_CODE_TIMES - errorTime)) + " " + getString(R.string.gesture_code_time));
                 findViewById(R.id.gesture_code_tips).setVisibility(View.VISIBLE);
                 Animation shake = AnimationUtils.loadAnimation(this, R.anim.left_right_shake);
                 gestureMessage.startAnimation(shake);
@@ -266,23 +261,6 @@ public class GestureLoginActivity extends BaseActivity {
         CreateGestureActivity.putGestureCodeIsOpenByUser(GestureLoginActivity.this, false);
     }
 
-    private enum Status {
-        //默认的状态
-        DEFAULT(R.string.gesture_default, R.color.grey_a5a5a5),
-        //密码输入错误
-        ERROR(R.string.gesture_error, R.color.red_f4333c),
-        //密码输入正确
-        CORRECT(R.string.gesture_correct, R.color.grey_a5a5a5);
-
-        Status(int strId, int colorId) {
-            this.strId = strId;
-            this.colorId = colorId;
-        }
-
-        private int strId;
-        private int colorId;
-    }
-
     @Override
     public void onBackPressed() {
         if (isLogin) {
@@ -296,6 +274,22 @@ public class GestureLoginActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
 //        EventBus.getDefault().unregister(this);
+    }
+
+    private enum Status {
+        //默认的状态
+        DEFAULT(R.string.gesture_default, R.color.grey_a5a5a5),
+        //密码输入错误
+        ERROR(R.string.gesture_error, R.color.red_f4333c),
+        //密码输入正确
+        CORRECT(R.string.gesture_correct, R.color.grey_a5a5a5);
+
+        private int strId;
+        private int colorId;
+        Status(int strId, int colorId) {
+            this.strId = strId;
+            this.colorId = colorId;
+        }
     }
 
 }

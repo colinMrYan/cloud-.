@@ -14,17 +14,17 @@ import android.widget.TextView;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.appcenter.App;
-import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 
 import java.util.List;
 
 public class AppCenterMoreActivity extends BaseActivity {
 
-    private ListView appCenterMoreListView;
-    private List<App> appList;
     public static final String APP_CENTER_APPLIST = "appList";
     public static final String APP_CENTER_CATEGORY_NAME = "category_name";
+    private ListView appCenterMoreListView;
+    private List<App> appList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,41 +33,42 @@ public class AppCenterMoreActivity extends BaseActivity {
         initView();
     }
 
-	/**
-	 * 初始化views
-	 */
-	private void initView() {
-		appCenterMoreListView = (ListView) findViewById(R.id.app_center_more_apps);
-		if(getIntent().hasExtra(APP_CENTER_APPLIST)){
-			appList = (List<App>) getIntent().getSerializableExtra(APP_CENTER_APPLIST);
-			if(appList != null){
-				AppMoreAdapter adapter = new AppMoreAdapter();
-				appCenterMoreListView.setAdapter(adapter);
-				appCenterMoreListView.setOnItemClickListener(new OnItemClickListener() {
-					@Override
-					public void onItemClick(AdapterView<?> parent, View view,
-											int position, long id) {
-						Bundle bundle = new Bundle();
-						bundle.putSerializable("app", appList.get(position));
-						IntentUtils.startActivity(AppCenterMoreActivity.this, AppDetailActivity.class, bundle);
-					}
-				});
-			}
-		}
-		if(getIntent().hasExtra(APP_CENTER_CATEGORY_NAME)){
-			((TextView)findViewById(R.id.header_text)).setText(getIntent().getStringExtra(APP_CENTER_CATEGORY_NAME));
-		}
-	}
-	
-	/**
-	 * 关闭
-	 * @param v
-	 */
-	public void onClick(View v){
-		finish();
-	}
-	
-	class AppMoreAdapter extends BaseAdapter{
+    /**
+     * 初始化views
+     */
+    private void initView() {
+        appCenterMoreListView = (ListView) findViewById(R.id.app_center_more_apps);
+        if (getIntent().hasExtra(APP_CENTER_APPLIST)) {
+            appList = (List<App>) getIntent().getSerializableExtra(APP_CENTER_APPLIST);
+            if (appList != null) {
+                AppMoreAdapter adapter = new AppMoreAdapter();
+                appCenterMoreListView.setAdapter(adapter);
+                appCenterMoreListView.setOnItemClickListener(new OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view,
+                                            int position, long id) {
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("app", appList.get(position));
+                        IntentUtils.startActivity(AppCenterMoreActivity.this, AppDetailActivity.class, bundle);
+                    }
+                });
+            }
+        }
+        if (getIntent().hasExtra(APP_CENTER_CATEGORY_NAME)) {
+            ((TextView) findViewById(R.id.header_text)).setText(getIntent().getStringExtra(APP_CENTER_CATEGORY_NAME));
+        }
+    }
+
+    /**
+     * 关闭
+     *
+     * @param v
+     */
+    public void onClick(View v) {
+        finish();
+    }
+
+    class AppMoreAdapter extends BaseAdapter {
 
         @Override
         public int getCount() {

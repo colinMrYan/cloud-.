@@ -14,20 +14,21 @@ import java.util.List;
 
 public class GetContactUserListUpateResult {
     private Long lastQueryTime;
-    private List<ContactUser> contactUserChangedList =new ArrayList<>();
+    private List<ContactUser> contactUserChangedList = new ArrayList<>();
     private List<String> contactUserIdDeleteList = new ArrayList<>();
+
     public GetContactUserListUpateResult(String response) {
 
         JSONObject obj = JSONUtils.getJSONObject(response);
-        lastQueryTime = JSONUtils.getLong(obj,"lastQueryTime",0L);
-        JSONArray array = JSONUtils.getJSONArray(obj,"changed",new JSONArray());
-        for (int i=0;i<array.length();i++){
-            JSONObject contactUserObj = JSONUtils.getJSONObject(array,i,new JSONObject());
-            contactUserChangedList.add(new ContactUser(contactUserObj,lastQueryTime+""));
+        lastQueryTime = JSONUtils.getLong(obj, "lastQueryTime", 0L);
+        JSONArray array = JSONUtils.getJSONArray(obj, "changed", new JSONArray());
+        for (int i = 0; i < array.length(); i++) {
+            JSONObject contactUserObj = JSONUtils.getJSONObject(array, i, new JSONObject());
+            contactUserChangedList.add(new ContactUser(contactUserObj, lastQueryTime + ""));
         }
-        JSONArray deleteArray = JSONUtils.getJSONArray(obj,"deleted",new JSONArray());
-        for (int i=0;i<deleteArray.length();i++){
-            contactUserIdDeleteList.add(JSONUtils.getString(deleteArray,i,""));
+        JSONArray deleteArray = JSONUtils.getJSONArray(obj, "deleted", new JSONArray());
+        for (int i = 0; i < deleteArray.length(); i++) {
+            contactUserIdDeleteList.add(JSONUtils.getString(deleteArray, i, ""));
         }
     }
 

@@ -77,23 +77,21 @@ import java.util.Map;
 
 @ContentView(R.layout.activity_index)
 public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChangeListener, OnTouchListener {
-    private long lastBackTime;
     private static final int REQUEST_CREATE_GUESTURE = 1;
     @ViewInject(android.R.id.tabhost)
     public MyFragmentTabHost mTabHost;
     @ViewInject(R.id.preload_webview)
     protected WebView webView;
+    protected NetworkChangeReceiver networkChangeReceiver;
+    private long lastBackTime;
     private TextView newMessageTipsText;
-
     private RelativeLayout newMessageTipsLayout;
-
     private boolean batteryDialogIsShow = true;
     @ViewInject(R.id.tip)
     private TipsView tipsView;
     private boolean isCommunicationRunning = false;
     private boolean isSystemChangeTag = true;// 控制如果是系统切换的tab则不计入用户行为
     private String tabId = "";
-    protected NetworkChangeReceiver networkChangeReceiver;
     // protected ConnectivityManager.NetworkCallback networkCallback;
     // protected ConnectivityManager connectivityManager;
     private BatteryWhiteListDialog confirmDialog;
@@ -101,8 +99,10 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         clearOldMainTabData();
         x.view().inject(this);
+        setStatus();
         mTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
         registerNetWorkListenerAccordingSysLevel();
         initTabs();
@@ -171,42 +171,42 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
                     TabBean tabBean = null;
                     MainTabResult mainTabResult = mainTabResultList.get(i);
                     switch (mainTabResult.getType()) {
-                    case Constant.APP_TAB_TYPE_NATIVE:
-                        switch (mainTabResult.getUri()) {
-                        case Constant.APP_TAB_BAR_COMMUNACATE:
-                            if (MyApplication.getInstance().isV0VersionChat()) {
-                                tabBean = new TabBean(getString(R.string.communicate), CommunicationV0Fragment.class,
-                                        mainTabResult);
-                            } else {
-                                tabBean = new TabBean(getString(R.string.communicate), CommunicationFragment.class,
-                                        mainTabResult);
+                        case Constant.APP_TAB_TYPE_NATIVE:
+                            switch (mainTabResult.getUri()) {
+                                case Constant.APP_TAB_BAR_COMMUNACATE:
+                                    if (MyApplication.getInstance().isV0VersionChat()) {
+                                        tabBean = new TabBean(getString(R.string.communicate), CommunicationV0Fragment.class,
+                                                mainTabResult);
+                                    } else {
+                                        tabBean = new TabBean(getString(R.string.communicate), CommunicationFragment.class,
+                                                mainTabResult);
+                                    }
+                                    break;
+                                case Constant.APP_TAB_BAR_WORK:
+                                    tabBean = new TabBean(getString(R.string.work), WorkFragment.class, mainTabResult);
+                                    break;
+                                case Constant.APP_TAB_BAR_APPLICATION:
+                                    tabBean = new TabBean(getString(R.string.application), MyAppFragment.class, mainTabResult);
+                                    break;
+                                case Constant.APP_TAB_BAR_PROFILE:
+                                    tabBean = new TabBean(getString(R.string.mine), MoreFragment.class, mainTabResult);
+                                    break;
+                                case Constant.APP_TAB_BAR_CONTACT:
+                                    tabBean = new TabBean(getString(R.string.contact), ContactSearchFragment.class,
+                                            mainTabResult);
+                                    break;
                             }
                             break;
-                        case Constant.APP_TAB_BAR_WORK:
-                            tabBean = new TabBean(getString(R.string.work), WorkFragment.class, mainTabResult);
+                        case Constant.APP_TAB_TYPE_RN:
+                            switch (mainTabResult.getUri()) {
+                                case Constant.APP_TAB_BAR_RN_FIND:
+                                    tabBean = new TabBean(getString(R.string.find), FindFragment.class, mainTabResult);
+                                    break;
+                            }
                             break;
-                        case Constant.APP_TAB_BAR_APPLICATION:
-                            tabBean = new TabBean(getString(R.string.application), MyAppFragment.class, mainTabResult);
+                        case Constant.APP_TAB_TYPE_WEB:
+                            tabBean = new TabBean(getString(R.string.web), ImpFragment.class, mainTabResult);
                             break;
-                        case Constant.APP_TAB_BAR_PROFILE:
-                            tabBean = new TabBean(getString(R.string.mine), MoreFragment.class, mainTabResult);
-                            break;
-                        case Constant.APP_TAB_BAR_CONTACT:
-                            tabBean = new TabBean(getString(R.string.contact), ContactSearchFragment.class,
-                                    mainTabResult);
-                            break;
-                        }
-                        break;
-                    case Constant.APP_TAB_TYPE_RN:
-                        switch (mainTabResult.getUri()) {
-                        case Constant.APP_TAB_BAR_RN_FIND:
-                            tabBean = new TabBean(getString(R.string.find), FindFragment.class, mainTabResult);
-                            break;
-                        }
-                        break;
-                    case Constant.APP_TAB_TYPE_WEB:
-                        tabBean = new TabBean(getString(R.string.web), ImpFragment.class, mainTabResult);
-                        break;
                     }
                     if (tabBean == null) {
                         String noSupportTabName =
@@ -228,30 +228,30 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
     private int getIconFromLocalByIco(String icon) {
         int localIcon = R.drawable.selector_tab_unknown_btn;
         switch (icon) {
-        case Constant.APP_TAB_BAR_COMMUNACATE_NAME:
-            localIcon = ResourceUtils.getValueOfAttr(IndexBaseActivity.this, R.attr.bg_tab_communicate);
-            break;
-        case Constant.APP_TAB_BAR_APPLICATION_NAME:
-            localIcon = ResourceUtils.getValueOfAttr(IndexBaseActivity.this, R.attr.bg_tab_app);
-            break;
-        case Constant.APP_TAB_BAR_WORK_NAME:
-            localIcon = ResourceUtils.getValueOfAttr(IndexBaseActivity.this, R.attr.bg_tab_work);
-            break;
-        case Constant.APP_TAB_BAR_MOMENT_NAME:
-            localIcon = ResourceUtils.getValueOfAttr(IndexBaseActivity.this, R.attr.bg_tab_cloud_tweet);
-            break;
-        case Constant.APP_TAB_BAR_ME_NAME:
-            localIcon = ResourceUtils.getValueOfAttr(IndexBaseActivity.this, R.attr.bg_tab_mine);
-            break;
-        case Constant.APP_TAB_BAR_CONTACT_NAME:
-            localIcon = ResourceUtils.getValueOfAttr(IndexBaseActivity.this, R.attr.bg_tab_contact);
-            break;
-        case Constant.APP_TAB_BAR_DISCOVER_NAME:
-            localIcon = ResourceUtils.getValueOfAttr(IndexBaseActivity.this, R.attr.bg_tab_find);
-            break;
-        default:
-            localIcon = ResourceUtils.getValueOfAttr(IndexBaseActivity.this, R.attr.bg_tab_unknown);
-            break;
+            case Constant.APP_TAB_BAR_COMMUNACATE_NAME:
+                localIcon = ResourceUtils.getValueOfAttr(IndexBaseActivity.this, R.attr.bg_tab_communicate);
+                break;
+            case Constant.APP_TAB_BAR_APPLICATION_NAME:
+                localIcon = ResourceUtils.getValueOfAttr(IndexBaseActivity.this, R.attr.bg_tab_app);
+                break;
+            case Constant.APP_TAB_BAR_WORK_NAME:
+                localIcon = ResourceUtils.getValueOfAttr(IndexBaseActivity.this, R.attr.bg_tab_work);
+                break;
+            case Constant.APP_TAB_BAR_MOMENT_NAME:
+                localIcon = ResourceUtils.getValueOfAttr(IndexBaseActivity.this, R.attr.bg_tab_cloud_tweet);
+                break;
+            case Constant.APP_TAB_BAR_ME_NAME:
+                localIcon = ResourceUtils.getValueOfAttr(IndexBaseActivity.this, R.attr.bg_tab_mine);
+                break;
+            case Constant.APP_TAB_BAR_CONTACT_NAME:
+                localIcon = ResourceUtils.getValueOfAttr(IndexBaseActivity.this, R.attr.bg_tab_contact);
+                break;
+            case Constant.APP_TAB_BAR_DISCOVER_NAME:
+                localIcon = ResourceUtils.getValueOfAttr(IndexBaseActivity.this, R.attr.bg_tab_find);
+                break;
+            default:
+                localIcon = ResourceUtils.getValueOfAttr(IndexBaseActivity.this, R.attr.bg_tab_unknown);
+                break;
         }
         return localIcon;
     }
@@ -373,6 +373,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
 
     /**
      * 这个app未读数目变化
+     *
      * @param badgeBodyModel
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -400,6 +401,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
 
     /**
      * 过滤应用角标数目（只显示已安装的应用角标数目）
+     *
      * @param appBadgeMap
      * @return
      */
@@ -455,6 +457,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
 
     /**
      * 根据正负数规则获取桌面显示总数
+     *
      * @return
      */
     private int getDesktopNumber() {
@@ -471,28 +474,30 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
 
     /**
      * 找到对应的tab后保存tabBarBadgeNumber
+     *
      * @param tabName
      * @param tabBarBadgeNumber
      */
     private void saveTabBarBadgeNumber(String tabName, int tabBarBadgeNumber) {
         switch (tabName) {
-        case Constant.APP_TAB_BAR_APPLICATION_NAME:
-            PreferencesByUserAndTanentUtils.putInt(MyApplication.getInstance(), Constant.PREF_BADGE_NUM_APPSTORE,
-                    tabBarBadgeNumber);
-            break;
-        case Constant.APP_TAB_BAR_COMMUNACATE_NAME:
-            PreferencesByUserAndTanentUtils.putInt(MyApplication.getInstance(), Constant.PREF_BADGE_NUM_COMMUNICATION,
-                    tabBarBadgeNumber);
-            break;
-        case Constant.APP_TAB_BAR_MOMENT_NAME:
-            PreferencesByUserAndTanentUtils.putInt(MyApplication.getInstance(), Constant.PREF_BADGE_NUM_SNS,
-                    tabBarBadgeNumber);
-            break;
+            case Constant.APP_TAB_BAR_APPLICATION_NAME:
+                PreferencesByUserAndTanentUtils.putInt(MyApplication.getInstance(), Constant.PREF_BADGE_NUM_APPSTORE,
+                        tabBarBadgeNumber);
+                break;
+            case Constant.APP_TAB_BAR_COMMUNACATE_NAME:
+                PreferencesByUserAndTanentUtils.putInt(MyApplication.getInstance(), Constant.PREF_BADGE_NUM_COMMUNICATION,
+                        tabBarBadgeNumber);
+                break;
+            case Constant.APP_TAB_BAR_MOMENT_NAME:
+                PreferencesByUserAndTanentUtils.putInt(MyApplication.getInstance(), Constant.PREF_BADGE_NUM_SNS,
+                        tabBarBadgeNumber);
+                break;
         }
     }
 
     /**
      * 打开相应位置的tab
+     *
      * @param changeTabBean
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -547,6 +552,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
 
     /**
      * 生成applicationMainTab
+     *
      * @return
      */
     private MainTabResult getApplicationMainTab() {
@@ -566,6 +572,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
 
     /**
      * 生成mainTab
+     *
      * @return
      */
     private MainTabResult getMineTab() {
@@ -591,19 +598,19 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
      * @return
      */
     private TabBean internationalMainLanguage(MainTabResult mainTabResult, String environmentLanguage,
-            TabBean tabBean) {
+                                              TabBean tabBean) {
         if (!tabBean.getClz().getName().equals(NotSupportFragment.class.getName())) {
             switch (environmentLanguage.toLowerCase()) {
-            case "zh-hant":
-                tabBean.setTabName(mainTabResult.getMainTabTitleResult().getZhHant());
-                break;
-            case "en":
-            case "en-us":
-                tabBean.setTabName(mainTabResult.getMainTabTitleResult().getEnUS());
-                break;
-            default:
-                tabBean.setTabName(mainTabResult.getMainTabTitleResult().getZhHans());
-                break;
+                case "zh-hant":
+                    tabBean.setTabName(mainTabResult.getMainTabTitleResult().getZhHant());
+                    break;
+                case "en":
+                case "en-us":
+                    tabBean.setTabName(mainTabResult.getMainTabTitleResult().getEnUS());
+                    break;
+                default:
+                    tabBean.setTabName(mainTabResult.getMainTabTitleResult().getZhHans());
+                    break;
             }
         }
         return tabBean;
@@ -725,6 +732,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
 
     /**
      * 根据tabId获取mainTab的name
+     *
      * @param tabId
      * @return
      */

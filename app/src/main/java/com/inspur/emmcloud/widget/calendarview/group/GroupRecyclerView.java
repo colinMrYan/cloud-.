@@ -15,13 +15,13 @@ import com.inspur.emmcloud.R;
  */
 @SuppressWarnings("all")
 public class GroupRecyclerView extends RecyclerView {
+    protected int mChildItemOffset;
     private GroupItemDecoration mItemDecoration;
     private int mGroupHeight;
     private int mGroutBackground, mTextColor;
     private int mTextSize;
     private int mPaddingLeft, mPaddingRight;
     private boolean isCenter;
-    protected int mChildItemOffset;
     private boolean isHasHeader;
     private OnGroupChangeListener mListener;
 

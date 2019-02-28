@@ -19,16 +19,16 @@ public class ImagePreviewDelActivity extends ImagePreviewBaseActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
+
         ImageView mBtnDel = (ImageView) findViewById(R.id.btn_del);
         mBtnDel.setOnClickListener(this);
         if (!isCanDelete) {
-        	mBtnDel.setVisibility(View.GONE);
-		}else {
-			 mBtnDel.setVisibility(View.VISIBLE);
-		}
+            mBtnDel.setVisibility(View.GONE);
+        } else {
+            mBtnDel.setVisibility(View.VISIBLE);
+        }
         topBar.findViewById(R.id.ibt_back).setOnClickListener(this);
-       
+
         mTitleCount.setText(getString(R.string.preview_image_count, mCurrentPosition + 1, mImageItems.size()));
         //滑动ViewPager的时候，根据外界的数据改变当前的选中状态和当前的图片的位置描述文本
         mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
@@ -38,6 +38,7 @@ public class ImagePreviewDelActivity extends ImagePreviewBaseActivity implements
                 mTitleCount.setText(getString(R.string.preview_image_count, mCurrentPosition + 1, mImageItems.size()));
             }
         });
+        setStatus();
     }
 
     @Override
@@ -50,9 +51,11 @@ public class ImagePreviewDelActivity extends ImagePreviewBaseActivity implements
         }
     }
 
-    /** 是否删除此张图片 */
+    /**
+     * 是否删除此张图片
+     */
     private void showDeleteDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this,android.R.style.Theme_Holo_Light_Dialog);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, android.R.style.Theme_Holo_Light_Dialog);
         builder.setTitle("提示");
         builder.setMessage("要删除这张照片吗？");
         builder.setNegativeButton("取消", null);
@@ -83,23 +86,27 @@ public class ImagePreviewDelActivity extends ImagePreviewBaseActivity implements
         super.onBackPressed();
     }
 
-    /** 单击时，隐藏头和尾 */
+    /**
+     * 单击时，隐藏头和尾
+     */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-	@SuppressLint("NewApi")
-	@Override
+    @SuppressLint("NewApi")
+    @Override
     public void onImageSingleTap() {
         if (topBar.getVisibility() == View.VISIBLE) {
             topBar.setAnimation(AnimationUtils.loadAnimation(this, R.anim.top_out));
             topBar.setVisibility(View.GONE);
 //            tintManager.setStatusBarTintResource(com.inspur.imp.plugin.camera.imagepicker.R.color.transparent);//通知栏所需颜色
             //给最外层布局加上这个属性表示，Activity全屏显示，且状态栏被隐藏覆盖掉。
-            if (Build.VERSION.SDK_INT >= 16) content.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+            if (Build.VERSION.SDK_INT >= 16)
+                content.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         } else {
             topBar.setAnimation(AnimationUtils.loadAnimation(this, R.anim.top_in));
             topBar.setVisibility(View.VISIBLE);
 //            tintManager.setStatusBarTintResource(com.inspur.imp.plugin.camera.imagepicker.R.color.status_bar);//通知栏所需颜色
             //Activity全屏显示，但状态栏不会被隐藏覆盖，状态栏依然可见，Activity顶端布局部分会被状态遮住
-            if (Build.VERSION.SDK_INT >= 16) content.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+            if (Build.VERSION.SDK_INT >= 16)
+                content.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         }
     }
 }

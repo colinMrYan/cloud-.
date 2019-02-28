@@ -34,7 +34,7 @@ class ImageUtil {
             // write the compressed bitmap at the destination specified by destinationPath.
             Bitmap bitmap = decodeSampledBitmapFromFile(imageFile, reqWidth, reqHeight);
             File outFile = new File(destinationPath);
-            if (outFile.exists()){
+            if (outFile.exists()) {
                 outFile.delete();
             }
             fileOutputStream = new FileOutputStream(destinationPath);
@@ -69,7 +69,7 @@ class ImageUtil {
         try {
             ExifInterface exif = new ExifInterface(imageFile.getAbsolutePath());
             orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 0);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         Matrix matrix = new Matrix();
@@ -80,12 +80,12 @@ class ImageUtil {
         } else if (orientation == 8) {
             matrix.postRotate(270);
         }
-        if (scaledBitmap.getWidth()>reqWidth || scaledBitmap.getHeight()>reqHeight){
+        if (scaledBitmap.getWidth() > reqWidth || scaledBitmap.getHeight() > reqHeight) {
             float scaleW = (float) reqWidth / scaledBitmap.getWidth();
             float scaleH = (float) reqHeight / scaledBitmap.getHeight();
-            float scale = scaleW<scaleH?scaleW:scaleH;
+            float scale = scaleW < scaleH ? scaleW : scaleH;
             //宽高等比例缩放
-            matrix.postScale(scale,scale);
+            matrix.postScale(scale, scale);
         }
         scaledBitmap = Bitmap.createBitmap(scaledBitmap, 0, 0, scaledBitmap.getWidth(), scaledBitmap.getHeight(), matrix, true);
         return scaledBitmap;
@@ -101,13 +101,13 @@ class ImageUtil {
             while ((height / inSampleSize) >= reqHeight || (width / inSampleSize) >= reqWidth) {
                 inSampleSize *= 2;
             }
-            LogUtils.jasonDebug("inSampleSize="+inSampleSize);
+            LogUtils.jasonDebug("inSampleSize=" + inSampleSize);
             //当bitmap压缩到最后一次时能用Matrix就用
-            if (inSampleSize>=2 && (height / inSampleSize*2< MyAppConfig.UPLOAD_ORIGIN_IMG_MAX_SIZE) || (width / inSampleSize*2< MyAppConfig.UPLOAD_ORIGIN_IMG_MAX_SIZE)){
-                inSampleSize = inSampleSize/2;
+            if (inSampleSize >= 2 && (height / inSampleSize * 2 < MyAppConfig.UPLOAD_ORIGIN_IMG_MAX_SIZE) || (width / inSampleSize * 2 < MyAppConfig.UPLOAD_ORIGIN_IMG_MAX_SIZE)) {
+                inSampleSize = inSampleSize / 2;
             }
         }
-        LogUtils.jasonDebug("inSampleSize="+inSampleSize);
+        LogUtils.jasonDebug("inSampleSize=" + inSampleSize);
         return inSampleSize;
     }
 }

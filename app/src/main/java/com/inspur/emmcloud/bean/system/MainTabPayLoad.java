@@ -21,17 +21,17 @@ public class MainTabPayLoad {
     private String state;
     private String name;
 
-    public MainTabPayLoad(JSONObject jsonObject){
-        this.version = JSONUtils.getString(jsonObject,"version","");
-        JSONArray jsonArray = JSONUtils.getJSONArray(jsonObject,"tabs",new JSONArray());
+    public MainTabPayLoad(JSONObject jsonObject) {
+        this.version = JSONUtils.getString(jsonObject, "version", "");
+        JSONArray jsonArray = JSONUtils.getJSONArray(jsonObject, "tabs", new JSONArray());
         for (int i = 0; i < jsonArray.length(); i++) {
-            mainTabResultList.add(new MainTabResult(JSONUtils.getJSONObject(jsonArray,i,new JSONObject())));
+            mainTabResultList.add(new MainTabResult(JSONUtils.getJSONObject(jsonArray, i, new JSONObject())));
         }
-        this.lastUpdate = JSONUtils.getLong(jsonObject,"lastUpdate",0);
-        this.creationDate = JSONUtils.getLong(jsonObject,"creationDate",0);
-        this.selected = JSONUtils.getString(jsonObject,"selected","");
-        this.state = JSONUtils.getString(jsonObject,"state","");
-        this.name = JSONUtils.getString(jsonObject,"name","");
+        this.lastUpdate = JSONUtils.getLong(jsonObject, "lastUpdate", 0);
+        this.creationDate = JSONUtils.getLong(jsonObject, "creationDate", 0);
+        this.selected = JSONUtils.getString(jsonObject, "selected", "");
+        this.state = JSONUtils.getString(jsonObject, "state", "");
+        this.name = JSONUtils.getString(jsonObject, "name", "");
     }
 
     public String getVersion() {

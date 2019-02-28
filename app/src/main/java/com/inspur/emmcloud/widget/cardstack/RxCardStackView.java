@@ -278,7 +278,8 @@ public class RxCardStackView extends ViewGroup implements RxScrollDelegate {
     }
 
     public void next() {
-        if (mSelectPosition == DEFAULT_SELECT_POSITION || mSelectPosition == mViewHolders.size() - 1) return;
+        if (mSelectPosition == DEFAULT_SELECT_POSITION || mSelectPosition == mViewHolders.size() - 1)
+            return;
         performItemClick(mViewHolders.get(mSelectPosition + 1));
     }
 

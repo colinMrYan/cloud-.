@@ -12,10 +12,10 @@ import java.util.List;
 /**
  * Created by chenmch on 2018/5/10.
  */
-@Table(name="ContactOrg")
+@Table(name = "ContactOrg")
 public class ContactOrg {
     @Column(name = "id", isId = true)
-    private String id="";
+    private String id = "";
     @Column(name = "name")
     private String name = "";
     @Column(name = "nameGlobal")
@@ -23,20 +23,21 @@ public class ContactOrg {
     @Column(name = "pinyin")
     private String pinyin = "";
     @Column(name = "parentId")
-    private String parentId= "";
+    private String parentId = "";
     @Column(name = "sortOrder")
-    private int sortOrder= 0;
-    public ContactOrg(){
+    private int sortOrder = 0;
+
+    public ContactOrg() {
 
     }
 
-    public ContactOrg(JSONObject object){
-        this.id = JSONUtils.getString(object,"id","");
-        this.name = JSONUtils.getString(object,"name","");
-        this.nameGlobal = JSONUtils.getString(object,"name_global","");
-        this.pinyin =JSONUtils.getString(object,"pinyin","");
-        this.parentId = JSONUtils.getString(object,"parent_id","");
-        this.sortOrder = JSONUtils.getInt(object,"sort_order",0);
+    public ContactOrg(JSONObject object) {
+        this.id = JSONUtils.getString(object, "id", "");
+        this.name = JSONUtils.getString(object, "name", "");
+        this.nameGlobal = JSONUtils.getString(object, "name_global", "");
+        this.pinyin = JSONUtils.getString(object, "pinyin", "");
+        this.parentId = JSONUtils.getString(object, "parent_id", "");
+        this.sortOrder = JSONUtils.getInt(object, "sort_order", 0);
     }
 
     public ContactOrg(String id, String name, String nameGlobal, String pinyin, String parentId, int sortOrder) {
@@ -48,13 +49,13 @@ public class ContactOrg {
         this.sortOrder = sortOrder;
     }
 
-    public static List<ContactOrg> protoBufOrgList2ContactOrgList(List<ContactProtoBuf.org> orgList){
+    public static List<ContactOrg> protoBufOrgList2ContactOrgList(List<ContactProtoBuf.org> orgList) {
         List<ContactOrg> contactOrgList = new ArrayList<>();
-        if (orgList != null && orgList.size()>0){
+        if (orgList != null && orgList.size() > 0) {
             int size = orgList.size();
-            for (int i=0;i<size;i++){
+            for (int i = 0; i < size; i++) {
                 ContactProtoBuf.org org = orgList.get(i);
-                ContactOrg contactOrg = new ContactOrg(org.getId(),org.getName(),org.getNameGlobal(),org.getPinyin(),org.getParentId(),org.getSortOrder());
+                ContactOrg contactOrg = new ContactOrg(org.getId(), org.getName(), org.getNameGlobal(), org.getPinyin(), org.getParentId(), org.getSortOrder());
                 contactOrgList.add(contactOrg);
             }
         }

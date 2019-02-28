@@ -24,33 +24,27 @@ import android.content.Context;
  */
 public abstract class BaseMonthView extends BaseView {
 
-    MonthViewPager mMonthViewPager;
     /**
      * 当前日历卡年份
      */
     protected int mYear;
-
     /**
      * 当前日历卡月份
      */
     protected int mMonth;
-
-
     /**
      * 日历的行数
      */
     protected int mLineCount;
-
     /**
      * 日历高度
      */
     protected int mHeight;
-
-
     /**
      * 下个月偏移的数量
      */
     protected int mNextDiff;
+    MonthViewPager mMonthViewPager;
 
     public BaseMonthView(Context context) {
         super(context);
@@ -168,7 +162,6 @@ public abstract class BaseMonthView extends BaseView {
             mHeight = CalendarUtil.getMonthViewHeight(mYear, mMonth, mItemHeight, mDelegate.getWeekStart());
         }
     }
-
 
 
     @Override

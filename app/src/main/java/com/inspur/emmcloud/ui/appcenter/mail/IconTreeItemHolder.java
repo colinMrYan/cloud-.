@@ -45,7 +45,7 @@ public class IconTreeItemHolder extends TreeNode.BaseNodeViewHolder<MailFolder> 
                     List<MailFolder> ChildMailFolderList = MailFolderCacheUtils.getChildMailFolderList(mailFolder.getId());
                     for (MailFolder mailFolder : ChildMailFolderList) {
                         TreeNode childTreeNode = new TreeNode(mailFolder);
-                       node.addChild(childTreeNode);
+                        node.addChild(childTreeNode);
                     }
                 }
                 getTreeView().toggleNode(node);

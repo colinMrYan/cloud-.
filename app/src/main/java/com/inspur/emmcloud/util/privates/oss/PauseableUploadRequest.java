@@ -18,14 +18,6 @@ public class PauseableUploadRequest extends OSSRequest {
     private Map<String, String> callbackVars;
     private OSSProgressCallback<PauseableUploadRequest> progressCallback;
 
-    public OSSProgressCallback<PauseableUploadRequest> getProgressCallback() {
-        return progressCallback;
-    }
-
-    public void setProgressCallback(OSSProgressCallback<PauseableUploadRequest> progressCallback) {
-        this.progressCallback = progressCallback;
-    }
-
     public PauseableUploadRequest(String bucket, String object, String localFile, int partSize) {
         this.bucket = bucket;
         this.object = object;
@@ -33,6 +25,13 @@ public class PauseableUploadRequest extends OSSRequest {
         this.partSize = partSize;
     }
 
+    public OSSProgressCallback<PauseableUploadRequest> getProgressCallback() {
+        return progressCallback;
+    }
+
+    public void setProgressCallback(OSSProgressCallback<PauseableUploadRequest> progressCallback) {
+        this.progressCallback = progressCallback;
+    }
 
     public String getBucket() {
         return bucket;

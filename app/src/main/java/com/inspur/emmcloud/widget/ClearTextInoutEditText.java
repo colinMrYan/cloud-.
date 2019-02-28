@@ -15,16 +15,17 @@ import com.inspur.emmcloud.R;
  * Created by chenmch on 2019/1/1.
  */
 
-public class ClearTextInoutEditText extends TextInputEditText implements TextWatcher, View.OnFocusChangeListener{
+public class ClearTextInoutEditText extends TextInputEditText implements TextWatcher, View.OnFocusChangeListener {
+    private final int DRAWABLE_LEFT = 0;
+    private final int DRAWABLE_TOP = 1;
+    private final int DRAWABLE_RIGHT = 2;
+    private final int DRAWABLE_BOTTOM = 3;
     private Context mContext;
     //左边图标
     private Drawable mLeftDrawable;
     //右侧删除图标
     private Drawable mRightDrawable;
-    private final int DRAWABLE_LEFT = 0;
-    private final int DRAWABLE_TOP = 1;
-    private final int DRAWABLE_RIGHT = 2;
-    private final int DRAWABLE_BOTTOM = 3;
+
     public ClearTextInoutEditText(Context context) {
         super(context);
         init(context);
@@ -53,7 +54,6 @@ public class ClearTextInoutEditText extends TextInputEditText implements TextWat
         this.addTextChangedListener(this);
         this.setOnFocusChangeListener(this);
     }
-
 
 
     @Override

@@ -22,8 +22,8 @@ import com.inspur.emmcloud.bean.appcenter.news.NewsIntrcutionUpdateEvent;
 import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.WaterMarkBgSingleLine;
+import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.MySwipeRefreshLayout;
 
@@ -80,8 +80,8 @@ public class GroupNewsCardFragment extends Fragment implements MySwipeRefreshLay
         newsAdapter = new NewsListAdapter(getActivity(), groupnNewsList);
         newsListView.setAdapter(newsAdapter);
         String myInfo = PreferencesUtils.getString(getContext(), "myInfo", "");
-        GetMyInfoResult  getMyInfoResult = new GetMyInfoResult(myInfo);
-        newsListView.setBackground(new WaterMarkBgSingleLine(getContext(),getMyInfoResult.getCode()));
+        GetMyInfoResult getMyInfoResult = new GetMyInfoResult(myInfo);
+        newsListView.setBackground(new WaterMarkBgSingleLine(getContext(), getMyInfoResult.getCode()));
         getGroupNewsList(getArguments().getString("catagoryid"), 0, true);
         EventBus.getDefault().register(this);
     }
@@ -116,18 +116,6 @@ public class GroupNewsCardFragment extends Fragment implements MySwipeRefreshLay
         }
     }
 
-
-    class ListItemOnClickListener implements OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position,
-                                long id) {
-            Intent intent = new Intent();
-            intent.setClass(getActivity(), NewsWebDetailActivity.class);
-            intent.putExtra("groupNews", groupnNewsList.get(position));
-            startActivity(intent);
-        }
-    }
-
     /**
      * 处理新闻列表，记录当前刷新成功的页编号，设置显示位置
      *
@@ -154,13 +142,12 @@ public class GroupNewsCardFragment extends Fragment implements MySwipeRefreshLay
         EventBus.getDefault().unregister(this);
     }
 
-
     /**
      * 获取每个标题下的新闻列表
      */
     private void getGroupNewsList(String catagoryId, int page, boolean isRefresh) {
         if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
-            if(isRefresh){
+            if (isRefresh) {
                 swipeRefreshLayout.setRefreshing(true);
             }
             MyAppAPIService apiService = new MyAppAPIService(getActivity());
@@ -179,6 +166,17 @@ public class GroupNewsCardFragment extends Fragment implements MySwipeRefreshLay
     @Override
     public void onLoadMore() {
         getGroupNewsList(getArguments().getString("catagoryid"), page + 1, false);
+    }
+
+    class ListItemOnClickListener implements OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position,
+                                long id) {
+            Intent intent = new Intent();
+            intent.setClass(getActivity(), NewsWebDetailActivity.class);
+            intent.putExtra("groupNews", groupnNewsList.get(position));
+            startActivity(intent);
+        }
     }
 
     class WebService extends APIInterfaceInstance {

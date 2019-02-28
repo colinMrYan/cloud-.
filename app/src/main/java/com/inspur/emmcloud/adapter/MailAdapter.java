@@ -26,17 +26,17 @@ public class MailAdapter extends RecyclerView.Adapter<MailAdapter.ViewHolder> {
     private List<Mail> mailList = new ArrayList<>();
     private MailFolder currentRootMailFolder;
 
-    public MailAdapter(Context context,AdapterListener adapterListener) {
+    public MailAdapter(Context context, AdapterListener adapterListener) {
         this.context = context;
         this.adapterListener = adapterListener;
     }
 
-    public void setMailList(List<Mail> mailList,MailFolder currentRootMailFolder){
+    public void setMailList(List<Mail> mailList, MailFolder currentRootMailFolder) {
         this.mailList = mailList;
         this.currentRootMailFolder = currentRootMailFolder;
     }
 
-    public void clearMailList(){
+    public void clearMailList() {
         this.mailList.clear();
         notifyDataSetChanged();
     }
@@ -52,15 +52,15 @@ public class MailAdapter extends RecyclerView.Adapter<MailAdapter.ViewHolder> {
         Mail mail = mailList.get(position);
         int folderType = currentRootMailFolder.getFolderType();
         //当root文件夹为发件箱、已发送和草稿箱时title显示收件人，否则显示发件人
-        if (folderType == 0 || folderType == 2 || folderType ==3){
+        if (folderType == 0 || folderType == 2 || folderType == 3) {
             holder.titleText.setText(mail.getDisplayTo());
-        }else {
+        } else {
             holder.titleText.setText(mail.getDisplaySender());
         }
-        String time = TimeUtils.getDisplayTime(context,mail.getCreationTimestamp());
+        String time = TimeUtils.getDisplayTime(context, mail.getCreationTimestamp());
         holder.topicText.setText(mail.getSubject());
-        holder.encryptFlagImg.setImageResource(mail.isEncrypted()?R.drawable.ic_mail_flag_encrypt_yes:R.drawable.ic_mail_flag_encrypt_no);
-        holder.unReadView.setVisibility(mail.isRead()?View.GONE:View.VISIBLE);
+        holder.encryptFlagImg.setImageResource(mail.isEncrypted() ? R.drawable.ic_mail_flag_encrypt_yes : R.drawable.ic_mail_flag_encrypt_no);
+        holder.unReadView.setVisibility(mail.isRead() ? View.GONE : View.VISIBLE);
         holder.timeText.setText(time);
     }
 
@@ -71,8 +71,17 @@ public class MailAdapter extends RecyclerView.Adapter<MailAdapter.ViewHolder> {
         return holder;
     }
 
+    /**
+     * 创建一个回调接口
+     */
+    public interface AdapterListener {
+        void onItemClick(View view, int position);
+
+        boolean onItemLongClick(View view, int position);
+    }
+
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
-//        private CircleTextImageView senderPhotoImg;
+        //        private CircleTextImageView senderPhotoImg;
         private TextView titleText;
         private ImageView encryptFlagImg;
         private ImageView signFlagImg;
@@ -92,7 +101,7 @@ public class MailAdapter extends RecyclerView.Adapter<MailAdapter.ViewHolder> {
             topicText = (TextView) convertView.findViewById(R.id.tv_topic);
             encryptFlagImg = (ImageView) convertView.findViewById(R.id.iv_flag_encrypt);
             signFlagImg = (ImageView) convertView.findViewById(R.id.iv_flag_sign);
-            unReadView=convertView.findViewById(R.id.v_unread);
+            unReadView = convertView.findViewById(R.id.v_unread);
         }
 
         @Override
@@ -109,14 +118,5 @@ public class MailAdapter extends RecyclerView.Adapter<MailAdapter.ViewHolder> {
             }
             return false;
         }
-    }
-
-    /**
-     * 创建一个回调接口
-     */
-    public interface AdapterListener {
-        void onItemClick(View view, int position);
-
-        boolean onItemLongClick(View view, int position);
     }
 }

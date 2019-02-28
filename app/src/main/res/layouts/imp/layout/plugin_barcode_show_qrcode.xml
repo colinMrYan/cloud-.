@@ -17,7 +17,7 @@
             android:layout_centerVertical="true"
             android:onClick="onClick"
             android:scaleType="fitXY"
-            android:src="@drawable/ic_back_btn_black" />
+            android:src="?attr/ic_back_btn" />
     </RelativeLayout>
 
     <RelativeLayout

@@ -16,12 +16,12 @@ public class MailAttachment {
     private boolean isAttachment;
     private String contentId;
 
-    public MailAttachment(JSONObject obj){
-        id= JSONUtils.getString(obj,"id","");
-        contentId = JSONUtils.getString(obj,"contentId","");
-        name= JSONUtils.getString(obj,"name","");
-        size= JSONUtils.getInt(obj,"size",-1);
-        isAttachment= JSONUtils.getBoolean(obj,"isAttachment",true);
+    public MailAttachment(JSONObject obj) {
+        id = JSONUtils.getString(obj, "id", "");
+        contentId = JSONUtils.getString(obj, "contentId", "");
+        name = JSONUtils.getString(obj, "name", "");
+        size = JSONUtils.getInt(obj, "size", -1);
+        isAttachment = JSONUtils.getBoolean(obj, "isAttachment", true);
     }
 
     public String getId() {

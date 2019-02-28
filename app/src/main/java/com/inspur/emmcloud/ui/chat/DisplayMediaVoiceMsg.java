@@ -90,7 +90,7 @@ public class DisplayMediaVoiceMsg {
                     MediaPlayerManagerUtils.getManager().stop();
                     return;
                 }
-                if (MediaPlayerManagerUtils.getManager().isPlaying()){
+                if (MediaPlayerManagerUtils.getManager().isPlaying()) {
                     MediaPlayerManagerUtils.getManager().stop();
                 }
 
@@ -176,21 +176,21 @@ public class DisplayMediaVoiceMsg {
      * @param isMyMsg
      */
     private static void playVoiceFile(String fileSavePath, final View voiceAnimView, final boolean isMyMsg) {
-            MediaPlayerManagerUtils.getManager().play(fileSavePath, new MediaPlayerManagerUtils.PlayCallback() {
-                @Override
-                public void onPrepared() {
-                }
+        MediaPlayerManagerUtils.getManager().play(fileSavePath, new MediaPlayerManagerUtils.PlayCallback() {
+            @Override
+            public void onPrepared() {
+            }
 
-                @Override
-                public void onComplete() {
-                    setVoiceAnimViewBgByPlayStatus(voiceAnimView, false, isMyMsg);
-                }
+            @Override
+            public void onComplete() {
+                setVoiceAnimViewBgByPlayStatus(voiceAnimView, false, isMyMsg);
+            }
 
-                @Override
-                public void onStop() {
-                    setVoiceAnimViewBgByPlayStatus(voiceAnimView, false, isMyMsg);
-                }
-            });
+            @Override
+            public void onStop() {
+                setVoiceAnimViewBgByPlayStatus(voiceAnimView, false, isMyMsg);
+            }
+        });
     }
 
 

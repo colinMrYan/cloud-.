@@ -16,19 +16,20 @@ import org.greenrobot.eventbus.EventBus;
 public class AppBadgeUtils {
     private Context context;
     private AppAPIService appAPIService;
-    public AppBadgeUtils(Context context){
+
+    public AppBadgeUtils(Context context) {
         this.context = context;
         appAPIService = new AppAPIService(context);
         appAPIService.setAPIInterface(new WebService());
     }
 
-    public void getAppBadgeCountFromServer(){
-        if(NetUtils.isNetworkConnected(context,false)){
+    public void getAppBadgeCountFromServer() {
+        if (NetUtils.isNetworkConnected(context, false)) {
             appAPIService.getBadgeCount();
         }
     }
 
-    class WebService extends APIInterfaceInstance{
+    class WebService extends APIInterfaceInstance {
         @Override
         public void returnBadgeCountSuccess(BadgeBodyModel badgeBodyModel) {
             EventBus.getDefault().post(badgeBodyModel);

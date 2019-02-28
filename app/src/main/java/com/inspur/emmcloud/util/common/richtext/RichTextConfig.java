@@ -51,8 +51,8 @@ public final class RichTextConfig {
     public final Drawable errorImage; // errorImage
     public final Callback callback; // 解析完成的回调
     public final ImageHolder.BorderHolder borderHolder;
-    final ImageGetter imageGetter; // 图片加载器，默认为GlideImageGetter
     public final boolean singleLoad;
+    final ImageGetter imageGetter; // 图片加载器，默认为GlideImageGetter
 
 
     private RichTextConfig(RichTextConfigBuild config) {

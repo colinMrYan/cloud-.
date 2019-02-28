@@ -14,10 +14,11 @@ import java.util.List;
 
 public class GetWebexMeetingListResult {
     private List<WebexMeeting> webexMeetingList = new ArrayList<>();
-    public GetWebexMeetingListResult(String response){
-        JSONArray array = JSONUtils.getJSONArray(response,new JSONArray());
-        for (int i=0;i<array.length();i++){
-            JSONObject obj = JSONUtils.getJSONObject(array,i,new JSONObject());
+
+    public GetWebexMeetingListResult(String response) {
+        JSONArray array = JSONUtils.getJSONArray(response, new JSONArray());
+        for (int i = 0; i < array.length(); i++) {
+            JSONObject obj = JSONUtils.getJSONObject(array, i, new JSONObject());
             WebexMeeting webexMeeting = new WebexMeeting(obj);
             webexMeetingList.add(webexMeeting);
         }

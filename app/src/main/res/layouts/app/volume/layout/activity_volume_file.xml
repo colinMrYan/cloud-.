@@ -24,7 +24,7 @@
                 android:layout_centerVertical="true"
                 android:onClick="onClick"
                 android:scaleType="fitXY"
-                android:src="@drawable/ic_back_btn_black" />
+                android:src="?attr/ic_back_btn" />
 
 
             <TextView
@@ -240,7 +240,7 @@
                     android:layout_height="wrap_content"
                     android:adjustViewBounds="true"
                     android:scaleType="fitXY"
-                    android:src="@drawable/ic_volume_file_blak" />
+                    android:src="@drawable/ic_no_channel_file" />
 
                 <TextView
                     android:id="@+id/no_file_text"

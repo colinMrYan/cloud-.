@@ -67,13 +67,9 @@ public class Message implements Serializable {
         type = JSONUtils.getString(dataObj, "type", "");
         state = JSONUtils.getString(dataObj, "state", "");
         content = JSONUtils.getString(dataObj, "content", "");
-        tmpId = JSONUtils.getString(content,"tmpId","");
+        tmpId = JSONUtils.getString(content, "tmpId", "");
         channel = msg.getCid();
         creationDate = msg.getTime();
-    }
-
-    public static boolean isMessage(Msg msg) {
-        return msg.getBody().contains("\\\"message\\\":\\\"1.0\\\"");
     }
 
     public Message(JSONObject obj) {
@@ -85,14 +81,18 @@ public class Message implements Serializable {
         channel = JSONUtils.getString(obj, "channel", "");
         state = JSONUtils.getString(obj, "state", "");
         content = JSONUtils.getString(obj, "content", "");
-        tmpId = JSONUtils.getString(content,"tmpId","");
+        tmpId = JSONUtils.getString(content, "tmpId", "");
         String UTCTime = JSONUtils.getString(obj, "creationDate", "");
         creationDate = TimeUtils.UTCString2Long(UTCTime);
         boolean readState = JSONUtils.getBoolean(obj, "read", false);
         if (!readState && getFromUser().equals(MyApplication.getInstance().getUid())) {
             readState = true;
         }
-        read = readState?1:0;
+        read = readState ? 1 : 0;
+    }
+
+    public static boolean isMessage(Msg msg) {
+        return msg.getBody().contains("\\\"message\\\":\\\"1.0\\\"");
     }
 
     public MsgContentExtendedActions getMsgContentExtendedActions() {

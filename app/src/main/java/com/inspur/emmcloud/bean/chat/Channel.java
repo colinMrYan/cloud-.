@@ -107,11 +107,11 @@ public class Channel implements Serializable {
                 this.inputs = obj.getString("inputs");
             }
 
-            if(obj.has("action")){
+            if (obj.has("action")) {
                 this.action = obj.getString("action");
             }
 
-            if(obj.has("avatar")){
+            if (obj.has("avatar")) {
                 this.avatar = obj.getString("avatar");
             }
         } catch (Exception e) {
@@ -159,12 +159,12 @@ public class Channel implements Serializable {
 
     }
 
-    public void setMsgLastUpdate(long time) {
-        this.msgLastUpdate = time;
-    }
-
     public long getMsgLastUpdate() {
         return msgLastUpdate;
+    }
+
+    public void setMsgLastUpdate(long time) {
+        this.msgLastUpdate = time;
     }
 
     public List<Msg> getNewMsgList() {
@@ -195,14 +195,6 @@ public class Channel implements Serializable {
 
     public String getNewMsgContent() {
         return newMsgContent;
-    }
-
-    public String getShowIcon() {
-        return showIcon;
-    }
-
-    public void setShowIcon(String showIcon) {
-        this.showIcon = showIcon;
     }
 
     public void setNewMsgContent(Context context) {
@@ -244,7 +236,7 @@ public class Channel implements Serializable {
                     String source = JSONUtils.getString(msgBody, "source", "");
                     if (!StringUtils.isBlank(source) && msg.getUid().toLowerCase().startsWith("bot")) {
                         newMsgContent = MarkDown.fromMarkdown(source);
-                    }else {
+                    } else {
                         newMsgContent = MentionsAndUrlShowUtils.getMsgContentSpannableString(msgBody).toString();
                     }
                     if (type.equals("GROUP")) {
@@ -266,14 +258,22 @@ public class Channel implements Serializable {
             } else if (type.equals("GROUP")) {
                 newMsgContent = context.getString(
                         R.string.group_no_message);
-            } else if(type.equals("LINK")){
-                newMsgContent = context.getString(R.string.welcome_to)+" "+title;
+            } else if (type.equals("LINK")) {
+                newMsgContent = context.getString(R.string.welcome_to) + " " + title;
             } else {
                 newMsgContent = context.getString(
                         R.string.direct_no_message);
             }
         }
 
+    }
+
+    public String getShowIcon() {
+        return showIcon;
+    }
+
+    public void setShowIcon(String showIcon) {
+        this.showIcon = showIcon;
     }
 
     public void setNewMessageContent(Context context) {
@@ -293,8 +293,8 @@ public class Channel implements Serializable {
                     break;
                 case Message.MESSAGE_TYPE_TEXT_MARKDOWN:
                     SpannableString spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(context, message.getMsgContentTextMarkdown().getText(), message.getMsgContentTextMarkdown().getMentionsMap());
-                    String markdownString =spannableString.toString();
-                    if (!StringUtils.isBlank(markdownString)){
+                    String markdownString = spannableString.toString();
+                    if (!StringUtils.isBlank(markdownString)) {
                         markdownString = MarkDown.fromMarkdown(markdownString);
                     }
                     newMsgContent = fromUserName + markdownString;
@@ -329,8 +329,8 @@ public class Channel implements Serializable {
             } else if (type.equals("GROUP")) {
                 newMsgContent = context.getString(
                         R.string.group_no_message);
-            } else if(type.equals("LINK")){
-                newMsgContent = context.getString(R.string.welcome_to)+" "+title;
+            } else if (type.equals("LINK")) {
+                newMsgContent = context.getString(R.string.welcome_to) + " " + title;
             } else {
                 newMsgContent = context.getString(
                         R.string.direct_no_message);
@@ -360,16 +360,16 @@ public class Channel implements Serializable {
         return type;
     }
 
+    public void setType(String type) {
+        this.type = type;
+    }
+
     public boolean getDnd() {
         return dnd;
     }
 
     public void setDnd(boolean dnd) {
         this.dnd = dnd;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
     public String getIcon() {
@@ -429,12 +429,12 @@ public class Channel implements Serializable {
         this.isHide = isHide;
     }
 
-    public void setTopTime(long setTopTime) {
-        this.setTopTime = setTopTime;
-    }
-
     public long getTopTime() {
         return setTopTime;
+    }
+
+    public void setTopTime(long setTopTime) {
+        this.setTopTime = setTopTime;
     }
 
     public String getInputs() {

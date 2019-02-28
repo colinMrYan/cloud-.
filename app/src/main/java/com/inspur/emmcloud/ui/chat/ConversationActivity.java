@@ -71,6 +71,7 @@ import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
 import com.inspur.imp.plugin.camera.mycamera.MyCameraActivity;
 import com.inspur.imp.util.compressor.Compressor;
 import com.qmuiteam.qmui.widget.QMUILoadingView;
+import com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -98,6 +99,7 @@ public class ConversationActivity extends ConversationBaseActivity {
     private static final int REFRESH_HISTORY_MESSAGE = 6;
     private static final int REFRESH_PUSH_MESSAGE = 7;
     private static final int REFRESH_OFFLINE_MESSAGE = 8;
+    private static final int UNREAD_NUMBER_BORDER = 20;
     @ViewInject(R.id.msg_list)
     private RecycleViewForSizeChange msgListView;
 
@@ -111,6 +113,8 @@ public class ConversationActivity extends ConversationBaseActivity {
 
     @ViewInject(R.id.robot_photo_img)
     private ImageView robotPhotoImg;
+    @ViewInject(R.id.btn_conversation_unread)
+    private QMUIRoundButton unreadQMUIRoundBtn;
     private LinearLayoutManager linearLayoutManager;
     private String robotUid = "BOT6004";
     private List<UIMessage> uiMessageList = new ArrayList<>();
@@ -225,7 +229,30 @@ public class ConversationActivity extends ConversationBaseActivity {
         setChannelTitle();
         initMsgListView();
         sendMsgFromShare();
+        setUnReadMessageCount();
     }
+
+    private void setUnReadMessageCount() {
+        if (getIntent().hasExtra(EXTRA_UNREAD_MESSAGE)) {
+            final List<Message> unReadMessageList = (List<Message>) getIntent().getSerializableExtra(EXTRA_UNREAD_MESSAGE);
+            unreadQMUIRoundBtn.setVisibility(unReadMessageList.size() > UNREAD_NUMBER_BORDER ? View.VISIBLE : View.GONE);
+            unreadQMUIRoundBtn.setText(getString(R.string.chat_conversation_unread_count, unReadMessageList.size()));
+            unreadQMUIRoundBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    List<UIMessage> unReadMessageUIList = UIMessage.MessageList2UIMessageList(unReadMessageList);
+                    uiMessageList.clear();
+                    uiMessageList.addAll(unReadMessageUIList);
+                    adapter.setMessageList(uiMessageList);
+                    adapter.notifyDataSetChanged();
+                    msgListView.MoveToPosition(0);
+                    unreadQMUIRoundBtn.setVisibility(View.GONE);
+                    msgListView.scrollToPosition(0);
+                }
+            });
+        }
+    }
+
 
     /**
      * 初始化下拉刷新UI
@@ -360,9 +387,9 @@ public class ConversationActivity extends ConversationBaseActivity {
             }
 
             @Override
-            public void onMessageResend(UIMessage uiMessage,View view) {
+            public void onMessageResend(UIMessage uiMessage, View view) {
                 if (uiMessage.getSendStatus() == Message.MESSAGE_SEND_FAIL) {
-                    showResendMessageDlg(uiMessage,view);
+                    showResendMessageDlg(uiMessage, view);
                 }
             }
 
@@ -388,9 +415,9 @@ public class ConversationActivity extends ConversationBaseActivity {
      *
      * @param uiMessage
      */
-    private void showResendMessageDlg(final UIMessage uiMessage,View view) {
+    private void showResendMessageDlg(final UIMessage uiMessage, View view) {
         View contentView = LayoutInflater.from(this).inflate(R.layout.pop_voice_to_text_view, null);
-        ((TextView)contentView.findViewById(R.id.tv_pop_title)).setText(getString(R.string.chat_resend_message));
+        ((TextView) contentView.findViewById(R.id.tv_pop_title)).setText(getString(R.string.chat_resend_message));
         contentView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         resendMessagePop = new PopupWindow(contentView,
                 LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -892,7 +919,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 finishActivity();
                 break;
 
-            case R.id.channel_info_img:
+            case R.id.iv_config:
                 showConversationInfo();
                 break;
             default:
@@ -1264,6 +1291,21 @@ public class ConversationActivity extends ConversationBaseActivity {
         }
     }
 
+    /**
+     * 将频道置为不隐藏
+     */
+    private void setConversationUnhide() {
+        if (conversation.isHide()) {
+            conversation.setHide(false);
+            ConversationCacheUtils.updateConversationHide(MyApplication.getInstance(), conversation.getId(), false);
+            if (NetUtils.isNetworkConnected(MyApplication.getInstance(), false)) {
+                ChatAPIService apiService = new ChatAPIService(this);
+                apiService.setAPIInterface(new WebService());
+                apiService.setConversationHide(conversation.getId(), false);
+            }
+        }
+    }
+
     class CacheMessageListThread extends Thread {
         private List<Message> messageList;
         private Long targetTime;
@@ -1298,21 +1340,6 @@ public class ConversationActivity extends ConversationBaseActivity {
                         break;
                 }
                 message.sendToTarget();
-            }
-        }
-    }
-
-    /**
-     * 将频道置为不隐藏
-     */
-    private void setConversationUnhide() {
-        if (conversation.isHide()) {
-            conversation.setHide(false);
-            ConversationCacheUtils.updateConversationHide(MyApplication.getInstance(), conversation.getId(), false);
-            if (NetUtils.isNetworkConnected(MyApplication.getInstance(),false)) {
-                ChatAPIService apiService = new ChatAPIService(this);
-                apiService.setAPIInterface(new WebService());
-                apiService.setConversationHide(conversation.getId(), false);
             }
         }
     }

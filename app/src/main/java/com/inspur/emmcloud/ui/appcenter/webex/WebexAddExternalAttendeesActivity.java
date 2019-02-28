@@ -54,14 +54,14 @@ public class WebexAddExternalAttendeesActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        webexAttendeesList = (List<WebexAttendees>)getIntent().getSerializableExtra(EXTRA_ATTENDEES_LIST);
+        webexAttendeesList = (List<WebexAttendees>) getIntent().getSerializableExtra(EXTRA_ATTENDEES_LIST);
         externalWebexAttendeesList = getExternalAttendeesList();
-        numText.setText(getString(R.string.webex_add_invitee_num,webexAttendeesList.size(),20-webexAttendeesList.size()));
+        numText.setText(getString(R.string.webex_add_invitee_num, webexAttendeesList.size(), 20 - webexAttendeesList.size()));
         adapter = new Adapter();
         adapter.registerDataSetObserver(new DataSetObserver() {
             @Override
             public void onChanged() {
-                numText.setText(getString(R.string.webex_add_invitee_num,webexAttendeesList.size(),20-webexAttendeesList.size()));
+                numText.setText(getString(R.string.webex_add_invitee_num, webexAttendeesList.size(), 20 - webexAttendeesList.size()));
             }
         });
         attendeesListView.setAdapter(adapter);
@@ -75,13 +75,13 @@ public class WebexAddExternalAttendeesActivity extends BaseActivity {
                 break;
             case R.id.tv_complete:
                 Intent intent = new Intent();
-                intent.putExtra(EXTRA_ATTENDEES_LIST,(Serializable)webexAttendeesList);
-                setResult(RESULT_OK,intent);
+                intent.putExtra(EXTRA_ATTENDEES_LIST, (Serializable) webexAttendeesList);
+                setResult(RESULT_OK, intent);
                 finish();
                 break;
             case R.id.bt_add_attendees:
                 String email = addAttendeesEdit.getText().toString();
-                if (addAttendees(email)){
+                if (addAttendees(email)) {
                     addAttendeesEdit.setText("");
                 }
 
@@ -93,7 +93,7 @@ public class WebexAddExternalAttendeesActivity extends BaseActivity {
     private List<WebexAttendees> getExternalAttendeesList() {
         List<WebexAttendees> targetWebexAttendeesList = new ArrayList<>();
         for (WebexAttendees webexAttendees : webexAttendeesList) {
-            if (webexAttendees.getSearchModel() == null)  {
+            if (webexAttendees.getSearchModel() == null) {
                 targetWebexAttendeesList.add(webexAttendees);
             }
         }
@@ -101,12 +101,12 @@ public class WebexAddExternalAttendeesActivity extends BaseActivity {
     }
 
 
-    private boolean addAttendees(String email){
+    private boolean addAttendees(String email) {
         if (StringUtils.isBlank(email)) {
             ToastUtils.show(this, R.string.webex_input_invitee_emails);
             return false;
         }
-        if (webexAttendeesList.size() == 20){
+        if (webexAttendeesList.size() == 20) {
             ToastUtils.show(this, R.string.contact_select_limit_warning);
             return false;
         }

@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class EmmSecurityKeyboard extends PopupWindow{
+public class EmmSecurityKeyboard extends PopupWindow {
 
     private static final int KEYBOARD_RADIX = 10;
     private static final int KEYBOARD_NUMBER_RANDOM_TYPE = 1;
@@ -48,152 +48,6 @@ public class EmmSecurityKeyboard extends PopupWindow{
     private EmmSecurityConfigure configuration;
     private EditText curEditText;
     private Context context;
-
-    public EmmSecurityKeyboard(Context context){
-        this(context,null);
-    }
-
-    public EmmSecurityKeyboard(Context context, EmmSecurityConfigure securityConfigure) {
-        super(context);
-        if (securityConfigure == null) {
-            configuration = new EmmSecurityConfigure();
-        } else {
-            configuration = securityConfigure;
-        }
-        this.context = context;
-        LayoutInflater inflater = (LayoutInflater) context
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        mainView = inflater.inflate(R.layout.emm_keyboard, null);
-        this.setContentView(mainView);
-        this.setWidth(EmmDisplayUtils.getScreenWidth(context));
-        this.setHeight(LayoutParams.WRAP_CONTENT);
-        ColorDrawable dw = new ColorDrawable(Color.parseColor("#00000000"));
-        // 设置SelectPicPopupWindow弹出窗体的背景
-        this.setBackgroundDrawable(dw);
-        this.setFocusable(false);
-        this.setOutsideTouchable(false);
-        this.setPopupWindowTouchModal(this, false);
-        this.setAnimationStyle(R.style.PopupKeybroad);
-        if (EmmDisplayUtils.dp2px(context, 236) > (int) (EmmDisplayUtils
-                .getScreenHeight(context) * 3.0f / 5.0f)) {
-            keyboardLetter = new Keyboard(context,
-                    R.xml.emm_keyboard_english_land);
-            keyboardNumber = new Keyboard(context, R.xml.emm_keyboard_number_land);
-            keyboardSymbol = new Keyboard(context, R.xml.emm_keyboard_symbols_shift_land);
-            randomKeysForOnce();
-        } else {
-            keyboardLetter = new Keyboard(context, R.xml.emm_keyboard_english);
-            keyboardNumber = new Keyboard(context, R.xml.emm_keyboard_number);
-            keyboardSymbol = new Keyboard(context, R.xml.emm_keyboard_symbols_shift);
-            randomKeysForOnce();
-        }
-        keyboardView = mainView.findViewById(R.id.keyboard_view);
-        switch (configuration.getDefaultKeyboardType().getCode()) {
-            case 0:
-                keyboardView.setKeyboard(keyboardLetter);
-                break;
-            case 1:
-                keyboardView.setKeyboard(keyboardNumber);
-                break;
-            case 2:
-                keyboardView.setKeyboard(keyboardSymbol);
-                break;
-            default:
-                keyboardView.setKeyboard(keyboardLetter);
-                break;
-        }
-        keyboardView.setEnabled(true);
-        keyboardView.setPreviewEnabled(false);
-        keyboardView.setOnKeyboardActionListener(listener);
-    }
-
-    private void editTextAddListener() {
-        //方法1，需要把构造函数里的EditText换成ClearEditText
-//        curEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-//            @Override
-//            public void onFocusChange(View view, boolean b) {
-//                if(!b){
-//                    dismiss();
-//                }
-//                clearEditText.onFocusChange(view,b);
-//            }
-//        });
-        //方法2
-        curEditText.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
-            @Override
-            public void onLayoutChange(View view, int i, int i1, int i2, int i3, int i4, int i5, int i6, int i7) {
-                if(!curEditText.isFocused()){
-                    dismiss();
-                }
-            }
-        });
-    }
-
-    /**
-     * 自主调用安全键盘
-     */
-    public void showSecurityKeyBoard(EditText clearEditText) {
-        this.curEditText = clearEditText;
-        editTextAddListener();
-        disableShowInput();
-        curEditText.requestFocus();
-        //curEditText.setInputType(InputType.TYPE_NULL);
-        //将光标移到文本最后
-        Editable editable = curEditText.getText();
-        Selection.setSelection(editable, editable.length());
-        hideSystemKeyboard(curEditText);
-        showKeyboard(curEditText);
-    }
-
-    private void disableShowInput() {
-        if (android.os.Build.VERSION.SDK_INT <= 10) {
-            curEditText.setInputType(InputType.TYPE_NULL);
-        } else {
-            Class<EditText> cls = EditText.class;
-            Method method;
-            try {
-                method = cls.getMethod("setShowSoftInputOnFocus", boolean.class);
-                method.setAccessible(true);
-                method.invoke(curEditText, false);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private void randomKeysForOnce() {
-        EmmCreateKeyList.initLetters(letterList);
-        randomKeys(KEYBOARD_LETTER_RANDOM_TYPE);
-        EmmCreateKeyList.initNumbers(numberList);
-        randomKeys(KEYBOARD_NUMBER_RANDOM_TYPE);
-    }
-
-    /**
-     * @param popupWindow popupWindow 的touch事件传递
-     * @param touchModal  true代表拦截，事件不向下一层传递，false表示不拦截，事件向下一层传递
-     */
-    @SuppressLint("PrivateApi")
-    private void setPopupWindowTouchModal(PopupWindow popupWindow,
-                                          boolean touchModal) {
-        Method method;
-        try {
-            method = PopupWindow.class.getDeclaredMethod("setTouchModal",
-                    boolean.class);
-            method.setAccessible(true);
-            method.invoke(popupWindow, touchModal);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void hideSystemKeyboard(View view) {
-        InputMethodManager manager = (InputMethodManager) view.getContext()
-                .getSystemService(Context.INPUT_METHOD_SERVICE);
-        if (manager != null) {
-            manager.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }
-    }
-
     private OnKeyboardActionListener listener = new OnKeyboardActionListener() {
         @Override
         public void swipeUp() {
@@ -274,6 +128,157 @@ public class EmmSecurityKeyboard extends PopupWindow{
             }
         }
     };
+
+    public EmmSecurityKeyboard(Context context) {
+        this(context, null);
+    }
+
+    public EmmSecurityKeyboard(Context context, EmmSecurityConfigure securityConfigure) {
+        super(context);
+        if (securityConfigure == null) {
+            configuration = new EmmSecurityConfigure();
+        } else {
+            configuration = securityConfigure;
+        }
+        this.context = context;
+        LayoutInflater inflater = (LayoutInflater) context
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mainView = inflater.inflate(R.layout.emm_keyboard, null);
+        mainView.findViewById(R.id.iv_keyboard_view_down).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
+        this.setContentView(mainView);
+        this.setWidth(EmmDisplayUtils.getScreenWidth(context));
+        this.setHeight(LayoutParams.WRAP_CONTENT);
+        ColorDrawable dw = new ColorDrawable(Color.parseColor("#00000000"));
+        // 设置SelectPicPopupWindow弹出窗体的背景
+        this.setBackgroundDrawable(dw);
+        this.setFocusable(false);
+        this.setOutsideTouchable(false);
+        this.setPopupWindowTouchModal(this, false);
+        this.setAnimationStyle(R.style.PopupKeybroad);
+        if (EmmDisplayUtils.dp2px(context, 236) > (int) (EmmDisplayUtils
+                .getScreenHeight(context) * 3.0f / 5.0f)) {
+            keyboardLetter = new Keyboard(context,
+                    R.xml.emm_keyboard_english_land);
+            keyboardNumber = new Keyboard(context, R.xml.emm_keyboard_number_land);
+            keyboardSymbol = new Keyboard(context, R.xml.emm_keyboard_symbols_shift_land);
+            randomKeysForOnce();
+        } else {
+            keyboardLetter = new Keyboard(context, R.xml.emm_keyboard_english);
+            keyboardNumber = new Keyboard(context, R.xml.emm_keyboard_number);
+            keyboardSymbol = new Keyboard(context, R.xml.emm_keyboard_symbols_shift);
+            randomKeysForOnce();
+        }
+        keyboardView = mainView.findViewById(R.id.keyboard_view);
+        switch (configuration.getDefaultKeyboardType().getCode()) {
+            case 0:
+                keyboardView.setKeyboard(keyboardLetter);
+                break;
+            case 1:
+                keyboardView.setKeyboard(keyboardNumber);
+                break;
+            case 2:
+                keyboardView.setKeyboard(keyboardSymbol);
+                break;
+            default:
+                keyboardView.setKeyboard(keyboardLetter);
+                break;
+        }
+        keyboardView.setEnabled(true);
+        keyboardView.setPreviewEnabled(false);
+        keyboardView.setOnKeyboardActionListener(listener);
+    }
+
+    private void editTextAddListener() {
+        //方法1，需要把构造函数里的EditText换成ClearEditText
+//        curEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//            @Override
+//            public void onFocusChange(View view, boolean b) {
+//                if(!b){
+//                    dismiss();
+//                }
+//                clearEditText.onFocusChange(view,b);
+//            }
+//        });
+        //方法2
+        curEditText.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View view, int i, int i1, int i2, int i3, int i4, int i5, int i6, int i7) {
+                if (!curEditText.isFocused()) {
+                    dismiss();
+                }
+            }
+        });
+    }
+
+    /**
+     * 自主调用安全键盘
+     */
+    public void showSecurityKeyBoard(EditText clearEditText) {
+        this.curEditText = clearEditText;
+        editTextAddListener();
+        disableShowInput();
+        curEditText.requestFocus();
+        //curEditText.setInputType(InputType.TYPE_NULL);
+        //将光标移到文本最后
+        Editable editable = curEditText.getText();
+        Selection.setSelection(editable, editable.length());
+        hideSystemKeyboard(curEditText);
+        showKeyboard(curEditText);
+    }
+
+    private void disableShowInput() {
+        if (android.os.Build.VERSION.SDK_INT <= 10) {
+            curEditText.setInputType(InputType.TYPE_NULL);
+        } else {
+            Class<EditText> cls = EditText.class;
+            Method method;
+            try {
+                method = cls.getMethod("setShowSoftInputOnFocus", boolean.class);
+                method.setAccessible(true);
+                method.invoke(curEditText, false);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void randomKeysForOnce() {
+        EmmCreateKeyList.initLetters(letterList);
+        randomKeys(KEYBOARD_LETTER_RANDOM_TYPE);
+        EmmCreateKeyList.initNumbers(numberList);
+        randomKeys(KEYBOARD_NUMBER_RANDOM_TYPE);
+    }
+
+    /**
+     * @param popupWindow popupWindow 的touch事件传递
+     * @param touchModal  true代表拦截，事件不向下一层传递，false表示不拦截，事件向下一层传递
+     */
+    @SuppressLint("PrivateApi")
+    private void setPopupWindowTouchModal(PopupWindow popupWindow,
+                                          boolean touchModal) {
+        Method method;
+        try {
+            method = PopupWindow.class.getDeclaredMethod("setTouchModal",
+                    boolean.class);
+            method.setAccessible(true);
+            method.invoke(popupWindow, touchModal);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void hideSystemKeyboard(View view) {
+        InputMethodManager manager = (InputMethodManager) view.getContext()
+                .getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (manager != null) {
+            manager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
 
     private void changeLetterKey() {
         List<Key> keyList = keyboardLetter.getKeys();

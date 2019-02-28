@@ -131,7 +131,7 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
         chatInputMenu.hideAddMenuLayout();
         chatInputMenu.setChatInputMenuListener(new ECMChatInputMenuV0.ChatInputMenuListener() {
             @Override
-            public void onSendMsg(String content, List<String> mentionsUidList, List<String> urlList, Map<String,String> mentionsMap) {
+            public void onSendMsg(String content, List<String> mentionsUidList, List<String> urlList, Map<String, String> mentionsMap) {
                 // TODO Auto-generated method stub
                 sendComment(content, mentionsUidList, urlList);
             }
@@ -179,7 +179,7 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
         disPlayCommonInfo();
         View msgDisplayView = null;
         if (msg.getType().equals("res_file")) {
-            msgDisplayView = DisplayResFileMsg.displayResFileMsg(ChannelMsgDetailActivity.this, msg,true);
+            msgDisplayView = DisplayResFileMsg.displayResFileMsg(ChannelMsgDetailActivity.this, msg, true);
         } else {
             msgDisplayView = inflater.inflate(R.layout.msg_common_detail, null);
             msgContentImg = (ImageView) msgDisplayView
@@ -192,7 +192,7 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
                     msg.getBody());
             displayImage(commentBodyBean.getKey());
             fileNameText.setText(commentBodyBean.getName());
-            LogUtils.jasonDebug("size="+commentBodyBean.getSize());
+            LogUtils.jasonDebug("size=" + commentBodyBean.getSize());
             fileSizeText.setText(FileUtils.formatFileSize(commentBodyBean
                     .getSize()));
             msgContentImg.setOnClickListener(new OnClickListener() {
@@ -363,6 +363,65 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
         return new Comment(jsonComment);
     }
 
+    /**
+     * 打开个人信息
+     *
+     * @param uid
+     */
+    private void openUserInfo(String uid) {
+        Bundle bundle = new Bundle();
+        bundle.putString("uid", uid);
+        //机器人进群修改处
+        if (uid.startsWith("BOT")) {
+            IntentUtils.startActivity(ChannelMsgDetailActivity.this, RobotInfoActivity.class, bundle);
+        } else {
+            IntentUtils.startActivity(ChannelMsgDetailActivity.this,
+                    UserInfoActivity.class, bundle);
+        }
+    }
+
+    @Override
+    public void onRefresh() {
+        getComment();
+    }
+
+    public String getConbineComment(String content, List<String> mentionsUidList, List<String> urlList) {
+        JSONObject richTextObj = new JSONObject();
+        JSONArray mentionArray = JSONUtils.toJSONArray(mentionsUidList);
+        JSONArray urlArray = JSONUtils.toJSONArray(urlList);
+        try {
+            richTextObj.put("source", content);
+            richTextObj.put("mentions", mentionArray);
+            richTextObj.put("urlList", urlArray);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return richTextObj.toString();
+    }
+
+    /**
+     * 获取消息
+     *
+     * @param mid
+     */
+    private void getMsgById(String mid) {
+        if (NetUtils.isNetworkConnected(ChannelMsgDetailActivity.this)) {
+            loadingDialog.show();
+            apiService.getMsg(mid);
+        }
+    }
+
+    /**
+     * 获取消息的评论
+     */
+    private void getComment() {
+        if (NetUtils.isNetworkConnected(ChannelMsgDetailActivity.this)) {
+            apiService.getComment(msg.getMid());
+        } else {
+            swipeRefreshLayout.setRefreshing(false);
+        }
+    }
+
     class CommentAdapter extends BaseAdapter {
         @Override
         public int getCount() {
@@ -403,7 +462,7 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
             sendTimeText.setText(time);
 
             //机器人进群修改处
-            String iconUrl = APIUri.getUserIconUrl(MyApplication.getInstance(),comment.getUid());
+            String iconUrl = APIUri.getUserIconUrl(MyApplication.getInstance(), comment.getUid());
             ImageDisplayUtils.getInstance().displayImage(photoImg, iconUrl, R.drawable.icon_person_default);
             photoImg.setOnClickListener(new OnClickListener() {
                 @Override
@@ -413,66 +472,6 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
                 }
             });
             return convertView;
-        }
-    }
-
-    /**
-     * 打开个人信息
-     *
-     * @param uid
-     */
-    private void openUserInfo(String uid) {
-        Bundle bundle = new Bundle();
-        bundle.putString("uid", uid);
-        //机器人进群修改处
-        if (uid.startsWith("BOT")) {
-            IntentUtils.startActivity(ChannelMsgDetailActivity.this, RobotInfoActivity.class, bundle);
-        } else {
-            IntentUtils.startActivity(ChannelMsgDetailActivity.this,
-                    UserInfoActivity.class, bundle);
-        }
-    }
-
-    @Override
-    public void onRefresh() {
-        getComment();
-    }
-
-
-    public String getConbineComment(String content, List<String> mentionsUidList, List<String> urlList) {
-        JSONObject richTextObj = new JSONObject();
-        JSONArray mentionArray = JSONUtils.toJSONArray(mentionsUidList);
-        JSONArray urlArray = JSONUtils.toJSONArray(urlList);
-        try {
-            richTextObj.put("source", content);
-            richTextObj.put("mentions", mentionArray);
-            richTextObj.put("urlList", urlArray);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return richTextObj.toString();
-    }
-
-    /**
-     * 获取消息
-     *
-     * @param mid
-     */
-    private void getMsgById(String mid) {
-        if (NetUtils.isNetworkConnected(ChannelMsgDetailActivity.this)) {
-            loadingDialog.show();
-            apiService.getMsg(mid);
-        }
-    }
-
-    /**
-     * 获取消息的评论
-     */
-    private void getComment() {
-        if (NetUtils.isNetworkConnected(ChannelMsgDetailActivity.this)) {
-            apiService.getComment(msg.getMid());
-        } else {
-            swipeRefreshLayout.setRefreshing(false);
         }
     }
 

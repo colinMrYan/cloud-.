@@ -10,10 +10,11 @@ public class GetWebSocketBadgeResult {
     private BadgeActionModel badgeActionModel;
     private BadgeHeadersModel badgeHeadersModel;
     private BadgeBodyModel badgeBodyModel;
-    public GetWebSocketBadgeResult(String response){
-        badgeActionModel = new BadgeActionModel(JSONUtils.getString(response,"action",""));
-        badgeHeadersModel = new BadgeHeadersModel(JSONUtils.getString(response,"headers",""));
-        badgeBodyModel = new BadgeBodyModel(JSONUtils.getString(response,"content",""));
+
+    public GetWebSocketBadgeResult(String response) {
+        badgeActionModel = new BadgeActionModel(JSONUtils.getString(response, "action", ""));
+        badgeHeadersModel = new BadgeHeadersModel(JSONUtils.getString(response, "headers", ""));
+        badgeBodyModel = new BadgeBodyModel(JSONUtils.getString(response, "content", ""));
     }
 
     public BadgeBodyModel getBadgeBodyModel() {

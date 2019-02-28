@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -15,7 +16,6 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.LoginAPIService;
 import com.inspur.emmcloud.util.common.FomatUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
@@ -30,7 +30,7 @@ import org.xutils.x;
  */
 
 @ContentView(R.layout.activity_password_reset)
-public class PasswordResetActivity extends BaseActivity implements View.OnTouchListener{
+public class PasswordResetActivity extends BaseActivity implements View.OnTouchListener {
     public static final String EXTRA_CAPTCHA = "extra_captcha";
     @ViewInject(R.id.bt_ok)
     private Button okBtn;
@@ -42,12 +42,12 @@ public class PasswordResetActivity extends BaseActivity implements View.OnTouchL
     private String passwordConfirm;
     private LoadingDialog loadingDlg;
     private EmmSecurityKeyboard emmSecurityKeyboard;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         x.view().inject(this);
-        StateBarUtils.translucent(this, R.color.white);
-        StateBarUtils.setStateBarTextColor(this, true);
+        ImmersionBar.with(this).statusBarColor(android.R.color.white).statusBarDarkFont(true).init();
         EditWatcher editWatcher = new EditWatcher();
         passwordNewEdit.addTextChangedListener(editWatcher);
         passwordConfirmEdit.addTextChangedListener(editWatcher);
@@ -61,31 +61,15 @@ public class PasswordResetActivity extends BaseActivity implements View.OnTouchL
         passwordConfirmEdit.setOnTouchListener(this);
     }
 
-    class EditOnTouchListener implements View.OnTouchListener{
-
-        @Override
-        public boolean onTouch(View view, MotionEvent motionEvent) {
-            switch (view.getId()){
-                case R.id.et_password_new:
-                    emmSecurityKeyboard.showSecurityKeyBoard(passwordNewEdit);
-                    break;
-                case R.id.et_password_confirm:
-                    emmSecurityKeyboard.showSecurityKeyBoard(passwordConfirmEdit);
-                    break;
-            }
-            return false;
-        }
-    }
-
-    public void onClick(View v){
-        switch (v.getId()){
+    public void onClick(View v) {
+        switch (v.getId()) {
             case R.id.bt_save:
-                if (!passwordNew.equals(passwordConfirm)){
-                    ToastUtils.show(PasswordResetActivity.this,R.string.modify_not_same);
+                if (!passwordNew.equals(passwordConfirm)) {
+                    ToastUtils.show(PasswordResetActivity.this, R.string.modify_not_same);
                     return;
                 }
-                if (passwordNew.length()<8 || passwordNew.length()>128 ||!FomatUtils.isPasswrodStrong(passwordNew) ){
-                    ToastUtils.show(MyApplication.getInstance(),R.string.modify_password_invalid);
+                if (passwordNew.length() < 8 || passwordNew.length() > 128 || !FomatUtils.isPasswrodStrong(passwordNew)) {
+                    ToastUtils.show(MyApplication.getInstance(), R.string.modify_password_invalid);
                     return;
                 }
                 resetPassword();
@@ -95,7 +79,7 @@ public class PasswordResetActivity extends BaseActivity implements View.OnTouchL
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.et_password_new:
                 emmSecurityKeyboard.showSecurityKeyBoard(passwordNewEdit);
                 break;
@@ -104,6 +88,32 @@ public class PasswordResetActivity extends BaseActivity implements View.OnTouchL
                 break;
         }
         return false;
+    }
+
+    private void resetPassword() {
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
+            loadingDlg.show();
+            String captcha = getIntent().getStringExtra(EXTRA_CAPTCHA);
+            LoginAPIService apiService = new LoginAPIService(this);
+            apiService.setAPIInterface(new WebService());
+            apiService.resetPassword(captcha, passwordNew);
+        }
+    }
+
+    class EditOnTouchListener implements View.OnTouchListener {
+
+        @Override
+        public boolean onTouch(View view, MotionEvent motionEvent) {
+            switch (view.getId()) {
+                case R.id.et_password_new:
+                    emmSecurityKeyboard.showSecurityKeyBoard(passwordNewEdit);
+                    break;
+                case R.id.et_password_confirm:
+                    emmSecurityKeyboard.showSecurityKeyBoard(passwordConfirmEdit);
+                    break;
+            }
+            return false;
+        }
     }
 
     private class EditWatcher implements TextWatcher {
@@ -128,33 +138,23 @@ public class PasswordResetActivity extends BaseActivity implements View.OnTouchL
             // TODO Auto-generated method stub
             passwordNew = passwordNewEdit.getText().toString();
             passwordConfirm = passwordConfirmEdit.getText().toString();
-            boolean isInputValaid = passwordNew.length()>7 && passwordConfirm.length()>7;
+            boolean isInputValaid = passwordNew.length() > 7 && passwordConfirm.length() > 7;
             okBtn.setEnabled(isInputValaid);
             okBtn.setBackgroundResource(isInputValaid ? R.drawable.selector_login_btn : R.drawable.bg_login_btn_unable);
         }
     }
 
-    private void resetPassword(){
-        if (NetUtils.isNetworkConnected(MyApplication.getInstance())){
-            loadingDlg.show();
-            String captcha = getIntent().getStringExtra(EXTRA_CAPTCHA);
-            LoginAPIService apiService = new LoginAPIService(this);
-            apiService.setAPIInterface(new WebService());
-            apiService.resetPassword(captcha,passwordNew);
+    class WebService extends APIInterfaceInstance {
+        @Override
+        public void returnResetPasswordSuccess() {
+            LoadingDialog.dimissDlg(loadingDlg);
+            MyApplication.getInstance().signout();
+        }
+
+        @Override
+        public void returnResetPasswordFail(String error, int errorCode) {
+            LoadingDialog.dimissDlg(loadingDlg);
+            WebServiceMiddleUtils.hand(PasswordResetActivity.this, error, errorCode);
         }
     }
-
-    class WebService extends APIInterfaceInstance {
-		@Override
-		public void returnResetPasswordSuccess() {
-			LoadingDialog.dimissDlg(loadingDlg);
-			MyApplication.getInstance().signout();
-		}
-
-		@Override
-		public void returnResetPasswordFail(String error, int errorCode) {
-            LoadingDialog.dimissDlg(loadingDlg);
-			WebServiceMiddleUtils.hand(PasswordResetActivity.this, error,errorCode);
-		}
-	}
 }

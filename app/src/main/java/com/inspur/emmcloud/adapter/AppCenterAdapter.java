@@ -122,7 +122,7 @@ public class AppCenterAdapter extends BaseAdapter {
                 if (app.getUseStatus() == 0) {
                     installApp(type, appID, (Button) v);
                 } else if (app.getUseStatus() == 1) {
-                    UriUtils.openApp(activity, app,"appcenter");
+                    UriUtils.openApp(activity, app, "appcenter");
                 } else {
                     // 更新
                 }
@@ -139,6 +139,12 @@ public class AppCenterAdapter extends BaseAdapter {
             loadingDialog.show();
             apiService.addApp(appID);
         }
+    }
+
+    public static class Holder {
+        ImageView iconImg;
+        TextView nameText;
+        Button statusBtn;
     }
 
     public class WebService extends APIInterfaceInstance {
@@ -175,12 +181,6 @@ public class AppCenterAdapter extends BaseAdapter {
             WebServiceMiddleUtils.hand(activity, error, errorCode);
             AppCenterAdapter.this.notifyDataSetChanged();
         }
-    }
-
-    public static class Holder {
-        ImageView iconImg;
-        TextView nameText;
-        Button statusBtn;
     }
 
 }

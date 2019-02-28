@@ -14,19 +14,21 @@ import android.os.IBinder;
  */
 public class CoreInnerService extends Service {
 
-	private final static int GRAY_SERVICE_ID = 1001;
-	@Override
-	public int onStartCommand(Intent intent, int flags, int startId) {
-		startForeground(GRAY_SERVICE_ID, new Notification());
-		stopForeground(true);
-		stopSelf();
-		return Service.START_STICKY;
-	}
-	@Override
-	public IBinder onBind(Intent intent) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    private final static int GRAY_SERVICE_ID = 1001;
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        startForeground(GRAY_SERVICE_ID, new Notification());
+        stopForeground(true);
+        stopSelf();
+        return Service.START_STICKY;
+    }
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
 
 }

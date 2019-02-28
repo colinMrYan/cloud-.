@@ -6,7 +6,6 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.view.View;
 
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.widget.calendarview.Calendar;
 import com.inspur.emmcloud.widget.calendarview.MonthView;
 
@@ -54,6 +53,18 @@ public class MeiZuMonthView extends MonthView {
     }
 
     /**
+     * dp转px
+     *
+     * @param context context
+     * @param dpValue dp
+     * @return px
+     */
+    private static int dipToPx(Context context, float dpValue) {
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (dpValue * scale + 0.5f);
+    }
+
+    /**
      * 绘制选中的日子
      *
      * @param canvas    canvas
@@ -66,7 +77,7 @@ public class MeiZuMonthView extends MonthView {
     @Override
     protected boolean onDrawSelected(Canvas canvas, Calendar calendar, int x, int y, boolean hasScheme) {
         mSelectedPaint.setStyle(Paint.Style.FILL);
-        canvas.drawRect(x + mPadding , y + mPadding, x + mItemWidth - mPadding, y + mItemHeight - mPadding, mSelectedPaint);
+        canvas.drawRect(x + mPadding, y + mPadding, x + mItemWidth - mPadding, y + mItemHeight - mPadding, mSelectedPaint);
         return true;
     }
 
@@ -127,17 +138,5 @@ public class MeiZuMonthView extends MonthView {
                     calendar.isCurrentDay() && isInRange ? mCurDayLunarTextPaint :
                             calendar.isCurrentMonth() ? mCurMonthLunarTextPaint : mOtherMonthLunarTextPaint);
         }
-    }
-
-    /**
-     * dp转px
-     *
-     * @param context context
-     * @param dpValue dp
-     * @return px
-     */
-    private static int dipToPx(Context context, float dpValue) {
-        final float scale = context.getResources().getDisplayMetrics().density;
-        return (int) (dpValue * scale + 0.5f);
     }
 }

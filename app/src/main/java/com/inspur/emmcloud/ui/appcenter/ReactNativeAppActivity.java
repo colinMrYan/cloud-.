@@ -10,6 +10,7 @@ import com.facebook.react.ReactRootView;
 import com.facebook.react.common.LifecycleState;
 import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler;
 import com.facebook.react.shell.MainReactPackage;
+import com.gyf.barlibrary.ImmersionBar;
 import com.horcrux.svg.SvgPackage;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
@@ -28,7 +29,6 @@ import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.common.ZipUtils;
@@ -68,8 +68,7 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
         init();
         checkSource();
         initReactNativeApp();
-        StateBarUtils.translucent( this ,R.color.white);
-        StateBarUtils.setStateBarTextColor( this,true );
+        ImmersionBar.with(this).statusBarColor(android.R.color.white).statusBarDarkFont(true).init();
     }
 
     /**
@@ -107,24 +106,23 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
         reactNativeAppScheme = getIntent().getDataString();
         if (StringUtils.isBlank(reactNativeAppScheme)) {
             //从其他Activity启动时从这启动
-            if(getIntent().hasExtra("ecc-app-react-native")){
+            if (getIntent().hasExtra("ecc-app-react-native")) {
                 String procotolsExtras = getIntent().getStringExtra("ecc-app-react-native");
                 initSchemeAndParams(procotolsExtras);
-            }else{
+            } else {
                 finish();
             }
-        }else {
+        } else {
             initSchemeAndParams(reactNativeAppScheme);
         }
     }
 
     /**
-     *
      * @param procotolsExtras
      */
     private void initSchemeAndParams(String procotolsExtras) {
-        reactNativeAppScheme = procotolsExtras.contains("?")?procotolsExtras.split("[?]")[0]:procotolsExtras;
-        rnAppParams = procotolsExtras.contains("?")?procotolsExtras.split("[?]")[1]:"";
+        reactNativeAppScheme = procotolsExtras.contains("?") ? procotolsExtras.split("[?]")[0] : procotolsExtras;
+        rnAppParams = procotolsExtras.contains("?") ? procotolsExtras.split("[?]")[1] : "";
     }
 
     @Override
@@ -178,7 +176,7 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
                 public void getClientIdSuccess(String clientId) {
                     StringBuilder describeVersionAndTime = ReactNativeFlow.getBundleDotJsonFromFile(reactAppFilePath);
                     AndroidBundleBean androidBundleBean = new AndroidBundleBean(describeVersionAndTime.toString());
-                    reactNativeAPIService.getDownLoadUrl(ReactNativeAppActivity.this,androidBundleBean.getUpdate(),clientId,androidBundleBean.getVersion());
+                    reactNativeAPIService.getDownLoadUrl(ReactNativeAppActivity.this, androidBundleBean.getUpdate(), clientId, androidBundleBean.getVersion());
                 }
 
                 @Override
@@ -262,24 +260,24 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
         bundle.putString("systemVersion", ReactNativeInitInfoUtils.getSystemVersion(ReactNativeAppActivity.this));
         bundle.putString("locale", ReactNativeInitInfoUtils.getLocalLanguage(ReactNativeAppActivity.this));
         bundle.putString("reactNativeVersion", ReactNativeInitInfoUtils.getReactNativeVersion(reactAppFilePath));
-        bundle.putString("accessToken", ((MyApplication)getApplicationContext()).getToken());
+        bundle.putString("accessToken", ((MyApplication) getApplicationContext()).getToken());
         bundle.putString("pushId", ReactNativeInitInfoUtils.getPushId(ReactNativeAppActivity.this));
         bundle.putString("pushType", ReactNativeInitInfoUtils.getPushType(ReactNativeAppActivity.this));
         bundle.putString("appVersion", AppUtils.getVersion(ReactNativeAppActivity.this));
         bundle.putSerializable("userProfile", myInfo);
-        bundle.putSerializable("currentEnterprise", ((MyApplication)getApplicationContext()).getCurrentEnterprise().toJSONObject().toString());
+        bundle.putSerializable("currentEnterprise", ((MyApplication) getApplicationContext()).getCurrentEnterprise().toJSONObject().toString());
 
         /**
          * 增加RN路径上的约定参数
          */
-        if(!StringUtils.isBlank(rnAppParams)){
+        if (!StringUtils.isBlank(rnAppParams)) {
             String[] rnParams = rnAppParams.split("&");
             ReactNativeWritableNativeMap map = new ReactNativeWritableNativeMap();
-            for(int i = 0; i < rnParams.length; i++){
+            for (int i = 0; i < rnParams.length; i++) {
                 String[] signleArgs = rnParams[i].split("=");
-                map.putString(signleArgs[0],signleArgs[1]);
+                map.putString(signleArgs[0], signleArgs[1]);
             }
-            bundle.putSerializable("params",map);
+            bundle.putSerializable("params", map);
         }
         return bundle;
     }
@@ -382,8 +380,8 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
                     createReactRootView(reactAppFilePath);
                     String currentVersion = getAppBundleBean().getVersion();
                     writeBackVersion(preVersion, currentVersion, "FORWARD");
-                }else {
-                    AppExceptionCacheUtils.saveAppException(getApplicationContext(),3,reactZipDownloadFromUri,"react zip download error",0);
+                } else {
+                    AppExceptionCacheUtils.saveAppException(getApplicationContext(), 3, reactZipDownloadFromUri, "react zip download error", 0);
                 }
             }
 

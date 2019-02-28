@@ -25,7 +25,8 @@ public class ConversationMemberAdapter extends BaseAdapter {
     private List<String> uidList = new ArrayList<>();
     private boolean isOwner = false;
     private Context context;
-    public ConversationMemberAdapter(Context context,List<String> uidList, boolean isOwner) {
+
+    public ConversationMemberAdapter(Context context, List<String> uidList, boolean isOwner) {
         this.uidList = uidList;
         this.isOwner = isOwner;
         this.context = context;
@@ -56,8 +57,8 @@ public class ConversationMemberAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        convertView = LayoutInflater.from(context).inflate(R.layout.channel_member_item_view,null);
-        CircleTextImageView photoImg =(CircleTextImageView) convertView.findViewById(R.id.member_head_img);
+        convertView = LayoutInflater.from(context).inflate(R.layout.channel_member_item_view, null);
+        CircleTextImageView photoImg = (CircleTextImageView) convertView.findViewById(R.id.member_head_img);
         TextView nameText = (TextView) convertView.findViewById(R.id.tv_name);
         String userPhotoUrl;
         String userName;
@@ -74,7 +75,7 @@ public class ConversationMemberAdapter extends BaseAdapter {
         } else {
             String uid = uidList.get(position);
             userName = ContactUserCacheUtils.getUserName(uid);
-            userPhotoUrl = APIUri.getUserIconUrl(MyApplication.getInstance(),uid);
+            userPhotoUrl = APIUri.getUserIconUrl(MyApplication.getInstance(), uid);
         }
         nameText.setText(userName);
         ImageDisplayUtils.getInstance().displayImage(photoImg, userPhotoUrl, R.drawable.icon_person_default);

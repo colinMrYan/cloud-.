@@ -41,7 +41,8 @@ public class ChannelGroup {
     public ChannelGroup() {
 
     }
-    public ChannelGroup(String cid,String extra){
+
+    public ChannelGroup(String cid, String extra) {
         this.cid = cid;
     }
 
@@ -87,11 +88,11 @@ public class ChannelGroup {
                 this.inputs = obj.getString("inputs");
             }
 
-            if(obj.has("action")){
+            if (obj.has("action")) {
                 this.action = obj.getString("action");
             }
 
-            if(obj.has("avatar")){
+            if (obj.has("avatar")) {
                 this.avatar = obj.getString("avatar");
             }
 
@@ -134,11 +135,11 @@ public class ChannelGroup {
                 this.inputs = obj.getString("inputs");
             }
 
-            if(obj.has("action")){
+            if (obj.has("action")) {
                 this.action = obj.getString("action");
             }
 
-            if(obj.has("avatar")){
+            if (obj.has("avatar")) {
                 this.avatar = obj.getString("avatar");
             }
 
@@ -148,24 +149,20 @@ public class ChannelGroup {
         }
     }
 
-    public void setCid(String cid) {
-        this.cid = cid;
-    }
-
     public String getCid() {
         return cid;
     }
 
-    public void setChannelName(String channelName) {
-        this.channelName = channelName;
+    public void setCid(String cid) {
+        this.cid = cid;
     }
 
     public String getChannelName() {
         return channelName;
     }
 
-    public void setIcon(String icon) {
-        this.icon = icon;
+    public void setChannelName(String channelName) {
+        this.channelName = channelName;
     }
 
     public String getIcon() {
@@ -180,46 +177,49 @@ public class ChannelGroup {
         return icon;
     }
 
-    public void setMembers(String members) {
-        this.members = members;
+    public void setIcon(String icon) {
+        this.icon = icon;
     }
 
     public String getMembers() {
         return members;
     }
 
-    public void setIsPrivate(boolean isPrivate) {
-        this.isPrivate = isPrivate;
+    public void setMembers(String members) {
+        this.members = members;
     }
 
     public boolean getIsPrivate() {
         return isPrivate;
     }
 
-    public void setPyFull(String pyFull) {
-        this.pyFull = pyFull;
+    public void setIsPrivate(boolean isPrivate) {
+        this.isPrivate = isPrivate;
     }
 
     public String getPyFull() {
         return pyFull;
     }
 
-    public void setPyShort(String pyShort) {
-        this.pyShort = pyShort;
+    public void setPyFull(String pyFull) {
+        this.pyFull = pyFull;
     }
 
     public String getPyShort() {
         return pyShort;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setPyShort(String pyShort) {
+        this.pyShort = pyShort;
     }
 
     public String getType() {
         return type;
     }
 
+    public void setType(String type) {
+        this.type = type;
+    }
 
     public String getOwner() {
         return owner;
@@ -265,7 +265,7 @@ public class ChannelGroup {
     }
 
     public ArrayList<String> getMemberList() {
-        ArrayList<String> memberList = JSONUtils.JSONArray2List(members,new ArrayList<String>());
+        ArrayList<String> memberList = JSONUtils.JSONArray2List(members, new ArrayList<String>());
         return memberList;
     }
 

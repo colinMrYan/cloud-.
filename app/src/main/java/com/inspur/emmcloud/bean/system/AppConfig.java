@@ -19,7 +19,7 @@ public class AppConfig {
         this.value = value;
     }
 
-    public AppConfig(){
+    public AppConfig() {
 
     }
 

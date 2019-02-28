@@ -23,10 +23,6 @@ public enum CloudHttpMethod {
         this.value = value;
     }
 
-    public String toString() {
-        return this.value;
-    }
-
     public static boolean permitsRetry(CloudHttpMethod method) {
         return method == GET;
     }
@@ -37,5 +33,9 @@ public enum CloudHttpMethod {
 
     public static boolean permitsRequestBody(CloudHttpMethod method) {
         return method == POST || method == PUT || method == PATCH || method == DELETE;
+    }
+
+    public String toString() {
+        return this.value;
     }
 }

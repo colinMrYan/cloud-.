@@ -38,18 +38,19 @@ public class AppExceptionCacheUtils {
 
     /**
      * 存储路由表
+     *
      * @param context
      * @param errorLevel
      * @param url
      * @param error
      * @param errorCode
      */
-    public static void saveAppClusterException(final Context context,int errorLevel,String url,String error,int errorCode){
+    public static void saveAppClusterException(final Context context, int errorLevel, String url, String error, int errorCode) {
         List<AppException> appExceptionList = getAppExceptionList(context);
         Iterator<AppException> appExceptionIterator = appExceptionList.iterator();
-        while (appExceptionIterator.hasNext()){
+        while (appExceptionIterator.hasNext()) {
             AppException appException = appExceptionIterator.next();
-            if(appException.getErrorInfo().equals("clusters")){
+            if (appException.getErrorInfo().equals("clusters")) {
                 appException.setHappenTime(System.currentTimeMillis());
                 appException.setAppVersion(AppUtils.getVersion(context));
                 appException.setErrorCode(errorCode);
@@ -90,7 +91,7 @@ public class AppExceptionCacheUtils {
      * 获取异常list
      *
      * @param context
-     * @param maxUpLoadItemsNum  一次上传最大数量
+     * @param maxUpLoadItemsNum 一次上传最大数量
      * @return
      */
     public static List<AppException> getAppExceptionList(final Context context, int maxUpLoadItemsNum) {
@@ -106,7 +107,6 @@ public class AppExceptionCacheUtils {
         }
         return appExceptionList;
     }
-
 
 
     /**
@@ -125,9 +125,10 @@ public class AppExceptionCacheUtils {
 
     /**
      * 清除AppException表信息
+     *
      * @param context
      */
-    public static void deleteAppException(Context context,List<AppException> appExceptionList) {
+    public static void deleteAppException(Context context, List<AppException> appExceptionList) {
         try {
             DbCacheUtils.getDb(context).delete(appExceptionList);
         } catch (Exception e) {

@@ -32,12 +32,12 @@ public class DisplayResLinkMsg {
      * @param isShowCommentBtn
      */
     public static View displayResLinkMsg(final Activity context,
-                                          final Msg msg, boolean isShowCommentBtn) {
+                                         final Msg msg, boolean isShowCommentBtn) {
         View cardContentView = LayoutInflater.from(context).inflate(
                 R.layout.chat_msg_card_child_res_link_view, null);
         boolean isMyMsg = msg.getUid().equals(MyApplication.getInstance().getUid());
         BubbleLayout cardLayout = (BubbleLayout) cardContentView.findViewById(R.id.bl_card);
-        cardLayout.setArrowDirection(isMyMsg? ArrowDirection.RIGHT:ArrowDirection.LEFT);
+        cardLayout.setArrowDirection(isMyMsg ? ArrowDirection.RIGHT : ArrowDirection.LEFT);
         String msgBody = msg.getBody();
         String linkTitle = JSONUtils.getString(msgBody, "title", "");
         String linkDigest = JSONUtils.getString(msgBody, "digest", "");
@@ -46,13 +46,13 @@ public class DisplayResLinkMsg {
                 .findViewById(R.id.tv_news_card_title);
         TextView linkDigestText = (TextView) cardContentView
                 .findViewById(R.id.tv_news_card_digest);
-        linkTitle = StringUtils.isBlank(linkTitle)?context.getString(R.string.share_default_title):linkTitle;
+        linkTitle = StringUtils.isBlank(linkTitle) ? context.getString(R.string.share_default_title) : linkTitle;
         linkTitleText.setText(linkTitle);
         linkDigestText.setText(linkDigest);
-        if(StringUtils.isBlank(linkTitle)){
+        if (StringUtils.isBlank(linkTitle)) {
             linkTitleText.setVisibility(View.GONE);
         }
-        if(StringUtils.isBlank(linkDigest)){
+        if (StringUtils.isBlank(linkDigest)) {
             linkDigestText.setVisibility(View.GONE);
         }
         ImageView linkImageview = (ImageView) cardContentView
@@ -85,7 +85,7 @@ public class DisplayResLinkMsg {
      */
     public static View displayResLinkMsg(Activity context,
                                          Msg msg) {
-       return displayResLinkMsg(context, msg, true);
+        return displayResLinkMsg(context, msg, true);
     }
 
 }

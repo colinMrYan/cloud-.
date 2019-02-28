@@ -8,6 +8,8 @@ import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 
 public interface ProgressCallback {
     void onSuccess(VolumeFile volumeFile);
+
     void onLoading(int progress);
+
     void onFail();
 }

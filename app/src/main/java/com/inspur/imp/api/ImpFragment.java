@@ -66,7 +66,6 @@ import java.util.Map;
  */
 
 public class ImpFragment extends ImpBaseFragment {
-    private ImpWebView webView;
     // 浏览文件resultCode
     public static final int CAMERA_SERVICE_CAMERA_REQUEST = 1;
     public static final int CAMERA_SERVICE_GALLERY_REQUEST = 2;
@@ -79,6 +78,7 @@ public class ImpFragment extends ImpBaseFragment {
     public static final int SELECT_FILE_SERVICE_REQUEST = 9;
     public static final int FILE_CHOOSER_RESULT_CODE = 5173;
     private static final String JAVASCRIPT_PREFIX = "javascript:";
+    private ImpWebView webView;
     private Map<String, String> webViewHeaders;
     private LinearLayout loadFailLayout;
     private Button normalBtn, middleBtn, bigBtn, biggestBtn;
@@ -114,9 +114,9 @@ public class ImpFragment extends ImpBaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        if (headerLayout.getVisibility() == View.VISIBLE){
+        if (headerLayout.getVisibility() == View.VISIBLE) {
             setFragmentStatusBarCommon();
-        }else {
+        } else {
             setFragmentStatusBarWhite();
         }
         if (rootView == null) {
@@ -168,15 +168,15 @@ public class ImpFragment extends ImpBaseFragment {
         initFragmentViews();
         RelativeLayout.LayoutParams layoutParams =
                 new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-        layoutParams.addRule(getActivity().getClass().getSimpleName().equals(IndexActivity.class.getSimpleName())?
-                (RelativeLayout.ALIGN_PARENT_LEFT|RelativeLayout.CENTER_VERTICAL):RelativeLayout.CENTER_IN_PARENT);
+        layoutParams.addRule(getActivity().getClass().getSimpleName().equals(IndexActivity.class.getSimpleName()) ?
+                (RelativeLayout.ALIGN_PARENT_LEFT | RelativeLayout.CENTER_VERTICAL) : RelativeLayout.CENTER_IN_PARENT);
         headerText.setLayoutParams(layoutParams);
-        if(getActivity().getClass().getSimpleName().equals(IndexActivity.class.getSimpleName())){
-            headerText.setPadding(DensityUtil.dip2px(getActivity(),15),0,0,0);
-        }else{
+        if (getActivity().getClass().getSimpleName().equals(IndexActivity.class.getSimpleName())) {
+            headerText.setPadding(DensityUtil.dip2px(getActivity(), 15), 0, 0, 0);
+        } else {
             headerText.setTextSize(17);
         }
-        headerText.setText(StringUtils.isBlank(appName)?"":appName);
+        headerText.setText(StringUtils.isBlank(appName) ? "" : appName);
     }
 
 
@@ -220,57 +220,6 @@ public class ImpFragment extends ImpBaseFragment {
         rootView.findViewById(R.id.load_error_layout).setOnClickListener(listener);
     }
 
-    class ImpFragmentClickListener implements View.OnClickListener {
-
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.imp_change_font_size_btn:
-                    showChangeFontSizeDialog();
-                    break;
-                case R.id.app_imp_crm_font_normal_btn:
-                    setNewsFontSize(MyAppWebConfig.NORMAL);
-                    break;
-                case R.id.app_imp_crm_font_middle_btn:
-                    setNewsFontSize(MyAppWebConfig.CRM_BIG);
-                    break;
-                case R.id.app_imp_crm_font_big_btn:
-                    setNewsFontSize(MyAppWebConfig.CRM_BIGGER);
-                    break;
-                case R.id.app_imp_crm_font_biggest_btn:
-                    setNewsFontSize(MyAppWebConfig.CRM_BIGGEST);
-                    break;
-                case R.id.ibt_back:
-                    goBack();
-                    break;
-                case R.id.imp_close_btn:
-                    finishActivity();
-                    break;
-                case R.id.refresh_text:
-                    IntentUtils.startActivity(getActivity(), NetWorkStateDetailActivity.class);
-                    break;
-                case R.id.load_error_layout:
-                    showLoadingDlg(getString(Res.getStringID("@string/loading_text")));
-                    webView.reload();
-                    webView.setVisibility(View.INVISIBLE);
-                    loadFailLayout.setVisibility(View.GONE);
-                    break;
-                case R.id.header_text:
-                    if (dropItemTitleList != null && dropItemTitleList.size() > 0) {
-                        if (dropTitlePopupWindow != null && dropTitlePopupWindow.isShowing()) {
-                            dropTitlePopupWindow.dismiss();
-                        } else {
-                            showDropTitlePop();
-                            setHeaderTitleTextDropImg();
-                        }
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
-
     /**
      * 执行JS脚本
      *
@@ -280,10 +229,10 @@ public class ImpFragment extends ImpBaseFragment {
         webView.loadUrl(script);
     }
 
-
     /**
      * 在WebClient获取header
      * 为了防止第一层不符合规则，第二层符合添加token规则时不再检查url的问题，需要回传url重新检查增加每次检查是否需要加token
+     *
      * @return
      */
     public Map<String, String> getWebViewHeaders(String url) {
@@ -310,7 +259,7 @@ public class ImpFragment extends ImpBaseFragment {
      */
     private void initWebViewHeaderLayout() {
         impCallBackInterface = getImpCallBackInterface();
-        if (getArguments().getBoolean(Constant.WEB_FRAGMENT_SHOW_HEADER,true)) {
+        if (getArguments().getBoolean(Constant.WEB_FRAGMENT_SHOW_HEADER, true)) {
             String title = getArguments().getString(Constant.WEB_FRAGMENT_APP_NAME);
             headerText.setOnClickListener(new ImpFragmentClickListener());
             webView.setProperty(headerText, loadFailLayout, frameLayout, impCallBackInterface);
@@ -321,7 +270,6 @@ public class ImpFragment extends ImpBaseFragment {
             webView.setProperty(null, loadFailLayout, frameLayout, impCallBackInterface);
         }
     }
-
 
     private void showDropTitlePop() {
         // 一个自定义的布局，作为显示的内容
@@ -370,37 +318,6 @@ public class ImpFragment extends ImpBaseFragment {
         dropTitlePopupWindow.showAsDropDown(headerLayout);
     }
 
-    private class Adapter extends BaseAdapter {
-
-        @Override
-        public int getCount() {
-            return dropItemTitleList.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return null;
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return 0;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            convertView = LayoutInflater.from(getActivity()).inflate(R.layout.plugin_pop_drop_list_item_view, null);
-            DropItemTitle dropItemTitle = dropItemTitleList.get(position);
-            ImageView iconImg = (ImageView) convertView.findViewById(R.id.iv_icon);
-            TextView titleText = (TextView) convertView.findViewById(R.id.tv_name_tips);
-            ImageView selectImg = (ImageView) convertView.findViewById(R.id.iv_select);
-            ImageDisplayUtils.getInstance().displayImage(iconImg, dropItemTitle.getIco(), R.drawable.icon_photo_default);
-            titleText.setText(dropItemTitle.getText());
-            selectImg.setVisibility(dropItemTitle.isSelected() ? View.VISIBLE : View.INVISIBLE);
-            return convertView;
-        }
-    }
-
     /**
      * 与主Fragment通信的接口
      *
@@ -430,7 +347,7 @@ public class ImpFragment extends ImpBaseFragment {
 
             @Override
             public void onSetTitle(String title) {
-                if(StringUtils.isBlank(appName)){
+                if (StringUtils.isBlank(appName)) {
                     setTitle(title);
                 }
             }
@@ -678,7 +595,7 @@ public class ImpFragment extends ImpBaseFragment {
 //        EasyDialog.showDialog(getActivity(), getString(R.string.prompt),
 //                getString(R.string.imp_function_error),
 //                getString(R.string.ok), listener, false);
-        ToastUtils.show(getActivity(),R.string.imp_function_error);
+        ToastUtils.show(getActivity(), R.string.imp_function_error);
     }
 
     @Override
@@ -707,7 +624,6 @@ public class ImpFragment extends ImpBaseFragment {
     public void dimissLoadingDlg() {
         loadingLayout.setVisibility(View.GONE);
     }
-
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -777,5 +693,87 @@ public class ImpFragment extends ImpBaseFragment {
         }
 
 
+    }
+
+    class ImpFragmentClickListener implements View.OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.imp_change_font_size_btn:
+                    showChangeFontSizeDialog();
+                    break;
+                case R.id.app_imp_crm_font_normal_btn:
+                    setNewsFontSize(MyAppWebConfig.NORMAL);
+                    break;
+                case R.id.app_imp_crm_font_middle_btn:
+                    setNewsFontSize(MyAppWebConfig.CRM_BIG);
+                    break;
+                case R.id.app_imp_crm_font_big_btn:
+                    setNewsFontSize(MyAppWebConfig.CRM_BIGGER);
+                    break;
+                case R.id.app_imp_crm_font_biggest_btn:
+                    setNewsFontSize(MyAppWebConfig.CRM_BIGGEST);
+                    break;
+                case R.id.ibt_back:
+                    goBack();
+                    break;
+                case R.id.imp_close_btn:
+                    finishActivity();
+                    break;
+                case R.id.refresh_text:
+                    IntentUtils.startActivity(getActivity(), NetWorkStateDetailActivity.class);
+                    break;
+                case R.id.load_error_layout:
+                    showLoadingDlg(getString(Res.getStringID("@string/loading_text")));
+                    webView.reload();
+                    webView.setVisibility(View.INVISIBLE);
+                    loadFailLayout.setVisibility(View.GONE);
+                    break;
+                case R.id.header_text:
+                    if (dropItemTitleList != null && dropItemTitleList.size() > 0) {
+                        if (dropTitlePopupWindow != null && dropTitlePopupWindow.isShowing()) {
+                            dropTitlePopupWindow.dismiss();
+                        } else {
+                            showDropTitlePop();
+                            setHeaderTitleTextDropImg();
+                        }
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    private class Adapter extends BaseAdapter {
+
+        @Override
+        public int getCount() {
+            return dropItemTitleList.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            convertView = LayoutInflater.from(getActivity()).inflate(R.layout.plugin_pop_drop_list_item_view, null);
+            DropItemTitle dropItemTitle = dropItemTitleList.get(position);
+            ImageView iconImg = (ImageView) convertView.findViewById(R.id.iv_icon);
+            TextView titleText = (TextView) convertView.findViewById(R.id.tv_name_tips);
+            ImageView selectImg = (ImageView) convertView.findViewById(R.id.iv_select);
+            ImageDisplayUtils.getInstance().displayImage(iconImg, dropItemTitle.getIco(), R.drawable.icon_photo_default);
+            titleText.setText(dropItemTitle.getText());
+            selectImg.setVisibility(dropItemTitle.isSelected() ? View.VISIBLE : View.INVISIBLE);
+            return convertView;
+        }
     }
 }

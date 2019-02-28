@@ -9,9 +9,10 @@ import com.inspur.emmcloud.util.common.JSONUtils;
 public class LoginMoreBean {
     private String url = "";
     private String name = "";
-    public LoginMoreBean(String content){
-        url = JSONUtils.getString(content,"u","");
-        name = JSONUtils.getString(content,"n","");
+
+    public LoginMoreBean(String content) {
+        url = JSONUtils.getString(content, "u", "");
+        name = JSONUtils.getString(content, "n", "");
     }
 
     public String getUrl() {

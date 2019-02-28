@@ -118,7 +118,7 @@ public class ChatFileDownloadActivtiy extends BaseActivity {
         }
         downloadBtn.setVisibility(View.GONE);
         downloadStatusLayout.setVisibility(View.VISIBLE);
-        String source = APIUri.getChatFileResouceUrl(message.getChannel(),message.getMsgContentAttachmentFile().getMedia());
+        String source = APIUri.getChatFileResouceUrl(message.getChannel(), message.getMsgContentAttachmentFile().getMedia());
         APIDownloadCallBack callBack = new APIDownloadCallBack(getApplicationContext(), source) {
             @Override
             public void callbackStart() {
@@ -162,7 +162,7 @@ public class ChatFileDownloadActivtiy extends BaseActivity {
 
             }
         };
-        cancelable= new DownLoaderUtils().startDownLoad(source,fileSavePath,callBack);
+        cancelable = new DownLoaderUtils().startDownLoad(source, fileSavePath, callBack);
     }
 
 }

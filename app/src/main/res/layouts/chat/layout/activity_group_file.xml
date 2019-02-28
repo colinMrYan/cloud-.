@@ -19,7 +19,7 @@
             android:layout_centerVertical="true"
             android:onClick="onClick"
             android:scaleType="fitXY"
-            android:src="@drawable/ic_back_btn_black" />
+            android:src="?attr/ic_back_btn" />
 
         <TextView
             android:id="@+id/header_text"
@@ -113,7 +113,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:adjustViewBounds="true"
-            android:src="@drawable/ic_no_work_content" />
+            android:src="@drawable/ic_no_channel_file" />
 
         <TextView
             android:layout_below="@id/iv_no_channel_file"

@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -25,7 +26,6 @@ import com.inspur.emmcloud.util.common.InputMethodUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.LoginUtils;
@@ -39,7 +39,6 @@ import org.xutils.view.annotation.ViewInject;
 
 /**
  * 登录页面
- *
  */
 
 @ContentView(R.layout.activity_login)
@@ -66,23 +65,23 @@ public class LoginActivity extends BaseActivity {
     @ViewInject(R.id.tv_register)
     private TextView registerText;
     private EmmSecurityKeyboard securityKeyboard;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        PreferencesUtils.putString(this,Constant.PREF_APP_PREVIOUS_VERSION,AppUtils.getVersion(this));
+        PreferencesUtils.putString(this, Constant.PREF_APP_PREVIOUS_VERSION, AppUtils.getVersion(this));
         this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
-        StateBarUtils.translucent(this,R.color.white);
-        StateBarUtils.setStateBarTextColor(this,true);
+        ImmersionBar.with(this).statusBarColor(android.R.color.white).statusBarDarkFont(true).init();
         MyApplication.getInstance().closeOtherActivity(LoginActivity.this);
         initView();
         handMessage();
     }
 
     private void initView() {
-        welcomeText.setText(getString(R.string.login_tv_welcome,AppUtils.getAppName(this)));
+        welcomeText.setText(getString(R.string.login_tv_welcome, AppUtils.getAppName(this)));
         registerText.setText(Html.fromHtml(getString(R.string.login_to_register)));
-        LoadingDlg = new LoadingDialog(LoginActivity.this,getString(R.string.login_loading_text));
+        LoadingDlg = new LoadingDialog(LoginActivity.this, getString(R.string.login_loading_text));
         EditWatcher watcher = new EditWatcher();
         usernameEdit.addTextChangedListener(watcher);
         passwordEdit.addTextChangedListener(watcher);
@@ -108,7 +107,6 @@ public class LoginActivity extends BaseActivity {
     }
 
 
-
     /**
      * 显示当前登录租户信息
      */
@@ -116,7 +114,7 @@ public class LoginActivity extends BaseActivity {
         String enterpriseName = PreferencesUtils.getString(LoginActivity.this, Constant.PREF_LOGIN_ENTERPRISE_NAME, "");
         currentLoginEnterpriseText.setVisibility(StringUtils.isBlank(enterpriseName)
                 ? View.INVISIBLE : View.VISIBLE);
-        currentLoginEnterpriseText.setText(getString(R.string.login_current_login_enterprise,enterpriseName));
+        currentLoginEnterpriseText.setText(getString(R.string.login_current_login_enterprise, enterpriseName));
     }
 
     @Override
@@ -135,11 +133,11 @@ public class LoginActivity extends BaseActivity {
                 break;
             case R.id.tv_forget_password:
                 bundle.putInt(LoginBySmsActivity.EXTRA_MODE, LoginBySmsActivity.MODE_FORGET_PASSWORD);
-                IntentUtils.startActivity(LoginActivity.this, LoginBySmsActivity.class,bundle);
+                IntentUtils.startActivity(LoginActivity.this, LoginBySmsActivity.class, bundle);
                 break;
             case R.id.tv_login_via_sms:
                 bundle.putInt(LoginBySmsActivity.EXTRA_MODE, LoginBySmsActivity.MODE_LOGIN);
-                IntentUtils.startActivity(LoginActivity.this,LoginBySmsActivity.class,bundle);
+                IntentUtils.startActivity(LoginActivity.this, LoginBySmsActivity.class, bundle);
                 break;
             case R.id.bt_more:
                 Intent intent = new Intent();
@@ -148,7 +146,7 @@ public class LoginActivity extends BaseActivity {
                 break;
             case R.id.ll_main:
                 InputMethodUtils.hide(LoginActivity.this);
-                if(securityKeyboard.isShowing()){
+                if (securityKeyboard.isShowing()) {
                     securityKeyboard.dismiss();
                 }
                 break;
@@ -156,7 +154,6 @@ public class LoginActivity extends BaseActivity {
                 break;
         }
     }
-
 
 
     private void handMessage() {
@@ -189,11 +186,35 @@ public class LoginActivity extends BaseActivity {
         //当没有设置短密码时进入密码设置界面
         PreferencesUtils.putString(getApplicationContext(),
                 Constant.PREF_LOGIN_USERNAME, userName);
-        boolean isHasSetShortPassword = PreferencesUtils.getBoolean(LoginActivity.this, Constant.PREF_LOGIN_HAVE_SET_PASSWORD,false);
-        if (!isHasSetShortPassword){
-            IntentUtils.startActivity(LoginActivity.this,PasswordFirstSettingActivity.class,true);
-        }else {
-            IntentUtils.startActivity(LoginActivity.this,IndexActivity.class,true);
+        boolean isHasSetShortPassword = PreferencesUtils.getBoolean(LoginActivity.this, Constant.PREF_LOGIN_HAVE_SET_PASSWORD, false);
+        if (!isHasSetShortPassword) {
+            IntentUtils.startActivity(LoginActivity.this, PasswordFirstSettingActivity.class, true);
+        } else {
+            IntentUtils.startActivity(LoginActivity.this, IndexActivity.class, true);
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        // TODO Auto-generated method stub
+        super.onDestroy();
+        if (handler != null) {
+            handler = null;
+        }
+        if (securityKeyboard != null) {
+            securityKeyboard.dismiss();
+            securityKeyboard = null;
+        }
+    }
+
+    /**
+     * 登录应用
+     */
+    private void loginApp() {
+        // TODO Auto-generated method stub
+        if (NetUtils.isNetworkConnected(LoginActivity.this)) {
+            LoginUtils loginUtils = new LoginUtils(LoginActivity.this, handler);
+            loginUtils.login(userName, password);
         }
     }
 
@@ -224,30 +245,5 @@ public class LoginActivity extends BaseActivity {
             loginBtn.setBackgroundResource(isInputValaid ? R.drawable.selector_login_btn : R.drawable.bg_login_btn_unable);
         }
 
-    }
-
-
-    @Override
-    public void onDestroy() {
-        // TODO Auto-generated method stub
-        super.onDestroy();
-        if (handler != null) {
-            handler = null;
-        }
-        if(securityKeyboard != null){
-            securityKeyboard.dismiss();
-            securityKeyboard = null;
-        }
-    }
-
-    /**
-     * 登录应用
-     */
-    private void loginApp() {
-        // TODO Auto-generated method stub
-        if (NetUtils.isNetworkConnected(LoginActivity.this)) {
-            LoginUtils loginUtils = new LoginUtils(LoginActivity.this, handler);
-            loginUtils.login(userName, password);
-        }
     }
 }

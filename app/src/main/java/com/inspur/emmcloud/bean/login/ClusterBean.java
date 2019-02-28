@@ -14,15 +14,17 @@ public class ClusterBean {
     private String baseUrl = "";
     private String serviceVersion = "";
 
-    public ClusterBean(){}
-    public ClusterBean(JSONObject clusterObj){
-        clusterId = JSONUtils.getString(clusterObj,"cluster_id","");
-        serviceName = JSONUtils.getString(clusterObj,"service_name","");
-        baseUrl = JSONUtils.getString(clusterObj,"base_url","");
-        serviceVersion = JSONUtils.getString(clusterObj,"service_version","");
+    public ClusterBean() {
     }
 
-    public ClusterBean(String serviceName){
+    public ClusterBean(JSONObject clusterObj) {
+        clusterId = JSONUtils.getString(clusterObj, "cluster_id", "");
+        serviceName = JSONUtils.getString(clusterObj, "service_name", "");
+        baseUrl = JSONUtils.getString(clusterObj, "base_url", "");
+        serviceVersion = JSONUtils.getString(clusterObj, "service_version", "");
+    }
+
+    public ClusterBean(String serviceName) {
         this.serviceName = serviceName;
     }
 
@@ -60,13 +62,13 @@ public class ClusterBean {
 
     @Override
     public boolean equals(Object other) {
-        if(this == other){
+        if (this == other) {
             return true;
         }
-        if(other == null){
+        if (other == null) {
             return false;
         }
-        if(!(other instanceof ClusterBean)){
+        if (!(other instanceof ClusterBean)) {
             return false;
         }
         ClusterBean clusterBean = (ClusterBean) other;

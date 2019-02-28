@@ -2,47 +2,47 @@ package com.inspur.emmcloud.bean.work;
 
 public class TagColorBean {
 
-	private String content = "";
-	private String color = "";
-	private String show = "";
+    private String content = "";
+    private String color = "";
+    private String show = "";
 
-	public TagColorBean() {
+    public TagColorBean() {
 
-	}
+    }
 
-	public TagColorBean(String color, String content, String show) {
-		this.color = color;
-		this.content = content;
-		this.show = show;
-	}
-	
-	public TagColorBean(String color, String content) {
-		this.color = color;
-		this.content = content;
-	}
+    public TagColorBean(String color, String content, String show) {
+        this.color = color;
+        this.content = content;
+        this.show = show;
+    }
 
-	public String getContent() {
-		return content;
-	}
+    public TagColorBean(String color, String content) {
+        this.color = color;
+        this.content = content;
+    }
 
-	public void setContent(String content) {
-		this.content = content;
-	}
+    public String getContent() {
+        return content;
+    }
 
-	public String getColor() {
-		return color;
-	}
+    public void setContent(String content) {
+        this.content = content;
+    }
 
-	public void setColor(String color) {
-		this.color = color;
-	}
+    public String getColor() {
+        return color;
+    }
 
-	public String getShow() {
-		return show;
-	}
+    public void setColor(String color) {
+        this.color = color;
+    }
 
-	public void setShow(String show) {
-		this.show = show;
-	}
+    public String getShow() {
+        return show;
+    }
+
+    public void setShow(String show) {
+        this.show = show;
+    }
 
 }

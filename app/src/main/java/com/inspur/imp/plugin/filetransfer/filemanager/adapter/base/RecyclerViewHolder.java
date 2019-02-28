@@ -9,9 +9,9 @@ import android.view.View;
 
 public abstract class RecyclerViewHolder<T> extends RecyclerView.ViewHolder {
 
-   public RecyclerViewHolder(View itemView) {
+    public RecyclerViewHolder(View itemView) {
         super(itemView);
     }
 
-    public abstract void onBindViewHolder ( T t , RecyclerViewAdapter adapter , int position) ;
+    public abstract void onBindViewHolder(T t, RecyclerViewAdapter adapter, int position);
 }

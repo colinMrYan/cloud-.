@@ -14,24 +14,25 @@ import java.util.Map;
 public class CustomProtocol {
     private String protocol;
     private String host;
-    private Map<String,String> paramMap = new HashMap<>();
-    public CustomProtocol(String response){
-        try{
-            if(response.contains("\\")){
-                response = response.replaceAll("\\\\","");
+    private Map<String, String> paramMap = new HashMap<>();
+
+    public CustomProtocol(String response) {
+        try {
+            if (response.contains("\\")) {
+                response = response.replaceAll("\\\\", "");
             }
             protocol = response.split("://")[0];
             String arg = response.split("://")[1];
             String[] hostAndParams = arg.split("\\?");
             host = hostAndParams[0];
             String[] paramArray = hostAndParams[1].split("&");
-            if(paramArray != null){
+            if (paramArray != null) {
                 for (int i = 0; i < paramArray.length; i++) {
                     String[] param = paramArray[i].split("=");
-                    paramMap.put(param[0],param[1]);
+                    paramMap.put(param[0], param[1]);
                 }
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

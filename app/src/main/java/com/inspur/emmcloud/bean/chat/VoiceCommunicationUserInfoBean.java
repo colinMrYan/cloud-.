@@ -6,10 +6,11 @@ import java.io.Serializable;
  * Created by yufuchang on 2018/8/16.
  */
 
-public class VoiceCommunicationUserInfoBean implements Serializable{
+public class VoiceCommunicationUserInfoBean implements Serializable {
     private String userId = "";
     private String userName = "";
-    public VoiceCommunicationUserInfoBean(String userId,String userName){
+
+    public VoiceCommunicationUserInfoBean(String userId, String userName) {
         this.userId = userId;
         this.userName = userName;
     }

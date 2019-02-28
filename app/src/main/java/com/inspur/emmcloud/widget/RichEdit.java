@@ -3,7 +3,6 @@ package com.inspur.emmcloud.widget;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
@@ -38,15 +37,17 @@ import java.util.regex.Pattern;
  */
 
 public class RichEdit extends EditText {
+    private static final int BACKGROUND_COLOR = Color.parseColor("#FFDEAD"); // 默认,话题背景高亮颜色
     private int size;
     private int maxLength = 100000;
     private List<InsertModel> insertModelList = new ArrayList<>();
-    private static final int BACKGROUND_COLOR = Color.parseColor("#FFDEAD"); // 默认,话题背景高亮颜色
     private Context mContext;
     private RichEdit.InputWatcher inputWatcher;
     private RichEdit.InsertModelListWatcher insertModelListWatcher;
-    private int mSumSpanCharsNum=0;
+    private int mSumSpanCharsNum = 0;
     private int mEndSpansPos;
+    private boolean isRequest = false;
+
     public RichEdit(Context context) {
         super(context);
         this.mContext = context;
@@ -148,7 +149,7 @@ public class RichEdit extends EditText {
             @Override
             public void afterTextChanged(Editable s) {
                 if (inputWatcher != null) {
-                    inputWatcher.afterTextChanged( s );
+                    inputWatcher.afterTextChanged(s);
                 }
             }
         });
@@ -168,8 +169,8 @@ public class RichEdit extends EditText {
                     int selectionEnd = getSelectionEnd();
                     removeInsertModelByDeleteContent(selectionStart, selectionEnd);
                 }
-                if(KeyEvent.KEYCODE_ENTER==keyCode){
-                    insertLastManualData( KeyEvent.KEYCODE_ENTER );
+                if (KeyEvent.KEYCODE_ENTER == keyCode) {
+                    insertLastManualData(KeyEvent.KEYCODE_ENTER);
                     return true;
                 }
                 return false;
@@ -179,35 +180,36 @@ public class RichEdit extends EditText {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        return super.onTouchEvent( event );
+        return super.onTouchEvent(event);
     }
 
+    public SpannableStringBuilder returnSpanStringBuilder() {
+        return (SpannableStringBuilder) getText();
+    }
 
-     public  SpannableStringBuilder returnSpanStringBuilder(){
-        return  (SpannableStringBuilder) getText();
-     }
-
-     public  MyForegroundColorSpan[] returrnMyForegroundColorSpanList(){
-         SpannableStringBuilder spannableStringBuilder = (SpannableStringBuilder) getText();
-         MyForegroundColorSpan[] mSpans = getText().getSpans(0, spannableStringBuilder.length(), MyForegroundColorSpan.class);
-         return mSpans;
-     }
-
-     /**
-      * 插入手动数据
-      * @param KeyCode 按键数据暂时未用*/
-    public  void insertLastManualData(int KeyCode){
+    public MyForegroundColorSpan[] returrnMyForegroundColorSpanList() {
         SpannableStringBuilder spannableStringBuilder = (SpannableStringBuilder) getText();
         MyForegroundColorSpan[] mSpans = getText().getSpans(0, spannableStringBuilder.length(), MyForegroundColorSpan.class);
-        int spanEndPos = mSpans.length>0?(spannableStringBuilder.getSpanEnd(mSpans[mSpans.length-1])):0;
-        String allTextData=this.getText().toString();
-        String manualData  = allTextData.substring(spanEndPos,allTextData.length());
-        LogUtils.LbcDebug( "manual Data:"+manualData );
-        manualData = manualData.replace(" ","");
-        if(!StringUtils.isBlank(manualData)&&StringUtils.isEmail( manualData )){
-            this.getText().delete(spanEndPos,allTextData.length());
-            InsertModel lastInsert = new InsertModel("； ", (System.currentTimeMillis()) + "",manualData ,manualData);
-            LogUtils.LbcDebug( "manual Data:"+manualData );
+        return mSpans;
+    }
+
+    /**
+     * 插入手动数据
+     *
+     * @param KeyCode 按键数据暂时未用
+     */
+    public void insertLastManualData(int KeyCode) {
+        SpannableStringBuilder spannableStringBuilder = (SpannableStringBuilder) getText();
+        MyForegroundColorSpan[] mSpans = getText().getSpans(0, spannableStringBuilder.length(), MyForegroundColorSpan.class);
+        int spanEndPos = mSpans.length > 0 ? (spannableStringBuilder.getSpanEnd(mSpans[mSpans.length - 1])) : 0;
+        String allTextData = this.getText().toString();
+        String manualData = allTextData.substring(spanEndPos, allTextData.length());
+        LogUtils.LbcDebug("manual Data:" + manualData);
+        manualData = manualData.replace(" ", "");
+        if (!StringUtils.isBlank(manualData) && StringUtils.isEmail(manualData)) {
+            this.getText().delete(spanEndPos, allTextData.length());
+            InsertModel lastInsert = new InsertModel("； ", (System.currentTimeMillis()) + "", manualData, manualData);
+            LogUtils.LbcDebug("manual Data:" + manualData);
             insertSpecialStr(false, lastInsert);
             notifyInsertModelListDataChanged();
         }
@@ -218,7 +220,7 @@ public class RichEdit extends EditText {
      */
     @Override
     protected void onSelectionChanged(int selStart, int selEnd) {
-        if (insertModelList == null || insertModelList.size() == 0){
+        if (insertModelList == null || insertModelList.size() == 0) {
             super.onSelectionChanged(selStart, selEnd);
             return;
         }
@@ -239,21 +241,21 @@ public class RichEdit extends EditText {
                 break;
             }
         }
-        if (selInSpan != null){
+        if (selInSpan != null) {
             int spanStartPos = spannableStringBuilder.getSpanStart(selInSpan);
             int spanEndPos = spannableStringBuilder.getSpanEnd(selInSpan);
-            if (selStart == selEnd){
-                setSelection(spanEndPos,spanEndPos);
-            }else {
-                if (selStart > spanStartPos){
+            if (selStart == selEnd) {
+                setSelection(spanEndPos, spanEndPos);
+            } else {
+                if (selStart > spanStartPos) {
                     selStart = spanStartPos;
                 }
-                if (selEnd <spanEndPos){
+                if (selEnd < spanEndPos) {
                     selEnd = spanEndPos;
                 }
-                setSelection(selStart,selEnd);
+                setSelection(selStart, selEnd);
             }
-        }else {
+        } else {
             super.onSelectionChanged(selStart, selEnd);
         }
     }
@@ -274,7 +276,7 @@ public class RichEdit extends EditText {
             int spanEndPos = spannableStringBuilder.getSpanEnd(span);
             //光标起始和结束在同一位置
             if (selectionStart == selectionEnd) {
-                if ( selectionStart == spanEndPos) {
+                if (selectionStart == spanEndPos) {
                     // 选中话题
                     LogUtils.jasonDebug("000000000000");
                     setSelection(spanStartPos, spanEndPos);
@@ -325,7 +327,7 @@ public class RichEdit extends EditText {
         if (insertRule.equals("@")) {
             insertContent = insertRule + insertContent;
         } else {
-            insertContent =   insertContent + insertRule;
+            insertContent = insertContent + insertRule;
         }
         insertModel.setInsertContent(insertContent);
         insertModelList.add(insertModel);
@@ -340,21 +342,21 @@ public class RichEdit extends EditText {
 //        spannableStringBuilder.insert(index, htmlText);
         //spannableStringBuilder.insert(index + insertContent.length(), " ");
         setText(spannableStringBuilder);
-        setSelection(index + insertContent.length() );
+        setSelection(index + insertContent.length());
         //mSumSpanCharsNum = mSumSpanCharsNum+insertModel.getInsertContent().length();
     }
 
-    public Map<String, String> getMentionsMap(){
-        Map<String,String> mentionsMap = new HashMap<>();
+    public Map<String, String> getMentionsMap() {
+        Map<String, String> mentionsMap = new HashMap<>();
         try {
-            if (insertModelList.size()>0){
-                for (InsertModel insertModel:insertModelList){
-                    if (insertModel.getInsertRule().equals("@")){
-                        mentionsMap.put(insertModel.getInsertId(),insertModel.getInsertContentId());
+            if (insertModelList.size() > 0) {
+                for (InsertModel insertModel : insertModelList) {
+                    if (insertModel.getInsertRule().equals("@")) {
+                        mentionsMap.put(insertModel.getInsertId(), insertModel.getInsertContentId());
                     }
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return mentionsMap;
@@ -371,10 +373,10 @@ public class RichEdit extends EditText {
             if (keyword.startsWith("@")) {
                 InsertModel insertModel = getInsertModel(span.getId());
                 if (insertModel != null) {
-                    if (isIdentifyUrl){
+                    if (isIdentifyUrl) {
                         spannableStringBuilder.replace(spanStartPos, spanEndPos, "[" + insertModel.getInsertContent() + "]" + getMentionProtoUtils(insertModel.getInsertId()));
-                    }else {
-                        spannableStringBuilder.replace(spanStartPos+1, spanEndPos,insertModel.getInsertId()+" ");
+                    } else {
+                        spannableStringBuilder.replace(spanStartPos + 1, spanEndPos, insertModel.getInsertId() + " ");
                     }
 
                 }
@@ -383,7 +385,7 @@ public class RichEdit extends EditText {
         }
         String content = spannableStringBuilder.toString();
         if (isIdentifyUrl) {
-            Pattern pattern = Pattern.compile( Constant.PATTERN_URL);
+            Pattern pattern = Pattern.compile(Constant.PATTERN_URL);
             Matcher matcher = pattern.matcher(content);
             int offset = 0;
             while (matcher.find()) {
@@ -428,12 +430,11 @@ public class RichEdit extends EditText {
      */
     private InsertModel getInsertModel(String insertId) {
         int index = insertModelList.indexOf(new InsertModel(insertId));
-        if (index != -1){
-            return  insertModelList.get(index);
+        if (index != -1) {
+            return insertModelList.get(index);
         }
         return null;
     }
-
 
     /**
      * 获取特殊字符列表
@@ -442,9 +443,6 @@ public class RichEdit extends EditText {
 
         return insertModelList;
     }
-
-
-    private boolean isRequest = false;
 
     public boolean isRequest() {
         return isRequest;
@@ -462,17 +460,13 @@ public class RichEdit extends EditText {
         return maxLength;
     }
 
-    /**最大可输入长度
-     *@param maxLength
+    /**
+     * 最大可输入长度
+     *
+     * @param maxLength
      **/
     public void setEditTextMaxLength(int maxLength) {
         this.maxLength = maxLength;
-    }
-
-    public interface InputWatcher {
-        void onTextChanged(CharSequence s, int start, int before,
-                           int count);
-        void afterTextChanged(Editable s);
     }
 
     /**
@@ -482,6 +476,13 @@ public class RichEdit extends EditText {
         if (insertModelListWatcher != null) {
             insertModelListWatcher.onDataChanged(insertModelList);
         }
+    }
+
+    public interface InputWatcher {
+        void onTextChanged(CharSequence s, int start, int before,
+                           int count);
+
+        void afterTextChanged(Editable s);
     }
 
     public interface InsertModelListWatcher {

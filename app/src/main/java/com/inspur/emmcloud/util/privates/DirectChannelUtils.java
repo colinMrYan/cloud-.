@@ -21,7 +21,7 @@ public class DirectChannelUtils {
      */
     public static String getDirectChannelTitle(Context context, String title) {
         String channelTitle = "";
-        if (title.contains("-") && title.contains(MyApplication.getInstance().getUid())){
+        if (title.contains("-") && title.contains(MyApplication.getInstance().getUid())) {
             ContactUser otherContactUser = getDirctChannelOtherContactUser(context, title);
             if (otherContactUser != null) {
                 channelTitle = otherContactUser.getName();
@@ -69,7 +69,7 @@ public class DirectChannelUtils {
      * @return
      */
     public static ContactUser getDirctChannelOtherContactUser(Context context,
-                                                      String title) {
+                                                              String title) {
         ContactUser contactUser = null;
         try {
             String[] uidArray = title.split("-");

@@ -18,12 +18,12 @@ import java.security.NoSuchAlgorithmException;
 import java.util.zip.CRC32;
 
 public class FileSafeCode {
+    public static MessageDigest messagedigest = null;
     /**
      * 计算大文件 md5获取getMD5(); SHA1获取getSha1() CRC32获取 getCRC32()
      */
     protected static char hexDigits[] = {'0', '1', '2', '3', '4', '5', '6',
             '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
-    public static MessageDigest messagedigest = null;
 
     /**
      * 对一个文件获取md5值
@@ -138,6 +138,7 @@ public class FileSafeCode {
 
     /**
      * 文件校验之SHA256
+     *
      * @param file
      * @return
      */
@@ -161,13 +162,13 @@ public class FileSafeCode {
             e.printStackTrace();
             return null;
         }
-        BigInteger bigInt = new BigInteger(1,digest.digest());
+        BigInteger bigInt = new BigInteger(1, digest.digest());
         //最小侵入修复bug，修复方式：高位补0 修复问题包验证 20170509 yfc
         String code = bigInt.toString(16);
-        if(code.length() < 64){
+        if (code.length() < 64) {
             int notEnght = 64 - bigInt.toString(16).length();
-            for (int i = 0; i < notEnght; i++){
-                code = "0"+code;
+            for (int i = 0; i < notEnght; i++) {
+                code = "0" + code;
             }
         }
         return code;

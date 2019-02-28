@@ -32,6 +32,14 @@ public class IMGStickerAdjustHelper implements View.OnTouchListener {
         mView.setOnTouchListener(this);
     }
 
+    private static double toDegrees(float v, float v1) {
+        return Math.toDegrees(Math.atan2(v, v1));
+    }
+
+    private static double toLength(float x1, float y1, float x2, float y2) {
+        return Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
+    }
+
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         switch (event.getAction()) {
@@ -89,13 +97,5 @@ public class IMGStickerAdjustHelper implements View.OnTouchListener {
                 return true;
         }
         return false;
-    }
-
-    private static double toDegrees(float v, float v1) {
-        return Math.toDegrees(Math.atan2(v, v1));
-    }
-
-    private static double toLength(float x1, float y1, float x2, float y2) {
-        return Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
     }
 }

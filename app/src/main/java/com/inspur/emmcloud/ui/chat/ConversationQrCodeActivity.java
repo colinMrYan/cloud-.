@@ -16,7 +16,7 @@ import org.xutils.view.annotation.ViewInject;
  * Created by yufuchang on 2019/1/19.
  */
 @ContentView(R.layout.activity_group_qrcode)
-public class ConversationQrCodeActivity extends BaseActivity{
+public class ConversationQrCodeActivity extends BaseActivity {
 
     @ViewInject(R.id.iv_group_image)
     private CircleTextImageView groupCircleTextImageView;
@@ -26,6 +26,7 @@ public class ConversationQrCodeActivity extends BaseActivity{
     private ImageView groupQrCodeImage;
     @ViewInject(R.id.btn_share_group_qrcode)
     private Button shareGroupQrCodeBtn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

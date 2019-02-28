@@ -24,18 +24,21 @@ import java.util.List;
  */
 
 public class ShortCutUtils {
+    private static String AUTHORITY = null;
+
     /**
      * 创建图标
+     *
      * @param contxt
      * @param clz
      */
-    public static void createShortCut(Context contxt,Class clz,String shortCutName,String appPathOrUri,String type,int icon) {
+    public static void createShortCut(Context contxt, Class clz, String shortCutName, String appPathOrUri, String type, int icon) {
         //String applicationName=getApplicationName(contxt);
-        if(icon == 0){
+        if (icon == 0) {
             icon = R.drawable.ic_launcher;
         }
         String applicationName = shortCutName;//程序名称，不是packageName
-        if (isShortCutExist(contxt,applicationName)) {// 如果已经创建了一次就不会再创建了
+        if (isShortCutExist(contxt, applicationName)) {// 如果已经创建了一次就不会再创建了
             return;
         }
         Intent sIntent = new Intent(Intent.ACTION_MAIN);
@@ -45,19 +48,19 @@ public class ShortCutUtils {
         Intent installer = new Intent();
         installer.putExtra("duplicate", false);//false标示不重复创建
         Intent intentTodo = new Intent();
-        if(type.equals("ecc-app-react-native")){
+        if (type.equals("ecc-app-react-native")) {
 //            intentTodo.putExtra("ecc-app-react-native",appPathOrUri);
 //            intentTodo.setClass(contxt, ReactNativeAppActivity.class);
-            sIntent.putExtra("ecc-app-react-native",appPathOrUri);
-        }else if(type.equals("ecc-app-web-hcm")){
-            sIntent.putExtra("uri",appPathOrUri);
-        }else if(type.equals("ecc-app-native")){
+            sIntent.putExtra("ecc-app-react-native", appPathOrUri);
+        } else if (type.equals("ecc-app-web-hcm")) {
+            sIntent.putExtra("uri", appPathOrUri);
+        } else if (type.equals("ecc-app-native")) {
 //            sIntent.setClass(contxt, clz);
-        }else if(type.equals("ecc-app-web-gs")){
-            sIntent.putExtra("uri",appPathOrUri);
+        } else if (type.equals("ecc-app-web-gs")) {
+            sIntent.putExtra("uri", appPathOrUri);
 //            sIntent.setClass(contxt, clz);
         }
-        installer.putExtra(Intent.EXTRA_SHORTCUT_INTENT,intentTodo);
+        installer.putExtra(Intent.EXTRA_SHORTCUT_INTENT, intentTodo);
         installer.putExtra("android.intent.extra.shortcut.INTENT", sIntent);
         //设置应用的名称
         installer.putExtra("android.intent.extra.shortcut.NAME", applicationName);
@@ -67,9 +70,9 @@ public class ShortCutUtils {
         LocalBroadcastManager.getInstance(contxt).sendBroadcast(installer);//发送安装桌面图标的通知
     }
 
-
     /**
      * 创建快捷方式，以bitmap指定图标的方式
+     *
      * @param contxt
      * @param clz
      * @param shortCutName
@@ -77,9 +80,9 @@ public class ShortCutUtils {
      * @param type
      * @param iconBitmap
      */
-    public static void createShortCut(Context contxt,Class clz,String shortCutName,String appPathOrUri,String type,Bitmap iconBitmap) {
+    public static void createShortCut(Context contxt, Class clz, String shortCutName, String appPathOrUri, String type, Bitmap iconBitmap) {
         String applicationName = shortCutName;//程序名称，不是packageName
-        if (isShortCutExist(contxt,applicationName)) {// 如果已经创建了一次就不会再创建了
+        if (isShortCutExist(contxt, applicationName)) {// 如果已经创建了一次就不会再创建了
             return;
         }
         Intent sIntent = new Intent(Intent.ACTION_MAIN);
@@ -88,17 +91,17 @@ public class ShortCutUtils {
         Intent installer = new Intent();
         installer.putExtra("duplicate", false);//false标示不重复创建
         Intent intentTodo = new Intent();
-        if(type.equals("ecc-app-react-native")){
-            sIntent.putExtra("ecc-app-react-native",appPathOrUri);
-        }else if(type.equals("ecc-app-web-hcm")){
-            sIntent.putExtra("uri",appPathOrUri);
-        }else if(type.equals("ecc-app-native")){
+        if (type.equals("ecc-app-react-native")) {
+            sIntent.putExtra("ecc-app-react-native", appPathOrUri);
+        } else if (type.equals("ecc-app-web-hcm")) {
+            sIntent.putExtra("uri", appPathOrUri);
+        } else if (type.equals("ecc-app-native")) {
 //            sIntent.setClass(contxt, clz);
-        }else if(type.equals("ecc-app-web-gs")){
-            sIntent.putExtra("uri",appPathOrUri);
+        } else if (type.equals("ecc-app-web-gs")) {
+            sIntent.putExtra("uri", appPathOrUri);
 //            sIntent.setClass(contxt, clz);
         }
-        installer.putExtra(Intent.EXTRA_SHORTCUT_INTENT,intentTodo);
+        installer.putExtra(Intent.EXTRA_SHORTCUT_INTENT, intentTodo);
         installer.putExtra("android.intent.extra.shortcut.INTENT", sIntent);
         //设置应用的名称
         installer.putExtra("android.intent.extra.shortcut.NAME", applicationName);
@@ -108,8 +111,6 @@ public class ShortCutUtils {
         installer.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
         LocalBroadcastManager.getInstance(contxt).sendBroadcast(installer);//发送安装桌面图标的通知
     }
-
-    private static String AUTHORITY = null;
 
     public static boolean isShortCutExist(Context context, String title) {
 
@@ -128,8 +129,8 @@ public class ShortCutUtils {
             try {
                 final Uri CONTENT_URI = Uri.parse(AUTHORITY);
 
-                Cursor c = cr.query(CONTENT_URI, new String[] { "title",
-                                "iconResource" }, "title=?", new String[] { title },
+                Cursor c = cr.query(CONTENT_URI, new String[]{"title",
+                                "iconResource"}, "title=?", new String[]{title},
                         null);
 
                 // XXX表示应用名称。
@@ -140,7 +141,7 @@ public class ShortCutUtils {
                     c.close();
             } catch (Exception e) {
                 // TODO: handle exception
-                LogUtils.YfcDebug("isShortCutExist"+ e.getMessage());
+                LogUtils.YfcDebug("isShortCutExist" + e.getMessage());
             }
 
         }

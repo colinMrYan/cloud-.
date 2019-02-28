@@ -17,10 +17,10 @@ import java.util.List;
  * Created by chenmch on 2018/5/10.
  */
 
-@Table(name="ContactUser",onCreated = "CREATE INDEX contactUserIndex ON ContactUser(id)")
+@Table(name = "ContactUser", onCreated = "CREATE INDEX contactUserIndex ON ContactUser(id)")
 public class ContactUser {
     @Column(name = "id", isId = true)
-    private String id="";
+    private String id = "";
     @Column(name = "name")
     private String name = "";
     @Column(name = "nameGlobal")
@@ -28,45 +28,46 @@ public class ContactUser {
     @Column(name = "pinyin")
     private String pinyin = "";
     @Column(name = "parentId")
-    private String parentId= "";
+    private String parentId = "";
     @Column(name = "mobile")
-    private String mobile="";
+    private String mobile = "";
     @Column(name = "email")
-    private String email="";
+    private String email = "";
     @Column(name = "hasHead")
     private int hasHead = 0;
     @Column(name = "sortOrder")
-    private int sortOrder= 0;
+    private int sortOrder = 0;
     @Column(name = "tel")
-    private String tel="";
+    private String tel = "";
     @Column(name = "office")
-    private String office="";
+    private String office = "";
     @Column(name = "lastQueryTime")
     private String lastQueryTime = "";
-    public ContactUser(){
+
+    public ContactUser() {
 
     }
 
-    public ContactUser(String id){
+    public ContactUser(String id) {
         this.id = id;
     }
 
-    public ContactUser(JSONObject object,String lastQueryTime){
-        this.id = JSONUtils.getString(object,"id","");
-        this.name = JSONUtils.getString(object,"real_name","");
-        this.nameGlobal = JSONUtils.getString(object,"name_global","");
-        this.pinyin =JSONUtils.getString(object,"pinyin","");
-        this.parentId = JSONUtils.getString(object,"parent_id","");
-        this.mobile = JSONUtils.getString(object,"mobile","");
-        this.email = JSONUtils.getString(object,"email","");
-        this.hasHead =JSONUtils.getInt(object,"has_head",0);
-        this.sortOrder = JSONUtils.getInt(object,"sort_order",0);
-        this.office = JSONUtils.getString(object,"office","");
-        this.tel = JSONUtils.getString(object,"tel","");
+    public ContactUser(JSONObject object, String lastQueryTime) {
+        this.id = JSONUtils.getString(object, "id", "");
+        this.name = JSONUtils.getString(object, "real_name", "");
+        this.nameGlobal = JSONUtils.getString(object, "name_global", "");
+        this.pinyin = JSONUtils.getString(object, "pinyin", "");
+        this.parentId = JSONUtils.getString(object, "parent_id", "");
+        this.mobile = JSONUtils.getString(object, "mobile", "");
+        this.email = JSONUtils.getString(object, "email", "");
+        this.hasHead = JSONUtils.getInt(object, "has_head", 0);
+        this.sortOrder = JSONUtils.getInt(object, "sort_order", 0);
+        this.office = JSONUtils.getString(object, "office", "");
+        this.tel = JSONUtils.getString(object, "tel", "");
         this.lastQueryTime = lastQueryTime;
     }
 
-    public ContactUser(String id, String name, String nameGlobal, String pinyin, String parentId, String mobile, String email, int hasHead, int sortOrder,String lastQueryTime,String tel,String office) {
+    public ContactUser(String id, String name, String nameGlobal, String pinyin, String parentId, String mobile, String email, int hasHead, int sortOrder, String lastQueryTime, String tel, String office) {
         this.id = id;
         this.name = name;
         this.nameGlobal = nameGlobal;
@@ -78,16 +79,16 @@ public class ContactUser {
         this.sortOrder = sortOrder;
         this.tel = tel;
         this.office = office;
-        this.lastQueryTime =lastQueryTime;
+        this.lastQueryTime = lastQueryTime;
     }
 
-    public static List<ContactUser> protoBufUserList2ContactUserList(List<ContactProtoBuf.user> userList,long lastQueryTime){
+    public static List<ContactUser> protoBufUserList2ContactUserList(List<ContactProtoBuf.user> userList, long lastQueryTime) {
         List<ContactUser> contactUserList = new ArrayList<>();
-        if (userList != null && userList.size()>0){
+        if (userList != null && userList.size() > 0) {
             int size = userList.size();
-            for (int i=0;i<size;i++){
+            for (int i = 0; i < size; i++) {
                 ContactProtoBuf.user user = userList.get(i);
-                ContactUser contactUser = new ContactUser(user.getId(),user.getRealName(),user.getNameGlobal(),user.getPinyin(),user.getParentId(),user.getMobile(),user.getEmail(),user.getHasHead(),user.getSortOrder(),lastQueryTime+"",user.getTel(),user.getOffice());
+                ContactUser contactUser = new ContactUser(user.getId(), user.getRealName(), user.getNameGlobal(), user.getPinyin(), user.getParentId(), user.getMobile(), user.getEmail(), user.getHasHead(), user.getSortOrder(), lastQueryTime + "", user.getTel(), user.getOffice());
                 contactUserList.add(contactUser);
             }
         }
@@ -193,7 +194,7 @@ public class ContactUser {
 
     public JSONObject contact2JSONObject(Context context) {
         JSONObject obj = new JSONObject();
-        String headUrl = APIUri.getChannelImgUrl4Imp( id);
+        String headUrl = APIUri.getChannelImgUrl4Imp(id);
         try {
             obj.put("id", id);
             obj.put("name", name);
@@ -201,7 +202,7 @@ public class ContactUser {
             obj.put("pinyin", pinyin);
             obj.put("mobile", mobile);
             obj.put("email", email);
-            obj.put("head", StringUtils.isBlank(headUrl)?"":headUrl);
+            obj.put("head", StringUtils.isBlank(headUrl) ? "" : headUrl);
         } catch (Exception e) {
             e.printStackTrace();
         }

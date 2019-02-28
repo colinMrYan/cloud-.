@@ -14,7 +14,7 @@ public class VolumeFileUploadInfo {
     private ProgressCallback progressCallback;
     private String localFilePath;
 
-    public VolumeFileUploadInfo(VolumeFileUploadService volumeFileUploadService, VolumeFile volumeFile, String volumeFileParentPath, ProgressCallback progressCallback,String localFilePath) {
+    public VolumeFileUploadInfo(VolumeFileUploadService volumeFileUploadService, VolumeFile volumeFile, String volumeFileParentPath, ProgressCallback progressCallback, String localFilePath) {
         this.volumeFileUploadService = volumeFileUploadService;
         this.volumeFile = volumeFile;
         this.volumeFileParentPath = volumeFileParentPath;

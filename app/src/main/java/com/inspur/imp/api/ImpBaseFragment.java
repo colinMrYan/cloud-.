@@ -32,15 +32,15 @@ import java.util.List;
  */
 
 public class ImpBaseFragment extends BaseFragment {
+    protected static final String JAVASCRIPT_PREFIX = "javascript:";
     protected RelativeLayout functionLayout;
     protected LinearLayout webFunctionLayout;
     protected List<MainTabMenu> optionMenuList;
     protected TextView headerText;
-    protected static final String JAVASCRIPT_PREFIX = "javascript:";
     private int functionLayoutWidth = -1;
     private int webFunctionLayoutWidth = -1;
 
-    protected void initHeaderOptionMenu(){
+    protected void initHeaderOptionMenu() {
         if (optionMenuList != null && optionMenuList.size() != 0) {
             webFunctionLayout.removeAllViews();
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT);
@@ -73,7 +73,7 @@ public class ImpBaseFragment extends BaseFragment {
                         textView.setText(mainTabMenu.getText());
                         textView.setOnClickListener(onClickListener);
                         textView.setLayoutParams(params);
-                        int textColor = ResourceUtils.getValueOfAttr(getActivity(),R.attr.header_text_color);
+                        int textColor = ResourceUtils.getValueOfAttr(getActivity(), R.attr.header_text_color);
                         textView.setTextColor(getContext().getResources().getColor(textColor));
                         textView.setGravity(Gravity.CENTER_VERTICAL);
                         webFunctionLayout.addView(textView);
@@ -93,7 +93,7 @@ public class ImpBaseFragment extends BaseFragment {
                     }
                 });
                 imageView.setLayoutParams(params);
-                int drawableResId= ResourceUtils.getValueOfAttr(getActivity(),R.attr.ic_header_option);
+                int drawableResId = ResourceUtils.getValueOfAttr(getActivity(), R.attr.ic_header_option);
                 imageView.setImageResource(drawableResId);
                 //ImageDisplayUtils.getInstance().displayImage(imageView, "drawable://" + drawableResId);
                 webFunctionLayout.addView(imageView);
@@ -132,9 +132,9 @@ public class ImpBaseFragment extends BaseFragment {
 
     private void showOptionMenu(View view) {
         View contentView = LayoutInflater.from(getContext()).inflate(R.layout.pop_imp_header_option_menu, null);
-        int width = StringUtils.isBlank(optionMenuList.get(0).getIco())?DensityUtil.dip2px(MyApplication.getInstance(),130):DensityUtil.dip2px(MyApplication.getInstance(),160);
-       final PopupWindow optionMenuPop = new PopupWindow(contentView,width,RelativeLayout.LayoutParams.WRAP_CONTENT, true);
-        ListView menuListView = (ListView)contentView.findViewById(R.id.lv_menu);
+        int width = StringUtils.isBlank(optionMenuList.get(0).getIco()) ? DensityUtil.dip2px(MyApplication.getInstance(), 130) : DensityUtil.dip2px(MyApplication.getInstance(), 160);
+        final PopupWindow optionMenuPop = new PopupWindow(contentView, width, RelativeLayout.LayoutParams.WRAP_CONTENT, true);
+        ListView menuListView = (ListView) contentView.findViewById(R.id.lv_menu);
         menuListView.setAdapter(new MenuAdapter());
         menuListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -156,8 +156,16 @@ public class ImpBaseFragment extends BaseFragment {
         optionMenuPop.showAsDropDown(view);
     }
 
+    /**
+     * 执行JS脚本
+     *
+     * @param script
+     */
+    protected void runJavaScript(String script) {
 
-    private class MenuAdapter extends BaseAdapter{
+    }
+
+    private class MenuAdapter extends BaseAdapter {
         @Override
         public int getCount() {
             return optionMenuList.size();
@@ -176,27 +184,18 @@ public class ImpBaseFragment extends BaseFragment {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             MainTabMenu optionMenu = optionMenuList.get(position);
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.pop_imp_header_option_menu_item_view,null);
-            ImageView iconImg = (ImageView)convertView.findViewById(R.id.iv_icon);
-            TextView textView = (TextView)convertView.findViewById(R.id.tv_text);
-            if (StringUtils.isBlank(optionMenu.getIco())){
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.pop_imp_header_option_menu_item_view, null);
+            ImageView iconImg = (ImageView) convertView.findViewById(R.id.iv_icon);
+            TextView textView = (TextView) convertView.findViewById(R.id.tv_text);
+            if (StringUtils.isBlank(optionMenu.getIco())) {
                 iconImg.setVisibility(View.GONE);
-            }else {
+            } else {
                 iconImg.setVisibility(View.VISIBLE);
-                ImageDisplayUtils.getInstance().displayImage(iconImg,optionMenu.getIco());
+                ImageDisplayUtils.getInstance().displayImage(iconImg, optionMenu.getIco());
             }
             textView.setText(optionMenu.getText());
             return convertView;
         }
-    }
-
-    /**
-     * 执行JS脚本
-     *
-     * @param script
-     */
-    protected void runJavaScript(String script) {
-
     }
 
 }

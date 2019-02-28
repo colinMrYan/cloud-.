@@ -8,8 +8,9 @@ import android.view.ViewGroup;
 
 /**
  * Span that holds a view it draws when rendering
- *
+ * <p>
  * Created on 2/3/15.
+ *
  * @author mgod
  */
 public class ViewSpan extends ReplacementSpan {

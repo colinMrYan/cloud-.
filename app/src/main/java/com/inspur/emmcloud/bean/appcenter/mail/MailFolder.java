@@ -26,22 +26,23 @@ public class MailFolder {
     @Column(name = "parentFolderId")
     private String parentFolderId;
     @Column(name = "folderType")
-    private int  folderType;
+    private int folderType;
     @Column(name = "sort")
-    private int sort=0;
-    public MailFolder(){
+    private int sort = 0;
+
+    public MailFolder() {
 
     }
 
-    public MailFolder(JSONObject object,int sort) {
+    public MailFolder(JSONObject object, int sort) {
         id = JSONUtils.getString(object, "id", "");
         folderClass = JSONUtils.getString(object, "folderClass", "");
         displayName = JSONUtils.getString(object, "displayName", "");
         totalCount = JSONUtils.getInt(object, "totalCount", 0);
         unreadCount = JSONUtils.getInt(object, "unreadCount", 0);
         childFolderCount = JSONUtils.getInt(object, "childFolderCount", 0);
-        parentFolderId= JSONUtils.getString(object, "parentFolderId", "");
-        folderType= JSONUtils.getInt(object, "folderType", 0);
+        parentFolderId = JSONUtils.getString(object, "parentFolderId", "");
+        folderType = JSONUtils.getInt(object, "folderType", 0);
         this.sort = sort;
     }
 

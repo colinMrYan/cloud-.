@@ -26,16 +26,15 @@ import org.xutils.x;
  */
 
 @ContentView(R.layout.activity_mail_home)
-public class MailHomeBaseActivity extends BaseFragmentActivity implements AllInterface.OnMenuSlideListener{
+public class MailHomeBaseActivity extends BaseFragmentActivity implements AllInterface.OnMenuSlideListener {
 
+    protected LoadingDialog loadingDlg;
     @ViewInject(R.id.ldl_menu)
     private LeftDrawerLayout leftDrawerLayout;
-
     @ViewInject(R.id.v_shadow)
     private View shadowView;
-
     private MailLeftMenuFragment mailLeftMenuFragment;
-    protected LoadingDialog loadingDlg;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +42,7 @@ public class MailHomeBaseActivity extends BaseFragmentActivity implements AllInt
         x.view().inject(this);
         loadingDlg = new LoadingDialog(this);
         addMailLeftMenyu();
+        setStatus();
     }
 
 //    private void loginMail(){
@@ -59,13 +59,13 @@ public class MailHomeBaseActivity extends BaseFragmentActivity implements AllInt
     public void onReceiveSimpleEventMessage(SimpleEventMessage simpleEventMessage) {
         if (simpleEventMessage.getAction().equals(Constant.EVENTBUS_TAG_MAIL_LOGIN_SUCCESS)) {
             addMailLeftMenyu();
-        }else if(simpleEventMessage.getAction().equals(Constant.EVENTBUS_TAG_MAIL_LOGIN_FAIL)){
+        } else if (simpleEventMessage.getAction().equals(Constant.EVENTBUS_TAG_MAIL_LOGIN_FAIL)) {
             addMailLeftMenyu();
         }
 
     }
 
-    private void addMailLeftMenyu(){
+    private void addMailLeftMenyu() {
         FragmentManager fm = getSupportFragmentManager();
         mailLeftMenuFragment = (MailLeftMenuFragment) fm.findFragmentById(R.id.fm_container_menu);
         leftDrawerLayout.setOnMenuSlideListener(this);
@@ -74,24 +74,24 @@ public class MailHomeBaseActivity extends BaseFragmentActivity implements AllInt
         }
     }
 
-    public void onClick(View v){
-        switch (v.getId()){
+    public void onClick(View v) {
+        switch (v.getId()) {
             case R.id.ibt_setting:
-               openMenu();
+                openMenu();
                 break;
             case R.id.rl_back:
                 closeMenu();
                 break;
             case R.id.bt_mail_setting:
-                IntentUtils.startActivity( this, MailSettingActivity.class);
+                IntentUtils.startActivity(this, MailSettingActivity.class);
                 break;
             case R.id.bt_mail_add:
                 Bundle bundle = new Bundle();
-                bundle.putString(MailSendActivity.EXTRA_MAIL_MODE,MailSendActivity.MODE_NEW);
-                IntentUtils.startActivity(this,MailSendActivity.class,bundle);
+                bundle.putString(MailSendActivity.EXTRA_MAIL_MODE, MailSendActivity.MODE_NEW);
+                IntentUtils.startActivity(this, MailSendActivity.class, bundle);
                 break;
             case R.id.ibt_back:
-               finish();
+                finish();
                 break;
             case R.id.v_shadow:
                 closeMenu();
@@ -104,10 +104,10 @@ public class MailHomeBaseActivity extends BaseFragmentActivity implements AllInt
 
     @Override
     public void onBackPressed() {
-        if (leftDrawerLayout.isDrawerOpen()){
+        if (leftDrawerLayout.isDrawerOpen()) {
             leftDrawerLayout.closeDrawer();
             shadowView.setVisibility(View.GONE);
-        }else {
+        } else {
             super.onBackPressed();
         }
     }
@@ -118,7 +118,7 @@ public class MailHomeBaseActivity extends BaseFragmentActivity implements AllInt
     }
 
     public void closeMenu() {
-        if (leftDrawerLayout.isDrawerOpen()){
+        if (leftDrawerLayout.isDrawerOpen()) {
             leftDrawerLayout.closeDrawer();
             shadowView.setVisibility(View.GONE);
         }

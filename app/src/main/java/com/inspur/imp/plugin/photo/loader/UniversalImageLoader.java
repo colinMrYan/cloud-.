@@ -79,8 +79,8 @@ public class UniversalImageLoader implements ImageLoaderCommon {
         }, new ImageLoadingProgressListener() {
             @Override
             public void onProgressUpdate(String imageUri, View view, int current, int total) {
-                LogUtils.jasonDebug("curremt=="+current);
-                LogUtils.jasonDebug("total=="+total);
+                LogUtils.jasonDebug("curremt==" + current);
+                LogUtils.jasonDebug("total==" + total);
                 if (sourceCallback != null)
                     sourceCallback.onProgress(current * 100 / total);
             }

@@ -55,7 +55,7 @@ public class SegmentControl extends View {
     private int mSelectedBackgroundColors;
     private int mCornerRadius;
     private OnSegmentControlClickListener mOnSegmentControlClickListener;
-    private boolean isEnable = true; 
+    private boolean isEnable = true;
 
     public SegmentControl(Context context) {
         this(context, null);
@@ -66,7 +66,7 @@ public class SegmentControl extends View {
     }
 
     @SuppressLint("NewApi")
-	public SegmentControl(Context context, AttributeSet attrs, int defStyle) {
+    public SegmentControl(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
 
         TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.SegmentControl);
@@ -101,7 +101,7 @@ public class SegmentControl extends View {
 
         mBackgroundDrawable = new RadiusDrawable(mCornerRadius, true, 0);
         mBackgroundDrawable.setStrokeWidth(2);
-            mBackgroundDrawable.setStrokeColor(mSelectedBackgroundColors);
+        mBackgroundDrawable.setStrokeColor(mSelectedBackgroundColors);
 
         if (Build.VERSION.SDK_INT < 16) {
             setBackgroundDrawable(mBackgroundDrawable);
@@ -130,9 +130,9 @@ public class SegmentControl extends View {
         mTouchSlop = touchSlop * touchSlop;
         inTapRegion = false;
     }
-    
-    public void setIsEnable(boolean isEnable){
-    	this.isEnable = isEnable;
+
+    public void setIsEnable(boolean isEnable) {
+        this.isEnable = isEnable;
     }
 
     public void setOnSegmentControlClickListener(OnSegmentControlClickListener onSegmentControlClickListener) {
@@ -151,13 +151,13 @@ public class SegmentControl extends View {
         }
     }
 
+    public int getCurrentIndex() {
+        return mCurrentIndex;
+    }
+
     public void setCurrentIndex(int index) {
         mCurrentIndex = index;
         invalidate();
-    }
-    
-    public int getCurrentIndex() {
-        return mCurrentIndex;
     }
 
     /**
@@ -279,7 +279,7 @@ public class SegmentControl extends View {
             }
 
             switch (widthMode) {
-            	
+
                 case MeasureSpec.AT_MOST:
                     if (mDirection == Direction.HORIZON) {
                         if (widthSize <= mSingleChildWidth * mTexts.length) {
@@ -344,9 +344,9 @@ public class SegmentControl extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-    	if (!isEnable) {
-			return true;
-		}
+        if (!isEnable) {
+            return true;
+        }
         switch (event.getAction() & MotionEvent.ACTION_MASK) {
             case MotionEvent.ACTION_DOWN:
                 inTapRegion = true;
@@ -448,7 +448,7 @@ public class SegmentControl extends View {
                 }
 
                 //draw texts
-                canvas.drawText(mTexts[i], mCacheBounds[i].left + (mSingleChildWidth - mTextBounds[i].width()) / 2, mCacheBounds[i].top + (mSingleChildHeight-mPaint.ascent()-mPaint.descent()) / 2, mPaint);
+                canvas.drawText(mTexts[i], mCacheBounds[i].left + (mSingleChildWidth - mTextBounds[i].width()) / 2, mCacheBounds[i].top + (mSingleChildHeight - mPaint.ascent() - mPaint.descent()) / 2, mPaint);
             }
         }
 

@@ -33,8 +33,8 @@ public class ImageGridActivity extends ImageBaseActivity implements
 
     public static final int REQUEST_PERMISSION_STORAGE = 0x01;
     public static final int REQUEST_PERMISSION_CAMERA = 0x02;
-    protected static final int CUT_IMG_SUCCESS = 1;
     public static final String EXTRA_ENCODING_TYPE = "IMAGE_ENCODING_TYPE";
+    protected static final int CUT_IMG_SUCCESS = 1;
     private int encodingType = 0;
     private ImagePicker imagePicker;
 
@@ -71,6 +71,7 @@ public class ImageGridActivity extends ImageBaseActivity implements
         onImageSelected(0, null, false);
         imageDataSource = new ImageDataSource(this, null, this);
         encodingType = getIntent().getIntExtra(EXTRA_ENCODING_TYPE, 0);
+        setStatus();
     }
 
 
@@ -233,7 +234,7 @@ public class ImageGridActivity extends ImageBaseActivity implements
         if (resultCode == RESULT_OK
                 && requestCode == ImagePicker.REQUEST_CODE_TAKE) {
             ImageItem imageItem = new ImageItem();
-            imageItem.path = data.getExtras().getString(MyCameraActivity.OUT_FILE_PATH,"");
+            imageItem.path = data.getExtras().getString(MyCameraActivity.OUT_FILE_PATH, "");
             // 发送广播通知图片增加了
             ImagePicker.galleryAddPic(this, imagePicker.getTakeImageFile());
             imagePicker.clearSelectedImages();
@@ -250,10 +251,7 @@ public class ImageGridActivity extends ImageBaseActivity implements
                 setResult(ImagePicker.RESULT_CODE_ITEMS, intent); // 单选不需要裁剪，返回数据
                 finish();
             }
-        }
-
-
-         else if (data != null) {
+        } else if (data != null) {
             if (requestCode == ImagePicker.REQUEST_CODE_EDIT) {// 说明是从裁剪页面过来的数据，直接返回就可以
                 if (resultCode == RESULT_OK) {
                     String newPath = data.getStringExtra(

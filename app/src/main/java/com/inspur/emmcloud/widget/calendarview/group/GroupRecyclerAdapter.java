@@ -2,7 +2,6 @@ package com.inspur.emmcloud.widget.calendarview.group;
 
 import android.content.Context;
 
-
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -26,7 +25,7 @@ public abstract class GroupRecyclerAdapter<Parent, Child> extends BaseRecyclerAd
     /**
      * 返回特定的标题
      */
-     Parent getGroup(int groupPosition) {
+    Parent getGroup(int groupPosition) {
         return mGroupTitles.get(groupPosition);
     }
 
@@ -35,7 +34,7 @@ public abstract class GroupRecyclerAdapter<Parent, Child> extends BaseRecyclerAd
      *
      * @return 组的数量
      */
-     int getGroupCount() {
+    int getGroupCount() {
         return mGroupTitles.size();
     }
 
@@ -45,7 +44,7 @@ public abstract class GroupRecyclerAdapter<Parent, Child> extends BaseRecyclerAd
      * @param groupPosition groupPosition
      * @return 某一组的数量
      */
-     int getChildCount(int groupPosition) {
+    int getChildCount(int groupPosition) {
         if (mGroupTitles == null || mGroups.size() == 0)
             return 0;
         if (mGroups.get(mGroupTitles.get(groupPosition)) == null)

@@ -14,10 +14,10 @@ import java.io.InputStream;
  */
 public class MarkDown {
 
-    public static String fromMarkdown(String source){
+    public static String fromMarkdown(String source) {
         MarkDownParser parser = new MarkDownParser(source, new StyleBuilderImpl(null, null));
         try {
-            Spanned spanned =  parser.parse();
+            Spanned spanned = parser.parse();
             return spanned.toString();
         } catch (Exception e) {
             e.printStackTrace();
@@ -34,7 +34,7 @@ public class MarkDown {
      * @return spanned
      */
     public static Spanned fromMarkdown(String source, Html.ImageGetter imageGetter, TextView textView) {
-       MarkDownParser parser = new MarkDownParser(source, new StyleBuilderImpl(textView, imageGetter));
+        MarkDownParser parser = new MarkDownParser(source, new StyleBuilderImpl(textView, imageGetter));
         try {
             return parser.parse();
         } catch (IOException e) {
@@ -52,7 +52,7 @@ public class MarkDown {
      * @return spanned
      */
     public static Spanned fromMarkdown(InputStream inputStream, Html.ImageGetter imageGetter, TextView textView) {
-       MarkDownParser parser = new MarkDownParser(inputStream, new StyleBuilderImpl(textView, imageGetter));
+        MarkDownParser parser = new MarkDownParser(inputStream, new StyleBuilderImpl(textView, imageGetter));
         try {
             return parser.parse();
         } catch (IOException e) {
@@ -70,7 +70,7 @@ public class MarkDown {
      * @return spanned
      */
     public static Spanned fromMarkdown(BufferedReader reader, Html.ImageGetter imageGetter, TextView textView) {
-       MarkDownParser parser = new MarkDownParser(reader, new StyleBuilderImpl(textView, imageGetter));
+        MarkDownParser parser = new MarkDownParser(reader, new StyleBuilderImpl(textView, imageGetter));
         try {
             return parser.parse();
         } catch (IOException e) {

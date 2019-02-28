@@ -33,11 +33,11 @@ import com.reactnativenavigation.bridge.NavigationReactPackage;
  * com.inspur.emmcloud.ui.FindFragment create at 2016年8月29日 下午3:27:26
  */
 public class FindFragment extends BaseFragment implements DefaultHardwareBackBtnHandler {
+    public static boolean hasUpdated = false;
     private ReactRootView mReactRootView;
     private ReactInstanceManager mReactInstanceManager;
     private String reactCurrentFilePath;
     private String userId = "";
-    public static boolean hasUpdated = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -93,7 +93,7 @@ public class FindFragment extends BaseFragment implements DefaultHardwareBackBtn
         super.onCreate(savedInstanceState);
         userId = ((MyApplication) getActivity().getApplicationContext()).getUid();
 //        reactCurrentFilePath = MyAppConfig.getReactCurrentFilePath(getActivity(), userId);
-        reactCurrentFilePath = MyAppConfig.getReactAppFilePath(getActivity(),userId,"discover");
+        reactCurrentFilePath = MyAppConfig.getReactAppFilePath(getActivity(), userId, "discover");
         if (!FileUtils.isFileExist(reactCurrentFilePath + "/index.android.bundle")) {
             ZipUtils.unZip(getActivity(), "bundle-inspur_esg-v0.3.1-beta7-.android.zip", reactCurrentFilePath, true);
         }
@@ -102,6 +102,7 @@ public class FindFragment extends BaseFragment implements DefaultHardwareBackBtn
 
     /**
      * 创建初始化参数，与ReactNativeActivity
+     *
      * @return
      */
     private Bundle createInitBundle() {
@@ -109,31 +110,30 @@ public class FindFragment extends BaseFragment implements DefaultHardwareBackBtn
         String myInfo = PreferencesUtils.getString(getActivity(),
                 "myInfo", "");
         GetMyInfoResult getMyInfoResult = new GetMyInfoResult(myInfo);
-        bundle.putString("id",getMyInfoResult.getID());
-        bundle.putString("code",getMyInfoResult.getCode());
-        bundle.putString("name",getMyInfoResult.getName());
-        bundle.putString("mail",getMyInfoResult.getMail());
-        bundle.putString("avatar",getMyInfoResult.getAvatar());
-        Enterprise currentEnterprise = ((MyApplication)getActivity().getApplicationContext()).getCurrentEnterprise();
-        bundle.putString("enterpriseCode",currentEnterprise.getCode());
-        bundle.putString("enterpriseName",currentEnterprise.getName());
-        bundle.putString("enterpriseId",currentEnterprise.getId());
+        bundle.putString("id", getMyInfoResult.getID());
+        bundle.putString("code", getMyInfoResult.getCode());
+        bundle.putString("name", getMyInfoResult.getName());
+        bundle.putString("mail", getMyInfoResult.getMail());
+        bundle.putString("avatar", getMyInfoResult.getAvatar());
+        Enterprise currentEnterprise = ((MyApplication) getActivity().getApplicationContext()).getCurrentEnterprise();
+        bundle.putString("enterpriseCode", currentEnterprise.getCode());
+        bundle.putString("enterpriseName", currentEnterprise.getName());
+        bundle.putString("enterpriseId", currentEnterprise.getId());
 
         //这里与IOS传值有所不同，建议是保留原来版本即上面的传值方式，下面是IOS传值方式
         //bundle.putString("profile",myInfo);
         bundle.putString("systemName", ReactNativeInitInfoUtils.SYSTEM);
-        bundle.putString("systemVersion",ReactNativeInitInfoUtils.getSystemVersion(getActivity()));
-        bundle.putString("locale",ReactNativeInitInfoUtils.getLocalLanguage(getActivity()));
-        bundle.putString("reactNativeVersion",ReactNativeInitInfoUtils.getReactNativeVersion(reactCurrentFilePath));
-        bundle.putString("accessToken",((MyApplication)getActivity().getApplicationContext()).getToken());
-        bundle.putString("pushId",ReactNativeInitInfoUtils.getPushId(getActivity()));
-        bundle.putString("pushType",ReactNativeInitInfoUtils.getPushType(getActivity()));
+        bundle.putString("systemVersion", ReactNativeInitInfoUtils.getSystemVersion(getActivity()));
+        bundle.putString("locale", ReactNativeInitInfoUtils.getLocalLanguage(getActivity()));
+        bundle.putString("reactNativeVersion", ReactNativeInitInfoUtils.getReactNativeVersion(reactCurrentFilePath));
+        bundle.putString("accessToken", ((MyApplication) getActivity().getApplicationContext()).getToken());
+        bundle.putString("pushId", ReactNativeInitInfoUtils.getPushId(getActivity()));
+        bundle.putString("pushType", ReactNativeInitInfoUtils.getPushType(getActivity()));
         bundle.putSerializable("userProfile", myInfo);
-        bundle.putSerializable("currentEnterprise", ((MyApplication)getActivity().getApplicationContext()).getCurrentEnterprise().toJSONObject().toString());
+        bundle.putSerializable("currentEnterprise", ((MyApplication) getActivity().getApplicationContext()).getCurrentEnterprise().toJSONObject().toString());
         bundle.putString("appVersion", AppUtils.getVersion(getActivity()));
         return bundle;
     }
-
 
 
     @Override

@@ -24,11 +24,9 @@ import java.util.HashMap;
  */
 public class PluginMgr {
 
-    private Context context;
-
-    private ImpWebView webView;
-
     private static final String TAG = "PLUGIN_MGR";
+    private Context context;
+    private ImpWebView webView;
     private IPlugin plugin;
 
     // 缓存功能类实例
@@ -61,7 +59,7 @@ public class PluginMgr {
      */
     public void execute(final String serviceName, final String action,
                         final String params) {
-        if (Looper.myLooper() != Looper.getMainLooper()){
+        if (Looper.myLooper() != Looper.getMainLooper()) {
             Handler mainThread = new Handler(Looper.getMainLooper());
             mainThread.post(new Runnable() {
                 @Override
@@ -69,14 +67,14 @@ public class PluginMgr {
                     executeOnMainThread(serviceName, action, params);
                 }
             });
-        }else {
+        } else {
             executeOnMainThread(serviceName, action, params);
         }
 
     }
 
     private void executeOnMainThread(String serviceName, final String action,
-                                     final String params){
+                                     final String params) {
         serviceName = getReallyServiceName(serviceName);
         if (serviceName != null) {
             LogUtils.jasonDebug("serviceName=" + serviceName);
@@ -88,7 +86,7 @@ public class PluginMgr {
                 try {
                     jo = new JSONObject(params);
                 } catch (JSONException e) {
-                    LogUtils.jasonDebug("e=="+e.toString());
+                    LogUtils.jasonDebug("e==" + e.toString());
                     iLog.e(TAG, "组装Json对象出现异常!");
                 }
             }
@@ -96,12 +94,12 @@ public class PluginMgr {
             if (plugin != null) {
                 plugin.execute(action, jo);
             } else {
-                if(impCallBackInterface != null){
+                if (impCallBackInterface != null) {
                     impCallBackInterface.onShowImpDialog();
                 }
             }
-        }else {
-            if(impCallBackInterface != null){
+        } else {
+            if (impCallBackInterface != null) {
                 impCallBackInterface.onShowImpDialog();
             }
         }
@@ -117,7 +115,7 @@ public class PluginMgr {
     public String executeAndReturn(final String serviceName,
                                    final String action, final String params) {
         String res = "";
-        if (Looper.myLooper() != Looper.getMainLooper() && !serviceName.endsWith("EMMService")&& !serviceName.endsWith("DeviceService")){
+        if (Looper.myLooper() != Looper.getMainLooper() && !serviceName.endsWith("EMMService") && !serviceName.endsWith("DeviceService")) {
             Handler mainThread = new Handler(Looper.getMainLooper());
             mainThread.post(new Runnable() {
                 @Override
@@ -125,7 +123,7 @@ public class PluginMgr {
                     executeAndReturnOnMainThead(serviceName, action, params);
                 }
             });
-        }else {
+        } else {
             res = executeAndReturnOnMainThead(serviceName, action, params);
         }
         return res;
@@ -156,13 +154,13 @@ public class PluginMgr {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-            }else{
-                if(impCallBackInterface != null){
+            } else {
+                if (impCallBackInterface != null) {
                     impCallBackInterface.onShowImpDialog();
                 }
             }
         } else {
-            if(impCallBackInterface != null){
+            if (impCallBackInterface != null) {
                 impCallBackInterface.onShowImpDialog();
             }
         }
@@ -180,23 +178,23 @@ public class PluginMgr {
                 // serviceName = "com.inspur.imp.plugin.ocr.OCRService";
             } else if (serviceName.endsWith("StartAppService")) {
                 serviceName = "com.inspur.imp.plugin.startapp.StartAppService";
-            }else if(serviceName.endsWith("WindowService")){
+            } else if (serviceName.endsWith("WindowService")) {
                 serviceName = "com.inspur.imp.plugin.window.WindowService";
-            }else if(serviceName.endsWith("DeviceService")){
+            } else if (serviceName.endsWith("DeviceService")) {
                 serviceName = "com.inspur.imp.plugin.device.DeviceService";
-            }else if(serviceName.endsWith("StuffInformationService")){
+            } else if (serviceName.endsWith("StuffInformationService")) {
                 serviceName = "com.inspur.imp.plugin.staff.StuffInformationService";
             }
         }
         return serviceName;
     }
 
-    public void setImpCallBackInterface(ImpCallBackInterface impCallBackInterface){
-        this.impCallBackInterface = impCallBackInterface;
+    public ImpCallBackInterface getImpCallBackInterface() {
+        return impCallBackInterface;
     }
 
-    public ImpCallBackInterface getImpCallBackInterface(){
-        return impCallBackInterface;
+    public void setImpCallBackInterface(ImpCallBackInterface impCallBackInterface) {
+        this.impCallBackInterface = impCallBackInterface;
     }
 
     /**
@@ -211,7 +209,7 @@ public class PluginMgr {
         Log.d("jason", "serviceName=" + service);
         if (!entries.containsKey(service) || service.equals("com.inspur.imp.plugin.transfer.FileTransferService")) {
             plugin = createPlugin(service);
-            if (plugin != null){
+            if (plugin != null) {
                 entries.put(service, plugin);
             }
         } else {
@@ -230,7 +228,7 @@ public class PluginMgr {
             @SuppressWarnings("rawtypes")
             Class c = getClassByName(clssName);
             plugin = (IPlugin) c.newInstance();
-            plugin.init(context, webView,impCallBackInterface);
+            plugin.init(context, webView, impCallBackInterface);
         } catch (Exception e) {
             e.printStackTrace();
         }

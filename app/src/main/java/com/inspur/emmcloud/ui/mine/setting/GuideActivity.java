@@ -1,17 +1,15 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
-import android.app.Activity;
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.gyf.barlibrary.ImmersionBar;
+import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.MyViewPagerAdapter;
@@ -36,10 +34,9 @@ import java.util.List;
 
 /**
  * 功能介绍页面 com.inspur.emmcloud.ui.GuideActivity
- *
  */
 @ContentView(R.layout.activity_guide)
-public class GuideActivity extends Activity {
+public class GuideActivity extends BaseActivity {
 
     @ViewInject(R.id.viewpager)
     private ViewPager viewPager;
@@ -49,15 +46,16 @@ public class GuideActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);//没有标题
-        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            //全屏显示
-            WindowManager.LayoutParams lp = getWindow().getAttributes();
-            lp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
-            getWindow().setAttributes(lp);
-        }
+//        requestWindowFeature(Window.FEATURE_NO_TITLE);//没有标题
+//        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+//            //全屏显示
+//            WindowManager.LayoutParams lp = getWindow().getAttributes();
+//            lp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+//            getWindow().setAttributes(lp);
+//        }
         x.view().inject(this);
+        ImmersionBar.with(this).init();
         deleteReactNativeResource();
         initView();
     }
@@ -67,11 +65,11 @@ public class GuideActivity extends Activity {
      */
     private void deleteReactNativeResource() {
         try {
-            String reactNativeResourceFolderPath = getDir("ReactResource",MODE_PRIVATE).getPath();
-            if(FileUtils.isFolderExist((reactNativeResourceFolderPath))){
+            String reactNativeResourceFolderPath = getDir("ReactResource", MODE_PRIVATE).getPath();
+            if (FileUtils.isFolderExist((reactNativeResourceFolderPath))) {
                 FileUtils.deleteFile(reactNativeResourceFolderPath);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -81,14 +79,14 @@ public class GuideActivity extends Activity {
         // TODO Auto-generated method stub
         List<Integer> splashResIdList = new ArrayList<>();
         //刚安装App初次进入
-        if (PreferencesUtils.getBoolean(getApplicationContext(),"isFirst", true) && AppUtils.isAppVersionStandard()){
+        if (PreferencesUtils.getBoolean(getApplicationContext(), "isFirst", true) && AppUtils.isAppVersionStandard()) {
             splashResIdList.add(R.drawable.guide_page_1);
             splashResIdList.add(R.drawable.guide_page_2);
             splashResIdList.add(R.drawable.guide_page_3);
             splashResIdList.add(R.drawable.guide_page_4);
             splashResIdList.add(R.drawable.guide_page_5);
             splashResIdList.add(R.drawable.guide_page_6);
-        }else {//版本升级进入
+        } else {//版本升级进入
             splashResIdList.add(R.drawable.guide_page_new_1);
             splashResIdList.add(R.drawable.guide_page_new_2);
             splashResIdList.add(R.drawable.guide_page_new_3);
@@ -97,7 +95,7 @@ public class GuideActivity extends Activity {
         for (int i = 0; i < splashResIdList.size(); i++) {
             View guideView = LayoutInflater.from(this).inflate(R.layout.view_pager_guide, null);
             ImageView img = (ImageView) guideView.findViewById(R.id.img);
-            ImageDisplayUtils.getInstance().displayImageNoCache(img,"drawable://"+splashResIdList.get(i));
+            ImageDisplayUtils.getInstance().displayImageNoCache(img, "drawable://" + splashResIdList.get(i));
             if (i == splashResIdList.size() - 1) {
                 Button enterButton = ((Button) guideView
                         .findViewById(R.id.enter_app_btn));
@@ -117,8 +115,8 @@ public class GuideActivity extends Activity {
                                     "isFirst", false);
                             String accessToken = PreferencesUtils.getString(
                                     GuideActivity.this, "accessToken", "");
-                            if(!StringUtils.isBlank(accessToken)){
-                                if (AppUtils.isAppHasUpgraded(GuideActivity.this) && NetUtils.isNetworkConnected(GuideActivity.this)){
+                            if (!StringUtils.isBlank(accessToken)) {
+                                if (AppUtils.isAppHasUpgraded(GuideActivity.this) && NetUtils.isNetworkConnected(GuideActivity.this)) {
                                     new ProfileUtils(GuideActivity.this, new CommonCallBack() {
                                         @Override
                                         public void execute() {
@@ -127,7 +125,7 @@ public class GuideActivity extends Activity {
                                         }
                                     }).initProfile();
                                 }
-                            }else{
+                            } else {
                                 MyApplication.getInstance().signout();
                             }
                         }

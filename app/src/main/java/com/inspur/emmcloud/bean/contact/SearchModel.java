@@ -48,7 +48,7 @@ public class SearchModel implements Serializable {
         this.icon = channelGroup.getIcon();
     }
 
-    public SearchModel(Conversation conversation){
+    public SearchModel(Conversation conversation) {
         if (conversation == null) {
             return;
         }
@@ -56,26 +56,6 @@ public class SearchModel implements Serializable {
         this.name = conversation.getName();
         this.type = TYPE_GROUP;
         this.icon = conversation.getAvatar();
-    }
-
-    public static List<SearchModel> channelGroupList2SearchModelList(List<ChannelGroup> channelGroupList){
-        List<SearchModel> searchModelList = new ArrayList<>();
-        if (channelGroupList != null){
-            for (ChannelGroup channelGroup:channelGroupList){
-                searchModelList.add(new SearchModel(channelGroup));
-            }
-        }
-        return searchModelList;
-    }
-
-    public static List<SearchModel> conversationList2SearchModelList(List<Conversation> conversationList){
-        List<SearchModel> searchModelList = new ArrayList<>();
-        if (conversationList != null){
-            for (Conversation conversation:conversationList){
-                searchModelList.add(new SearchModel(conversation));
-            }
-        }
-        return searchModelList;
     }
 
     public SearchModel(Contact contact) {
@@ -134,24 +114,40 @@ public class SearchModel implements Serializable {
         type = channel.getType();
     }
 
-    public String getId() {
-        return id;
+    public static List<SearchModel> channelGroupList2SearchModelList(List<ChannelGroup> channelGroupList) {
+        List<SearchModel> searchModelList = new ArrayList<>();
+        if (channelGroupList != null) {
+            for (ChannelGroup channelGroup : channelGroupList) {
+                searchModelList.add(new SearchModel(channelGroup));
+            }
+        }
+        return searchModelList;
     }
 
-    public String getName() {
-        return name;
+    public static List<SearchModel> conversationList2SearchModelList(List<Conversation> conversationList) {
+        List<SearchModel> searchModelList = new ArrayList<>();
+        if (conversationList != null) {
+            for (Conversation conversation : conversationList) {
+                searchModelList.add(new SearchModel(conversation));
+            }
+        }
+        return searchModelList;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public void setId(String id) {
         this.id = id;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String getName() {
+        return name;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getIcon() {
@@ -200,12 +196,16 @@ public class SearchModel implements Serializable {
         return type;
     }
 
-    public void setHeat(int heat) {
-        this.heat = heat;
+    public void setType(String type) {
+        this.type = type;
     }
 
     public int getHeat() {
         return heat;
+    }
+
+    public void setHeat(int heat) {
+        this.heat = heat;
     }
 
     public String getIcon(Context context) {

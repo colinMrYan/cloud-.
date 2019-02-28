@@ -43,16 +43,16 @@ public class DisplayTxtMarkdownMsg {
         final TextView contentText = (TextView) cardContentView
                 .findViewById(R.id.tv_content);
         BubbleLayout cardLayout = (BubbleLayout) cardContentView.findViewById(R.id.bl_card);
-        cardLayout.setArrowDirection(isMyMsg? ArrowDirection.RIGHT:ArrowDirection.LEFT);
+        cardLayout.setArrowDirection(isMyMsg ? ArrowDirection.RIGHT : ArrowDirection.LEFT);
         cardLayout.setBubbleColor(context.getResources().getColor(isMyMsg ? R.color.bg_my_card : R.color.bg_other_card));
-        cardLayout.setStrokeWidth(isMyMsg ?0: 0.5f);
+        cardLayout.setStrokeWidth(isMyMsg ? 0 : 0.5f);
         titleText.setTextColor(context.getResources().getColor(
                 isMyMsg ? R.color.white : R.color.black));
         contentText.setTextColor(context.getResources().getColor(
                 isMyMsg ? R.color.white : R.color.black));
         String text = msg.getMsgContentTextMarkdown().getText();
         String title = msg.getMsgContentTextMarkdown().getTitle();
-        titleText.setVisibility(StringUtils.isBlank(title)?View.GONE:View.VISIBLE);
+        titleText.setVisibility(StringUtils.isBlank(title) ? View.GONE : View.VISIBLE);
         RichText.from(title)
                 .type(RichType.MARKDOWN)
                 .linkFix(new LinkFixCallback() {
@@ -78,7 +78,6 @@ public class DisplayTxtMarkdownMsg {
                 .singleLoad(false)
                 .cache(CacheType.ALL)
                 .into(titleText);
-
 
 
         RichText.from(text)

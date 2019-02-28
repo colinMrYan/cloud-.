@@ -6,7 +6,7 @@ import com.inspur.emmcloud.util.common.JSONUtils;
  * Created by yufuchang on 2018/4/2.
  */
 
-public  class SplashPayloadBean {
+public class SplashPayloadBean {
     /**
      * version : v1.0.0
      * state : ACTIVED
@@ -36,20 +36,20 @@ public  class SplashPayloadBean {
     private String xxxhdpiHash = "";
     private SplashResourceBean resource;
 
-    public SplashPayloadBean(String payloadBean){
-        this.version = JSONUtils.getString(payloadBean,"version","");
-        this.state = JSONUtils.getString(payloadBean,"state","");
-        this.effectiveDate = JSONUtils.getLong(payloadBean,"effectiveDate",0);
-        this.expireDate = JSONUtils.getLong(payloadBean,"expireDate",0);
-        this.res1xHash = JSONUtils.getString(payloadBean,"res1xHash","");
-        this.res2xHash = JSONUtils.getString(payloadBean,"res2xHash","");
-        this.res3xHash = JSONUtils.getString(payloadBean,"res3xHash","");
-        this.mdpiHash = JSONUtils.getString(payloadBean,"mdpiHash","");
-        this.hdpiHash = JSONUtils.getString(payloadBean,"hdpiHash","");
-        this.xhdpiHash = JSONUtils.getString(payloadBean,"xhdpiHash","");
-        this.xxhdpiHash = JSONUtils.getString(payloadBean,"xxhdpiHash","");
-        this.xxxhdpiHash = JSONUtils.getString(payloadBean,"xxxhdpiHash","");
-        String resourceBean = JSONUtils.getString(payloadBean,"resource","");
+    public SplashPayloadBean(String payloadBean) {
+        this.version = JSONUtils.getString(payloadBean, "version", "");
+        this.state = JSONUtils.getString(payloadBean, "state", "");
+        this.effectiveDate = JSONUtils.getLong(payloadBean, "effectiveDate", 0);
+        this.expireDate = JSONUtils.getLong(payloadBean, "expireDate", 0);
+        this.res1xHash = JSONUtils.getString(payloadBean, "res1xHash", "");
+        this.res2xHash = JSONUtils.getString(payloadBean, "res2xHash", "");
+        this.res3xHash = JSONUtils.getString(payloadBean, "res3xHash", "");
+        this.mdpiHash = JSONUtils.getString(payloadBean, "mdpiHash", "");
+        this.hdpiHash = JSONUtils.getString(payloadBean, "hdpiHash", "");
+        this.xhdpiHash = JSONUtils.getString(payloadBean, "xhdpiHash", "");
+        this.xxhdpiHash = JSONUtils.getString(payloadBean, "xxhdpiHash", "");
+        this.xxxhdpiHash = JSONUtils.getString(payloadBean, "xxxhdpiHash", "");
+        String resourceBean = JSONUtils.getString(payloadBean, "resource", "");
         this.resource = new SplashResourceBean(resourceBean);
     }
 

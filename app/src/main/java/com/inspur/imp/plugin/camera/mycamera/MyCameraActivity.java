@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.hardware.Camera;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.Nullable;
@@ -30,10 +29,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.ImageUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.emmcloud.util.common.ResolutionUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
@@ -54,7 +55,6 @@ import static android.Manifest.permission.CAMERA;
 
 public class MyCameraActivity extends ImpBaseActivity implements View.OnClickListener, SurfaceHolder.Callback {
 
-    private static final int REQ_IMAGE_EDIT = 1;
     public static final String EXTRA_PHOTO_DIRECTORY_PATH = "IMAGE_SAVE_PATH";
     public static final String EXTRA_PHOTO_NAME = "IMAGE_NAME";
     //    public static final String EXTRA_CROP_ENABLE = "IMAGE_CROP_ENABLE";
@@ -64,7 +64,7 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
     public static final String EXTRA_ENCODING_TYPE = "IMAGE_ENCODING_TYPE";
     public static final String EXTRA_RECT_SCALE_JSON = "CAMERA_SCALE_JSON";
     public static final String OUT_FILE_PATH = "OUT_FILE_PATH";
-
+    private static final int REQ_IMAGE_EDIT = 1;
     //    private int maxHeight = 2000;
 //    private int maxWidth = 2000;
 //    private int qualtity = 90;
@@ -156,8 +156,11 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
 
     private void initView() {
         previewSFV = (FocusSurfaceView) findViewById(R.id.preview_sv);
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) previewSFV.getLayoutParams();
+        int screenWidth = ResolutionUtils.getWidth(this);
+        params.height = (int) (screenWidth * 4.0 / 3);
         //为了使取景框居中（下部的内容较多），上调取景框
-        previewSFV.setTopMove(DensityUtil.dip2px(getApplicationContext(), (rectScaleList.size()) > 0 ? 28 : 16));
+//        previewSFV.setTopMove(DensityUtil.dip2px(getApplicationContext(), (rectScaleList.size()) > 0 ? 28 : 16));
         mHolder = previewSFV.getHolder();
         mHolder.addCallback(MyCameraActivity.this);
         switchCameraBtn = (ImageButton) findViewById(R.id.switch_camera_btn);
@@ -267,14 +270,13 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
             mCamera.setDisplayOrientation(rotateAngle);
             parameters.setRotation(rotateAngle);
             List<Camera.Size> PictureSizeList = parameters.getSupportedPictureSizes();
-            int maxPicSize = (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.N)?2600:3600;
-            Camera.Size pictureSize = CameraUtils.getInstance(this).getPictureSize(PictureSizeList, maxPicSize);
+            Camera.Size pictureSize = CameraUtils.getInstance(this).getPictureSize(PictureSizeList, MyAppConfig.UPLOAD_ORIGIN_IMG_MAX_SIZE);
             parameters.setPictureSize(pictureSize.width, pictureSize.height);
-            LogUtils.jasonDebug("pictureSize.width="+pictureSize.width + "   pictureSize.height="+pictureSize.height);
+            LogUtils.jasonDebug("pictureSize.width=" + pictureSize.width + "   pictureSize.height=" + pictureSize.height);
             List<Camera.Size> previewSizeList = parameters.getSupportedPreviewSizes();
             Camera.Size previewSize = CameraUtils.getInstance(this).getPreviewSize(previewSizeList, 2000);
             parameters.setPreviewSize(previewSize.width, previewSize.height);
-            LogUtils.jasonDebug("previewSize.width="+previewSize.width + "   previewSize.height="+previewSize.height);
+            LogUtils.jasonDebug("previewSize.width=" + previewSize.width + "   previewSize.height=" + previewSize.height);
             List<String> modelList = parameters.getSupportedFlashModes();
             if (modelList != null && modelList.contains(cameraFlashModel)) {
                 parameters.setFlashMode(cameraFlashModel);
@@ -344,7 +346,7 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
                 break;
             case R.id.switch_camera_btn:
                 currentCameraFacing = 1 - currentCameraFacing;
-                cameraLightSwitchBtn.setVisibility((currentCameraFacing ==Camera.CameraInfo.CAMERA_FACING_FRONT)?View.INVISIBLE:View.VISIBLE);
+                cameraLightSwitchBtn.setVisibility((currentCameraFacing == Camera.CameraInfo.CAMERA_FACING_FRONT) ? View.INVISIBLE : View.VISIBLE);
                 releaseCamera();
                 initCamera();
                 setCameraParams();
@@ -470,6 +472,30 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
 
     }
 
+    private boolean checkCameraFacing(final int facing) {
+        final int cameraCount = Camera.getNumberOfCameras();
+        Camera.CameraInfo info = new Camera.CameraInfo();
+        for (int i = 0; i < cameraCount; i++) {
+            Camera.getCameraInfo(i, info);
+            if (facing == info.facing) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean hasBackFacingCamera() {
+        final int CAMERA_FACING_BACK = 0;
+        return checkCameraFacing(CAMERA_FACING_BACK);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        releaseCamera();
+        recycleBitmap(originBitmap);
+        recycleBitmap(cropBitmap);
+    }
 
     /**
      * 用来监测左横屏和右横屏切换时旋转摄像头的角度
@@ -499,44 +525,9 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
         }
     }
 
-    private boolean checkCameraFacing(final int facing) {
-        final int cameraCount = Camera.getNumberOfCameras();
-        Camera.CameraInfo info = new Camera.CameraInfo();
-        for (int i = 0; i < cameraCount; i++) {
-            Camera.getCameraInfo(i, info);
-            if (facing == info.facing) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public boolean hasBackFacingCamera() {
-        final int CAMERA_FACING_BACK = 0;
-        return checkCameraFacing(CAMERA_FACING_BACK);
-    }
-
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        releaseCamera();
-        recycleBitmap(originBitmap);
-        recycleBitmap(cropBitmap);
-    }
-
-
     public class Adapter extends
             RecyclerView.Adapter<Adapter.ViewHolder> {
 
-
-        public class ViewHolder extends RecyclerView.ViewHolder {
-            public ViewHolder(View arg0) {
-                super(arg0);
-            }
-
-            TextView textView;
-        }
 
         @Override
         public int getItemCount() {
@@ -550,7 +541,7 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
         public ViewHolder onCreateViewHolder(ViewGroup viewGroup, final int i) {
             TextView textView = new TextView(MyCameraActivity.this);
             textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
-            textView.setPadding(DensityUtil.dip2px(MyCameraActivity.this, 20), DensityUtil.dip2px(MyCameraActivity.this, 4), DensityUtil.dip2px(MyCameraActivity.this, 20), DensityUtil.dip2px(MyCameraActivity.this, 4));
+            textView.setPadding(DensityUtil.dip2px(MyCameraActivity.this, 20), DensityUtil.dip2px(MyCameraActivity.this, 10), DensityUtil.dip2px(MyCameraActivity.this, 20), DensityUtil.dip2px(MyCameraActivity.this, 10));
             textView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             ViewHolder viewHolder = new ViewHolder(textView);
             viewHolder.textView = textView;
@@ -574,6 +565,14 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
                 }
             });
 
+        }
+
+        public class ViewHolder extends RecyclerView.ViewHolder {
+            TextView textView;
+
+            public ViewHolder(View arg0) {
+                super(arg0);
+            }
         }
 
     }

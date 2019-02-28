@@ -32,20 +32,18 @@ import java.lang.ref.WeakReference;
  */
 public class StyleBuilderImpl implements StyleBuilder {
 
-    private static  int h1_color = Color.parseColor("#333333");
-    private static  int h6_color = Color.parseColor("#777777");
-    private static  int quota_color = Color.parseColor("#DDDDDD");
-    private static  int code_color = Color.parseColor("#F0F0F0");
-    private static  int link_color = Color.parseColor("#4078C0");
-    private static  int h_under_line_color = Color.parseColor("#eeeeee");
-
     private static final float scale_h1 = 2.25f;
     private static final float scale_h2 = 2.0f;
     private static final float scale_h3 = 1.75f;
     private static final float scale_h4 = 1.5f;
     private static final float scale_h5 = 1.25F, scale_h6 = 1;
     private static final float scale_normal = 1;
-
+    private static int h1_color = Color.parseColor("#333333");
+    private static int h6_color = Color.parseColor("#777777");
+    private static int quota_color = Color.parseColor("#DDDDDD");
+    private static int code_color = Color.parseColor("#F0F0F0");
+    private static int link_color = Color.parseColor("#4078C0");
+    private static int h_under_line_color = Color.parseColor("#eeeeee");
     private WeakReference<TextView> textViewWeakReference;
     private Html.ImageGetter imageGetter;
 
@@ -54,7 +52,7 @@ public class StyleBuilderImpl implements StyleBuilder {
         this.imageGetter = imageGetter;
         //Jason修改 防止textview为空的时候报错
         int textColor = Color.parseColor("#333333");
-        if (textView != null){
+        if (textView != null) {
             textColor = textView.getCurrentTextColor();
         }
         h1_color = textColor;
@@ -190,11 +188,11 @@ public class StyleBuilderImpl implements StyleBuilder {
         //SpannableStringBuilder builder = SpannableStringBuilder.valueOf("$");
         // CodeBlockSpan codeBlockSpan = new CodeBlockSpan(getTextViewRealWidth(), code_color, charSequence);
         // builder.setSpan(codeBlockSpan, 0, builder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-       SpannableStringBuilder builder = new SpannableStringBuilder();
+        SpannableStringBuilder builder = new SpannableStringBuilder();
         int size = charSequence.length;
-        for (int i=0;i<size;i++){
+        for (int i = 0; i < size; i++) {
             builder.append(charSequence[i]);
-            if (i != size-1){
+            if (i != size - 1) {
                 builder.append("\n");
             }
         }

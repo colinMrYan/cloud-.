@@ -36,9 +36,9 @@ public class PingNetEntity {
      */
     private boolean result;
 
-    public PingNetEntity(String ip, int pingCount, int pingWtime,StringBuffer resultBuffer) {
+    public PingNetEntity(String ip, int pingCount, int pingWtime, StringBuffer resultBuffer) {
         this.ip = ip;
-        this.pingWtime=pingWtime;
+        this.pingWtime = pingWtime;
         this.pingCount = pingCount;
         this.resultBuffer = resultBuffer;
     }

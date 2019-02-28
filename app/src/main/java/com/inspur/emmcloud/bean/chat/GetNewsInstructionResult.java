@@ -5,7 +5,7 @@ package com.inspur.emmcloud.bean.chat;
  */
 
 public class GetNewsInstructionResult {
-    public GetNewsInstructionResult(String response){
+    public GetNewsInstructionResult(String response) {
 
     }
 }

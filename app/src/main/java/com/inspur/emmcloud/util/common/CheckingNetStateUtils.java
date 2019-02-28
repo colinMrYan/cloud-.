@@ -28,11 +28,11 @@ public class CheckingNetStateUtils {
         @Override
         public void handleMessage(Message msg) {
             List<Object> pingIdAndData = (List<Object>) msg.obj;
-            String actionTip = (String) pingIdAndData.get( 0 );
-            pingIdAndData.remove( 0 );
-            LogUtils.LbcDebug( "action:" + pingIdAndData.get( 0 ) + "data" + pingIdAndData.get( 1 ) );
-            EventBus.getDefault().post( new SimpleEventMessage( actionTip, pingIdAndData ) );
-            super.handleMessage( msg );
+            String actionTip = (String) pingIdAndData.get(0);
+            pingIdAndData.remove(0);
+            LogUtils.LbcDebug("action:" + pingIdAndData.get(0) + "data" + pingIdAndData.get(1));
+            EventBus.getDefault().post(new SimpleEventMessage(actionTip, pingIdAndData));
+            super.handleMessage(msg);
         }
     };
 
@@ -45,8 +45,8 @@ public class CheckingNetStateUtils {
     public CheckingNetStateUtils(Context context, String[] Urls) {
         this.context = context;
         for (int i = 0; i < Urls.length; i++) {
-            PingUrlAndConnectState pingUrlAndConnectState = new PingUrlAndConnectState( Urls[i] );
-            pingUrlAndConnectStates.add( pingUrlAndConnectState );
+            PingUrlAndConnectState pingUrlAndConnectState = new PingUrlAndConnectState(Urls[i]);
+            pingUrlAndConnectStates.add(pingUrlAndConnectState);
         }
     }
 
@@ -56,39 +56,39 @@ public class CheckingNetStateUtils {
     public void CheckNetPingThreadStart(final String[] StrUrl, final int WaiteTime, final String eventBusAction) {
         for (int i = 0; i < StrUrl.length; i++) {
             final int finalI = i;
-            new Thread( new Runnable() {
+            new Thread(new Runnable() {
                 @Override
                 public void run() {
                     try {
-                        PingNetEntity pingNetEntity = new PingNetEntity( StrUrl[finalI], 1, WaiteTime, new StringBuffer() );
-                        pingNetEntity = NetUtils.ping( pingNetEntity, (long) WaiteTime );
+                        PingNetEntity pingNetEntity = new PingNetEntity(StrUrl[finalI], 1, WaiteTime, new StringBuffer());
+                        pingNetEntity = NetUtils.ping(pingNetEntity, (long) WaiteTime);
                         final List<Object> pingIdAndData = new ArrayList<>();
-                        pingIdAndData.add( eventBusAction );
-                        pingIdAndData.add( StrUrl[finalI] );
-                        pingIdAndData.add( pingNetEntity.isResult() );
+                        pingIdAndData.add(eventBusAction);
+                        pingIdAndData.add(StrUrl[finalI]);
+                        pingIdAndData.add(pingNetEntity.isResult());
                         Message message = new Message();
                         message.obj = pingIdAndData;
-                        handler.sendMessage( message );
+                        handler.sendMessage(message);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
-            } ).start();
+            }).start();
         }
     }
 
     public void CheckNetHttpThreadStart(final String[] StrUrl) {
         for (int i = 0; i < StrUrl.length; i++) {
-            AppAPIService apiService = new AppAPIService( context );
-            apiService.setAPIInterface( new WebHttpService() );
-            apiService.getCloudConnectStateUrl( StrUrl[i] );
+            AppAPIService apiService = new AppAPIService(context);
+            apiService.setAPIInterface(new WebHttpService());
+            apiService.getCloudConnectStateUrl(StrUrl[i]);
         }
     }
 
     public boolean isConnectedNet() {
-        if (NetworkInfo.State.CONNECTED == NetUtils.getNetworkMobileState( context )
-                || NetworkInfo.State.CONNECTING == NetUtils.getNetworkMobileState( context )
-                || (NetworkInfo.State.CONNECTED == NetUtils.getNetworkWifiState( context ) && NetUtils.isVpnConnected())) {
+        if (NetworkInfo.State.CONNECTED == NetUtils.getNetworkMobileState(context)
+                || NetworkInfo.State.CONNECTING == NetUtils.getNetworkMobileState(context)
+                || (NetworkInfo.State.CONNECTED == NetUtils.getNetworkWifiState(context) && NetUtils.isVpnConnected())) {
             return true;
         } else {
             return false;
@@ -99,16 +99,16 @@ public class CheckingNetStateUtils {
     public boolean isPingConnectedNet(String Url, boolean connectedState) {
         int isFalse = 0;
         for (int i = 0; i < pingUrlAndConnectStates.size(); i++) {
-            if (Url.equals( pingUrlAndConnectStates.get( i ).getUrl() )) {
+            if (Url.equals(pingUrlAndConnectStates.get(i).getUrl())) {
                 int intConnectedState = connectedState ? 1 : 0;
-                pingUrlAndConnectStates.get( i ).setState( intConnectedState );
+                pingUrlAndConnectStates.get(i).setState(intConnectedState);
             }
         }
         for (int i = 0; i < pingUrlAndConnectStates.size(); i++) {
-            if (1 == pingUrlAndConnectStates.get( i ).getState()) {
+            if (1 == pingUrlAndConnectStates.get(i).getState()) {
                 return true;
             }
-            isFalse = isFalse + pingUrlAndConnectStates.get( i ).getState();
+            isFalse = isFalse + pingUrlAndConnectStates.get(i).getState();
             if (i == (pingUrlAndConnectStates.size() - 1) && (isFalse == 0)) {
                 return false;
             }
@@ -118,37 +118,37 @@ public class CheckingNetStateUtils {
 
     public void clearUrlsStates() {
         for (int i = 0; i < pingUrlAndConnectStates.size(); i++) {
-            pingUrlAndConnectStates.get( i ).clearState();
+            pingUrlAndConnectStates.get(i).clearState();
         }
     }
 
     public class WebHttpService extends APIInterfaceInstance {
         @Override
         public void returnCheckCloudPluseConnectionSuccess(byte[] arg0, final String url) {
-            new Handler( Looper.getMainLooper() ).post( new Runnable() {
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
                 public void run() {
-                    LogUtils.LbcDebug( "http 返回成功" + url );
+                    LogUtils.LbcDebug("http 返回成功" + url);
                     List<Object> pingIdAndData = new ArrayList<>();//PingThreadStart
-                    pingIdAndData.add( url );
-                    pingIdAndData.add( true );
-                    EventBus.getDefault().post( new SimpleEventMessage( Constant.EVENTBUS_TAG_NET_HTTP_POST_CONNECTION, pingIdAndData ) );
+                    pingIdAndData.add(url);
+                    pingIdAndData.add(true);
+                    EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_NET_HTTP_POST_CONNECTION, pingIdAndData));
                 }
-            } );
+            });
         }
 
         @Override
         public void returnCheckCloudPluseConnectionError(String error, int responseCode, final String url) {
-            new Handler( Looper.getMainLooper() ).post( new Runnable() {
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
                 public void run() {
-                    LogUtils.LbcDebug( "http 返回失败" );
+                    LogUtils.LbcDebug("http 返回失败");
                     List<Object> pingIdAndData = new ArrayList<>();//PingThreadStart
-                    pingIdAndData.add( url );
-                    pingIdAndData.add( false );
-                    EventBus.getDefault().post( new SimpleEventMessage( Constant.EVENTBUS_TAG_NET_HTTP_POST_CONNECTION, pingIdAndData ) );
+                    pingIdAndData.add(url);
+                    pingIdAndData.add(false);
+                    EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_NET_HTTP_POST_CONNECTION, pingIdAndData));
                 }
-            } );
+            });
         }
     }
 

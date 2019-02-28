@@ -44,6 +44,7 @@ public interface ImageLoaderCommon {
 
     /**
      * 同步加载图片，返回 Drawable
+     *
      * @param imageUrl
      * @return
      */

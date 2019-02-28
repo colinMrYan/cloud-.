@@ -8,16 +8,17 @@ import java.io.Serializable;
  * Created by chenmch on 2018/7/27.
  */
 //@Table(name = "ClientConfigVersion")
-public class ClientConfigVersion implements Serializable{
+public class ClientConfigVersion implements Serializable {
     @Column(name = "name", isId = true)
-    private String name="";
+    private String name = "";
     @Column(name = "localVersion")
-    private String localVersion="";
+    private String localVersion = "";
     @Column(name = "lastestVersion")
-    private String lastestVersion="";
+    private String lastestVersion = "";
     @Column(name = "realVersion")
-    private String realVersion="";
-    public ClientConfigVersion(){
+    private String realVersion = "";
+
+    public ClientConfigVersion() {
 
     }
 

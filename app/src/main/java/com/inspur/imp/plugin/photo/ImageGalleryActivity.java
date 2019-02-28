@@ -51,7 +51,7 @@ public class ImageGalleryActivity extends BaseActivity {
 
         List<String> sourceImageList = getIntent().getStringArrayListExtra(EXTRA_IMAGE_SOURCE_URLS);
         List<String> thumbnailImageList = getIntent().getStringArrayListExtra(EXTRA_IMAGE_THUMB_URLS);
-        int index = getIntent().getIntExtra(EXTRA_IMAGE_INDEX,0);
+        int index = getIntent().getIntExtra(EXTRA_IMAGE_INDEX, 0);
         transLayout = new TransferLayout(this);
         contentLayout.addView(transLayout);
         transConfig = TransferConfig.build()
@@ -97,8 +97,8 @@ public class ImageGalleryActivity extends BaseActivity {
                 : transConfig.getImageLoader());
     }
 
-    public void onClick(View v){
-        switch (v.getId()){
+    public void onClick(View v) {
+        switch (v.getId()) {
             case R.id.iv_close:
                 finish();
                 break;
@@ -112,43 +112,43 @@ public class ImageGalleryActivity extends BaseActivity {
         }
     }
 
-    private void saveImg(String url){
-        String savePath = MyAppConfig.LOCAL_DOWNLOAD_PATH+"download"+System.currentTimeMillis()+".jpg";
-    new DownLoaderUtils().startDownLoad(url, savePath, new Callback.ProgressCallback<File>() {
-        @Override
-        public void onWaiting() {
+    private void saveImg(String url) {
+        String savePath = MyAppConfig.LOCAL_DOWNLOAD_PATH + "download" + System.currentTimeMillis() + ".jpg";
+        new DownLoaderUtils().startDownLoad(url, savePath, new Callback.ProgressCallback<File>() {
+            @Override
+            public void onWaiting() {
 
-        }
+            }
 
-        @Override
-        public void onStarted() {
+            @Override
+            public void onStarted() {
 
-        }
+            }
 
-        @Override
-        public void onLoading(long l, long l1, boolean b) {
+            @Override
+            public void onLoading(long l, long l1, boolean b) {
 
-        }
+            }
 
-        @Override
-        public void onSuccess(File file) {
+            @Override
+            public void onSuccess(File file) {
 
-        }
+            }
 
-        @Override
-        public void onError(Throwable throwable, boolean b) {
-            Toast.makeText(getApplicationContext(),R.string.download_fail,Toast.LENGTH_SHORT).show();
-        }
+            @Override
+            public void onError(Throwable throwable, boolean b) {
+                Toast.makeText(getApplicationContext(), R.string.download_fail, Toast.LENGTH_SHORT).show();
+            }
 
-        @Override
-        public void onCancelled(CancelledException e) {
-        }
+            @Override
+            public void onCancelled(CancelledException e) {
+            }
 
-        @Override
-        public void onFinished() {
-            Toast.makeText(getApplicationContext(),"图片已保存至IMP-Cloud/download/文件夹",Toast.LENGTH_SHORT).show();
-        }
-    });
+            @Override
+            public void onFinished() {
+                Toast.makeText(getApplicationContext(), "图片已保存至IMP-Cloud/download/文件夹", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 

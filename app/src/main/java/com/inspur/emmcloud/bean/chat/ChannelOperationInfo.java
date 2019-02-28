@@ -48,11 +48,11 @@ public class ChannelOperationInfo {
         this.isHide = isHide;
     }
 
-    public void setTopTime(long setTopTime) {
-        this.setTopTime = setTopTime;
-    }
-
     public long getTopTime() {
         return setTopTime;
+    }
+
+    public void setTopTime(long setTopTime) {
+        this.setTopTime = setTopTime;
     }
 }

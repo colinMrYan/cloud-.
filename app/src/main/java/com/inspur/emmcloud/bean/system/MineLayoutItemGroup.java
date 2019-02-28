@@ -13,14 +13,15 @@ import java.util.List;
 
 public class MineLayoutItemGroup {
     private List<MineLayoutItem> mineLayoutItemList = new ArrayList<>();
-    public MineLayoutItemGroup(JSONArray array){
-        for (int i =0;i<array.length();i++){
-            String content = JSONUtils.getString(array,i,"");
+
+    public MineLayoutItemGroup(JSONArray array) {
+        for (int i = 0; i < array.length(); i++) {
+            String content = JSONUtils.getString(array, i, "");
             mineLayoutItemList.add(new MineLayoutItem(content));
         }
     }
 
-    public MineLayoutItemGroup(){
+    public MineLayoutItemGroup() {
 
     }
 

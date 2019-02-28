@@ -852,12 +852,12 @@ public class FileUtils {
      *
      * @param context
      */
-    public static void openFile(Activity context, File file,boolean isNeedStartForResult) {
+    public static void openFile(Activity context, File file, boolean isNeedStartForResult) {
         String mime = FileUtils.getMimeType(file);
         if (StringUtils.isBlank(mime)) {
             mime = "text/plain";
         }
-        openFile(context, file, mime,isNeedStartForResult);
+        openFile(context, file, mime, isNeedStartForResult);
     }
 
     /**
@@ -882,22 +882,24 @@ public class FileUtils {
      * @param mime
      */
     public static void openFile(Activity context, File file, String mime, boolean isNeedStartActivityForResult) {
-        Intent intent =new Intent(Intent.ACTION_VIEW);
+        Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         //判断是否是AndroidN以及更高的版本
-        if(Build.VERSION.SDK_INT>= Build.VERSION_CODES.N) {
-            Uri contentUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID+".fileprovider",file);
-            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION|Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-            intent.setDataAndType(contentUri,mime);
-        }else{
-            intent.setDataAndType(Uri.fromFile(file),mime);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            Uri contentUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".fileprovider", file);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+            intent.setDataAndType(contentUri, mime);
+        } else {
+            intent.setDataAndType(Uri.fromFile(file), mime);
         }
         if (context.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY) != null) {
-            if(isNeedStartActivityForResult){
+            if (isNeedStartActivityForResult) {
                 context.startActivityForResult(intent, ImpActivity.DO_NOTHING_RESULTCODE);
-            }else{
+            } else {
                 context.startActivity(intent);
             }
+        } else {
+            ToastUtils.show(context, context.getString(R.string.chat_file_open_fail_tip));
         }
     }
 
@@ -926,32 +928,27 @@ public class FileUtils {
 
 
         File file = new File(path);
-        Intent intent =new Intent(Intent.ACTION_VIEW);
+        Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         //判断是否是AndroidN以及更高的版本
-        if(Build.VERSION.SDK_INT>= Build.VERSION_CODES.N) {
-            Uri contentUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID+".fileprovider",file);
-            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION|Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-            intent.setDataAndType(contentUri,mime);
-        }else{
-            intent.setDataAndType(Uri.fromFile(file),mime);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            Uri contentUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".fileprovider", file);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+            intent.setDataAndType(contentUri, mime);
+        } else {
+            intent.setDataAndType(Uri.fromFile(file), mime);
         }
         if (context.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY) != null) {
             context.startActivity(intent);
+        } else {
+            Uri contentUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".fileprovider", file);
+            intent.setDataAndType(contentUri, "text/plain");
+            if (context.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY) != null) {
+                context.startActivity(intent);
+            } else {
+                ToastUtils.show(context, context.getString(R.string.chat_file_open_fail_tip));
+            }
         }
-    }
-
-    /**
-     * 文件夹改名
-     *
-     * @param src
-     * @param dest
-     * @return
-     */
-    private boolean renameToNewFile(String src, String dest) {
-        File srcDir = new File(src);
-        boolean isOk = srcDir.renameTo(new File(dest));
-        return isOk;
     }
 
     /**
@@ -984,13 +981,14 @@ public class FileUtils {
 
     /**
      * 根据文件名得到类型
+     *
      * @param fileName
      * @return
      */
-    public static String getFileTypeByName(String fileName){
+    public static String getFileTypeByName(String fileName) {
         String fileType = CLOUD_UNKNOWN_FILE_TYPE;
         String suffix = getFileExtension(fileName);
-        switch (suffix){
+        switch (suffix) {
             case "doc":
             case "docx":
             case "xls":
@@ -1306,7 +1304,6 @@ public class FileUtils {
         return Base64.encodeToString(buffer, Base64.NO_WRAP);
     }
 
-
     /**
      * 获得指定文件的byte数组
      */
@@ -1330,6 +1327,19 @@ public class FileUtils {
             e.printStackTrace();
         }
         return buffer;
+    }
+
+    /**
+     * 文件夹改名
+     *
+     * @param src
+     * @param dest
+     * @return
+     */
+    private boolean renameToNewFile(String src, String dest) {
+        File srcDir = new File(src);
+        boolean isOk = srcDir.renameTo(new File(dest));
+        return isOk;
     }
 
 }

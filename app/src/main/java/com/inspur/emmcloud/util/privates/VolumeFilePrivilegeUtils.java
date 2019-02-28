@@ -21,40 +21,42 @@ import java.util.Map;
 
 public class VolumeFilePrivilegeUtils {
 
-    public static boolean canGetVolumeFilePrivilege(Context context,Volume volume){
-       return  (volume.getType().equals("public") || VolumeGroupContainMeCacheUtils.getVolumeGroupContainMe(context,volume.getId())!=null);
+    public static boolean canGetVolumeFilePrivilege(Context context, Volume volume) {
+        return (volume.getType().equals("public") || VolumeGroupContainMeCacheUtils.getVolumeGroupContainMe(context, volume.getId()) != null);
     }
 
     /**
      * 判断一组文件的最低权限
+     *
      * @param context
      * @param volumeFileList
      * @return
      */
-    public static boolean getVolumeFileListWriteable(Context context, List<VolumeFile> volumeFileList){
-        for (int i=0;i<volumeFileList.size();i++ ){
-            if(getVolumeFileWriteable(context,volumeFileList.get(i)) == false){
-                return  false;
+    public static boolean getVolumeFileListWriteable(Context context, List<VolumeFile> volumeFileList) {
+        for (int i = 0; i < volumeFileList.size(); i++) {
+            if (getVolumeFileWriteable(context, volumeFileList.get(i)) == false) {
+                return false;
             }
         }
         return true;
     }
 
-        /**
+    /**
      * 判断是否有写权限
+     *
      * @param context
      * @param volumeFile
      * @return
      */
-    public static  boolean getVolumeFileWriteable(Context context, VolumeFile volumeFile){
+    public static boolean getVolumeFileWriteable(Context context, VolumeFile volumeFile) {
         int privilege = 0;
         String myUid = MyApplication.getInstance().getUid();
-        LogUtils.jasonDebug("======myUid="+myUid);
-        LogUtils.jasonDebug("=======volumeFile.getOwner()="+volumeFile.getOwner());
-        if (volumeFile.getOwner().equals(myUid)){
+        LogUtils.jasonDebug("======myUid=" + myUid);
+        LogUtils.jasonDebug("=======volumeFile.getOwner()=" + volumeFile.getOwner());
+        if (volumeFile.getOwner().equals(myUid)) {
             LogUtils.jasonDebug("===========isowner");
             privilege = volumeFile.getOwnerPrivilege();
-        }else {
+        } else {
             VolumeGroupContainMe volumeGroupContainMe = VolumeGroupContainMeCacheUtils.getVolumeGroupContainMe(context, volumeFile.getVolume());
             if (volumeGroupContainMe != null) {
                 LogUtils.jasonDebug("===========有自己所属组数据");
@@ -74,16 +76,16 @@ public class VolumeFilePrivilegeUtils {
                 privilege = volumeFile.getOthersPrivilege();
             }
         }
-        LogUtils.jasonDebug("===========最终privilege="+privilege);
+        LogUtils.jasonDebug("===========最终privilege=" + privilege);
         return (privilege > 4);
     }
 
-    public static boolean getVolumeFileWriteable(Context context, GetVolumeFileListResult getVolumeFileListResult){
+    public static boolean getVolumeFileWriteable(Context context, GetVolumeFileListResult getVolumeFileListResult) {
         int privilege = 0;
         String myUid = MyApplication.getInstance().getUid();
-        if (getVolumeFileListResult.getOwner().equals(myUid)){
+        if (getVolumeFileListResult.getOwner().equals(myUid)) {
             privilege = getVolumeFileListResult.getOwnerPrivilege();
-        }else {
+        } else {
             VolumeGroupContainMe volumeGroupContainMe = VolumeGroupContainMeCacheUtils.getVolumeGroupContainMe(context, getVolumeFileListResult.getVolume());
             if (volumeGroupContainMe != null) {
                 List<String> groupIdList = volumeGroupContainMe.getGroupIdList();
@@ -103,10 +105,6 @@ public class VolumeFilePrivilegeUtils {
         }
         return (privilege > 4);
     }
-
-
-
-
 
 
 //    private static VolumeFilePrivilegeUtils mInstance;

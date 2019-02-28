@@ -34,7 +34,7 @@ public class GradientDrawableBuilder {
         return this;
     }
 
-    public GradientDrawable build(){
+    public GradientDrawable build() {
         GradientDrawable drawable = new GradientDrawable();
 //        drawable.setCornerRadius(cornerRadius);
         drawable.setStroke(strokeWith, strokeColor);

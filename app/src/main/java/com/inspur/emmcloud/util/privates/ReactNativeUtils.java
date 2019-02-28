@@ -25,12 +25,13 @@ public class ReactNativeUtils {
     private Context context;
     private String uid;
     private String reactNativeCurrentPath;
-    public ReactNativeUtils(Context context){
+
+    public ReactNativeUtils(Context context) {
         this.context = context;
-        uid = ((MyApplication)context.getApplicationContext()).getUid();
+        uid = ((MyApplication) context.getApplicationContext()).getUid();
     }
 
-    public void init(){
+    public void init() {
         reactNativeCurrentPath = MyAppConfig.getReactAppFilePath(context, uid, "discover");
         if (!FileUtils.isFileExist(reactNativeCurrentPath + "/index.android.bundle")) {
             ReactNativeFlow.initReactNative(context, uid);
@@ -111,8 +112,7 @@ public class ReactNativeUtils {
     }
 
 
-
-    private class WebService extends APIInterfaceInstance{
+    private class WebService extends APIInterfaceInstance {
         @Override
         public void returnReactNativeUpdateSuccess(ReactNativeUpdateBean reactNativeUpdateBean) {
             //保存下返回的ReactNative更新信息，回写日志时需要用

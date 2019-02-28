@@ -35,10 +35,10 @@ public class VolumeGroupContainMeCacheUtils {
      * @param volumeId
      * @return
      */
-    public static VolumeGroupContainMe getVolumeGroupContainMe(Context context,String volumeId){
+    public static VolumeGroupContainMe getVolumeGroupContainMe(Context context, String volumeId) {
         try {
             if (!StringUtils.isBlank(volumeId)) {
-                return DbCacheUtils.getDb(context).findById(VolumeGroupContainMe.class,volumeId);
+                return DbCacheUtils.getDb(context).findById(VolumeGroupContainMe.class, volumeId);
             }
         } catch (Exception e) {
             // TODO Auto-generated catch block

@@ -8,5 +8,6 @@ import java.util.List;
 
 public interface PermissionRequestCallback {
     void onPermissionRequestSuccess(List<String> permissions);
+
     void onPermissionRequestFail(List<String> permissions);
 }

@@ -52,37 +52,37 @@ public class DbCacheUtils {
                     public void onUpgrade(DbManager db, int oldVersion, int newVersion) {
                         // TODO: ...
                         try {
-                            if (oldVersion<5){
+                            if (oldVersion < 5) {
                                 db.dropTable(ChannelGroup.class);
                                 db.dropTable(AppCommonlyUse.class);
                                 db.dropTable(Channel.class);
                             }
                             if (oldVersion < 6) {
-                                if (tableIsExist(db,"com_inspur_emmcloud_bean_Contact")) {
+                                if (tableIsExist(db, "com_inspur_emmcloud_bean_Contact")) {
                                     db.execNonQuery("alter table com_inspur_emmcloud_bean_Contact rename to Contact");
                                     db.execNonQuery("alter table Contact add lastUpdateTime String");
                                 }
 
-                                if (tableIsExist(db,"com_inspur_emmcloud_bean_Channel")) {
+                                if (tableIsExist(db, "com_inspur_emmcloud_bean_Channel")) {
                                     db.execNonQuery("alter table com_inspur_emmcloud_bean_Channel rename to Channel");
                                 }
 
-                                if (tableIsExist(db,"com_inspur_emmcloud_bean_ChannelOperationInfo")) {
+                                if (tableIsExist(db, "com_inspur_emmcloud_bean_ChannelOperationInfo")) {
                                     db.execNonQuery("alter table com_inspur_emmcloud_bean_ChannelOperationInfo rename to ChannelOperationInfo");
                                 }
 
-                                if (tableIsExist(db,"com_inspur_emmcloud_bean_SearchModel")) {
+                                if (tableIsExist(db, "com_inspur_emmcloud_bean_SearchModel")) {
                                     db.execNonQuery("alter table com_inspur_emmcloud_bean_SearchModel rename to SearchModel");
                                 }
-                                if (tableIsExist(db,"com_inspur_emmcloud_bean_MyCalendarOperation")) {
+                                if (tableIsExist(db, "com_inspur_emmcloud_bean_MyCalendarOperation")) {
                                     db.execNonQuery("alter table com_inspur_emmcloud_bean_MyCalendarOperation rename to MyCalendarOperation");
                                 }
 
-                                if (tableIsExist(db,"com_inspur_emmcloud_bean_Robot")) {
+                                if (tableIsExist(db, "com_inspur_emmcloud_bean_Robot")) {
                                     db.execNonQuery("alter table com_inspur_emmcloud_bean_Robot rename to Robot");
                                 }
 
-                                if (tableIsExist(db,"com_inspur_emmcloud_bean_AppOrder")) {
+                                if (tableIsExist(db, "com_inspur_emmcloud_bean_AppOrder")) {
                                     db.execNonQuery("alter table com_inspur_emmcloud_bean_AppOrder rename to AppOrder");
                                 }
 
@@ -91,7 +91,7 @@ public class DbCacheUtils {
                                 db.dropTable(PVCollectModel.class);
                             }
                             if (oldVersion < 8) {
-                                if (tableIsExist(db,"Contact")) {
+                                if (tableIsExist(db, "Contact")) {
                                     db.execNonQuery("CREATE INDEX contactindex ON Contact(inspurID)");
                                 }
 
@@ -101,35 +101,35 @@ public class DbCacheUtils {
                                 db.execNonQuery("DROP TABLE IF EXISTS MsgReadId");
                                 db.execNonQuery("DROP TABLE IF EXISTS MsgMatheSet");
                             }
-                            if (oldVersion<14){
+                            if (oldVersion < 14) {
                                 db.execNonQuery("DROP TABLE IF EXISTS Contact");
                                 db.execNonQuery("DROP TABLE IF EXISTS ContactUser");
                                 ContactUserCacheUtils.setLastQueryTime(0);
                                 db.execNonQuery("DROP TABLE IF EXISTS Message");
                                 db.execNonQuery("DROP TABLE IF EXISTS MessageMatheSet");
                             }
-                            if(oldVersion<15){
+                            if (oldVersion < 15) {
                                 db.execNonQuery("ALTER TABLE Message ADD COLUMN sendStatus INTEGER DEFAULT 1");
                                 db.execNonQuery("ALTER TABLE Message ADD COLUMN localPath TEXT DEFAULT ''");
                             }
-                            if(oldVersion<16){
+                            if (oldVersion < 16) {
                                 db.execNonQuery("DROP TABLE IF EXISTS Mail");
                             }
-                            if(oldVersion<17){
-                                if(tableIsExist(db,"ChannelGroup")){
+                            if (oldVersion < 17) {
+                                if (tableIsExist(db, "ChannelGroup")) {
                                     db.execNonQuery("ALTER TABLE ChannelGroup ADD COLUMN action TEXT DEFAULT ''");
                                     db.execNonQuery("ALTER TABLE ChannelGroup ADD COLUMN avatar TEXT DEFAULT ''");
                                 }
-                                if(tableIsExist(db,"Channel")){
+                                if (tableIsExist(db, "Channel")) {
                                     db.execNonQuery("ALTER TABLE Channel ADD COLUMN action TEXT DEFAULT ''");
                                     db.execNonQuery("ALTER TABLE Channel ADD COLUMN avatar TEXT DEFAULT ''");
                                 }
-                                if(tableIsExist(db,"Conversation")){
+                                if (tableIsExist(db, "Conversation")) {
                                     db.execNonQuery("ALTER TABLE Conversation ADD COLUMN action TEXT DEFAULT ''");
                                 }
                             }
-                            if(oldVersion<18){
-                                if(tableIsExist(db,"Conversation")){
+                            if (oldVersion < 18) {
+                                if (tableIsExist(db, "Conversation")) {
                                     db.execNonQuery("ALTER TABLE Conversation ADD COLUMN pyFull TEXT DEFAULT ''");
                                 }
                             }
@@ -143,23 +143,24 @@ public class DbCacheUtils {
 
     /**
      * 判断数据库是否为空
+     *
      * @return
      */
     public static boolean isDbNull() {
         return db == null;
     }
 
-    public static boolean tableIsExist(DbManager dbManager,String tabName) {
+    public static boolean tableIsExist(DbManager dbManager, String tabName) {
         boolean result = false;
         if (tabName == null) {
             return false;
         }
-        SQLiteDatabase sqliteDatabase =null;
-        if (dbManager != null){
+        SQLiteDatabase sqliteDatabase = null;
+        if (dbManager != null) {
             sqliteDatabase = dbManager.getDatabase();
-        }else if(db != null){
+        } else if (db != null) {
             sqliteDatabase = db.getDatabase();
-        }else {
+        } else {
             return false;
         }
         Cursor cursor = null;
@@ -176,8 +177,8 @@ public class DbCacheUtils {
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
-        }finally {
-            if (cursor != null){
+        } finally {
+            if (cursor != null) {
                 cursor.close();
             }
         }
@@ -200,6 +201,7 @@ public class DbCacheUtils {
 
     /**
      * 删除数据库
+     *
      * @param context
      */
     public static void deleteDb(Context context) {
@@ -216,6 +218,7 @@ public class DbCacheUtils {
 
     /**
      * 关闭数据库
+     *
      * @param context
      */
     public static void closeDb(Context context) {

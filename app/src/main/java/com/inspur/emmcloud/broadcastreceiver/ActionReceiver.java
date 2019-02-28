@@ -18,12 +18,12 @@ import com.inspur.emmcloud.MyApplication;
  */
 public class ActionReceiver extends BroadcastReceiver {
 
-	@Override
-	public void onReceive(Context context, Intent intent) {
-		// TODO Auto-generated method stub
-		if(((MyApplication)context.getApplicationContext()).isHaveLogin()){
-			((MyApplication)context.getApplicationContext()).startPush();
-		}
-	}
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        // TODO Auto-generated method stub
+        if (((MyApplication) context.getApplicationContext()).isHaveLogin()) {
+            ((MyApplication) context.getApplicationContext()).startPush();
+        }
+    }
 
 }

@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -26,7 +27,6 @@ import com.inspur.emmcloud.ui.login.PasswordModifyActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
@@ -94,8 +94,7 @@ public class MyInfoActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        StateBarUtils.translucent(this,R.color.white);
-        StateBarUtils.setStateBarTextColor(this,true);
+        ImmersionBar.with(this).statusBarColor(android.R.color.white).statusBarDarkFont(true).init();
         loadingDlg = new LoadingDialog(this);
         apiService = new MineAPIService(MyInfoActivity.this);
         apiService.setAPIInterface(new WebService());
@@ -130,29 +129,29 @@ public class MyInfoActivity extends BaseActivity {
     public void onClick(View v) {
         // TODO Auto-generated method stub
         switch (v.getId()) {
-        case R.id.iv_photo:
-            if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-                initImagePicker();
-                Intent intent = new Intent(getApplicationContext(), ImageGridActivity.class);
-                startActivityForResult(intent, REQUEST_CODE_SELECT_IMG);
-            } else {
-                ToastUtils.show(MyInfoActivity.this, getString(R.string.user_no_storage));
-            }
-            break;
-        case R.id.ibt_back:
-            finishActivity();
-            break;
-        case R.id.rl_password_modify:
-            IntentUtils.startActivity(MyInfoActivity.this, PasswordModifyActivity.class);
-            break;
-        case R.id.rl_password_reset:
-            Bundle bundle = new Bundle();
-            bundle.putInt(LoginBySmsActivity.EXTRA_MODE, LoginBySmsActivity.MODE_FORGET_PASSWORD);
-            bundle.putString(LoginBySmsActivity.EXTRA_PHONE, getMyInfoResult.getPhoneNumber());
-            IntentUtils.startActivity(MyInfoActivity.this, LoginBySmsActivity.class, bundle);
-            break;
-        default:
-            break;
+            case R.id.iv_photo:
+                if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+                    initImagePicker();
+                    Intent intent = new Intent(getApplicationContext(), ImageGridActivity.class);
+                    startActivityForResult(intent, REQUEST_CODE_SELECT_IMG);
+                } else {
+                    ToastUtils.show(MyInfoActivity.this, getString(R.string.user_no_storage));
+                }
+                break;
+            case R.id.ibt_back:
+                finishActivity();
+                break;
+            case R.id.rl_password_modify:
+                IntentUtils.startActivity(MyInfoActivity.this, PasswordModifyActivity.class);
+                break;
+            case R.id.rl_password_reset:
+                Bundle bundle = new Bundle();
+                bundle.putInt(LoginBySmsActivity.EXTRA_MODE, LoginBySmsActivity.MODE_FORGET_PASSWORD);
+                bundle.putString(LoginBySmsActivity.EXTRA_PHONE, getMyInfoResult.getPhoneNumber());
+                IntentUtils.startActivity(MyInfoActivity.this, LoginBySmsActivity.class, bundle);
+                break;
+            default:
+                break;
         }
     }
 
@@ -225,8 +224,8 @@ public class MyInfoActivity extends BaseActivity {
         }
         if (userProfileInfoBean != null) {
             enterpriseLayout.setVisibility((userProfileInfoBean.getShowEpInfo() == 0) ? View.GONE : View.VISIBLE);
-            photoLayout.setVisibility((userProfileInfoBean.getShowHead() == 0)?View.GONE:View.VISIBLE);
-            nameText.setVisibility((userProfileInfoBean.getShowUserName() == 0)?View.GONE:View.VISIBLE);
+            photoLayout.setVisibility((userProfileInfoBean.getShowHead() == 0) ? View.GONE : View.VISIBLE);
+            nameText.setVisibility((userProfileInfoBean.getShowUserName() == 0) ? View.GONE : View.VISIBLE);
             passwordModifyLayout.setVisibility((userProfileInfoBean.getShowModifyPsd() == 0) ? View.GONE : View.VISIBLE);
             passwordResetLayout.setVisibility((userProfileInfoBean.getShowResetPsd() == 0) ? View.GONE : View.VISIBLE);
             phoneLayout.setVisibility((0 == userProfileInfoBean.getShowUserPhone()) ? View.GONE : View.VISIBLE);

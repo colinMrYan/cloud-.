@@ -46,6 +46,8 @@ public class MyAppConfig {
     public static final int VOLUME_MAX_FILE_NAME_LENGTH = 40;
     public static final int WEBSOCKET_QEQUEST_TIMEOUT = 16;
     public static Boolean test = true;
+    public static Language getDefaultLanguage = new Language("中文简体", "zh-CN", "zh-Hans", "zh-CN", "zh-CN", "zh-Hans");
+
     public static Map<String, String> getLocalLanguageMap() {
         Map<String, String> languageMap = new HashMap<String, String>();
         languageMap.put("zh-CN", "zh-CN");
@@ -55,9 +57,9 @@ public class MyAppConfig {
 
     }
 
-
     /**
      * 获取React App的存储路径，分租户用户
+     *
      * @param context
      * @param userId
      * @return
@@ -68,23 +70,27 @@ public class MyAppConfig {
 
     /**
      * 获取聊天语音存储目录
+     *
      * @return
      */
-    public static String getCacheVoiceFilePath(String cid,String messageId){
-        cid = cid.replaceAll(":","_");
-        return Environment.getExternalStorageDirectory() + "/IMP-Cloud/"+MyApplication.getInstance().getUid()+"/"+MyApplication.getInstance().getTanent()+"/voice/"+cid+"/"+messageId+".amr";
+    public static String getCacheVoiceFilePath(String cid, String messageId) {
+        cid = cid.replaceAll(":", "_");
+        return Environment.getExternalStorageDirectory() + "/IMP-Cloud/" + MyApplication.getInstance().getUid() + "/" + MyApplication.getInstance().getTanent() + "/voice/" + cid + "/" + messageId + ".amr";
     }
 
     /**
      * 获取聊天语音存储目录
+     *
      * @return
      */
-    public static String getCacheVoicePCMFilePath(String cid, String messageId){
-        cid = cid.replaceAll(":","_");
-        return Environment.getExternalStorageDirectory() + "/IMP-Cloud/"+MyApplication.getInstance().getUid()+"/"+MyApplication.getInstance().getTanent()+"/voice/"+cid+"/"+messageId+".pcm";
+    public static String getCacheVoicePCMFilePath(String cid, String messageId) {
+        cid = cid.replaceAll(":", "_");
+        return Environment.getExternalStorageDirectory() + "/IMP-Cloud/" + MyApplication.getInstance().getUid() + "/" + MyApplication.getInstance().getTanent() + "/voice/" + cid + "/" + messageId + ".pcm";
     }
+
     /**
      * 获取React上一版本缓存途径（用于Roback的版本）
+     *
      * @param context
      * @param userId
      * @return
@@ -95,6 +101,7 @@ public class MyAppConfig {
 
     /**
      * 获取闪屏页目前显示图片的路径
+     *
      * @param context
      * @param userId
      * @return
@@ -103,10 +110,7 @@ public class MyAppConfig {
         return context.getDir("SplashPage", MODE_PRIVATE).getPath() + "/" + MyApplication.getInstance().getTanent() + "/" + userId + "/" + module;
     }
 
-
-    public static Language getDefaultLanguage = new Language("中文简体", "zh-CN", "zh-Hans", "zh-CN", "zh-CN", "zh-Hans");
-
-    public static String getChannelDrafsPreKey(String cid){
-        return "drafts"+cid;
+    public static String getChannelDrafsPreKey(String cid) {
+        return "drafts" + cid;
     }
 }

@@ -15,8 +15,8 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.MediaPlayerManagerUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
+import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
 import com.inspur.emmcloud.util.common.systool.permission.Permissions;
 import com.shuyu.waveview.FileUtils;
 
@@ -55,6 +55,35 @@ public class AudioRecordButton extends Button {
     private boolean isDeviceError = false;
     private float lastCallBackDurationTime = 0;
     private android.media.AudioManager audioManager;
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case VOICE_MESSAGE:
+                    if (durationTime < 60.0) {
+                        mDialogManager.updateVoiceLevelAndDurationTime(volumeSize, durationTime);
+                    } else if (durationTime >= 60.0) {
+                        isRecording = false;
+                        voiceRecordUIFinish();
+//                        if (AppUtils.getIsVoiceWordOpen()) {
+                        mListener.onFinished(60f, audioRecorderManager.getCurrentFilePath());
+//                        } else {
+//                            mListener.onFinished(60f, mp3FilePath);
+//                        }
+                        reset();
+                    }
+                    break;
+                case VOICE_DISMISS_DIALOG:
+                    voiceRecordUIFinish();
+                    break;
+                case VOICE_ERROR_TOAST:
+                    voiceRecordUIFinish();
+                    ToastUtils.show(MyApplication.getInstance(), getContext().getString(R.string.voice_audio_record_unavailiable));
+                    break;
+            }
+
+        }
+    };
 
     /**
      * 先实现两个参数的构造方法，布局会默认引用这个构造方法， 用一个 构造参数的构造方法来引用这个方法 * @param context
@@ -71,9 +100,9 @@ public class AudioRecordButton extends Button {
         setOnLongClickListener(new OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                if(PermissionRequestManagerUtils.getInstance().isHasPermission(getContext(), Permissions.RECORD_AUDIO)){
+                if (PermissionRequestManagerUtils.getInstance().isHasPermission(getContext(), Permissions.RECORD_AUDIO)) {
                     startRecordVoice();
-                }else{
+                } else {
                     PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getContext(), Permissions.RECORD_AUDIO, new PermissionRequestCallback() {
                         @Override
                         public void onPermissionRequestSuccess(List<String> permissions) {
@@ -83,7 +112,7 @@ public class AudioRecordButton extends Button {
 
                         @Override
                         public void onPermissionRequestFail(List<String> permissions) {
-                            ToastUtils.show(context, PermissionRequestManagerUtils.getInstance().getPermissionToast(context,permissions));
+                            ToastUtils.show(context, PermissionRequestManagerUtils.getInstance().getPermissionToast(context, permissions));
                         }
 
 
@@ -245,36 +274,6 @@ public class AudioRecordButton extends Button {
         return db;
     }
 
-    private Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case VOICE_MESSAGE:
-                    if (durationTime < 60.0) {
-                        mDialogManager.updateVoiceLevelAndDurationTime(volumeSize, durationTime);
-                    } else if (durationTime >= 60.0) {
-                        isRecording = false;
-                        voiceRecordUIFinish();
-//                        if (AppUtils.getIsVoiceWordOpen()) {
-                            mListener.onFinished(60f, audioRecorderManager.getCurrentFilePath());
-//                        } else {
-//                            mListener.onFinished(60f, mp3FilePath);
-//                        }
-                        reset();
-                    }
-                    break;
-                case VOICE_DISMISS_DIALOG:
-                    voiceRecordUIFinish();
-                    break;
-                case VOICE_ERROR_TOAST:
-                    voiceRecordUIFinish();
-                    ToastUtils.show(MyApplication.getInstance(), getContext().getString(R.string.voice_audio_record_unavailiable));
-                    break;
-            }
-
-        }
-    };
-
     /**
      * 设置Audio回调
      *
@@ -325,7 +324,7 @@ public class AudioRecordButton extends Button {
                     voiceRecordUIFinish();
                     if (mListener != null) {
 //                        if (AppUtils.getIsVoiceWordOpen()) {
-                            mListener.onFinished(durationTime, audioRecorderManager.getCurrentFilePath());
+                        mListener.onFinished(durationTime, audioRecorderManager.getCurrentFilePath());
 //                        } else if (!isDeviceError) {
 //                            mListener.onFinished(durationTime, mp3FilePath);
 //                        }
@@ -437,6 +436,15 @@ public class AudioRecordButton extends Button {
     }
 
     /**
+     * 获取Mp3文件夹路径
+     *
+     * @return
+     */
+    private String getMp3FilePath() {
+        return MyAppConfig.LOCAL_CACHE_VOICE_PATH + "/";
+    }
+
+    /**
      * 录音完成后的回调，回调给activiy，可以获得mtime和文件的路径
      *
      * @author nickming
@@ -447,14 +455,5 @@ public class AudioRecordButton extends Button {
         void onFinished(float seconds, String filePath);
 
         void onErrorRecordingVoice(int errorType);
-    }
-
-    /**
-     * 获取Mp3文件夹路径
-     *
-     * @return
-     */
-    private String getMp3FilePath() {
-        return MyAppConfig.LOCAL_CACHE_VOICE_PATH + "/";
     }
 }

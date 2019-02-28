@@ -49,12 +49,26 @@ public class TextViewWithSpan extends AppCompatTextView {
 
     }
 
-    public void setTextViewHTML(String html)
-    {
+    public void setTextViewHTML(String html) {
         CharSequence sequence = Html.fromHtml(html);
         SpannableStringBuilder strBuilder =
                 new SpannableStringBuilder(sequence);
         setText(strBuilder);
+    }
+
+    @Override
+    public boolean hasFocus() {
+        return false;
+    }
+
+    @Override
+    public void setFocusable(boolean focusable) {
+        super.setFocusable(false);
+    }
+
+    @Override
+    public boolean performLongClick() {
+        return false;
     }
 
     public static class LocalLinkMovementMethod extends LinkMovementMethod {
@@ -100,7 +114,7 @@ public class TextViewWithSpan extends AppCompatTextView {
                                 buffer.getSpanEnd(link[0]));
                     }
 
-                    if (widget instanceof TextViewWithSpan){
+                    if (widget instanceof TextViewWithSpan) {
                         ((TextViewWithSpan) widget).linkHit = true;
                     }
                     return true;
@@ -112,20 +126,5 @@ public class TextViewWithSpan extends AppCompatTextView {
             }
             return Touch.onTouchEvent(widget, buffer, event);
         }
-    }
-
-    @Override
-    public boolean hasFocus() {
-        return false;
-    }
-
-    @Override
-    public void setFocusable(boolean focusable) {
-        super.setFocusable(false);
-    }
-
-    @Override
-    public boolean performLongClick() {
-        return false;
     }
 }

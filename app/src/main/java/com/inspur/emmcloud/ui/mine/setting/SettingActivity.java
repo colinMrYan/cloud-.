@@ -81,68 +81,6 @@ public class SettingActivity extends BaseActivity {
     private LoadingDialog loadingDlg;
     @ViewInject(R.id.tv_setting_theme_name)
     private TextView themeNameText;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
-        super.onCreate(savedInstanceState);
-        initView();
-        setLanguage();
-        handMessage();
-        EventBus.getDefault().register(this);
-    }
-
-    private void initView() {
-        loadingDlg = new LoadingDialog(this);
-        apiService = new MineAPIService(this);
-        apiService.setAPIInterface(new WebService());
-        setWebAutoRotateState();
-        webRotateSwitch.setOnStateChangedListener(onStateChangedListener);
-        boolean isAppSetRunBackground = PreferencesUtils.getBoolean(getApplicationContext(), Constant.PREF_APP_RUN_BACKGROUND, false);
-        runBackgroundSwitch.setOpened(isAppSetRunBackground);
-        runBackgroundSwitch.setOnStateChangedListener(onStateChangedListener);
-        if (MyApplication.getInstance().isV1xVersionChat()) {
-           voice2WordLayout.setVisibility(View.VISIBLE);
-            voice2WordSwitch.setOpened(AppUtils.getIsVoiceWordOpen());
-            voice2WordSwitch.setOnStateChangedListener(onStateChangedListener);
-        }
-        if (AppUtils.isAppVersionStandard()) {
-            getUserExperienceUpgradeFlag();
-            experienceUpgradeLayout.setVisibility(View.VISIBLE);
-            boolean isExperienceUpgradeFlag = PreferencesByUserAndTanentUtils.getBoolean(MyApplication.getInstance(), Constant.PREF_EXPERIENCE_UPGRATE, false);
-            experienceUpgradeSwitch.setOpened(isExperienceUpgradeFlag);
-            experienceUpgradeSwitch.setOnStateChangedListener(onStateChangedListener);
-        }
-
-    }
-
-    private void setWebAutoRotateState() {
-        boolean isWebAutoRotate = Boolean.parseBoolean(AppConfigCacheUtils.getAppConfigValue(this, Constant.CONCIG_WEB_AUTO_ROTATE, "false"));
-        webRotateSwitch.setOpened(isWebAutoRotate);
-    }
-
-    /**
-     * 设置显示app语言
-     */
-    private void setLanguage() {
-        // TODO Auto-generated method stub
-        String languageName = PreferencesUtils.getString(MyApplication.getInstance(), MyApplication.getInstance().getTanent() + "language", "");
-        String languageJson = PreferencesUtils
-                .getString(this, MyApplication.getInstance().getTanent() + "appLanguageObj");
-        if (languageJson != null && !languageName.equals("followSys")) {
-            Language language = new Language(languageJson);
-            languageNameText.setText(new Language(languageJson).getLabel());
-            String iso = language.getIso();
-            iso = iso.replace("-", "_");
-            iso = iso.toLowerCase();
-            int id = getResources().getIdentifier(iso, "drawable", getApplicationContext().getPackageName());
-            //设置语言国旗标志
-            languageFlagImg.setImageResource(id);
-        } else {
-            languageNameText.setText(getString(R.string.follow_system));
-        }
-    }
-
     private SwitchView.OnStateChangedListener onStateChangedListener = new SwitchView.OnStateChangedListener() {
 
         @Override
@@ -195,6 +133,67 @@ public class SettingActivity extends BaseActivity {
         }
     };
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        // TODO Auto-generated method stub
+        super.onCreate(savedInstanceState);
+        initView();
+        setLanguage();
+        handMessage();
+        EventBus.getDefault().register(this);
+    }
+
+    private void initView() {
+        loadingDlg = new LoadingDialog(this);
+        apiService = new MineAPIService(this);
+        apiService.setAPIInterface(new WebService());
+        setWebAutoRotateState();
+        webRotateSwitch.setOnStateChangedListener(onStateChangedListener);
+        boolean isAppSetRunBackground = PreferencesUtils.getBoolean(getApplicationContext(), Constant.PREF_APP_RUN_BACKGROUND, false);
+        runBackgroundSwitch.setOpened(isAppSetRunBackground);
+        runBackgroundSwitch.setOnStateChangedListener(onStateChangedListener);
+        if (MyApplication.getInstance().isV1xVersionChat()) {
+            voice2WordLayout.setVisibility(View.VISIBLE);
+            voice2WordSwitch.setOpened(AppUtils.getIsVoiceWordOpen());
+            voice2WordSwitch.setOnStateChangedListener(onStateChangedListener);
+        }
+        if (AppUtils.isAppVersionStandard()) {
+            getUserExperienceUpgradeFlag();
+            experienceUpgradeLayout.setVisibility(View.VISIBLE);
+            boolean isExperienceUpgradeFlag = PreferencesByUserAndTanentUtils.getBoolean(MyApplication.getInstance(), Constant.PREF_EXPERIENCE_UPGRATE, false);
+            experienceUpgradeSwitch.setOpened(isExperienceUpgradeFlag);
+            experienceUpgradeSwitch.setOnStateChangedListener(onStateChangedListener);
+        }
+        themeNameText.setText(ThemeSwitchActivity.getThemeName());
+    }
+
+    private void setWebAutoRotateState() {
+        boolean isWebAutoRotate = Boolean.parseBoolean(AppConfigCacheUtils.getAppConfigValue(this, Constant.CONCIG_WEB_AUTO_ROTATE, "false"));
+        webRotateSwitch.setOpened(isWebAutoRotate);
+    }
+
+    /**
+     * 设置显示app语言
+     */
+    private void setLanguage() {
+        // TODO Auto-generated method stub
+        String languageName = PreferencesUtils.getString(MyApplication.getInstance(), MyApplication.getInstance().getTanent() + "language", "");
+        String languageJson = PreferencesUtils
+                .getString(this, MyApplication.getInstance().getTanent() + "appLanguageObj");
+        if (languageJson != null && !languageName.equals("followSys")) {
+            Language language = new Language(languageJson);
+            languageNameText.setText(new Language(languageJson).getLabel());
+            String iso = language.getIso();
+            iso = iso.replace("-", "_");
+            iso = iso.toLowerCase();
+            int id = getResources().getIdentifier(iso, "drawable", getApplicationContext().getPackageName());
+            //设置语言国旗标志
+            languageFlagImg.setImageResource(id);
+        } else {
+            languageNameText.setText(getString(R.string.follow_system));
+        }
+    }
+
     /**
      * 设置app是否运行在后台
      *
@@ -242,7 +241,7 @@ public class SettingActivity extends BaseActivity {
                 break;
             case R.id.rl_setting_language:
                 IntentUtils.startActivity(SettingActivity.this,
-                        LanguageChangeActivity.class);
+                        LanguageSwitchActivity.class);
                 break;
             case R.id.clear_cache_layout:
                 showClearCacheDlg();
@@ -251,18 +250,7 @@ public class SettingActivity extends BaseActivity {
                 IntentUtils.startActivity(SettingActivity.this, SafeCenterActivity.class);
                 break;
             case R.id.rl_setting_switch_theme:
-                int currentThemeNo = PreferencesUtils.getInt(MyApplication.getInstance(), Constant.PREF_APP_THEME, 0);
-                currentThemeNo++;
-                if (currentThemeNo > 2){
-                    currentThemeNo = 0;
-                }
-                PreferencesUtils.putInt(MyApplication.getInstance(), Constant.PREF_APP_THEME, currentThemeNo);
-                setTheme();
-                Intent intent = new Intent(SettingActivity.this,
-                        IndexActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                        | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
+                IntentUtils.startActivity(SettingActivity.this, ThemeSwitchActivity.class);
                 break;
             default:
                 break;

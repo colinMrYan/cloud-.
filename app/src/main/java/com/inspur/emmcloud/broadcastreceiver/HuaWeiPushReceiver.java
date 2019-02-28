@@ -26,7 +26,7 @@ public class HuaWeiPushReceiver extends PushReceiver {
      */
     @Override
     public void onToken(Context context, String token, Bundle extras) {
-        AppUtils.setPushFlag(context,Constant.HUAWEI_FLAG);
+        AppUtils.setPushFlag(context, Constant.HUAWEI_FLAG);
         PreferencesUtils.putString(context, Constant.HUAWEI_PUSH_TOKEN, token);
         new PushIdManagerUtils(context).registerPushId2Emm();
         new ClientIDUtils(context).upload();
@@ -43,10 +43,9 @@ public class HuaWeiPushReceiver extends PushReceiver {
      */
     @Override
     public boolean onPushMsg(Context context, byte[] msg, Bundle bundle) {
-        ECMTransparentUtils.handleTransparentMsg(context,msg);
+        ECMTransparentUtils.handleTransparentMsg(context, msg);
         return false;
     }
-
 
 
     /**

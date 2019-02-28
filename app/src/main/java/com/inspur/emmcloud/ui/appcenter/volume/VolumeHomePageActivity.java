@@ -47,15 +47,12 @@ import java.util.List;
 @ContentView(R.layout.activity_volume_homepage)
 public class VolumeHomePageActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener {
 
-    @ViewInject(R.id.list)
-    private ListView listView;
-
-    @ViewInject(R.id.volume_recent_use_list)
-    private ListView volumeRecentUseListView;
-
     @ViewInject(R.id.refresh_layout)
     protected SwipeRefreshLayout swipeRefreshLayout;
-
+    @ViewInject(R.id.list)
+    private ListView listView;
+    @ViewInject(R.id.volume_recent_use_list)
+    private ListView volumeRecentUseListView;
     private VolumeRecentUseAdapter volumeRecentUseAdapter;
     private MyAppAPIService apiService;
     private LoadingDialog loadingDlg;
@@ -92,19 +89,19 @@ public class VolumeHomePageActivity extends BaseActivity implements SwipeRefresh
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("volume", myVolume);
-                bundle.putString("title",getString(R.string.clouddriver_my_file) );
+                bundle.putString("title", getString(R.string.clouddriver_my_file));
                 List<Uri> uriList = null;
-                if(isShareState){
+                if (isShareState) {
                     uriList = (List<Uri>) getIntent().getSerializableExtra(Constant.SHARE_FILE_URI_LIST);
                 }
                 switch (position) {
                     case 0:
-                        if(myVolume != null){
-                            if(uriList!=null && uriList.size() > 0){
+                        if (myVolume != null) {
+                            if (uriList != null && uriList.size() > 0) {
                                 bundle.putSerializable("fileShareUriList", (Serializable) uriList);
                                 bundle.putString("operationFileDirAbsolutePath", "/");
-                                IntentUtils.startActivity(VolumeHomePageActivity.this,VolumeFileLocationSelectActivity.class,bundle);
-                            } else  {
+                                IntentUtils.startActivity(VolumeHomePageActivity.this, VolumeFileLocationSelectActivity.class, bundle);
+                            } else {
                                 IntentUtils.startActivity(VolumeHomePageActivity.this, VolumeFileActivity.class,
                                         bundle);
                             }
@@ -127,10 +124,11 @@ public class VolumeHomePageActivity extends BaseActivity implements SwipeRefresh
 
     /**
      * 接收来自上传页面的消息
+     *
      * @param clearShareDataBean
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void clearShareData(ClearShareDataBean clearShareDataBean){
+    public void clearShareData(ClearShareDataBean clearShareDataBean) {
         isShareState = false;
     }
 
@@ -143,6 +141,29 @@ public class VolumeHomePageActivity extends BaseActivity implements SwipeRefresh
                 break;
             default:
                 break;
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    public void onRefresh() {
+        getVolumeList(false);
+    }
+
+    /**
+     * 获取云盘列表
+     */
+    private void getVolumeList(boolean isShowDlg) {
+        if (NetUtils.isNetworkConnected(getApplicationContext())) {
+            loadingDlg.show(isShowDlg);
+            apiService.getVolumeList();
+        } else {
+            swipeRefreshLayout.setRefreshing(false);
         }
     }
 
@@ -171,29 +192,6 @@ public class VolumeHomePageActivity extends BaseActivity implements SwipeRefresh
             ((TextView) convertView.findViewById(R.id.volume_capacity_text)).setText(volumeHomePageDirectory.getText());
             ((ImageView) convertView.findViewById(R.id.volume_img)).setImageResource(volumeHomePageDirectory.getIcon());
             return convertView;
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        EventBus.getDefault().unregister(this);
-    }
-
-    @Override
-    public void onRefresh() {
-        getVolumeList(false);
-    }
-
-    /**
-     * 获取云盘列表
-     */
-    private void getVolumeList(boolean isShowDlg) {
-        if (NetUtils.isNetworkConnected(getApplicationContext())) {
-            loadingDlg.show(isShowDlg);
-            apiService.getVolumeList();
-        } else {
-            swipeRefreshLayout.setRefreshing(false);
         }
     }
 

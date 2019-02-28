@@ -14,16 +14,17 @@ public class MsgContentRegularFile {
     private long size;
     private String media;
     private String tmpId;
+
     public MsgContentRegularFile(String content) {
         JSONObject object = JSONUtils.getJSONObject(content);
-        category = JSONUtils.getString(object,"category","");
-        name = JSONUtils.getString(object,"name","");
-        media = JSONUtils.getString(object,"media","");
-        size = JSONUtils.getLong(object,"size",0);
-        tmpId = JSONUtils.getString(object,"tmpId","");
+        category = JSONUtils.getString(object, "category", "");
+        name = JSONUtils.getString(object, "name", "");
+        media = JSONUtils.getString(object, "media", "");
+        size = JSONUtils.getLong(object, "size", 0);
+        tmpId = JSONUtils.getString(object, "tmpId", "");
     }
 
-    public MsgContentRegularFile(){
+    public MsgContentRegularFile() {
 
     }
 
@@ -55,6 +56,10 @@ public class MsgContentRegularFile {
         return media;
     }
 
+    public void setMedia(String media) {
+        this.media = media;
+    }
+
     public String getTmpId() {
         return tmpId;
     }
@@ -63,9 +68,6 @@ public class MsgContentRegularFile {
         this.tmpId = tmpId;
     }
 
-    public void setMedia(String media) {
-        this.media = media;
-    }
     public String toString() {
         JSONObject obj = new JSONObject();
         try {

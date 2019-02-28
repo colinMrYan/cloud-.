@@ -69,12 +69,13 @@ public class ImageCropActivity extends ImageBaseActivity implements View.OnClick
         rotateButton = (Button) findViewById(R.id.cv_rotate_btn);
         rotateButton.setVisibility(View.GONE);
         rotateButton.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				mCropImageView.RotateImage();
-			}
-		});
+
+            @Override
+            public void onClick(View v) {
+                mCropImageView.RotateImage();
+            }
+        });
+        setStatus();
 
 //        mCropImageView.setImageURI(Uri.fromFile(new File(imagePath)));
     }

@@ -33,8 +33,8 @@ import java.util.List;
  * Created by Administrator on 2017/5/25.
  */
 
-@ContentView(R.layout.activity_switch_enterprise)
-public class SwitchEnterpriseActivity extends BaseActivity {
+@ContentView(R.layout.activity_mine_enterprise_switch)
+public class EnterpriseSwitchActivity extends BaseActivity {
 
     @ViewInject(R.id.lv_enterprise)
     private ScrollViewWithListView enterpriseListView;
@@ -57,11 +57,11 @@ public class SwitchEnterpriseActivity extends BaseActivity {
     }
 
     private void initView() {
-        String selectLoginEnterpriseId= PreferencesByUsersUtils.getString(this, Constant.PREF_SELECT_LOGIN_ENTERPRISE_ID,"");
-        if(!StringUtils.isBlank(selectLoginEnterpriseId)){
+        String selectLoginEnterpriseId = PreferencesByUsersUtils.getString(this, Constant.PREF_SELECT_LOGIN_ENTERPRISE_ID, "");
+        if (!StringUtils.isBlank(selectLoginEnterpriseId)) {
             closeAutoSelectLayout.setVisibility(View.VISIBLE);
         }
-        enterpriseListView.setAdapter(new EnterpriseAdapter(this,enterpriseList));
+        enterpriseListView.setAdapter(new EnterpriseAdapter(this, enterpriseList));
         enterpriseListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -80,7 +80,7 @@ public class SwitchEnterpriseActivity extends BaseActivity {
      * @param enterprise
      */
     private void showSwitchEnterpriseConfirmDlg(final Enterprise enterprise) {
-        new MyQMUIDialog.MessageDialogBuilder(SwitchEnterpriseActivity.this)
+        new MyQMUIDialog.MessageDialogBuilder(EnterpriseSwitchActivity.this)
                 .setMessage(getString(R.string.sure_switch_to, enterprise.getName()))
                 .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
                     @Override
@@ -111,8 +111,8 @@ public class SwitchEnterpriseActivity extends BaseActivity {
         MyApplication.getInstance().clearNotification();
         MyApplication.getInstance().removeAllCookie();
         MyApplication.getInstance().clearUserPhotoMap();
-        PreferencesUtils.putBoolean(SwitchEnterpriseActivity.this, "isMDMStatusPass", false);
-        Intent intent = new Intent(SwitchEnterpriseActivity.this,
+        PreferencesUtils.putBoolean(EnterpriseSwitchActivity.this, "isMDMStatusPass", false);
+        Intent intent = new Intent(EnterpriseSwitchActivity.this,
                 MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
                 | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -126,8 +126,8 @@ public class SwitchEnterpriseActivity extends BaseActivity {
                 break;
             case R.id.rl_setting_close_auto_select:
                 v.setVisibility(View.GONE);
-                PreferencesByUsersUtils.putString(this, Constant.PREF_SELECT_LOGIN_ENTERPRISE_ID,"");
-                ToastUtils.show(MyApplication.getInstance(),R.string.turn_off_success);
+                PreferencesByUsersUtils.putString(this, Constant.PREF_SELECT_LOGIN_ENTERPRISE_ID, "");
+                ToastUtils.show(MyApplication.getInstance(), R.string.turn_off_success);
                 break;
             default:
                 break;

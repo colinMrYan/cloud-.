@@ -97,6 +97,98 @@ public class MeetingHistoryListActivity extends BaseActivity implements
         }
     }
 
+    /**
+     * 初始化数据
+     */
+    private void initAndDisplayData() {
+        MeetingGroupByDayMap = new ArrayMap<String, List<Meeting>>();
+        meetingDayList = new ArrayList<String>();
+        if (allMeetingList.size() == 0) {
+            noMeetingLayout.setVisibility(View.VISIBLE);
+        } else {
+            noMeetingLayout.setVisibility(View.GONE);
+            MeetingGroupByDayMap = GroupUtils.group(allMeetingList,
+                    new MeetingGroupByDay());
+            meetingDayList = new ArrayList<String>(MeetingGroupByDayMap.keySet());
+            Collections.sort(meetingDayList, new SortClass());
+
+        }
+        if (adapter == null) {
+            adapter = new MyAdapter();
+            expandListView.setAdapter(adapter);
+        } else {
+            adapter.notifyDataSetChanged();
+        }
+
+
+    }
+
+    /**
+     * 得到格式化的时间如06:00-07:30
+     *
+     * @param meeting
+     * @return
+     */
+    public String getTimeDuration(Meeting meeting) {
+        String from = meeting.getFrom();
+        String to = meeting.getTo();
+        String dateFromTime = "", dateToTime = "";
+        dateFromTime = getFromTime(from);
+        dateToTime = getToTime(to);
+        String meetingTime = dateFromTime + "-" + dateToTime;
+        return meetingTime;
+    }
+
+    /**
+     * 获取结束时间
+     *
+     * @return
+     */
+    private String getToTime(String to) {
+        // TODO Auto-generated method stub
+        Calendar calendarTo = TimeUtils.timeString2Calendar(to);
+        String dateToTime = TimeUtils.calendar2FormatString(
+                MeetingHistoryListActivity.this, calendarTo,
+                TimeUtils.DATE_FORMAT_HOUR_MINUTE);
+        return dateToTime;
+    }
+
+    /**
+     * @param from
+     * @return
+     */
+    private String getFromTime(String from) {
+        // TODO Auto-generated method stub
+        Calendar calendFrom = TimeUtils.timeString2Calendar(from);
+        String dateFromTime = TimeUtils.calendar2FormatString(
+                MeetingHistoryListActivity.this, calendFrom,
+                TimeUtils.DATE_FORMAT_HOUR_MINUTE);
+        return dateFromTime;
+    }
+
+    @Override
+    public void onRefresh() {
+        getHistoryMeetings(false, false);
+    }
+
+    @Override
+    public void onLoadMore() {
+        getHistoryMeetings(false, true);
+    }
+
+    /**
+     * 获取会议列表
+     *
+     * @param isShowDlg
+     * @param isLoadMore
+     */
+    private void getHistoryMeetings(Boolean isShowDlg, boolean isLoadMore) {
+        if (NetUtils.isNetworkConnected(getApplicationContext())) {
+            loadingDlg.show(isShowDlg);
+            int requestPage = isLoadMore ? page + 1 : 0;
+            apiService.getHistoryMeetingList("", requestPage, LIMIT, isLoadMore);
+        }
+    }
 
     /**
      * expandableListView适配器
@@ -217,6 +309,11 @@ public class MeetingHistoryListActivity extends BaseActivity implements
             return convertView;
         }
 
+        @Override
+        public boolean isChildSelectable(int groupPosition, int childPosition) {
+            return true;
+        }
+
         class ViewHolder {
             TextView dateText;
             TextView weekText;
@@ -231,83 +328,7 @@ public class MeetingHistoryListActivity extends BaseActivity implements
             View meetingCardLineView;
         }
 
-        @Override
-        public boolean isChildSelectable(int groupPosition, int childPosition) {
-            return true;
-        }
-
     }
-
-    /**
-     * 初始化数据
-     */
-    private void initAndDisplayData() {
-        MeetingGroupByDayMap = new ArrayMap<String, List<Meeting>>();
-        meetingDayList = new ArrayList<String>();
-        if (allMeetingList.size() == 0) {
-            noMeetingLayout.setVisibility(View.VISIBLE);
-        } else {
-            noMeetingLayout.setVisibility(View.GONE);
-            MeetingGroupByDayMap = GroupUtils.group(allMeetingList,
-                    new MeetingGroupByDay());
-            meetingDayList = new ArrayList<String>(MeetingGroupByDayMap.keySet());
-            Collections.sort(meetingDayList, new SortClass());
-
-        }
-        if (adapter == null) {
-            adapter = new MyAdapter();
-            expandListView.setAdapter(adapter);
-        } else {
-            adapter.notifyDataSetChanged();
-        }
-
-
-    }
-
-
-    /**
-     * 得到格式化的时间如06:00-07:30
-     *
-     * @param meeting
-     * @return
-     */
-    public String getTimeDuration(Meeting meeting) {
-        String from = meeting.getFrom();
-        String to = meeting.getTo();
-        String dateFromTime = "", dateToTime = "";
-        dateFromTime = getFromTime(from);
-        dateToTime = getToTime(to);
-        String meetingTime = dateFromTime + "-" + dateToTime;
-        return meetingTime;
-    }
-
-    /**
-     * 获取结束时间
-     *
-     * @return
-     */
-    private String getToTime(String to) {
-        // TODO Auto-generated method stub
-        Calendar calendarTo = TimeUtils.timeString2Calendar(to);
-        String dateToTime = TimeUtils.calendar2FormatString(
-                MeetingHistoryListActivity.this, calendarTo,
-                TimeUtils.DATE_FORMAT_HOUR_MINUTE);
-        return dateToTime;
-    }
-
-    /**
-     * @param from
-     * @return
-     */
-    private String getFromTime(String from) {
-        // TODO Auto-generated method stub
-        Calendar calendFrom = TimeUtils.timeString2Calendar(from);
-        String dateFromTime = TimeUtils.calendar2FormatString(
-                MeetingHistoryListActivity.this, calendFrom,
-                TimeUtils.DATE_FORMAT_HOUR_MINUTE);
-        return dateFromTime;
-    }
-
 
     /**
      * 点击 时间监听，数据传递
@@ -365,31 +386,6 @@ public class MeetingHistoryListActivity extends BaseActivity implements
             } else {
                 return 0;
             }
-        }
-    }
-
-
-    @Override
-    public void onRefresh() {
-        getHistoryMeetings(false, false);
-    }
-
-    @Override
-    public void onLoadMore() {
-        getHistoryMeetings(false, true);
-    }
-
-    /**
-     * 获取会议列表
-     *
-     * @param isShowDlg
-     * @param isLoadMore
-     */
-    private void getHistoryMeetings(Boolean isShowDlg, boolean isLoadMore) {
-        if (NetUtils.isNetworkConnected(getApplicationContext())) {
-            loadingDlg.show(isShowDlg);
-            int requestPage = isLoadMore?page+1:0;
-            apiService.getHistoryMeetingList("", requestPage, LIMIT, isLoadMore);
         }
     }
 

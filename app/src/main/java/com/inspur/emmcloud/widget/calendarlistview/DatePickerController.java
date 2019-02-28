@@ -27,7 +27,7 @@ package com.inspur.emmcloud.widget.calendarlistview;
 public interface DatePickerController {
 //	public abstract int getMaxYear();
 
-	void onDayOfMonthSelected(int year, int month, int day);
+    void onDayOfMonthSelected(int year, int month, int day);
 
     void onDateRangeSelected(final SimpleMonthAdapter.SelectedDays<SimpleMonthAdapter.CalendarDay> selectedDays);
 

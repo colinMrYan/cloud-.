@@ -32,109 +32,108 @@ import org.xutils.view.annotation.ViewInject;
  */
 @ContentView(R.layout.activity_about)
 public class AboutActivity extends BaseActivity {
-	private static final int NO_NEED_UPGRADE = 10;
-	private static final int UPGRADE_FAIL = 11;
-	private static final int DONOT_UPGRADE = 12;
-	private Handler handler;
-	@ViewInject(R.id.tv_app_version)
-	private TextView appVersionText;
-	@ViewInject(R.id.iv_logo)
-	private ImageView logoImg;
-	@ViewInject(R.id.rl_protocol)
-	private RelativeLayout protocolLayout;
-	@ViewInject(R.id.rl_invite_friends)
-	private RelativeLayout inviteFriendsLayout;
+    private static final int NO_NEED_UPGRADE = 10;
+    private static final int UPGRADE_FAIL = 11;
+    private static final int DONOT_UPGRADE = 12;
+    private Handler handler;
+    @ViewInject(R.id.tv_app_version)
+    private TextView appVersionText;
+    @ViewInject(R.id.iv_logo)
+    private ImageView logoImg;
+    @ViewInject(R.id.rl_protocol)
+    private RelativeLayout protocolLayout;
+    @ViewInject(R.id.rl_invite_friends)
+    private RelativeLayout inviteFriendsLayout;
 
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        // TODO Auto-generated method stub
+        super.onCreate(savedInstanceState);
+        String version = AppUtils.getVersion(this).replace("beta", "b");
+        appVersionText.setText(AppUtils.getAppName(this) + "  " + version);
+        ImageDisplayUtils.getInstance().displayImage(logoImg, "drawable://" + AppUtils.getAppIconRes(MyApplication.getInstance()), R.drawable.ic_launcher);
+        protocolLayout.setVisibility(AppUtils.isAppVersionStandard() ? View.VISIBLE : View.GONE);
+        inviteFriendsLayout.setVisibility(AppUtils.isAppVersionStandard() ? View.VISIBLE : View.GONE);
+        handMessage();
+    }
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
-		super.onCreate(savedInstanceState);
-		String version = AppUtils.getVersion(this).replace("beta","b");
-		appVersionText.setText(AppUtils.getAppName(this)+"  "+ version);
-		ImageDisplayUtils.getInstance().displayImage(logoImg,"drawable://"+AppUtils.getAppIconRes(MyApplication.getInstance()),R.drawable.ic_launcher);
-		protocolLayout.setVisibility(AppUtils.isAppVersionStandard()?View.VISIBLE:View.GONE);
-		inviteFriendsLayout.setVisibility(AppUtils.isAppVersionStandard()?View.VISIBLE:View.GONE);
-		handMessage();
-	}
-
-	@Event(value = R.id.iv_logo,type = View.OnLongClickListener.class)
-	private boolean onLongClick(View v) {
-		LogUtils.jasonDebug("00000000000000");
-		new ActionSheetDialog.ActionListSheetBuilder(AboutActivity.this)
+    @Event(value = R.id.iv_logo, type = View.OnLongClickListener.class)
+    private boolean onLongClick(View v) {
+        LogUtils.jasonDebug("00000000000000");
+        new ActionSheetDialog.ActionListSheetBuilder(AboutActivity.this)
 //						.setTitle(getString(R.string.current_system)+"-->"+ (StringUtils.isBlank(enterpriseName)?getString(R.string.cluster_default):enterpriseName))
-				.addItem("idm-->"+ MyApplication.getInstance().getCloudId())
+                .addItem("idm-->" + MyApplication.getInstance().getCloudId())
 //						.addItem("ecm-->"+ MyApplication.getInstance().getClusterEcm())
-				.addItem("emm-->"+ MyApplication.getInstance().getClusterEmm())
-				.addItem("ecm.chat-->"+MyApplication.getInstance().getClusterChat())
-				.addItem("ecm.schedule-->"+MyApplication.getInstance().getClusterSchedule())
-				.addItem("ecm.distribution-->"+MyApplication.getInstance().getClusterDistribution())
-				.addItem("ecm.news-->"+MyApplication.getInstance().getClusterNews())
-				.addItem("ecm.cloud-drive-->"+MyApplication.getInstance().getClusterCloudDrive())
-				.addItem("ecm.storage.legacy-->"+MyApplication.getInstance().getClusterStorageLegacy())
-				.addItem("ecm.client-registry-->"+MyApplication.getInstance().getClusterClientRegistry())
-				.addItem("ClientId-->"+ PreferencesByUserAndTanentUtils.getString(AboutActivity.this, Constant.PREF_CLIENTID, ""))
+                .addItem("emm-->" + MyApplication.getInstance().getClusterEmm())
+                .addItem("ecm.chat-->" + MyApplication.getInstance().getClusterChat())
+                .addItem("ecm.schedule-->" + MyApplication.getInstance().getClusterSchedule())
+                .addItem("ecm.distribution-->" + MyApplication.getInstance().getClusterDistribution())
+                .addItem("ecm.news-->" + MyApplication.getInstance().getClusterNews())
+                .addItem("ecm.cloud-drive-->" + MyApplication.getInstance().getClusterCloudDrive())
+                .addItem("ecm.storage.legacy-->" + MyApplication.getInstance().getClusterStorageLegacy())
+                .addItem("ecm.client-registry-->" + MyApplication.getInstance().getClusterClientRegistry())
+                .addItem("ClientId-->" + PreferencesByUserAndTanentUtils.getString(AboutActivity.this, Constant.PREF_CLIENTID, ""))
 //						.addItem("DeviceId-->"+ AppUtils.getMyUUID(MyApplication.getInstance()))
-				.addItem("DeviceToken-->"+ AppUtils.getPushId(MyApplication.getInstance()))
-				.build()
-				.show();
-		return false;
-	}
+                .addItem("DeviceToken-->" + AppUtils.getPushId(MyApplication.getInstance()))
+                .build()
+                .show();
+        return false;
+    }
 
-	/**
-	 * 显示系统信息
-	 */
+    /**
+     * 显示系统信息
+     */
 
-	public void onClick(View v) {
-		// TODO Auto-generated method stub
-		switch (v.getId()) {
-			case R.id.ibt_back:
-				finish();
-				break;
-			case R.id.rl_welcome:
-				Bundle bundle = new Bundle();
-				bundle.putString("from", "about");
-				IntentUtils.startActivity(AboutActivity.this, GuideActivity.class,
-						bundle);
-				break;
-			case R.id.rl_protocol:
-				IntentUtils.startActivity(AboutActivity.this,ServiceTermActivity.class);
-				break;
-			case R.id.rl_check_update:
-				UpgradeUtils upgradeUtils = new UpgradeUtils(AboutActivity.this,
-						handler,true);
-				upgradeUtils.checkUpdate(true);
-				break;
-			case R.id.rl_invite_friends:
-				IntentUtils.startActivity(AboutActivity.this,RecommendAppActivity.class);
-				break;
-			default:
-				break;
-		}
-	}
+    public void onClick(View v) {
+        // TODO Auto-generated method stub
+        switch (v.getId()) {
+            case R.id.ibt_back:
+                finish();
+                break;
+            case R.id.rl_welcome:
+                Bundle bundle = new Bundle();
+                bundle.putString("from", "about");
+                IntentUtils.startActivity(AboutActivity.this, GuideActivity.class,
+                        bundle);
+                break;
+            case R.id.rl_protocol:
+                IntentUtils.startActivity(AboutActivity.this, ServiceTermActivity.class);
+                break;
+            case R.id.rl_check_update:
+                UpgradeUtils upgradeUtils = new UpgradeUtils(AboutActivity.this,
+                        handler, true);
+                upgradeUtils.checkUpdate(true);
+                break;
+            case R.id.rl_invite_friends:
+                IntentUtils.startActivity(AboutActivity.this, RecommendAppActivity.class);
+                break;
+            default:
+                break;
+        }
+    }
 
-	private void handMessage() {
-		// TODO Auto-generated method stub
-		handler = new Handler() {
+    private void handMessage() {
+        // TODO Auto-generated method stub
+        handler = new Handler() {
 
-			@Override
-			public void handleMessage(Message msg) {
-				// TODO Auto-generated method stub
-				switch (msg.what) {
-					case NO_NEED_UPGRADE:
-						ToastUtils.show(getApplicationContext(), R.string.app_is_lastest_version);
-						break;
-					case UPGRADE_FAIL:
-						ToastUtils.show(getApplicationContext(), R.string.check_update_fail);
-						break;
-					case DONOT_UPGRADE:
-						break;
-					default:
-						break;
-				}
-			}
-		};
-	}
+            @Override
+            public void handleMessage(Message msg) {
+                // TODO Auto-generated method stub
+                switch (msg.what) {
+                    case NO_NEED_UPGRADE:
+                        ToastUtils.show(getApplicationContext(), R.string.app_is_lastest_version);
+                        break;
+                    case UPGRADE_FAIL:
+                        ToastUtils.show(getApplicationContext(), R.string.check_update_fail);
+                        break;
+                    case DONOT_UPGRADE:
+                        break;
+                    default:
+                        break;
+                }
+            }
+        };
+    }
 
 }

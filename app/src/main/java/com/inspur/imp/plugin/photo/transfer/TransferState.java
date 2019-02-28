@@ -89,7 +89,7 @@ abstract class TransferState {
     @NonNull
     protected TransferImage createTransferImage() {
 
-        return createTransferImage(0,0,0,0);
+        return createTransferImage(0, 0, 0, 0);
 //        TransferConfig config = transfer.getTransConfig();
 //        int[] location = getViewLocation(originImage);
 //
@@ -105,7 +105,7 @@ abstract class TransferState {
 //        return transImage;
     }
 
-    protected TransferImage createTransferImage(int locationX,int locationY,int locationW,int locationHlocationH){
+    protected TransferImage createTransferImage(int locationX, int locationY, int locationW, int locationHlocationH) {
         TransferConfig config = transfer.getTransConfig();
 
         TransferImage transImage = new TransferImage(context);
@@ -202,6 +202,6 @@ abstract class TransferState {
      * @param position 当前点击的图片索引
      * @return 创建的 TransferImage
      */
-   // public abstract TransferImage transferOut(final int position);
+    // public abstract TransferImage transferOut(final int position);
 
 }

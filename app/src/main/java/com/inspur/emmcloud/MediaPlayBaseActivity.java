@@ -108,9 +108,9 @@ public class MediaPlayBaseActivity extends BaseActivity implements SensorEventLi
         }
     }
 
-    public void releaseWakeLock(){
+    public void releaseWakeLock() {
         //释放息屏
-        if (wakeLock != null && wakeLock.isHeld()){
+        if (wakeLock != null && wakeLock.isHeld()) {
             wakeLock.release();
             wakeLock = null;
         }

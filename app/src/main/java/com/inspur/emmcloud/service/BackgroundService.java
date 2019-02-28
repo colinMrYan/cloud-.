@@ -41,14 +41,14 @@ public class BackgroundService extends Service {
         return START_STICKY;
     }
 
-    private void startPlayMusic(){
-        if(mMediaPlayer != null){
+    private void startPlayMusic() {
+        if (mMediaPlayer != null) {
             mMediaPlayer.start();
         }
     }
 
-    private void stopPlayMusic(){
-        if(mMediaPlayer != null){
+    private void stopPlayMusic() {
+        if (mMediaPlayer != null) {
             mMediaPlayer.stop();
         }
     }

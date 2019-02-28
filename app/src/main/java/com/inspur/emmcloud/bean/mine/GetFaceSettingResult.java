@@ -8,11 +8,12 @@ import com.inspur.emmcloud.util.common.JSONUtils;
 
 public class GetFaceSettingResult {
     public int code;
-    public GetFaceSettingResult(String response){
-        code = JSONUtils.getInt(response,"code",-1);
+
+    public GetFaceSettingResult(String response) {
+        code = JSONUtils.getInt(response, "code", -1);
     }
 
-    public int  getCode(){
+    public int getCode() {
         return code;
     }
 }

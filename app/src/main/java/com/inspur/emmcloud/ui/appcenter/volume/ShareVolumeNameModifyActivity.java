@@ -27,97 +27,99 @@ import org.xutils.view.annotation.ViewInject;
 
 /**
  * 修改共享网盘名称
- *
  */
 @ContentView(R.layout.activity_conversation_name_modify)
 public class ShareVolumeNameModifyActivity extends BaseActivity {
 
-	@ViewInject(R.id.edit)
-	private ClearEditText editText;
+    @ViewInject(R.id.edit)
+    private ClearEditText editText;
 
-	@ViewInject(R.id.header_text)
-	private TextView headerText;
+    @ViewInject(R.id.header_text)
+    private TextView headerText;
 
-	private LoadingDialog loadingDlg;
-	private Volume volume;
-	private Group group;
-	private boolean isVolumeNameModify = false;
+    private LoadingDialog loadingDlg;
+    private Volume volume;
+    private Group group;
+    private boolean isVolumeNameModify = false;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
-		super.onCreate(savedInstanceState);
-		if (getIntent().hasExtra("volume")){
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        // TODO Auto-generated method stub
+        super.onCreate(savedInstanceState);
+        if (getIntent().hasExtra("volume")) {
             isVolumeNameModify = true;
             volume = (Volume) getIntent().getSerializableExtra("volume");
-        }else {
-		    group = (Group)getIntent().getSerializableExtra("group");
+        } else {
+            group = (Group) getIntent().getSerializableExtra("group");
         }
-        headerText.setText(isVolumeNameModify?R.string.clouddriver_update_volume_name:R.string.clouddriver_update_group_name);
-		EditTextUtils.setText(editText, isVolumeNameModify?volume.getName():group.getName());
+        headerText.setText(isVolumeNameModify ? R.string.clouddriver_update_volume_name : R.string.clouddriver_update_group_name);
+        EditTextUtils.setText(editText, isVolumeNameModify ? volume.getName() : group.getName());
         editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MyAppConfig.VOLUME_MAX_FILE_NAME_LENGTH)});
-		loadingDlg= new LoadingDialog(ShareVolumeNameModifyActivity.this);
-	}
-	
-	public void onClick(View v){
-		switch (v.getId()) {
-		case R.id.ibt_back:
-			finish();
-			break;
-		case R.id.save_text:
-			String name = editText.getText().toString();
-			if (StringUtils.isBlank(name)) {
-				ToastUtils.show(getApplicationContext(), isVolumeNameModify?R.string.clouddriver_input_volume_name:R.string.clouddriver_input_volume_group_name);
-			}else if(isVolumeNameModify){
-                if (!FomatUtils.isValidFileName(name)) {
-                    ToastUtils.show(getApplicationContext(), R.string.clouddriver_volume_name_invaliad);
-                } else {
-                    updateShareVolumeName(name);
-                }
-            }else {
-			    updateGroupName(name);
-            }
-			break;
+        loadingDlg = new LoadingDialog(ShareVolumeNameModifyActivity.this);
+    }
 
-		default:
-			break;
-		}
-	}
-	/**
-	 * 修改网盘名称
-	 * @param volume
-	 * @param name
-	 */
-	private void updateShareVolumeName(String volumeName) {
-		if (NetUtils.isNetworkConnected(getApplicationContext())) {
-			loadingDlg.show();
-			MyAppAPIService apiService = new MyAppAPIService(this);
-			apiService.setAPIInterface(new WebService());
-			apiService.updateShareVolumeName(volume, volumeName);
-		}
-	}
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.ibt_back:
+                finish();
+                break;
+            case R.id.save_text:
+                String name = editText.getText().toString();
+                if (StringUtils.isBlank(name)) {
+                    ToastUtils.show(getApplicationContext(), isVolumeNameModify ? R.string.clouddriver_input_volume_name : R.string.clouddriver_input_volume_group_name);
+                } else if (isVolumeNameModify) {
+                    if (!FomatUtils.isValidFileName(name)) {
+                        ToastUtils.show(getApplicationContext(), R.string.clouddriver_volume_name_invaliad);
+                    } else {
+                        updateShareVolumeName(name);
+                    }
+                } else {
+                    updateGroupName(name);
+                }
+                break;
+
+            default:
+                break;
+        }
+    }
 
     /**
-     * 修改组名称
-     * @param groupId
-     * @param groupName
+     * 修改网盘名称
+     *
+     * @param volume
+     * @param name
      */
-	private void updateGroupName(String groupName){
+    private void updateShareVolumeName(String volumeName) {
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
             loadingDlg.show();
             MyAppAPIService apiService = new MyAppAPIService(this);
             apiService.setAPIInterface(new WebService());
-            apiService.updateGroupName(group.getId(),groupName);
+            apiService.updateShareVolumeName(volume, volumeName);
         }
     }
 
-	private class WebService extends APIInterfaceInstance{
+    /**
+     * 修改组名称
+     *
+     * @param groupId
+     * @param groupName
+     */
+    private void updateGroupName(String groupName) {
+        if (NetUtils.isNetworkConnected(getApplicationContext())) {
+            loadingDlg.show();
+            MyAppAPIService apiService = new MyAppAPIService(this);
+            apiService.setAPIInterface(new WebService());
+            apiService.updateGroupName(group.getId(), groupName);
+        }
+    }
+
+    private class WebService extends APIInterfaceInstance {
         @Override
         public void returnUpdateShareVolumeNameSuccess(Volume volume, String name) {
-           LoadingDialog.dimissDlg(loadingDlg);
+            LoadingDialog.dimissDlg(loadingDlg);
             Intent intent = new Intent();
-            intent.putExtra("volumeName",name);
-            setResult(RESULT_OK,intent);
+            intent.putExtra("volumeName", name);
+            setResult(RESULT_OK, intent);
             finish();
         }
 
@@ -131,8 +133,8 @@ public class ShareVolumeNameModifyActivity extends BaseActivity {
         public void returnUpdateGroupNameSuccess(String name) {
             LoadingDialog.dimissDlg(loadingDlg);
             Intent intent = new Intent();
-            intent.putExtra("groupName",name);
-            setResult(RESULT_OK,intent);
+            intent.putExtra("groupName", name);
+            setResult(RESULT_OK, intent);
             finish();
         }
 

@@ -48,30 +48,31 @@ public class MailLeftMenuFragment extends Fragment {
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view=inflater.inflate(R.layout.mail_left_menu,null);
+        View view = inflater.inflate(R.layout.mail_left_menu, null);
         loadingDialog = new LoadingDialog(getActivity());
         containerLayout = view.findViewById(R.id.rl_container);
-        mailAcountText =view.findViewById(R.id.tv_mail_acount);
+        mailAcountText = view.findViewById(R.id.tv_mail_acount);
         mailAcountText.setText(ContactUserCacheUtils.getUserMail(MyApplication.getInstance().getUid()));
         addTreeView();
         getMailFolder();
         return view;
     }
-    private void addTreeView(){
+
+    private void addTreeView() {
         List<MailFolder> rootChildMailFolderList = MailFolderCacheUtils.getChildMailFolderList("");
-        if (rootChildMailFolderList.size()>0){
-            if (!hasOpenFirstMailFolder){
+        if (rootChildMailFolderList.size() > 0) {
+            if (!hasOpenFirstMailFolder) {
                 openMailFolder(rootChildMailFolderList.get(0));
                 hasOpenFirstMailFolder = true;
             }
             containerLayout.removeAllViews();
             containerLayout.removeAllViewsInLayout();
             TreeNode root = TreeNode.root();
-            for (MailFolder mailFolder:rootChildMailFolderList){
+            for (MailFolder mailFolder : rootChildMailFolderList) {
                 TreeNode treeNode = new TreeNode(mailFolder);
                 root.addChild(treeNode);
             }
-            treeView = new AndroidTreeView(getActivity(),root);
+            treeView = new AndroidTreeView(getActivity(), root);
             treeView.setDefaultAnimation(true);
             treeView.setUseAutoToggle(false);
             treeView.setDefaultContainerStyle(R.style.AndroidTreeNodeStyleCustom);
@@ -79,7 +80,7 @@ public class MailLeftMenuFragment extends Fragment {
             treeView.setDefaultNodeClickListener(new TreeNode.TreeNodeClickListener() {
                 @Override
                 public void onClick(TreeNode node, Object value) {
-                    MailFolder mailFolder = (MailFolder)value;
+                    MailFolder mailFolder = (MailFolder) value;
                     openMailFolder(mailFolder);
 
                 }
@@ -89,20 +90,20 @@ public class MailLeftMenuFragment extends Fragment {
 
     }
 
-    private void openMailFolder(MailFolder mailFolder){
-        EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_GET_MAIL_BY_FOLDER,mailFolder));
+    private void openMailFolder(MailFolder mailFolder) {
+        EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_GET_MAIL_BY_FOLDER, mailFolder));
     }
 
 
-    private void getMailFolder(){
-        if (NetUtils.isNetworkConnected(MyApplication.getInstance())){
+    private void getMailFolder() {
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
             //loadingDialog.show();
             apiService.getMailFolder();
         }
     }
 
 
-    private class WebService extends APIInterfaceInstance{
+    private class WebService extends APIInterfaceInstance {
         @Override
         public void returnMailFolderSuccess(GetMailFolderResult getMailfolderResult) {
             LoadingDialog.dimissDlg(loadingDialog);

@@ -38,7 +38,7 @@ public class LoginUtils extends APIInterfaceInstance {
     private static final int LOGIN_SUCCESS = 0;
     private static final int LOGIN_FAIL = 1;
     private static final int GET_LANGUAGE_SUCCESS = 3;
-    private  LoginAPIService apiServices;
+    private LoginAPIService apiServices;
     private Activity activity;
     private Handler handler;
     private boolean isSMSLogin = false;
@@ -104,7 +104,7 @@ public class LoginUtils extends APIInterfaceInstance {
             @Override
             public void MDMStatusPass(int doubleValidation) {
                 // TODO Auto-generated method stub
-                PreferencesByUserAndTanentUtils.putInt(MyApplication.getInstance(), Constant.PREF_MNM_DOUBLE_VALIADATION,doubleValidation);
+                PreferencesByUserAndTanentUtils.putInt(MyApplication.getInstance(), Constant.PREF_MNM_DOUBLE_VALIADATION, doubleValidation);
                 PreferencesUtils.putBoolean(activity, "isMDMStatusPass", true);
                 saveLoginInfo();
                 loginUtilsHandler.sendEmptyMessage(LOGIN_SUCCESS);
@@ -112,13 +112,12 @@ public class LoginUtils extends APIInterfaceInstance {
             }
 
 
-
             @Override
             public void MDMStatusNoPass() {
                 // TODO Auto-generated method stub
                 clearLoginInfo();
                 //当设备因为设备管理无法进入时，把记住选择企业选项情况，让用户重新选择企业进入
-                PreferencesByUsersUtils.putString(activity, Constant.PREF_SELECT_LOGIN_ENTERPRISE_ID,"");
+                PreferencesByUsersUtils.putString(activity, Constant.PREF_SELECT_LOGIN_ENTERPRISE_ID, "");
                 loginUtilsHandler.sendEmptyMessage(LOGIN_FAIL);
                 mdm.destroyOnMDMListener();
             }
@@ -296,12 +295,12 @@ public class LoginUtils extends APIInterfaceInstance {
                 .setUid(getMyInfoResult.getID());
         List<Enterprise> enterpriseList = getMyInfoResult.getEnterpriseList();
         Enterprise defaultEnterprise = getMyInfoResult.getDefaultEnterprise();
-        if (enterpriseList.size() == 0 && defaultEnterprise == null){
-            ToastUtils.show(activity,  R.string.login_user_not_bound_enterprise);
+        if (enterpriseList.size() == 0 && defaultEnterprise == null) {
+            ToastUtils.show(activity, R.string.login_user_not_bound_enterprise);
             MyApplication.getInstance().setAccessToken("");
             PreferencesUtils.putString(MyApplication.getInstance(), "accessToken", "");
             loginUtilsHandler.sendEmptyMessage(LOGIN_FAIL);
-        }else {
+        } else {
             if (isLogin && enterpriseList.size() > 1) {
                 String selectLoginEnterpriseId = PreferencesByUsersUtils.getString(activity, Constant.PREF_SELECT_LOGIN_ENTERPRISE_ID, "");
                 //当用户没有指定登录的企业时或已指定登录企业但是此企业不存在时则弹出选择登录企业的页面

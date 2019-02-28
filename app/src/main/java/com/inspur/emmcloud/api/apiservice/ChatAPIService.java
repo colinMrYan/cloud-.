@@ -794,10 +794,11 @@ public class ChatAPIService {
 
     /**
      * 添加群成员
+     *
      * @param id
      * @param uidList
      */
-    public void addConversationGroupMember(final String id, final List<String> uidList){
+    public void addConversationGroupMember(final String id, final List<String> uidList) {
         final String url = APIUri.getModifyGroupMemberUrl(id);
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(url);
         params.addParameter("members", uidList);
@@ -838,10 +839,11 @@ public class ChatAPIService {
 
     /**
      * 删除群成员
+     *
      * @param id
      * @param uidList
      */
-    public void delConversationGroupMember(final String id, final List<String> uidList){
+    public void delConversationGroupMember(final String id, final List<String> uidList) {
         final String url = APIUri.getModifyGroupMemberUrl(id);
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(url);
         params.addParameter("members", JSONUtils.toJSONArray(uidList));
@@ -1457,13 +1459,14 @@ public class ChatAPIService {
 
     /**
      * 设置会话是否置顶
+     *
      * @param cid
      * @param isStick
      */
-    public void setConversationStick(final String id,final boolean isStick){
+    public void setConversationStick(final String id, final boolean isStick) {
         final String completeUrl = APIUri.getConversationSetStick(id);
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
-        params.addParameter("stick",isStick);
+        params.addParameter("stick", isStick);
         HttpUtils.request(context, CloudHttpMethod.PUT, params, new APICallback(context, completeUrl) {
 
             @Override
@@ -1471,7 +1474,7 @@ public class ChatAPIService {
                 OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        setConversationStick(id,isStick);
+                        setConversationStick(id, isStick);
                     }
 
                     @Override
@@ -1486,7 +1489,7 @@ public class ChatAPIService {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
-                apiInterface.returnSetConversationStickSuccess(id,isStick);
+                apiInterface.returnSetConversationStickSuccess(id, isStick);
             }
 
             @Override
@@ -1499,12 +1502,13 @@ public class ChatAPIService {
 
     /**
      * 隐藏会话
+     *
      * @param uiConversation
      */
-    public void setConversationHide(final String id,final boolean isHide){
+    public void setConversationHide(final String id, final boolean isHide) {
         final String completeUrl = APIUri.getConversationSetHide(id);
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
-        params.addParameter("hide",isHide);
+        params.addParameter("hide", isHide);
         HttpUtils.request(context, CloudHttpMethod.PUT, params, new APICallback(context, completeUrl) {
 
             @Override
@@ -1512,7 +1516,7 @@ public class ChatAPIService {
                 OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        setConversationHide(id,isHide);
+                        setConversationHide(id, isHide);
                     }
 
                     @Override
@@ -1527,7 +1531,7 @@ public class ChatAPIService {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
-                apiInterface.returnSetConversationHideSuccess(id,isHide);
+                apiInterface.returnSetConversationHideSuccess(id, isHide);
             }
 
             @Override
@@ -1540,13 +1544,14 @@ public class ChatAPIService {
 
     /**
      * 设置会话是否消息免打扰
+     *
      * @param id
      * @param isDnd
      */
-    public void updateConversationDnd(final String id, final boolean isDnd){
+    public void updateConversationDnd(final String id, final boolean isDnd) {
         final String completeUrl = APIUri.getConversationSetDnd(id);
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
-        params.addParameter("dnd",isDnd);
+        params.addParameter("dnd", isDnd);
         HttpUtils.request(context, CloudHttpMethod.PUT, params, new APICallback(context, completeUrl) {
 
             @Override
@@ -1554,7 +1559,7 @@ public class ChatAPIService {
                 OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        updateConversationDnd(id,isDnd);
+                        updateConversationDnd(id, isDnd);
                     }
 
                     @Override
@@ -1582,9 +1587,10 @@ public class ChatAPIService {
 
     /**
      * 获取会话信息
+     *
      * @param id
      */
-    public void getConversationInfo(final String id){
+    public void getConversationInfo(final String id) {
         final String completeUrl = APIUri.getConversationInfoUrl(id);
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
         HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
@@ -1623,13 +1629,14 @@ public class ChatAPIService {
 
     /**
      * 修改会话名称
+     *
      * @param id
      * @param name
      */
-    public void updateConversationName(final String id,final String name){
+    public void updateConversationName(final String id, final String name) {
         final String completeUrl = APIUri.getUpdateConversationNameUrl(id);
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
-        params.addQueryStringParameter("name",name);
+        params.addQueryStringParameter("name", name);
         HttpUtils.request(context, CloudHttpMethod.PUT, params, new APICallback(context, completeUrl) {
 
             @Override
@@ -1637,7 +1644,7 @@ public class ChatAPIService {
                 OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        updateConversationName(id,name);
+                        updateConversationName(id, name);
                     }
 
                     @Override

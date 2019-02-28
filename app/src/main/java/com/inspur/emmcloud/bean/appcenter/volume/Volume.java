@@ -22,15 +22,16 @@ public class Volume implements Serializable {
     public Volume() {
     }
 
-    public Volume(String volumeJSon){
+    public Volume(String volumeJSon) {
         this(JSONUtils.getJSONObject(volumeJSon));
     }
+
     public Volume(JSONObject obj) {
         id = JSONUtils.getString(obj, "id", "");
         name = JSONUtils.getString(obj, "name", "");
         type = JSONUtils.getString(obj, "type", "");
         owner = JSONUtils.getString(obj, "owner", "");
-        JSONObject quotaObj = JSONUtils.getJSONObject(obj,"quota",new JSONObject());
+        JSONObject quotaObj = JSONUtils.getJSONObject(obj, "quota", new JSONObject());
         quotaTotal = JSONUtils.getLong(quotaObj, "total", 0L);
         quotaUsed = JSONUtils.getLong(quotaObj, "used", 0L);
     }
@@ -63,10 +64,6 @@ public class Volume implements Serializable {
         return owner;
     }
 
-    public void setOwner(String owner) {
-        this.owner = owner;
-    }
-
     public long getQuotaTotal() {
         return quotaTotal;
     }
@@ -83,8 +80,12 @@ public class Volume implements Serializable {
         this.quotaUsed = quotaUsed;
     }
 
-    public boolean isOwner(){
+    public boolean isOwner() {
         return MyApplication.getInstance().getUid().equals(owner);
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
     }
 
     public boolean equals(Object other) { // 重写equals方法，后面最好重写hashCode方法

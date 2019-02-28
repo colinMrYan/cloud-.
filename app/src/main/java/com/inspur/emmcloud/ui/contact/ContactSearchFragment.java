@@ -82,12 +82,6 @@ import static android.content.Context.LAYOUT_INFLATER_SERVICE;
  */
 
 public class ContactSearchFragment extends ContactSearchBaseFragment {
-    private View rootView;
-    private static final int SEARCH_ALL = 0;
-    private static final int SEARCH_CHANNELGROUP = 1;
-    private static final int SEARCH_CONTACT = 2;
-    private static final int SEARCH_NOTHIING = 4;
-    private static final int SEARCH_MORE = 5;
     public static final String EXTRA_TITLE = "title";
     public static final String EXTRA_MULTI_SELECT = "isMulti_select";
     public static final String EXTRA_TYPE = "select_content";
@@ -95,6 +89,12 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
     public static final String EXTRA_HAS_SELECT = "hasSearchResult";
     public static final String EXTRA_EXCLUDE_SELECT = "excludeContactUidList";
     public static final String EXTRA_LIMIT = "select_limit";
+    private static final int SEARCH_ALL = 0;
+    private static final int SEARCH_CHANNELGROUP = 1;
+    private static final int SEARCH_CONTACT = 2;
+    private static final int SEARCH_NOTHIING = 4;
+    private static final int SEARCH_MORE = 5;
+    private View rootView;
     private boolean isSearchSingle = false; // 判断是否搜索单一项
     private boolean isContainMe = false; // 搜索结果是否可以包含自己
     private boolean isMultiSelect = false;
@@ -400,34 +400,6 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
         rootView.findViewById(R.id.layout).setOnClickListener(contactSearchClickListener);
     }
 
-    class ContactSearchClickListener implements View.OnClickListener {
-
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.ibt_back:
-                    InputMethodUtils.hide(getActivity());
-                    getActivity().finish();
-                    break;
-                case R.id.ok_text:
-                    InputMethodUtils.hide(getActivity());
-                    returnSearchResultData();
-                    break;
-                case R.id.struct_layout:
-                    openContact(null);
-                    break;
-                case R.id.channel_group_layout:
-                    showAllChannelGroup();
-                    break;
-                case R.id.layout:
-                    if (searchEdit != null) {
-                        InputMethodUtils.display(getActivity(), searchEdit);
-                    }
-                    break;
-            }
-        }
-    }
-
     /**
      * 初始化第二组的数据
      */
@@ -487,7 +459,6 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
                 .show();
 
     }
-
 
     /**
      * 群组或通讯录打开浏览页面
@@ -619,7 +590,6 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
         isSearchSingle = true;
         displayOpenLayout();
     }
-
 
     /**
      * 添加联系人
@@ -797,46 +767,6 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
         };
     }
 
-    private class MyTextWatcher implements TextWatcher {
-
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count,
-                                      int after) {
-            // TODO Auto-generated method stub
-
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before,
-                                  int count) {
-            // TODO Auto-generated method stub
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-            // TODO Auto-generated method stub
-            searchText = searchEdit.getText().toString().trim();
-            if (!StringUtils.isBlank(searchText)) {
-                if (popLayout.getVisibility() == View.GONE) {
-                    searchArea = orginCurrentArea;
-                }
-                long currentTime = System.currentTimeMillis();
-                if (currentTime - lastSearchTime > 500) {
-                    handler.post(searchRunnbale);
-                } else {
-                    handler.removeCallbacks(searchRunnbale);
-                    handler.postDelayed(searchRunnbale, 500);
-                }
-                lastSearchTime = System.currentTimeMillis();
-            } else {
-                lastSearchTime = 0;
-                handler.removeCallbacks(searchRunnbale);
-                hideSearchPop();
-            }
-        }
-
-    }
-
     /**
      * 处理点击事件
      *
@@ -845,7 +775,6 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
     public void onClick(View v) {
         clickView(v.getId());
     }
-
 
     /**
      * 返回搜索结果
@@ -1102,362 +1031,6 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
     }
 
     /**
-     * 原界面第一个list的Adapter
-     *
-     * @author Administrator
-     */
-    private class OpenGroupListAdapter extends BaseAdapter {
-
-        @Override
-        public int getCount() {
-            // TODO Auto-generated method stub
-            if (orginCurrentArea == SEARCH_CONTACT) {
-                return openGroupContactList.size();
-            } else {
-                return openGroupChannelList.size();
-            }
-        }
-
-        @Override
-        public Object getItem(int position) {
-            // TODO Auto-generated method stub
-            return null;
-        }
-
-        @Override
-        public long getItemId(int position) {
-            // TODO Auto-generated method stub
-            return 0;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            // TODO Auto-generated method stub
-            ViewHolder viewHolder = null;
-            if (convertView == null) {
-                viewHolder = new ViewHolder();
-                LayoutInflater mInflater = (LayoutInflater) getActivity().getSystemService(LAYOUT_INFLATER_SERVICE);
-                convertView = mInflater.inflate(
-                        R.layout.member_search_item_view, null);
-                viewHolder.nameText = (TextView) convertView
-                        .findViewById(R.id.tv_name);
-                viewHolder.rightArrowImg = (ImageView) convertView
-                        .findViewById(R.id.arrow_img);
-                viewHolder.selectedImg = (ImageView) convertView
-                        .findViewById(R.id.selected_img);
-                viewHolder.photoImg = (CircleTextImageView) convertView.findViewById(R.id.img_photo);
-                convertView.setTag(viewHolder);
-            } else {
-                viewHolder = (ViewHolder) convertView.getTag();
-            }
-            SearchModel searchModel = null;
-            if (orginCurrentArea == SEARCH_CONTACT)
-
-            {
-                Contact contact = openGroupContactList.get(position);
-                searchModel = new SearchModel(contact);
-                if (contact.getType().equals(Contact.TYPE_USER)) { // 如果通讯录是人的话就显示头像
-                    viewHolder.rightArrowImg.setVisibility(View.INVISIBLE);
-                } else {
-                    viewHolder.rightArrowImg.setVisibility(View.VISIBLE);
-                }
-                viewHolder.nameText.setText(searchModel.getCompleteName());
-
-            } else {
-                viewHolder.rightArrowImg.setVisibility(View.INVISIBLE);
-                searchModel = openGroupChannelList.get(position);
-                viewHolder.nameText.setText(searchModel.getName());
-
-            }
-            if (searchModel != null) {
-                displayImg(searchModel, viewHolder.photoImg);
-                if (selectMemList.contains(searchModel)) {
-                    viewHolder.selectedImg.setVisibility(View.VISIBLE);
-                    viewHolder.nameText.setTextColor(Color.parseColor("#0f7bca"));
-                } else {
-                    viewHolder.selectedImg.setVisibility(View.INVISIBLE);
-                    viewHolder.nameText.setTextColor(Color.parseColor("#030303"));
-                }
-
-            }
-            return convertView;
-        }
-
-    }
-
-    /**
-     * 原界面第二个list的Adapter
-     *
-     * @author Administrator
-     */
-    private class SecondGroupListAdapter extends BaseAdapter {
-
-        @Override
-        public int getCount() {
-            // TODO Auto-generated method stub
-            return commonContactList.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            // TODO Auto-generated method stub
-            return null;
-        }
-
-        @Override
-        public long getItemId(int position) {
-            // TODO Auto-generated method stub
-            return 0;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            // TODO Auto-generated method stub
-            ViewHolder viewHolder = null;
-            if (convertView == null) {
-                viewHolder = new ViewHolder();
-                convertView = LayoutInflater.from(getActivity()).inflate(
-                        R.layout.member_search_item_view, null);
-                viewHolder.nameText = (TextView) convertView
-                        .findViewById(R.id.tv_name);
-                viewHolder.selectedImg = (ImageView) convertView
-                        .findViewById(R.id.selected_img);
-                viewHolder.photoImg = (CircleTextImageView) convertView.findViewById(R.id.img_photo);
-                convertView.setTag(viewHolder);
-            } else {
-                viewHolder = (ViewHolder) convertView.getTag();
-            }
-            SearchModel searchModel = commonContactList.get(position);
-            viewHolder.nameText.setText(searchModel.getCompleteName());
-            displayImg(searchModel, viewHolder.photoImg);
-            if (selectMemList.contains(searchModel)) {
-                viewHolder.selectedImg.setVisibility(View.VISIBLE);
-                viewHolder.nameText.setTextColor(Color.parseColor("#0f7bca"));
-            } else {
-                viewHolder.selectedImg.setVisibility(View.INVISIBLE);
-                viewHolder.nameText.setTextColor(Color.parseColor("#030303"));
-            }
-            return convertView;
-        }
-
-    }
-
-    public static class ViewHolder {
-        TextView nameText;
-        CircleTextImageView photoImg;
-        ImageView rightArrowImg;
-        ImageView selectedImg;
-    }
-
-    /**
-     * pop页面list的公共Adapter
-     *
-     * @author Administrator
-     */
-    private class popAdapter extends BaseAdapter {
-        private int groupPosition;
-
-        public popAdapter(int groupPosition) {
-            // TODO Auto-generated constructor stub
-            this.groupPosition = groupPosition;
-        }
-
-        @Override
-        public int getCount() { // 当筛选的结果比较多时先默认显示其中的三项
-            // TODO Auto-generated method stub
-            if (groupPosition == 2) {
-                return getListDisplayCount(searchChannelGroupList);
-            } else {
-                return getListDisplayCount(searchContactList);
-            }
-        }
-
-        @Override
-        public Object getItem(int position) {
-            // TODO Auto-generated method stub
-            return null;
-        }
-
-        @Override
-        public long getItemId(int position) {
-            // TODO Auto-generated method stub
-            return 0;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            // TODO Auto-generated method stub
-            ViewHolder viewHolder = null;
-            if (convertView == null) {
-                viewHolder = new ViewHolder();
-                LayoutInflater mInflater = (LayoutInflater) getActivity().getSystemService(LAYOUT_INFLATER_SERVICE);
-                convertView = mInflater.inflate(
-                        R.layout.member_search_item_view, null);
-                viewHolder.nameText = (TextView) convertView
-                        .findViewById(R.id.tv_name);
-                viewHolder.selectedImg = (ImageView) convertView
-                        .findViewById(R.id.selected_img);
-                viewHolder.photoImg = (CircleTextImageView) convertView.findViewById(R.id.img_photo);
-                convertView.setTag(viewHolder);
-            } else {
-                viewHolder = (ViewHolder) convertView.getTag();
-            }
-            convertView.setBackgroundColor(Color.parseColor("#F4F4F4"));
-            SearchModel searchModel = null;
-            if (groupPosition == 2) {
-                searchModel = searchChannelGroupList.get(position);
-            } else {
-                Contact contact = searchContactList.get(position);
-                searchModel = new SearchModel(contact);
-
-            }
-            displayImg(searchModel, viewHolder.photoImg);
-            viewHolder.nameText.setText(searchModel.getCompleteName());
-            if (selectMemList.contains(searchModel)) {
-                viewHolder.selectedImg.setVisibility(View.VISIBLE);
-            } else {
-                viewHolder.selectedImg.setVisibility(View.INVISIBLE);
-            }
-            return convertView;
-        }
-
-    }
-
-    /**
-     * 第一个group title中list的adapter
-     *
-     * @author Administrator
-     */
-    public class GroupTitleAdapter extends RecyclerView.Adapter<MyViewHolder> {
-        private boolean isPopTitle = false;
-        private int groupPosition;
-
-        public GroupTitleAdapter() {
-
-        }
-
-        public GroupTitleAdapter(boolean isPopTitle, int groupPosition) {
-            this.isPopTitle = isPopTitle;
-            this.groupPosition = groupPosition;
-        }
-
-        private MyItemClickListener mItemClickListener;
-
-        @Override
-        public int getItemCount() {
-            // TODO Auto-generated method stub
-            if (isPopTitle) {
-                if (groupPosition == 2) {
-                    return popSecondGroupTextList.size();
-                } else {
-                    return 1;
-                }
-
-            } else {
-                return openGroupTextList.size();
-            }
-
-        }
-
-        @Override
-        public void onBindViewHolder(MyViewHolder arg0, int arg1) {
-            // TODO Auto-generated method stub
-            int count = getItemCount();
-            if (isPopTitle) {
-                if (groupPosition == 2) {
-                    arg0.titleText.setText(popSecondGroupTextList.get(arg1)
-                            .getName());
-                } else {
-                    arg0.titleText.setText(R.string.origanization_struct);
-                }
-
-                if (count > 1) {
-                    if (arg1 != count - 1) {
-                        arg0.titleImg.setVisibility(View.VISIBLE);
-                        arg0.titleText
-                                .setTextColor(Color.parseColor("#018DD4"));
-                    } else {
-                        arg0.titleImg.setVisibility(View.GONE);
-                        arg0.titleText
-                                .setTextColor(Color.parseColor("#666666"));
-                    }
-                } else {
-                    arg0.titleText.setTextColor(Color.parseColor("#666666"));
-                    arg0.titleImg.setVisibility(View.GONE);
-                }
-
-            } else {
-                arg0.titleText.setText(openGroupTextList.get(arg1).getName());
-                if (arg1 != count - 1) {
-                    arg0.titleImg.setVisibility(View.VISIBLE);
-                    arg0.titleText.setTextColor(Color.parseColor("#018DD4"));
-                } else {
-                    arg0.titleImg.setVisibility(View.GONE);
-                    arg0.titleText.setTextColor(Color.parseColor("#666666"));
-                }
-            }
-
-        }
-
-        @Override
-        public MyViewHolder onCreateViewHolder(ViewGroup arg0, int arg1) {
-            // TODO Auto-generated method stub
-            LayoutInflater mInflater = (LayoutInflater) getActivity().getSystemService(LAYOUT_INFLATER_SERVICE);
-            View view = mInflater.inflate(R.layout.contact_header_item_view,
-                    arg0, false);
-            // view.setBackgroundColor(Color.RED);
-            MyViewHolder viewHolder = new MyViewHolder(view, mItemClickListener);
-            return viewHolder;
-        }
-
-        /**
-         * 设置Item点击监听
-         *
-         * @param listener
-         */
-        public void setOnItemClickListener(MyItemClickListener listener) {
-            this.mItemClickListener = listener;
-        }
-
-    }
-
-    public interface MyItemClickListener {
-        void onItemClick(View view, int position);
-    }
-
-    public static class MyViewHolder extends RecyclerView.ViewHolder implements
-            View.OnClickListener {
-        private MyItemClickListener mListener;
-        TextView titleText;
-        ImageView titleImg;
-        View view;
-
-        public MyViewHolder(View view, MyItemClickListener listener) {
-            super(view);
-            this.view = view;
-            titleText = (TextView) view.findViewById(R.id.tv_name_tips);
-            titleImg = (ImageView) view.findViewById(R.id.title_img);
-            this.mListener = listener;
-            view.setOnClickListener(this);
-
-        }
-
-        public View getView() {
-            return view;
-        }
-
-        @Override
-        public void onClick(View v) {
-            // TODO Auto-generated method stub
-            if (mListener != null) {
-                mListener.onItemClick(v, getPosition());
-            }
-
-        }
-
-    }
-
-    /**
      * 统一显示图片
      *
      * @param searchModel
@@ -1614,6 +1187,429 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
     private void refreshListView(ListView listView, BaseAdapter adpter) {
         adpter.notifyDataSetChanged();
         ListViewUtils.setListViewHeightBasedOnChildren(listView);
+    }
+
+    public interface MyItemClickListener {
+        void onItemClick(View view, int position);
+    }
+
+    public static class ViewHolder {
+        TextView nameText;
+        CircleTextImageView photoImg;
+        ImageView rightArrowImg;
+        ImageView selectedImg;
+    }
+
+    public static class MyViewHolder extends RecyclerView.ViewHolder implements
+            View.OnClickListener {
+        TextView titleText;
+        ImageView titleImg;
+        View view;
+        private MyItemClickListener mListener;
+
+        public MyViewHolder(View view, MyItemClickListener listener) {
+            super(view);
+            this.view = view;
+            titleText = (TextView) view.findViewById(R.id.tv_name_tips);
+            titleImg = (ImageView) view.findViewById(R.id.title_img);
+            this.mListener = listener;
+            view.setOnClickListener(this);
+
+        }
+
+        public View getView() {
+            return view;
+        }
+
+        @Override
+        public void onClick(View v) {
+            // TODO Auto-generated method stub
+            if (mListener != null) {
+                mListener.onItemClick(v, getPosition());
+            }
+
+        }
+
+    }
+
+    class ContactSearchClickListener implements View.OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.ibt_back:
+                    InputMethodUtils.hide(getActivity());
+                    getActivity().finish();
+                    break;
+                case R.id.ok_text:
+                    InputMethodUtils.hide(getActivity());
+                    returnSearchResultData();
+                    break;
+                case R.id.struct_layout:
+                    openContact(null);
+                    break;
+                case R.id.channel_group_layout:
+                    showAllChannelGroup();
+                    break;
+                case R.id.layout:
+                    if (searchEdit != null) {
+                        InputMethodUtils.display(getActivity(), searchEdit);
+                    }
+                    break;
+            }
+        }
+    }
+
+    private class MyTextWatcher implements TextWatcher {
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count,
+                                      int after) {
+            // TODO Auto-generated method stub
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before,
+                                  int count) {
+            // TODO Auto-generated method stub
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            // TODO Auto-generated method stub
+            searchText = searchEdit.getText().toString().trim();
+            if (!StringUtils.isBlank(searchText)) {
+                if (popLayout.getVisibility() == View.GONE) {
+                    searchArea = orginCurrentArea;
+                }
+                long currentTime = System.currentTimeMillis();
+                if (currentTime - lastSearchTime > 500) {
+                    handler.post(searchRunnbale);
+                } else {
+                    handler.removeCallbacks(searchRunnbale);
+                    handler.postDelayed(searchRunnbale, 500);
+                }
+                lastSearchTime = System.currentTimeMillis();
+            } else {
+                lastSearchTime = 0;
+                handler.removeCallbacks(searchRunnbale);
+                hideSearchPop();
+            }
+        }
+
+    }
+
+    /**
+     * 原界面第一个list的Adapter
+     *
+     * @author Administrator
+     */
+    private class OpenGroupListAdapter extends BaseAdapter {
+
+        @Override
+        public int getCount() {
+            // TODO Auto-generated method stub
+            if (orginCurrentArea == SEARCH_CONTACT) {
+                return openGroupContactList.size();
+            } else {
+                return openGroupChannelList.size();
+            }
+        }
+
+        @Override
+        public Object getItem(int position) {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            // TODO Auto-generated method stub
+            return 0;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            // TODO Auto-generated method stub
+            ViewHolder viewHolder = null;
+            if (convertView == null) {
+                viewHolder = new ViewHolder();
+                LayoutInflater mInflater = (LayoutInflater) getActivity().getSystemService(LAYOUT_INFLATER_SERVICE);
+                convertView = mInflater.inflate(
+                        R.layout.member_search_item_view, null);
+                viewHolder.nameText = (TextView) convertView
+                        .findViewById(R.id.tv_name);
+                viewHolder.rightArrowImg = (ImageView) convertView
+                        .findViewById(R.id.arrow_img);
+                viewHolder.selectedImg = (ImageView) convertView
+                        .findViewById(R.id.selected_img);
+                viewHolder.photoImg = (CircleTextImageView) convertView.findViewById(R.id.img_photo);
+                convertView.setTag(viewHolder);
+            } else {
+                viewHolder = (ViewHolder) convertView.getTag();
+            }
+            SearchModel searchModel = null;
+            if (orginCurrentArea == SEARCH_CONTACT)
+
+            {
+                Contact contact = openGroupContactList.get(position);
+                searchModel = new SearchModel(contact);
+                if (contact.getType().equals(Contact.TYPE_USER)) { // 如果通讯录是人的话就显示头像
+                    viewHolder.rightArrowImg.setVisibility(View.INVISIBLE);
+                } else {
+                    viewHolder.rightArrowImg.setVisibility(View.VISIBLE);
+                }
+                viewHolder.nameText.setText(searchModel.getCompleteName());
+
+            } else {
+                viewHolder.rightArrowImg.setVisibility(View.INVISIBLE);
+                searchModel = openGroupChannelList.get(position);
+                viewHolder.nameText.setText(searchModel.getName());
+
+            }
+            if (searchModel != null) {
+                displayImg(searchModel, viewHolder.photoImg);
+                if (selectMemList.contains(searchModel)) {
+                    viewHolder.selectedImg.setVisibility(View.VISIBLE);
+                    viewHolder.nameText.setTextColor(Color.parseColor("#0f7bca"));
+                } else {
+                    viewHolder.selectedImg.setVisibility(View.INVISIBLE);
+                    viewHolder.nameText.setTextColor(Color.parseColor("#030303"));
+                }
+
+            }
+            return convertView;
+        }
+
+    }
+
+    /**
+     * 原界面第二个list的Adapter
+     *
+     * @author Administrator
+     */
+    private class SecondGroupListAdapter extends BaseAdapter {
+
+        @Override
+        public int getCount() {
+            // TODO Auto-generated method stub
+            return commonContactList.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            // TODO Auto-generated method stub
+            return 0;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            // TODO Auto-generated method stub
+            ViewHolder viewHolder = null;
+            if (convertView == null) {
+                viewHolder = new ViewHolder();
+                convertView = LayoutInflater.from(getActivity()).inflate(
+                        R.layout.member_search_item_view, null);
+                viewHolder.nameText = (TextView) convertView
+                        .findViewById(R.id.tv_name);
+                viewHolder.selectedImg = (ImageView) convertView
+                        .findViewById(R.id.selected_img);
+                viewHolder.photoImg = (CircleTextImageView) convertView.findViewById(R.id.img_photo);
+                convertView.setTag(viewHolder);
+            } else {
+                viewHolder = (ViewHolder) convertView.getTag();
+            }
+            SearchModel searchModel = commonContactList.get(position);
+            viewHolder.nameText.setText(searchModel.getCompleteName());
+            displayImg(searchModel, viewHolder.photoImg);
+            if (selectMemList.contains(searchModel)) {
+                viewHolder.selectedImg.setVisibility(View.VISIBLE);
+                viewHolder.nameText.setTextColor(Color.parseColor("#0f7bca"));
+            } else {
+                viewHolder.selectedImg.setVisibility(View.INVISIBLE);
+                viewHolder.nameText.setTextColor(Color.parseColor("#030303"));
+            }
+            return convertView;
+        }
+
+    }
+
+    /**
+     * pop页面list的公共Adapter
+     *
+     * @author Administrator
+     */
+    private class popAdapter extends BaseAdapter {
+        private int groupPosition;
+
+        public popAdapter(int groupPosition) {
+            // TODO Auto-generated constructor stub
+            this.groupPosition = groupPosition;
+        }
+
+        @Override
+        public int getCount() { // 当筛选的结果比较多时先默认显示其中的三项
+            // TODO Auto-generated method stub
+            if (groupPosition == 2) {
+                return getListDisplayCount(searchChannelGroupList);
+            } else {
+                return getListDisplayCount(searchContactList);
+            }
+        }
+
+        @Override
+        public Object getItem(int position) {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            // TODO Auto-generated method stub
+            return 0;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            // TODO Auto-generated method stub
+            ViewHolder viewHolder = null;
+            if (convertView == null) {
+                viewHolder = new ViewHolder();
+                LayoutInflater mInflater = (LayoutInflater) getActivity().getSystemService(LAYOUT_INFLATER_SERVICE);
+                convertView = mInflater.inflate(
+                        R.layout.member_search_item_view, null);
+                viewHolder.nameText = (TextView) convertView
+                        .findViewById(R.id.tv_name);
+                viewHolder.selectedImg = (ImageView) convertView
+                        .findViewById(R.id.selected_img);
+                viewHolder.photoImg = (CircleTextImageView) convertView.findViewById(R.id.img_photo);
+                convertView.setTag(viewHolder);
+            } else {
+                viewHolder = (ViewHolder) convertView.getTag();
+            }
+            convertView.setBackgroundColor(Color.parseColor("#F4F4F4"));
+            SearchModel searchModel = null;
+            if (groupPosition == 2) {
+                searchModel = searchChannelGroupList.get(position);
+            } else {
+                Contact contact = searchContactList.get(position);
+                searchModel = new SearchModel(contact);
+
+            }
+            displayImg(searchModel, viewHolder.photoImg);
+            viewHolder.nameText.setText(searchModel.getCompleteName());
+            if (selectMemList.contains(searchModel)) {
+                viewHolder.selectedImg.setVisibility(View.VISIBLE);
+            } else {
+                viewHolder.selectedImg.setVisibility(View.INVISIBLE);
+            }
+            return convertView;
+        }
+
+    }
+
+    /**
+     * 第一个group title中list的adapter
+     *
+     * @author Administrator
+     */
+    public class GroupTitleAdapter extends RecyclerView.Adapter<MyViewHolder> {
+        private boolean isPopTitle = false;
+        private int groupPosition;
+        private MyItemClickListener mItemClickListener;
+
+        public GroupTitleAdapter() {
+
+        }
+
+        public GroupTitleAdapter(boolean isPopTitle, int groupPosition) {
+            this.isPopTitle = isPopTitle;
+            this.groupPosition = groupPosition;
+        }
+
+        @Override
+        public int getItemCount() {
+            // TODO Auto-generated method stub
+            if (isPopTitle) {
+                if (groupPosition == 2) {
+                    return popSecondGroupTextList.size();
+                } else {
+                    return 1;
+                }
+
+            } else {
+                return openGroupTextList.size();
+            }
+
+        }
+
+        @Override
+        public void onBindViewHolder(MyViewHolder arg0, int arg1) {
+            // TODO Auto-generated method stub
+            int count = getItemCount();
+            if (isPopTitle) {
+                if (groupPosition == 2) {
+                    arg0.titleText.setText(popSecondGroupTextList.get(arg1)
+                            .getName());
+                } else {
+                    arg0.titleText.setText(R.string.origanization_struct);
+                }
+
+                if (count > 1) {
+                    if (arg1 != count - 1) {
+                        arg0.titleImg.setVisibility(View.VISIBLE);
+                        arg0.titleText
+                                .setTextColor(Color.parseColor("#018DD4"));
+                    } else {
+                        arg0.titleImg.setVisibility(View.GONE);
+                        arg0.titleText
+                                .setTextColor(Color.parseColor("#666666"));
+                    }
+                } else {
+                    arg0.titleText.setTextColor(Color.parseColor("#666666"));
+                    arg0.titleImg.setVisibility(View.GONE);
+                }
+
+            } else {
+                arg0.titleText.setText(openGroupTextList.get(arg1).getName());
+                if (arg1 != count - 1) {
+                    arg0.titleImg.setVisibility(View.VISIBLE);
+                    arg0.titleText.setTextColor(Color.parseColor("#018DD4"));
+                } else {
+                    arg0.titleImg.setVisibility(View.GONE);
+                    arg0.titleText.setTextColor(Color.parseColor("#666666"));
+                }
+            }
+
+        }
+
+        @Override
+        public MyViewHolder onCreateViewHolder(ViewGroup arg0, int arg1) {
+            // TODO Auto-generated method stub
+            LayoutInflater mInflater = (LayoutInflater) getActivity().getSystemService(LAYOUT_INFLATER_SERVICE);
+            View view = mInflater.inflate(R.layout.contact_header_item_view,
+                    arg0, false);
+            // view.setBackgroundColor(Color.RED);
+            MyViewHolder viewHolder = new MyViewHolder(view, mItemClickListener);
+            return viewHolder;
+        }
+
+        /**
+         * 设置Item点击监听
+         *
+         * @param listener
+         */
+        public void setOnItemClickListener(MyItemClickListener listener) {
+            this.mItemClickListener = listener;
+        }
+
     }
 
 

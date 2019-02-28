@@ -75,6 +75,8 @@ import java.util.List;
 public class MailDetailActivity extends BaseActivity {
     public static final String EXTRA_MAIL = "extra_mail";
     public static final String EXTRA_MAIL_ID = "extra_mail_id";
+    @ViewInject(R.id.sv_slide_data)
+    QMUIObservableScrollView scrollView;
     @ViewInject(R.id.tv_mail_sender)
     private TextView senderText;
     @ViewInject(R.id.tv_mail_receiver_collapse)
@@ -95,9 +97,6 @@ public class MailDetailActivity extends BaseActivity {
     private TextView ccCollapseText;
     @ViewInject(R.id.rl_cc_collapse)
     private RelativeLayout ccCollapseLayout;
-    @ViewInject(R.id.sv_slide_data)
-    QMUIObservableScrollView scrollView;
-
     @ViewInject(R.id.iv_flag_encrypt)
     private ImageView encryptImg;
     @ViewInject(R.id.iv_flag_sign)
@@ -184,8 +183,8 @@ public class MailDetailActivity extends BaseActivity {
             webSettings.setDisplayZoomControls(false);
             webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
             webSettings.setLoadWithOverviewMode(true);
-            contentWebView.loadDataWithBaseURL(null,mailBodyText, "text/html", "utf-8",null);
-            contentWebView.setWebChromeClient(new WebChromeClient(){
+            contentWebView.loadDataWithBaseURL(null, mailBodyText, "text/html", "utf-8", null);
+            contentWebView.setWebChromeClient(new WebChromeClient() {
                 @Override
                 public void onProgressChanged(WebView view, int newProgress) {
                     super.onProgressChanged(view, newProgress);
@@ -474,22 +473,22 @@ public class MailDetailActivity extends BaseActivity {
         return encryptBytes;
     }
 
-    private void intentMailSendActivity(String extraMailModel){
+    private void intentMailSendActivity(String extraMailModel) {
         Bundle bundle = new Bundle();
         bundle.putString(MailSendActivity.EXTRA_MAIL_ID, mail.getId());
         bundle.putString(MailSendActivity.EXTRA_MAIL_MODE, extraMailModel);
         IntentUtils.startActivity(this, MailSendActivity.class, bundle);
     }
 
-    private void removeMail(Mail mail){
+    private void removeMail(Mail mail) {
         if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
             loadingDlg.show();
             JSONObject object = new JSONObject();
-            object.put("Email",ContactUserCacheUtils.getUserMail(MyApplication.getInstance().getUid()));
-            object.put("DeleteMode",2);
+            object.put("Email", ContactUserCacheUtils.getUserMail(MyApplication.getInstance().getUid()));
+            object.put("DeleteMode", 2);
             JSONArray array = new JSONArray();
             array.add(mail.getId());
-            object.put("ItemIds",array);
+            object.put("ItemIds", array);
             apiService = new MailApiService(this);
             apiService.setAPIInterface(new WebService());
             apiService.removeMail(object.toJSONString());
@@ -536,15 +535,15 @@ public class MailDetailActivity extends BaseActivity {
         @Override
         public void returnRemoveMailSuccess() {
             LoadingDialog.dimissDlg(loadingDlg);
-            ToastUtils.show(MailDetailActivity.this,"邮件删除成功");
+            ToastUtils.show(MailDetailActivity.this, "邮件删除成功");
             finish();
-            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_MAIL_REMOVE,mail));
+            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_MAIL_REMOVE, mail));
         }
 
         @Override
         public void returnRemoveMailFail(String error, int errorCode) {
             LoadingDialog.dimissDlg(loadingDlg);
-            WebServiceMiddleUtils.hand(MailDetailActivity.this,error,errorCode);
+            WebServiceMiddleUtils.hand(MailDetailActivity.this, error, errorCode);
         }
     }
 }

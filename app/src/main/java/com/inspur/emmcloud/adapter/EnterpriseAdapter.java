@@ -26,7 +26,7 @@ public class EnterpriseAdapter extends BaseAdapter {
     private List<Enterprise> enterpriseList;
     private Holder holder;
 
-    public EnterpriseAdapter(Context context,List<Enterprise> enterpriseList){
+    public EnterpriseAdapter(Context context, List<Enterprise> enterpriseList) {
         this.context = context;
         this.enterpriseList = enterpriseList;
     }
@@ -48,26 +48,25 @@ public class EnterpriseAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup viewGroup) {
-        if(convertView==null){
-            convertView=LayoutInflater.from(context).inflate(R.layout.mine_setting_enterprise_item_view, null);
-            holder=new Holder();
-            x.view().inject(holder,convertView);//注解绑定
+        if (convertView == null) {
+            convertView = LayoutInflater.from(context).inflate(R.layout.mine_setting_enterprise_list_item, null);
+            holder = new Holder();
+            x.view().inject(holder, convertView);//注解绑定
             convertView.setTag(holder);
-        }
-        else{
-            holder=(Holder) convertView.getTag();
+        } else {
+            holder = (Holder) convertView.getTag();
         }
         Enterprise enterprise = enterpriseList.get(position);
         holder.enterpriseName.setText(enterprise.getName());
-        if (enterprise.getId().equals(MyApplication.getInstance().getCurrentEnterprise().getId())){
+        if (enterprise.getId().equals(MyApplication.getInstance().getCurrentEnterprise().getId())) {
             holder.selectImg.setVisibility(View.VISIBLE);
-        }else {
+        } else {
             holder.selectImg.setVisibility(View.INVISIBLE);
         }
         return convertView;
     }
 
-    private class Holder{
+    private class Holder {
         @ViewInject(R.id.iv_select)
         private ImageView selectImg;
         @ViewInject(R.id.tv_name)
