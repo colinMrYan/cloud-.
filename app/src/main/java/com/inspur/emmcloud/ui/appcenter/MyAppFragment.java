@@ -856,7 +856,7 @@ public class MyAppFragment extends BaseFragment {
             ImageView imageView = commonlyUseLayout.findViewById(R.id.iv_app_commonly_use);
             TextView textView = commonlyUseLayout.findViewById(R.id.tv_app_commonly_use);
             imageView.setImageResource(getNeedCommonlyUseApp() ? R.drawable.ic_commonly_use_open : R.drawable.ic_commonly_use_close);
-            textView.setText(getNeedCommonlyUseApp() ? R.string.app_commonly_use : R.string.app_commonly_use_close);
+            textView.setText(getNeedCommonlyUseApp() ? R.string.app_commonly_use_close:R.string.app_commonly_use);
         }
     }
 
