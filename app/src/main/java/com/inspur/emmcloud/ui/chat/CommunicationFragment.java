@@ -375,10 +375,10 @@ public class CommunicationFragment extends BaseFragment {
                 conversationAdapter.setNetExceptionView(true);
             }
         } else if (netState.getAction().equals(Constant.EVENTBUS_TAG_NET_EXCEPTION_HINT)) {   //网络异常提示
-            Boolean pingConnectedResult=false;
+            Boolean pingConnectedResult = false;
             if (!NetUtils.isNetworkConnected(getContext(), false)) {
                 conversationAdapter.setNetExceptionView(false);
-                pingConnectedResult=false;
+                pingConnectedResult = false;
             } else {
                 List<Object> pingIdAndData = (List<Object>) netState.getMessageObj();
                 pingConnectedResult = checkingNetStateUtils.isPingConnectedNet((String) pingIdAndData.get(0), (boolean) pingIdAndData.get(1));
