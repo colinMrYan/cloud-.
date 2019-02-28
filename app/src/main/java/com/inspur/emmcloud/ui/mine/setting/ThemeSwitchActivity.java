@@ -27,8 +27,8 @@ import org.xutils.view.annotation.ViewInject;
 
 @ContentView(R.layout.activity_mine_language_switch)
 public class ThemeSwitchActivity extends BaseActivity {
-    private static final int[] THEME_FLAG = {R.drawable.ic_mine_theme_white, R.drawable.ic_mine_theme_blue, R.drawable.ic_mine_theme_grey};
-    private static final int[] THEME_NAME = {R.string.mine_theme_white, R.string.mine_theme_blue, R.string.mine_theme_grey};
+    private static final int[] THEME_FLAG = {R.drawable.ic_mine_theme_white, R.drawable.ic_mine_theme_grey, R.drawable.ic_mine_theme_blue};
+    private static final int[] THEME_NAME = {R.string.mine_theme_white, R.string.mine_theme_grey, R.string.mine_theme_blue};
     @ViewInject(R.id.tv_header)
     private TextView headerText;
     @ViewInject(R.id.lv)
