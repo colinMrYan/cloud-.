@@ -210,12 +210,12 @@ public class NetWorkStateDetailActivity extends BaseActivity {
         new Thread() {
             public void run() {
                 HttpURLConnection httpURLConnection = null;
-                boolean resultData = false;
+                boolean isConnected = false;
                 try {
                     PingNetEntity prePingPortal = new PingNetEntity(subUrls[0], 1, 5, new StringBuffer());
                     PingNetEntity pingPortalState = NetUtils.ping(prePingPortal, (long) 2000);
                     if (pingPortalState.isResult()) {
-                        resultData = true;
+                        isConnected = true;
                     } else {
                         if (wifiConnection == NetworkInfo.State.CONNECTED) {
                             URL url = new URL(StrUrl);
@@ -225,23 +225,25 @@ public class NetWorkStateDetailActivity extends BaseActivity {
                             httpURLConnection.setReadTimeout(10000);
                             int responcode = httpURLConnection.getResponseCode();
                             if ((responcode >= 200) && (responcode < 300)) {
-                                resultData = true;
-                            } else {
-                                if (responcode > 300 && responcode < 310) {
+                                isConnected = true;
+                            } else if(302==responcode) {
                                     PortalUrl = httpURLConnection.getURL().toString();
-                                }
-                                resultData = false;
+                                   isConnected = false;
+                            }else if (301 == responcode){
+                                 isConnected=true;
+                            }else {
+                                isConnected=false;
                             }
                         }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 } finally {
-                    final boolean finalResultData = resultData;
+                    final boolean finalIsConnected = isConnected;
                     new Handler(Looper.getMainLooper()).post(new Runnable() {
                         @Override
                         public void run() {
-                            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_NET_PORTAL_HTTP_POST, finalResultData));
+                            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_NET_PORTAL_HTTP_POST, finalIsConnected));
                         }
                     });
                     if (httpURLConnection != null) {
