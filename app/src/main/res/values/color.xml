@@ -36,7 +36,7 @@
 
 
 
-    <color name="content_bg">#f6f6f6</color>
+    <color name="content_bg">#f8f9fb</color>
     <color name="footer_tab_text_nor">#979EA3</color>
     <!-- 原底部文字颜色#698fa7 -->
     <color name="footer_tab_text_sel">#36A5F6</color>
