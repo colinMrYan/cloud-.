@@ -289,7 +289,6 @@ public class LoginBySmsActivity extends BaseActivity {
             // TODO Auto-generated method stub
             LoadingDialog.dimissDlg(loadingDlg);
             phoneEdit.setEnabled(false);
-            captchaEdit.setEnabled(true);
             ToastUtils.show(LoginBySmsActivity.this, R.string.login_captchas_getcode_success);
             myCountDownTimer.start();
         }
