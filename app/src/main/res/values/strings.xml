@@ -669,6 +669,7 @@
     <string name="user_info_my_info">个人信息</string>
     <string name="user_info_organ">浪潮国际</string>
     <string name="user_info_phone_number">手机</string>
+    <string name="user_info_title">职位</string>
     <string name="user_telephone">座机</string>
     <string name="user_no_storage">没有存储设备</string>
     <string name="user_employee_num">员工编号</string>

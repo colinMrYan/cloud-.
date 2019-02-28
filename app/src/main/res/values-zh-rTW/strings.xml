@@ -661,10 +661,12 @@
     <string name="user_info_my_info">個人資訊</string>
     <string name="user_info_organ">浪潮國際</string>
     <string name="user_info_phone_number">手機</string>
+    <string name="user_info_title">職位</string>
     <string name="user_no_storage">沒有存放裝置</string>
     <string name="user_employee_num">員工編號</string>
     <string name="user_worker_num">工號</string>
     <string name="user_new_chat">發起會話</string>
+    <string name="user_send_message">發消息</string>
 
     <!-- 集團新聞 部分 -->
     <string name="news_group_news">集團新聞</string>
