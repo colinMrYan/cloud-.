@@ -16,7 +16,7 @@
             android:layout_marginRight="10dp"
             android:scaleType="centerCrop"
             app:riv_oval="false"
-            app:riv_border_color="#dddddd"
+            app:riv_border_color="#bbbbbb"
             app:riv_corner_radius = "6dp"
             app:riv_border_width="0.5px"
             />
