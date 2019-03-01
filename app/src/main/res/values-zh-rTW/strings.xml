@@ -261,7 +261,7 @@
     <string name="chanel_cancel_top"> 取消置頂</string>
     <string name="creat_group">創建群組</string>
     <string name="creat_group_fail">群組創建失敗</string>
-    <string name="all_group_member">群成員</string>
+    <string name="all_group_member">群成員(%1$d)</string>
     <string name="add_group_member">添加群成員 </string>
     <string name="channel_group">群組</string>
     <string name="group_member">群成員列表 </string>
