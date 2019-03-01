@@ -83,7 +83,6 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
         }
         skipImageBtn = findViewById(R.id.ibt_skip);
         checkNecessaryPermission();
-//        IntentUtils.startActivity(this, FeedBackActivity.class,true);
     }
 
     private void checkNecessaryPermission() {
