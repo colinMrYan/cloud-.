@@ -54,7 +54,7 @@
                 android:background="#00000000"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
-                android:textColor="@color/header_bg"
+                android:textColor="@color/header_bg_blue"
                 android:padding="20dp"
                 android:text="@string/forgetpwd"
                 android:textSize="14sp" />

@@ -58,7 +58,7 @@ public class DisplayTxtCommentMsg {
                 commentContentText,
                 context.getResources().getColor(
                         isMyMsg ? R.color.hightlight_in_blue_bg
-                                : R.color.header_bg));
+                                : R.color.header_bg_blue));
         // 取出评论消息的id
         Msg commentedMsg = MsgCacheUtil.getCacheMsg(context,
                 msg.getCommentMid());
@@ -115,7 +115,7 @@ public class DisplayTxtCommentMsg {
         style.setSpan(
                 new ForegroundColorSpan(context.getResources().getColor(
                         isMyMsg ? R.color.hightlight_in_blue_bg
-                                : R.color.header_bg)), fstart, fend,
+                                : R.color.header_bg_blue)), fstart, fend,
                 Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
         commentTitleText.setText(style);
     }
