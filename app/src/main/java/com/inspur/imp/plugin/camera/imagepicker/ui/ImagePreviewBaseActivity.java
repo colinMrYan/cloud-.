@@ -1,12 +1,10 @@
 package com.inspur.imp.plugin.camera.imagepicker.ui;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
-import android.widget.TextView;
 
+import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.R;
 import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
 import com.inspur.imp.plugin.camera.imagepicker.adapter.ImagePageAdapter;
@@ -20,7 +18,6 @@ public abstract class ImagePreviewBaseActivity extends ImageBaseActivity {
     protected ImagePicker imagePicker;
     protected ArrayList<ImageItem> mImageItems;      //跳转进ImagePreviewFragment的图片文件夹
     protected int mCurrentPosition = 0;              //跳转进ImagePreviewFragment时的序号，第几个图片
-    protected TextView mTitleCount;                  //显示当前图片的位置  例如  5/31
     protected ArrayList<ImageItem> selectedImages;   //所有已经选中的图片
     protected View content;
     protected View topBar;
@@ -32,14 +29,15 @@ public abstract class ImagePreviewBaseActivity extends ImageBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);//没有标题
-        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            //全屏显示
-            WindowManager.LayoutParams lp = getWindow().getAttributes();
-            lp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
-            getWindow().setAttributes(lp);
-        }
+//        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+//            //全屏显示
+//            WindowManager.LayoutParams lp = getWindow().getAttributes();
+//            lp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+//            getWindow().setAttributes(lp);
+//        }
         setContentView(R.layout.activity_image_preview);
+        ImmersionBar.with(this).statusBarColor(android.R.color.black).navigationBarColor(android.R.color.black).statusBarDarkFont(false).init();
         mCurrentPosition = getIntent().getIntExtra(ImagePicker.EXTRA_SELECTED_IMAGE_POSITION, 0);
         mImageItems = (ArrayList<ImageItem>) getIntent().getSerializableExtra(ImagePicker.EXTRA_IMAGE_ITEMS);
         imagePicker = ImagePicker.getInstance();
@@ -64,7 +62,6 @@ public abstract class ImagePreviewBaseActivity extends ImageBaseActivity {
             }
         });
 
-        mTitleCount = (TextView) findViewById(R.id.tv_des);
 
         mViewPager = (ViewPagerFixed) findViewById(R.id.viewpager);
         mAdapter = new ImagePageAdapter(this, mImageItems);
@@ -77,8 +74,6 @@ public abstract class ImagePreviewBaseActivity extends ImageBaseActivity {
         mViewPager.setAdapter(mAdapter);
         mViewPager.setCurrentItem(mCurrentPosition, false);
 
-        //初始化当前页面的状态
-        mTitleCount.setText(getString(R.string.preview_image_count, mCurrentPosition + 1, mImageItems.size()));
     }
 
     /**

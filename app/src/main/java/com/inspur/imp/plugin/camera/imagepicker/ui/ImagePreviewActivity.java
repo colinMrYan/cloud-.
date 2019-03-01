@@ -34,7 +34,7 @@ public class ImagePreviewActivity extends ImagePreviewBaseActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        setNavigationBarColor(android.R.color.black);
         isOrigin = getIntent().getBooleanExtra(ImagePreviewActivity.ISORIGIN,
                 false);
         imagePicker.addOnImageSelectedListener(this);
@@ -66,8 +66,6 @@ public class ImagePreviewActivity extends ImagePreviewBaseActivity implements
         onImageSelected(0, null, true);
         ImageItem item = mImageItems.get(mCurrentPosition);
         boolean isSelected = imagePicker.isSelect(item);
-        mTitleCount.setText(getString(R.string.preview_image_count,
-                mCurrentPosition + 1, mImageItems.size()));
         LogUtils.jasonDebug("isSelected1=" + isSelected);
         mCbCheck.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
@@ -96,9 +94,6 @@ public class ImagePreviewActivity extends ImagePreviewBaseActivity implements
                             editBtn.setTextColor(Color.parseColor("#4f87a2"));
                         }
                         mCbCheck.setChecked(isSelected);
-                        mTitleCount.setText(getString(
-                                R.string.preview_image_count,
-                                mCurrentPosition + 1, mImageItems.size()));
                     }
                 });
         // 当点击当前选中按钮的时候，需要根据当前的选中状态添加和移除图片

@@ -32,6 +32,7 @@ public class IMGEditActivity extends IMGEditBaseActivity {
 
     @Override
     public void onCreated() {
+        setNavigationBarColor(android.R.color.black);
     }
 
     @Override
