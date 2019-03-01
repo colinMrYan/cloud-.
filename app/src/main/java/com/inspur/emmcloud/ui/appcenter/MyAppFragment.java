@@ -119,7 +119,7 @@ public class MyAppFragment extends BaseFragment {
     private MySwipeRefreshLayout swipeRefreshLayout;
     private BroadcastReceiver mBroadcastReceiver;
     private PopupWindow popupWindow;
-    private boolean isNeedCommonlyUseApp = false;
+//    private boolean isNeedCommonlyUseApp = true;
     private MyAppSaveTask myAppSaveTask;
     private Map<String, Integer> appStoreBadgeMap = new HashMap<>();
     private RecyclerView recommendAppWidgetListView = null;
@@ -342,6 +342,16 @@ public class MyAppFragment extends BaseFragment {
         if (appListAdapter != null) {
             appListAdapter.setAppAdapterList(appGroupList);
         } else {
+//            boolean isHasCommonlyUse = true;
+//            List<App> commonlyUseAppList = AppCacheUtils.getCommonlyUseNeedShowList(getActivity());
+//            for (int i = 0; i < (commonlyUseAppList.size()>8?8:commonlyUseAppList.size()); i++) {
+//                if(commonlyUseAppList.get(i).getAppID().equals(appGroupList.get(0).getAppItemList().get(i).getAppID())){
+//                    isHasCommonlyUse = false;
+//                }
+//            }
+//            if(!){
+//
+//            }
             appListAdapter = new AppListAdapter(appGroupList);
             appListAdapter.registerDataSetObserver(dataSetObserver);
             appListView.setAdapter(appListAdapter);
@@ -728,9 +738,8 @@ public class MyAppFragment extends BaseFragment {
      */
     private boolean getNeedCommonlyUseApp() {
         String userId = MyApplication.getInstance().getUid();
-        isNeedCommonlyUseApp = PreferencesUtils.getBoolean(getActivity(), MyApplication.getInstance().getTanent()
+        return PreferencesUtils.getBoolean(getActivity(), MyApplication.getInstance().getTanent()
                 + userId + "needCommonlyUseApp", true);
-        return isNeedCommonlyUseApp;
     }
 
     /**
