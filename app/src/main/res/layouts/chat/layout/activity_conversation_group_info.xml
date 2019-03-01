@@ -20,18 +20,8 @@
             android:onClick="onClick"
             android:padding="11dp"
             android:scaleType="fitXY"
-            android:src="?attr/ic_back_btn" />
+            android:src="@drawable/ic_back_btn_white" />
 
-        <TextView
-            android:id="@+id/header_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:text="@string/channel_group_info"
-            android:textColor="?attr/header_text_color"
-            android:textSize="@dimen/header_textsize"
-            android:visibility="gone" />
     </RelativeLayout>
 
     <ScrollView

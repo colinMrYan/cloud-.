@@ -37,7 +37,7 @@
         android:id="@+id/line"
         android:layout_width="match_parent"
         android:layout_marginLeft="59dp"
-        android:layout_height="0.6dp"
+        android:layout_height="0.5px"
         android:layout_below="@id/iv_icon"
         android:background="#dddddd" />
 </RelativeLayout>

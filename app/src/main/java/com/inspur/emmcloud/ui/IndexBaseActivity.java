@@ -229,28 +229,28 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
         int localIcon = R.drawable.selector_tab_unknown_btn;
         switch (icon) {
             case Constant.APP_TAB_BAR_COMMUNACATE_NAME:
-                localIcon = ResourceUtils.getValueOfAttr(IndexBaseActivity.this, R.attr.bg_tab_communicate);
+                localIcon = ResourceUtils.getResValueOfAttr(IndexBaseActivity.this, R.attr.bg_tab_communicate);
                 break;
             case Constant.APP_TAB_BAR_APPLICATION_NAME:
-                localIcon = ResourceUtils.getValueOfAttr(IndexBaseActivity.this, R.attr.bg_tab_app);
+                localIcon = ResourceUtils.getResValueOfAttr(IndexBaseActivity.this, R.attr.bg_tab_app);
                 break;
             case Constant.APP_TAB_BAR_WORK_NAME:
-                localIcon = ResourceUtils.getValueOfAttr(IndexBaseActivity.this, R.attr.bg_tab_work);
+                localIcon = ResourceUtils.getResValueOfAttr(IndexBaseActivity.this, R.attr.bg_tab_work);
                 break;
             case Constant.APP_TAB_BAR_MOMENT_NAME:
-                localIcon = ResourceUtils.getValueOfAttr(IndexBaseActivity.this, R.attr.bg_tab_cloud_tweet);
+                localIcon = ResourceUtils.getResValueOfAttr(IndexBaseActivity.this, R.attr.bg_tab_cloud_tweet);
                 break;
             case Constant.APP_TAB_BAR_ME_NAME:
-                localIcon = ResourceUtils.getValueOfAttr(IndexBaseActivity.this, R.attr.bg_tab_mine);
+                localIcon = ResourceUtils.getResValueOfAttr(IndexBaseActivity.this, R.attr.bg_tab_mine);
                 break;
             case Constant.APP_TAB_BAR_CONTACT_NAME:
-                localIcon = ResourceUtils.getValueOfAttr(IndexBaseActivity.this, R.attr.bg_tab_contact);
+                localIcon = ResourceUtils.getResValueOfAttr(IndexBaseActivity.this, R.attr.bg_tab_contact);
                 break;
             case Constant.APP_TAB_BAR_DISCOVER_NAME:
-                localIcon = ResourceUtils.getValueOfAttr(IndexBaseActivity.this, R.attr.bg_tab_find);
+                localIcon = ResourceUtils.getResValueOfAttr(IndexBaseActivity.this, R.attr.bg_tab_find);
                 break;
             default:
-                localIcon = ResourceUtils.getValueOfAttr(IndexBaseActivity.this, R.attr.bg_tab_unknown);
+                localIcon = ResourceUtils.getResValueOfAttr(IndexBaseActivity.this, R.attr.bg_tab_unknown);
                 break;
         }
         return localIcon;

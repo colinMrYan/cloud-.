@@ -71,7 +71,6 @@ public class BaseActivity extends Activity {
     protected void setTheme() {
         String className = this.getClass().getCanonicalName();
         boolean isContain = Arrays.asList(classNames).contains(className);
-        if (!isContain) {
             int currentThemeNo = PreferencesUtils.getInt(MyApplication.getInstance(), Constant.PREF_APP_THEME, 0);
             switch (currentThemeNo) {
                 case 1:
@@ -84,47 +83,24 @@ public class BaseActivity extends Activity {
                     setTheme(R.style.AppTheme_0);
                     break;
             }
-        }
     }
 
     private void setStatus() {
         String className = this.getClass().getCanonicalName();
         boolean isContain = Arrays.asList(classNames).contains(className);
+        int navigationBarColor =ResourceUtils.getResValueOfAttr(BaseActivity.this, R.attr.footer_bg_color);
         if (!isContain) {
-            int color = ResourceUtils.getValueOfAttr(BaseActivity.this, R.attr.header_bg_color);
-            boolean isStatusFontDark = true;
-            int currentThemeNo = PreferencesUtils.getInt(MyApplication.getInstance(), Constant.PREF_APP_THEME, 0);
-            switch (currentThemeNo) {
-                case 1:
-                    isStatusFontDark = false;
-                    break;
-                case 2:
-                    isStatusFontDark = true;
-                    break;
-                default:
-                    isStatusFontDark = true;
-                    break;
-            }
-            ImmersionBar.with(this).statusBarColor(color).statusBarDarkFont(isStatusFontDark).init();
+            int statusBarColor = ResourceUtils.getResValueOfAttr(BaseActivity.this, R.attr.header_bg_color);
+            boolean isStatusBarDarkFont = ResourceUtils.getBoolenOfAttr(this,R.attr.status_bar_dark_font);
+            ImmersionBar.with(this).statusBarColor(statusBarColor).navigationBarColor(navigationBarColor).statusBarDarkFont(isStatusBarDarkFont).init();
+        }else {
+            ImmersionBar.with(this).navigationBarColor(navigationBarColor).init();
         }
     }
 
     protected void setTransparentStatus() {
-        int color = ResourceUtils.getValueOfAttr(BaseActivity.this, R.attr.header_bg_color);
-        boolean isStatusFontDark = true;
-        int currentThemeNo = PreferencesUtils.getInt(MyApplication.getInstance(), Constant.PREF_APP_THEME, 0);
-        switch (currentThemeNo) {
-            case 1:
-                isStatusFontDark = false;
-                break;
-            case 2:
-                isStatusFontDark = true;
-                break;
-            default:
-                isStatusFontDark = true;
-                break;
-        }
-        ImmersionBar.with(this).transparentStatusBar().statusBarDarkFont(isStatusFontDark).init();
+        boolean isStatusBarDarkFont = ResourceUtils.getBoolenOfAttr(this,R.attr.status_bar_dark_font);
+        ImmersionBar.with(this).transparentStatusBar().statusBarDarkFont(isStatusBarDarkFont).init();
     }
 
 

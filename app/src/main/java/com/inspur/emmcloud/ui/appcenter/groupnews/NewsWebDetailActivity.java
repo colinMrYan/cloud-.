@@ -697,7 +697,7 @@ public class NewsWebDetailActivity extends BaseActivity {
      */
     private void setHeaderModel(String model) {
         boolean isDarkMode = model.equals(darkMode);
-        int color = ResourceUtils.getValueOfAttr(this, R.attr.header_bg_color);
+        int color = ResourceUtils.getResValueOfAttr(this, R.attr.header_bg_color);
         int statusBarColor = isDarkMode ? R.color.app_news_night_color : color;
         ImmersionBar.with(this).statusBarColor(statusBarColor).init();
         (findViewById(R.id.rl_header)).setBackgroundColor(ContextCompat.getColor(MyApplication.getInstance(), statusBarColor));

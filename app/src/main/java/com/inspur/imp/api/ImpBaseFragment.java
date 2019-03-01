@@ -73,7 +73,7 @@ public class ImpBaseFragment extends BaseFragment {
                         textView.setText(mainTabMenu.getText());
                         textView.setOnClickListener(onClickListener);
                         textView.setLayoutParams(params);
-                        int textColor = ResourceUtils.getValueOfAttr(getActivity(), R.attr.header_text_color);
+                        int textColor = ResourceUtils.getResValueOfAttr(getActivity(), R.attr.header_text_color);
                         textView.setTextColor(getContext().getResources().getColor(textColor));
                         textView.setGravity(Gravity.CENTER_VERTICAL);
                         webFunctionLayout.addView(textView);
@@ -93,7 +93,7 @@ public class ImpBaseFragment extends BaseFragment {
                     }
                 });
                 imageView.setLayoutParams(params);
-                int drawableResId = ResourceUtils.getValueOfAttr(getActivity(), R.attr.ic_header_option);
+                int drawableResId = ResourceUtils.getResValueOfAttr(getActivity(), R.attr.ic_header_option);
                 imageView.setImageResource(drawableResId);
                 //ImageDisplayUtils.getInstance().displayImage(imageView, "drawable://" + drawableResId);
                 webFunctionLayout.addView(imageView);

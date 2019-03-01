@@ -8,12 +8,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ListView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseFragment;
@@ -41,6 +40,7 @@ import com.inspur.emmcloud.ui.mine.setting.EnterpriseSwitchActivity;
 import com.inspur.emmcloud.ui.mine.setting.SettingActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -121,11 +121,11 @@ public class MoreFragment extends BaseFragment {
                             mineLayoutItem.setTitle(getString(R.string.more_feedback));
                             break;
                         case "my_customerService_function":
-                            mineLayoutItem.setIco("personcenter_customerservice");
+                            mineLayoutItem.setIco("personcenter_customerService");
                             mineLayoutItem.setTitle(getString(R.string.app_customer));
                             break;
                         case "my_aboutUs_function":
-                            mineLayoutItem.setIco("personcenter_aboutus");
+                            mineLayoutItem.setIco("personcenter_aboutUs");
                             mineLayoutItem.setTitle(getString(R.string.about_text));
                             break;
                     }
@@ -267,8 +267,6 @@ public class MoreFragment extends BaseFragment {
      * expandableListView适配器
      */
     public class MyAdapter extends BaseExpandableListAdapter {
-        // private List<List<String>> child;
-
         @Override
         public int getGroupCount() {
             return mineLayoutItemGroupList.size();
@@ -332,19 +330,10 @@ public class MoreFragment extends BaseFragment {
                 String UserCardMenus = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_MINE_USER_MENUS, "");
                 GetUserCardMenusResult getUserCardMenusResult = new GetUserCardMenusResult(UserCardMenus);
                 final List<MineLayoutItem> mineLayoutItemList = getUserCardMenusResult.getMineLayoutItemList();
-                ListView userCardMenuListView = convertView.findViewById(R.id.lv_user_card_menu);
-                userCardMenuListView.setAdapter(new UserCardMenuAdapter(mineLayoutItemList));
+                LinearLayout userCardMenuLayout = convertView.findViewById(R.id.ll_user_card_menu);
                 int paddintTop = mineLayoutItemList.size() > 0 ? DensityUtil.dip2px(MyApplication.getInstance(), 10) : 0;
-                userCardMenuListView.setPadding(0, paddintTop, 0, 0);
-                userCardMenuListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                        openMineLayoutItem(mineLayoutItemList.get(i));
-                    }
-                });
-                // convertView.findViewById(R.id.ibt_business_card).setOnClickListener(myClickListener);
-                // convertView.findViewById(R.id.ibt_employee_no).setOnClickListener(myClickListener);
-                // convertView.findViewById(R.id.ibt_qrcode).setOnClickListener(myClickListener);
+                userCardMenuLayout.setPadding(0, paddintTop, 0, 0);
+                setUserCardMenuLayout(userCardMenuLayout, mineLayoutItemList);
                 convertView.findViewById(R.id.card_view_my_info).setOnClickListener(myClickListener);
                 enterpriseText.setOnClickListener(myClickListener);
 
@@ -357,7 +346,6 @@ public class MoreFragment extends BaseFragment {
                     drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
                 }
                 enterpriseText.setCompoundDrawables(null, null, drawable, null);
-
             } else {
                 convertView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_mine_common_item_view, null);
                 View lineView = convertView.findViewById(R.id.line);
@@ -374,6 +362,32 @@ public class MoreFragment extends BaseFragment {
             titleText.setText(layoutItem.getTitle());
             String iconUrl = getIconUrl(layoutItem.getIco());
             ImageDisplayUtils.getInstance().displayImage(iconImg, iconUrl, R.drawable.ic_mine_item_default);
+        }
+
+        private void setUserCardMenuLayout(LinearLayout userCardMenuLayout, List<MineLayoutItem> mineLayoutItemList) {
+            for (final MineLayoutItem mineLayoutItem : mineLayoutItemList) {
+                ImageButton menuImgBtn = new ImageButton(getActivity());
+                int height = DensityUtil.dip2px(MyApplication.getInstance(), 38);
+                int width = DensityUtil.dip2px(MyApplication.getInstance(), 37);
+                int paddingLeft = DensityUtil.dip2px(MyApplication.getInstance(), 3);
+                int paddingTop = DensityUtil.dip2px(MyApplication.getInstance(), 10);
+                int paddingRight = DensityUtil.dip2px(MyApplication.getInstance(), 6);
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(width, height);
+                layoutParams.setMargins(0, 0, paddingRight, 0);
+                menuImgBtn.setScaleType(ImageView.ScaleType.FIT_XY);
+                menuImgBtn.setLayoutParams(layoutParams);
+                menuImgBtn.setPadding(paddingLeft, paddingTop, paddingRight, 0);
+                menuImgBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        openMineLayoutItem(mineLayoutItem);
+                    }
+                });
+                ImageDisplayUtils.getInstance().displayImage(menuImgBtn, getIconUrl(mineLayoutItem.getIco()), R.drawable.ic_mine_item_default);
+                userCardMenuLayout.addView(menuImgBtn);
+            }
+
+
         }
 
         private String getIconUrl(String icon) {
@@ -397,6 +411,7 @@ public class MoreFragment extends BaseFragment {
                         break;
                 }
             }
+            LogUtils.YfcDebug("icon=" + icon);
             return icon;
         }
 
@@ -404,47 +419,6 @@ public class MoreFragment extends BaseFragment {
         public boolean isChildSelectable(int groupPosition, int childPosition) {
             return true;
         }
-
-        private class UserCardMenuAdapter extends BaseAdapter {
-            private List<MineLayoutItem> mineLayoutItemList = null;
-
-            public UserCardMenuAdapter(List<MineLayoutItem> mineLayoutItemList) {
-                this.mineLayoutItemList = mineLayoutItemList;
-
-            }
-
-            @Override
-            public int getCount() {
-                return mineLayoutItemList.size();
-            }
-
-            @Override
-            public Object getItem(int i) {
-                return null;
-            }
-
-            @Override
-            public long getItemId(int i) {
-                return 0;
-            }
-
-            @Override
-            public View getView(int i, View view, ViewGroup viewGroup) {
-                ImageView imageView = new ImageView(getActivity());
-                int height = DensityUtil.dip2px(MyApplication.getInstance(), 38);
-                int width = DensityUtil.dip2px(MyApplication.getInstance(), 37);
-                int paddingLeft = DensityUtil.dip2px(MyApplication.getInstance(), 3);
-                int paddingTop = DensityUtil.dip2px(MyApplication.getInstance(), 10);
-                int paddingRight = DensityUtil.dip2px(MyApplication.getInstance(), 6);
-                ListView.LayoutParams layoutParams = new ListView.LayoutParams(width, height);
-                imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-                imageView.setLayoutParams(layoutParams);
-                imageView.setPadding(paddingLeft, paddingTop, paddingRight, 0);
-                ImageDisplayUtils.getInstance().displayImage(imageView, getIconUrl(mineLayoutItemList.get(i).getIco()), R.drawable.ic_mine_item_default);
-                return imageView;
-            }
-        }
-
     }
 
     private class MyClickListener implements View.OnClickListener {
