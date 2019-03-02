@@ -13,10 +13,9 @@
         android:id="@+id/tv_current_login_enterprise"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
         android:paddingLeft="4dp"
         android:layout_centerHorizontal="true"
-        android:paddingTop="10dp"
+        android:paddingTop="35dp"
         android:gravity="center_horizontal"
         android:textColor="#999999"
         android:textSize="13sp"
@@ -26,12 +25,12 @@
         android:id="@+id/tv_welcome"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="60dp"
         android:textColor="#FF333333"
         android:textSize="26sp" />
     <LinearLayout
         android:gravity="center_horizontal"
-        android:layout_marginTop="155dp"
+        android:layout_marginTop="165dp"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">

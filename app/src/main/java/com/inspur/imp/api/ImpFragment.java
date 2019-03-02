@@ -37,6 +37,7 @@ import com.inspur.emmcloud.ui.mine.setting.NetWorkStateDetailActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
+import com.inspur.emmcloud.util.common.ResourceUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
@@ -387,7 +388,9 @@ public class ImpFragment extends ImpBaseFragment {
 
     private void setHeaderTitleTextDropImg() {
         boolean isDropTitlePopShow = (dropTitlePopupWindow != null && dropTitlePopupWindow.isShowing());
-        Drawable drawable = ContextCompat.getDrawable(MyApplication.getInstance(), isDropTitlePopShow ? R.drawable.plugin_ic_header_title_drop_up : R.drawable.plugin_ic_header_title_drop_down);
+        int dropUpRes = ResourceUtils.getResValueOfAttr(getActivity(),R.attr.plugin_ic_header_title_drop_up);
+        int dropDownRes = ResourceUtils.getResValueOfAttr(getActivity(),R.attr.plugin_ic_header_title_drop_down);
+        Drawable drawable = ContextCompat.getDrawable(MyApplication.getInstance(), isDropTitlePopShow ? dropUpRes : dropDownRes);
         drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
         headerText.setCompoundDrawables(null, null, drawable, null);
     }

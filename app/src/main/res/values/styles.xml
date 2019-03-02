@@ -56,6 +56,8 @@
         <item name="status_bar_dark_font">true</item>
         <item name="ic_back_btn">@drawable/ic_back_btn_white</item>
         <item name="ic_appcenter_search">@drawable/ic_appcenter_search_white</item>
+        <item name="plugin_ic_header_title_drop_down">@drawable/plugin_ic_header_title_drop_down_white</item>
+        <item name="plugin_ic_header_title_drop_up">@drawable/plugin_ic_header_title_drop_up_white</item>
     </style>
 
     <style name="AppTheme_1"  parent="AppTheme">
@@ -84,6 +86,8 @@
         <item name="status_bar_dark_font">true</item>
         <item name="ic_back_btn">@drawable/ic_back_btn_white</item>
         <item name="ic_appcenter_search">@drawable/ic_appcenter_search_white</item>
+        <item name="plugin_ic_header_title_drop_down">@drawable/plugin_ic_header_title_drop_down_white</item>
+        <item name="plugin_ic_header_title_drop_up">@drawable/plugin_ic_header_title_drop_up_white</item>
     </style>
 
     <style name="AppTheme_2"  parent="AppTheme">
@@ -112,6 +116,8 @@
         <item name="status_bar_dark_font">false</item>
         <item name="ic_back_btn">@drawable/ic_back_btn_blue</item>
         <item name="ic_appcenter_search">@drawable/ic_appcenter_search_blue</item>
+        <item name="plugin_ic_header_title_drop_down">@drawable/plugin_ic_header_title_drop_down_blue</item>
+        <item name="plugin_ic_header_title_drop_up">@drawable/plugin_ic_header_title_drop_up_blue</item>
     </style>
 
 

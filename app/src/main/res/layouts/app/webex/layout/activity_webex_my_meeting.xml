@@ -44,6 +44,7 @@
                 android:layout_centerVertical="true"
                 android:clickable="true"
                 android:onClick="onClick"
+                android:tint="?attr/header_text_color"
                 android:paddingLeft="14dp"
                 android:paddingRight="14dp"
                 android:scaleType="centerInside"
