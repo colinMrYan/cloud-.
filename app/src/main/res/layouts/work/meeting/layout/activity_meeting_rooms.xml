@@ -13,7 +13,7 @@
         android:id="@+id/rl_header"
         android:layout_width="match_parent"
         android:layout_height="@dimen/header_height"
-        android:background="@drawable/shape_header_bg">
+        android:background="?attr/header_bg">
 
         <ImageButton
             android:id="@+id/ibt_back"
@@ -52,6 +52,7 @@
                 android:layout_centerVertical="true"
                 android:onClick="onClick"
                 android:paddingBottom="11dp"
+                android:tint="?attr/header_text_color"
                 android:paddingLeft="6dp"
                 android:paddingRight="6dp"
                 android:paddingTop="11dp"
@@ -69,6 +70,7 @@
                 android:paddingLeft="10dp"
                 android:paddingRight="14dp"
                 android:paddingTop="4dp"
+                android:tint="?attr/header_text_color"
                 android:scaleType="centerInside"
                 android:src="@drawable/icon_common_office_set"
                 android:visibility="visible" />

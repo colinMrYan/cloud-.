@@ -1,5 +1,6 @@
 package com.inspur.imp.plugin.app;
 
+import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.imp.plugin.ImpPlugin;
 
 import org.json.JSONObject;
@@ -36,8 +37,10 @@ public class AppService extends ImpPlugin {
 
     // 退出系统
     private void close() {
+        if (!getActivity().getClass().getSimpleName().equals(IndexActivity.class.getSimpleName())){
+            getActivity().finish();
+        }
 
-        getActivity().finish();
     }
 
     @Override

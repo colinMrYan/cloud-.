@@ -122,7 +122,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
      * 初始化RecyclerView
      */
     private void initRecycleView() {
-        swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(getApplicationContext(), R.color.header_bg), ContextCompat.getColor(getApplicationContext(), R.color.header_bg));
+        swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(getApplicationContext(), R.color.header_bg_blue), ContextCompat.getColor(getApplicationContext(), R.color.header_bg_blue));
         swipeRefreshLayout.setOnRefreshListener(this);
         fileRecycleView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new VolumeFileAdapter(this, volumeFileList);

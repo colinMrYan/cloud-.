@@ -78,7 +78,7 @@ public class VolumeHomePageActivity extends BaseActivity implements SwipeRefresh
         apiService.setAPIInterface(new WebService());
         volumeRecentUseAdapter = new VolumeRecentUseAdapter(this);
         volumeRecentUseListView.setAdapter(volumeRecentUseAdapter);
-        swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(getApplicationContext(), R.color.header_bg), ContextCompat.getColor(getApplicationContext(), R.color.header_bg));
+        swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(getApplicationContext(), R.color.header_bg_blue), ContextCompat.getColor(getApplicationContext(), R.color.header_bg_blue));
         swipeRefreshLayout.setOnRefreshListener(this);
         volumeHomePageDirectoryList.add(new VolumeHomePageDirectory(R.drawable.ic_volume_my_file, getString(R.string.clouddriver_my_file), ""));
         volumeHomePageDirectoryList.add(new VolumeHomePageDirectory(R.drawable.ic_volume_share_volume, getString(R.string.clouddriver_share_volume), ""));

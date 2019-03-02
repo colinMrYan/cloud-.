@@ -23,6 +23,7 @@ import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.ResolutionUtils;
 import com.inspur.emmcloud.util.common.ResourceUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 
 import java.util.List;
@@ -150,8 +151,15 @@ public class ImpBaseFragment extends BaseFragment {
                 return false;
             }
         });
+        optionMenuPop.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                AppUtils.setWindowBackgroundAlpha(getActivity(), 1.0f);
+            }
+        });
         optionMenuPop.setBackgroundDrawable(getResources().getDrawable(
                 R.drawable.pop_window_view_tran));
+        AppUtils.setWindowBackgroundAlpha(getActivity(), 0.8f);
         // 设置好参数之后再show
         optionMenuPop.showAsDropDown(view);
     }

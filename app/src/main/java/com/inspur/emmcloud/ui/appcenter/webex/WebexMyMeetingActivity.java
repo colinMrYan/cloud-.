@@ -122,7 +122,7 @@ public class WebexMyMeetingActivity extends BaseActivity {
         PreferencesUtils.putString(MyApplication.getInstance(), Constant.PREF_WEBEX_DOWNLOAD_URL, installUri);
         loadingDlg = new LoadingDialog(this);
         setNoMeetingTipsText();
-        swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.header_bg), getResources().getColor(R.color.header_bg));
+        swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.header_bg_blue), getResources().getColor(R.color.header_bg_blue));
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {

@@ -237,7 +237,7 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
         adapter = new MyAdapter(MeetingRoomListActivity.this);
         loadingDlg = new LoadingDialog(MeetingRoomListActivity.this);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_layout);
-        swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.header_bg), getResources().getColor(R.color.header_bg));
+        swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.header_bg_blue), getResources().getColor(R.color.header_bg_blue));
         swipeRefreshLayout.setOnRefreshListener(MeetingRoomListActivity.this);
         headLayout = (RelativeLayout) findViewById(R.id.rl_header);
         filteImg = (ImageView) findViewById(R.id.filte_img);

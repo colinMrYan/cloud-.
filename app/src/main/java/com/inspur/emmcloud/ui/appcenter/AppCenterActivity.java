@@ -114,10 +114,10 @@ public class AppCenterActivity extends BaseActivity {
         recommendListView.setFocusable(false); //lbc
         classListView = (ListView) classView.findViewById(R.id.app_center_categories_list);
         recommendSwipeRefreshLayout = (MySwipeRefreshLayout) recommendView.findViewById(R.id.refresh_layout);
-        recommendSwipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.header_bg), getResources().getColor(R.color.header_bg));
+        recommendSwipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.header_bg_blue), getResources().getColor(R.color.header_bg_blue));
         recommendSwipeRefreshLayout.setOnRefreshListener(new AppCenterRefreshListener());
         classSwipeRefreshLayout = (SwipeRefreshLayout) classView.findViewById(R.id.refresh_layout);
-        classSwipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.header_bg), getResources().getColor(R.color.header_bg));
+        classSwipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.header_bg_blue), getResources().getColor(R.color.header_bg_blue));
         classSwipeRefreshLayout.setOnRefreshListener(new AppCenterRefreshListener());
         recommendAppAdapter = new RecommendAppAdapter();
         recommendListView.setAdapter(recommendAppAdapter);

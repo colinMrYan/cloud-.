@@ -52,7 +52,7 @@ public class DisplayTxtPlainMsg {
         contentText.setText(spannableString);
         TransHtmlToTextUtils.stripUnderlines(
                 contentText, context.getResources().getColor(isMyMsg ? R.color.hightlight_in_blue_bg
-                        : R.color.header_bg));
+                        : R.color.header_bg_blue));
         contentText.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {

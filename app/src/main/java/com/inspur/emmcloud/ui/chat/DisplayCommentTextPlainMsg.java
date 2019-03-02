@@ -61,7 +61,7 @@ public class DisplayCommentTextPlainMsg {
         commentContentText.setText(spannableString);
         TransHtmlToTextUtils.stripUnderlines(
                 commentContentText, context.getResources().getColor(isMyMsg ? R.color.hightlight_in_blue_bg
-                        : R.color.header_bg));
+                        : R.color.header_bg_blue));
 
         Message commentedMessage = MessageCacheUtil.getMessageByMid(MyApplication.getInstance(), msgContentComment.getMessage());
         if (commentedMessage != null) {
@@ -100,7 +100,7 @@ public class DisplayCommentTextPlainMsg {
         builder.setSpan(
                 new ForegroundColorSpan(context.getResources().getColor(
                         isMyMsg ? R.color.hightlight_in_blue_bg
-                                : R.color.header_bg)), fstart, fend,
+                                : R.color.header_bg_blue)), fstart, fend,
                 Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
         return builder;
     }

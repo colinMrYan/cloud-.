@@ -61,7 +61,7 @@ public class DisplayTxtMarkdownMsg {
                         holder.setUnderLine(false);
                         holder.setColor(context.getResources().getColor(
                                 isMyMsg ? R.color.hightlight_in_blue_bg
-                                        : R.color.header_bg));
+                                        : R.color.header_bg_blue));
                     }
                 })
                 .urlClick(new OnUrlClickListener() {
@@ -88,7 +88,7 @@ public class DisplayTxtMarkdownMsg {
                         holder.setUnderLine(false);
                         holder.setColor(context.getResources().getColor(
                                 isMyMsg ? R.color.hightlight_in_blue_bg
-                                        : R.color.header_bg));
+                                        : R.color.header_bg_blue));
                     }
                 })
                 .urlClick(new OnUrlClickListener() {

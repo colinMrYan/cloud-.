@@ -44,7 +44,7 @@ public class MySwipeRefreshLayout extends SwipeRefreshLayout {
 
         // 表示控件移动的最小距离，手移动的距离大于这个距离才能拖动控件
         mScaledTouchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
-        setColorSchemeColors(getResources().getColor(R.color.header_bg), getResources().getColor(R.color.header_bg));
+        setColorSchemeColors(getResources().getColor(R.color.header_bg_blue), getResources().getColor(R.color.header_bg_blue));
     }
 
     @Override

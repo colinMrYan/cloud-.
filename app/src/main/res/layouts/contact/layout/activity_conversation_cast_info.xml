@@ -9,7 +9,7 @@
         android:id="@+id/rl_header"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/shape_header_bg">
+        android:background="?attr/header_bg">
 
         <ImageButton
             android:id="@+id/ibt_back"

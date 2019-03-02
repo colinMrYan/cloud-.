@@ -66,7 +66,7 @@ public class DisplayTxtRichMsg {
                             holder.setUnderLine(false);
                             holder.setColor(context.getResources().getColor(
                                     isMyMsg ? R.color.hightlight_in_blue_bg
-                                            : R.color.header_bg));
+                                            : R.color.header_bg_blue));
                         }
                     })
                     .urlClick(new OnUrlClickListener() {
@@ -99,7 +99,7 @@ public class DisplayTxtRichMsg {
                     contentText,
                     context.getResources().getColor(
                             isMyMsg ? R.color.hightlight_in_blue_bg
-                                    : R.color.header_bg));
+                                    : R.color.header_bg_blue));
 
         }
         contentText.setOnLongClickListener(new View.OnLongClickListener() {

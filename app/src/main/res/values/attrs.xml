@@ -6,6 +6,7 @@
     <attr name="footer_tab_text_color_nor" format="reference|color"/>
     <attr name="footer_tab_text_color_select" format="reference|color"/>
     <attr name="header_bg" format="reference"/>
+    <attr name="footer_bg" format="reference"/>
 
     <attr name="footer_tab_text_color" format="reference"/>
 
@@ -26,7 +27,8 @@
     <attr name="status_bar_dark_font" format="boolean"/>
     <attr name="ic_back_btn" format="reference"/>
     <attr name="ic_appcenter_search" format="reference"/>
-
+    <attr name="plugin_ic_header_title_drop_down" format="reference"/>
+    <attr name="plugin_ic_header_title_drop_up" format="reference"/>
 
     <declare-styleable name="CircleImageView">
         <attr name="border_width" format="dimension" />
