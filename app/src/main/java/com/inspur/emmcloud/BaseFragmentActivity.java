@@ -67,7 +67,7 @@ public class BaseFragmentActivity extends FragmentActivity {
         boolean isContain = Arrays.asList(classNames).contains(className);
         if (!isContain) {
             int statusBarColor = ResourceUtils.getResValueOfAttr(this, R.attr.header_bg_color);
-            int navigationBarColor =ResourceUtils.getResValueOfAttr(this, R.attr.footer_bg_color);
+            int navigationBarColor =R.color.white;
             boolean isStatusBarDarkFont = ResourceUtils.getBoolenOfAttr(this,R.attr.status_bar_dark_font);
             ImmersionBar.with(this).statusBarColor(statusBarColor).navigationBarColor(navigationBarColor).statusBarDarkFont(isStatusBarDarkFont).init();
         }

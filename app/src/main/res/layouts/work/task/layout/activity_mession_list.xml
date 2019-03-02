@@ -40,6 +40,7 @@
             android:paddingLeft="5dp"
             android:layout_alignParentRight="true"
             android:layout_marginRight="11dp"
+            android:tint="?attr/header_text_color"
             android:clickable="true"
             android:onClick="onClick"
             android:scaleType="centerInside"
