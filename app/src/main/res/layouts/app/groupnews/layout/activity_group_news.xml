@@ -23,11 +23,11 @@
             android:id="@+id/header_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
+            android:layout_toRightOf="@id/ibt_back"
             android:layout_centerVertical="true"
             android:text="@string/news_group_news"
             android:textColor="?attr/header_text_color"
-            android:textSize="@dimen/header_textsize" />
+            android:textSize="20sp" />
     </RelativeLayout>
 
     <RelativeLayout

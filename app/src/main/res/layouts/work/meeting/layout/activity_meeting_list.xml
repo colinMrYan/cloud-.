@@ -44,6 +44,7 @@
             android:onClick="onClick"
             android:paddingLeft="10dp"
             android:paddingRight="15dp"
+            android:tint="?attr/header_text_color"
             android:scaleType="centerInside"
             android:src="@drawable/ic_add" />
 

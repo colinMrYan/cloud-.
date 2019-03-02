@@ -26,7 +26,7 @@
             android:paddingLeft="20dp"
             android:text="@string/ok"
             android:textColor="?attr/header_text_color"
-            android:textSize="@dimen/header_textsize"
+            android:textSize="@dimen/header_function_textsize"
             android:visibility="gone" />
 
         <ImageButton
@@ -56,6 +56,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:clickable="true"
+            android:tint="?attr/header_text_color"
             android:onClick="onClick"
             android:paddingLeft="20dp"
             android:paddingRight="17dp"
@@ -74,7 +75,7 @@
             android:paddingTop="13dp"
             android:text="@string/cancel"
             android:textColor="?attr/header_text_color"
-            android:textSize="17sp"
+            android:textSize="@dimen/header_function_textsize"
             android:visibility="gone" />
     </RelativeLayout>
 
