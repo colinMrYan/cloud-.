@@ -387,7 +387,7 @@
             android:name=".ui.SchemeHandleActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:theme="@style/AppTheme.Transparent">
+            android:theme="@style/AppTheme_Transparent">
             <intent-filter>
                 <action android:name="android.intent.action.SEND_MULTIPLE" />
 
