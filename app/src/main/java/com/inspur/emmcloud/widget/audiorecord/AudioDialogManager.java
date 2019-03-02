@@ -7,8 +7,10 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.content.ContextCompat;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -70,9 +72,22 @@ public class AudioDialogManager {
         recorderImg = (ImageView) dialog.findViewById(R.id.iv_recorder);
         labelText = (TextView) dialog.findViewById(R.id.tv_recorder);
         dialog.setCancelable(false);
+        setDialogWidth(0.5f);
         dialog.setCanceledOnTouchOutside(false);
         dialog.show();
         isStatusRecording = true;
+    }
+
+    private void setDialogWidth(float size) {
+        WindowManager m = dialog.getWindow().getWindowManager();
+        Display d = m.getDefaultDisplay();
+        int width = d.getWidth();
+        WindowManager.LayoutParams p = dialog.getWindow().getAttributes();
+        p.x = 0;
+        p.y = 0;
+        p.width = (int) (width * size);
+        dialog.getWindow().setAttributes(
+                p);
     }
 
     /**
@@ -99,7 +114,7 @@ public class AudioDialogManager {
         if (dialog != null && dialog.isShowing()) {
             isStatusRecording = false;
             recorderImg.setImageResource(R.drawable.ic_recorder_cancel);
-            labelText.setText(R.string.release_to_cancel);
+            labelText.setText(R.string.release_to_cancel_dialog);
             labelText.setBackgroundResource(R.drawable.bg_record_dialog_text);
         }
     }
@@ -176,6 +191,7 @@ public class AudioDialogManager {
         imageViewList.add((ImageView) dialog.findViewById(R.id.iv_arrow_second));
         imageViewList.add((ImageView) dialog.findViewById(R.id.iv_arrow_third));
         dialog.setCancelable(false);
+        setDialogWidth(0.75f);
         dialog.setCanceledOnTouchOutside(false);
         dialog.show();
         timer.schedule(timerTask, 10, 300);

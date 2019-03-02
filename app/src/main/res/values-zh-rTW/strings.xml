@@ -261,7 +261,7 @@
     <string name="chanel_cancel_top"> 取消置頂</string>
     <string name="creat_group">創建群組</string>
     <string name="creat_group_fail">群組創建失敗</string>
-    <string name="all_group_member">群成員</string>
+    <string name="all_group_member">群成員(%1$d)</string>
     <string name="add_group_member">添加群成員 </string>
     <string name="channel_group">群組</string>
     <string name="group_member">群成員列表 </string>
@@ -286,6 +286,7 @@
     <string name="hold_to_talk">按住 說話</string>
     <string name="release_to_send">鬆開 結束</string>
     <string name="release_to_cancel">鬆開手指，取消發送</string>
+    <string name="release_to_cancel_dialog">鬆開手指，取消發送</string>
     <string name="slide_up_to_cancel">手指上滑，取消發送</string>
     <string name="recording_too_short">錄音時間過短</string>
     <string name="play_fail">播放失败</string>

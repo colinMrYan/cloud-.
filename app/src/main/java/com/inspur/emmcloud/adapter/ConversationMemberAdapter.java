@@ -41,8 +41,8 @@ public class ConversationMemberAdapter extends BaseAdapter {
     public int getCount() {
         int size = uidList.size();
         if (isOwner)
-            return size > 8 ? 10 : size + 2;
-        return size > 9 ? 10 : size + 1;
+            return size > 5 ? 7 : size + 2;
+        return size > 6 ? 7 : size + 1;
     }
 
     @Override

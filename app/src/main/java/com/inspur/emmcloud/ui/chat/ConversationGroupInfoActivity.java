@@ -148,6 +148,9 @@ public class ConversationGroupInfoActivity extends BaseActivity {
         ImmersionBar.with(this).statusBarColor(android.R.color.white).statusBarDarkFont(true).init();
         String cid = getIntent().getExtras().getString(EXTRA_CID);
         conversation = ConversationCacheUtils.getConversation(MyApplication.getInstance(), cid);
+        if(conversation == null){
+            finish();
+        }
         isOwner = conversation.getOwner().equals(MyApplication.getInstance().getUid());
         apiService = new ChatAPIService(ConversationGroupInfoActivity.this);
         apiService.setAPIInterface(new WebService());
@@ -446,6 +449,8 @@ public class ConversationGroupInfoActivity extends BaseActivity {
             memberUidList.addAll(uidList);
             ConversationCacheUtils.setConversationMember(MyApplication.getInstance(), conversation.getId(), memberUidList);
             memberText.setText(getString(R.string.all_group_member, memberUidList.size()));
+            groupMembersText.setText(conversation.getName() + getString(R.string.bracket_with_word, (memberUidList.size() + "")));
+            memberSizeText.setText(getString(R.string.people_num, memberUidList.size()));
             if (adapter.getCount() < 10) {
                 uiMemberUidList.addAll(uidList);
                 adapter.notifyDataSetChanged();
@@ -465,6 +470,8 @@ public class ConversationGroupInfoActivity extends BaseActivity {
             memberUidList.removeAll(uidList);
             ConversationCacheUtils.setConversationMember(MyApplication.getInstance(), conversation.getId(), memberUidList);
             memberText.setText(getString(R.string.all_group_member, memberUidList.size()));
+            groupMembersText.setText(conversation.getName() + getString(R.string.bracket_with_word, (memberUidList.size() + "")));
+            memberSizeText.setText(getString(R.string.people_num, memberUidList.size()));
             filterGroupMember(memberUidList);
             adapter.notifyDataSetChanged();
         }
