@@ -217,6 +217,7 @@ public class ScheduleFragment extends Fragment implements
                 calendarLayout.switchStatus();
             }
         });
+        initData();
     }
 
     private void initData() {
