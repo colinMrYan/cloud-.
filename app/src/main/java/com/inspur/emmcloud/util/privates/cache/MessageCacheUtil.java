@@ -6,6 +6,7 @@ import com.inspur.emmcloud.bean.chat.MatheSet;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.FileUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 
 import org.xutils.common.util.KeyValue;
@@ -629,4 +630,30 @@ public class MessageCacheUtil {
             }
         }
     }
+
+    /**
+     * 查找所有文本类型的消息
+     * @param context
+     * @param cid
+     * @return
+     */
+    public static List<Message> getGroupMessageByKeyWords(Context context,String cid){
+        List<Message> messageList = new ArrayList<>();
+        try {
+            messageList = DbCacheUtils.getDb(context).selector(Message.class)
+                    .where("channel", "=", cid)
+                    .and(WhereBuilder.b("type", "=", Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN)
+                            .or("type","=",Message.MESSAGE_TYPE_TEXT_MARKDOWN)
+                            .or("type", "=", Message.MESSAGE_TYPE_TEXT_PLAIN))
+                    .findAll();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if(messageList == null){
+            messageList = new ArrayList<>();
+        }
+        return messageList;
+    }
+
+
 }
