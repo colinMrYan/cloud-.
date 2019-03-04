@@ -13,11 +13,11 @@ public class BaseFragment extends Fragment {
     protected void setFragmentStatusBarCommon() {
         int color = ResourceUtils.getResValueOfAttr(getActivity(), R.attr.header_bg_color);
         boolean isStatusBarDarkFont = ResourceUtils.getBoolenOfAttr(getActivity(),R.attr.status_bar_dark_font);
-        ImmersionBar.with(getActivity()).statusBarColor(color).statusBarDarkFont(isStatusBarDarkFont).navigationBarColor(R.color.white).init();
+        ImmersionBar.with(getActivity()).statusBarColor(color).statusBarDarkFont(isStatusBarDarkFont).navigationBarColor(R.color.white).navigationBarDarkIcon(true).init();
 
     }
 
     protected void setFragmentStatusBarWhite() {
-        ImmersionBar.with(getActivity()).statusBarColor(R.color.white).navigationBarColor(R.color.white).statusBarDarkFont(true).init();
+        ImmersionBar.with(getActivity()).statusBarColor(R.color.white).navigationBarColor(R.color.white).statusBarDarkFont(true).navigationBarDarkIcon(true).init();
     }
 }
